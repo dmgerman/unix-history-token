@@ -204,8 +204,6 @@ name|nflag
 decl_stmt|,
 name|qflag
 decl_stmt|,
-name|pflag
-decl_stmt|,
 name|sverrno
 decl_stmt|;
 name|u_int
@@ -335,10 +333,6 @@ break|break;
 case|case
 literal|'p'
 case|:
-name|pflag
-operator|=
-literal|1
-expr_stmt|;
 name|howto
 operator||=
 name|RB_POWEROFF
