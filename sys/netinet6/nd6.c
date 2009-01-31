@@ -299,16 +299,6 @@ parameter_list|)
 value|((struct sockaddr_in6 *)s)
 end_define
 
-begin_define
-define|#
-directive|define
-name|SDL
-parameter_list|(
-name|s
-parameter_list|)
-value|((struct sockaddr_dl *)s)
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
