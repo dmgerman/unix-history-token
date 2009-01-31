@@ -894,7 +894,11 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|RTFREE
+if|if
+condition|(
+name|rt
+condition|)
+name|RTFREE_LOCKED
 argument_list|(
 name|rt
 argument_list|)
@@ -903,7 +907,7 @@ return|return
 name|EINVAL
 return|;
 block|}
-name|RTFREE
+name|RTFREE_LOCKED
 argument_list|(
 name|rt
 argument_list|)

@@ -9100,7 +9100,7 @@ name|rt
 operator|!=
 name|NULL
 condition|)
-name|rtfree
+name|RTFREE_LOCKED
 argument_list|(
 name|rt
 argument_list|)
@@ -9140,7 +9140,7 @@ name|rt
 operator|!=
 name|NULL
 condition|)
-name|rtfree
+name|RTFREE_LOCKED
 argument_list|(
 name|rt
 argument_list|)
@@ -9149,7 +9149,7 @@ return|return
 name|EINVAL
 return|;
 block|}
-name|rtfree
+name|RTFREE_LOCKED
 argument_list|(
 name|rt
 argument_list|)

@@ -1188,7 +1188,7 @@ if|if
 condition|(
 name|rt
 condition|)
-name|rtfree
+name|RTFREE_LOCKED
 argument_list|(
 name|rt
 argument_list|)

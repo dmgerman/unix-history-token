@@ -3271,7 +3271,7 @@ name|rt
 operator|->
 name|rt_flags
 expr_stmt|;
-name|rtfree
+name|RTFREE_LOCKED
 argument_list|(
 name|rt
 argument_list|)
