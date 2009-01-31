@@ -315,17 +315,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|void
 modifier|*
 name|calloc
-parameter_list|(
+argument_list|(
 name|size_t
-parameter_list|,
+argument_list|,
 name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__malloc_like
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|div_t
@@ -393,15 +394,16 @@ name|__pure2
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 modifier|*
 name|malloc
-parameter_list|(
+argument_list|(
 name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__malloc_like
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int

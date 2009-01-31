@@ -395,17 +395,18 @@ operator|||
 name|__XSI_VISIBLE
 end_if
 
-begin_function_decl
+begin_decl_stmt
 name|char
 modifier|*
 name|strdup
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|)
+name|__malloc_like
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -589,19 +590,20 @@ directive|if
 name|__BSD_VISIBLE
 end_if
 
-begin_function_decl
+begin_decl_stmt
 name|char
 modifier|*
 name|strndup
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__malloc_like
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
