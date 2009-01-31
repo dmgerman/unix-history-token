@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20090126_0126"
+value|"20090131_0127"
 end_define
 
 begin_expr_stmt
@@ -37381,7 +37381,7 @@ operator|.
 name|key
 argument_list|)
 condition|)
-break|break;
+continue|continue;
 name|HDA_BOOTVERBOSE
 argument_list|(
 argument|printf(
