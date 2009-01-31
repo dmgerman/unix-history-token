@@ -4417,7 +4417,7 @@ name|TESTSETRATE
 argument_list|(
 name|IEEE80211_MODE_11G
 argument_list|,
-literal|47
+literal|48
 argument_list|)
 expr_stmt|;
 name|TESTSETRATE
@@ -4458,7 +4458,7 @@ name|TESTSETRATE
 argument_list|(
 name|IEEE80211_MODE_11A
 argument_list|,
-literal|47
+literal|48
 argument_list|)
 expr_stmt|;
 name|TESTSETRATE
