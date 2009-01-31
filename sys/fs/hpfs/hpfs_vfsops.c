@@ -492,13 +492,6 @@ modifier|*
 name|devvp
 decl_stmt|;
 name|struct
-name|hpfsmount
-modifier|*
-name|hpmp
-init|=
-literal|0
-decl_stmt|;
-name|struct
 name|nameidata
 name|ndp
 decl_stmt|;
@@ -572,13 +565,6 @@ argument_list|(
 operator|(
 literal|"hpfs_omount: MNT_UPDATE: "
 operator|)
-argument_list|)
-expr_stmt|;
-name|hpmp
-operator|=
-name|VFSTOHPFS
-argument_list|(
-name|mp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1471,8 +1457,6 @@ name|int
 name|error
 decl_stmt|,
 name|flags
-decl_stmt|,
-name|ronly
 decl_stmt|;
 specifier|register
 name|struct
@@ -1491,18 +1475,6 @@ operator|(
 literal|"hpfs_unmount():\n"
 operator|)
 argument_list|)
-expr_stmt|;
-name|ronly
-operator|=
-operator|(
-name|mp
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_RDONLY
-operator|)
-operator|!=
-literal|0
 expr_stmt|;
 name|flags
 operator|=

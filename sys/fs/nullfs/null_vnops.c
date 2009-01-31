@@ -1926,11 +1926,6 @@ name|xp
 operator|->
 name|null_lowervp
 decl_stmt|;
-name|struct
-name|lock
-modifier|*
-name|vnlock
-decl_stmt|;
 if|if
 condition|(
 name|lowervp
@@ -1957,12 +1952,6 @@ operator|->
 name|v_object
 operator|=
 name|NULL
-expr_stmt|;
-name|vnlock
-operator|=
-name|vp
-operator|->
-name|v_vnlock
 expr_stmt|;
 name|vp
 operator|->

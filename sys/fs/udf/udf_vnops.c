@@ -4437,11 +4437,6 @@ name|udf_dirstream
 modifier|*
 name|ds
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
 name|u_long
 name|nameiop
 decl_stmt|;
@@ -4533,14 +4528,6 @@ name|fentry
 operator|->
 name|inf_len
 argument_list|)
-expr_stmt|;
-name|td
-operator|=
-name|a
-operator|->
-name|a_cnp
-operator|->
-name|cn_thread
 expr_stmt|;
 comment|/* 	 * If this is a LOOKUP and we've already partially searched through 	 * the directory, pick up where we left off and flag that the 	 * directory may need to be searched twice.  For a full description, 	 * see /sys/fs/cd9660/cd9660_lookup.c:cd9660_lookup() 	 */
 if|if

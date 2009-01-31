@@ -5481,8 +5481,6 @@ name|dmp
 decl_stmt|;
 name|off_t
 name|off
-decl_stmt|,
-name|oldoff
 decl_stmt|;
 name|int
 modifier|*
@@ -5637,12 +5635,6 @@ expr_stmt|;
 name|off
 operator|=
 literal|0
-expr_stmt|;
-name|oldoff
-operator|=
-name|uio
-operator|->
-name|uio_offset
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(

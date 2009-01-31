@@ -2975,11 +2975,6 @@ name|ncp_open_info
 name|no
 decl_stmt|;
 name|struct
-name|nwnode
-modifier|*
-name|np
-decl_stmt|;
-name|struct
 name|vnode
 modifier|*
 name|newvp
@@ -3184,13 +3179,6 @@ operator|!
 name|error
 condition|)
 block|{
-name|np
-operator|=
-name|VTONW
-argument_list|(
-name|newvp
-argument_list|)
-expr_stmt|;
 name|newvp
 operator|->
 name|v_type

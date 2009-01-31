@@ -4770,9 +4770,6 @@ name|off_t
 name|length
 parameter_list|)
 block|{
-name|boolean_t
-name|extended
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -4787,14 +4784,6 @@ name|VP_TO_TMPFS_NODE
 argument_list|(
 name|vp
 argument_list|)
-expr_stmt|;
-name|extended
-operator|=
-name|length
-operator|>
-name|node
-operator|->
-name|tn_size
 expr_stmt|;
 if|if
 condition|(
