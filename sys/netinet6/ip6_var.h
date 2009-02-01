@@ -547,12 +547,6 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-name|u_quad_t
-name|ip6s_forward_cachehit
-decl_stmt|;
-name|u_quad_t
-name|ip6s_forward_cachemiss
-decl_stmt|;
 comment|/* number of times that each rule of source selection is applied. */
 name|u_quad_t
 name|ip6s_sources_rule

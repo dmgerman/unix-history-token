@@ -98,6 +98,7 @@ name|struct
 name|route_in6
 name|_ip6_forward_rt
 decl_stmt|;
+comment|/* XXX remove */
 name|struct
 name|in6_addrpolicy
 name|_defaultaddrpolicy
@@ -613,13 +614,6 @@ define|#
 directive|define
 name|V_ip6_desync_factor
 value|VNET_INET6(ip6_desync_factor)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_ip6_forward_rt
-value|VNET_INET6(ip6_forward_rt)
 end_define
 
 begin_define
