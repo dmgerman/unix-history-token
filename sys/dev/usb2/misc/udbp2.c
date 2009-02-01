@@ -1956,6 +1956,15 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|==
+name|NULL
+condition|)
+block|{
+return|return;
+block|}
 name|mtx_lock
 argument_list|(
 operator|&
