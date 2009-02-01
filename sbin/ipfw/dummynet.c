@@ -18,8 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sockio.h>
+file|<sys/queue.h>
 end_include
+
+begin_comment
+comment|/* XXX there are several sysctl leftover here */
+end_comment
 
 begin_include
 include|#
@@ -84,19 +88,13 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
 end_include
 
 begin_include
@@ -116,6 +114,10 @@ include|#
 directive|include
 file|<arpa/inet.h>
 end_include
+
+begin_comment
+comment|/* inet_ntoa */
+end_comment
 
 begin_decl_stmt
 specifier|static
