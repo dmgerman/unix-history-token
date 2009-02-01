@@ -6328,7 +6328,9 @@ name|fc
 operator|.
 name|dev
 argument_list|,
-literal|"maxdesc: %d\n"
+literal|"%s: maxdesc %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|maxdesc
 argument_list|)
@@ -11430,6 +11432,11 @@ name|node_id
 decl_stmt|,
 name|plen
 decl_stmt|;
+name|FW_GLOCK_ASSERT
+argument_list|(
+name|fc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -11674,9 +11681,11 @@ name|fc
 operator|->
 name|dev
 argument_list|,
-literal|"node_id=0x%08x, gen=%d, "
+literal|"node_id=0x%08x, SelfID Count=%d, "
 argument_list|,
-name|node_id
+name|fc
+operator|->
+name|nodeid
 argument_list|,
 operator|(
 name|plen
@@ -12273,6 +12282,14 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
+name|FW_GLOCK
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|fc
+argument_list|)
+expr_stmt|;
 name|fw_busreset
 argument_list|(
 operator|&
@@ -12319,6 +12336,14 @@ index|[
 literal|2
 index|]
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|FW_GUNLOCK
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|fc
 argument_list|)
 expr_stmt|;
 block|}
@@ -12368,6 +12393,7 @@ name|i
 decl_stmt|,
 name|plen
 decl_stmt|;
+comment|/* 	 * We really should have locking 	 * here.  Not sure why it's not 	 */
 name|plen
 operator|=
 name|OREAD
@@ -12493,10 +12519,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|1
-comment|/* XXX needed?? */
 comment|/* pending all pre-bus_reset packets */
 name|fwohci_txd
 argument_list|(
@@ -12549,8 +12571,6 @@ argument_list|(
 name|fc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|fw_sidrcv
 argument_list|(
 name|fc
@@ -12650,6 +12670,14 @@ name|irstat
 decl_stmt|,
 name|itstat
 decl_stmt|;
+name|FW_GLOCK_ASSERT
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|fc
+argument_list|)
+expr_stmt|;
 name|stat
 operator|=
 name|OREAD
@@ -12817,8 +12845,8 @@ block|}
 end_function
 
 begin_function
-name|int
-name|fwohci_filt
+name|void
+name|fwohci_intr
 parameter_list|(
 name|void
 modifier|*
@@ -12837,48 +12865,25 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
+name|FW_GLOCK
+argument_list|(
+operator|&
 name|sc
 operator|->
-name|intmask
-operator|&
-name|OHCI_INT_EN
-operator|)
-condition|)
-block|{
-comment|/* polling mode */
-return|return
-operator|(
-name|FILTER_STRAY
-operator|)
-return|;
-block|}
-return|return
-operator|(
+name|fc
+argument_list|)
+expr_stmt|;
 name|fwohci_check_stat
 argument_list|(
 name|sc
 argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|fwohci_intr
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|)
-block|{
-name|fwohci_filt
+expr_stmt|;
+name|FW_GUNLOCK
 argument_list|(
-name|arg
+operator|&
+name|sc
+operator|->
+name|fc
 argument_list|)
 expr_stmt|;
 block|}
@@ -12912,9 +12917,19 @@ operator|*
 operator|)
 name|fc
 decl_stmt|;
+name|FW_GLOCK
+argument_list|(
+name|fc
+argument_list|)
+expr_stmt|;
 name|fwohci_check_stat
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|FW_GUNLOCK
+argument_list|(
+name|fc
 argument_list|)
 expr_stmt|;
 block|}
@@ -14595,7 +14610,7 @@ argument|].db.immed[
 literal|3
 argument|])); 		} 		if(key == OHCI_KEY_DEVICE){ 			return; 		} 		if((cmd& OHCI_BRANCH_MASK)  				== OHCI_BRANCH_ALWAYS){ 			return; 		} 		if((cmd& OHCI_CMD_MASK)  				== OHCI_OUTPUT_LAST){ 			return; 		} 		if((cmd& OHCI_CMD_MASK)  				== OHCI_INPUT_LAST){ 			return; 		} 		if(key == OHCI_KEY_ST2 ){ 			i++; 		} 	} 	return; }  void fwohci_ibr(struct firewire_comm *fc) { 	struct fwohci_softc *sc; 	uint32_t fun;  	device_printf(fc->dev,
 literal|"Initiate bus reset\n"
-argument|); 	sc = (struct fwohci_softc *)fc;
+argument|); 	sc = (struct fwohci_softc *)fc;  	FW_GLOCK(fc);
 comment|/* 	 * Make sure our cached values from the config rom are 	 * initialised. 	 */
 argument|OWRITE(sc, OHCI_CROMHDR, ntohl(sc->fc.config_rom[
 literal|0
@@ -14613,7 +14628,7 @@ comment|/* Short bus reset */
 argument|fun = fwphy_rddata(sc, FW_PHY_ISBR_REG); 	fun |= FW_PHY_ISBR | FW_PHY_RHB; 	fun = fwphy_wrdata(sc, FW_PHY_ISBR_REG, fun);
 endif|#
 directive|endif
-argument|}  void fwohci_txbufdb(struct fwohci_softc *sc, int dmach, struct fw_bulkxfer *bulkxfer) { 	struct fwohcidb_tr *db_tr
+argument|FW_GUNLOCK(fc); }  void fwohci_txbufdb(struct fwohci_softc *sc, int dmach, struct fw_bulkxfer *bulkxfer) { 	struct fwohcidb_tr *db_tr
 argument_list|,
 argument|*fdb_tr; 	struct fwohci_dbch *dbch; 	struct fwohcidb *db; 	struct fw_pkt *fp; 	struct fwohci_txpkthdr *ohcifp; 	unsigned short chtag; 	int idb;  	FW_GLOCK_ASSERT(&sc->fc);  	dbch =&sc->it[dmach]; 	chtag = sc->it[dmach].xferq.flag&
 literal|0xff

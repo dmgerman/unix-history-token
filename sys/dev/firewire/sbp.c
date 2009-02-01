@@ -2518,6 +2518,15 @@ argument_list|(
 name|sdev
 argument_list|)
 expr_stmt|;
+name|target
+operator|->
+name|luns
+index|[
+name|lun
+index|]
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 block|}
 comment|/* Reallocate */
@@ -4109,12 +4118,24 @@ name|status
 operator|=
 name|SBP_DEV_RETRY
 expr_stmt|;
-name|sbp_abort_all_ocbs
+name|sbp_cam_detach_sdev
 argument_list|(
 name|sdev
-argument_list|,
-name|CAM_SCSI_BUS_RESET
 argument_list|)
+expr_stmt|;
+name|sbp_free_sdev
+argument_list|(
+name|sdev
+argument_list|)
+expr_stmt|;
+name|target
+operator|->
+name|luns
+index|[
+name|i
+index|]
+operator|=
+name|NULL
 expr_stmt|;
 break|break;
 case|case
@@ -6476,6 +6497,16 @@ operator|->
 name|bus_addr
 argument_list|)
 expr_stmt|;
+comment|/* 	 * sbp_xfer_free() will attempt to acquire 	 * the SBP lock on entrance.  Also, this removes 	 * a LOR between the firewire layer and sbp 	 */
+name|SBP_UNLOCK
+argument_list|(
+name|sdev
+operator|->
+name|target
+operator|->
+name|sbp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fw_asyreq
@@ -6516,6 +6547,15 @@ name|ccb
 argument_list|)
 expr_stmt|;
 block|}
+name|SBP_LOCK
+argument_list|(
+name|sdev
+operator|->
+name|target
+operator|->
+name|sbp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -9315,7 +9355,7 @@ argument|; }  static int sbp_shutdown(device_t dev) { 	struct sbp_softc *sbp = (
 literal|0
 argument|); }  static void sbp_free_sdev(struct sbp_dev *sdev) { 	int i;  	if (sdev == NULL) 		return; 	for (i =
 literal|0
-argument|; i< SBP_QUEUE_LEN; i++) 		bus_dmamap_destroy(sdev->target->sbp->dmat, 		    sdev->ocb[i].dmamap); 	fwdma_free(sdev->target->sbp->fd.fc,&sdev->dma); 	free(sdev, M_SBP); }  static void sbp_free_target(struct sbp_target *target) { 	struct sbp_softc *sbp; 	struct fw_xfer *xfer
+argument|; i< SBP_QUEUE_LEN; i++) 		bus_dmamap_destroy(sdev->target->sbp->dmat, 		    sdev->ocb[i].dmamap); 	fwdma_free(sdev->target->sbp->fd.fc,&sdev->dma); 	free(sdev, M_SBP); 	sdev = NULL; }  static void sbp_free_target(struct sbp_target *target) { 	struct sbp_softc *sbp; 	struct fw_xfer *xfer
 argument_list|,
 argument|*next; 	int i;  	if (target->luns == NULL) 		return; 	callout_stop(&target->mgm_ocb_timeout); 	sbp = target->sbp; 	for (i =
 literal|0
