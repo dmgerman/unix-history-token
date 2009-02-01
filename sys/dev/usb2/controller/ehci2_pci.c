@@ -679,26 +679,6 @@ decl_stmt|;
 name|int
 name|rid
 decl_stmt|;
-if|if
-condition|(
-name|sc
-operator|==
-name|NULL
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|self
-argument_list|,
-literal|"Could not allocate sc\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 comment|/* initialise some bus fields */
 name|sc
 operator|->

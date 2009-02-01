@@ -1346,19 +1346,6 @@ name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 comment|/* approx */
-if|if
-condition|(
-name|sc
-operator|==
-name|NULL
-condition|)
-block|{
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-block|}
 name|sc
 operator|->
 name|sc_udev

@@ -1470,19 +1470,6 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-if|if
-condition|(
-name|sc
-operator|==
-name|NULL
-condition|)
-block|{
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-block|}
 comment|/* 	 * NOTE: the softc struct is bzero-ed in device_set_driver. 	 * We can safely call ustorage_fs_detach without specifically 	 * initializing the struct. 	 */
 name|sc
 operator|->

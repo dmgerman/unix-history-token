@@ -937,17 +937,6 @@ name|x
 decl_stmt|,
 name|cnt
 decl_stmt|;
-if|if
-condition|(
-name|sc
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
 name|device_set_usb2_desc
 argument_list|(
 name|dev

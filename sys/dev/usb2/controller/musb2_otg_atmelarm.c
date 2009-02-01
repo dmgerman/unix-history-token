@@ -238,19 +238,6 @@ decl_stmt|;
 name|int
 name|rid
 decl_stmt|;
-if|if
-condition|(
-name|sc
-operator|==
-name|NULL
-condition|)
-block|{
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 comment|/* setup MUSB OTG USB controller interface softc */
 name|sc
 operator|->

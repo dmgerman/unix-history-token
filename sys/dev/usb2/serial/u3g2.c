@@ -2118,19 +2118,6 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|==
-name|NULL
-condition|)
-block|{
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-block|}
 comment|/* copy in USB config */
 for|for
 control|(
