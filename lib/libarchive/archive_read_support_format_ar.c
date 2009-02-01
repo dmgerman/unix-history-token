@@ -2355,7 +2355,7 @@ literal|'\0'
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Sanity check, last two chars must be `/\n' or '\n\n', 	 * depending on whether the string table is padded by a '\n' 	 * (string table produced by GNU ar always has a even size). 	 */
+comment|/* 	 * GNU ar always pads the table to an even size. 	 * The pad character is either '\n' or '`'. 	 */
 if|if
 condition|(
 name|p
@@ -2370,6 +2370,11 @@ operator|*
 name|p
 operator|!=
 literal|'\n'
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'`'
 condition|)
 goto|goto
 name|bad_string_table
