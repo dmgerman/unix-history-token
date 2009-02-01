@@ -2004,7 +2004,7 @@ name|ic_freq
 operator|==
 name|freq
 operator|&&
-name|IEEE80211_IS_CHAN_ANYG
+name|IEEE80211_IS_CHAN_G
 argument_list|(
 name|c
 argument_list|)
@@ -2045,7 +2045,7 @@ name|ic_freq
 operator|==
 name|freq
 operator|&&
-name|IEEE80211_IS_CHAN_ANYG
+name|IEEE80211_IS_CHAN_G
 argument_list|(
 name|c
 argument_list|)
