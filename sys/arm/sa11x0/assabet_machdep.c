@@ -1028,6 +1028,7 @@ name|pv_pa
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Allocate a page for the system page mapped to V0x00000000 	 * This page will just contain the system vectors and can be 	 * shared by all processes. 	 */
 name|valloc_pages
 argument_list|(
 name|systempage
@@ -1035,7 +1036,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Allocate a page for the system page mapped to V0x00000000 	 * This page will just contain the system vectors and can be 	 * shared by all processes. 	 */
 comment|/* Allocate stacks for all modes */
 name|valloc_pages
 argument_list|(
