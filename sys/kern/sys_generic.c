@@ -4427,7 +4427,7 @@ parameter_list|,
 name|int
 name|idx
 parameter_list|,
-name|int
+name|fd_mask
 name|bit
 parameter_list|)
 block|{
@@ -4476,9 +4476,6 @@ index|[
 name|idx
 index|]
 operator|&
-operator|(
-name|fd_mask
-operator|)
 name|bit
 operator|)
 operator|==
