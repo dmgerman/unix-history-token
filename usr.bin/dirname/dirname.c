@@ -170,12 +170,18 @@ expr_stmt|;
 if|if
 condition|(
 name|argc
-operator|!=
+operator|<
 literal|1
 condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+while|while
+condition|(
+name|argc
+operator|--
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -200,6 +206,9 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
+name|argv
+operator|++
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -210,6 +219,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|0
@@ -232,7 +242,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: dirname string\n"
+literal|"usage: dirname string [...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
