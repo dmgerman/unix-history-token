@@ -174,8 +174,6 @@ end_comment
 begin_decl_stmt
 name|uint16_t
 name|l2cap_psm
-init|=
-literal|15
 decl_stmt|;
 end_decl_stmt
 
@@ -186,8 +184,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|l2cap_mode
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -763,6 +759,16 @@ condition|)
 name|interface_name
 operator|=
 literal|"/dev/tap"
+expr_stmt|;
+if|if
+condition|(
+name|l2cap_psm
+operator|==
+literal|0
+condition|)
+name|l2cap_psm
+operator|=
+name|L2CAP_PSM_BNEP
 expr_stmt|;
 if|if
 condition|(

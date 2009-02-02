@@ -125,6 +125,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|L2CAP_PSM_BNEP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|L2CAP_PSM_BNEP
+value|15
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 name|struct
