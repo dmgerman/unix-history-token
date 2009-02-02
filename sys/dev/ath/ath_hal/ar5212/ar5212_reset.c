@@ -3984,6 +3984,8 @@ name|powerMeasI
 decl_stmt|;
 name|HAL_BOOL
 name|isBmode
+init|=
+name|AH_FALSE
 decl_stmt|;
 name|OS_MARK
 argument_list|(
