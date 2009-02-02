@@ -1519,7 +1519,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* XXX can happen? */
+comment|/* should not happen */
 if|if
 condition|(
 name|usb2_fifo_alloc_buffer

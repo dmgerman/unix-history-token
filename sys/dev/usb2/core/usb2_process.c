@@ -524,7 +524,7 @@ name|up
 operator|->
 name|up_cv
 argument_list|,
-literal|"WMSG"
+literal|"wmsg"
 argument_list|)
 expr_stmt|;
 name|usb2_cv_init
@@ -534,7 +534,7 @@ name|up
 operator|->
 name|up_drain
 argument_list|,
-literal|"DMSG"
+literal|"dmsg"
 argument_list|)
 expr_stmt|;
 if|if
@@ -551,7 +551,7 @@ name|up
 operator|->
 name|up_ptr
 argument_list|,
-literal|"USBPROC"
+literal|"usbproc"
 argument_list|)
 condition|)
 block|{
