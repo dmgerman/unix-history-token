@@ -1439,7 +1439,7 @@ name|_chan
 parameter_list|,
 name|_flag
 parameter_list|)
-value|do {			\ 	if ((IS_2425(_ah) || IS_2417(_ah))&&			\ 	    (((_chan)->ic_flags)& IEEE80211_CHAN_CCK)) {	\ 		(_chan)->ic_flags&= ~IEEE80211_CHAN_CCK;	\ 		(_chan)->ic_flags |= IEEE80211_CHAN_DYN;	\ 		(_flag) = AH_TRUE;				\ 	}							\ } while (0)
+value|do {			\ 	if ((IS_2425(_ah) || IS_2417(_ah))&&			\ 	    (((_chan)->ic_flags)& IEEE80211_CHAN_CCK)) {	\ 		(_chan)->ic_flags&= ~IEEE80211_CHAN_CCK;	\ 		(_chan)->ic_flags |= IEEE80211_CHAN_DYN;	\ 		(_flag) = AH_TRUE;				\ 	} else							\ 		(_flag) = AH_FALSE;				\ } while (0)
 end_define
 
 begin_define
@@ -1453,7 +1453,7 @@ name|_chan
 parameter_list|,
 name|_flag
 parameter_list|)
-value|do {                     \ 	if ((IS_2425(_ah) || IS_2417(_ah))&& (_flag)) {	\ 		(_chan)->ic_flags&= ~IEEE80211_CHAN_DYN;	\ 		(_chan)->ic_flags |= IEEE80211_CHAN_CCK;	\ 	}							\ } while (0)
+value|do {                     \ 	if ((_flag)&& (IS_2425(_ah) || IS_2417(_ah))) {	\ 		(_chan)->ic_flags&= ~IEEE80211_CHAN_DYN;	\ 		(_chan)->ic_flags |= IEEE80211_CHAN_CCK;	\ 	}							\ } while (0)
 end_define
 
 begin_struct_decl
