@@ -1534,10 +1534,6 @@ expr_stmt|;
 define|#
 directive|define
 name|OPTFLAGS
-value|"ABC:D:E:I:PSV:Xd:ef:ij:km:nQpqrstvx:"
-define|#
-directive|define
-name|OPTFLAGS
 value|"ABC:D:d:E:ef:I:ij:km:nPpQqrSstV:vXx:"
 for|for
 control|(
