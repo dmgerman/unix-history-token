@@ -2549,6 +2549,9 @@ name|MAXPATHLEN
 index|]
 decl_stmt|,
 modifier|*
+name|tofree
+decl_stmt|,
+modifier|*
 name|totalpath
 decl_stmt|;
 name|uint32_t
@@ -2566,6 +2569,8 @@ name|ret
 operator|=
 literal|0
 expr_stmt|;
+name|tofree
+operator|=
 name|totalpath
 operator|=
 name|strdup
@@ -2686,7 +2691,7 @@ break|break;
 block|}
 name|free
 argument_list|(
-name|totalpath
+name|tofree
 argument_list|)
 expr_stmt|;
 comment|/* No library was found, but standard commands can still be used */
