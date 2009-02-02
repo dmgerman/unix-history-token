@@ -577,7 +577,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|PCI_MAX_BAR_0
+name|PCIR_MAX_BAR_0
 condition|;
 name|i
 operator|++
