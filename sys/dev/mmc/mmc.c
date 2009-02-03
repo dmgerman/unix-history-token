@@ -256,7 +256,7 @@ name|mmc
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|"mmc driver"
 argument_list|)
@@ -264,6 +264,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|mmc_debug
 decl_stmt|;
@@ -2890,6 +2891,7 @@ name|mode
 operator|<<
 literal|31
 expr_stmt|;
+comment|/* 0 - check, 1 - set */
 name|cmd
 operator|.
 name|arg
@@ -3213,9 +3215,9 @@ name|mmc_sd_switch
 argument_list|(
 name|sc
 argument_list|,
-literal|1
+name|SD_SWITCH_MODE_SET
 argument_list|,
-literal|0
+name|SD_SWITCH_GROUP1
 argument_list|,
 name|value
 argument_list|,
@@ -7167,6 +7169,12 @@ name|bus_width_1
 expr_stmt|;
 name|ivar
 operator|->
+name|timing
+operator|=
+name|bus_timing_normal
+expr_stmt|;
+name|ivar
+operator|->
 name|mode
 operator|=
 name|mmcbr_get_mode
@@ -7330,13 +7338,7 @@ operator|->
 name|scr
 argument_list|)
 expr_stmt|;
-comment|/* Get card switch capabilities. */
-name|ivar
-operator|->
-name|timing
-operator|=
-name|bus_timing_normal
-expr_stmt|;
+comment|/* Get card switch capabilities (command class 10). */
 if|if
 condition|(
 operator|(
@@ -7368,11 +7370,11 @@ name|mmc_sd_switch
 argument_list|(
 name|sc
 argument_list|,
-literal|0
+name|SD_SWITCH_MODE_CHECK
 argument_list|,
-literal|0
+name|SD_SWITCH_GROUP1
 argument_list|,
-literal|0xF
+name|SD_SWITCH_NOCHANGE
 argument_list|,
 name|switch_res
 argument_list|)
@@ -7397,7 +7399,7 @@ name|ivar
 operator|->
 name|hs_tran_speed
 operator|=
-literal|50000000
+name|SD_MAX_HS
 expr_stmt|;
 block|}
 block|}
@@ -7750,7 +7752,7 @@ name|ivar
 operator|->
 name|hs_tran_speed
 operator|=
-literal|52000000
+name|MMC_TYPE_52_MAX_HS
 expr_stmt|;
 elseif|else
 if|if
@@ -7768,7 +7770,7 @@ name|ivar
 operator|->
 name|hs_tran_speed
 operator|=
-literal|26000000
+name|MMC_TYPE_26_MAX_HS
 expr_stmt|;
 else|else
 name|ivar
@@ -9336,9 +9338,9 @@ name|mmc_driver
 argument_list|,
 name|mmc_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -9354,9 +9356,9 @@ name|mmc_driver
 argument_list|,
 name|mmc_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
