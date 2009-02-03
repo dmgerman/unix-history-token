@@ -857,13 +857,91 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|USB_MAKE_DEBUG_TABLE
-argument_list|(
-name|USB_QUIRK
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|usb_quirk_str
+index|[
+name|USB_QUIRK_MAX
+index|]
+init|=
+block|{
+literal|"UQ_NONE"
+block|,
+literal|"UQ_AUDIO_SWAP_LR"
+block|,
+comment|/* left and right sound channels are swapped */
+literal|"UQ_AU_INP_ASYNC"
+block|,
+comment|/* input is async despite claim of adaptive */
+literal|"UQ_AU_NO_FRAC"
+block|,
+comment|/* don't adjust for fractional samples */
+literal|"UQ_AU_NO_XU"
+block|,
+comment|/* audio device has broken extension unit */
+literal|"UQ_BAD_ADC"
+block|,
+comment|/* bad audio spec version number */
+literal|"UQ_BAD_AUDIO"
+block|,
+comment|/* device claims audio class, but isn't */
+literal|"UQ_BROKEN_BIDIR"
+block|,
+comment|/* printer has broken bidir mode */
+literal|"UQ_BUS_POWERED"
+block|,
+comment|/* device is bus powered, despite claim */
+literal|"UQ_HID_IGNORE"
+block|,
+comment|/* device should be ignored by hid class */
+literal|"UQ_KBD_IGNORE"
+block|,
+comment|/* device should be ignored by kbd class */
+literal|"UQ_MS_BAD_CLASS"
+block|,
+comment|/* doesn't identify properly */
+literal|"UQ_MS_LEADING_BYTE"
+block|,
+comment|/* mouse sends an unknown leading byte */
+literal|"UQ_MS_REVZ"
+block|,
+comment|/* mouse has Z-axis reversed */
+literal|"UQ_NO_STRINGS"
+block|,
+comment|/* string descriptors are broken */
+literal|"UQ_OPEN_CLEARSTALL"
+block|,
+comment|/* device needs clear endpoint stall */
+literal|"UQ_POWER_CLAIM"
+block|,
+comment|/* hub lies about power status */
+literal|"UQ_SPUR_BUT_UP"
+block|,
+comment|/* spurious mouse button up events */
+literal|"UQ_SWAP_UNICODE"
+block|,
+comment|/* has some Unicode strings swapped */
+literal|"UQ_CFG_INDEX_1"
+block|,
+comment|/* select configuration index 1 by default */
+literal|"UQ_CFG_INDEX_2"
+block|,
+comment|/* select configuration index 2 by default */
+literal|"UQ_CFG_INDEX_3"
+block|,
+comment|/* select configuration index 3 by default */
+literal|"UQ_CFG_INDEX_4"
+block|,
+comment|/* select configuration index 4 by default */
+literal|"UQ_CFG_INDEX_0"
+block|,
+comment|/* select configuration index 0 by default */
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_quirkstr  *  * This function converts an USB quirk code into a string.  *------------------------------------------------------------------------*/
@@ -888,7 +966,7 @@ operator|<
 name|USB_QUIRK_MAX
 operator|)
 condition|?
-name|USB_QUIRK
+name|usb_quirk_str
 index|[
 name|quirk
 index|]

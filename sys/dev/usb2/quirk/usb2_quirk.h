@@ -26,6 +26,7 @@ end_comment
 begin_enum
 enum|enum
 block|{
+comment|/* keep in sync with usb_quirk_str table */
 name|UQ_NONE
 block|,
 name|UQ_AUDIO_SWAP_LR
