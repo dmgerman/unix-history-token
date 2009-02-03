@@ -868,78 +868,150 @@ name|USB_QUIRK_MAX
 index|]
 init|=
 block|{
+index|[
+name|UQ_NONE
+index|]
+operator|=
 literal|"UQ_NONE"
 block|,
+index|[
+name|UQ_AUDIO_SWAP_LR
+index|]
+operator|=
 literal|"UQ_AUDIO_SWAP_LR"
 block|,
-comment|/* left and right sound channels are swapped */
+index|[
+name|UQ_AU_INP_ASYNC
+index|]
+operator|=
 literal|"UQ_AU_INP_ASYNC"
 block|,
-comment|/* input is async despite claim of adaptive */
+index|[
+name|UQ_AU_NO_FRAC
+index|]
+operator|=
 literal|"UQ_AU_NO_FRAC"
 block|,
-comment|/* don't adjust for fractional samples */
+index|[
+name|UQ_AU_NO_XU
+index|]
+operator|=
 literal|"UQ_AU_NO_XU"
 block|,
-comment|/* audio device has broken extension unit */
+index|[
+name|UQ_BAD_ADC
+index|]
+operator|=
 literal|"UQ_BAD_ADC"
 block|,
-comment|/* bad audio spec version number */
+index|[
+name|UQ_BAD_AUDIO
+index|]
+operator|=
 literal|"UQ_BAD_AUDIO"
 block|,
-comment|/* device claims audio class, but isn't */
+index|[
+name|UQ_BROKEN_BIDIR
+index|]
+operator|=
 literal|"UQ_BROKEN_BIDIR"
 block|,
-comment|/* printer has broken bidir mode */
+index|[
+name|UQ_BUS_POWERED
+index|]
+operator|=
 literal|"UQ_BUS_POWERED"
 block|,
-comment|/* device is bus powered, despite claim */
+index|[
+name|UQ_HID_IGNORE
+index|]
+operator|=
 literal|"UQ_HID_IGNORE"
 block|,
-comment|/* device should be ignored by hid class */
+index|[
+name|UQ_KBD_IGNORE
+index|]
+operator|=
 literal|"UQ_KBD_IGNORE"
 block|,
-comment|/* device should be ignored by kbd class */
+index|[
+name|UQ_MS_BAD_CLASS
+index|]
+operator|=
 literal|"UQ_MS_BAD_CLASS"
 block|,
-comment|/* doesn't identify properly */
+index|[
+name|UQ_MS_LEADING_BYTE
+index|]
+operator|=
 literal|"UQ_MS_LEADING_BYTE"
 block|,
-comment|/* mouse sends an unknown leading byte */
+index|[
+name|UQ_MS_REVZ
+index|]
+operator|=
 literal|"UQ_MS_REVZ"
 block|,
-comment|/* mouse has Z-axis reversed */
+index|[
+name|UQ_NO_STRINGS
+index|]
+operator|=
 literal|"UQ_NO_STRINGS"
 block|,
-comment|/* string descriptors are broken */
+index|[
+name|UQ_OPEN_CLEARSTALL
+index|]
+operator|=
 literal|"UQ_OPEN_CLEARSTALL"
 block|,
-comment|/* device needs clear endpoint stall */
+index|[
+name|UQ_POWER_CLAIM
+index|]
+operator|=
 literal|"UQ_POWER_CLAIM"
 block|,
-comment|/* hub lies about power status */
+index|[
+name|UQ_SPUR_BUT_UP
+index|]
+operator|=
 literal|"UQ_SPUR_BUT_UP"
 block|,
-comment|/* spurious mouse button up events */
+index|[
+name|UQ_SWAP_UNICODE
+index|]
+operator|=
 literal|"UQ_SWAP_UNICODE"
 block|,
-comment|/* has some Unicode strings swapped */
+index|[
+name|UQ_CFG_INDEX_1
+index|]
+operator|=
 literal|"UQ_CFG_INDEX_1"
 block|,
-comment|/* select configuration index 1 by default */
+index|[
+name|UQ_CFG_INDEX_2
+index|]
+operator|=
 literal|"UQ_CFG_INDEX_2"
 block|,
-comment|/* select configuration index 2 by default */
+index|[
+name|UQ_CFG_INDEX_3
+index|]
+operator|=
 literal|"UQ_CFG_INDEX_3"
 block|,
-comment|/* select configuration index 3 by default */
+index|[
+name|UQ_CFG_INDEX_4
+index|]
+operator|=
 literal|"UQ_CFG_INDEX_4"
 block|,
-comment|/* select configuration index 4 by default */
+index|[
+name|UQ_CFG_INDEX_0
+index|]
+operator|=
 literal|"UQ_CFG_INDEX_0"
-block|,
-comment|/* select configuration index 0 by default */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
