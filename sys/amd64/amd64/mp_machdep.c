@@ -360,6 +360,13 @@ name|doublefault_stack
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+modifier|*
+name|nmi_stack
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Hotwire a 0->4MB V==P mapping */
 end_comment
@@ -1714,6 +1721,11 @@ name|pcpu
 modifier|*
 name|pc
 decl_stmt|;
+name|struct
+name|nmi_pcpu
+modifier|*
+name|np
+decl_stmt|;
 name|u_int64_t
 name|msr
 decl_stmt|,
@@ -1784,6 +1796,36 @@ name|doublefault_stack
 index|[
 name|PAGE_SIZE
 index|]
+expr_stmt|;
+comment|/* The NMI stack runs on IST2. */
+name|np
+operator|=
+operator|(
+operator|(
+expr|struct
+name|nmi_pcpu
+operator|*
+operator|)
+operator|&
+name|nmi_stack
+index|[
+name|PAGE_SIZE
+index|]
+operator|)
+operator|-
+literal|1
+expr_stmt|;
+name|common_tss
+index|[
+name|cpu
+index|]
+operator|.
+name|tss_ist2
+operator|=
+operator|(
+name|long
+operator|)
+name|np
 expr_stmt|;
 comment|/* Prepare private GDT */
 name|gdt_segs
@@ -1985,6 +2027,16 @@ name|cpu
 operator|+
 name|GUGS32_SEL
 index|]
+expr_stmt|;
+comment|/* Save the per-cpu pointer for use by the NMI handler. */
+name|np
+operator|->
+name|np_pcpu
+operator|=
+operator|(
+name|register_t
+operator|)
+name|pc
 expr_stmt|;
 name|wrmsr
 argument_list|(
@@ -3053,6 +3105,19 @@ name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 name|doublefault_stack
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|kmem_alloc
+argument_list|(
+name|kernel_map
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+name|nmi_stack
 operator|=
 operator|(
 name|char
