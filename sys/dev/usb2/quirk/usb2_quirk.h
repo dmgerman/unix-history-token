@@ -23,72 +23,84 @@ begin_comment
 comment|/* NOTE: UQ_NONE is not a valid quirk */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|USB_QUIRK
-parameter_list|(
-name|m
-parameter_list|,
-name|n
-parameter_list|)
-define|\
-value|m(n, UQ_NONE)						\
+begin_enum
+enum|enum
+block|{
+name|UQ_NONE
+block|,
+name|UQ_AUDIO_SWAP_LR
+block|,
 comment|/* left and right sound channels are swapped */
-value|\   m(n, UQ_AUDIO_SWAP_LR)				\
+name|UQ_AU_INP_ASYNC
+block|,
 comment|/* input is async despite claim of adaptive */
-value|\   m(n, UQ_AU_INP_ASYNC)					\
+name|UQ_AU_NO_FRAC
+block|,
 comment|/* don't adjust for fractional samples */
-value|\   m(n, UQ_AU_NO_FRAC)					\
+name|UQ_AU_NO_XU
+block|,
 comment|/* audio device has broken extension unit */
-value|\   m(n, UQ_AU_NO_XU)					\
+name|UQ_BAD_ADC
+block|,
 comment|/* bad audio spec version number */
-value|\   m(n, UQ_BAD_ADC)					\
+name|UQ_BAD_AUDIO
+block|,
 comment|/* device claims audio class, but isn't */
-value|\   m(n, UQ_BAD_AUDIO)					\
+name|UQ_BROKEN_BIDIR
+block|,
 comment|/* printer has broken bidir mode */
-value|\   m(n, UQ_BROKEN_BIDIR)					\
+name|UQ_BUS_POWERED
+block|,
 comment|/* device is bus powered, despite claim */
-value|\   m(n, UQ_BUS_POWERED)					\
+name|UQ_HID_IGNORE
+block|,
 comment|/* device should be ignored by hid class */
-value|\   m(n, UQ_HID_IGNORE)					\
+name|UQ_KBD_IGNORE
+block|,
 comment|/* device should be ignored by kbd class */
-value|\   m(n, UQ_KBD_IGNORE)					\
+name|UQ_MS_BAD_CLASS
+block|,
 comment|/* doesn't identify properly */
-value|\   m(n, UQ_MS_BAD_CLASS)					\
+name|UQ_MS_LEADING_BYTE
+block|,
 comment|/* mouse sends an unknown leading byte */
-value|\   m(n, UQ_MS_LEADING_BYTE)				\
+name|UQ_MS_REVZ
+block|,
 comment|/* mouse has Z-axis reversed */
-value|\   m(n, UQ_MS_REVZ)					\
+name|UQ_NO_STRINGS
+block|,
 comment|/* string descriptors are broken */
-value|\   m(n, UQ_NO_STRINGS)					\
+name|UQ_OPEN_CLEARSTALL
+block|,
 comment|/* device needs clear endpoint stall */
-value|\   m(n, UQ_OPEN_CLEARSTALL)				\
+name|UQ_POWER_CLAIM
+block|,
 comment|/* hub lies about power status */
-value|\   m(n, UQ_POWER_CLAIM)					\
+name|UQ_SPUR_BUT_UP
+block|,
 comment|/* spurious mouse button up events */
-value|\   m(n, UQ_SPUR_BUT_UP)					\
+name|UQ_SWAP_UNICODE
+block|,
 comment|/* has some Unicode strings swapped */
-value|\   m(n, UQ_SWAP_UNICODE)					\
+name|UQ_CFG_INDEX_1
+block|,
 comment|/* select configuration index 1 by default */
-value|\   m(n, UQ_CFG_INDEX_1)					\
+name|UQ_CFG_INDEX_2
+block|,
 comment|/* select configuration index 2 by default */
-value|\   m(n, UQ_CFG_INDEX_2)					\
+name|UQ_CFG_INDEX_3
+block|,
 comment|/* select configuration index 3 by default */
-value|\   m(n, UQ_CFG_INDEX_3)					\
+name|UQ_CFG_INDEX_4
+block|,
 comment|/* select configuration index 4 by default */
-value|\   m(n, UQ_CFG_INDEX_4)					\
+name|UQ_CFG_INDEX_0
+block|,
 comment|/* select configuration index 0 by default */
-value|\   m(n, UQ_CFG_INDEX_0)
-end_define
-
-begin_expr_stmt
-name|USB_MAKE_ENUM
-argument_list|(
-name|USB_QUIRK
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+name|USB_QUIRK_MAX
+block|}
+enum|;
+end_enum
 
 begin_endif
 endif|#

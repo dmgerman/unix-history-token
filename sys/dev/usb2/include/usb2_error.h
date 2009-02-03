@@ -19,22 +19,102 @@ directive|define
 name|_USB2_ERROR_H_
 end_define
 
-begin_comment
-comment|/*  * The "USB_STATUS" macro defines all the USB error codes.  * NOTE: "USB_ERR_NORMAL_COMPLETION" is not an error code.  * NOTE: "USB_ERR_STARTING" is not an error code.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_ERR
-parameter_list|(
-name|m
-parameter_list|,
-name|n
-parameter_list|)
-define|\
-value|m(n, USB_ERR_NORMAL_COMPLETION)\ m(n, USB_ERR_PENDING_REQUESTS)\ m(n, USB_ERR_NOT_STARTED)\ m(n, USB_ERR_INVAL)\ m(n, USB_ERR_NOMEM)\ m(n, USB_ERR_CANCELLED)\ m(n, USB_ERR_BAD_ADDRESS)\ m(n, USB_ERR_BAD_BUFSIZE)\ m(n, USB_ERR_BAD_FLAG)\ m(n, USB_ERR_NO_CALLBACK)\ m(n, USB_ERR_IN_USE)\ m(n, USB_ERR_NO_ADDR)\ m(n, USB_ERR_NO_PIPE)\ m(n, USB_ERR_ZERO_NFRAMES)\ m(n, USB_ERR_ZERO_MAXP)\ m(n, USB_ERR_SET_ADDR_FAILED)\ m(n, USB_ERR_NO_POWER)\ m(n, USB_ERR_TOO_DEEP)\ m(n, USB_ERR_IOERROR)\ m(n, USB_ERR_NOT_CONFIGURED)\ m(n, USB_ERR_TIMEOUT)\ m(n, USB_ERR_SHORT_XFER)\ m(n, USB_ERR_STALLED)\ m(n, USB_ERR_INTERRUPTED)\ m(n, USB_ERR_DMA_LOAD_FAILED)\ m(n, USB_ERR_BAD_CONTEXT)\ m(n, USB_ERR_NO_ROOT_HUB)\ m(n, USB_ERR_NO_INTR_THREAD)\ m(n, USB_ERR_NOT_LOCKED)\  USB_MAKE_ENUM(USB_ERR);
-end_define
+begin_enum
+enum|enum
+block|{
+comment|/* keep in sync with usb_errstr_table */
+name|USB_ERR_NORMAL_COMPLETION
+init|=
+literal|0
+block|,
+name|USB_ERR_PENDING_REQUESTS
+block|,
+comment|/* 1 */
+name|USB_ERR_NOT_STARTED
+block|,
+comment|/* 2 */
+name|USB_ERR_INVAL
+block|,
+comment|/* 3 */
+name|USB_ERR_NOMEM
+block|,
+comment|/* 4 */
+name|USB_ERR_CANCELLED
+block|,
+comment|/* 5 */
+name|USB_ERR_BAD_ADDRESS
+block|,
+comment|/* 6 */
+name|USB_ERR_BAD_BUFSIZE
+block|,
+comment|/* 7 */
+name|USB_ERR_BAD_FLAG
+block|,
+comment|/* 8 */
+name|USB_ERR_NO_CALLBACK
+block|,
+comment|/* 9 */
+name|USB_ERR_IN_USE
+block|,
+comment|/* 10 */
+name|USB_ERR_NO_ADDR
+block|,
+comment|/* 11 */
+name|USB_ERR_NO_PIPE
+block|,
+comment|/* 12 */
+name|USB_ERR_ZERO_NFRAMES
+block|,
+comment|/* 13 */
+name|USB_ERR_ZERO_MAXP
+block|,
+comment|/* 14 */
+name|USB_ERR_SET_ADDR_FAILED
+block|,
+comment|/* 15 */
+name|USB_ERR_NO_POWER
+block|,
+comment|/* 16 */
+name|USB_ERR_TOO_DEEP
+block|,
+comment|/* 17 */
+name|USB_ERR_IOERROR
+block|,
+comment|/* 18 */
+name|USB_ERR_NOT_CONFIGURED
+block|,
+comment|/* 19 */
+name|USB_ERR_TIMEOUT
+block|,
+comment|/* 20 */
+name|USB_ERR_SHORT_XFER
+block|,
+comment|/* 21 */
+name|USB_ERR_STALLED
+block|,
+comment|/* 22 */
+name|USB_ERR_INTERRUPTED
+block|,
+comment|/* 23 */
+name|USB_ERR_DMA_LOAD_FAILED
+block|,
+comment|/* 24 */
+name|USB_ERR_BAD_CONTEXT
+block|,
+comment|/* 25 */
+name|USB_ERR_NO_ROOT_HUB
+block|,
+comment|/* 26 */
+name|USB_ERR_NO_INTR_THREAD
+block|,
+comment|/* 27 */
+name|USB_ERR_NOT_LOCKED
+block|,
+comment|/* 28 */
+name|USB_ERR_MAX
+block|}
+enum|;
+end_enum
 
 begin_endif
 endif|#

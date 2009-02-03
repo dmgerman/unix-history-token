@@ -19,62 +19,69 @@ directive|define
 name|_USB2_REVISION_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<dev/usb2/include/usb2_mfunc.h>
-end_include
-
 begin_comment
 comment|/*  * The "USB_SPEED" macro defines all the supported USB speeds.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|USB_SPEED
-parameter_list|(
-name|m
-parameter_list|,
-name|n
-parameter_list|)
-define|\
-value|m(n, USB_SPEED_VARIABLE)\ m(n, USB_SPEED_LOW)\ m(n, USB_SPEED_FULL)\ m(n, USB_SPEED_HIGH)\ m(n, USB_SPEED_SUPER)\  USB_MAKE_ENUM(USB_SPEED);
-end_define
+begin_enum
+enum|enum
+block|{
+name|USB_SPEED_VARIABLE
+block|,
+name|USB_SPEED_LOW
+block|,
+name|USB_SPEED_FULL
+block|,
+name|USB_SPEED_HIGH
+block|,
+name|USB_SPEED_SUPER
+block|,
+name|USB_SPEED_MAX
+block|}
+enum|;
+end_enum
 
 begin_comment
 comment|/*  * The "USB_REV" macro defines all the supported USB revisions.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|USB_REV
-parameter_list|(
-name|m
-parameter_list|,
-name|n
-parameter_list|)
-define|\
-value|m(n, USB_REV_UNKNOWN)\ m(n, USB_REV_PRE_1_0)\ m(n, USB_REV_1_0)\ m(n, USB_REV_1_1)\ m(n, USB_REV_2_0)\ m(n, USB_REV_2_5)\ m(n, USB_REV_3_0)\  USB_MAKE_ENUM(USB_REV);
-end_define
+begin_enum
+enum|enum
+block|{
+name|USB_REV_UNKNOWN
+block|,
+name|USB_REV_PRE_1_0
+block|,
+name|USB_REV_1_0
+block|,
+name|USB_REV_1_1
+block|,
+name|USB_REV_2_0
+block|,
+name|USB_REV_2_5
+block|,
+name|USB_REV_3_0
+block|,
+name|USB_REV_MAX
+block|}
+enum|;
+end_enum
 
 begin_comment
 comment|/*  * The "USB_MODE" macro defines all the supported USB modes.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|USB_MODE
-parameter_list|(
-name|m
-parameter_list|,
-name|n
-parameter_list|)
-define|\
-value|m(n, USB_MODE_HOST)\ m(n, USB_MODE_DEVICE)\  USB_MAKE_ENUM(USB_MODE);
-end_define
+begin_enum
+enum|enum
+block|{
+name|USB_MODE_HOST
+block|,
+name|USB_MODE_DEVICE
+block|,
+name|USB_MODE_MAX
+block|}
+enum|;
+end_enum
 
 begin_endif
 endif|#
