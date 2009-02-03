@@ -4546,6 +4546,8 @@ block|{
 literal|1
 block|,
 literal|0
+operator||
+literal|4
 block|,
 name|GSEL
 argument_list|(
@@ -4569,6 +4571,8 @@ block|{
 literal|3
 block|,
 literal|3
+operator||
+literal|4
 block|,
 name|GSEL
 argument_list|(
@@ -4662,6 +4666,8 @@ block|{
 literal|7
 block|,
 literal|0
+operator||
+literal|4
 block|,
 name|GSEL
 argument_list|(
@@ -4801,6 +4807,8 @@ block|{
 literal|14
 block|,
 literal|0
+operator||
+literal|4
 block|,
 name|GSEL
 argument_list|(
