@@ -198,17 +198,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|fwohci_filt
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|fwohci_init
 parameter_list|(
