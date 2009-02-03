@@ -668,12 +668,12 @@ comment|/* direct/indirect 						    * descendant count */
 name|int16_t
 name|w_ddb_level
 decl_stmt|;
-name|int
+name|unsigned
 name|w_displayed
 range|:
 literal|1
 decl_stmt|;
-name|int
+name|unsigned
 name|w_reversed
 range|:
 literal|1
@@ -1602,7 +1602,7 @@ name|witness
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|"Witness Locking"
 argument_list|)
