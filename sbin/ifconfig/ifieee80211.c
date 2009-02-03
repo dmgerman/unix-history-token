@@ -5184,7 +5184,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"channel %u out of range, max %zu"
+literal|"channel %u out of range, max %u"
 argument_list|,
 name|first
 argument_list|,
@@ -5215,7 +5215,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"channel %u out of range, max %zu"
+literal|"channel %u out of range, max %u"
 argument_list|,
 name|first
 argument_list|,
@@ -5233,7 +5233,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"channel %u out of range, max %zu"
+literal|"channel %u out of range, max %u"
 argument_list|,
 name|last
 argument_list|,
