@@ -24,6 +24,36 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socketvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/sctp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/sctp_os.h>
 end_include
 
@@ -33,11 +63,21 @@ directive|include
 file|<netinet/sctp_crc32.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SCTP_USE_ADLER32
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<netinet/sctp_pcb.h>
+end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|SCTP_WITH_NO_CSUM
+argument_list|)
+end_if
 
 begin_comment
 comment|/**  *  * Routine Description:  *  * Computes the CRC32c checksum for the specified buffer using the slicing by 8  * algorithm over 64 bit quantities.  *  * Arguments:  *  *		p_running_crc - pointer to the initial or final remainder value  *				used in CRC computations. It should be set to  *				non-NULL if the mode argument is equal to CONT or END  *		p_buf - the packet buffer where crc computations are being performed  *		length - the length of p_buf in bytes  *		init_bytes - the number of initial bytes that need to be procesed before  *					 aligning p_buf to multiples of 4 bytes  *		mode - can be any of the following: BEGIN, CONT, END, BODY, ALIGN  *  * Return value:  *  *		The computed CRC32c value  */
@@ -48,7 +88,7 @@ comment|/*  * Copyright (c) 2004-2006 Intel Corporation - All Rights Reserved  *
 end_comment
 
 begin_comment
-comment|/*  * The following CRC lookup table was generated automagically using the  * following model parameters:  *  * Generator Polynomial = ................. 0x1EDC6F41 Generator Polynomial  * Length = .......... 32 bits Reflected Bits = ....................... TRUE  * Table Generation Offset = .............. 32 bits Number of Slices =  * ..................... 8 slices Slice Lengths = ........................ 8  * 8 8 8 8 8 8 8 Directory Name = ....................... .\ File Name =  * ............................ 8x256_tables.c  */
+comment|/*  * The following CRC lookup table was generated automagically using the  * following model parameters:  *  * Generator Polynomial = ................. 0x1EDC6F41  * Generator Polynomial Length = .......... 32 bits  * Reflected Bits = ....................... TRUE  * Table Generation Offset = .............. 32 bits  * Number of Slices = ..................... 8 slices  * Slice Lengths = ........................ 8 8 8 8 8 8 8 8  * Directory Name = ....................... .\  * File Name = ............................ 8x256_tables.c  */
 end_comment
 
 begin_decl_stmt
@@ -579,7 +619,7 @@ comment|/*  * end of the CRC lookup table crc_tableil8_o32  */
 end_comment
 
 begin_comment
-comment|/*  * The following CRC lookup table was generated automagically using the  * following model parameters:  *  * Generator Polynomial = ................. 0x1EDC6F41 Generator Polynomial  * Length = .......... 32 bits Reflected Bits = ....................... TRUE  * Table Generation Offset = .............. 32 bits Number of Slices =  * ..................... 8 slices Slice Lengths = ........................ 8  * 8 8 8 8 8 8 8 Directory Name = ....................... .\ File Name =  * ............................ 8x256_tables.c  */
+comment|/*  * The following CRC lookup table was generated automagically using the  * following model parameters:  *  * Generator Polynomial = ................. 0x1EDC6F41  * Generator Polynomial Length = .......... 32 bits  * Reflected Bits = ....................... TRUE  * Table Generation Offset = .............. 32 bits  * Number of Slices = ..................... 8 slices  * Slice Lengths = ........................ 8 8 8 8 8 8 8 8  * Directory Name = ....................... .\  * File Name = ............................ 8x256_tables.c  */
 end_comment
 
 begin_decl_stmt
@@ -1110,7 +1150,7 @@ comment|/*  * end of the CRC lookup table crc_tableil8_o40  */
 end_comment
 
 begin_comment
-comment|/*  * The following CRC lookup table was generated automagically using the  * following model parameters:  *  * Generator Polynomial = ................. 0x1EDC6F41 Generator Polynomial  * Length = .......... 32 bits Reflected Bits = ....................... TRUE  * Table Generation Offset = .............. 32 bits Number of Slices =  * ..................... 8 slices Slice Lengths = ........................ 8  * 8 8 8 8 8 8 8 Directory Name = ....................... .\ File Name =  * ............................ 8x256_tables.c  */
+comment|/*  * The following CRC lookup table was generated automagically using the  * following model parameters:  *  * Generator Polynomial = ................. 0x1EDC6F41  * Generator Polynomial Length = .......... 32 bits  * Reflected Bits = ....................... TRUE  * Table Generation Offset = .............. 32 bits  * Number of Slices = ..................... 8 slices  * Slice Lengths = ........................ 8 8 8 8 8 8 8 8  * Directory Name = ....................... .\  * File Name = ............................ 8x256_tables.c  */
 end_comment
 
 begin_decl_stmt
@@ -1641,7 +1681,7 @@ comment|/*  * end of the CRC lookup table crc_tableil8_o48  */
 end_comment
 
 begin_comment
-comment|/*  * The following CRC lookup table was generated automagically using the  * following model parameters:  *  * Generator Polynomial = ................. 0x1EDC6F41 Generator Polynomial  * Length = .......... 32 bits Reflected Bits = ....................... TRUE  * Table Generation Offset = .............. 32 bits Number of Slices =  * ..................... 8 slices Slice Lengths = ........................ 8  * 8 8 8 8 8 8 8 Directory Name = ....................... .\ File Name =  * ............................ 8x256_tables.c  */
+comment|/*  * The following CRC lookup table was generated automagically using the  * following model parameters:  *  * Generator Polynomial = ................. 0x1EDC6F41  * Generator Polynomial Length = .......... 32 bits  * Reflected Bits = ....................... TRUE  * Table Generation Offset = .............. 32 bits  * Number of Slices = ..................... 8 slices  * Slice Lengths = ........................ 8 8 8 8 8 8 8 8  * Directory Name = ....................... .\  * File Name = ............................ 8x256_tables.c  */
 end_comment
 
 begin_decl_stmt
@@ -2172,7 +2212,7 @@ comment|/*  * end of the CRC lookup table crc_tableil8_o56  */
 end_comment
 
 begin_comment
-comment|/*  * The following CRC lookup table was generated automagically using the  * following model parameters:  *  * Generator Polynomial = ................. 0x1EDC6F41 Generator Polynomial  * Length = .......... 32 bits Reflected Bits = ....................... TRUE  * Table Generation Offset = .............. 32 bits Number of Slices =  * ..................... 8 slices Slice Lengths = ........................ 8  * 8 8 8 8 8 8 8 Directory Name = ....................... .\ File Name =  * ............................ 8x256_tables.c  */
+comment|/*  * The following CRC lookup table was generated automagically using the  * following model parameters:  *  * Generator Polynomial = ................. 0x1EDC6F41  * Generator Polynomial Length = .......... 32 bits  * Reflected Bits = ....................... TRUE  * Table Generation Offset = .............. 32 bits  * Number of Slices = ..................... 8 slices  * Slice Lengths = ........................ 8 8 8 8 8 8 8 8  * Directory Name = ....................... .\  * File Name = ............................ 8x256_tables.c  */
 end_comment
 
 begin_decl_stmt
@@ -2703,7 +2743,7 @@ comment|/*  * end of the CRC lookup table crc_tableil8_o64  */
 end_comment
 
 begin_comment
-comment|/*  * The following CRC lookup table was generated automagically using the  * following model parameters:  *  * Generator Polynomial = ................. 0x1EDC6F41 Generator Polynomial  * Length = .......... 32 bits Reflected Bits = ....................... TRUE  * Table Generation Offset = .............. 32 bits Number of Slices =  * ..................... 8 slices Slice Lengths = ........................ 8  * 8 8 8 8 8 8 8 Directory Name = ....................... .\ File Name =  * ............................ 8x256_tables.c  */
+comment|/*  * The following CRC lookup table was generated automagically using the  * following model parameters:  *  * Generator Polynomial = ................. 0x1EDC6F41  * Generator Polynomial Length = .......... 32 bits  * Reflected Bits = ....................... TRUE  * Table Generation Offset = .............. 32 bits  * Number of Slices = ..................... 8 slices  * Slice Lengths = ........................ 8 8 8 8 8 8 8 8  * Directory Name = ....................... .\  * File Name = ............................ 8x256_tables.c  */
 end_comment
 
 begin_decl_stmt
@@ -3234,7 +3274,7 @@ comment|/*  * end of the CRC lookup table crc_tableil8_o72  */
 end_comment
 
 begin_comment
-comment|/*  * The following CRC lookup table was generated automagically using the  * following model parameters:  *  * Generator Polynomial = ................. 0x1EDC6F41 Generator Polynomial  * Length = .......... 32 bits Reflected Bits = ....................... TRUE  * Table Generation Offset = .............. 32 bits Number of Slices =  * ..................... 8 slices Slice Lengths = ........................ 8  * 8 8 8 8 8 8 8 Directory Name = ....................... .\ File Name =  * ............................ 8x256_tables.c  */
+comment|/*  * The following CRC lookup table was generated automagically using the  * following model parameters:  *  * Generator Polynomial = ................. 0x1EDC6F41  * Generator Polynomial Length = .......... 32 bits  * Reflected Bits = ....................... TRUE  * Table Generation Offset = .............. 32 bits  * Number of Slices = ..................... 8 slices  * Slice Lengths = ........................ 8 8 8 8 8 8 8 8  * Directory Name = ....................... .\  * File Name = ............................ 8x256_tables.c  */
 end_comment
 
 begin_decl_stmt
@@ -3765,7 +3805,7 @@ comment|/*  * end of the CRC lookup table crc_tableil8_o80  */
 end_comment
 
 begin_comment
-comment|/*  * The following CRC lookup table was generated automagically using the  * following model parameters:  *  * Generator Polynomial = ................. 0x1EDC6F41 Generator Polynomial  * Length = .......... 32 bits Reflected Bits = ....................... TRUE  * Table Generation Offset = .............. 32 bits Number of Slices =  * ..................... 8 slices Slice Lengths = ........................ 8  * 8 8 8 8 8 8 8 Directory Name = ....................... .\ File Name =  * ............................ 8x256_tables.c  */
+comment|/*  * The following CRC lookup table was generated automagically using the  * following model parameters:  *  * Generator Polynomial = ................. 0x1EDC6F41  * Generator Polynomial Length = .......... 32 bits  * Reflected Bits = ....................... TRUE  * Table Generation Offset = .............. 32 bits  * Number of Slices = ..................... 8 slices  * Slice Lengths = ........................ 8 8 8 8 8 8 8 8  * Directory Name = ....................... .\  * File Name = ............................ 8x256_tables.c  */
 end_comment
 
 begin_decl_stmt
@@ -4673,6 +4713,7 @@ comment|/**  *  * Routine Description:  *  * warms the tables  *  * Arguments:  
 end_comment
 
 begin_function
+specifier|static
 name|uint32_t
 name|update_crc32
 parameter_list|(
@@ -5275,6 +5316,7 @@ value|(c=(c>>8)^sctp_crc_c[(c^(d))&0xFF])
 end_define
 
 begin_function
+specifier|static
 name|uint32_t
 name|old_update_crc32
 parameter_list|(
@@ -5329,8 +5371,9 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|uint32_t
-name|sctp_csum_finalize
+name|sctp_finalize_crc32
 parameter_list|(
 name|uint32_t
 name|crc32c
@@ -5448,6 +5491,406 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !defined(SCTP_WITH_NO_CSUM) */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SCTP_WITH_NO_CSUM
+argument_list|)
+end_if
+
+begin_function
+name|uint32_t
+name|sctp_calculate_cksum
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|uint32_t
+name|offset
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function
+name|uint32_t
+name|sctp_calculate_cksum
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|uint32_t
+name|offset
+parameter_list|)
+block|{
+comment|/* 	 * given a mbuf chain with a packetheader offset by 'offset' 	 * pointing at a sctphdr (with csum set to 0) go through the chain 	 * of SCTP_BUF_NEXT()'s and calculate the SCTP checksum. This also 	 * has a side bonus as it will calculate the total length of the 	 * mbuf chain. Note: if offset is greater than the total mbuf 	 * length, checksum=1, pktlen=0 is returned (ie. no real error code) 	 */
+name|uint32_t
+name|base
+init|=
+literal|0xffffffff
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|at
+decl_stmt|;
+name|at
+operator|=
+name|m
+expr_stmt|;
+comment|/* find the correct mbuf and offset into mbuf */
+while|while
+condition|(
+operator|(
+name|at
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|offset
+operator|>
+operator|(
+name|uint32_t
+operator|)
+name|SCTP_BUF_LEN
+argument_list|(
+name|at
+argument_list|)
+operator|)
+condition|)
+block|{
+name|offset
+operator|-=
+name|SCTP_BUF_LEN
+argument_list|(
+name|at
+argument_list|)
+expr_stmt|;
+comment|/* update remaining offset 						 * left */
+name|at
+operator|=
+name|SCTP_BUF_NEXT
+argument_list|(
+name|at
+argument_list|)
+expr_stmt|;
+block|}
+while|while
+condition|(
+name|at
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|SCTP_BUF_LEN
+argument_list|(
+name|at
+argument_list|)
+operator|-
+name|offset
+operator|)
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|SCTP_BUF_LEN
+argument_list|(
+name|at
+argument_list|)
+operator|-
+name|offset
+operator|)
+operator|<
+literal|4
+condition|)
+block|{
+comment|/* Use old method if less than 4 bytes */
+name|base
+operator|=
+name|old_update_crc32
+argument_list|(
+name|base
+argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+operator|(
+name|SCTP_BUF_AT
+argument_list|(
+name|at
+argument_list|,
+name|offset
+argument_list|)
+operator|)
+argument_list|,
+call|(
+name|unsigned
+name|int
+call|)
+argument_list|(
+name|SCTP_BUF_LEN
+argument_list|(
+name|at
+argument_list|)
+operator|-
+name|offset
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|base
+operator|=
+name|update_crc32
+argument_list|(
+name|base
+argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+operator|(
+name|SCTP_BUF_AT
+argument_list|(
+name|at
+argument_list|,
+name|offset
+argument_list|)
+operator|)
+argument_list|,
+call|(
+name|unsigned
+name|int
+call|)
+argument_list|(
+name|SCTP_BUF_LEN
+argument_list|(
+name|at
+argument_list|)
+operator|-
+name|offset
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* we only offset once into the first mbuf */
+block|}
+if|if
+condition|(
+name|offset
+condition|)
+block|{
+if|if
+condition|(
+name|offset
+operator|<
+operator|(
+name|uint32_t
+operator|)
+name|SCTP_BUF_LEN
+argument_list|(
+name|at
+argument_list|)
+condition|)
+name|offset
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|offset
+operator|-=
+name|SCTP_BUF_LEN
+argument_list|(
+name|at
+argument_list|)
+expr_stmt|;
+block|}
+name|at
+operator|=
+name|SCTP_BUF_NEXT
+argument_list|(
+name|at
+argument_list|)
+expr_stmt|;
+block|}
+name|base
+operator|=
+name|sctp_finalize_crc32
+argument_list|(
+name|base
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|base
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+name|void
+name|sctp_delayed_cksum
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|)
+block|{
+name|struct
+name|ip
+modifier|*
+name|ip
+decl_stmt|;
+name|uint32_t
+name|checksum
+decl_stmt|;
+name|uint32_t
+name|offset
+decl_stmt|;
+name|ip
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip
+operator|*
+argument_list|)
+expr_stmt|;
+name|offset
+operator|=
+name|ip
+operator|->
+name|ip_hl
+operator|<<
+literal|2
+expr_stmt|;
+name|checksum
+operator|=
+name|sctp_calculate_cksum
+argument_list|(
+name|m
+argument_list|,
+name|offset
+argument_list|)
+expr_stmt|;
+name|SCTP_STAT_DECR
+argument_list|(
+name|sctps_sendhwcrc
+argument_list|)
+expr_stmt|;
+name|SCTP_STAT_INCR
+argument_list|(
+name|sctps_sendswcrc
+argument_list|)
+expr_stmt|;
+name|offset
+operator|+=
+name|offsetof
+argument_list|(
+expr|struct
+name|sctphdr
+argument_list|,
+name|checksum
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|offset
+operator|+
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
+operator|>
+call|(
+name|uint32_t
+call|)
+argument_list|(
+name|m
+operator|->
+name|m_len
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"delayed m_pullup, m->len: %d  off: %d  p: %d\n"
+argument_list|,
+operator|(
+name|uint32_t
+operator|)
+name|m
+operator|->
+name|m_len
+argument_list|,
+name|offset
+argument_list|,
+name|ip
+operator|->
+name|ip_p
+argument_list|)
+expr_stmt|;
+comment|/* 		 * XXX this shouldn't happen, but if it does, the correct 		 * behavior may be to insert the checksum in the appropriate 		 * next mbuf in the chain. 		 */
+return|return;
+block|}
+operator|*
+operator|(
+name|uint32_t
+operator|*
+operator|)
+operator|(
+name|m
+operator|->
+name|m_data
+operator|+
+name|offset
+operator|)
+operator|=
+name|checksum
+expr_stmt|;
+block|}
+end_function
 
 end_unit
 

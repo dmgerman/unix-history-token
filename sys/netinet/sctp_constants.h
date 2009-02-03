@@ -37,11 +37,15 @@ begin_comment
 comment|/* IANA assigned port number for SCTP over UDP encapsulation */
 end_comment
 
+begin_comment
+comment|/* For freebsd we cannot bind the port at  * startup. Otherwise what will happen is  * we really won't be bound. The user must  * put it into the sysctl... or we need  * to build a special timer for this to allow  * us to wait 1 second or so after the system  * comes up.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SCTP_OVER_UDP_TUNNELING_PORT
-value|9899
+value|0
 end_define
 
 begin_comment
@@ -1412,10 +1416,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Minimum number of bytes read by user before we  * condsider doing a rwnd update  */
-end_comment
-
-begin_comment
 comment|/*  * default HMAC for cookies, etc... use one of the AUTH HMAC id's  * SCTP_HMAC is the HMAC_ID to use  * SCTP_SIGNATURE_SIZE is the digest length  */
 end_comment
 
@@ -1439,67 +1439,6 @@ directive|define
 name|SCTP_SIGNATURE_ALOC_SIZE
 value|SCTP_SIGNATURE_SIZE
 end_define
-
-begin_comment
-comment|/* DEFINE HERE WHAT CRC YOU WANT TO USE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_USECRC_RFC2960
-value|1
-end_define
-
-begin_comment
-comment|/* #define SCTP_USECRC_FLETCHER 1 */
-end_comment
-
-begin_comment
-comment|/* #define SCTP_USECRC_SSHCRC32 1 */
-end_comment
-
-begin_comment
-comment|/* #define SCTP_USECRC_FASTCRC32 1 */
-end_comment
-
-begin_comment
-comment|/* #define SCTP_USECRC_CRC32 1 */
-end_comment
-
-begin_comment
-comment|/* #define SCTP_USECRC_TCP32 1 */
-end_comment
-
-begin_comment
-comment|/* #define SCTP_USECRC_CRC16SMAL 1 */
-end_comment
-
-begin_comment
-comment|/* #define SCTP_USECRC_CRC16 1 */
-end_comment
-
-begin_comment
-comment|/* #define SCTP_USECRC_MODADLER 1 */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SCTP_ADLER32_BASE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|SCTP_ADLER32_BASE
-value|65521
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * the SCTP protocol signature this includes the version number encoded in  * the last 4 bits of the signature.  */
@@ -2840,14 +2779,6 @@ value|(((t)> SCTP_TIMER_TYPE_NONE)&& \ 					 ((t)< SCTP_TIMER_TYPE_LAST))
 end_define
 
 begin_comment
-comment|/*  * Number of ticks before the soxwakeup() event that is delayed is sent AFTER  * the accept() call  */
-end_comment
-
-begin_comment
-comment|/*  * Of course we really don't collect stale cookies, being folks of decerning  * taste. However we do count them, if we get too many before the association  * comes up.. we give up. Below is the constant that dictates when we give it  * up...this is a implemenation dependent treatment. In ours we do not ask  * for a extension of time, but just retry this many times...  */
-end_comment
-
-begin_comment
 comment|/* max number of TSN's dup'd that I will hold */
 end_comment
 
@@ -2863,14 +2794,6 @@ comment|/*  * Here we define the types used when setting the retry amounts.  */
 end_comment
 
 begin_comment
-comment|/* constants for type of set */
-end_comment
-
-begin_comment
-comment|/* Maximum TSN's we will summarize in a drop report */
-end_comment
-
-begin_comment
 comment|/* How many drop re-attempts we make on  INIT/COOKIE-ECHO */
 end_comment
 
@@ -2880,14 +2803,6 @@ directive|define
 name|SCTP_RETRY_DROPPED_THRESH
 value|4
 end_define
-
-begin_comment
-comment|/*  * And the max we will keep a history of in the tcb which MUST be lower than  * 256.  */
-end_comment
-
-begin_comment
-comment|/*  * Here we define the default timers and the default number of attemts we  * make for each respective side (send/init).  */
-end_comment
 
 begin_comment
 comment|/*  * Maxmium number of chunks a single association can have on it. Note that  * this is a squishy number since the count can run over this if the user  * sends a large message down .. the fragmented chunks don't count until  * AFTER the message is on queue.. it would be the next send that blocks  * things. This number will get tuned up at boot in the sctp_init and use the  * number of clusters as a base. This way high bandwidth environments will  * not get impacted by the lower bandwidth sending a bunch of 1 byte chunks  */
@@ -3403,7 +3318,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTP_DEBUG_INDATA4
+name|SCTP_DEBUG_CRCOFFLOAD
 value|0x08000000
 end_define
 
@@ -3506,7 +3421,7 @@ value|1500
 end_define
 
 begin_comment
-comment|/* emegency default MTU */
+comment|/* emergency default MTU */
 end_comment
 
 begin_comment
@@ -4501,10 +4416,6 @@ directive|define
 name|SCTP_STACK_VTAG_HASH_SIZE
 value|32
 end_define
-
-begin_comment
-comment|/*  * If we use the per-endpoint model than we do not have a hash table of  * entries but instead have a single head pointer and we must crawl through  * the entire list.  */
-end_comment
 
 begin_comment
 comment|/*  * Number of seconds of time wait for a vtag.  */

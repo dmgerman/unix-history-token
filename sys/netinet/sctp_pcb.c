@@ -11224,6 +11224,23 @@ argument_list|,
 name|sctp_tcblist
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|in_asocid_hash
+condition|)
+block|{
+name|LIST_REMOVE
+argument_list|(
+name|stcb
+argument_list|,
+name|sctp_tcbasocidhash
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Now insert the new_inp into the TCP connected hash */
 name|head
 operator|=
@@ -11277,6 +11294,51 @@ name|sctp_tcblist
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Question, do we even need to worry about the ep-hash since we 	 * only have one connection? Probably not :> so lets get rid of it 	 * and not suck up any kernel memory in that. 	 */
+if|if
+condition|(
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|in_asocid_hash
+condition|)
+block|{
+name|struct
+name|sctpasochead
+modifier|*
+name|lhd
+decl_stmt|;
+name|lhd
+operator|=
+operator|&
+name|new_inp
+operator|->
+name|sctp_asocidhash
+index|[
+name|SCTP_PCBHASH_ASOC
+argument_list|(
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|assoc_id
+argument_list|,
+name|new_inp
+operator|->
+name|hashasocidmark
+argument_list|)
+index|]
+expr_stmt|;
+name|LIST_INSERT_HEAD
+argument_list|(
+name|lhd
+argument_list|,
+name|stcb
+argument_list|,
+name|sctp_tcbasocidhash
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Ok. Let's restart timer. */
 name|TAILQ_FOREACH
 argument_list|(
@@ -21520,6 +21582,8 @@ name|asoc
 operator|->
 name|my_vtag
 argument_list|,
+name|SCTP_TIME_WAIT
+argument_list|,
 name|inp
 operator|->
 name|sctp_lport
@@ -21527,8 +21591,6 @@ argument_list|,
 name|stcb
 operator|->
 name|rport
-argument_list|,
-name|SCTP_TIME_WAIT
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now restop the timers to be sure - this is paranoia at is finest! 	 */
@@ -22193,7 +22255,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*   if(ccnt) {   printf("Freed %d from send_queue\n", ccnt);   ccnt = 0;   } */
+comment|/*   if (ccnt) {   printf("Freed %d from send_queue\n", ccnt);   ccnt = 0;   } */
 comment|/* sent queue SHOULD be empty */
 if|if
 condition|(
@@ -22306,7 +22368,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*   if(ccnt) {   printf("Freed %d from sent_queue\n", ccnt);   ccnt = 0;   } */
+comment|/*   if (ccnt) {   printf("Freed %d from sent_queue\n", ccnt);   ccnt = 0;   } */
 comment|/* control queue MAY not be empty */
 if|if
 condition|(
@@ -22419,7 +22481,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*   if(ccnt) {   printf("Freed %d from ctrl_queue\n", ccnt);   ccnt = 0;   } */
+comment|/*   if (ccnt) {   printf("Freed %d from ctrl_queue\n", ccnt);   ccnt = 0;   } */
 comment|/* ASCONF queue MAY not be empty */
 if|if
 condition|(
@@ -22532,7 +22594,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*   if(ccnt) {   printf("Freed %d from asconf_queue\n", ccnt);   ccnt = 0;   } */
+comment|/*   if (ccnt) {   printf("Freed %d from asconf_queue\n", ccnt);   ccnt = 0;   } */
 if|if
 condition|(
 operator|!
@@ -22644,7 +22706,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*   if(ccnt) {   printf("Freed %d from reasm_queue\n", ccnt);   ccnt = 0;   } */
+comment|/*   if (ccnt) {   printf("Freed %d from reasm_queue\n", ccnt);   ccnt = 0;   } */
 if|if
 condition|(
 name|asoc
@@ -28796,19 +28858,29 @@ operator|+
 sizeof|sizeof
 argument_list|(
 operator|*
-name|chunks
-argument_list|)
-operator|+
-name|num_chunks
-operator|+
-sizeof|sizeof
-argument_list|(
-operator|*
 name|hmacs
 argument_list|)
 operator|+
 name|hmacs_len
 expr_stmt|;
+if|if
+condition|(
+name|chunks
+operator|!=
+name|NULL
+condition|)
+block|{
+name|keylen
+operator|+=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|chunks
+argument_list|)
+operator|+
+name|num_chunks
+expr_stmt|;
+block|}
 name|new_key
 operator|=
 name|sctp_alloc_key
@@ -29443,6 +29515,28 @@ name|i
 index|]
 operator|.
 name|v_tag
+operator|=
+literal|0
+expr_stmt|;
+name|twait_block
+operator|->
+name|vtag_block
+index|[
+name|i
+index|]
+operator|.
+name|lport
+operator|=
+literal|0
+expr_stmt|;
+name|twait_block
+operator|->
+name|vtag_block
+index|[
+name|i
+index|]
+operator|.
+name|rport
 operator|=
 literal|0
 expr_stmt|;

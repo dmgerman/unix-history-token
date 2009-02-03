@@ -369,22 +369,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|uint32_t
-name|sctp_calculate_sum
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|int32_t
-modifier|*
-parameter_list|,
-name|uint32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|sctp_mtu_size_reset
 parameter_list|(

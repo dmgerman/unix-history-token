@@ -705,19 +705,6 @@ begin_comment
 comment|/* then define the macro(s) that hook into the vimage macros */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|800056
-end_if
-
 begin_define
 define|#
 directive|define
@@ -729,28 +716,6 @@ name|__SYMBOL
 parameter_list|)
 value|V_ ## __SYMBOL
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MODULE_GLOBAL
-parameter_list|(
-name|__MODULE
-parameter_list|,
-name|__SYMBOL
-parameter_list|)
-value|(__SYMBOL)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  *  */

@@ -2722,6 +2722,15 @@ name|uint32_t
 name|sctps_recvexpressm
 decl_stmt|;
 comment|/* total fast path multi-part data */
+name|uint32_t
+name|sctps_recvnocrc
+decl_stmt|;
+name|uint32_t
+name|sctps_recvswcrc
+decl_stmt|;
+name|uint32_t
+name|sctps_recvhwcrc
+decl_stmt|;
 comment|/* output statistics: */
 name|uint32_t
 name|sctps_sendpackets
@@ -2763,6 +2772,15 @@ name|uint32_t
 name|sctps_senderrors
 decl_stmt|;
 comment|/* ip_output error counter */
+name|uint32_t
+name|sctps_sendnocrc
+decl_stmt|;
+name|uint32_t
+name|sctps_sendswcrc
+decl_stmt|;
+name|uint32_t
+name|sctps_sendhwcrc
+decl_stmt|;
 comment|/* PCKDROPREP statistics: */
 name|uint32_t
 name|sctps_pdrpfmbox
@@ -3381,6 +3399,10 @@ name|sctp_timeval
 name|discontinuity_time
 decl_stmt|;
 comment|/* sctpAssocEntry 17  */
+name|sctp_assoc_t
+name|assoc_id
+decl_stmt|;
+comment|/* sctpAssocEntry 1   */
 block|}
 struct|;
 end_struct

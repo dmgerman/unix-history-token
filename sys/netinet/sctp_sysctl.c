@@ -2086,6 +2086,16 @@ name|asoc
 argument_list|)
 expr_stmt|;
 comment|/* FIXME */
+comment|/* 7.0 does not support this */
+name|xstcb
+operator|.
+name|assoc_id
+operator|=
+name|sctp_get_associd
+argument_list|(
+name|stcb
+argument_list|)
+expr_stmt|;
 name|xstcb
 operator|.
 name|in_streams
@@ -2881,6 +2891,9 @@ decl_stmt|;
 name|uint32_t
 name|old_sctp_udp_tunneling_port
 decl_stmt|;
+name|SCTP_INP_INFO_WLOCK
+argument_list|()
+expr_stmt|;
 name|old_sctp_udp_tunneling_port
 operator|=
 name|SCTP_BASE_SYSCTL
@@ -2927,6 +2940,24 @@ expr_stmt|;
 if|if
 condition|(
 name|old_sctp_udp_tunneling_port
+operator|==
+name|SCTP_BASE_SYSCTL
+argument_list|(
+name|sctp_udp_tunneling_port
+argument_list|)
+condition|)
+block|{
+name|error
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+if|if
+condition|(
+name|old_sctp_udp_tunneling_port
 condition|)
 block|{
 name|sctp_over_udp_stop
@@ -2957,6 +2988,11 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|out
+label|:
+name|SCTP_INP_INFO_WUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -3816,6 +3852,11 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -3835,7 +3876,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
