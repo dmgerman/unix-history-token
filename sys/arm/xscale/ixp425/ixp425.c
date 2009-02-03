@@ -1436,6 +1436,14 @@ block|,
 name|IXP425_PCI_MEM_VBASE
 block|}
 block|,
+block|{
+name|IXP425_EXP_BUS_CS0_HWBASE
+block|,
+name|IXP425_EXP_BUS_CS0_SIZE
+block|,
+name|IXP425_EXP_BUS_CS0_VBASE
+block|}
+block|,
 comment|/* NB: needed only for uart_cpu_getdev */
 block|{
 name|IXP425_UART0_HWBASE

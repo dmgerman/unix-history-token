@@ -583,6 +583,21 @@ block|,
 name|PTE_NOCACHE
 block|, }
 block|,
+comment|/* CFI Flash on the Expansion Bus */
+block|{
+name|IXP425_EXP_BUS_CS0_VBASE
+block|,
+name|IXP425_EXP_BUS_CS0_HWBASE
+block|,
+name|IXP425_EXP_BUS_CS0_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, }
+block|,
 comment|/* IXP425 PCI Configuration */
 block|{
 name|IXP425_PCI_VBASE
