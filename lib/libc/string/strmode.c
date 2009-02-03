@@ -73,7 +73,8 @@ begin_function
 name|void
 name|strmode
 parameter_list|(
-name|mode_t
+comment|/* mode_t */
+name|int
 name|mode
 parameter_list|,
 name|char

@@ -67,8 +67,7 @@ name|void
 modifier|*
 name|s
 parameter_list|,
-name|unsigned
-name|char
+name|int
 name|c
 parameter_list|,
 name|size_t

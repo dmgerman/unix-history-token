@@ -69,7 +69,6 @@ modifier|*
 name|s
 parameter_list|,
 name|wchar_t
-modifier|*
 name|c
 parameter_list|,
 name|size_t
