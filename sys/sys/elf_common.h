@@ -46,6 +46,35 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * The header for GNU-style hash sections.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|u_int32_t
+name|gh_nbuckets
+decl_stmt|;
+comment|/* Number of hash buckets. */
+name|u_int32_t
+name|gh_symndx
+decl_stmt|;
+comment|/* First visible symbol in .dynsym. */
+name|u_int32_t
+name|gh_maskwords
+decl_stmt|;
+comment|/* #maskwords used in bloom filter. */
+name|u_int32_t
+name|gh_shift2
+decl_stmt|;
+comment|/* Bloom filter shift count. */
+block|}
+name|Elf_GNU_Hash_Header
+typedef|;
+end_typedef
+
+begin_comment
 comment|/* Indexes into the e_ident array.  Keep synced with    http://www.sco.com/developers/gabi/latest/ch4.eheader.html */
 end_comment
 
