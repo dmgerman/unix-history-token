@@ -875,13 +875,6 @@ name|d_postfree_list
 value|__d_giant.postfree_list
 end_define
 
-begin_define
-define|#
-directive|define
-name|NUMCDEVSW
-value|256
-end_define
-
 begin_struct_decl
 struct_decl|struct
 name|module
