@@ -1412,7 +1412,7 @@ name|AH_MARK_PERCAL
 argument_list|,
 name|chan
 operator|->
-name|channel
+name|ic_freq
 argument_list|)
 expr_stmt|;
 operator|*

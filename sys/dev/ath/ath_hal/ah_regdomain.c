@@ -12462,7 +12462,7 @@ name|ah
 argument_list|,
 name|HAL_DEBUG_ANY
 argument_list|,
-literal|"%s: too many channels, max %u\n"
+literal|"%s: too many channels, max %zu\n"
 argument_list|,
 name|__func__
 argument_list|,
