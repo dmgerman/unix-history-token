@@ -3622,22 +3622,6 @@ argument_list|,
 literal|"ttydcd"
 argument_list|)
 expr_stmt|;
-name|ttyinq_init
-argument_list|(
-operator|&
-name|tp
-operator|->
-name|t_inq
-argument_list|)
-expr_stmt|;
-name|ttyoutq_init
-argument_list|(
-operator|&
-name|tp
-operator|->
-name|t_outq
-argument_list|)
-expr_stmt|;
 comment|/* Allow drivers to use a custom mutex to lock the TTY. */
 if|if
 condition|(

@@ -426,14 +426,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-name|ttyoutq_init
-argument_list|(
-operator|&
-name|ss
-operator|->
-name|snp_outq
-argument_list|)
-expr_stmt|;
 name|cv_init
 argument_list|(
 operator|&
