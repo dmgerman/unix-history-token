@@ -99,7 +99,8 @@ name|find
 operator|++
 operator|)
 operator|!=
-literal|0
+literal|L'
+expr|\0'
 condition|)
 block|{
 name|len

@@ -63,13 +63,11 @@ begin_function
 name|size_t
 name|wcslen
 parameter_list|(
-name|s
-parameter_list|)
 specifier|const
 name|wchar_t
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|wchar_t

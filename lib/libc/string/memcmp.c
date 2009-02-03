@@ -65,29 +65,19 @@ begin_function
 name|int
 name|memcmp
 parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|,
-name|n
-parameter_list|)
 specifier|const
 name|void
 modifier|*
 name|s1
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
 name|s2
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 name|size_t
 name|n
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -148,7 +138,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
