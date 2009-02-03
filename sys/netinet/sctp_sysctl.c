@@ -2891,7 +2891,7 @@ decl_stmt|;
 name|uint32_t
 name|old_sctp_udp_tunneling_port
 decl_stmt|;
-name|SCTP_INP_INFO_WLOCK
+name|SCTP_INP_INFO_RLOCK
 argument_list|()
 expr_stmt|;
 name|old_sctp_udp_tunneling_port
@@ -2900,6 +2900,9 @@ name|SCTP_BASE_SYSCTL
 argument_list|(
 name|sctp_udp_tunneling_port
 argument_list|)
+expr_stmt|;
+name|SCTP_INP_INFO_RUNLOCK
+argument_list|()
 expr_stmt|;
 name|error
 operator|=
@@ -2955,6 +2958,9 @@ goto|goto
 name|out
 goto|;
 block|}
+name|SCTP_INP_INFO_WLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|old_sctp_udp_tunneling_port
@@ -2987,12 +2993,12 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-block|}
-name|out
-label|:
 name|SCTP_INP_INFO_WUNLOCK
 argument_list|()
 expr_stmt|;
+block|}
+name|out
+label|:
 return|return
 operator|(
 name|error
