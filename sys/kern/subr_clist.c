@@ -98,7 +98,7 @@ name|cblock
 modifier|*
 name|cfreelist
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -1886,12 +1886,12 @@ name|cblock
 modifier|*
 name|cblockp
 init|=
-literal|0
+name|NULL
 decl_stmt|,
 modifier|*
 name|cbp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 name|s
