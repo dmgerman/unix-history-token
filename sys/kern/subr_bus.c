@@ -3441,15 +3441,13 @@ begin_comment
 comment|/* End of /dev/devctl code */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|device
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|bus_data_devices
 expr_stmt|;
 end_expr_stmt
@@ -3464,6 +3462,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|kobj_method_t
 name|null_methods
 index|[]
@@ -6740,7 +6739,7 @@ name|child
 operator|->
 name|devclass
 operator|!=
-literal|0
+name|NULL
 operator|)
 decl_stmt|;
 name|GIANT_REQUIRED
@@ -7518,7 +7517,7 @@ if|if
 condition|(
 name|name
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -13641,7 +13640,7 @@ literal|"rootbus"
 block|,
 name|root_bus_module_handler
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
