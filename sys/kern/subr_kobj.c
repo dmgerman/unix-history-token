@@ -651,7 +651,7 @@ return|;
 block|}
 block|}
 return|return
-literal|0
+name|NULL
 return|;
 block|}
 end_function
@@ -734,7 +734,7 @@ return|;
 block|}
 block|}
 return|return
-literal|0
+name|NULL
 return|;
 block|}
 end_function
@@ -822,7 +822,7 @@ name|void
 modifier|*
 name|ops
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|KOBJ_ASSERT
 argument_list|(
@@ -883,7 +883,7 @@ name|cls
 operator|->
 name|ops
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 name|KOBJ_UNLOCK
@@ -944,7 +944,7 @@ operator|!
 name|obj
 condition|)
 return|return
-literal|0
+name|NULL
 return|;
 name|kobj_init
 argument_list|(
@@ -1083,7 +1083,7 @@ name|obj
 operator|->
 name|ops
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
