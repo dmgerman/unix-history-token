@@ -924,7 +924,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|static struct sysctl_oid sysctl__##parent##_##name = {		 \&sysctl_##parent##_children, { 0 }, nbr, kind,		 \ 		a1, a2, #name, handler, fmt, 0, __DESCR(descr) };        \ 	DATA_SET(sysctl_set, sysctl__##parent##_##name)
+value|static struct sysctl_oid sysctl__##parent##_##name = {		 \&sysctl_##parent##_children, { NULL }, nbr, kind,	 \ 		a1, a2, #name, handler, fmt, 0, __DESCR(descr) };        \ 	DATA_SET(sysctl_set, sysctl__##parent##_##name)
 end_define
 
 begin_ifdef
@@ -1126,7 +1126,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_NODE|(access),	    \ 	0, 0, handler, "N", __DESCR(descr))
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_NODE|(access),	    \ 	NULL, 0, handler, "N", __DESCR(descr))
 end_define
 
 begin_comment
