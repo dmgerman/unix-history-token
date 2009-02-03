@@ -534,7 +534,7 @@ operator|!
 name|lflag
 condition|)
 block|{
-comment|/* 		 * Mmap and write if less than 8M (the limit is so we don't totally 		 * trash memory on big files.  This is really a minor hack, but it 		 * wins some CPU back. 		 */
+comment|/* 		 * Mmap and write if less than 8M (the limit is so we don't totally 		 * trash memory on big files.  This is really a minor hack, but it 		 * wins some CPU back. 		 * Some filesystems, such as smbnetfs, don't support mmap, 		 * so this is a best-effort attempt. 		 */
 ifdef|#
 directive|ifdef
 name|VM_AND_BUFFER_CACHE_SYNCHRONIZED
@@ -559,11 +559,10 @@ name|st_size
 operator|<=
 literal|8
 operator|*
-literal|1048576
-condition|)
-block|{
-if|if
-condition|(
+literal|1024
+operator|*
+literal|1024
+operator|&&
 operator|(
 name|p
 operator|=
@@ -590,25 +589,9 @@ operator|)
 literal|0
 argument_list|)
 operator|)
-operator|==
+operator|!=
 name|MAP_FAILED
 condition|)
-block|{
-name|warn
-argument_list|(
-literal|"%s"
-argument_list|,
-name|entp
-operator|->
-name|fts_path
-argument_list|)
-expr_stmt|;
-name|rval
-operator|=
-literal|1
-expr_stmt|;
-block|}
-else|else
 block|{
 name|wtotal
 operator|=
@@ -761,7 +744,6 @@ name|rval
 operator|=
 literal|1
 expr_stmt|;
-block|}
 block|}
 block|}
 else|else
