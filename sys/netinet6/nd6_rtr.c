@@ -2930,11 +2930,17 @@ name|ln
 operator|!=
 name|NULL
 condition|)
+block|{
 name|LLE_RUNLOCK
 argument_list|(
 name|ln
 argument_list|)
 expr_stmt|;
+name|ln
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|dr
