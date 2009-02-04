@@ -290,7 +290,7 @@ name|skipclean
 operator|=
 literal|1
 expr_stmt|;
-name|damagedflag
+name|inoopt
 operator|=
 literal|0
 expr_stmt|;
@@ -305,7 +305,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:Bc:CdDfFm:npy"
+literal|"b:Bc:CdfFm:npry"
 argument_list|)
 operator|)
 operator|!=
@@ -398,14 +398,6 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
-literal|'D'
-case|:
-name|damagedflag
-operator|=
-literal|1
-expr_stmt|;
-comment|/* FALLTHROUGH */
-case|case
 literal|'f'
 case|:
 name|skipclean
@@ -483,6 +475,13 @@ case|case
 literal|'C'
 case|:
 name|ckclean
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+name|inoopt
 operator|++
 expr_stmt|;
 break|break;
@@ -2895,7 +2894,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-BCFpfny] [-b block] [-c level] [-m mode] "
+literal|"usage: %s [-BFprfny] [-b block] [-c level] [-m mode] "
 literal|"filesystem ...\n"
 argument_list|,
 name|getprogname
