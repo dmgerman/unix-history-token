@@ -1423,38 +1423,7 @@ comment|/* Became daemon if required */
 if|if
 condition|(
 name|background
-condition|)
-block|{
-switch|switch
-condition|(
-name|fork
-argument_list|()
-condition|)
-block|{
-case|case
-operator|-
-literal|1
-case|:
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"Could not fork()"
-argument_list|)
-expr_stmt|;
-comment|/* NOT REACHED */
-case|case
-literal|0
-case|:
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* NOT REACHED */
-default|default:
-if|if
-condition|(
+operator|&&
 name|daemon
 argument_list|(
 literal|0
@@ -1471,9 +1440,6 @@ argument_list|,
 literal|"Could not daemon()"
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
-block|}
 name|openlog
 argument_list|(
 name|SPPD_IDENT
