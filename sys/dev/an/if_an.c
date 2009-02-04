@@ -15115,7 +15115,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|an_shutdown
 parameter_list|(
 name|device_t
@@ -15145,7 +15145,9 @@ name|an_gone
 operator|=
 literal|1
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
