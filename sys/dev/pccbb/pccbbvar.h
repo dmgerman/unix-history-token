@@ -423,7 +423,10 @@ name|int
 name|cbb_child_present
 parameter_list|(
 name|device_t
-name|self
+name|parent
+parameter_list|,
+name|device_t
+name|child
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -538,7 +541,7 @@ parameter_list|,
 name|int
 name|rid
 parameter_list|,
-name|uint32_t
+name|u_long
 name|flags
 parameter_list|)
 function_decl|;
@@ -571,7 +574,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|cbb_power_disable_socket
 parameter_list|(
 name|device_t

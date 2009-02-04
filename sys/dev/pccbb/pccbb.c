@@ -708,7 +708,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|cbb_cardbus_power_disable_socket
 parameter_list|(
 name|device_t
@@ -3924,7 +3924,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|cbb_cardbus_power_disable_socket
 parameter_list|(
 name|device_t
@@ -3950,6 +3950,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -5457,7 +5462,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|cbb_pcic_power_disable_socket
 parameter_list|(
 name|device_t
@@ -5560,6 +5565,11 @@ argument_list|,
 name|EXCA_INTR_ENABLE
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -5614,7 +5624,6 @@ name|child
 argument_list|)
 operator|)
 return|;
-else|else
 return|return
 operator|(
 name|cbb_cardbus_power_enable_socket
@@ -5629,7 +5638,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|cbb_power_disable_socket
 parameter_list|(
 name|device_t
@@ -5657,21 +5666,26 @@ name|flags
 operator|&
 name|CBB_16BIT_CARD
 condition|)
+return|return
+operator|(
 name|cbb_pcic_power_disable_socket
 argument_list|(
 name|brdev
 argument_list|,
 name|child
 argument_list|)
-expr_stmt|;
-else|else
+operator|)
+return|;
+return|return
+operator|(
 name|cbb_cardbus_power_disable_socket
 argument_list|(
 name|brdev
 argument_list|,
 name|child
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -6235,7 +6249,7 @@ parameter_list|,
 name|int
 name|rid
 parameter_list|,
-name|uint32_t
+name|u_long
 name|flags
 parameter_list|)
 block|{
@@ -7075,7 +7089,10 @@ name|int
 name|cbb_child_present
 parameter_list|(
 name|device_t
-name|self
+name|parent
+parameter_list|,
+name|device_t
+name|child
 parameter_list|)
 block|{
 name|struct
@@ -7090,7 +7107,7 @@ operator|*
 operator|)
 name|device_get_softc
 argument_list|(
-name|self
+name|parent
 argument_list|)
 decl_stmt|;
 name|uint32_t
