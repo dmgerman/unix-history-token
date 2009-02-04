@@ -583,7 +583,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|afd_shutdown
 parameter_list|(
 name|device_t
@@ -625,6 +625,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
