@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20090113_0125"
+value|"20090131_0127"
 end_define
 
 begin_expr_stmt
@@ -4145,6 +4145,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_NVIDIAMCP78_2
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0006)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_NVIDIAMCP7A
 value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0007)
 end_define
@@ -4154,6 +4161,13 @@ define|#
 directive|define
 name|HDA_CODEC_NVIDIAMCP67
 value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0067)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIAMCP73
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x8001)
 end_define
 
 begin_define
@@ -4992,7 +5006,19 @@ literal|"NVidia MCP67 HDMI"
 block|}
 block|,
 block|{
+name|HDA_CODEC_NVIDIAMCP73
+block|,
+literal|"NVidia MCP73 HDMI"
+block|}
+block|,
+block|{
 name|HDA_CODEC_NVIDIAMCP78
+block|,
+literal|"NVidia MCP78 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_NVIDIAMCP78_2
 block|,
 literal|"NVidia MCP78 HDMI"
 block|}
@@ -12925,10 +12951,31 @@ name|id
 condition|)
 block|{
 case|case
+name|HDA_CODEC_AD1882
+case|:
+case|case
+name|HDA_CODEC_AD1883
+case|:
+case|case
+name|HDA_CODEC_AD1984
+case|:
+case|case
+name|HDA_CODEC_AD1984A
+case|:
+case|case
+name|HDA_CODEC_AD1984B
+case|:
+case|case
+name|HDA_CODEC_AD1987
+case|:
+case|case
 name|HDA_CODEC_AD1988
 case|:
 case|case
 name|HDA_CODEC_AD1988B
+case|:
+case|case
+name|HDA_CODEC_AD1989B
 case|:
 name|beeper
 operator|=
@@ -37334,7 +37381,7 @@ operator|.
 name|key
 argument_list|)
 condition|)
-break|break;
+continue|continue;
 name|HDA_BOOTVERBOSE
 argument_list|(
 argument|printf(
