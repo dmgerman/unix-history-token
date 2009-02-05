@@ -146,17 +146,9 @@ index|]
 operator|.
 name|fmt
 return|;
-name|errx
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-literal|"unknown tag \%s\""
-argument_list|,
+return|return
 name|tag
-argument_list|)
-expr_stmt|;
-comment|/*NOTREACHED*/
+return|;
 undef|#
 directive|undef
 name|N
