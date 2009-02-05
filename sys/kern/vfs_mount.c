@@ -1663,6 +1663,27 @@ operator|->
 name|flags
 argument_list|)
 expr_stmt|;
+name|CTR4
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: iovp %p with iovcnt %d and flags %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|uap
+operator|->
+name|iovp
+argument_list|,
+name|uap
+operator|->
+name|iovcnt
+argument_list|,
+name|uap
+operator|->
+name|flags
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Filter out MNT_ROOTFS.  We do not want clients of nmount() in 	 * userspace to set this flag, but we must filter it out if we want 	 * MNT_UPDATE on the root file system to work. 	 * MNT_ROOTFS should only be set in the kernel in vfs_mountroot_try(). 	 */
 name|uap
 operator|->
@@ -1692,11 +1713,26 @@ operator|<
 literal|4
 operator|)
 condition|)
+block|{
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: failed for invalid iovcnt %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|uap
+operator|->
+name|iovcnt
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 name|error
 operator|=
 name|copyinuio
@@ -1715,11 +1751,24 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: failed for invalid uio op with %d errno"
+argument_list|,
+name|__func__
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 name|iov
 operator|=
 name|auio
@@ -1754,6 +1803,15 @@ argument_list|(
 name|auio
 argument_list|,
 name|M_IOV
+argument_list|)
+expr_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: failed for invalid new auio"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -1808,6 +1866,17 @@ modifier|*
 name|mp
 parameter_list|)
 block|{
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: mp %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|mp
+argument_list|)
+expr_stmt|;
 name|MNT_ILOCK
 argument_list|(
 name|mp
@@ -1836,6 +1905,17 @@ modifier|*
 name|mp
 parameter_list|)
 block|{
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: mp %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|mp
+argument_list|)
+expr_stmt|;
 name|MNT_ILOCK
 argument_list|(
 name|mp
