@@ -23003,14 +23003,20 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|ATH_DEBUG_XMIT
+name|ATH_DEBUG_TDMA
 argument_list|,
-literal|"%s: ACK required w/ TDMA\n"
+literal|"%s: discard frame, ACK required w/ TDMA\n"
 argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-comment|/* XXX statistic */
+name|sc
+operator|->
+name|sc_stats
+operator|.
+name|ast_tdma_ack
+operator|++
+expr_stmt|;
 name|ath_freetx
 argument_list|(
 name|m0
@@ -34563,6 +34569,38 @@ operator|->
 name|sc_invalid
 condition|)
 block|{
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_XMIT
+argument_list|,
+literal|"%s: discard frame, %s"
+argument_list|,
+name|__func__
+argument_list|,
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|==
+literal|0
+condition|?
+literal|"!running"
+else|:
+literal|"invalid"
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_stats
+operator|.
+name|ast_tx_raw_fail
+operator|++
+expr_stmt|;
 name|ieee80211_free_node
 argument_list|(
 name|ni
@@ -34592,6 +34630,7 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* NB: ath_getbuf handles stat+msg */
 name|ieee80211_free_node
 argument_list|(
 name|ni
