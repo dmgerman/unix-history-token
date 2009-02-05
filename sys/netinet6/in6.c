@@ -1323,7 +1323,9 @@ name|td
 operator|!=
 name|NULL
 operator|&&
-operator|!
+operator|(
+name|error
+operator|=
 name|prison_check_ip6
 argument_list|(
 name|td
@@ -1335,10 +1337,13 @@ name|sa6
 operator|->
 name|sin6_addr
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
-name|EADDRNOTAVAIL
+name|error
 operator|)
 return|;
 name|ia
@@ -9692,16 +9697,6 @@ continue|continue;
 comment|/* Skip if jailed and not a valid IP of the prison. */
 if|if
 condition|(
-name|jailed
-argument_list|(
-name|wr
-operator|->
-name|td
-operator|->
-name|td_ucred
-argument_list|)
-operator|&&
-operator|!
 name|prison_if
 argument_list|(
 name|wr
@@ -9715,6 +9710,8 @@ argument_list|(
 name|lle
 argument_list|)
 argument_list|)
+operator|!=
+literal|0
 condition|)
 continue|continue;
 comment|/* 			 * produce a msg made of: 			 *  struct rt_msghdr; 			 *  struct sockaddr_in6 (IPv6) 			 *  struct sockaddr_dl; 			 */

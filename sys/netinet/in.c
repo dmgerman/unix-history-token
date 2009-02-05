@@ -1244,6 +1244,8 @@ argument_list|,
 operator|&
 name|dst
 argument_list|)
+operator|==
+literal|0
 condition|)
 name|ia
 operator|=
@@ -1290,7 +1292,6 @@ name|td
 operator|!=
 name|NULL
 operator|&&
-operator|!
 name|prison_check_ip4
 argument_list|(
 name|td
@@ -1304,6 +1305,8 @@ name|ia_addr
 operator|.
 name|sin_addr
 argument_list|)
+operator|!=
+literal|0
 condition|)
 continue|continue;
 name|ia
@@ -5859,16 +5862,6 @@ continue|continue;
 comment|/* Skip if jailed and not a valid IP of the prison. */
 if|if
 condition|(
-name|jailed
-argument_list|(
-name|wr
-operator|->
-name|td
-operator|->
-name|td_ucred
-argument_list|)
-operator|&&
-operator|!
 name|prison_if
 argument_list|(
 name|wr
@@ -5882,6 +5875,8 @@ argument_list|(
 name|lle
 argument_list|)
 argument_list|)
+operator|!=
+literal|0
 condition|)
 continue|continue;
 comment|/* 			 * produce a msg made of: 			 *  struct rt_msghdr; 			 *  struct sockaddr_inarp; (IPv4) 			 *  struct sockaddr_dl; 			 */
