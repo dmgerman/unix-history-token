@@ -265,9 +265,9 @@ specifier|static
 name|void
 name|padlock_identify
 parameter_list|(
-name|device_t
+name|driver_t
 modifier|*
-name|dev
+name|drv
 parameter_list|,
 name|device_t
 name|parent
