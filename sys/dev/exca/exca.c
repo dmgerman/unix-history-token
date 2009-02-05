@@ -1065,6 +1065,9 @@ operator|&
 name|EXCA_HAS_MEMREG_WIN
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|_LP64
 if|if
 condition|(
 name|rman_get_start
@@ -1096,6 +1099,8 @@ name|EINVAL
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 block|}
 else|else
 block|{
