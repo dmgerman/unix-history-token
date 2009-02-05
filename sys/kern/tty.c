@@ -1165,6 +1165,19 @@ block|}
 block|}
 if|if
 condition|(
+name|dev
+operator|==
+name|dev_console
+condition|)
+name|tp
+operator|->
+name|t_flags
+operator||=
+name|TF_OPENED_CONS
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|TTY_CALLOUT
 argument_list|(
 name|tp
@@ -1172,23 +1185,19 @@ argument_list|,
 name|dev
 argument_list|)
 condition|)
-block|{
 name|tp
 operator|->
 name|t_flags
 operator||=
 name|TF_OPENED_OUT
 expr_stmt|;
-block|}
 else|else
-block|{
 name|tp
 operator|->
 name|t_flags
 operator||=
 name|TF_OPENED_IN
 expr_stmt|;
-block|}
 name|done
 label|:
 name|tp
@@ -1242,36 +1251,12 @@ name|dev
 operator|->
 name|si_drv1
 decl_stmt|;
-comment|/* 	 * Don't actually close the device if it is being used as the 	 * console. 	 */
-if|if
-condition|(
-name|dev_console_filename
-operator|!=
-name|NULL
-operator|&&
-name|strcmp
-argument_list|(
-name|dev_console_filename
-argument_list|,
-name|tty_devname
-argument_list|(
-name|tp
-argument_list|)
-argument_list|)
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|tty_lock
 argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * This can only be called once. The callin and the callout 	 * devices cannot be opened at the same time. 	 */
+comment|/* 	 * Don't actually close the device if it is being used as the 	 * console. 	 */
 name|MPASS
 argument_list|(
 operator|(
@@ -1285,14 +1270,58 @@ operator|!=
 name|TF_OPENED
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dev
+operator|==
+name|dev_console
+condition|)
+name|tp
+operator|->
+name|t_flags
+operator|&=
+operator|~
+name|TF_OPENED_CONS
+expr_stmt|;
+else|else
 name|tp
 operator|->
 name|t_flags
 operator|&=
 operator|~
 operator|(
-name|TF_OPENED
+name|TF_OPENED_IN
 operator||
+name|TF_OPENED_OUT
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|t_flags
+operator|&
+name|TF_OPENED
+condition|)
+block|{
+name|tty_unlock
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/* 	 * This can only be called once. The callin and the callout 	 * devices cannot be opened at the same time. 	 */
+name|tp
+operator|->
+name|t_flags
+operator|&=
+operator|~
+operator|(
 name|TF_EXCLUDE
 operator||
 name|TF_STOPPED
@@ -8026,7 +8055,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * /dev/console is a little different than normal TTY's. Unlike regular  * TTY device nodes, this device node will not revoke the entire TTY  * upon closure and all data written to it will be logged.  */
+comment|/*  * /dev/console is a little different than normal TTY's.  When opened,  * it determines which TTY to use.  When data gets written to it, it  * will be logged in the kernel message buffer.  */
 end_comment
 
 begin_decl_stmt
@@ -8045,6 +8074,11 @@ operator|.
 name|d_open
 operator|=
 name|ttyconsdev_open
+block|,
+operator|.
+name|d_close
+operator|=
+name|ttydev_close
 block|,
 operator|.
 name|d_read
@@ -8199,7 +8233,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|{ TF_NOPREFIX,	'N' },
+block|{ TF_NOPREFIX,		'N' },
 endif|#
 directive|endif
 block|{
@@ -8231,6 +8265,12 @@ block|{
 name|TF_OPENED_OUT
 block|,
 literal|'o'
+block|}
+block|,
+block|{
+name|TF_OPENED_CONS
+block|,
+literal|'c'
 block|}
 block|,
 block|{

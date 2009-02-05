@@ -1342,7 +1342,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|{ TF_NOPREFIX,	'N' },
+block|{ TF_NOPREFIX,		'N' },
 endif|#
 directive|endif
 block|{
@@ -1374,6 +1374,12 @@ block|{
 name|TF_OPENED_OUT
 block|,
 literal|'o'
+block|}
+block|,
+block|{
+name|TF_OPENED_CONS
+block|,
+literal|'c'
 block|}
 block|,
 block|{
