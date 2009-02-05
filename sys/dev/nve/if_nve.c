@@ -562,7 +562,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|nve_miibus_writereg
 parameter_list|(
 name|device_t
@@ -6352,7 +6352,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|nve_miibus_writereg
 parameter_list|(
 name|device_t
@@ -6410,7 +6410,9 @@ argument_list|,
 literal|"nve: nve_miibus_writereg - exit\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
