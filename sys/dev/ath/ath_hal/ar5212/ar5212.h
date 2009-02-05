@@ -459,9 +459,6 @@ name|uint32_t
 name|hiTrig
 decl_stmt|;
 name|uint32_t
-name|gainFCorrection
-decl_stmt|;
-name|uint32_t
 name|active
 decl_stmt|;
 specifier|const
