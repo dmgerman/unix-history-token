@@ -4168,6 +4168,36 @@ operator|<
 name|IQ_CAL_TRIES
 condition|)
 do|;
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_PERCAL
+argument_list|,
+literal|"%s: IQ cal finished: %d tries\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_PERCAL
+argument_list|,
+literal|"%s: powerMeasI %u powerMeasQ %u iqCorrMeas %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|powerMeasI
+argument_list|,
+name|powerMeasQ
+argument_list|,
+name|iqCorrMeas
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Prescale these values to remove 64-bit operation 		 * requirement at the loss of a little precision. 		 */
 name|iCoffDenom
 operator|=
@@ -4285,76 +4315,11 @@ name|ah
 argument_list|,
 name|HAL_DEBUG_PERCAL
 argument_list|,
-literal|"****************** MISGATED IQ CAL! *******************\n"
-argument_list|)
-expr_stmt|;
-name|HALDEBUG
-argument_list|(
-name|ah
+literal|"%s: iCoff %d qCoff %d\n"
 argument_list|,
-name|HAL_DEBUG_PERCAL
-argument_list|,
-literal|"time       = %d, i = %d, \n"
-argument_list|,
-name|OS_GETUPTIME
-argument_list|(
-name|ah
-argument_list|)
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-name|HALDEBUG
-argument_list|(
-name|ah
-argument_list|,
-name|HAL_DEBUG_PERCAL
-argument_list|,
-literal|"powerMeasI = 0x%08x\n"
-argument_list|,
-name|powerMeasI
-argument_list|)
-expr_stmt|;
-name|HALDEBUG
-argument_list|(
-name|ah
-argument_list|,
-name|HAL_DEBUG_PERCAL
-argument_list|,
-literal|"powerMeasQ = 0x%08x\n"
-argument_list|,
-name|powerMeasQ
-argument_list|)
-expr_stmt|;
-name|HALDEBUG
-argument_list|(
-name|ah
-argument_list|,
-name|HAL_DEBUG_PERCAL
-argument_list|,
-literal|"iqCorrMeas = 0x%08x\n"
-argument_list|,
-name|iqCorrMeas
-argument_list|)
-expr_stmt|;
-name|HALDEBUG
-argument_list|(
-name|ah
-argument_list|,
-name|HAL_DEBUG_PERCAL
-argument_list|,
-literal|"iCoff      = %d\n"
+name|__func__
 argument_list|,
 name|iCoff
-argument_list|)
-expr_stmt|;
-name|HALDEBUG
-argument_list|(
-name|ah
-argument_list|,
-name|HAL_DEBUG_PERCAL
-argument_list|,
-literal|"qCoff      = %d\n"
 argument_list|,
 name|qCoff
 argument_list|)
