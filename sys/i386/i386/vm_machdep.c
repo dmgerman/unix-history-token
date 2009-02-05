@@ -2275,7 +2275,7 @@ expr_stmt|;
 else|else
 name|HYPERVISOR_shutdown
 argument_list|(
-name|SHUTDOWN_reboot
+name|SHUTDOWN_poweroff
 argument_list|)
 expr_stmt|;
 endif|#
