@@ -4431,9 +4431,9 @@ specifier|static
 name|void
 name|swcr_identify
 parameter_list|(
-name|device_t
+name|driver_t
 modifier|*
-name|dev
+name|drv
 parameter_list|,
 name|device_t
 name|parent
@@ -4675,7 +4675,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|swcr_detach
 parameter_list|(
 name|device_t
@@ -4700,6 +4700,9 @@ argument_list|,
 name|M_CRYPTO_DATA
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
