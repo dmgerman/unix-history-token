@@ -616,7 +616,7 @@ parameter_list|,
 name|int
 name|rid
 parameter_list|,
-name|uint32_t
+name|u_long
 name|flags
 parameter_list|)
 function_decl|;
@@ -693,7 +693,7 @@ parameter_list|,
 name|int
 name|which
 parameter_list|,
-name|u_char
+name|uintptr_t
 modifier|*
 name|result
 parameter_list|)
@@ -5231,7 +5231,7 @@ parameter_list|,
 name|int
 name|rid
 parameter_list|,
-name|uint32_t
+name|u_long
 name|flags
 parameter_list|)
 block|{
@@ -5744,7 +5744,7 @@ parameter_list|,
 name|int
 name|which
 parameter_list|,
-name|u_char
+name|uintptr_t
 modifier|*
 name|result
 parameter_list|)
