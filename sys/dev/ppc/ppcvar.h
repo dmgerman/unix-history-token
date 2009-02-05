@@ -198,7 +198,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|ppc_reset_epp
 parameter_list|(
 name|device_t
@@ -207,7 +207,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|ppc_ecp_sync
 parameter_list|(
 name|device_t

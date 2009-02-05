@@ -463,7 +463,7 @@ comment|/*  * ppc_ecp_sync()		XXX  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|ppc_ecp_sync
 parameter_list|(
 name|device_t
@@ -510,7 +510,9 @@ operator|&
 name|PPB_ECP
 operator|)
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 name|r
 operator|=
 name|r_ecr
@@ -528,7 +530,9 @@ operator|)
 operator|!=
 name|PPC_ECR_EPP
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 for|for
 control|(
 name|i
@@ -556,7 +560,9 @@ name|r
 operator|&
 literal|0x1
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 name|DELAY
 argument_list|(
 literal|100
@@ -570,7 +576,9 @@ argument_list|,
 literal|"ECP sync failed as data still present in FIFO.\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -6779,7 +6787,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|ppc_reset_epp
 parameter_list|(
 name|device_t
@@ -6806,7 +6814,9 @@ argument_list|(
 name|ppc
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
