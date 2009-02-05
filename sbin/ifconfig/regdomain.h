@@ -95,6 +95,10 @@ name|uint8_t
 name|maxPowerDFS
 decl_stmt|;
 comment|/* regulatory cap w/ DFS (dBm) */
+name|uint8_t
+name|maxAntGain
+decl_stmt|;
+comment|/* max allowed antenna gain (.5 dBm) */
 name|uint32_t
 name|flags
 decl_stmt|;
