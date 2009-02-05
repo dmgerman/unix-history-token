@@ -1339,7 +1339,8 @@ condition|(
 operator|!
 name|time_values_up_to_date
 argument_list|(
-name|cpu
+name|smp_processor_id
+argument_list|()
 argument_list|)
 condition|)
 name|__get_time_values_from_xen
