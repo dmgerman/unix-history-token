@@ -261,6 +261,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|IEEE80211_KEY_BITS
+define|\
+value|"\20\1XMIT\2RECV\3GROUP\4SWENCRYPT\5SWDECRYPT\6SWENMIC\7SWDEMIC" \ 	"\10DEVKEY\11CIPHER0\12CIPHER1"
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_KEYIX_NONE
 value|((ieee80211_keyix) -1)
 end_define
