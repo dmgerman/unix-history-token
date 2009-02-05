@@ -380,6 +380,179 @@ value|0xff
 end_define
 
 begin_comment
+comment|/* Intel commands. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CFI_INTEL_READ_ID
+value|0x90
+end_define
+
+begin_comment
+comment|/* Read Identifier */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CFI_INTEL_PP_SETUP
+value|0xc0
+end_define
+
+begin_comment
+comment|/* Protection Program Setup */
+end_comment
+
+begin_comment
+comment|/* NB: these are addresses for 16-bit accesses */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CFI_INTEL_PLR
+value|0x80
+end_define
+
+begin_comment
+comment|/* Protection Lock Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CFI_INTEL_PR
+parameter_list|(
+name|n
+parameter_list|)
+value|(0x81+(n))
+end_define
+
+begin_comment
+comment|/* Protection Register */
+end_comment
+
+begin_comment
+comment|/* Status register definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CFI_INTEL_STATUS_WSMS
+value|0x0080
+end_define
+
+begin_comment
+comment|/* Write Machine Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CFI_INTEL_STATUS_ESS
+value|0x0040
+end_define
+
+begin_comment
+comment|/* Erase Suspend Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CFI_INTEL_STATUS_ECLBS
+value|0x0020
+end_define
+
+begin_comment
+comment|/* Erase and Clear Lock-Bit Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CFI_INTEL_STATUS_PSLBS
+value|0x0010
+end_define
+
+begin_comment
+comment|/* Program and Set Lock-Bit Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CFI_INTEL_STATUS_VPENS
+value|0x0008
+end_define
+
+begin_comment
+comment|/* Programming Voltage Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CFI_INTEL_STATUS_PSS
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Program Suspend Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CFI_INTEL_STATUS_DPS
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Device Protect Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CFI_INTEL_STATUS_RSVD
+value|0x0001
+end_define
+
+begin_comment
+comment|/* reserved */
+end_comment
+
+begin_comment
+comment|/* eXtended Status register definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CFI_INTEL_XSTATUS_WBS
+value|0x8000
+end_define
+
+begin_comment
+comment|/* Write Buffer Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CFI_INTEL_XSTATUS_RSVD
+value|0x7f00
+end_define
+
+begin_comment
+comment|/* reserved */
+end_comment
+
+begin_comment
 comment|/* AMD commands. */
 end_comment
 
