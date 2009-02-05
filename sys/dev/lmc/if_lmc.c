@@ -28139,7 +28139,7 @@ return|;
 comment|/* no error */
 block|}
 specifier|static
-name|void
+name|int
 name|fbsd_shutdown
 parameter_list|(
 name|device_t
@@ -28154,6 +28154,9 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 specifier|static
 name|int
