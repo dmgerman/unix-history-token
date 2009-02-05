@@ -1693,7 +1693,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|bge_shutdown
 parameter_list|(
 name|device_t
@@ -19861,7 +19861,7 @@ expr_stmt|;
 block|}
 comment|/*  * Stop all chip I/O so that the kernel's probe routines don't  * get confused by errant DMAs when rebooting.  */
 specifier|static
-name|void
+name|int
 name|bge_shutdown
 parameter_list|(
 name|device_t
@@ -19900,6 +19900,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 specifier|static
 name|int
