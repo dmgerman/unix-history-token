@@ -680,7 +680,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|pcn_shutdown
 parameter_list|(
 name|device_t
@@ -6129,13 +6129,11 @@ specifier|static
 name|void
 name|pcn_stop
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|pcn_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -6372,14 +6370,12 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|pcn_shutdown
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|pcn_softc
@@ -6413,7 +6409,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
