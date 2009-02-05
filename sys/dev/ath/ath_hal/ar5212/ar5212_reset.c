@@ -4150,19 +4150,12 @@ name|powerMeasQ
 condition|)
 break|break;
 comment|/* Do we really need this??? */
-name|OS_REG_WRITE
+name|OS_REG_SET_BIT
 argument_list|(
 name|ah
 argument_list|,
 name|AR_PHY_TIMING_CTRL4
 argument_list|,
-name|OS_REG_READ
-argument_list|(
-name|ah
-argument_list|,
-name|AR_PHY_TIMING_CTRL4
-argument_list|)
-operator||
 name|AR_PHY_TIMING_CTRL4_DO_IQCAL
 argument_list|)
 expr_stmt|;
