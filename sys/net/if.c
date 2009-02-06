@@ -299,6 +299,13 @@ directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
+begin_decl_stmt
+specifier|static
+name|int
+name|slowtimo_started
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -2001,6 +2008,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If at least one interface added during boot uses 	 * if_watchdog then start the timer. 	 */
+if|if
+condition|(
+name|slowtimo_started
+condition|)
 name|if_slowtimo
 argument_list|(
 literal|0
@@ -2975,6 +2987,7 @@ name|if_watchdog
 operator|!=
 name|NULL
 condition|)
+block|{
 name|if_printf
 argument_list|(
 name|ifp
@@ -2982,6 +2995,28 @@ argument_list|,
 literal|"WARNING: using obsoleted if_watchdog interface\n"
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Note that we need if_slowtimo().  If this happens after 		 * boot, then call if_slowtimo() directly. 		 */
+if|if
+condition|(
+name|atomic_cmpset_int
+argument_list|(
+operator|&
+name|slowtimo_started
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+operator|&&
+operator|!
+name|cold
+condition|)
+name|if_slowtimo
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ifp
