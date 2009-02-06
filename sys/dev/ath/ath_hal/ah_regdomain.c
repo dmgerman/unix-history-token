@@ -7143,8 +7143,10 @@ block|,
 operator|.
 name|chan11a
 operator|=
-name|BM3
+name|BM4
 argument_list|(
+name|F1_4950_4980
+argument_list|,
 name|F1_5120_5240
 argument_list|,
 name|F1_5260_5700
@@ -7155,8 +7157,10 @@ block|,
 operator|.
 name|chan11a_half
 operator|=
-name|BM3
+name|BM4
 argument_list|(
+name|F1_4945_4985
+argument_list|,
 name|F2_5120_5240
 argument_list|,
 name|F2_5260_5700
@@ -7167,8 +7171,10 @@ block|,
 operator|.
 name|chan11a_quarter
 operator|=
-name|BM3
+name|BM4
 argument_list|(
+name|F1_4942_4987
+argument_list|,
 name|F3_5120_5240
 argument_list|,
 name|F3_5260_5700
