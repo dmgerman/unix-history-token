@@ -9987,8 +9987,8 @@ condition|(
 name|devvp
 operator|->
 name|v_type
-operator|!=
-name|VCHR
+operator|==
+name|VREG
 condition|)
 block|{
 comment|/* devvp is a snapshot */
@@ -10318,8 +10318,8 @@ condition|(
 name|devvp
 operator|->
 name|v_type
-operator|!=
-name|VCHR
+operator|==
+name|VREG
 condition|)
 block|{
 name|UFS_UNLOCK
@@ -11204,8 +11204,8 @@ condition|(
 name|devvp
 operator|->
 name|v_type
-operator|!=
-name|VCHR
+operator|==
+name|VREG
 condition|)
 block|{
 comment|/* devvp is a snapshot */
@@ -11624,8 +11624,8 @@ condition|(
 name|devvp
 operator|->
 name|v_type
-operator|!=
-name|VCHR
+operator|==
+name|VREG
 condition|)
 block|{
 comment|/* devvp is a snapshot */
