@@ -5633,6 +5633,17 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|pf
+operator|->
+name|pf_funce_disk_power
+operator|=
+name|pccard_tuple_read_1
+argument_list|(
+name|tuple
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 block|}
 break|break;
 case|case
