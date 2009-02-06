@@ -15616,6 +15616,11 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|db_printf
+argument_list|(
+literal|" "
+argument_list|)
+expr_stmt|;
 name|lockmgr_printinfo
 argument_list|(
 operator|&

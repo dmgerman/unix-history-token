@@ -3796,7 +3796,7 @@ name|LK_UNLOCKED
 condition|)
 name|printf
 argument_list|(
-literal|" lock type %s: UNLOCKED\n"
+literal|"lock type %s: UNLOCKED\n"
 argument_list|,
 name|lk
 operator|->
@@ -3816,7 +3816,7 @@ name|LK_SHARE
 condition|)
 name|printf
 argument_list|(
-literal|" lock type %s: SHARED (count %ju)\n"
+literal|"lock type %s: SHARED (count %ju)\n"
 argument_list|,
 name|lk
 operator|->
@@ -3846,7 +3846,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" lock type %s: EXCL by thread %p (pid %d)\n"
+literal|"lock type %s: EXCL by thread %p (pid %d)\n"
 argument_list|,
 name|lk
 operator|->
