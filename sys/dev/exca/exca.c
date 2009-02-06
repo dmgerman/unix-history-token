@@ -799,7 +799,7 @@ name|kind
 operator|&
 name|PCCARD_MEM_ATTR
 condition|?
-literal|"attrubute"
+literal|"attribute"
 else|:
 literal|"common"
 argument_list|,
