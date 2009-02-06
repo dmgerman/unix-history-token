@@ -3126,6 +3126,13 @@ name|v_type
 operator|=
 name|VFIFO
 expr_stmt|;
+name|vp
+operator|->
+name|v_op
+operator|=
+operator|&
+name|udf_fifoops
+expr_stmt|;
 break|break;
 case|case
 literal|10
