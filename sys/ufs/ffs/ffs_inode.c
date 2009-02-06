@@ -1013,8 +1013,6 @@ operator|->
 name|i_flag
 operator||=
 name|IN_CHANGE
-operator||
-name|IN_UPDATE
 expr_stmt|;
 if|if
 condition|(
