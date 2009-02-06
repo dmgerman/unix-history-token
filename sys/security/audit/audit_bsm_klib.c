@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2005 Apple Inc.  * Copyright (c) 2005 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1999-2008 Apple Inc.  * Copyright (c) 2005 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -57,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
 end_include
 
 begin_include
@@ -175,8 +181,8 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|mtx
-name|evclass_mtx
+name|rwlock
+name|evclass_lock
 decl_stmt|;
 end_decl_stmt
 
@@ -190,6 +196,46 @@ name|EVCLASSMAP_HASH_TABLE_SIZE
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|EVCLASS_LOCK_INIT
+parameter_list|()
+value|rw_init(&evclass_lock, "evclass_lock")
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVCLASS_RLOCK
+parameter_list|()
+value|rw_rlock(&evclass_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVCLASS_RUNLOCK
+parameter_list|()
+value|rw_runlock(&evclass_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVCLASS_WLOCK
+parameter_list|()
+value|rw_wlock(&evclass_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVCLASS_WUNLOCK
+parameter_list|()
+value|rw_wunlock(&evclass_lock)
+end_define
 
 begin_comment
 comment|/*  * Look up the class for an audit event in the class mapping table.  */
@@ -216,11 +262,8 @@ decl_stmt|;
 name|au_class_t
 name|class
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|evclass_mtx
-argument_list|)
+name|EVCLASS_RLOCK
+argument_list|()
 expr_stmt|;
 name|evcl
 operator|=
@@ -267,11 +310,8 @@ block|}
 block|}
 name|out
 label|:
-name|mtx_unlock
-argument_list|(
-operator|&
-name|evclass_mtx
-argument_list|)
+name|EVCLASS_RUNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -325,11 +365,8 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|evclass_mtx
-argument_list|)
+name|EVCLASS_WLOCK
+argument_list|()
 expr_stmt|;
 name|evcl
 operator|=
@@ -365,11 +402,8 @@ name|class
 operator|=
 name|class
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|evclass_mtx
-argument_list|)
+name|EVCLASS_WUNLOCK
+argument_list|()
 expr_stmt|;
 name|free
 argument_list|(
@@ -409,11 +443,8 @@ argument_list|,
 name|entry
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|evclass_mtx
-argument_list|)
+name|EVCLASS_WUNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -428,17 +459,8 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|evclass_mtx
-argument_list|,
-literal|"evclass_mtx"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
+name|EVCLASS_LOCK_INIT
+argument_list|()
 expr_stmt|;
 for|for
 control|(
