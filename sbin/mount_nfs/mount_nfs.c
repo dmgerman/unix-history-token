@@ -3536,6 +3536,12 @@ name|opt
 argument_list|)
 expr_stmt|;
 block|}
+name|args
+operator|.
+name|flags
+operator||=
+name|NFSMNT_ACDIRMAX
+expr_stmt|;
 block|}
 if|if
 condition|(
