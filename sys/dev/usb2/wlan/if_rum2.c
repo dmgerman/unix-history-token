@@ -1464,6 +1464,17 @@ block|,
 block|{
 name|USB_VPI
 argument_list|(
+argument|USB_VENDOR_MELCO
+argument_list|,
+argument|USB_PRODUCT_MELCO_SG54HG
+argument_list|,
+literal|0
+argument_list|)
+block|}
+block|,
+block|{
+name|USB_VPI
+argument_list|(
 argument|USB_VENDOR_MSI
 argument_list|,
 argument|USB_PRODUCT_MSI_RT2573_1

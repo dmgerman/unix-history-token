@@ -522,6 +522,12 @@ name|USB_PRODUCT_MELCO_SG54HP
 block|}
 block|,
 block|{
+name|USB_VENDOR_MELCO
+block|,
+name|USB_PRODUCT_MELCO_SG54HG
+block|}
+block|,
+block|{
 name|USB_VENDOR_MSI
 block|,
 name|USB_PRODUCT_MSI_RT2573_1
