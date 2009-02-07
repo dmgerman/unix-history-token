@@ -2609,15 +2609,6 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|MAP_FAILED
-define|#
-directive|define
-name|MAP_FAILED
-value|((caddr_t) -1)
-endif|#
-directive|endif
 if|if
 condition|(
 name|p
