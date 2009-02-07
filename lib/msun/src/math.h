@@ -318,6 +318,7 @@ begin_define
 define|#
 directive|define
 name|FP_FAST_FMA
+value|1
 end_define
 
 begin_endif
@@ -335,6 +336,7 @@ begin_define
 define|#
 directive|define
 name|FP_FAST_FMAL
+value|1
 end_define
 
 begin_endif
@@ -346,6 +348,7 @@ begin_define
 define|#
 directive|define
 name|FP_FAST_FMAF
+value|1
 end_define
 
 begin_comment
