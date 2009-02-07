@@ -266,6 +266,33 @@ define|\
 value|{ W0(_fa) | W0(_fb) | W0(_fc) | W0(_fd) | W0(_fe) | W0(_ff) |	\ 	  W0(_fg) | W0(_fh) ,	\ 	  W1(_fa) | W1(_fb) | W1(_fc) | W1(_fd) | W1(_fe) | W1(_ff) |	\ 	  W1(_fg) | W1(_fh) }
 end_define
 
+begin_define
+define|#
+directive|define
+name|BM9
+parameter_list|(
+name|_fa
+parameter_list|,
+name|_fb
+parameter_list|,
+name|_fc
+parameter_list|,
+name|_fd
+parameter_list|,
+name|_fe
+parameter_list|,
+name|_ff
+parameter_list|,
+name|_fg
+parameter_list|,
+name|_fh
+parameter_list|,
+name|_fi
+parameter_list|)
+define|\
+value|{ W0(_fa) | W0(_fb) | W0(_fc) | W0(_fd) | W0(_fe) | W0(_ff) |	\ 	  W0(_fg) | W0(_fh) | W0(_fi) ,	\ 	  W1(_fa) | W1(_fb) | W1(_fc) | W1(_fd) | W1(_fe) | W1(_ff) |	\ 	  W1(_fg) | W1(_fh) | W1(_fi) }
+end_define
+
 begin_comment
 comment|/*  * Mask to check whether a domain is a multidomain or a single domain  */
 end_comment
