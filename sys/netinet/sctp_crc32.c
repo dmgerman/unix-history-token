@@ -4713,7 +4713,6 @@ comment|/**  *  * Routine Description:  *  * warms the tables  *  * Arguments:  
 end_comment
 
 begin_function
-specifier|static
 name|uint32_t
 name|update_crc32
 parameter_list|(
@@ -5371,7 +5370,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|uint32_t
 name|sctp_finalize_crc32
 parameter_list|(

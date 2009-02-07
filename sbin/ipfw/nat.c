@@ -1131,11 +1131,24 @@ condition|)
 return|return
 name|IPPROTO_UDP
 return|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|str
+argument_list|,
+literal|"sctp"
+argument_list|)
+condition|)
+return|return
+name|IPPROTO_SCTP
+return|;
 name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"unknown protocol %s. Expected tcp or udp"
+literal|"unknown protocol %s. Expected sctp, tcp or udp"
 argument_list|,
 name|str
 argument_list|)
@@ -1800,6 +1813,50 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 		 * The sctp nat does not allow the port numbers to be mapped to  		 * new port numbers. Therefore, no ports are to be specified  		 * in the target port field. 		 */
+if|if
+condition|(
+name|r
+operator|->
+name|proto
+operator|==
+name|IPPROTO_SCTP
+condition|)
+block|{
+if|if
+condition|(
+name|strchr
+argument_list|(
+operator|*
+name|av
+argument_list|,
+literal|':'
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"redirect_port:"
+literal|"port numbers do not change in sctp, so do not "
+literal|"specify them as part of the target"
+argument_list|)
+expr_stmt|;
+else|else
+name|StrToAddr
+argument_list|(
+operator|*
+name|av
+argument_list|,
+operator|&
+name|r
+operator|->
+name|laddr
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|StrToAddrAndPortRange
@@ -1844,6 +1901,7 @@ argument_list|(
 name|portRange
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|INC_ARGCV
 argument_list|()
@@ -1949,6 +2007,32 @@ argument_list|(
 name|portRange
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|r
+operator|->
+name|proto
+operator|==
+name|IPPROTO_SCTP
+condition|)
+block|{
+comment|/* so the logic below still works */
+name|numLocalPorts
+operator|=
+name|GETNUMPORTS
+argument_list|(
+name|portRange
+argument_list|)
+expr_stmt|;
+name|r
+operator|->
+name|lport
+operator|=
+name|r
+operator|->
+name|pport
+expr_stmt|;
+block|}
 name|r
 operator|->
 name|pport_cnt
@@ -2193,6 +2277,61 @@ name|space
 operator|+=
 name|SOF_SPOOL
 expr_stmt|;
+comment|/* 			 * The sctp nat does not allow the port numbers to be mapped to new port numbers 			 * Therefore, no ports are to be specified in the target port field 			 */
+if|if
+condition|(
+name|r
+operator|->
+name|proto
+operator|==
+name|IPPROTO_SCTP
+condition|)
+block|{
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|sep
+argument_list|,
+literal|':'
+argument_list|)
+condition|)
+block|{
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"redirect_port:"
+literal|"port numbers do not change in "
+literal|"sctp, so do not specify them as "
+literal|"part of the target"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|StrToAddr
+argument_list|(
+name|sep
+argument_list|,
+operator|&
+name|tmp
+operator|->
+name|addr
+argument_list|)
+expr_stmt|;
+name|tmp
+operator|->
+name|port
+operator|=
+name|r
+operator|->
+name|pport
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|StrToAddrAndPortRange
@@ -2233,8 +2372,9 @@ name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"redirect_port: local port"
-literal|"must be single in this context"
+literal|"redirect_port: "
+literal|"local port must be single in "
+literal|"this context"
 argument_list|)
 expr_stmt|;
 name|tmp
@@ -2246,6 +2386,7 @@ argument_list|(
 name|portRange
 argument_list|)
 expr_stmt|;
+block|}
 name|r
 operator|->
 name|spool_cnt
