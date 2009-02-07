@@ -76,6 +76,50 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* private flags, don't pass to os */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REQ_ECM
+value|0x1
+end_define
+
+begin_comment
+comment|/* enable if ECM set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REQ_INDOOR
+value|0x2
+end_define
+
+begin_comment
+comment|/* enable only for indoor operation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REQ_OUTDOOR
+value|0x4
+end_define
+
+begin_comment
+comment|/* enable only for outdoor operation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REQ_FLAGS
+value|(REQ_ECM|REQ_INDOOR|REQ_OUTDOOR)
+end_define
+
 begin_struct
 struct|struct
 name|netband
