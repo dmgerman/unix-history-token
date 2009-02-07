@@ -1626,14 +1626,6 @@ decl_stmt|;
 name|uint16_t
 name|y
 decl_stmt|;
-name|USB_BUS_LOCK
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_bus
-argument_list|)
-expr_stmt|;
 name|DPRINTF
 argument_list|(
 literal|"start\n"
@@ -2400,6 +2392,14 @@ name|methods
 operator|=
 operator|&
 name|uhci_bus_methods
+expr_stmt|;
+name|USB_BUS_LOCK
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_bus
+argument_list|)
 expr_stmt|;
 comment|/* reset the controller */
 name|uhci_reset
