@@ -58,6 +58,9 @@ begin_struct
 struct|struct
 name|aoa_softc
 block|{
+name|device_t
+name|sc_dev
+decl_stmt|;
 name|void
 modifier|*
 name|sc_intrp
@@ -85,11 +88,9 @@ begin_function_decl
 name|int
 name|aoa_attach
 parameter_list|(
-name|device_t
-parameter_list|,
 name|void
 modifier|*
-name|sc
+name|xsc
 parameter_list|)
 function_decl|;
 end_function_decl
