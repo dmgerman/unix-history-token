@@ -2008,7 +2008,7 @@ name|CFI_SUPPORT_STRATAFLASH
 end_ifdef
 
 begin_comment
-comment|/*  * Intel StrataFlash Protection Register Support.  *  * The memory includes a 128-bit Protection Register that can be  * used for security.  There are two 64-bit segments; one is programmed  * at the factory with a unique 64-bit number which is immutable.  * The other segment is left blank for User (OEM) programming.  * Once the User/OEM segment is programmed it can be locked  * to prevent future programming by writing bit 0 of the Protection  * Lock Register (PLR).  The PLR can written only once.  */
+comment|/*  * Intel StrataFlash Protection Register Support.  *  * The memory includes a 128-bit Protection Register that can be  * used for security.  There are two 64-bit segments; one is programmed  * at the factory with a unique 64-bit number which is immutable.  * The other segment is left blank for User (OEM) programming.  * The User/OEM segment is One Time Programmable (OTP).  It can also  * be locked to prevent any firther writes by setting bit 0 of the  * Protection Lock Register (PLR).  The PLR can written only once.  */
 end_comment
 
 begin_function
@@ -2365,7 +2365,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Write the User/OEM 64-bit segment of the PR.  */
+comment|/*  * Write the User/OEM 64-bit segment of the PR.  * XXX should allow writing individual words/bytes  */
 end_comment
 
 begin_function
@@ -2381,6 +2381,9 @@ name|uint64_t
 name|id
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|CFI_ARMEDANDDANGEROUS
 name|register_t
 name|intr
 decl_stmt|;
@@ -2389,6 +2392,8 @@ name|i
 decl_stmt|,
 name|error
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|sc
@@ -2417,6 +2422,9 @@ name|sc_width
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CFI_ARMEDANDDANGEROUS
 for|for
 control|(
 name|i
@@ -2499,6 +2507,25 @@ expr_stmt|;
 return|return
 name|error
 return|;
+else|#
+directive|else
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: OEM PR not set, "
+literal|"CFI_ARMEDANDDANGEROUS not configured\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return
+name|ENXIO
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
