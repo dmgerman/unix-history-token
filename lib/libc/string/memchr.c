@@ -97,6 +97,10 @@ operator|*
 name|p
 operator|++
 operator|==
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 condition|)
 return|return
