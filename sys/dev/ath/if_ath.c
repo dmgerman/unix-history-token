@@ -15389,6 +15389,13 @@ operator|->
 name|sc_bmisscount
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_stats
+operator|.
+name|ast_bstuck
+operator|++
+expr_stmt|;
 name|ath_reset
 argument_list|(
 name|ifp
