@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_inet6.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_mac.h"
 end_include
 
@@ -1390,6 +1396,19 @@ name|dom_family
 operator|!=
 name|PF_INET
 operator|&&
+ifdef|#
+directive|ifdef
+name|INET6
+name|prp
+operator|->
+name|pr_domain
+operator|->
+name|dom_family
+operator|!=
+name|PF_INET6
+operator|&&
+endif|#
+directive|endif
 name|prp
 operator|->
 name|pr_domain
