@@ -1776,7 +1776,7 @@ argument_list|)
 condition|)
 if|if
 condition|(
-name|prison_getip6
+name|prison_get_ip6
 argument_list|(
 name|in6p
 operator|->

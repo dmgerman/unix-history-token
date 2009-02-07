@@ -779,7 +779,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|prison_getip4
+name|prison_get_ip4
 parameter_list|(
 name|struct
 name|ucred
@@ -853,7 +853,7 @@ end_ifdef
 
 begin_function_decl
 name|int
-name|prison_getip6
+name|prison_get_ip6
 parameter_list|(
 name|struct
 name|ucred

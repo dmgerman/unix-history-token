@@ -1747,7 +1747,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|prison_getip4
+name|prison_get_ip4
 argument_list|(
 name|inp
 operator|->
@@ -1758,6 +1758,8 @@ name|ip
 operator|->
 name|ip_src
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|INP_RUNLOCK
