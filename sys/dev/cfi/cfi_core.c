@@ -2049,6 +2049,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CFI_ARMEDANDDANGEROUS
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -2085,6 +2091,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Read the factory-defined 64-bit segment of the PR.  */
@@ -2629,11 +2640,11 @@ name|CFI_ARMEDANDDANGEROUS
 name|register_t
 name|intr
 decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|error
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|sc
@@ -2725,6 +2736,9 @@ argument_list|,
 name|CFI_BCS_READ_ARRAY
 argument_list|)
 expr_stmt|;
+return|return
+name|error
+return|;
 else|#
 directive|else
 name|device_printf
@@ -2739,15 +2753,11 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
+return|return
 name|ENXIO
-expr_stmt|;
+return|;
 endif|#
 directive|endif
-return|return
-name|error
-return|;
 block|}
 end_function
 
