@@ -1170,7 +1170,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|error
+name|err
 operator|)
 return|;
 block|}
