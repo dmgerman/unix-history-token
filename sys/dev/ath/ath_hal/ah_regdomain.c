@@ -10030,7 +10030,7 @@ block|,
 block|{
 name|HAL_MODE_11NG_HT20
 block|,
-name|IEEE80211_CHAN_2GHZ
+name|IEEE80211_CHAN_G
 operator||
 name|IEEE80211_CHAN_HT20
 block|}
@@ -10038,7 +10038,7 @@ block|,
 block|{
 name|HAL_MODE_11NG_HT40PLUS
 block|,
-name|IEEE80211_CHAN_2GHZ
+name|IEEE80211_CHAN_G
 operator||
 name|IEEE80211_CHAN_HT40U
 block|}
@@ -10046,7 +10046,7 @@ block|,
 block|{
 name|HAL_MODE_11NG_HT40MINUS
 block|,
-name|IEEE80211_CHAN_2GHZ
+name|IEEE80211_CHAN_G
 operator||
 name|IEEE80211_CHAN_HT40D
 block|}
@@ -10054,7 +10054,7 @@ block|,
 block|{
 name|HAL_MODE_11NA_HT20
 block|,
-name|IEEE80211_CHAN_5GHZ
+name|IEEE80211_CHAN_A
 operator||
 name|IEEE80211_CHAN_HT20
 block|}
@@ -10062,7 +10062,7 @@ block|,
 block|{
 name|HAL_MODE_11NA_HT40PLUS
 block|,
-name|IEEE80211_CHAN_5GHZ
+name|IEEE80211_CHAN_A
 operator||
 name|IEEE80211_CHAN_HT40U
 block|}
@@ -10070,7 +10070,7 @@ block|,
 block|{
 name|HAL_MODE_11NA_HT40MINUS
 block|,
-name|IEEE80211_CHAN_5GHZ
+name|IEEE80211_CHAN_A
 operator||
 name|IEEE80211_CHAN_HT40D
 block|}
