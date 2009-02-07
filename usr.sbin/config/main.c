@@ -2116,6 +2116,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * Try to read all configuration files. Since those will be present as 	 * C string in the macro, we have to slash their ends then the line 	 * wraps. 	 */
 name|STAILQ_FOREACH
 argument_list|(
 argument|cf
@@ -2301,7 +2302,6 @@ argument_list|(
 name|sb
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Try to read all configuration files. Since those will be present as 	 * C string in the macro, we have to slash their ends then the line 	 * wraps. 	 */
 if|if
 condition|(
 name|filebased
