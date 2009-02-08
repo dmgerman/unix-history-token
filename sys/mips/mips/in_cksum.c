@@ -97,9 +97,11 @@ name|in_masks
 index|[]
 init|=
 block|{
-ifndef|#
-directive|ifndef
-name|_MISEB
+if|#
+directive|if
+name|_BYTE_ORDER
+operator|==
+name|_LITTLE_ENDIAN
 comment|/*0 bytes*/
 comment|/*1 byte*/
 comment|/*2 bytes*/
