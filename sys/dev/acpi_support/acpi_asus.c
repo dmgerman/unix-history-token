@@ -4454,6 +4454,15 @@ name|status
 init|=
 name|AE_OK
 decl_stmt|;
+name|ACPI_OBJECT_LIST
+name|acpiargs
+decl_stmt|;
+name|ACPI_OBJECT
+name|acpiarg
+index|[
+literal|1
+index|]
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 operator|(
