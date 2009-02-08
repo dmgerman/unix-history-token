@@ -2008,7 +2008,7 @@ name|CFI_SUPPORT_STRATAFLASH
 end_ifdef
 
 begin_comment
-comment|/*  * Intel StrataFlash Protection Register Support.  *  * The memory includes a 128-bit Protection Register that can be  * used for security.  There are two 64-bit segments; one is programmed  * at the factory with a unique 64-bit number which is immutable.  * The other segment is left blank for User (OEM) programming.  * The User/OEM segment is One Time Programmable (OTP).  It can also  * be locked to prevent any firther writes by setting bit 0 of the  * Protection Lock Register (PLR).  The PLR can written only once.  */
+comment|/*  * Intel StrataFlash Protection Register Support.  *  * The memory includes a 128-bit Protection Register that can be  * used for security.  There are two 64-bit segments; one is programmed  * at the factory with a unique 64-bit number which is immutable.  * The other segment is left blank for User (OEM) programming.  * The User/OEM segment is One Time Programmable (OTP).  It can also  * be locked to prevent any further writes by setting bit 0 of the  * Protection Lock Register (PLR).  The PLR can written only once.  */
 end_comment
 
 begin_function
