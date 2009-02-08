@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libutil.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ah.h"
 end_include
 
@@ -186,7 +192,7 @@ directive|define
 name|S_INPUT
 value|0
 block|{
-literal|8
+literal|7
 block|,
 literal|"input"
 block|,
@@ -200,7 +206,7 @@ directive|define
 name|S_OUTPUT
 value|AFTER(S_INPUT)
 block|{
-literal|8
+literal|7
 block|,
 literal|"output"
 block|,
@@ -228,7 +234,7 @@ directive|define
 name|S_TX_SHORTRETRY
 value|AFTER(S_TX_ALTRATE)
 block|{
-literal|7
+literal|6
 block|,
 literal|"short"
 block|,
@@ -242,7 +248,7 @@ directive|define
 name|S_TX_LONGRETRY
 value|AFTER(S_TX_SHORTRETRY)
 block|{
-literal|7
+literal|6
 block|,
 literal|"long"
 block|,
@@ -1090,7 +1096,7 @@ directive|define
 name|S_BE_XMIT
 value|AFTER(S_BE_NOMBUF)
 block|{
-literal|7
+literal|6
 block|,
 literal|"bexmit"
 block|,
@@ -1149,7 +1155,7 @@ directive|define
 name|S_TDMA_UPDATE
 value|AFTER(S_PER_RFGAIN)
 block|{
-literal|5
+literal|6
 block|,
 literal|"tdmau"
 block|,
@@ -1163,7 +1169,7 @@ directive|define
 name|S_TDMA_TIMERS
 value|AFTER(S_TDMA_UPDATE)
 block|{
-literal|5
+literal|6
 block|,
 literal|"tdmab"
 block|,
@@ -1177,7 +1183,7 @@ directive|define
 name|S_TDMA_TSF
 value|AFTER(S_TDMA_TIMERS)
 block|{
-literal|5
+literal|6
 block|,
 literal|"tdmat"
 block|,
@@ -1191,7 +1197,7 @@ directive|define
 name|S_TDMA_TSFADJ
 value|AFTER(S_TDMA_TSF)
 block|{
-literal|8
+literal|6
 block|,
 literal|"tdmadj"
 block|,
@@ -1787,7 +1793,7 @@ directive|define
 name|S_ANI_OFDMERRS
 value|AFTER(S_ANI_STEPDOWN)
 block|{
-literal|8
+literal|7
 block|,
 literal|"ofdm"
 block|,
@@ -1801,7 +1807,7 @@ directive|define
 name|S_ANI_CCKERRS
 value|AFTER(S_ANI_OFDMERRS)
 block|{
-literal|8
+literal|7
 block|,
 literal|"cck"
 block|,
@@ -1857,7 +1863,7 @@ directive|define
 name|S_MIB_ACKBAD
 value|AFTER(S_ANI_LNEG)
 block|{
-literal|5
+literal|7
 block|,
 literal|"ackbad"
 block|,
@@ -1871,7 +1877,7 @@ directive|define
 name|S_MIB_RTSBAD
 value|AFTER(S_MIB_ACKBAD)
 block|{
-literal|5
+literal|7
 block|,
 literal|"rtsbad"
 block|,
@@ -1885,7 +1891,7 @@ directive|define
 name|S_MIB_RTSGOOD
 value|AFTER(S_MIB_RTSBAD)
 block|{
-literal|5
+literal|7
 block|,
 literal|"rtsgood"
 block|,
@@ -1899,7 +1905,7 @@ directive|define
 name|S_MIB_FCSBAD
 value|AFTER(S_MIB_RTSGOOD)
 block|{
-literal|5
+literal|7
 block|,
 literal|"fcsbad"
 block|,
@@ -1913,7 +1919,7 @@ directive|define
 name|S_MIB_BEACONS
 value|AFTER(S_MIB_FCSBAD)
 block|{
-literal|5
+literal|7
 block|,
 literal|"beacons"
 block|,
@@ -1978,7 +1984,7 @@ endif|#
 directive|endif
 comment|/* ATH_SUPPORT_ANI */
 block|{
-literal|8
+literal|7
 block|,
 literal|"tx0"
 block|,
@@ -1992,7 +1998,7 @@ directive|define
 name|S_ANT_TX1
 value|AFTER(S_ANT_TX0)
 block|{
-literal|8
+literal|7
 block|,
 literal|"tx1"
 block|,
@@ -2006,7 +2012,7 @@ directive|define
 name|S_ANT_TX2
 value|AFTER(S_ANT_TX1)
 block|{
-literal|8
+literal|7
 block|,
 literal|"tx2"
 block|,
@@ -2020,7 +2026,7 @@ directive|define
 name|S_ANT_TX3
 value|AFTER(S_ANT_TX2)
 block|{
-literal|8
+literal|7
 block|,
 literal|"tx3"
 block|,
@@ -2034,7 +2040,7 @@ directive|define
 name|S_ANT_TX4
 value|AFTER(S_ANT_TX3)
 block|{
-literal|8
+literal|7
 block|,
 literal|"tx4"
 block|,
@@ -2048,7 +2054,7 @@ directive|define
 name|S_ANT_TX5
 value|AFTER(S_ANT_TX4)
 block|{
-literal|8
+literal|7
 block|,
 literal|"tx5"
 block|,
@@ -2062,7 +2068,7 @@ directive|define
 name|S_ANT_TX6
 value|AFTER(S_ANT_TX5)
 block|{
-literal|8
+literal|7
 block|,
 literal|"tx6"
 block|,
@@ -2076,7 +2082,7 @@ directive|define
 name|S_ANT_TX7
 value|AFTER(S_ANT_TX6)
 block|{
-literal|8
+literal|7
 block|,
 literal|"tx7"
 block|,
@@ -2090,7 +2096,7 @@ directive|define
 name|S_ANT_RX0
 value|AFTER(S_ANT_TX7)
 block|{
-literal|8
+literal|7
 block|,
 literal|"rx0"
 block|,
@@ -2104,7 +2110,7 @@ directive|define
 name|S_ANT_RX1
 value|AFTER(S_ANT_RX0)
 block|{
-literal|8
+literal|7
 block|,
 literal|"rx1"
 block|,
@@ -2118,7 +2124,7 @@ directive|define
 name|S_ANT_RX2
 value|AFTER(S_ANT_RX1)
 block|{
-literal|8
+literal|7
 block|,
 literal|"rx2"
 block|,
@@ -2132,7 +2138,7 @@ directive|define
 name|S_ANT_RX3
 value|AFTER(S_ANT_RX2)
 block|{
-literal|8
+literal|7
 block|,
 literal|"rx3"
 block|,
@@ -2146,7 +2152,7 @@ directive|define
 name|S_ANT_RX4
 value|AFTER(S_ANT_RX3)
 block|{
-literal|8
+literal|7
 block|,
 literal|"rx4"
 block|,
@@ -2160,7 +2166,7 @@ directive|define
 name|S_ANT_RX5
 value|AFTER(S_ANT_RX4)
 block|{
-literal|8
+literal|7
 block|,
 literal|"rx5"
 block|,
@@ -2174,7 +2180,7 @@ directive|define
 name|S_ANT_RX6
 value|AFTER(S_ANT_RX5)
 block|{
-literal|8
+literal|7
 block|,
 literal|"rx6"
 block|,
@@ -2188,7 +2194,7 @@ directive|define
 name|S_ANT_RX7
 value|AFTER(S_ANT_RX6)
 block|{
-literal|8
+literal|7
 block|,
 literal|"rx7"
 block|,
@@ -4417,6 +4423,44 @@ block|}
 end_function
 
 begin_function
+name|int
+name|hnprintf
+parameter_list|(
+name|char
+modifier|*
+name|b
+parameter_list|,
+name|size_t
+name|bs
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+name|int64_t
+name|v
+parameter_list|)
+block|{
+name|humanize_number
+argument_list|(
+name|b
+argument_list|,
+name|bs
+argument_list|,
+name|v
+argument_list|,
+literal|""
+argument_list|,
+name|HN_AUTOSCALE
+argument_list|,
+name|HN_NOSPACE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|ath_get_totstat
@@ -4456,7 +4500,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|snprintf(b, bs, "%u", wf->total.ath.ast_##x); return 1
+value|hnprintf(b, bs, "%u", (int64_t) wf->total.ath.ast_##x); return 1
 define|#
 directive|define
 name|PHY
@@ -4464,7 +4508,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|snprintf(b, bs, "%u", wf->total.ath.ast_rx_phy[x]); return 1
+value|hnprintf(b, bs, "%u", (int64_t) wf->total.ath.ast_rx_phy[x]); return 1
 define|#
 directive|define
 name|ANI
@@ -4472,7 +4516,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|snprintf(b, bs, "%u", wf->total.ani_state.x); return 1
+value|hnprintf(b, bs, "%u", (int64_t) wf->total.ani_state.x); return 1
 define|#
 directive|define
 name|ANISTAT
@@ -4480,7 +4524,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|snprintf(b, bs, "%u", wf->total.ani_stats.ast_ani_##x); return 1
+value|hnprintf(b, bs, "%u", (int64_t) wf->total.ani_stats.ast_ani_##x); return 1
 define|#
 directive|define
 name|MIBSTAT
@@ -4488,7 +4532,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|snprintf(b, bs, "%u", wf->total.ani_stats.ast_mibstats.x); return 1
+value|hnprintf(b, bs, "%u", (int64_t) wf->total.ani_stats.ast_mibstats.x); return 1
 define|#
 directive|define
 name|TXANT
@@ -4496,7 +4540,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|snprintf(b, bs, "%u", wf->total.ath.ast_ant_tx[x]); return 1
+value|hnprintf(b, bs, "%u", (int64_t) wf->total.ath.ast_ant_tx[x]); return 1
 define|#
 directive|define
 name|RXANT
@@ -4504,7 +4548,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|snprintf(b, bs, "%u", wf->total.ath.ast_ant_rx[x]); return 1
+value|hnprintf(b, bs, "%u", (int64_t) wf->total.ath.ast_ant_rx[x]); return 1
 switch|switch
 condition|(
 name|s
@@ -4513,7 +4557,7 @@ block|{
 case|case
 name|S_INPUT
 case|:
-name|snprintf
+name|hnprintf
 argument_list|(
 name|b
 argument_list|,
@@ -4544,7 +4588,7 @@ return|;
 case|case
 name|S_OUTPUT
 case|:
-name|snprintf
+name|hnprintf
 argument_list|(
 name|b
 argument_list|,

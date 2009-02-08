@@ -509,10 +509,9 @@ literal|0x80
 argument_list|,
 name|buf
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
+name|f
+operator|->
+name|width
 argument_list|)
 condition|)
 name|fprintf
@@ -635,10 +634,9 @@ literal|0x80
 argument_list|,
 name|buf
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
+name|f
+operator|->
+name|width
 argument_list|)
 condition|)
 name|fprintf
