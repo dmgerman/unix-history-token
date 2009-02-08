@@ -10414,6 +10414,9 @@ decl_stmt|;
 name|vm_object_t
 name|object
 decl_stmt|;
+name|int
+name|locked
+decl_stmt|;
 name|vm_map_lock
 argument_list|(
 name|old_map
@@ -10473,6 +10476,23 @@ operator|->
 name|vm_map
 expr_stmt|;
 comment|/* XXX */
+name|locked
+operator|=
+name|vm_map_trylock
+argument_list|(
+name|new_map
+argument_list|)
+expr_stmt|;
+comment|/* trylock to silence WITNESS */
+name|KASSERT
+argument_list|(
+name|locked
+argument_list|,
+operator|(
+literal|"vmspace_fork: lock failed"
+operator|)
+argument_list|)
+expr_stmt|;
 name|new_map
 operator|->
 name|timestamp
@@ -10836,6 +10856,17 @@ label|:
 name|vm_map_unlock
 argument_list|(
 name|old_map
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vm2
+operator|!=
+name|NULL
+condition|)
+name|vm_map_unlock
+argument_list|(
+name|new_map
 argument_list|)
 expr_stmt|;
 return|return
