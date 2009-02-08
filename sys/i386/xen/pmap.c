@@ -15912,20 +15912,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 			 * Regardless of whether a pte is 32 or 64 bits 			 * in size, PG_RW and PG_M are among the least 			 * significant 32 bits. 			 */
-if|if
-condition|(
-operator|!
-name|atomic_cmpset_int
-argument_list|(
-operator|(
-name|u_int
-operator|*
-operator|)
-name|pte
-argument_list|,
-name|oldpte
-argument_list|,
+name|vm_paddr_t
+name|newpte
+init|=
 name|oldpte
 operator|&
 operator|~
@@ -15934,7 +15923,23 @@ name|PG_RW
 operator||
 name|PG_M
 operator|)
+decl_stmt|;
+comment|/* 			 * Regardless of whether a pte is 32 or 64 bits 			 * in size, PG_RW and PG_M are among the least 			 * significant 32 bits. 			 */
+name|PT_SET_VA_MA
+argument_list|(
+name|pte
+argument_list|,
+name|newpte
+argument_list|,
+name|TRUE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|pte
+operator|!=
+name|newpte
 condition|)
 goto|goto
 name|retry
