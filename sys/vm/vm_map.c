@@ -5139,6 +5139,7 @@ operator|->
 name|prev
 argument_list|)
 expr_stmt|;
+comment|/* 			 * If the backing object is the vnode object, 			 * vm_object_deallocate() results in a call to 			 * vrele(). Because the reference to the 			 * object is not last, vrele() does not lock 			 * the vnode, and map lock can be kept without 			 * causing vnode lock to be taken after the 			 * map lock. 			 */
 if|if
 condition|(
 name|prev
@@ -5311,6 +5312,7 @@ argument_list|,
 name|entry
 argument_list|)
 expr_stmt|;
+comment|/* 			 * See comment above. 			 */
 if|if
 condition|(
 name|next
@@ -10651,6 +10653,7 @@ operator|.
 name|vm_object
 argument_list|)
 expr_stmt|;
+comment|/* 				 * As in vm_map_simplify_entry(), the 				 * vnode lock may not be acquired in 				 * this call to vm_object_deallocate(). 				 */
 name|vm_object_deallocate
 argument_list|(
 name|object
