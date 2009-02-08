@@ -17827,14 +17827,6 @@ operator|->
 name|bus
 operator|!=
 name|NULL
-operator|&&
-name|path
-operator|->
-name|bus
-operator|->
-name|sim
-operator|!=
-name|NULL
 condition|)
 name|mtx_assert
 argument_list|(
