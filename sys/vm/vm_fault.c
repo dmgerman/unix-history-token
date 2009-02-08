@@ -2053,7 +2053,7 @@ literal|"vm_fault: Object requiring giant mapped by system map"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 			 * now we find out if any other pages should be paged 			 * in at this time this routine checks to see if the 			 * pages surrounding this fault reside in the same 			 * object as the page for this fault.  If they do, 			 * then they are faulted in also into the object.  The 			 * array "marray" returned contains an array of 			 * vm_page_t structs where one of them is the 			 * vm_page_t passed to the routine.  The reqpage 			 * return value is the index into the marray for the 			 * vm_page_t passed to the routine. 			 * 			 * fs.m plus the additional pages are VPO_BUSY'd. 			 * 			 * XXX vm_fault_additional_pages() can block 			 * without releasing the map lock. 			 */
+comment|/* 			 * now we find out if any other pages should be paged 			 * in at this time this routine checks to see if the 			 * pages surrounding this fault reside in the same 			 * object as the page for this fault.  If they do, 			 * then they are faulted in also into the object.  The 			 * array "marray" returned contains an array of 			 * vm_page_t structs where one of them is the 			 * vm_page_t passed to the routine.  The reqpage 			 * return value is the index into the marray for the 			 * vm_page_t passed to the routine. 			 * 			 * fs.m plus the additional pages are VPO_BUSY'd. 			 */
 name|faultcount
 operator|=
 name|vm_fault_additional_pages
