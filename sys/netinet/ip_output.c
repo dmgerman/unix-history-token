@@ -4475,7 +4475,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|ipsec4_set_policy
+name|ipsec_set_policy
 argument_list|(
 name|inp
 argument_list|,
@@ -4869,7 +4869,7 @@ expr_stmt|;
 block|}
 name|error
 operator|=
-name|ipsec4_get_policy
+name|ipsec_get_policy
 argument_list|(
 name|sotoinpcb
 argument_list|(

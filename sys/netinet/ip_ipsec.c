@@ -724,7 +724,7 @@ block|{
 comment|/* count IPsec header size */
 name|ipsechdr
 operator|=
-name|ipsec4_hdrsiz
+name|ipsec_hdrsiz
 argument_list|(
 name|m
 argument_list|,

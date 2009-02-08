@@ -8483,7 +8483,7 @@ argument_list|)
 expr_stmt|;
 name|hdrsiz
 operator|=
-name|ipsec6_hdrsiz
+name|ipsec_hdrsiz
 argument_list|(
 name|m
 argument_list|,
@@ -8549,7 +8549,7 @@ argument_list|)
 expr_stmt|;
 name|hdrsiz
 operator|=
-name|ipsec4_hdrsiz
+name|ipsec_hdrsiz
 argument_list|(
 name|m
 argument_list|,

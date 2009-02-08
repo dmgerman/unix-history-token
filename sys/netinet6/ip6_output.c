@@ -6975,7 +6975,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|ipsec6_set_policy
+name|ipsec_set_policy
 argument_list|(
 name|in6p
 argument_list|,
@@ -7754,7 +7754,7 @@ expr_stmt|;
 block|}
 name|error
 operator|=
-name|ipsec6_get_policy
+name|ipsec_get_policy
 argument_list|(
 name|in6p
 argument_list|,

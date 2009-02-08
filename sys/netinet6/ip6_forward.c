@@ -1551,7 +1551,7 @@ condition|)
 block|{
 name|ipsechdrsiz
 operator|=
-name|ipsec6_hdrsiz
+name|ipsec_hdrsiz
 argument_list|(
 name|mcopy
 argument_list|,
