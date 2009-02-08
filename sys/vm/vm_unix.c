@@ -148,6 +148,9 @@ name|td_proc
 operator|->
 name|p_vmspace
 decl_stmt|;
+name|vm_map_entry_t
+name|freelist
+decl_stmt|;
 name|vm_offset_t
 name|new
 decl_stmt|,
@@ -222,6 +225,10 @@ name|uap
 operator|->
 name|nsize
 argument_list|)
+expr_stmt|;
+name|freelist
+operator|=
+name|NULL
 expr_stmt|;
 name|vm_map_lock
 argument_list|(
@@ -455,6 +462,9 @@ argument_list|,
 name|new
 argument_list|,
 name|old
+argument_list|,
+operator|&
+name|freelist
 argument_list|)
 expr_stmt|;
 if|if
@@ -492,6 +502,16 @@ operator|&
 name|vm
 operator|->
 name|vm_map
+argument_list|)
+expr_stmt|;
+name|vm_map_entry_free_freelist
+argument_list|(
+operator|&
+name|vm
+operator|->
+name|vm_map
+argument_list|,
+name|freelist
 argument_list|)
 expr_stmt|;
 if|if
