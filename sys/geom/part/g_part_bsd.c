@@ -202,7 +202,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|g_part_bsd_dumpconf
 parameter_list|(
 name|struct
@@ -262,6 +262,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|g_part_bsd_name
@@ -1212,7 +1213,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|g_part_bsd_dumpconf
 parameter_list|(
 name|struct
@@ -1301,11 +1302,6 @@ else|else
 block|{
 comment|/* confxml: scheme information */
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -1451,6 +1447,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|g_part_bsd_name
