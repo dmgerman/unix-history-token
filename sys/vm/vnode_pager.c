@@ -1393,6 +1393,13 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|ASSERT_VOP_ELOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|"vnode_pager_setsize and not locked vnode"
+argument_list|)
+expr_stmt|;
 name|VM_OBJECT_LOCK
 argument_list|(
 name|object
