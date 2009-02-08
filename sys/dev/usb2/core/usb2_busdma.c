@@ -1370,7 +1370,7 @@ else|:
 name|size
 argument_list|,
 comment|/* flags     */
-literal|0
+name|BUS_DMA_KEEP_PG_OFFSET
 argument_list|,
 comment|/* lockfn    */
 operator|&
