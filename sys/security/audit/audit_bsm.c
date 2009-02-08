@@ -3056,6 +3056,9 @@ comment|/* FALLTHROUGH */
 case|case
 name|AUE_EXECVE
 case|:
+case|case
+name|AUE_MAC_EXECVE
+case|:
 if|if
 condition|(
 name|ARG_IS_VALID
