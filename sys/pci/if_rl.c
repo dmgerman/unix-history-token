@@ -5118,6 +5118,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+block|}
 name|bus_dma_tag_destroy
 argument_list|(
 name|sc
@@ -5135,7 +5136,6 @@ name|rl_tx_tag
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
