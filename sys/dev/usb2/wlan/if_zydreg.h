@@ -3867,8 +3867,8 @@ end_struct
 begin_define
 define|#
 directive|define
-name|ZYD_CONFIG_INDEX
-value|0
+name|ZYD_CONFIG_NO
+value|1
 end_define
 
 begin_define
@@ -4403,21 +4403,21 @@ name|ZYD_FLAG_FWLOADED
 value|(1<< 0)
 define|#
 directive|define
-name|ZYD_FLAG_INITONCE
+name|ZYD_FLAG_DETACHING
 value|(1<< 1)
 define|#
 directive|define
-name|ZYD_FLAG_INITDONE
+name|ZYD_FLAG_INITONCE
 value|(1<< 2)
+define|#
+directive|define
+name|ZYD_FLAG_INITDONE
+value|(1<< 3)
 name|int
 name|sc_if_flags
 decl_stmt|;
-name|struct
-name|zyd_task
-name|sc_synctask
-index|[
-literal|2
-index|]
+name|uint32_t
+name|sc_debug
 decl_stmt|;
 name|struct
 name|zyd_task
@@ -4567,10 +4567,8 @@ name|sc_intr_cv
 decl_stmt|;
 name|struct
 name|zyd_tx_data
+modifier|*
 name|tx_data
-index|[
-name|ZYD_TX_LIST_CNT
-index|]
 decl_stmt|;
 name|zyd_txdhead
 name|tx_q
