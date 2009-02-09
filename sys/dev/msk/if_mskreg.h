@@ -15440,13 +15440,6 @@ name|MSK_TSO_MAXSIZE
 value|(65535 + sizeof(struct ether_vlan_header))
 end_define
 
-begin_define
-define|#
-directive|define
-name|MSK_MAXRXSEGS
-value|32
-end_define
-
 begin_comment
 comment|/*  * It seems that the hardware requires extra decriptors(LEs) to offload  * TCP/UDP checksum, VLAN hardware tag inserstion and TSO.  *  * 1 descriptor for TCP/UDP checksum offload.  * 1 descriptor VLAN hardware tag insertion.  * 1 descriptor for TSO(TCP Segmentation Offload)  * 1 descriptor for 64bits DMA : Not applicatable due to the use of  *  BUS_SPACE_MAXADDR_32BIT in parent DMA tag creation.  */
 end_comment
@@ -15490,66 +15483,6 @@ directive|define
 name|MSK_MIN_FRAMELEN
 value|(ETHER_MIN_LEN - ETHER_CRC_LEN)
 end_define
-
-begin_define
-define|#
-directive|define
-name|MSK_JSLOTS
-value|((MSK_RX_RING_CNT * 3) / 2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MSK_JRAWLEN
-value|(MSK_JUMBO_FRAMELEN + ETHER_ALIGN)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MSK_JLEN
-value|(MSK_JRAWLEN + (sizeof(uint64_t) - \ 	(MSK_JRAWLEN % sizeof(uint64_t))))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MSK_JPAGESZ
-value|PAGE_SIZE
-end_define
-
-begin_define
-define|#
-directive|define
-name|MSK_RESID
-define|\
-value|(MSK_JPAGESZ - (MSK_JLEN * MSK_JSLOTS) % MSK_JPAGESZ)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MSK_JMEM
-value|((MSK_JLEN * MSK_JSLOTS) + MSK_RESID)
-end_define
-
-begin_struct
-struct|struct
-name|msk_jpool_entry
-block|{
-name|int
-name|slot
-decl_stmt|;
-name|SLIST_ENTRY
-argument_list|(
-argument|msk_jpool_entry
-argument_list|)
-name|jpool_entries
-expr_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct
@@ -15638,21 +15571,6 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|msk_jumbo_rx_tag
 decl_stmt|;
-name|bus_dma_tag_t
-name|msk_jumbo_tag
-decl_stmt|;
-name|bus_dmamap_t
-name|msk_jumbo_map
-decl_stmt|;
-name|bus_dma_tag_t
-name|msk_jumbo_mtag
-decl_stmt|;
-name|caddr_t
-name|msk_jslots
-index|[
-name|MSK_JSLOTS
-index|]
-decl_stmt|;
 name|struct
 name|msk_rxdesc
 name|msk_jumbo_rxdesc
@@ -15724,13 +15642,6 @@ name|msk_jumbo_rx_ring
 decl_stmt|;
 name|bus_addr_t
 name|msk_jumbo_rx_ring_paddr
-decl_stmt|;
-name|void
-modifier|*
-name|msk_jumbo_buf
-decl_stmt|;
-name|bus_addr_t
-name|msk_jumbo_buf_paddr
 decl_stmt|;
 block|}
 struct|;
@@ -16169,6 +16080,10 @@ define|#
 directive|define
 name|MSK_FLAG_RAMBUF
 value|0x0010
+define|#
+directive|define
+name|MSK_FLAG_NOJUMBO
+value|0x0020
 name|struct
 name|callout
 name|msk_tick_ch
@@ -16220,49 +16135,9 @@ name|uint16_t
 name|msk_vtag
 decl_stmt|;
 comment|/* VLAN tag id. */
-name|SLIST_HEAD
-argument_list|(
-argument|__msk_jfreehead
-argument_list|,
-argument|msk_jpool_entry
-argument_list|)
-name|msk_jfree_listhead
-expr_stmt|;
-name|SLIST_HEAD
-argument_list|(
-argument|__msk_jinusehead
-argument_list|,
-argument|msk_jpool_entry
-argument_list|)
-name|msk_jinuse_listhead
-expr_stmt|;
-name|struct
-name|mtx
-name|msk_jlist_mtx
-decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|MSK_JLIST_LOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_lock(&(_sc)->msk_jlist_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MSK_JLIST_UNLOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_unlock(&(_sc)->msk_jlist_mtx)
-end_define
 
 begin_define
 define|#
