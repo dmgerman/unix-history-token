@@ -2275,8 +2275,6 @@ name|firewire_comm
 modifier|*
 name|fc
 init|=
-name|fc
-operator|=
 name|fwip
 operator|->
 name|fd
