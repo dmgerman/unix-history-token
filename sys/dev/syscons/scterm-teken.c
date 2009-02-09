@@ -115,6 +115,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|unsigned
+name|int
+name|scteken_attr
+parameter_list|(
+specifier|const
+name|teken_attr_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|sc_term_init_t
@@ -655,9 +668,21 @@ modifier|*
 name|td
 parameter_list|)
 block|{
+name|teken_stat
+modifier|*
+name|ts
+init|=
+name|scp
+operator|->
+name|ts
+decl_stmt|;
 name|vid_info_t
 modifier|*
 name|vi
+decl_stmt|;
+name|unsigned
+name|int
+name|attr
 decl_stmt|;
 switch|switch
 condition|(
@@ -675,7 +700,16 @@ operator|*
 operator|)
 name|data
 operator|=
-name|SC_NORM_ATTR
+name|scteken_attr
+argument_list|(
+name|teken_get_curattr
+argument_list|(
+operator|&
+name|ts
+operator|->
+name|ts_teken
+argument_list|)
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -686,7 +720,6 @@ case|case
 name|CONS_GETINFO
 case|:
 comment|/* get current (virtual) console info */
-comment|/* XXX: INCORRECT! */
 name|vi
 operator|=
 operator|(
@@ -710,13 +743,26 @@ condition|)
 return|return
 name|EINVAL
 return|;
+name|attr
+operator|=
+name|scteken_attr
+argument_list|(
+name|teken_get_defattr
+argument_list|(
+operator|&
+name|ts
+operator|->
+name|ts_teken
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|vi
 operator|->
 name|mv_norm
 operator|.
 name|fore
 operator|=
-name|SC_NORM_ATTR
+name|attr
 operator|&
 literal|0x0f
 expr_stmt|;
@@ -727,7 +773,7 @@ operator|.
 name|back
 operator|=
 operator|(
-name|SC_NORM_ATTR
+name|attr
 operator|>>
 literal|4
 operator|)
@@ -740,9 +786,11 @@ name|mv_rev
 operator|.
 name|fore
 operator|=
-name|SC_NORM_ATTR
-operator|&
-literal|0x0f
+name|vi
+operator|->
+name|mv_norm
+operator|.
+name|back
 expr_stmt|;
 name|vi
 operator|->
@@ -750,13 +798,11 @@ name|mv_rev
 operator|.
 name|back
 operator|=
-operator|(
-name|SC_NORM_ATTR
-operator|>>
-literal|4
-operator|)
-operator|&
-literal|0x0f
+name|vi
+operator|->
+name|mv_norm
+operator|.
+name|fore
 expr_stmt|;
 comment|/* 		 * The other fields are filled by the upper routine. XXX 		 */
 return|return
@@ -1164,7 +1210,6 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|unsigned
 name|int
 name|scteken_attr
@@ -1256,8 +1301,6 @@ comment|/* FG_BLINK */
 return|return
 operator|(
 name|attr
-operator|<<
-literal|8
 operator|)
 return|;
 block|}
@@ -1413,6 +1456,8 @@ name|scteken_attr
 argument_list|(
 name|a
 argument_list|)
+operator|<<
+literal|8
 expr_stmt|;
 name|ch
 operator|=
@@ -1585,6 +1630,8 @@ name|scteken_attr
 argument_list|(
 name|a
 argument_list|)
+operator|<<
+literal|8
 expr_stmt|;
 name|ch
 operator|=

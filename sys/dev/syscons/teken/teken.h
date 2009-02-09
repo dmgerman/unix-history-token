@@ -720,8 +720,32 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Set teken attributes. */
+comment|/* Get/set teken attributes. */
 end_comment
+
+begin_function_decl
+specifier|const
+name|teken_attr_t
+modifier|*
+name|teken_get_curattr
+parameter_list|(
+name|teken_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|teken_attr_t
+modifier|*
+name|teken_get_defattr
+parameter_list|(
+name|teken_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
