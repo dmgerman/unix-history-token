@@ -4405,6 +4405,10 @@ name|RL_FLAG_MACSTAT
 value|0x0080
 define|#
 directive|define
+name|RL_FLAG_FASTETHER
+value|0x0100
+define|#
+directive|define
 name|RL_FLAG_LINK
 value|0x8000
 block|}
