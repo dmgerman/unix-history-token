@@ -596,6 +596,17 @@ begin_comment
 comment|/* save bad pkts: bad size, CRC, etc */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FXP_FLAG_82559_RXCSUM
+value|0x1000
+end_define
+
+begin_comment
+comment|/* 82559 compatible RX checksum */
+end_comment
+
 begin_comment
 comment|/* Macros to ease CSR access. */
 end_comment
