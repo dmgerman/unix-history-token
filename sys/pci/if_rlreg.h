@@ -4458,6 +4458,10 @@ name|RL_FLAG_MACSLEEP
 value|0x2000
 define|#
 directive|define
+name|RL_FLAG_PCIE
+value|0x4000
+define|#
+directive|define
 name|RL_FLAG_LINK
 value|0x8000
 block|}
@@ -4692,6 +4696,13 @@ define|#
 directive|define
 name|RL_TIMEOUT
 value|1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_PHY_TIMEOUT
+value|2000
 end_define
 
 begin_comment
