@@ -32635,11 +32635,22 @@ directive|include
 file|<sys/proc.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<netinet6/sctp6_var.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
