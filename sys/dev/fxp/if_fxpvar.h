@@ -18,6 +18,13 @@ name|FXP_NTXCB
 value|128
 end_define
 
+begin_define
+define|#
+directive|define
+name|FXP_NTXCB_HIWAT
+value|((FXP_NTXCB * 7) / 10)
+end_define
+
 begin_comment
 comment|/*  * Size of the TxCB list.  */
 end_comment
