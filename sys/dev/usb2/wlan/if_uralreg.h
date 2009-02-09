@@ -46,27 +46,6 @@ begin_comment
 comment|/* NOTE: using 0x980 does not work */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|(
-name|RAL_FRAME_SIZE
-operator|%
-literal|0x80
-operator|)
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"Invalid RAL_FRAME_SIZE"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -124,7 +103,7 @@ value|0x09
 end_define
 
 begin_comment
-comment|/* MAC registers. */
+comment|/*  * MAC registers.  */
 end_comment
 
 begin_define
@@ -370,7 +349,7 @@ comment|/* XXX not documented */
 end_comment
 
 begin_comment
-comment|/* Tx/Rx Registers. */
+comment|/*  * Tx/Rx Registers.  */
 end_comment
 
 begin_define
@@ -506,7 +485,7 @@ comment|/* XXX not documented */
 end_comment
 
 begin_comment
-comment|/* Security registers. */
+comment|/*  * Security registers.  */
 end_comment
 
 begin_define
@@ -521,7 +500,7 @@ comment|/* Shared key 0, word 0 */
 end_comment
 
 begin_comment
-comment|/* PHY registers. */
+comment|/*  * PHY registers.  */
 end_comment
 
 begin_define
@@ -613,7 +592,7 @@ comment|/* RF serial control1 */
 end_comment
 
 begin_comment
-comment|/* Statistics registers. */
+comment|/*  * Statistics registers.  */
 end_comment
 
 begin_define
@@ -907,83 +886,6 @@ name|RAL_JAPAN_FILTER
 value|0x08
 end_define
 
-begin_define
-define|#
-directive|define
-name|RAL_RF_LOBUSY
-value|(1<< 15)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RAL_RF_BUSY
-value|(1<< 31)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RAL_RF_20BIT
-value|(20<< 24)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RAL_RF1
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|RAL_RF2
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|RAL_RF3
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|RAL_RF4
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|RAL_EEPROM_ADDRESS
-value|0x0004
-end_define
-
-begin_define
-define|#
-directive|define
-name|RAL_EEPROM_TXPOWER
-value|0x003c
-end_define
-
-begin_define
-define|#
-directive|define
-name|RAL_EEPROM_CONFIG0
-value|0x0016
-end_define
-
-begin_define
-define|#
-directive|define
-name|RAL_EEPROM_BBP_BASE
-value|0x001c
-end_define
-
 begin_struct
 struct|struct
 name|ural_tx_desc
@@ -991,13 +893,6 @@ block|{
 name|uint32_t
 name|flags
 decl_stmt|;
-define|#
-directive|define
-name|RAL_TX_PACKET_ID
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& 0xf)
 define|#
 directive|define
 name|RAL_TX_RETRY
@@ -1144,6 +1039,83 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|RAL_RF_LOBUSY
+value|(1<< 15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAL_RF_BUSY
+value|(1<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAL_RF_20BIT
+value|(20<< 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAL_RF1
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAL_RF2
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAL_RF3
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAL_RF4
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAL_EEPROM_ADDRESS
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAL_EEPROM_TXPOWER
+value|0x003c
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAL_EEPROM_CONFIG0
+value|0x0016
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAL_EEPROM_BBP_BASE
+value|0x001c
+end_define
 
 end_unit
 

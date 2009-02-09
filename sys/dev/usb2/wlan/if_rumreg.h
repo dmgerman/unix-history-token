@@ -924,11 +924,6 @@ define|#
 directive|define
 name|RT2573_TX_HWSEQ
 value|(1<< 12)
-define|#
-directive|define
-name|RT2573_TX_BEACON
-value|(1<< 15)
-comment|/* Internal flag only! */
 name|uint8_t
 name|plcp_signal
 decl_stmt|;

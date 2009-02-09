@@ -8,8 +8,6 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_decl_stmt
-specifier|static
-specifier|const
 name|uint8_t
 name|zd1211_firmware
 index|[]
@@ -10270,8 +10268,6 @@ value|4705
 end_define
 
 begin_decl_stmt
-specifier|static
-specifier|const
 name|uint8_t
 name|zd1211b_firmware
 index|[]
