@@ -663,10 +663,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|comma
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|so_state
