@@ -3084,7 +3084,7 @@ name|sco
 argument_list|)
 condition|)
 block|{
-name|NG_HCI_WARN
+name|NG_HCI_INFO
 argument_list|(
 literal|"%s: %s - could not forward HCI SCO data packet, state=%#x, hook=%p\n"
 argument_list|,
