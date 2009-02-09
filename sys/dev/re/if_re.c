@@ -283,7 +283,7 @@ specifier|static
 name|int
 name|msi_disable
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -9439,6 +9439,12 @@ argument_list|(
 name|sc
 operator|->
 name|rl_dev
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Reclaim transmitted frames here. Technically it is not 	 * necessary to do here but it ensures periodic reclamation 	 * regardless of Tx completion interrupt which seems to be 	 * lost on PCIe based controllers under certain situations.  	 */
+name|re_txeof
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|re_watchdog
