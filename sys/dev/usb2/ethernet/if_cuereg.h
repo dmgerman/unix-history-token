@@ -385,13 +385,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|CUE_MCAST_TABLE_LEN
-value|64
-end_define
-
-begin_define
-define|#
-directive|define
 name|CUE_TIMEOUT
 value|1000
 end_define
@@ -460,13 +453,7 @@ name|CUE_BULK_DT_WR
 block|,
 name|CUE_BULK_DT_RD
 block|,
-name|CUE_BULK_CS_WR
-block|,
-name|CUE_BULK_CS_RD
-block|,
 name|CUE_N_TRANSFER
-init|=
-literal|4
 block|, }
 enum|;
 end_enum
@@ -476,29 +463,12 @@ struct|struct
 name|cue_softc
 block|{
 name|struct
-name|ifnet
-modifier|*
-name|sc_ifp
-decl_stmt|;
-name|struct
-name|usb2_config_td
-name|sc_config_td
-decl_stmt|;
-name|struct
-name|usb2_callout
-name|sc_watchdog
+name|usb2_ether
+name|sc_ue
 decl_stmt|;
 name|struct
 name|mtx
 name|sc_mtx
-decl_stmt|;
-name|device_t
-name|sc_dev
-decl_stmt|;
-name|struct
-name|usb2_device
-modifier|*
-name|sc_udev
 decl_stmt|;
 name|struct
 name|usb2_xfer
@@ -508,40 +478,49 @@ index|[
 name|CUE_N_TRANSFER
 index|]
 decl_stmt|;
-name|uint32_t
-name|sc_unit
-decl_stmt|;
-name|uint16_t
+name|int
 name|sc_flags
 decl_stmt|;
 define|#
 directive|define
-name|CUE_FLAG_READ_STALL
-value|0x0010
-comment|/* wait for clearing of stall */
-define|#
-directive|define
-name|CUE_FLAG_WRITE_STALL
-value|0x0020
-comment|/* wait for clearing of stall */
-define|#
-directive|define
-name|CUE_FLAG_LL_READY
-value|0x0040
-comment|/* Lower Layer Ready */
-define|#
-directive|define
-name|CUE_FLAG_HL_READY
-value|0x0080
-comment|/* Higher Layer Ready */
-define|#
-directive|define
-name|CUE_FLAG_INTR_STALL
-value|0x0100
-comment|/* wait for clearing of stall */
+name|CUE_FLAG_LINK
+value|0x0001
+comment|/* got a link */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|CUE_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->sc_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CUE_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(&(_sc)->sc_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CUE_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|,
+name|t
+parameter_list|)
+value|mtx_assert(&(_sc)->sc_mtx, t)
+end_define
 
 end_unit
 

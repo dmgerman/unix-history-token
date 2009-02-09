@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Bill Paul<wpaul@ee.columbia.edu
 end_comment
 
 begin_comment
-comment|/*  * Register definitions for ADMtek Pegasus AN986 USB to Ethernet  * chip. The Pegasus uses a total of four USB endpoints: the control  * endpoint (0), a bulk read endpoint for receiving packets (1),  * a bulk write endpoint for sending packets (2) and an interrupt  * endpoint for passing RX and TX status (3). Endpoint 0 is used  * to read and write the ethernet module's registers. All registers  * are 8 bits wide.  *  * Packet transfer is done in 64 byte chunks. The last chunk in a  * transfer is denoted by having a length less that 64 bytes.  For  * the RX case, the data includes an optional RX status word.  */
+comment|/*  * Register definitions for ADMtek Pegasus AN986 USB to Ethernet  * chip. The Pegasus uses a total of four USB endpoints: the control  * endpoint (0), a bulk read endpoint for receiving packets (1),  * a bulk write endpoint for sending packets (2) and an interrupt  * endpoint for passing RX and TX status (3). Endpoint 0 is used  * to read and write the ethernet module's registers. All registers  * are 8 bits wide.  *  * Packet transfer is done in 64 byte chunks. The last chunk in a  * transfer is denoted by having a length less that 64 bytes. For  * the RX case, the data includes an optional RX status word.  */
 end_comment
 
 begin_define
@@ -50,17 +50,9 @@ name|AUE_BULK_DT_WR
 block|,
 name|AUE_BULK_DT_RD
 block|,
-name|AUE_BULK_CS_WR
-block|,
-name|AUE_BULK_CS_RD
-block|,
 name|AUE_INTR_DT_RD
 block|,
-name|AUE_INTR_CS_RD
-block|,
 name|AUE_N_TRANSFER
-init|=
-literal|6
 block|, }
 enum|;
 end_enum
@@ -795,7 +787,7 @@ name|GET_MII
 parameter_list|(
 name|sc
 parameter_list|)
-value|((sc)->sc_miibus ?				\ 			    device_get_softc((sc)->sc_miibus) : NULL)
+value|usb2_ether_getmii(&(sc)->sc_ue)
 end_define
 
 begin_struct
@@ -838,6 +830,9 @@ decl_stmt|;
 name|uint8_t
 name|aue_rxstat
 decl_stmt|;
+name|uint8_t
+name|pad
+decl_stmt|;
 block|}
 name|__packed
 struct|;
@@ -848,30 +843,12 @@ struct|struct
 name|aue_softc
 block|{
 name|struct
-name|ifnet
-modifier|*
-name|sc_ifp
-decl_stmt|;
-name|struct
-name|usb2_config_td
-name|sc_config_td
-decl_stmt|;
-name|struct
-name|usb2_callout
-name|sc_watchdog
+name|usb2_ether
+name|sc_ue
 decl_stmt|;
 name|struct
 name|mtx
 name|sc_mtx
-decl_stmt|;
-name|struct
-name|aue_rxpkt
-name|sc_rxpkt
-decl_stmt|;
-name|struct
-name|usb2_device
-modifier|*
-name|sc_udev
 decl_stmt|;
 name|struct
 name|usb2_xfer
@@ -881,22 +858,7 @@ index|[
 name|AUE_N_TRANSFER
 index|]
 decl_stmt|;
-name|device_t
-name|sc_miibus
-decl_stmt|;
-name|device_t
-name|sc_dev
-decl_stmt|;
-name|uint32_t
-name|sc_unit
-decl_stmt|;
-name|uint32_t
-name|sc_media_active
-decl_stmt|;
-name|uint32_t
-name|sc_media_status
-decl_stmt|;
-name|uint16_t
+name|int
 name|sc_flags
 decl_stmt|;
 define|#
@@ -916,34 +878,9 @@ value|0x0004
 comment|/* Pegasus II chip */
 define|#
 directive|define
-name|AUE_FLAG_WAIT_LINK
+name|AUE_FLAG_LINK
 value|0x0008
 comment|/* wait for link to come up */
-define|#
-directive|define
-name|AUE_FLAG_READ_STALL
-value|0x0010
-comment|/* wait for clearing of stall */
-define|#
-directive|define
-name|AUE_FLAG_WRITE_STALL
-value|0x0020
-comment|/* wait for clearing of stall */
-define|#
-directive|define
-name|AUE_FLAG_LL_READY
-value|0x0040
-comment|/* Lower Layer Ready */
-define|#
-directive|define
-name|AUE_FLAG_HL_READY
-value|0x0080
-comment|/* Higher Layer Ready */
-define|#
-directive|define
-name|AUE_FLAG_INTR_STALL
-value|0x0100
-comment|/* wait for clearing of stall */
 define|#
 directive|define
 name|AUE_FLAG_VER_2
@@ -954,15 +891,41 @@ directive|define
 name|AUE_FLAG_DUAL_PHY
 value|0x0400
 comment|/* chip has two transcivers */
-name|uint8_t
-name|sc_name
-index|[
-literal|16
-index|]
-decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|AUE_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->sc_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(&(_sc)->sc_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|,
+name|t
+parameter_list|)
+value|mtx_assert(&(_sc)->sc_mtx, t)
+end_define
 
 end_unit
 
