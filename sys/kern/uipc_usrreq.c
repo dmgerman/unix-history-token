@@ -4613,16 +4613,11 @@ name|unp_flags
 operator|&
 name|UNP_CONNECTING
 condition|)
-block|{
-name|UNP_UNLOCK
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|EALREADY
 operator|)
 return|;
-block|}
 name|unp
 operator|->
 name|unp_flags
