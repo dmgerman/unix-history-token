@@ -1375,7 +1375,7 @@ decl_stmt|;
 name|uint8_t
 name|tbd_number
 decl_stmt|;
-comment|/* 	 * The following structure isn't actually part of the TxCB, 	 * unless the extended TxCB feature is being used.  In this 	 * case, the first two elements of the structure below are  	 * fetched along with the TxCB. 	 */
+comment|/* 	 * The following structure isn't actually part of the TxCB, 	 * unless the extended TxCB feature is being used.  In this 	 * case, the first two elements of the structure below are 	 * fetched along with the TxCB. 	 */
 union|union
 block|{
 name|struct

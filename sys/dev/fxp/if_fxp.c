@@ -53,23 +53,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/endian.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
+file|<sys/kernel.h>
 end_include
-
-begin_comment
-comment|/* #include<sys/mutex.h> */
-end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
+file|<sys/mbuf.h>
 end_include
 
 begin_include
@@ -81,7 +83,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sockio.h>
 end_include
 
 begin_include
@@ -93,7 +107,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/bpf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/ethernet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_arp.h>
 end_include
 
 begin_include
@@ -111,19 +143,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/bpf.h>
+file|<net/if_types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/sockio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/bus.h>
+file|<net/if_vlan_var.h>
 end_include
 
 begin_include
@@ -135,37 +161,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/rman.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/ethernet.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_arp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_vlan_var.h>
 end_include
 
 begin_ifdef
@@ -2782,7 +2778,7 @@ name|rnr
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Enable workarounds for certain chip revision deficiencies. 	 * 	 * Systems based on the ICH2/ICH2-M chip from Intel, and possibly 	 * some systems based a normal 82559 design, have a defect where 	 * the chip can cause a PCI protocol violation if it receives 	 * a CU_RESUME command when it is entering the IDLE state.  The  	 * workaround is to disable Dynamic Standby Mode, so the chip never 	 * deasserts CLKRUN#, and always remains in an active state. 	 * 	 * See Intel 82801BA/82801BAM Specification Update, Errata #30. 	 */
+comment|/* 	 * Enable workarounds for certain chip revision deficiencies. 	 * 	 * Systems based on the ICH2/ICH2-M chip from Intel, and possibly 	 * some systems based a normal 82559 design, have a defect where 	 * the chip can cause a PCI protocol violation if it receives 	 * a CU_RESUME command when it is entering the IDLE state.  The 	 * workaround is to disable Dynamic Standby Mode, so the chip never 	 * deasserts CLKRUN#, and always remains in an active state. 	 * 	 * See Intel 82801BA/82801BAM Specification Update, Errata #30. 	 */
 name|i
 operator|=
 name|pci_get_device
@@ -4230,7 +4226,7 @@ operator|->
 name|if_snd
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Hook our interrupt after all initialization is complete. 	 */
+comment|/* 	 * Hook our interrupt after all initialization is complete. 	 */
 name|error
 operator|=
 name|bus_setup_intr
@@ -5856,7 +5852,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Start packet transmission on the interface.    * This routine must be called with the softc lock held, and is an  * internal entry point only.  */
+comment|/*  * Start packet transmission on the interface.  * This routine must be called with the softc lock held, and is an  * internal entry point only.  */
 end_comment
 
 begin_function
@@ -6182,7 +6178,7 @@ name|ip
 operator|=
 name|mtod
 argument_list|(
-name|mb_head
+name|m_head
 argument_list|,
 expr|struct
 name|ip
@@ -6195,7 +6191,7 @@ name|ip_sum
 operator|=
 name|in_cksum
 argument_list|(
-name|mb_head
+name|m_head
 argument_list|,
 name|ip
 operator|->
@@ -6963,7 +6959,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * It should not be possible to have all bits set; the 		 * FXP_SCB_INTR_SWI bit always returns 0 on a read.  If  		 * all bits are set, this may indicate that the card has 		 * been physically ejected, so ignore it. 		 */
+comment|/* 		 * It should not be possible to have all bits set; the 		 * FXP_SCB_INTR_SWI bit always returns 0 on a read.  If 		 * all bits are set, this may indicate that the card has 		 * been physically ejected, so ignore it. 		 */
 if|if
 condition|(
 name|statack
@@ -10141,7 +10137,7 @@ name|m_ext
 operator|.
 name|ext_buf
 expr_stmt|;
-comment|/* 		 * return error so the receive loop will  		 * not pass the packet to upper layer 		 */
+comment|/* 		 * return error so the receive loop will 		 * not pass the packet to upper layer 		 */
 name|reused_mbuf
 operator|=
 name|EAGAIN
@@ -12229,7 +12225,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Interrupt delay is expressed in microseconds, a multiplier is used  * to convert this to the appropriate clock ticks before using.   */
+comment|/*  * Interrupt delay is expressed in microseconds, a multiplier is used  * to convert this to the appropriate clock ticks before using.  */
 end_comment
 
 begin_function
