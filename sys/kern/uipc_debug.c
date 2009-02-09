@@ -511,7 +511,7 @@ condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|"%sSS_FDREF"
+literal|"%sSS_NOFDREF"
 argument_list|,
 name|comma
 condition|?
