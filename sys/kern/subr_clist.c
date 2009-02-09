@@ -259,7 +259,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Freed cblocks have zero quotes and garbage elsewhere. 		 * Set the may-have-quote bit to force zeroing the quotes. 		 */
 name|cblock_free
 argument_list|(
 name|cbp
