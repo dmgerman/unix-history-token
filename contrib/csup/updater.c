@@ -9550,8 +9550,6 @@ name|sr
 operator|->
 name|sr_serverattr
 argument_list|)
-operator|==
-literal|0
 condition|)
 name|lprintf
 argument_list|(
@@ -9574,6 +9572,20 @@ argument_list|,
 name|fup
 operator|->
 name|coname
+argument_list|)
+expr_stmt|;
+comment|/* Install new attributes. */
+name|fattr_install
+argument_list|(
+name|sr
+operator|->
+name|sr_serverattr
+argument_list|,
+name|fup
+operator|->
+name|destpath
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
