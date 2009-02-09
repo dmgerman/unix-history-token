@@ -1735,9 +1735,6 @@ name|device_t
 name|parent
 parameter_list|)
 block|{
-name|device_t
-name|child
-decl_stmt|;
 name|SBP_DEBUG
 argument_list|(
 literal|0
@@ -1748,8 +1745,6 @@ literal|"sbp_identify\n"
 argument_list|)
 expr_stmt|;
 name|END_DEBUG
-name|child
-init|=
 name|BUS_ADD_CHILD
 argument_list|(
 name|parent
