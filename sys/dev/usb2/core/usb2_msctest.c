@@ -2498,7 +2498,7 @@ name|sc
 operator|->
 name|mtx
 argument_list|,
-name|USB_MS_HZ
+name|hz
 argument_list|)
 expr_stmt|;
 goto|goto

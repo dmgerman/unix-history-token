@@ -5067,7 +5067,10 @@ argument_list|(
 operator|&
 name|Giant
 argument_list|,
+name|USB_MS_TO_TICKS
+argument_list|(
 name|USB_SET_ADDRESS_SETTLE
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -7345,6 +7348,36 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*  * Returns:  * See: USB_MODE_XXX  */
+end_comment
+
+begin_function
+name|uint8_t
+name|usb2_get_mode
+parameter_list|(
+name|struct
+name|usb2_device
+modifier|*
+name|udev
+parameter_list|)
+block|{
+return|return
+operator|(
+name|udev
+operator|->
+name|flags
+operator|.
+name|usb2_mode
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Returns:  * See: USB_SPEED_XXX  */
+end_comment
 
 begin_function
 name|uint8_t

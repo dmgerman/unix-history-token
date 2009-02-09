@@ -1280,7 +1280,10 @@ argument_list|(
 operator|&
 name|Giant
 argument_list|,
+name|USB_MS_TO_TICKS
+argument_list|(
 name|USB_PORT_POWERUP_DELAY
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* reset port, which implies enabling it */
@@ -2830,7 +2833,10 @@ argument_list|(
 operator|&
 name|Giant
 argument_list|,
+name|USB_MS_TO_TICKS
+argument_list|(
 name|USB_POWER_DOWN_TIME
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * To have the best chance of success we do things in the exact same 	 * order as Windoze98.  This should not be necessary, but some 	 * devices do not follow the USB specs to the letter. 	 * 	 * These are the events on the bus when a hub is attached: 	 *  Get device and config descriptors (see attach code) 	 *  Get hub descriptor (see above) 	 *  For all ports 	 *     turn on power 	 *     wait for power to become stable 	 * (all below happens in explore code) 	 *  For all ports 	 *     clear C_PORT_CONNECTION 	 *  For all ports 	 *     get port status 	 *     if device connected 	 *        wait 100 ms 	 *        turn on reset 	 *        wait 	 *        clear C_PORT_RESET 	 *        get port status 	 *        proceed with device attachment 	 */
@@ -2969,7 +2975,10 @@ argument_list|(
 operator|&
 name|Giant
 argument_list|,
+name|USB_MS_TO_TICKS
+argument_list|(
 name|pwrdly
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6061,7 +6070,10 @@ argument_list|(
 operator|&
 name|Giant
 argument_list|,
+name|USB_MS_TO_TICKS
+argument_list|(
 name|USB_PORT_RESUME_DELAY
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -6592,7 +6604,10 @@ argument_list|(
 operator|&
 name|Giant
 argument_list|,
+name|USB_MS_TO_TICKS
+argument_list|(
 name|temp
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

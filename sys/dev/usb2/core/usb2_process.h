@@ -210,8 +210,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|uint8_t
-name|usb2_proc_setup
+name|int
+name|usb2_proc_create
 parameter_list|(
 name|struct
 name|usb2_process
@@ -222,6 +222,11 @@ name|struct
 name|mtx
 modifier|*
 name|p_mtx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|pmesg
 parameter_list|,
 name|uint8_t
 name|prio
@@ -275,7 +280,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_proc_unsetup
+name|usb2_proc_free
 parameter_list|(
 name|struct
 name|usb2_process

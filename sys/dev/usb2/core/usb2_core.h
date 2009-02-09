@@ -1644,6 +1644,18 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
+name|usb2_get_mode
+parameter_list|(
+name|struct
+name|usb2_device
+modifier|*
+name|udev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint8_t
 name|usb2_get_speed
 parameter_list|(
 name|struct

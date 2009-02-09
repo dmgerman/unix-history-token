@@ -476,12 +476,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_proc_setup  *  * This function will create a process using the given "prio" that can  * execute callbacks. The mutex pointed to by "p_mtx" will be applied  * before calling the callbacks and released after that the callback  * has returned. The structure pointed to by "up" is assumed to be  * zeroed before this function is called.  *  * Return values:  *    0: success  * Else: failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_proc_create  *  * This function will create a process using the given "prio" that can  * execute callbacks. The mutex pointed to by "p_mtx" will be applied  * before calling the callbacks and released after that the callback  * has returned. The structure pointed to by "up" is assumed to be  * zeroed before this function is called.  *  * Return values:  *    0: success  * Else: failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
-name|uint8_t
-name|usb2_proc_setup
+name|int
+name|usb2_proc_create
 parameter_list|(
 name|struct
 name|usb2_process
@@ -492,6 +492,11 @@ name|struct
 name|mtx
 modifier|*
 name|p_mtx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|pmesg
 parameter_list|,
 name|uint8_t
 name|prio
@@ -551,7 +556,7 @@ name|up
 operator|->
 name|up_ptr
 argument_list|,
-literal|"usbproc"
+name|pmesg
 argument_list|)
 condition|)
 block|{
@@ -579,26 +584,26 @@ operator|)
 return|;
 name|error
 label|:
-name|usb2_proc_unsetup
+name|usb2_proc_free
 argument_list|(
 name|up
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|ENOMEM
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_proc_unsetup  *  * NOTE: If the structure pointed to by "up" is all zero, this  * function does nothing.  *  * NOTE: Messages that are pending on the process queue will not be  * removed nor called.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_proc_free  *  * NOTE: If the structure pointed to by "up" is all zero, this  * function does nothing.  *  * NOTE: Messages that are pending on the process queue will not be  * removed nor called.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_proc_unsetup
+name|usb2_proc_free
 parameter_list|(
 name|struct
 name|usb2_process

@@ -4563,7 +4563,10 @@ name|bus
 operator|->
 name|bus_mtx
 argument_list|,
+name|USB_MS_TO_TICKS
+argument_list|(
 name|temp
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
