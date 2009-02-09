@@ -1387,6 +1387,8 @@ name|fxp_tbd
 name|tbd
 index|[
 name|FXP_NTXSEG
+operator|+
+literal|1
 index|]
 decl_stmt|;
 block|}
