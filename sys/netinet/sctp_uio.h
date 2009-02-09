@@ -3296,6 +3296,13 @@ decl_stmt|;
 name|uint16_t
 name|maxqlen
 decl_stmt|;
+name|uint32_t
+name|extra_padding
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* future */
 block|}
 struct|;
 end_struct
@@ -3403,6 +3410,13 @@ name|sctp_assoc_t
 name|assoc_id
 decl_stmt|;
 comment|/* sctpAssocEntry 1   */
+name|uint32_t
+name|extra_padding
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* future */
 block|}
 struct|;
 end_struct
@@ -3424,6 +3438,13 @@ name|sctp_timeval
 name|start_time
 decl_stmt|;
 comment|/* sctpAssocLocalAddrEntry 3   */
+name|uint32_t
+name|extra_padding
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* future */
 block|}
 struct|;
 end_struct
@@ -3485,6 +3506,13 @@ name|sctp_timeval
 name|start_time
 decl_stmt|;
 comment|/* sctpAssocLocalRemEntry 8   */
+name|uint32_t
+name|extra_padding
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* future */
 block|}
 struct|;
 end_struct
