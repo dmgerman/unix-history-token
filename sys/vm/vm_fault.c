@@ -578,6 +578,8 @@ decl_stmt|,
 name|result
 decl_stmt|;
 name|boolean_t
+name|are_queues_locked
+decl_stmt|,
 name|growstack
 decl_stmt|,
 name|wired
@@ -1635,8 +1637,9 @@ literal|2
 operator|*
 name|VM_FAULT_READ
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
+name|are_queues_locked
+operator|=
+name|FALSE
 expr_stmt|;
 comment|/* 				 * note: partially valid pages cannot be  				 * included in the lookahead - NFS piecemeal 				 * writes will barf on it badly. 				 */
 for|for
@@ -1699,7 +1702,24 @@ name|oflags
 operator|&
 name|VPO_BUSY
 operator|)
-operator|||
+condition|)
+continue|continue;
+if|if
+condition|(
+operator|!
+name|are_queues_locked
+condition|)
+block|{
+name|are_queues_locked
+operator|=
+name|TRUE
+expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|mt
 operator|->
 name|hold_count
@@ -1736,6 +1756,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|are_queues_locked
+condition|)
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
