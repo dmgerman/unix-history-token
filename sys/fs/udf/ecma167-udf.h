@@ -1267,7 +1267,7 @@ decl_stmt|;
 name|uint8_t
 name|identifier
 index|[
-literal|0
+literal|1
 index|]
 decl_stmt|;
 block|}
