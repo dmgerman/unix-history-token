@@ -1226,7 +1226,7 @@ name|gamla_rx
 operator|:
 literal|1
 argument_list|,
-name|vlan_drop_en
+name|vlan_strip_en
 operator|:
 literal|1
 argument_list|, 			    :
@@ -1830,6 +1830,17 @@ end_define
 
 begin_comment
 comment|/* CRC error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_RFA_STATUS_VLAN
+value|0x1000
+end_define
+
+begin_comment
+comment|/* VLAN tagged frame */
 end_comment
 
 begin_define
