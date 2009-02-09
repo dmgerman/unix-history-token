@@ -5559,7 +5559,7 @@ operator|)
 name|buf
 operator|+
 name|len
-operator|<
+operator|<=
 name|bpage
 operator|->
 name|datavaddr
