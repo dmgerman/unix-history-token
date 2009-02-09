@@ -1179,7 +1179,10 @@ name|sc_bus
 operator|.
 name|bus_mtx
 argument_list|,
+name|USB_MS_TO_TICKS
+argument_list|(
 name|USB_BUS_RESET_DELAY
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* terminate all transfers */
@@ -1211,7 +1214,9 @@ name|sc_bus
 operator|.
 name|bus_mtx
 argument_list|,
-literal|1
+name|hz
+operator|/
+literal|1000
 argument_list|)
 expr_stmt|;
 if|if
@@ -1267,7 +1272,9 @@ name|sc_bus
 operator|.
 name|bus_mtx
 argument_list|,
-literal|1
+name|hz
+operator|/
+literal|1000
 argument_list|)
 expr_stmt|;
 comment|/* check if HC is stopped */
@@ -1431,7 +1438,9 @@ name|sc_bus
 operator|.
 name|bus_mtx
 argument_list|,
-literal|1
+name|hz
+operator|/
+literal|1000
 argument_list|)
 expr_stmt|;
 comment|/* check that controller has started */
@@ -2523,7 +2532,10 @@ name|sc_bus
 operator|.
 name|bus_mtx
 argument_list|,
+name|USB_MS_TO_TICKS
+argument_list|(
 name|USB_RESUME_WAIT
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|USB_BUS_UNLOCK
@@ -2577,7 +2589,10 @@ name|sc_bus
 operator|.
 name|bus_mtx
 argument_list|,
+name|USB_MS_TO_TICKS
+argument_list|(
 name|USB_RESUME_DELAY
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* and start traffic again */
@@ -9292,7 +9307,9 @@ name|sc_bus
 operator|.
 name|bus_mtx
 argument_list|,
-literal|10
+name|hz
+operator|/
+literal|100
 argument_list|)
 expr_stmt|;
 block|}
@@ -9345,7 +9362,10 @@ name|sc_bus
 operator|.
 name|bus_mtx
 argument_list|,
+name|USB_MS_TO_TICKS
+argument_list|(
 name|USB_PORT_ROOT_RESET_DELAY
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -9493,7 +9513,10 @@ name|sc_bus
 operator|.
 name|bus_mtx
 argument_list|,
+name|USB_MS_TO_TICKS
+argument_list|(
 name|USB_PORT_RESET_DELAY
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -11017,9 +11040,7 @@ block|{
 comment|/* polling */
 name|DELAY
 argument_list|(
-literal|20
-operator|*
-literal|1000
+literal|20000
 argument_list|)
 expr_stmt|;
 block|}
@@ -11034,7 +11055,9 @@ name|sc_bus
 operator|.
 name|bus_mtx
 argument_list|,
-literal|20
+name|hz
+operator|/
+literal|50
 argument_list|)
 expr_stmt|;
 block|}
@@ -11068,7 +11091,9 @@ name|sc_bus
 operator|.
 name|bus_mtx
 argument_list|,
-literal|2
+name|hz
+operator|/
+literal|500
 argument_list|)
 expr_stmt|;
 name|sc

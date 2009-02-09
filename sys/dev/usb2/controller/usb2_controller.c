@@ -736,7 +736,7 @@ name|bus
 argument_list|)
 expr_stmt|;
 comment|/* Get rid of USB callback processes */
-name|usb2_proc_unsetup
+name|usb2_proc_free
 argument_list|(
 operator|&
 name|bus
@@ -744,7 +744,7 @@ operator|->
 name|giant_callback_proc
 argument_list|)
 expr_stmt|;
-name|usb2_proc_unsetup
+name|usb2_proc_free
 argument_list|(
 operator|&
 name|bus
@@ -753,7 +753,7 @@ name|non_giant_callback_proc
 argument_list|)
 expr_stmt|;
 comment|/* Get rid of USB roothub process */
-name|usb2_proc_unsetup
+name|usb2_proc_free
 argument_list|(
 operator|&
 name|bus
@@ -762,7 +762,7 @@ name|roothub_proc
 argument_list|)
 expr_stmt|;
 comment|/* Get rid of USB explore process */
-name|usb2_proc_unsetup
+name|usb2_proc_free
 argument_list|(
 operator|&
 name|bus
@@ -1385,6 +1385,16 @@ modifier|*
 name|bus
 parameter_list|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|pname
+init|=
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 comment|/* Initialise USB process messages */
 name|bus
 operator|->
@@ -1589,7 +1599,7 @@ expr_stmt|;
 comment|/* Create USB explore, roothub and callback processes */
 if|if
 condition|(
-name|usb2_proc_setup
+name|usb2_proc_create
 argument_list|(
 operator|&
 name|bus
@@ -1600,6 +1610,8 @@ operator|&
 name|bus
 operator|->
 name|bus_mtx
+argument_list|,
+name|pname
 argument_list|,
 name|USB_PRI_MED
 argument_list|)
@@ -1615,7 +1627,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|usb2_proc_setup
+name|usb2_proc_create
 argument_list|(
 operator|&
 name|bus
@@ -1626,6 +1638,8 @@ operator|&
 name|bus
 operator|->
 name|bus_mtx
+argument_list|,
+name|pname
 argument_list|,
 name|USB_PRI_HIGH
 argument_list|)
@@ -1641,7 +1655,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|usb2_proc_setup
+name|usb2_proc_create
 argument_list|(
 operator|&
 name|bus
@@ -1652,6 +1666,8 @@ operator|&
 name|bus
 operator|->
 name|bus_mtx
+argument_list|,
+name|pname
 argument_list|,
 name|USB_PRI_HIGH
 argument_list|)
@@ -1667,7 +1683,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|usb2_proc_setup
+name|usb2_proc_create
 argument_list|(
 operator|&
 name|bus
@@ -1678,6 +1694,8 @@ operator|&
 name|bus
 operator|->
 name|bus_mtx
+argument_list|,
+name|pname
 argument_list|,
 name|USB_PRI_MED
 argument_list|)

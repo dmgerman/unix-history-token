@@ -5336,7 +5336,9 @@ name|sc_bus
 operator|.
 name|bus_mtx
 argument_list|,
-literal|10
+name|hz
+operator|/
+literal|100
 argument_list|)
 expr_stmt|;
 comment|/* check hardware revision */

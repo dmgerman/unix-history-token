@@ -2650,9 +2650,6 @@ name|void
 modifier|*
 name|sc_intr_hdl
 decl_stmt|;
-name|device_t
-name|sc_dev
-decl_stmt|;
 name|bus_size_t
 name|sc_io_size
 decl_stmt|;

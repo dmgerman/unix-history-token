@@ -732,12 +732,6 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-name|sc
-operator|->
-name|sc_dev
-operator|=
-name|self
-expr_stmt|;
 name|pci_enable_busmaster
 argument_list|(
 name|self
@@ -1749,7 +1743,9 @@ name|usb2_pause_mtx
 argument_list|(
 name|NULL
 argument_list|,
-literal|10
+name|hz
+operator|/
+literal|100
 argument_list|)
 expr_stmt|;
 comment|/* wait 10ms */

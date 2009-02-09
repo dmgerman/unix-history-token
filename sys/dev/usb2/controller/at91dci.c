@@ -1044,7 +1044,9 @@ name|sc_bus
 operator|.
 name|bus_mtx
 argument_list|,
-literal|8
+name|hz
+operator|/
+literal|125
 argument_list|)
 expr_stmt|;
 block|}
@@ -5348,7 +5350,9 @@ name|sc_bus
 operator|.
 name|bus_mtx
 argument_list|,
-literal|1
+name|hz
+operator|/
+literal|1000
 argument_list|)
 expr_stmt|;
 comment|/* disable and clear all interrupts */
