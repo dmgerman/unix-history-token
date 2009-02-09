@@ -334,6 +334,13 @@ decl_stmt|;
 comment|/* should be an enum */
 name|struct
 name|ural_task
+name|sc_synctask
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|struct
+name|ural_task
 name|sc_task
 index|[
 literal|2
@@ -355,8 +362,10 @@ index|]
 decl_stmt|;
 name|struct
 name|ural_tx_data
-modifier|*
 name|tx_data
+index|[
+name|RAL_TX_LIST_COUNT
+index|]
 decl_stmt|;
 name|ural_txdhead
 name|tx_q
@@ -375,13 +384,6 @@ name|struct
 name|mtx
 name|sc_mtx
 decl_stmt|;
-name|int
-name|sc_flags
-decl_stmt|;
-define|#
-directive|define
-name|URAL_FLAG_DETACH
-value|0x0001
 name|uint16_t
 name|sta
 index|[
@@ -398,6 +400,12 @@ name|uint8_t
 name|txpow
 index|[
 literal|14
+index|]
+decl_stmt|;
+name|uint8_t
+name|sc_bssid
+index|[
+literal|6
 index|]
 decl_stmt|;
 struct|struct
