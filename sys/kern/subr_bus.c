@@ -6849,6 +6849,9 @@ condition|(
 operator|!
 name|hasclass
 condition|)
+block|{
+if|if
+condition|(
 name|device_set_devclass
 argument_list|(
 name|child
@@ -6859,7 +6862,25 @@ name|driver
 operator|->
 name|name
 argument_list|)
+condition|)
+block|{
+name|PDEBUG
+argument_list|(
+operator|(
+literal|"Unable to set device class"
+operator|)
+argument_list|)
 expr_stmt|;
+name|device_set_driver
+argument_list|(
+name|child
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+block|}
 comment|/* Fetch any flags for the device before probing. */
 name|resource_int_value
 argument_list|(
@@ -7040,6 +7061,9 @@ name|child
 operator|->
 name|devclass
 condition|)
+block|{
+name|result
+operator|=
 name|device_set_devclass
 argument_list|(
 name|child
@@ -7051,6 +7075,18 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|result
+operator|)
+return|;
+block|}
 name|device_set_driver
 argument_list|(
 name|child
