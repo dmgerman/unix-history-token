@@ -13123,6 +13123,10 @@ block|}
 else|else
 block|{
 comment|/* 		 * Do transceiver setup and tell the firmware the 		 * driver is down so we can try to get access the 		 * probe if ASF is running.  Retry a couple of times 		 * if we get a conflict with the ASF firmware accessing 		 * the PHY. 		 */
+name|trys
+operator|=
+literal|0
+expr_stmt|;
 name|BGE_CLRBIT
 argument_list|(
 name|sc
@@ -13138,10 +13142,6 @@ name|bge_asf_driver_up
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
-name|trys
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
