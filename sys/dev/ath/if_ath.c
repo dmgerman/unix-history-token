@@ -28041,6 +28041,15 @@ name|wk_rxkeyix
 operator|=
 name|rxkeyix
 expr_stmt|;
+comment|/* NB: must mark device key to get called back on delete */
+name|ni
+operator|->
+name|ni_ucastkey
+operator|.
+name|wk_flags
+operator||=
+name|IEEE80211_KEY_DEVKEY
+expr_stmt|;
 name|IEEE80211_ADDR_COPY
 argument_list|(
 name|ni
