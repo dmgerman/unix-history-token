@@ -2916,7 +2916,18 @@ name|error
 operator|!=
 literal|0
 condition|)
+block|{
+name|vnode_pager_setsize
+argument_list|(
+name|vp
+argument_list|,
+name|ip
+operator|->
+name|i_size
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 comment|/* 		 * If the buffer is not valid we have to clear out any 		 * garbage data from the pages instantiated for the buffer. 		 * If we do not, a failed uiomove() during a write can leave 		 * the prior contents of the pages exposed to a userland 		 * mmap().  XXX deal with uiomove() errors a better way. 		 */
 if|if
 condition|(
