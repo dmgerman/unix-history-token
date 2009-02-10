@@ -1780,6 +1780,18 @@ condition|(
 name|foundfile
 condition|)
 block|{
+comment|/* 		 * If the file type has not been recognized by the last try 		 * printout a message before to fail. 		 */
+if|if
+condition|(
+name|error
+operator|==
+name|ENOSYS
+condition|)
+name|printf
+argument_list|(
+literal|"linker_load_file: Unsupported file type\n"
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Format not recognized or otherwise unloadable. 		 * When loading a module that is statically built into 		 * the kernel EEXIST percolates back up as the return 		 * value.  Preserve this so that apps like sysinstall 		 * can recognize this special case and not post bogus 		 * dialog boxes. 		 */
 if|if
 condition|(

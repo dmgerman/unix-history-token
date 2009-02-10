@@ -2494,16 +2494,9 @@ operator|!=
 name|ET_REL
 condition|)
 block|{
-name|link_elf_error
-argument_list|(
-name|filename
-argument_list|,
-literal|"Unsupported file type"
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
-name|ENOEXEC
+name|ENOSYS
 expr_stmt|;
 goto|goto
 name|out
