@@ -5952,6 +5952,16 @@ argument_list|,
 name|sc
 operator|->
 name|sc_curchan
+operator|!=
+name|NULL
+condition|?
+name|sc
+operator|->
+name|sc_curchan
+else|:
+name|ic
+operator|->
+name|ic_curchan
 argument_list|,
 name|AH_FALSE
 argument_list|,
