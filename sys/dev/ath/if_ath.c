@@ -1990,6 +1990,40 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|ath_bstuck_threshold
+init|=
+literal|4
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max missed beacons */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_ath
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|bstuck
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ath_bstuck_threshold
+argument_list|,
+literal|0
+argument_list|,
+literal|"max missed beacon xmits before chip reset"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -14307,10 +14341,9 @@ condition|(
 name|sc
 operator|->
 name|sc_bmisscount
-operator|>
-literal|3
+operator|>=
+name|ath_bstuck_threshold
 condition|)
-comment|/* NB: 3 is a guess */
 name|taskqueue_enqueue
 argument_list|(
 name|sc
@@ -36271,10 +36304,9 @@ condition|(
 name|sc
 operator|->
 name|sc_bmisscount
-operator|>
-literal|3
+operator|>=
+name|ath_bstuck_threshold
 condition|)
-comment|/* NB: 3 is a guess */
 name|taskqueue_enqueue
 argument_list|(
 name|sc
