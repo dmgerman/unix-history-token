@@ -1280,6 +1280,9 @@ argument_list|(
 name|dqb32
 argument_list|)
 argument_list|)
+operator|==
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -1454,6 +1457,9 @@ argument_list|(
 name|dqb64
 argument_list|)
 argument_list|)
+operator|==
+operator|-
+literal|1
 operator|)
 return|;
 block|}
