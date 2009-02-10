@@ -2054,10 +2054,7 @@ operator|!=
 name|IEEE80211_CHAN_ANYC
 condition|)
 block|{
-comment|/* NB: may be NULL if not present in new channel list */
-name|vap
-operator|->
-name|iv_des_chan
+name|c
 operator|=
 name|ieee80211_find_channel
 argument_list|(
@@ -2067,6 +2064,21 @@ name|desfreq
 argument_list|,
 name|desflags
 argument_list|)
+expr_stmt|;
+comment|/* NB: may be NULL if not present in new channel list */
+name|vap
+operator|->
+name|iv_des_chan
+operator|=
+operator|(
+name|c
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|c
+else|:
+name|IEEE80211_CHAN_ANYC
 expr_stmt|;
 block|}
 name|IEEE80211_UNLOCK
