@@ -3841,12 +3841,6 @@ operator|->
 name|unit_number
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|sysctl_ctx_init
 argument_list|(
 operator|&
@@ -3902,12 +3896,6 @@ argument_list|(
 literal|"dasysctlinit: unable to allocate sysctl tree\n"
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|cam_periph_release
 argument_list|(
 name|periph
@@ -3950,12 +3938,6 @@ argument_list|,
 literal|"I"
 argument_list|,
 literal|"Minimum CDB size"
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|cam_periph_release
