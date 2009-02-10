@@ -90,6 +90,13 @@ name|TAPGIFINFO
 value|_IOR('t', 92, struct tapinfo)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TAPGIFNAME
+value|_IOR('t', 93, struct ifreq)
+end_define
+
 begin_comment
 comment|/* VMware ioctl's */
 end_comment
