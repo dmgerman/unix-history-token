@@ -505,7 +505,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int32_t
+name|int
 name|arcmsr_probe
 parameter_list|(
 name|device_t
@@ -516,7 +516,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int32_t
+name|int
 name|arcmsr_attach
 parameter_list|(
 name|device_t
@@ -527,7 +527,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int32_t
+name|int
 name|arcmsr_detach
 parameter_list|(
 name|device_t
@@ -570,7 +570,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|arcmsr_shutdown
 parameter_list|(
 name|device_t
@@ -14157,7 +14157,7 @@ end_comment
 
 begin_function
 specifier|static
-name|u_int32_t
+name|int
 name|arcmsr_attach
 parameter_list|(
 name|device_t
@@ -14869,7 +14869,7 @@ return|;
 block|}
 comment|/* ************************************************************************ ************************************************************************ */
 specifier|static
-name|u_int32_t
+name|int
 name|arcmsr_probe
 parameter_list|(
 name|device_t
@@ -15019,7 +15019,7 @@ return|;
 block|}
 comment|/* ************************************************************************ ************************************************************************ */
 specifier|static
-name|void
+name|int
 name|arcmsr_shutdown
 parameter_list|(
 name|device_t
@@ -15202,11 +15202,15 @@ operator|->
 name|qbuffer_lock
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 comment|/* ************************************************************************ ************************************************************************ */
 specifier|static
-name|u_int32_t
+name|int
 name|arcmsr_detach
 parameter_list|(
 name|device_t
