@@ -230,6 +230,20 @@ directive|define
 name|TF_HOOK
 value|0x10000
 comment|/* TTY has hook attached. */
+define|#
+directive|define
+name|TF_BUSY_IN
+value|0x20000
+comment|/* Process busy in read() -- not supported. */
+define|#
+directive|define
+name|TF_BUSY_OUT
+value|0x40000
+comment|/* Process busy in write(). */
+define|#
+directive|define
+name|TF_BUSY
+value|(TF_BUSY_IN|TF_BUSY_OUT)
 name|unsigned
 name|int
 name|t_revokecnt

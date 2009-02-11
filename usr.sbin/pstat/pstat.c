@@ -1455,6 +1455,25 @@ block|,
 literal|'s'
 block|}
 block|,
+comment|/* Keep these together -> 'bi' and 'bo'. */
+block|{
+name|TF_BUSY
+block|,
+literal|'b'
+block|}
+block|,
+block|{
+name|TF_BUSY_IN
+block|,
+literal|'i'
+block|}
+block|,
+block|{
+name|TF_BUSY_OUT
+block|,
+literal|'o'
+block|}
+block|,
 block|{
 literal|0
 block|,
