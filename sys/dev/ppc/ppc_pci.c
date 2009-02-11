@@ -274,6 +274,14 @@ literal|0x10
 block|}
 block|,
 block|{
+literal|0x05111407
+block|,
+literal|"Lava SP BIDIR Parallel PCI"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
 literal|0x80001407
 block|,
 literal|"Lava Computers 2SP-PCI parallel port"
