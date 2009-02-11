@@ -15053,6 +15053,14 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+operator|*
+name|indexL
+operator|=
+operator|*
+name|indexR
+operator|=
+literal|0
+expr_stmt|;
 return|return
 name|AH_FALSE
 return|;
