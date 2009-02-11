@@ -1056,14 +1056,6 @@ argument_list|,
 name|vap
 argument_list|)
 expr_stmt|;
-name|ieee80211_free_node
-argument_list|(
-name|vap
-operator|->
-name|iv_bss
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 block|}
 if|if
 condition|(
