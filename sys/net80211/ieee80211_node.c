@@ -7789,7 +7789,7 @@ name|ni_vap
 argument_list|,
 name|IEEE80211_MSG_NODE
 argument_list|,
-literal|"%s: %p<%s> clear key map entry\n"
+literal|"%s: %p<%s> clear key map entry %u\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -7801,6 +7801,8 @@ name|ni
 operator|->
 name|ni_macaddr
 argument_list|)
+argument_list|,
+name|keyix
 argument_list|)
 expr_stmt|;
 name|nt
@@ -8013,7 +8015,7 @@ name|ni_vap
 argument_list|,
 name|IEEE80211_MSG_NODE
 argument_list|,
-literal|"%s: %p<%s> clear key map entry"
+literal|"%s: %p<%s> clear key map entry %u"
 argument_list|,
 name|__func__
 argument_list|,
@@ -8025,6 +8027,8 @@ name|ni
 operator|->
 name|ni_macaddr
 argument_list|)
+argument_list|,
+name|keyix
 argument_list|)
 expr_stmt|;
 name|nt
