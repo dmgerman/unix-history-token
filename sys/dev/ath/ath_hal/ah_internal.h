@@ -297,7 +297,7 @@ parameter_list|,
 name|_attach
 parameter_list|)
 define|\
-value|static struct ath_hal_chip name##_chip = {			\ 	.name		= #_name,				\ 	.probe		= _probe,				\ 	.attach		= _attach				\ };								\ OS_DATA_SET(ah_chips, name##_chip)
+value|static struct ath_hal_chip name##_chip = {			\ 	.name		= #_name,				\ 	.probe		= _probe,				\ 	.attach		= _attach				\ };								\ OS_DATA_SET(ah_chips, _name##_chip)
 end_define
 
 begin_endif
