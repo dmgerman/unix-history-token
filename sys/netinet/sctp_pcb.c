@@ -14747,6 +14747,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|inp
+operator|->
+name|sctp_socket
+operator|=
+name|NULL
+expr_stmt|;
 return|return;
 block|}
 block|}
