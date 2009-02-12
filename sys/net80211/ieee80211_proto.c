@@ -5666,6 +5666,33 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Block until the parent is in a known state.  This is  * used after any operations that dispatch a task (e.g.  * to auto-configure the parent device up/down).  */
+end_comment
+
+begin_function
+name|void
+name|ieee80211_waitfor_parent
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+parameter_list|)
+block|{
+name|taskqueue_drain
+argument_list|(
+name|taskqueue_thread
+argument_list|,
+operator|&
+name|ic
+operator|->
+name|ic_parent_task
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Start a vap running.  If this is the first vap to be  * set running on the underlying device then we  * automatically bring the device up.  */
 end_comment
 
@@ -6269,6 +6296,11 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
+name|ieee80211_waitfor_parent
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6337,6 +6369,11 @@ expr_stmt|;
 block|}
 block|}
 name|IEEE80211_UNLOCK
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
+name|ieee80211_waitfor_parent
 argument_list|(
 name|ic
 argument_list|)

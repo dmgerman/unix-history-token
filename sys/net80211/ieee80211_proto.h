@@ -1448,6 +1448,17 @@ end_function
 
 begin_function_decl
 name|void
+name|ieee80211_waitfor_parent
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ieee80211_start_locked
 parameter_list|(
 name|struct

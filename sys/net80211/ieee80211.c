@@ -1495,7 +1495,6 @@ name|ieee80211vap
 modifier|*
 name|vap
 decl_stmt|;
-comment|/* XXX ieee80211_stop_all? */
 while|while
 condition|(
 operator|(
@@ -1515,6 +1514,11 @@ condition|)
 name|ieee80211_vap_destroy
 argument_list|(
 name|vap
+argument_list|)
+expr_stmt|;
+name|ieee80211_waitfor_parent
+argument_list|(
+name|ic
 argument_list|)
 expr_stmt|;
 name|ieee80211_sysctl_detach

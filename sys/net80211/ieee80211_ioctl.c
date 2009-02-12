@@ -16522,14 +16522,9 @@ name|ic
 argument_list|)
 expr_stmt|;
 comment|/* Wait for parent ioctl handler if it was queued */
-name|taskqueue_drain
+name|ieee80211_waitfor_parent
 argument_list|(
-name|taskqueue_thread
-argument_list|,
-operator|&
 name|ic
-operator|->
-name|ic_parent_task
 argument_list|)
 expr_stmt|;
 break|break;
