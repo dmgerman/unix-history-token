@@ -1463,12 +1463,6 @@ end_function
 begin_if
 if|#
 directive|if
-operator|#
-name|cpu
-argument_list|(
-name|i386
-argument_list|)
-operator|||
 name|defined
 name|__i386
 operator|||
@@ -1477,12 +1471,6 @@ name|i386
 operator|||
 name|defined
 name|__i386__
-operator|||
-operator|#
-name|cpu
-argument_list|(
-name|x86_64
-argument_list|)
 operator|||
 name|defined
 name|__x86_64__
