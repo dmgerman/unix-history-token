@@ -2009,7 +2009,9 @@ name|fc
 operator|.
 name|dev
 argument_list|,
-literal|"fw_set_bus_manager: %d->%d (loop=%d)\n"
+literal|"%s: %d->%d (loop=%d)\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|bm
 argument_list|,
@@ -2157,7 +2159,9 @@ name|fc
 operator|.
 name|dev
 argument_list|,
-literal|"phy read failed(1).\n"
+literal|"%s: failed(1).\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -2223,7 +2227,9 @@ name|fc
 operator|.
 name|dev
 argument_list|,
-literal|"phy read failed(2).\n"
+literal|"%s: failed(2).\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -2247,6 +2253,8 @@ block|}
 if|if
 condition|(
 name|firewire_debug
+operator|>
+literal|1
 operator|||
 name|retry
 operator|>=
@@ -2260,7 +2268,9 @@ name|fc
 operator|.
 name|dev
 argument_list|,
-literal|"fwphy_rddata: 0x%x loop=%d, retry=%d\n"
+literal|"%s:: 0x%x loop=%d, retry=%d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|addr
 argument_list|,
@@ -11476,7 +11486,9 @@ name|fc
 operator|->
 name|dev
 argument_list|,
-literal|"BUS reset\n"
+literal|"%s: BUS reset\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|OWRITE
@@ -11681,7 +11693,9 @@ name|fc
 operator|->
 name|dev
 argument_list|,
-literal|"node_id=0x%08x, SelfID Count=%d, "
+literal|"%s: node_id=0x%08x, SelfID Count=%d, "
+argument_list|,
+name|__func__
 argument_list|,
 name|fc
 operator|->
@@ -11706,9 +11720,15 @@ name|OHCI_NODE_VALID
 operator|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"Bus reset failure\n"
+name|fc
+operator|->
+name|dev
+argument_list|,
+literal|"%s: Bus reset failure\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 goto|goto
