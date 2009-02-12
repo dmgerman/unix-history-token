@@ -302,6 +302,10 @@ name|FWRCODE_ER_ADDR
 value|7
 end_define
 
+begin_comment
+comment|/*  * Defined 1394a-2000  * Table 5B-1  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -321,6 +325,27 @@ define|#
 directive|define
 name|FWSPD_S400
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|FWSPD_S800
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|FWSPD_S1600
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|FWSPD_S3200
+value|5
 end_define
 
 begin_define
