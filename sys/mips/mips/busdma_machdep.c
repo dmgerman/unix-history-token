@@ -2570,8 +2570,7 @@ name|m
 operator|->
 name|m_len
 argument_list|,
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 name|flags
 argument_list|,
@@ -2822,8 +2821,7 @@ name|m
 operator|->
 name|m_len
 argument_list|,
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 name|flags
 argument_list|,
