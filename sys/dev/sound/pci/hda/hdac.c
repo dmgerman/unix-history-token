@@ -25414,7 +25414,7 @@ name|i
 operator|++
 control|)
 empty_stmt|;
-comment|/* Check if there is no any left. If so - we succeded. */
+comment|/* Check if there is no any left. If so - we succeeded. */
 if|if
 condition|(
 name|i
@@ -25589,7 +25589,7 @@ index|]
 operator|=
 name|res
 expr_stmt|;
-comment|/* We succeded, so call next. */
+comment|/* We succeeded, so call next. */
 if|if
 condition|(
 name|hdac_audio_trace_as_out
@@ -30534,7 +30534,7 @@ block|{
 name|HDA_BOOTVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
-literal|"Association %d (%d) trace succeded\n"
+literal|"Association %d (%d) trace succeeded\n"
 argument|, 				    j, as[j].index);
 argument_list|)
 empty_stmt|;
