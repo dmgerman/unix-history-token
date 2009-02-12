@@ -1398,6 +1398,24 @@ name|mtu
 operator|=
 name|nxtsz
 expr_stmt|;
+if|if
+condition|(
+name|net
+operator|->
+name|port
+condition|)
+block|{
+name|net
+operator|->
+name|mtu
+operator|-=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|udphdr
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* now what about the ep? */
 if|if

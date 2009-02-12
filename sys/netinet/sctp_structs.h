@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001-2008, by Cisco Systems, Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -880,6 +880,13 @@ decl_stmt|;
 name|uint16_t
 name|mbcnt
 decl_stmt|;
+name|uint16_t
+name|auth_keyid
+decl_stmt|;
+name|uint8_t
+name|holds_key_ref
+decl_stmt|;
+comment|/* flag if auth keyid refcount is held */
 name|uint8_t
 name|pad_inplace
 decl_stmt|;
@@ -1079,6 +1086,12 @@ decl_stmt|;
 name|uint16_t
 name|act_flags
 decl_stmt|;
+name|uint16_t
+name|auth_keyid
+decl_stmt|;
+name|uint8_t
+name|holds_key_ref
+decl_stmt|;
 name|uint8_t
 name|msg_is_complete
 decl_stmt|;
@@ -1218,6 +1231,10 @@ name|uint8_t
 name|sent
 decl_stmt|;
 comment|/* has this been sent yet? */
+name|uint8_t
+name|special_del
+decl_stmt|;
+comment|/* not to be used in lookup */
 block|}
 struct|;
 end_struct
@@ -1932,6 +1949,20 @@ comment|/* 	 * used to track highest TSN we have received and is listed in the 	
 name|uint32_t
 name|highest_tsn_inside_map
 decl_stmt|;
+comment|/* EY - new NR variables used for nr_sack based on mapping_array */
+name|uint8_t
+modifier|*
+name|nr_mapping_array
+decl_stmt|;
+name|uint32_t
+name|nr_mapping_array_base_tsn
+decl_stmt|;
+name|uint32_t
+name|highest_tsn_inside_nr_map
+decl_stmt|;
+name|uint16_t
+name|nr_mapping_array_size
+decl_stmt|;
 name|uint32_t
 name|last_echo_tsn
 decl_stmt|;
@@ -2417,6 +2448,10 @@ comment|/* flag to indicate if peer can do asconf */
 name|uint8_t
 name|peer_supports_asconf
 decl_stmt|;
+comment|/* EY - flag to indicate if peer can do nr_sack */
+name|uint8_t
+name|peer_supports_nr_sack
+decl_stmt|;
 comment|/* pr-sctp support flag */
 name|uint8_t
 name|peer_supports_prsctp
@@ -2428,6 +2463,9 @@ decl_stmt|;
 comment|/* stream resets are supported by the peer */
 name|uint8_t
 name|peer_supports_strreset
+decl_stmt|;
+name|uint8_t
+name|peer_supports_nat
 decl_stmt|;
 comment|/* 	 * packet drop's are supported by the peer, we don't really care 	 * about this but we bookkeep it anyway. 	 */
 name|uint8_t
@@ -2490,8 +2528,12 @@ decl_stmt|;
 name|uint8_t
 name|saw_sack_with_frags
 decl_stmt|;
+comment|/* EY */
 name|uint8_t
-name|in_restart_hash
+name|saw_sack_with_nr_frags
+decl_stmt|;
+name|uint8_t
+name|in_asocid_hash
 decl_stmt|;
 name|uint8_t
 name|assoc_up_sent
@@ -2517,6 +2559,10 @@ name|cookie_how
 index|[
 literal|8
 index|]
+decl_stmt|;
+comment|/* EY 05/05/08 - NR_SACK variable */
+name|uint8_t
+name|sctp_nr_sack_on_off
 decl_stmt|;
 comment|/* JRS 5/21/07 - CMT PF variable */
 name|uint8_t

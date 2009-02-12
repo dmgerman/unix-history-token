@@ -115,6 +115,9 @@ name|uint8_t
 name|sctp_authentication_event
 decl_stmt|;
 name|uint8_t
+name|sctp_sender_dry_event
+decl_stmt|;
+name|uint8_t
 name|sctp_stream_reset_events
 decl_stmt|;
 block|}
@@ -429,12 +432,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTP_PR_POLICY_VALID
+name|SCTP_SACK_IMMEDIATELY
 value|0x4000
 end_define
 
 begin_comment
-comment|/* pr sctp policy valid */
+comment|/* Set I-Bit */
 end_comment
 
 begin_define
@@ -444,7 +447,7 @@ name|INVALID_SINFO_FLAG
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)& 0xffffff00 \& ~(SCTP_EOF | SCTP_ABORT | SCTP_UNORDERED |\ 				        SCTP_ADDR_OVER | SCTP_SENDALL | SCTP_EOR)) != 0)
+value|(((x)& 0xffffff00 \& ~(SCTP_EOF | SCTP_ABORT | SCTP_UNORDERED |\ 				        SCTP_ADDR_OVER | SCTP_SENDALL | SCTP_EOR |\ 					SCTP_SACK_IMMEDIATELY)) != 0)
 end_define
 
 begin_comment
@@ -1166,6 +1169,40 @@ name|SCTP_AUTH_NEWKEY
 value|0x0001
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_AUTH_NO_AUTH
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_AUTH_FREE_KEY
+value|0x0003
+end_define
+
+begin_struct
+struct|struct
+name|sctp_sender_dry_event
+block|{
+name|uint16_t
+name|sender_dry_type
+decl_stmt|;
+name|uint16_t
+name|sender_dry_flags
+decl_stmt|;
+name|uint32_t
+name|sender_dry_length
+decl_stmt|;
+name|sctp_assoc_t
+name|sender_dry_assoc_id
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * stream reset event  */
 end_comment
@@ -1302,6 +1339,10 @@ name|sctp_authkey_event
 name|sn_auth_event
 decl_stmt|;
 name|struct
+name|sctp_sender_dry_event
+name|sn_sender_dry_event
+decl_stmt|;
+name|struct
 name|sctp_stream_reset_event
 name|sn_strreset_event
 decl_stmt|;
@@ -1385,6 +1426,13 @@ define|#
 directive|define
 name|SCTP_STREAM_RESET_EVENT
 value|0x0009
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_SENDER_DRY_EVENT
+value|0x000a
 end_define
 
 begin_comment
@@ -1855,6 +1903,9 @@ begin_struct
 struct|struct
 name|sctp_assoc_ids
 block|{
+name|uint32_t
+name|gaids_number_of_ids
+decl_stmt|;
 name|sctp_assoc_t
 name|gaids_assoc_id
 index|[

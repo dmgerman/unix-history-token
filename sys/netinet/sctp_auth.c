@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001-2008, by Cisco Systems, Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -1381,7 +1381,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * given two keys of variable size, compute which key is "larger/smaller"  * returns: 1 if key1> key2 -1 if key1< key2 0 if key1 = key2  */
+comment|/*-  * given two keys of variable size, compute which key is "larger/smaller"  * returns:  1 if key1> key2  *          -1 if key1< key2  *           0 if key1 = key2  */
 end_comment
 
 begin_function
@@ -2214,6 +2214,18 @@ name|key
 operator|=
 name|NULL
 expr_stmt|;
+name|new_key
+operator|->
+name|refcount
+operator|=
+literal|1
+expr_stmt|;
+name|new_key
+operator|->
+name|deactivated
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|new_key
@@ -2234,8 +2246,19 @@ block|{
 if|if
 condition|(
 name|skey
-operator|!=
+operator|==
 name|NULL
+condition|)
+return|return;
+if|if
+condition|(
+name|SCTP_DECREMENT_AND_CHECK_REFCOUNT
+argument_list|(
+operator|&
+name|skey
+operator|->
+name|refcount
+argument_list|)
 condition|)
 block|{
 if|if
@@ -2314,7 +2337,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|sctp_insert_sharedkey
 parameter_list|(
 name|struct
@@ -2345,7 +2368,11 @@ operator|==
 name|NULL
 operator|)
 condition|)
-return|return;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 comment|/* insert into an empty list? */
 if|if
 condition|(
@@ -2364,7 +2391,11 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 comment|/* insert into the existing list, ordered by key id */
 name|LIST_FOREACH
@@ -2397,7 +2428,11 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 elseif|else
 if|if
@@ -2412,6 +2447,41 @@ name|keyid
 condition|)
 block|{
 comment|/* replace the existing key */
+comment|/* verify this key *can* be replaced */
+if|if
+condition|(
+operator|(
+name|skey
+operator|->
+name|deactivated
+operator|)
+operator|&&
+operator|(
+name|skey
+operator|->
+name|refcount
+operator|>
+literal|1
+operator|)
+condition|)
+block|{
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_AUTH1
+argument_list|,
+literal|"can't replace shared key id %u\n"
+argument_list|,
+name|new_skey
+operator|->
+name|keyid
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
+block|}
 name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_AUTH1
@@ -2444,7 +2514,11 @@ argument_list|(
 name|skey
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -2468,7 +2542,200 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+block|}
+comment|/* shouldn't reach here */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|sctp_auth_key_acquire
+parameter_list|(
+name|struct
+name|sctp_tcb
+modifier|*
+name|stcb
+parameter_list|,
+name|uint16_t
+name|key_id
+parameter_list|)
+block|{
+name|sctp_sharedkey_t
+modifier|*
+name|skey
+decl_stmt|;
+comment|/* find the shared key */
+name|skey
+operator|=
+name|sctp_find_sharedkey
+argument_list|(
+operator|&
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|shared_keys
+argument_list|,
+name|key_id
+argument_list|)
+expr_stmt|;
+comment|/* bump the ref count */
+if|if
+condition|(
+name|skey
+condition|)
+block|{
+name|atomic_add_int
+argument_list|(
+operator|&
+name|skey
+operator|->
+name|refcount
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_AUTH2
+argument_list|,
+literal|"%s: stcb %p key %u refcount acquire to %d\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+name|stcb
+argument_list|,
+name|key_id
+argument_list|,
+name|skey
+operator|->
+name|refcount
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|sctp_auth_key_release
+parameter_list|(
+name|struct
+name|sctp_tcb
+modifier|*
+name|stcb
+parameter_list|,
+name|uint16_t
+name|key_id
+parameter_list|)
+block|{
+name|sctp_sharedkey_t
+modifier|*
+name|skey
+decl_stmt|;
+comment|/* find the shared key */
+name|skey
+operator|=
+name|sctp_find_sharedkey
+argument_list|(
+operator|&
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|shared_keys
+argument_list|,
+name|key_id
+argument_list|)
+expr_stmt|;
+comment|/* decrement the ref count */
+if|if
+condition|(
+name|skey
+condition|)
+block|{
+name|sctp_free_sharedkey
+argument_list|(
+name|skey
+argument_list|)
+expr_stmt|;
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_AUTH2
+argument_list|,
+literal|"%s: stcb %p key %u refcount release to %d\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+name|stcb
+argument_list|,
+name|key_id
+argument_list|,
+name|skey
+operator|->
+name|refcount
+argument_list|)
+expr_stmt|;
+comment|/* see if a notification should be generated */
+if|if
+condition|(
+operator|(
+name|skey
+operator|->
+name|refcount
+operator|<=
+literal|1
+operator|)
+operator|&&
+operator|(
+name|skey
+operator|->
+name|deactivated
+operator|)
+condition|)
+block|{
+comment|/* notify ULP that key is no longer used */
+name|sctp_ulp_notify
+argument_list|(
+name|SCTP_NOTIFY_AUTH_FREE_KEY
+argument_list|,
+name|stcb
+argument_list|,
+name|key_id
+argument_list|,
+literal|0
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
+argument_list|)
+expr_stmt|;
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_AUTH2
+argument_list|,
+literal|"%s: stcb %p key %u no longer used, %d\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+name|stcb
+argument_list|,
+name|key_id
+argument_list|,
+name|skey
+operator|->
+name|refcount
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -2637,6 +2904,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sctp_insert_sharedkey
 argument_list|(
 name|dest
@@ -3109,7 +3379,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * HMAC algos are listed in priority/preference order find the best HMAC id  * to use for the peer based on local support  */
+comment|/*-  * HMAC algos are listed in priority/preference order  * find the best HMAC id to use for the peer based on local support  */
 end_comment
 
 begin_function
@@ -3254,7 +3524,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * serialize the HMAC algo list and return space used caller must guarantee  * ptr has appropriate space  */
+comment|/*-  * serialize the HMAC algo list and return space used  * caller must guarantee ptr has appropriate space  */
 end_comment
 
 begin_function
@@ -4119,7 +4389,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Keyed-Hashing for Message Authentication: FIPS 198 (RFC 2104)  *  * Compute the HMAC digest using the desired hash key, text, and HMAC  * algorithm.  Resulting digest is placed in 'digest' and digest length  * is returned, if the HMAC was performed.  *  * WARNING: it is up to the caller to supply sufficient space to hold the  * resultant digest.  */
+comment|/*-  * Keyed-Hashing for Message Authentication: FIPS 198 (RFC 2104)  *  * Compute the HMAC digest using the desired hash key, text, and HMAC  * algorithm.  Resulting digest is placed in 'digest' and digest length  * is returned, if the HMAC was performed.  *  * WARNING: it is up to the caller to supply sufficient space to hold the  * resultant digest.  */
 end_comment
 
 begin_function
@@ -4908,7 +5178,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * verify the HMAC digest using the desired hash key, text, and HMAC  * algorithm. Returns -1 on error, 0 on success.  */
+comment|/*-  * verify the HMAC digest using the desired hash key, text, and HMAC  * algorithm.  * Returns -1 on error, 0 on success.  */
 end_comment
 
 begin_function
@@ -5530,7 +5800,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * clear any cached key(s) if they match the given key id on an association  * the cached key(s) will be recomputed and re-cached at next use. ASSUMES  * TCB_LOCK is already held  */
+comment|/*-  * clear any cached key(s) if they match the given key id on an association.  * the cached key(s) will be recomputed and re-cached at next use.  * ASSUMES TCB_LOCK is already held  */
 end_comment
 
 begin_function
@@ -5627,7 +5897,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * clear any cached key(s) if they match the given key id for all assocs on  * an association ASSUMES INP_WLOCK is already held  */
+comment|/*-  * clear any cached key(s) if they match the given key id for all assocs on  * an endpoint.  * ASSUMES INP_WLOCK is already held  */
 end_comment
 
 begin_function
@@ -5687,7 +5957,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * delete a shared key from an association ASSUMES TCB_LOCK is already held  */
+comment|/*-  * delete a shared key from an association  * ASSUMES TCB_LOCK is already held  */
 end_comment
 
 begin_function
@@ -5730,7 +6000,7 @@ name|asoc
 operator|.
 name|authinfo
 operator|.
-name|assoc_keyid
+name|active_keyid
 condition|)
 return|return
 operator|(
@@ -5758,6 +6028,21 @@ condition|(
 name|skey
 operator|==
 name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* are there other refcount holders on the key? */
+if|if
+condition|(
+name|skey
+operator|->
+name|refcount
+operator|>
+literal|1
 condition|)
 return|return
 operator|(
@@ -5796,7 +6081,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * deletes a shared key from the endpoint ASSUMES INP_WLOCK is already held  */
+comment|/*-  * deletes a shared key from the endpoint  * ASSUMES INP_WLOCK is already held  */
 end_comment
 
 begin_function
@@ -5816,11 +6101,6 @@ name|sctp_sharedkey_t
 modifier|*
 name|skey
 decl_stmt|;
-name|struct
-name|sctp_tcb
-modifier|*
-name|stcb
-decl_stmt|;
 if|if
 condition|(
 name|inp
@@ -5833,7 +6113,7 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* is the keyid the active sending key on the endpoint or any assoc */
+comment|/* is the keyid the active sending key on the endpoint */
 if|if
 condition|(
 name|keyid
@@ -5850,51 +6130,6 @@ operator|-
 literal|1
 operator|)
 return|;
-name|LIST_FOREACH
-argument_list|(
-argument|stcb
-argument_list|,
-argument|&inp->sctp_asoc_list
-argument_list|,
-argument|sctp_tcblist
-argument_list|)
-block|{
-name|SCTP_TCB_LOCK
-argument_list|(
-name|stcb
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|keyid
-operator|==
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|authinfo
-operator|.
-name|assoc_keyid
-condition|)
-block|{
-name|SCTP_TCB_UNLOCK
-argument_list|(
-name|stcb
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-name|SCTP_TCB_UNLOCK
-argument_list|(
-name|stcb
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* does the key exist? */
 name|skey
 operator|=
@@ -5922,6 +6157,7 @@ operator|-
 literal|1
 operator|)
 return|;
+comment|/* endpoint keys are not refcounted */
 comment|/* remove it */
 name|LIST_REMOVE
 argument_list|(
@@ -5953,7 +6189,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * set the active key on an association ASSUME TCB_LOCK is already held  */
+comment|/*-  * set the active key on an association  * ASSUMES TCB_LOCK is already held  */
 end_comment
 
 begin_function
@@ -5974,17 +6210,6 @@ modifier|*
 name|skey
 init|=
 name|NULL
-decl_stmt|;
-name|sctp_key_t
-modifier|*
-name|key
-init|=
-name|NULL
-decl_stmt|;
-name|int
-name|using_ep_key
-init|=
-literal|0
 decl_stmt|;
 comment|/* find the key on the assoc */
 name|skey
@@ -6008,91 +6233,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* if not on the assoc, find the key on the endpoint */
-name|atomic_add_int
-argument_list|(
-operator|&
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|refcnt
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|SCTP_TCB_UNLOCK
-argument_list|(
-name|stcb
-argument_list|)
-expr_stmt|;
-name|SCTP_INP_RLOCK
-argument_list|(
-name|stcb
-operator|->
-name|sctp_ep
-argument_list|)
-expr_stmt|;
-name|SCTP_TCB_LOCK
-argument_list|(
-name|stcb
-argument_list|)
-expr_stmt|;
-name|atomic_add_int
-argument_list|(
-operator|&
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|refcnt
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|skey
-operator|=
-name|sctp_find_sharedkey
-argument_list|(
-operator|&
-name|stcb
-operator|->
-name|sctp_ep
-operator|->
-name|sctp_ep
-operator|.
-name|shared_keys
-argument_list|,
-name|keyid
-argument_list|)
-expr_stmt|;
-name|using_ep_key
-operator|=
-literal|1
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|skey
-operator|==
-name|NULL
-condition|)
-block|{
 comment|/* that key doesn't exist */
-if|if
-condition|(
-name|using_ep_key
-condition|)
-block|{
-name|SCTP_INP_RUNLOCK
-argument_list|(
-name|stcb
-operator|->
-name|sctp_ep
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 operator|-
@@ -6100,112 +6241,49 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* get the shared key text */
-name|key
-operator|=
-name|skey
-operator|->
-name|key
-expr_stmt|;
-comment|/* free any existing cached key */
 if|if
 condition|(
-name|stcb
+operator|(
+name|skey
 operator|->
-name|asoc
-operator|.
-name|authinfo
-operator|.
-name|assoc_key
-operator|!=
-name|NULL
+name|deactivated
+operator|)
+operator|&&
+operator|(
+name|skey
+operator|->
+name|refcount
+operator|>
+literal|1
+operator|)
 condition|)
-name|sctp_free_key
-argument_list|(
+block|{
+comment|/* can't reactivate a deactivated key with other refcounts */
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+comment|/* set the (new) active key */
 name|stcb
 operator|->
 name|asoc
 operator|.
 name|authinfo
 operator|.
-name|assoc_key
-argument_list|)
-expr_stmt|;
-comment|/* compute a new assoc key and cache it */
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|authinfo
-operator|.
-name|assoc_key
-operator|=
-name|sctp_compute_hashkey
-argument_list|(
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|authinfo
-operator|.
-name|random
-argument_list|,
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|authinfo
-operator|.
-name|peer_random
-argument_list|,
-name|key
-argument_list|)
-expr_stmt|;
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|authinfo
-operator|.
-name|assoc_keyid
+name|active_keyid
 operator|=
 name|keyid
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|SCTP_AUTH_DEBUG
-condition|)
-name|sctp_print_key
-argument_list|(
-name|stcb
+comment|/* reset the deactivated flag */
+name|skey
 operator|->
-name|asoc
-operator|.
-name|authinfo
-operator|.
-name|assoc_key
-argument_list|,
-literal|"Assoc Key"
-argument_list|)
+name|deactivated
+operator|=
+literal|0
 expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-name|using_ep_key
-condition|)
-block|{
-name|SCTP_INP_RUNLOCK
-argument_list|(
-name|stcb
-operator|->
-name|sctp_ep
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -6215,7 +6293,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * set the active key on an endpoint ASSUMES INP_WLOCK is already held  */
+comment|/*-  * set the active key on an endpoint  * ASSUMES INP_WLOCK is already held  */
 end_comment
 
 begin_function
@@ -6273,6 +6351,225 @@ name|default_keyid
 operator|=
 name|keyid
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*-  * deactivates a shared key from the association  * ASSUMES INP_WLOCK is already held  */
+end_comment
+
+begin_function
+name|int
+name|sctp_deact_sharedkey
+parameter_list|(
+name|struct
+name|sctp_tcb
+modifier|*
+name|stcb
+parameter_list|,
+name|uint16_t
+name|keyid
+parameter_list|)
+block|{
+name|sctp_sharedkey_t
+modifier|*
+name|skey
+decl_stmt|;
+if|if
+condition|(
+name|stcb
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* is the keyid the assoc active sending key */
+if|if
+condition|(
+name|keyid
+operator|==
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|authinfo
+operator|.
+name|active_keyid
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* does the key exist? */
+name|skey
+operator|=
+name|sctp_find_sharedkey
+argument_list|(
+operator|&
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|shared_keys
+argument_list|,
+name|keyid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|skey
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* are there other refcount holders on the key? */
+if|if
+condition|(
+name|skey
+operator|->
+name|refcount
+operator|==
+literal|1
+condition|)
+block|{
+comment|/* no other users, send a notification for this key */
+name|sctp_ulp_notify
+argument_list|(
+name|SCTP_NOTIFY_AUTH_FREE_KEY
+argument_list|,
+name|stcb
+argument_list|,
+name|keyid
+argument_list|,
+literal|0
+argument_list|,
+name|SCTP_SO_LOCKED
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* mark the key as deactivated */
+name|skey
+operator|->
+name|deactivated
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*-  * deactivates a shared key from the endpoint  * ASSUMES INP_WLOCK is already held  */
+end_comment
+
+begin_function
+name|int
+name|sctp_deact_sharedkey_ep
+parameter_list|(
+name|struct
+name|sctp_inpcb
+modifier|*
+name|inp
+parameter_list|,
+name|uint16_t
+name|keyid
+parameter_list|)
+block|{
+name|sctp_sharedkey_t
+modifier|*
+name|skey
+decl_stmt|;
+if|if
+condition|(
+name|inp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* is the keyid the active sending key on the endpoint */
+if|if
+condition|(
+name|keyid
+operator|==
+name|inp
+operator|->
+name|sctp_ep
+operator|.
+name|default_keyid
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* does the key exist? */
+name|skey
+operator|=
+name|sctp_find_sharedkey
+argument_list|(
+operator|&
+name|inp
+operator|->
+name|sctp_ep
+operator|.
+name|shared_keys
+argument_list|,
+name|keyid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|skey
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* endpoint keys are not refcounted */
+comment|/* remove it */
+name|LIST_REMOVE
+argument_list|(
+name|skey
+argument_list|,
+name|next
+argument_list|)
+expr_stmt|;
+name|sctp_free_sharedkey
+argument_list|(
+name|skey
+argument_list|)
+expr_stmt|;
+comment|/* frees skey->key as well */
 return|return
 operator|(
 literal|0
@@ -7183,7 +7480,7 @@ name|asoc
 operator|.
 name|authinfo
 operator|.
-name|assoc_keyid
+name|active_keyid
 operator|=
 name|stcb
 operator|->
@@ -7192,6 +7489,29 @@ operator|->
 name|sctp_ep
 operator|.
 name|default_keyid
+expr_stmt|;
+comment|/* copy out the shared key list (by reference) from the endpoint */
+operator|(
+name|void
+operator|)
+name|sctp_copy_skeylist
+argument_list|(
+operator|&
+name|stcb
+operator|->
+name|sctp_ep
+operator|->
+name|sctp_ep
+operator|.
+name|shared_keys
+argument_list|,
+operator|&
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|shared_keys
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -7221,6 +7541,9 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
+parameter_list|,
+name|uint16_t
+name|keyid
 parameter_list|)
 block|{
 name|uint32_t
@@ -7273,9 +7596,22 @@ name|digestlen
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* is an assoc key cached? */
+comment|/* is the desired key cached? */
 if|if
 condition|(
+operator|(
+name|keyid
+operator|!=
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|authinfo
+operator|.
+name|assoc_keyid
+operator|)
+operator|||
+operator|(
 name|stcb
 operator|->
 name|asoc
@@ -7285,36 +7621,35 @@ operator|.
 name|assoc_key
 operator|==
 name|NULL
+operator|)
 condition|)
 block|{
-name|skey
-operator|=
-name|sctp_find_sharedkey
-argument_list|(
-operator|&
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|shared_keys
-argument_list|,
+if|if
+condition|(
 name|stcb
 operator|->
 name|asoc
 operator|.
 name|authinfo
 operator|.
-name|assoc_keyid
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|skey
-operator|==
+name|assoc_key
+operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* not in the assoc list, so check the endpoint list */
+comment|/* free the old cached key */
+name|sctp_free_key
+argument_list|(
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|authinfo
+operator|.
+name|assoc_key
+argument_list|)
+expr_stmt|;
+block|}
 name|skey
 operator|=
 name|sctp_find_sharedkey
@@ -7322,22 +7657,13 @@ argument_list|(
 operator|&
 name|stcb
 operator|->
-name|sctp_ep
-operator|->
-name|sctp_ep
+name|asoc
 operator|.
 name|shared_keys
 argument_list|,
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|authinfo
-operator|.
-name|assoc_keyid
+name|keyid
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* the only way skey is NULL is if null key id 0 is used */
 if|if
 condition|(
@@ -7386,6 +7712,16 @@ argument_list|,
 name|key
 argument_list|)
 expr_stmt|;
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|authinfo
+operator|.
+name|assoc_keyid
+operator|=
+name|keyid
+expr_stmt|;
 name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_AUTH1
@@ -7431,13 +7767,7 @@ name|shared_key_id
 operator|=
 name|htons
 argument_list|(
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|authinfo
-operator|.
-name|assoc_keyid
+name|keyid
 argument_list|)
 expr_stmt|;
 comment|/* compute and fill in the digest */
@@ -7637,7 +7967,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * process the incoming Authentication chunk return codes: -1 on any  * authentication error 0 on authentication verification  */
+comment|/*-  * process the incoming Authentication chunk  * return codes:  *   -1 on any authentication error  *    0 on authentication verification  */
 end_comment
 
 begin_function
@@ -7968,31 +8298,6 @@ argument_list|,
 name|shared_key_id
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|skey
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* if not on the assoc, find it on the endpoint */
-name|skey
-operator|=
-name|sctp_find_sharedkey
-argument_list|(
-operator|&
-name|stcb
-operator|->
-name|sctp_ep
-operator|->
-name|sctp_ep
-operator|.
-name|shared_keys
-argument_list|,
-name|shared_key_id
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* if the shared key isn't found, discard the chunk */
 if|if
 condition|(
@@ -8051,6 +8356,8 @@ operator|.
 name|authinfo
 operator|.
 name|recv_keyid
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 comment|/* compute a new recv assoc key and cache it */
@@ -8299,6 +8606,25 @@ name|keyid
 parameter_list|,
 name|uint16_t
 name|alt_keyid
+parameter_list|,
+name|int
+name|so_locked
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SCTP_SO_LOCK_TESTING
+argument_list|)
+name|SCTP_UNUSED
+endif|#
+directive|endif
 parameter_list|)
 block|{
 name|struct
@@ -8567,14 +8893,14 @@ name|so_rcv
 argument_list|,
 literal|1
 argument_list|,
-name|SCTP_SO_NOT_LOCKED
+name|so_locked
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * validates the AUTHentication related parameters in an INIT/INIT-ACK  * Note: currently only used for INIT as INIT-ACK is handled inline  * with sctp_load_addresses_from_init()  */
+comment|/*-  * validates the AUTHentication related parameters in an INIT/INIT-ACK  * Note: currently only used for INIT as INIT-ACK is handled inline  * with sctp_load_addresses_from_init()  */
 end_comment
 
 begin_function
@@ -9453,13 +9779,34 @@ name|asoc
 operator|.
 name|authinfo
 operator|.
-name|assoc_keyid
+name|active_keyid
 operator|=
 name|inp
 operator|->
 name|sctp_ep
 operator|.
 name|default_keyid
+expr_stmt|;
+comment|/* copy out the shared key list (by reference) from the endpoint */
+operator|(
+name|void
+operator|)
+name|sctp_copy_skeylist
+argument_list|(
+operator|&
+name|inp
+operator|->
+name|sctp_ep
+operator|.
+name|shared_keys
+argument_list|,
+operator|&
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|shared_keys
+argument_list|)
 expr_stmt|;
 comment|/* now set the concatenated key (random + chunks + hmacs) */
 ifdef|#
@@ -10039,7 +10386,7 @@ name|failed
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * test_case =     1 key = 	 * 0x0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b key_len =       20 	 * data =          "Hi There" data_len =      8 digest = 	 * 0xb617318655057264e28bc0b6fb378c8ef146be00 	 */
+comment|/*- 	 * test_case =     1 	 * key =           0x0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b 	 * key_len =       20 	 * data =          "Hi There" 	 * data_len =      8 	 * digest =        0xb617318655057264e28bc0b6fb378c8ef146be00 	 */
 name|keylen
 operator|=
 literal|20
@@ -10094,7 +10441,7 @@ condition|)
 name|failed
 operator|++
 expr_stmt|;
-comment|/* 	 * test_case =     2 key =           "Jefe" key_len =       4 data = 	 * "what do ya want for nothing?" data_len =      28 digest = 	 * 0xeffcdf6ae5eb2fa2d27416d5f184df9c259a7c79 	 */
+comment|/*- 	 * test_case =     2 	 * key =           "Jefe" 	 * key_len =       4 	 * data =          "what do ya want for nothing?" 	 * data_len =      28 	 * digest =        0xeffcdf6ae5eb2fa2d27416d5f184df9c259a7c79 	 */
 name|keylen
 operator|=
 literal|4
@@ -10147,7 +10494,7 @@ condition|)
 name|failed
 operator|++
 expr_stmt|;
-comment|/* 	 * test_case =     3 key = 	 * 0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa key_len =       20 	 * data =          0xdd repeated 50 times data_len =      50 digest 	 * = 0x125d7342b9ac11cd91a39af48aa17b4f63f175d3 	 */
+comment|/*- 	 * test_case =     3 	 * key =           0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa 	 * key_len =       20 	 * data =          0xdd repeated 50 times 	 * data_len =      50 	 * digest =        0x125d7342b9ac11cd91a39af48aa17b4f63f175d3 	 */
 name|keylen
 operator|=
 literal|20
@@ -10204,7 +10551,7 @@ condition|)
 name|failed
 operator|++
 expr_stmt|;
-comment|/* 	 * test_case =     4 key = 	 * 0x0102030405060708090a0b0c0d0e0f10111213141516171819 key_len = 25 	 * data =          0xcd repeated 50 times data_len =      50 digest 	 * =        0x4c9007f4026250c6bc8414f9bf50c86c2d7235da 	 */
+comment|/*- 	 * test_case =     4 	 * key =           0x0102030405060708090a0b0c0d0e0f10111213141516171819 	 * key_len =       25 	 * data =          0xcd repeated 50 times 	 * data_len =      50 	 * digest =        0x4c9007f4026250c6bc8414f9bf50c86c2d7235da 	 */
 name|keylen
 operator|=
 literal|25
@@ -10261,7 +10608,7 @@ condition|)
 name|failed
 operator|++
 expr_stmt|;
-comment|/* 	 * test_case =     5 key = 	 * 0x0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c key_len =       20 	 * data =          "Test With Truncation" data_len =      20 digest 	 * = 0x4c1a03424b55e07fe7f27be1d58bb9324a9a5a04 digest-96 = 	 * 0x4c1a03424b55e07fe7f27be1 	 */
+comment|/*- 	 * test_case =     5 	 * key =           0x0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c 	 * key_len =       20 	 * data =          "Test With Truncation" 	 * data_len =      20 	 * digest =        0x4c1a03424b55e07fe7f27be1d58bb9324a9a5a04 	 * digest-96 =     0x4c1a03424b55e07fe7f27be1 	 */
 name|keylen
 operator|=
 literal|20
@@ -10316,7 +10663,7 @@ condition|)
 name|failed
 operator|++
 expr_stmt|;
-comment|/* 	 * test_case =     6 key =           0xaa repeated 80 times key_len 	 * = 80 data =          "Test Using Larger Than Block-Size Key - 	 * Hash Key First" data_len =      54 digest = 	 * 0xaa4ae5e15272d00e95705637ce8a3b55ed402112 	 */
+comment|/*- 	 * test_case =     6 	 * key =           0xaa repeated 80 times 	 * key_len =       80 	 * data =          "Test Using Larger Than Block-Size Key - Hash Key First" 	 * data_len =      54 	 * digest =        0xaa4ae5e15272d00e95705637ce8a3b55ed402112 	 */
 name|keylen
 operator|=
 literal|80
@@ -10371,7 +10718,7 @@ condition|)
 name|failed
 operator|++
 expr_stmt|;
-comment|/* 	 * test_case =     7 key =           0xaa repeated 80 times key_len 	 * = 80 data =          "Test Using Larger Than Block-Size Key and 	 * Larger Than One Block-Size Data" data_len =      73 digest = 	 * 0xe8e99d0f45237d786d6bbaa7965c7808bbff1a91 	 */
+comment|/*- 	 * test_case =     7 	 * key =           0xaa repeated 80 times 	 * key_len =       80 	 * data =          "Test Using Larger Than Block-Size Key and Larger Than One Block-Size Data" 	 * data_len =      73 	 * digest =        0xe8e99d0f45237d786d6bbaa7965c7808bbff1a91 	 */
 name|keylen
 operator|=
 literal|80
@@ -10490,7 +10837,7 @@ name|failed
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * test_case =     1 key = 0x0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b 	 * key_len =       16 data = "Hi There" data_len =      8 digest = 	 * 0x9294727a3638bb1c13f48ef8158bfc9d 	 */
+comment|/*- 	 * test_case =     1 	 * key =           0x0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b 	 * key_len =       16 	 * data =          "Hi There" 	 * data_len =      8 	 * digest =        0x9294727a3638bb1c13f48ef8158bfc9d 	 */
 name|keylen
 operator|=
 literal|16
@@ -10545,7 +10892,7 @@ condition|)
 name|failed
 operator|++
 expr_stmt|;
-comment|/* 	 * test_case =     2 key =           "Jefe" key_len =       4 data = 	 * "what do ya want for nothing?" data_len =      28 digest = 	 * 0x750c783e6ab0b503eaa86e310a5db738 	 */
+comment|/*- 	 * test_case =     2 	 * key =           "Jefe" 	 * key_len =       4 	 * data =          "what do ya want for nothing?" 	 * data_len =      28 	 * digest =        0x750c783e6ab0b503eaa86e310a5db738 	 */
 name|keylen
 operator|=
 literal|4
@@ -10598,7 +10945,7 @@ condition|)
 name|failed
 operator|++
 expr_stmt|;
-comment|/* 	 * test_case =     3 key = 0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa 	 * key_len =       16 data = 0xdd repeated 50 times data_len = 50 	 * digest = 0x56be34521d144c88dbb8c733f0e8b3f6 	 */
+comment|/*- 	 * test_case =     3 	 * key =           0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa 	 * key_len =       16 	 * data =          0xdd repeated 50 times 	 * data_len =	   50 	 * digest =        0x56be34521d144c88dbb8c733f0e8b3f6 	 */
 name|keylen
 operator|=
 literal|16
@@ -10655,7 +11002,7 @@ condition|)
 name|failed
 operator|++
 expr_stmt|;
-comment|/* 	 * test_case =     4 key = 	 * 0x0102030405060708090a0b0c0d0e0f10111213141516171819 key_len = 25 	 * data =          0xcd repeated 50 times data_len =      50 digest 	 * =        0x697eaf0aca3a3aea3a75164746ffaa79 	 */
+comment|/*- 	 * test_case =     4 	 * key =           0x0102030405060708090a0b0c0d0e0f10111213141516171819 	 * key_len =       25 	 * data =          0xcd repeated 50 times 	 * data_len =      50 	 * digest =        0x697eaf0aca3a3aea3a75164746ffaa79 	 */
 name|keylen
 operator|=
 literal|25
@@ -10712,7 +11059,7 @@ condition|)
 name|failed
 operator|++
 expr_stmt|;
-comment|/* 	 * test_case =     5 key = 0x0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c 	 * key_len =       16 data = "Test With Truncation" data_len = 20 	 * digest = 0x56461ef2342edc00f9bab995690efd4c digest-96 	 * 0x56461ef2342edc00f9bab995 	 */
+comment|/*- 	 * test_case =     5 	 * key = 0x0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c 	 * key_len =       16 	 * data =          "Test With Truncation" 	 * data_len =      20 	 * digest =        0x56461ef2342edc00f9bab995690efd4c 	 * digest-96 =     0x56461ef2342edc00f9bab995 	 */
 name|keylen
 operator|=
 literal|16
@@ -10767,7 +11114,7 @@ condition|)
 name|failed
 operator|++
 expr_stmt|;
-comment|/* 	 * test_case =     6 key =           0xaa repeated 80 times key_len 	 * = 80 data =          "Test Using Larger Than Block-Size Key - 	 * Hash Key First" data_len =      54 digest = 	 * 0x6b1ab7fe4bd7bf8f0b62e6ce61b9d0cd 	 */
+comment|/*- 	 * test_case =     6 	 * key =           0xaa repeated 80 times 	 * key_len =       80 	 * data =          "Test Using Larger Than Block-Size Key - Hash Key First" 	 * data_len =      54 	 * digest =        0x6b1ab7fe4bd7bf8f0b62e6ce61b9d0cd 	 */
 name|keylen
 operator|=
 literal|80
@@ -10822,7 +11169,7 @@ condition|)
 name|failed
 operator|++
 expr_stmt|;
-comment|/* 	 * test_case =     7 key =           0xaa repeated 80 times key_len 	 * = 80 data =          "Test Using Larger Than Block-Size Key and 	 * Larger Than One Block-Size Data" data_len =      73 digest = 	 * 0x6f630fad67cda0ee1fb1f562db3aa53e 	 */
+comment|/*- 	 * test_case =     7 	 * key =           0xaa repeated 80 times 	 * key_len =       80 	 * data =          "Test Using Larger Than Block-Size Key and Larger Than One Block-Size Data" 	 * data_len =      73 	 * digest =        0x6f630fad67cda0ee1fb1f562db3aa53e 	 */
 name|keylen
 operator|=
 literal|80

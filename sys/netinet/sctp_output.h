@@ -299,6 +299,9 @@ parameter_list|,
 name|struct
 name|sctp_chunkhdr
 modifier|*
+parameter_list|,
+name|int
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -660,6 +663,21 @@ end_function_decl
 begin_function_decl
 name|void
 name|sctp_send_sack
+parameter_list|(
+name|struct
+name|sctp_tcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* EY 05/07/08 if nr_sacks used, the following function will be called instead of sctp_send_sack */
+end_comment
+
+begin_function_decl
+name|void
+name|sctp_send_nr_sack
 parameter_list|(
 name|struct
 name|sctp_tcb
