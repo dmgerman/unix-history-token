@@ -795,6 +795,12 @@ define|\
 value|do { \   	               atomic_add_int(&SCTP_BASE_INFO(ipi_count_chunk), 1); \ 	        } while (0)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -803,6 +809,25 @@ parameter_list|()
 define|\
 value|do { \                        if(SCTP_BASE_INFO(ipi_count_chunk) == 0) \                              panic("chunk count to 0?");    \   	               atomic_subtract_int(&SCTP_BASE_INFO(ipi_count_chunk), 1); \ 	        } while (0)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SCTP_DECR_CHK_COUNT
+parameter_list|()
+define|\
+value|do { \                        if(SCTP_BASE_INFO(ipi_count_chunk) != 0) \   	               atomic_subtract_int(&SCTP_BASE_INFO(ipi_count_chunk), 1); \ 	        } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

@@ -5163,11 +5163,16 @@ argument_list|,
 name|ENOMEM
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|panic
 argument_list|(
 literal|"Huh is_in_timewait fails"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|ENOMEM
@@ -24380,6 +24385,8 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|stage_right
+label|:
 if|if
 condition|(
 name|holds_lock
@@ -24491,11 +24498,29 @@ operator|==
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|panic
 argument_list|(
 literal|"Huh LIST_FOREACH corrupt"
 argument_list|)
 expr_stmt|;
+goto|goto
+name|stage_right
+goto|;
+else|#
+directive|else
+name|SCTP_PRINTF
+argument_list|(
+literal|"LIST corrupt of sctp_ifap's?\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|stage_right
+goto|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -29464,11 +29489,24 @@ operator|==
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|panic
 argument_list|(
 literal|"stcb for refcnt has gone NULL?"
 argument_list|)
 expr_stmt|;
+goto|goto
+name|stage_left
+goto|;
+else|#
+directive|else
+goto|goto
+name|stage_left
+goto|;
+endif|#
+directive|endif
 block|}
 name|atomic_add_int
 argument_list|(
@@ -29581,6 +29619,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|stage_left
+label|:
 if|if
 condition|(
 name|wakeup_read_socket
