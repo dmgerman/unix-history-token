@@ -57837,6 +57837,24 @@ name|tail_mbuf
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|length
+operator|==
+literal|0
+condition|)
+block|{
+operator|*
+name|error
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|skip_copy
+goto|;
+block|}
 operator|*
 name|error
 operator|=
@@ -57849,6 +57867,8 @@ argument_list|,
 name|resv_in_first
 argument_list|)
 expr_stmt|;
+name|skip_copy
+label|:
 if|if
 condition|(
 operator|*
@@ -61475,9 +61495,15 @@ name|SCTP_SB_LIMIT_SND
 argument_list|(
 name|so
 argument_list|)
-operator|>
+operator|>=
 name|local_add_more
 operator|)
+operator|)
+operator|||
+operator|(
+name|max_len
+operator|==
+literal|0
 operator|)
 operator|||
 operator|(
@@ -64727,7 +64753,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_OUTPUT1
 argument_list|,
-literal|"USR Send complete qo:%d prw:%d unsent:%d tf:%d cooq:%d toqs:%d err:%d"
+literal|"USR Send complete qo:%d prw:%d unsent:%d tf:%d cooq:%d toqs:%d err:%d\n"
 argument_list|,
 name|queue_only
 argument_list|,
