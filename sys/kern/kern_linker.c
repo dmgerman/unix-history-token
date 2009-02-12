@@ -2688,6 +2688,16 @@ operator|&
 name|LINKER_FILE_LINKED
 condition|)
 block|{
+name|file
+operator|->
+name|flags
+operator|&=
+operator|~
+name|LINKER_FILE_LINKED
+expr_stmt|;
+name|KLD_UNLOCK
+argument_list|()
+expr_stmt|;
 name|linker_file_sysuninit
 argument_list|(
 name|file
@@ -2697,6 +2707,9 @@ name|linker_file_unregister_sysctls
 argument_list|(
 name|file
 argument_list|)
+expr_stmt|;
+name|KLD_LOCK
+argument_list|()
 expr_stmt|;
 block|}
 name|TAILQ_REMOVE
