@@ -2120,6 +2120,28 @@ block|,
 block|{
 literal|0x1409
 block|,
+literal|0x7268
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Sunix SUN1888"
+block|,
+literal|0
+block|,
+name|PUC_PORT_2P
+block|,
+literal|0x10
+block|,
+literal|0
+block|,
+literal|8
+block|, 	}
+block|,
+block|{
+literal|0x1409
+block|,
 literal|0x7168
 block|,
 literal|0xffff
