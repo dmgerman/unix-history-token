@@ -4690,7 +4690,7 @@ name|length
 parameter_list|)
 block|{
 name|uint32_t
-name|offset
+name|to_even_word
 decl_stmt|;
 if|if
 condition|(
@@ -4705,8 +4705,12 @@ name|crc32c
 operator|)
 return|;
 block|}
-name|offset
+name|to_even_word
 operator|=
+operator|(
+literal|4
+operator|-
+operator|(
 operator|(
 operator|(
 name|uintptr_t
@@ -4715,6 +4719,8 @@ name|buffer
 operator|)
 operator|&
 literal|0x3
+operator|)
+operator|)
 expr_stmt|;
 return|return
 operator|(
@@ -4726,7 +4732,7 @@ name|buffer
 argument_list|,
 name|length
 argument_list|,
-name|offset
+name|to_even_word
 argument_list|)
 operator|)
 return|;
