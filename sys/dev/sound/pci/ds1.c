@@ -1970,10 +1970,6 @@ operator|->
 name|PgBase
 operator|=
 name|base
-condition|?
-name|base
-else|:
-literal|0
 expr_stmt|;
 name|pb
 operator|->
