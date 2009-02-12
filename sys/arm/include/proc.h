@@ -62,6 +62,14 @@ name|void
 modifier|*
 name|md_tp
 decl_stmt|;
+name|void
+modifier|*
+name|md_ras_start
+decl_stmt|;
+name|void
+modifier|*
+name|md_ras_end
+decl_stmt|;
 block|}
 struct|;
 end_struct
