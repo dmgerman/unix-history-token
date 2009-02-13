@@ -533,7 +533,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2908,6 +2908,12 @@ name|ic_update_mcast
 operator|=
 name|zyd_update_mcast
 expr_stmt|;
+name|ic
+operator|->
+name|ic_update_promisc
+operator|=
+name|zyd_update_mcast
+expr_stmt|;
 name|bpfattach
 argument_list|(
 name|ifp
@@ -3055,10 +3061,6 @@ name|struct
 name|ieee80211com
 modifier|*
 name|ic
-init|=
-name|ifp
-operator|->
-name|if_l2com
 decl_stmt|;
 comment|/* wait for any post attach or other command to complete */
 name|usb2_proc_drain
@@ -3098,6 +3100,12 @@ condition|(
 name|ifp
 condition|)
 block|{
+name|ic
+operator|=
+name|ifp
+operator|->
+name|if_l2com
+expr_stmt|;
 name|bpfdetach
 argument_list|(
 name|ifp
@@ -4890,7 +4898,7 @@ parameter_list|,
 name|int
 name|olen
 parameter_list|,
-name|u_int
+name|int
 name|flags
 parameter_list|)
 block|{
@@ -7736,7 +7744,7 @@ index|[]
 init|=
 name|ZYD_AL2230_PHY_BANDEDGE6
 decl_stmt|;
-name|u_int
+name|int
 name|chan
 init|=
 name|ieee80211_chan2ieee
@@ -12461,7 +12469,7 @@ decl_stmt|;
 name|uint32_t
 name|tmp
 decl_stmt|;
-name|u_int
+name|int
 name|chan
 decl_stmt|;
 name|chan
