@@ -3383,9 +3383,6 @@ name|uint32_t
 name|mtu
 decl_stmt|;
 name|uint32_t
-name|peers_rwnd
-decl_stmt|;
-name|uint32_t
 name|refcnt
 decl_stmt|;
 name|uint16_t
@@ -3406,6 +3403,9 @@ name|sctp_timeval
 name|discontinuity_time
 decl_stmt|;
 comment|/* sctpAssocEntry 17  */
+name|uint32_t
+name|peers_rwnd
+decl_stmt|;
 name|sctp_assoc_t
 name|assoc_id
 decl_stmt|;

@@ -2086,7 +2086,7 @@ name|asoc
 argument_list|)
 expr_stmt|;
 comment|/* FIXME */
-comment|/* 7.0 does not support this */
+comment|/* 7.0 does not support these */
 name|xstcb
 operator|.
 name|assoc_id
@@ -2095,6 +2095,16 @@ name|sctp_get_associd
 argument_list|(
 name|stcb
 argument_list|)
+expr_stmt|;
+name|xstcb
+operator|.
+name|peers_rwnd
+operator|=
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|peers_rwnd
 expr_stmt|;
 name|xstcb
 operator|.
@@ -2330,16 +2340,6 @@ operator|->
 name|asoc
 operator|.
 name|smallest_mtu
-expr_stmt|;
-name|xstcb
-operator|.
-name|peers_rwnd
-operator|=
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|peers_rwnd
 expr_stmt|;
 name|xstcb
 operator|.
