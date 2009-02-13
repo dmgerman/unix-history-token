@@ -63,7 +63,7 @@ name|_KERNEL
 end_ifdef
 
 begin_function_decl
-name|n_time
+name|uint32_t
 name|iptime
 parameter_list|(
 name|void

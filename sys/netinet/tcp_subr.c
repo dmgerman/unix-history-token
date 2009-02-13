@@ -2753,7 +2753,7 @@ name|ip_src
 operator|.
 name|s_addr
 argument_list|,
-name|n_long
+name|uint32_t
 argument_list|)
 expr_stmt|;
 name|nth
@@ -2805,7 +2805,7 @@ name|nth
 operator|->
 name|th_sport
 argument_list|,
-name|n_short
+name|uint16_t
 argument_list|)
 expr_stmt|;
 undef|#
