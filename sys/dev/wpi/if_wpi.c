@@ -7750,13 +7750,6 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|ic
-operator|->
-name|ic_stats
-operator|.
-name|is_rx_nobuf
-operator|++
-expr_stmt|;
 name|ifp
 operator|->
 name|if_ierrors
@@ -7822,14 +7815,6 @@ argument_list|(
 name|mnew
 argument_list|)
 expr_stmt|;
-name|ic
-operator|->
-name|ic_stats
-operator|.
-name|is_rx_nobuf
-operator|++
-expr_stmt|;
-comment|/* XXX need stat */
 name|ifp
 operator|->
 name|if_ierrors
