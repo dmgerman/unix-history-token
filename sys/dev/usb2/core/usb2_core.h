@@ -1805,6 +1805,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|uint8_t
+name|usb2_transfer_pending
+parameter_list|(
+name|struct
+name|usb2_xfer
+modifier|*
+name|xfer
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|usb2_transfer_start
 parameter_list|(

@@ -6474,6 +6474,20 @@ name|usb2_xfer_queue
 modifier|*
 name|pq
 decl_stmt|;
+if|if
+condition|(
+name|xfer
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* transfer is gone */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|USB_XFER_LOCK_ASSERT
 argument_list|(
 name|xfer
