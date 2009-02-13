@@ -3616,6 +3616,13 @@ argument_list|,
 name|IFT_ETHER
 argument_list|)
 expr_stmt|;
+name|ifc_free_unit
+argument_list|(
+name|ifc
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|ifv
