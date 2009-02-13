@@ -15061,9 +15061,7 @@ argument|); 		fwohci_arcv_free_buf(sc, dbch, db_tr, off,
 literal|0
 argument|); 		db_tr = STAILQ_NEXT(db_tr, link); 		resCount = FWOHCI_DMA_READ(db_tr->db[
 literal|0
-argument|].db.desc.res)& OHCI_COUNT_MASK; 	} while (resCount ==
-literal|0
-argument|) 	printf(
+argument|].db.desc.res)& OHCI_COUNT_MASK; 	} 	printf(
 literal|" done\n"
 argument|); 	dbch->top = db_tr; 	dbch->buf_offset = dbch->xferq.psize - resCount; 	OWRITE(sc, OHCI_DMACTL(off), OHCI_CNTL_DMA_WAKE); 	splx(s); }
 end_function
