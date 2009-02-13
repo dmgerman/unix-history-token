@@ -1869,7 +1869,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* rendezvous with thread that asked us to terminate */
 name|tq
 operator|->
