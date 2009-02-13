@@ -9581,15 +9581,6 @@ operator|->
 name|if_softc
 decl_stmt|;
 name|struct
-name|ieee80211com
-modifier|*
-name|ic
-init|=
-name|ifp
-operator|->
-name|if_l2com
-decl_stmt|;
-name|struct
 name|ieee80211_node
 modifier|*
 name|ni
@@ -9904,14 +9895,13 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|ic
+name|sc
 operator|->
-name|ic_stats
+name|sc_stats
 operator|.
-name|is_tx_nobuf
+name|ast_tx_nofrag
 operator|++
 expr_stmt|;
-comment|/* XXX */
 name|ath_freetx
 argument_list|(
 name|m

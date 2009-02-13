@@ -357,9 +357,13 @@ name|ast_tx_raw_fail
 decl_stmt|;
 comment|/* raw tx failed 'cuz h/w down */
 name|u_int32_t
+name|ast_tx_nofrag
+decl_stmt|;
+comment|/* tx dropped 'cuz no ath frag buffer */
+name|u_int32_t
 name|ast_pad
 index|[
-literal|15
+literal|14
 index|]
 decl_stmt|;
 block|}
