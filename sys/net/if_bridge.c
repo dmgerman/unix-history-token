@@ -682,6 +682,12 @@ name|uint32_t
 name|sc_brtexceeded
 decl_stmt|;
 comment|/* # of cache drops */
+name|struct
+name|ifnet
+modifier|*
+name|sc_ifaddr
+decl_stmt|;
+comment|/* member mac copied from */
 name|u_char
 name|sc_defaddr
 index|[
@@ -4517,23 +4523,11 @@ if|if
 condition|(
 name|bridge_inherit_mac
 operator|&&
-operator|!
-name|memcmp
-argument_list|(
-name|IF_LLADDR
-argument_list|(
 name|sc
 operator|->
-name|sc_ifp
-argument_list|)
-argument_list|,
-name|IF_LLADDR
-argument_list|(
+name|sc_ifaddr
+operator|==
 name|ifs
-argument_list|)
-argument_list|,
-name|ETHER_ADDR_LEN
-argument_list|)
 condition|)
 block|{
 if|if
@@ -4546,6 +4540,7 @@ operator|->
 name|sc_iflist
 argument_list|)
 condition|)
+block|{
 name|bcopy
 argument_list|(
 name|sc
@@ -4562,6 +4557,13 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_ifaddr
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 else|else
 block|{
 name|fif
@@ -4592,6 +4594,12 @@ argument_list|)
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_ifaddr
+operator|=
+name|fif
 expr_stmt|;
 block|}
 block|}
@@ -5026,6 +5034,7 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 condition|)
+block|{
 name|bcopy
 argument_list|(
 name|IF_LLADDR
@@ -5043,6 +5052,13 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_ifaddr
+operator|=
+name|ifs
+expr_stmt|;
+block|}
 name|ifs
 operator|->
 name|if_bridge
