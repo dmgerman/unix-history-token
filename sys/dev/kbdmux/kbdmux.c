@@ -5719,16 +5719,10 @@ expr_stmt|;
 if|if
 condition|(
 name|kbd
-operator|==
+operator|!=
 name|NULL
 condition|)
-name|panic
-argument_list|(
-literal|"kbd_get_keyboard(kbd_find_keyboard("
-name|KEYBOARD_NAME
-literal|", 0)) == NULL"
-argument_list|)
-expr_stmt|;
+block|{
 call|(
 modifier|*
 name|sw
@@ -5765,6 +5759,7 @@ operator|&
 name|kbdmux_kbd_driver
 argument_list|)
 expr_stmt|;
+block|}
 name|error
 operator|=
 literal|0
