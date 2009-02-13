@@ -142,16 +142,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_comment
-comment|/* n_long, SYSCTL_DECL(_net) */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<netinet/ip.h>
 end_include
 
