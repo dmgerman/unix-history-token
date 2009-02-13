@@ -281,12 +281,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in_var.h>
 end_include
 
@@ -347,25 +341,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/tcp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcp_timer.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/tcp_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcpip.h>
 end_include
 
 begin_include
@@ -396,12 +372,6 @@ begin_include
 include|#
 directive|include
 file|<netgraph/ng_ipfw.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<altq/if_altq.h>
 end_include
 
 begin_include
@@ -453,11 +423,22 @@ begin_comment
 comment|/* XXX for in_cksum */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MAC
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<security/mac/mac_framework.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#

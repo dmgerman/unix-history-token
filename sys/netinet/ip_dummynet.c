@@ -135,16 +135,14 @@ directive|include
 file|<net/if.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/netisr.h>
-end_include
+begin_comment
+comment|/* IFNAMSIZ, struct ifaddr, ifq head, lock.h mutex.h */
+end_comment
 
 begin_include
 include|#
 directive|include
-file|<net/route.h>
+file|<net/netisr.h>
 end_include
 
 begin_include
@@ -156,20 +154,12 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/ip.h>
 end_include
+
+begin_comment
+comment|/* ip_len, ip_off */
+end_comment
 
 begin_include
 include|#
@@ -189,6 +179,10 @@ directive|include
 file|<netinet/ip_var.h>
 end_include
 
+begin_comment
+comment|/* ip_output(), IP_FORWARDING */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -196,7 +190,7 @@ file|<netinet/if_ether.h>
 end_include
 
 begin_comment
-comment|/* for struct arpcom */
+comment|/* various ether_* routines */
 end_comment
 
 begin_include
@@ -689,6 +683,22 @@ ifdef|#
 directive|ifdef
 name|SYSCTL_NODE
 end_ifdef
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_inet
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_inet_ip
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_NODE
