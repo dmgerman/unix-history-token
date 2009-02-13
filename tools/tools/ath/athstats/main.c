@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2002-2009 Sam Leffler, Errno Consulting  * All righ
 end_comment
 
 begin_comment
-comment|/*  * Simple Atheros-specific tool to inspect and monitor network traffic  * statistics.  *  *	athstats [-i interface] [-l] [-o fmtstring] [interval]  *  * (default interface is ath0).  If interval is specified a rolling output  * a la netstat -i is displayed every interval seconds.  The format of  * the rolling display can be controlled a la ps.  The -l option will  * print a list of all possible statistics for use with the -o option.  */
+comment|/*  * Simple Atheros-specific tool to inspect and monitor network traffic  * statistics.  *  *	athstats [-i interface] [-z] [-l] [-o fmtstring] [interval]  *  * (default interface is ath0).  If interval is specified a rolling output  * a la netstat -i is displayed every interval seconds.  The format of  * the rolling display can be controlled a la ps.  The -l option will  * print a list of all possible statistics for use with the -o option.  */
 end_comment
 
 begin_include
@@ -245,7 +245,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"i:lo:"
+literal|"i:lo:z"
 argument_list|)
 operator|)
 operator|!=
@@ -302,13 +302,24 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'z'
+case|:
+name|wf
+operator|->
+name|zerostats
+argument_list|(
+name|wf
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|errx
 argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"usage: %s [-a] [-i ifname] [-l] [-o fmt] [interval]\n"
+literal|"usage: %s [-a] [-i ifname] [-l] [-o fmt] [-z] [interval]\n"
 argument_list|,
 name|argv
 index|[
