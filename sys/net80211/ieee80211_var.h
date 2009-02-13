@@ -423,11 +423,6 @@ argument_list|)
 name|ic_vaps
 expr_stmt|;
 comment|/* list of vap instances */
-name|struct
-name|ieee80211_stats
-name|ic_stats
-decl_stmt|;
-comment|/* statistics */
 name|int
 name|ic_headroom
 decl_stmt|;

@@ -2746,14 +2746,6 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|_db_show_stats
-argument_list|(
-operator|&
-name|ic
-operator|->
-name|ic_stats
-argument_list|)
-expr_stmt|;
 name|db_printf
 argument_list|(
 literal|"\theadroom %d"

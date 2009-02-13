@@ -2484,7 +2484,6 @@ argument_list|(
 name|vap
 argument_list|)
 expr_stmt|;
-comment|/* XXX accumulate iv_stats in ic_stats? */
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
