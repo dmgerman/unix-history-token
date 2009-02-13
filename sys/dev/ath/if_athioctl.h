@@ -377,6 +377,13 @@ name|SIOCGATHSTATS
 value|_IOWR('i', 137, struct ifreq)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SIOCZATHSTATS
+value|_IOWR('i', 139, struct ifreq)
+end_define
+
 begin_struct
 struct|struct
 name|ath_diag
