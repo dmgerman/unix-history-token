@@ -1534,6 +1534,7 @@ name|nbytes
 operator|=
 sizeof|sizeof
 argument_list|(
+operator|*
 name|linux_dirent
 argument_list|)
 expr_stmt|;
