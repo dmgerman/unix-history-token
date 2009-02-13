@@ -991,6 +991,12 @@ name|quotafile
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|fstab
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|struct
 name|quotafile
@@ -1059,6 +1065,23 @@ name|dqblk
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|hasquota
+parameter_list|(
+name|struct
+name|fstab
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
