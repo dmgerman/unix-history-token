@@ -123,6 +123,10 @@ directive|include
 file|<net/if.h>
 end_include
 
+begin_comment
+comment|/* IFNAMSIZ, struct ifaddr, ifq head, lock.h mutex.h */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -141,17 +145,19 @@ directive|include
 file|<netinet/in_systm.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/in_var.h>
-end_include
+begin_comment
+comment|/* n_long, SYSCTL_DECL(_net) */
+end_comment
 
 begin_include
 include|#
 directive|include
 file|<netinet/ip.h>
 end_include
+
+begin_comment
+comment|/* ip_len, ip_off */
+end_comment
 
 begin_include
 include|#
@@ -170,6 +176,10 @@ include|#
 directive|include
 file|<netinet/ip_var.h>
 end_include
+
+begin_comment
+comment|/* ip_output(), IP_FORWARDING */
+end_comment
 
 begin_include
 include|#
@@ -671,6 +681,22 @@ ifdef|#
 directive|ifdef
 name|SYSCTL_NODE
 end_ifdef
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_inet
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_inet_ip
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_NODE
