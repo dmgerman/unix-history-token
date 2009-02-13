@@ -369,7 +369,7 @@ name|sin
 decl_stmt|,
 name|dst
 decl_stmt|;
-name|n_time
+name|uint32_t
 name|ntime
 decl_stmt|;
 name|struct
@@ -1439,7 +1439,7 @@ name|off
 operator|+
 sizeof|sizeof
 argument_list|(
-name|n_time
+name|uint32_t
 argument_list|)
 operator|+
 sizeof|sizeof
@@ -1553,7 +1553,7 @@ name|off
 operator|+
 sizeof|sizeof
 argument_list|(
-name|n_time
+name|uint32_t
 argument_list|)
 operator|+
 sizeof|sizeof
@@ -1676,7 +1676,7 @@ name|ntime
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|n_time
+name|uint32_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1687,7 +1687,7 @@ index|]
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|n_time
+name|uint32_t
 argument_list|)
 expr_stmt|;
 block|}
