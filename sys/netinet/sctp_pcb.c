@@ -11978,6 +11978,9 @@ if|if
 condition|(
 name|p
 operator|&&
+operator|(
+name|error
+operator|=
 name|prison_local_ip4
 argument_list|(
 name|p
@@ -11989,6 +11992,7 @@ name|sin
 operator|->
 name|sin_addr
 argument_list|)
+operator|)
 operator|!=
 literal|0
 condition|)
@@ -12003,12 +12007,12 @@ name|NULL
 argument_list|,
 name|SCTP_FROM_SCTP_PCB
 argument_list|,
-name|EINVAL
+name|error
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EINVAL
+name|error
 operator|)
 return|;
 block|}
@@ -12095,6 +12099,9 @@ if|if
 condition|(
 name|p
 operator|&&
+operator|(
+name|error
+operator|=
 name|prison_local_ip6
 argument_list|(
 name|p
@@ -12115,6 +12122,7 @@ operator|!=
 literal|0
 operator|)
 argument_list|)
+operator|)
 operator|!=
 literal|0
 condition|)
@@ -12129,12 +12137,12 @@ name|NULL
 argument_list|,
 name|SCTP_FROM_SCTP_PCB
 argument_list|,
-name|EINVAL
+name|error
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EINVAL
+name|error
 operator|)
 return|;
 block|}
