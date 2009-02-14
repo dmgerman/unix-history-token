@@ -1280,6 +1280,26 @@ block|}
 end_function
 
 begin_function_decl
+name|uint32_t
+name|calculate_crc32c
+parameter_list|(
+name|uint32_t
+name|crc32c
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|buffer
+parameter_list|,
+name|unsigned
+name|int
+name|length
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|LIBKERN_INLINE
 name|void
 modifier|*
