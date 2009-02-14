@@ -3639,5 +3639,31 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|ffs_rdonly
+parameter_list|(
+name|struct
+name|inode
+modifier|*
+name|ip
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ip
+operator|->
+name|i_ump
+operator|->
+name|um_fs
+operator|->
+name|fs_ronly
+operator|!=
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 
