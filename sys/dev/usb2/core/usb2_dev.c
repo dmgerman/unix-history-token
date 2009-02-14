@@ -6172,7 +6172,7 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-comment|/* 	 * Create a dummy device so that we are visible. This device 	 * should never be opened. Therefore a space character is 	 * appended after the USB device name. 	 * 	 * NOTE: The permissions of this device is 0777, because we 	 * check the permissions again in the open routine against the 	 * real USB permissions which are not 0777. Else USB access 	 * will be limited to one user and one group. 	 */
+comment|/* 	 * Create a dummy device so that we are visible. This device 	 * should never be opened. Therefore a space character is 	 * appended after the USB device name. 	 * 	 * NOTE: The permissions of this device is 0666, because we 	 * check the permissions again in the open routine against the 	 * real USB permissions which are not 0666. Else USB access 	 * will be limited to one user and one group. 	 */
 name|usb2_dev
 operator|=
 name|make_dev
@@ -6186,7 +6186,7 @@ name|UID_ROOT
 argument_list|,
 name|GID_OPERATOR
 argument_list|,
-literal|0777
+literal|0666
 argument_list|,
 name|USB_DEVICE_NAME
 literal|" "
