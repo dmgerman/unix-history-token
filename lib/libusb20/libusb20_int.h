@@ -372,6 +372,51 @@ begin_typedef
 typedef|typedef
 name|int
 function_decl|(
+name|libusb20_dev_get_info_t
+function_decl|)
+parameter_list|(
+name|struct
+name|libusb20_device
+modifier|*
+name|pdev
+parameter_list|,
+name|struct
+name|usb2_device_info
+modifier|*
+name|pinfo
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+name|libusb20_dev_get_iface_desc_t
+function_decl|)
+parameter_list|(
+name|struct
+name|libusb20_device
+modifier|*
+name|pdev
+parameter_list|,
+name|uint8_t
+name|iface_index
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|uint8_t
+name|len
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
 name|libusb20_dev_set_iface_owner_t
 function_decl|)
 parameter_list|(
@@ -622,7 +667,7 @@ comment|/* description of this backend */
 define|\
 value|m(n, get_backend_name) \
 comment|/* optional backend methods */
-value|\   m(n, init_backend) \   m(n, exit_backend) \   m(n, bus_set_owner) \   m(n, bus_get_owner) \   m(n, bus_set_perm) \   m(n, bus_get_perm) \   m(n, dev_get_iface_owner) \   m(n, dev_get_iface_perm) \   m(n, dev_get_owner) \   m(n, dev_get_perm) \   m(n, dev_set_iface_owner) \   m(n, dev_set_iface_perm) \   m(n, dev_set_owner) \   m(n, dev_set_perm) \   m(n, root_get_dev_quirk) \   m(n, root_get_quirk_name) \   m(n, root_add_dev_quirk) \   m(n, root_remove_dev_quirk) \   m(n, root_set_owner) \   m(n, root_get_owner) \   m(n, root_set_perm) \   m(n, root_get_perm) \
+value|\   m(n, init_backend) \   m(n, exit_backend) \   m(n, bus_set_owner) \   m(n, bus_get_owner) \   m(n, bus_set_perm) \   m(n, bus_get_perm) \   m(n, dev_get_info) \   m(n, dev_get_iface_owner) \   m(n, dev_get_iface_perm) \   m(n, dev_get_iface_desc) \   m(n, dev_get_owner) \   m(n, dev_get_perm) \   m(n, dev_set_iface_owner) \   m(n, dev_set_iface_perm) \   m(n, dev_set_owner) \   m(n, dev_set_perm) \   m(n, root_get_dev_quirk) \   m(n, root_get_quirk_name) \   m(n, root_add_dev_quirk) \   m(n, root_remove_dev_quirk) \   m(n, root_set_owner) \   m(n, root_get_owner) \   m(n, root_set_perm) \   m(n, root_get_perm) \
 comment|/* mandatory device methods */
 value|\   m(n, open_device) \   m(n, close_device) \  struct libusb20_backend_methods {
 end_define

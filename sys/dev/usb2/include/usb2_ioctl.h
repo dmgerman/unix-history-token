@@ -184,23 +184,6 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_device_names
-block|{
-name|char
-modifier|*
-name|udn_devnames_ptr
-decl_stmt|;
-comment|/* userland pointer to comma separated 					 * list of device names */
-name|uint16_t
-name|udn_devnames_len
-decl_stmt|;
-comment|/* maximum string length including 					 * terminating zero */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|usb2_device_info
 block|{
 name|uint16_t
@@ -822,8 +805,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|USB_GET_DEVICENAMES
-value|_IOW ('U', 121, struct usb2_device_names)
+name|USB_GET_IFACE_DRIVER
+value|_IOWR('U', 121, struct usb2_gen_descriptor)
 end_define
 
 begin_define

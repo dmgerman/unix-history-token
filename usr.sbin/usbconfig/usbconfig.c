@@ -246,6 +246,11 @@ range|:
 literal|1
 decl_stmt|;
 name|uint8_t
+name|got_show_iface_driver
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
 name|got_remove_device_quirk
 range|:
 literal|1
@@ -308,6 +313,8 @@ block|,
 name|T_ADD_DEVICE_QUIRK
 block|,
 name|T_REMOVE_DEVICE_QUIRK
+block|,
+name|T_SHOW_IFACE_DRIVER
 block|,
 name|T_DUMP_QUIRK_NAMES
 block|,
@@ -493,6 +500,14 @@ block|{
 literal|"dump_info"
 block|,
 name|T_DUMP_INFO
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"show_ifdrv"
+block|,
+name|T_SHOW_IFACE_DRIVER
 block|,
 literal|0
 block|}
@@ -1213,6 +1228,8 @@ literal|"\n"
 literal|"  dump_access"
 literal|"\n"
 literal|"  dump_info"
+literal|"\n"
+literal|"  show_ifdrv"
 literal|"\n"
 literal|"  suspend"
 literal|"\n"
@@ -2403,6 +2420,10 @@ block|{
 name|dump_device_info
 argument_list|(
 name|pdev
+argument_list|,
+name|opt
+operator|->
+name|got_show_iface_driver
 argument_list|)
 expr_stmt|;
 block|}
@@ -2904,6 +2925,16 @@ name|opt
 operator|->
 name|got_any
 operator|++
+expr_stmt|;
+break|break;
+case|case
+name|T_SHOW_IFACE_DRIVER
+case|:
+name|opt
+operator|->
+name|got_show_iface_driver
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case

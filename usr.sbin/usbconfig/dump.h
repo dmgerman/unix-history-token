@@ -51,6 +51,9 @@ name|struct
 name|libusb20_device
 modifier|*
 name|pdev
+parameter_list|,
+name|uint8_t
+name|show_drv
 parameter_list|)
 function_decl|;
 end_function_decl
