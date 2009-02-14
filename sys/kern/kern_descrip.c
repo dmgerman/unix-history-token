@@ -11693,19 +11693,35 @@ operator|=
 name|KF_TYPE_VNODE
 expr_stmt|;
 comment|/* This function only handles directories. */
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|vp
 operator|->
 name|v_type
-operator|==
+operator|!=
 name|VDIR
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"export_vnode_for_osysctl: vnode not directory: %d\n"
 argument_list|,
-operator|(
-literal|"export_vnode_for_osysctl: vnode not directory"
-operator|)
+name|vp
+operator|->
+name|v_type
 argument_list|)
 expr_stmt|;
+name|vrele
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOTDIR
+operator|)
+return|;
+block|}
 name|kif
 operator|->
 name|kf_vnode_type
@@ -12950,19 +12966,35 @@ operator|=
 name|KF_TYPE_VNODE
 expr_stmt|;
 comment|/* This function only handles directories. */
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|vp
 operator|->
 name|v_type
-operator|==
+operator|!=
 name|VDIR
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"export_vnode_for_sysctl: vnode not directory: %d\n"
 argument_list|,
-operator|(
-literal|"export_vnode_for_sysctl: vnode not directory"
-operator|)
+name|vp
+operator|->
+name|v_type
 argument_list|)
 expr_stmt|;
+name|vrele
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOTDIR
+operator|)
+return|;
+block|}
 name|kif
 operator|->
 name|kf_vnode_type
