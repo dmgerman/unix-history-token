@@ -11702,15 +11702,6 @@ operator|!=
 name|VDIR
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"export_vnode_for_osysctl: vnode not directory: %d\n"
-argument_list|,
-name|vp
-operator|->
-name|v_type
-argument_list|)
-expr_stmt|;
 name|vrele
 argument_list|(
 name|vp
@@ -12975,15 +12966,6 @@ operator|!=
 name|VDIR
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"export_vnode_for_sysctl: vnode not directory: %d\n"
-argument_list|,
-name|vp
-operator|->
-name|v_type
-argument_list|)
-expr_stmt|;
 name|vrele
 argument_list|(
 name|vp
