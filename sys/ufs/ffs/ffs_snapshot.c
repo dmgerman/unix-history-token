@@ -782,18 +782,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|process_deferred_inactive
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|try_free_snapdata
 parameter_list|(
 name|struct
@@ -13795,12 +13783,16 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Process file deletes that were deferred by ufs_inactive() due to  * the file system being suspended. Transfer IN_LAZYACCESS into  * IN_MODIFIED for vnodes that were accessed during suspension.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|process_deferred_inactive
 parameter_list|(
@@ -14203,6 +14195,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_FFS_SNAPSHOT
+end_ifndef
 
 begin_comment
 comment|/* Try to free snapdata associated with devvp */

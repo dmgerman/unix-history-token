@@ -449,6 +449,11 @@ operator|.
 name|vfs_vget
 operator|=
 name|ffs_vget
+block|,
+operator|.
+name|vfs_susp_clean
+operator|=
+name|process_deferred_inactive
 block|, }
 decl_stmt|;
 end_decl_stmt

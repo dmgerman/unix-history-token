@@ -598,6 +598,12 @@ name|int
 name|mnt_secondary_accwrites
 decl_stmt|;
 comment|/* (i) secondary wr. starts */
+name|struct
+name|thread
+modifier|*
+name|mnt_susp_owner
+decl_stmt|;
+comment|/* (i) thread owning suspension */
 define|#
 directive|define
 name|mnt_endzero
@@ -2501,6 +2507,19 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|void
+name|vfs_susp_clean_t
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|vfsops
@@ -2560,6 +2579,10 @@ decl_stmt|;
 name|vfs_sysctl_t
 modifier|*
 name|vfs_sysctl
+decl_stmt|;
+name|vfs_susp_clean_t
+modifier|*
+name|vfs_susp_clean
 decl_stmt|;
 block|}
 struct|;
@@ -2743,6 +2766,17 @@ name|REQ
 parameter_list|)
 define|\
 value|(*(MP)->mnt_op->vfs_sysctl)(MP, OP, REQ)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VFS_SUSP_CLEAN
+parameter_list|(
+name|MP
+parameter_list|)
+define|\
+value|({if (*(MP)->mnt_op->vfs_susp_clean != NULL)		\ 	       (*(MP)->mnt_op->vfs_susp_clean)(MP); })
 end_define
 
 begin_decl_stmt
