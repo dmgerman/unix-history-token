@@ -829,7 +829,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_NOHOST
 argument_list|)
 expr_stmt|;
 block|}
@@ -912,7 +912,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -1015,12 +1015,12 @@ literal|0
 condition|)
 name|exit
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+name|EX_OK
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -1328,7 +1328,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|)
 expr_stmt|;
 block|}
@@ -2897,7 +2897,6 @@ name|in_addr_source
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3108,13 +3107,21 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 return|return
+operator|(
 name|buf
+operator|)
 return|;
+block|}
 else|else
+block|{
 return|return
+operator|(
 literal|"(invalid)"
+operator|)
 return|;
+block|}
 block|}
 end_function
 
