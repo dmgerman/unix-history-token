@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002, 2005-2008 Marcel Moolenaar  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2002, 2005-2009 Marcel Moolenaar  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -417,41 +417,6 @@ name|g_part
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_enum
-enum|enum
-name|g_part_ctl
-block|{
-name|G_PART_CTL_NONE
-block|,
-name|G_PART_CTL_ADD
-block|,
-name|G_PART_CTL_BOOTCODE
-block|,
-name|G_PART_CTL_COMMIT
-block|,
-name|G_PART_CTL_CREATE
-block|,
-name|G_PART_CTL_DELETE
-block|,
-name|G_PART_CTL_DESTROY
-block|,
-name|G_PART_CTL_MODIFY
-block|,
-name|G_PART_CTL_MOVE
-block|,
-name|G_PART_CTL_RECOVER
-block|,
-name|G_PART_CTL_RESIZE
-block|,
-name|G_PART_CTL_SET
-block|,
-name|G_PART_CTL_UNDO
-block|,
-name|G_PART_CTL_UNSET
-block|}
-enum|;
-end_enum
 
 begin_comment
 comment|/*  * Support functions.  */
@@ -7010,7 +6975,6 @@ name|table
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Suppress uninit. warning. */
 if|if
 condition|(
 name|modifies
@@ -7099,11 +7063,51 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+comment|/* Allow the scheme to check or modify the parameters. */
+if|if
+condition|(
+name|table
+operator|!=
+name|NULL
+condition|)
+block|{
+name|error
+operator|=
+name|G_PART_PRECHECK
+argument_list|(
+name|table
+argument_list|,
+name|ctlreq
+argument_list|,
+operator|&
+name|gpp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"%d pre-check failed"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+block|}
+else|else
 name|error
 operator|=
 name|EDOOFUS
 expr_stmt|;
-comment|/* Prevent bogus  uninit. warning. */
+comment|/* Prevent bogus uninit. warning. */
 switch|switch
 condition|(
 name|ctlreq
@@ -7372,6 +7376,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|out
+label|:
 if|if
 condition|(
 name|error
