@@ -1308,15 +1308,11 @@ name|r_res2
 argument_list|,
 name|ATA_AHCI_IS
 argument_list|,
-name|action
-operator|&
-operator|(
 literal|1
 operator|<<
 name|ch
 operator|->
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* do we have any PHY events ? */
