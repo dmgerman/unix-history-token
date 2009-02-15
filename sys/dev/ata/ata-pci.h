@@ -67,6 +67,9 @@ name|resource
 modifier|*
 name|r_res2
 decl_stmt|;
+name|int
+name|r_irq_rid
+decl_stmt|;
 name|struct
 name|resource
 modifier|*
