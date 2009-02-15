@@ -18,31 +18,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/socketvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/md5.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
 end_include
 
 begin_include
