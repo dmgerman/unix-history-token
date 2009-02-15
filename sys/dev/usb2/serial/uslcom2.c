@@ -122,13 +122,13 @@ name|_hw_usb2
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|uplcom
+name|uslcom
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 literal|0
 argument_list|,
-literal|"USB uplcom"
+literal|"USB uslcom"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -136,7 +136,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_hw_usb2_uplcom
+name|_hw_usb2_uslcom
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -1079,7 +1079,7 @@ block|{
 operator|.
 name|name
 operator|=
-literal|"uplcom"
+literal|"uslcom"
 block|,
 operator|.
 name|methods
@@ -1101,7 +1101,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|uplcom
+name|uslcom
 argument_list|,
 name|ushub
 argument_list|,
@@ -1119,7 +1119,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|uplcom
+name|uslcom
 argument_list|,
 name|usb2_serial
 argument_list|,
@@ -1135,7 +1135,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|uplcom
+name|uslcom
 argument_list|,
 name|usb2_core
 argument_list|,
@@ -1151,7 +1151,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
-name|uplcom
+name|uslcom
 argument_list|,
 literal|1
 argument_list|)
