@@ -326,65 +326,6 @@ name|CP_LOCK_NAME
 value|"cpX"
 end_define
 
-begin_decl_stmt
-specifier|static
-name|int
-name|cp_mpsafenet
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"debug.cp.mpsafenet"
-argument_list|,
-operator|&
-name|cp_mpsafenet
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(
-name|_debug
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|cp
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-literal|0
-argument_list|,
-literal|"Cronyx Tau-PCI Adapters"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_debug_cp
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|mpsafenet
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|cp_mpsafenet
-argument_list|,
-literal|0
-argument_list|,
-literal|"Enable/disable MPSAFE network support for Cronyx Tau-PCI Adapters"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_define
 define|#
 directive|define
@@ -392,7 +333,7 @@ name|CP_LOCK
 parameter_list|(
 name|_bd
 parameter_list|)
-value|do { \ 				    if (cp_mpsafenet) \ 					mtx_lock (&(_bd)->cp_mtx); \ 				} while (0)
+value|mtx_lock (&(_bd)->cp_mtx)
 end_define
 
 begin_define
@@ -402,7 +343,7 @@ name|CP_UNLOCK
 parameter_list|(
 name|_bd
 parameter_list|)
-value|do { \ 				    if (cp_mpsafenet) \ 					mtx_unlock (&(_bd)->cp_mtx); \ 				} while (0)
+value|mtx_unlock (&(_bd)->cp_mtx)
 end_define
 
 begin_define
@@ -412,7 +353,7 @@ name|CP_LOCK_ASSERT
 parameter_list|(
 name|_bd
 parameter_list|)
-value|do { \ 				    if (cp_mpsafenet) \ 					mtx_assert (&(_bd)->cp_mtx, MA_OWNED); \ 				} while (0)
+value|mtx_assert (&(_bd)->cp_mtx, MA_OWNED)
 end_define
 
 begin_decl_stmt
@@ -1035,11 +976,6 @@ operator|.
 name|d_name
 operator|=
 literal|"cp"
-block|,
-operator|.
-name|d_flags
-operator|=
-name|D_NEEDGIANT
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -2603,11 +2539,7 @@ index|[
 name|unit
 index|]
 argument_list|,
-name|cp_mpsafenet
-condition|?
 name|CALLOUT_MPSAFE
-else|:
-literal|0
 argument_list|)
 expr_stmt|;
 name|error
@@ -2622,13 +2554,7 @@ name|cp_irq
 argument_list|,
 name|INTR_TYPE_NET
 operator||
-operator|(
-name|cp_mpsafenet
-condition|?
 name|INTR_MPSAFE
-else|:
-literal|0
-operator|)
 argument_list|,
 name|NULL
 argument_list|,
@@ -3004,11 +2930,7 @@ name|d
 operator|->
 name|timeout_handle
 argument_list|,
-name|cp_mpsafenet
-condition|?
 name|CALLOUT_MPSAFE
-else|:
-literal|0
 argument_list|)
 expr_stmt|;
 else|#
@@ -3087,19 +3009,6 @@ operator|=
 name|IFF_POINTOPOINT
 operator||
 name|IFF_MULTICAST
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|cp_mpsafenet
-condition|)
-name|d
-operator|->
-name|ifp
-operator|->
-name|if_flags
-operator||=
-name|IFF_NEEDSGIANT
 expr_stmt|;
 name|d
 operator|->
@@ -13618,17 +13527,6 @@ name|load_count
 init|=
 literal|0
 decl_stmt|;
-if|if
-condition|(
-name|cp_mpsafenet
-condition|)
-name|cp_cdevsw
-operator|.
-name|d_flags
-operator|&=
-operator|~
-name|D_NEEDGIANT
-expr_stmt|;
 switch|switch
 condition|(
 name|type
@@ -13663,11 +13561,7 @@ argument_list|(
 operator|&
 name|timeout_handle
 argument_list|,
-name|cp_mpsafenet
-condition|?
 name|CALLOUT_MPSAFE
-else|:
-literal|0
 argument_list|)
 expr_stmt|;
 name|callout_reset
