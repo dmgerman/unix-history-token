@@ -66,13 +66,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pccard/cardinfo.h>
+file|"cardinfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pccard/cis.h>
+file|"cis.h"
 end_include
 
 begin_include
