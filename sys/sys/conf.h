@@ -556,24 +556,24 @@ name|dumper_t
 parameter_list|(
 name|void
 modifier|*
-name|priv
+name|_priv
 parameter_list|,
 comment|/* Private to the driver. */
 name|void
 modifier|*
-name|virtual
+name|_virtual
 parameter_list|,
 comment|/* Virtual (mapped) address. */
 name|vm_offset_t
-name|physical
+name|_physical
 parameter_list|,
 comment|/* Physical address of virtual. */
 name|off_t
-name|offset
+name|_offset
 parameter_list|,
 comment|/* Byte-offset to write at. */
 name|size_t
-name|length
+name|_length
 parameter_list|)
 function_decl|;
 end_typedef
