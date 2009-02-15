@@ -3505,7 +3505,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ata_ahci_wait_ready
 parameter_list|(
 name|device_t
@@ -3589,7 +3589,12 @@ argument_list|,
 literal|"port is not ready\n"
 argument_list|)
 expr_stmt|;
-break|break;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 block|}
 if|if
@@ -3605,6 +3610,11 @@ argument_list|,
 name|timeout
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -3813,11 +3823,19 @@ return|return
 operator|-
 literal|1
 return|;
+if|if
+condition|(
 name|ata_ahci_wait_ready
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 return|return
 name|ATA_INL
 argument_list|(
@@ -4134,6 +4152,7 @@ argument_list|)
 operator|&
 name|ATA_AHCI_CAP_SPM
 condition|)
+block|{
 name|signature
 operator|=
 name|ata_ahci_softreset
@@ -4143,6 +4162,23 @@ argument_list|,
 name|ATA_PM
 argument_list|)
 expr_stmt|;
+comment|/* Workaround for some ATI chips, failing to soft-reset 	 * when port multiplicator supported, but absent. 	 * XXX: We can also check PxIS.IPMS==1 here to be sure. */
+if|if
+condition|(
+name|signature
+operator|==
+literal|0xffffffff
+condition|)
+name|signature
+operator|=
+name|ata_ahci_softreset
+argument_list|(
+name|dev
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 name|signature
