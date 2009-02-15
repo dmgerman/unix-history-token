@@ -2037,25 +2037,21 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"PCI Advanced Features: %s%s"
+literal|"PCI Advanced Features:%s%s"
 argument_list|,
-operator|(
 name|cap
 operator|&
 name|PCIM_PCIAFCAP_FLR
-operator|)
 condition|?
-literal|"FLR "
+literal|" FLR"
 else|:
 literal|""
 argument_list|,
-operator|(
 name|cap
 operator|&
 name|PCIM_PCIAFCAP_TP
-operator|)
 condition|?
-literal|"TP "
+literal|" TP"
 else|:
 literal|""
 argument_list|)
