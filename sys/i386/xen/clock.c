@@ -454,17 +454,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|u_long
-name|cached_gtm
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* cached quotient for TSC -> microseconds */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|u_long
 name|cyc2ns_scale
 decl_stmt|;
 end_decl_stmt
@@ -704,7 +693,7 @@ name|delta
 operator|<<=
 name|shift
 expr_stmt|;
-asm|__asm__ ( 		"mul  %5       ; " 		"mov  %4,%%eax ; " 		"mov  %%edx,%4 ; " 		"mul  %5       ; " 		"add  %4,%%eax ; " 		"xor  %5,%5    ; " 		"adc  %5,%%edx ; " 		: "=A" (product), "=r" (tmp1), "=r" (tmp2) 		: "a" ((uint32_t)delta), "1" ((uint32_t)(delta>> 32)), "2" (mul_frac) );
+asm|__asm__ ( 		"mul  %5       ; " 		"mov  %4,%%eax ; " 		"mov  %%edx,%4 ; " 		"mul  %5       ; " 		"xor  %5,%5    ; " 		"add  %4,%%eax ; " 		"adc  %5,%%edx ; " 		: "=A" (product), "=r" (tmp1), "=r" (tmp2) 		: "a" ((uint32_t)delta), "1" ((uint32_t)(delta>> 32)), "2" (mul_frac) );
 return|return
 name|product
 return|;
@@ -1781,19 +1770,6 @@ literal|1000
 argument_list|)
 expr_stmt|;
 comment|/* (10^6 * 2^32) / cpu_hz = (10^3 * 2^32) / cpu_khz = 	   (2^32 * 1 / (clocks/us)) */
-block|{
-name|unsigned
-name|long
-name|eax
-init|=
-literal|0
-decl_stmt|,
-name|edx
-init|=
-literal|1000
-decl_stmt|;
-asm|__asm__("divl %2" 			:"=a" (cached_gtm), "=d" (edx) 			:"r" (cpu_khz), 			"0" (eax), "1" (edx));
-block|}
 name|set_cyc2ns_scale
 argument_list|(
 name|cpu_khz
@@ -3069,38 +3045,6 @@ begin_comment
 comment|/*  * Track behavior of cur_timer->get_offset() functionality in timer_tsc.c  */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|static uint32_t xen_get_offset(void) { 	register unsigned long eax, edx;
-comment|/* Read the Time Stamp Counter */
-end_comment
-
-begin_comment
-unit|rdtsc(eax,edx);
-comment|/* .. relative to previous jiffy (32 bits is enough) */
-end_comment
-
-begin_comment
-unit|eax -= shadow_tsc_stamp;
-comment|/* 	 * Time offset = (tsc_low delta) * cached_gtm 	 *             = (tsc_low delta) * (usecs_per_clock) 	 *             = (tsc_low delta) * (usecs_per_jiffy / clocks_per_jiffy) 	 * 	 * Using a mull instead of a divl saves up to 31 clock cycles 	 * in the critical path. 	 */
-end_comment
-
-begin_comment
-unit|__asm__("mull %2" 		:"=a" (eax), "=d" (edx) 		:"rm" (cached_gtm), 		"0" (eax));
-comment|/* our adjusted time offset in microseconds */
-end_comment
-
-begin_endif
-unit|return edx; }
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Convert jiffies to system time. */
 end_comment
@@ -3110,18 +3054,11 @@ specifier|static
 name|uint64_t
 name|ticks_to_system_time
 parameter_list|(
-name|unsigned
-name|long
+name|int
 name|newticks
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|unsigned long seq;
-endif|#
-directive|endif
-name|long
+name|int
 name|delta
 decl_stmt|;
 name|uint64_t
@@ -3140,7 +3077,7 @@ operator|<
 literal|1
 condition|)
 block|{
-comment|/* Triggers in some wrap-around cases, but that's okay:        * we just end up with a shorter timeout. */
+comment|/* Triggers in some wrap-around cases, 		 * but that's okay: 		 * we just end up with a shorter timeout. */
 name|st
 operator|=
 name|processed_system_time
@@ -3154,7 +3091,7 @@ condition|(
 operator|(
 operator|(
 name|unsigned
-name|long
+name|int
 operator|)
 name|delta
 operator|>>
@@ -3168,7 +3105,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* Very long timeout means there is no pending timer.        * We indicate this to Xen by passing zero timeout. */
+comment|/* Very long timeout means there is no pending timer. 		 * We indicate this to Xen by passing zero timeout. */
 name|st
 operator|=
 literal|0
