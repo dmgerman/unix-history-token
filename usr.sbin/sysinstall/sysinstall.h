@@ -941,13 +941,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|VAR_SKIP_PCCARD
-value|"skipPCCARD"
-end_define
-
-begin_define
-define|#
-directive|define
 name|VAR_UFS_PATH
 value|"ufs"
 end_define
@@ -6382,20 +6375,6 @@ parameter_list|(
 name|char
 modifier|*
 name|name
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* pccard.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|pccardInitialize
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
