@@ -235,6 +235,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/ethernet.h>
+end_include
+
+begin_comment
+comment|/* for ETHERTYPE_IP */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -402,16 +412,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
-end_include
-
-begin_comment
-comment|/* XXX for ETHERTYPE_IP */
-end_comment
 
 begin_include
 include|#

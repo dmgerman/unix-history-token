@@ -159,6 +159,16 @@ directive|include
 file|<sys/vimage.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_NET_IF_VAR_H_
+end_define
+
+begin_comment
+comment|/* we don't want if_var.h, only if.h */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -187,12 +197,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_var.h>
 end_include
 
 begin_include
