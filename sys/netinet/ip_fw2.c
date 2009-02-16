@@ -133,18 +133,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/condvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/eventhandler.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -193,12 +181,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/rwlock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socket.h>
 end_include
 
@@ -225,6 +207,16 @@ include|#
 directive|include
 file|<sys/ucred.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<net/ethernet.h>
+end_include
+
+begin_comment
+comment|/* for ETHERTYPE_IP */
+end_comment
 
 begin_include
 include|#
@@ -388,16 +380,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<netinet/if_ether.h>
-end_include
-
-begin_comment
-comment|/* XXX for ETHERTYPE_IP */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<machine/in_cksum.h>
 end_include
 
@@ -442,16 +424,16 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|verbose_limit
+name|struct
+name|callout
+name|ipfw_timeout
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|callout
-name|ipfw_timeout
+name|int
+name|verbose_limit
 decl_stmt|;
 end_decl_stmt
 
@@ -806,6 +788,35 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_net_inet_ip_fw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|tables_max
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+name|NULL
+argument_list|,
+name|IPFW_TABLES_MAX
+argument_list|,
+literal|"The maximum number of tables."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SYSCTL_NODE */
+end_comment
+
 begin_comment
 comment|/*  * Description of dynamic rules.  *  * Dynamic rules are stored in lists accessed through a hash table  * (ipfw_dyn_v) whose size is curr_dyn_buckets. This value can  * be modified through the sysctl variable dyn_buckets which is  * updated when the table becomes empty.  *  * XXX currently there is only one list, ipfw_dyn.  *  * When a packet is received, its address fields are first masked  * with the mask defined for the rule, then hashed, then matched  * against the entries in the corresponding list.  * Dynamic rules can be used for different purposes:  *  + stateful rules;  *  + enforcing limits on the number of sessions;  *  + in-kernel NAT (not implemented yet)  *  * The lifetime of dynamic rules is regulated by dyn_*_lifetime,  * measured in seconds and depending on the flags.  *  * The total number of dynamic rules is stored in dyn_count.  * The max number of dynamic rules is dyn_max. When we reach  * the maximum number of rules we do not create anymore. This is  * done to avoid consuming too much memory, but also too much  * time when searching on each packet (ideally, we should try instead  * to put a limit on the length of the list on each bucket...).  *  * Each dynamic rule holds a pointer to the parent ipfw rule so  * we know what action to perform. Dynamic rules are removed when  * the parent rule is deleted. XXX we should make them survive.  *  * There are some limitations with dynamic rules -- we do not  * obey the 'randomized match', and we do not do multiple  * passes through the firewall. XXX check the latter!!!  */
 end_comment
@@ -1038,6 +1049,12 @@ end_decl_stmt
 begin_comment
 comment|/* max # of dynamic rules */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSCTL_NODE
+end_ifdef
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -1291,6 +1308,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SYSCTL_NODE */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1301,6 +1327,12 @@ begin_comment
 comment|/*  * IPv6 specific variables  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSCTL_NODE
+end_ifdef
+
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -1308,6 +1340,15 @@ name|_net_inet6_ip6
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SYSCTL_NODE */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1333,15 +1374,6 @@ end_endif
 
 begin_comment
 comment|/* INET6 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SYSCTL_NODE */
 end_comment
 
 begin_decl_stmt
@@ -8212,6 +8244,11 @@ name|table_entry
 modifier|*
 name|ent
 decl_stmt|;
+name|struct
+name|radix_node
+modifier|*
+name|rn
+decl_stmt|;
 if|if
 condition|(
 name|tbl
@@ -8330,12 +8367,11 @@ name|s_addr
 expr_stmt|;
 name|IPFW_WLOCK
 argument_list|(
-operator|&
-name|layer3_chain
+name|ch
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|rn
+operator|=
 name|rnh
 operator|->
 name|rnh_addaddr
@@ -8358,14 +8394,17 @@ operator|*
 operator|)
 name|ent
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rn
 operator|==
 name|NULL
 condition|)
 block|{
 name|IPFW_WUNLOCK
 argument_list|(
-operator|&
-name|layer3_chain
+name|ch
 argument_list|)
 expr_stmt|;
 name|free
@@ -8383,8 +8422,7 @@ return|;
 block|}
 name|IPFW_WUNLOCK
 argument_list|(
-operator|&
-name|layer3_chain
+name|ch
 argument_list|)
 expr_stmt|;
 return|return
@@ -9955,6 +9993,13 @@ name|IP_FW_PASS
 operator|)
 return|;
 comment|/* accept */
+name|dst_ip
+operator|.
+name|s_addr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* make sure it is initialized */
 name|pktlen
 operator|=
 name|m
@@ -12004,6 +12049,8 @@ name|s_addr
 decl_stmt|;
 name|uint32_t
 name|v
+init|=
+literal|0
 decl_stmt|;
 name|match
 operator|=
@@ -16409,9 +16456,9 @@ name|msg
 operator|=
 name|log_only
 condition|?
-literal|"ipfw: All logging counts reset.\n"
+literal|"logging counts reset"
 else|:
-literal|"ipfw: Accounting cleared.\n"
+literal|"Accounting cleared"
 expr_stmt|;
 block|}
 else|else
@@ -16512,9 +16559,9 @@ name|msg
 operator|=
 name|log_only
 condition|?
-literal|"ipfw: Entry %d logging count reset.\n"
+literal|"logging count reset"
 else|:
-literal|"ipfw: Entry %d cleared.\n"
+literal|"cleared"
 expr_stmt|;
 block|}
 name|IPFW_WUNLOCK
@@ -16526,17 +16573,40 @@ if|if
 condition|(
 name|fw_verbose
 condition|)
-name|log
-argument_list|(
+block|{
+name|int
+name|lev
+init|=
 name|LOG_SECURITY
 operator||
 name|LOG_NOTICE
+decl_stmt|;
+if|if
+condition|(
+name|rulenum
+condition|)
+name|log
+argument_list|(
+name|lev
 argument_list|,
-name|msg
+literal|"ipfw: Entry %d %s.\n"
 argument_list|,
 name|rulenum
+argument_list|,
+name|msg
 argument_list|)
 expr_stmt|;
+else|else
+name|log
+argument_list|(
+name|lev
+argument_list|,
+literal|"ipfw: %s.\n"
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -18965,7 +19035,6 @@ break|break;
 case|case
 name|IP_FW_NAT_CFG
 case|:
-block|{
 if|if
 condition|(
 name|IPFW_NAT_LOADED
@@ -18981,7 +19050,9 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"IP_FW_NAT_CFG: ipfw_nat not present, please load it.\n"
+literal|"IP_FW_NAT_CFG: %s\n"
+argument_list|,
+literal|"ipfw_nat not present, please load it"
 argument_list|)
 expr_stmt|;
 name|error
@@ -18989,12 +19060,10 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
-block|}
 break|break;
 case|case
 name|IP_FW_NAT_DEL
 case|:
-block|{
 if|if
 condition|(
 name|IPFW_NAT_LOADED
@@ -19010,16 +19079,9 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"IP_FW_NAT_DEL: ipfw_nat not present, please load it.\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ipfw_nat not loaded: %d\n"
+literal|"IP_FW_NAT_DEL: %s\n"
 argument_list|,
-name|sopt
-operator|->
-name|sopt_name
+literal|"ipfw_nat not present, please load it"
 argument_list|)
 expr_stmt|;
 name|error
@@ -19027,12 +19089,10 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
-block|}
 break|break;
 case|case
 name|IP_FW_NAT_GET_CONFIG
 case|:
-block|{
 if|if
 condition|(
 name|IPFW_NAT_LOADED
@@ -19048,7 +19108,9 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"IP_FW_NAT_GET_CFG: ipfw_nat not present, please load it.\n"
+literal|"IP_FW_NAT_GET_CFG: %s\n"
+argument_list|,
+literal|"ipfw_nat not present, please load it"
 argument_list|)
 expr_stmt|;
 name|error
@@ -19056,12 +19118,10 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
-block|}
 break|break;
 case|case
 name|IP_FW_NAT_GET_LOG
 case|:
-block|{
 if|if
 condition|(
 name|IPFW_NAT_LOADED
@@ -19077,14 +19137,15 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"IP_FW_NAT_GET_LOG: ipfw_nat not present, please load it.\n"
+literal|"IP_FW_NAT_GET_LOG: %s\n"
+argument_list|,
+literal|"ipfw_nat not present, please load it"
 argument_list|)
 expr_stmt|;
 name|error
 operator|=
 name|EINVAL
 expr_stmt|;
-block|}
 block|}
 break|break;
 default|default:
