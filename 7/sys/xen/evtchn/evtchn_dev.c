@@ -98,18 +98,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpufunc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/intr_machdep.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/xen/xen-os.h>
 end_include
 
@@ -1000,7 +988,7 @@ operator|!
 name|synch_test_and_set_bit
 argument_list|(
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|arg
 argument_list|,
@@ -1014,7 +1002,7 @@ condition|)
 name|unmask_evtchn
 argument_list|(
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|arg
 argument_list|)
@@ -1033,7 +1021,7 @@ condition|(
 name|synch_test_and_clear_bit
 argument_list|(
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|arg
 argument_list|,
@@ -1047,7 +1035,7 @@ condition|)
 name|mask_evtchn
 argument_list|(
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|arg
 argument_list|)
@@ -1506,7 +1494,11 @@ comment|/* (DEVFS) automatically destroy the symlink with its destination. */
 block|devfs_auto_unregister(evtchn_miscdev.devfs_handle, symlink_handle);
 endif|#
 directive|endif
-name|printk
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
 argument_list|(
 literal|"Event-channel device installed.\n"
 argument_list|)
