@@ -91,6 +91,9 @@ name|int
 name|channels
 decl_stmt|;
 name|int
+name|ichannels
+decl_stmt|;
+name|int
 function_decl|(
 modifier|*
 name|chipinit
