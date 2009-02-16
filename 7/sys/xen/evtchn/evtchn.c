@@ -797,7 +797,7 @@ name|void
 name|evtchn_do_upcall
 parameter_list|(
 name|struct
-name|intrframe
+name|trapframe
 modifier|*
 name|frame
 parameter_list|)
@@ -1950,6 +1950,8 @@ name|devname
 argument_list|,
 name|irq
 argument_list|,
+name|NULL
+argument_list|,
 name|handler
 argument_list|,
 name|arg
@@ -2065,6 +2067,8 @@ name|devname
 argument_list|,
 name|irq
 argument_list|,
+name|NULL
+argument_list|,
 name|handler
 argument_list|,
 name|arg
@@ -2132,6 +2136,9 @@ name|char
 modifier|*
 name|devname
 parameter_list|,
+name|driver_filter_t
+name|filter
+parameter_list|,
 name|driver_intr_t
 name|handler
 parameter_list|,
@@ -2181,6 +2188,8 @@ argument_list|(
 name|devname
 argument_list|,
 name|irq
+argument_list|,
+name|filter
 argument_list|,
 name|handler
 argument_list|,
@@ -2249,6 +2258,9 @@ name|char
 modifier|*
 name|devname
 parameter_list|,
+name|driver_filter_t
+name|filter
+parameter_list|,
 name|driver_intr_t
 name|handler
 parameter_list|,
@@ -2298,6 +2310,8 @@ argument_list|(
 name|devname
 argument_list|,
 name|irq
+argument_list|,
+name|filter
 argument_list|,
 name|handler
 argument_list|,
@@ -2366,8 +2380,8 @@ name|char
 modifier|*
 name|devname
 parameter_list|,
-name|driver_intr_t
-name|handler
+name|driver_filter_t
+name|filter
 parameter_list|,
 name|unsigned
 name|long
@@ -2416,7 +2430,9 @@ name|devname
 argument_list|,
 name|irq
 argument_list|,
-name|handler
+name|filter
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,

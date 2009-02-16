@@ -66,7 +66,7 @@ name|void
 name|evtchn_do_upcall
 parameter_list|(
 name|struct
-name|intrframe
+name|trapframe
 modifier|*
 name|frame
 parameter_list|)
