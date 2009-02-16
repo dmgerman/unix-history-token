@@ -72,7 +72,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -124,7 +136,7 @@ file|<net/if.h>
 end_include
 
 begin_comment
-comment|/* IFNAMSIZ, struct ifaddr, ifq head, lock.h mutex.h */
+comment|/* IFNAMSIZ, struct ifaddr, ifq head */
 end_comment
 
 begin_include
