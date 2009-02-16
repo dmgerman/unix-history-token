@@ -114,13 +114,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<xen/hypervisor.h>
+file|<machine/xen/xen-os.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen-os.h>
+file|<machine/xen/xenfunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<xen/hypervisor.h>
 end_include
 
 begin_include
@@ -133,6 +139,12 @@ begin_include
 include|#
 directive|include
 file|<xen/evtchn.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<xen/gnttab.h>
 end_include
 
 begin_include
@@ -157,18 +169,6 @@ begin_include
 include|#
 directive|include
 file|<geom/geom_disk.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/xen/xenfunc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<xen/gnttab.h>
 end_include
 
 begin_include
@@ -524,7 +524,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|printf("[XEN] %s:%d" fmt ".\n", __FUNCTION__, __LINE__,##args)
+value|printf("[XEN] %s:%d: " fmt ".\n", __func__, __LINE__, ##args)
 end_define
 
 begin_else
@@ -1700,7 +1700,7 @@ name|dev
 parameter_list|)
 block|{
 name|int
-name|err
+name|error
 decl_stmt|,
 name|vdevice
 decl_stmt|,
@@ -1719,7 +1719,7 @@ modifier|*
 name|name
 decl_stmt|;
 comment|/* FIXME: Use dynamic device id if this is not set. */
-name|err
+name|error
 operator|=
 name|xenbus_scanf
 argument_list|(
@@ -1742,14 +1742,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|err
+name|error
 condition|)
 block|{
 name|xenbus_dev_fatal
 argument_list|(
 name|dev
 argument_list|,
-name|err
+name|error
 argument_list|,
 literal|"reading virtual-device"
 argument_list|)
@@ -1761,7 +1761,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|err
+name|error
 operator|)
 return|;
 block|}
@@ -1930,7 +1930,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|err
+name|error
 operator|=
 name|talk_to_backend
 argument_list|(
@@ -1941,13 +1941,59 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|err
+name|error
 condition|)
 return|return
 operator|(
-name|err
+name|error
 operator|)
 return|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|blkfront_suspend
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|struct
+name|blkfront_info
+modifier|*
+name|info
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+comment|/* Prevent new requests being issued until we fix things up. */
+name|mtx_lock
+argument_list|(
+operator|&
+name|blkif_io_lock
+argument_list|)
+expr_stmt|;
+name|info
+operator|->
+name|connected
+operator|=
+name|BLKIF_STATE_SUSPENDED
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|blkif_io_lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1982,9 +2028,10 @@ name|DPRINTK
 argument_list|(
 literal|"blkfront_resume: %s\n"
 argument_list|,
+name|xenbus_get_node
+argument_list|(
 name|dev
-operator|->
-name|nodename
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|blkif_free
@@ -2020,7 +2067,9 @@ name|info
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|err
+operator|)
 return|;
 block|}
 end_function
@@ -2516,7 +2565,9 @@ argument_list|)
 decl_stmt|;
 name|DPRINTK
 argument_list|(
-literal|"blkfront:backend_changed.\n"
+literal|"backend_state=%d\n"
+argument_list|,
+name|backend_state
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -3306,7 +3357,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"xb%d: not found"
 argument_list|,
@@ -4658,6 +4709,14 @@ name|blk_shadow
 modifier|*
 name|copy
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|info
+operator|->
+name|sc
+condition|)
+return|return;
 comment|/* Stage 1: Make a safe copy of the shadow state. */
 name|copy
 operator|=
@@ -4680,13 +4739,6 @@ argument_list|,
 name|M_NOWAIT
 operator||
 name|M_ZERO
-argument_list|)
-expr_stmt|;
-name|PANIC_IF
-argument_list|(
-name|copy
-operator|==
-name|NULL
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -5051,7 +5103,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_suspend
 argument_list|,
-name|bus_generic_suspend
+name|blkfront_suspend
 argument_list|)
 block|,
 name|DEVMETHOD
