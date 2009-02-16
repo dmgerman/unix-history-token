@@ -1114,6 +1114,10 @@ name|ata_interrupt
 argument_list|(
 name|ch
 argument_list|)
+operator|&&
+name|ch
+operator|->
+name|running
 condition|)
 name|DELAY
 argument_list|(
