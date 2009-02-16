@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"libusb20.h"
 end_include
 
@@ -2708,7 +2714,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|if
+switch|switch
 condition|(
 name|libusb20_tr_get_status
 argument_list|(
@@ -2716,11 +2722,27 @@ name|xfer
 argument_list|)
 condition|)
 block|{
-comment|/* transfer error */
+case|case
+literal|0
+case|:
+comment|/* success */
+break|break;
+case|case
+name|LIBUSB20_TRANSFER_TIMED_OUT
+case|:
+comment|/* transfer timeout */
 return|return
 operator|(
 operator|-
-literal|1
+name|ETIMEDOUT
+operator|)
+return|;
+default|default:
+comment|/* other transfer error */
+return|return
+operator|(
+operator|-
+name|ENXIO
 operator|)
 return|;
 block|}
