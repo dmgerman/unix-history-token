@@ -8125,6 +8125,10 @@ operator|&&
 name|type
 operator|!=
 name|T_SIG
+operator|&&
+name|type
+operator|!=
+name|ns_t_dname
 condition|)
 name|syslog
 argument_list|(
