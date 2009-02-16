@@ -16693,9 +16693,9 @@ name|msg
 operator|=
 name|log_only
 condition|?
-literal|"ipfw: All logging counts reset.\n"
+literal|"All logging counts reset"
 else|:
-literal|"ipfw: Accounting cleared.\n"
+literal|"Accounting cleared"
 expr_stmt|;
 block|}
 else|else
@@ -16796,9 +16796,9 @@ name|msg
 operator|=
 name|log_only
 condition|?
-literal|"ipfw: Entry %d logging count reset.\n"
+literal|"logging count reset"
 else|:
-literal|"ipfw: Entry %d cleared.\n"
+literal|"cleared"
 expr_stmt|;
 block|}
 name|IPFW_WUNLOCK
@@ -16810,17 +16810,40 @@ if|if
 condition|(
 name|V_fw_verbose
 condition|)
-name|log
-argument_list|(
+block|{
+name|int
+name|lev
+init|=
 name|LOG_SECURITY
 operator||
 name|LOG_NOTICE
+decl_stmt|;
+if|if
+condition|(
+name|rulenum
+condition|)
+name|log
+argument_list|(
+name|lev
 argument_list|,
-name|msg
+literal|"ipfw: Entry %d %s.\n"
 argument_list|,
 name|rulenum
+argument_list|,
+name|msg
 argument_list|)
 expr_stmt|;
+else|else
+name|log
+argument_list|(
+name|lev
+argument_list|,
+literal|"ipfw: %s.\n"
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
