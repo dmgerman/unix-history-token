@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"hvm_op.h"
+file|<xen/interface/hvm/hvm_op.h>
 end_include
 
 begin_comment
