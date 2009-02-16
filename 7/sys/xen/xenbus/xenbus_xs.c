@@ -3674,7 +3674,7 @@ name|xs_state
 operator|.
 name|reply_lock
 operator|.
-name|lock_object
+name|mtx_object
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -3745,7 +3745,7 @@ name|xs_state
 operator|.
 name|reply_lock
 operator|.
-name|lock_object
+name|mtx_object
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
