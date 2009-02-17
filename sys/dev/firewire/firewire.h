@@ -1218,6 +1218,20 @@ name|FW_SELF_ID_PORT_NOT_EXISTS
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|FW_SELF_ID_PAGE0
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|FW_SELF_ID_PAGE1
+value|1
+end_define
+
 begin_if
 if|#
 directive|if
@@ -1257,7 +1271,7 @@ name|phy_speed
 range|:
 literal|2
 decl_stmt|,
-name|phy_delay
+name|reserved
 range|:
 literal|2
 decl_stmt|,
@@ -1450,7 +1464,7 @@ name|contender
 range|:
 literal|1
 decl_stmt|,
-name|phy_delay
+name|reserved
 range|:
 literal|2
 decl_stmt|,
