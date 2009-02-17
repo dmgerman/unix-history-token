@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 2006-2007 Semihalf  * All rights reserved.  *  * Written by: Piotr Kruszynski<ppk@semihalf.com>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (C) 2008-2009 Semihalf, Piotr Ziecik  * Copyright (C) 2006-2007 Semihalf, Piotr Kruszynski  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -1231,6 +1231,26 @@ begin_comment
 comment|/* Group address register 7 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TSEC_REG_IADDR
+parameter_list|(
+name|n
+parameter_list|)
+value|(TSEC_REG_IADDR0 + (n<< 2))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSEC_REG_GADDR
+parameter_list|(
+name|n
+parameter_list|)
+value|(TSEC_REG_GADDR0 + (n<< 2))
+end_define
+
 begin_comment
 comment|/* TSEC attribute registers */
 end_comment
@@ -1348,6 +1368,61 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TSEC_RCTRL_VLEX
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* Enable automatic VLAN tag 						    * extraction and deletion 						    * from Ethernet frames */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_RCTRL_IPCSEN
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* IP Checksum verification enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_RCTRL_TUCSEN
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* TCP or UDP Checksum verification enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_RCTRL_PRSDEP
+value|0x000000C0
+end_define
+
+begin_comment
+comment|/* Parser control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_RCRTL_PRSFM
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* FIFO-mode parsing */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TSEC_RCTRL_BC_REJ
 value|0x00000010
 end_define
@@ -1376,6 +1451,72 @@ end_define
 
 begin_comment
 comment|/* Receive short frame mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_RCTRL_PRSDEP_PARSER_OFF
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* Parser Disabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_RCTRL_PRSDEP_PARSE_L2
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* Parse L2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_RCTRL_PRSDEP_PARSE_L23
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* Parse L2 and L3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_RCTRL_PRSDEP_PARSE_L234
+value|0x000000C0
+end_define
+
+begin_comment
+comment|/* Parse L2, L3 and L4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_TCTRL_IPCSEN
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* IP header checksum generation enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_TCTRL_TUCSEN
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* TCP/UDP header checksum generation enable */
 end_comment
 
 begin_define
@@ -2441,6 +2582,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TSEC_TXBD_TOE
+value|0x0002
+end_define
+
+begin_comment
+comment|/* TCP/IP Offload Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TSEC_TXBD_UN
 value|0x0002
 end_define
@@ -2650,19 +2802,211 @@ name|TSEC_RXBUFFER_ALIGNMENT
 value|64
 end_define
 
-begin_define
-define|#
-directive|define
-name|TSEC_DEFAULT_MAX_RX_BUFFER_SIZE
-value|0x0600
-end_define
+begin_comment
+comment|/* Transmit Path Off-Load Frame Control Block flags */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|TSEC_DEFAULT_MIN_RX_BUFFER_SIZE
-value|0x0040
+name|TSEC_TX_FCB_VLAN
+value|0x8000
 end_define
+
+begin_comment
+comment|/* VLAN control word valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_TX_FCB_L3_IS_IP
+value|0x4000
+end_define
+
+begin_comment
+comment|/* Layer 3 header is an IP header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_TX_FCB_L3_IS_IP6
+value|0x2000
+end_define
+
+begin_comment
+comment|/* IP header is IP version 6 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_TX_FCB_L4_IS_TCP_UDP
+value|0x1000
+end_define
+
+begin_comment
+comment|/* Layer 4 header is a TCP or UDP header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_TX_FCB_L4_IS_UDP
+value|0x0800
+end_define
+
+begin_comment
+comment|/* UDP protocol at layer 4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_TX_FCB_CSUM_IP
+value|0x0400
+end_define
+
+begin_comment
+comment|/* Checksum IP header enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_TX_FCB_CSUM_TCP_UDP
+value|0x0200
+end_define
+
+begin_comment
+comment|/* Checksum TCP or UDP header enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_TX_FCB_FLAG_NO_PH_CSUM
+value|0x0100
+end_define
+
+begin_comment
+comment|/* Disable pseudo-header checksum */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_TX_FCB_FLAG_PTP
+value|0x0001
+end_define
+
+begin_comment
+comment|/* This is a PTP packet */
+end_comment
+
+begin_comment
+comment|/* Receive Path Off-Load Frame Control Block flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_RX_FCB_VLAN
+value|0x8000
+end_define
+
+begin_comment
+comment|/* VLAN tag recognized */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_RX_FCB_IP_FOUND
+value|0x4000
+end_define
+
+begin_comment
+comment|/* IP header found at layer 3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_RX_FCB_IP6_FOUND
+value|0x2000
+end_define
+
+begin_comment
+comment|/* IP version 6 header found at layer 3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_RX_FCB_TCP_UDP_FOUND
+value|0x1000
+end_define
+
+begin_comment
+comment|/* TCP or UDP header found at layer 4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_RX_FCB_IP_CSUM
+value|0x0800
+end_define
+
+begin_comment
+comment|/* IPv4 header checksum checked */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_RX_FCB_TCP_UDP_CSUM
+value|0x0400
+end_define
+
+begin_comment
+comment|/* TCP or UDP header checksum checked */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_RX_FCB_IP_CSUM_ERROR
+value|0x0200
+end_define
+
+begin_comment
+comment|/* IPv4 header checksum verification error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_RX_FCB_TCP_UDP_CSUM_ERROR
+value|0x0100
+end_define
+
+begin_comment
+comment|/* TCP or UDP header checksum verification error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_RX_FCB_PARSE_ERROR
+value|0x000C
+end_define
+
+begin_comment
+comment|/* Parse error */
+end_comment
 
 end_unit
 
