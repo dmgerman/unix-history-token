@@ -12786,7 +12786,7 @@ name|fp
 operator|->
 name|f_vnode
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|,
@@ -13511,7 +13511,7 @@ name|fp
 operator|->
 name|f_vnode
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|,
@@ -14317,7 +14317,7 @@ name|fp
 operator|->
 name|f_vnode
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|,
@@ -15546,7 +15546,7 @@ name|fp
 operator|->
 name|f_vnode
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|,
