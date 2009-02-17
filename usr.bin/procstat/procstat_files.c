@@ -688,6 +688,14 @@ literal|"m"
 expr_stmt|;
 break|break;
 case|case
+name|KF_TYPE_SEM
+case|:
+name|str
+operator|=
+literal|"e"
+expr_stmt|;
+break|break;
+case|case
 name|KF_TYPE_NONE
 case|:
 case|case

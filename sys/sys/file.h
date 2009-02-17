@@ -188,6 +188,17 @@ begin_comment
 comment|/* posix message queue */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DTYPE_SEM
+value|9
+end_define
+
+begin_comment
+comment|/* posix semaphore */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
