@@ -1386,8 +1386,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"bus_release_resource() failed for %s intr"
-literal|", error %d\n"
+literal|"bus_release_resource() failed for %s "
+literal|"intr, error %d\n"
 argument_list|,
 name|iname
 argument_list|,

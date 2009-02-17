@@ -411,7 +411,7 @@ name|count
 parameter_list|,
 name|wrap
 parameter_list|)
-value|do {				\ 		if ((sc)->count> 0)					\ 			(sc)->count--;					\ 		else							\ 			(sc)->count = (wrap) - 1;			\ } while (0)
+value|do {			\ 		if ((sc)->count> 0)				\ 			(sc)->count--;				\ 		else						\ 			(sc)->count = (wrap) - 1;		\ } while (0)
 end_define
 
 begin_comment
@@ -555,7 +555,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|&TSEC_GET_GENERIC(sc, tsec_tx_vaddr, tx_cur_desc_cnt,	\ 		TSEC_TX_NUM_DESC)
+value|&TSEC_GET_GENERIC(sc, tsec_tx_vaddr, tx_cur_desc_cnt,		\ 		TSEC_TX_NUM_DESC)
 end_define
 
 begin_define
@@ -566,7 +566,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|&TSEC_GET_GENERIC(sc, tsec_tx_vaddr, tx_dirty_desc_cnt,	\ 		TSEC_TX_NUM_DESC)
+value|&TSEC_GET_GENERIC(sc, tsec_tx_vaddr, tx_dirty_desc_cnt,		\ 		TSEC_TX_NUM_DESC)
 end_define
 
 begin_define
@@ -1180,6 +1180,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _IF_TSEC_H */
+end_comment
 
 end_unit
 

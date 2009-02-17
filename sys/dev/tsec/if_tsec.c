@@ -1071,7 +1071,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"failed to allocate busdma tag(tx mbufs)\n"
+literal|"failed to allocate busdma tag "
+literal|"(tx mbufs)\n"
 argument_list|)
 expr_stmt|;
 name|tsec_detach
@@ -1143,7 +1144,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"failed to allocate busdma tag(rx mbufs)\n"
+literal|"failed to allocate busdma tag "
+literal|"(rx mbufs)\n"
 argument_list|)
 expr_stmt|;
 name|tsec_detach
@@ -1374,8 +1376,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"can't load rx DMA map %d, error = "
-literal|"%d\n"
+literal|"can't load rx DMA map %d, "
+literal|"error = %d\n"
 argument_list|,
 name|i
 argument_list|,
@@ -1889,11 +1891,9 @@ name|tsec_ifp
 decl_stmt|;
 name|uint32_t
 name|timeout
-decl_stmt|;
-name|uint32_t
+decl_stmt|,
 name|val
-decl_stmt|;
-name|uint32_t
+decl_stmt|,
 name|i
 decl_stmt|;
 name|TSEC_GLOBAL_LOCK_ASSERT
@@ -2684,8 +2684,7 @@ decl_stmt|;
 name|char
 modifier|*
 name|macbufp
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|curmac
 decl_stmt|;
@@ -2820,8 +2819,7 @@ name|dev
 decl_stmt|;
 name|uint32_t
 name|dma_flags
-decl_stmt|;
-name|uint32_t
+decl_stmt|,
 name|timeout
 decl_stmt|;
 name|dev
@@ -5107,7 +5105,8 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"cannot get address of the %s descriptors\n"
+literal|"cannot get address of the %s "
+literal|"descriptors\n"
 argument_list|,
 name|dname
 argument_list|)
@@ -5265,7 +5264,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* Destroy tag for Tx mbufs */
+comment|/* Destroy tag for TX mbufs */
 name|bus_dma_tag_destroy
 argument_list|(
 name|sc
@@ -5380,7 +5379,7 @@ name|map
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Destroy tag for Rx mbufs */
+comment|/* Destroy tag for RX mbufs */
 name|bus_dma_tag_destroy
 argument_list|(
 name|sc
@@ -5461,7 +5460,7 @@ name|sc
 operator|->
 name|tsec_ifp
 expr_stmt|;
-comment|/* Stop tick engine */
+comment|/* Disable interface and watchdog timer */
 name|callout_stop
 argument_list|(
 operator|&
@@ -5470,7 +5469,6 @@ operator|->
 name|tsec_callout
 argument_list|)
 expr_stmt|;
-comment|/* Disable interface and watchdog timer */
 name|ifp
 operator|->
 name|if_drv_flags
@@ -7260,7 +7258,8 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"No speed selected but link active!\n"
+literal|"No speed selected but link "
+literal|"active!\n"
 argument_list|)
 expr_stmt|;
 name|sc
