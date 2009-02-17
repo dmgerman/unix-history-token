@@ -6463,9 +6463,15 @@ if|if
 condition|(
 name|firewire_debug
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"send phy_config root_node=%d gap_count=%d\n"
+name|fc
+operator|->
+name|bdev
+argument_list|,
+literal|"%s: root_node=%d gap_count=%d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|root_node
 argument_list|,
@@ -6485,21 +6491,114 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_comment
 comment|/*  * Dump self ID.   */
 end_comment
 
-begin_endif
-unit|static void fw_print_sid(uint32_t sid) { 	union fw_self_id *s; 	s = (union fw_self_id *)&sid; 	printf("node:%d link:%d gap:%d spd:%d del:%d con:%d pwr:%d" 		" p0:%d p1:%d p2:%d i:%d m:%d\n", 		s->p0.phy_id, s->p0.link_active, s->p0.gap_count, 		s->p0.phy_speed, s->p0.phy_delay, s->p0.contender, 		s->p0.power_class, s->p0.port0, s->p0.port1, 		s->p0.port2, s->p0.initiated_reset, s->p0.more_packets); }
-endif|#
-directive|endif
-end_endif
+begin_function
+specifier|static
+name|void
+name|fw_print_sid
+parameter_list|(
+name|uint32_t
+name|sid
+parameter_list|)
+block|{
+name|union
+name|fw_self_id
+modifier|*
+name|s
+decl_stmt|;
+name|s
+operator|=
+operator|(
+expr|union
+name|fw_self_id
+operator|*
+operator|)
+operator|&
+name|sid
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"node:%d link:%d gap:%d spd:%d del:%d con:%d pwr:%d"
+literal|" p0:%d p1:%d p2:%d i:%d m:%d\n"
+argument_list|,
+name|s
+operator|->
+name|p0
+operator|.
+name|phy_id
+argument_list|,
+name|s
+operator|->
+name|p0
+operator|.
+name|link_active
+argument_list|,
+name|s
+operator|->
+name|p0
+operator|.
+name|gap_count
+argument_list|,
+name|s
+operator|->
+name|p0
+operator|.
+name|phy_speed
+argument_list|,
+name|s
+operator|->
+name|p0
+operator|.
+name|phy_delay
+argument_list|,
+name|s
+operator|->
+name|p0
+operator|.
+name|contender
+argument_list|,
+name|s
+operator|->
+name|p0
+operator|.
+name|power_class
+argument_list|,
+name|s
+operator|->
+name|p0
+operator|.
+name|port0
+argument_list|,
+name|s
+operator|->
+name|p0
+operator|.
+name|port1
+argument_list|,
+name|s
+operator|->
+name|p0
+operator|.
+name|port2
+argument_list|,
+name|s
+operator|->
+name|p0
+operator|.
+name|initiated_reset
+argument_list|,
+name|s
+operator|->
+name|p0
+operator|.
+name|more_packets
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * To receive self ID.   */
@@ -6693,9 +6792,15 @@ literal|0
 index|]
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"fw_sidrcv: invalid self-id packet\n"
+name|fc
+operator|->
+name|bdev
+argument_list|,
+literal|"%s: ERROR invalid self-id packet\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sid
@@ -6746,12 +6851,18 @@ name|c_port
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
+if|if
+condition|(
+name|firewire_debug
+condition|)
+name|fw_print_sid
+argument_list|(
+name|sid
+index|[
 literal|0
-block|fw_print_sid(sid[0]);
-endif|#
-directive|endif
+index|]
+argument_list|)
+expr_stmt|;
 name|node
 operator|=
 name|self_id
@@ -6983,21 +7094,6 @@ name|self_id_count
 operator|++
 expr_stmt|;
 block|}
-name|device_printf
-argument_list|(
-name|fc
-operator|->
-name|bdev
-argument_list|,
-literal|"%d nodes"
-argument_list|,
-name|fc
-operator|->
-name|max_node
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
 comment|/* CRC */
 name|fc
 operator|->
@@ -7179,44 +7275,42 @@ name|max_node
 operator|-
 name|i_branch
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|", maxhop<= %d"
+name|fc
+operator|->
+name|bdev
+argument_list|,
+literal|"%d nodes, maxhop<= %d %s irm(%d) %s\n"
+argument_list|,
+name|fc
+operator|->
+name|max_node
+operator|+
+literal|1
 argument_list|,
 name|fc
 operator|->
 name|max_hop
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
+operator|(
 name|fc
 operator|->
 name|irm
 operator|==
 operator|-
 literal|1
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|", Not found IRM capable node"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|", cable IRM = %d"
+operator|)
+condition|?
+literal|"Not IRM capable"
+else|:
+literal|"cable IRM"
 argument_list|,
 name|fc
 operator|->
 name|irm
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
+operator|(
 name|fc
 operator|->
 name|irm
@@ -7224,16 +7318,11 @@ operator|==
 name|fc
 operator|->
 name|nodeid
-condition|)
-name|printf
-argument_list|(
-literal|" (me)"
-argument_list|)
-expr_stmt|;
-block|}
-name|printf
-argument_list|(
-literal|"\n"
+operator|)
+condition|?
+literal|" (me) "
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 if|if
@@ -7405,6 +7494,22 @@ operator|=
 name|FWBUSEXPLORE
 expr_stmt|;
 comment|/* Invalidate all devices, just after bus reset. */
+if|if
+condition|(
+name|firewire_debug
+condition|)
+name|device_printf
+argument_list|(
+name|fc
+operator|->
+name|bdev
+argument_list|,
+literal|"%s:"
+literal|"iterate and invalidate all nodes\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
 argument|fwdev
@@ -7433,6 +7538,65 @@ operator|->
 name|rcnt
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|firewire_debug
+condition|)
+name|device_printf
+argument_list|(
+name|fc
+operator|->
+name|bdev
+argument_list|,
+literal|"%s:"
+literal|"Invalidate Dev ID: %08x%08x\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|fwdev
+operator|->
+name|eui
+operator|.
+name|hi
+argument_list|,
+name|fwdev
+operator|->
+name|eui
+operator|.
+name|lo
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|firewire_debug
+condition|)
+name|device_printf
+argument_list|(
+name|fc
+operator|->
+name|bdev
+argument_list|,
+literal|"%s:"
+literal|"Dev ID: %08x%08x already invalid\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|fwdev
+operator|->
+name|eui
+operator|.
+name|hi
+argument_list|,
+name|fwdev
+operator|->
+name|eui
+operator|.
+name|lo
+argument_list|)
 expr_stmt|;
 block|}
 name|splx
@@ -7470,7 +7634,7 @@ modifier|*
 name|quad
 parameter_list|,
 name|int
-name|n
+name|length
 parameter_list|)
 block|{
 name|struct
@@ -7494,7 +7658,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|n
+name|length
 condition|;
 name|i
 operator|++
@@ -8061,9 +8225,15 @@ if|if
 condition|(
 name|firewire_debug
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"node%d: wrong bus info len(%d)\n"
+name|fc
+operator|->
+name|bdev
+argument_list|,
+literal|"%s: node%d: wrong bus info len(%d)\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|node
 argument_list|,
@@ -8071,6 +8241,12 @@ name|hdr
 operator|->
 name|info_len
 argument_list|)
+expr_stmt|;
+name|dfwdev
+operator|->
+name|status
+operator|=
+name|FWDEVINVAL
 expr_stmt|;
 return|return
 operator|(
@@ -8103,12 +8279,33 @@ if|if
 condition|(
 name|err
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|fc
+operator|->
+name|bdev
+argument_list|,
+literal|"%s: node%d: error reading 0x04\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|node
+argument_list|)
+expr_stmt|;
+name|dfwdev
+operator|->
+name|status
+operator|=
+name|FWDEVINVAL
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 name|binfo
 operator|=
 operator|(
@@ -8131,13 +8328,15 @@ operator|!=
 name|CSR_BUS_NAME_IEEE1394
 condition|)
 block|{
-if|if
-condition|(
-name|firewire_debug
-condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"node%d: invalid bus name 0x%08x\n"
+name|fc
+operator|->
+name|bdev
+argument_list|,
+literal|"%s: node%d: invalid bus name 0x%08x\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|node
 argument_list|,
@@ -8145,6 +8344,12 @@ name|binfo
 operator|->
 name|bus_name
 argument_list|)
+expr_stmt|;
+name|dfwdev
+operator|->
+name|status
+operator|=
+name|FWDEVINVAL
 expr_stmt|;
 return|return
 operator|(
@@ -8267,13 +8472,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|firewire_debug
-condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"node%d: no memory\n"
+name|fc
+operator|->
+name|bdev
+argument_list|,
+literal|"%s: node%d: no memory\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|node
 argument_list|)
@@ -8882,7 +9089,60 @@ name|fc
 operator|->
 name|nodeid
 condition|)
+block|{
+if|if
+condition|(
+name|firewire_debug
+condition|)
+name|device_printf
+argument_list|(
+name|fc
+operator|->
+name|bdev
+argument_list|,
+literal|"%s:"
+literal|"found myself node(%d) fc->nodeid(%d) fc->max_node(%d)\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|node
+argument_list|,
+name|fc
+operator|->
+name|nodeid
+argument_list|,
+name|fc
+operator|->
+name|max_node
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
+elseif|else
+if|if
+condition|(
+name|firewire_debug
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|fc
+operator|->
+name|bdev
+argument_list|,
+literal|"%s:"
+literal|"node(%d) fc->max_node(%d) found\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|node
+argument_list|,
+name|fc
+operator|->
+name|max_node
+argument_list|)
+expr_stmt|;
+block|}
 name|fwsid
 operator|=
 name|fw_find_self_id
@@ -8909,9 +9169,15 @@ if|if
 condition|(
 name|firewire_debug
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"node%d: link down\n"
+name|fc
+operator|->
+name|bdev
+argument_list|,
+literal|"%s: node%d: link down\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|node
 argument_list|)
@@ -9004,11 +9270,15 @@ if|if
 condition|(
 name|firewire_debug
 condition|)
-name|printf
+name|device_printf
 argument_list|(
+name|fc
+operator|->
+name|bdev
+argument_list|,
 literal|"%s: node %d, err = %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|node
 argument_list|,
@@ -9263,6 +9533,28 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+name|firewire_debug
+condition|)
+name|device_printf
+argument_list|(
+name|fc
+operator|->
+name|bdev
+argument_list|,
+literal|"%s:"
+literal|"fwdev->rcnt(%d), hold_count(%d)\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|fwdev
+operator|->
+name|rcnt
+argument_list|,
+name|hold_count
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|fwdev
 operator|->
 name|rcnt
@@ -9271,6 +9563,30 @@ name|hold_count
 condition|)
 block|{
 comment|/* 				 * Remove devices which have not been seen 				 * for a while. 				 */
+name|device_printf
+argument_list|(
+name|fc
+operator|->
+name|bdev
+argument_list|,
+literal|"%s:"
+literal|"Removing missing device ID:%08x%08x\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|fwdev
+operator|->
+name|eui
+operator|.
+name|hi
+argument_list|,
+name|fwdev
+operator|->
+name|eui
+operator|.
+name|lo
+argument_list|)
+expr_stmt|;
 name|STAILQ_REMOVE
 argument_list|(
 operator|&
@@ -9313,10 +9629,10 @@ expr_stmt|;
 if|if
 condition|(
 name|err
-operator|!=
+operator|==
 literal|0
 condition|)
-return|return;
+block|{
 for|for
 control|(
 name|i
@@ -9378,6 +9694,7 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 block|}
 end_function
@@ -9890,9 +10207,18 @@ operator|<
 name|len
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"rcv buffer(%d) is %d bytes short.\n"
+name|rb
+operator|->
+name|fc
+operator|->
+name|bdev
+argument_list|,
+literal|"%s:"
+literal|" rcv buffer(%d) is %d bytes short.\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|rb
 operator|->
@@ -10094,10 +10420,19 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"fw_rcv: unknown response "
+name|rb
+operator|->
+name|fc
+operator|->
+name|bdev
+argument_list|,
+literal|"%s: "
+literal|"unknown response "
 literal|"%s(%x) src=0x%x tl=0x%x rt=%d data=0x%x\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|tcode_str
 index|[
@@ -10237,9 +10572,18 @@ endif|#
 directive|endif
 break|break;
 default|default:
-name|printf
+name|device_printf
 argument_list|(
+name|rb
+operator|->
+name|fc
+operator|->
+name|bdev
+argument_list|,
+literal|"%s: "
 literal|"unexpected flag 0x%02x\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|rb
 operator|->
@@ -10297,8 +10641,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|rb
+operator|->
+name|fc
+operator|->
+name|bdev
+argument_list|,
+literal|"%s: "
 literal|"Unknown service addr 0x%04x:0x%08x %s(%x)"
 if|#
 directive|if
@@ -10318,6 +10669,8 @@ literal|" src=0x%x data=%x\n"
 argument_list|,
 endif|#
 directive|endif
+name|__func__
+argument_list|,
 name|fp
 operator|->
 name|mode
@@ -10372,9 +10725,17 @@ operator|==
 name|FWBUSINIT
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"fw_rcv: cannot respond(bus reset)!\n"
+name|rb
+operator|->
+name|fc
+operator|->
+name|bdev
+argument_list|,
+literal|"%s: cannot respond(bus reset)!\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return;
@@ -10663,16 +11024,20 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|#
-directive|if
-literal|1
-name|printf
+name|device_printf
 argument_list|(
+name|rb
+operator|->
+name|fc
+operator|->
+name|bdev
+argument_list|,
+literal|"%s: "
 literal|"Discard a packet for this bind.\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return;
 block|}
 name|STAILQ_REMOVE_HEAD
@@ -10738,9 +11103,17 @@ block|selwakeuppri(&xferq->rsel, FWPRI); 		if (xferq->flag& FWXFERQ_WAKEUP) { 		
 endif|#
 directive|endif
 default|default:
-name|printf
+name|device_printf
 argument_list|(
-literal|"fw_rcv: unknow tcode %d\n"
+name|rb
+operator|->
+name|fc
+operator|->
+name|bdev
+argument_list|,
+literal|"%s: unknown tcode %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|tcode
 argument_list|)
@@ -11960,6 +12333,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Find the root node, if it is not  * Cycle Master Capable, then we should  * override this and become the Cycle  * Master  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -12061,7 +12438,7 @@ name|fc
 operator|->
 name|bdev
 argument_list|,
-literal|"bus manager %d "
+literal|"bus manager %d %s\n"
 argument_list|,
 name|CSRARC
 argument_list|(
@@ -12069,6 +12446,23 @@ name|fc
 argument_list|,
 name|BUS_MGR_ID
 argument_list|)
+argument_list|,
+operator|(
+name|CSRARC
+argument_list|(
+name|fc
+argument_list|,
+name|BUS_MGR_ID
+argument_list|)
+operator|!=
+name|fc
+operator|->
+name|nodeid
+operator|)
+condition|?
+literal|"(me)"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 if|if
@@ -12086,22 +12480,12 @@ name|nodeid
 condition|)
 block|{
 comment|/* We are not the bus manager */
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
-name|printf
-argument_list|(
-literal|"(me)\n"
-argument_list|)
-expr_stmt|;
 comment|/* Optimize gapcount */
 if|if
 condition|(
