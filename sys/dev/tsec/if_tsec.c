@@ -6206,6 +6206,16 @@ operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Make sure TSEC receiver is not halted. 	 * 	 * Various conditions can stop the TSEC receiver, but not all are 	 * signaled and handled by error interrupt, so make sure the receiver 	 * is running. Writing to TSEC_REG_RSTAT restarts the receiver when 	 * halted, and is harmless if already running. 	 */
+name|TSEC_WRITE
+argument_list|(
+name|sc
+argument_list|,
+name|TSEC_REG_RSTAT
+argument_list|,
+name|TSEC_RSTAT_QHLT
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6751,16 +6761,6 @@ argument_list|(
 name|sc
 argument_list|,
 name|count
-argument_list|)
-expr_stmt|;
-comment|/* Make receiver again active */
-name|TSEC_WRITE
-argument_list|(
-name|sc
-argument_list|,
-name|TSEC_REG_RSTAT
-argument_list|,
-name|TSEC_RSTAT_QHLT
 argument_list|)
 expr_stmt|;
 block|}
