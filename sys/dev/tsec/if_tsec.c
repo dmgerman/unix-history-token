@@ -4033,6 +4033,14 @@ operator|==
 name|POLL_AND_CHECK_STATUS
 condition|)
 block|{
+name|tsec_error_intr_locked
+argument_list|(
+name|sc
+argument_list|,
+name|count
+argument_list|)
+expr_stmt|;
+comment|/* Clear all events reported */
 name|ie
 operator|=
 name|TSEC_READ
@@ -4042,7 +4050,6 @@ argument_list|,
 name|TSEC_REG_IEVENT
 argument_list|)
 expr_stmt|;
-comment|/* Clear all events reported */
 name|TSEC_WRITE
 argument_list|(
 name|sc
@@ -4050,13 +4057,6 @@ argument_list|,
 name|TSEC_REG_IEVENT
 argument_list|,
 name|ie
-argument_list|)
-expr_stmt|;
-name|tsec_error_intr_locked
-argument_list|(
-name|sc
-argument_list|,
-name|count
 argument_list|)
 expr_stmt|;
 block|}
