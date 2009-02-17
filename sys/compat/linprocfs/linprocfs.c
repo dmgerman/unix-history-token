@@ -1258,7 +1258,7 @@ argument_list|,
 operator|&
 name|flep
 argument_list|)
-operator|!=
+operator|==
 literal|0
 condition|)
 name|lep
