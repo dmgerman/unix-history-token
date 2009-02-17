@@ -6083,7 +6083,13 @@ operator|->
 name|if_ierrors
 operator|++
 expr_stmt|;
-continue|continue;
+comment|/* 			 * We ran out of mbufs; didn't consume current 			 * descriptor and have to return it to the queue. 			 */
+name|TSEC_BACK_CUR_RX_DESC
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 comment|/* Attach new buffer to descriptor and clear flags */
 name|rx_desc
