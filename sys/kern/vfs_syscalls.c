@@ -1407,6 +1407,8 @@ name|LOOKUP
 argument_list|,
 name|FOLLOW
 operator||
+name|LOCKSHARED
+operator||
 name|LOCKLEAF
 operator||
 name|MPSAFE
@@ -1851,7 +1853,7 @@ name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|,
@@ -3748,7 +3750,7 @@ name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|,
@@ -3819,7 +3821,7 @@ name|VFS_ROOT
 argument_list|(
 name|mp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 argument_list|,
 operator|&
 name|tdp
@@ -4066,6 +4068,8 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|FOLLOW
+operator||
+name|LOCKSHARED
 operator||
 name|LOCKLEAF
 operator||
@@ -4448,6 +4452,8 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|FOLLOW
+operator||
+name|LOCKSHARED
 operator||
 name|LOCKLEAF
 operator||
@@ -9127,7 +9133,7 @@ name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|,
@@ -9817,6 +9823,8 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|FOLLOW
+operator||
+name|LOCKSHARED
 operator||
 name|LOCKLEAF
 operator||
@@ -11697,6 +11705,8 @@ name|LOOKUP
 argument_list|,
 name|FOLLOW
 operator||
+name|LOCKSHARED
+operator||
 name|LOCKLEAF
 operator||
 name|MPSAFE
@@ -11940,6 +11950,8 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|NOFOLLOW
+operator||
+name|LOCKSHARED
 operator||
 name|LOCKLEAF
 operator||
