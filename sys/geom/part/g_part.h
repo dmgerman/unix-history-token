@@ -238,10 +238,6 @@ decl_stmt|;
 name|uint32_t
 name|gpt_heads
 decl_stmt|;
-comment|/* 	 * gpt_offset holds the absolute block address of the scheme 	 * on disk. Some partitioning schemes (historically) use 	 * absolute addressing. Relative addresses are obtained by 	 * subtracting gpt_offset from the absolute addresses. 	 */
-name|uint64_t
-name|gpt_offset
-decl_stmt|;
 name|int
 name|gpt_depth
 decl_stmt|;
