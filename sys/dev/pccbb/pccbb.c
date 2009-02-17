@@ -2086,6 +2086,28 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+comment|/* 		 * First time through we need to tell mountroot that we're 		 * done. 		 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_root_token
+condition|)
+block|{
+name|root_mount_rel
+argument_list|(
+name|sc
+operator|->
+name|sc_root_token
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_root_token
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 comment|/* 		 * Wait until it has been 250ms since the last time we 		 * get an interrupt.  We handle the rest of the interrupt 		 * at the top of the loop.  Although we clear the bit in the 		 * ISR, we signal sc->cv from the detach path after we've 		 * set the CBB_KTHREAD_DONE bit, so we can't do a simple 		 * 250ms sleep here. 		 * 		 * In our ISR, we turn off the card changed interrupt.  Turn 		 * them back on here before we wait for them to happen.  We 		 * turn them on/off so that we can tolerate a large latency 		 * between the time we signal cbb_event_thread and it gets 		 * a chance to run. 		 */
 name|mtx_lock
 argument_list|(

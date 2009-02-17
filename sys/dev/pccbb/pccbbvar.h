@@ -234,6 +234,11 @@ function_decl|;
 name|int
 name|powerintr
 decl_stmt|;
+name|struct
+name|root_hold_token
+modifier|*
+name|sc_root_token
+decl_stmt|;
 block|}
 struct|;
 end_struct
