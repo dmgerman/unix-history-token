@@ -641,15 +641,9 @@ name|ata_ahci_reset
 expr_stmt|;
 name|ctlr
 operator|->
-name|dmainit
+name|ch_attach
 operator|=
-name|ata_ahci_dmainit
-expr_stmt|;
-name|ctlr
-operator|->
-name|allocate
-operator|=
-name|ata_ahci_allocate
+name|ata_ahci_ch_attach
 expr_stmt|;
 name|ctlr
 operator|->
@@ -989,7 +983,7 @@ end_function
 
 begin_function
 name|int
-name|ata_ahci_allocate
+name|ata_ahci_ch_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -1027,6 +1021,11 @@ name|unit
 operator|<<
 literal|7
 decl_stmt|;
+name|ata_ahci_dmainit
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 comment|/* set the SATA resources */
 name|ch
 operator|->

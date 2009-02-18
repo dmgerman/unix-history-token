@@ -123,7 +123,16 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|allocate
+name|ch_attach
+function_decl|)
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|ch_detach
 function_decl|)
 parameter_list|(
 name|device_t
@@ -144,15 +153,6 @@ name|void
 function_decl|(
 modifier|*
 name|reset
-function_decl|)
-parameter_list|(
-name|device_t
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|dmainit
 function_decl|)
 parameter_list|(
 name|device_t
@@ -2504,7 +2504,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ata_pci_allocate
+name|ata_pci_ch_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -2763,7 +2763,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ata_ahci_allocate
+name|ata_ahci_ch_attach
 parameter_list|(
 name|device_t
 name|dev

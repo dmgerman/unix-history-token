@@ -173,7 +173,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|ata_intel_allocate
+name|ata_intel_ch_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -237,7 +237,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|ata_intel_31244_allocate
+name|ata_intel_31244_ch_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -1348,9 +1348,9 @@ literal|4
 expr_stmt|;
 name|ctlr
 operator|->
-name|allocate
+name|ch_attach
 operator|=
-name|ata_intel_31244_allocate
+name|ata_intel_31244_ch_attach
 expr_stmt|;
 name|ctlr
 operator|->
@@ -1391,9 +1391,9 @@ name|cfg2
 expr_stmt|;
 name|ctlr
 operator|->
-name|allocate
+name|ch_attach
 operator|=
-name|ata_intel_allocate
+name|ata_intel_ch_attach
 expr_stmt|;
 name|ctlr
 operator|->
@@ -1428,9 +1428,9 @@ argument_list|)
 expr_stmt|;
 name|ctlr
 operator|->
-name|allocate
+name|ch_attach
 operator|=
-name|ata_intel_allocate
+name|ata_intel_ch_attach
 expr_stmt|;
 name|ctlr
 operator|->
@@ -1561,7 +1561,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ata_intel_allocate
+name|ata_intel_ch_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -1593,7 +1593,7 @@ decl_stmt|;
 comment|/* setup the usual register normal pci style */
 if|if
 condition|(
-name|ata_pci_allocate
+name|ata_pci_ch_attach
 argument_list|(
 name|dev
 argument_list|)
@@ -1765,7 +1765,7 @@ operator|->
 name|unit
 operator|)
 expr_stmt|;
-comment|/* XXX SOS should be in intel_allocate if we grow it */
+comment|/* XXX SOS should be in intel_ch_attach if we grow it */
 name|ch
 operator|->
 name|flags
@@ -2691,7 +2691,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ata_intel_31244_allocate
+name|ata_intel_31244_ch_attach
 parameter_list|(
 name|device_t
 name|dev

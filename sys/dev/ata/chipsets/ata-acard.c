@@ -173,7 +173,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|ata_acard_allocate
+name|ata_acard_ch_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -441,9 +441,9 @@ name|ENXIO
 return|;
 name|ctlr
 operator|->
-name|allocate
+name|ch_attach
 operator|=
-name|ata_acard_allocate
+name|ata_acard_ch_attach
 expr_stmt|;
 if|if
 condition|(
@@ -485,7 +485,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ata_acard_allocate
+name|ata_acard_ch_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -504,7 +504,7 @@ decl_stmt|;
 comment|/* setup the usual register normal pci style */
 if|if
 condition|(
-name|ata_pci_allocate
+name|ata_pci_ch_attach
 argument_list|(
 name|dev
 argument_list|)

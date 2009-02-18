@@ -162,7 +162,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|int
-name|ata_cmd_allocate
+name|ata_cmd_ch_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -198,7 +198,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|ata_sii_allocate
+name|ata_sii_ch_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -245,7 +245,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|ata_siiprb_allocate
+name|ata_siiprb_ch_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -887,21 +887,15 @@ return|;
 block|}
 name|ctlr
 operator|->
-name|allocate
+name|ch_attach
 operator|=
-name|ata_siiprb_allocate
+name|ata_siiprb_ch_attach
 expr_stmt|;
 name|ctlr
 operator|->
 name|reset
 operator|=
 name|ata_siiprb_reset
-expr_stmt|;
-name|ctlr
-operator|->
-name|dmainit
-operator|=
-name|ata_siiprb_dmainit
 expr_stmt|;
 name|ctlr
 operator|->
@@ -1217,9 +1211,9 @@ name|r_res2
 condition|)
 name|ctlr
 operator|->
-name|allocate
+name|ch_attach
 operator|=
-name|ata_sii_allocate
+name|ata_sii_ch_attach
 expr_stmt|;
 if|if
 condition|(
@@ -1300,9 +1294,9 @@ argument_list|)
 expr_stmt|;
 name|ctlr
 operator|->
-name|allocate
+name|ch_attach
 operator|=
-name|ata_cmd_allocate
+name|ata_cmd_ch_attach
 expr_stmt|;
 name|ctlr
 operator|->
@@ -1321,7 +1315,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ata_cmd_allocate
+name|ata_cmd_ch_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -1353,7 +1347,7 @@ decl_stmt|;
 comment|/* setup the usual register normal pci style */
 if|if
 condition|(
-name|ata_pci_allocate
+name|ata_pci_ch_attach
 argument_list|(
 name|dev
 argument_list|)
@@ -1910,7 +1904,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ata_sii_allocate
+name|ata_sii_ch_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -3124,7 +3118,7 @@ end_struct
 begin_function
 specifier|static
 name|int
-name|ata_siiprb_allocate
+name|ata_siiprb_ch_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -3162,6 +3156,11 @@ name|unit
 operator|*
 literal|0x2000
 decl_stmt|;
+name|ata_siiprb_dmainit
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 comment|/* set the SATA resources */
 name|ch
 operator|->
