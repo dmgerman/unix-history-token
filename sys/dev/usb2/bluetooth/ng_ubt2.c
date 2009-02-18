@@ -14,7 +14,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/usb2/include/usb2_devid.h>
+file|"usbdevs.h"
 end_include
 
 begin_include

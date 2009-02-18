@@ -40,7 +40,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/include/usb2_devid.h>
+file|"usbdevs.h"
 end_include
 
 begin_define
@@ -6977,13 +6977,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/usb2/include/usb2_devid.h>
+file|"usbdevs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb2/include/usb2_devtable.h>
+file|"usbdevs_data.h"
 end_include
 
 begin_endif
