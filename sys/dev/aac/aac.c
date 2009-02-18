@@ -11276,7 +11276,7 @@ name|AAC_GETREG4
 argument_list|(
 name|sc
 argument_list|,
-name|AAC_RX_FWSTATUS
+name|AAC_RX_OMR0
 argument_list|)
 operator|)
 return|;
@@ -11349,7 +11349,7 @@ name|AAC_GETREG4
 argument_list|(
 name|sc
 argument_list|,
-name|AAC_RKT_FWSTATUS
+name|AAC_RKT_OMR0
 argument_list|)
 operator|)
 return|;

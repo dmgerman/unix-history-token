@@ -4555,6 +4555,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AAC_RX_OMR0
+value|0x18
+end_define
+
+begin_comment
+comment|/* outbound message register 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAC_RX_OMR1
+value|0x1c
+end_define
+
+begin_comment
+comment|/* outbound message register 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AAC_RX_IDBR
 value|0x20
 end_define
@@ -4660,6 +4682,28 @@ end_define
 
 begin_comment
 comment|/*  * Register definitions for the Adaptec 'Rocket' RAID-On-Chip adapters.  * Unsurprisingly, it's quite similar to the i960!  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAC_RKT_OMR0
+value|0x18
+end_define
+
+begin_comment
+comment|/* outbound message register 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAC_RKT_OMR1
+value|0x1c
+end_define
+
+begin_comment
+comment|/* outbound message register 1 */
 end_comment
 
 begin_define
