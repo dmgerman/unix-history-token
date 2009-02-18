@@ -207,6 +207,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|uint16_t
+name|__used
 name|saved_ldt
 decl_stmt|;
 end_decl_stmt
@@ -214,6 +215,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|uint32_t
+name|__used
 name|r_eax
 decl_stmt|,
 name|r_ebx
@@ -245,6 +247,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|uint16_t
+name|__used
 name|r_cs
 decl_stmt|,
 name|r_ds
@@ -264,6 +267,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|uint32_t
+name|__used
 name|r_esp
 decl_stmt|;
 end_decl_stmt
