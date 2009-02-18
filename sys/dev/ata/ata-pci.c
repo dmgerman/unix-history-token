@@ -2843,16 +2843,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|struct
-name|ata_channel
-modifier|*
-name|ch
-init|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -2870,15 +2860,6 @@ condition|)
 return|return
 name|error
 return|;
-name|ch
-operator|->
-name|dma
-operator|.
-name|free
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 comment|/* XXX SOS free resources for io and ctlio ?? */
 return|return
 literal|0

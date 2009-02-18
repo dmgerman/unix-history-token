@@ -979,6 +979,24 @@ name|r_irq
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* free DMA resources if DMA HW present*/
+if|if
+condition|(
+name|ch
+operator|->
+name|dma
+operator|.
+name|free
+condition|)
+name|ch
+operator|->
+name|dma
+operator|.
+name|free
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|mtx_destroy
 argument_list|(
 operator|&
