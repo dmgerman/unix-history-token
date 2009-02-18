@@ -1517,11 +1517,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|struct
-name|ata_channel
-modifier|*
-name|ch
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1532,14 +1527,10 @@ operator|!
 name|dev
 operator|||
 operator|!
-operator|(
-name|ch
-operator|=
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
-operator|)
 condition|)
 return|return
 name|ENXIO
