@@ -289,7 +289,7 @@ begin_define
 define|#
 directive|define
 name|XN_CSUM_FEATURES
-value|(CSUM_TCP | CSUM_UDP)
+value|(CSUM_TCP | CSUM_UDP | CSUM_TSO)
 end_define
 
 begin_define
@@ -4315,6 +4315,10 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+name|netif_tx_response_t
+modifier|*
+name|txr
+decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -4380,7 +4384,7 @@ name|i
 operator|++
 control|)
 block|{
-name|id
+name|txr
 operator|=
 name|RING_GET_RESPONSE
 argument_list|(
@@ -4391,6 +4395,19 @@ name|tx
 argument_list|,
 name|i
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|txr
+operator|->
+name|status
+operator|==
+name|NETIF_RSP_NULL
+condition|)
+continue|continue;
+name|id
+operator|=
+name|txr
 operator|->
 name|id
 expr_stmt|;
@@ -6209,7 +6226,7 @@ name|m
 operator|->
 name|m_pkthdr
 operator|.
-name|len
+name|tso_segsz
 expr_stmt|;
 name|gso
 operator|->
@@ -7839,7 +7856,12 @@ directive|if
 name|__FreeBSD_version
 operator|>=
 literal|700000
-comment|//ifp->if_capabilities |= IFCAP_TSO4;
+name|ifp
+operator|->
+name|if_capabilities
+operator||=
+name|IFCAP_TSO4
+expr_stmt|;
 endif|#
 directive|endif
 name|ifp
