@@ -1186,6 +1186,8 @@ argument_list|,
 operator|&
 name|dst
 argument_list|)
+operator|==
+literal|0
 condition|)
 name|ia
 operator|=
@@ -1232,7 +1234,6 @@ name|td
 operator|!=
 name|NULL
 operator|&&
-operator|!
 name|prison_check_ip4
 argument_list|(
 name|td
@@ -1246,6 +1247,8 @@ name|ia_addr
 operator|.
 name|sin_addr
 argument_list|)
+operator|!=
+literal|0
 condition|)
 continue|continue;
 name|ia

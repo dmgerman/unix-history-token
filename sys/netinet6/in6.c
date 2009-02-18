@@ -1770,7 +1770,9 @@ name|td
 operator|!=
 name|NULL
 operator|&&
-operator|!
+operator|(
+name|error
+operator|=
 name|prison_check_ip6
 argument_list|(
 name|td
@@ -1782,10 +1784,13 @@ name|sa6
 operator|->
 name|sin6_addr
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
-name|EADDRNOTAVAIL
+name|error
 operator|)
 return|;
 name|ia

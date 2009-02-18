@@ -9968,14 +9968,6 @@ name|ifa_addr
 decl_stmt|;
 if|if
 condition|(
-name|jailed
-argument_list|(
-name|curthread
-operator|->
-name|td_ucred
-argument_list|)
-operator|&&
-operator|!
 name|prison_if
 argument_list|(
 name|curthread
@@ -9984,6 +9976,8 @@ name|td_ucred
 argument_list|,
 name|sa
 argument_list|)
+operator|!=
+literal|0
 condition|)
 continue|continue;
 name|addrs

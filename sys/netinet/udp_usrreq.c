@@ -4223,8 +4223,8 @@ name|release
 goto|;
 block|}
 comment|/* 		 * Jail may rewrite the destination address, so let it do 		 * that before we use it. 		 */
-if|if
-condition|(
+name|error
+operator|=
 name|prison_remote_ip4
 argument_list|(
 name|td
@@ -4236,18 +4236,14 @@ name|sin
 operator|->
 name|sin_addr
 argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|error
-operator|=
-name|EINVAL
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
 goto|goto
 name|release
 goto|;
-block|}
 comment|/* 		 * If a local address or port hasn't yet been selected, or if 		 * the destination address needs to be rewritten due to using 		 * a special INADDR_ constant, invoke in_pcbconnect_setup() 		 * to do the heavy lifting.  Once a port is selected, we 		 * commit the binding back to the socket; we also commit the 		 * binding of the address if in jail. 		 * 		 * If we already have a valid binding and we're not 		 * requesting a destination address rewrite, use a fast path. 		 */
 if|if
 condition|(
@@ -5454,8 +5450,8 @@ operator|*
 operator|)
 name|nam
 expr_stmt|;
-if|if
-condition|(
+name|error
+operator|=
 name|prison_remote_ip4
 argument_list|(
 name|td
@@ -5467,6 +5463,10 @@ name|sin
 operator|->
 name|sin_addr
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
@@ -5484,7 +5484,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EAFNOSUPPORT
+name|error
 operator|)
 return|;
 block|}
