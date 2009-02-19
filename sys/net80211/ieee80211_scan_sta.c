@@ -2070,37 +2070,68 @@ name|IEEE80211_MODE_MAX
 index|]
 init|=
 block|{
+index|[
+name|IEEE80211_MODE_AUTO
+index|]
+operator|=
 name|IEEE80211_CHAN_B
 block|,
-comment|/* IEEE80211_MODE_AUTO */
+index|[
+name|IEEE80211_MODE_11A
+index|]
+operator|=
 name|IEEE80211_CHAN_A
 block|,
-comment|/* IEEE80211_MODE_11A */
+index|[
+name|IEEE80211_MODE_11B
+index|]
+operator|=
 name|IEEE80211_CHAN_B
 block|,
-comment|/* IEEE80211_MODE_11B */
+index|[
+name|IEEE80211_MODE_11G
+index|]
+operator|=
 name|IEEE80211_CHAN_G
 block|,
-comment|/* IEEE80211_MODE_11G */
+index|[
+name|IEEE80211_MODE_FH
+index|]
+operator|=
 name|IEEE80211_CHAN_FHSS
 block|,
-comment|/* IEEE80211_MODE_FH */
+comment|/* check base channel */
+index|[
+name|IEEE80211_MODE_TURBO_A
+index|]
+operator|=
 name|IEEE80211_CHAN_A
 block|,
-comment|/* IEEE80211_MODE_TURBO_A (check base channel)*/
+index|[
+name|IEEE80211_MODE_TURBO_G
+index|]
+operator|=
 name|IEEE80211_CHAN_G
 block|,
-comment|/* IEEE80211_MODE_TURBO_G */
+index|[
+name|IEEE80211_MODE_STURBO_A
+index|]
+operator|=
 name|IEEE80211_CHAN_ST
 block|,
-comment|/* IEEE80211_MODE_STURBO_A */
+comment|/* check legacy */
+index|[
+name|IEEE80211_MODE_11NA
+index|]
+operator|=
 name|IEEE80211_CHAN_A
 block|,
-comment|/* IEEE80211_MODE_11NA (check legacy) */
+index|[
+name|IEEE80211_MODE_11NG
+index|]
+operator|=
 name|IEEE80211_CHAN_G
-block|,
-comment|/* IEEE80211_MODE_11NG (check legacy) */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
