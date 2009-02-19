@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar5212_phy.c,v 1.5 2008/11/15 03:43:53 sam Exp $  */
+comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -50,6 +50,20 @@ define|#
 directive|define
 name|TURBO
 value|IEEE80211_T_TURBO
+end_define
+
+begin_define
+define|#
+directive|define
+name|HALF
+value|IEEE80211_T_OFDM_HALF
+end_define
+
+begin_define
+define|#
+directive|define
+name|QUART
+value|IEEE80211_T_OFDM_QUARTER
 end_define
 
 begin_decl_stmt
@@ -234,11 +248,11 @@ block|,
 block|{
 comment|/*                                                  short            ctrl  */
 comment|/*                valid                 rateCode Preamble  dot11Rate Rate */
-comment|/*   6 Mb */
+comment|/*   3 Mb */
 block|{
 name|AH_TRUE
 block|,
-name|OFDM
+name|HALF
 block|,
 literal|3000
 block|,
@@ -255,11 +269,11 @@ block|,
 literal|0
 block|}
 block|,
-comment|/*   9 Mb */
+comment|/* 4.5 Mb */
 block|{
 name|AH_TRUE
 block|,
-name|OFDM
+name|HALF
 block|,
 literal|4500
 block|,
@@ -272,11 +286,11 @@ block|,
 literal|0
 block|}
 block|,
-comment|/*  12 Mb */
+comment|/*   6 Mb */
 block|{
 name|AH_TRUE
 block|,
-name|OFDM
+name|HALF
 block|,
 literal|6000
 block|,
@@ -293,11 +307,11 @@ block|,
 literal|2
 block|}
 block|,
-comment|/*  18 Mb */
+comment|/*   9 Mb */
 block|{
 name|AH_TRUE
 block|,
-name|OFDM
+name|HALF
 block|,
 literal|9000
 block|,
@@ -310,11 +324,11 @@ block|,
 literal|2
 block|}
 block|,
-comment|/*  24 Mb */
+comment|/*  12 Mb */
 block|{
 name|AH_TRUE
 block|,
-name|OFDM
+name|HALF
 block|,
 literal|12000
 block|,
@@ -331,11 +345,11 @@ block|,
 literal|4
 block|}
 block|,
-comment|/*  36 Mb */
+comment|/*  18 Mb */
 block|{
 name|AH_TRUE
 block|,
-name|OFDM
+name|HALF
 block|,
 literal|18000
 block|,
@@ -348,11 +362,11 @@ block|,
 literal|4
 block|}
 block|,
-comment|/*  48 Mb */
+comment|/*  24 Mb */
 block|{
 name|AH_TRUE
 block|,
-name|OFDM
+name|HALF
 block|,
 literal|24000
 block|,
@@ -365,11 +379,11 @@ block|,
 literal|4
 block|}
 block|,
-comment|/*  54 Mb */
+comment|/*  27 Mb */
 block|{
 name|AH_TRUE
 block|,
-name|OFDM
+name|HALF
 block|,
 literal|27000
 block|,
@@ -401,11 +415,11 @@ block|,
 block|{
 comment|/*                                                  short            ctrl  */
 comment|/*                valid                 rateCode Preamble  dot11Rate Rate */
-comment|/*   6 Mb */
+comment|/* 1.5 Mb */
 block|{
 name|AH_TRUE
 block|,
-name|OFDM
+name|QUART
 block|,
 literal|1500
 block|,
@@ -422,11 +436,11 @@ block|,
 literal|0
 block|}
 block|,
-comment|/*   9 Mb */
+comment|/*   2 Mb */
 block|{
 name|AH_TRUE
 block|,
-name|OFDM
+name|QUART
 block|,
 literal|2250
 block|,
@@ -439,11 +453,11 @@ block|,
 literal|0
 block|}
 block|,
-comment|/*  12 Mb */
+comment|/*   3 Mb */
 block|{
 name|AH_TRUE
 block|,
-name|OFDM
+name|QUART
 block|,
 literal|3000
 block|,
@@ -460,11 +474,11 @@ block|,
 literal|2
 block|}
 block|,
-comment|/*  18 Mb */
+comment|/* 4.5 Mb */
 block|{
 name|AH_TRUE
 block|,
-name|OFDM
+name|QUART
 block|,
 literal|4500
 block|,
@@ -477,11 +491,11 @@ block|,
 literal|2
 block|}
 block|,
-comment|/*  24 Mb */
+comment|/*   6 Mb */
 block|{
 name|AH_TRUE
 block|,
-name|OFDM
+name|QUART
 block|,
 literal|6000
 block|,
@@ -498,11 +512,11 @@ block|,
 literal|4
 block|}
 block|,
-comment|/*  36 Mb */
+comment|/*   9 Mb */
 block|{
 name|AH_TRUE
 block|,
-name|OFDM
+name|QUART
 block|,
 literal|9000
 block|,
@@ -515,11 +529,11 @@ block|,
 literal|4
 block|}
 block|,
-comment|/*  48 Mb */
+comment|/*  12 Mb */
 block|{
 name|AH_TRUE
 block|,
-name|OFDM
+name|QUART
 block|,
 literal|12000
 block|,
@@ -532,11 +546,11 @@ block|,
 literal|4
 block|}
 block|,
-comment|/*  54 Mb */
+comment|/*13.5 Mb */
 block|{
 name|AH_TRUE
 block|,
-name|OFDM
+name|QUART
 block|,
 literal|13500
 block|,
