@@ -4403,17 +4403,22 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-comment|/* take care of green memory */
-name|bzero
-argument_list|(
+if|if
+condition|(
 name|ch
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ata_channel
-argument_list|)
-argument_list|)
+operator|->
+name|attached
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|ch
+operator|->
+name|attached
+operator|=
+literal|1
 expr_stmt|;
 comment|/* initialize the softc basics */
 name|ch
@@ -4589,6 +4594,24 @@ name|nchildren
 decl_stmt|,
 name|i
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|ch
+operator|->
+name|attached
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|ch
+operator|->
+name|attached
+operator|=
+literal|0
+expr_stmt|;
 comment|/* detach& delete all children */
 if|if
 condition|(

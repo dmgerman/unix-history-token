@@ -2709,6 +2709,10 @@ name|int
 name|unit
 decl_stmt|;
 comment|/* physical channel */
+name|int
+name|attached
+decl_stmt|;
+comment|/* channel is attached */
 name|struct
 name|ata_resource
 name|r_io
