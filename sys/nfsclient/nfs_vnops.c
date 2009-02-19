@@ -2703,13 +2703,6 @@ name|n_mtx
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*   	     * Invalidate the attribute cache in all cases.  	     * An open is going to fetch fresh attrs any way, other procs  	     * on this node that have file open will be forced to do an   	     * otw attr fetch, but this is safe.  	     */
-name|np
-operator|->
-name|n_attrstamp
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|np
