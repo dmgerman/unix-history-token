@@ -6790,6 +6790,8 @@ comment|/* NB: ic may be NULL for some drivers */
 if|if
 condition|(
 name|ic
+operator|!=
+name|NULL
 operator|&&
 name|ic
 operator|->
