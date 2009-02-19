@@ -2119,6 +2119,18 @@ index|]
 operator|=
 name|IEEE80211_CHAN_ST
 block|,
+index|[
+name|IEEE80211_MODE_HALF
+index|]
+operator|=
+name|IEEE80211_CHAN_HALF
+block|,
+index|[
+name|IEEE80211_MODE_QUARTER
+index|]
+operator|=
+name|IEEE80211_CHAN_QUARTER
+block|,
 comment|/* check legacy */
 index|[
 name|IEEE80211_MODE_11NA

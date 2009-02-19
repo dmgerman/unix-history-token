@@ -869,7 +869,7 @@ name|CHAN_UNINTERESTING
 define|\
 value|(IEEE80211_CHAN_TURBO | IEEE80211_CHAN_STURBO | \      IEEE80211_CHAN_HALF | IEEE80211_CHAN_QUARTER)
 comment|/* XXX what about auto? */
-comment|/* flag set of channels to be excluded */
+comment|/* flag set of channels to be excluded (band added below) */
 specifier|static
 specifier|const
 name|int
@@ -932,6 +932,22 @@ name|IEEE80211_MODE_STURBO_A
 index|]
 operator|=
 name|CHAN_UNINTERESTING
+block|,
+index|[
+name|IEEE80211_MODE_HALF
+index|]
+operator|=
+name|IEEE80211_CHAN_TURBO
+operator||
+name|IEEE80211_CHAN_STURBO
+block|,
+index|[
+name|IEEE80211_MODE_QUARTER
+index|]
+operator|=
+name|IEEE80211_CHAN_TURBO
+operator||
+name|IEEE80211_CHAN_STURBO
 block|,
 index|[
 name|IEEE80211_MODE_11NA

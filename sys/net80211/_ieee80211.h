@@ -121,6 +121,16 @@ init|=
 literal|9
 block|,
 comment|/* 2GHz, w/ HT */
+name|IEEE80211_MODE_HALF
+init|=
+literal|10
+block|,
+comment|/* OFDM, 1/2x clock */
+name|IEEE80211_MODE_QUARTER
+init|=
+literal|11
+block|,
+comment|/* OFDM, 1/4x clock */
 block|}
 enum|;
 end_enum
@@ -129,7 +139,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_MODE_MAX
-value|(IEEE80211_MODE_11NG+1)
+value|(IEEE80211_MODE_QUARTER+1)
 end_define
 
 begin_comment
