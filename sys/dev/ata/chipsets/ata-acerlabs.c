@@ -522,6 +522,12 @@ name|ata_ali_sata_ch_attach
 expr_stmt|;
 name|ctlr
 operator|->
+name|ch_detach
+operator|=
+name|ata_pci_ch_detach
+expr_stmt|;
+name|ctlr
+operator|->
 name|setmode
 operator|=
 name|ata_sata_setmode
@@ -664,6 +670,12 @@ operator|->
 name|ch_attach
 operator|=
 name|ata_ali_ch_attach
+expr_stmt|;
+name|ctlr
+operator|->
+name|ch_detach
+operator|=
+name|ata_pci_ch_detach
 expr_stmt|;
 name|ctlr
 operator|->

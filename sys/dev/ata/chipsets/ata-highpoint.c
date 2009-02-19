@@ -754,6 +754,12 @@ name|ata_highpoint_ch_attach
 expr_stmt|;
 name|ctlr
 operator|->
+name|ch_detach
+operator|=
+name|ata_pci_ch_detach
+expr_stmt|;
+name|ctlr
+operator|->
 name|setmode
 operator|=
 name|ata_highpoint_setmode

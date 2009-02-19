@@ -445,6 +445,12 @@ name|ch_attach
 operator|=
 name|ata_acard_ch_attach
 expr_stmt|;
+name|ctlr
+operator|->
+name|ch_detach
+operator|=
+name|ata_pci_ch_detach
+expr_stmt|;
 if|if
 condition|(
 name|ctlr

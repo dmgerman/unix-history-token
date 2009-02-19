@@ -2514,6 +2514,16 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ata_pci_ch_detach
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ata_pci_status
 parameter_list|(
 name|device_t
@@ -2535,6 +2545,16 @@ end_function_decl
 begin_function_decl
 name|void
 name|ata_pci_dmainit
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ata_pci_dmafini
 parameter_list|(
 name|device_t
 name|dev
@@ -2772,8 +2792,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|ata_ahci_reset
+name|int
+name|ata_ahci_ch_detach
 parameter_list|(
 name|device_t
 name|dev
@@ -2783,7 +2803,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ata_ahci_dmainit
+name|ata_ahci_reset
 parameter_list|(
 name|device_t
 name|dev
@@ -2818,6 +2838,16 @@ name|void
 name|ata_dmainit
 parameter_list|(
 name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ata_dmafini
+parameter_list|(
+name|device_t
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl

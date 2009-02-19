@@ -313,6 +313,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|ata_ahci_dmainit
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * AHCI v1.x compliant SATA chipset support functions  */
 end_comment
@@ -644,6 +655,12 @@ operator|->
 name|ch_attach
 operator|=
 name|ata_ahci_ch_attach
+expr_stmt|;
+name|ctlr
+operator|->
+name|ch_detach
+operator|=
+name|ata_ahci_ch_detach
 expr_stmt|;
 name|ctlr
 operator|->
@@ -1190,6 +1207,27 @@ name|ata_ahci_pm_write
 expr_stmt|;
 return|return
 literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|ata_ahci_ch_detach
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|ata_dmafini
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -4381,6 +4419,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ata_ahci_dmainit
 parameter_list|(
