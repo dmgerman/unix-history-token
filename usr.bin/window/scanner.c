@@ -74,6 +74,12 @@ directive|include
 file|"mystring.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_macro
 name|s_getc
 argument_list|()
