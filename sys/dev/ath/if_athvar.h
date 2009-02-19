@@ -1074,22 +1074,12 @@ name|sc_eecc
 decl_stmt|;
 comment|/* country code from EEPROM */
 comment|/* rate tables */
-define|#
-directive|define
-name|IEEE80211_MODE_HALF
-value|(IEEE80211_MODE_MAX+0)
-define|#
-directive|define
-name|IEEE80211_MODE_QUARTER
-value|(IEEE80211_MODE_MAX+1)
 specifier|const
 name|HAL_RATE_TABLE
 modifier|*
 name|sc_rates
 index|[
 name|IEEE80211_MODE_MAX
-operator|+
-literal|2
 index|]
 decl_stmt|;
 specifier|const
