@@ -1962,6 +1962,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|mode
+operator|==
+operator|-
+literal|1
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"unknown mode"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|ioctl
 argument_list|(
 name|fd
