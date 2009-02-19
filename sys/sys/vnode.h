@@ -2418,6 +2418,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|cache_purge_negative
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|cache_purgevfs
 parameter_list|(
 name|struct
