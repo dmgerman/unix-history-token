@@ -715,6 +715,8 @@ name|irr
 operator|->
 name|irr_raf_mask_onlink
 operator|=
+operator|!
+operator|!
 operator|(
 name|rpu
 operator|->
@@ -727,6 +729,8 @@ name|irr
 operator|->
 name|irr_raf_mask_auto
 operator|=
+operator|!
+operator|!
 operator|(
 name|rpu
 operator|->
