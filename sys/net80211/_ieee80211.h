@@ -42,6 +42,12 @@ comment|/* high rate OFDM, aka turbo mode */
 name|IEEE80211_T_HT
 block|,
 comment|/* high throughput */
+name|IEEE80211_T_OFDM_HALF
+block|,
+comment|/* 1/2 rate OFDM */
+name|IEEE80211_T_OFDM_QUARTER
+block|,
+comment|/* 1/4 rate OFDM */
 block|}
 enum|;
 end_enum
