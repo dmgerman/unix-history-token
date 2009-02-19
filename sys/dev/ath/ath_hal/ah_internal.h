@@ -168,6 +168,23 @@ name|HAL_REGRANGE
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|uint32_t
+name|addr
+decl_stmt|;
+comment|/* regiser address/offset */
+name|uint32_t
+name|value
+decl_stmt|;
+comment|/* value to write */
+block|}
+name|HAL_REGWRITE
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * Transmit power scale factor.  *  * NB: This is not public because we want to discourage the use of  *     scaling; folks should use the tx power limit interface.  */
 end_comment
@@ -2633,22 +2650,7 @@ init|=
 literal|18
 block|,
 comment|/* Write EEPROM word */
-comment|/* 19 was HAL_DIAG_TXCONT, 20-23 were for radar */
-name|HAL_DIAG_REGREAD
-init|=
-literal|24
-block|,
-comment|/* Reg reads */
-name|HAL_DIAG_REGWRITE
-init|=
-literal|25
-block|,
-comment|/* Reg writes */
-name|HAL_DIAG_GET_REGBASE
-init|=
-literal|26
-block|,
-comment|/* Get register base */
+comment|/* 19-26 removed, do not reuse */
 name|HAL_DIAG_RDWRITE
 init|=
 literal|27
@@ -2679,6 +2681,11 @@ init|=
 literal|32
 block|,
 comment|/* check h/w hangs */
+name|HAL_DIAG_SETREGS
+init|=
+literal|33
+block|,
+comment|/* write registers */
 block|}
 enum|;
 end_enum
