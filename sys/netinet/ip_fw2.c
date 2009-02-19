@@ -10037,14 +10037,14 @@ define|#
 directive|define
 name|PULLUP_TO
 parameter_list|(
-name|len
+name|_len
 parameter_list|,
 name|p
 parameter_list|,
 name|T
 parameter_list|)
 define|\
-value|do {									\ 	int x = (len) + sizeof(T);					\ 	if ((m)->m_len< x) {						\ 		args->m = m = m_pullup(m, x);				\ 		if (m == NULL)						\ 			goto pullup_failed;				\ 	}								\ 	p = (mtod(m, char *) + (len));					\ } while (0)
+value|do {									\ 	int x = (_len) + sizeof(T);					\ 	if ((m)->m_len< x) {						\ 		args->m = m = m_pullup(m, x);				\ 		if (m == NULL)						\ 			goto pullup_failed;				\ 	}								\ 	p = (mtod(m, char *) + (_len));					\ } while (0)
 comment|/* 	 * if we have an ether header, 	 */
 if|if
 condition|(
@@ -16456,7 +16456,7 @@ name|msg
 operator|=
 name|log_only
 condition|?
-literal|"logging counts reset"
+literal|"All logging counts reset"
 else|:
 literal|"Accounting cleared"
 expr_stmt|;
