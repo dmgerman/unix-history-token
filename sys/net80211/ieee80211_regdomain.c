@@ -879,59 +879,72 @@ name|IEEE80211_MODE_MAX
 index|]
 init|=
 block|{
+index|[
+name|IEEE80211_MODE_AUTO
+index|]
+operator|=
 name|CHAN_UNINTERESTING
 block|,
-comment|/* MODE_AUTO */
+index|[
+name|IEEE80211_MODE_11A
+index|]
+operator|=
 name|CHAN_UNINTERESTING
-operator||
-name|IEEE80211_CHAN_2GHZ
 block|,
-comment|/* MODE_11A */
+index|[
+name|IEEE80211_MODE_11B
+index|]
+operator|=
 name|CHAN_UNINTERESTING
-operator||
-name|IEEE80211_CHAN_5GHZ
 block|,
-comment|/* MODE_11B */
+index|[
+name|IEEE80211_MODE_11G
+index|]
+operator|=
 name|CHAN_UNINTERESTING
-operator||
-name|IEEE80211_CHAN_5GHZ
 block|,
-comment|/* MODE_11G */
+index|[
+name|IEEE80211_MODE_FH
+index|]
+operator|=
 name|CHAN_UNINTERESTING
 operator||
 name|IEEE80211_CHAN_OFDM
 operator||
-comment|/* MODE_FH */
 name|IEEE80211_CHAN_CCK
 operator||
 name|IEEE80211_CHAN_DYN
 block|,
+index|[
+name|IEEE80211_MODE_TURBO_A
+index|]
+operator|=
 name|CHAN_UNINTERESTING
-operator||
-name|IEEE80211_CHAN_2GHZ
 block|,
-comment|/* MODE_TURBO_A */
+index|[
+name|IEEE80211_MODE_TURBO_G
+index|]
+operator|=
 name|CHAN_UNINTERESTING
-operator||
-name|IEEE80211_CHAN_5GHZ
 block|,
-comment|/* MODE_TURBO_G */
+index|[
+name|IEEE80211_MODE_STURBO_A
+index|]
+operator|=
 name|CHAN_UNINTERESTING
-operator||
-name|IEEE80211_CHAN_2GHZ
 block|,
-comment|/* MODE_STURBO_A */
+index|[
+name|IEEE80211_MODE_11NA
+index|]
+operator|=
 name|CHAN_UNINTERESTING
-operator||
-name|IEEE80211_CHAN_2GHZ
 block|,
-comment|/* MODE_11NA */
+index|[
+name|IEEE80211_MODE_11NG
+index|]
+operator|=
 name|CHAN_UNINTERESTING
-operator||
-name|IEEE80211_CHAN_5GHZ
-block|,
-comment|/* MODE_11NG */
-block|}
+block|, 	}
 decl_stmt|;
 specifier|const
 name|struct
@@ -1174,6 +1187,33 @@ operator|->
 name|ic_bsschan
 argument_list|)
 index|]
+expr_stmt|;
+if|if
+condition|(
+name|IEEE80211_IS_CHAN_5GHZ
+argument_list|(
+name|ic
+operator|->
+name|ic_bsschan
+argument_list|)
+condition|)
+name|skip
+operator||=
+name|IEEE80211_CHAN_2GHZ
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|IEEE80211_IS_CHAN_2GHZ
+argument_list|(
+name|ic
+operator|->
+name|ic_bsschan
+argument_list|)
+condition|)
+name|skip
+operator||=
+name|IEEE80211_CHAN_5GHZ
 expr_stmt|;
 for|for
 control|(
