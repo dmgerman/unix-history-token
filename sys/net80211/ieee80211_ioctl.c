@@ -11197,12 +11197,6 @@ operator|->
 name|ic_sup_rates
 index|[
 name|i
-operator|==
-name|IEEE80211_MODE_11NA
-condition|?
-name|IEEE80211_MODE_11A
-else|:
-name|IEEE80211_MODE_11G
 index|]
 expr_stmt|;
 if|if
