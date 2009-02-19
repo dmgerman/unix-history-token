@@ -9546,38 +9546,67 @@ name|IEEE80211_MODE_MAX
 index|]
 init|=
 block|{
+index|[
+name|IEEE80211_MODE_AUTO
+index|]
+operator|=
 literal|0
 block|,
-comment|/* IEEE80211_MODE_AUTO */
+index|[
+name|IEEE80211_MODE_11A
+index|]
+operator|=
 name|IEEE80211_CHAN_A
 block|,
-comment|/* IEEE80211_MODE_11A */
+index|[
+name|IEEE80211_MODE_11B
+index|]
+operator|=
 name|IEEE80211_CHAN_B
 block|,
-comment|/* IEEE80211_MODE_11B */
+index|[
+name|IEEE80211_MODE_11G
+index|]
+operator|=
 name|IEEE80211_CHAN_G
 block|,
-comment|/* IEEE80211_MODE_11G */
+index|[
+name|IEEE80211_MODE_FH
+index|]
+operator|=
 name|IEEE80211_CHAN_FHSS
 block|,
-comment|/* IEEE80211_MODE_FH */
+index|[
+name|IEEE80211_MODE_TURBO_A
+index|]
+operator|=
 name|IEEE80211_CHAN_108A
 block|,
-comment|/* IEEE80211_MODE_TURBO_A */
+index|[
+name|IEEE80211_MODE_TURBO_G
+index|]
+operator|=
 name|IEEE80211_CHAN_108G
 block|,
-comment|/* IEEE80211_MODE_TURBO_G */
+index|[
+name|IEEE80211_MODE_STURBO_A
+index|]
+operator|=
 name|IEEE80211_CHAN_STURBO
 block|,
-comment|/* IEEE80211_MODE_STURBO_A */
 comment|/* NB: handled specially below */
+index|[
+name|IEEE80211_MODE_11NA
+index|]
+operator|=
 name|IEEE80211_CHAN_A
 block|,
-comment|/* IEEE80211_MODE_11NA */
+index|[
+name|IEEE80211_MODE_11NG
+index|]
+operator|=
 name|IEEE80211_CHAN_G
-block|,
-comment|/* IEEE80211_MODE_11NG */
-block|}
+block|, 	}
 decl_stmt|;
 name|u_int
 name|modeflags

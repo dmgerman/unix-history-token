@@ -3015,14 +3015,10 @@ name|IEEE80211_MODE_MAX
 index|]
 init|=
 block|{
-block|{
-operator|.
-name|rs_nrates
+index|[
+name|IEEE80211_MODE_11A
+index|]
 operator|=
-literal|0
-block|}
-block|,
-comment|/* IEEE80211_MODE_AUTO */
 block|{
 literal|3
 block|,
@@ -3035,54 +3031,25 @@ literal|48
 block|}
 block|}
 block|,
-comment|/* IEEE80211_MODE_11A */
-block|{
-literal|2
-block|,
-block|{
-literal|2
-block|,
-literal|4
-block|}
-block|}
-block|,
-comment|/* IEEE80211_MODE_11B */
-block|{
-literal|4
-block|,
-block|{
-literal|2
-block|,
-literal|4
-block|,
-literal|11
-block|,
-literal|22
-block|}
-block|}
-block|,
-comment|/* IEEE80211_MODE_11G (mixed b/g) */
-block|{
-operator|.
-name|rs_nrates
+index|[
+name|IEEE80211_MODE_11B
+index|]
 operator|=
-literal|0
-block|}
-block|,
-comment|/* IEEE80211_MODE_FH */
 block|{
-literal|3
+literal|2
 block|,
 block|{
-literal|12
+literal|2
 block|,
-literal|24
-block|,
-literal|48
+literal|4
 block|}
 block|}
 block|,
-comment|/* IEEE80211_MODE_TURBO_A */
+comment|/* NB: mixed b/g */
+index|[
+name|IEEE80211_MODE_11G
+index|]
+operator|=
 block|{
 literal|4
 block|,
@@ -3097,7 +3064,10 @@ literal|22
 block|}
 block|}
 block|,
-comment|/* IEEE80211_MODE_TURBO_G (mixed b/g) */
+index|[
+name|IEEE80211_MODE_TURBO_A
+index|]
+operator|=
 block|{
 literal|3
 block|,
@@ -3110,20 +3080,10 @@ literal|48
 block|}
 block|}
 block|,
-comment|/* IEEE80211_MODE_STURBO_A */
-block|{
-literal|3
-block|,
-block|{
-literal|12
-block|,
-literal|24
-block|,
-literal|48
-block|}
-block|}
-block|,
-comment|/* IEEE80211_MODE_11NA */
+index|[
+name|IEEE80211_MODE_TURBO_G
+index|]
+operator|=
 block|{
 literal|4
 block|,
@@ -3138,8 +3098,57 @@ literal|22
 block|}
 block|}
 block|,
-comment|/* IEEE80211_MODE_11NG (mixed b/g) */
+index|[
+name|IEEE80211_MODE_STURBO_A
+index|]
+operator|=
+block|{
+literal|3
+block|,
+block|{
+literal|12
+block|,
+literal|24
+block|,
+literal|48
 block|}
+block|}
+block|,
+index|[
+name|IEEE80211_MODE_11NA
+index|]
+operator|=
+block|{
+literal|3
+block|,
+block|{
+literal|12
+block|,
+literal|24
+block|,
+literal|48
+block|}
+block|}
+block|,
+comment|/* NB: mixed b/g */
+index|[
+name|IEEE80211_MODE_11NG
+index|]
+operator|=
+block|{
+literal|4
+block|,
+block|{
+literal|2
+block|,
+literal|4
+block|,
+literal|11
+block|,
+literal|22
+block|}
+block|}
+block|, 	}
 decl_stmt|;
 name|int
 name|i
@@ -3329,6 +3338,10 @@ name|IEEE80211_MODE_MAX
 index|]
 init|=
 block|{
+index|[
+name|IEEE80211_MODE_AUTO
+index|]
+operator|=
 block|{
 literal|3
 block|,
@@ -3341,7 +3354,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_AUTO */
+index|[
+name|IEEE80211_MODE_11A
+index|]
+operator|=
 block|{
 literal|3
 block|,
@@ -3354,7 +3370,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11A */
+index|[
+name|IEEE80211_MODE_11B
+index|]
+operator|=
 block|{
 literal|3
 block|,
@@ -3367,7 +3386,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11B */
+index|[
+name|IEEE80211_MODE_11G
+index|]
+operator|=
 block|{
 literal|3
 block|,
@@ -3380,7 +3402,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11G */
+index|[
+name|IEEE80211_MODE_FH
+index|]
+operator|=
 block|{
 literal|3
 block|,
@@ -3393,7 +3418,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_FH */
+index|[
+name|IEEE80211_MODE_TURBO_A
+index|]
+operator|=
 block|{
 literal|2
 block|,
@@ -3406,7 +3434,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_TURBO_A */
+index|[
+name|IEEE80211_MODE_TURBO_G
+index|]
+operator|=
 block|{
 literal|2
 block|,
@@ -3419,7 +3450,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_TURBO_G */
+index|[
+name|IEEE80211_MODE_STURBO_A
+index|]
+operator|=
 block|{
 literal|2
 block|,
@@ -3432,7 +3466,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_STURBO_A */
+index|[
+name|IEEE80211_MODE_11NA
+index|]
+operator|=
 block|{
 literal|3
 block|,
@@ -3445,7 +3482,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11NA */
+index|[
+name|IEEE80211_MODE_11NG
+index|]
+operator|=
 block|{
 literal|3
 block|,
@@ -3457,9 +3497,7 @@ literal|0
 block|,
 literal|0
 block|}
-block|,
-comment|/* IEEE80211_MODE_11NG */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -3474,6 +3512,10 @@ name|IEEE80211_MODE_MAX
 index|]
 init|=
 block|{
+index|[
+name|IEEE80211_MODE_AUTO
+index|]
+operator|=
 block|{
 literal|7
 block|,
@@ -3486,7 +3528,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_AUTO */
+index|[
+name|IEEE80211_MODE_11A
+index|]
+operator|=
 block|{
 literal|7
 block|,
@@ -3499,7 +3544,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11A */
+index|[
+name|IEEE80211_MODE_11B
+index|]
+operator|=
 block|{
 literal|7
 block|,
@@ -3512,7 +3560,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11B */
+index|[
+name|IEEE80211_MODE_11G
+index|]
+operator|=
 block|{
 literal|7
 block|,
@@ -3525,7 +3576,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11G */
+index|[
+name|IEEE80211_MODE_FH
+index|]
+operator|=
 block|{
 literal|7
 block|,
@@ -3538,7 +3592,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_FH */
+index|[
+name|IEEE80211_MODE_TURBO_A
+index|]
+operator|=
 block|{
 literal|7
 block|,
@@ -3551,7 +3608,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_TURBO_A */
+index|[
+name|IEEE80211_MODE_TURBO_G
+index|]
+operator|=
 block|{
 literal|7
 block|,
@@ -3564,7 +3624,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_TURBO_G */
+index|[
+name|IEEE80211_MODE_STURBO_A
+index|]
+operator|=
 block|{
 literal|7
 block|,
@@ -3577,7 +3640,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_STURBO_A */
+index|[
+name|IEEE80211_MODE_11NA
+index|]
+operator|=
 block|{
 literal|7
 block|,
@@ -3590,7 +3656,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11NA */
+index|[
+name|IEEE80211_MODE_11NG
+index|]
+operator|=
 block|{
 literal|7
 block|,
@@ -3602,9 +3671,7 @@ literal|0
 block|,
 literal|0
 block|}
-block|,
-comment|/* IEEE80211_MODE_11NG */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -3619,6 +3686,10 @@ name|IEEE80211_MODE_MAX
 index|]
 init|=
 block|{
+index|[
+name|IEEE80211_MODE_AUTO
+index|]
+operator|=
 block|{
 literal|1
 block|,
@@ -3631,7 +3702,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_AUTO */
+index|[
+name|IEEE80211_MODE_11A
+index|]
+operator|=
 block|{
 literal|1
 block|,
@@ -3644,33 +3718,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11A */
-block|{
-literal|1
-block|,
-literal|3
-block|,
-literal|4
-block|,
-literal|188
-block|,
-literal|0
-block|}
-block|,
-comment|/* IEEE80211_MODE_11B */
-block|{
-literal|1
-block|,
-literal|3
-block|,
-literal|4
-block|,
-literal|94
-block|,
-literal|0
-block|}
-block|,
-comment|/* IEEE80211_MODE_11G */
+index|[
+name|IEEE80211_MODE_11B
+index|]
+operator|=
 block|{
 literal|1
 block|,
@@ -3683,46 +3734,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_FH */
-block|{
-literal|1
-block|,
-literal|2
-block|,
-literal|3
-block|,
-literal|94
-block|,
-literal|0
-block|}
-block|,
-comment|/* IEEE80211_MODE_TURBO_A */
-block|{
-literal|1
-block|,
-literal|2
-block|,
-literal|3
-block|,
-literal|94
-block|,
-literal|0
-block|}
-block|,
-comment|/* IEEE80211_MODE_TURBO_G */
-block|{
-literal|1
-block|,
-literal|2
-block|,
-literal|3
-block|,
-literal|94
-block|,
-literal|0
-block|}
-block|,
-comment|/* IEEE80211_MODE_STURBO_A */
+index|[
+name|IEEE80211_MODE_11G
+index|]
+operator|=
 block|{
 literal|1
 block|,
@@ -3735,7 +3750,74 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11NA */
+index|[
+name|IEEE80211_MODE_FH
+index|]
+operator|=
+block|{
+literal|1
+block|,
+literal|3
+block|,
+literal|4
+block|,
+literal|188
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|IEEE80211_MODE_TURBO_A
+index|]
+operator|=
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|94
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|IEEE80211_MODE_TURBO_G
+index|]
+operator|=
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|94
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|IEEE80211_MODE_STURBO_A
+index|]
+operator|=
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|94
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|IEEE80211_MODE_11NA
+index|]
+operator|=
 block|{
 literal|1
 block|,
@@ -3748,8 +3830,22 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11NG */
+index|[
+name|IEEE80211_MODE_11NG
+index|]
+operator|=
+block|{
+literal|1
+block|,
+literal|3
+block|,
+literal|4
+block|,
+literal|94
+block|,
+literal|0
 block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -3764,6 +3860,10 @@ name|IEEE80211_MODE_MAX
 index|]
 init|=
 block|{
+index|[
+name|IEEE80211_MODE_AUTO
+index|]
+operator|=
 block|{
 literal|1
 block|,
@@ -3776,7 +3876,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_AUTO */
+index|[
+name|IEEE80211_MODE_11A
+index|]
+operator|=
 block|{
 literal|1
 block|,
@@ -3789,33 +3892,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11A */
-block|{
-literal|1
-block|,
-literal|2
-block|,
-literal|3
-block|,
-literal|102
-block|,
-literal|0
-block|}
-block|,
-comment|/* IEEE80211_MODE_11B */
-block|{
-literal|1
-block|,
-literal|2
-block|,
-literal|3
-block|,
-literal|47
-block|,
-literal|0
-block|}
-block|,
-comment|/* IEEE80211_MODE_11G */
+index|[
+name|IEEE80211_MODE_11B
+index|]
+operator|=
 block|{
 literal|1
 block|,
@@ -3828,46 +3908,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_FH */
-block|{
-literal|1
-block|,
-literal|2
-block|,
-literal|2
-block|,
-literal|47
-block|,
-literal|0
-block|}
-block|,
-comment|/* IEEE80211_MODE_TURBO_A */
-block|{
-literal|1
-block|,
-literal|2
-block|,
-literal|2
-block|,
-literal|47
-block|,
-literal|0
-block|}
-block|,
-comment|/* IEEE80211_MODE_TURBO_G */
-block|{
-literal|1
-block|,
-literal|2
-block|,
-literal|2
-block|,
-literal|47
-block|,
-literal|0
-block|}
-block|,
-comment|/* IEEE80211_MODE_STURBO_A */
+index|[
+name|IEEE80211_MODE_11G
+index|]
+operator|=
 block|{
 literal|1
 block|,
@@ -3880,7 +3924,74 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11NA */
+index|[
+name|IEEE80211_MODE_FH
+index|]
+operator|=
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|102
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|IEEE80211_MODE_TURBO_A
+index|]
+operator|=
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|47
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|IEEE80211_MODE_TURBO_G
+index|]
+operator|=
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|47
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|IEEE80211_MODE_STURBO_A
+index|]
+operator|=
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|47
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|IEEE80211_MODE_11NA
+index|]
+operator|=
 block|{
 literal|1
 block|,
@@ -3893,8 +4004,22 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11NG */
+index|[
+name|IEEE80211_MODE_11NG
+index|]
+operator|=
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|47
+block|,
+literal|0
 block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -3909,6 +4034,10 @@ name|IEEE80211_MODE_MAX
 index|]
 init|=
 block|{
+index|[
+name|IEEE80211_MODE_AUTO
+index|]
+operator|=
 block|{
 literal|3
 block|,
@@ -3921,7 +4050,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_AUTO */
+index|[
+name|IEEE80211_MODE_11A
+index|]
+operator|=
 block|{
 literal|3
 block|,
@@ -3934,7 +4066,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11A */
+index|[
+name|IEEE80211_MODE_11B
+index|]
+operator|=
 block|{
 literal|3
 block|,
@@ -3947,7 +4082,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11B */
+index|[
+name|IEEE80211_MODE_11G
+index|]
+operator|=
 block|{
 literal|3
 block|,
@@ -3960,7 +4098,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11G */
+index|[
+name|IEEE80211_MODE_FH
+index|]
+operator|=
 block|{
 literal|3
 block|,
@@ -3973,7 +4114,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_FH */
+index|[
+name|IEEE80211_MODE_TURBO_A
+index|]
+operator|=
 block|{
 literal|2
 block|,
@@ -3986,7 +4130,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_TURBO_A */
+index|[
+name|IEEE80211_MODE_TURBO_G
+index|]
+operator|=
 block|{
 literal|2
 block|,
@@ -3999,7 +4146,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_TURBO_G */
+index|[
+name|IEEE80211_MODE_STURBO_A
+index|]
+operator|=
 block|{
 literal|2
 block|,
@@ -4012,7 +4162,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_STURBO_A */
+index|[
+name|IEEE80211_MODE_11NA
+index|]
+operator|=
 block|{
 literal|3
 block|,
@@ -4025,7 +4178,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11NA */
+index|[
+name|IEEE80211_MODE_11NG
+index|]
+operator|=
 block|{
 literal|3
 block|,
@@ -4037,9 +4193,7 @@ literal|0
 block|,
 literal|0
 block|}
-block|,
-comment|/* IEEE80211_MODE_11NG */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -4054,6 +4208,10 @@ name|IEEE80211_MODE_MAX
 index|]
 init|=
 block|{
+index|[
+name|IEEE80211_MODE_AUTO
+index|]
+operator|=
 block|{
 literal|2
 block|,
@@ -4066,7 +4224,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_AUTO */
+index|[
+name|IEEE80211_MODE_11A
+index|]
+operator|=
 block|{
 literal|2
 block|,
@@ -4079,33 +4240,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11A */
-block|{
-literal|2
-block|,
-literal|3
-block|,
-literal|4
-block|,
-literal|188
-block|,
-literal|0
-block|}
-block|,
-comment|/* IEEE80211_MODE_11B */
-block|{
-literal|2
-block|,
-literal|3
-block|,
-literal|4
-block|,
-literal|94
-block|,
-literal|0
-block|}
-block|,
-comment|/* IEEE80211_MODE_11G */
+index|[
+name|IEEE80211_MODE_11B
+index|]
+operator|=
 block|{
 literal|2
 block|,
@@ -4118,46 +4256,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_FH */
-block|{
-literal|2
-block|,
-literal|2
-block|,
-literal|3
-block|,
-literal|94
-block|,
-literal|0
-block|}
-block|,
-comment|/* IEEE80211_MODE_TURBO_A */
-block|{
-literal|2
-block|,
-literal|2
-block|,
-literal|3
-block|,
-literal|94
-block|,
-literal|0
-block|}
-block|,
-comment|/* IEEE80211_MODE_TURBO_G */
-block|{
-literal|2
-block|,
-literal|2
-block|,
-literal|3
-block|,
-literal|94
-block|,
-literal|0
-block|}
-block|,
-comment|/* IEEE80211_MODE_STURBO_A */
+index|[
+name|IEEE80211_MODE_11G
+index|]
+operator|=
 block|{
 literal|2
 block|,
@@ -4170,7 +4272,74 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11NA */
+index|[
+name|IEEE80211_MODE_FH
+index|]
+operator|=
+block|{
+literal|2
+block|,
+literal|3
+block|,
+literal|4
+block|,
+literal|188
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|IEEE80211_MODE_TURBO_A
+index|]
+operator|=
+block|{
+literal|2
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|94
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|IEEE80211_MODE_TURBO_G
+index|]
+operator|=
+block|{
+literal|2
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|94
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|IEEE80211_MODE_STURBO_A
+index|]
+operator|=
+block|{
+literal|2
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|94
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|IEEE80211_MODE_11NA
+index|]
+operator|=
 block|{
 literal|2
 block|,
@@ -4183,8 +4352,22 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11NG */
+index|[
+name|IEEE80211_MODE_11NG
+index|]
+operator|=
+block|{
+literal|2
+block|,
+literal|3
+block|,
+literal|4
+block|,
+literal|94
+block|,
+literal|0
 block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -4199,6 +4382,10 @@ name|IEEE80211_MODE_MAX
 index|]
 init|=
 block|{
+index|[
+name|IEEE80211_MODE_AUTO
+index|]
+operator|=
 block|{
 literal|2
 block|,
@@ -4211,7 +4398,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_AUTO */
+index|[
+name|IEEE80211_MODE_11A
+index|]
+operator|=
 block|{
 literal|2
 block|,
@@ -4224,33 +4414,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11A */
-block|{
-literal|2
-block|,
-literal|2
-block|,
-literal|3
-block|,
-literal|102
-block|,
-literal|0
-block|}
-block|,
-comment|/* IEEE80211_MODE_11B */
-block|{
-literal|2
-block|,
-literal|2
-block|,
-literal|3
-block|,
-literal|47
-block|,
-literal|0
-block|}
-block|,
-comment|/* IEEE80211_MODE_11G */
+index|[
+name|IEEE80211_MODE_11B
+index|]
+operator|=
 block|{
 literal|2
 block|,
@@ -4263,46 +4430,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_FH */
-block|{
-literal|1
-block|,
-literal|2
-block|,
-literal|2
-block|,
-literal|47
-block|,
-literal|0
-block|}
-block|,
-comment|/* IEEE80211_MODE_TURBO_A */
-block|{
-literal|1
-block|,
-literal|2
-block|,
-literal|2
-block|,
-literal|47
-block|,
-literal|0
-block|}
-block|,
-comment|/* IEEE80211_MODE_TURBO_G */
-block|{
-literal|1
-block|,
-literal|2
-block|,
-literal|2
-block|,
-literal|47
-block|,
-literal|0
-block|}
-block|,
-comment|/* IEEE80211_MODE_STURBO_A */
+index|[
+name|IEEE80211_MODE_11G
+index|]
+operator|=
 block|{
 literal|2
 block|,
@@ -4315,7 +4446,74 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11NA */
+index|[
+name|IEEE80211_MODE_FH
+index|]
+operator|=
+block|{
+literal|2
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|102
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|IEEE80211_MODE_TURBO_A
+index|]
+operator|=
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|47
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|IEEE80211_MODE_TURBO_G
+index|]
+operator|=
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|47
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|IEEE80211_MODE_STURBO_A
+index|]
+operator|=
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|47
+block|,
+literal|0
+block|}
+block|,
+index|[
+name|IEEE80211_MODE_11NA
+index|]
+operator|=
 block|{
 literal|2
 block|,
@@ -4328,8 +4526,22 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11NG */
+index|[
+name|IEEE80211_MODE_11NG
+index|]
+operator|=
+block|{
+literal|2
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|47
+block|,
+literal|0
 block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -4853,6 +5065,10 @@ name|IEEE80211_MODE_MAX
 index|]
 init|=
 block|{
+index|[
+name|IEEE80211_MODE_AUTO
+index|]
+operator|=
 block|{
 literal|2
 block|,
@@ -4865,7 +5081,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_AUTO */
+index|[
+name|IEEE80211_MODE_11A
+index|]
+operator|=
 block|{
 literal|2
 block|,
@@ -4878,7 +5097,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11A */
+index|[
+name|IEEE80211_MODE_11B
+index|]
+operator|=
 block|{
 literal|2
 block|,
@@ -4891,7 +5113,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11B */
+index|[
+name|IEEE80211_MODE_11G
+index|]
+operator|=
 block|{
 literal|2
 block|,
@@ -4904,7 +5129,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11G */
+index|[
+name|IEEE80211_MODE_FH
+index|]
+operator|=
 block|{
 literal|2
 block|,
@@ -4917,7 +5145,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_FH */
+index|[
+name|IEEE80211_MODE_TURBO_A
+index|]
+operator|=
 block|{
 literal|1
 block|,
@@ -4930,7 +5161,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_TURBO_A */
+index|[
+name|IEEE80211_MODE_TURBO_G
+index|]
+operator|=
 block|{
 literal|1
 block|,
@@ -4943,7 +5177,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_TURBO_G */
+index|[
+name|IEEE80211_MODE_STURBO_A
+index|]
+operator|=
 block|{
 literal|1
 block|,
@@ -4956,7 +5193,10 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_STURBO_A */
+index|[
+name|IEEE80211_MODE_11NA
+index|]
+operator|=
 block|{
 literal|2
 block|,
@@ -4969,8 +5209,11 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11NA */
-comment|/*XXXcheck*/
+comment|/* XXXcheck*/
+index|[
+name|IEEE80211_MODE_11NG
+index|]
+operator|=
 block|{
 literal|2
 block|,
@@ -4983,8 +5226,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* IEEE80211_MODE_11NG */
-comment|/*XXXcheck*/
+comment|/* XXXcheck*/
 block|}
 decl_stmt|;
 name|struct
@@ -5397,37 +5639,66 @@ name|IEEE80211_MODE_MAX
 index|]
 init|=
 block|{
+index|[
+name|IEEE80211_MODE_AUTO
+index|]
+operator|=
 literal|3
 block|,
-comment|/* IEEE80211_MODE_AUTO */
+index|[
+name|IEEE80211_MODE_11A
+index|]
+operator|=
 literal|3
 block|,
-comment|/* IEEE80211_MODE_11A */
+index|[
+name|IEEE80211_MODE_11B
+index|]
+operator|=
 literal|4
 block|,
-comment|/* IEEE80211_MODE_11B */
+index|[
+name|IEEE80211_MODE_11G
+index|]
+operator|=
 literal|3
 block|,
-comment|/* IEEE80211_MODE_11G */
+index|[
+name|IEEE80211_MODE_FH
+index|]
+operator|=
 literal|4
 block|,
-comment|/* IEEE80211_MODE_FH */
+index|[
+name|IEEE80211_MODE_TURBO_A
+index|]
+operator|=
 literal|3
 block|,
-comment|/* IEEE80211_MODE_TURBO_A */
+index|[
+name|IEEE80211_MODE_TURBO_G
+index|]
+operator|=
 literal|3
 block|,
-comment|/* IEEE80211_MODE_TURBO_G */
+index|[
+name|IEEE80211_MODE_STURBO_A
+index|]
+operator|=
 literal|3
 block|,
-comment|/* IEEE80211_MODE_STURBO_A */
+index|[
+name|IEEE80211_MODE_11NA
+index|]
+operator|=
 literal|3
 block|,
-comment|/* IEEE80211_MODE_11NA */
+index|[
+name|IEEE80211_MODE_11NG
+index|]
+operator|=
 literal|3
-block|,
-comment|/* IEEE80211_MODE_11NG */
-block|}
+block|, 		}
 decl_stmt|;
 name|chanp
 operator|=
