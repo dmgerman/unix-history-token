@@ -159,7 +159,11 @@ value|msecs_to_ticks(150)
 end_define
 
 begin_comment
-comment|/*  * Roaming-related defaults.  RSSI thresholds are as returned by the  * driver (dBm).  Transmit rate thresholds are IEEE rate codes (i.e  * .5M units) or MCS.  */
+comment|/*  * Roaming-related defaults.  RSSI thresholds are as returned by the  * driver (.5dBm).  Transmit rate thresholds are IEEE rate codes (i.e  * .5M units) or MCS.  */
+end_comment
+
+begin_comment
+comment|/* rssi thresholds */
 end_comment
 
 begin_define
@@ -170,7 +174,7 @@ value|14
 end_define
 
 begin_comment
-comment|/* rssi threshold for 11a bss */
+comment|/* 11a bss */
 end_comment
 
 begin_define
@@ -181,7 +185,7 @@ value|14
 end_define
 
 begin_comment
-comment|/* rssi threshold for 11b bss */
+comment|/* 11b bss */
 end_comment
 
 begin_define
@@ -192,7 +196,11 @@ value|14
 end_define
 
 begin_comment
-comment|/* rssi threshold for 11b-only bss */
+comment|/* 11b-only bss */
+end_comment
+
+begin_comment
+comment|/* transmit rate thresholds */
 end_comment
 
 begin_define
@@ -203,7 +211,7 @@ value|2*12
 end_define
 
 begin_comment
-comment|/* tx rate thresh for 11a bss */
+comment|/* 11a bss */
 end_comment
 
 begin_define
@@ -214,7 +222,7 @@ value|2*5
 end_define
 
 begin_comment
-comment|/* tx rate thresh for 11b bss */
+comment|/* 11b bss */
 end_comment
 
 begin_define
@@ -225,18 +233,18 @@ value|2*1
 end_define
 
 begin_comment
-comment|/* tx rate thresh for 11b-only bss */
+comment|/* 11b-only bss */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ROAM_MCS_11N_DEFAULT
-value|1
+value|(1 | IEEE80211_RATE_MCS)
 end_define
 
 begin_comment
-comment|/* tx MCS thresh for 11n  bss*/
+comment|/* 11n bss */
 end_comment
 
 begin_function_decl
@@ -480,38 +488,147 @@ block|}
 block|}
 end_function
 
-begin_function
+begin_decl_stmt
 specifier|static
-name|__inline
-name|void
-name|setparams
-parameter_list|(
+specifier|const
 name|struct
 name|ieee80211_roamparam
-modifier|*
-name|rp
-parameter_list|,
-name|int8_t
-name|rssi
-parameter_list|,
-name|uint8_t
-name|txrate
-parameter_list|)
+name|defroam
+index|[
+name|IEEE80211_MODE_MAX
+index|]
+init|=
 block|{
-name|rp
-operator|->
+index|[
+name|IEEE80211_MODE_11A
+index|]
+operator|=
+block|{
+operator|.
 name|rssi
 operator|=
-name|rssi
-expr_stmt|;
-name|rp
-operator|->
+name|ROAM_RSSI_11A_DEFAULT
+block|,
+operator|.
 name|rate
 operator|=
-name|txrate
-expr_stmt|;
+name|ROAM_RATE_11A_DEFAULT
 block|}
-end_function
+block|,
+index|[
+name|IEEE80211_MODE_11G
+index|]
+operator|=
+block|{
+operator|.
+name|rssi
+operator|=
+name|ROAM_RSSI_11B_DEFAULT
+block|,
+operator|.
+name|rate
+operator|=
+name|ROAM_RATE_11B_DEFAULT
+block|}
+block|,
+index|[
+name|IEEE80211_MODE_11B
+index|]
+operator|=
+block|{
+operator|.
+name|rssi
+operator|=
+name|ROAM_RSSI_11BONLY_DEFAULT
+block|,
+operator|.
+name|rate
+operator|=
+name|ROAM_RATE_11BONLY_DEFAULT
+block|}
+block|,
+index|[
+name|IEEE80211_MODE_TURBO_A
+index|]
+operator|=
+block|{
+operator|.
+name|rssi
+operator|=
+name|ROAM_RSSI_11A_DEFAULT
+block|,
+operator|.
+name|rate
+operator|=
+name|ROAM_RATE_11A_DEFAULT
+block|}
+block|,
+index|[
+name|IEEE80211_MODE_TURBO_G
+index|]
+operator|=
+block|{
+operator|.
+name|rssi
+operator|=
+name|ROAM_RSSI_11A_DEFAULT
+block|,
+operator|.
+name|rate
+operator|=
+name|ROAM_RATE_11A_DEFAULT
+block|}
+block|,
+index|[
+name|IEEE80211_MODE_STURBO_A
+index|]
+operator|=
+block|{
+operator|.
+name|rssi
+operator|=
+name|ROAM_RSSI_11A_DEFAULT
+block|,
+operator|.
+name|rate
+operator|=
+name|ROAM_RATE_11A_DEFAULT
+block|}
+block|,
+index|[
+name|IEEE80211_MODE_11NA
+index|]
+operator|=
+block|{
+operator|.
+name|rssi
+operator|=
+name|ROAM_RSSI_11A_DEFAULT
+block|,
+operator|.
+name|rate
+operator|=
+name|ROAM_MCS_11N_DEFAULT
+block|}
+block|,
+index|[
+name|IEEE80211_MODE_11NG
+index|]
+operator|=
+block|{
+operator|.
+name|rssi
+operator|=
+name|ROAM_RSSI_11B_DEFAULT
+block|,
+operator|.
+name|rate
+operator|=
+name|ROAM_MCS_11N_DEFAULT
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void
@@ -523,15 +640,6 @@ modifier|*
 name|vap
 parameter_list|)
 block|{
-name|struct
-name|ieee80211com
-modifier|*
-name|ic
-init|=
-name|vap
-operator|->
-name|iv_ic
-decl_stmt|;
 name|vap
 operator|->
 name|iv_bgscanidle
@@ -566,215 +674,18 @@ name|iv_roaming
 operator|=
 name|IEEE80211_ROAMING_AUTO
 expr_stmt|;
-comment|/* NB: only set supported modes so user apps can identify */
-if|if
-condition|(
-name|isset
+name|memcpy
 argument_list|(
-name|ic
-operator|->
-name|ic_modecaps
-argument_list|,
-name|IEEE80211_MODE_11A
-argument_list|)
-condition|)
-name|setparams
-argument_list|(
-operator|&
 name|vap
 operator|->
 name|iv_roamparms
-index|[
-name|IEEE80211_MODE_11A
-index|]
 argument_list|,
-name|ROAM_RSSI_11A_DEFAULT
+name|defroam
 argument_list|,
-name|ROAM_RATE_11A_DEFAULT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|isset
+sizeof|sizeof
 argument_list|(
-name|ic
-operator|->
-name|ic_modecaps
-argument_list|,
-name|IEEE80211_MODE_11G
+name|defroam
 argument_list|)
-condition|)
-name|setparams
-argument_list|(
-operator|&
-name|vap
-operator|->
-name|iv_roamparms
-index|[
-name|IEEE80211_MODE_11G
-index|]
-argument_list|,
-name|ROAM_RSSI_11B_DEFAULT
-argument_list|,
-name|ROAM_RATE_11B_DEFAULT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|isset
-argument_list|(
-name|ic
-operator|->
-name|ic_modecaps
-argument_list|,
-name|IEEE80211_MODE_11B
-argument_list|)
-condition|)
-name|setparams
-argument_list|(
-operator|&
-name|vap
-operator|->
-name|iv_roamparms
-index|[
-name|IEEE80211_MODE_11B
-index|]
-argument_list|,
-name|ROAM_RSSI_11BONLY_DEFAULT
-argument_list|,
-name|ROAM_RATE_11BONLY_DEFAULT
-argument_list|)
-expr_stmt|;
-comment|/* NB: default turbo controls to be the same as !turbo */
-if|if
-condition|(
-name|isset
-argument_list|(
-name|ic
-operator|->
-name|ic_modecaps
-argument_list|,
-name|IEEE80211_MODE_TURBO_A
-argument_list|)
-condition|)
-name|vap
-operator|->
-name|iv_roamparms
-index|[
-name|IEEE80211_MODE_TURBO_A
-index|]
-operator|=
-name|vap
-operator|->
-name|iv_roamparms
-index|[
-name|IEEE80211_MODE_11A
-index|]
-expr_stmt|;
-if|if
-condition|(
-name|isset
-argument_list|(
-name|ic
-operator|->
-name|ic_modecaps
-argument_list|,
-name|IEEE80211_MODE_TURBO_G
-argument_list|)
-condition|)
-name|vap
-operator|->
-name|iv_roamparms
-index|[
-name|IEEE80211_MODE_TURBO_G
-index|]
-operator|=
-name|vap
-operator|->
-name|iv_roamparms
-index|[
-name|IEEE80211_MODE_11G
-index|]
-expr_stmt|;
-if|if
-condition|(
-name|isset
-argument_list|(
-name|ic
-operator|->
-name|ic_modecaps
-argument_list|,
-name|IEEE80211_MODE_STURBO_A
-argument_list|)
-condition|)
-name|vap
-operator|->
-name|iv_roamparms
-index|[
-name|IEEE80211_MODE_STURBO_A
-index|]
-operator|=
-name|vap
-operator|->
-name|iv_roamparms
-index|[
-name|IEEE80211_MODE_11A
-index|]
-expr_stmt|;
-if|if
-condition|(
-name|isset
-argument_list|(
-name|ic
-operator|->
-name|ic_modecaps
-argument_list|,
-name|IEEE80211_MODE_11NA
-argument_list|)
-condition|)
-name|setparams
-argument_list|(
-operator|&
-name|vap
-operator|->
-name|iv_roamparms
-index|[
-name|IEEE80211_MODE_11NA
-index|]
-argument_list|,
-name|ROAM_RSSI_11A_DEFAULT
-argument_list|,
-name|ROAM_MCS_11N_DEFAULT
-operator||
-literal|0x80
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|isset
-argument_list|(
-name|ic
-operator|->
-name|ic_modecaps
-argument_list|,
-name|IEEE80211_MODE_11NG
-argument_list|)
-condition|)
-name|setparams
-argument_list|(
-operator|&
-name|vap
-operator|->
-name|iv_roamparms
-index|[
-name|IEEE80211_MODE_11NG
-index|]
-argument_list|,
-name|ROAM_RSSI_11B_DEFAULT
-argument_list|,
-name|ROAM_MCS_11N_DEFAULT
-operator||
-literal|0x80
 argument_list|)
 expr_stmt|;
 block|}
