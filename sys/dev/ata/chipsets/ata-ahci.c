@@ -3806,7 +3806,7 @@ expr_stmt|;
 comment|//return -1;
 name|ata_udelay
 argument_list|(
-literal|5000
+literal|50
 argument_list|)
 expr_stmt|;
 comment|/* pull reset inactive -> device softreset */
