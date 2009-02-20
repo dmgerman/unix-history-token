@@ -1294,7 +1294,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATA_AHCI_P_CMD_SLUMPER
+name|ATA_AHCI_P_CMD_SLUMBER
 value|0x60000000
 end_define
 
