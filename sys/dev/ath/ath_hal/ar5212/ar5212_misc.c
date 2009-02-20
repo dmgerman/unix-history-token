@@ -1776,6 +1776,8 @@ argument_list|(
 name|ah
 argument_list|,
 name|us
+operator|-
+literal|2
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1821,6 +1823,8 @@ name|ah
 argument_list|,
 name|clks
 argument_list|)
+operator|+
+literal|2
 return|;
 comment|/* convert from system clocks */
 block|}
