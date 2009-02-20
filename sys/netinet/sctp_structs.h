@@ -2320,6 +2320,9 @@ decl_stmt|;
 name|uint16_t
 name|streamoutcnt
 decl_stmt|;
+name|uint16_t
+name|strm_realoutsize
+decl_stmt|;
 comment|/* my maximum number of retrans of INIT and SEND */
 comment|/* copied from SCTP but should be individually setable */
 name|uint16_t

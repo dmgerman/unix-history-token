@@ -1850,7 +1850,7 @@ value|0x000c
 end_define
 
 begin_comment
-comment|/* draft-ietf-stewart-strreset-xxx */
+comment|/* draft-ietf-stewart-tsvwg-strreset-xxx */
 end_comment
 
 begin_define
@@ -1879,6 +1879,13 @@ define|#
 directive|define
 name|SCTP_STR_RESET_RESPONSE
 value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_STR_RESET_ADD_STREAMS
+value|0x0011
 end_define
 
 begin_define
@@ -3714,8 +3721,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCTP_NOTIFY_STR_RESET_ADD_OK
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_NOTIFY_STR_RESET_ADD_FAIL
+value|31
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_NOTIFY_STR_RESET_INSTREAM_ADD_OK
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCTP_NOTIFY_MAX
-value|29
+value|32
 end_define
 
 begin_comment

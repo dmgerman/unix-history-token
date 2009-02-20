@@ -1272,6 +1272,13 @@ name|SCTP_STRRESET_FAILED
 value|0x0010
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_STRRESET_ADD_STREAM
+value|0x0020
+end_define
+
 begin_comment
 comment|/* SCTP notification event */
 end_comment
@@ -2048,6 +2055,13 @@ define|#
 directive|define
 name|SCTP_RESET_TSN
 value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_RESET_ADD_STREAMS
+value|0x0005
 end_define
 
 begin_struct
@@ -3088,7 +3102,7 @@ comment|/* Number of unread message abandonded 					 * by close */
 name|uint32_t
 name|sctps_send_burst_avoid
 decl_stmt|;
-comment|/* Send burst avoidance, 						 * already max burst inflight 						 * to net */
+comment|/* Unused */
 name|uint32_t
 name|sctps_send_cwnd_avoid
 decl_stmt|;

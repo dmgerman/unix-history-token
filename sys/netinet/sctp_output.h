@@ -894,6 +894,12 @@ name|send_in_req
 parameter_list|,
 name|uint8_t
 name|send_tsn_req
+parameter_list|,
+name|uint8_t
+name|add_str
+parameter_list|,
+name|uint16_t
+name|adding
 parameter_list|)
 function_decl|;
 end_function_decl

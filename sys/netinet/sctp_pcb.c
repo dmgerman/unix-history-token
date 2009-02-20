@@ -22764,6 +22764,10 @@ expr_stmt|;
 block|}
 name|asoc
 operator|->
+name|strm_realoutsize
+operator|=
+name|asoc
+operator|->
 name|streamoutcnt
 operator|=
 literal|0
