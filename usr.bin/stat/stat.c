@@ -381,7 +381,7 @@ define|#
 directive|define
 name|LINUX_FORMAT
 define|\
-value|"  File: \"%N\"%n" \ 	"  Size: %-11z  FileType: %HT%n" \ 	"  Mode: (%04OLp/%.10Sp)         Uid: (%5u/%8Su)  Gid: (%5g/%8Sg)%n" \ 	"Device: %Hd,%Ld   Inode: %i    Links: %l%n" \ 	"Access: %Sa%n" \ 	"Modify: %Sm%n" \ 	"Change: %Sc"
+value|"  File: \"%N\"%n" \ 	"  Size: %-11z  FileType: %HT%n" \ 	"  Mode: (%OMp%03OLp/%.10Sp)         Uid: (%5u/%8Su)  Gid: (%5g/%8Sg)%n" \ 	"Device: %Hd,%Ld   Inode: %i    Links: %l%n" \ 	"Access: %Sa%n" \ 	"Modify: %Sm%n" \ 	"Change: %Sc"
 end_define
 
 begin_define
