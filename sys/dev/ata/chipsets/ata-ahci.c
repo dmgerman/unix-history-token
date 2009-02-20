@@ -3938,6 +3938,20 @@ name|unit
 operator|<<
 literal|7
 decl_stmt|;
+comment|/* Disable port interrupts */
+name|ATA_OUTL
+argument_list|(
+name|ctlr
+operator|->
+name|r_res2
+argument_list|,
+name|ATA_AHCI_P_IE
+operator|+
+name|offset
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* setup work areas */
 name|work
 operator|=
