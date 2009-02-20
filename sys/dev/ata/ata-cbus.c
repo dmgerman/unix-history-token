@@ -1519,6 +1519,16 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|struct
+name|ata_channel
+modifier|*
+name|ch
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 operator|!
