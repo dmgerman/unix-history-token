@@ -5001,6 +5001,12 @@ name|IEEE80211_C_WME
 operator|)
 operator|==
 literal|0
+operator|||
+name|ic
+operator|->
+name|ic_nrunning
+operator|>
+literal|1
 condition|)
 return|return;
 comment|/* 	 * Select mode; we can be called early in which case we 	 * always use auto mode.  We know we'll be called when 	 * entering the RUN state with bsschan setup properly 	 * so state will eventually get set correctly 	 */
@@ -5230,6 +5236,13 @@ name|ni_intval
 operator|)
 operator|/
 literal|100
+expr_stmt|;
+name|wme
+operator|->
+name|wme_flags
+operator|&=
+operator|~
+name|WME_F_AGGRMODE
 expr_stmt|;
 name|ieee80211_wme_updateparams
 argument_list|(
