@@ -67,6 +67,11 @@ directive|define
 name|PCB_FPU
 value|1
 comment|/* Process had FPU initialized */
+define|#
+directive|define
+name|PCB_VEC
+value|2
+comment|/* Process had Altivec initialized */
 struct|struct
 name|fpu
 block|{
@@ -89,6 +94,48 @@ name|int
 name|pcb_fpcpu
 decl_stmt|;
 comment|/* which CPU had our FPU 							stuff. */
+struct|struct
+name|vec
+block|{
+name|uint32_t
+name|vr
+index|[
+literal|32
+index|]
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|register_t
+name|vrsave
+decl_stmt|;
+name|register_t
+name|spare
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|register_t
+name|vscr
+decl_stmt|;
+block|}
+name|pcb_vec
+name|__attribute__
+argument_list|(
+operator|(
+name|aligned
+argument_list|(
+literal|16
+argument_list|)
+operator|)
+argument_list|)
+struct|;
+comment|/* Vector processor */
+name|unsigned
+name|int
+name|pcb_veccpu
+decl_stmt|;
+comment|/* which CPU had our vector 							stuff. */
 union|union
 block|{
 struct|struct

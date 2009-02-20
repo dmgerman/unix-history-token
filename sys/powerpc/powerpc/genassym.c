@@ -1760,6 +1760,16 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
+name|PCB_VEC
+argument_list|,
+name|PCB_VEC
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ASSYM
+argument_list|(
 name|PCB_AIM_USR
 argument_list|,
 name|offsetof

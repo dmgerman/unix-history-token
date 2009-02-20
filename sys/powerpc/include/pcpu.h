@@ -43,6 +43,8 @@ value|int		pc_inside_intr;					\ 	struct pmap	*pc_curpmap;
 comment|/* current pmap */
 value|\ 	struct thread	*pc_fputhread;
 comment|/* current fpu user */
+value|\ 	struct thread	*pc_vecthread;
+comment|/* current vec user */
 value|\ 	uintptr_t	pc_hwref;					\ 	uint32_t	pc_pir;						\ 	int		pc_bsp:1;					\ 	int		pc_awake:1;					\ 	uint32_t	pc_ipimask;					\ 	register_t	pc_tempsave[CPUSAVE_LEN];			\ 	register_t	pc_disisave[CPUSAVE_LEN];			\ 	register_t	pc_dbsave[CPUSAVE_LEN];
 end_define
 
