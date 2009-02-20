@@ -3234,8 +3234,6 @@ operator|.
 name|dp_size
 argument_list|)
 expr_stmt|;
-do|do
-block|{
 name|next
 operator|=
 name|LIST_NEXT
@@ -3245,8 +3243,7 @@ argument_list|,
 name|gpe_entry
 argument_list|)
 expr_stmt|;
-block|}
-do|while
+while|while
 condition|(
 name|next
 operator|!=
@@ -3256,7 +3253,15 @@ name|next
 operator|->
 name|gpe_deleted
 condition|)
-do|;
+name|next
+operator|=
+name|LIST_NEXT
+argument_list|(
+name|next
+argument_list|,
+name|gpe_entry
+argument_list|)
+expr_stmt|;
 name|p
 operator|+=
 name|DOSPARTSIZE
