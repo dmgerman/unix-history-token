@@ -590,6 +590,9 @@ block|{
 case|case
 name|AAC_HWIF_I960RX
 case|:
+case|case
+name|AAC_HWIF_NARK
+case|:
 name|device_printf
 argument_list|(
 name|sc
@@ -599,21 +602,21 @@ argument_list|,
 literal|"IDBR 0x%08x  IIMR 0x%08x  "
 literal|"IISR 0x%08x\n"
 argument_list|,
-name|AAC_GETREG4
+name|AAC_MEM0_GETREG4
 argument_list|(
 name|sc
 argument_list|,
 name|AAC_RX_IDBR
 argument_list|)
 argument_list|,
-name|AAC_GETREG4
+name|AAC_MEM0_GETREG4
 argument_list|(
 name|sc
 argument_list|,
 name|AAC_RX_IIMR
 argument_list|)
 argument_list|,
-name|AAC_GETREG4
+name|AAC_MEM0_GETREG4
 argument_list|(
 name|sc
 argument_list|,
@@ -630,21 +633,21 @@ argument_list|,
 literal|"ODBR 0x%08x  OIMR 0x%08x  "
 literal|"OISR 0x%08x\n"
 argument_list|,
-name|AAC_GETREG4
+name|AAC_MEM0_GETREG4
 argument_list|(
 name|sc
 argument_list|,
 name|AAC_RX_ODBR
 argument_list|)
 argument_list|,
-name|AAC_GETREG4
+name|AAC_MEM0_GETREG4
 argument_list|(
 name|sc
 argument_list|,
 name|AAC_RX_OIMR
 argument_list|)
 argument_list|,
-name|AAC_GETREG4
+name|AAC_MEM0_GETREG4
 argument_list|(
 name|sc
 argument_list|,
@@ -652,7 +655,7 @@ name|AAC_RX_OISR
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|AAC_SETREG4
+name|AAC_MEM0_SETREG4
 argument_list|(
 name|sc
 argument_list|,
@@ -671,21 +674,21 @@ argument_list|,
 literal|"ODBR 0x%08x  OIMR 0x%08x  "
 literal|"OISR 0x%08x\n"
 argument_list|,
-name|AAC_GETREG4
+name|AAC_MEM0_GETREG4
 argument_list|(
 name|sc
 argument_list|,
 name|AAC_RX_ODBR
 argument_list|)
 argument_list|,
-name|AAC_GETREG4
+name|AAC_MEM0_GETREG4
 argument_list|(
 name|sc
 argument_list|,
 name|AAC_RX_OIMR
 argument_list|)
 argument_list|,
-name|AAC_GETREG4
+name|AAC_MEM0_GETREG4
 argument_list|(
 name|sc
 argument_list|,
