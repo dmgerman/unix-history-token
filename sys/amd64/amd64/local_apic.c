@@ -3749,6 +3749,10 @@ name|vector
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
+comment|/* 	 * We can not currently clear the idt entry because other cpus 	 * may have a valid vector at this offset. 	 */
 name|setidt
 argument_list|(
 name|vector
@@ -3766,6 +3770,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -3881,6 +3887,11 @@ name|apic_id
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|thread_unlock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -3905,6 +3916,11 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|icu_lock
+argument_list|)
+expr_stmt|;
+name|thread_lock
+argument_list|(
+name|td
 argument_list|)
 expr_stmt|;
 name|sched_unbind
