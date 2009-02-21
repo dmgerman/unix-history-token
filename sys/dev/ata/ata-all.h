@@ -2836,6 +2836,11 @@ modifier|*
 name|running
 decl_stmt|;
 comment|/* currently running request */
+name|struct
+name|task
+name|conntask
+decl_stmt|;
+comment|/* PHY events handling task */
 block|}
 struct|;
 end_struct

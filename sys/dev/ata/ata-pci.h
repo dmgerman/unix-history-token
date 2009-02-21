@@ -197,36 +197,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for SATA connection update hotplug/hotswap support */
-end_comment
-
-begin_struct
-struct|struct
-name|ata_connect_task
-block|{
-name|struct
-name|task
-name|task
-decl_stmt|;
-name|device_t
-name|dev
-decl_stmt|;
-name|int
-name|action
-decl_stmt|;
-define|#
-directive|define
-name|ATA_C_ATTACH
-value|1
-define|#
-directive|define
-name|ATA_C_DETACH
-value|2
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/* defines for known chipset PCI id's */
 end_comment
 
@@ -2862,20 +2832,6 @@ end_function_decl
 begin_comment
 comment|/* global prototypes ata-sata.c */
 end_comment
-
-begin_function_decl
-name|void
-name|ata_sata_phy_event
-parameter_list|(
-name|void
-modifier|*
-name|context
-parameter_list|,
-name|int
-name|dummy
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
