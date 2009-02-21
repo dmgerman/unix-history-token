@@ -816,16 +816,6 @@ operator|*
 name|rid
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"DEFAULT: %d, %p\n"
-argument_list|,
-operator|*
-name|rid
-argument_list|,
-name|rle
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|rle
