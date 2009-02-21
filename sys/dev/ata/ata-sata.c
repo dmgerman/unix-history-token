@@ -1493,10 +1493,12 @@ comment|/* figure out whats there */
 switch|switch
 condition|(
 name|signature
+operator|>>
+literal|16
 condition|)
 block|{
 case|case
-literal|0x00000101
+literal|0x0000
 case|:
 name|ch
 operator|->
@@ -1510,7 +1512,7 @@ operator|)
 expr_stmt|;
 continue|continue;
 case|case
-literal|0xeb140101
+literal|0xeb14
 case|:
 name|ch
 operator|->

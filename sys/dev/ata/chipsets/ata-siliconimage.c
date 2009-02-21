@@ -5537,10 +5537,12 @@ comment|/* figure out whats there */
 switch|switch
 condition|(
 name|signature
+operator|>>
+literal|16
 condition|)
 block|{
 case|case
-literal|0x00000101
+literal|0x0000
 case|:
 name|ch
 operator|->
@@ -5550,7 +5552,7 @@ name|ATA_ATA_MASTER
 expr_stmt|;
 break|break;
 case|case
-literal|0x96690101
+literal|0x9669
 case|:
 name|ch
 operator|->
@@ -5580,7 +5582,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|0xeb140101
+literal|0xeb14
 case|:
 name|ch
 operator|->
