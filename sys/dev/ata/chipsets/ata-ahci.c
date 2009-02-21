@@ -3650,6 +3650,9 @@ name|ata_ahci_wait_ready
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|int
+name|t
 parameter_list|)
 block|{
 name|struct
@@ -3719,7 +3722,7 @@ condition|(
 name|timeout
 operator|++
 operator|>
-literal|1000
+name|t
 condition|)
 block|{
 name|device_printf
@@ -3968,6 +3971,8 @@ condition|(
 name|ata_ahci_wait_ready
 argument_list|(
 name|dev
+argument_list|,
+literal|1000
 argument_list|)
 condition|)
 return|return
@@ -4258,6 +4263,8 @@ comment|/* Wait for initial TFD from device. */
 name|ata_ahci_wait_ready
 argument_list|(
 name|dev
+argument_list|,
+literal|10000
 argument_list|)
 expr_stmt|;
 comment|/* only probe for PortMultiplier if HW has support */
