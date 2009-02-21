@@ -423,6 +423,14 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb2_device_request
+name|usb_device_request_t
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
@@ -1202,6 +1210,14 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb2_descriptor
+name|usb_descriptor_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|usb2_device_descriptor
@@ -1276,6 +1292,14 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb2_device_descriptor
+name|usb_device_descriptor_t
+typedef|;
+end_typedef
+
 begin_comment
 comment|/* Binary Device Object Store (BOS) */
 end_comment
@@ -1300,6 +1324,14 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|usb2_bos_descriptor
+name|usb_bos_descriptor_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/* Binary Device Object Store Capability */
@@ -1344,6 +1376,14 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb2_bos_cap_descriptor
+name|usb_bos_cap_descriptor_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|usb2_devcap_usb2ext_descriptor
@@ -1368,6 +1408,14 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|usb2_devcap_usb2ext_descriptor
+name|usb_devcap_usb2ext_descriptor_t
+typedef|;
+end_typedef
 
 begin_struct
 struct|struct
@@ -1402,6 +1450,14 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb2_devcap_ss_descriptor
+name|usb_devcap_ss_descriptor_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|usb2_devcap_container_id_descriptor
@@ -1425,6 +1481,14 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|usb2_devcap_container_id_descriptor
+name|usb_devcap_container_id_descriptor_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/* Device class codes */
@@ -1568,6 +1632,14 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb2_config_descriptor
+name|usb_config_descriptor_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|usb2_interface_descriptor
@@ -1604,6 +1676,14 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb2_interface_descriptor
+name|usb_interface_descriptor_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|usb2_interface_assoc_descriptor
@@ -1636,6 +1716,14 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|usb2_interface_assoc_descriptor
+name|usb_interface_assoc_descriptor_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/* Interface class codes */
@@ -2397,6 +2485,14 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb2_endpoint_descriptor
+name|usb_endpoint_descriptor_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|usb2_endpoint_ss_comp_descriptor
@@ -2421,6 +2517,14 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb2_endpoint_ss_comp_descriptor
+name|usb_endpoint_ss_comp_descriptor_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|usb2_string_descriptor
@@ -2444,6 +2548,14 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|usb2_string_descriptor
+name|usb_string_descriptor_t
+typedef|;
+end_typedef
 
 begin_define
 define|#
@@ -2574,6 +2686,14 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb2_hub_descriptor
+name|usb_hub_descriptor_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|usb2_hub_ss_descriptor
@@ -2615,6 +2735,14 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|usb2_hub_ss_descriptor
+name|usb_hub_ss_descriptor_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/* minimum HUB descriptor (8-ports maximum) */
@@ -2659,6 +2787,14 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb2_hub_descriptor_min
+name|usb_hub_descriptor_min_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|usb2_device_qualifier
@@ -2695,6 +2831,14 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb2_device_qualifier
+name|usb_device_qualifier_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|usb2_otg_descriptor
@@ -2720,6 +2864,14 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|usb2_otg_descriptor
+name|usb_otg_descriptor_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/* OTG feature selectors */
@@ -2772,6 +2924,14 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb2_status
+name|usb_status_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|usb2_hub_status
@@ -2794,6 +2954,14 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|usb2_hub_status
+name|usb_hub_status_t
+typedef|;
+end_typedef
 
 begin_struct
 struct|struct
@@ -2874,6 +3042,14 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|usb2_port_status
+name|usb_port_status_t
+typedef|;
+end_typedef
 
 begin_endif
 endif|#
