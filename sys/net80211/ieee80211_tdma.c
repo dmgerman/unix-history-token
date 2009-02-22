@@ -1211,9 +1211,15 @@ operator|->
 name|tdma_slot
 operator|!=
 literal|0
+operator|&&
+name|vap
+operator|->
+name|iv_des_chan
+operator|==
+name|IEEE80211_CHAN_ANYC
 condition|)
 block|{
-comment|/* 		 * Start s/w beacon miss timer for slave devices w/o 		 * hardware support.  The 2x is a fudge for our doing 		 * this in software. 		 */
+comment|/* 		 * Start s/w beacon miss timer for slave devices w/o 		 * hardware support.  Note we do this only if we're 		 * not locked to a channel (i.e. roam to follow the 		 * master). The 2x is a fudge for our doing this in 		 * software. 		 */
 name|vap
 operator|->
 name|iv_swbmiss_period
