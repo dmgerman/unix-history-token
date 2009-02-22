@@ -3042,16 +3042,10 @@ expr_stmt|;
 name|sched_unpin
 argument_list|()
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_wakeup
 argument_list|(
 name|m
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 break|break;
 block|}
@@ -3129,16 +3123,10 @@ expr_stmt|;
 name|sched_unpin
 argument_list|()
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_wakeup
 argument_list|(
 name|m
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 break|break;
 block|}
@@ -3171,7 +3159,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|} else if (bp->bio_cmd == BIO_DELETE) { 			if (len != PAGE_SIZE&& m->valid != VM_PAGE_BITS_ALL) 				rv = vm_pager_get_pages(sc->object,&m, 1, 0); 			if (rv == VM_PAGER_ERROR) { 				sf_buf_free(sf); 				sched_unpin(); 				vm_page_lock_queues(); 				vm_page_wakeup(m); 				vm_page_unlock_queues(); 				break; 			} 			bzero((void *)(sf_buf_kva(sf) + offs), len); 			vm_page_dirty(m); 			m->valid = VM_PAGE_BITS_ALL;
+block|} else if (bp->bio_cmd == BIO_DELETE) { 			if (len != PAGE_SIZE&& m->valid != VM_PAGE_BITS_ALL) 				rv = vm_pager_get_pages(sc->object,&m, 1, 0); 			if (rv == VM_PAGER_ERROR) { 				sf_buf_free(sf); 				sched_unpin(); 				vm_page_wakeup(m); 				break; 			} 			bzero((void *)(sf_buf_kva(sf) + offs), len); 			vm_page_dirty(m); 			m->valid = VM_PAGE_BITS_ALL;
 endif|#
 directive|endif
 block|}
@@ -3183,13 +3171,13 @@ expr_stmt|;
 name|sched_unpin
 argument_list|()
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_wakeup
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
 expr_stmt|;
 name|vm_page_activate
 argument_list|(
