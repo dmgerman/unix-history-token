@@ -3783,11 +3783,11 @@ operator|=
 name|getnameinfo
 argument_list|(
 operator|&
-name|pllasa
+name|pllsa
 operator|->
 name|sa
 argument_list|,
-name|pllasa
+name|pllsa
 operator|->
 name|sa
 operator|.
