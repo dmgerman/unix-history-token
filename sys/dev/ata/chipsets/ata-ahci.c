@@ -2774,23 +2774,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bootverbose
-condition|)
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"ahci_issue_cmd time=%dms cnt=%dms status=%08x\n"
-argument_list|,
-name|timeout
-argument_list|,
-name|count
-argument_list|,
-name|status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|timeout
 operator|&&
 operator|(
@@ -2799,9 +2782,30 @@ operator|>=
 name|timeout
 operator|)
 condition|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"ahci_issue_cmd timeout: %d of %dms, status=%08x\n"
+argument_list|,
+name|count
+argument_list|,
+name|timeout
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|EIO
 return|;
+block|}
 return|return
 literal|0
 return|;
@@ -3729,7 +3733,9 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"port is not ready\n"
+literal|"port is not ready (timeout %dms)\n"
+argument_list|,
+name|t
 argument_list|)
 expr_stmt|;
 return|return
@@ -3825,6 +3831,19 @@ operator|+
 name|ATA_AHCI_CT_OFFSET
 operator|)
 decl_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"software reset port %d...\n"
+argument_list|,
+name|port
+argument_list|)
+expr_stmt|;
 comment|/* kick controller into sane state */
 name|ata_ahci_stop
 argument_list|(
@@ -3898,14 +3917,21 @@ argument_list|,
 literal|100
 argument_list|)
 condition|)
+block|{
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"setting SRST failed ??\n"
+literal|"software reset set timeout\n"
 argument_list|)
 expr_stmt|;
-comment|//return -1;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 name|ata_udelay
 argument_list|(
 literal|50
@@ -3975,12 +4001,21 @@ argument_list|,
 literal|1000
 argument_list|)
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"software reset clear timeout\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 return|return
 name|ATA_INL
 argument_list|(
@@ -4042,6 +4077,17 @@ name|unit
 operator|<<
 literal|7
 decl_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"AHCI reset...\n"
+argument_list|)
+expr_stmt|;
 comment|/* Disable port interrupts */
 name|ATA_OUTL
 argument_list|(
@@ -4181,7 +4227,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"phy reset found no device\n"
+literal|"AHCI reset done: phy reset found no device\n"
 argument_list|)
 expr_stmt|;
 name|ch
@@ -4385,7 +4431,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"No signature, asuming disk device\n"
+literal|"Unknown signature, asuming disk device\n"
 argument_list|)
 expr_stmt|;
 name|ch
@@ -4403,7 +4449,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"ahci_reset devices=%08x\n"
+literal|"AHCI reset done: devices=%08x\n"
 argument_list|,
 name|ch
 operator|->
