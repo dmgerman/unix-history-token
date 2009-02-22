@@ -2295,12 +2295,7 @@ name|vm_page_unwire
 argument_list|(
 name|m
 argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|vm_page_activate
-argument_list|(
-name|m
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
@@ -2994,12 +2989,7 @@ name|vm_page_unwire
 argument_list|(
 name|tpg
 argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|vm_page_activate
-argument_list|(
-name|tpg
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
