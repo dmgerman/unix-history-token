@@ -1543,15 +1543,21 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" dwell min %lu max %lu\n"
+literal|" dwell min %lums max %lums\n"
 argument_list|,
+name|ticks_to_msecs
+argument_list|(
 name|ss
 operator|->
 name|ss_mindwell
+argument_list|)
 argument_list|,
+name|ticks_to_msecs
+argument_list|(
 name|ss
 operator|->
 name|ss_maxdwell
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4024,7 +4030,7 @@ name|vap
 argument_list|,
 name|IEEE80211_MSG_SCAN
 argument_list|,
-literal|"%s: chan %3d%c -> %3d%c [%s, dwell min %lu max %lu]\n"
+literal|"%s: chan %3d%c -> %3d%c [%s, dwell min %lums max %lums]\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4078,11 +4084,17 @@ literal|"active"
 else|:
 literal|"passive"
 argument_list|,
+name|ticks_to_msecs
+argument_list|(
 name|ss
 operator|->
 name|ss_mindwell
+argument_list|)
 argument_list|,
+name|ticks_to_msecs
+argument_list|(
 name|maxdwell
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Potentially change channel and phy mode. 		 */
