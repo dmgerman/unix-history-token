@@ -82,6 +82,11 @@ name|struct
 name|usb2_process
 name|roothub_proc
 decl_stmt|;
+name|struct
+name|root_hold_token
+modifier|*
+name|bus_roothold
+decl_stmt|;
 comment|/* 	 * There are two callback processes. One for Giant locked 	 * callbacks. One for non-Giant locked callbacks. This should 	 * avoid congestion and reduce response time in most cases. 	 */
 name|struct
 name|usb2_process
