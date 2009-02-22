@@ -10379,7 +10379,11 @@ operator|->
 name|eflags
 operator|&=
 operator|~
+operator|(
 name|MAP_ENTRY_USER_WIRED
+operator||
+name|MAP_ENTRY_IN_TRANSITION
+operator|)
 expr_stmt|;
 name|new_entry
 operator|->
@@ -10463,7 +10467,11 @@ operator|->
 name|eflags
 operator|&=
 operator|~
+operator|(
 name|MAP_ENTRY_USER_WIRED
+operator||
+name|MAP_ENTRY_IN_TRANSITION
+operator|)
 expr_stmt|;
 name|new_entry
 operator|->
