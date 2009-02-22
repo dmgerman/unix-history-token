@@ -403,6 +403,8 @@ name|tmpfs_dir_lookup
 argument_list|(
 name|dnode
 argument_list|,
+name|NULL
+argument_list|,
 name|cnp
 argument_list|)
 expr_stmt|;
@@ -3723,11 +3725,15 @@ argument_list|)
 expr_stmt|;
 name|de
 operator|=
-name|tmpfs_dir_search
+name|tmpfs_dir_lookup
 argument_list|(
 name|dnode
 argument_list|,
 name|node
+argument_list|,
+name|v
+operator|->
+name|a_cnp
 argument_list|)
 expr_stmt|;
 name|MPASS
@@ -4337,11 +4343,13 @@ argument_list|)
 expr_stmt|;
 name|de
 operator|=
-name|tmpfs_dir_search
+name|tmpfs_dir_lookup
 argument_list|(
 name|fdnode
 argument_list|,
 name|fnode
+argument_list|,
+name|fcnp
 argument_list|)
 expr_stmt|;
 comment|/* Avoid manipulating '.' and '..' entries. */
@@ -4817,11 +4825,13 @@ block|{
 comment|/* Remove the old entry from the target directory. */
 name|de
 operator|=
-name|tmpfs_dir_search
+name|tmpfs_dir_lookup
 argument_list|(
 name|tdnode
 argument_list|,
 name|tnode
+argument_list|,
+name|tcnp
 argument_list|)
 expr_stmt|;
 name|tmpfs_dir_detach
@@ -5170,11 +5180,15 @@ expr_stmt|;
 comment|/* Get the directory entry associated with node (vp).  This was 	 * filled by tmpfs_lookup while looking up the entry. */
 name|de
 operator|=
-name|tmpfs_dir_search
+name|tmpfs_dir_lookup
 argument_list|(
 name|dnode
 argument_list|,
 name|node
+argument_list|,
+name|v
+operator|->
+name|a_cnp
 argument_list|)
 expr_stmt|;
 name|MPASS
