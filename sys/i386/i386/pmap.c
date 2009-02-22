@@ -11152,16 +11152,10 @@ argument_list|,
 name|pindex
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_wakeup
 argument_list|(
 name|p
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 name|ptepa
