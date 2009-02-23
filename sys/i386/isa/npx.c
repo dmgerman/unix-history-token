@@ -861,7 +861,7 @@ name|hw_float
 argument_list|,
 literal|0
 argument_list|,
-literal|"Floatingpoint instructions executed in hardware"
+literal|"Floating point instructions executed in hardware"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2746,7 +2746,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * The following frstor may cause an IRQ13 when the state 		 * being restored has a pending error.  The error will 		 * appear to have been triggered by the current (npx) user 		 * instruction even when that instruction is a no-wait 		 * instruction that should not trigger an error (e.g., 		 * fnclex).  On at least one 486 system all of the no-wait 		 * instructions are broken the same as frstor, so our 		 * treatment does not amplify the breakage.  On at least 		 * one 386/Cyrix 387 system, fnclex works correctly while 		 * frstor and fnsave are broken, so our treatment breaks 		 * fnclex if it is the first FPU instruction after a context 		 * switch. 		 */
+comment|/* 		 * The following fpurstor() may cause an IRQ13 when the 		 * state being restored has a pending error.  The error will 		 * appear to have been triggered by the current (npx) user 		 * instruction even when that instruction is a no-wait 		 * instruction that should not trigger an error (e.g., 		 * fnclex).  On at least one 486 system all of the no-wait 		 * instructions are broken the same as frstor, so our 		 * treatment does not amplify the breakage.  On at least 		 * one 386/Cyrix 387 system, fnclex works correctly while 		 * frstor and fnsave are broken, so our treatment breaks 		 * fnclex if it is the first FPU instruction after a context 		 * switch. 		 */
 name|fpurstor
 argument_list|(
 operator|&
