@@ -226,6 +226,12 @@ directive|include
 file|<nfsserver/nfsrvcache.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<security/audit/audit.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
