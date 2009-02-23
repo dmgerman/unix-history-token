@@ -821,80 +821,6 @@ function_decl|;
 name|HAL_BOOL
 function_decl|(
 modifier|*
-name|ah_gpioCfgOutput
-function_decl|)
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|,
-name|uint32_t
-name|gpio
-parameter_list|)
-function_decl|;
-name|HAL_BOOL
-function_decl|(
-modifier|*
-name|ah_gpioCfgInput
-function_decl|)
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|,
-name|uint32_t
-name|gpio
-parameter_list|)
-function_decl|;
-name|uint32_t
-function_decl|(
-modifier|*
-name|ah_gpioGet
-function_decl|)
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|,
-name|uint32_t
-name|gpio
-parameter_list|)
-function_decl|;
-name|HAL_BOOL
-function_decl|(
-modifier|*
-name|ah_gpioSet
-function_decl|)
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|,
-name|uint32_t
-name|gpio
-parameter_list|,
-name|uint32_t
-name|val
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|ah_gpioSetIntr
-function_decl|)
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|,
-name|uint32_t
-parameter_list|)
-function_decl|;
-name|HAL_BOOL
-function_decl|(
-modifier|*
 name|ah_getChipPowerLimits
 function_decl|)
 parameter_list|(
@@ -1235,7 +1161,7 @@ parameter_list|,
 name|_gpio
 parameter_list|)
 define|\
-value|AH_PRIVATE(_ah)->ah_gpioCfgOutput(_ah, _gpio)
+value|(_ah)->ah_gpioCfgOutput(_ah, _gpio)
 end_define
 
 begin_define
@@ -1248,7 +1174,7 @@ parameter_list|,
 name|_gpio
 parameter_list|)
 define|\
-value|AH_PRIVATE(_ah)->ah_gpioCfgInput(_ah, _gpio)
+value|(_ah)->ah_gpioCfgInput(_ah, _gpio)
 end_define
 
 begin_define
@@ -1261,7 +1187,7 @@ parameter_list|,
 name|_gpio
 parameter_list|)
 define|\
-value|AH_PRIVATE(_ah)->ah_gpioGet(_ah, _gpio)
+value|(_ah)->ah_gpioGet(_ah, _gpio)
 end_define
 
 begin_define
@@ -1276,7 +1202,7 @@ parameter_list|,
 name|_val
 parameter_list|)
 define|\
-value|AH_PRIVATE(_ah)->ah_gpioGet(_ah, _gpio, _val)
+value|(_ah)->ah_gpioSet(_ah, _gpio, _val)
 end_define
 
 begin_define
@@ -1291,7 +1217,7 @@ parameter_list|,
 name|_ilevel
 parameter_list|)
 define|\
-value|AH_PRIVATE(_ah)->ah_gpioSetIntr(_ah, _gpio, _ilevel)
+value|(_ah)->ah_gpioSetIntr(_ah, _gpio, _ilevel)
 end_define
 
 begin_define
