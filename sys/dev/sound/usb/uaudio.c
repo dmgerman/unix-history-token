@@ -119,18 +119,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/sound/uaudio_reg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/sound/uaudio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/reboot.h>
 end_include
 
@@ -142,6 +130,18 @@ begin_include
 include|#
 directive|include
 file|<dev/sound/pcm/sound.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/sound/usb/uaudioreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/sound/usb/uaudio.h>
 end_include
 
 begin_include

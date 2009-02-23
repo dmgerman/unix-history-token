@@ -28,7 +28,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/sound/uaudio.h>
+file|<dev/sound/usb/uaudio.h>
 end_include
 
 begin_include
