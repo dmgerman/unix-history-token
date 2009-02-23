@@ -3385,6 +3385,34 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|ath_hal_mac_name
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|ath_hal_rf_name
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Regulatory interfaces.  Drivers should use ath_hal_init_channels to  * request a set of channels for a particular country code and/or  * regulatory domain.  If CTRY_DEFAULT and SKU_NONE are specified then  * this list is constructed according to the contents of the EEPROM.  * ath_hal_getchannels acts similarly but does not alter the operating  * state; this can be used to collect information for a particular  * regulatory configuration.  Finally ath_hal_set_channels installs a  * channel list constructed outside the driver.  The HAL will adopt the  * channel list and setup internal state according to the specified  * regulatory configuration (e.g. conformance test limits).  *  * For all interfaces the channel list is returned in the supplied array.  * maxchans defines the maximum size of this array.  nchans contains the  * actual number of channels returned.  If a problem occurred then a  * status code != HAL_OK is returned.  */
 end_comment
