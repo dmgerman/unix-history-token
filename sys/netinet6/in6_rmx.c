@@ -756,6 +756,13 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+name|RADIX_NODE_HEAD_WLOCK_ASSERT
+argument_list|(
+name|ap
+operator|->
+name|rnh
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rt
