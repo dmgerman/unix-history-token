@@ -14,6 +14,13 @@ name|RUM_TX_LIST_COUNT
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|RUM_TX_MINFREE
+value|2
+end_define
+
 begin_struct
 struct|struct
 name|rum_rx_radiotap_header

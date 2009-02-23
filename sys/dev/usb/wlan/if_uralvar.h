@@ -17,6 +17,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RAL_TX_MINFREE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
 name|URAL_SCAN_START
 value|1
 end_define
