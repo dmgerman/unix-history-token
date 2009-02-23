@@ -1615,6 +1615,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+end_ifdef
+
 begin_comment
 comment|/*  * Allow userspace to directly trigger the VM drain routine for testing  * purposes.  */
 end_comment
@@ -1703,6 +1709,11 @@ literal|"set to trigger vm_lowmem event"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
