@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/usb/usb_ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 

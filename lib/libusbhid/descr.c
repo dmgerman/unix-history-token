@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/include/usb2_ioctl.h>
+file|<dev/usb/usb_ioctl.h>
 end_include
 
 begin_include
@@ -113,6 +113,9 @@ operator|&
 name|enable
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HID_COMPAT7
 if|if
 condition|(
 name|ret
@@ -128,6 +131,8 @@ argument_list|,
 name|enable
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|ret
@@ -165,6 +170,9 @@ operator|&
 name|temp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HID_COMPAT7
 if|if
 condition|(
 name|ret
@@ -179,6 +187,8 @@ name|fd
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|ret
 operator|=
 name|temp
@@ -236,6 +246,9 @@ name|ugd_maxlen
 operator|=
 literal|65535
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HID_COMPAT7
 if|if
 condition|(
 name|ioctl
@@ -262,6 +275,8 @@ argument_list|)
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 comment|/* 	 * NOTE: The kernel will return a failure if  	 * "ugd_actlen" is zero. 	 */
 name|data
 operator|=

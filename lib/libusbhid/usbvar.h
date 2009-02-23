@@ -30,6 +30,12 @@ begin_comment
 comment|/* internal backwards compatibility functions */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HID_COMPAT7
+end_ifdef
+
 begin_function_decl
 name|int
 name|hid_set_immed_compat7
@@ -62,6 +68,11 @@ name|fd
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

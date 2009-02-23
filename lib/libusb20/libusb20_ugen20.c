@@ -82,31 +82,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/include/usb2_standard.h>
+file|<dev/usb/usb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb2/include/usb2_ioctl.h>
+file|<dev/usb/usb_ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb2/include/usb2_mfunc.h>
+file|<dev/usb/usb_mfunc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb2/include/usb2_error.h>
+file|<dev/usb/usb_error.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb2/include/usb2_revision.h>
+file|<dev/usb/usb_revision.h>
 end_include
 
 begin_decl_stmt
