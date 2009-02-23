@@ -3689,6 +3689,10 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|&&
+name|error
+operator|!=
+name|ENXIO
 condition|)
 return|return
 name|error
@@ -3725,6 +3729,10 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|&&
+name|error
+operator|!=
+name|ENXIO
 condition|)
 block|{
 operator|(
@@ -4012,7 +4020,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}

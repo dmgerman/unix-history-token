@@ -5508,6 +5508,10 @@ condition|(
 name|error
 operator|!=
 literal|0
+operator|&&
+name|error
+operator|!=
+name|ENXIO
 condition|)
 goto|goto
 name|fail
@@ -5611,6 +5615,10 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|&&
+name|error
+operator|!=
+name|ENXIO
 condition|)
 block|{
 name|fs
