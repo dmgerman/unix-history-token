@@ -134,31 +134,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb.h>
+file|<legacy/dev/usb/usb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usbdi.h>
+file|<legacy/dev/usb/usbdi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usbdi_util.h>
+file|<legacy/dev/usb/usbdi_util.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usbdivar.h>
+file|<legacy/dev/usb/usbdivar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_quirks.h>
+file|<legacy/dev/usb/usb_quirks.h>
 end_include
 
 begin_include
