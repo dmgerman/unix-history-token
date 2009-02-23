@@ -781,6 +781,7 @@ comment|/*  * Attach for an AR5211 part.  */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|ath_hal
 modifier|*

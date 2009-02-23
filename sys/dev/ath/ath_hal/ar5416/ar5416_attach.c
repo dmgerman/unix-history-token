@@ -754,6 +754,7 @@ comment|/*  * Attach for an AR5416 part.  */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|ath_hal
 modifier|*

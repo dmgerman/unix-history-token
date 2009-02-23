@@ -449,27 +449,6 @@ end_struct_decl
 
 begin_function_decl
 specifier|extern
-name|struct
-name|ath_hal
-modifier|*
-name|ar5211Attach
-parameter_list|(
-name|uint16_t
-parameter_list|,
-name|HAL_SOFTC
-parameter_list|,
-name|HAL_BUS_TAG
-parameter_list|,
-name|HAL_BUS_HANDLE
-parameter_list|,
-name|HAL_STATUS
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|void
 name|ar5211Detach
 parameter_list|(

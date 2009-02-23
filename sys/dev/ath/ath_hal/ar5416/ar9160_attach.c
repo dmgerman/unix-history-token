@@ -215,31 +215,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|struct
-name|ath_hal
-modifier|*
-name|ar9160Attach
-parameter_list|(
-name|uint16_t
-name|devid
-parameter_list|,
-name|HAL_SOFTC
-name|sc
-parameter_list|,
-name|HAL_BUS_TAG
-name|st
-parameter_list|,
-name|HAL_BUS_HANDLE
-name|sh
-parameter_list|,
-name|HAL_STATUS
-modifier|*
-name|status
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|static
 name|void
 name|ar9160Detach
@@ -459,6 +434,7 @@ comment|/*  * Attach for an AR9160 part.  */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|ath_hal
 modifier|*
