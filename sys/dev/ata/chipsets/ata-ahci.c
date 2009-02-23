@@ -4431,7 +4431,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Unknown signature, asuming disk device\n"
+literal|"Unknown signature, assuming disk device\n"
 argument_list|)
 expr_stmt|;
 name|ch

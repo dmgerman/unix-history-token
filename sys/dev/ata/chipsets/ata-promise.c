@@ -5312,7 +5312,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"No signature, asuming disk device\n"
+literal|"No signature, assuming disk device\n"
 argument_list|)
 expr_stmt|;
 name|ch
