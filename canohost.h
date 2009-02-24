@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: canohost.h,v 1.9 2006/03/25 22:22:42 djm Exp $ */
+comment|/* $OpenBSD: canohost.h,v 1.10 2009/02/12 03:00:56 djm Exp $ */
 end_comment
 
 begin_comment
@@ -95,6 +95,17 @@ name|int
 name|get_local_port
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|get_sock_port
+parameter_list|(
+name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

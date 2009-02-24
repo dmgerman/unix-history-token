@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: cipher.c,v 1.81 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: cipher.c,v 1.82 2009/01/26 09:58:15 markus Exp $ */
 end_comment
 
 begin_comment
@@ -158,6 +158,9 @@ decl_stmt|;
 name|u_int
 name|discard_len
 decl_stmt|;
+name|u_int
+name|cbc_mode
+decl_stmt|;
 specifier|const
 name|EVP_CIPHER
 modifier|*
@@ -185,6 +188,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 name|EVP_enc_null
 block|}
 block|,
@@ -198,6 +203,8 @@ block|,
 literal|8
 block|,
 literal|0
+block|,
+literal|1
 block|,
 name|EVP_des_cbc
 block|}
@@ -213,6 +220,8 @@ literal|16
 block|,
 literal|0
 block|,
+literal|1
+block|,
 name|evp_ssh1_3des
 block|}
 block|,
@@ -226,6 +235,8 @@ block|,
 literal|32
 block|,
 literal|0
+block|,
+literal|1
 block|,
 name|evp_ssh1_bf
 block|}
@@ -241,6 +252,8 @@ literal|24
 block|,
 literal|0
 block|,
+literal|1
+block|,
 name|EVP_des_ede3_cbc
 block|}
 block|,
@@ -254,6 +267,8 @@ block|,
 literal|16
 block|,
 literal|0
+block|,
+literal|1
 block|,
 name|EVP_bf_cbc
 block|}
@@ -269,6 +284,8 @@ literal|16
 block|,
 literal|0
 block|,
+literal|1
+block|,
 name|EVP_cast5_cbc
 block|}
 block|,
@@ -280,6 +297,8 @@ block|,
 literal|8
 block|,
 literal|16
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -297,6 +316,8 @@ literal|16
 block|,
 literal|1536
 block|,
+literal|0
+block|,
 name|EVP_rc4
 block|}
 block|,
@@ -310,6 +331,8 @@ block|,
 literal|32
 block|,
 literal|1536
+block|,
+literal|0
 block|,
 name|EVP_rc4
 block|}
@@ -325,6 +348,8 @@ literal|16
 block|,
 literal|0
 block|,
+literal|1
+block|,
 name|EVP_aes_128_cbc
 block|}
 block|,
@@ -338,6 +363,8 @@ block|,
 literal|24
 block|,
 literal|0
+block|,
+literal|1
 block|,
 name|EVP_aes_192_cbc
 block|}
@@ -353,6 +380,8 @@ literal|32
 block|,
 literal|0
 block|,
+literal|1
+block|,
 name|EVP_aes_256_cbc
 block|}
 block|,
@@ -367,6 +396,8 @@ literal|32
 block|,
 literal|0
 block|,
+literal|1
+block|,
 name|EVP_aes_256_cbc
 block|}
 block|,
@@ -378,6 +409,8 @@ block|,
 literal|16
 block|,
 literal|16
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -395,6 +428,8 @@ literal|24
 block|,
 literal|0
 block|,
+literal|0
+block|,
 name|evp_aes_128_ctr
 block|}
 block|,
@@ -406,6 +441,8 @@ block|,
 literal|16
 block|,
 literal|32
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -426,6 +463,8 @@ literal|5
 block|,
 literal|0
 block|,
+literal|0
+block|,
 name|EVP_acss
 block|}
 block|,
@@ -435,6 +474,8 @@ block|{
 name|NULL
 block|,
 name|SSH_CIPHER_INVALID
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -507,6 +548,26 @@ operator|(
 name|c
 operator|->
 name|number
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|u_int
+name|cipher_is_cbc
+parameter_list|(
+specifier|const
+name|Cipher
+modifier|*
+name|c
+parameter_list|)
+block|{
+return|return
+operator|(
+name|c
+operator|->
+name|cbc_mode
 operator|)
 return|;
 block|}

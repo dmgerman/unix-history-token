@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: scp.c,v 1.163 2008/06/13 18:55:22 dtucker Exp $ */
+comment|/* $OpenBSD: scp.c,v 1.164 2008/10/10 04:55:16 stevesk Exp $ */
 end_comment
 
 begin_comment
@@ -1930,7 +1930,7 @@ argument_list|)
 expr_stmt|;
 comment|/* Dest is local host. */
 block|}
-comment|/* 	 * Finally check the exit status of the ssh process, if one was forked 	 * and no error has occured yet 	 */
+comment|/* 	 * Finally check the exit status of the ssh process, if one was forked 	 * and no error has occurred yet 	 */
 if|if
 condition|(
 name|do_cmd_pid

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2002 Tim Rice.  All rights reserved.  * MAP_FAILED c
 end_comment
 
 begin_comment
-comment|/* $Id: xmmap.c,v 1.14 2007/06/11 02:52:24 djm Exp $ */
+comment|/* $Id: xmmap.c,v 1.15 2009/02/16 04:21:40 djm Exp $ */
 end_comment
 
 begin_include
@@ -245,11 +245,27 @@ argument_list|(
 name|tmpname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|ftruncate
 argument_list|(
 name|tmpfd
 argument_list|,
 name|size
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: ftruncate: %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|address

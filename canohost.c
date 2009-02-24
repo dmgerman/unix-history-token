@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: canohost.c,v 1.63 2008/06/12 00:03:49 dtucker Exp $ */
+comment|/* $OpenBSD: canohost.c,v 1.64 2009/02/12 03:00:56 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1491,7 +1491,6 @@ comment|/* Returns the local/remote port for the socket. */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|get_sock_port
 parameter_list|(

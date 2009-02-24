@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: session.c,v 1.241 2008/06/16 13:22:53 dtucker Exp $ */
+comment|/* $OpenBSD: session.c,v 1.245 2009/01/22 09:46:01 djm Exp $ */
 end_comment
 
 begin_comment
@@ -346,6 +346,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|IS_INTERNAL_SFTP
+parameter_list|(
+name|c
+parameter_list|)
+define|\
+value|(!strncmp(c, INTERNAL_SFTP_NAME, sizeof(INTERNAL_SFTP_NAME) - 1)&& \ 	 (c[sizeof(INTERNAL_SFTP_NAME) - 1] == '\0' || \ 	  c[sizeof(INTERNAL_SFTP_NAME) - 1] == ' ' || \ 	  c[sizeof(INTERNAL_SFTP_NAME) - 1] == '\t'))
+end_define
 
 begin_comment
 comment|/* func */
@@ -1068,20 +1079,13 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|strlcpy
-argument_list|(
 name|nc
 operator|->
 name|path
-argument_list|,
+operator|=
+name|xstrdup
+argument_list|(
 name|auth_sock_name
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|nc
-operator|->
-name|path
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3371,14 +3375,10 @@ name|adm_forced_command
 expr_stmt|;
 if|if
 condition|(
-name|strcmp
+name|IS_INTERNAL_SFTP
 argument_list|(
-name|INTERNAL_SFTP_NAME
-argument_list|,
 name|command
 argument_list|)
-operator|==
-literal|0
 condition|)
 name|s
 operator|->
@@ -3423,14 +3423,10 @@ name|forced_command
 expr_stmt|;
 if|if
 condition|(
-name|strcmp
+name|IS_INTERNAL_SFTP
 argument_list|(
-name|INTERNAL_SFTP_NAME
-argument_list|,
 name|command
 argument_list|)
-operator|==
-literal|0
 condition|)
 name|s
 operator|->
@@ -3986,7 +3982,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Sets the value of the given variable in the environment.  If the variable  * already exists, its value is overriden.  */
+comment|/*  * Sets the value of the given variable in the environment.  If the variable  * already exists, its value is overridden.  */
 end_comment
 
 begin_function
@@ -8100,7 +8096,7 @@ argument_list|)
 expr_stmt|;
 name|args
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|command
 condition|?

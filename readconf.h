@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.h,v 1.74 2008/06/26 11:46:31 grunk Exp $ */
+comment|/* $OpenBSD: readconf.h,v 1.78 2009/02/12 03:00:56 djm Exp $ */
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ modifier|*
 name|listen_host
 decl_stmt|;
 comment|/* Host (address) to listen on. */
-name|u_short
+name|int
 name|listen_port
 decl_stmt|;
 comment|/* Port to forward. */
@@ -41,7 +41,7 @@ modifier|*
 name|connect_host
 decl_stmt|;
 comment|/* Host to connect. */
-name|u_short
+name|int
 name|connect_port
 decl_stmt|;
 comment|/* Port to connect on connect_host. */
@@ -135,6 +135,10 @@ modifier|*
 name|kbd_interactive_devices
 decl_stmt|;
 comment|/* Keyboard-interactive auth devices. */
+name|int
+name|zero_knowledge_password_authentication
+decl_stmt|;
+comment|/* Try jpake */
 name|int
 name|batch_mode
 decl_stmt|;
@@ -456,6 +460,10 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

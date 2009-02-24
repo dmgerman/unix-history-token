@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: addrmatch.c,v 1.3 2008/06/10 23:06:19 djm Exp $ */
+comment|/*	$OpenBSD: addrmatch.c,v 1.4 2008/12/10 03:55:20 stevesk Exp $ */
 end_comment
 
 begin_comment
@@ -77,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xmalloc.h"
 end_include
 
 begin_struct
@@ -378,6 +384,9 @@ name|v6
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_STRUCT_SOCKADDR_IN6_SIN6_SCOPE_ID
 name|xa
 operator|->
 name|scope_id
@@ -386,6 +395,8 @@ name|in6
 operator|->
 name|sin6_scope_id
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 default|default:
 return|return
@@ -1974,7 +1985,7 @@ name|foundit
 goto|;
 block|}
 block|}
-name|free
+name|xfree
 argument_list|(
 name|o
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-options.c,v 1.43 2008/06/10 23:06:19 djm Exp $ */
+comment|/* $OpenBSD: auth-options.c,v 1.44 2009/01/22 10:09:16 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1229,7 +1229,7 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
-name|u_short
+name|int
 name|port
 decl_stmt|;
 name|char
@@ -1434,7 +1434,7 @@ argument_list|(
 name|p
 argument_list|)
 operator|)
-operator|==
+operator|<=
 literal|0
 condition|)
 block|{

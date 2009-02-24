@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect.c,v 1.211 2008/07/01 07:24:22 dtucker Exp $ */
+comment|/* $OpenBSD: sshconnect.c,v 1.212 2008/10/14 18:11:33 stevesk Exp $ */
 end_comment
 
 begin_comment
@@ -311,28 +311,6 @@ name|pid_t
 name|proxy_command_pid
 decl_stmt|;
 end_decl_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|INET6_ADDRSTRLEN
-end_ifndef
-
-begin_comment
-comment|/* for non IPv6 machines */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INET6_ADDRSTRLEN
-value|46
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -3480,7 +3458,7 @@ literal|0
 argument_list|,
 name|host_key
 argument_list|,
-literal|2
+name|ROQUIET
 argument_list|,
 name|user_hostfile
 argument_list|,

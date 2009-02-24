@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh2.h,v 1.10 2006/03/25 22:22:43 djm Exp $ */
+comment|/* $OpenBSD: ssh2.h,v 1.11 2008/11/04 08:22:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -296,6 +296,48 @@ define|#
 directive|define
 name|SSH2_MSG_USERAUTH_INFO_RESPONSE
 value|61
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_MSG_USERAUTH_JPAKE_CLIENT_STEP1
+value|60
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_MSG_USERAUTH_JPAKE_SERVER_STEP1
+value|61
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_MSG_USERAUTH_JPAKE_CLIENT_STEP2
+value|62
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_MSG_USERAUTH_JPAKE_SERVER_STEP2
+value|63
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_MSG_USERAUTH_JPAKE_CLIENT_CONFIRM
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_MSG_USERAUTH_JPAKE_SERVER_CONFIRM
+value|65
 end_define
 
 begin_comment

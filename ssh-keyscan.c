@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keyscan.c,v 1.76 2008/04/30 10:14:03 djm Exp $ */
+comment|/* $OpenBSD: ssh-keyscan.c,v 1.78 2009/01/22 10:02:34 djm Exp $ */
 end_comment
 
 begin_comment
@@ -3841,7 +3841,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: %s [-46Hv] [-f file] [-p port] [-T timeout] [-t type]\n"
-literal|"\t\t   [host | addrlist namelist] [...]\n"
+literal|"\t\t   [host | addrlist namelist] ...\n"
 argument_list|,
 name|__progname
 argument_list|)
@@ -3976,7 +3976,7 @@ expr_stmt|;
 if|if
 condition|(
 name|ssh_port
-operator|==
+operator|<=
 literal|0
 condition|)
 block|{

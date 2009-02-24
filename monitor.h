@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor.h,v 1.14 2006/03/25 22:22:43 djm Exp $ */
+comment|/* $OpenBSD: monitor.h,v 1.15 2008/11/04 08:22:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -140,7 +140,27 @@ block|,
 name|MONITOR_REQ_AUDIT_COMMAND
 block|,
 name|MONITOR_REQ_TERM
-block|}
+block|,
+name|MONITOR_REQ_JPAKE_STEP1
+block|,
+name|MONITOR_ANS_JPAKE_STEP1
+block|,
+name|MONITOR_REQ_JPAKE_GET_PWDATA
+block|,
+name|MONITOR_ANS_JPAKE_GET_PWDATA
+block|,
+name|MONITOR_REQ_JPAKE_STEP2
+block|,
+name|MONITOR_ANS_JPAKE_STEP2
+block|,
+name|MONITOR_REQ_JPAKE_KEY_CONFIRM
+block|,
+name|MONITOR_ANS_JPAKE_KEY_CONFIRM
+block|,
+name|MONITOR_REQ_JPAKE_CHECK_CONFIRM
+block|,
+name|MONITOR_ANS_JPAKE_CHECK_CONFIRM
+block|, }
 enum|;
 end_enum
 

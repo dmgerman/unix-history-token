@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-server-main.c,v 1.3 2008/03/26 23:44:41 djm Exp $ */
+comment|/* $OpenBSD: sftp-server-main.c,v 1.4 2009/02/21 19:32:04 tobias Exp $ */
 end_comment
 
 begin_comment
@@ -118,7 +118,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"No user found for uid %lu"
+literal|"No user found for uid %lu\n"
 argument_list|,
 operator|(
 name|u_long

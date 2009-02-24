@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: nchan.c,v 1.60 2008/06/30 12:16:02 djm Exp $ */
+comment|/* $OpenBSD: nchan.c,v 1.62 2008/11/07 18:50:18 stevesk Exp $ */
 end_comment
 
 begin_comment
@@ -1531,6 +1531,16 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+operator|!
+operator|(
+name|datafellows
+operator|&
+name|SSH_NEW_OPENSSH
+operator|)
+condition|)
+return|return;
 name|packet_start
 argument_list|(
 name|SSH2_MSG_CHANNEL_REQUEST
@@ -1975,7 +1985,7 @@ condition|)
 name|debug2
 argument_list|(
 literal|"channel %d: chan_shutdown_write: "
-literal|"shutdown() failed for fd%d: %.100s"
+literal|"shutdown() failed for fd %d: %.100s"
 argument_list|,
 name|c
 operator|->
@@ -2009,7 +2019,7 @@ condition|)
 name|logit
 argument_list|(
 literal|"channel %d: chan_shutdown_write: "
-literal|"close() failed for fd%d: %.100s"
+literal|"close() failed for fd %d: %.100s"
 argument_list|,
 name|c
 operator|->
@@ -2090,7 +2100,7 @@ condition|)
 name|error
 argument_list|(
 literal|"channel %d: chan_shutdown_read: "
-literal|"shutdown() failed for fd%d [i%d o%d]: %.100s"
+literal|"shutdown() failed for fd %d [i%d o%d]: %.100s"
 argument_list|,
 name|c
 operator|->
@@ -2132,7 +2142,7 @@ condition|)
 name|logit
 argument_list|(
 literal|"channel %d: chan_shutdown_read: "
-literal|"close() failed for fd%d: %.100s"
+literal|"close() failed for fd %d: %.100s"
 argument_list|,
 name|c
 operator|->

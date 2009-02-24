@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: serverloop.c,v 1.153 2008/06/30 12:15:39 djm Exp $ */
+comment|/* $OpenBSD: serverloop.c,v 1.157 2009/02/12 03:16:01 djm Exp $ */
 end_comment
 
 begin_comment
@@ -3808,7 +3808,7 @@ decl_stmt|,
 modifier|*
 name|originator
 decl_stmt|;
-name|int
+name|u_short
 name|target_port
 decl_stmt|,
 name|originator_port
@@ -4489,6 +4489,10 @@ name|int
 name|success
 init|=
 literal|0
+decl_stmt|,
+name|allocated_listen_port
+init|=
+literal|0
 decl_stmt|;
 name|rtype
 operator|=
@@ -4591,6 +4595,15 @@ operator|.
 name|allow_tcp_forwarding
 operator|||
 name|no_port_forwarding_flag
+operator|||
+operator|(
+operator|!
+name|want_reply
+operator|&&
+name|listen_port
+operator|==
+literal|0
+operator|)
 ifndef|#
 directive|ifndef
 name|NO_IPPORT_RESERVED_CONCEPT
@@ -4630,6 +4643,9 @@ argument_list|(
 name|listen_address
 argument_list|,
 name|listen_port
+argument_list|,
+operator|&
+name|allocated_listen_port
 argument_list|,
 name|options
 operator|.
@@ -4738,6 +4754,19 @@ condition|?
 name|SSH2_MSG_REQUEST_SUCCESS
 else|:
 name|SSH2_MSG_REQUEST_FAILURE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|success
+operator|&&
+name|allocated_listen_port
+operator|>
+literal|0
+condition|)
+name|packet_put_int
+argument_list|(
+name|allocated_listen_port
 argument_list|)
 expr_stmt|;
 name|packet_send
@@ -5026,12 +5055,13 @@ operator|&
 name|server_input_global_request
 argument_list|)
 expr_stmt|;
+comment|/* client_alive */
 name|dispatch_set
 argument_list|(
 name|SSH2_MSG_CHANNEL_SUCCESS
 argument_list|,
 operator|&
-name|channel_input_status_confirm
+name|server_input_keep_alive
 argument_list|)
 expr_stmt|;
 name|dispatch_set
@@ -5039,10 +5069,9 @@ argument_list|(
 name|SSH2_MSG_CHANNEL_FAILURE
 argument_list|,
 operator|&
-name|channel_input_status_confirm
+name|server_input_keep_alive
 argument_list|)
 expr_stmt|;
-comment|/* client_alive */
 name|dispatch_set
 argument_list|(
 name|SSH2_MSG_REQUEST_SUCCESS

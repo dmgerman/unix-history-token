@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ttymodes.c,v 1.28 2008/07/07 00:31:41 stevesk Exp $ */
+comment|/* $OpenBSD: ttymodes.c,v 1.29 2008/11/02 00:16:16 stevesk Exp $ */
 end_comment
 
 begin_comment
@@ -850,13 +850,6 @@ name|tio
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|debug3
-argument_list|(
-literal|"tty_make_modes: ospeed %d"
-argument_list|,
-name|baud
-argument_list|)
-expr_stmt|;
 name|buffer_put_char
 argument_list|(
 operator|&
@@ -882,13 +875,6 @@ argument_list|(
 operator|&
 name|tio
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|debug3
-argument_list|(
-literal|"tty_make_modes: ispeed %d"
-argument_list|,
-name|baud
 argument_list|)
 expr_stmt|;
 name|buffer_put_char
@@ -1052,14 +1038,6 @@ operator|=
 name|packet_get_int
 argument_list|()
 expr_stmt|;
-name|debug3
-argument_list|(
-literal|"tty_parse_modes: SSH2 n_bytes %d"
-argument_list|,
-operator|*
-name|n_bytes_ptr
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -1161,13 +1139,6 @@ operator|=
 name|packet_get_int
 argument_list|()
 expr_stmt|;
-name|debug3
-argument_list|(
-literal|"tty_parse_modes: ispeed %d"
-argument_list|,
-name|baud
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|failure
@@ -1212,13 +1183,6 @@ name|baud
 operator|=
 name|packet_get_int
 argument_list|()
-expr_stmt|;
-name|debug3
-argument_list|(
-literal|"tty_parse_modes: ospeed %d"
-argument_list|,
-name|baud
-argument_list|)
 expr_stmt|;
 if|if
 condition|(

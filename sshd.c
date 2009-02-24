@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshd.c,v 1.364 2008/07/10 18:08:11 markus Exp $ */
+comment|/* $OpenBSD: sshd.c,v 1.366 2009/01/22 10:02:34 djm Exp $ */
 end_comment
 
 begin_comment
@@ -420,12 +420,6 @@ begin_include
 include|#
 directive|include
 file|"monitor_wrap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"monitor_fdpass.h"
 end_include
 
 begin_include
@@ -5675,7 +5669,7 @@ name|num_ports
 operator|-
 literal|1
 index|]
-operator|==
+operator|<=
 literal|0
 condition|)
 block|{

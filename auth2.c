@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2.c,v 1.119 2008/07/04 23:30:16 djm Exp $ */
+comment|/* $OpenBSD: auth2.c,v 1.120 2008/11/04 08:22:12 djm Exp $ */
 end_comment
 
 begin_comment
@@ -258,6 +258,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|JPAKE
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|Authmethod
+name|method_jpake
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|Authmethod
 modifier|*
@@ -276,6 +294,14 @@ directive|ifdef
 name|GSSAPI
 operator|&
 name|method_gssapi
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|JPAKE
+operator|&
+name|method_jpake
 block|,
 endif|#
 directive|endif
@@ -1179,7 +1205,18 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
+name|JPAKE
+name|auth2_jpake_stop
+argument_list|(
+name|authctxt
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|GSSAPI
+comment|/* XXX move to auth2_gssapi_stop() */
 name|dispatch_set
 argument_list|(
 name|SSH2_MSG_USERAUTH_GSSAPI_TOKEN

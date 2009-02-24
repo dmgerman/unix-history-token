@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: servconf.h,v 1.85 2008/06/10 04:50:25 dtucker Exp $ */
+comment|/* $OpenBSD: servconf.h,v 1.87 2009/01/22 10:02:34 djm Exp $ */
 end_comment
 
 begin_comment
@@ -200,7 +200,7 @@ decl_stmt|;
 name|u_int
 name|ports_from_cmdline
 decl_stmt|;
-name|u_short
+name|int
 name|ports
 index|[
 name|MAX_PORTS
@@ -377,6 +377,10 @@ comment|/* If true, permit */
 name|int
 name|challenge_response_authentication
 decl_stmt|;
+name|int
+name|zero_knowledge_password_authentication
+decl_stmt|;
+comment|/* If true, permit jpake auth */
 name|int
 name|permit_empty_passwd
 decl_stmt|;
