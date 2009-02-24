@@ -18,7 +18,7 @@ comment|/*-  * Copyright (c) 2003 Scott Long  * All rights reserved.  *  * Redis
 end_comment
 
 begin_comment
-comment|/*  * Driver for the MCT (Magic Control Technology) USB-RS232 Converter.  * Based on the superb documentation from the linux mct_u232 driver by  * Wolfgang Grandeggar<wolfgang@cec.ch>.  * This device smells a lot like the Belkin F5U103, except that it has  * suffered some mild brain-damage.  This driver is based off of the ubsa.c  * driver from Alexander Kabaev<kan@freebsd.org>.  Merging the two together  * might be useful, though the subtle differences might lead to lots of  * #ifdef's.  */
+comment|/*  * Driver for the MCT (Magic Control Technology) USB-RS232 Converter.  * Based on the superb documentation from the linux mct_u232 driver by  * Wolfgang Grandeggar<wolfgang@cec.ch>.  * This device smells a lot like the Belkin F5U103, except that it has  * suffered some mild brain-damage.  This driver is based off of the ubsa.c  * driver from Alexander Kabaev<kan@FreeBSD.org>.  Merging the two together  * might be useful, though the subtle differences might lead to lots of  * #ifdef's.  */
 end_comment
 
 begin_comment
