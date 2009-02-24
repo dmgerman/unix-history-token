@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2008 AnyWi Technologies  * Author: Andrea Guzzo<aguz
 end_comment
 
 begin_comment
-comment|/*  * NOTE:  *  * - The detour through the tty layer is ridiculously expensive wrt  *   buffering due to the high speeds.  *  *   We should consider adding a simple r/w device which allows  *   attaching of PPP in a more efficient way.  *  * NOTE:  *  * - The device ID's are stored in "core/usb2_msctest.c"  */
+comment|/*  * NOTE:  *  * - The detour through the tty layer is ridiculously expensive wrt  *   buffering due to the high speeds.  *  *   We should consider adding a simple r/w device which allows  *   attaching of PPP in a more efficient way.  *  */
 end_comment
 
 begin_include
@@ -138,7 +138,7 @@ name|CTLFLAG_RW
 argument_list|,
 literal|0
 argument_list|,
-literal|"USB u3g"
+literal|"USB 3g"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -159,7 +159,7 @@ name|u3g_debug
 argument_list|,
 literal|0
 argument_list|,
-literal|"u3g debug level"
+literal|"Debug level"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -250,7 +250,7 @@ begin_define
 define|#
 directive|define
 name|U3GFL_NONE
-value|0x00
+value|0x0000
 end_define
 
 begin_comment
@@ -261,7 +261,7 @@ begin_define
 define|#
 directive|define
 name|U3GFL_HUAWEI_INIT
-value|0x01
+value|0x0001
 end_define
 
 begin_comment
@@ -272,7 +272,7 @@ begin_define
 define|#
 directive|define
 name|U3GFL_SCSI_EJECT
-value|0x02
+value|0x0002
 end_define
 
 begin_comment
@@ -283,26 +283,23 @@ begin_define
 define|#
 directive|define
 name|U3GFL_SIERRA_INIT
-value|0x04
+value|0x0004
 end_define
 
 begin_comment
 comment|/* Init command required */
 end_comment
 
-begin_struct
-struct|struct
-name|u3g_speeds_s
-block|{
-name|uint32_t
-name|ispeed
-decl_stmt|;
-name|uint32_t
-name|ospeed
-decl_stmt|;
-block|}
-struct|;
-end_struct
+begin_define
+define|#
+directive|define
+name|U3GFL_SAEL_M460_INIT
+value|0x0008
+end_define
+
+begin_comment
+comment|/* Init device */
+end_comment
 
 begin_enum
 enum|enum
@@ -626,18 +623,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static const struct u3g_speeds_s u3g_speeds[U3GSP_MAX] = { 	[U3GSP_GPRS] = {64000, 64000}, 	[U3GSP_EDGE] = {384000, 64000}, 	[U3GSP_CDMA] = {384000, 64000}, 	[U3GSP_UMTS] = {384000, 64000}, 	[U3GSP_HSDPA] = {1200000, 384000}, 	[U3GSP_HSUPA] = {1200000, 384000}, 	[U3GSP_HSPA] = {7200000, 384000}, };
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -760,36 +745,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* Huawei specific defines */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|U3GINFO
-parameter_list|(
-name|flag
-parameter_list|,
-name|speed
-parameter_list|)
-value|((flag)|((speed) * 256))
-end_define
-
-begin_define
-define|#
-directive|define
-name|U3G_GET_SPEED
-parameter_list|(
-name|uaa
-parameter_list|)
-value|(USB_GET_DRIVER_INFO(uaa) / 256)
-end_define
-
-begin_comment
-comment|/*  * NOTE: The entries marked with XXX should be checked for the correct  * speed indication to set the buffer sizes.  */
-end_comment
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -807,7 +762,7 @@ argument|USB_VENDOR_OPTION
 argument_list|,
 argument|USB_PRODUCT_OPTION_GT3G
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
@@ -818,7 +773,7 @@ argument|USB_VENDOR_OPTION
 argument_list|,
 argument|USB_PRODUCT_OPTION_GT3GQUAD
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
@@ -829,7 +784,7 @@ argument|USB_VENDOR_OPTION
 argument_list|,
 argument|USB_PRODUCT_OPTION_GT3GPLUS
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
@@ -840,7 +795,7 @@ argument|USB_VENDOR_OPTION
 argument_list|,
 argument|USB_PRODUCT_OPTION_GTMAX36
 argument_list|,
-argument|U3GINFO(U3GSP_HSDPA, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
@@ -851,7 +806,7 @@ argument|USB_VENDOR_OPTION
 argument_list|,
 argument|USB_PRODUCT_OPTION_GTMAXHSUPA
 argument_list|,
-argument|U3GINFO(U3GSP_HSDPA, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
@@ -862,7 +817,7 @@ argument|USB_VENDOR_OPTION
 argument_list|,
 argument|USB_PRODUCT_OPTION_VODAFONEMC3G
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
@@ -874,7 +829,7 @@ argument|USB_VENDOR_QUALCOMMINC
 argument_list|,
 argument|USB_PRODUCT_QUALCOMMINC_ZTE_STOR
 argument_list|,
-argument|U3GINFO(U3GSP_CDMA, U3GFL_SCSI_EJECT)
+argument|U3GFL_SCSI_EJECT
 argument_list|)
 block|}
 block|,
@@ -885,7 +840,7 @@ argument|USB_VENDOR_QUALCOMMINC
 argument_list|,
 argument|USB_PRODUCT_QUALCOMMINC_CDMA_MSM
 argument_list|,
-argument|U3GINFO(U3GSP_CDMA, U3GFL_SCSI_EJECT)
+argument|U3GFL_SCSI_EJECT
 argument_list|)
 block|}
 block|,
@@ -897,7 +852,7 @@ argument|USB_VENDOR_HUAWEI
 argument_list|,
 argument|USB_PRODUCT_HUAWEI_MOBILE
 argument_list|,
-argument|U3GINFO(U3GSP_HSDPA, U3GFL_HUAWEI_INIT)
+argument|U3GFL_HUAWEI_INIT
 argument_list|)
 block|}
 block|,
@@ -908,7 +863,7 @@ argument|USB_VENDOR_HUAWEI
 argument_list|,
 argument|USB_PRODUCT_HUAWEI_E220
 argument_list|,
-argument|U3GINFO(U3GSP_HSPA, U3GFL_HUAWEI_INIT)
+argument|U3GFL_HUAWEI_INIT
 argument_list|)
 block|}
 block|,
@@ -920,7 +875,7 @@ argument|USB_VENDOR_NOVATEL
 argument_list|,
 argument|USB_PRODUCT_NOVATEL_CDMA_MODEM
 argument_list|,
-argument|U3GINFO(U3GSP_CDMA, U3GFL_SCSI_EJECT)
+argument|U3GFL_SCSI_EJECT
 argument_list|)
 block|}
 block|,
@@ -931,11 +886,10 @@ argument|USB_VENDOR_NOVATEL
 argument_list|,
 argument|USB_PRODUCT_NOVATEL_ES620
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_SCSI_EJECT)
+argument|U3GFL_SCSI_EJECT
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -943,7 +897,7 @@ argument|USB_VENDOR_NOVATEL
 argument_list|,
 argument|USB_PRODUCT_NOVATEL_MC950D
 argument_list|,
-argument|U3GINFO(U3GSP_HSUPA, U3GFL_SCSI_EJECT)
+argument|U3GFL_SCSI_EJECT
 argument_list|)
 block|}
 block|,
@@ -954,11 +908,10 @@ argument|USB_VENDOR_NOVATEL
 argument_list|,
 argument|USB_PRODUCT_NOVATEL_U720
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_SCSI_EJECT)
+argument|U3GFL_SCSI_EJECT
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -966,11 +919,10 @@ argument|USB_VENDOR_NOVATEL
 argument_list|,
 argument|USB_PRODUCT_NOVATEL_U727
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_SCSI_EJECT)
+argument|U3GFL_SCSI_EJECT
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -978,7 +930,7 @@ argument|USB_VENDOR_NOVATEL
 argument_list|,
 argument|USB_PRODUCT_NOVATEL_U740
 argument_list|,
-argument|U3GINFO(U3GSP_HSDPA, U3GFL_SCSI_EJECT)
+argument|U3GFL_SCSI_EJECT
 argument_list|)
 block|}
 block|,
@@ -989,7 +941,7 @@ argument|USB_VENDOR_NOVATEL
 argument_list|,
 argument|USB_PRODUCT_NOVATEL_U740_2
 argument_list|,
-argument|U3GINFO(U3GSP_HSDPA, U3GFL_SCSI_EJECT)
+argument|U3GFL_SCSI_EJECT
 argument_list|)
 block|}
 block|,
@@ -1000,11 +952,10 @@ argument|USB_VENDOR_NOVATEL
 argument_list|,
 argument|USB_PRODUCT_NOVATEL_U870
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_SCSI_EJECT)
+argument|U3GFL_SCSI_EJECT
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1012,11 +963,10 @@ argument|USB_VENDOR_NOVATEL
 argument_list|,
 argument|USB_PRODUCT_NOVATEL_V620
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_SCSI_EJECT)
+argument|U3GFL_SCSI_EJECT
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1024,11 +974,10 @@ argument|USB_VENDOR_NOVATEL
 argument_list|,
 argument|USB_PRODUCT_NOVATEL_V640
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_SCSI_EJECT)
+argument|U3GFL_SCSI_EJECT
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1036,11 +985,10 @@ argument|USB_VENDOR_NOVATEL
 argument_list|,
 argument|USB_PRODUCT_NOVATEL_V720
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_SCSI_EJECT)
+argument|U3GFL_SCSI_EJECT
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1048,7 +996,7 @@ argument|USB_VENDOR_NOVATEL
 argument_list|,
 argument|USB_PRODUCT_NOVATEL_V740
 argument_list|,
-argument|U3GINFO(U3GSP_HSDPA, U3GFL_SCSI_EJECT)
+argument|U3GFL_SCSI_EJECT
 argument_list|)
 block|}
 block|,
@@ -1059,7 +1007,7 @@ argument|USB_VENDOR_NOVATEL
 argument_list|,
 argument|USB_PRODUCT_NOVATEL_X950D
 argument_list|,
-argument|U3GINFO(U3GSP_HSUPA, U3GFL_SCSI_EJECT)
+argument|U3GFL_SCSI_EJECT
 argument_list|)
 block|}
 block|,
@@ -1070,7 +1018,7 @@ argument|USB_VENDOR_NOVATEL
 argument_list|,
 argument|USB_PRODUCT_NOVATEL_XU870
 argument_list|,
-argument|U3GINFO(U3GSP_HSDPA, U3GFL_SCSI_EJECT)
+argument|U3GFL_SCSI_EJECT
 argument_list|)
 block|}
 block|,
@@ -1081,7 +1029,7 @@ argument|USB_VENDOR_NOVATEL
 argument_list|,
 argument|USB_PRODUCT_NOVATEL_ZEROCD
 argument_list|,
-argument|U3GINFO(U3GSP_HSUPA, U3GFL_SCSI_EJECT)
+argument|U3GFL_SCSI_EJECT
 argument_list|)
 block|}
 block|,
@@ -1092,7 +1040,7 @@ argument|USB_VENDOR_DELL
 argument_list|,
 argument|USB_PRODUCT_DELL_U740
 argument_list|,
-argument|U3GINFO(U3GSP_HSDPA, U3GFL_SCSI_EJECT)
+argument|U3GFL_SCSI_EJECT
 argument_list|)
 block|}
 block|,
@@ -1104,11 +1052,10 @@ argument|USB_VENDOR_MERLIN
 argument_list|,
 argument|USB_PRODUCT_MERLIN_V620
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 comment|/* OEM: Sierra Wireless: */
 block|{
 name|USB_VPI
@@ -1117,11 +1064,10 @@ argument|USB_VENDOR_SIERRA
 argument_list|,
 argument|USB_PRODUCT_SIERRA_AIRCARD580
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1129,11 +1075,10 @@ argument|USB_VENDOR_SIERRA
 argument_list|,
 argument|USB_PRODUCT_SIERRA_AIRCARD595
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1141,11 +1086,10 @@ argument|USB_VENDOR_SIERRA
 argument_list|,
 argument|USB_PRODUCT_SIERRA_AC595U
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1153,11 +1097,10 @@ argument|USB_VENDOR_SIERRA
 argument_list|,
 argument|USB_PRODUCT_SIERRA_AC597E
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1165,11 +1108,10 @@ argument|USB_VENDOR_SIERRA
 argument_list|,
 argument|USB_PRODUCT_SIERRA_C597
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1177,11 +1119,10 @@ argument|USB_VENDOR_SIERRA
 argument_list|,
 argument|USB_PRODUCT_SIERRA_AC880
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1189,11 +1130,10 @@ argument|USB_VENDOR_SIERRA
 argument_list|,
 argument|USB_PRODUCT_SIERRA_AC880E
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1201,11 +1141,10 @@ argument|USB_VENDOR_SIERRA
 argument_list|,
 argument|USB_PRODUCT_SIERRA_AC880U
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1213,11 +1152,10 @@ argument|USB_VENDOR_SIERRA
 argument_list|,
 argument|USB_PRODUCT_SIERRA_AC881
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1225,11 +1163,10 @@ argument|USB_VENDOR_SIERRA
 argument_list|,
 argument|USB_PRODUCT_SIERRA_AC881E
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1237,11 +1174,10 @@ argument|USB_VENDOR_SIERRA
 argument_list|,
 argument|USB_PRODUCT_SIERRA_AC881U
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1249,11 +1185,10 @@ argument|USB_VENDOR_SIERRA
 argument_list|,
 argument|USB_PRODUCT_SIERRA_EM5625
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1261,11 +1196,10 @@ argument|USB_VENDOR_SIERRA
 argument_list|,
 argument|USB_PRODUCT_SIERRA_MC5720
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1273,11 +1207,10 @@ argument|USB_VENDOR_SIERRA
 argument_list|,
 argument|USB_PRODUCT_SIERRA_MC5720_2
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1285,11 +1218,10 @@ argument|USB_VENDOR_SIERRA
 argument_list|,
 argument|USB_PRODUCT_SIERRA_MC5725
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1297,11 +1229,10 @@ argument|USB_VENDOR_SIERRA
 argument_list|,
 argument|USB_PRODUCT_SIERRA_MINI5725
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1309,11 +1240,10 @@ argument|USB_VENDOR_SIERRA
 argument_list|,
 argument|USB_PRODUCT_SIERRA_AIRCARD875
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1321,11 +1251,10 @@ argument|USB_VENDOR_SIERRA
 argument_list|,
 argument|USB_PRODUCT_SIERRA_MC8755
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1333,11 +1262,10 @@ argument|USB_VENDOR_SIERRA
 argument_list|,
 argument|USB_PRODUCT_SIERRA_MC8755_2
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1345,11 +1273,10 @@ argument|USB_VENDOR_SIERRA
 argument_list|,
 argument|USB_PRODUCT_SIERRA_MC8755_3
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1357,11 +1284,10 @@ argument|USB_VENDOR_SIERRA
 argument_list|,
 argument|USB_PRODUCT_SIERRA_MC8765
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1369,11 +1295,10 @@ argument|USB_VENDOR_SIERRA
 argument_list|,
 argument|USB_PRODUCT_SIERRA_AC875U
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1381,11 +1306,10 @@ argument|USB_VENDOR_SIERRA
 argument_list|,
 argument|USB_PRODUCT_SIERRA_MC8775_2
 argument_list|,
-argument|U3GINFO(U3GSP_HSDPA, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1393,7 +1317,7 @@ argument|USB_VENDOR_HP
 argument_list|,
 argument|USB_PRODUCT_HP_HS2300
 argument_list|,
-argument|U3GINFO(U3GSP_HSDPA, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
@@ -1404,11 +1328,10 @@ argument|USB_VENDOR_SIERRA
 argument_list|,
 argument|USB_PRODUCT_SIERRA_MC8780
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1416,11 +1339,10 @@ argument|USB_VENDOR_SIERRA
 argument_list|,
 argument|USB_PRODUCT_SIERRA_MC8781
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 block|{
 name|USB_VPI
 argument_list|(
@@ -1428,11 +1350,10 @@ argument|USB_VENDOR_HP
 argument_list|,
 argument|USB_PRODUCT_HP_HS2300
 argument_list|,
-argument|U3GINFO(U3GSP_HSPA, U3GFL_NONE)
+argument|U3GFL_NONE
 argument_list|)
 block|}
 block|,
-comment|/* XXX */
 comment|/* Sierra TruInstaller device ID */
 block|{
 name|USB_VPI
@@ -1441,7 +1362,19 @@ argument|USB_VENDOR_SIERRA
 argument_list|,
 argument|USB_PRODUCT_SIERRA_TRUINSTALL
 argument_list|,
-argument|U3GINFO(U3GSP_UMTS, U3GFL_SIERRA_INIT)
+argument|U3GFL_SIERRA_INIT
+argument_list|)
+block|}
+block|,
+comment|/* PRUEBA SILABS */
+block|{
+name|USB_VPI
+argument_list|(
+argument|USB_VENDOR_SILABS
+argument_list|,
+argument|USB_PRODUCT_SILABS_SAEL
+argument_list|,
+argument|U3GFL_SAEL_M460_INIT
 argument_list|)
 block|}
 block|, }
@@ -1619,6 +1552,724 @@ argument_list|)
 condition|)
 block|{
 comment|/* ignore any errors */
+block|}
+return|return;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|u3g_sael_m460_init
+parameter_list|(
+name|struct
+name|usb2_device
+modifier|*
+name|udev
+parameter_list|)
+block|{
+specifier|static
+specifier|const
+name|uint8_t
+name|setup
+index|[]
+index|[
+literal|24
+index|]
+init|=
+block|{
+block|{
+literal|0x41
+block|,
+literal|0x11
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x41
+block|,
+literal|0x00
+block|,
+literal|0x01
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x41
+block|,
+literal|0x13
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x10
+block|,
+literal|0x00
+block|,
+literal|0x01
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x40
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0xc1
+block|,
+literal|0x0f
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x40
+block|,
+literal|0x02
+block|}
+block|,
+block|{
+literal|0xc1
+block|,
+literal|0x08
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x01
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x41
+block|,
+literal|0x07
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0xc1
+block|,
+literal|0x0f
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x02
+block|}
+block|,
+block|{
+literal|0x41
+block|,
+literal|0x01
+block|,
+literal|0x08
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x41
+block|,
+literal|0x07
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x41
+block|,
+literal|0x03
+block|,
+literal|0x00
+block|,
+literal|0x08
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x41
+block|,
+literal|0x19
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x06
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x11
+block|,
+literal|0x13
+block|}
+block|,
+block|{
+literal|0x41
+block|,
+literal|0x13
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x10
+block|,
+literal|0x00
+block|,
+literal|0x09
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x80
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x0a
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x0a
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x41
+block|,
+literal|0x12
+block|,
+literal|0x03
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x41
+block|,
+literal|0x01
+block|,
+literal|0x08
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x41
+block|,
+literal|0x07
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x41
+block|,
+literal|0x03
+block|,
+literal|0x00
+block|,
+literal|0x08
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x41
+block|,
+literal|0x19
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x06
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x11
+block|,
+literal|0x13
+block|}
+block|,
+block|{
+literal|0x41
+block|,
+literal|0x13
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x10
+block|,
+literal|0x00
+block|,
+literal|0x09
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x80
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x0a
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x0a
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x41
+block|,
+literal|0x07
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|, 	}
+decl_stmt|;
+name|struct
+name|usb2_device_request
+name|req
+decl_stmt|;
+name|uint16_t
+name|len
+decl_stmt|;
+name|uint8_t
+name|buf
+index|[
+literal|0x300
+index|]
+decl_stmt|;
+name|uint8_t
+name|n
+decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|1
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|usb2_req_set_alt_interface_no
+argument_list|(
+name|udev
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+block|{
+name|DPRINTFN
+argument_list|(
+literal|0
+argument_list|,
+literal|"Alt setting 0 failed\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
+name|n
+operator|!=
+operator|(
+sizeof|sizeof
+argument_list|(
+name|setup
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|setup
+index|[
+literal|0
+index|]
+argument_list|)
+operator|)
+condition|;
+name|n
+operator|++
+control|)
+block|{
+name|memcpy
+argument_list|(
+operator|&
+name|req
+argument_list|,
+name|setup
+index|[
+name|n
+index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|req
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|len
+operator|=
+name|UGETW
+argument_list|(
+name|req
+operator|.
+name|wLength
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|req
+operator|.
+name|bmRequestType
+operator|&
+name|UE_DIR_IN
+condition|)
+block|{
+if|if
+condition|(
+name|len
+operator|>
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+condition|)
+block|{
+name|DPRINTFN
+argument_list|(
+literal|0
+argument_list|,
+literal|"too small buffer\n"
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|usb2_do_request
+argument_list|(
+name|udev
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|req
+argument_list|,
+name|buf
+argument_list|)
+condition|)
+block|{
+name|DPRINTFN
+argument_list|(
+literal|0
+argument_list|,
+literal|"request %u failed\n"
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|n
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|len
+operator|>
+operator|(
+sizeof|sizeof
+argument_list|(
+name|setup
+index|[
+literal|0
+index|]
+argument_list|)
+operator|-
+literal|8
+operator|)
+condition|)
+block|{
+name|DPRINTFN
+argument_list|(
+literal|0
+argument_list|,
+literal|"too small buffer\n"
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|usb2_do_request
+argument_list|(
+name|udev
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|req
+argument_list|,
+name|__DECONST
+argument_list|(
+name|uint8_t
+operator|*
+argument_list|,
+operator|&
+name|setup
+index|[
+name|n
+index|]
+index|[
+literal|8
+index|]
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|DPRINTFN
+argument_list|(
+literal|0
+argument_list|,
+literal|"request %u failed\n"
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|n
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
 block|}
 return|return;
 block|}
@@ -2026,6 +2677,9 @@ name|usb2_interface_descriptor
 modifier|*
 name|id
 decl_stmt|;
+name|uint32_t
+name|flags
+decl_stmt|;
 name|uint8_t
 name|m
 decl_stmt|;
@@ -2046,6 +2700,26 @@ argument_list|(
 literal|"sc=%p\n"
 argument_list|,
 name|sc
+argument_list|)
+expr_stmt|;
+name|flags
+operator|=
+name|USB_GET_DRIVER_INFO
+argument_list|(
+name|uaa
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|U3GFL_SAEL_M460_INIT
+condition|)
+name|u3g_sael_m460_init
+argument_list|(
+name|uaa
+operator|->
+name|device
 argument_list|)
 expr_stmt|;
 comment|/* copy in USB config */
