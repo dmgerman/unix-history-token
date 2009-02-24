@@ -30,24 +30,6 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|USB_NO_POLL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|USB_NO_POLL
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|USB_USE_CONDVAR
 end_ifndef
 

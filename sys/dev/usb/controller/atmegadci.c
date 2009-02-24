@@ -769,9 +769,6 @@ name|bus
 argument_list|)
 decl_stmt|;
 name|uint8_t
-name|use_polling
-decl_stmt|;
-name|uint8_t
 name|temp
 decl_stmt|;
 if|if
@@ -786,21 +783,6 @@ condition|)
 block|{
 return|return;
 block|}
-name|use_polling
-operator|=
-name|mtx_owned
-argument_list|(
-name|xfer
-operator|->
-name|xroot
-operator|->
-name|xfer_mtx
-argument_list|)
-condition|?
-literal|1
-else|:
-literal|0
-expr_stmt|;
 name|temp
 operator|=
 name|ATMEGA_READ_1
@@ -822,20 +804,6 @@ name|ATMEGA_UDCON_RMWKUP
 argument_list|)
 expr_stmt|;
 comment|/* wait 8 milliseconds */
-if|if
-condition|(
-name|use_polling
-condition|)
-block|{
-comment|/* polling */
-name|DELAY
-argument_list|(
-literal|8000
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 comment|/* Wait for reset to complete. */
 name|usb2_pause_mtx
 argument_list|(
@@ -851,7 +819,6 @@ operator|/
 literal|125
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* hardware should have cleared RMWKUP bit */
 block|}
 end_function
@@ -6329,9 +6296,6 @@ decl_stmt|;
 name|uint16_t
 name|index
 decl_stmt|;
-name|uint8_t
-name|use_polling
-decl_stmt|;
 name|USB_BUS_LOCK_ASSERT
 argument_list|(
 operator|&
@@ -6417,21 +6381,6 @@ name|req
 operator|.
 name|wIndex
 argument_list|)
-expr_stmt|;
-name|use_polling
-operator|=
-name|mtx_owned
-argument_list|(
-name|xfer
-operator|->
-name|xroot
-operator|->
-name|xfer_mtx
-argument_list|)
-condition|?
-literal|1
-else|:
-literal|0
 expr_stmt|;
 comment|/* demultiplex the control request */
 switch|switch
@@ -8512,12 +8461,6 @@ name|xfer_unsetup
 operator|=
 operator|&
 name|atmegadci_xfer_unsetup
-block|,
-operator|.
-name|do_poll
-operator|=
-operator|&
-name|atmegadci_do_poll
 block|,
 operator|.
 name|get_hw_ep_profile

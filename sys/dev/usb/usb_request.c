@@ -612,7 +612,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_do_request_flags and usb2_do_request  *  * Description of arguments passed to these functions:  *  * "udev" - this is the "usb2_device" structure pointer on which the  * request should be performed. It is possible to call this function  * in both Host Side mode and Device Side mode.  *  * "mtx" - if this argument is non-NULL the mutex pointed to by it  * will get dropped and picked up during the execution of this  * function, hence this function sometimes needs to sleep. If this  * argument is NULL it has no effect.  *  * "req" - this argument must always be non-NULL and points to an  * 8-byte structure holding the USB request to be done. The USB  * request structure has a bit telling the direction of the USB  * request, if it is a read or a write.  *  * "data" - if the "wLength" part of the structure pointed to by "req"  * is non-zero this argument must point to a valid kernel buffer which  * can hold at least "wLength" bytes. If "wLength" is zero "data" can  * be NULL.  *  * "flags" - here is a list of valid flags:  *  *  o USB_SHORT_XFER_OK: allows the data transfer to be shorter than  *  specified  *  *  o USB_USE_POLLING: forces the transfer to complete from the  *  current context by polling the interrupt handler. This flag can be  *  used to perform USB transfers after that the kernel has crashed.  *  *  o USB_DELAY_STATUS_STAGE: allows the status stage to be performed  *  at a later point in time. This is tunable by the "hw.usb.ss_delay"  *  sysctl. This flag is mostly useful for debugging.  *  *  o USB_USER_DATA_PTR: treat the "data" pointer like a userland  *  pointer.  *  * "actlen" - if non-NULL the actual transfer length will be stored in  * the 16-bit unsigned integer pointed to by "actlen". This  * information is mostly useful when the "USB_SHORT_XFER_OK" flag is  * used.  *  * "timeout" - gives the timeout for the control transfer in  * milliseconds. A "timeout" value less than 50 milliseconds is  * treated like a 50 millisecond timeout. A "timeout" value greater  * than 30 seconds is treated like a 30 second timeout. This USB stack  * does not allow control requests without a timeout.  *  * NOTE: This function is thread safe. All calls to  * "usb2_do_request_flags" will be serialised by the use of an  * internal "sx_lock".  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_do_request_flags and usb2_do_request  *  * Description of arguments passed to these functions:  *  * "udev" - this is the "usb2_device" structure pointer on which the  * request should be performed. It is possible to call this function  * in both Host Side mode and Device Side mode.  *  * "mtx" - if this argument is non-NULL the mutex pointed to by it  * will get dropped and picked up during the execution of this  * function, hence this function sometimes needs to sleep. If this  * argument is NULL it has no effect.  *  * "req" - this argument must always be non-NULL and points to an  * 8-byte structure holding the USB request to be done. The USB  * request structure has a bit telling the direction of the USB  * request, if it is a read or a write.  *  * "data" - if the "wLength" part of the structure pointed to by "req"  * is non-zero this argument must point to a valid kernel buffer which  * can hold at least "wLength" bytes. If "wLength" is zero "data" can  * be NULL.  *  * "flags" - here is a list of valid flags:  *  *  o USB_SHORT_XFER_OK: allows the data transfer to be shorter than  *  specified  *  *  o USB_DELAY_STATUS_STAGE: allows the status stage to be performed  *  at a later point in time. This is tunable by the "hw.usb.ss_delay"  *  sysctl. This flag is mostly useful for debugging.  *  *  o USB_USER_DATA_PTR: treat the "data" pointer like a userland  *  pointer.  *  * "actlen" - if non-NULL the actual transfer length will be stored in  * the 16-bit unsigned integer pointed to by "actlen". This  * information is mostly useful when the "USB_SHORT_XFER_OK" flag is  * used.  *  * "timeout" - gives the timeout for the control transfer in  * milliseconds. A "timeout" value less than 50 milliseconds is  * treated like a 50 millisecond timeout. A "timeout" value greater  * than 30 seconds is treated like a 30 second timeout. This USB stack  * does not allow control requests without a timeout.  *  * NOTE: This function is thread safe. All calls to  * "usb2_do_request_flags" will be serialised by the use of an  * internal "sx_lock".  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -1288,29 +1288,6 @@ name|xfer
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-operator|(
-name|flags
-operator|&
-name|USB_USE_POLLING
-operator|)
-operator|||
-name|cold
-condition|)
-block|{
-name|usb2_do_poll
-argument_list|(
-name|udev
-operator|->
-name|default_xfer
-argument_list|,
-name|USB_DEFAULT_XFER_MAX
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|usb2_cv_wait
 argument_list|(
 name|udev
@@ -1324,7 +1301,6 @@ operator|->
 name|xfer_mtx
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|err
 operator|=

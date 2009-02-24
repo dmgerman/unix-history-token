@@ -176,17 +176,6 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|do_poll
-function_decl|)
-parameter_list|(
-name|struct
-name|usb2_bus
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
 name|xfer_setup
 function_decl|)
 parameter_list|(

@@ -86,11 +86,6 @@ name|ucr_flags
 decl_stmt|;
 define|#
 directive|define
-name|USB_USE_POLLING
-value|0x0001
-comment|/* internal flag */
-define|#
-directive|define
 name|USB_SHORT_XFER_OK
 value|0x0004
 comment|/* allow short reads */

@@ -13664,9 +13664,6 @@ decl_stmt|;
 name|uint8_t
 name|l
 decl_stmt|;
-name|uint8_t
-name|use_polling
-decl_stmt|;
 name|USB_BUS_LOCK_ASSERT
 argument_list|(
 operator|&
@@ -13748,21 +13745,6 @@ name|req
 operator|.
 name|wIndex
 argument_list|)
-expr_stmt|;
-name|use_polling
-operator|=
-name|mtx_owned
-argument_list|(
-name|xfer
-operator|->
-name|xroot
-operator|->
-name|xfer_mtx
-argument_list|)
-condition|?
-literal|1
-else|:
-literal|0
 expr_stmt|;
 name|DPRINTFN
 argument_list|(
@@ -14456,20 +14438,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* wait 20ms for resume sequence to complete */
-if|if
-condition|(
-name|use_polling
-condition|)
-block|{
-comment|/* polling */
-name|DELAY
-argument_list|(
-literal|20000
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|usb2_pause_mtx
 argument_list|(
 operator|&
@@ -14484,7 +14452,6 @@ operator|/
 literal|50
 argument_list|)
 expr_stmt|;
-block|}
 name|EOWRITE4
 argument_list|(
 name|sc
@@ -14508,21 +14475,7 @@ comment|/* High Speed */
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* settle time */
-if|if
-condition|(
-name|use_polling
-condition|)
-block|{
-comment|/* polling */
-name|DELAY
-argument_list|(
-literal|4000
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
+comment|/* 4ms settle time */
 name|usb2_pause_mtx
 argument_list|(
 operator|&
@@ -14537,7 +14490,6 @@ operator|/
 literal|250
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|UHF_PORT_POWER
@@ -15356,22 +15308,6 @@ operator||
 name|EHCI_PS_PR
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|use_polling
-condition|)
-block|{
-comment|/* polling */
-name|DELAY
-argument_list|(
-name|USB_PORT_ROOT_RESET_DELAY
-operator|*
-literal|1000
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 comment|/* Wait for reset to complete. */
 name|usb2_pause_mtx
 argument_list|(
@@ -15388,7 +15324,6 @@ name|USB_PORT_ROOT_RESET_DELAY
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Terminate reset sequence. */
 if|if
 condition|(
@@ -15410,22 +15345,6 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|use_polling
-condition|)
-block|{
-comment|/* polling */
-name|DELAY
-argument_list|(
-name|EHCI_PORT_RESET_COMPLETE
-operator|*
-literal|1000
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 comment|/* Wait for HC to complete reset. */
 name|usb2_pause_mtx
 argument_list|(
@@ -15442,7 +15361,6 @@ name|EHCI_PORT_RESET_COMPLETE
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|v
 operator|=
 name|EOREAD4
@@ -17648,11 +17566,6 @@ operator|.
 name|xfer_unsetup
 operator|=
 name|ehci_xfer_unsetup
-block|,
-operator|.
-name|do_poll
-operator|=
-name|ehci_do_poll
 block|,
 operator|.
 name|get_dma_delay

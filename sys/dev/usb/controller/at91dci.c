@@ -978,9 +978,6 @@ operator|->
 name|bus
 argument_list|)
 decl_stmt|;
-name|uint8_t
-name|use_polling
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -995,21 +992,6 @@ condition|)
 block|{
 return|return;
 block|}
-name|use_polling
-operator|=
-name|mtx_owned
-argument_list|(
-name|xfer
-operator|->
-name|xroot
-operator|->
-name|xfer_mtx
-argument_list|)
-condition|?
-literal|1
-else|:
-literal|0
-expr_stmt|;
 name|AT91_UDP_WRITE_4
 argument_list|(
 name|sc
@@ -1020,20 +1002,6 @@ name|AT91_UDP_GSTATE_ESR
 argument_list|)
 expr_stmt|;
 comment|/* wait 8 milliseconds */
-if|if
-condition|(
-name|use_polling
-condition|)
-block|{
-comment|/* polling */
-name|DELAY
-argument_list|(
-literal|8000
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 comment|/* Wait for reset to complete. */
 name|usb2_pause_mtx
 argument_list|(
@@ -1049,7 +1017,6 @@ operator|/
 literal|125
 argument_list|)
 expr_stmt|;
-block|}
 name|AT91_UDP_WRITE_4
 argument_list|(
 name|sc
@@ -6927,9 +6894,6 @@ decl_stmt|;
 name|uint16_t
 name|index
 decl_stmt|;
-name|uint8_t
-name|use_polling
-decl_stmt|;
 name|USB_BUS_LOCK_ASSERT
 argument_list|(
 operator|&
@@ -7015,21 +6979,6 @@ name|req
 operator|.
 name|wIndex
 argument_list|)
-expr_stmt|;
-name|use_polling
-operator|=
-name|mtx_owned
-argument_list|(
-name|xfer
-operator|->
-name|xroot
-operator|->
-name|xfer_mtx
-argument_list|)
-condition|?
-literal|1
-else|:
-literal|0
 expr_stmt|;
 comment|/* demultiplex the control request */
 switch|switch
@@ -9169,12 +9118,6 @@ name|xfer_unsetup
 operator|=
 operator|&
 name|at91dci_xfer_unsetup
-block|,
-operator|.
-name|do_poll
-operator|=
-operator|&
-name|at91dci_do_poll
 block|,
 operator|.
 name|get_hw_ep_profile
