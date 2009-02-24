@@ -344,6 +344,14 @@ name|NET_RX_RING_SIZE
 value|__RING_SIZE((netif_rx_sring_t *)0, PAGE_SIZE)
 end_define
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|700000
+end_if
+
 begin_comment
 comment|/*  * Should the driver do LRO on the RX end  *  this can be toggled on the fly, but the  *  interface must be reset (down/up) for it  *  to take effect.  */
 end_comment
@@ -367,6 +375,30 @@ name|xn_enable_lro
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|IFCAP_TSO4
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSUM_TSO
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -1897,6 +1929,11 @@ return|return
 name|err
 return|;
 block|}
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|700000
 name|SYSCTL_ADD_INT
 argument_list|(
 name|device_get_sysctl_ctx
@@ -1928,6 +1965,8 @@ argument_list|,
 literal|"Large Receive Offload"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
