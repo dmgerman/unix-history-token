@@ -269,7 +269,7 @@ operator||=
 name|AR_GPIO_OE_OUT_DRV_ALL
 operator|<<
 name|gpio_shift
-operator|,
+expr_stmt|;
 name|OS_REG_WRITE
 argument_list|(
 name|ah
@@ -352,7 +352,7 @@ operator||=
 name|AR_GPIO_OE_OUT_DRV_ALL
 operator|<<
 name|gpio_shift
-operator|,
+expr_stmt|;
 name|OS_REG_WRITE
 argument_list|(
 name|ah
