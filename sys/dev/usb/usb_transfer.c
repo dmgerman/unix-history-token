@@ -3764,13 +3764,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|ppxfer
-index|[
-name|n
-index|]
-operator|=
-name|xfer
-expr_stmt|;
 name|xfer
 operator|->
 name|address
@@ -3790,11 +3783,6 @@ operator|->
 name|xroot
 operator|=
 name|info
-expr_stmt|;
-name|info
-operator|->
-name|setup_refcount
-operator|++
 expr_stmt|;
 name|usb2_callout_init_mtx
 argument_list|(
@@ -3837,6 +3825,13 @@ name|refcount
 operator|++
 expr_stmt|;
 block|}
+comment|/* set transfer pipe pointer */
+name|xfer
+operator|->
+name|pipe
+operator|=
+name|pipe
+expr_stmt|;
 name|parm
 operator|.
 name|size
@@ -3852,26 +3847,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|xfer
-operator|->
-name|pipe
-operator|=
-name|pipe
-expr_stmt|;
-if|if
-condition|(
-name|buf
-condition|)
-block|{
-comment|/* 				 * Increment the pipe refcount. This 				 * basically prevents setting a new 				 * configuration and alternate setting 				 * when USB transfers are in use on 				 * the given interface. Search the USB 				 * code for "pipe->refcount" if you 				 * want more information. 				 */
-name|xfer
-operator|->
-name|pipe
-operator|->
-name|refcount
-operator|++
-expr_stmt|;
-block|}
 name|parm
 operator|.
 name|methods
@@ -3888,7 +3863,7 @@ name|curr_xfer
 operator|=
 name|xfer
 expr_stmt|;
-comment|/* 			 * Call the Host or Device controller transfer setup 			 * routine: 			 */
+comment|/* 			 * Call the Host or Device controller transfer 			 * setup routine: 			 */
 call|(
 name|udev
 operator|->
@@ -3903,16 +3878,43 @@ operator|&
 name|parm
 argument_list|)
 expr_stmt|;
+comment|/* check for error */
 if|if
 condition|(
 name|parm
 operator|.
 name|err
 condition|)
-block|{
 goto|goto
 name|done
 goto|;
+if|if
+condition|(
+name|buf
+condition|)
+block|{
+comment|/* 				 * Increment the pipe refcount. This 				 * basically prevents setting a new 				 * configuration and alternate setting 				 * when USB transfers are in use on 				 * the given interface. Search the USB 				 * code for "pipe->refcount" if you 				 * want more information. 				 */
+name|xfer
+operator|->
+name|pipe
+operator|->
+name|refcount
+operator|++
+expr_stmt|;
+comment|/* 				 * Whenever we set ppxfer[] then we 				 * also need to increment the 				 * "setup_refcount": 				 */
+name|info
+operator|->
+name|setup_refcount
+operator|++
+expr_stmt|;
+comment|/* 				 * Transfer is successfully setup and 				 * can be used: 				 */
+name|ppxfer
+index|[
+name|n
+index|]
+operator|=
+name|xfer
+expr_stmt|;
 block|}
 block|}
 if|if
@@ -4741,15 +4743,16 @@ expr_stmt|;
 if|if
 condition|(
 name|xfer
+operator|==
+name|NULL
 condition|)
-block|{
-if|if
-condition|(
+continue|continue;
+name|info
+operator|=
 name|xfer
 operator|->
-name|pipe
-condition|)
-block|{
+name|xroot
+expr_stmt|;
 name|USB_XFER_LOCK
 argument_list|(
 name|xfer
@@ -4757,14 +4760,12 @@ argument_list|)
 expr_stmt|;
 name|USB_BUS_LOCK
 argument_list|(
-name|xfer
-operator|->
-name|xroot
+name|info
 operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-comment|/* 				 * HINT: when you start/stop a transfer, it 				 * might be a good idea to directly use the 				 * "pxfer[]" structure: 				 * 				 * usb2_transfer_start(sc->pxfer[0]); 				 * usb2_transfer_stop(sc->pxfer[0]); 				 * 				 * That way, if your code has many parts that 				 * will not stop running under the same 				 * lock, in other words "xfer_mtx", the 				 * usb2_transfer_start and 				 * usb2_transfer_stop functions will simply 				 * return when they detect a NULL pointer 				 * argument. 				 * 				 * To avoid any races we clear the "pxfer[]" 				 * pointer while holding the private mutex 				 * of the driver: 				 */
+comment|/* 		 * HINT: when you start/stop a transfer, it might be a 		 * good idea to directly use the "pxfer[]" structure: 		 * 		 * usb2_transfer_start(sc->pxfer[0]); 		 * usb2_transfer_stop(sc->pxfer[0]); 		 * 		 * That way, if your code has many parts that will not 		 * stop running under the same lock, in other words 		 * "xfer_mtx", the usb2_transfer_start and 		 * usb2_transfer_stop functions will simply return 		 * when they detect a NULL pointer argument. 		 * 		 * To avoid any races we clear the "pxfer[]" pointer 		 * while holding the private mutex of the driver: 		 */
 name|pxfer
 index|[
 name|n_setup
@@ -4774,9 +4775,7 @@ name|NULL
 expr_stmt|;
 name|USB_BUS_UNLOCK
 argument_list|(
-name|xfer
-operator|->
-name|xroot
+name|info
 operator|->
 name|bus
 argument_list|)
@@ -4799,13 +4798,11 @@ name|flags_int
 operator|.
 name|bdma_enable
 condition|)
-block|{
 name|needs_delay
 operator|=
 literal|1
 expr_stmt|;
-block|}
-comment|/* 				 * NOTE: default pipe does not have an 				 * interface, even if pipe->iface_index == 0 				 */
+comment|/* 		 * NOTE: default pipe does not have an 		 * interface, even if pipe->iface_index == 0 		 */
 name|xfer
 operator|->
 name|pipe
@@ -4813,18 +4810,6 @@ operator|->
 name|refcount
 operator|--
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* clear the transfer pointer */
-name|pxfer
-index|[
-name|n_setup
-index|]
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 name|usb2_callout_drain
 argument_list|(
 operator|&
@@ -4832,19 +4817,6 @@ name|xfer
 operator|->
 name|timeout_handle
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|xfer
-operator|->
-name|xroot
-condition|)
-block|{
-name|info
-operator|=
-name|xfer
-operator|->
-name|xroot
 expr_stmt|;
 name|USB_BUS_LOCK
 argument_list|(
@@ -4898,8 +4870,6 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 block|}
 block|}
 block|}
