@@ -9811,7 +9811,7 @@ operator|->
 name|end
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Delete the entry (which may delete the object) only after 		 * removing all pmap entries pointing to its pages. 		 * (Otherwise, its page frames may be reallocated, and any 		 * modify bits will be set in the wrong object!) 		 */
+comment|/* 		 * Delete the entry only after removing all pmap 		 * entries pointing to its pages.  (Otherwise, its 		 * page frames may be reallocated, and any modify bits 		 * will be set in the wrong object!) 		 */
 name|vm_map_entry_delete
 argument_list|(
 name|map
