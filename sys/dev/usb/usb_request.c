@@ -2078,7 +2078,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_get_desc  *  * This function can be used to retrieve USB descriptors. It contains  * some additional logic like zeroing of missing descriptor bytes and  * retrying an USB descriptor in case of failure. The "min_len"  * argument specifies the minimum descriptor length. The "max_len"  * argument specifies the maximum descriptor length. If the real  * descriptor length is less than the minimum length the missing  * byte(s) will be zeroed. The length field, first byte, of the USB  * descriptor will get overwritten in case it indicates a length that  * is too big. Also the type field, second byte, of the USB descriptor  * will get forced to the correct type.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_req_get_desc  *  * This function can be used to retrieve USB descriptors. It contains  * some additional logic like zeroing of missing descriptor bytes and  * retrying an USB descriptor in case of failure. The "min_len"  * argument specifies the minimum descriptor length. The "max_len"  * argument specifies the maximum descriptor length. If the real  * descriptor length is less than the minimum length the missing  * byte(s) will be zeroed. The type field, the second byte of the USB  * descriptor, will get forced to the correct type. If the "actlen"  * pointer is non-NULL, the actual length of the transfer will get  * stored in the 16-bit unsigned integer which it is pointing to. The  * first byte of the descriptor will not get updated. If the "actlen"  * pointer is NULL the first byte of the descriptor will get updated  * to reflect the actual length instead. If "min_len" is not equal to  * "max_len" then this function will try to retrive the beginning of  * the descriptor and base the maximum length on the first byte of the  * descriptor.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -2094,6 +2094,10 @@ name|struct
 name|mtx
 modifier|*
 name|mtx
+parameter_list|,
+name|uint16_t
+modifier|*
+name|actlen
 parameter_list|,
 name|void
 modifier|*
@@ -2273,17 +2277,24 @@ operator|==
 name|max_len
 condition|)
 block|{
-comment|/* enforce correct type and length */
+comment|/* enforce correct length */
 if|if
 condition|(
+operator|(
 name|buf
 index|[
 literal|0
 index|]
 operator|>
 name|min_len
+operator|)
+operator|&&
+operator|(
+name|actlen
+operator|==
+name|NULL
+operator|)
 condition|)
-block|{
 name|buf
 index|[
 literal|0
@@ -2291,7 +2302,7 @@ index|]
 operator|=
 name|min_len
 expr_stmt|;
-block|}
+comment|/* enforce correct type */
 name|buf
 index|[
 literal|1
@@ -2349,6 +2360,29 @@ expr_stmt|;
 block|}
 name|done
 label|:
+if|if
+condition|(
+name|actlen
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|err
+condition|)
+operator|*
+name|actlen
+operator|=
+literal|0
+expr_stmt|;
+else|else
+operator|*
+name|actlen
+operator|=
+name|min_len
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|err
@@ -2766,6 +2800,8 @@ name|udev
 argument_list|,
 name|mtx
 argument_list|,
+name|NULL
+argument_list|,
 name|sdesc
 argument_list|,
 literal|2
@@ -2831,6 +2867,8 @@ argument_list|(
 name|udev
 argument_list|,
 name|mtx
+argument_list|,
+name|NULL
 argument_list|,
 name|d
 argument_list|,
@@ -3043,6 +3081,8 @@ name|udev
 argument_list|,
 name|mtx
 argument_list|,
+name|NULL
+argument_list|,
 name|cdesc
 argument_list|,
 name|len
@@ -3138,6 +3178,8 @@ argument_list|(
 name|udev
 argument_list|,
 name|mtx
+argument_list|,
+name|NULL
 argument_list|,
 name|d
 argument_list|,
@@ -5405,6 +5447,8 @@ argument_list|(
 name|udev
 argument_list|,
 name|mtx
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 name|udev

@@ -755,6 +755,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|struct
+name|usb2_pipe
+modifier|*
+name|usb2_pipe_foreach
+parameter_list|(
+name|struct
+name|usb2_device
+modifier|*
+name|udev
+parameter_list|,
+name|struct
+name|usb2_pipe
+modifier|*
+name|pipe
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

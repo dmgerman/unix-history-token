@@ -255,6 +255,10 @@ name|mtx
 modifier|*
 name|mtx
 parameter_list|,
+name|uint16_t
+modifier|*
+name|actlen
+parameter_list|,
 name|void
 modifier|*
 name|desc
