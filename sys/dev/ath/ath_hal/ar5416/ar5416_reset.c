@@ -740,9 +740,6 @@ modifier|*
 name|ichan
 decl_stmt|;
 name|uint32_t
-name|softLedCfg
-decl_stmt|;
-name|uint32_t
 name|saveDefAntenna
 decl_stmt|,
 name|saveLedState
@@ -973,15 +970,6 @@ name|AR_MAC_LED_BLINK_THRESH_SEL
 operator||
 name|AR_MAC_LED_BLINK_SLOW
 operator|)
-expr_stmt|;
-name|softLedCfg
-operator|=
-name|OS_REG_READ
-argument_list|(
-name|ah
-argument_list|,
-name|AR_GPIO_INTR_OUT
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Adjust gain parameters before reset if 	 * there's an outstanding gain updated. 	 */
 operator|(
@@ -1773,16 +1761,6 @@ name|AR_MAC_LED
 argument_list|)
 operator||
 name|saveLedState
-argument_list|)
-expr_stmt|;
-comment|/* Restore soft Led state to GPIO */
-name|OS_REG_WRITE
-argument_list|(
-name|ah
-argument_list|,
-name|AR_GPIO_INTR_OUT
-argument_list|,
-name|softLedCfg
 argument_list|)
 expr_stmt|;
 comment|/* Restore previous antenna */

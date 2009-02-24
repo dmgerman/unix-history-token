@@ -150,6 +150,9 @@ name|u_int
 name|ah_globaltxtimeout
 decl_stmt|;
 comment|/* global tx timeout */
+name|u_int
+name|ah_gpioMask
+decl_stmt|;
 name|int
 name|ah_hangs
 decl_stmt|;
