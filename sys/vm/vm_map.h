@@ -400,19 +400,6 @@ return|;
 block|}
 end_function
 
-begin_function_decl
-name|void
-name|vm_map_entry_free_freelist
-parameter_list|(
-name|vm_map_t
-name|map
-parameter_list|,
-name|vm_map_entry_t
-name|freelist
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
@@ -475,6 +462,9 @@ name|pmap_t
 name|pmap
 decl_stmt|;
 comment|/* (c) Physical map */
+name|vm_map_entry_t
+name|deferred_freelist
+decl_stmt|;
 define|#
 directive|define
 name|min_offset
@@ -1292,9 +1282,6 @@ parameter_list|,
 name|vm_offset_t
 parameter_list|,
 name|vm_offset_t
-parameter_list|,
-name|vm_map_entry_t
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
