@@ -889,9 +889,7 @@ modifier|*
 name|map
 parameter_list|)
 block|{
-name|struct
-name|vm_map_entry
-modifier|*
+name|vm_map_entry_t
 name|vme
 decl_stmt|;
 name|int
