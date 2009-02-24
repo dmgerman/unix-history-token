@@ -257,6 +257,10 @@ parameter_list|,
 name|uint32_t
 modifier|*
 name|flags
+parameter_list|,
+name|uint8_t
+modifier|*
+name|id
 parameter_list|)
 function_decl|;
 end_function_decl
