@@ -5668,6 +5668,10 @@ name|data
 operator|=
 name|data
 expr_stmt|;
+name|err
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|cmd
