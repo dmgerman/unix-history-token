@@ -228,7 +228,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * for SWAN similar to Condor 	 * Bit 0 enables link to go to L1 when MAC goes to sleep. 	 * Bit 3 enables the loop back the link down to reset. 	 */
-block|if (IS_PCIE(ah)&& ath_hal_pcieL1SKPEnable) { 		OS_REG_WRITE(ah, AR_PCIE_PMC, 		    AR_PCIE_PMC_ENA_L1 | AR_PCIE_PMC_ENA_RESET); 	}
+block|if (AH_PRIVATE(ah)->ah_ispcie&&&& ath_hal_pcieL1SKPEnable) { 		OS_REG_WRITE(ah, AR_PCIE_PMC, 		    AR_PCIE_PMC_ENA_L1 | AR_PCIE_PMC_ENA_RESET); 	}
 comment|/* 	 * for Standby issue in Swan/Condor. 	 * Bit 9 (MAC_WOW_PWR_STATE_MASK_D2)to be set to avoid skips 	 *	before last Training Sequence 2 (TS2) 	 * Bit 8 (MAC_WOW_PWR_STATE_MASK_D1)to be unset to assert 	 *	Power Reset along with PCI Reset 	 */
 block|OS_REG_SET_BIT(ah, AR_PCIE_PMC, MAC_WOW_PWR_STATE_MASK_D2);
 endif|#

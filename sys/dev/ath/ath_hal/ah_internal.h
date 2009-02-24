@@ -989,6 +989,10 @@ name|uint16_t
 name|ah_analog2GhzRev
 decl_stmt|;
 comment|/* 5GHz radio revision */
+name|uint8_t
+name|ah_ispcie
+decl_stmt|;
+comment|/* PCIE, special treatment */
 name|HAL_OPMODE
 name|ah_opmode
 decl_stmt|;
@@ -1259,6 +1263,30 @@ name|_nfArray
 parameter_list|)
 define|\
 value|AH_PRIVATE(_ah)->ah_getNoiseFloor(_ah, _nfArray)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_configPCIE
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_reset
+parameter_list|)
+define|\
+value|(_ah)->ah_configPCIE(_ah, _reset)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_disablePCIE
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(_ah)->ah_disablePCIE(_ah)
 end_define
 
 begin_define

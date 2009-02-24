@@ -1310,16 +1310,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|IS_PCIE
-parameter_list|(
-name|ah
-parameter_list|)
-value|(IS_5424(ah) || IS_2425(ah))
-end_define
-
-begin_define
-define|#
-directive|define
 name|AH_RADIO_MAJOR
 parameter_list|(
 name|ah
