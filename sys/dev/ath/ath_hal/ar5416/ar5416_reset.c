@@ -3201,12 +3201,16 @@ name|ds_coef_man
 decl_stmt|;
 name|uint32_t
 name|clockMhzScaled
-init|=
-name|INIT_CLOCKMHZSCALED
 decl_stmt|;
 name|CHAN_CENTERS
 name|centers
 decl_stmt|;
+comment|/* half and quarter rate can divide the scaled clock by 2 or 4 respectively */
+comment|/* scale for selected channel bandwidth */
+name|clockMhzScaled
+operator|=
+name|INIT_CLOCKMHZSCALED
+expr_stmt|;
 if|if
 condition|(
 name|IEEE80211_IS_CHAN_TURBO
@@ -3215,11 +3219,10 @@ name|chan
 argument_list|)
 condition|)
 name|clockMhzScaled
-operator|*=
-literal|2
+operator|<<=
+literal|1
 expr_stmt|;
-comment|/* half and quarter rate can divide the scaled clock by 2 or 4 respectively */
-comment|/* scale for selected channel bandwidth */
+elseif|else
 if|if
 condition|(
 name|IEEE80211_IS_CHAN_HALF
@@ -3227,14 +3230,10 @@ argument_list|(
 name|chan
 argument_list|)
 condition|)
-block|{
 name|clockMhzScaled
-operator|=
-name|clockMhzScaled
-operator|>>
+operator|>>=
 literal|1
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -3243,14 +3242,10 @@ argument_list|(
 name|chan
 argument_list|)
 condition|)
-block|{
 name|clockMhzScaled
-operator|=
-name|clockMhzScaled
-operator|>>
+operator|>>=
 literal|2
 expr_stmt|;
-block|}
 comment|/* 	 * ALGO -> coef = 1e8/fcarrier*fclock/40; 	 * scaled coef to provide precision for this floating calculation  	 */
 name|ar5416GetChannelCenters
 argument_list|(
@@ -3534,6 +3529,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*      * Need to verify range +/- 9.5 for static ht20, otherwise spur      * is out-of-band and can be ignored.      */
+comment|/* XXX ath9k changes */
 for|for
 control|(
 name|i
@@ -5560,9 +5556,9 @@ name|freq
 expr_stmt|;
 if|if
 condition|(
-name|IS_CHAN_HT40
+name|IEEE80211_IS_CHAN_HT40
 argument_list|(
-name|ichan
+name|chan
 argument_list|)
 condition|)
 block|{
@@ -5828,7 +5824,7 @@ name|denominator
 operator|=
 name|IEEE80211_IS_CHAN_2GHZ
 argument_list|(
-name|ichan
+name|chan
 argument_list|)
 condition|?
 literal|44
