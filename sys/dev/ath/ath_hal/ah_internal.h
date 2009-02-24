@@ -1159,9 +1159,11 @@ parameter_list|(
 name|_ah
 parameter_list|,
 name|_gpio
+parameter_list|,
+name|_type
 parameter_list|)
 define|\
-value|(_ah)->ah_gpioCfgOutput(_ah, _gpio)
+value|(_ah)->ah_gpioCfgOutput(_ah, _gpio, _type)
 end_define
 
 begin_define

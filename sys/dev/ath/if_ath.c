@@ -3310,6 +3310,8 @@ argument_list|,
 name|sc
 operator|->
 name|sc_ledpin
+argument_list|,
+name|HAL_GPIO_MUX_MAC_NETWORK_LED
 argument_list|)
 expr_stmt|;
 name|ath_hal_gpioset
@@ -6062,6 +6064,8 @@ argument_list|,
 name|sc
 operator|->
 name|sc_ledpin
+argument_list|,
+name|HAL_GPIO_MUX_MAC_NETWORK_LED
 argument_list|)
 expr_stmt|;
 name|ath_hal_gpioset
@@ -31326,6 +31330,8 @@ argument_list|,
 name|sc
 operator|->
 name|sc_ledpin
+argument_list|,
+name|HAL_GPIO_MUX_MAC_NETWORK_LED
 argument_list|)
 expr_stmt|;
 name|ath_hal_gpioset
@@ -31440,6 +31446,8 @@ argument_list|,
 name|sc
 operator|->
 name|sc_ledpin
+argument_list|,
+name|HAL_GPIO_MUX_MAC_NETWORK_LED
 argument_list|)
 expr_stmt|;
 name|ath_hal_gpioset

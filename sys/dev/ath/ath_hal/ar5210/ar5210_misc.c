@@ -534,6 +534,9 @@ name|ah
 parameter_list|,
 name|uint32_t
 name|gpio
+parameter_list|,
+name|HAL_GPIO_MUX_TYPE
+name|type
 parameter_list|)
 block|{
 name|HALASSERT
