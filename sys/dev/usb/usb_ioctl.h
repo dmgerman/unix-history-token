@@ -979,6 +979,20 @@ name|USB_GET_POWER_MODE
 value|_IOR ('U', 146, int)
 end_define
 
+begin_define
+define|#
+directive|define
+name|USB_SET_TEMPLATE
+value|_IOW ('U', 147, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_GET_TEMPLATE
+value|_IOR ('U', 148, int)
+end_define
+
 begin_comment
 comment|/* Modem device */
 end_comment

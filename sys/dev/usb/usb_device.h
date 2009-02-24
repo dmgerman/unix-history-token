@@ -474,6 +474,17 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* globals */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|usb2_template
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* function prototypes */
 end_comment
 

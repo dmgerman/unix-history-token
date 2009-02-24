@@ -626,6 +626,43 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+name|libusb20_root_set_template_t
+function_decl|)
+parameter_list|(
+name|struct
+name|libusb20_backend
+modifier|*
+name|pbe
+parameter_list|,
+name|int
+name|temp
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+name|libusb20_root_get_template_t
+function_decl|)
+parameter_list|(
+name|struct
+name|libusb20_backend
+modifier|*
+name|pbe
+parameter_list|,
+name|int
+modifier|*
+name|ptemp
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_define
 define|#
 directive|define
@@ -667,7 +704,7 @@ comment|/* description of this backend */
 define|\
 value|m(n, get_backend_name) \
 comment|/* optional backend methods */
-value|\   m(n, init_backend) \   m(n, exit_backend) \   m(n, bus_set_owner) \   m(n, bus_get_owner) \   m(n, bus_set_perm) \   m(n, bus_get_perm) \   m(n, dev_get_info) \   m(n, dev_get_iface_owner) \   m(n, dev_get_iface_perm) \   m(n, dev_get_iface_desc) \   m(n, dev_get_owner) \   m(n, dev_get_perm) \   m(n, dev_set_iface_owner) \   m(n, dev_set_iface_perm) \   m(n, dev_set_owner) \   m(n, dev_set_perm) \   m(n, root_get_dev_quirk) \   m(n, root_get_quirk_name) \   m(n, root_add_dev_quirk) \   m(n, root_remove_dev_quirk) \   m(n, root_set_owner) \   m(n, root_get_owner) \   m(n, root_set_perm) \   m(n, root_get_perm) \
+value|\   m(n, init_backend) \   m(n, exit_backend) \   m(n, bus_set_owner) \   m(n, bus_get_owner) \   m(n, bus_set_perm) \   m(n, bus_get_perm) \   m(n, dev_get_info) \   m(n, dev_get_iface_owner) \   m(n, dev_get_iface_perm) \   m(n, dev_get_iface_desc) \   m(n, dev_get_owner) \   m(n, dev_get_perm) \   m(n, dev_set_iface_owner) \   m(n, dev_set_iface_perm) \   m(n, dev_set_owner) \   m(n, dev_set_perm) \   m(n, root_get_dev_quirk) \   m(n, root_get_quirk_name) \   m(n, root_add_dev_quirk) \   m(n, root_remove_dev_quirk) \   m(n, root_set_owner) \   m(n, root_get_owner) \   m(n, root_set_perm) \   m(n, root_get_perm) \   m(n, root_set_template) \   m(n, root_get_template) \
 comment|/* mandatory device methods */
 value|\   m(n, open_device) \   m(n, close_device) \  struct libusb20_backend_methods {
 end_define
