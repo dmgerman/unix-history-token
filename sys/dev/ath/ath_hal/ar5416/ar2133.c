@@ -1737,6 +1737,17 @@ name|uint32_t
 modifier|*
 name|bankData
 decl_stmt|;
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_ATTACH
+argument_list|,
+literal|"%s: attach AR2133 radio\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|HALASSERT
 argument_list|(
 name|ahp

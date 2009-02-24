@@ -1582,17 +1582,6 @@ operator|->
 name|ah_miscMode
 argument_list|)
 expr_stmt|;
-name|HALDEBUG
-argument_list|(
-name|ah
-argument_list|,
-name|HAL_DEBUG_ATTACH
-argument_list|,
-literal|"%s: Attaching AR2133 radio\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
 name|rfStatus
 operator|=
 name|ar2133RfAttach
