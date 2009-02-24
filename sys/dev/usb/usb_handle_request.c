@@ -1000,6 +1000,7 @@ goto|;
 block|}
 break|break;
 block|}
+comment|/*  			 * Doing the alternate setting will detach the 			 * interface aswell: 			 */
 name|error
 operator|=
 name|usb2_set_alt_interface_index

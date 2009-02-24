@@ -3320,8 +3320,7 @@ name|usb2_req_get_config_desc_full
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|cdesc
@@ -3488,8 +3487,7 @@ name|f
 operator|->
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|ptr
 argument_list|,

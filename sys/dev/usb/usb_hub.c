@@ -950,8 +950,7 @@ name|sc
 operator|->
 name|sc_udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|ps
@@ -1111,8 +1110,7 @@ name|usb2_req_clear_port_feature
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|portno
 argument_list|,
@@ -1264,8 +1262,7 @@ name|sc
 operator|->
 name|sc_udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|portno
 argument_list|,
@@ -1277,8 +1274,7 @@ comment|/* USB Host Mode */
 comment|/* wait for maximum device power up time */
 name|usb2_pause_mtx
 argument_list|(
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|USB_MS_TO_TICKS
 argument_list|(
@@ -1293,8 +1289,7 @@ name|usb2_req_reset_port
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|portno
 argument_list|)
@@ -1620,8 +1615,7 @@ name|sc
 operator|->
 name|sc_udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|portno
 argument_list|,
@@ -1732,8 +1726,7 @@ name|usb2_req_clear_port_feature
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|portno
 argument_list|,
@@ -2026,8 +2019,7 @@ name|usb2_req_clear_port_feature
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|portno
 argument_list|,
@@ -2082,8 +2074,7 @@ name|usb2_req_clear_port_feature
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|portno
 argument_list|,
@@ -2561,8 +2552,7 @@ name|usb2_req_get_hub_descriptor
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|hubdesc
@@ -2595,8 +2585,7 @@ name|usb2_req_get_hub_descriptor
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|hubdesc
@@ -2830,8 +2819,7 @@ block|}
 comment|/* wait with power off for a while */
 name|usb2_pause_mtx
 argument_list|(
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|USB_MS_TO_TICKS
 argument_list|(
@@ -2933,8 +2921,7 @@ name|usb2_req_set_port_feature
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|portno
 argument_list|,
@@ -2972,8 +2959,7 @@ expr_stmt|;
 comment|/* wait for stable power */
 name|usb2_pause_mtx
 argument_list|(
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|USB_MS_TO_TICKS
 argument_list|(
@@ -6040,8 +6026,7 @@ name|udev
 operator|->
 name|parent_hub
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|udev
 operator|->
@@ -6067,8 +6052,7 @@ block|}
 comment|/* resume settle time */
 name|usb2_pause_mtx
 argument_list|(
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|USB_MS_TO_TICKS
 argument_list|(
@@ -6273,8 +6257,7 @@ name|usb2_req_clear_device_feature
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|UF_DEVICE_REMOTE_WAKEUP
 argument_list|)
@@ -6518,8 +6501,7 @@ name|usb2_req_set_device_feature
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|UF_DEVICE_REMOTE_WAKEUP
 argument_list|)
@@ -6601,8 +6583,7 @@ argument_list|)
 expr_stmt|;
 name|usb2_pause_mtx
 argument_list|(
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|USB_MS_TO_TICKS
 argument_list|(
@@ -6620,8 +6601,7 @@ name|udev
 operator|->
 name|parent_hub
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|udev
 operator|->

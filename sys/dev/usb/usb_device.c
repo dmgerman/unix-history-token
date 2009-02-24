@@ -1975,8 +1975,7 @@ name|usb2_req_set_config
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|USB_UNCONFIG_NO
 argument_list|)
@@ -1992,8 +1991,7 @@ name|usb2_req_get_config_desc_full
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|cdp
@@ -2108,8 +2106,7 @@ name|usb2_req_get_hub_descriptor
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|hd
@@ -2175,8 +2172,7 @@ name|usb2_req_get_device_status
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|ds
@@ -2377,8 +2373,7 @@ name|usb2_req_set_config
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|cdp
 operator|->
@@ -2475,7 +2470,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_set_alt_interface_index  *  * This function will select an alternate interface index for the  * given interface index. The interface should not be in use when this  * function is called. That means there should be no open USB  * transfers. Else an error is returned.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_set_alt_interface_index  *  * This function will select an alternate interface index for the  * given interface index. The interface should not be in use when this  * function is called. That means there should not be any open USB  * transfers. Else an error is returned. If the alternate setting is  * already set this function will simply return success. This function  * is called in Host mode and Device mode!  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -2582,6 +2577,27 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+if|if
+condition|(
+name|iface
+operator|->
+name|alt_index
+operator|==
+name|alt_index
+condition|)
+block|{
+comment|/*  			 * Optimise away duplicate setting of 			 * alternate setting in USB Host Mode! 			 */
+name|err
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
+block|}
 comment|/* 	 * Free all generic FIFOs for this interface, except control 	 * endpoint FIFOs: 	 */
 name|usb2_fifo_free_wrap
 argument_list|(
@@ -2618,8 +2634,7 @@ name|usb2_req_set_alt_interface_no
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|iface_index
 argument_list|,
@@ -5123,8 +5138,7 @@ name|usb2_req_set_address
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|device_index
 argument_list|)
@@ -5158,8 +5172,7 @@ block|}
 comment|/* allow device time to set new address */
 name|usb2_pause_mtx
 argument_list|(
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|USB_MS_TO_TICKS
 argument_list|(
@@ -5229,8 +5242,7 @@ name|usb2_req_get_desc
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -5276,8 +5288,7 @@ name|usb2_req_re_enumerate
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -5350,8 +5361,7 @@ name|usb2_req_get_device_desc
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|udev
@@ -5504,8 +5514,7 @@ name|usb2_req_get_string_desc
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|(
 name|char
@@ -5580,8 +5589,7 @@ name|usb2_req_get_string_any
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|(
 name|char
@@ -5625,8 +5633,7 @@ name|usb2_req_get_string_any
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|(
 name|char
@@ -5670,8 +5677,7 @@ name|usb2_req_get_string_any
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|(
 name|char
@@ -5922,8 +5928,7 @@ name|usb2_req_re_enumerate
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
