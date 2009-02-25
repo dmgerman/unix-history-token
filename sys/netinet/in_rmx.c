@@ -341,6 +341,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|RTF_CLONING
+operator||
+name|RTF_RNH_LOCKED
 argument_list|,
 name|rt
 operator|->

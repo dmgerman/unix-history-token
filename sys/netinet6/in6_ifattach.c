@@ -3474,7 +3474,7 @@ name|sin6
 argument_list|,
 literal|0
 argument_list|,
-literal|0UL
+name|RTF_RNH_LOCKED
 argument_list|)
 expr_stmt|;
 if|if
