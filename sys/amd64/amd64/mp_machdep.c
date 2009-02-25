@@ -4913,7 +4913,7 @@ return|;
 ifdef|#
 directive|ifdef
 name|SCHED_ULE
-comment|/* 	 * SCHED_ULE doesn't allow enabling/disabling HT cores at 	 * tun time. 	 */
+comment|/* 	 * SCHED_ULE doesn't allow enabling/disabling HT cores at 	 * run time. 	 */
 if|if
 condition|(
 name|allowed
