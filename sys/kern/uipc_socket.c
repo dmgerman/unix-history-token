@@ -8599,8 +8599,6 @@ decl_stmt|,
 name|len
 decl_stmt|,
 name|error
-decl_stmt|,
-name|offset
 decl_stmt|;
 name|struct
 name|protosw
@@ -9364,10 +9362,6 @@ operator|(
 literal|"soreceive_dgram: !data"
 operator|)
 argument_list|)
-expr_stmt|;
-name|offset
-operator|=
-literal|0
 expr_stmt|;
 while|while
 condition|(
