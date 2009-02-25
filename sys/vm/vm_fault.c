@@ -2944,7 +2944,11 @@ name|retry_prot
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * update lastr imperfectly (we do not know how much 	 * getpages will actually read), but good enough. 	 * 	 * XXX The following assignment modifies the map 	 * without holding a write lock on it. 	 */
+comment|/* 	 * If the page was filled by a pager, update the map entry's 	 * last read offset.  Since the pager does not return the 	 * actual set of pages that it read, this update is based on 	 * the requested set.  Typically, the requested and actual 	 * sets are the same. 	 * 	 * XXX The following assignment modifies the map 	 * without holding a write lock on it. 	 */
+if|if
+condition|(
+name|hardfault
+condition|)
 name|fs
 operator|.
 name|entry
