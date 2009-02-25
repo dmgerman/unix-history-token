@@ -3525,7 +3525,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Audit pipe read.  Pull one record off the queue and copy to user space.  * On error, the record is dropped.  *  * Providing more sophisticated behavior, such as partial reads, is tricky  * due to the potential for parallel I/O.  If partial read support is  * required, it will require a per-pipe "current record being read" along  * with an offset into that trecord which has already been read.  Threads  * performing partial reads will need to allocate per-thread copies of the  * data so that if another thread completes the read of the record, it can be  * freed without adding reference count logic.  If this is added, a flag to  * indicate that only atomic record reads are desired would be useful, as if  * different threads are all waiting for records on the pipe, they will want  * independent record reads, which is currently the behavior.  */
+comment|/*  * Audit pipe read.  Read one or more partial or complete records to user  * memory.  */
 end_comment
 
 begin_function
@@ -3673,12 +3673,15 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Copy as many remaining bytes from the current record to userspace 	 * as we can. 	 * 	 * Note: we rely on the SX lock to maintain ape's stability here. 	 */
+comment|/* 	 * Copy as many remaining bytes from the current record to userspace 	 * as we can.  Keep processing records until we run out of records in 	 * the queue, or until the user buffer runs out of space. 	 * 	 * Note: we rely on the SX lock to maintain ape's stability here. 	 */
 name|ap
 operator|->
 name|ap_reads
 operator|++
 expr_stmt|;
+while|while
+condition|(
+operator|(
 name|ape
 operator|=
 name|TAILQ_FIRST
@@ -3687,6 +3690,21 @@ operator|&
 name|ap
 operator|->
 name|ap_queue
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+operator|&&
+name|uio
+operator|->
+name|uio_resid
+operator|>
+literal|0
+condition|)
+block|{
+name|AUDIT_PIPE_LOCK_ASSERT
+argument_list|(
+name|ap
 argument_list|)
 expr_stmt|;
 name|toread
@@ -3748,7 +3766,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * If the copy succeeded, update book-keeping, and if no bytes remain 	 * in the current record, free it. 	 */
+comment|/* 		 * If the copy succeeded, update book-keeping, and if no 		 * bytes remain in the current record, free it. 		 */
 name|AUDIT_PIPE_LOCK
 argument_list|(
 name|ap
@@ -3800,17 +3818,18 @@ argument_list|,
 name|ape_queue
 argument_list|)
 expr_stmt|;
+name|audit_pipe_entry_free
+argument_list|(
+name|ape
+argument_list|)
+expr_stmt|;
 name|ap
 operator|->
 name|ap_qlen
 operator|--
 expr_stmt|;
 block|}
-else|else
-name|ape
-operator|=
-name|NULL
-expr_stmt|;
+block|}
 name|AUDIT_PIPE_UNLOCK
 argument_list|(
 name|ap
@@ -3821,20 +3840,9 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ape
-operator|!=
-name|NULL
-condition|)
-name|audit_pipe_entry_free
-argument_list|(
-name|ape
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
