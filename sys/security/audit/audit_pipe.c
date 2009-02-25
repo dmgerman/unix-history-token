@@ -350,10 +350,6 @@ name|u_int64_t
 name|ap_drops
 decl_stmt|;
 comment|/* Records dropped. */
-name|u_int64_t
-name|ap_truncates
-decl_stmt|;
-comment|/* Records too long. */
 comment|/* 	 * Fields relating to pipe interest: global masks for unmatched 	 * processes (attributable, non-attributable), and a list of specific 	 * interest specifications by auid. 	 */
 name|int
 name|ap_preselect_mode
@@ -3507,9 +3503,7 @@ operator|*
 operator|)
 name|data
 operator|=
-name|ap
-operator|->
-name|ap_truncates
+literal|0
 expr_stmt|;
 name|error
 operator|=
