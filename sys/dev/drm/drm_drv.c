@@ -787,8 +787,6 @@ operator|.
 name|d_flags
 operator|=
 name|D_TRACKCLOSE
-operator||
-name|D_NEEDGIANT
 block|}
 decl_stmt|;
 end_decl_stmt
