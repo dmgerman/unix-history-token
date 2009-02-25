@@ -342,6 +342,7 @@ decl_stmt|;
 name|u_int
 name|ap_qoffset
 decl_stmt|;
+comment|/* 	 * Per-pipe operation statistics. 	 */
 name|u_int64_t
 name|ap_inserts
 decl_stmt|;
