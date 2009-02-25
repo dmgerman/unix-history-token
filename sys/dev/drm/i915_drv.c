@@ -262,14 +262,6 @@ name|dev
 operator|->
 name|driver
 operator|->
-name|get_vblank_counter
-operator|=
-name|i915_get_vblank_counter
-expr_stmt|;
-name|dev
-operator|->
-name|driver
-operator|->
 name|enable_vblank
 operator|=
 name|i915_enable_vblank

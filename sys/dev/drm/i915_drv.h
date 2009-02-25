@@ -1327,6 +1327,22 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|u32
+name|gm45_get_vblank_counter
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|int
+name|crtc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|i915_vblank_swap
 parameter_list|(
