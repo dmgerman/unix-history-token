@@ -3517,6 +3517,12 @@ decl_stmt|;
 name|u_int32_t
 name|addr
 decl_stmt|;
+name|u_int32_t
+name|hmac
+index|[
+literal|5
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
