@@ -6661,7 +6661,12 @@ name|ENETUNREACH
 operator|)
 return|;
 block|}
-comment|/* 			 * Relock it and lose the added reference. 			 * All sorts of things could have happenned while we 			 * had no lock on it, so check for them. 			 */
+comment|/* 			 * Relock it and lose the added reference.  All sorts 			 * of things could have happenned while we had no 			 * lock on it, so check for them.  rt need to be 			 * unlocked to avoid possible deadlock. 			 */
+name|RT_UNLOCK
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 name|RT_RELOCK
 argument_list|(
 name|rt0
@@ -6685,10 +6690,17 @@ operator|==
 literal|0
 operator|)
 condition|)
+block|{
 comment|/* Ru-roh.. what we had is no longer any good */
+name|RTFREE
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 goto|goto
 name|retry
 goto|;
+block|}
 comment|/*  			 * While we were away, someone replaced the gateway. 			 * Since a reference count is involved we can't just 			 * overwrite it. 			 */
 if|if
 condition|(
@@ -6705,16 +6717,11 @@ name|rt_gwroute
 operator|!=
 name|rt
 condition|)
-block|{
-name|RTFREE_LOCKED
+name|RTFREE
 argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
-goto|goto
-name|retry
-goto|;
-block|}
 block|}
 else|else
 block|{
@@ -6725,6 +6732,10 @@ operator|=
 name|rt
 expr_stmt|;
 block|}
+comment|/*  			 * Since rt was not locked, we need recheck that 			 * it still may be used (e.g. up) 			 */
+goto|goto
+name|retry
+goto|;
 block|}
 name|RT_LOCK_ASSERT
 argument_list|(
