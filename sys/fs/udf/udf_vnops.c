@@ -5230,6 +5230,7 @@ name|a_runb
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * UDF_INVALID_BMAP means data embedded into fentry, this is an internal 	 * error that should not be propagated to calling code. 	 * Most obvious mapping for this error is EOPNOTSUPP as we can not truly 	 * translate block numbers in this case. 	 * Incidentally, this return code will make vnode pager to use VOP_READ 	 * to get data for mmap-ed pages and udf_read knows how to do the right 	 * thing for this kind of files. 	 */
 name|error
 operator|=
 name|udf_bmap_internal
@@ -5239,12 +5240,12 @@ argument_list|,
 name|a
 operator|->
 name|a_bn
-operator|*
+operator|<<
 name|node
 operator|->
 name|udfmp
 operator|->
-name|bsize
+name|bshift
 argument_list|,
 operator|&
 name|lsector
@@ -5253,6 +5254,17 @@ operator|&
 name|max_size
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+name|UDF_INVALID_BMAP
+condition|)
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 if|if
 condition|(
 name|error
