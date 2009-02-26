@@ -392,10 +392,6 @@ block|{
 name|teken_stat
 modifier|*
 name|ts
-init|=
-name|scp
-operator|->
-name|ts
 decl_stmt|;
 name|teken_pos_t
 name|tp
