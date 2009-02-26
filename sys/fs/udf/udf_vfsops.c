@@ -2130,7 +2130,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|udf_readlblks
+name|udf_readdevblks
 argument_list|(
 name|udfmp
 argument_list|,
@@ -3682,7 +3682,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|udf_readlblks
+name|udf_readdevblks
 argument_list|(
 name|udfmp
 argument_list|,
