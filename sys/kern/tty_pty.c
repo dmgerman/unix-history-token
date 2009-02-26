@@ -440,6 +440,8 @@ name|GID_WHEEL
 argument_list|,
 literal|0666
 argument_list|,
+literal|"%s"
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
