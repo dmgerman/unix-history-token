@@ -293,6 +293,35 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|pci_bar_io
+block|{
+name|struct
+name|pcisel
+name|pbi_sel
+decl_stmt|;
+comment|/* device to operate on */
+name|int
+name|pbi_reg
+decl_stmt|;
+comment|/* starting address of BAR */
+name|int
+name|pbi_enabled
+decl_stmt|;
+comment|/* decoding enabled */
+name|uint64_t
+name|pbi_base
+decl_stmt|;
+comment|/* current value of BAR */
+name|uint64_t
+name|pbi_length
+decl_stmt|;
+comment|/* length of BAR */
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -319,6 +348,13 @@ define|#
 directive|define
 name|PCIOCATTACHED
 value|_IOWR('p', 4, struct pci_io)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIOCGETBAR
+value|_IOWR('p', 6, struct pci_bar_io)
 end_define
 
 begin_endif

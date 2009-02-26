@@ -556,13 +556,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCI_MAX_BAR_0
+name|PCIR_MAX_BAR_0
 value|5
 end_define
-
-begin_comment
-comment|/* Number of standard bars */
-end_comment
 
 begin_define
 define|#
@@ -843,6 +839,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIR_MAX_BAR_1
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIR_SECSTAT_1
 value|0x1e
 end_define
@@ -997,6 +1000,13 @@ end_define
 begin_comment
 comment|/* config registers for header type 2 (CardBus) devices */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIR_MAX_BAR_2
+value|0
+end_define
 
 begin_define
 define|#
