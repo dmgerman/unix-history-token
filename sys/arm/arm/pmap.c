@@ -14036,6 +14036,8 @@ name|pmap
 argument_list|,
 name|vector_page
 argument_list|,
+name|VM_PROT_READ
+argument_list|,
 name|PHYS_TO_VM_PAGE
 argument_list|(
 name|systempage
@@ -16264,6 +16266,30 @@ name|addr
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
+comment|/*  *	Increase the starting virtual address of the given mapping if a  *	different alignment might result in more superpage mappings.  */
+end_comment
+
+begin_function
+name|void
+name|pmap_align_superpage
+parameter_list|(
+name|vm_object_t
+name|object
+parameter_list|,
+name|vm_ooffset_t
+name|offset
+parameter_list|,
+name|vm_offset_t
+modifier|*
+name|addr
+parameter_list|,
+name|vm_size_t
+name|size
+parameter_list|)
+block|{ }
 end_function
 
 begin_comment
