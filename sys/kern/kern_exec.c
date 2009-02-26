@@ -2576,10 +2576,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|len
-operator|=
-name|MAXCOMLEN
-expr_stmt|;
 if|if
 condition|(
 name|vn_commname
@@ -4522,10 +4518,6 @@ decl_stmt|;
 name|size_t
 name|length
 decl_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 name|bzero
 argument_list|(
 name|args

@@ -3186,12 +3186,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|v
-operator|=
-name|rw
-operator|->
-name|rw_lock
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|rw

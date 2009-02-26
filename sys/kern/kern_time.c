@@ -6720,11 +6720,6 @@ name|itimer
 modifier|*
 name|it
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
 name|it
 operator|=
 operator|(
@@ -6733,12 +6728,6 @@ name|itimer
 operator|*
 operator|)
 name|arg
-expr_stmt|;
-name|p
-operator|=
-name|it
-operator|->
-name|it_proc
 expr_stmt|;
 name|realtimer_clocktime
 argument_list|(

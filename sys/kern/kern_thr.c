@@ -696,10 +696,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 name|p
 operator|=
 name|td
@@ -1184,7 +1180,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
@@ -1895,10 +1891,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 name|tsp
 operator|=
 name|NULL

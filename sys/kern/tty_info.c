@@ -836,13 +836,6 @@ name|picktd
 operator|=
 name|NULL
 expr_stmt|;
-name|td
-operator|=
-name|FIRST_THREAD_IN_PROC
-argument_list|(
-name|pick
-argument_list|)
-expr_stmt|;
 name|FOREACH_THREAD_IN_PROC
 argument_list|(
 argument|pick

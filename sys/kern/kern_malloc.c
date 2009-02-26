@@ -1780,10 +1780,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|size
-operator|=
-literal|0
-expr_stmt|;
 name|slab
 operator|=
 name|vtoslab
