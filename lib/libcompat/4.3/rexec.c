@@ -1595,6 +1595,9 @@ name|s3
 decl_stmt|;
 name|char
 name|c
+decl_stmt|,
+modifier|*
+name|acct
 decl_stmt|;
 name|hp
 operator|=
@@ -1631,6 +1634,10 @@ name|hp
 operator|->
 name|h_name
 expr_stmt|;
+name|acct
+operator|=
+name|NULL
+expr_stmt|;
 name|ruserpass
 argument_list|(
 name|hp
@@ -1642,6 +1649,14 @@ name|name
 argument_list|,
 operator|&
 name|pass
+argument_list|,
+operator|&
+name|acct
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|acct
 argument_list|)
 expr_stmt|;
 name|retry
