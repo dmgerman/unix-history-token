@@ -2057,10 +2057,6 @@ name|ATA_R_THREAD
 value|0x00000800
 define|#
 directive|define
-name|ATA_R_DIRECT
-value|0x00001000
-define|#
-directive|define
 name|ATA_R_DEBUG
 value|0x10000000
 define|#

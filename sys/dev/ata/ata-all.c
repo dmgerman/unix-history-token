@@ -3297,7 +3297,7 @@ name|ATA_R_READ
 operator||
 name|ATA_R_AT_HEAD
 operator||
-name|ATA_R_DIRECT
+name|ATA_R_THREAD
 operator||
 name|ATA_R_QUIET
 operator|)
