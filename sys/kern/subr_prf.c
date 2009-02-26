@@ -510,12 +510,6 @@ operator|&
 name|proctree_lock
 argument_list|)
 expr_stmt|;
-name|p
-operator|=
-name|td
-operator|->
-name|td_proc
-expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
