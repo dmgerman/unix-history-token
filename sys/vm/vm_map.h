@@ -1142,6 +1142,43 @@ comment|/* Dirty the page */
 end_comment
 
 begin_comment
+comment|/*  * The following "find_space" options are supported by vm_map_find()  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMFS_NO_SPACE
+value|0
+end_define
+
+begin_comment
+comment|/* don't find; use the given range */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMFS_ANY_SPACE
+value|1
+end_define
+
+begin_comment
+comment|/* find a range with any alignment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMFS_ALIGNED_SPACE
+value|2
+end_define
+
+begin_comment
+comment|/* find a superpage-aligned range */
+end_comment
+
+begin_comment
 comment|/*  * vm_map_wire and vm_map_unwire option flags  */
 end_comment
 
@@ -1251,7 +1288,7 @@ modifier|*
 parameter_list|,
 name|vm_size_t
 parameter_list|,
-name|boolean_t
+name|int
 parameter_list|,
 name|vm_prot_t
 parameter_list|,
@@ -1273,7 +1310,6 @@ parameter_list|,
 name|vm_ooffset_t
 parameter_list|,
 name|vm_offset_t
-modifier|*
 parameter_list|,
 name|vm_size_t
 parameter_list|,

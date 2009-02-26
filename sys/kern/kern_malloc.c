@@ -2523,6 +2523,8 @@ operator|&
 name|kmemlimit
 argument_list|,
 name|vm_kmem_size
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|kmem_map

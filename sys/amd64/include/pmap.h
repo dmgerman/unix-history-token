@@ -108,7 +108,7 @@ value|0x080
 end_define
 
 begin_comment
-comment|/* PS	Page size (0=4k,1=4M)	*/
+comment|/* PS	Page size (0=4k,1=2M)	*/
 end_comment
 
 begin_define
@@ -245,6 +245,17 @@ end_define
 begin_comment
 comment|/* Non-cacheable */
 end_comment
+
+begin_comment
+comment|/*  * Promotion to a 2MB (PDE) page mapping requires that the corresponding 4KB  * (PTE) page mappings have identical settings for the following fields:  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_PTE_PROMOTE
+value|(PG_NX | PG_MANAGED | PG_W | PG_G | PG_PTE_PAT | \ 	    PG_M | PG_A | PG_NC_PCD | PG_NC_PWT | PG_U | PG_RW | PG_V)
+end_define
 
 begin_comment
 comment|/*  * Page Protection Exception bits  */
@@ -917,6 +928,10 @@ name|pmap_statistics
 name|pm_stats
 decl_stmt|;
 comment|/* pmap statistics */
+name|vm_page_t
+name|pm_root
+decl_stmt|;
+comment|/* spare page table pages */
 block|}
 struct|;
 end_struct
@@ -1218,16 +1233,6 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|pmap_page_is_mapped
-parameter_list|(
-name|m
-parameter_list|)
-value|(!TAILQ_EMPTY(&(m)->md.pv_list))
-end_define
-
-begin_define
-define|#
-directive|define
 name|pmap_unmapbios
 parameter_list|(
 name|va
@@ -1364,6 +1369,16 @@ parameter_list|,
 name|vm_size_t
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|boolean_t
+name|pmap_page_is_mapped
+parameter_list|(
+name|vm_page_t
+name|m
 parameter_list|)
 function_decl|;
 end_function_decl

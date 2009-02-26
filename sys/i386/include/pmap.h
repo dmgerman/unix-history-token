@@ -288,6 +288,17 @@ comment|/* Non-cacheable */
 end_comment
 
 begin_comment
+comment|/*  * Promotion to a 2 or 4MB (PDE) page mapping requires that the corresponding  * 4KB (PTE) page mappings have identical settings for the following fields:  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_PTE_PROMOTE
+value|(PG_MANAGED | PG_W | PG_G | PG_PTE_PAT | \ 	    PG_M | PG_A | PG_NC_PCD | PG_NC_PWT | PG_U | PG_RW | PG_V)
+end_define
+
+begin_comment
 comment|/*  * Page Protection Exception bits  */
 end_comment
 
@@ -814,6 +825,21 @@ directive|ifdef
 name|PAE
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|pde_cmpset
+parameter_list|(
+name|pdep
+parameter_list|,
+name|old
+parameter_list|,
+name|new
+parameter_list|)
+define|\
+value|atomic_cmpset_64((pdep), (old), (new))
+end_define
+
 begin_function
 specifier|static
 name|__inline
@@ -1067,6 +1093,21 @@ begin_comment
 comment|/* PAE */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|pde_cmpset
+parameter_list|(
+name|pdep
+parameter_list|,
+name|old
+parameter_list|,
+name|new
+parameter_list|)
+define|\
+value|atomic_cmpset_int((pdep), (old), (new))
+end_define
+
 begin_function
 specifier|static
 name|__inline
@@ -1301,6 +1342,10 @@ decl_stmt|;
 comment|/* KVA of page director pointer 						   table */
 endif|#
 directive|endif
+name|vm_page_t
+name|pm_root
+decl_stmt|;
+comment|/* spare page table pages */
 block|}
 struct|;
 end_struct
@@ -1628,16 +1673,6 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|pmap_page_is_mapped
-parameter_list|(
-name|m
-parameter_list|)
-value|(!TAILQ_EMPTY(&(m)->md.pv_list))
-end_define
-
-begin_define
-define|#
-directive|define
 name|pmap_unmapbios
 parameter_list|(
 name|va
@@ -1764,6 +1799,16 @@ parameter_list|,
 name|vm_size_t
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|boolean_t
+name|pmap_page_is_mapped
+parameter_list|(
+name|vm_page_t
+name|m
 parameter_list|)
 function_decl|;
 end_function_decl

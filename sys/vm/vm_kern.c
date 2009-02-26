@@ -219,7 +219,7 @@ name|addr
 argument_list|,
 name|size
 argument_list|,
-name|TRUE
+name|VMFS_ANY_SPACE
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
@@ -507,40 +507,30 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	kmem_suballoc:  *  *	Allocates a map to manage a subrange  *	of the kernel virtual address space.  *  *	Arguments are as follows:  *  *	parent		Map to take range from  *	min, max	Returned endpoints of map  *	size		Size of range to find  */
+comment|/*  *	kmem_suballoc:  *  *	Allocates a map to manage a subrange  *	of the kernel virtual address space.  *  *	Arguments are as follows:  *  *	parent		Map to take range from  *	min, max	Returned endpoints of map  *	size		Size of range to find  *	superpage_align	Request that min is superpage aligned  */
 end_comment
 
 begin_function
 name|vm_map_t
 name|kmem_suballoc
 parameter_list|(
-name|parent
-parameter_list|,
-name|min
-parameter_list|,
-name|max
-parameter_list|,
-name|size
-parameter_list|)
 name|vm_map_t
 name|parent
-decl_stmt|;
+parameter_list|,
 name|vm_offset_t
 modifier|*
 name|min
-decl_stmt|,
-decl|*
+parameter_list|,
+name|vm_offset_t
+modifier|*
 name|max
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 name|vm_size_t
 name|size
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|,
+name|boolean_t
+name|superpage_align
+parameter_list|)
 block|{
 name|int
 name|ret
@@ -558,9 +548,6 @@ expr_stmt|;
 operator|*
 name|min
 operator|=
-operator|(
-name|vm_offset_t
-operator|)
 name|vm_map_min
 argument_list|(
 name|parent
@@ -574,16 +561,17 @@ name|parent
 argument_list|,
 name|NULL
 argument_list|,
-operator|(
-name|vm_offset_t
-operator|)
 literal|0
 argument_list|,
 name|min
 argument_list|,
 name|size
 argument_list|,
-name|TRUE
+name|superpage_align
+condition|?
+name|VMFS_ALIGNED_SPACE
+else|:
+name|VMFS_ANY_SPACE
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
@@ -675,10 +663,10 @@ name|result
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  *	kmem_malloc:  *  * 	Allocate wired-down memory in the kernel's address map for the higher  * 	level kernel memory allocator (kern/kern_malloc.c).  We cannot use  * 	kmem_alloc() because we may need to allocate memory at interrupt  * 	level where we cannot block (canwait == FALSE).  *  * 	This routine has its own private kernel submap (kmem_map) and object  * 	(kmem_object).  This, combined with the fact that only malloc uses  * 	this routine, ensures that we will never block in map or object waits.  *  * 	Note that this still only works in a uni-processor environment and  * 	when called at splhigh().  *  * 	We don't worry about expanding the map (adding entries) since entries  * 	for wired maps are statically allocated.  *  *	`map' is ONLY allowed to be kmem_map or one of the mbuf submaps to  *	which we never free.  */
+comment|/*  *	kmem_malloc:  *  * 	Allocate wired-down memory in the kernel's address map for the higher  * 	level kernel memory allocator (kern/kern_malloc.c).  We cannot use  * 	kmem_alloc() because we may need to allocate memory at interrupt  * 	level where we cannot block (canwait == FALSE).  *  * 	This routine has its own private kernel submap (kmem_map) and object  * 	(kmem_object).  This, combined with the fact that only malloc uses  * 	this routine, ensures that we will never block in map or object waits.  *  * 	We don't worry about expanding the map (adding entries) since entries  * 	for wired maps are statically allocated.  *  *	`map' is ONLY allowed to be kmem_map or one of the mbuf submaps to  *	which we never free.  */
 end_comment
 
 begin_function
@@ -1259,11 +1247,13 @@ name|addr
 operator|+
 name|i
 argument_list|,
+name|VM_PROT_ALL
+argument_list|,
 name|m
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
-literal|1
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|vm_page_wakeup

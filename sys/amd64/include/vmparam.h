@@ -256,6 +256,50 @@ value|13
 end_define
 
 begin_comment
+comment|/*  * Enable superpage reservations: 1 level.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_NRESERVLEVEL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_NRESERVLEVEL
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Level 0 reservations consist of 512 pages.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_LEVEL_0_ORDER
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_LEVEL_0_ORDER
+value|9
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Virtual addresses of things.  Derived from the page directory and  * page table indexes from pmap.h for precision.  *  * 0x0000000000000000 - 0x00007fffffffffff   user map  * 0x0000800000000000 - 0xffff7fffffffffff   does not exist (hole)  * 0xffff800000000000 - 0xffff804020100fff   recursive page table (512GB slot)  * 0xffff804020101000 - 0xfffffeffffffffff   unused  * 0xffffff0000000000 - 0xffffff7fffffffff   512GB direct map mappings  * 0xffffff8000000000 - 0xfffffffe7fffffff   unused (506GB)  * 0xfffffffe80000000 - 0xffffffffffffffff   6GB kernel map  *  * Within the kernel map:  *  * 0xffffffff80000000                        KERNBASE  */
 end_comment
 

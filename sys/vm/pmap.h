@@ -85,6 +85,22 @@ end_decl_stmt
 
 begin_function_decl
 name|void
+name|pmap_align_superpage
+parameter_list|(
+name|vm_object_t
+parameter_list|,
+name|vm_ooffset_t
+parameter_list|,
+name|vm_offset_t
+modifier|*
+parameter_list|,
+name|vm_size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|pmap_change_wiring
 parameter_list|(
 name|pmap_t
@@ -151,6 +167,8 @@ parameter_list|(
 name|pmap_t
 parameter_list|,
 name|vm_offset_t
+parameter_list|,
+name|vm_prot_t
 parameter_list|,
 name|vm_page_t
 parameter_list|,

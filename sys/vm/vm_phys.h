@@ -19,6 +19,12 @@ directive|define
 name|_VM_PHYS_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_function_decl
 name|void
 name|vm_phys_add_page
@@ -120,7 +126,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|boolean_t
 name|vm_phys_unfree_page
 parameter_list|(
 name|vm_page_t
@@ -137,6 +143,15 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#
