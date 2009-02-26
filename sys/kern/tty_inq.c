@@ -81,6 +81,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|unsigned
 name|long
 name|ttyinq_nfast
 init|=
@@ -89,7 +90,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_LONG
+name|SYSCTL_ULONG
 argument_list|(
 name|_kern
 argument_list|,
@@ -111,6 +112,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
+name|unsigned
 name|long
 name|ttyinq_nslow
 init|=
@@ -119,7 +121,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_LONG
+name|SYSCTL_ULONG
 argument_list|(
 name|_kern
 argument_list|,
