@@ -1452,9 +1452,6 @@ decl_stmt|;
 name|struct
 name|nameidata
 name|nd
-decl_stmt|,
-modifier|*
-name|ndp
 decl_stmt|;
 name|struct
 name|ucred
@@ -1778,14 +1775,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|ndp
-operator|=
-operator|&
-name|nd
-expr_stmt|;
 name|NDINIT
 argument_list|(
-name|ndp
+operator|&
+name|nd
 argument_list|,
 name|LOOKUP
 argument_list|,
@@ -1847,7 +1840,8 @@ name|error
 operator|=
 name|namei
 argument_list|(
-name|ndp
+operator|&
+name|nd
 argument_list|)
 expr_stmt|;
 if|if
@@ -1861,13 +1855,14 @@ name|vfslocked
 operator|=
 name|NDHASGIANT
 argument_list|(
-name|ndp
+operator|&
+name|nd
 argument_list|)
 expr_stmt|;
 name|binvp
 operator|=
-name|ndp
-operator|->
+name|nd
+operator|.
 name|ni_vp
 expr_stmt|;
 name|imgp
@@ -2184,7 +2179,8 @@ name|NULL
 condition|)
 name|NDFREE
 argument_list|(
-name|ndp
+operator|&
+name|nd
 argument_list|,
 name|NDF_ONLY_PNBUF
 argument_list|)
@@ -2259,7 +2255,8 @@ expr_stmt|;
 comment|/* set new name to that of the interpreter */
 name|NDINIT
 argument_list|(
-name|ndp
+operator|&
+name|nd
 argument_list|,
 name|LOOKUP
 argument_list|,
@@ -2549,8 +2546,8 @@ name|len
 operator|=
 name|min
 argument_list|(
-name|ndp
-operator|->
+name|nd
+operator|.
 name|ni_cnd
 operator|.
 name|cn_namelen
@@ -2560,8 +2557,8 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|ndp
-operator|->
+name|nd
+operator|.
 name|ni_cnd
 operator|.
 name|cn_nameptr
@@ -3524,7 +3521,8 @@ name|fname
 condition|)
 name|NDFREE
 argument_list|(
-name|ndp
+operator|&
+name|nd
 argument_list|,
 name|NDF_ONLY_PNBUF
 argument_list|)
