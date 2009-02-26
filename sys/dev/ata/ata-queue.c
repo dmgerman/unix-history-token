@@ -2658,6 +2658,14 @@ argument_list|,
 literal|"timeout"
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|ch
+operator|->
+name|state_mtx
+argument_list|)
+expr_stmt|;
 comment|/*      * if we have an ATA_ACTIVE request running, we flag the request       * ATA_R_TIMEOUT so ata_finish will handle it correctly      * also NULL out the running request so we wont loose       * the race with an eventual interrupt arriving late      */
 if|if
 condition|(
