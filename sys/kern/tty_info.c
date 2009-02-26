@@ -130,7 +130,7 @@ name|proc
 modifier|*
 name|p
 parameter_list|,
-name|int
+name|fixpt_t
 modifier|*
 name|estcpup
 parameter_list|)
