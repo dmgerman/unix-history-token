@@ -4008,6 +4008,10 @@ name|struct
 name|usb2_proc_msg
 name|hdr
 decl_stmt|;
+name|usb2_proc_callback_t
+modifier|*
+name|func
+decl_stmt|;
 name|struct
 name|zyd_softc
 modifier|*
@@ -4323,6 +4327,11 @@ name|int
 parameter_list|)
 function_decl|;
 name|struct
+name|zyd_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|struct
 name|ieee80211_amrr
 name|amrr
 decl_stmt|;
@@ -4387,6 +4396,11 @@ index|[
 name|ZYD_N_TRANSFER
 index|]
 decl_stmt|;
+name|struct
+name|zyd_task
+modifier|*
+name|sc_last_task
+decl_stmt|;
 name|enum
 name|ieee80211_state
 name|sc_state
@@ -4409,9 +4423,6 @@ define|#
 directive|define
 name|ZYD_FLAG_INITDONE
 value|(1<< 2)
-name|int
-name|sc_if_flags
-decl_stmt|;
 name|struct
 name|zyd_task
 name|sc_synctask
@@ -4563,7 +4574,7 @@ name|sc_mtx
 decl_stmt|;
 name|struct
 name|cv
-name|sc_intr_cv
+name|sc_cmd_cv
 decl_stmt|;
 name|struct
 name|zyd_tx_data

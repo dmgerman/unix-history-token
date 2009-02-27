@@ -108,6 +108,10 @@ name|struct
 name|usb2_proc_msg
 name|hdr
 decl_stmt|;
+name|usb2_proc_callback_t
+modifier|*
+name|func
+decl_stmt|;
 name|struct
 name|rum_softc
 modifier|*
@@ -301,6 +305,11 @@ index|[
 name|RUM_N_TRANSFER
 index|]
 decl_stmt|;
+name|struct
+name|rum_task
+modifier|*
+name|sc_last_task
+decl_stmt|;
 name|uint8_t
 name|rf_rev
 decl_stmt|;
@@ -376,6 +385,10 @@ decl_stmt|;
 name|struct
 name|rum_rx_desc
 name|sc_rx_desc
+decl_stmt|;
+name|struct
+name|cv
+name|sc_cmd_cv
 decl_stmt|;
 name|struct
 name|mtx

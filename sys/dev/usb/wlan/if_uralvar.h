@@ -129,6 +129,10 @@ name|struct
 name|usb2_proc_msg
 name|hdr
 decl_stmt|;
+name|usb2_proc_callback_t
+modifier|*
+name|func
+decl_stmt|;
 name|struct
 name|ural_softc
 modifier|*
@@ -328,6 +332,11 @@ index|[
 name|URAL_N_TRANSFER
 index|]
 decl_stmt|;
+name|struct
+name|ural_task
+modifier|*
+name|sc_last_task
+decl_stmt|;
 name|enum
 name|ieee80211_state
 name|sc_state
@@ -390,6 +399,10 @@ decl_stmt|;
 name|struct
 name|mtx
 name|sc_mtx
+decl_stmt|;
+name|struct
+name|cv
+name|sc_cmd_cv
 decl_stmt|;
 name|uint16_t
 name|sta
