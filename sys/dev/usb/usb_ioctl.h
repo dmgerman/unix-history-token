@@ -45,6 +45,13 @@ begin_define
 define|#
 directive|define
 name|USB_DEVICE_NAME
+value|"usbctl"
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_DEVICE_DIR
 value|"usb"
 end_define
 
@@ -506,34 +513,6 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_dev_perm
-block|{
-comment|/* Access information */
-name|uint32_t
-name|user_id
-decl_stmt|;
-name|uint32_t
-name|group_id
-decl_stmt|;
-name|uint16_t
-name|mode
-decl_stmt|;
-comment|/* Device location */
-name|uint16_t
-name|bus_index
-decl_stmt|;
-name|uint16_t
-name|dev_index
-decl_stmt|;
-name|uint16_t
-name|iface_index
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|usb2_gen_quirk
 block|{
 name|uint16_t
@@ -846,61 +825,9 @@ name|USB_READ_DIR
 value|_IOW ('U', 127, struct usb2_read_dir)
 end_define
 
-begin_define
-define|#
-directive|define
-name|USB_SET_ROOT_PERM
-value|_IOW ('U', 128, struct usb2_dev_perm)
-end_define
-
-begin_define
-define|#
-directive|define
-name|USB_SET_BUS_PERM
-value|_IOW ('U', 129, struct usb2_dev_perm)
-end_define
-
-begin_define
-define|#
-directive|define
-name|USB_SET_DEVICE_PERM
-value|_IOW ('U', 130, struct usb2_dev_perm)
-end_define
-
-begin_define
-define|#
-directive|define
-name|USB_SET_IFACE_PERM
-value|_IOW ('U', 131, struct usb2_dev_perm)
-end_define
-
-begin_define
-define|#
-directive|define
-name|USB_GET_ROOT_PERM
-value|_IOWR('U', 132, struct usb2_dev_perm)
-end_define
-
-begin_define
-define|#
-directive|define
-name|USB_GET_BUS_PERM
-value|_IOWR('U', 133, struct usb2_dev_perm)
-end_define
-
-begin_define
-define|#
-directive|define
-name|USB_GET_DEVICE_PERM
-value|_IOWR('U', 134, struct usb2_dev_perm)
-end_define
-
-begin_define
-define|#
-directive|define
-name|USB_GET_IFACE_PERM
-value|_IOWR('U', 135, struct usb2_dev_perm)
-end_define
+begin_comment
+comment|/* 128 - 135 unused */
+end_comment
 
 begin_define
 define|#

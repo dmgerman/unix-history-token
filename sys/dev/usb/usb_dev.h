@@ -101,11 +101,6 @@ name|fifo
 parameter_list|,
 name|int
 name|fflags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_typedef
@@ -124,11 +119,6 @@ name|fifo
 parameter_list|,
 name|int
 name|fflags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_typedef
@@ -154,11 +144,6 @@ name|addr
 parameter_list|,
 name|int
 name|fflags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_typedef
@@ -304,6 +289,119 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Private per-device information.  */
+end_comment
+
+begin_struct
+struct|struct
+name|usb2_cdev_privdata
+block|{
+name|struct
+name|usb2_bus
+modifier|*
+name|bus
+decl_stmt|;
+name|struct
+name|usb2_device
+modifier|*
+name|udev
+decl_stmt|;
+name|struct
+name|usb2_interface
+modifier|*
+name|iface
+decl_stmt|;
+name|struct
+name|usb2_fifo
+modifier|*
+name|rxfifo
+decl_stmt|;
+name|struct
+name|usb2_fifo
+modifier|*
+name|txfifo
+decl_stmt|;
+name|int
+name|bus_index
+decl_stmt|;
+comment|/* bus index */
+name|int
+name|dev_index
+decl_stmt|;
+comment|/* device index */
+name|int
+name|iface_index
+decl_stmt|;
+comment|/* interface index */
+name|int
+name|ep_addr
+decl_stmt|;
+comment|/* endpoint address */
+name|uint8_t
+name|fifo_index
+decl_stmt|;
+comment|/* FIFO index */
+name|uint8_t
+name|is_read
+decl_stmt|;
+comment|/* location has read access */
+name|uint8_t
+name|is_write
+decl_stmt|;
+comment|/* location has write access */
+name|uint8_t
+name|is_uref
+decl_stmt|;
+comment|/* USB refcount decr. needed */
+name|uint8_t
+name|is_usbfs
+decl_stmt|;
+comment|/* USB-FS is active */
+name|int
+name|fflags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|usb2_fs_privdata
+block|{
+name|int
+name|bus_index
+decl_stmt|;
+name|int
+name|dev_index
+decl_stmt|;
+name|int
+name|iface_index
+decl_stmt|;
+name|int
+name|ep_addr
+decl_stmt|;
+name|int
+name|mode
+decl_stmt|;
+name|int
+name|fifo_index
+decl_stmt|;
+name|struct
+name|cdev
+modifier|*
+name|cdev
+decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|usb2_fs_privdata
+argument_list|)
+name|pd_next
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Most of the fields in the "usb2_fifo" structure are used by the  * generic USB access layer.  */
 end_comment
 
@@ -381,10 +479,8 @@ modifier|*
 name|priv_mtx
 decl_stmt|;
 comment|/* client data */
-name|struct
-name|file
-modifier|*
-name|curr_file
+name|int
+name|opened
 decl_stmt|;
 comment|/* set if FIFO is opened by a FILE */
 name|void
@@ -483,9 +579,22 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|struct
+name|cdev
+modifier|*
+name|dev
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|cdevsw
+name|usb2_devsw
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int
@@ -577,6 +686,15 @@ name|subunit
 parameter_list|,
 name|uint8_t
 name|iface_index
+parameter_list|,
+name|uid_t
+name|uid
+parameter_list|,
+name|gid_t
+name|gid
+parameter_list|,
+name|int
+name|mode
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -810,32 +928,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|usb2_check_thread_perm
-parameter_list|(
-name|struct
-name|usb2_device
-modifier|*
-name|udev
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|int
-name|fflags
-parameter_list|,
-name|uint8_t
-name|iface_index
-parameter_list|,
-name|uint8_t
-name|ep_index
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|usb2_fifo_wakeup
 parameter_list|(
@@ -857,13 +949,6 @@ specifier|const
 name|char
 modifier|*
 name|target
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -876,21 +961,6 @@ name|struct
 name|usb2_symlink
 modifier|*
 name|ps
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|uint32_t
-name|usb2_lookup_symlink
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|src_ptr
-parameter_list|,
-name|uint8_t
-name|src_len
 parameter_list|)
 function_decl|;
 end_function_decl

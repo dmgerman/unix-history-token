@@ -125,11 +125,6 @@ struct|struct
 name|usb2_interface
 block|{
 name|struct
-name|usb2_perm
-name|perm
-decl_stmt|;
-comment|/* interface permissions */
-name|struct
 name|usb2_interface_descriptor
 modifier|*
 name|idesc
@@ -143,6 +138,14 @@ decl_stmt|;
 name|uint8_t
 name|parent_iface_index
 decl_stmt|;
+name|uint16_t
+name|ep_in_mask
+decl_stmt|;
+comment|/* bitmask of IN endpoints */
+name|uint16_t
+name|ep_out_mask
+decl_stmt|;
+comment|/* bitmask of OUT endpoints */
 block|}
 struct|;
 end_struct
@@ -253,10 +256,6 @@ index|]
 decl_stmt|;
 comment|/* generic clear stall 						 * messages */
 name|struct
-name|usb2_perm
-name|perm
-decl_stmt|;
-name|struct
 name|sx
 name|default_sx
 index|[
@@ -289,6 +288,12 @@ name|usb2_pipe
 name|default_pipe
 decl_stmt|;
 comment|/* Control Endpoint 0 */
+name|struct
+name|cdev
+modifier|*
+name|default_dev
+decl_stmt|;
+comment|/* Control Endpoint 0 device node */
 name|struct
 name|usb2_pipe
 name|pipes
@@ -360,16 +365,38 @@ index|[
 name|USB_FIFO_MAX
 index|]
 decl_stmt|;
+name|char
+name|ugen_name
+index|[
+literal|20
+index|]
+decl_stmt|;
+comment|/* name of ugenX.X device */
 name|struct
 name|usb2_symlink
 modifier|*
 name|ugen_symlink
 decl_stmt|;
 comment|/* our generic symlink */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|usb2_fs_privdata
+argument_list|)
+name|pd_list
+expr_stmt|;
 name|uint32_t
 name|plugtime
 decl_stmt|;
 comment|/* copy of "ticks" */
+name|uint16_t
+name|ep_rd_opened
+decl_stmt|;
+comment|/* bitmask of endpoints opened */
+name|uint16_t
+name|ep_wr_opened
+decl_stmt|;
+comment|/*  from the device nodes. */
 name|uint16_t
 name|refcount
 decl_stmt|;

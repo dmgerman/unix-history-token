@@ -718,27 +718,6 @@ comment|/* structures */
 end_comment
 
 begin_comment
-comment|/*  * This structure contains permissions.  */
-end_comment
-
-begin_struct
-struct|struct
-name|usb2_perm
-block|{
-name|uint32_t
-name|uid
-decl_stmt|;
-name|uint32_t
-name|gid
-decl_stmt|;
-name|uint16_t
-name|mode
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Common queue structure for USB transfers.  */
 end_comment
 
@@ -1381,79 +1360,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Structure used when referring an USB device */
-end_comment
-
-begin_struct
-struct|struct
-name|usb2_location
-block|{
-name|struct
-name|usb2_bus
-modifier|*
-name|bus
-decl_stmt|;
-name|struct
-name|usb2_device
-modifier|*
-name|udev
-decl_stmt|;
-name|struct
-name|usb2_interface
-modifier|*
-name|iface
-decl_stmt|;
-name|struct
-name|usb2_fifo
-modifier|*
-name|rxfifo
-decl_stmt|;
-name|struct
-name|usb2_fifo
-modifier|*
-name|txfifo
-decl_stmt|;
-name|uint32_t
-name|devloc
-decl_stmt|;
-comment|/* original devloc */
-name|uint16_t
-name|bus_index
-decl_stmt|;
-comment|/* bus index */
-name|uint8_t
-name|dev_index
-decl_stmt|;
-comment|/* device index */
-name|uint8_t
-name|iface_index
-decl_stmt|;
-comment|/* interface index */
-name|uint8_t
-name|fifo_index
-decl_stmt|;
-comment|/* FIFO index */
-name|uint8_t
-name|is_read
-decl_stmt|;
-comment|/* set if location has read access */
-name|uint8_t
-name|is_write
-decl_stmt|;
-comment|/* set if location has write access */
-name|uint8_t
-name|is_uref
-decl_stmt|;
-comment|/* set if USB refcount decr. needed */
-name|uint8_t
-name|is_usbfs
-decl_stmt|;
-comment|/* set if USB-FS is active */
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/* external variables */
 end_comment
 
@@ -1839,38 +1745,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|usb2_error_t
-name|usb2_ref_device
-parameter_list|(
-name|struct
-name|file
-modifier|*
-name|fp
-parameter_list|,
-name|struct
-name|usb2_location
-modifier|*
-name|ploc
-parameter_list|,
-name|uint32_t
-name|devloc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|usb2_unref_device
-parameter_list|(
-name|struct
-name|usb2_location
-modifier|*
-name|ploc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|usb2_set_parent_iface
 parameter_list|(
@@ -1884,30 +1758,6 @@ name|iface_index
 parameter_list|,
 name|uint8_t
 name|parent_index
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|usb2_set_iface_perm
-parameter_list|(
-name|struct
-name|usb2_device
-modifier|*
-name|udev
-parameter_list|,
-name|uint8_t
-name|iface_index
-parameter_list|,
-name|uint32_t
-name|uid
-parameter_list|,
-name|uint32_t
-name|gid
-parameter_list|,
-name|uint16_t
-name|mode
 parameter_list|)
 function_decl|;
 end_function_decl

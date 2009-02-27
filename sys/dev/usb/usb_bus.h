@@ -130,10 +130,6 @@ name|mtx
 name|bus_mtx
 decl_stmt|;
 name|struct
-name|usb2_perm
-name|perm
-decl_stmt|;
-name|struct
 name|usb2_xfer_queue
 name|intr_q
 decl_stmt|;
