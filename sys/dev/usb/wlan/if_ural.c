@@ -1115,18 +1115,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|ural_update_mcast
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|ural_update_promisc
 parameter_list|(
 name|struct
@@ -3281,12 +3269,6 @@ name|ieee80211_ifattach
 argument_list|(
 name|ic
 argument_list|)
-expr_stmt|;
-name|ic
-operator|->
-name|ic_update_mcast
-operator|=
-name|ural_update_mcast
 expr_stmt|;
 name|ic
 operator|->
@@ -11341,21 +11323,6 @@ else|:
 literal|"leaving"
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|ural_update_mcast
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|)
-block|{
-comment|/* not supported */
 block|}
 end_function
 
