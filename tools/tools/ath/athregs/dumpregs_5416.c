@@ -1508,7 +1508,7 @@ name|DUMP_BASIC
 block|}
 block|,
 block|{
-name|AR5416_PCIE_PM_CTRL
+name|AR_PCIE_PM_CTRL
 block|,
 literal|"PCIEPMC"
 block|,
