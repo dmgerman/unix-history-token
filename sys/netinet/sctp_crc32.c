@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/sctp_os.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/sctp_crc32.h>
 end_include
 

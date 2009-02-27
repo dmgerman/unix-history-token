@@ -37616,7 +37616,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|sctp_remove_from_wheel
 parameter_list|(
@@ -37634,9 +37633,18 @@ name|struct
 name|sctp_stream_out
 modifier|*
 name|strq
+parameter_list|,
+name|int
+name|holds_lock
 parameter_list|)
 block|{
 comment|/* take off and then setup so we know it is not on the wheel */
+if|if
+condition|(
+name|holds_lock
+operator|==
+literal|0
+condition|)
 name|SCTP_TCB_SEND_LOCK
 argument_list|(
 name|stcb
@@ -37654,6 +37662,12 @@ argument_list|)
 condition|)
 block|{
 comment|/* more was added */
+if|if
+condition|(
+name|holds_lock
+operator|==
+literal|0
+condition|)
 name|SCTP_TCB_SEND_UNLOCK
 argument_list|(
 name|stcb
@@ -37689,6 +37703,12 @@ name|tqe_prev
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|holds_lock
+operator|==
+literal|0
+condition|)
 name|SCTP_TCB_SEND_UNLOCK
 argument_list|(
 name|stcb
@@ -45359,6 +45379,8 @@ argument_list|,
 name|asoc
 argument_list|,
 name|strq
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
