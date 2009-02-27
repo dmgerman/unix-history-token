@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2006-2008 Broadcom Corporation  *	David Christensen<davidch@broadcom.com>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of Broadcom Corporation nor the name of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written consent.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS'  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2006-2009 Broadcom Corporation  *	David Christensen<davidch@broadcom.com>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of Broadcom Corporation nor the name of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written consent.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS'  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -177,13 +177,6 @@ end_comment
 begin_comment
 comment|/****************************************************************************/
 end_comment
-
-begin_define
-define|#
-directive|define
-name|BCE_USE_SPLIT_HEADER
-value|1
-end_define
 
 begin_comment
 comment|/* #define BCE_NVRAM_WRITE_SUPPORT 1 */
@@ -1199,7 +1192,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 end_ifdef
 
 begin_function_decl
@@ -1262,7 +1255,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 end_ifdef
 
 begin_function_decl
@@ -1367,7 +1360,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 end_ifdef
 
 begin_function_decl
@@ -2236,7 +2229,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 end_ifdef
 
 begin_function_decl
@@ -3506,7 +3499,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 name|printf
 argument_list|(
 literal|"SPLT "
@@ -5054,7 +5047,7 @@ expr_stmt|;
 comment|/* 	 * Assume standard mbuf sizes for buffer allocation. 	 * This may change later if the MTU size is set to 	 * something other than 1500. 	 */
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 name|sc
 operator|->
 name|rx_bd_mbuf_alloc_size
@@ -12199,7 +12192,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 comment|/* Free, unmap and destroy all page buffer descriptor chain pages. */
 for|for
 control|(
@@ -12517,7 +12510,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 comment|/* Unload and destroy the page mbuf maps. */
 for|for
 control|(
@@ -14205,7 +14198,7 @@ block|}
 comment|/* 	 * Create a DMA tag for RX mbufs. 	 */
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 name|max_size
 operator|=
 name|max_seg_size
@@ -14349,7 +14342,7 @@ block|}
 block|}
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 comment|/* 	 * Create a DMA tag for the page buffer descriptor chain, 	 * allocate and clear the memory, and fetch the physical 	 * address of the blocks. 	 */
 if|if
 condition|(
@@ -19316,7 +19309,7 @@ expr_stmt|;
 comment|/* Free RX buffers. */
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 name|bce_free_pg_chain
 argument_list|(
 name|sc
@@ -21008,7 +21001,7 @@ empty_stmt|;
 comment|/* This is a new mbuf allocation. */
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 name|MGETHDR
 argument_list|(
 name|m_new
@@ -21376,7 +21369,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 end_ifdef
 
 begin_comment
@@ -21861,7 +21854,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* BCE_USE_SPLIT_HEADER */
+comment|/* ZERO_COPY_SOCKETS */
 end_comment
 
 begin_comment
@@ -23522,7 +23515,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 end_ifdef
 
 begin_comment
@@ -24312,7 +24305,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* BCE_USE_SPLIT_HEADER */
+comment|/* ZERO_COPY_SOCKETS */
 end_comment
 
 begin_comment
@@ -24923,7 +24916,7 @@ name|status
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 name|unsigned
 name|int
 name|rem_len
@@ -25007,7 +25000,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 comment|/* Prepare the page chain pages to be accessed by the host CPU. */
 for|for
 control|(
@@ -25062,7 +25055,7 @@ name|rx_cons
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 name|sw_pg_cons
 operator|=
 name|sc
@@ -25240,7 +25233,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 comment|/* 		 * Check whether the received frame fits in a single 		 * mbuf or not (i.e. packet data + FCS<= 		 * sc->rx_bd_mbuf_data_len bytes). 		 */
 if|if
 condition|(
@@ -25745,7 +25738,7 @@ name|sw_rx_cons
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 name|sc
 operator|->
 name|pg_cons
@@ -25785,7 +25778,7 @@ name|rx_cons
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 name|sw_pg_cons
 operator|=
 name|sc
@@ -25817,7 +25810,7 @@ block|}
 comment|/* No new packets to process.  Refill the RX and page chains and exit. */
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 name|sc
 operator|->
 name|pg_cons
@@ -25874,7 +25867,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 for|for
 control|(
 name|int
@@ -26797,7 +26790,7 @@ expr_stmt|;
 comment|/* 	 * Calculate and program the hardware Ethernet MTU 	 * size. Be generous on the receive if we have room. 	 */
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 if|if
 condition|(
 name|ifp
@@ -26945,7 +26938,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 comment|/* Init page buffer descriptor chain. */
 name|bce_init_pg_chain
 argument_list|(
@@ -29043,7 +29036,7 @@ name|IFF_DRV_RUNNING
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 comment|/* No buffer allocation size changes are necessary. */
 else|#
 directive|else
@@ -31600,7 +31593,7 @@ expr_stmt|;
 comment|/* Top off the receive and page chains. */
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 name|bce_fill_pg_chain
 argument_list|(
 name|sc
@@ -32291,7 +32284,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 end_ifdef
 
 begin_comment
@@ -34810,7 +34803,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|ctx
@@ -36128,7 +36121,7 @@ begin_ifdef
 unit|}
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 end_ifdef
 
 begin_comment
@@ -36655,7 +36648,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 end_ifdef
 
 begin_comment
@@ -39403,7 +39396,7 @@ begin_ifdef
 unit|}
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 end_ifdef
 
 begin_comment
@@ -41246,7 +41239,7 @@ argument_list|)
 block|;
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 name|val_hi
 operator|=
 name|BCE_ADDR_HI
@@ -41332,7 +41325,7 @@ argument_list|)
 block|;
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 name|val_hi
 operator|=
 name|BCE_ADDR_HI
@@ -41543,7 +41536,7 @@ argument_list|)
 block|;
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 name|BCE_PRINTF
 argument_list|(
 literal|"     0x%04X(0x%04X) - (sc->pg_prod) page producer index\n"
@@ -43850,7 +43843,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|BCE_USE_SPLIT_HEADER
+name|ZERO_COPY_SOCKETS
 name|bce_dump_pgbd
 argument_list|(
 name|sc
