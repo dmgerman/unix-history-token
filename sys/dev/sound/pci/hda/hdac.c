@@ -21075,7 +21075,7 @@ operator|&&
 operator|(
 name|hdac_devices
 index|[
-name|i
+name|devid
 index|]
 operator|.
 name|flags
