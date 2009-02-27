@@ -8166,7 +8166,7 @@ name|priv_check
 argument_list|(
 name|curthread
 argument_list|,
-name|PRIV_ROOT
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -8460,7 +8460,7 @@ name|priv_check
 argument_list|(
 name|curthread
 argument_list|,
-name|PRIV_ROOT
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
