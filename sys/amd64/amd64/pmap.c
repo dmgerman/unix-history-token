@@ -2766,7 +2766,7 @@ name|pmap_pde
 argument_list|(
 name|kernel_pmap
 argument_list|,
-name|VM_MIN_KERNEL_ADDRESS
+name|KERNBASE
 argument_list|)
 expr_stmt|;
 for|for
@@ -2805,6 +2805,24 @@ name|PG_V
 operator|)
 condition|)
 continue|continue;
+name|KASSERT
+argument_list|(
+operator|(
+name|pd
+index|[
+name|i
+index|]
+operator|&
+name|PG_V
+operator|)
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"pmap_init: page table page is missing"
+operator|)
+argument_list|)
+expr_stmt|;
 name|mpte
 operator|=
 name|PHYS_TO_VM_PAGE
@@ -2842,7 +2860,7 @@ name|pindex
 operator|=
 name|pmap_pde_pindex
 argument_list|(
-name|VM_MIN_KERNEL_ADDRESS
+name|KERNBASE
 argument_list|)
 operator|+
 name|i
