@@ -246,9 +246,6 @@ name|ugd_maxlen
 operator|=
 literal|65535
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HID_COMPAT7
 if|if
 condition|(
 name|ioctl
@@ -264,6 +261,9 @@ operator|<
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|HID_COMPAT7
 comment|/* could not read descriptor */
 comment|/* try FreeBSD 7 compat code */
 return|return
@@ -274,9 +274,16 @@ name|fd
 argument_list|)
 operator|)
 return|;
-block|}
+else|#
+directive|else
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 endif|#
 directive|endif
+block|}
 comment|/* 	 * NOTE: The kernel will return a failure if  	 * "ugd_actlen" is zero. 	 */
 name|data
 operator|=
