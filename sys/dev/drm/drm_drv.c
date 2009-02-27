@@ -380,8 +380,6 @@ name|drm_addctx
 argument_list|,
 name|DRM_AUTH
 operator||
-name|DRM_MASTER
-operator||
 name|DRM_ROOT_ONLY
 argument_list|)
 block|,
@@ -512,7 +510,7 @@ name|DRM_IOCTL_DEF
 argument_list|(
 name|DRM_IOCTL_ADD_BUFS
 argument_list|,
-name|drm_addbufs_ioctl
+name|drm_addbufs
 argument_list|,
 name|DRM_AUTH
 operator||
@@ -530,6 +528,8 @@ argument_list|,
 name|DRM_AUTH
 operator||
 name|DRM_MASTER
+operator||
+name|DRM_ROOT_ONLY
 argument_list|)
 block|,
 name|DRM_IOCTL_DEF
