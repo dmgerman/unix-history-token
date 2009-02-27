@@ -592,12 +592,6 @@ operator|&
 name|ifr
 argument_list|)
 expr_stmt|;
-else|else
-name|clone_setcallback
-argument_list|(
-name|vlan_create
-argument_list|)
-expr_stmt|;
 end_if
 
 begin_macro
@@ -656,12 +650,6 @@ name|s
 argument_list|,
 operator|&
 name|ifr
-argument_list|)
-expr_stmt|;
-else|else
-name|clone_setcallback
-argument_list|(
-name|vlan_create
 argument_list|)
 expr_stmt|;
 block|}
@@ -975,6 +963,13 @@ argument_list|(
 name|vlan_cb
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|clone_setdefcallback
+argument_list|(
+literal|"vlan"
+argument_list|,
+name|vlan_create
 argument_list|)
 expr_stmt|;
 undef|#

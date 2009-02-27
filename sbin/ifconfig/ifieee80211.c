@@ -23997,7 +23997,8 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"must specify a parent when creating a wlan device"
+literal|"must specify a parent device (wlandev) when creating "
+literal|"a wlan device"
 argument_list|)
 expr_stmt|;
 if|if
@@ -24085,11 +24086,6 @@ name|arg
 argument_list|,
 name|IFNAMSIZ
 argument_list|)
-block|;
-name|clone_setcallback
-argument_list|(
-name|wlan_create
-argument_list|)
 block|; }
 specifier|static
 name|DECL_CMD_FUNC
@@ -24140,14 +24136,6 @@ operator|->
 name|octet
 argument_list|,
 name|IEEE80211_ADDR_LEN
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|clone_setcallback
-argument_list|(
-name|wlan_create
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -24212,11 +24200,6 @@ operator|.
 name|icp_flags
 operator||=
 name|IEEE80211_CLONE_MACADDR
-expr_stmt|;
-name|clone_setcallback
-argument_list|(
-name|wlan_create
-argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -24398,14 +24381,6 @@ argument_list|)
 expr_stmt|;
 end_else
 
-begin_expr_stmt
-name|clone_setcallback
-argument_list|(
-name|wlan_create
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_undef
 undef|#
 directive|undef
@@ -24454,11 +24429,6 @@ name|icp_flags
 operator||=
 name|IEEE80211_CLONE_NOBEACONS
 expr_stmt|;
-name|clone_setcallback
-argument_list|(
-name|wlan_create
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -24503,11 +24473,6 @@ operator|&=
 operator|~
 name|IEEE80211_CLONE_BSSID
 expr_stmt|;
-name|clone_setcallback
-argument_list|(
-name|wlan_create
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -24551,11 +24516,6 @@ name|icp_flags
 operator|&=
 operator|~
 name|IEEE80211_CLONE_WDSLEGACY
-expr_stmt|;
-name|clone_setcallback
-argument_list|(
-name|wlan_create
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -25877,6 +25837,13 @@ name|af_register
 argument_list|(
 operator|&
 name|af_ieee80211
+argument_list|)
+expr_stmt|;
+name|clone_setdefcallback
+argument_list|(
+literal|"wlan"
+argument_list|,
+name|wlan_create
 argument_list|)
 expr_stmt|;
 undef|#
