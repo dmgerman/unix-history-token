@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_route.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_device_polling.h"
 end_include
 
@@ -112,6 +118,12 @@ end_include
 begin_comment
 comment|/* for NETISR_POLL		*/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<net/route.h>
+end_include
 
 begin_include
 include|#

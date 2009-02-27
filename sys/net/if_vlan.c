@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_route.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_vlan.h"
 end_include
 
@@ -131,6 +137,12 @@ begin_include
 include|#
 directive|include
 file|<net/if_vlan_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/route.h>
 end_include
 
 begin_include
