@@ -1934,7 +1934,7 @@ name|flags
 operator||=
 name|ATA_R_ORDERED
 operator||
-name|ATA_R_THREAD
+name|ATA_R_DIRECT
 expr_stmt|;
 name|ata_queue_request
 argument_list|(
@@ -8908,7 +8908,7 @@ name|size
 argument_list|,
 name|ATA_R_WRITE
 operator||
-name|ATA_R_THREAD
+name|ATA_R_DIRECT
 argument_list|)
 condition|)
 block|{
@@ -13106,7 +13106,7 @@ argument_list|)
 argument_list|,
 name|ATA_R_WRITE
 operator||
-name|ATA_R_THREAD
+name|ATA_R_DIRECT
 argument_list|)
 condition|)
 block|{
@@ -16034,7 +16034,7 @@ literal|1024
 argument_list|,
 name|ATA_R_WRITE
 operator||
-name|ATA_R_THREAD
+name|ATA_R_DIRECT
 argument_list|)
 condition|)
 block|{
@@ -18034,7 +18034,7 @@ argument_list|)
 argument_list|,
 name|ATA_R_WRITE
 operator||
-name|ATA_R_THREAD
+name|ATA_R_DIRECT
 argument_list|)
 condition|)
 block|{
@@ -22631,7 +22631,7 @@ argument_list|)
 argument_list|,
 name|ATA_R_WRITE
 operator||
-name|ATA_R_THREAD
+name|ATA_R_DIRECT
 argument_list|)
 condition|)
 block|{
@@ -24717,7 +24717,7 @@ argument_list|)
 argument_list|,
 name|ATA_R_WRITE
 operator||
-name|ATA_R_THREAD
+name|ATA_R_DIRECT
 argument_list|)
 condition|)
 block|{
@@ -26118,7 +26118,7 @@ argument_list|)
 argument_list|,
 name|ATA_R_WRITE
 operator||
-name|ATA_R_THREAD
+name|ATA_R_DIRECT
 argument_list|)
 condition|)
 block|{
