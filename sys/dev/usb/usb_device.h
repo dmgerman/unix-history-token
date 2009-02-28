@@ -138,14 +138,6 @@ decl_stmt|;
 name|uint8_t
 name|parent_iface_index
 decl_stmt|;
-name|uint16_t
-name|ep_in_mask
-decl_stmt|;
-comment|/* bitmask of IN endpoints */
-name|uint16_t
-name|ep_out_mask
-decl_stmt|;
-comment|/* bitmask of OUT endpoints */
 block|}
 struct|;
 end_struct

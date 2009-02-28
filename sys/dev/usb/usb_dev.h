@@ -330,10 +330,6 @@ name|dev_index
 decl_stmt|;
 comment|/* device index */
 name|int
-name|iface_index
-decl_stmt|;
-comment|/* interface index */
-name|int
 name|ep_addr
 decl_stmt|;
 comment|/* endpoint address */
@@ -373,9 +369,6 @@ name|bus_index
 decl_stmt|;
 name|int
 name|dev_index
-decl_stmt|;
-name|int
-name|iface_index
 decl_stmt|;
 name|int
 name|ep_addr

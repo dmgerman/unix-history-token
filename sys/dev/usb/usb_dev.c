@@ -379,8 +379,6 @@ parameter_list|,
 name|uint8_t
 parameter_list|,
 name|uint8_t
-parameter_list|,
-name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -673,14 +671,6 @@ operator|=
 name|pd
 operator|->
 name|dev_index
-expr_stmt|;
-name|cpd
-operator|->
-name|iface_index
-operator|=
-name|pd
-operator|->
-name|iface_index
 expr_stmt|;
 name|cpd
 operator|->
@@ -1099,73 +1089,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* no ref */
-block|}
-block|}
-comment|/* check if we require an interface */
-name|cpd
-operator|->
-name|iface
-operator|=
-name|usb2_get_iface
-argument_list|(
-name|cpd
-operator|->
-name|udev
-argument_list|,
-name|cpd
-operator|->
-name|iface_index
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dev_ep_index
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* non control endpoint - we need an interface */
-if|if
-condition|(
-name|cpd
-operator|->
-name|iface
-operator|==
-name|NULL
-condition|)
-block|{
-name|DPRINTFN
-argument_list|(
-literal|2
-argument_list|,
-literal|"no iface\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|error
-goto|;
-block|}
-if|if
-condition|(
-name|cpd
-operator|->
-name|iface
-operator|->
-name|idesc
-operator|==
-name|NULL
-condition|)
-block|{
-name|DPRINTFN
-argument_list|(
-literal|2
-argument_list|,
-literal|"no idesc\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|error
-goto|;
 block|}
 block|}
 comment|/* when everything is OK we increment the refcounts */
@@ -1776,13 +1699,6 @@ modifier|*
 name|pipe
 decl_stmt|;
 name|uint8_t
-name|iface_index
-init|=
-name|cpd
-operator|->
-name|iface_index
-decl_stmt|;
-name|uint8_t
 name|n
 decl_stmt|;
 name|uint8_t
@@ -2048,22 +1964,6 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|ep
-operator|!=
-literal|0
-operator|&&
-name|f
-operator|->
-name|iface_index
-operator|!=
-name|iface_index
-condition|)
-block|{
-comment|/* wrong interface index */
-continue|continue;
-block|}
-if|if
-condition|(
 name|f
 operator|->
 name|opened
@@ -2120,22 +2020,6 @@ name|ep
 condition|)
 block|{
 comment|/* wrong endpoint index */
-continue|continue;
-block|}
-if|if
-condition|(
-name|ep
-operator|!=
-literal|0
-operator|&&
-name|f
-operator|->
-name|iface_index
-operator|!=
-name|iface_index
-condition|)
-block|{
-comment|/* wrong interface index */
 continue|continue;
 block|}
 if|if
@@ -2226,8 +2110,6 @@ name|usb2_dev_get_pipe
 argument_list|(
 name|udev
 argument_list|,
-name|iface_index
-argument_list|,
 name|ep
 argument_list|,
 name|USB_FIFO_TX
@@ -2237,9 +2119,7 @@ name|DPRINTFN
 argument_list|(
 literal|5
 argument_list|,
-literal|"dev_get_pipe(%d, 0x%x, 0x%x)\n"
-argument_list|,
-name|iface_index
+literal|"dev_get_pipe(%d, 0x%x)\n"
 argument_list|,
 name|ep
 argument_list|,
@@ -2331,6 +2211,8 @@ name|f
 operator|->
 name|iface_index
 operator|=
+name|pipe
+operator|->
 name|iface_index
 expr_stmt|;
 name|f
@@ -2388,8 +2270,6 @@ name|usb2_dev_get_pipe
 argument_list|(
 name|udev
 argument_list|,
-name|iface_index
-argument_list|,
 name|ep
 argument_list|,
 name|USB_FIFO_RX
@@ -2399,9 +2279,7 @@ name|DPRINTFN
 argument_list|(
 literal|5
 argument_list|,
-literal|"dev_get_pipe(%d, 0x%x, 0x%x)\n"
-argument_list|,
-name|iface_index
+literal|"dev_get_pipe(%d, 0x%x)\n"
 argument_list|,
 name|ep
 argument_list|,
@@ -2493,6 +2371,8 @@ name|f
 operator|->
 name|iface_index
 operator|=
+name|pipe
+operator|->
 name|iface_index
 expr_stmt|;
 name|f
@@ -2863,9 +2743,6 @@ modifier|*
 name|udev
 parameter_list|,
 name|uint8_t
-name|iface_index
-parameter_list|,
-name|uint8_t
 name|ep_index
 parameter_list|,
 name|uint8_t
@@ -2995,30 +2872,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-block|}
-if|if
-condition|(
-name|ep_index
-operator|!=
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|pipe
-operator|->
-name|iface_index
-operator|!=
-name|iface_index
-condition|)
-block|{
-comment|/* 			 * Permissions violation - trying to access a 			 * pipe that does not belong to the interface. 			 */
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
 block|}
 return|return
 operator|(
@@ -4644,13 +4497,15 @@ operator|(
 name|err
 operator|)
 return|;
+comment|/*  	 * Performance optimistaion: We try to check for IOCTL's that 	 * don't need the USB reference first. Then we grab the USB 	 * reference if we need it! 	 */
 name|err
 operator|=
 name|usb2_ref_device
 argument_list|(
 name|cpd
 argument_list|,
-literal|1
+literal|0
+comment|/* no uref */
 argument_list|)
 expr_stmt|;
 if|if
@@ -7351,12 +7206,6 @@ operator|=
 name|udev
 operator|->
 name|device_index
-expr_stmt|;
-name|pd
-operator|->
-name|iface_index
-operator|=
-name|iface_index
 expr_stmt|;
 name|pd
 operator|->
