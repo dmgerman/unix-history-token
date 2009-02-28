@@ -3559,11 +3559,6 @@ name|ccb_getdev
 modifier|*
 name|cgd
 decl_stmt|;
-name|struct
-name|cam_sim
-modifier|*
-name|sim
-decl_stmt|;
 name|cam_status
 name|status
 decl_stmt|;
@@ -3617,17 +3612,6 @@ name|T_OPTICAL
 condition|)
 break|break;
 comment|/* 		 * Allocate a peripheral instance for 		 * this device and start the probe 		 * process. 		 */
-name|sim
-operator|=
-name|xpt_path_sim
-argument_list|(
-name|cgd
-operator|->
-name|ccb_h
-operator|.
-name|path
-argument_list|)
-expr_stmt|;
 name|status
 operator|=
 name|cam_periph_alloc
