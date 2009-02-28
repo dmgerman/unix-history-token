@@ -516,6 +516,34 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Defined by POSIX 1003.1-2008; BSD default, but reserve for future use. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|200809
+end_if
+
+begin_define
+define|#
+directive|define
+name|O_TTY_INIT
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* Restore default termios attributes */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * XXX missing O_DSYNC, O_RSYNC.  */
 end_comment
 
