@@ -7125,46 +7125,6 @@ literal|"share->uexcl"
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|(
-name|instance
-operator|->
-name|li_flags
-operator|&
-name|LI_NORELEASE
-operator|)
-operator|!=
-literal|0
-operator|&&
-name|witness_watch
-operator|>
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"forbidden unlock of (%s) %s @ %s:%d\n"
-argument_list|,
-name|class
-operator|->
-name|lc_name
-argument_list|,
-name|lock
-operator|->
-name|lo_name
-argument_list|,
-name|file
-argument_list|,
-name|line
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"lock marked norelease"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* If we are recursed, unrecurse. */
 if|if
 condition|(
@@ -7210,6 +7170,47 @@ name|li_flags
 operator|--
 expr_stmt|;
 return|return;
+block|}
+comment|/* The lock is now being dropped, check for NORELEASE flag */
+if|if
+condition|(
+operator|(
+name|instance
+operator|->
+name|li_flags
+operator|&
+name|LI_NORELEASE
+operator|)
+operator|!=
+literal|0
+operator|&&
+name|witness_watch
+operator|>
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"forbidden unlock of (%s) %s @ %s:%d\n"
+argument_list|,
+name|class
+operator|->
+name|lc_name
+argument_list|,
+name|lock
+operator|->
+name|lo_name
+argument_list|,
+name|file
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"lock marked norelease"
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Otherwise, remove this item from the list. */
 name|s
