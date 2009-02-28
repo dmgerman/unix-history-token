@@ -789,20 +789,6 @@ parameter_list|)
 value|time_after_eq(b,a)
 end_define
 
-begin_define
-define|#
-directive|define
-name|memmove
-parameter_list|(
-name|dst
-parameter_list|,
-name|src
-parameter_list|,
-name|n
-parameter_list|)
-value|ovbcopy(src, dst, n)
-end_define
-
 begin_function_decl
 name|struct
 name|mbuf

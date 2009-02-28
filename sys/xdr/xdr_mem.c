@@ -95,20 +95,6 @@ directive|include
 file|<rpc/xdr.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|memmove
-parameter_list|(
-name|dst
-parameter_list|,
-name|src
-parameter_list|,
-name|len
-parameter_list|)
-value|bcopy(src, dst, len)
-end_define
-
 begin_function_decl
 specifier|static
 name|void
