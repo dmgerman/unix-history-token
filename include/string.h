@@ -189,25 +189,26 @@ directive|if
 name|__BSD_VISIBLE
 end_if
 
-begin_function_decl
+begin_decl_stmt
 name|void
 modifier|*
 name|memmem
-parameter_list|(
+argument_list|(
 specifier|const
 name|void
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|size_t
-parameter_list|,
+argument_list|,
 specifier|const
 name|void
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
