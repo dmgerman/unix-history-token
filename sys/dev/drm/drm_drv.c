@@ -2754,6 +2754,11 @@ name|retcode
 argument_list|)
 expr_stmt|;
 block|}
+name|drm_vblank_cleanup
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|DRM_LOCK
 argument_list|()
 expr_stmt|;

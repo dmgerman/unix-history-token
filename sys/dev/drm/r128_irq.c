@@ -308,12 +308,7 @@ name|dev
 parameter_list|)
 block|{
 return|return
-name|drm_vblank_init
-argument_list|(
-name|dev
-argument_list|,
-literal|1
-argument_list|)
+literal|0
 return|;
 block|}
 end_function
