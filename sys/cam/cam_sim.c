@@ -489,6 +489,15 @@ literal|"sim->refcount>= 1"
 operator|)
 argument_list|)
 expr_stmt|;
+name|mtx_assert
+argument_list|(
+name|sim
+operator|->
+name|mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|sim
 operator|->
 name|refcount
@@ -499,8 +508,8 @@ condition|(
 name|sim
 operator|->
 name|refcount
-operator|<=
-literal|1
+operator|==
+literal|0
 condition|)
 name|wakeup
 argument_list|(
@@ -531,6 +540,15 @@ argument_list|,
 operator|(
 literal|"sim->refcount>= 1"
 operator|)
+argument_list|)
+expr_stmt|;
+name|mtx_assert
+argument_list|(
+name|sim
+operator|->
+name|mtx
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|sim
