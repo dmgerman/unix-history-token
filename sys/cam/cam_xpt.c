@@ -26478,12 +26478,6 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-name|done_ccb
-operator|->
-name|ccb_h
-operator|.
-name|pinfo
-operator|.
 name|priority
 argument_list|)
 expr_stmt|;
