@@ -1103,14 +1103,14 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
+name|data
+argument_list|,
 operator|&
 name|tp
 operator|->
 name|t_termios
-argument_list|,
-name|data
 argument_list|,
 sizeof|sizeof
 argument_list|(
