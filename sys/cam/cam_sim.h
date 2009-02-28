@@ -157,6 +157,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|cam_sim_hold
+parameter_list|(
+name|struct
+name|cam_sim
+modifier|*
+name|sim
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cam_sim_release
+parameter_list|(
+name|struct
+name|cam_sim
+modifier|*
+name|sim
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Optional sim attributes may be set with these. */
 end_comment
@@ -367,6 +391,10 @@ modifier|*
 name|devq
 decl_stmt|;
 comment|/* Device Queue to use for this SIM */
+name|int
+name|refcount
+decl_stmt|;
+comment|/* References to the SIM. */
 comment|/* "Pool" of inactive ccbs managed by xpt_alloc_ccb and xpt_free_ccb */
 name|SLIST_HEAD
 argument_list|(

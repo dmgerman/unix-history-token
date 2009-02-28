@@ -18403,6 +18403,11 @@ name|sim
 operator|->
 name|path_id
 expr_stmt|;
+name|cam_sim_hold
+argument_list|(
+name|sim
+argument_list|)
+expr_stmt|;
 name|new_bus
 operator|->
 name|sim
@@ -20677,6 +20682,13 @@ operator|&
 name|xsoftc
 operator|.
 name|xpt_topo_lock
+argument_list|)
+expr_stmt|;
+name|cam_sim_release
+argument_list|(
+name|bus
+operator|->
+name|sim
 argument_list|)
 expr_stmt|;
 name|free
