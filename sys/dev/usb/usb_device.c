@@ -6498,11 +6498,6 @@ name|struct
 name|usb2_config_descriptor
 modifier|*
 name|cd
-init|=
-name|usb2_get_config_descriptor
-argument_list|(
-name|udev
-argument_list|)
 decl_stmt|;
 name|struct
 name|usb2_endpoint_descriptor
@@ -6606,6 +6601,13 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	 * Collect all used endpoint numbers instead of just 	 * generating 16 static endpoints. 	 */
+name|cd
+operator|=
+name|usb2_get_config_descriptor
+argument_list|(
+name|udev
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
