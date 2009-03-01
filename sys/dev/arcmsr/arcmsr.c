@@ -10027,6 +10027,8 @@ name|spi
 operator|->
 name|valid
 operator|=
+name|CTS_SPI_VALID_DISC
+operator||
 name|CTS_SPI_VALID_SYNC_RATE
 operator||
 name|CTS_SPI_VALID_SYNC_OFFSET
