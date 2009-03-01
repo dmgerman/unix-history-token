@@ -23487,7 +23487,7 @@ parameter_list|,
 name|newaction
 parameter_list|)
 define|\
-value|do {									\ 	char **text = probe_action_text;				\ 	CAM_DEBUG((softc)->periph->path, CAM_DEBUG_INFO,		\ 	    ("Probe %s to %s\n", text[(softc)->action],			\ 	    text[(newaction)]));					\ 	(softc)->action = (newaction);					\ } while(0)
+value|do {									\ 	char **text;							\ 	text = probe_action_text;					\ 	CAM_DEBUG((softc)->periph->path, CAM_DEBUG_INFO,		\ 	    ("Probe %s to %s\n", text[(softc)->action],			\ 	    text[(newaction)]));					\ 	(softc)->action = (newaction);					\ } while(0)
 end_define
 
 begin_typedef
