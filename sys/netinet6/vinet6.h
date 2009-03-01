@@ -386,6 +386,24 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Size guard. See sys/vimage.h. */
+end_comment
+
+begin_expr_stmt
+name|VIMAGE_CTASSERT
+argument_list|(
+name|SIZEOF_vnet_inet6
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|vnet_inet6
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
