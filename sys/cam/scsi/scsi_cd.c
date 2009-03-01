@@ -1280,6 +1280,24 @@ end_expr_stmt
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|CD_DEFAULT_RETRY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CD_DEFAULT_RETRY
+value|4
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|CHANGER_MIN_BUSY_SECONDS
 end_ifndef
 
@@ -1312,6 +1330,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cd_retry_count
+init|=
+name|CD_DEFAULT_RETRY
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1363,6 +1390,38 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"CD Changer"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_cam_cd
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|retry_count
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|cd_retry_count
+argument_list|,
+literal|0
+argument_list|,
+literal|"Normal I/O retry count"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.cam.cd.retry_count"
+argument_list|,
+operator|&
+name|cd_retry_count
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5895,7 +5954,7 @@ operator|->
 name|csio
 argument_list|,
 comment|/*retries*/
-literal|4
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone
