@@ -1337,7 +1337,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
+operator|<=
 name|mp_maxid
 condition|;
 name|i
@@ -1366,6 +1366,13 @@ condition|)
 name|ncpus
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|ncpus
+operator|==
+literal|0
+condition|)
+return|return;
 comment|/* obtain rendezvous lock */
 name|mtx_lock_spin
 argument_list|(
