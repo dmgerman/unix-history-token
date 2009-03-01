@@ -6468,12 +6468,16 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If we failed to flush the dirty blocks for this mount point, 	 * undo all the cdir/rdir and rootvnode changes we made above. 	 * Unless we failed to do so because the device is reporting that 	 * it doesn't exist anymore. 	 */
 if|if
 condition|(
 name|error
+operator|&&
+name|error
+operator|!=
+name|ENXIO
 condition|)
 block|{
-comment|/* Undo cdir/rdir and rootvnode changes made above. */
 if|if
 condition|(
 operator|(
