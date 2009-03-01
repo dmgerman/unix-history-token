@@ -507,6 +507,34 @@ name|sockaddr
 modifier|*
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|if_qflush
+function_decl|)
+comment|/* flush any queues */
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|if_transmit
+function_decl|)
+comment|/* initiate output routine */
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
 name|struct
 name|ifaddr
 modifier|*
@@ -522,10 +550,6 @@ name|int
 name|if_drv_flags
 decl_stmt|;
 comment|/* driver-managed status flags */
-name|u_int
-name|if_spare_flags2
-decl_stmt|;
-comment|/* spare flags 2 */
 name|struct
 name|ifaltq
 name|if_snd
@@ -608,6 +632,7 @@ modifier|*
 name|if_lagg
 decl_stmt|;
 comment|/* lagg glue */
+comment|/* 	 * Spare fields are added so that we can modify sensitive data 	 * structures without changing the kernel binary interface, and must 	 * be used with care where binary compatibility is required. 	 */
 name|void
 modifier|*
 name|if_pspare
@@ -615,42 +640,12 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-comment|/* TOE 3; vimage 3; general use 4 */
-name|void
-function_decl|(
-modifier|*
-name|if_qflush
-function_decl|)
-comment|/* flush any queues */
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|if_transmit
-function_decl|)
-comment|/* initiate output routine */
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
 name|int
 name|if_ispare
 index|[
-literal|2
+literal|4
 index|]
 decl_stmt|;
-comment|/* general use 2 */
 block|}
 struct|;
 end_struct
