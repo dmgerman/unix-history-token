@@ -395,7 +395,7 @@ name|int
 name|refcount
 decl_stmt|;
 comment|/* References to the SIM. */
-comment|/* "Pool" of inactive ccbs managed by xpt_alloc_ccb and xpt_free_ccb */
+comment|/* "Pool" of inactive ccbs managed by xpt_get_ccb and xpt_release_ccb */
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
