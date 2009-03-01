@@ -29185,22 +29185,6 @@ operator|)
 operator|==
 literal|0
 operator|)
-operator|||
-operator|(
-name|spi
-operator|->
-name|sync_offset
-operator|==
-literal|0
-operator|)
-operator|||
-operator|(
-name|spi
-operator|->
-name|sync_period
-operator|==
-literal|0
-operator|)
 condition|)
 block|{
 comment|/* Force async */
@@ -29441,12 +29425,22 @@ condition|(
 operator|(
 name|spi
 operator|->
+name|valid
+operator|&
+name|CTS_SPI_VALID_DISC
+operator|)
+operator|&&
+operator|(
+operator|(
+name|spi
+operator|->
 name|flags
 operator|&
 name|CTS_SPI_FLAGS_DISC_ENB
 operator|)
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
 comment|/* 			 * Can't tag queue without disconnection. 			 */
