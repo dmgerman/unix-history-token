@@ -6551,7 +6551,7 @@ else|else
 block|{
 name|action_string
 operator|=
-literal|"Retries Exausted"
+literal|"Retries Exhausted"
 expr_stmt|;
 name|error
 operator|=
