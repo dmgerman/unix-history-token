@@ -3093,6 +3093,11 @@ operator|(
 name|error
 operator|)
 return|;
+name|dev_ref
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|devvp
@@ -4760,6 +4765,11 @@ operator|)
 literal|0
 expr_stmt|;
 block|}
+name|dev_rel
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -5704,6 +5714,13 @@ argument_list|(
 name|ump
 operator|->
 name|um_devvp
+argument_list|)
+expr_stmt|;
+name|dev_rel
+argument_list|(
+name|ump
+operator|->
+name|um_dev
 argument_list|)
 expr_stmt|;
 name|mtx_destroy
