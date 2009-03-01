@@ -414,91 +414,119 @@ begin_define
 define|#
 directive|define
 name|D
-value|0x001
+value|(1<< T_DIRECT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|T
-value|0x002
+value|(1<< T_SEQUENTIAL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|L
-value|0x004
+value|(1<< T_PRINTER)
 end_define
 
 begin_define
 define|#
 directive|define
 name|P
-value|0x008
+value|(1<< T_PROCESSOR)
 end_define
 
 begin_define
 define|#
 directive|define
 name|W
-value|0x010
+value|(1<< T_WORM)
 end_define
 
 begin_define
 define|#
 directive|define
 name|R
-value|0x020
-end_define
-
-begin_define
-define|#
-directive|define
-name|S
-value|0x040
+value|(1<< T_CDROM)
 end_define
 
 begin_define
 define|#
 directive|define
 name|O
-value|0x080
+value|(1<< T_OPTICAL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|M
-value|0x100
-end_define
-
-begin_define
-define|#
-directive|define
-name|C
-value|0x200
+value|(1<< T_CHANGER)
 end_define
 
 begin_define
 define|#
 directive|define
 name|A
-value|0x400
+value|(1<< T_STORARRAY)
 end_define
 
 begin_define
 define|#
 directive|define
 name|E
-value|0x800
+value|(1<< T_ENCLOSURE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|B
+value|(1<< T_RBC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|K
+value|(1<< T_OCRW)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V
+value|(1<< T_ADC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|F
+value|(1<< T_OSD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S
+value|(1<< T_SCANNER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|C
+value|(1<< T_COMM)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ALL
-value|0xFFF
+value|(D | T | L | P | W | R | O | M | A | E | B | K | V | F | S | C)
 end_define
 
 begin_decl_stmt
@@ -567,9 +595,9 @@ name|scsi_op_codes
 index|[]
 init|=
 block|{
-comment|/*  * From: ftp://ftp.symbios.com/pub/standards/io/t10/drafts/spc/op-num.txt  * Modifications by Kenneth Merry (ken@FreeBSD.ORG)  *  * Note:  order is important in this table, scsi_op_desc() currently  * depends on the opcodes in the table being in order to save search time.  */
-comment|/*    * File: OP-NUM.TXT  *  * SCSI Operation Codes  * Numeric Sorted Listing  * as of 11/13/96  *   *     D - DIRECT ACCESS DEVICE (SBC)                    device column key  *     .T - SEQUENTIAL ACCESS DEVICE (SSC)              -------------------  *     . L - PRINTER DEVICE (SSC)                       M = Mandatory  *     .  P - PROCESSOR DEVICE (SPC)                    O = Optional  *     .  .W - WRITE ONCE READ MULTIPLE DEVICE (SBC)    V = Vendor specific  *     .  . R - CD DEVICE (MMC)                         R = Reserved  *     .  .  S - SCANNER DEVICE (SGC)                   Z = Obsolete  *     .  .  .O - OPTICAL MEMORY DEVICE (SBC)  *     .  .  . M - MEDIA CHANGER DEVICE (SMC)  *     .  .  .  C - COMMUNICATION DEVICE (SSC)  *     .  .  .  .A - STORAGE ARRAY DEVICE (SCC)  *     .  .  .  . E - ENCLOSURE SERVICES DEVICE (SES)  * OP  DTLPWRSOMCAE  Description  * --  ------------  ---------------------------------------------------- */
-comment|/* 00  MMMMMMMMMMMM  TEST UNIT READY */
+comment|/* 	 * From: http://www.t10.org/lists/op-num.txt 	 * Modifications by Kenneth Merry (ken@FreeBSD.ORG) 	 *              and Jung-uk Kim (jkim@FreeBSD.org) 	 * 	 * Note:  order is important in this table, scsi_op_desc() currently 	 * depends on the opcodes in the table being in order to save 	 * search time. 	 * Note:  scanner and comm. devices are carried over from the previous 	 * version because they were removed in the latest spec. 	 */
+comment|/* File: OP-NUM.TXT 	 * 	 * SCSI Operation Codes 	 * Numeric Sorted Listing 	 * as of  3/11/08 	 * 	 *     D - DIRECT ACCESS DEVICE (SBC-2)                device column key 	 *     .T - SEQUENTIAL ACCESS DEVICE (SSC-2)           ----------------- 	 *     . L - PRINTER DEVICE (SSC)                      M = Mandatory 	 *     .  P - PROCESSOR DEVICE (SPC)                   O = Optional 	 *     .  .W - WRITE ONCE READ MULTIPLE DEVICE (SBC-2) V = Vendor spec. 	 *     .  . R - CD/DVE DEVICE (MMC-3)                  Z = Obsolete 	 *     .  .  O - OPTICAL MEMORY DEVICE (SBC-2) 	 *     .  .  .M - MEDIA CHANGER DEVICE (SMC-2) 	 *     .  .  . A - STORAGE ARRAY DEVICE (SCC-2) 	 *     .  .  . .E - ENCLOSURE SERVICES DEVICE (SES) 	 *     .  .  .  .B - SIMPLIFIED DIRECT-ACCESS DEVICE (RBC) 	 *     .  .  .  . K - OPTICAL CARD READER/WRITER DEVICE (OCRW) 	 *     .  .  .  .  V - AUTOMATION/DRIVE INTERFACE (ADC) 	 *     .  .  .  .  .F - OBJECT-BASED STORAGE (OSD) 	 * OP  DTLPWROMAEBKVF  Description 	 * --  --------------  ---------------------------------------------- */
+comment|/* 00  MMMMMMMMMMMMMM  TEST UNIT READY */
 block|{
 literal|0x00
 block|,
@@ -578,7 +606,7 @@ block|,
 literal|"TEST UNIT READY"
 block|}
 block|,
-comment|/* 01   M            REWIND */
+comment|/* 01   M              REWIND */
 block|{
 literal|0x01
 block|,
@@ -587,15 +615,15 @@ block|,
 literal|"REWIND"
 block|}
 block|,
-comment|/* 01  Z V ZO ZO     REZERO UNIT */
+comment|/* 01  Z V ZZZZ        REZERO UNIT */
 block|{
 literal|0x01
 block|,
 name|D
 operator||
-name|L
-operator||
 name|W
+operator||
+name|R
 operator||
 name|O
 operator||
@@ -604,8 +632,8 @@ block|,
 literal|"REZERO UNIT"
 block|}
 block|,
-comment|/* 02  VVVVVV  V   */
-comment|/* 03  MMMMMMMMMMMM  REQUEST SENSE */
+comment|/* 02  VVVVVV V */
+comment|/* 03  MMMMMMMMMMOMMM  REQUEST SENSE */
 block|{
 literal|0x03
 block|,
@@ -614,7 +642,7 @@ block|,
 literal|"REQUEST SENSE"
 block|}
 block|,
-comment|/* 04  M    O O      FORMAT UNIT */
+comment|/* 04  M    OO         FORMAT UNIT */
 block|{
 literal|0x04
 block|,
@@ -627,7 +655,7 @@ block|,
 literal|"FORMAT UNIT"
 block|}
 block|,
-comment|/* 04   O            FORMAT MEDIUM */
+comment|/* 04   O              FORMAT MEDIUM */
 block|{
 literal|0x04
 block|,
@@ -636,7 +664,7 @@ block|,
 literal|"FORMAT MEDIUM"
 block|}
 block|,
-comment|/* 04    O           FORMAT */
+comment|/* 04    O             FORMAT */
 block|{
 literal|0x04
 block|,
@@ -645,7 +673,7 @@ block|,
 literal|"FORMAT"
 block|}
 block|,
-comment|/* 05  VMVVVV  V     READ BLOCK LIMITS */
+comment|/* 05  VMVVVV V        READ BLOCK LIMITS */
 block|{
 literal|0x05
 block|,
@@ -654,8 +682,8 @@ block|,
 literal|"READ BLOCK LIMITS"
 block|}
 block|,
-comment|/* 06  VVVVVV  V   */
-comment|/* 07  OVV O  OV     REASSIGN BLOCKS */
+comment|/* 06  VVVVVV V */
+comment|/* 07  OVV O OV        REASSIGN BLOCKS */
 block|{
 literal|0x07
 block|,
@@ -668,7 +696,7 @@ block|,
 literal|"REASSIGN BLOCKS"
 block|}
 block|,
-comment|/* 07          O     INITIALIZE ELEMENT STATUS */
+comment|/* 07         O        INITIALIZE ELEMENT STATUS */
 block|{
 literal|0x07
 block|,
@@ -677,7 +705,7 @@ block|,
 literal|"INITIALIZE ELEMENT STATUS"
 block|}
 block|,
-comment|/* 08  OMV OO OV     READ(06) */
+comment|/* 08  MOV O OV        READ(6) */
 block|{
 literal|0x08
 block|,
@@ -687,14 +715,12 @@ name|T
 operator||
 name|W
 operator||
-name|R
-operator||
 name|O
 block|,
-literal|"READ(06)"
+literal|"READ(6)"
 block|}
 block|,
-comment|/* 08     O          RECEIVE */
+comment|/* 08     O            RECEIVE */
 block|{
 literal|0x08
 block|,
@@ -703,17 +729,17 @@ block|,
 literal|"RECEIVE"
 block|}
 block|,
-comment|/* 08           M    GET MESSAGE(06) */
+comment|/* 08                  GET MESSAGE(6) */
 block|{
 literal|0x08
 block|,
 name|C
 block|,
-literal|"GET MESSAGE(06)"
+literal|"GET MESSAGE(6)"
 block|}
 block|,
-comment|/* 09  VVVVVV  V   */
-comment|/* 0A  OM  O  OV     WRITE(06) */
+comment|/* 09  VVVVVV V */
+comment|/* 0A  OO  O OV        WRITE(6) */
 block|{
 literal|0x0A
 block|,
@@ -725,28 +751,28 @@ name|W
 operator||
 name|O
 block|,
-literal|"WRITE(06)"
+literal|"WRITE(6)"
 block|}
 block|,
-comment|/* 0A     M          SEND(06) */
+comment|/* 0A     M            SEND(6) */
 block|{
 literal|0x0A
 block|,
 name|P
 block|,
-literal|"SEND(06)"
+literal|"SEND(6)"
 block|}
 block|,
-comment|/* 0A           M    SEND MESSAGE(06) */
+comment|/* 0A                  SEND MESSAGE(6) */
 block|{
 literal|0x0A
 block|,
 name|C
 block|,
-literal|"SEND MESSAGE(06)"
+literal|"SEND MESSAGE(6)"
 block|}
 block|,
-comment|/* 0A    M           PRINT */
+comment|/* 0A    M             PRINT */
 block|{
 literal|0x0A
 block|,
@@ -755,7 +781,7 @@ block|,
 literal|"PRINT"
 block|}
 block|,
-comment|/* 0B  Z   ZO ZV     SEEK(06) */
+comment|/* 0B  Z   ZOZV        SEEK(6) */
 block|{
 literal|0x0B
 block|,
@@ -767,10 +793,19 @@ name|R
 operator||
 name|O
 block|,
-literal|"SEEK(06)"
+literal|"SEEK(6)"
 block|}
 block|,
-comment|/* 0B    O           SLEW AND PRINT */
+comment|/* 0B   O              SET CAPACITY */
+block|{
+literal|0x0B
+block|,
+name|T
+block|,
+literal|"SET CAPACITY"
+block|}
+block|,
+comment|/* 0B    O             SLEW AND PRINT */
 block|{
 literal|0x0B
 block|,
@@ -779,48 +814,46 @@ block|,
 literal|"SLEW AND PRINT"
 block|}
 block|,
-comment|/* 0C  VVVVVV  V   */
-comment|/* 0D  VVVVVV  V   */
-comment|/* 0E  VVVVVV  V   */
-comment|/* 0F  VOVVVV  V     READ REVERSE */
+comment|/* 0C  VVVVVV V */
+comment|/* 0D  VVVVVV V */
+comment|/* 0E  VVVVVV V */
+comment|/* 0F  VOVVVV V        READ REVERSE(6) */
 block|{
 literal|0x0F
 block|,
 name|T
 block|,
-literal|"READ REVERSE"
+literal|"READ REVERSE(6)"
 block|}
 block|,
-comment|/* 10  VM VVV        WRITE FILEMARKS */
+comment|/* 10  VM VVV          WRITE FILEMARKS(6) */
 block|{
 literal|0x10
 block|,
 name|T
 block|,
-literal|"WRITE FILEMARKS"
+literal|"WRITE FILEMARKS(6)"
 block|}
 block|,
-comment|/* 10    O O         SYNCHRONIZE BUFFER */
+comment|/* 10    O             SYNCHRONIZE BUFFER */
 block|{
 literal|0x10
 block|,
 name|L
-operator||
-name|W
 block|,
 literal|"SYNCHRONIZE BUFFER"
 block|}
 block|,
-comment|/* 11  VMVVVV        SPACE */
+comment|/* 11  VMVVVV          SPACE(6) */
 block|{
 literal|0x11
 block|,
 name|T
 block|,
-literal|"SPACE"
+literal|"SPACE(6)"
 block|}
 block|,
-comment|/* 12  MMMMMMMMMMMM  INQUIRY */
+comment|/* 12  MMMMMMMMMMMMMM  INQUIRY */
 block|{
 literal|0x12
 block|,
@@ -829,16 +862,17 @@ block|,
 literal|"INQUIRY"
 block|}
 block|,
-comment|/* 13  VOVVVV        VERIFY(06) */
+comment|/* 13  V VVVV */
+comment|/* 13   O              VERIFY(6) */
 block|{
 literal|0x13
 block|,
 name|T
 block|,
-literal|"VERIFY(06)"
+literal|"VERIFY(6)"
 block|}
 block|,
-comment|/* 14  VOOVVV        RECOVER BUFFERED DATA */
+comment|/* 14  VOOVVV          RECOVER BUFFERED DATA */
 block|{
 literal|0x14
 block|,
@@ -849,7 +883,7 @@ block|,
 literal|"RECOVER BUFFERED DATA"
 block|}
 block|,
-comment|/* 15  OMO OOOOOOOO  MODE SELECT(06) */
+comment|/* 15  OMO O OOOO OO   MODE SELECT(6) */
 block|{
 literal|0x15
 block|,
@@ -858,14 +892,82 @@ operator|&
 operator|~
 operator|(
 name|P
+operator||
+name|R
+operator||
+name|B
+operator||
+name|F
 operator|)
 block|,
-literal|"MODE SELECT(06)"
+literal|"MODE SELECT(6)"
 block|}
 block|,
-comment|/* 16  MMMOMMMM   O  RESERVE(06) */
+comment|/* 16  ZZMZO OOOZ O    RESERVE(6) */
 block|{
 literal|0x16
+block|,
+name|ALL
+operator|&
+operator|~
+operator|(
+name|R
+operator||
+name|B
+operator||
+name|V
+operator||
+name|F
+operator||
+name|C
+operator|)
+block|,
+literal|"RESERVE(6)"
+block|}
+block|,
+comment|/* 16         Z        RESERVE ELEMENT(6) */
+block|{
+literal|0x16
+block|,
+name|M
+block|,
+literal|"RESERVE ELEMENT(6)"
+block|}
+block|,
+comment|/* 17  ZZMZO OOOZ O    RELEASE(6) */
+block|{
+literal|0x17
+block|,
+name|ALL
+operator|&
+operator|~
+operator|(
+name|R
+operator||
+name|B
+operator||
+name|V
+operator||
+name|F
+operator||
+name|C
+operator|)
+block|,
+literal|"RELEASE(6)"
+block|}
+block|,
+comment|/* 17         Z        RELEASE ELEMENT(6) */
+block|{
+literal|0x17
+block|,
+name|M
+block|,
+literal|"RELEASE ELEMENT(6)"
+block|}
+block|,
+comment|/* 18  ZZZZOZO    Z    COPY */
+block|{
+literal|0x18
 block|,
 name|D
 operator||
@@ -879,81 +981,25 @@ name|W
 operator||
 name|R
 operator||
-name|S
-operator||
 name|O
 operator||
-name|E
-block|,
-literal|"RESERVE(06)"
-block|}
-block|,
-comment|/* 16          M     RESERVE ELEMENT(06) */
-block|{
-literal|0x16
-block|,
-name|M
-block|,
-literal|"RESERVE ELEMENT(06)"
-block|}
-block|,
-comment|/* 17  MMMOMMMM   O  RELEASE(06) */
-block|{
-literal|0x17
-block|,
-name|ALL
-operator|&
-operator|~
-operator|(
-name|M
+name|K
 operator||
-name|C
-operator||
-name|A
-operator|)
-block|,
-literal|"RELEASE(06)"
-block|}
-block|,
-comment|/* 17          M     RELEASE ELEMENT(06) */
-block|{
-literal|0x17
-block|,
-name|M
-block|,
-literal|"RELEASE ELEMENT(06)"
-block|}
-block|,
-comment|/* 18  OOOOOOOO      COPY */
-block|{
-literal|0x18
-block|,
-name|ALL
-operator|&
-operator|~
-operator|(
-name|M
-operator||
-name|C
-operator||
-name|A
-operator||
-name|E
-operator|)
+name|S
 block|,
 literal|"COPY"
 block|}
 block|,
-comment|/* 19  VMVVVV        ERASE */
+comment|/* 19  VMVVVV          ERASE(6) */
 block|{
 literal|0x19
 block|,
 name|T
 block|,
-literal|"ERASE"
+literal|"ERASE(6)"
 block|}
 block|,
-comment|/* 1A  OMO OOOOOOOO  MODE SENSE(06) */
+comment|/* 1A  OMO O OOOO OO   MODE SENSE(6) */
 block|{
 literal|0x1A
 block|,
@@ -962,12 +1008,18 @@ operator|&
 operator|~
 operator|(
 name|P
+operator||
+name|R
+operator||
+name|B
+operator||
+name|F
 operator|)
 block|,
-literal|"MODE SENSE(06)"
+literal|"MODE SENSE(6)"
 block|}
 block|,
-comment|/* 1B  O   OM O      STOP START UNIT */
+comment|/* 1B  O   OOO O MO O  START STOP UNIT */
 block|{
 literal|0x1B
 block|,
@@ -978,20 +1030,30 @@ operator||
 name|R
 operator||
 name|O
+operator||
+name|A
+operator||
+name|B
+operator||
+name|K
+operator||
+name|F
 block|,
-literal|"STOP START UNIT"
+literal|"START STOP UNIT"
 block|}
 block|,
-comment|/* 1B   O            LOAD UNLOAD */
+comment|/* 1B   O          M   LOAD UNLOAD */
 block|{
 literal|0x1B
 block|,
 name|T
+operator||
+name|V
 block|,
 literal|"LOAD UNLOAD"
 block|}
 block|,
-comment|/* 1B        O       SCAN */
+comment|/* 1B                  SCAN */
 block|{
 literal|0x1B
 block|,
@@ -1000,7 +1062,7 @@ block|,
 literal|"SCAN"
 block|}
 block|,
-comment|/* 1B    O           STOP PRINT */
+comment|/* 1B    O             STOP PRINT */
 block|{
 literal|0x1B
 block|,
@@ -1009,7 +1071,16 @@ block|,
 literal|"STOP PRINT"
 block|}
 block|,
-comment|/* 1C  OOOOOOOOOO M  RECEIVE DIAGNOSTIC RESULTS */
+comment|/* 1B         O        OPEN/CLOSE IMPORT/EXPORT ELEMENT */
+block|{
+literal|0x1B
+block|,
+name|M
+block|,
+literal|"OPEN/CLOSE IMPORT/EXPORT ELEMENT"
+block|}
+block|,
+comment|/* 1C  OOOOO OOOM OOO  RECEIVE DIAGNOSTIC RESULTS */
 block|{
 literal|0x1C
 block|,
@@ -1017,22 +1088,31 @@ name|ALL
 operator|&
 operator|~
 operator|(
-name|A
+name|R
+operator||
+name|B
 operator|)
 block|,
 literal|"RECEIVE DIAGNOSTIC RESULTS"
 block|}
 block|,
-comment|/* 1D  MMMMMMMMMMMM  SEND DIAGNOSTIC */
+comment|/* 1D  MMMMM MMOM MMM  SEND DIAGNOSTIC */
 block|{
 literal|0x1D
 block|,
 name|ALL
+operator|&
+operator|~
+operator|(
+name|R
+operator||
+name|B
+operator|)
 block|,
 literal|"SEND DIAGNOSTIC"
 block|}
 block|,
-comment|/* 1E  OO  OM OO     PREVENT ALLOW MEDIUM REMOVAL */
+comment|/* 1E  OO  OOOO   O O  PREVENT ALLOW MEDIUM REMOVAL */
 block|{
 literal|0x1E
 block|,
@@ -1047,16 +1127,29 @@ operator||
 name|O
 operator||
 name|M
+operator||
+name|K
+operator||
+name|F
 block|,
 literal|"PREVENT ALLOW MEDIUM REMOVAL"
 block|}
 block|,
 comment|/* 1F */
-comment|/* 20  V   VV V */
-comment|/* 21  V   VV V */
-comment|/* 22  V   VV V */
-comment|/* 23  V   VV V */
-comment|/* 24  V   VVM       SET WINDOW */
+comment|/* 20  V   VVV    V */
+comment|/* 21  V   VVV    V */
+comment|/* 22  V   VVV    V */
+comment|/* 23  V   V V    V */
+comment|/* 23       O          READ FORMAT CAPACITIES */
+block|{
+literal|0x23
+block|,
+name|R
+block|,
+literal|"READ FORMAT CAPACITIES"
+block|}
+block|,
+comment|/* 24  V   VV          SET WINDOW */
 block|{
 literal|0x24
 block|,
@@ -1065,7 +1158,7 @@ block|,
 literal|"SET WINDOW"
 block|}
 block|,
-comment|/* 25  M   M  M      READ CAPACITY */
+comment|/* 25  M   M M   M     READ CAPACITY(10) */
 block|{
 literal|0x25
 block|,
@@ -1074,20 +1167,31 @@ operator||
 name|W
 operator||
 name|O
+operator||
+name|B
 block|,
-literal|"READ CAPACITY"
+literal|"READ CAPACITY(10)"
 block|}
 block|,
-comment|/* 25       M        READ CD RECORDED CAPACITY */
+comment|/* 25       O          READ CAPACITY */
 block|{
 literal|0x25
 block|,
 name|R
 block|,
-literal|"READ CD RECORDED CAPACITY"
+literal|"READ CAPACITY"
 block|}
 block|,
-comment|/* 25        O       GET WINDOW */
+comment|/* 25             M    READ CARD CAPACITY */
+block|{
+literal|0x25
+block|,
+name|K
+block|,
+literal|"READ CARD CAPACITY"
+block|}
+block|,
+comment|/* 25                  GET WINDOW */
 block|{
 literal|0x25
 block|,
@@ -1098,7 +1202,7 @@ block|}
 block|,
 comment|/* 26  V   VV */
 comment|/* 27  V   VV */
-comment|/* 28  M   MMMM      READ(10) */
+comment|/* 28  M   MOM   MM    READ(10) */
 block|{
 literal|0x28
 block|,
@@ -1108,14 +1212,18 @@ name|W
 operator||
 name|R
 operator||
-name|S
-operator||
 name|O
+operator||
+name|B
+operator||
+name|K
+operator||
+name|S
 block|,
 literal|"READ(10)"
 block|}
 block|,
-comment|/* 28           O    GET MESSAGE(10) */
+comment|/* 28                  GET MESSAGE(10) */
 block|{
 literal|0x28
 block|,
@@ -1124,7 +1232,7 @@ block|,
 literal|"GET MESSAGE(10)"
 block|}
 block|,
-comment|/* 29  V   VV O      READ GENERATION */
+comment|/* 29  V   VVO         READ GENERATION */
 block|{
 literal|0x29
 block|,
@@ -1133,7 +1241,7 @@ block|,
 literal|"READ GENERATION"
 block|}
 block|,
-comment|/* 2A  M   MM M      WRITE(10) */
+comment|/* 2A  O   MOM   MO    WRITE(10) */
 block|{
 literal|0x2A
 block|,
@@ -1144,11 +1252,15 @@ operator||
 name|R
 operator||
 name|O
+operator||
+name|B
+operator||
+name|K
 block|,
 literal|"WRITE(10)"
 block|}
 block|,
-comment|/* 2A        O       SEND(10) */
+comment|/* 2A                  SEND(10) */
 block|{
 literal|0x2A
 block|,
@@ -1157,7 +1269,7 @@ block|,
 literal|"SEND(10)"
 block|}
 block|,
-comment|/* 2A           O    SEND MESSAGE(10) */
+comment|/* 2A                  SEND MESSAGE(10) */
 block|{
 literal|0x2A
 block|,
@@ -1166,7 +1278,7 @@ block|,
 literal|"SEND MESSAGE(10)"
 block|}
 block|,
-comment|/* 2B  O   OM O      SEEK(10) */
+comment|/* 2B  Z   OOO    O    SEEK(10) */
 block|{
 literal|0x2B
 block|,
@@ -1177,20 +1289,22 @@ operator||
 name|R
 operator||
 name|O
+operator||
+name|K
 block|,
 literal|"SEEK(10)"
 block|}
 block|,
-comment|/* 2B   O            LOCATE */
+comment|/* 2B   O              LOCATE(10) */
 block|{
 literal|0x2B
 block|,
 name|T
 block|,
-literal|"LOCATE"
+literal|"LOCATE(10)"
 block|}
 block|,
-comment|/* 2B          O     POSITION TO ELEMENT */
+comment|/* 2B         O        POSITION TO ELEMENT */
 block|{
 literal|0x2B
 block|,
@@ -1199,27 +1313,28 @@ block|,
 literal|"POSITION TO ELEMENT"
 block|}
 block|,
-comment|/* 2C  V      O      ERASE(10) */
+comment|/* 2C  V    OO         ERASE(10) */
 block|{
 literal|0x2C
 block|,
+name|R
+operator||
 name|O
 block|,
 literal|"ERASE(10)"
 block|}
 block|,
-comment|/* 2D  V   O  O      READ UPDATED BLOCK */
+comment|/* 2D        O         READ UPDATED BLOCK */
 block|{
 literal|0x2D
 block|,
-name|W
-operator||
 name|O
 block|,
 literal|"READ UPDATED BLOCK"
 block|}
 block|,
-comment|/* 2E  O   O  O      WRITE AND VERIFY(10) */
+comment|/* 2D  V */
+comment|/* 2E  O   OOO   MO    WRITE AND VERIFY(10) */
 block|{
 literal|0x2E
 block|,
@@ -1227,12 +1342,18 @@ name|D
 operator||
 name|W
 operator||
+name|R
+operator||
 name|O
+operator||
+name|B
+operator||
+name|K
 block|,
 literal|"WRITE AND VERIFY(10)"
 block|}
 block|,
-comment|/* 2F  O   OO O      VERIFY(10) */
+comment|/* 2F  O   OOO         VERIFY(10) */
 block|{
 literal|0x2F
 block|,
@@ -1247,7 +1368,7 @@ block|,
 literal|"VERIFY(10)"
 block|}
 block|,
-comment|/* 30  Z   ZO Z      SEARCH DATA HIGH(10) */
+comment|/* 30  Z   ZZZ         SEARCH DATA HIGH(10) */
 block|{
 literal|0x30
 block|,
@@ -1262,7 +1383,7 @@ block|,
 literal|"SEARCH DATA HIGH(10)"
 block|}
 block|,
-comment|/* 31  Z   ZO Z      SEARCH DATA EQUAL(10) */
+comment|/* 31  Z   ZZZ         SEARCH DATA EQUAL(10) */
 block|{
 literal|0x31
 block|,
@@ -1277,7 +1398,7 @@ block|,
 literal|"SEARCH DATA EQUAL(10)"
 block|}
 block|,
-comment|/* 31        O       OBJECT POSITION */
+comment|/* 31                  OBJECT POSITION */
 block|{
 literal|0x31
 block|,
@@ -1286,7 +1407,7 @@ block|,
 literal|"OBJECT POSITION"
 block|}
 block|,
-comment|/* 32  Z   ZO Z      SEARCH DATA LOW(10) */
+comment|/* 32  Z   ZZZ         SEARCH DATA LOW(10) */
 block|{
 literal|0x32
 block|,
@@ -1298,10 +1419,10 @@ name|R
 operator||
 name|O
 block|,
-literal|"SEARCH DATA LOW(10"
+literal|"SEARCH DATA LOW(10)"
 block|}
 block|,
-comment|/* 33  O   OO O      SET LIMITS(10) */
+comment|/* 33  Z   OZO         SET LIMITS(10) */
 block|{
 literal|0x33
 block|,
@@ -1316,7 +1437,7 @@ block|,
 literal|"SET LIMITS(10)"
 block|}
 block|,
-comment|/* 34  O   OO O      PRE-FETCH */
+comment|/* 34  O   O O    O    PRE-FETCH(10) */
 block|{
 literal|0x34
 block|,
@@ -1324,14 +1445,14 @@ name|D
 operator||
 name|W
 operator||
-name|R
-operator||
 name|O
+operator||
+name|K
 block|,
-literal|"PRE-FETCH"
+literal|"PRE-FETCH(10)"
 block|}
 block|,
-comment|/* 34   O            READ POSITION */
+comment|/* 34   M              READ POSITION */
 block|{
 literal|0x34
 block|,
@@ -1340,7 +1461,7 @@ block|,
 literal|"READ POSITION"
 block|}
 block|,
-comment|/* 34        O       GET DATA BUFFER STATUS */
+comment|/* 34                  GET DATA BUFFER STATUS */
 block|{
 literal|0x34
 block|,
@@ -1349,7 +1470,7 @@ block|,
 literal|"GET DATA BUFFER STATUS"
 block|}
 block|,
-comment|/* 35  O   OM O      SYNCHRONIZE CACHE */
+comment|/* 35  O   OOO   MO    SYNCHRONIZE CACHE(10) */
 block|{
 literal|0x35
 block|,
@@ -1360,11 +1481,15 @@ operator||
 name|R
 operator||
 name|O
+operator||
+name|B
+operator||
+name|K
 block|,
-literal|"SYNCHRONIZE CACHE"
+literal|"SYNCHRONIZE CACHE(10)"
 block|}
 block|,
-comment|/* 36  O   OO O      LOCK UNLOCK CACHE */
+comment|/* 36  Z   O O    O    LOCK UNLOCK CACHE(10) */
 block|{
 literal|0x36
 block|,
@@ -1372,14 +1497,14 @@ name|D
 operator||
 name|W
 operator||
-name|R
-operator||
 name|O
+operator||
+name|K
 block|,
-literal|"LOCK UNLOCK CACHE"
+literal|"LOCK UNLOCK CACHE(10)"
 block|}
 block|,
-comment|/* 37  O      O      READ DEFECT DATA(10) */
+comment|/* 37  O     O         READ DEFECT DATA(10) */
 block|{
 literal|0x37
 block|,
@@ -1390,72 +1515,88 @@ block|,
 literal|"READ DEFECT DATA(10)"
 block|}
 block|,
-comment|/* 38      O  O      MEDIUM SCAN */
+comment|/* 37         O        INITIALIZE ELEMENT STATUS WITH RANGE */
+block|{
+literal|0x37
+block|,
+name|M
+block|,
+literal|"INITIALIZE ELEMENT STATUS WITH RANGE"
+block|}
+block|,
+comment|/* 38      O O    O    MEDIUM SCAN */
 block|{
 literal|0x38
 block|,
 name|W
 operator||
 name|O
+operator||
+name|K
 block|,
 literal|"MEDIUM SCAN"
 block|}
 block|,
-comment|/* 39  OOOOOOOO      COMPARE */
+comment|/* 39  ZZZZOZO    Z    COMPARE */
 block|{
 literal|0x39
 block|,
-name|ALL
-operator|&
-operator|~
-operator|(
-name|M
+name|D
 operator||
-name|C
+name|T
 operator||
-name|A
+name|L
 operator||
-name|E
-operator|)
+name|P
+operator||
+name|W
+operator||
+name|R
+operator||
+name|O
+operator||
+name|K
+operator||
+name|S
 block|,
 literal|"COMPARE"
 block|}
 block|,
-comment|/* 3A  OOOOOOOO      COPY AND VERIFY */
+comment|/* 3A  ZZZZOZO    Z    COPY AND VERIFY */
 block|{
 literal|0x3A
 block|,
-name|ALL
-operator|&
-operator|~
-operator|(
-name|M
+name|D
 operator||
-name|C
+name|T
 operator||
-name|A
+name|L
 operator||
-name|E
-operator|)
+name|P
+operator||
+name|W
+operator||
+name|R
+operator||
+name|O
+operator||
+name|K
+operator||
+name|S
 block|,
 literal|"COPY AND VERIFY"
 block|}
 block|,
-comment|/* 3B  OOOOOOOOOO O  WRITE BUFFER */
+comment|/* 3B  OOOOOOOOOOMOOO  WRITE BUFFER */
 block|{
 literal|0x3B
 block|,
 name|ALL
-operator|&
-operator|~
-operator|(
-name|A
-operator|)
 block|,
 literal|"WRITE BUFFER"
 block|}
 block|,
-comment|/* 3C  OOOOOOOOOO    READ BUFFER */
+comment|/* 3C  OOOOOOOOOO OOO  READ BUFFER */
 block|{
 literal|0x3C
 block|,
@@ -1463,26 +1604,22 @@ name|ALL
 operator|&
 operator|~
 operator|(
-name|A
-operator||
-name|E
+name|B
 operator|)
 block|,
 literal|"READ BUFFER"
 block|}
 block|,
-comment|/* 3D      O  O      UPDATE BLOCK */
+comment|/* 3D        O         UPDATE BLOCK */
 block|{
 literal|0x3D
 block|,
-name|W
-operator||
 name|O
 block|,
 literal|"UPDATE BLOCK"
 block|}
 block|,
-comment|/* 3E  O   OO O      READ LONG */
+comment|/* 3E  O   O O         READ LONG(10) */
 block|{
 literal|0x3E
 block|,
@@ -1490,14 +1627,12 @@ name|D
 operator||
 name|W
 operator||
-name|R
-operator||
 name|O
 block|,
-literal|"READ LONG"
+literal|"READ LONG(10)"
 block|}
 block|,
-comment|/* 3F  O   O  O      WRITE LONG */
+comment|/* 3F  O   O O         WRITE LONG(10) */
 block|{
 literal|0x3F
 block|,
@@ -1507,35 +1642,46 @@ name|W
 operator||
 name|O
 block|,
-literal|"WRITE LONG"
+literal|"WRITE LONG(10)"
 block|}
 block|,
-comment|/* 40  OOOOOOOOOO    CHANGE DEFINITION */
+comment|/* 40  ZZZZOZOZ        CHANGE DEFINITION */
 block|{
 literal|0x40
 block|,
-name|ALL
-operator|&
-operator|~
-operator|(
-name|A
+name|D
 operator||
-name|E
-operator|)
+name|T
+operator||
+name|L
+operator||
+name|P
+operator||
+name|W
+operator||
+name|R
+operator||
+name|O
+operator||
+name|M
+operator||
+name|S
+operator||
+name|C
 block|,
 literal|"CHANGE DEFINITION"
 block|}
 block|,
-comment|/* 41  O             WRITE SAME */
+comment|/* 41  O               WRITE SAME(10) */
 block|{
 literal|0x41
 block|,
 name|D
 block|,
-literal|"WRITE SAME"
+literal|"WRITE SAME(10)"
 block|}
 block|,
-comment|/* 42       M        READ SUB-CHANNEL */
+comment|/* 42       O          READ SUB-CHANNEL */
 block|{
 literal|0x42
 block|,
@@ -1544,34 +1690,28 @@ block|,
 literal|"READ SUB-CHANNEL"
 block|}
 block|,
-comment|/* 43       M        READ TOC/PMA/ATIP {MMC Proposed} */
+comment|/* 43       O          READ TOC/PMA/ATIP */
 block|{
 literal|0x43
 block|,
 name|R
 block|,
-literal|"READ TOC/PMA/ATIP {MMC Proposed}"
+literal|"READ TOC/PMA/ATIP"
 block|}
 block|,
-comment|/* 44   M            REPORT DENSITY SUPPORT */
+comment|/* 44   M          M   REPORT DENSITY SUPPORT */
 block|{
 literal|0x44
 block|,
 name|T
+operator||
+name|V
 block|,
 literal|"REPORT DENSITY SUPPORT"
 block|}
 block|,
-comment|/* 44       M        READ HEADER */
-block|{
-literal|0x44
-block|,
-name|R
-block|,
-literal|"READ HEADER"
-block|}
-block|,
-comment|/* 45       O        PLAY AUDIO(10) */
+comment|/* 44                  READ HEADER */
+comment|/* 45       O          PLAY AUDIO(10) */
 block|{
 literal|0x45
 block|,
@@ -1580,8 +1720,16 @@ block|,
 literal|"PLAY AUDIO(10)"
 block|}
 block|,
-comment|/* 46 */
-comment|/* 47       O        PLAY AUDIO MSF */
+comment|/* 46       M          GET CONFIGURATION */
+block|{
+literal|0x46
+block|,
+name|R
+block|,
+literal|"GET CONFIGURATION"
+block|}
+block|,
+comment|/* 47       O          PLAY AUDIO MSF */
 block|{
 literal|0x47
 block|,
@@ -1590,26 +1738,18 @@ block|,
 literal|"PLAY AUDIO MSF"
 block|}
 block|,
-comment|/* 48       O        PLAY AUDIO TRACK INDEX */
+comment|/* 48 */
+comment|/* 49 */
+comment|/* 4A       M          GET EVENT STATUS NOTIFICATION */
 block|{
-literal|0x48
+literal|0x4A
 block|,
 name|R
 block|,
-literal|"PLAY AUDIO TRACK INDEX"
+literal|"GET EVENT STATUS NOTIFICATION"
 block|}
 block|,
-comment|/* 49       O        PLAY TRACK RELATIVE(10) */
-block|{
-literal|0x49
-block|,
-name|R
-block|,
-literal|"PLAY TRACK RELATIVE(10)"
-block|}
-block|,
-comment|/* 4A */
-comment|/* 4B       O        PAUSE/RESUME */
+comment|/* 4B       O          PAUSE/RESUME */
 block|{
 literal|0x4B
 block|,
@@ -1618,7 +1758,7 @@ block|,
 literal|"PAUSE/RESUME"
 block|}
 block|,
-comment|/* 4C  OOOOOOOOOOO   LOG SELECT */
+comment|/* 4C  OOOOO OOOO OOO  LOG SELECT */
 block|{
 literal|0x4C
 block|,
@@ -1626,13 +1766,15 @@ name|ALL
 operator|&
 operator|~
 operator|(
-name|E
+name|R
+operator||
+name|B
 operator|)
 block|,
 literal|"LOG SELECT"
 block|}
 block|,
-comment|/* 4D  OOOOOOOOOOO   LOG SENSE */
+comment|/* 4D  OOOOO OOOO OMO  LOG SENSE */
 block|{
 literal|0x4D
 block|,
@@ -1640,23 +1782,25 @@ name|ALL
 operator|&
 operator|~
 operator|(
-name|E
+name|R
+operator||
+name|B
 operator|)
 block|,
 literal|"LOG SENSE"
 block|}
 block|,
-comment|/* 4E       O        STOP PLAY/SCAN {MMC Proposed} */
+comment|/* 4E       O          STOP PLAY/SCAN */
 block|{
 literal|0x4E
 block|,
 name|R
 block|,
-literal|"STOP PLAY/SCAN {MMC Proposed}"
+literal|"STOP PLAY/SCAN"
 block|}
 block|,
 comment|/* 4F */
-comment|/* 50  O             XDWRITE(10) */
+comment|/* 50  O               XDWRITE(10) */
 block|{
 literal|0x50
 block|,
@@ -1665,7 +1809,7 @@ block|,
 literal|"XDWRITE(10)"
 block|}
 block|,
-comment|/* 51  O             XPWRITE(10) */
+comment|/* 51  O               XPWRITE(10) */
 block|{
 literal|0x51
 block|,
@@ -1674,16 +1818,16 @@ block|,
 literal|"XPWRITE(10)"
 block|}
 block|,
-comment|/* 51       M        READ DISC INFORMATION {MMC Proposed} */
+comment|/* 51       O          READ DISC INFORMATION */
 block|{
 literal|0x51
 block|,
 name|R
 block|,
-literal|"READ DISC INFORMATION {MMC Proposed}"
+literal|"READ DISC INFORMATION"
 block|}
 block|,
-comment|/* 52  O             XDREAD(10) */
+comment|/* 52  O               XDREAD(10) */
 block|{
 literal|0x52
 block|,
@@ -1692,34 +1836,34 @@ block|,
 literal|"XDREAD(10)"
 block|}
 block|,
-comment|/* 52       M        READ TRACK INFORMATION {MMC Proposed} */
+comment|/* 52       O          READ TRACK INFORMATION */
 block|{
 literal|0x52
 block|,
 name|R
 block|,
-literal|"READ TRACK INFORMATION {MMC Proposed}"
+literal|"READ TRACK INFORMATION"
 block|}
 block|,
-comment|/* 53       M        RESERVE TRACK {MMC Proposed} */
+comment|/* 53       O          RESERVE TRACK */
 block|{
 literal|0x53
 block|,
 name|R
 block|,
-literal|"RESERVE TRACK {MMC Proposed}"
+literal|"RESERVE TRACK"
 block|}
 block|,
-comment|/* 54       O        SEND OPC INFORMATION {MMC Proposed} */
+comment|/* 54       O          SEND OPC INFORMATION */
 block|{
 literal|0x54
 block|,
 name|R
 block|,
-literal|"SEND OPC INFORMATION {MMC Proposed}"
+literal|"SEND OPC INFORMATION"
 block|}
 block|,
-comment|/* 55  OOO OOOOOOOO  MODE SELECT(10) */
+comment|/* 55  OOO OMOOOOMOMO  MODE SELECT(10) */
 block|{
 literal|0x55
 block|,
@@ -1733,7 +1877,7 @@ block|,
 literal|"MODE SELECT(10)"
 block|}
 block|,
-comment|/* 56  MMMOMMMM   O  RESERVE(10) */
+comment|/* 56  ZZMZO OOOZ      RESERVE(10) */
 block|{
 literal|0x56
 block|,
@@ -1741,17 +1885,23 @@ name|ALL
 operator|&
 operator|~
 operator|(
-name|M
+name|R
+operator||
+name|B
+operator||
+name|K
+operator||
+name|V
+operator||
+name|F
 operator||
 name|C
-operator||
-name|A
 operator|)
 block|,
 literal|"RESERVE(10)"
 block|}
 block|,
-comment|/* 56          M     RESERVE ELEMENT(10) */
+comment|/* 56         Z        RESERVE ELEMENT(10) */
 block|{
 literal|0x56
 block|,
@@ -1760,7 +1910,7 @@ block|,
 literal|"RESERVE ELEMENT(10)"
 block|}
 block|,
-comment|/* 57  MMMOMMMM   O  RELEASE(10) */
+comment|/* 57  ZZMZO OOOZ      RELEASE(10) */
 block|{
 literal|0x57
 block|,
@@ -1768,17 +1918,23 @@ name|ALL
 operator|&
 operator|~
 operator|(
-name|M
+name|R
+operator||
+name|B
+operator||
+name|K
+operator||
+name|V
+operator||
+name|F
 operator||
 name|C
-operator||
-name|A
 operator|)
 block|,
-literal|"RELEASE(10"
+literal|"RELEASE(10)"
 block|}
 block|,
-comment|/* 57          M     RELEASE ELEMENT(10) */
+comment|/* 57         Z        RELEASE ELEMENT(10) */
 block|{
 literal|0x57
 block|,
@@ -1787,25 +1943,17 @@ block|,
 literal|"RELEASE ELEMENT(10)"
 block|}
 block|,
-comment|/* 58       O        REPAIR TRACK {MMC Proposed} */
+comment|/* 58       O          REPAIR TRACK */
 block|{
 literal|0x58
 block|,
 name|R
 block|,
-literal|"REPAIR TRACK {MMC Proposed}"
+literal|"REPAIR TRACK"
 block|}
 block|,
-comment|/* 59       O        READ MASTER CUE {MMC Proposed} */
-block|{
-literal|0x59
-block|,
-name|R
-block|,
-literal|"READ MASTER CUE {MMC Proposed}"
-block|}
-block|,
-comment|/* 5A  OOO OOOOOOOO  MODE SENSE(10) */
+comment|/* 59 */
+comment|/* 5A  OOO OMOOOOMOMO  MODE SENSE(10) */
 block|{
 literal|0x5A
 block|,
@@ -1819,34 +1967,34 @@ block|,
 literal|"MODE SENSE(10)"
 block|}
 block|,
-comment|/* 5B       M        CLOSE TRACK/SESSION {MMC Proposed} */
+comment|/* 5B       O          CLOSE TRACK/SESSION */
 block|{
 literal|0x5B
 block|,
 name|R
 block|,
-literal|"CLOSE TRACK/SESSION {MMC Proposed}"
+literal|"CLOSE TRACK/SESSION"
 block|}
 block|,
-comment|/* 5C       O        READ BUFFER CAPACITY {MMC Proposed} */
+comment|/* 5C       O          READ BUFFER CAPACITY */
 block|{
 literal|0x5C
 block|,
 name|R
 block|,
-literal|"READ BUFFER CAPACITY {MMC Proposed}"
+literal|"READ BUFFER CAPACITY"
 block|}
 block|,
-comment|/* 5D       O        SEND CUE SHEET {MMC Proposed} */
+comment|/* 5D       O          SEND CUE SHEET */
 block|{
 literal|0x5D
 block|,
 name|R
 block|,
-literal|"SEND CUE SHEET {MMC Proposed}"
+literal|"SEND CUE SHEET"
 block|}
 block|,
-comment|/* 5E  OOOOOOOOO  O  PERSISTENT RESERVE IN */
+comment|/* 5E  OOOOO OOOO   M  PERSISTENT RESERVE IN */
 block|{
 literal|0x5E
 block|,
@@ -1854,15 +2002,21 @@ name|ALL
 operator|&
 operator|~
 operator|(
-name|C
+name|R
 operator||
-name|A
+name|B
+operator||
+name|K
+operator||
+name|V
+operator||
+name|C
 operator|)
 block|,
 literal|"PERSISTENT RESERVE IN"
 block|}
 block|,
-comment|/* 5F  OOOOOOOOO  O  PERSISTENT RESERVE OUT */
+comment|/* 5F  OOOOO OOOO   M  PERSISTENT RESERVE OUT */
 block|{
 literal|0x5F
 block|,
@@ -1870,15 +2024,55 @@ name|ALL
 operator|&
 operator|~
 operator|(
-name|C
+name|R
 operator||
-name|A
+name|B
+operator||
+name|K
+operator||
+name|V
+operator||
+name|C
 operator|)
 block|,
 literal|"PERSISTENT RESERVE OUT"
 block|}
 block|,
-comment|/* 80  O             XDWRITE EXTENDED(16) */
+comment|/* 7E  OO   O OOOO O   extended CDB */
+block|{
+literal|0x7E
+block|,
+name|D
+operator||
+name|T
+operator||
+name|R
+operator||
+name|M
+operator||
+name|A
+operator||
+name|E
+operator||
+name|B
+operator||
+name|V
+block|,
+literal|"extended CDB"
+block|}
+block|,
+comment|/* 7F  O            M  variable length CDB (more than 16 bytes) */
+block|{
+literal|0x7F
+block|,
+name|D
+operator||
+name|F
+block|,
+literal|"variable length CDB (more than 16 bytes)"
+block|}
+block|,
+comment|/* 80  Z               XDWRITE EXTENDED(16) */
 block|{
 literal|0x80
 block|,
@@ -1887,7 +2081,16 @@ block|,
 literal|"XDWRITE EXTENDED(16)"
 block|}
 block|,
-comment|/* 81  O             REBUILD(16) */
+comment|/* 80   M              WRITE FILEMARKS(16) */
+block|{
+literal|0x80
+block|,
+name|T
+block|,
+literal|"WRITE FILEMARKS(16)"
+block|}
+block|,
+comment|/* 81  Z               REBUILD(16) */
 block|{
 literal|0x81
 block|,
@@ -1896,7 +2099,16 @@ block|,
 literal|"REBUILD(16)"
 block|}
 block|,
-comment|/* 82  O             REGENERATE(16) */
+comment|/* 81   O              READ REVERSE(16) */
+block|{
+literal|0x81
+block|,
+name|T
+block|,
+literal|"READ REVERSE(16)"
+block|}
+block|,
+comment|/* 82  Z               REGENERATE(16) */
 block|{
 literal|0x82
 block|,
@@ -1905,12 +2117,103 @@ block|,
 literal|"REGENERATE(16)"
 block|}
 block|,
-comment|/* 83 */
-comment|/* 84 */
-comment|/* 85 */
-comment|/* 86 */
-comment|/* 87 */
-comment|/* 88  MM  OO O    O   READ(16) */
+comment|/* 83  OOOOO O    OO   EXTENDED COPY */
+block|{
+literal|0x83
+block|,
+name|D
+operator||
+name|T
+operator||
+name|L
+operator||
+name|P
+operator||
+name|W
+operator||
+name|O
+operator||
+name|K
+operator||
+name|V
+block|,
+literal|"EXTENDED COPY"
+block|}
+block|,
+comment|/* 84  OOOOO O    OO   RECEIVE COPY RESULTS */
+block|{
+literal|0x84
+block|,
+name|D
+operator||
+name|T
+operator||
+name|L
+operator||
+name|P
+operator||
+name|W
+operator||
+name|O
+operator||
+name|K
+operator||
+name|V
+block|,
+literal|"RECEIVE COPY RESULTS"
+block|}
+block|,
+comment|/* 85  O    O    O     ATA COMMAND PASS THROUGH(16) */
+block|{
+literal|0x85
+block|,
+name|D
+operator||
+name|R
+operator||
+name|B
+block|,
+literal|"ATA COMMAND PASS THROUGH(16)"
+block|}
+block|,
+comment|/* 86  OO OO OOOOOOO   ACCESS CONTROL IN */
+block|{
+literal|0x86
+block|,
+name|ALL
+operator|&
+operator|~
+operator|(
+name|L
+operator||
+name|R
+operator||
+name|F
+operator|)
+block|,
+literal|"ACCESS CONTROL IN"
+block|}
+block|,
+comment|/* 87  OO OO OOOOOOO   ACCESS CONTROL OUT */
+block|{
+literal|0x87
+block|,
+name|ALL
+operator|&
+operator|~
+operator|(
+name|L
+operator||
+name|R
+operator||
+name|F
+operator|)
+block|,
+literal|"ACCESS CONTROL OUT"
+block|}
+block|,
+comment|/* 	 * XXX READ(16)/WRITE(16) were not listed for CD/DVE in op-num.txt 	 * but we had it since r1.40.  Do we really want them? 	 */
+comment|/* 88  MM  O O   O     READ(16) */
 block|{
 literal|0x88
 block|,
@@ -1920,15 +2223,15 @@ name|T
 operator||
 name|W
 operator||
-name|R
-operator||
 name|O
+operator||
+name|B
 block|,
 literal|"READ(16)"
 block|}
 block|,
 comment|/* 89 */
-comment|/* 8A  OM  O  O    O   WRITE(16) */
+comment|/* 8A  OM  O O   O     WRITE(16) */
 block|{
 literal|0x8A
 block|,
@@ -1938,33 +2241,186 @@ name|T
 operator||
 name|W
 operator||
-name|R
-operator||
 name|O
+operator||
+name|B
 block|,
 literal|"WRITE(16)"
 block|}
 block|,
-comment|/* 8B */
-comment|/* 8C */
-comment|/* 8D */
-comment|/* 8E */
-comment|/* 8F */
-comment|/* 90 */
-comment|/* 91 */
-comment|/* 92 */
-comment|/* 93 */
-comment|/* 94 */
-comment|/* 95 */
-comment|/* 96 */
-comment|/* 97 */
+comment|/* 8B  O               ORWRITE */
+block|{
+literal|0x8B
+block|,
+name|D
+block|,
+literal|"ORWRITE"
+block|}
+block|,
+comment|/* 8C  OO  O OO  O M   READ ATTRIBUTE */
+block|{
+literal|0x8C
+block|,
+name|D
+operator||
+name|T
+operator||
+name|W
+operator||
+name|O
+operator||
+name|M
+operator||
+name|B
+operator||
+name|V
+block|,
+literal|"READ ATTRIBUTE"
+block|}
+block|,
+comment|/* 8D  OO  O OO  O O   WRITE ATTRIBUTE */
+block|{
+literal|0x8D
+block|,
+name|D
+operator||
+name|T
+operator||
+name|W
+operator||
+name|O
+operator||
+name|M
+operator||
+name|B
+operator||
+name|V
+block|,
+literal|"WRITE ATTRIBUTE"
+block|}
+block|,
+comment|/* 8E  O   O O   O     WRITE AND VERIFY(16) */
+block|{
+literal|0x8E
+block|,
+name|D
+operator||
+name|W
+operator||
+name|O
+operator||
+name|B
+block|,
+literal|"WRITE AND VERIFY(16)"
+block|}
+block|,
+comment|/* 8F  OO  O O   O     VERIFY(16) */
+block|{
+literal|0x8F
+block|,
+name|D
+operator||
+name|T
+operator||
+name|W
+operator||
+name|O
+operator||
+name|B
+block|,
+literal|"VERIFY(16)"
+block|}
+block|,
+comment|/* 90  O   O O   O     PRE-FETCH(16) */
+block|{
+literal|0x90
+block|,
+name|D
+operator||
+name|W
+operator||
+name|O
+operator||
+name|B
+block|,
+literal|"PRE-FETCH(16)"
+block|}
+block|,
+comment|/* 91  O   O O   O     SYNCHRONIZE CACHE(16) */
+block|{
+literal|0x91
+block|,
+name|D
+operator||
+name|W
+operator||
+name|O
+operator||
+name|B
+block|,
+literal|"SYNCHRONIZE CACHE(16)"
+block|}
+block|,
+comment|/* 91   O              SPACE(16) */
+block|{
+literal|0x91
+block|,
+name|T
+block|,
+literal|"SPACE(16)"
+block|}
+block|,
+comment|/* 92  Z   O O         LOCK UNLOCK CACHE(16) */
+block|{
+literal|0x92
+block|,
+name|D
+operator||
+name|W
+operator||
+name|O
+block|,
+literal|"LOCK UNLOCK CACHE(16)"
+block|}
+block|,
+comment|/* 92   O              LOCATE(16) */
+block|{
+literal|0x92
+block|,
+name|T
+block|,
+literal|"LOCATE(16)"
+block|}
+block|,
+comment|/* 93  O               WRITE SAME(16) */
+block|{
+literal|0x93
+block|,
+name|D
+block|,
+literal|"WRITE SAME(16)"
+block|}
+block|,
+comment|/* 93   M              ERASE(16) */
+block|{
+literal|0x93
+block|,
+name|T
+block|,
+literal|"ERASE(16)"
+block|}
+block|,
+comment|/* 94 [usage proposed by SCSI Socket Services project] */
+comment|/* 95 [usage proposed by SCSI Socket Services project] */
+comment|/* 96 [usage proposed by SCSI Socket Services project] */
+comment|/* 97 [usage proposed by SCSI Socket Services project] */
 comment|/* 98 */
 comment|/* 99 */
 comment|/* 9A */
 comment|/* 9B */
 comment|/* 9C */
 comment|/* 9D */
-comment|/* XXX KDM ALL for these?  op-num.txt defines them for none.. */
+comment|/* XXX KDM ALL for this?  op-num.txt defines it for none.. */
 comment|/* 9E                  SERVICE ACTION IN(16) */
 block|{
 literal|0x9E
@@ -1974,7 +2430,8 @@ block|,
 literal|"SERVICE ACTION IN(16)"
 block|}
 block|,
-comment|/* 9F                  SERVICE ACTION OUT(16) */
+comment|/* XXX KDM ALL for this?  op-num.txt defines it for ADC.. */
+comment|/* 9F              M   SERVICE ACTION OUT(16) */
 block|{
 literal|0x9F
 block|,
@@ -1983,7 +2440,7 @@ block|,
 literal|"SERVICE ACTION OUT(16)"
 block|}
 block|,
-comment|/* A0  OOOOOOOOOOO   REPORT LUNS */
+comment|/* A0  MMOOO OMMM OMO  REPORT LUNS */
 block|{
 literal|0xA0
 block|,
@@ -1991,60 +2448,119 @@ name|ALL
 operator|&
 operator|~
 operator|(
-name|E
+name|R
+operator||
+name|B
 operator|)
 block|,
 literal|"REPORT LUNS"
 block|}
 block|,
-comment|/* A1       O        BLANK {MMC Proposed} */
+comment|/* A1       O          BLANK */
 block|{
 literal|0xA1
 block|,
 name|R
 block|,
-literal|"BLANK {MMC Proposed}"
+literal|"BLANK"
 block|}
 block|,
-comment|/* A2       O        WRITE CD MSF {MMC Proposed} */
+comment|/* A1  O         O     ATA COMMAND PASS THROUGH(12) */
+block|{
+literal|0xA1
+block|,
+name|D
+operator||
+name|B
+block|,
+literal|"ATA COMMAND PASS THROUGH(12)"
+block|}
+block|,
+comment|/* A2  OO   O      O   SECURITY PROTOCOL IN */
 block|{
 literal|0xA2
 block|,
+name|D
+operator||
+name|T
+operator||
 name|R
+operator||
+name|V
 block|,
-literal|"WRITE CD MSF {MMC Proposed}"
+literal|"SECURITY PROTOCOL IN"
 block|}
 block|,
-comment|/* A3            M   MAINTENANCE (IN) */
+comment|/* A3  OOO O OOMOOOM   MAINTENANCE (IN) */
 block|{
 literal|0xA3
 block|,
-name|A
+name|ALL
+operator|&
+operator|~
+operator|(
+name|P
+operator||
+name|R
+operator||
+name|F
+operator|)
 block|,
 literal|"MAINTENANCE (IN)"
 block|}
 block|,
-comment|/* A4            O   MAINTENANCE (OUT) */
+comment|/* A3       O          SEND KEY */
+block|{
+literal|0xA3
+block|,
+name|R
+block|,
+literal|"SEND KEY"
+block|}
+block|,
+comment|/* A4  OOO O OOOOOOO   MAINTENANCE (OUT) */
 block|{
 literal|0xA4
 block|,
-name|A
+name|ALL
+operator|&
+operator|~
+operator|(
+name|P
+operator||
+name|R
+operator||
+name|F
+operator|)
 block|,
 literal|"MAINTENANCE (OUT)"
 block|}
 block|,
-comment|/* A5   O      M     MOVE MEDIUM */
+comment|/* A4       O          REPORT KEY */
+block|{
+literal|0xA4
+block|,
+name|R
+block|,
+literal|"REPORT KEY"
+block|}
+block|,
+comment|/* A5   O  O OM        MOVE MEDIUM */
 block|{
 literal|0xA5
 block|,
 name|T
+operator||
+name|W
+operator||
+name|O
 operator||
 name|M
 block|,
 literal|"MOVE MEDIUM"
 block|}
 block|,
-comment|/* A5       O        PLAY AUDIO(12) */
+comment|/* A5       O          PLAY AUDIO(12) */
 block|{
 literal|0xA5
 block|,
@@ -2053,7 +2569,7 @@ block|,
 literal|"PLAY AUDIO(12)"
 block|}
 block|,
-comment|/* A6          O     EXCHANGE MEDIUM */
+comment|/* A6         O        EXCHANGE MEDIUM */
 block|{
 literal|0xA6
 block|,
@@ -2062,16 +2578,16 @@ block|,
 literal|"EXCHANGE MEDIUM"
 block|}
 block|,
-comment|/* A6       O        LOAD/UNLOAD CD {MMC Proposed} */
+comment|/* A6       O          LOAD/UNLOAD C/DVD */
 block|{
 literal|0xA6
 block|,
 name|R
 block|,
-literal|"LOAD/UNLOAD CD {MMC Proposed}"
+literal|"LOAD/UNLOAD C/DVD"
 block|}
 block|,
-comment|/* A7  OO  OO OO     MOVE MEDIUM ATTACHED */
+comment|/* A7  ZZ  O O         MOVE MEDIUM ATTACHED */
 block|{
 literal|0xA7
 block|,
@@ -2081,16 +2597,21 @@ name|T
 operator||
 name|W
 operator||
-name|R
-operator||
 name|O
-operator||
-name|M
 block|,
 literal|"MOVE MEDIUM ATTACHED"
 block|}
 block|,
-comment|/* A8  O   OM O      READ(12) */
+comment|/* A7       O          SET READ AHEAD */
+block|{
+literal|0xA7
+block|,
+name|R
+block|,
+literal|"SET READ AHEAD"
+block|}
+block|,
+comment|/* A8  O   OOO         READ(12) */
 block|{
 literal|0xA8
 block|,
@@ -2105,7 +2626,7 @@ block|,
 literal|"READ(12)"
 block|}
 block|,
-comment|/* A8           O    GET MESSAGE(12) */
+comment|/* A8                  GET MESSAGE(12) */
 block|{
 literal|0xA8
 block|,
@@ -2114,16 +2635,16 @@ block|,
 literal|"GET MESSAGE(12)"
 block|}
 block|,
-comment|/* A9       O        PLAY TRACK RELATIVE(12) */
+comment|/* A9              O   SERVICE ACTION OUT(12) */
 block|{
 literal|0xA9
 block|,
-name|R
+name|V
 block|,
-literal|"PLAY TRACK RELATIVE(12)"
+literal|"SERVICE ACTION OUT(12)"
 block|}
 block|,
-comment|/* AA  O   O  O      WRITE(12) */
+comment|/* AA  O   OOO         WRITE(12) */
 block|{
 literal|0xAA
 block|,
@@ -2131,21 +2652,14 @@ name|D
 operator||
 name|W
 operator||
+name|R
+operator||
 name|O
 block|,
 literal|"WRITE(12)"
 block|}
 block|,
-comment|/* AA       O        WRITE CD(12) {MMC Proposed} */
-block|{
-literal|0xAA
-block|,
-name|R
-block|,
-literal|"WRITE CD(12) {MMC Proposed}"
-block|}
-block|,
-comment|/* AA           O    SEND MESSAGE(12) */
+comment|/* AA                  SEND MESSAGE(12) */
 block|{
 literal|0xAA
 block|,
@@ -2154,8 +2668,18 @@ block|,
 literal|"SEND MESSAGE(12)"
 block|}
 block|,
-comment|/* AB */
-comment|/* AC         O      ERASE(12) */
+comment|/* AB       O      O   SERVICE ACTION IN(12) */
+block|{
+literal|0xAB
+block|,
+name|R
+operator||
+name|V
+block|,
+literal|"SERVICE ACTION IN(12)"
+block|}
+block|,
+comment|/* AC        O         ERASE(12) */
 block|{
 literal|0xAC
 block|,
@@ -2164,11 +2688,30 @@ block|,
 literal|"ERASE(12)"
 block|}
 block|,
-comment|/* AD */
-comment|/* AE      O  O      WRITE AND VERIFY(12) */
+comment|/* AC       O          GET PERFORMANCE */
+block|{
+literal|0xAC
+block|,
+name|R
+block|,
+literal|"GET PERFORMANCE"
+block|}
+block|,
+comment|/* AD       O          READ DVD STRUCTURE */
+block|{
+literal|0xAD
+block|,
+name|R
+block|,
+literal|"READ DVD STRUCTURE"
+block|}
+block|,
+comment|/* AE  O   O O         WRITE AND VERIFY(12) */
 block|{
 literal|0xAE
 block|,
+name|D
+operator||
 name|W
 operator||
 name|O
@@ -2176,10 +2719,12 @@ block|,
 literal|"WRITE AND VERIFY(12)"
 block|}
 block|,
-comment|/* AF      OO O      VERIFY(12) */
+comment|/* AF  O   OZO         VERIFY(12) */
 block|{
 literal|0xAF
 block|,
+name|D
+operator||
 name|W
 operator||
 name|R
@@ -2189,7 +2734,7 @@ block|,
 literal|"VERIFY(12)"
 block|}
 block|,
-comment|/* B0      ZO Z      SEARCH DATA HIGH(12) */
+comment|/* B0      ZZZ         SEARCH DATA HIGH(12) */
 block|{
 literal|0xB0
 block|,
@@ -2202,7 +2747,7 @@ block|,
 literal|"SEARCH DATA HIGH(12)"
 block|}
 block|,
-comment|/* B1      ZO Z      SEARCH DATA EQUAL(12) */
+comment|/* B1      ZZZ         SEARCH DATA EQUAL(12) */
 block|{
 literal|0xB1
 block|,
@@ -2215,7 +2760,7 @@ block|,
 literal|"SEARCH DATA EQUAL(12)"
 block|}
 block|,
-comment|/* B2      ZO Z      SEARCH DATA LOW(12) */
+comment|/* B2      ZZZ         SEARCH DATA LOW(12) */
 block|{
 literal|0xB2
 block|,
@@ -2228,10 +2773,12 @@ block|,
 literal|"SEARCH DATA LOW(12)"
 block|}
 block|,
-comment|/* B3      OO O      SET LIMITS(12) */
+comment|/* B3  Z   OZO         SET LIMITS(12) */
 block|{
 literal|0xB3
 block|,
+name|D
+operator||
 name|W
 operator||
 name|R
@@ -2241,7 +2788,7 @@ block|,
 literal|"SET LIMITS(12)"
 block|}
 block|,
-comment|/* B4  OO  OO OO     READ ELEMENT STATUS ATTACHED */
+comment|/* B4  ZZ  OZO         READ ELEMENT STATUS ATTACHED */
 block|{
 literal|0xB4
 block|,
@@ -2254,13 +2801,26 @@ operator||
 name|R
 operator||
 name|O
-operator||
-name|M
 block|,
 literal|"READ ELEMENT STATUS ATTACHED"
 block|}
 block|,
-comment|/* B5          O     REQUEST VOLUME ELEMENT ADDRESS */
+comment|/* B5  OO   O      O   SECURITY PROTOCOL OUT */
+block|{
+literal|0xB5
+block|,
+name|D
+operator||
+name|T
+operator||
+name|R
+operator||
+name|V
+block|,
+literal|"SECURITY PROTOCOL OUT"
+block|}
+block|,
+comment|/* B5         O        REQUEST VOLUME ELEMENT ADDRESS */
 block|{
 literal|0xB5
 block|,
@@ -2269,7 +2829,7 @@ block|,
 literal|"REQUEST VOLUME ELEMENT ADDRESS"
 block|}
 block|,
-comment|/* B6          O     SEND VOLUME TAG */
+comment|/* B6         O        SEND VOLUME TAG */
 block|{
 literal|0xB6
 block|,
@@ -2278,141 +2838,209 @@ block|,
 literal|"SEND VOLUME TAG"
 block|}
 block|,
-comment|/* B7         O      READ DEFECT DATA(12) */
+comment|/* B6       O          SET STREAMING */
+block|{
+literal|0xB6
+block|,
+name|R
+block|,
+literal|"SET STREAMING"
+block|}
+block|,
+comment|/* B7  O     O         READ DEFECT DATA(12) */
 block|{
 literal|0xB7
 block|,
+name|D
+operator||
 name|O
 block|,
 literal|"READ DEFECT DATA(12)"
 block|}
 block|,
-comment|/* B8   O      M     READ ELEMENT STATUS */
+comment|/* B8   O  OZOM        READ ELEMENT STATUS */
 block|{
 literal|0xB8
 block|,
 name|T
+operator||
+name|W
+operator||
+name|R
+operator||
+name|O
 operator||
 name|M
 block|,
 literal|"READ ELEMENT STATUS"
 block|}
 block|,
-comment|/* B8       O        SET CD SPEED {MMC Proposed} */
-block|{
-literal|0xB8
-block|,
-name|R
-block|,
-literal|"SET CD SPEED {MMC Proposed}"
-block|}
-block|,
-comment|/* B9       M        READ CD MSF {MMC Proposed} */
+comment|/* B9       O          READ CD MSF */
 block|{
 literal|0xB9
 block|,
 name|R
 block|,
-literal|"READ CD MSF {MMC Proposed}"
+literal|"READ CD MSF"
 block|}
 block|,
-comment|/* BA       O        SCAN {MMC Proposed} */
+comment|/* BA  O   O OOMO      REDUNDANCY GROUP (IN) */
 block|{
 literal|0xBA
 block|,
-name|R
-block|,
-literal|"SCAN {MMC Proposed}"
-block|}
-block|,
-comment|/* BA            M   REDUNDANCY GROUP (IN) */
-block|{
-literal|0xBA
-block|,
+name|D
+operator||
+name|W
+operator||
+name|O
+operator||
+name|M
+operator||
 name|A
+operator||
+name|E
 block|,
 literal|"REDUNDANCY GROUP (IN)"
 block|}
 block|,
-comment|/* BB       O        SET CD-ROM SPEED {proposed} */
+comment|/* BA       O          SCAN */
 block|{
-literal|0xBB
+literal|0xBA
 block|,
 name|R
 block|,
-literal|"SET CD-ROM SPEED {proposed}"
+literal|"SCAN"
 block|}
 block|,
-comment|/* BB            O   REDUNDANCY GROUP (OUT) */
+comment|/* BB  O   O OOOO      REDUNDANCY GROUP (OUT) */
 block|{
 literal|0xBB
 block|,
+name|D
+operator||
+name|W
+operator||
+name|O
+operator||
+name|M
+operator||
 name|A
+operator||
+name|E
 block|,
 literal|"REDUNDANCY GROUP (OUT)"
 block|}
 block|,
-comment|/* BC       O        PLAY CD {MMC Proposed} */
+comment|/* BB       O          SET CD SPEED */
 block|{
-literal|0xBC
+literal|0xBB
 block|,
 name|R
 block|,
-literal|"PLAY CD {MMC Proposed}"
+literal|"SET CD SPEED"
 block|}
 block|,
-comment|/* BC            M   SPARE (IN) */
+comment|/* BC  O   O OOMO      SPARE (IN) */
 block|{
 literal|0xBC
 block|,
+name|D
+operator||
+name|W
+operator||
+name|O
+operator||
+name|M
+operator||
 name|A
+operator||
+name|E
 block|,
 literal|"SPARE (IN)"
 block|}
 block|,
-comment|/* BD       M        MECHANISM STATUS {MMC Proposed} */
+comment|/* BD  O   O OOOO      SPARE (OUT) */
 block|{
 literal|0xBD
 block|,
-name|R
-block|,
-literal|"MECHANISM STATUS {MMC Proposed}"
-block|}
-block|,
-comment|/* BD            O   SPARE (OUT) */
-block|{
-literal|0xBD
-block|,
+name|D
+operator||
+name|W
+operator||
+name|O
+operator||
+name|M
+operator||
 name|A
+operator||
+name|E
 block|,
 literal|"SPARE (OUT)"
 block|}
 block|,
-comment|/* BE       O        READ CD {MMC Proposed} */
+comment|/* BD       O          MECHANISM STATUS */
+block|{
+literal|0xBD
+block|,
+name|R
+block|,
+literal|"MECHANISM STATUS"
+block|}
+block|,
+comment|/* BE  O   O OOMO      VOLUME SET (IN) */
+block|{
+literal|0xBE
+block|,
+name|D
+operator||
+name|W
+operator||
+name|O
+operator||
+name|M
+operator||
+name|A
+operator||
+name|E
+block|,
+literal|"VOLUME SET (IN)"
+block|}
+block|,
+comment|/* BE       O          READ CD */
 block|{
 literal|0xBE
 block|,
 name|R
 block|,
-literal|"READ CD {MMC Proposed}"
+literal|"READ CD"
 block|}
 block|,
-comment|/* BE            M   VOLUME SET (IN) */
-block|{
-literal|0xBE
-block|,
-name|A
-block|,
-literal|"VOLUME SET (IN)"
-block|}
-block|,
-comment|/* BF            O   VOLUME SET (OUT) */
+comment|/* BF  O   O OOOO      VOLUME SET (OUT) */
 block|{
 literal|0xBF
 block|,
+name|D
+operator||
+name|W
+operator||
+name|O
+operator||
+name|M
+operator||
 name|A
+operator||
+name|E
 block|,
 literal|"VOLUME SET (OUT)"
+block|}
+block|,
+comment|/* BF       O          SEND DVD STRUCTURE */
+block|{
+literal|0xBF
+block|,
+name|R
+block|,
+literal|"SEND DVD STRUCTURE"
 block|}
 block|}
 decl_stmt|;
@@ -2441,7 +3069,7 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|u_int16_t
+name|u_int32_t
 name|opmask
 decl_stmt|;
 name|u_int16_t
@@ -3051,7 +3679,7 @@ literal|0x04
 argument_list|,
 literal|0x0b
 argument_list|,
-argument|SS_START|SSQ_DECREMENT_COUNT|ENXIO
+argument|SS_START | SSQ_DECREMENT_COUNT | ENXIO
 argument_list|,
 literal|"Logical unit not ready, initializing cmd. required"
 argument_list|)
@@ -3075,7 +3703,7 @@ literal|0x04
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_START|SSQ_DECREMENT_COUNT|ENXIO
+argument|SS_START | SSQ_DECREMENT_COUNT | ENXIO
 argument_list|,
 literal|"Logical unit not ready, cause not reportable"
 argument_list|)
@@ -3093,7 +3721,7 @@ index|[]
 init|=
 block|{
 block|{
-comment|/* 		 * The Quantum Fireball ST and SE like to return 0x04 0x0b when 		 * they really should return 0x04 0x02.  0x04,0x0b isn't 		 * defined in any SCSI spec, and it isn't mentioned in the 		 * hardware manual for these drives. 		 */
+comment|/* 		 * XXX The Quantum Fireball ST and SE like to return 0x04 0x0b 		 * when they really should return 0x04 0x02. 		 */
 block|{
 name|T_DIRECT
 block|,
@@ -3191,8 +3819,9 @@ name|asc_table
 index|[]
 init|=
 block|{
-comment|/*  * From File: ASC-NUM.TXT  * SCSI ASC/ASCQ Assignments  * Numeric Sorted Listing  * as of  5/12/97  *  * D - DIRECT ACCESS DEVICE (SBC)                     device column key  * .T - SEQUENTIAL ACCESS DEVICE (SSC)               -------------------  * . L - PRINTER DEVICE (SSC)                           blank = reserved  * .  P - PROCESSOR DEVICE (SPC)                     not blank = allowed  * .  .W - WRITE ONCE READ MULTIPLE DEVICE (SBC)  * .  . R - CD DEVICE (MMC)  * .  .  S - SCANNER DEVICE (SGC)  * .  .  .O - OPTICAL MEMORY DEVICE (SBC)  * .  .  . M - MEDIA CHANGER DEVICE (SMC)  * .  .  .  C - COMMUNICATION DEVICE (SSC)  * .  .  .  .A - STORAGE ARRAY DEVICE (SCC)  * .  .  .  . E - ENCLOSURE SERVICES DEVICE (SES)  * DTLPWRSOMCAE        ASC   ASCQ  Action  Description  * ------------        ----  ----  ------  -----------------------------------*/
-comment|/* DTLPWRSOMCAE */
+comment|/* 	 * From: http://www.t10.org/lists/asc-num.txt 	 * Modifications by Jung-uk Kim (jkim@FreeBSD.org) 	 */
+comment|/* 	 * File: ASC-NUM.TXT 	 * 	 * SCSI ASC/ASCQ Assignments 	 * Numeric Sorted Listing 	 * as of  7/29/08 	 * 	 * D - DIRECT ACCESS DEVICE (SBC-2)                   device column key 	 * .T - SEQUENTIAL ACCESS DEVICE (SSC)               ------------------- 	 * . L - PRINTER DEVICE (SSC)                           blank = reserved 	 * .  P - PROCESSOR DEVICE (SPC)                     not blank = allowed 	 * .  .W - WRITE ONCE READ MULTIPLE DEVICE (SBC-2) 	 * .  . R - CD DEVICE (MMC) 	 * .  .  O - OPTICAL MEMORY DEVICE (SBC-2) 	 * .  .  .M - MEDIA CHANGER DEVICE (SMC) 	 * .  .  . A - STORAGE ARRAY DEVICE (SCC) 	 * .  .  .  E - ENCLOSURE SERVICES DEVICE (SES) 	 * .  .  .  .B - SIMPLIFIED DIRECT-ACCESS DEVICE (RBC) 	 * .  .  .  . K - OPTICAL CARD READER/WRITER DEVICE (OCRW) 	 * .  .  .  .  V - AUTOMATION/DRIVE INTERFACE (ADC) 	 * .  .  .  .  .F - OBJECT-BASED STORAGE (OSD) 	 * DTLPWROMAEBKVF 	 * ASC      ASCQ  Action 	 * Description 	 */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -3206,7 +3835,7 @@ literal|"No additional sense information"
 argument_list|)
 block|}
 block|,
-comment|/*  T    S      */
+comment|/*  T             */
 block|{
 name|SST
 argument_list|(
@@ -3220,7 +3849,7 @@ literal|"Filemark detected"
 argument_list|)
 block|}
 block|,
-comment|/*  T    S      */
+comment|/*  T             */
 block|{
 name|SST
 argument_list|(
@@ -3234,7 +3863,7 @@ literal|"End-of-partition/medium detected"
 argument_list|)
 block|}
 block|,
-comment|/*  T           */
+comment|/*  T             */
 block|{
 name|SST
 argument_list|(
@@ -3248,7 +3877,7 @@ literal|"Setmark detected"
 argument_list|)
 block|}
 block|,
-comment|/*  T    S      */
+comment|/*  T             */
 block|{
 name|SST
 argument_list|(
@@ -3262,7 +3891,7 @@ literal|"Beginning-of-partition/medium detected"
 argument_list|)
 block|}
 block|,
-comment|/*  T    S      */
+comment|/*  TL            */
 block|{
 name|SST
 argument_list|(
@@ -3276,7 +3905,7 @@ literal|"End-of-data detected"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -3290,7 +3919,22 @@ literal|"I/O process terminated"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x00
+argument_list|,
+literal|0x07
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Programmable early warning detected"
+argument_list|)
+block|}
+block|,
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -3298,13 +3942,13 @@ literal|0x00
 argument_list|,
 literal|0x11
 argument_list|,
-argument|SS_FATAL|EBUSY
+argument|SS_FATAL | EBUSY
 argument_list|,
 literal|"Audio play operation in progress"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -3318,7 +3962,7 @@ literal|"Audio play operation paused"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -3332,7 +3976,7 @@ literal|"Audio play operation successfully completed"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -3346,7 +3990,7 @@ literal|"Audio play operation stopped due to error"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -3360,7 +4004,7 @@ literal|"No current audio status to return"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -3368,13 +4012,13 @@ literal|0x00
 argument_list|,
 literal|0x16
 argument_list|,
-argument|SS_FATAL|EBUSY
+argument|SS_FATAL | EBUSY
 argument_list|,
 literal|"Operation in progress"
 argument_list|)
 block|}
 block|,
-comment|/* DTL WRSOM AE */
+comment|/* DTL WROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -3388,7 +4032,112 @@ literal|"Cleaning requested"
 argument_list|)
 block|}
 block|,
-comment|/* D   W  O     */
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x00
+argument_list|,
+literal|0x18
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Erase operation in progress"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x00
+argument_list|,
+literal|0x19
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Locate operation in progress"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x00
+argument_list|,
+literal|0x1A
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Rewind operation in progress"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x00
+argument_list|,
+literal|0x1B
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Set capacity operation in progress"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x00
+argument_list|,
+literal|0x1C
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Verify operation in progress"
+argument_list|)
+block|}
+block|,
+comment|/* DT        B    */
+block|{
+name|SST
+argument_list|(
+literal|0x00
+argument_list|,
+literal|0x1D
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"ATA pass through information available"
+argument_list|)
+block|}
+block|,
+comment|/* DT   R MAEBKV  */
+block|{
+name|SST
+argument_list|(
+literal|0x00
+argument_list|,
+literal|0x1E
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Conflicting SA creation request"
+argument_list|)
+block|}
+block|,
+comment|/* D   W O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -3402,7 +4151,7 @@ literal|"No index/sector signal"
 argument_list|)
 block|}
 block|,
-comment|/* D   WR OM    */
+comment|/* D   WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -3416,7 +4165,7 @@ literal|"No seek complete"
 argument_list|)
 block|}
 block|,
-comment|/* DTL W SO     */
+comment|/* DTL W O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -3430,7 +4179,7 @@ literal|"Peripheral device write fault"
 argument_list|)
 block|}
 block|,
-comment|/*  T           */
+comment|/*  T             */
 block|{
 name|SST
 argument_list|(
@@ -3444,7 +4193,7 @@ literal|"No write current"
 argument_list|)
 block|}
 block|,
-comment|/*  T           */
+comment|/*  T             */
 block|{
 name|SST
 argument_list|(
@@ -3458,7 +4207,7 @@ literal|"Excessive write errors"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -3466,13 +4215,13 @@ literal|0x04
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_TUR|SSQ_MANY|SSQ_DECREMENT_COUNT|EIO
+argument|SS_TUR | SSQ_MANY | SSQ_DECREMENT_COUNT | EIO
 argument_list|,
 literal|"Logical unit not ready, cause not reportable"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -3480,13 +4229,13 @@ literal|0x04
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_TUR|SSQ_MANY|SSQ_DECREMENT_COUNT|EBUSY
+argument|SS_TUR | SSQ_MANY | SSQ_DECREMENT_COUNT | EBUSY
 argument_list|,
 literal|"Logical unit is in process of becoming ready"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -3494,13 +4243,13 @@ literal|0x04
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_START|SSQ_DECREMENT_COUNT|ENXIO
+argument|SS_START | SSQ_DECREMENT_COUNT | ENXIO
 argument_list|,
-literal|"Logical unit not ready, initializing cmd. required"
+literal|"Logical unit not ready, initializing command required"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -3508,13 +4257,13 @@ literal|0x04
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_FATAL|ENXIO
+argument|SS_FATAL | ENXIO
 argument_list|,
 literal|"Logical unit not ready, manual intervention required"
 argument_list|)
 block|}
 block|,
-comment|/* DTL    O     */
+comment|/* DTL  RO   B    */
 block|{
 name|SST
 argument_list|(
@@ -3522,13 +4271,13 @@ literal|0x04
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_FATAL|EBUSY
+argument|SS_FATAL | EBUSY
 argument_list|,
 literal|"Logical unit not ready, format in progress"
 argument_list|)
 block|}
 block|,
-comment|/* DT  W  OMCA  */
+comment|/* DT  W O A BK F */
 block|{
 name|SST
 argument_list|(
@@ -3536,13 +4285,13 @@ literal|0x04
 argument_list|,
 literal|0x05
 argument_list|,
-argument|SS_FATAL|EBUSY
+argument|SS_FATAL | EBUSY
 argument_list|,
 literal|"Logical unit not ready, rebuild in progress"
 argument_list|)
 block|}
 block|,
-comment|/* DT  W  OMCA  */
+comment|/* DT  W O A BK   */
 block|{
 name|SST
 argument_list|(
@@ -3550,13 +4299,13 @@ literal|0x04
 argument_list|,
 literal|0x06
 argument_list|,
-argument|SS_FATAL|EBUSY
+argument|SS_FATAL | EBUSY
 argument_list|,
 literal|"Logical unit not ready, recalculation in progress"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -3564,13 +4313,13 @@ literal|0x04
 argument_list|,
 literal|0x07
 argument_list|,
-argument|SS_FATAL|EBUSY
+argument|SS_FATAL | EBUSY
 argument_list|,
 literal|"Logical unit not ready, operation in progress"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -3578,13 +4327,148 @@ literal|0x04
 argument_list|,
 literal|0x08
 argument_list|,
-argument|SS_FATAL|EBUSY
+argument|SS_FATAL | EBUSY
 argument_list|,
 literal|"Logical unit not ready, long write in progress"
 argument_list|)
 block|}
 block|,
-comment|/* DTL WRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x04
+argument_list|,
+literal|0x09
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Logical unit not ready, self-test in progress"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x04
+argument_list|,
+literal|0x0A
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Logical unit not accessible, asymmetric access state transition"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x04
+argument_list|,
+literal|0x0B
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Logical unit not accessible, target port in standby state"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x04
+argument_list|,
+literal|0x0C
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Logical unit not accessible, target port in unavailable state"
+argument_list|)
+block|}
+block|,
+comment|/*              F */
+block|{
+name|SST
+argument_list|(
+literal|0x04
+argument_list|,
+literal|0x0D
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Logical unit not ready, structure check required"
+argument_list|)
+block|}
+block|,
+comment|/* DT  WROM  B    */
+block|{
+name|SST
+argument_list|(
+literal|0x04
+argument_list|,
+literal|0x10
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Logical unit not ready, auxiliary memory not accessible"
+argument_list|)
+block|}
+block|,
+comment|/* DT  WRO AEB VF */
+block|{
+name|SST
+argument_list|(
+literal|0x04
+argument_list|,
+literal|0x11
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Logical unit not ready, notify (enable spinup) required"
+argument_list|)
+block|}
+block|,
+comment|/*        M    V  */
+block|{
+name|SST
+argument_list|(
+literal|0x04
+argument_list|,
+literal|0x12
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Logical unit not ready, offline"
+argument_list|)
+block|}
+block|,
+comment|/* DT   R MAEBKV  */
+block|{
+name|SST
+argument_list|(
+literal|0x04
+argument_list|,
+literal|0x13
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Logical unit not ready, SA creation in progress"
+argument_list|)
+block|}
+block|,
+comment|/* DTL WROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -3598,7 +4482,7 @@ literal|"Logical unit does not respond to selection"
 argument_list|)
 block|}
 block|,
-comment|/* D   WR OM    */
+comment|/* D   WROM  BK   */
 block|{
 name|SST
 argument_list|(
@@ -3612,7 +4496,7 @@ literal|"No reference position found"
 argument_list|)
 block|}
 block|,
-comment|/* DTL WRSOM    */
+comment|/* DTL WROM  BK   */
 block|{
 name|SST
 argument_list|(
@@ -3626,7 +4510,7 @@ literal|"Multiple peripheral devices selected"
 argument_list|)
 block|}
 block|,
-comment|/* DTL WRSOMCAE */
+comment|/* DTL WROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -3640,7 +4524,7 @@ literal|"Logical unit communication failure"
 argument_list|)
 block|}
 block|,
-comment|/* DTL WRSOMCAE */
+comment|/* DTL WROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -3654,7 +4538,7 @@ literal|"Logical unit communication time-out"
 argument_list|)
 block|}
 block|,
-comment|/* DTL WRSOMCAE */
+comment|/* DTL WROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -3668,7 +4552,7 @@ literal|"Logical unit communication parity error"
 argument_list|)
 block|}
 block|,
-comment|/* DT   R OM    */
+comment|/* DT   ROM  BK   */
 block|{
 name|SST
 argument_list|(
@@ -3678,11 +4562,26 @@ literal|0x03
 argument_list|,
 argument|SS_RDEF
 argument_list|,
-literal|"Logical unit communication crc error (ultra-dma/32)"
+literal|"Logical unit communication CRC error (Ultra-DMA/32)"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR O     */
+comment|/* DTLPWRO    K   */
+block|{
+name|SST
+argument_list|(
+literal|0x08
+argument_list|,
+literal|0x04
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Unreachable copy target"
+argument_list|)
+block|}
+block|,
+comment|/* DT  WRO   B    */
 block|{
 name|SST
 argument_list|(
@@ -3696,7 +4595,7 @@ literal|"Track following error"
 argument_list|)
 block|}
 block|,
-comment|/*     WR O     */
+comment|/*     WRO    K   */
 block|{
 name|SST
 argument_list|(
@@ -3710,7 +4609,7 @@ literal|"Tracking servo failure"
 argument_list|)
 block|}
 block|,
-comment|/*     WR O     */
+comment|/*     WRO    K   */
 block|{
 name|SST
 argument_list|(
@@ -3724,7 +4623,7 @@ literal|"Focus servo failure"
 argument_list|)
 block|}
 block|,
-comment|/*     WR O     */
+comment|/*     WRO        */
 block|{
 name|SST
 argument_list|(
@@ -3738,7 +4637,7 @@ literal|"Spindle servo failure"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR O     */
+comment|/* DT  WRO   B    */
 block|{
 name|SST
 argument_list|(
@@ -3752,7 +4651,7 @@ literal|"Head select fault"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -3760,13 +4659,13 @@ literal|0x0A
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_FATAL|ENOSPC
+argument|SS_FATAL | ENOSPC
 argument_list|,
 literal|"Error log overflow"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -3780,7 +4679,7 @@ literal|"Warning"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -3790,11 +4689,11 @@ literal|0x01
 argument_list|,
 argument|SS_RDEF
 argument_list|,
-literal|"Specified temperature exceeded"
+literal|"Warning - specified temperature exceeded"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -3804,11 +4703,86 @@ literal|0x02
 argument_list|,
 argument|SS_RDEF
 argument_list|,
-literal|"Enclosure degraded"
+literal|"Warning - enclosure degraded"
 argument_list|)
 block|}
 block|,
-comment|/*  T   RS      */
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x0B
+argument_list|,
+literal|0x03
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Warning - background self-test failed"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWRO AEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x0B
+argument_list|,
+literal|0x04
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Warning - background pre-scan detected medium error"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWRO AEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x0B
+argument_list|,
+literal|0x05
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Warning - background medium scan detected medium error"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x0B
+argument_list|,
+literal|0x06
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Warning - non-volatile cache now volatile"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x0B
+argument_list|,
+literal|0x07
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Warning - degraded power to non-volatile cache"
+argument_list|)
+block|}
+block|,
+comment|/*  T   R         */
 block|{
 name|SST
 argument_list|(
@@ -3822,7 +4796,7 @@ literal|"Write error"
 argument_list|)
 block|}
 block|,
-comment|/* D   W  O     */
+comment|/*            K   */
 block|{
 name|SST
 argument_list|(
@@ -3830,13 +4804,13 @@ literal|0x0C
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_NOP|SSQ_PRINT_SENSE
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
 literal|"Write error - recovered with auto reallocation"
 argument_list|)
 block|}
 block|,
-comment|/* D   W  O     */
+comment|/* D   W O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -3850,7 +4824,7 @@ literal|"Write error - auto reallocation failed"
 argument_list|)
 block|}
 block|,
-comment|/* D   W  O     */
+comment|/* D   W O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -3864,7 +4838,7 @@ literal|"Write error - recommend reassignment"
 argument_list|)
 block|}
 block|,
-comment|/* DT  W  O     */
+comment|/* DT  W O   B    */
 block|{
 name|SST
 argument_list|(
@@ -3878,7 +4852,7 @@ literal|"Compression check miscompare error"
 argument_list|)
 block|}
 block|,
-comment|/* DT  W  O     */
+comment|/* DT  W O   B    */
 block|{
 name|SST
 argument_list|(
@@ -3892,7 +4866,7 @@ literal|"Data expansion occurred during compression"
 argument_list|)
 block|}
 block|,
-comment|/* DT  W  O     */
+comment|/* DT  W O   B    */
 block|{
 name|SST
 argument_list|(
@@ -3906,7 +4880,7 @@ literal|"Block not compressible"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -3920,7 +4894,7 @@ literal|"Write error - recovery needed"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -3934,7 +4908,7 @@ literal|"Write error - recovery failed"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -3948,7 +4922,7 @@ literal|"Write error - loss of streaming"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -3962,7 +4936,217 @@ literal|"Write error - padding blocks added"
 argument_list|)
 block|}
 block|,
-comment|/* D   W  O     */
+comment|/* DT  WROM  B    */
+block|{
+name|SST
+argument_list|(
+literal|0x0C
+argument_list|,
+literal|0x0B
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Auxiliary memory write error"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWRO AEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x0C
+argument_list|,
+literal|0x0C
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Write error - unexpected unsolicited data"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWRO AEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x0C
+argument_list|,
+literal|0x0D
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Write error - not enough unsolicited data"
+argument_list|)
+block|}
+block|,
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x0C
+argument_list|,
+literal|0x0F
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Defects in error window"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWRO A  K   */
+block|{
+name|SST
+argument_list|(
+literal|0x0D
+argument_list|,
+literal|0x00
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Error detected by third party temporary initiator"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWRO A  K   */
+block|{
+name|SST
+argument_list|(
+literal|0x0D
+argument_list|,
+literal|0x01
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Third party device failure"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWRO A  K   */
+block|{
+name|SST
+argument_list|(
+literal|0x0D
+argument_list|,
+literal|0x02
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Copy target device not reachable"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWRO A  K   */
+block|{
+name|SST
+argument_list|(
+literal|0x0D
+argument_list|,
+literal|0x03
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Incorrect copy target device type"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWRO A  K   */
+block|{
+name|SST
+argument_list|(
+literal|0x0D
+argument_list|,
+literal|0x04
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Copy target device data underrun"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWRO A  K   */
+block|{
+name|SST
+argument_list|(
+literal|0x0D
+argument_list|,
+literal|0x05
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Copy target device data overrun"
+argument_list|)
+block|}
+block|,
+comment|/* DT PWROMAEBK F */
+block|{
+name|SST
+argument_list|(
+literal|0x0E
+argument_list|,
+literal|0x00
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Invalid information unit"
+argument_list|)
+block|}
+block|,
+comment|/* DT PWROMAEBK F */
+block|{
+name|SST
+argument_list|(
+literal|0x0E
+argument_list|,
+literal|0x01
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Information unit too short"
+argument_list|)
+block|}
+block|,
+comment|/* DT PWROMAEBK F */
+block|{
+name|SST
+argument_list|(
+literal|0x0E
+argument_list|,
+literal|0x02
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Information unit too long"
+argument_list|)
+block|}
+block|,
+comment|/* DT P R MAEBK F */
+block|{
+name|SST
+argument_list|(
+literal|0x0E
+argument_list|,
+literal|0x03
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Invalid field in command information unit"
+argument_list|)
+block|}
+block|,
+comment|/* D   W O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -3976,7 +5160,52 @@ literal|"ID CRC or ECC error"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WRSO     */
+comment|/* DT  W O        */
+block|{
+name|SST
+argument_list|(
+literal|0x10
+argument_list|,
+literal|0x01
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Logical block guard check failed"
+argument_list|)
+block|}
+block|,
+comment|/* DT  W O        */
+block|{
+name|SST
+argument_list|(
+literal|0x10
+argument_list|,
+literal|0x02
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Logical block application tag check failed"
+argument_list|)
+block|}
+block|,
+comment|/* DT  W O        */
+block|{
+name|SST
+argument_list|(
+literal|0x10
+argument_list|,
+literal|0x03
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Logical block reference tag check failed"
+argument_list|)
+block|}
+block|,
+comment|/* DT  WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -3990,7 +5219,7 @@ literal|"Unrecovered read error"
 argument_list|)
 block|}
 block|,
-comment|/* DT  W SO     */
+comment|/* DT  WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4004,7 +5233,7 @@ literal|"Read retries exhausted"
 argument_list|)
 block|}
 block|,
-comment|/* DT  W SO     */
+comment|/* DT  WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4018,7 +5247,7 @@ literal|"Error too long to correct"
 argument_list|)
 block|}
 block|,
-comment|/* DT  W SO     */
+comment|/* DT  W O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4032,7 +5261,7 @@ literal|"Multiple read errors"
 argument_list|)
 block|}
 block|,
-comment|/* D   W  O     */
+comment|/* D   W O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4046,7 +5275,7 @@ literal|"Unrecovered read error - auto reallocate failed"
 argument_list|)
 block|}
 block|,
-comment|/*     WR O     */
+comment|/*     WRO   B    */
 block|{
 name|SST
 argument_list|(
@@ -4060,7 +5289,7 @@ literal|"L-EC uncorrectable error"
 argument_list|)
 block|}
 block|,
-comment|/*     WR O     */
+comment|/*     WRO   B    */
 block|{
 name|SST
 argument_list|(
@@ -4074,7 +5303,7 @@ literal|"CIRC unrecovered error"
 argument_list|)
 block|}
 block|,
-comment|/*     W  O     */
+comment|/*     W O   B    */
 block|{
 name|SST
 argument_list|(
@@ -4088,7 +5317,7 @@ literal|"Data re-synchronization error"
 argument_list|)
 block|}
 block|,
-comment|/*  T           */
+comment|/*  T             */
 block|{
 name|SST
 argument_list|(
@@ -4102,7 +5331,7 @@ literal|"Incomplete block read"
 argument_list|)
 block|}
 block|,
-comment|/*  T           */
+comment|/*  T             */
 block|{
 name|SST
 argument_list|(
@@ -4116,7 +5345,7 @@ literal|"No gap found"
 argument_list|)
 block|}
 block|,
-comment|/* DT     O     */
+comment|/* DT    O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4130,7 +5359,7 @@ literal|"Miscorrected error"
 argument_list|)
 block|}
 block|,
-comment|/* D   W  O     */
+comment|/* D   W O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4144,7 +5373,7 @@ literal|"Unrecovered read error - recommend reassignment"
 argument_list|)
 block|}
 block|,
-comment|/* D   W  O     */
+comment|/* D   W O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4158,7 +5387,7 @@ literal|"Unrecovered read error - recommend rewrite the data"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR O     */
+comment|/* DT  WRO   B    */
 block|{
 name|SST
 argument_list|(
@@ -4172,7 +5401,7 @@ literal|"De-compression CRC error"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR O     */
+comment|/* DT  WRO   B    */
 block|{
 name|SST
 argument_list|(
@@ -4186,7 +5415,7 @@ literal|"Cannot decompress using declared algorithm"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -4200,7 +5429,7 @@ literal|"Error reading UPC/EAN number"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -4214,7 +5443,7 @@ literal|"Error reading ISRC number"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -4228,7 +5457,52 @@ literal|"Read error - loss of streaming"
 argument_list|)
 block|}
 block|,
-comment|/* D   W  O     */
+comment|/* DT  WROM  B    */
+block|{
+name|SST
+argument_list|(
+literal|0x11
+argument_list|,
+literal|0x12
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Auxiliary memory read error"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWRO AEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x11
+argument_list|,
+literal|0x13
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Read error - failed retransmission request"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x11
+argument_list|,
+literal|0x14
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Read error - LBA marked bad by application client"
+argument_list|)
+block|}
+block|,
+comment|/* D   W O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4238,11 +5512,11 @@ literal|0x00
 argument_list|,
 argument|SS_RDEF
 argument_list|,
-literal|"Address mark not found for id field"
+literal|"Address mark not found for ID field"
 argument_list|)
 block|}
 block|,
-comment|/* D   W  O     */
+comment|/* D   W O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4256,7 +5530,7 @@ literal|"Address mark not found for data field"
 argument_list|)
 block|}
 block|,
-comment|/* DTL WRSO     */
+comment|/* DTL WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4270,7 +5544,7 @@ literal|"Recorded entity not found"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR O     */
+comment|/* DT  WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4284,7 +5558,7 @@ literal|"Record not found"
 argument_list|)
 block|}
 block|,
-comment|/*  T           */
+comment|/*  T             */
 block|{
 name|SST
 argument_list|(
@@ -4298,7 +5572,7 @@ literal|"Filemark or setmark not found"
 argument_list|)
 block|}
 block|,
-comment|/*  T           */
+comment|/*  T             */
 block|{
 name|SST
 argument_list|(
@@ -4312,7 +5586,7 @@ literal|"End-of-data not found"
 argument_list|)
 block|}
 block|,
-comment|/*  T           */
+comment|/*  T             */
 block|{
 name|SST
 argument_list|(
@@ -4326,7 +5600,7 @@ literal|"Block sequence error"
 argument_list|)
 block|}
 block|,
-comment|/* DT  W  O     */
+comment|/* DT  W O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4340,7 +5614,7 @@ literal|"Record not found - recommend reassignment"
 argument_list|)
 block|}
 block|,
-comment|/* DT  W  O     */
+comment|/* DT  W O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4354,7 +5628,22 @@ literal|"Record not found - data auto-reallocated"
 argument_list|)
 block|}
 block|,
-comment|/* DTL WRSOM    */
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x14
+argument_list|,
+literal|0x07
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Locate operation failure"
+argument_list|)
+block|}
+block|,
+comment|/* DTL WROM  BK   */
 block|{
 name|SST
 argument_list|(
@@ -4368,7 +5657,7 @@ literal|"Random positioning error"
 argument_list|)
 block|}
 block|,
-comment|/* DTL WRSOM    */
+comment|/* DTL WROM  BK   */
 block|{
 name|SST
 argument_list|(
@@ -4382,7 +5671,7 @@ literal|"Mechanical positioning error"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR O     */
+comment|/* DT  WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4396,7 +5685,7 @@ literal|"Positioning error detected by read of medium"
 argument_list|)
 block|}
 block|,
-comment|/* D   W  O     */
+comment|/* D   W O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4410,7 +5699,7 @@ literal|"Data synchronization mark error"
 argument_list|)
 block|}
 block|,
-comment|/* D   W  O     */
+comment|/* D   W O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4424,7 +5713,7 @@ literal|"Data sync error - data rewritten"
 argument_list|)
 block|}
 block|,
-comment|/* D   W  O     */
+comment|/* D   W O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4438,7 +5727,7 @@ literal|"Data sync error - recommend rewrite"
 argument_list|)
 block|}
 block|,
-comment|/* D   W  O     */
+comment|/* D   W O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4446,13 +5735,13 @@ literal|0x16
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_NOP|SSQ_PRINT_SENSE
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
 literal|"Data sync error - data auto-reallocated"
 argument_list|)
 block|}
 block|,
-comment|/* D   W  O     */
+comment|/* D   W O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4466,7 +5755,7 @@ literal|"Data sync error - recommend reassignment"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WRSO     */
+comment|/* DT  WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4474,13 +5763,13 @@ literal|0x17
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_NOP|SSQ_PRINT_SENSE
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data with no error correction applied"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WRSO     */
+comment|/* DT  WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4488,13 +5777,13 @@ literal|0x17
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_NOP|SSQ_PRINT_SENSE
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data with retries"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR O     */
+comment|/* DT  WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4502,13 +5791,13 @@ literal|0x17
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_NOP|SSQ_PRINT_SENSE
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data with positive head offset"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR O     */
+comment|/* DT  WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4516,13 +5805,13 @@ literal|0x17
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_NOP|SSQ_PRINT_SENSE
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data with negative head offset"
 argument_list|)
 block|}
 block|,
-comment|/*     WR O     */
+comment|/*     WRO   B    */
 block|{
 name|SST
 argument_list|(
@@ -4530,13 +5819,13 @@ literal|0x17
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_NOP|SSQ_PRINT_SENSE
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data with retries and/or CIRC applied"
 argument_list|)
 block|}
 block|,
-comment|/* D   WR O     */
+comment|/* D   WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4544,13 +5833,13 @@ literal|0x17
 argument_list|,
 literal|0x05
 argument_list|,
-argument|SS_NOP|SSQ_PRINT_SENSE
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-literal|"Recovered data using previous sector id"
+literal|"Recovered data using previous sector ID"
 argument_list|)
 block|}
 block|,
-comment|/* D   W  O     */
+comment|/* D   W O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4558,13 +5847,13 @@ literal|0x17
 argument_list|,
 literal|0x06
 argument_list|,
-argument|SS_NOP|SSQ_PRINT_SENSE
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data without ECC - data auto-reallocated"
 argument_list|)
 block|}
 block|,
-comment|/* D   W  O     */
+comment|/* D   WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4572,13 +5861,13 @@ literal|0x17
 argument_list|,
 literal|0x07
 argument_list|,
-argument|SS_NOP|SSQ_PRINT_SENSE
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data without ECC - recommend reassignment"
 argument_list|)
 block|}
 block|,
-comment|/* D   W  O     */
+comment|/* D   WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4586,13 +5875,13 @@ literal|0x17
 argument_list|,
 literal|0x08
 argument_list|,
-argument|SS_NOP|SSQ_PRINT_SENSE
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data without ECC - recommend rewrite"
 argument_list|)
 block|}
 block|,
-comment|/* D   W  O     */
+comment|/* D   WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4600,13 +5889,13 @@ literal|0x17
 argument_list|,
 literal|0x09
 argument_list|,
-argument|SS_NOP|SSQ_PRINT_SENSE
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data without ECC - data rewritten"
 argument_list|)
 block|}
 block|,
-comment|/* D   W  O     */
+comment|/* DT  WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4614,13 +5903,13 @@ literal|0x18
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_NOP|SSQ_PRINT_SENSE
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data with error correction applied"
 argument_list|)
 block|}
 block|,
-comment|/* D   WR O     */
+comment|/* D   WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4628,13 +5917,13 @@ literal|0x18
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_NOP|SSQ_PRINT_SENSE
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data with error corr.& retries applied"
 argument_list|)
 block|}
 block|,
-comment|/* D   WR O     */
+comment|/* D   WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4642,13 +5931,13 @@ literal|0x18
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_NOP|SSQ_PRINT_SENSE
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data - data auto-reallocated"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -4656,13 +5945,13 @@ literal|0x18
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_NOP|SSQ_PRINT_SENSE
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data with CIRC"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -4670,13 +5959,13 @@ literal|0x18
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_NOP|SSQ_PRINT_SENSE
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data with L-EC"
 argument_list|)
 block|}
 block|,
-comment|/* D   WR O     */
+comment|/* D   WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4684,13 +5973,13 @@ literal|0x18
 argument_list|,
 literal|0x05
 argument_list|,
-argument|SS_NOP|SSQ_PRINT_SENSE
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data - recommend reassignment"
 argument_list|)
 block|}
 block|,
-comment|/* D   WR O     */
+comment|/* D   WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4698,13 +5987,13 @@ literal|0x18
 argument_list|,
 literal|0x06
 argument_list|,
-argument|SS_NOP|SSQ_PRINT_SENSE
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data - recommend rewrite"
 argument_list|)
 block|}
 block|,
-comment|/* D   W  O     */
+comment|/* D   W O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4712,13 +6001,28 @@ literal|0x18
 argument_list|,
 literal|0x07
 argument_list|,
-argument|SS_NOP|SSQ_PRINT_SENSE
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data with ECC - data rewritten"
 argument_list|)
 block|}
 block|,
-comment|/* D      O     */
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x18
+argument_list|,
+literal|0x08
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Recovered data with linking"
+argument_list|)
+block|}
+block|,
+comment|/* D     O    K   */
 block|{
 name|SST
 argument_list|(
@@ -4732,7 +6036,7 @@ literal|"Defect list error"
 argument_list|)
 block|}
 block|,
-comment|/* D      O     */
+comment|/* D     O    K   */
 block|{
 name|SST
 argument_list|(
@@ -4746,7 +6050,7 @@ literal|"Defect list not available"
 argument_list|)
 block|}
 block|,
-comment|/* D      O     */
+comment|/* D     O    K   */
 block|{
 name|SST
 argument_list|(
@@ -4760,7 +6064,7 @@ literal|"Defect list error in primary list"
 argument_list|)
 block|}
 block|,
-comment|/* D      O     */
+comment|/* D     O    K   */
 block|{
 name|SST
 argument_list|(
@@ -4774,7 +6078,7 @@ literal|"Defect list error in grown list"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -4788,7 +6092,7 @@ literal|"Parameter list length error"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -4802,7 +6106,7 @@ literal|"Synchronous data transfer error"
 argument_list|)
 block|}
 block|,
-comment|/* D      O     */
+comment|/* D     O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4816,7 +6120,7 @@ literal|"Defect list not found"
 argument_list|)
 block|}
 block|,
-comment|/* D      O     */
+comment|/* D     O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4830,7 +6134,7 @@ literal|"Primary defect list not found"
 argument_list|)
 block|}
 block|,
-comment|/* D      O     */
+comment|/* D     O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4844,7 +6148,7 @@ literal|"Grown defect list not found"
 argument_list|)
 block|}
 block|,
-comment|/* D   W  O     */
+comment|/* DT  WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4858,7 +6162,7 @@ literal|"Miscompare during verify operation"
 argument_list|)
 block|}
 block|,
-comment|/* D   W  O     */
+comment|/* D   W O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4866,13 +6170,13 @@ literal|0x1E
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_NOP|SSQ_PRINT_SENSE
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-literal|"Recovered id with ecc correction"
+literal|"Recovered ID with ECC correction"
 argument_list|)
 block|}
 block|,
-comment|/* D      O     */
+comment|/* D     O    K   */
 block|{
 name|SST
 argument_list|(
@@ -4886,7 +6190,7 @@ literal|"Partial defect list transfer"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -4894,13 +6198,178 @@ literal|0x20
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_FATAL|EINVAL
+argument|SS_FATAL | EINVAL
 argument_list|,
 literal|"Invalid command operation code"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR OM    */
+comment|/* DT PWROMAEBK   */
+block|{
+name|SST
+argument_list|(
+literal|0x20
+argument_list|,
+literal|0x01
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Access denied - initiator pending-enrolled"
+argument_list|)
+block|}
+block|,
+comment|/* DT PWROMAEBK   */
+block|{
+name|SST
+argument_list|(
+literal|0x20
+argument_list|,
+literal|0x02
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Access denied - no access rights"
+argument_list|)
+block|}
+block|,
+comment|/* DT PWROMAEBK   */
+block|{
+name|SST
+argument_list|(
+literal|0x20
+argument_list|,
+literal|0x03
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Access denied - invalid mgmt ID key"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x20
+argument_list|,
+literal|0x04
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Illegal command while in write capable state"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x20
+argument_list|,
+literal|0x05
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Obsolete"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x20
+argument_list|,
+literal|0x06
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Illegal command while in explicit address mode"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x20
+argument_list|,
+literal|0x07
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Illegal command while in implicit address mode"
+argument_list|)
+block|}
+block|,
+comment|/* DT PWROMAEBK   */
+block|{
+name|SST
+argument_list|(
+literal|0x20
+argument_list|,
+literal|0x08
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Access denied - enrollment conflict"
+argument_list|)
+block|}
+block|,
+comment|/* DT PWROMAEBK   */
+block|{
+name|SST
+argument_list|(
+literal|0x20
+argument_list|,
+literal|0x09
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Access denied - invalid LU identifier"
+argument_list|)
+block|}
+block|,
+comment|/* DT PWROMAEBK   */
+block|{
+name|SST
+argument_list|(
+literal|0x20
+argument_list|,
+literal|0x0A
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Access denied - invalid proxy token"
+argument_list|)
+block|}
+block|,
+comment|/* DT PWROMAEBK   */
+block|{
+name|SST
+argument_list|(
+literal|0x20
+argument_list|,
+literal|0x0B
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Access denied - ACL LUN conflict"
+argument_list|)
+block|}
+block|,
+comment|/* DT  WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -4908,13 +6377,13 @@ literal|0x21
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_FATAL|EINVAL
+argument|SS_FATAL | EINVAL
 argument_list|,
 literal|"Logical block address out of range"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR OM    */
+comment|/* DT  WROM  BK   */
 block|{
 name|SST
 argument_list|(
@@ -4922,13 +6391,43 @@ literal|0x21
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_FATAL|EINVAL
+argument|SS_FATAL | EINVAL
 argument_list|,
 literal|"Invalid element address"
 argument_list|)
 block|}
 block|,
-comment|/* D            */
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x21
+argument_list|,
+literal|0x02
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Invalid address for write"
+argument_list|)
+block|}
+block|,
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x21
+argument_list|,
+literal|0x03
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Invalid write crossing layer jump"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
 block|{
 name|SST
 argument_list|(
@@ -4936,14 +6435,13 @@ literal|0x22
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_FATAL|EINVAL
+argument|SS_FATAL | EINVAL
 argument_list|,
-literal|"Illegal function"
+literal|"Illegal function (use 20 00, 24 00, or 26 00)"
 argument_list|)
 block|}
 block|,
-comment|/* Deprecated. Use 20 00, 24 00, or 26 00 instead */
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -4951,13 +6449,133 @@ literal|0x24
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_FATAL|EINVAL
+argument|SS_FATAL | EINVAL
 argument_list|,
 literal|"Invalid field in CDB"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWRO AEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x24
+argument_list|,
+literal|0x01
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"CDB decryption error"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x24
+argument_list|,
+literal|0x02
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Obsolete"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x24
+argument_list|,
+literal|0x03
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Obsolete"
+argument_list|)
+block|}
+block|,
+comment|/*              F */
+block|{
+name|SST
+argument_list|(
+literal|0x24
+argument_list|,
+literal|0x04
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Security audit value frozen"
+argument_list|)
+block|}
+block|,
+comment|/*              F */
+block|{
+name|SST
+argument_list|(
+literal|0x24
+argument_list|,
+literal|0x05
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Security working key frozen"
+argument_list|)
+block|}
+block|,
+comment|/*              F */
+block|{
+name|SST
+argument_list|(
+literal|0x24
+argument_list|,
+literal|0x06
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"NONCE not unique"
+argument_list|)
+block|}
+block|,
+comment|/*              F */
+block|{
+name|SST
+argument_list|(
+literal|0x24
+argument_list|,
+literal|0x07
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"NONCE timestamp out of range"
+argument_list|)
+block|}
+block|,
+comment|/* DT   R MAEBKV  */
+block|{
+name|SST
+argument_list|(
+literal|0x24
+argument_list|,
+literal|0x08
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Invalid XCDB"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -4965,13 +6583,13 @@ literal|0x25
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_FATAL|ENXIO
+argument|SS_FATAL | ENXIO
 argument_list|,
 literal|"Logical unit not supported"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -4979,13 +6597,13 @@ literal|0x26
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_FATAL|EINVAL
+argument|SS_FATAL | EINVAL
 argument_list|,
 literal|"Invalid field in parameter list"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -4993,13 +6611,13 @@ literal|0x26
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_FATAL|EINVAL
+argument|SS_FATAL | EINVAL
 argument_list|,
 literal|"Parameter not supported"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -5007,13 +6625,13 @@ literal|0x26
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_FATAL|EINVAL
+argument|SS_FATAL | EINVAL
 argument_list|,
 literal|"Parameter value invalid"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAE K   */
 block|{
 name|SST
 argument_list|(
@@ -5021,13 +6639,13 @@ literal|0x26
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_FATAL|EINVAL
+argument|SS_FATAL | EINVAL
 argument_list|,
 literal|"Threshold parameters not supported"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -5035,13 +6653,223 @@ literal|0x26
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_FATAL|EINVAL
+argument|SS_FATAL | EINVAL
 argument_list|,
-literal|"Invalid release of active persistent reservation"
+literal|"Invalid release of persistent reservation"
 argument_list|)
 block|}
 block|,
-comment|/* DT  W  O     */
+comment|/* DTLPWRO A BK   */
+block|{
+name|SST
+argument_list|(
+literal|0x26
+argument_list|,
+literal|0x05
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data decryption error"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWRO    K   */
+block|{
+name|SST
+argument_list|(
+literal|0x26
+argument_list|,
+literal|0x06
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Too many target descriptors"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWRO    K   */
+block|{
+name|SST
+argument_list|(
+literal|0x26
+argument_list|,
+literal|0x07
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Unsupported target descriptor type code"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWRO    K   */
+block|{
+name|SST
+argument_list|(
+literal|0x26
+argument_list|,
+literal|0x08
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Too many segment descriptors"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWRO    K   */
+block|{
+name|SST
+argument_list|(
+literal|0x26
+argument_list|,
+literal|0x09
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Unsupported segment descriptor type code"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWRO    K   */
+block|{
+name|SST
+argument_list|(
+literal|0x26
+argument_list|,
+literal|0x0A
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Unexpected inexact segment"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWRO    K   */
+block|{
+name|SST
+argument_list|(
+literal|0x26
+argument_list|,
+literal|0x0B
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Inline data length exceeded"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWRO    K   */
+block|{
+name|SST
+argument_list|(
+literal|0x26
+argument_list|,
+literal|0x0C
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Invalid operation for copy source or destination"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWRO    K   */
+block|{
+name|SST
+argument_list|(
+literal|0x26
+argument_list|,
+literal|0x0D
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Copy segment granularity violation"
+argument_list|)
+block|}
+block|,
+comment|/* DT PWROMAEBK   */
+block|{
+name|SST
+argument_list|(
+literal|0x26
+argument_list|,
+literal|0x0E
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Invalid parameter while port is enabled"
+argument_list|)
+block|}
+block|,
+comment|/*              F */
+block|{
+name|SST
+argument_list|(
+literal|0x26
+argument_list|,
+literal|0x0F
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Invalid data-out buffer integrity check value"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x26
+argument_list|,
+literal|0x10
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data decryption key fail limit reached"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x26
+argument_list|,
+literal|0x11
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Incomplete key-associated data set"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x26
+argument_list|,
+literal|0x12
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Vendor specific key reference not found"
+argument_list|)
+block|}
+block|,
+comment|/* DT  WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -5049,13 +6877,13 @@ literal|0x27
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_FATAL|EACCES
+argument|SS_FATAL | EACCES
 argument_list|,
 literal|"Write protected"
 argument_list|)
 block|}
 block|,
-comment|/* DT  W  O     */
+comment|/* DT  WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -5063,13 +6891,13 @@ literal|0x27
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_FATAL|EACCES
+argument|SS_FATAL | EACCES
 argument_list|,
 literal|"Hardware write protected"
 argument_list|)
 block|}
 block|,
-comment|/* DT  W  O     */
+comment|/* DT  WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -5077,13 +6905,13 @@ literal|0x27
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_FATAL|EACCES
+argument|SS_FATAL | EACCES
 argument_list|,
 literal|"Logical unit software write protected"
 argument_list|)
 block|}
 block|,
-comment|/*  T           */
+comment|/*  T   R         */
 block|{
 name|SST
 argument_list|(
@@ -5091,13 +6919,13 @@ literal|0x27
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_FATAL|EACCES
+argument|SS_FATAL | EACCES
 argument_list|,
 literal|"Associated write protect"
 argument_list|)
 block|}
 block|,
-comment|/*  T           */
+comment|/*  T   R         */
 block|{
 name|SST
 argument_list|(
@@ -5105,13 +6933,13 @@ literal|0x27
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_FATAL|EACCES
+argument|SS_FATAL | EACCES
 argument_list|,
 literal|"Persistent write protect"
 argument_list|)
 block|}
 block|,
-comment|/*  T           */
+comment|/*  T   R         */
 block|{
 name|SST
 argument_list|(
@@ -5119,13 +6947,28 @@ literal|0x27
 argument_list|,
 literal|0x05
 argument_list|,
-argument|SS_FATAL|EACCES
+argument|SS_FATAL | EACCES
 argument_list|,
 literal|"Permanent write protect"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/*      R       F */
+block|{
+name|SST
+argument_list|(
+literal|0x27
+argument_list|,
+literal|0x06
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Conditional write protect"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -5133,13 +6976,13 @@ literal|0x28
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_FATAL|ENXIO
+argument|SS_FATAL | ENXIO
 argument_list|,
 literal|"Not ready to ready change, medium may have changed"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DT  WROM  B    */
 block|{
 name|SST
 argument_list|(
@@ -5147,14 +6990,44 @@ literal|0x28
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_FATAL|ENXIO
+argument|SS_FATAL | ENXIO
 argument_list|,
 literal|"Import or export element accessed"
 argument_list|)
 block|}
 block|,
-comment|/*  * XXX JGibbs - All of these should use the same errno, but I don't think  * ENXIO is the correct choice.  Should we borrow from the networking  * errnos?  ECONNRESET anyone?  */
-comment|/* DTLPWRSOMCAE */
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x28
+argument_list|,
+literal|0x02
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Format-layer may have changed"
+argument_list|)
+block|}
+block|,
+comment|/*        M       */
+block|{
+name|SST
+argument_list|(
+literal|0x28
+argument_list|,
+literal|0x03
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Import/export element accessed, medium changed"
+argument_list|)
+block|}
+block|,
+comment|/* 	 * XXX JGibbs - All of these should use the same errno, but I don't 	 * think ENXIO is the correct choice.  Should we borrow from 	 * the networking errnos?  ECONNRESET anyone? 	 */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -5162,13 +7035,13 @@ literal|0x29
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_FATAL|ENXIO
+argument|SS_FATAL | ENXIO
 argument_list|,
 literal|"Power on, reset, or bus device reset occurred"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -5182,7 +7055,7 @@ literal|"Power on occurred"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -5192,11 +7065,11 @@ literal|0x02
 argument_list|,
 argument|SS_RDEF
 argument_list|,
-literal|"Scsi bus reset occurred"
+literal|"SCSI bus reset occurred"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -5210,7 +7083,7 @@ literal|"Bus device reset function occurred"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -5224,7 +7097,7 @@ literal|"Device internal reset"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -5238,7 +7111,7 @@ literal|"Transceiver mode changed to single-ended"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -5252,7 +7125,22 @@ literal|"Transceiver mode changed to LVD"
 argument_list|)
 block|}
 block|,
-comment|/* DTL WRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x29
+argument_list|,
+literal|0x07
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"I_T nexus loss occurred"
+argument_list|)
+block|}
+block|,
+comment|/* DTL WROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -5266,7 +7154,7 @@ literal|"Parameters changed"
 argument_list|)
 block|}
 block|,
-comment|/* DTL WRSOMCAE */
+comment|/* DTL WROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -5280,7 +7168,7 @@ literal|"Mode parameters changed"
 argument_list|)
 block|}
 block|,
-comment|/* DTL WRSOMCAE */
+comment|/* DTL WROMAE K   */
 block|{
 name|SST
 argument_list|(
@@ -5294,7 +7182,7 @@ literal|"Log parameters changed"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAE K   */
 block|{
 name|SST
 argument_list|(
@@ -5308,7 +7196,232 @@ literal|"Reservations preempted"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSO C   */
+comment|/* DTLPWROMAE     */
+block|{
+name|SST
+argument_list|(
+literal|0x2A
+argument_list|,
+literal|0x04
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Reservations released"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAE     */
+block|{
+name|SST
+argument_list|(
+literal|0x2A
+argument_list|,
+literal|0x05
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Registrations preempted"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x2A
+argument_list|,
+literal|0x06
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Asymmetric access state changed"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x2A
+argument_list|,
+literal|0x07
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Implicit asymmetric access state transition failed"
+argument_list|)
+block|}
+block|,
+comment|/* DT  WROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x2A
+argument_list|,
+literal|0x08
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Priority changed"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x2A
+argument_list|,
+literal|0x09
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Capacity data has changed"
+argument_list|)
+block|}
+block|,
+comment|/* DT             */
+block|{
+name|SST
+argument_list|(
+literal|0x2A
+argument_list|,
+literal|0x0A
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Error history I_T nexus cleared"
+argument_list|)
+block|}
+block|,
+comment|/* DT             */
+block|{
+name|SST
+argument_list|(
+literal|0x2A
+argument_list|,
+literal|0x0B
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Error history snapshot released"
+argument_list|)
+block|}
+block|,
+comment|/*              F */
+block|{
+name|SST
+argument_list|(
+literal|0x2A
+argument_list|,
+literal|0x0C
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Error recovery attributes have changed"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x2A
+argument_list|,
+literal|0x0D
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data encryption capabilities changed"
+argument_list|)
+block|}
+block|,
+comment|/* DT     M E  V  */
+block|{
+name|SST
+argument_list|(
+literal|0x2A
+argument_list|,
+literal|0x10
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Timestamp changed"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x2A
+argument_list|,
+literal|0x11
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data encryption parameters changed by another I_T nexus"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x2A
+argument_list|,
+literal|0x12
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data encryption parameters changed by vendor specific event"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x2A
+argument_list|,
+literal|0x13
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data encryption key instance counter has changed"
+argument_list|)
+block|}
+block|,
+comment|/* DT   R MAEBKV  */
+block|{
+name|SST
+argument_list|(
+literal|0x2A
+argument_list|,
+literal|0x14
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"SA creation capabilities data has changed"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWRO    K   */
 block|{
 name|SST
 argument_list|(
@@ -5322,7 +7435,7 @@ literal|"Copy cannot execute since host cannot disconnect"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -5336,7 +7449,7 @@ literal|"Command sequence error"
 argument_list|)
 block|}
 block|,
-comment|/*       S      */
+comment|/*                */
 block|{
 name|SST
 argument_list|(
@@ -5350,7 +7463,7 @@ literal|"Too many windows specified"
 argument_list|)
 block|}
 block|,
-comment|/*       S      */
+comment|/*                */
 block|{
 name|SST
 argument_list|(
@@ -5364,7 +7477,7 @@ literal|"Invalid combination of windows specified"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -5378,7 +7491,7 @@ literal|"Current program area is not empty"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -5392,7 +7505,112 @@ literal|"Current program area is empty"
 argument_list|)
 block|}
 block|,
-comment|/*  T           */
+comment|/*           B    */
+block|{
+name|SST
+argument_list|(
+literal|0x2C
+argument_list|,
+literal|0x05
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Illegal power condition request"
+argument_list|)
+block|}
+block|,
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x2C
+argument_list|,
+literal|0x06
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Persistent prevent conflict"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x2C
+argument_list|,
+literal|0x07
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Previous busy status"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x2C
+argument_list|,
+literal|0x08
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Previous task set full status"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROM EBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x2C
+argument_list|,
+literal|0x09
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Previous reservation conflict status"
+argument_list|)
+block|}
+block|,
+comment|/*              F */
+block|{
+name|SST
+argument_list|(
+literal|0x2C
+argument_list|,
+literal|0x0A
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Partition or collection contains user objects"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x2C
+argument_list|,
+literal|0x0B
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Not reserved"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
 block|{
 name|SST
 argument_list|(
@@ -5406,7 +7624,22 @@ literal|"Overwrite error on update in place"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x2E
+argument_list|,
+literal|0x00
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Insufficient time for operation"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -5420,7 +7653,37 @@ literal|"Commands cleared by another initiator"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR OM    */
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x2F
+argument_list|,
+literal|0x01
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Commands cleared by power loss notification"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x2F
+argument_list|,
+literal|0x02
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Commands cleared by device server"
+argument_list|)
+block|}
+block|,
+comment|/* DT  WROM  BK   */
 block|{
 name|SST
 argument_list|(
@@ -5434,7 +7697,7 @@ literal|"Incompatible medium installed"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR O     */
+comment|/* DT  WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -5448,7 +7711,7 @@ literal|"Cannot read medium - unknown format"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR O     */
+comment|/* DT  WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -5462,7 +7725,7 @@ literal|"Cannot read medium - incompatible format"
 argument_list|)
 block|}
 block|,
-comment|/* DT           */
+comment|/* DT   R     K   */
 block|{
 name|SST
 argument_list|(
@@ -5476,7 +7739,7 @@ literal|"Cleaning cartridge installed"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR O     */
+comment|/* DT  WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -5490,7 +7753,7 @@ literal|"Cannot write medium - unknown format"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR O     */
+comment|/* DT  WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -5504,7 +7767,7 @@ literal|"Cannot write medium - incompatible format"
 argument_list|)
 block|}
 block|,
-comment|/* DT  W  O     */
+comment|/* DT  WRO   B    */
 block|{
 name|SST
 argument_list|(
@@ -5518,7 +7781,7 @@ literal|"Cannot format medium - incompatible medium"
 argument_list|)
 block|}
 block|,
-comment|/* DTL WRSOM AE */
+comment|/* DTL WROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -5532,7 +7795,7 @@ literal|"Cleaning failure"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -5546,7 +7809,7 @@ literal|"Cannot write - application code mismatch"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -5560,7 +7823,97 @@ literal|"Current session not fixated for append"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR O     */
+comment|/* DT  WRO AEBK   */
+block|{
+name|SST
+argument_list|(
+literal|0x30
+argument_list|,
+literal|0x0A
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Cleaning request rejected"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x30
+argument_list|,
+literal|0x0C
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"WORM medium - overwrite attempted"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x30
+argument_list|,
+literal|0x0D
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"WORM medium - integrity check"
+argument_list|)
+block|}
+block|,
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x30
+argument_list|,
+literal|0x10
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Medium not formatted"
+argument_list|)
+block|}
+block|,
+comment|/*        M       */
+block|{
+name|SST
+argument_list|(
+literal|0x30
+argument_list|,
+literal|0x11
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Incompatible volume type"
+argument_list|)
+block|}
+block|,
+comment|/*        M       */
+block|{
+name|SST
+argument_list|(
+literal|0x30
+argument_list|,
+literal|0x12
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Incompatible volume qualifier"
+argument_list|)
+block|}
+block|,
+comment|/* DT  WRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -5574,7 +7927,7 @@ literal|"Medium format corrupted"
 argument_list|)
 block|}
 block|,
-comment|/* D L  R O     */
+comment|/* D L  RO   B    */
 block|{
 name|SST
 argument_list|(
@@ -5588,7 +7941,22 @@ literal|"Format command failed"
 argument_list|)
 block|}
 block|,
-comment|/* D   W  O     */
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x31
+argument_list|,
+literal|0x02
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Zoned formatting failed due to spare linking"
+argument_list|)
+block|}
+block|,
+comment|/* D   W O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -5602,7 +7970,7 @@ literal|"No defect spare location available"
 argument_list|)
 block|}
 block|,
-comment|/* D   W  O     */
+comment|/* D   W O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -5616,7 +7984,7 @@ literal|"Defect list update failure"
 argument_list|)
 block|}
 block|,
-comment|/*  T           */
+comment|/*  T             */
 block|{
 name|SST
 argument_list|(
@@ -5630,7 +7998,7 @@ literal|"Tape length error"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -5644,7 +8012,7 @@ literal|"Enclosure failure"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -5658,7 +8026,7 @@ literal|"Enclosure services failure"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -5672,7 +8040,7 @@ literal|"Unsupported enclosure function"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -5686,7 +8054,7 @@ literal|"Enclosure services unavailable"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -5700,7 +8068,7 @@ literal|"Enclosure services transfer failure"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -5714,7 +8082,22 @@ literal|"Enclosure services transfer refused"
 argument_list|)
 block|}
 block|,
-comment|/*   L          */
+comment|/* DTL WROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x35
+argument_list|,
+literal|0x05
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Enclosure services checksum error"
+argument_list|)
+block|}
+block|,
+comment|/*   L            */
 block|{
 name|SST
 argument_list|(
@@ -5728,7 +8111,7 @@ literal|"Ribbon, ink, or toner failure"
 argument_list|)
 block|}
 block|,
-comment|/* DTL WRSOMCAE */
+comment|/* DTL WROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -5742,7 +8125,67 @@ literal|"Rounded parameter"
 argument_list|)
 block|}
 block|,
-comment|/* DTL WRSOMCAE */
+comment|/*           B    */
+block|{
+name|SST
+argument_list|(
+literal|0x38
+argument_list|,
+literal|0x00
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Event status notification"
+argument_list|)
+block|}
+block|,
+comment|/*           B    */
+block|{
+name|SST
+argument_list|(
+literal|0x38
+argument_list|,
+literal|0x02
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"ESN - power management class event"
+argument_list|)
+block|}
+block|,
+comment|/*           B    */
+block|{
+name|SST
+argument_list|(
+literal|0x38
+argument_list|,
+literal|0x04
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"ESN - media class event"
+argument_list|)
+block|}
+block|,
+comment|/*           B    */
+block|{
+name|SST
+argument_list|(
+literal|0x38
+argument_list|,
+literal|0x06
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"ESN - device busy class event"
+argument_list|)
+block|}
+block|,
+comment|/* DTL WROMAE K   */
 block|{
 name|SST
 argument_list|(
@@ -5756,7 +8199,7 @@ literal|"Saving parameters not supported"
 argument_list|)
 block|}
 block|,
-comment|/* DTL WRSOM    */
+comment|/* DTL WROM  BK   */
 block|{
 name|SST
 argument_list|(
@@ -5764,13 +8207,13 @@ literal|0x3A
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_FATAL|ENXIO
+argument|SS_FATAL | ENXIO
 argument_list|,
 literal|"Medium not present"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR OM    */
+comment|/* DT  WROM  BK   */
 block|{
 name|SST
 argument_list|(
@@ -5778,13 +8221,13 @@ literal|0x3A
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_FATAL|ENXIO
+argument|SS_FATAL | ENXIO
 argument_list|,
 literal|"Medium not present - tray closed"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR OM    */
+comment|/* DT  WROM  BK   */
 block|{
 name|SST
 argument_list|(
@@ -5792,13 +8235,43 @@ literal|0x3A
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_FATAL|ENXIO
+argument|SS_FATAL | ENXIO
 argument_list|,
 literal|"Medium not present - tray open"
 argument_list|)
 block|}
 block|,
-comment|/*  TL          */
+comment|/* DT  WROM  B    */
+block|{
+name|SST
+argument_list|(
+literal|0x3A
+argument_list|,
+literal|0x03
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Medium not present - loadable"
+argument_list|)
+block|}
+block|,
+comment|/* DT  WRO   B    */
+block|{
+name|SST
+argument_list|(
+literal|0x3A
+argument_list|,
+literal|0x04
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Medium not present - medium auxiliary memory accessible"
+argument_list|)
+block|}
+block|,
+comment|/*  TL            */
 block|{
 name|SST
 argument_list|(
@@ -5812,7 +8285,7 @@ literal|"Sequential positioning error"
 argument_list|)
 block|}
 block|,
-comment|/*  T           */
+comment|/*  T             */
 block|{
 name|SST
 argument_list|(
@@ -5826,7 +8299,7 @@ literal|"Tape position error at beginning-of-medium"
 argument_list|)
 block|}
 block|,
-comment|/*  T           */
+comment|/*  T             */
 block|{
 name|SST
 argument_list|(
@@ -5840,7 +8313,7 @@ literal|"Tape position error at end-of-medium"
 argument_list|)
 block|}
 block|,
-comment|/*   L          */
+comment|/*   L            */
 block|{
 name|SST
 argument_list|(
@@ -5854,7 +8327,7 @@ literal|"Tape or electronic vertical forms unit not ready"
 argument_list|)
 block|}
 block|,
-comment|/*   L          */
+comment|/*   L            */
 block|{
 name|SST
 argument_list|(
@@ -5868,7 +8341,7 @@ literal|"Slew failure"
 argument_list|)
 block|}
 block|,
-comment|/*   L          */
+comment|/*   L            */
 block|{
 name|SST
 argument_list|(
@@ -5882,7 +8355,7 @@ literal|"Paper jam"
 argument_list|)
 block|}
 block|,
-comment|/*   L          */
+comment|/*   L            */
 block|{
 name|SST
 argument_list|(
@@ -5896,7 +8369,7 @@ literal|"Failed to sense top-of-form"
 argument_list|)
 block|}
 block|,
-comment|/*   L          */
+comment|/*   L            */
 block|{
 name|SST
 argument_list|(
@@ -5910,7 +8383,7 @@ literal|"Failed to sense bottom-of-form"
 argument_list|)
 block|}
 block|,
-comment|/*  T           */
+comment|/*  T             */
 block|{
 name|SST
 argument_list|(
@@ -5924,7 +8397,7 @@ literal|"Reposition error"
 argument_list|)
 block|}
 block|,
-comment|/*       S      */
+comment|/*                */
 block|{
 name|SST
 argument_list|(
@@ -5938,7 +8411,7 @@ literal|"Read past end of medium"
 argument_list|)
 block|}
 block|,
-comment|/*       S      */
+comment|/*                */
 block|{
 name|SST
 argument_list|(
@@ -5952,7 +8425,7 @@ literal|"Read past beginning of medium"
 argument_list|)
 block|}
 block|,
-comment|/*       S      */
+comment|/*                */
 block|{
 name|SST
 argument_list|(
@@ -5966,7 +8439,7 @@ literal|"Position past end of medium"
 argument_list|)
 block|}
 block|,
-comment|/*  T    S      */
+comment|/*  T             */
 block|{
 name|SST
 argument_list|(
@@ -5980,7 +8453,7 @@ literal|"Position past beginning of medium"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR OM    */
+comment|/* DT  WROM  BK   */
 block|{
 name|SST
 argument_list|(
@@ -5988,13 +8461,13 @@ literal|0x3B
 argument_list|,
 literal|0x0D
 argument_list|,
-argument|SS_FATAL|ENOSPC
+argument|SS_FATAL | ENOSPC
 argument_list|,
 literal|"Medium destination element full"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR OM    */
+comment|/* DT  WROM  BK   */
 block|{
 name|SST
 argument_list|(
@@ -6008,7 +8481,7 @@ literal|"Medium source element empty"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -6022,7 +8495,7 @@ literal|"End of medium reached"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR OM    */
+comment|/* DT  WROM  BK   */
 block|{
 name|SST
 argument_list|(
@@ -6036,7 +8509,7 @@ literal|"Medium magazine not accessible"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR OM    */
+comment|/* DT  WROM  BK   */
 block|{
 name|SST
 argument_list|(
@@ -6050,7 +8523,7 @@ literal|"Medium magazine removed"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR OM    */
+comment|/* DT  WROM  BK   */
 block|{
 name|SST
 argument_list|(
@@ -6064,7 +8537,7 @@ literal|"Medium magazine inserted"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR OM    */
+comment|/* DT  WROM  BK   */
 block|{
 name|SST
 argument_list|(
@@ -6078,7 +8551,7 @@ literal|"Medium magazine locked"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR OM    */
+comment|/* DT  WROM  BK   */
 block|{
 name|SST
 argument_list|(
@@ -6092,7 +8565,97 @@ literal|"Medium magazine unlocked"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x3B
+argument_list|,
+literal|0x16
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Mechanical positioning or changer error"
+argument_list|)
+block|}
+block|,
+comment|/*              F */
+block|{
+name|SST
+argument_list|(
+literal|0x3B
+argument_list|,
+literal|0x17
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Read past end of user object"
+argument_list|)
+block|}
+block|,
+comment|/*        M       */
+block|{
+name|SST
+argument_list|(
+literal|0x3B
+argument_list|,
+literal|0x18
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Element disabled"
+argument_list|)
+block|}
+block|,
+comment|/*        M       */
+block|{
+name|SST
+argument_list|(
+literal|0x3B
+argument_list|,
+literal|0x19
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Element enabled"
+argument_list|)
+block|}
+block|,
+comment|/*        M       */
+block|{
+name|SST
+argument_list|(
+literal|0x3B
+argument_list|,
+literal|0x1A
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data transfer device removed"
+argument_list|)
+block|}
+block|,
+comment|/*        M       */
+block|{
+name|SST
+argument_list|(
+literal|0x3B
+argument_list|,
+literal|0x1B
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data transfer device inserted"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAE K   */
 block|{
 name|SST
 argument_list|(
@@ -6102,11 +8665,11 @@ literal|0x00
 argument_list|,
 argument|SS_RDEF
 argument_list|,
-literal|"Invalid bits in identify message"
+literal|"Invalid bits in IDENTIFY message"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -6120,7 +8683,7 @@ literal|"Logical unit has not self-configured yet"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -6134,7 +8697,7 @@ literal|"Logical unit failure"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -6148,7 +8711,37 @@ literal|"Timeout on logical unit"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x3E
+argument_list|,
+literal|0x03
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Logical unit failed self-test"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x3E
+argument_list|,
+literal|0x04
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Logical unit unable to update self-test log"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -6162,7 +8755,7 @@ literal|"Target operating conditions have changed"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -6176,7 +8769,7 @@ literal|"Microcode has been changed"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMC   */
+comment|/* DTLPWROM  BK   */
 block|{
 name|SST
 argument_list|(
@@ -6190,7 +8783,7 @@ literal|"Changed operating definition"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -6200,11 +8793,11 @@ literal|0x03
 argument_list|,
 argument|SS_RDEF
 argument_list|,
-literal|"Inquiry data has changed"
+literal|"INQUIRY data has changed"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR OMCAE */
+comment|/* DT  WROMAEBK   */
 block|{
 name|SST
 argument_list|(
@@ -6218,7 +8811,7 @@ literal|"Component device attached"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR OMCAE */
+comment|/* DT  WROMAEBK   */
 block|{
 name|SST
 argument_list|(
@@ -6232,7 +8825,7 @@ literal|"Device identifier changed"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR OMCAE */
+comment|/* DT  WROMAEB    */
 block|{
 name|SST
 argument_list|(
@@ -6246,7 +8839,7 @@ literal|"Redundancy group created or modified"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR OMCAE */
+comment|/* DT  WROMAEB    */
 block|{
 name|SST
 argument_list|(
@@ -6260,7 +8853,7 @@ literal|"Redundancy group deleted"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR OMCAE */
+comment|/* DT  WROMAEB    */
 block|{
 name|SST
 argument_list|(
@@ -6274,7 +8867,7 @@ literal|"Spare created or modified"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR OMCAE */
+comment|/* DT  WROMAEB    */
 block|{
 name|SST
 argument_list|(
@@ -6288,7 +8881,7 @@ literal|"Spare deleted"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR OMCAE */
+comment|/* DT  WROMAEBK   */
 block|{
 name|SST
 argument_list|(
@@ -6302,7 +8895,7 @@ literal|"Volume set created or modified"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR OMCAE */
+comment|/* DT  WROMAEBK   */
 block|{
 name|SST
 argument_list|(
@@ -6316,7 +8909,7 @@ literal|"Volume set deleted"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR OMCAE */
+comment|/* DT  WROMAEBK   */
 block|{
 name|SST
 argument_list|(
@@ -6330,7 +8923,7 @@ literal|"Volume set deassigned"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR OMCAE */
+comment|/* DT  WROMAEBK   */
 block|{
 name|SST
 argument_list|(
@@ -6344,7 +8937,112 @@ literal|"Volume set reassigned"
 argument_list|)
 block|}
 block|,
-comment|/* D            */
+comment|/* DTLPWROMAE     */
+block|{
+name|SST
+argument_list|(
+literal|0x3F
+argument_list|,
+literal|0x0E
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Reported LUNs data has changed"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x3F
+argument_list|,
+literal|0x0F
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Echo buffer overwritten"
+argument_list|)
+block|}
+block|,
+comment|/* DT  WROM  B    */
+block|{
+name|SST
+argument_list|(
+literal|0x3F
+argument_list|,
+literal|0x10
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Medium loadable"
+argument_list|)
+block|}
+block|,
+comment|/* DT  WROM  B    */
+block|{
+name|SST
+argument_list|(
+literal|0x3F
+argument_list|,
+literal|0x11
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Medium auxiliary memory accessible"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWR MAEBK F */
+block|{
+name|SST
+argument_list|(
+literal|0x3F
+argument_list|,
+literal|0x12
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"iSCSI IP address added"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWR MAEBK F */
+block|{
+name|SST
+argument_list|(
+literal|0x3F
+argument_list|,
+literal|0x13
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"iSCSI IP address removed"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWR MAEBK F */
+block|{
+name|SST
+argument_list|(
+literal|0x3F
+argument_list|,
+literal|0x14
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"iSCSI IP address changed"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
 block|{
 name|SST
 argument_list|(
@@ -6354,12 +9052,12 @@ literal|0x00
 argument_list|,
 argument|SS_RDEF
 argument_list|,
-literal|"Ram failure"
+literal|"RAM failure"
 argument_list|)
 block|}
 block|,
 comment|/* deprecated - use 40 NN instead */
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -6373,7 +9071,7 @@ literal|"Diagnostic failure: ASCQ = Component ID"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -6381,14 +9079,14 @@ literal|0x40
 argument_list|,
 literal|0xFF
 argument_list|,
-argument|SS_RDEF|SSQ_RANGE
+argument|SS_RDEF | SSQ_RANGE
 argument_list|,
 argument|NULL
 argument_list|)
 block|}
 block|,
 comment|/* Range 0x80->0xFF */
-comment|/* D            */
+comment|/* D              */
 block|{
 name|SST
 argument_list|(
@@ -6403,7 +9101,7 @@ argument_list|)
 block|}
 block|,
 comment|/* deprecated - use 40 NN instead */
-comment|/* D            */
+comment|/* D              */
 block|{
 name|SST
 argument_list|(
@@ -6418,7 +9116,7 @@ argument_list|)
 block|}
 block|,
 comment|/* deprecated - use 40 NN instead */
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -6432,7 +9130,7 @@ literal|"Message error"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -6446,7 +9144,22 @@ literal|"Internal target failure"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DT        B    */
+block|{
+name|SST
+argument_list|(
+literal|0x44
+argument_list|,
+literal|0x71
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"ATA device failed set features"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -6460,7 +9173,7 @@ literal|"Select or reselect failure"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMC   */
+comment|/* DTLPWROM  BK   */
 block|{
 name|SST
 argument_list|(
@@ -6474,7 +9187,7 @@ literal|"Unsuccessful soft reset"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -6488,7 +9201,112 @@ literal|"SCSI parity error"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x47
+argument_list|,
+literal|0x01
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data phase CRC error detected"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x47
+argument_list|,
+literal|0x02
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"SCSI parity error detected during ST data phase"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x47
+argument_list|,
+literal|0x03
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Information unit iuCRC error detected"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x47
+argument_list|,
+literal|0x04
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Asynchronous information protection error detected"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x47
+argument_list|,
+literal|0x05
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Protocol service CRC error"
+argument_list|)
+block|}
+block|,
+comment|/* DT     MAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x47
+argument_list|,
+literal|0x06
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"PHY test function in progress"
+argument_list|)
+block|}
+block|,
+comment|/* DT PWROMAEBK   */
+block|{
+name|SST
+argument_list|(
+literal|0x47
+argument_list|,
+literal|0x7F
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Some commands cleared by iSCSI protocol event"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -6502,7 +9320,7 @@ literal|"Initiator detected error message received"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -6516,7 +9334,7 @@ literal|"Invalid message error"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -6530,7 +9348,7 @@ literal|"Command phase error"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -6544,7 +9362,97 @@ literal|"Data phase error"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DT PWROMAEBK   */
+block|{
+name|SST
+argument_list|(
+literal|0x4B
+argument_list|,
+literal|0x01
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Invalid target port transfer tag received"
+argument_list|)
+block|}
+block|,
+comment|/* DT PWROMAEBK   */
+block|{
+name|SST
+argument_list|(
+literal|0x4B
+argument_list|,
+literal|0x02
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Too much write data"
+argument_list|)
+block|}
+block|,
+comment|/* DT PWROMAEBK   */
+block|{
+name|SST
+argument_list|(
+literal|0x4B
+argument_list|,
+literal|0x03
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"ACK/NAK timeout"
+argument_list|)
+block|}
+block|,
+comment|/* DT PWROMAEBK   */
+block|{
+name|SST
+argument_list|(
+literal|0x4B
+argument_list|,
+literal|0x04
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"NAK received"
+argument_list|)
+block|}
+block|,
+comment|/* DT PWROMAEBK   */
+block|{
+name|SST
+argument_list|(
+literal|0x4B
+argument_list|,
+literal|0x05
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data offset error"
+argument_list|)
+block|}
+block|,
+comment|/* DT PWROMAEBK   */
+block|{
+name|SST
+argument_list|(
+literal|0x4B
+argument_list|,
+literal|0x06
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Initiator response timeout"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -6558,7 +9466,7 @@ literal|"Logical unit failed self-configuration"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -6572,7 +9480,7 @@ literal|"Tagged overlapped commands: ASCQ = Queue tag ID"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -6580,14 +9488,14 @@ literal|0x4D
 argument_list|,
 literal|0xFF
 argument_list|,
-argument|SS_RDEF|SSQ_RANGE
+argument|SS_RDEF | SSQ_RANGE
 argument_list|,
 argument|NULL
 argument_list|)
 block|}
 block|,
 comment|/* Range 0x00->0xFF */
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -6601,7 +9509,7 @@ literal|"Overlapped commands attempted"
 argument_list|)
 block|}
 block|,
-comment|/*  T           */
+comment|/*  T             */
 block|{
 name|SST
 argument_list|(
@@ -6615,7 +9523,7 @@ literal|"Write append error"
 argument_list|)
 block|}
 block|,
-comment|/*  T           */
+comment|/*  T             */
 block|{
 name|SST
 argument_list|(
@@ -6629,7 +9537,7 @@ literal|"Write append position error"
 argument_list|)
 block|}
 block|,
-comment|/*  T           */
+comment|/*  T             */
 block|{
 name|SST
 argument_list|(
@@ -6643,7 +9551,7 @@ literal|"Position error related to timing"
 argument_list|)
 block|}
 block|,
-comment|/*  T     O     */
+comment|/*  T   RO        */
 block|{
 name|SST
 argument_list|(
@@ -6657,7 +9565,22 @@ literal|"Erase failure"
 argument_list|)
 block|}
 block|,
-comment|/*  T           */
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x51
+argument_list|,
+literal|0x01
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Erase failure - incomplete erase operation detected"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
 block|{
 name|SST
 argument_list|(
@@ -6671,7 +9594,7 @@ literal|"Cartridge fault"
 argument_list|)
 block|}
 block|,
-comment|/* DTL WRSOM    */
+comment|/* DTL WROM  BK   */
 block|{
 name|SST
 argument_list|(
@@ -6685,7 +9608,7 @@ literal|"Media load or eject failed"
 argument_list|)
 block|}
 block|,
-comment|/*  T           */
+comment|/*  T             */
 block|{
 name|SST
 argument_list|(
@@ -6699,7 +9622,7 @@ literal|"Unload tape failure"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR OM    */
+comment|/* DT  WROM  BK   */
 block|{
 name|SST
 argument_list|(
@@ -6713,7 +9636,37 @@ literal|"Medium removal prevented"
 argument_list|)
 block|}
 block|,
-comment|/*    P         */
+comment|/*        M       */
+block|{
+name|SST
+argument_list|(
+literal|0x53
+argument_list|,
+literal|0x03
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Medium removal prevented by data transfer element"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x53
+argument_list|,
+literal|0x04
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Medium thread or unthread failure"
+argument_list|)
+block|}
+block|,
+comment|/*    P           */
 block|{
 name|SST
 argument_list|(
@@ -6723,11 +9676,11 @@ literal|0x00
 argument_list|,
 argument|SS_RDEF
 argument_list|,
-literal|"Scsi to host system interface failure"
+literal|"SCSI to host system interface failure"
 argument_list|)
 block|}
 block|,
-comment|/*    P         */
+comment|/*    P           */
 block|{
 name|SST
 argument_list|(
@@ -6741,7 +9694,7 @@ literal|"System resource failure"
 argument_list|)
 block|}
 block|,
-comment|/* D      O     */
+comment|/* D     O   BK   */
 block|{
 name|SST
 argument_list|(
@@ -6749,13 +9702,148 @@ literal|0x55
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_FATAL|ENOSPC
+argument|SS_FATAL | ENOSPC
 argument_list|,
 literal|"System buffer full"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/* DTLPWROMAE K   */
+block|{
+name|SST
+argument_list|(
+literal|0x55
+argument_list|,
+literal|0x02
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Insufficient reservation resources"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAE K   */
+block|{
+name|SST
+argument_list|(
+literal|0x55
+argument_list|,
+literal|0x03
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Insufficient resources"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAE K   */
+block|{
+name|SST
+argument_list|(
+literal|0x55
+argument_list|,
+literal|0x04
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Insufficient registration resources"
+argument_list|)
+block|}
+block|,
+comment|/* DT PWROMAEBK   */
+block|{
+name|SST
+argument_list|(
+literal|0x55
+argument_list|,
+literal|0x05
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Insufficient access control resources"
+argument_list|)
+block|}
+block|,
+comment|/* DT  WROM  B    */
+block|{
+name|SST
+argument_list|(
+literal|0x55
+argument_list|,
+literal|0x06
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Auxiliary memory out of space"
+argument_list|)
+block|}
+block|,
+comment|/*              F */
+block|{
+name|SST
+argument_list|(
+literal|0x55
+argument_list|,
+literal|0x07
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Quota error"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x55
+argument_list|,
+literal|0x08
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Maximum number of supplemental decryption keys exceeded"
+argument_list|)
+block|}
+block|,
+comment|/*        M       */
+block|{
+name|SST
+argument_list|(
+literal|0x55
+argument_list|,
+literal|0x09
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Medium auxiliary memory not accessible"
+argument_list|)
+block|}
+block|,
+comment|/*        M       */
+block|{
+name|SST
+argument_list|(
+literal|0x55
+argument_list|,
+literal|0x0A
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data currently unavailable"
+argument_list|)
+block|}
+block|,
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -6769,7 +9857,7 @@ literal|"Unable to recover table-of-contents"
 argument_list|)
 block|}
 block|,
-comment|/*        O     */
+comment|/*       O        */
 block|{
 name|SST
 argument_list|(
@@ -6783,7 +9871,7 @@ literal|"Generation does not exist"
 argument_list|)
 block|}
 block|,
-comment|/*        O     */
+comment|/*       O        */
 block|{
 name|SST
 argument_list|(
@@ -6797,7 +9885,7 @@ literal|"Updated block read"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOM    */
+comment|/* DTLPWRO   BK   */
 block|{
 name|SST
 argument_list|(
@@ -6811,7 +9899,7 @@ literal|"Operator request or state change input"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR OM    */
+comment|/* DT  WROM  BK   */
 block|{
 name|SST
 argument_list|(
@@ -6825,7 +9913,7 @@ literal|"Operator medium removal request"
 argument_list|)
 block|}
 block|,
-comment|/* DT  W  O     */
+comment|/* DT  WRO A BK   */
 block|{
 name|SST
 argument_list|(
@@ -6839,7 +9927,7 @@ literal|"Operator selected write protect"
 argument_list|)
 block|}
 block|,
-comment|/* DT  W  O     */
+comment|/* DT  WRO A BK   */
 block|{
 name|SST
 argument_list|(
@@ -6853,7 +9941,7 @@ literal|"Operator selected write permit"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOM    */
+comment|/* DTLPWROM   K   */
 block|{
 name|SST
 argument_list|(
@@ -6867,7 +9955,7 @@ literal|"Log exception"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOM    */
+comment|/* DTLPWROM   K   */
 block|{
 name|SST
 argument_list|(
@@ -6881,7 +9969,7 @@ literal|"Threshold condition met"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOM    */
+comment|/* DTLPWROM   K   */
 block|{
 name|SST
 argument_list|(
@@ -6895,7 +9983,7 @@ literal|"Log counter at maximum"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOM    */
+comment|/* DTLPWROM   K   */
 block|{
 name|SST
 argument_list|(
@@ -6909,7 +9997,7 @@ literal|"Log list codes exhausted"
 argument_list|)
 block|}
 block|,
-comment|/* D      O     */
+comment|/* D     O        */
 block|{
 name|SST
 argument_list|(
@@ -6923,7 +10011,7 @@ literal|"RPL status change"
 argument_list|)
 block|}
 block|,
-comment|/* D      O     */
+comment|/* D     O        */
 block|{
 name|SST
 argument_list|(
@@ -6931,13 +10019,13 @@ literal|0x5C
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_NOP|SSQ_PRINT_SENSE
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
 literal|"Spindles synchronized"
 argument_list|)
 block|}
 block|,
-comment|/* D      O     */
+comment|/* D     O        */
 block|{
 name|SST
 argument_list|(
@@ -6951,7 +10039,7 @@ literal|"Spindles not synchronized"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -6965,7 +10053,1222 @@ literal|"Failure prediction threshold exceeded"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/*      R    B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x01
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Media failure prediction threshold exceeded"
+argument_list|)
+block|}
+block|,
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x02
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Logical unit failure prediction threshold exceeded"
+argument_list|)
+block|}
+block|,
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x03
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Spare area exhaustion prediction threshold exceeded"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x10
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Hardware impending failure general hard drive failure"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x11
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Hardware impending failure drive error rate too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x12
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Hardware impending failure data error rate too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x13
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Hardware impending failure seek error rate too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x14
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Hardware impending failure too many block reassigns"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x15
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Hardware impending failure access times too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x16
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Hardware impending failure start unit times too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x17
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Hardware impending failure channel parametrics"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x18
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Hardware impending failure controller detected"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x19
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Hardware impending failure throughput performance"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x1A
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Hardware impending failure seek time performance"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x1B
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Hardware impending failure spin-up retry count"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x1C
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Hardware impending failure drive calibration retry count"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x20
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Controller impending failure general hard drive failure"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x21
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Controller impending failure drive error rate too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x22
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Controller impending failure data error rate too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x23
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Controller impending failure seek error rate too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x24
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Controller impending failure too many block reassigns"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x25
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Controller impending failure access times too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x26
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Controller impending failure start unit times too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x27
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Controller impending failure channel parametrics"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x28
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Controller impending failure controller detected"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x29
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Controller impending failure throughput performance"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x2A
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Controller impending failure seek time performance"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x2B
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Controller impending failure spin-up retry count"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x2C
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Controller impending failure drive calibration retry count"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x30
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data channel impending failure general hard drive failure"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x31
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data channel impending failure drive error rate too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x32
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data channel impending failure data error rate too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x33
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data channel impending failure seek error rate too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x34
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data channel impending failure too many block reassigns"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x35
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data channel impending failure access times too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x36
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data channel impending failure start unit times too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x37
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data channel impending failure channel parametrics"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x38
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data channel impending failure controller detected"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x39
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data channel impending failure throughput performance"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x3A
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data channel impending failure seek time performance"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x3B
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data channel impending failure spin-up retry count"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x3C
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data channel impending failure drive calibration retry count"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x40
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Servo impending failure general hard drive failure"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x41
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Servo impending failure drive error rate too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x42
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Servo impending failure data error rate too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x43
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Servo impending failure seek error rate too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x44
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Servo impending failure too many block reassigns"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x45
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Servo impending failure access times too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x46
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Servo impending failure start unit times too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x47
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Servo impending failure channel parametrics"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x48
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Servo impending failure controller detected"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x49
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Servo impending failure throughput performance"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x4A
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Servo impending failure seek time performance"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x4B
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Servo impending failure spin-up retry count"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x4C
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Servo impending failure drive calibration retry count"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x50
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Spindle impending failure general hard drive failure"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x51
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Spindle impending failure drive error rate too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x52
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Spindle impending failure data error rate too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x53
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Spindle impending failure seek error rate too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x54
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Spindle impending failure too many block reassigns"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x55
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Spindle impending failure access times too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x56
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Spindle impending failure start unit times too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x57
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Spindle impending failure channel parametrics"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x58
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Spindle impending failure controller detected"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x59
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Spindle impending failure throughput performance"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x5A
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Spindle impending failure seek time performance"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x5B
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Spindle impending failure spin-up retry count"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x5C
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Spindle impending failure drive calibration retry count"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x60
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Firmware impending failure general hard drive failure"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x61
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Firmware impending failure drive error rate too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x62
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Firmware impending failure data error rate too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x63
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Firmware impending failure seek error rate too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x64
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Firmware impending failure too many block reassigns"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x65
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Firmware impending failure access times too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x66
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Firmware impending failure start unit times too high"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x67
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Firmware impending failure channel parametrics"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x68
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Firmware impending failure controller detected"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x69
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Firmware impending failure throughput performance"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x6A
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Firmware impending failure seek time performance"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x6B
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Firmware impending failure spin-up retry count"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x6C
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Firmware impending failure drive calibration retry count"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -6979,7 +11282,7 @@ literal|"Failure prediction threshold exceeded (false)"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSO CA  */
+comment|/* DTLPWRO A  K   */
 block|{
 name|SST
 argument_list|(
@@ -6993,7 +11296,7 @@ literal|"Low power condition on"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSO CA  */
+comment|/* DTLPWRO A  K   */
 block|{
 name|SST
 argument_list|(
@@ -7007,7 +11310,7 @@ literal|"Idle condition activated by timer"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSO CA  */
+comment|/* DTLPWRO A  K   */
 block|{
 name|SST
 argument_list|(
@@ -7021,7 +11324,7 @@ literal|"Standby condition activated by timer"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSO CA  */
+comment|/* DTLPWRO A  K   */
 block|{
 name|SST
 argument_list|(
@@ -7035,7 +11338,7 @@ literal|"Idle condition activated by command"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSO CA  */
+comment|/* DTLPWRO A  K   */
 block|{
 name|SST
 argument_list|(
@@ -7049,7 +11352,82 @@ literal|"Standby condition activated by command"
 argument_list|)
 block|}
 block|,
-comment|/*       S      */
+comment|/*           B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5E
+argument_list|,
+literal|0x41
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Power state change to active"
+argument_list|)
+block|}
+block|,
+comment|/*           B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5E
+argument_list|,
+literal|0x42
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Power state change to idle"
+argument_list|)
+block|}
+block|,
+comment|/*           B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5E
+argument_list|,
+literal|0x43
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Power state change to standby"
+argument_list|)
+block|}
+block|,
+comment|/*           B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5E
+argument_list|,
+literal|0x45
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Power state change to sleep"
+argument_list|)
+block|}
+block|,
+comment|/*           BK   */
+block|{
+name|SST
+argument_list|(
+literal|0x5E
+argument_list|,
+literal|0x47
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Power state change to device control"
+argument_list|)
+block|}
+block|,
+comment|/*                */
 block|{
 name|SST
 argument_list|(
@@ -7063,7 +11441,7 @@ literal|"Lamp failure"
 argument_list|)
 block|}
 block|,
-comment|/*       S      */
+comment|/*                */
 block|{
 name|SST
 argument_list|(
@@ -7077,7 +11455,7 @@ literal|"Video acquisition error"
 argument_list|)
 block|}
 block|,
-comment|/*       S      */
+comment|/*                */
 block|{
 name|SST
 argument_list|(
@@ -7091,7 +11469,7 @@ literal|"Unable to acquire video"
 argument_list|)
 block|}
 block|,
-comment|/*       S      */
+comment|/*                */
 block|{
 name|SST
 argument_list|(
@@ -7105,7 +11483,7 @@ literal|"Out of focus"
 argument_list|)
 block|}
 block|,
-comment|/*       S      */
+comment|/*                */
 block|{
 name|SST
 argument_list|(
@@ -7119,7 +11497,7 @@ literal|"Scan head positioning error"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -7133,7 +11511,7 @@ literal|"End of user area encountered on this track"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -7141,13 +11519,13 @@ literal|0x63
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_FATAL|ENOSPC
+argument|SS_FATAL | ENOSPC
 argument_list|,
 literal|"Packet does not fit in available space"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -7155,13 +11533,13 @@ literal|0x64
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_FATAL|ENXIO
+argument|SS_FATAL | ENXIO
 argument_list|,
 literal|"Illegal mode for this track"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -7175,7 +11553,7 @@ literal|"Invalid packet size"
 argument_list|)
 block|}
 block|,
-comment|/* DTLPWRSOMCAE */
+comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
 argument_list|(
@@ -7189,7 +11567,7 @@ literal|"Voltage fault"
 argument_list|)
 block|}
 block|,
-comment|/*       S      */
+comment|/*                */
 block|{
 name|SST
 argument_list|(
@@ -7203,7 +11581,7 @@ literal|"Automatic document feeder cover up"
 argument_list|)
 block|}
 block|,
-comment|/*       S      */
+comment|/*                */
 block|{
 name|SST
 argument_list|(
@@ -7217,7 +11595,7 @@ literal|"Automatic document feeder lift up"
 argument_list|)
 block|}
 block|,
-comment|/*       S      */
+comment|/*                */
 block|{
 name|SST
 argument_list|(
@@ -7231,7 +11609,7 @@ literal|"Document jam in automatic document feeder"
 argument_list|)
 block|}
 block|,
-comment|/*       S      */
+comment|/*                */
 block|{
 name|SST
 argument_list|(
@@ -7245,7 +11623,7 @@ literal|"Document miss feed automatic in document feeder"
 argument_list|)
 block|}
 block|,
-comment|/*           A  */
+comment|/*         A      */
 block|{
 name|SST
 argument_list|(
@@ -7259,7 +11637,7 @@ literal|"Configuration failure"
 argument_list|)
 block|}
 block|,
-comment|/*           A  */
+comment|/*         A      */
 block|{
 name|SST
 argument_list|(
@@ -7273,7 +11651,7 @@ literal|"Configuration of incapable logical units failed"
 argument_list|)
 block|}
 block|,
-comment|/*           A  */
+comment|/*         A      */
 block|{
 name|SST
 argument_list|(
@@ -7287,7 +11665,7 @@ literal|"Add logical unit failed"
 argument_list|)
 block|}
 block|,
-comment|/*           A  */
+comment|/*         A      */
 block|{
 name|SST
 argument_list|(
@@ -7301,7 +11679,7 @@ literal|"Modification of logical unit failed"
 argument_list|)
 block|}
 block|,
-comment|/*           A  */
+comment|/*         A      */
 block|{
 name|SST
 argument_list|(
@@ -7315,7 +11693,7 @@ literal|"Exchange of logical unit failed"
 argument_list|)
 block|}
 block|,
-comment|/*           A  */
+comment|/*         A      */
 block|{
 name|SST
 argument_list|(
@@ -7329,7 +11707,7 @@ literal|"Remove of logical unit failed"
 argument_list|)
 block|}
 block|,
-comment|/*           A  */
+comment|/*         A      */
 block|{
 name|SST
 argument_list|(
@@ -7343,7 +11721,7 @@ literal|"Attachment of logical unit failed"
 argument_list|)
 block|}
 block|,
-comment|/*           A  */
+comment|/*         A      */
 block|{
 name|SST
 argument_list|(
@@ -7357,7 +11735,67 @@ literal|"Creation of logical unit failed"
 argument_list|)
 block|}
 block|,
-comment|/*           A  */
+comment|/*         A      */
+block|{
+name|SST
+argument_list|(
+literal|0x67
+argument_list|,
+literal|0x08
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Assign failure occurred"
+argument_list|)
+block|}
+block|,
+comment|/*         A      */
+block|{
+name|SST
+argument_list|(
+literal|0x67
+argument_list|,
+literal|0x09
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Multiply assigned logical unit"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x67
+argument_list|,
+literal|0x0A
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Set target port groups command failed"
+argument_list|)
+block|}
+block|,
+comment|/* DT        B    */
+block|{
+name|SST
+argument_list|(
+literal|0x67
+argument_list|,
+literal|0x0B
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"ATA device feature not enabled"
+argument_list|)
+block|}
+block|,
+comment|/*         A      */
 block|{
 name|SST
 argument_list|(
@@ -7371,7 +11809,7 @@ literal|"Logical unit not configured"
 argument_list|)
 block|}
 block|,
-comment|/*           A  */
+comment|/*         A      */
 block|{
 name|SST
 argument_list|(
@@ -7385,7 +11823,7 @@ literal|"Data loss on logical unit"
 argument_list|)
 block|}
 block|,
-comment|/*           A  */
+comment|/*         A      */
 block|{
 name|SST
 argument_list|(
@@ -7399,7 +11837,7 @@ literal|"Multiple logical unit failures"
 argument_list|)
 block|}
 block|,
-comment|/*           A  */
+comment|/*         A      */
 block|{
 name|SST
 argument_list|(
@@ -7413,7 +11851,7 @@ literal|"Parity/data mismatch"
 argument_list|)
 block|}
 block|,
-comment|/*           A  */
+comment|/*         A      */
 block|{
 name|SST
 argument_list|(
@@ -7427,7 +11865,7 @@ literal|"Informational, refer to log"
 argument_list|)
 block|}
 block|,
-comment|/*           A  */
+comment|/*         A      */
 block|{
 name|SST
 argument_list|(
@@ -7441,7 +11879,7 @@ literal|"State change has occurred"
 argument_list|)
 block|}
 block|,
-comment|/*           A  */
+comment|/*         A      */
 block|{
 name|SST
 argument_list|(
@@ -7455,7 +11893,7 @@ literal|"Redundancy level got better"
 argument_list|)
 block|}
 block|,
-comment|/*           A  */
+comment|/*         A      */
 block|{
 name|SST
 argument_list|(
@@ -7469,7 +11907,7 @@ literal|"Redundancy level got worse"
 argument_list|)
 block|}
 block|,
-comment|/*           A  */
+comment|/*         A      */
 block|{
 name|SST
 argument_list|(
@@ -7483,7 +11921,7 @@ literal|"Rebuild failure occurred"
 argument_list|)
 block|}
 block|,
-comment|/*           A  */
+comment|/*         A      */
 block|{
 name|SST
 argument_list|(
@@ -7497,7 +11935,7 @@ literal|"Recalculate failure occurred"
 argument_list|)
 block|}
 block|,
-comment|/*           A  */
+comment|/*         A      */
 block|{
 name|SST
 argument_list|(
@@ -7511,7 +11949,127 @@ literal|"Command to logical unit failed"
 argument_list|)
 block|}
 block|,
-comment|/*  T           */
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x6F
+argument_list|,
+literal|0x00
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Copy protection key exchange failure - authentication failure"
+argument_list|)
+block|}
+block|,
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x6F
+argument_list|,
+literal|0x01
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Copy protection key exchange failure - key not present"
+argument_list|)
+block|}
+block|,
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x6F
+argument_list|,
+literal|0x02
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Copy protection key exchange failure - key not established"
+argument_list|)
+block|}
+block|,
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x6F
+argument_list|,
+literal|0x03
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Read of scrambled sector without authentication"
+argument_list|)
+block|}
+block|,
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x6F
+argument_list|,
+literal|0x04
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Media region code is mismatched to logical unit region"
+argument_list|)
+block|}
+block|,
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x6F
+argument_list|,
+literal|0x05
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Drive region must be permanent/region reset count error"
+argument_list|)
+block|}
+block|,
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x6F
+argument_list|,
+literal|0x06
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Insufficient block count for binding NONCE recording"
+argument_list|)
+block|}
+block|,
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x6F
+argument_list|,
+literal|0x07
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Conflict in binding NONCE recording"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
 block|{
 name|SST
 argument_list|(
@@ -7525,7 +12083,7 @@ literal|"Decompression exception short: ASCQ = Algorithm ID"
 argument_list|)
 block|}
 block|,
-comment|/*  T           */
+comment|/*  T             */
 block|{
 name|SST
 argument_list|(
@@ -7533,14 +12091,14 @@ literal|0x70
 argument_list|,
 literal|0xFF
 argument_list|,
-argument|SS_RDEF|SSQ_RANGE
+argument|SS_RDEF | SSQ_RANGE
 argument_list|,
 argument|NULL
 argument_list|)
 block|}
 block|,
 comment|/* Range 0x00 -> 0xFF */
-comment|/*  T           */
+comment|/*  T             */
 block|{
 name|SST
 argument_list|(
@@ -7554,7 +12112,7 @@ literal|"Decompression exception long: ASCQ = Algorithm ID"
 argument_list|)
 block|}
 block|,
-comment|/*  T           */
+comment|/*  T             */
 block|{
 name|SST
 argument_list|(
@@ -7562,14 +12120,14 @@ literal|0x71
 argument_list|,
 literal|0xFF
 argument_list|,
-argument|SS_RDEF|SSQ_RANGE
+argument|SS_RDEF | SSQ_RANGE
 argument_list|,
 argument|NULL
 argument_list|)
 block|}
 block|,
 comment|/* Range 0x00 -> 0xFF */
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -7583,7 +12141,7 @@ literal|"Session fixation error"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -7597,7 +12155,7 @@ literal|"Session fixation error writing lead-in"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -7611,7 +12169,7 @@ literal|"Session fixation error writing lead-out"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -7625,7 +12183,7 @@ literal|"Session fixation error - incomplete track in session"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -7639,7 +12197,52 @@ literal|"Empty or partially written reserved track"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x72
+argument_list|,
+literal|0x05
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"No more track reservations allowed"
+argument_list|)
+block|}
+block|,
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x72
+argument_list|,
+literal|0x06
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"RMZ extension is not allowed"
+argument_list|)
+block|}
+block|,
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x72
+argument_list|,
+literal|0x07
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"No more test zone extensions are allowed"
+argument_list|)
+block|}
+block|,
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -7653,7 +12256,7 @@ literal|"CD control error"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -7667,7 +12270,7 @@ literal|"Power calibration area almost full"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -7675,13 +12278,13 @@ literal|0x73
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_FATAL|ENOSPC
+argument|SS_FATAL | ENOSPC
 argument_list|,
 literal|"Power calibration area is full"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -7695,7 +12298,7 @@ literal|"Power calibration area error"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -7709,7 +12312,7 @@ literal|"Program memory area update failure"
 argument_list|)
 block|}
 block|,
-comment|/*      R       */
+comment|/*      R         */
 block|{
 name|SST
 argument_list|(
@@ -7719,7 +12322,487 @@ literal|0x05
 argument_list|,
 argument|SS_RDEF
 argument_list|,
-literal|"program memory area is full"
+literal|"Program memory area is full"
+argument_list|)
+block|}
+block|,
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x73
+argument_list|,
+literal|0x06
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"RMA/PMA is almost full"
+argument_list|)
+block|}
+block|,
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x73
+argument_list|,
+literal|0x10
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Current power calibration area almost full"
+argument_list|)
+block|}
+block|,
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x73
+argument_list|,
+literal|0x11
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Current power calibration area is full"
+argument_list|)
+block|}
+block|,
+comment|/*      R         */
+block|{
+name|SST
+argument_list|(
+literal|0x73
+argument_list|,
+literal|0x17
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"RDZ is full"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x00
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Security error"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x01
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Unable to decrypt data"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x02
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Unencrypted data encountered while decrypting"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x03
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Incorrect data encryption key"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x04
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Cryptographic integrity validation failed"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x05
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Error decrypting data"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x06
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Unknown signature verification key"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x07
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Encryption parameters not useable"
+argument_list|)
+block|}
+block|,
+comment|/* DT   R M E  VF */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x08
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Digital signature validation failure"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x09
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Encryption mode mismatch on read"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x0A
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Encrypted block not raw read enabled"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x0B
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Incorrect encryption parameters"
+argument_list|)
+block|}
+block|,
+comment|/* DT   R MAEBKV  */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x0C
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Unable to decrypt parameter list"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x0D
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Encryption algorithm disabled"
+argument_list|)
+block|}
+block|,
+comment|/* DT   R MAEBKV  */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x10
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"SA creation parameter value invalid"
+argument_list|)
+block|}
+block|,
+comment|/* DT   R MAEBKV  */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x11
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"SA creation parameter value rejected"
+argument_list|)
+block|}
+block|,
+comment|/* DT   R MAEBKV  */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x12
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Invalid SA usage"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x21
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data encryption configuration prevented"
+argument_list|)
+block|}
+block|,
+comment|/* DT   R MAEBKV  */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x30
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"SA creation parameter not supported"
+argument_list|)
+block|}
+block|,
+comment|/* DT   R MAEBKV  */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x40
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Authentication failed"
+argument_list|)
+block|}
+block|,
+comment|/*             V  */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x61
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"External data encryption key manager access error"
+argument_list|)
+block|}
+block|,
+comment|/*             V  */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x62
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"External data encryption key manager error"
+argument_list|)
+block|}
+block|,
+comment|/*             V  */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x63
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"External data encryption key not found"
+argument_list|)
+block|}
+block|,
+comment|/*             V  */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x64
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"External data encryption request not authorized"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x6E
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"External data encryption control timeout"
+argument_list|)
+block|}
+block|,
+comment|/*  T             */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x6F
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"External data encryption control error"
+argument_list|)
+block|}
+block|,
+comment|/* DT   R M E  V  */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x71
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Logical unit access not authorized"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x74
+argument_list|,
+literal|0x79
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Security conflict in translated device"
 argument_list|)
 block|}
 block|}
@@ -10710,7 +15793,7 @@ name|SID_QUAL_BAD_LU
 case|:
 name|qtype
 operator|=
-literal|"(lun not supported)"
+literal|"(LUN not supported)"
 expr_stmt|;
 break|break;
 block|}
@@ -10753,19 +15836,19 @@ literal|"Processor"
 expr_stmt|;
 break|break;
 case|case
+name|T_WORM
+case|:
+name|dtype
+operator|=
+literal|"WORM"
+expr_stmt|;
+break|break;
+case|case
 name|T_CDROM
 case|:
 name|dtype
 operator|=
 literal|"CD-ROM"
-expr_stmt|;
-break|break;
-case|case
-name|T_WORM
-case|:
-name|dtype
-operator|=
-literal|"Worm"
 expr_stmt|;
 break|break;
 case|case
@@ -10830,6 +15913,22 @@ case|:
 name|dtype
 operator|=
 literal|"Optical Card Read/Write"
+expr_stmt|;
+break|break;
+case|case
+name|T_OSD
+case|:
+name|dtype
+operator|=
+literal|"Object-Based Storage"
+expr_stmt|;
+break|break;
+case|case
+name|T_ADC
+case|:
+name|dtype
+operator|=
+literal|"Automation/Drive Interface"
 expr_stmt|;
 break|break;
 case|case
