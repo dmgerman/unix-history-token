@@ -758,6 +758,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|*
 name|p_drv
 operator|==
 name|NULL
