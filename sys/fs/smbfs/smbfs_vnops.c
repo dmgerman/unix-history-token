@@ -3988,7 +3988,9 @@ name|td
 argument_list|)
 expr_stmt|;
 return|return
-name|error
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 end_function
