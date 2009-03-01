@@ -2497,7 +2497,7 @@ elif|#
 directive|elif
 name|_POSIX_C_SOURCE
 operator|>=
-literal|200121
+literal|200112
 end_elif
 
 begin_define
