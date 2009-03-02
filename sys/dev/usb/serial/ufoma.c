@@ -1276,7 +1276,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|ufoma
 argument_list|,
-name|ushub
+name|uhub
 argument_list|,
 name|ufoma_driver
 argument_list|,

@@ -837,7 +837,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|uvisor
 argument_list|,
-name|ushub
+name|uhub
 argument_list|,
 name|uvisor_driver
 argument_list|,

@@ -940,7 +940,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|udbp
 argument_list|,
-name|ushub
+name|uhub
 argument_list|,
 name|udbp_driver
 argument_list|,

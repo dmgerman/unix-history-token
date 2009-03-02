@@ -788,7 +788,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|urio
 argument_list|,
-name|ushub
+name|uhub
 argument_list|,
 name|urio_driver
 argument_list|,

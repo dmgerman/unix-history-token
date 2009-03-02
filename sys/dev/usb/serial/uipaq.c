@@ -6022,7 +6022,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|uipaq
 argument_list|,
-name|ushub
+name|uhub
 argument_list|,
 name|uipaq_driver
 argument_list|,

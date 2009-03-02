@@ -762,7 +762,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|uscanner
 argument_list|,
-name|ushub
+name|uhub
 argument_list|,
 name|uscanner_driver
 argument_list|,

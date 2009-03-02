@@ -934,7 +934,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|umct
 argument_list|,
-name|ushub
+name|uhub
 argument_list|,
 name|umct_driver
 argument_list|,

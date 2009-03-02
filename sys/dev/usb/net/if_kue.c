@@ -961,7 +961,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|kue
 argument_list|,
-name|ushub
+name|uhub
 argument_list|,
 name|kue_driver
 argument_list|,

@@ -515,7 +515,7 @@ block|{
 operator|.
 name|name
 operator|=
-literal|"ushub"
+literal|"uhub"
 block|,
 operator|.
 name|methods
@@ -610,7 +610,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|ushub
+name|uhub
 argument_list|,
 name|usbus
 argument_list|,
@@ -628,9 +628,9 @@ end_expr_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|ushub
+name|uhub
 argument_list|,
-name|ushub
+name|uhub
 argument_list|,
 name|uhub_driver
 argument_list|,

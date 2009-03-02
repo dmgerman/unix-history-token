@@ -455,7 +455,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|usb_linux
 argument_list|,
-name|ushub
+name|uhub
 argument_list|,
 name|usb_linux_driver
 argument_list|,

@@ -3927,7 +3927,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|uchcom
 argument_list|,
-name|ushub
+name|uhub
 argument_list|,
 name|uchcom_driver
 argument_list|,

@@ -5260,7 +5260,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|umass
 argument_list|,
-name|ushub
+name|uhub
 argument_list|,
 name|umass_driver
 argument_list|,

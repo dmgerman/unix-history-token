@@ -6010,7 +6010,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|ng_ubt
 argument_list|,
-name|ushub
+name|uhub
 argument_list|,
 name|ubt_driver
 argument_list|,

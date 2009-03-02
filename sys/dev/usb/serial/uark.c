@@ -663,7 +663,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|uark
 argument_list|,
-name|ushub
+name|uhub
 argument_list|,
 name|uark_driver
 argument_list|,

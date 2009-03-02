@@ -973,7 +973,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|ustorage_fs
 argument_list|,
-name|ushub
+name|uhub
 argument_list|,
 name|ustorage_fs_driver
 argument_list|,

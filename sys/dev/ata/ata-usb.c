@@ -1225,7 +1225,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|atausb
 argument_list|,
-name|ushub
+name|uhub
 argument_list|,
 name|atausb2_driver
 argument_list|,

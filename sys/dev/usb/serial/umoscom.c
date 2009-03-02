@@ -1477,7 +1477,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|umoscom
 argument_list|,
-name|ushub
+name|uhub
 argument_list|,
 name|umoscom_driver
 argument_list|,

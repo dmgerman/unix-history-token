@@ -1298,7 +1298,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|uplcom
 argument_list|,
-name|ushub
+name|uhub
 argument_list|,
 name|uplcom_driver
 argument_list|,
