@@ -1576,7 +1576,8 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-if|if
+comment|/* 	 * If mount point is currenly being unmounted, sleep until the 	 * mount point fate is decided.  If thread doing the unmounting fails, 	 * it will clear MNTK_UNMOUNT flag before waking us up, indicating 	 * that this mount point has survived the unmount attempt and vfs_busy 	 * should retry.  Otherwise the unmounter thread will set MNTK_REFEXPIRE 	 * flag in addition to MNTK_UNMOUNT, indicating that mount point is 	 * about to be really destroyed.  vfs_busy needs to release its 	 * reference on the mount point in this case and return with ENOENT, 	 * telling the caller that mount mount it tried to busy is no longer 	 * valid. 	 */
+while|while
 condition|(
 name|mp
 operator|->
@@ -1657,16 +1658,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|MNT_REL
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
-name|MNT_IUNLOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -1679,20 +1670,6 @@ operator|&
 name|mountlist_mtx
 argument_list|)
 expr_stmt|;
-name|CTR1
-argument_list|(
-name|KTR_VFS
-argument_list|,
-literal|"%s: failed busying after sleep"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENOENT
-operator|)
-return|;
 block|}
 if|if
 condition|(
