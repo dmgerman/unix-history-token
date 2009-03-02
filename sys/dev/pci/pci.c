@@ -14809,6 +14809,16 @@ name|mte_handlers
 operator|++
 expr_stmt|;
 block|}
+comment|/* Disable INTx if we are using MSI/MSIX */
+name|pci_set_command_bit
+argument_list|(
+name|dev
+argument_list|,
+name|child
+argument_list|,
+name|PCIM_CMD_INTxDIS
+argument_list|)
+expr_stmt|;
 name|bad
 label|:
 if|if
@@ -15129,6 +15139,16 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Restore INTx capability for MSI/MSIX */
+name|pci_clear_command_bit
+argument_list|(
+name|dev
+argument_list|,
+name|child
+argument_list|,
+name|PCIM_CMD_INTxDIS
+argument_list|)
+expr_stmt|;
 block|}
 name|error
 operator|=

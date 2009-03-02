@@ -137,6 +137,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIM_CMD_INTxDIS
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIR_STATUS
 value|0x06
 end_define
