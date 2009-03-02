@@ -981,6 +981,14 @@ name|detach
 goto|;
 block|}
 comment|/* clear stall at first run */
+name|mtx_lock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mtx
+argument_list|)
+expr_stmt|;
 name|usb2_transfer_set_stall
 argument_list|(
 name|ssc
@@ -999,6 +1007,14 @@ name|sc_xfer
 index|[
 name|UGENSA_BULK_DT_RD
 index|]
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mtx
 argument_list|)
 expr_stmt|;
 comment|/* initialize port number */
