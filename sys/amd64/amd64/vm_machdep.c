@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysent.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/unistd.h>
 end_include
 
@@ -208,25 +214,6 @@ include|#
 directive|include
 file|<amd64/isa/isa.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_IA32
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|sysentvec
-name|ia32_freebsd_sysvec
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -1050,9 +1037,10 @@ operator|->
 name|td_proc
 operator|->
 name|p_sysent
-operator|==
+operator|->
+name|sv_flags
 operator|&
-name|ia32_freebsd_sysvec
+name|SV_ILP32
 condition|)
 block|{
 comment|/* 	 	 * Set the trap frame to point at the beginning of the uts 		 * function. 		 */
@@ -1239,9 +1227,10 @@ operator|->
 name|td_proc
 operator|->
 name|p_sysent
-operator|==
+operator|->
+name|sv_flags
 operator|&
-name|ia32_freebsd_sysvec
+name|SV_ILP32
 condition|)
 block|{
 if|if
