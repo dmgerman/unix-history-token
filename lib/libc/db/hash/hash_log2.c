@@ -67,11 +67,9 @@ begin_function
 name|u_int32_t
 name|__log2
 parameter_list|(
-name|num
-parameter_list|)
 name|u_int32_t
 name|num
-decl_stmt|;
+parameter_list|)
 block|{
 name|u_int32_t
 name|i

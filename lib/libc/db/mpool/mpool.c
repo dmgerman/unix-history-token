@@ -173,31 +173,28 @@ begin_comment
 comment|/*  * mpool_open --  *	Initialize a memory pool.  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 name|MPOOL
 modifier|*
 name|mpool_open
 parameter_list|(
-name|key
-parameter_list|,
-name|fd
-parameter_list|,
-name|pagesize
-parameter_list|,
-name|maxcache
-parameter_list|)
 name|void
 modifier|*
 name|key
-decl_stmt|;
+parameter_list|,
 name|int
 name|fd
-decl_stmt|;
+parameter_list|,
 name|pgno_t
 name|pagesize
-decl_stmt|,
+parameter_list|,
+name|pgno_t
 name|maxcache
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|stat
@@ -347,25 +344,14 @@ begin_comment
 comment|/*  * mpool_filter --  *	Initialize input/output filters.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|mpool_filter
-argument_list|(
-name|mp
-argument_list|,
-name|pgin
-argument_list|,
-name|pgout
-argument_list|,
-name|pgcookie
-argument_list|)
+parameter_list|(
 name|MPOOL
 modifier|*
 name|mp
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
+parameter_list|,
 name|void
 function_decl|(
 modifier|*
@@ -380,10 +366,7 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+parameter_list|,
 name|void
 function_decl|(
 modifier|*
@@ -398,17 +381,11 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
+parameter_list|,
 name|void
 modifier|*
 name|pgcookie
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|mp
 operator|->
@@ -429,7 +406,7 @@ operator|=
 name|pgcookie
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * mpool_new --  *	Get a new page of memory.  */
@@ -582,27 +559,25 @@ begin_comment
 comment|/*  * mpool_get  *	Get a page.  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 name|void
 modifier|*
 name|mpool_get
 parameter_list|(
-name|mp
-parameter_list|,
-name|pgno
-parameter_list|,
-name|flags
-parameter_list|)
 name|MPOOL
 modifier|*
 name|mp
-decl_stmt|;
+parameter_list|,
 name|pgno_t
 name|pgno
-decl_stmt|;
+parameter_list|,
 name|u_int
 name|flags
-decl_stmt|;
+parameter_list|)
 comment|/* XXX not used? */
 block|{
 name|struct
@@ -946,27 +921,25 @@ begin_comment
 comment|/*  * mpool_put  *	Return a page.  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 name|int
 name|mpool_put
 parameter_list|(
-name|mp
-parameter_list|,
-name|page
-parameter_list|,
-name|flags
-parameter_list|)
 name|MPOOL
 modifier|*
 name|mp
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|page
-decl_stmt|;
+parameter_list|,
 name|u_int
 name|flags
-decl_stmt|;
+parameter_list|)
 block|{
 name|BKT
 modifier|*
@@ -1067,12 +1040,10 @@ begin_function
 name|int
 name|mpool_close
 parameter_list|(
-name|mp
-parameter_list|)
 name|MPOOL
 modifier|*
 name|mp
-decl_stmt|;
+parameter_list|)
 block|{
 name|BKT
 modifier|*
@@ -1141,12 +1112,10 @@ begin_function
 name|int
 name|mpool_sync
 parameter_list|(
-name|mp
-parameter_list|)
 name|MPOOL
 modifier|*
 name|mp
-decl_stmt|;
+parameter_list|)
 block|{
 name|BKT
 modifier|*
@@ -1211,12 +1180,10 @@ name|BKT
 modifier|*
 name|mpool_bkt
 parameter_list|(
-name|mp
-parameter_list|)
 name|MPOOL
 modifier|*
 name|mp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|_hqh
@@ -1484,18 +1451,14 @@ specifier|static
 name|int
 name|mpool_write
 parameter_list|(
-name|mp
-parameter_list|,
-name|bp
-parameter_list|)
 name|MPOOL
 modifier|*
 name|mp
-decl_stmt|;
+parameter_list|,
 name|BKT
 modifier|*
 name|bp
-decl_stmt|;
+parameter_list|)
 block|{
 name|off_t
 name|off
@@ -1599,17 +1562,13 @@ name|BKT
 modifier|*
 name|mpool_look
 parameter_list|(
-name|mp
-parameter_list|,
-name|pgno
-parameter_list|)
 name|MPOOL
 modifier|*
 name|mp
-decl_stmt|;
+parameter_list|,
 name|pgno_t
 name|pgno
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|_hqh
@@ -1698,12 +1657,10 @@ begin_function
 name|void
 name|mpool_stat
 parameter_list|(
-name|mp
-parameter_list|)
 name|MPOOL
 modifier|*
 name|mp
-decl_stmt|;
+parameter_list|)
 block|{
 name|BKT
 modifier|*
