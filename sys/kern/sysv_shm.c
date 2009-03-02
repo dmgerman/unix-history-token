@@ -413,9 +413,13 @@ name|shm_last_free
 decl_stmt|,
 name|shm_nused
 decl_stmt|,
-name|shm_committed
-decl_stmt|,
 name|shmalloced
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|size_t
+name|shm_committed
 decl_stmt|;
 end_decl_stmt
 
@@ -1232,9 +1236,7 @@ name|round_page
 argument_list|(
 name|shmseg
 operator|->
-name|u
-operator|.
-name|shm_segsz
+name|shm_bsegsz
 argument_list|)
 expr_stmt|;
 name|shm_committed
@@ -1324,9 +1326,7 @@ name|round_page
 argument_list|(
 name|shmseg
 operator|->
-name|u
-operator|.
-name|shm_segsz
+name|shm_bsegsz
 argument_list|)
 expr_stmt|;
 name|result
@@ -1997,9 +1997,7 @@ name|round_page
 argument_list|(
 name|shmseg
 operator|->
-name|u
-operator|.
-name|shm_segsz
+name|shm_bsegsz
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2182,9 +2180,9 @@ operator|&
 name|MAP_FIXED
 operator|)
 condition|?
-literal|0
+name|VMFS_NO_SPACE
 else|:
-literal|1
+name|VMFS_ANY_SPACE
 argument_list|,
 name|prot
 argument_list|,
@@ -3698,9 +3696,7 @@ name|size
 operator|>
 name|shmseg
 operator|->
-name|u
-operator|.
-name|shm_segsz
+name|shm_bsegsz
 condition|)
 return|return
 operator|(
@@ -3764,7 +3760,8 @@ decl_stmt|,
 name|segnum
 decl_stmt|,
 name|shmid
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|size
 decl_stmt|;
 name|struct
@@ -4131,6 +4128,14 @@ operator|->
 name|u
 operator|.
 name|shm_segsz
+operator|=
+name|uap
+operator|->
+name|size
+expr_stmt|;
+name|shmseg
+operator|->
+name|shm_bsegsz
 operator|=
 name|uap
 operator|->
