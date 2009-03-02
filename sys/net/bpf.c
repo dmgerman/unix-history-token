@@ -631,7 +631,7 @@ specifier|static
 name|int
 name|bpf_zerocopy_enable
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
