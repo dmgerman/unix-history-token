@@ -9187,6 +9187,9 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|EAP_SERVER
 if|if
 condition|(
 name|eap_server_register_methods
@@ -9205,6 +9208,9 @@ operator|-
 literal|1
 return|;
 block|}
+endif|#
+directive|endif
+comment|/* EAP_SERVER */
 name|interfaces
 operator|.
 name|count
@@ -9800,9 +9806,15 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* CONFIG_NATIVE_WINDOWS */
+ifdef|#
+directive|ifdef
+name|EAP_SERVER
 name|eap_server_unregister_methods
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* EAP_SERVER */
 name|os_daemonize_terminate
 argument_list|(
 name|pid_file

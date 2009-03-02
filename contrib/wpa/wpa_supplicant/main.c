@@ -57,11 +57,35 @@ name|printf
 argument_list|(
 literal|"%s\n\n%s\n"
 literal|"usage:\n"
-literal|"  wpa_supplicant [-BddhKLqqtuvW] [-P<pid file>] "
+literal|"  wpa_supplicant [-BddhKLqq"
+ifdef|#
+directive|ifdef
+name|CONFIG_DEBUG_SYSLOG
+literal|"s"
+endif|#
+directive|endif
+comment|/* CONFIG_DEBUG_SYSLOG */
+literal|"t"
+ifdef|#
+directive|ifdef
+name|CONFIG_CTRL_IFACE_DBUS
+literal|"u"
+endif|#
+directive|endif
+comment|/* CONFIG_CTRL_IFACE_DBUS */
+literal|"vW] [-P<pid file>] "
 literal|"[-g<global ctrl>] \\\n"
 literal|"        -i<ifname> -c<config file> [-C<ctrl>] [-D<driver>] "
 literal|"[-p<driver_param>] \\\n"
-literal|"        [-b<br_ifname>] [-f<debug file>] \\\n"
+literal|"        [-b<br_ifname>]"
+ifdef|#
+directive|ifdef
+name|CONFIG_DEBUG_FILE
+literal|" [-f<debug file>]"
+endif|#
+directive|endif
+comment|/* CONFIG_DEBUG_FILE */
+literal|" \\\n"
 literal|"        [-N -i<ifname> -c<conf> [-C<ctrl>] "
 literal|"[-D<driver>] \\\n"
 literal|"        [-p<driver_param>] [-b<br_ifname>] ...]\n"
@@ -130,6 +154,13 @@ directive|endif
 comment|/* CONFIG_DEBUG_FILE */
 literal|"  -g = global ctrl_interface\n"
 literal|"  -K = include keys (passwords, etc.) in debug output\n"
+ifdef|#
+directive|ifdef
+name|CONFIG_DEBUG_SYSLOG
+literal|"  -s = log output to syslog instead of stdout\n"
+endif|#
+directive|endif
+comment|/* CONFIG_DEBUG_SYSLOG */
 literal|"  -t = include timestamp in debug messages\n"
 literal|"  -h = show this help text\n"
 literal|"  -L = show license (GPL and BSD)\n"
@@ -155,7 +186,21 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"example:\n"
-literal|"  wpa_supplicant -Dwext -iwlan0 -c/etc/wpa_supplicant.conf\n"
+literal|"  wpa_supplicant -D%s -iwlan0 -c/etc/wpa_supplicant.conf\n"
+argument_list|,
+name|wpa_supplicant_drivers
+index|[
+name|i
+index|]
+condition|?
+name|wpa_supplicant_drivers
+index|[
+name|i
+index|]
+operator|->
+name|name
+else|:
+literal|"wext"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -374,7 +419,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:Bc:C:D:df:g:hi:KLNp:P:qtuvW"
+literal|"b:Bc:C:D:df:g:hi:KLNp:P:qstuvW"
 argument_list|)
 expr_stmt|;
 if|if
@@ -576,6 +621,21 @@ name|wpa_debug_level
 operator|++
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|CONFIG_DEBUG_SYSLOG
+case|case
+literal|'s'
+case|:
+name|params
+operator|.
+name|wpa_debug_syslog
+operator|++
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* CONFIG_DEBUG_SYSLOG */
 case|case
 literal|'t'
 case|:

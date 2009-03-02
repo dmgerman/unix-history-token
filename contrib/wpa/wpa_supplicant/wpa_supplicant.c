@@ -9025,6 +9025,15 @@ operator|->
 name|wpa_debug_file_path
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|params
+operator|->
+name|wpa_debug_syslog
+condition|)
+name|wpa_debug_open_syslog
+argument_list|()
+expr_stmt|;
 name|ret
 operator|=
 name|eap_peer_register_methods
@@ -9703,6 +9712,9 @@ name|os_free
 argument_list|(
 name|global
 argument_list|)
+expr_stmt|;
+name|wpa_debug_close_syslog
+argument_list|()
 expr_stmt|;
 name|wpa_debug_close_file
 argument_list|()
