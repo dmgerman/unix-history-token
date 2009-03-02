@@ -2004,6 +2004,7 @@ decl_stmt|;
 name|int
 name|_fw_debug
 decl_stmt|;
+comment|/* actually unused */
 name|int
 name|_autoinc_step
 decl_stmt|;

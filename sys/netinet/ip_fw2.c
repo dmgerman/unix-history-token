@@ -676,13 +676,6 @@ end_ifdef
 begin_decl_stmt
 specifier|static
 name|int
-name|fw_debug
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|autoinc_step
 decl_stmt|;
 end_decl_stmt
@@ -804,30 +797,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Only do a single pass through ipfw when using dummynet(4)"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_V_INT
-argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipfw
-argument_list|,
-name|_net_inet_ip_fw
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|debug
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-name|fw_debug
-argument_list|,
-literal|0
-argument_list|,
-literal|"Enable printing of debug ip_fw statements"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -19775,10 +19744,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|V_fw_debug
-operator|=
-literal|1
-expr_stmt|;
 name|V_autoinc_step
 operator|=
 literal|100
