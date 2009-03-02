@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2002-2009 Sam Leffler, Errno Consulting  * All righ
 end_comment
 
 begin_comment
-comment|/*  * Simple Atheros-specific tool to inspect and monitor network traffic  * statistics.  *  *	athstats [-i interface] [-z] [-l] [-o fmtstring] [interval]  *  * (default interface is ath0).  If interval is specified a rolling output  * a la netstat -i is displayed every interval seconds.  The format of  * the rolling display can be controlled a la ps.  The -l option will  * print a list of all possible statistics for use with the -o option.  */
+comment|/*  * Simple Atheros-specific tool to inspect and monitor network traffic  * statistics.  *  *	athstats [-i interface] [-bz] [-l] [-o fmtstring] [interval]  *  * (default interface is ath0).  If interval is specified a rolling output  * a la netstat -i is displayed every interval seconds.  The format of  * the rolling display can be controlled a la ps.  The -l option will  * print a list of all possible statistics for use with the -o option.  */
 end_comment
 
 begin_include
@@ -204,6 +204,10 @@ name|ifname
 decl_stmt|;
 name|int
 name|c
+decl_stmt|,
+name|banner
+init|=
+literal|1
 decl_stmt|;
 name|ifname
 operator|=
@@ -245,7 +249,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"i:lo:z"
+literal|"bi:lo:z"
 argument_list|)
 operator|)
 operator|!=
@@ -258,6 +262,14 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'b'
+case|:
+name|banner
+operator|=
+literal|0
+expr_stmt|;
+break|break;
 case|case
 literal|'i'
 case|:
@@ -393,6 +405,10 @@ argument_list|)
 expr_stmt|;
 name|banner
 label|:
+if|if
+condition|(
+name|banner
+condition|)
 name|wf
 operator|->
 name|print_header
