@@ -471,6 +471,27 @@ name|child
 argument_list|)
 control|)
 block|{
+comment|/* 		 * Try to get the I2C address first from the i2c-address 		 * property, then try the reg property. It moves around 		 * on different systems. 		 */
+if|if
+condition|(
+name|OF_getprop
+argument_list|(
+name|child
+argument_list|,
+literal|"i2c-address"
+argument_list|,
+operator|&
+name|addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|addr
+argument_list|)
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
 if|if
 condition|(
 name|OF_getprop
