@@ -159,7 +159,7 @@ name|T_SSIZET
 block|,
 name|T_SIZET
 block|,
-name|TP_SIZET
+name|TP_SSIZET
 block|,
 name|T_INTMAXT
 block|,
@@ -1639,7 +1639,7 @@ argument_list|(
 operator|&
 name|types
 argument_list|,
-name|TP_SIZET
+name|TP_SSIZET
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -2504,7 +2504,7 @@ argument_list|(
 operator|&
 name|types
 argument_list|,
-name|TP_SIZET
+name|TP_SSIZET
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -3397,7 +3397,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|TP_SIZET
+name|TP_SSIZET
 case|:
 operator|(
 operator|*
@@ -3407,13 +3407,13 @@ index|[
 name|n
 index|]
 operator|.
-name|psizearg
+name|pssizearg
 operator|=
 name|va_arg
 argument_list|(
 name|ap
 argument_list|,
-name|size_t
+name|ssize_t
 operator|*
 argument_list|)
 expr_stmt|;
