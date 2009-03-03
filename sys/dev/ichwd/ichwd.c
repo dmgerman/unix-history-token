@@ -907,11 +907,11 @@ if|if
 condition|(
 name|timeout
 operator|>
-literal|0x0bff
+literal|0x03ff
 condition|)
 name|timeout
 operator|=
-literal|0x0bff
+literal|0x03ff
 expr_stmt|;
 name|tmr_val16
 operator||=
