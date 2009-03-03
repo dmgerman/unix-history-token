@@ -916,6 +916,12 @@ begin_comment
 comment|/*  * x shall be the expected value (SIZEOF_vnet_* from above)  * and y shall be the real size (sizeof(struct vnet_*)).  * If you run into the CTASSERT() you want to compile a universe  * with COPTFLAGS+="-O -Wuninitialized -DVIMAGE_CHECK_SIZES".  * This should give you the errors for the proper values defined above.  * Make sure to re-run universe with the proper values afterwards -  * -DMAKE_JUST_KERNELS should be enough.  *   * Note:   * CTASSERT() takes precedence in the current FreeBSD world thus the  * CTASSERT_EQUAL() will not neccessarily trigger if one uses both.  * But as CTASSERT_EQUAL() needs special compile time options, we  * want the default case to be backed by CTASSERT().  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -963,6 +969,28 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|VIMAGE_CTASSERT
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|struct __hack
+end_define
 
 begin_endif
 endif|#
