@@ -660,7 +660,7 @@ parameter_list|,
 name|arg1
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0)		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1)
+value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1)
 end_define
 
 begin_define
@@ -683,7 +683,7 @@ parameter_list|,
 name|arg2
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0)		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1)		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2)
+value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2)
 end_define
 
 begin_define
@@ -708,7 +708,7 @@ parameter_list|,
 name|arg3
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0)		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1)		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2)		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 3, arg3)
+value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 3, arg3)
 end_define
 
 begin_define
@@ -735,7 +735,7 @@ parameter_list|,
 name|arg4
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0)		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1)		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2)		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 3, arg3)		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 4, arg4)
+value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 3, arg3);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 4, arg4)
 end_define
 
 begin_typedef
