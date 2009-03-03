@@ -756,7 +756,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Type 0 Routing header */
+comment|/* Type 0 Routing header, deprecated by RFC 5095. */
 end_comment
 
 begin_struct
