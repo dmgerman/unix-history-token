@@ -209,6 +209,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|MFNTOPFN
+parameter_list|(
+name|ma
+parameter_list|)
+value|(ma)
+end_define
+
+begin_define
+define|#
+directive|define
 name|set_phys_to_machine
 parameter_list|(
 name|pfn
