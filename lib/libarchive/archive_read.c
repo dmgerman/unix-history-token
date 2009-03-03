@@ -2414,7 +2414,7 @@ argument_list|)
 expr_stmt|;
 comment|/* TODO: Clean up the formatters. */
 comment|/* Clean up the stream pipeline. */
-if|if
+while|while
 condition|(
 name|a
 operator|->
@@ -2423,6 +2423,17 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|struct
+name|archive_read_source
+modifier|*
+name|t
+init|=
+name|a
+operator|->
+name|source
+operator|->
+name|upstream
+decl_stmt|;
 name|r1
 operator|=
 call|(
@@ -2452,7 +2463,7 @@ name|a
 operator|->
 name|source
 operator|=
-name|NULL
+name|t
 expr_stmt|;
 block|}
 comment|/* Release the reader objects. */

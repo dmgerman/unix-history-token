@@ -1219,17 +1219,6 @@ name|self
 operator|->
 name|data
 decl_stmt|;
-name|self
-operator|->
-name|upstream
-operator|->
-name|close
-argument_list|(
-name|self
-operator|->
-name|upstream
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|state
