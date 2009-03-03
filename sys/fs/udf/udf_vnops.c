@@ -4380,17 +4380,6 @@ condition|(
 name|error
 condition|)
 break|break;
-block|}
-comment|/* tell the calling layer whether we need to be called again */
-operator|*
-name|a
-operator|->
-name|a_eofflag
-operator|=
-name|uiodir
-operator|.
-name|eofflag
-expr_stmt|;
 name|uio
 operator|->
 name|uio_offset
@@ -4402,6 +4391,17 @@ operator|+
 name|ds
 operator|->
 name|off
+expr_stmt|;
+block|}
+comment|/* tell the calling layer whether we need to be called again */
+operator|*
+name|a
+operator|->
+name|a_eofflag
+operator|=
+name|uiodir
+operator|.
+name|eofflag
 expr_stmt|;
 if|if
 condition|(
