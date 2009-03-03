@@ -747,10 +747,6 @@ name|ATA_INTR_FLAGS
 argument_list|,
 name|NULL
 argument_list|,
-operator|(
-name|driver_intr_t
-operator|*
-operator|)
 name|ata_interrupt
 argument_list|,
 name|ch
@@ -1525,7 +1521,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|ata_interrupt
 parameter_list|(
 name|void
@@ -1680,9 +1676,7 @@ argument_list|(
 name|request
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+return|return;
 block|}
 block|}
 do|while
@@ -1698,9 +1692,6 @@ operator|->
 name|state_mtx
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 

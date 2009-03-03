@@ -2880,7 +2880,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|ata_interrupt
 parameter_list|(
 name|void
