@@ -798,7 +798,7 @@ modifier|*
 name|h
 decl_stmt|;
 name|indx_t
-name|index
+name|idx
 decl_stmt|,
 name|nxtindex
 decl_stmt|;
@@ -952,7 +952,7 @@ name|e
 operator|->
 name|page
 expr_stmt|;
-name|index
+name|idx
 operator|=
 name|e
 operator|->
@@ -968,7 +968,7 @@ case|case
 name|R_IAFTER
 case|:
 operator|++
-name|index
+name|idx
 expr_stmt|;
 break|break;
 case|case
@@ -990,7 +990,7 @@ name|t
 argument_list|,
 name|h
 argument_list|,
-name|index
+name|idx
 argument_list|)
 operator|==
 name|RET_ERROR
@@ -1059,7 +1059,7 @@ name|dflags
 argument_list|,
 name|nbytes
 argument_list|,
-name|index
+name|idx
 argument_list|)
 expr_stmt|;
 if|if
@@ -1081,7 +1081,7 @@ return|;
 block|}
 if|if
 condition|(
-name|index
+name|idx
 operator|<
 operator|(
 name|nxtindex
@@ -1098,7 +1098,7 @@ name|h
 operator|->
 name|linp
 operator|+
-name|index
+name|idx
 operator|+
 literal|1
 argument_list|,
@@ -1106,12 +1106,12 @@ name|h
 operator|->
 name|linp
 operator|+
-name|index
+name|idx
 argument_list|,
 operator|(
 name|nxtindex
 operator|-
-name|index
+name|idx
 operator|)
 operator|*
 sizeof|sizeof
@@ -1133,7 +1133,7 @@ name|h
 operator|->
 name|linp
 index|[
-name|index
+name|idx
 index|]
 operator|=
 name|h

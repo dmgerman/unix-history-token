@@ -434,30 +434,24 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * __REC_DLEAF -- Delete a single record from a recno leaf page.  *  * Parameters:  *	t:	tree  *	index:	index on current page to delete  *  * Returns:  *	RET_SUCCESS, RET_ERROR.  */
+comment|/*  * __REC_DLEAF -- Delete a single record from a recno leaf page.  *  * Parameters:  *	t:	tree  *	idx:	index on current page to delete  *  * Returns:  *	RET_SUCCESS, RET_ERROR.  */
 end_comment
 
 begin_function
 name|int
 name|__rec_dleaf
 parameter_list|(
-name|t
-parameter_list|,
-name|h
-parameter_list|,
-name|index
-parameter_list|)
 name|BTREE
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|,
 name|PAGE
 modifier|*
 name|h
-decl_stmt|;
+parameter_list|,
 name|u_int32_t
-name|index
-decl_stmt|;
+name|idx
+parameter_list|)
 block|{
 name|RLEAF
 modifier|*
@@ -491,7 +485,7 @@ name|GETRLEAF
 argument_list|(
 name|h
 argument_list|,
-name|index
+name|idx
 argument_list|)
 expr_stmt|;
 if|if
@@ -567,7 +561,7 @@ name|h
 operator|->
 name|linp
 index|[
-name|index
+name|idx
 index|]
 expr_stmt|;
 for|for
@@ -579,7 +573,7 @@ name|h
 operator|->
 name|linp
 index|[
-name|index
+name|idx
 index|]
 operator|-
 operator|(

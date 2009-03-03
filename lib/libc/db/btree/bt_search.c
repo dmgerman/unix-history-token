@@ -147,7 +147,7 @@ decl_stmt|;
 name|indx_t
 name|base
 decl_stmt|,
-name|index
+name|idx
 decl_stmt|,
 name|lim
 decl_stmt|;
@@ -230,7 +230,7 @@ name|bt_cur
 operator|.
 name|index
 operator|=
-name|index
+name|idx
 operator|=
 name|base
 operator|+
@@ -297,7 +297,7 @@ condition|)
 block|{
 name|base
 operator|=
-name|index
+name|idx
 operator|+
 literal|1
 expr_stmt|;
@@ -416,7 +416,7 @@ operator|)
 return|;
 block|}
 comment|/* 		 * No match found.  Base is the smallest index greater than 		 * key and may be zero or a last + 1 index.  If it's non-zero, 		 * decrement by one, and record the internal page which should 		 * be a parent page for the key.  If a split later occurs, the 		 * inserted page will be to the right of the saved page. 		 */
-name|index
+name|idx
 operator|=
 name|base
 condition|?
@@ -436,7 +436,7 @@ name|h
 operator|->
 name|pgno
 argument_list|,
-name|index
+name|idx
 argument_list|)
 expr_stmt|;
 name|pg
@@ -445,7 +445,7 @@ name|GETBINTERNAL
 argument_list|(
 name|h
 argument_list|,
-name|index
+name|idx
 argument_list|)
 operator|->
 name|pgno

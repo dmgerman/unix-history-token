@@ -160,7 +160,7 @@ modifier|*
 name|h
 decl_stmt|;
 name|indx_t
-name|index
+name|idx
 decl_stmt|,
 name|nxtindex
 decl_stmt|;
@@ -566,7 +566,7 @@ operator|(
 name|RET_ERROR
 operator|)
 return|;
-name|index
+name|idx
 operator|=
 name|t
 operator|->
@@ -636,7 +636,7 @@ name|e
 operator|->
 name|page
 expr_stmt|;
-name|index
+name|idx
 operator|=
 name|e
 operator|->
@@ -701,7 +701,7 @@ name|key
 argument_list|,
 name|h
 argument_list|,
-name|index
+name|idx
 argument_list|)
 operator|==
 name|RET_ERROR
@@ -777,7 +777,7 @@ name|dflags
 argument_list|,
 name|nbytes
 argument_list|,
-name|index
+name|idx
 argument_list|)
 operator|)
 operator|!=
@@ -794,7 +794,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|index
+name|idx
 operator|<
 operator|(
 name|nxtindex
@@ -811,7 +811,7 @@ name|h
 operator|->
 name|linp
 operator|+
-name|index
+name|idx
 operator|+
 literal|1
 argument_list|,
@@ -819,12 +819,12 @@ name|h
 operator|->
 name|linp
 operator|+
-name|index
+name|idx
 argument_list|,
 operator|(
 name|nxtindex
 operator|-
-name|index
+name|idx
 operator|)
 operator|*
 sizeof|sizeof
@@ -846,7 +846,7 @@ name|h
 operator|->
 name|linp
 index|[
-name|index
+name|idx
 index|]
 operator|=
 name|h
@@ -922,7 +922,7 @@ name|pg
 operator|.
 name|index
 operator|>=
-name|index
+name|idx
 condition|)
 operator|++
 name|t
@@ -953,7 +953,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|index
+name|idx
 operator|==
 name|NEXTINDEX
 argument_list|(
@@ -975,7 +975,7 @@ name|bt_last
 operator|.
 name|index
 operator|=
-name|index
+name|idx
 expr_stmt|;
 name|t
 operator|->
@@ -1001,7 +1001,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|index
+name|idx
 operator|==
 literal|0
 condition|)

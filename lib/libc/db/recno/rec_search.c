@@ -103,7 +103,7 @@ name|op
 parameter_list|)
 block|{
 name|indx_t
-name|index
+name|idx
 decl_stmt|;
 name|PAGE
 modifier|*
@@ -207,7 +207,7 @@ return|;
 block|}
 for|for
 control|(
-name|index
+name|idx
 operator|=
 literal|0
 operator|,
@@ -227,13 +227,13 @@ name|GETRINTERNAL
 argument_list|(
 name|h
 argument_list|,
-name|index
+name|idx
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|++
-name|index
+name|idx
 operator|==
 name|top
 operator|||
@@ -259,7 +259,7 @@ name|t
 argument_list|,
 name|pg
 argument_list|,
-name|index
+name|idx
 operator|-
 literal|1
 argument_list|)
@@ -284,7 +284,7 @@ argument_list|(
 name|h
 argument_list|,
 operator|(
-name|index
+name|idx
 operator|-
 literal|1
 operator|)
@@ -313,7 +313,7 @@ argument_list|(
 name|h
 argument_list|,
 operator|(
-name|index
+name|idx
 operator|-
 literal|1
 operator|)

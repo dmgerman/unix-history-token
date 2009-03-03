@@ -759,7 +759,7 @@ modifier|*
 name|h
 decl_stmt|;
 name|indx_t
-name|index
+name|idx
 decl_stmt|;
 name|pgno_t
 name|pg
@@ -855,7 +855,7 @@ condition|)
 goto|goto
 name|usecurrent
 goto|;
-name|index
+name|idx
 operator|=
 name|c
 operator|->
@@ -866,7 +866,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|++
-name|index
+name|idx
 operator|==
 name|NEXTINDEX
 argument_list|(
@@ -926,7 +926,7 @@ operator|(
 name|RET_ERROR
 operator|)
 return|;
-name|index
+name|idx
 operator|=
 literal|0
 expr_stmt|;
@@ -980,7 +980,7 @@ name|RET_SUCCESS
 operator|)
 return|;
 block|}
-name|index
+name|idx
 operator|=
 name|c
 operator|->
@@ -990,7 +990,7 @@ name|index
 expr_stmt|;
 if|if
 condition|(
-name|index
+name|idx
 operator|==
 literal|0
 condition|)
@@ -1047,7 +1047,7 @@ operator|(
 name|RET_ERROR
 operator|)
 return|;
-name|index
+name|idx
 operator|=
 name|NEXTINDEX
 argument_list|(
@@ -1059,7 +1059,7 @@ expr_stmt|;
 block|}
 else|else
 operator|--
-name|index
+name|idx
 expr_stmt|;
 break|break;
 block|}
@@ -1073,7 +1073,7 @@ name|ep
 operator|->
 name|index
 operator|=
-name|index
+name|idx
 expr_stmt|;
 return|return
 operator|(
@@ -1498,29 +1498,23 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * __bt_setcur --  *	Set the cursor to an entry in the tree.  *  * Parameters:  *	t:	the tree  *   pgno:	page number  *  index:	page index  */
+comment|/*  * __bt_setcur --  *	Set the cursor to an entry in the tree.  *  * Parameters:  *	t:	the tree  *   pgno:	page number  *    idx:	page index  */
 end_comment
 
 begin_function
 name|void
 name|__bt_setcur
 parameter_list|(
-name|t
-parameter_list|,
-name|pgno
-parameter_list|,
-name|index
-parameter_list|)
 name|BTREE
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|,
 name|pgno_t
 name|pgno
-decl_stmt|;
+parameter_list|,
 name|u_int
-name|index
-decl_stmt|;
+name|idx
+parameter_list|)
 block|{
 comment|/* Lose any already deleted key. */
 if|if
@@ -1601,7 +1595,7 @@ name|pg
 operator|.
 name|index
 operator|=
-name|index
+name|idx
 expr_stmt|;
 name|F_SET
 argument_list|(
