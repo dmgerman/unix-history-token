@@ -9,16 +9,6 @@ directive|include
 file|"archive_platform.h"
 end_include
 
-begin_comment
-comment|/* Don't compile this if we don't have bzlib. */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|HAVE_BZLIB_H
-end_if
-
 begin_expr_stmt
 name|__FBSDID
 argument_list|(
@@ -118,6 +108,40 @@ include|#
 directive|include
 file|"archive_write_private.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_BZLIB_H
+end_ifndef
+
+begin_function
+name|int
+name|archive_write_set_compression_bzip2
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|_a
+parameter_list|)
+block|{
+comment|/* Unsupported bzip2 compression, we don't have bzlib */
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Don't compile this if we don't have bzlib. */
+end_comment
 
 begin_struct
 struct|struct
