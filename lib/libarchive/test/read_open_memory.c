@@ -465,6 +465,9 @@ name|size
 expr_stmt|;
 return|return
 operator|(
+operator|(
+name|ssize_t
+operator|)
 name|size
 operator|)
 return|;

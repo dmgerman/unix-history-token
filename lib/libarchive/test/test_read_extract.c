@@ -50,10 +50,15 @@ name|archive
 modifier|*
 name|a
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
 name|struct
 name|stat
 name|st
 decl_stmt|;
+endif|#
+directive|endif
 name|size_t
 name|used
 decl_stmt|;
@@ -67,12 +72,17 @@ decl_stmt|,
 modifier|*
 name|file_buff
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
 name|int
 name|fd
 decl_stmt|;
 name|ssize_t
 name|bytes_read
 decl_stmt|;
+endif|#
+directive|endif
 name|buff
 operator|=
 name|malloc
@@ -780,6 +790,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|_WIN32
 comment|/* Test the entries on disk. */
 comment|/* This first entry was extracted with ARCHIVE_EXTRACT_PERM, 	 * so the permissions should have been restored exactly, 	 * including resetting the gid bit on those platforms 	 * where gid is inherited by subdirs. */
 name|assert
@@ -1220,6 +1233,8 @@ literal|0755
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|buff

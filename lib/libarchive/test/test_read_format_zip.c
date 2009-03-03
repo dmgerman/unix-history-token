@@ -30,6 +30,9 @@ end_macro
 
 begin_block
 block|{
+if|#
+directive|if
+name|HAVE_ZLIB_H
 specifier|const
 name|char
 modifier|*
@@ -182,6 +185,9 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
+operator|(
+name|int
+operator|)
 name|s
 argument_list|,
 literal|0
@@ -394,6 +400,15 @@ name|archive_read_finish
 argument_list|(
 name|a
 argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+else|#
+directive|else
+name|skipping
+argument_list|(
+literal|"Need zlib"
 argument_list|)
 expr_stmt|;
 endif|#

@@ -291,6 +291,9 @@ end_macro
 
 begin_block
 block|{
+if|#
+directive|if
+name|HAVE_BZLIB_H
 name|compat_bzip2
 argument_list|(
 literal|"test_compat_bzip2_1.tbz"
@@ -301,6 +304,15 @@ argument_list|(
 literal|"test_compat_bzip2_2.tbz"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|skipping
+argument_list|(
+literal|"Need bzlib"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 

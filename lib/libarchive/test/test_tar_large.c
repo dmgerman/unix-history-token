@@ -323,6 +323,9 @@ name|last
 operator|->
 name|filebytes
 operator|+=
+operator|(
+name|off_t
+operator|)
 name|size
 expr_stmt|;
 block|}
@@ -431,6 +434,9 @@ expr_stmt|;
 block|}
 return|return
 operator|(
+operator|(
+name|long
+operator|)
 name|size
 operator|)
 return|;
@@ -535,6 +541,9 @@ name|filedatasize
 condition|)
 name|size
 operator|=
+operator|(
+name|ssize_t
+operator|)
 name|filedatasize
 expr_stmt|;
 else|else
@@ -578,6 +587,9 @@ name|next
 expr_stmt|;
 name|size
 operator|=
+operator|(
+name|ssize_t
+operator|)
 name|block
 operator|->
 name|size
@@ -921,9 +933,14 @@ name|writesize
 decl_stmt|;
 name|filedatasize
 operator|=
+call|(
+name|size_t
+call|)
+argument_list|(
 literal|1
 operator|*
 name|MB
+argument_list|)
 expr_stmt|;
 name|filedata
 operator|=
@@ -998,7 +1015,7 @@ name|tests
 index|[
 name|i
 index|]
-operator|>
+operator|!=
 literal|0
 condition|;
 name|i
@@ -1056,6 +1073,11 @@ operator|<
 literal|0
 condition|)
 block|{
+name|archive_entry_free
+argument_list|(
+name|ae
+argument_list|)
+expr_stmt|;
 name|skipping
 argument_list|(
 literal|"32-bit off_t doesn't permit testing of very large files."
@@ -1097,6 +1119,9 @@ condition|)
 block|{
 name|writesize
 operator|=
+operator|(
+name|off_t
+operator|)
 name|filedatasize
 expr_stmt|;
 if|if

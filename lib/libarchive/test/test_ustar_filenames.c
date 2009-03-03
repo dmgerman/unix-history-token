@@ -95,6 +95,9 @@ argument_list|)
 expr_stmt|;
 name|i
 operator|=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|prefix

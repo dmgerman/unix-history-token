@@ -86,7 +86,7 @@ name|char
 name|tmpfilename
 index|[]
 init|=
-literal|"/tmp/test-read_large.XXXXXX"
+literal|"test-read_large.XXXXXX"
 decl_stmt|;
 name|size_t
 name|used
@@ -461,9 +461,17 @@ operator|<
 operator|(
 name|tmpfilefd
 operator|=
-name|mkstemp
+name|open
 argument_list|(
 name|tmpfilename
+argument_list|,
+name|O_WRONLY
+operator||
+name|O_CREAT
+operator||
+name|O_BINARY
+argument_list|,
+literal|0755
 argument_list|)
 operator|)
 argument_list|)

@@ -74,6 +74,9 @@ name|blocksize
 init|=
 literal|1024
 decl_stmt|;
+name|int
+name|r
+decl_stmt|;
 comment|/* Create a new archive in memory. */
 comment|/* Write it through an external "gzip" program. */
 name|assert
@@ -98,18 +101,34 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assertA
-argument_list|(
-literal|0
-operator|==
+name|r
+operator|=
 name|archive_write_set_compression_program
 argument_list|(
 name|a
 argument_list|,
 literal|"gzip"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|==
+name|ARCHIVE_FATAL
+condition|)
+block|{
+name|skipping
+argument_list|(
+literal|"Write compression via external program unsupported on this platform"
 argument_list|)
 expr_stmt|;
+name|archive_write_finish
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|assertA
 argument_list|(
 literal|0

@@ -291,6 +291,9 @@ end_macro
 
 begin_block
 block|{
+if|#
+directive|if
+name|HAVE_ZLIB_H
 comment|/* This sample has been 'split', each piece compressed separately, 	 * then concatenated.  Gunzip will emit the concatenated result. */
 comment|/* Not supported in libarchive 2.6 and earlier */
 comment|/* verify("test_compat_gzip_1.tgz"); */
@@ -300,6 +303,15 @@ argument_list|(
 literal|"test_compat_gzip_2.tgz"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|skipping
+argument_list|(
+literal|"Need zlib"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 

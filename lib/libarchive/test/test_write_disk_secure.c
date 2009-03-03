@@ -138,6 +138,9 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
 comment|/* Write a symlink to the dir above. */
 name|assert
 argument_list|(
@@ -736,6 +739,8 @@ argument_list|(
 name|ae
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * As above, but a link to a non-dir, so the link should get replaced. 	 */
 comment|/* Create a regular file and a symlink to it */
 name|assert
@@ -950,6 +955,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|_WIN32
 comment|/* Test the entries on disk. */
 name|assert
 argument_list|(
@@ -1194,6 +1202,8 @@ operator|==
 literal|0755
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}

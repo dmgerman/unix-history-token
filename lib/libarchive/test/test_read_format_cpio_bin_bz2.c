@@ -233,6 +233,9 @@ end_macro
 
 begin_block
 block|{
+if|#
+directive|if
+name|HAVE_BZLIB_H
 name|struct
 name|archive_entry
 modifier|*
@@ -363,6 +366,15 @@ name|archive_read_finish
 argument_list|(
 name|a
 argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+else|#
+directive|else
+name|skipping
+argument_list|(
+literal|"Need bzlib"
 argument_list|)
 expr_stmt|;
 endif|#

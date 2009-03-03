@@ -175,6 +175,9 @@ operator|&=
 operator|~
 name|S_ISGID
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
 name|assertEqualInt
 argument_list|(
 name|st
@@ -190,6 +193,8 @@ operator|~
 name|UMASK
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -377,6 +382,9 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
 name|assertEqualInt
 argument_list|(
 name|st
@@ -394,6 +402,8 @@ name|UMASK
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|assertEqualInt
 argument_list|(
 name|st
@@ -673,6 +683,9 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
 name|assertEqualInt
 argument_list|(
 name|st
@@ -690,6 +703,8 @@ name|UMASK
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|assertEqualInt
 argument_list|(
 name|st
@@ -923,6 +938,9 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
 name|assertEqualInt
 argument_list|(
 name|st
@@ -940,6 +958,8 @@ name|UMASK
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|assertEqualInt
 argument_list|(
 name|st
@@ -1099,6 +1119,9 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
 name|assertEqualInt
 argument_list|(
 name|st
@@ -1116,6 +1139,8 @@ name|UMASK
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|failure
 argument_list|(
 name|msg

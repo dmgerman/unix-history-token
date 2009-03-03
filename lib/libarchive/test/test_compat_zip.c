@@ -235,9 +235,21 @@ end_macro
 
 begin_block
 block|{
+if|#
+directive|if
+name|HAVE_ZLIB_H
 name|test_compat_zip_1
 argument_list|()
 expr_stmt|;
+else|#
+directive|else
+name|skipping
+argument_list|(
+literal|"Need zlib"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 

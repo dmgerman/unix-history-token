@@ -90,7 +90,7 @@ begin_define
 define|#
 directive|define
 name|KNOWNREF
-value|"test_compat_gtar_1.tgz.uu"
+value|"test_compat_gtar_1.tar.uu"
 end_define
 
 begin_expr_stmt
@@ -254,11 +254,55 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|refdir
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32
+end_ifdef
+
+begin_function
+specifier|static
+name|void
+name|invalid_paramter_handler
+parameter_list|(
+specifier|const
+name|wchar_t
+modifier|*
+name|expression
+parameter_list|,
+specifier|const
+name|wchar_t
+modifier|*
+name|function
+parameter_list|,
+specifier|const
+name|wchar_t
+modifier|*
+name|file
+parameter_list|,
+name|unsigned
+name|int
+name|line
+parameter_list|,
+name|uintptr_t
+name|pReserved
+parameter_list|)
+block|{
+comment|/* nop */
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * My own implementation of the standard assert() macro emits the  * message in the same format as GCC (file:line: message).  * It also includes some additional useful information.  * This makes it a lot easier to skim through test failures in  * Emacs.  ;-)  *  * It also supports a few special features specifically to simplify  * test harnesses:  *    failure(fmt, args) -- Stores a text string that gets  *          printed if the following assertion fails, good for  *          explaining subtle tests.  */
@@ -3820,6 +3864,9 @@ operator|==
 literal|0
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|_WIN32
 name|systemf
 argument_list|(
 literal|"rm -rf %s"
@@ -3832,6 +3879,22 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|systemf
+argument_list|(
+literal|"rmdir /S /Q %s"
+argument_list|,
+name|tests
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 comment|/* Return appropriate status. */
@@ -4311,10 +4374,7 @@ name|char
 modifier|*
 name|get_refdir
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|tmpdir
+name|void
 parameter_list|)
 block|{
 name|char
@@ -4341,22 +4401,14 @@ modifier|*
 name|p
 decl_stmt|;
 comment|/* Get the current dir. */
-name|systemf
-argument_list|(
-literal|"/bin/pwd> %s/refdir"
-argument_list|,
-name|tmpdir
-argument_list|)
-expr_stmt|;
+comment|/* XXX Visual C++ uses _getcwd() XXX */
 name|pwd
 operator|=
-name|slurpfile
+name|getcwd
 argument_list|(
 name|NULL
 argument_list|,
-literal|"%s/refdir"
-argument_list|,
-name|tmpdir
+literal|0
 argument_list|)
 expr_stmt|;
 while|while
@@ -4390,13 +4442,6 @@ argument_list|(
 literal|"PWD: %s\n"
 argument_list|,
 name|pwd
-argument_list|)
-expr_stmt|;
-name|systemf
-argument_list|(
-literal|"rm %s/refdir"
-argument_list|,
-name|tmpdir
 argument_list|)
 expr_stmt|;
 comment|/* Look for a known file. */
@@ -4873,7 +4918,7 @@ name|tests_failed
 init|=
 literal|0
 decl_stmt|,
-name|opt
+name|option
 decl_stmt|;
 name|time_t
 name|now
@@ -4884,17 +4929,24 @@ name|refdir_alloc
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|progname
-decl_stmt|,
-modifier|*
-name|p
+init|=
+name|LIBRARY
+literal|"_test"
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|tmp
+decl_stmt|,
+modifier|*
+name|option_arg
+decl_stmt|,
+modifier|*
+name|p
 decl_stmt|;
 name|char
 name|tmpdir
@@ -4908,41 +4960,37 @@ index|[
 literal|256
 index|]
 decl_stmt|;
-comment|/* 	 * Name of this program, used to build root of our temp directory 	 * tree. 	 */
-name|progname
-operator|=
-name|p
-operator|=
-name|argv
-index|[
+operator|(
+name|void
+operator|)
+name|argc
+expr_stmt|;
+comment|/* UNUSED */
+ifdef|#
+directive|ifdef
+name|_WIN32
+comment|/* To stop to run the default invalid parameter handler. */
+name|_set_invalid_parameter_handler
+argument_list|(
+name|invalid_paramter_handler
+argument_list|)
+expr_stmt|;
+comment|/* for open() to a binary mode. */
+name|_set_fmode
+argument_list|(
+name|_O_BINARY
+argument_list|)
+expr_stmt|;
+comment|/* Disable annoying assertion message box. */
+name|_CrtSetReportMode
+argument_list|(
+name|_CRT_ASSERT
+argument_list|,
 literal|0
-index|]
+argument_list|)
 expr_stmt|;
-while|while
-condition|(
-operator|*
-name|p
-operator|!=
-literal|'\0'
-condition|)
-block|{
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-literal|'/'
-condition|)
-name|progname
-operator|=
-name|p
-operator|+
-literal|1
-expr_stmt|;
-operator|++
-name|p
-expr_stmt|;
-block|}
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|PROGRAM
@@ -5052,29 +5100,120 @@ name|ENVBASE
 literal|"_TEST_FILES"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Parse options. 	 */
+comment|/* 	 * Parse options, without using getopt(), which isn't available 	 * on all platforms. 	 */
+operator|++
+name|argv
+expr_stmt|;
+comment|/* Skip program name */
 while|while
 condition|(
-operator|(
-name|opt
-operator|=
-name|getopt
-argument_list|(
-name|argc
-argument_list|,
+operator|*
 name|argv
-argument_list|,
-literal|"dkp:qr:v"
-argument_list|)
-operator|)
 operator|!=
-operator|-
-literal|1
+name|NULL
 condition|)
 block|{
+name|p
+operator|=
+operator|*
+name|argv
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|++
+operator|!=
+literal|'-'
+condition|)
+name|usage
+argument_list|(
+name|progname
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|option
+operator|=
+operator|*
+name|p
+operator|++
+expr_stmt|;
+name|option_arg
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* If 'opt' takes an argument, parse that. */
+if|if
+condition|(
+name|option
+operator|==
+literal|'p'
+operator|||
+name|option
+operator|==
+literal|'r'
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|)
+name|option_arg
+operator|=
+name|p
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|*
+name|argv
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Option -%c requires argument.\n"
+argument_list|,
+name|option
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|(
+name|progname
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|option_arg
+operator|=
+operator|*
+name|argv
+operator|++
+expr_stmt|;
+name|p
+operator|=
+literal|""
+expr_stmt|;
+comment|/* End of this option word. */
+block|}
+comment|/* Now, handle the option. */
 switch|switch
 condition|(
-name|opt
+name|option
 condition|)
 block|{
 case|case
@@ -5101,7 +5240,7 @@ directive|ifdef
 name|PROGRAM
 name|testprog
 operator|=
-name|optarg
+name|option_arg
 expr_stmt|;
 else|#
 directive|else
@@ -5125,7 +5264,7 @@ literal|'r'
 case|:
 name|refdir
 operator|=
-name|optarg
+name|option_arg
 expr_stmt|;
 break|break;
 case|case
@@ -5136,9 +5275,6 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-case|case
-literal|'?'
-case|:
 default|default:
 name|usage
 argument_list|(
@@ -5147,14 +5283,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|argc
-operator|-=
-name|optind
-expr_stmt|;
-name|argv
-operator|+=
-name|optind
-expr_stmt|;
+block|}
 comment|/* 	 * Sanity-check that our options make sense. 	 */
 ifdef|#
 directive|ifdef
@@ -5273,9 +5402,7 @@ operator|=
 name|refdir_alloc
 operator|=
 name|get_refdir
-argument_list|(
-name|tmpdir
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Banner with basic information. 	 */
 if|if
@@ -5331,9 +5458,10 @@ block|}
 comment|/* 	 * Run some or all of the individual tests. 	 */
 if|if
 condition|(
-name|argc
+operator|*
+name|argv
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* Default: Run all tests. */

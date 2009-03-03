@@ -1381,6 +1381,9 @@ expr_stmt|;
 comment|/* Must be multiple of four here! */
 name|assertEqualInt
 argument_list|(
+operator|(
+name|int
+operator|)
 name|used
 argument_list|,
 name|e
