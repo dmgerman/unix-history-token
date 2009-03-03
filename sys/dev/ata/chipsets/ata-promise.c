@@ -4408,6 +4408,39 @@ argument_list|,
 literal|0x00000001
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ctlr
+operator|->
+name|chip
+operator|->
+name|cfg2
+operator|==
+name|PR_SATA2
+operator|)
+operator|||
+operator|(
+operator|(
+name|ctlr
+operator|->
+name|chip
+operator|->
+name|cfg2
+operator|==
+name|PR_CMBO2
+operator|)
+operator|&&
+operator|(
+name|ch
+operator|->
+name|unit
+operator|<
+literal|2
+operator|)
+operator|)
+condition|)
+block|{
 comment|/* set portmultiplier port */
 name|ATA_OUTB
 argument_list|(
@@ -4432,6 +4465,7 @@ operator|&
 literal|0x0f
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* XXX SOS add ATAPI commands support later */
 switch|switch
 condition|(
