@@ -1777,7 +1777,7 @@ name|i
 operator|+=
 literal|2
 control|)
-empty_stmt|;
+continue|continue;
 name|avail_end
 operator|=
 name|phys_avail
