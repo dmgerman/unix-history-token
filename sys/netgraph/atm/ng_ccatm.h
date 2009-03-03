@@ -251,10 +251,6 @@ name|uint32_t
 name|op
 decl_stmt|;
 comment|/* request code */
-name|u_char
-name|data
-index|[]
-decl_stmt|;
 block|}
 struct|;
 end_struct
