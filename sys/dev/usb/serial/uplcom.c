@@ -1217,7 +1217,23 @@ argument_list|,
 argument|TYPE_PL2303X
 argument_list|)
 block|}
-block|, }
+block|,
+comment|/* Mobile Action MA-620 Infrared Adapter */
+block|{
+name|USB_UPL
+argument_list|(
+argument|USB_VENDOR_MOBILEACTION
+argument_list|,
+argument|USB_PRODUCT_MOBILEACTION_MA620
+argument_list|,
+literal|0
+argument_list|,
+literal|0xFFFF
+argument_list|,
+argument|TYPE_PL2303X
+argument_list|)
+block|}
+block|,  }
 decl_stmt|;
 end_decl_stmt
 
