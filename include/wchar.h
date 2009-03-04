@@ -1401,8 +1401,8 @@ modifier|*
 name|wcpcpy
 parameter_list|(
 name|wchar_t
-name|__restrict
 modifier|*
+name|__restrict
 parameter_list|,
 specifier|const
 name|wchar_t
@@ -1418,8 +1418,8 @@ modifier|*
 name|wcpncpy
 parameter_list|(
 name|wchar_t
-name|__restrict
 modifier|*
+name|__restrict
 parameter_list|,
 specifier|const
 name|wchar_t
