@@ -875,7 +875,7 @@ name|c
 parameter_list|,
 name|d
 parameter_list|)
-value|if(SCTP_BASE_SYSCTL(sctp_logging_level)& SCTP_LTRACE_CHUNK_ENABLE) CTR6(KTR_SUBSYS, "SCTP:%d[%d]:%x-%x-%x-%x", SCTP_LOG_CHUNK_PROC, 0, a, b, c, d)
+value|if(SCTP_BASE_SYSCTL(sctp_logging_level)& SCTP_LTRACE_CHUNK_ENABLE) SCTP_CTR6(KTR_SUBSYS, "SCTP:%d[%d]:%x-%x-%x-%x", SCTP_LOG_CHUNK_PROC, 0, a, b, c, d)
 end_define
 
 begin_else
