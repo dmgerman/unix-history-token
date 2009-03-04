@@ -441,6 +441,13 @@ end_function_decl
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|in_mcast_loop
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|struct
 name|protosw
 name|inetsw
@@ -1344,11 +1351,6 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|struct
-name|in_multi
-modifier|*
-name|inm
-decl_stmt|;
 name|m
 operator|->
 name|m_flags
@@ -1495,41 +1497,26 @@ operator|->
 name|sin_addr
 expr_stmt|;
 block|}
-name|IN_MULTI_LOCK
-argument_list|()
-expr_stmt|;
-name|IN_LOOKUP_MULTI
-argument_list|(
-name|ip
-operator|->
-name|ip_dst
-argument_list|,
-name|ifp
-argument_list|,
-name|inm
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|inm
-operator|!=
-name|NULL
-operator|&&
 operator|(
 name|imo
 operator|==
 name|NULL
+operator|&&
+name|in_mcast_loop
+operator|)
 operator|||
+operator|(
+name|imo
+operator|&&
 name|imo
 operator|->
 name|imo_multicast_loop
 operator|)
 condition|)
 block|{
-name|IN_MULTI_UNLOCK
-argument_list|()
-expr_stmt|;
-comment|/* 			 * If we belong to the destination multicast group 			 * on the outgoing interface, and the caller did not 			 * forbid loopback, loop back a copy. 			 */
+comment|/* 			 * Loop back multicast datagram if not expressly 			 * forbidden to do so, even if we are not a member 			 * of the group; ip_input() will filter it later, 			 * thus deferring a hash lookup and mutex acquisition 			 * at the expense of a cheap copy using m_copym(). 			 */
 name|ip_mloopback
 argument_list|(
 name|ifp
@@ -1544,9 +1531,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|IN_MULTI_UNLOCK
-argument_list|()
-expr_stmt|;
 comment|/* 			 * If we are acting as a multicast router, perform 			 * multicast forwarding as if the packet had just 			 * arrived on the interface to which we are about 			 * to send.  The multicast forwarding function 			 * recursively calls this function, using the 			 * IP_FORWARDING flag to prevent infinite recursion. 			 * 			 * Multicasts that are looped back by ip_mloopback(), 			 * above, will be forwarded by the ip_input() routine, 			 * if necessary. 			 */
 if|if
 condition|(
@@ -1600,7 +1584,7 @@ goto|;
 block|}
 block|}
 block|}
-comment|/* 		 * Multicasts with a time-to-live of zero may be looped- 		 * back, above, but must not be transmitted on a network. 		 * Also, multicasts addressed to the loopback interface 		 * are not sent -- the above call to ip_mloopback() will 		 * loop back a copy if this host actually belongs to the 		 * destination group on the loopback interface. 		 */
+comment|/* 		 * Multicasts with a time-to-live of zero may be looped- 		 * back, above, but must not be transmitted on a network. 		 * Also, multicasts addressed to the loopback interface 		 * are not sent -- the above call to ip_mloopback() will 		 * loop back a copy. ip_input() will drop the copy if 		 * this host does not belong to the destination group on 		 * the loopback interface. 		 */
 if|if
 condition|(
 name|ip
@@ -3274,7 +3258,7 @@ operator|)
 operator||
 name|M_FRAG
 expr_stmt|;
-comment|/* 		 * In the first mbuf, leave room for the link header, then 		 * copy the original IP header including options. The payload 		 * goes into an additional mbuf chain returned by m_copy(). 		 */
+comment|/* 		 * In the first mbuf, leave room for the link header, then 		 * copy the original IP header including options. The payload 		 * goes into an additional mbuf chain returned by m_copym(). 		 */
 name|m
 operator|->
 name|m_data
@@ -3418,13 +3402,15 @@ name|m
 operator|->
 name|m_next
 operator|=
-name|m_copy
+name|m_copym
 argument_list|(
 name|m0
 argument_list|,
 name|off
 argument_list|,
 name|len
+argument_list|,
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
