@@ -680,28 +680,6 @@ name|resume
 operator|=
 name|ata_ahci_ctlr_reset
 expr_stmt|;
-comment|/* enable PCI interrupt */
-name|pci_write_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-literal|2
-argument_list|)
-operator|&
-operator|~
-literal|0x0400
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
 comment|/* announce we support the HW */
 name|version
 operator|=
