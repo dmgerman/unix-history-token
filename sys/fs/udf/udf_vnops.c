@@ -5039,7 +5039,6 @@ operator|->
 name|b_lblkno
 condition|)
 block|{
-comment|/* 		 * Files that are embedded in the fentry don't translate well 		 * to a block number.  Reject. 		 */
 name|offset
 operator|=
 name|lblktosize
