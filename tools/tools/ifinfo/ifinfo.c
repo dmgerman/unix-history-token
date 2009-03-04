@@ -864,24 +864,24 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\treceive quota: %d\n"
+literal|"\treceive spare char1: %u\n"
 argument_list|,
 name|ifmd
 operator|->
 name|ifmd_data
 operator|.
-name|ifi_recvquota
+name|ifi_spare_char1
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\ttransmit quota: %d\n"
+literal|"\ttransmit spare char2: %u\n"
 argument_list|,
 name|ifmd
 operator|->
 name|ifmd_data
 operator|.
-name|ifi_xmitquota
+name|ifi_spare_char2
 argument_list|)
 expr_stmt|;
 name|printf
