@@ -44,6 +44,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NETISR_IGMP
+value|3
+end_define
+
+begin_comment
+comment|/* IGMPv3 output queue */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NETISR_ROUTE
 value|14
 end_define
