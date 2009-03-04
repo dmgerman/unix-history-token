@@ -2957,7 +2957,33 @@ value|1024
 end_define
 
 begin_comment
-comment|/* # of filters per socket, per group */
+comment|/* XXX to be unused */
+end_comment
+
+begin_comment
+comment|/*  * Default resource limits for IPv4 multicast source filtering.  * These may be modified by sysctl.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_MAX_GROUP_SRC_FILTER
+value|512
+end_define
+
+begin_comment
+comment|/* sources per group */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_MAX_SOCK_SRC_FILTER
+value|128
+end_define
+
+begin_comment
+comment|/* sources per socket/group */
 end_comment
 
 begin_comment
@@ -3242,6 +3268,17 @@ end_function_decl
 
 begin_comment
 comment|/*  * Filter modes; also used to represent per-socket filter mode internally.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCAST_UNDEFINED
+value|0
+end_define
+
+begin_comment
+comment|/* fmode: not yet defined */
 end_comment
 
 begin_define
@@ -3671,6 +3708,16 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x).s_addr == INADDR_ANY)
+end_define
+
+begin_define
+define|#
+directive|define
+name|in_allhosts
+parameter_list|(
+name|x
+parameter_list|)
+value|((x).s_addr == htonl(INADDR_ALLHOSTS_GROUP))
 end_define
 
 begin_define
