@@ -1882,6 +1882,9 @@ name|val
 operator|->
 name|size
 operator|=
+operator|(
+name|size_t
+operator|)
 name|collect_data
 argument_list|(
 name|hashp
@@ -1902,6 +1905,9 @@ name|val
 operator|->
 name|size
 operator|==
+operator|(
+name|size_t
+operator|)
 operator|-
 literal|1
 condition|)
@@ -2348,6 +2354,9 @@ name|key
 operator|->
 name|size
 operator|=
+operator|(
+name|size_t
+operator|)
 name|collect_key
 argument_list|(
 name|hashp
@@ -2367,6 +2376,9 @@ name|key
 operator|->
 name|size
 operator|==
+operator|(
+name|size_t
+operator|)
 operator|-
 literal|1
 condition|)
@@ -2711,15 +2723,10 @@ parameter_list|)
 block|{
 name|BUFHEAD
 modifier|*
-name|tmpp
-decl_stmt|;
-name|u_int16_t
-modifier|*
-name|tp
-decl_stmt|;
-name|BUFHEAD
-modifier|*
 name|bp
+decl_stmt|,
+modifier|*
+name|tmpp
 decl_stmt|;
 name|DBT
 name|key
@@ -2735,6 +2742,9 @@ decl_stmt|,
 name|n
 decl_stmt|,
 name|off
+decl_stmt|,
+modifier|*
+name|tp
 decl_stmt|;
 name|bp
 operator|=
@@ -2828,7 +2838,6 @@ operator|-
 literal|1
 operator|)
 return|;
-empty_stmt|;
 block|}
 else|else
 name|ret

@@ -832,7 +832,7 @@ operator|(
 name|RET_ERROR
 operator|)
 return|;
-comment|/*  	 * Find the next/previous record in the tree and point the cursor at 	 * it.  The cursor may not be moved until a new key has been found. 	 */
+comment|/* 	 * Find the next/previous record in the tree and point the cursor at 	 * it.  The cursor may not be moved until a new key has been found. 	 */
 switch|switch
 condition|(
 name|flags

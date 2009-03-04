@@ -1102,7 +1102,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * BT_FAST -- Do a quick check for sorted data.  *  * Parameters:  *	t:	tree  *	key:	key to insert  *  * Returns:  * 	EPG for new record or NULL if not found.  */
+comment|/*  * BT_FAST -- Do a quick check for sorted data.  *  * Parameters:  *	t:	tree  *	key:	key to insert  *  * Returns:  *	EPG for new record or NULL if not found.  */
 end_comment
 
 begin_function

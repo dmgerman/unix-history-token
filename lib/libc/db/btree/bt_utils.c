@@ -810,7 +810,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * __BT_DEFCMP -- Default comparison routine.  *  * Parameters:  *	a:	DBT #1  *	b: 	DBT #2  *  * Returns:  *< 0 if a is< b  *	= 0 if a is = b  *> 0 if a is> b  */
+comment|/*  * __BT_DEFCMP -- Default comparison routine.  *  * Parameters:  *	a:	DBT #1  *	b:	DBT #2  *  * Returns:  *< 0 if a is< b  *	= 0 if a is = b  *> 0 if a is> b  */
 end_comment
 
 begin_function
@@ -919,7 +919,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * __BT_DEFPFX -- Default prefix routine.  *  * Parameters:  *	a:	DBT #1  *	b: 	DBT #2  *  * Returns:  *	Number of bytes needed to distinguish b from a.  */
+comment|/*  * __BT_DEFPFX -- Default prefix routine.  *  * Parameters:  *	a:	DBT #1  *	b:	DBT #2  *  * Returns:  *	Number of bytes needed to distinguish b from a.  */
 end_comment
 
 begin_function

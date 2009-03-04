@@ -253,7 +253,8 @@ operator|=
 name|RET_ERROR
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|_close
@@ -267,6 +268,7 @@ name|status
 operator|=
 name|RET_ERROR
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -578,10 +580,6 @@ index|]
 operator|.
 name|iov_base
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|t
 operator|->

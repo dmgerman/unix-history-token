@@ -1707,6 +1707,7 @@ argument_list|)
 operator|==
 literal|1
 condition|)
+block|{
 if|if
 condition|(
 name|pg
@@ -1761,6 +1762,7 @@ name|RET_ERROR
 operator|)
 return|;
 continue|continue;
+block|}
 block|}
 else|else
 block|{

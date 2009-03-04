@@ -82,7 +82,7 @@ file|"recno.h"
 end_include
 
 begin_comment
-comment|/*  * __REC_SEARCH -- Search a btree for a key.  *  * Parameters:  *	t:	tree to search  *	recno:	key to find  *	op: 	search operation  *  * Returns:  *	EPG for matching record, if any, or the EPG for the location of the  *	key, if it were inserted into the tree.  *  * Returns:  *	The EPG for matching record, if any, or the EPG for the location  *	of the key, if it were inserted into the tree, is entered into  *	the bt_cur field of the tree.  A pointer to the field is returned.  */
+comment|/*  * __REC_SEARCH -- Search a btree for a key.  *  * Parameters:  *	t:	tree to search  *	recno:	key to find  *	op:	search operation  *  * Returns:  *	EPG for matching record, if any, or the EPG for the location of the  *	key, if it were inserted into the tree.  *  * Returns:  *	The EPG for matching record, if any, or the EPG for the location  *	of the key, if it were inserted into the tree, is entered into  *	the bt_cur field of the tree.  A pointer to the field is returned.  */
 end_comment
 
 begin_function

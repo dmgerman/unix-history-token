@@ -88,7 +88,7 @@ file|"recno.h"
 end_include
 
 begin_comment
-comment|/*  * __rec_ret --  *	Build return data.  *  * Parameters:  *	t:	tree  *	e:	key/data pair to be returned  *   nrec:	record number  *    key:	user's key structure  *	data:	user's data structure  *  * Returns:  *	RET_SUCCESS, RET_ERROR.  */
+comment|/*  * __rec_ret --  *	Build return data.  *  * Parameters:  *	t:	tree  *	e:	key/data pair to be returned  *   nrec:	record number  *    key:	user's key structure  *   data:	user's data structure  *  * Returns:  *	RET_SUCCESS, RET_ERROR.  */
 end_comment
 
 begin_function
