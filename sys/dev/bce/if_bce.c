@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * The following controllers are supported by this driver:  *   BCM5706C A2, A3  *   BCM5706S A2, A3  *   BCM5708C B1, B2  *   BCM5708S B1, B2  *   BCM5709C A1, C0  *   BCM5716  C0  *  * The following controllers are not supported by this driver:  *   BCM5706C A0, A1 (pre-production)  *   BCM5706S A0, A1 (pre-production)  *   BCM5708C A0, B0 (pre-production)  *   BCM5708S A0, B0 (pre-production)  *   BCM5709C A0  B0, B1, B2 (pre-production)  *   BCM5709S A0, A1, B0, B1, B2, C0 (pre-production)  */
+comment|/*  * The following controllers are supported by this driver:  *   BCM5706C A2, A3  *   BCM5706S A2, A3  *   BCM5708C B1, B2  *   BCM5708S B1, B2  *   BCM5709C A1, C0  * 	 BCM5716C C0  *  * The following controllers are not supported by this driver:  *   BCM5706C A0, A1 (pre-production)  *   BCM5706S A0, A1 (pre-production)  *   BCM5708C A0, B0 (pre-production)  *   BCM5708S A0, B0 (pre-production)  *   BCM5709C A0  B0, B1, B2 (pre-production)  *   BCM5709S A0, A1, B0, B1, B2, C0 (pre-production)  */
 end_comment
 
 begin_include
@@ -107,7 +107,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|bce_debug_l2fhdr_status_check
+name|l2fhdr_error_sim_control
 init|=
 literal|0
 decl_stmt|;
@@ -119,7 +119,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|bce_debug_unexpected_attention
+name|unexpected_attention_sim_control
 init|=
 literal|0
 decl_stmt|;
@@ -131,7 +131,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|bce_debug_mbuf_allocation_failure
+name|mbuf_alloc_failed_sim_control
 init|=
 literal|0
 decl_stmt|;
@@ -143,7 +143,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|bce_debug_dma_map_addr_failure
+name|dma_map_addr_failed_sim_control
 init|=
 literal|0
 decl_stmt|;
@@ -155,7 +155,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|bce_debug_bootcode_running_failure
+name|bootcode_running_failure_sim_control
 init|=
 literal|0
 decl_stmt|;
@@ -2969,7 +2969,11 @@ comment|/* H/W RX MTU to the size of the largest receive buffer, or */
 end_comment
 
 begin_comment
-comment|/* 2048 bytes).                                             */
+comment|/* 2048 bytes). This will cause a UNH failure but is more   */
+end_comment
+
+begin_comment
+comment|/* desireable from a functional perspective.                */
 end_comment
 
 begin_comment
@@ -3490,11 +3494,11 @@ block|}
 comment|/* Firmware version and device features. */
 name|printf
 argument_list|(
-literal|"F/W (0x%08X); Flags( "
+literal|"B/C (0x%08X); Flags( "
 argument_list|,
 name|sc
 operator|->
-name|bce_fw_ver
+name|bce_bc_ver
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -4458,7 +4462,7 @@ expr_stmt|;
 comment|/* Fetch the bootcode revision. */
 name|sc
 operator|->
-name|bce_fw_ver
+name|bce_bc_ver
 operator|=
 name|REG_RD_IND
 argument_list|(
@@ -12716,40 +12720,30 @@ decl_stmt|;
 comment|/* Simulate a mapping failure. */
 name|DBRUNIF
 argument_list|(
-argument|DB_RANDOMTRUE(bce_debug_dma_map_addr_failure)
-argument_list|,
-argument|printf(
-literal|"bce: %s(%d): Simulating DMA mapping error.\n"
-argument|, 			__FILE__, __LINE__); 		error = ENOMEM
+name|DB_RANDOMTRUE
+argument_list|(
+name|dma_map_addr_failed_sim_control
 argument_list|)
-empty_stmt|;
+argument_list|,
+name|error
+operator|=
+name|ENOMEM
+argument_list|)
+expr_stmt|;
 comment|/* Check for an error and signal the caller that an error occurred. */
 if|if
 condition|(
 name|error
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"bce %s(%d): DMA mapping error! error = %d, "
-literal|"nseg = %d\n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|,
-name|error
-argument_list|,
-name|nseg
-argument_list|)
-expr_stmt|;
 operator|*
 name|busaddr
 operator|=
 literal|0
 expr_stmt|;
-return|return;
 block|}
+else|else
+block|{
 operator|*
 name|busaddr
 operator|=
@@ -12757,6 +12751,7 @@ name|segs
 operator|->
 name|ds_addr
 expr_stmt|;
+block|}
 return|return;
 block|}
 end_function
@@ -14229,6 +14224,34 @@ name|MJUM9BYTES
 expr_stmt|;
 endif|#
 directive|endif
+name|max_segments
+operator|=
+literal|1
+expr_stmt|;
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_INFO
+argument_list|,
+literal|"%s(): Creating rx_mbuf_tag (max size = 0x%jX "
+literal|"max segments = %d, max segment size = 0x%jX)\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|max_size
+argument_list|,
+name|max_segments
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|max_seg_size
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -14253,7 +14276,7 @@ name|NULL
 argument_list|,
 name|max_size
 argument_list|,
-literal|1
+name|max_segments
 argument_list|,
 name|max_seg_size
 argument_list|,
@@ -18311,6 +18334,49 @@ name|BCE_CHIP_NUM_5716
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|BCE_CHIP_REV
+argument_list|(
+name|sc
+argument_list|)
+operator|==
+name|BCE_CHIP_REV_Ax
+operator|)
+condition|)
+block|{
+name|bce_load_rv2p_fw
+argument_list|(
+name|sc
+argument_list|,
+name|bce_xi90_rv2p_proc1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bce_xi90_rv2p_proc1
+argument_list|)
+argument_list|,
+name|RV2P_PROC1
+argument_list|)
+expr_stmt|;
+name|bce_load_rv2p_fw
+argument_list|(
+name|sc
+argument_list|,
+name|bce_xi90_rv2p_proc2
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bce_xi90_rv2p_proc2
+argument_list|)
+argument_list|,
+name|RV2P_PROC2
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|bce_load_rv2p_fw
 argument_list|(
 name|sc
@@ -18339,6 +18405,7 @@ argument_list|,
 name|RV2P_PROC2
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -20600,7 +20667,7 @@ argument_list|)
 expr_stmt|;
 name|DBRUNIF
 argument_list|(
-argument|DB_RANDOMTRUE(bce_debug_bootcode_running_failure)
+argument|DB_RANDOMTRUE(bootcode_running_failure_sim_control)
 argument_list|,
 argument|BCE_PRINTF(
 literal|"%s(%d): Simulating bootcode failure.\n"
@@ -20993,9 +21060,9 @@ block|{
 comment|/* Simulate an mbuf allocation failure. */
 name|DBRUNIF
 argument_list|(
-argument|DB_RANDOMTRUE(bce_debug_mbuf_allocation_failure)
+argument|DB_RANDOMTRUE(mbuf_alloc_failed_sim_control)
 argument_list|,
-argument|sc->mbuf_alloc_failed++; 			sc->debug_mbuf_sim_alloc_failed++; 			rc = ENOBUFS; 			goto bce_get_rx_buf_exit
+argument|sc->mbuf_alloc_failed_count++; 			sc->mbuf_alloc_failed_sim_count++; 			rc = ENOBUFS; 			goto bce_get_rx_buf_exit
 argument_list|)
 empty_stmt|;
 comment|/* This is a new mbuf allocation. */
@@ -21059,7 +21126,7 @@ condition|)
 block|{
 name|sc
 operator|->
-name|mbuf_alloc_failed
+name|mbuf_alloc_failed_count
 operator|++
 expr_stmt|;
 name|rc
@@ -21165,6 +21232,11 @@ name|__LINE__
 argument_list|,
 name|error
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|dma_map_addr_rx_failed_count
+operator|++
 expr_stmt|;
 name|m_freem
 argument_list|(
@@ -21562,9 +21634,9 @@ block|{
 comment|/* Simulate an mbuf allocation failure. */
 name|DBRUNIF
 argument_list|(
-argument|DB_RANDOMTRUE(bce_debug_mbuf_allocation_failure)
+argument|DB_RANDOMTRUE(mbuf_alloc_failed_sim_control)
 argument_list|,
-argument|sc->mbuf_alloc_failed++; 			sc->debug_mbuf_sim_alloc_failed++; 			rc = ENOBUFS; 			goto bce_get_pg_buf_exit
+argument|sc->mbuf_alloc_failed_count++; 			sc->mbuf_alloc_failed_sim_count++; 			rc = ENOBUFS; 			goto bce_get_pg_buf_exit
 argument_list|)
 empty_stmt|;
 comment|/* This is a new mbuf allocation. */
@@ -21588,7 +21660,7 @@ condition|)
 block|{
 name|sc
 operator|->
-name|mbuf_alloc_failed
+name|mbuf_alloc_failed_count
 operator|++
 expr_stmt|;
 name|rc
@@ -25192,7 +25264,7 @@ operator|->
 name|free_rx_bd
 operator|++
 expr_stmt|;
-comment|/* 		 * Frames received on the NetXteme II are prepended 		 * with an l2_fhdr structure which provides status 		 * information about the received frame (including 		 * VLAN tags and checksum info).  The frames are also 		 * automatically adjusted to align the IP header 		 * (i.e. two null bytes are inserted before the 		 * Ethernet header).  As a result the data DMA'd by 		 * the controller into the mbuf is as follows: 		 * +---------+-----+---------------------+-----+ 		 * | l2_fhdr | pad | packet data         | FCS | 		 * +---------+-----+---------------------+-----+ 		 * The l2_fhdr needs to be checked and skipped and 		 * the FCS needs to be stripped before sending the 		 * packet up the stack. 		 */
+comment|/* 		 * Frames received on the NetXteme II are prepended	with an 		 * l2_fhdr structure which provides status information about 		 * the received frame (including VLAN tags and checksum info). 		 * The frames are also automatically adjusted to align the IP 		 * header (i.e. two null bytes are inserted before the Ethernet 		 * header).  As a result the data DMA'd by the controller into 		 * the mbuf is as follows: 		 *  		 * +---------+-----+---------------------+-----+ 		 * | l2_fhdr | pad | packet data         | FCS | 		 * +---------+-----+---------------------+-----+ 		 *  		 * The l2_fhdr needs to be checked and skipped and the FCS needs 		 * to be stripped before sending the packet up the stack. 		 */
 name|l2fhdr
 operator|=
 name|mtod
@@ -25483,11 +25555,11 @@ argument_list|)
 empty_stmt|;
 name|DBRUNIF
 argument_list|(
-argument|DB_RANDOMTRUE(bce_debug_l2fhdr_status_check)
+argument|DB_RANDOMTRUE(l2fhdr_error_sim_control)
 argument_list|,
 argument|BCE_PRINTF(
 literal|"Simulating l2_fhdr status error.\n"
-argument|); 			status = status | L2_FHDR_ERRORS_PHY_DECODE
+argument|); 			sc->l2fhdr_error_sim_count++; 			status = status | L2_FHDR_ERRORS_PHY_DECODE
 argument_list|)
 empty_stmt|;
 comment|/* Check the received frame for errors. */
@@ -25514,13 +25586,10 @@ operator|->
 name|if_ierrors
 operator|++
 expr_stmt|;
-name|DBRUN
-argument_list|(
 name|sc
 operator|->
-name|l2fhdr_status_errors
+name|l2fhdr_error_count
 operator|++
-argument_list|)
 expr_stmt|;
 name|m_freem
 argument_list|(
@@ -25663,7 +25732,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* 		 * If we received a packet with a vlan tag, 		 * attach that information to the packet. 		 */
+comment|/* Attach the VLAN tag.	*/
 if|if
 condition|(
 name|status
@@ -25708,7 +25777,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* Pass the mbuf off to the upper layers. */
+comment|/* Increment received packet statistics. */
 name|ifp
 operator|->
 name|if_ipackets
@@ -26909,7 +26978,7 @@ argument_list|,
 name|BCE_INFO_LOAD
 argument_list|,
 literal|"%s(): rx_bd_mbuf_alloc_size = %d, rx_bce_mbuf_data_len = %d, "
-literal|"rx_bd_mbuf_align_pad = %d, pg_bd_mbuf_alloc_size = %d\n"
+literal|"rx_bd_mbuf_align_pad = %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -26924,10 +26993,6 @@ argument_list|,
 name|sc
 operator|->
 name|rx_bd_mbuf_align_pad
-argument_list|,
-name|sc
-operator|->
-name|pg_bd_mbuf_alloc_size
 argument_list|)
 expr_stmt|;
 comment|/* Program appropriate promiscuous/multicast filtering. */
@@ -26939,6 +27004,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ZERO_COPY_SOCKETS
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_INFO_LOAD
+argument_list|,
+literal|"%s(): pg_bd_mbuf_alloc_size = %d\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+name|sc
+operator|->
+name|pg_bd_mbuf_alloc_size
+argument_list|)
+expr_stmt|;
 comment|/* Init page buffer descriptor chain. */
 name|bce_init_pg_chain
 argument_list|(
@@ -27786,25 +27866,11 @@ operator|==
 name|EFBIG
 condition|)
 block|{
-comment|/* The mbuf is too fragmented for our DMA mapping. */
-name|DBPRINT
-argument_list|(
 name|sc
-argument_list|,
-name|BCE_WARN
-argument_list|,
-literal|"%s(): fragmented mbuf (%d pieces)\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|,
-name|nsegs
-argument_list|)
+operator|->
+name|fragmented_mbuf_count
+operator|++
 expr_stmt|;
-name|DBRUN
-argument_list|(
-argument|bce_dump_mbuf(sc, m0);
-argument_list|)
-empty_stmt|;
 comment|/* Try to defrag the mbuf. */
 name|m0
 operator|=
@@ -27837,7 +27903,7 @@ name|NULL
 expr_stmt|;
 name|sc
 operator|->
-name|mbuf_alloc_failed
+name|mbuf_alloc_failed_count
 operator|++
 expr_stmt|;
 name|rc
@@ -27885,7 +27951,7 @@ block|{
 comment|/* Insufficient DMA buffers available. */
 name|sc
 operator|->
-name|tx_dma_map_failures
+name|dma_map_addr_tx_failed_count
 operator|++
 expr_stmt|;
 name|rc
@@ -27926,7 +27992,7 @@ name|NULL
 expr_stmt|;
 name|sc
 operator|->
-name|tx_dma_map_failures
+name|dma_map_addr_tx_failed_count
 operator|++
 expr_stmt|;
 name|rc
@@ -27949,7 +28015,7 @@ block|{
 comment|/* Insufficient DMA buffers available. */
 name|sc
 operator|->
-name|tx_dma_map_failures
+name|dma_map_addr_tx_failed_count
 operator|++
 expr_stmt|;
 name|rc
@@ -27980,7 +28046,7 @@ name|NULL
 expr_stmt|;
 name|sc
 operator|->
-name|tx_dma_map_failures
+name|dma_map_addr_tx_failed_count
 operator|++
 expr_stmt|;
 name|rc
@@ -29908,11 +29974,11 @@ name|status_attn_bits
 expr_stmt|;
 name|DBRUNIF
 argument_list|(
-argument|DB_RANDOMTRUE(bce_debug_unexpected_attention)
+argument|DB_RANDOMTRUE(unexpected_attention_sim_control)
 argument_list|,
 argument|BCE_PRINTF(
 literal|"Simulating unexpected status attention bit set."
-argument|); 			status_attn_bits = status_attn_bits | STATUS_ATTN_BITS_PARITY_ERROR
+argument|); 		sc->unexpected_attention_sim_count++; 		status_attn_bits = status_attn_bits | STATUS_ATTN_BITS_PARITY_ERROR
 argument_list|)
 empty_stmt|;
 comment|/* Was it a link change interrupt? */
@@ -29986,13 +30052,10 @@ operator|)
 operator|)
 condition|)
 block|{
-name|DBRUN
-argument_list|(
 name|sc
 operator|->
-name|unexpected_attentions
+name|unexpected_attention_count
 operator|++
-argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
@@ -30013,7 +30076,7 @@ name|DBRUNMSG
 argument_list|(
 argument|BCE_FATAL
 argument_list|,
-argument|if (bce_debug_unexpected_attention ==
+argument|if (unexpected_attention_sim_control ==
 literal|0
 argument|) 					bce_breakpoint(sc)
 argument_list|)
@@ -31032,11 +31095,11 @@ name|stat_EtherStatsUndersizePkts
 expr_stmt|;
 name|sc
 operator|->
-name|stat_EtherStatsOverrsizePkts
+name|stat_EtherStatsOversizePkts
 operator|=
 name|stats
 operator|->
-name|stat_EtherStatsOverrsizePkts
+name|stat_EtherStatsOversizePkts
 expr_stmt|;
 name|sc
 operator|->
@@ -31318,7 +31381,7 @@ name|u_long
 operator|)
 name|sc
 operator|->
-name|stat_EtherStatsOverrsizePkts
+name|stat_EtherStatsOversizePkts
 operator|+
 operator|(
 name|u_long
@@ -33143,6 +33206,347 @@ name|children
 argument_list|,
 name|OID_AUTO
 argument_list|,
+literal|"l2fhdr_error_sim_control"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|l2fhdr_error_sim_control
+argument_list|,
+literal|0
+argument_list|,
+literal|"Debug control to force l2fhdr errors"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"l2fhdr_error_sim_count"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|l2fhdr_error_sim_count
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of simulated l2_fhdr errors"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"l2fhdr_error_count"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|l2fhdr_error_count
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of l2_fhdr errors"
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BCE_DEBUG
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"mbuf_alloc_failed_sim_control"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|mbuf_alloc_failed_sim_control
+argument_list|,
+literal|0
+argument_list|,
+literal|"Debug control to force mbuf allocation failures"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"mbuf_alloc_failed_sim_count"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|mbuf_alloc_failed_sim_count
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of simulated mbuf cluster allocation failures"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"mbuf_alloc_failed_count"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|mbuf_alloc_failed_count
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of mbuf allocation failures"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"fragmented_mbuf_count"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|fragmented_mbuf_count
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of fragmented mbufs"
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BCE_DEBUG
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"dma_map_addr_failed_sim_control"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|dma_map_addr_failed_sim_control
+argument_list|,
+literal|0
+argument_list|,
+literal|"Debug control to force DMA mapping failures"
+argument_list|)
+expr_stmt|;
+comment|/* ToDo: Figure out how to update this value in bce_dma_map_addr(). */
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"dma_map_addr_failed_sim_count"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|dma_map_addr_failed_sim_count
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of simulated DMA mapping failures"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"dma_map_addr_rx_failed_count"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|dma_map_addr_rx_failed_count
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of RX DMA mapping failures"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"dma_map_addr_tx_failed_count"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|dma_map_addr_tx_failed_count
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of TX DMA mapping failures"
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BCE_DEBUG
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"unexpected_attention_sim_control"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|unexpected_attention_sim_control
+argument_list|,
+literal|0
+argument_list|,
+literal|"Debug control to simulate unexpected attentions"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"unexpected_attention_sim_count"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|unexpected_attention_sim_count
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of simulated unexpected attentions"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"unexpected_attention_count"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|unexpected_attention_count
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of unexpected attentions"
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BCE_DEBUG
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"debug_bootcode_running_failure"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|bootcode_running_failure_sim_control
+argument_list|,
+literal|0
+argument_list|,
+literal|"Debug control to force bootcode running failures"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
 literal|"rx_low_watermark"
 argument_list|,
 name|CTLFLAG_RD
@@ -33221,94 +33625,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Number of times the TX chain was full"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_INT
-argument_list|(
-name|ctx
-argument_list|,
-name|children
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"l2fhdr_status_errors"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|l2fhdr_status_errors
-argument_list|,
-literal|0
-argument_list|,
-literal|"l2_fhdr status errors"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_INT
-argument_list|(
-name|ctx
-argument_list|,
-name|children
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"unexpected_attentions"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|unexpected_attentions
-argument_list|,
-literal|0
-argument_list|,
-literal|"Unexpected attentions"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_INT
-argument_list|(
-name|ctx
-argument_list|,
-name|children
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"lost_status_block_updates"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|lost_status_block_updates
-argument_list|,
-literal|0
-argument_list|,
-literal|"Lost status block updates"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_INT
-argument_list|(
-name|ctx
-argument_list|,
-name|children
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"debug_mbuf_sim_alloc_failed"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|debug_mbuf_sim_alloc_failed
-argument_list|,
-literal|0
-argument_list|,
-literal|"Simulated mbuf cluster allocation failures"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_INT
@@ -33419,50 +33735,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|SYSCTL_ADD_INT
-argument_list|(
-name|ctx
-argument_list|,
-name|children
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"mbuf_alloc_failed"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|mbuf_alloc_failed
-argument_list|,
-literal|0
-argument_list|,
-literal|"mbuf cluster allocation failures"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_INT
-argument_list|(
-name|ctx
-argument_list|,
-name|children
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"tx_dma_map_failures"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|tx_dma_map_failures
-argument_list|,
-literal|0
-argument_list|,
-literal|"tx dma mapping failures"
-argument_list|)
-expr_stmt|;
 name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
@@ -33957,18 +34229,18 @@ name|children
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"stat_EtherStatsOverrsizePkts"
+literal|"stat_EtherStatsOversizePkts"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|sc
 operator|->
-name|stat_EtherStatsOverrsizePkts
+name|stat_EtherStatsOversizePkts
 argument_list|,
 literal|0
 argument_list|,
-literal|"stat_EtherStatsOverrsizePkts"
+literal|"stat_EtherStatsOversizePkts"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_UINT
@@ -40560,7 +40832,7 @@ if|if
 condition|(
 name|sblk
 operator|->
-name|stat_EtherStatsOverrsizePkts
+name|stat_EtherStatsOversizePkts
 condition|)
 name|BCE_PRINTF
 argument_list|(
@@ -40568,7 +40840,7 @@ literal|"         0x%08X : EtherStatsOverrsizePkts\n"
 argument_list|,
 name|sblk
 operator|->
-name|stat_EtherStatsOverrsizePkts
+name|stat_EtherStatsOversizePkts
 argument_list|)
 expr_stmt|;
 if|if
@@ -41610,22 +41882,12 @@ endif|#
 directive|endif
 name|BCE_PRINTF
 argument_list|(
-literal|"         0x%08X - (sc->mbuf_alloc_failed) "
+literal|"         0x%08X - (sc->mbuf_alloc_failed_count) "
 literal|"mbuf alloc failures\n"
 argument_list|,
 name|sc
 operator|->
-name|mbuf_alloc_failed
-argument_list|)
-block|;
-name|BCE_PRINTF
-argument_list|(
-literal|"         0x%08X - (sc->debug_mbuf_sim_alloc_failed) "
-literal|"simulated mbuf alloc failures\n"
-argument_list|,
-name|sc
-operator|->
-name|debug_mbuf_sim_alloc_failed
+name|mbuf_alloc_failed_count
 argument_list|)
 block|;
 name|BCE_PRINTF
@@ -41687,7 +41949,7 @@ literal|"0x%08X - bootcode version\n"
 argument_list|,
 name|sc
 operator|->
-name|bce_fw_ver
+name|bce_bc_ver
 argument_list|)
 block|;
 name|val
@@ -42254,7 +42516,7 @@ literal|"0x%08X - bootcode version\n"
 argument_list|,
 name|sc
 operator|->
-name|bce_fw_ver
+name|bce_bc_ver
 argument_list|)
 block|;
 name|val

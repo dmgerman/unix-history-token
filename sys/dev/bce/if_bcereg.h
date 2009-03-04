@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_BCE_H_DEFINED
+name|_BCEREG_H_DEFINED
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_BCE_H_DEFINED
+name|_BCEREG_H_DEFINED
 end_define
 
 begin_ifdef
@@ -5436,7 +5436,7 @@ name|u32
 name|stat_EtherStatsUndersizePkts
 decl_stmt|;
 name|u32
-name|stat_EtherStatsOverrsizePkts
+name|stat_EtherStatsOversizePkts
 decl_stmt|;
 name|u32
 name|stat_EtherStatsPktsRx64Octets
@@ -34729,6 +34729,10 @@ name|MAX_TX_BD
 value|(TOTAL_TX_BD - 1)
 end_define
 
+begin_comment
+comment|/* Advance to the next tx_bd, skipping any next page pointers. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -34814,6 +34818,10 @@ directive|define
 name|MAX_RX_BD
 value|(TOTAL_RX_BD - 1)
 end_define
+
+begin_comment
+comment|/* Advance to the next rx_bd, skipping any next page pointers. */
+end_comment
 
 begin_define
 define|#
@@ -34906,6 +34914,10 @@ directive|define
 name|MAX_PG_BD
 value|(TOTAL_PG_BD - 1)
 end_define
+
+begin_comment
+comment|/* Advance to the next pg_bd, skipping any next page pointers. */
+end_comment
 
 begin_define
 define|#
@@ -35785,7 +35797,7 @@ decl_stmt|;
 comment|/* Name string */
 comment|/* Tracks the version of bootcode firmware. */
 name|u32
-name|bce_fw_ver
+name|bce_bc_ver
 decl_stmt|;
 comment|/* Tracks the state of the firmware.  0 = Running while any     */
 comment|/* other value indicates that the firmware is not responding.   */
@@ -36252,7 +36264,7 @@ name|u32
 name|stat_EtherStatsUndersizePkts
 decl_stmt|;
 name|u32
-name|stat_EtherStatsOverrsizePkts
+name|stat_EtherStatsOversizePkts
 decl_stmt|;
 name|u32
 name|stat_EtherStatsPktsRx64Octets
@@ -36348,14 +36360,43 @@ comment|/* Provides access to certain firmware statistics. */
 name|u32
 name|com_no_buffers
 decl_stmt|;
-comment|/* Mbuf allocation failure counter. */
+comment|/* Recoverable failure counters. */
 name|u32
-name|mbuf_alloc_failed
+name|mbuf_alloc_failed_count
 decl_stmt|;
-comment|/* TX DMA mapping failure counter. */
 name|u32
-name|tx_dma_map_failures
+name|fragmented_mbuf_count
 decl_stmt|;
+name|u32
+name|unexpected_attention_count
+decl_stmt|;
+name|u32
+name|l2fhdr_error_count
+decl_stmt|;
+name|u32
+name|dma_map_addr_tx_failed_count
+decl_stmt|;
+name|u32
+name|dma_map_addr_rx_failed_count
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|BCE_DEBUG
+comment|/* Simulated recoverable failure counters. */
+name|u32
+name|mbuf_alloc_failed_sim_count
+decl_stmt|;
+name|u32
+name|unexpected_attention_sim_count
+decl_stmt|;
+name|u32
+name|l2fhdr_error_sim_count
+decl_stmt|;
+name|u32
+name|dma_map_addr_failed_sim_count
+decl_stmt|;
+endif|#
+directive|endif
 name|u32
 name|hc_command
 decl_stmt|;
@@ -36426,19 +36467,6 @@ name|u32
 name|tx_full_count
 decl_stmt|;
 comment|/* Number of times the TX chain was full. */
-comment|/* Simulated mbuf allocation failure counter. */
-name|u32
-name|debug_mbuf_sim_alloc_failed
-decl_stmt|;
-name|u32
-name|l2fhdr_status_errors
-decl_stmt|;
-name|u32
-name|unexpected_attentions
-decl_stmt|;
-name|u32
-name|lost_status_block_updates
-decl_stmt|;
 name|u32
 name|requested_tso_frames
 decl_stmt|;
