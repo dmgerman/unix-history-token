@@ -119,11 +119,11 @@ struct|struct
 name|hashhdr
 block|{
 comment|/* Disk resident portion */
-name|int
+name|int32_t
 name|magic
 decl_stmt|;
 comment|/* Magic NO for hash tables */
-name|int
+name|int32_t
 name|version
 decl_stmt|;
 comment|/* Version ID */
@@ -131,59 +131,59 @@ name|u_int32_t
 name|lorder
 decl_stmt|;
 comment|/* Byte Order */
-name|int
+name|int32_t
 name|bsize
 decl_stmt|;
 comment|/* Bucket/Page Size */
-name|int
+name|int32_t
 name|bshift
 decl_stmt|;
 comment|/* Bucket shift */
-name|int
+name|int32_t
 name|dsize
 decl_stmt|;
 comment|/* Directory Size */
-name|int
+name|int32_t
 name|ssize
 decl_stmt|;
 comment|/* Segment Size */
-name|int
+name|int32_t
 name|sshift
 decl_stmt|;
 comment|/* Segment shift */
-name|int
+name|int32_t
 name|ovfl_point
 decl_stmt|;
 comment|/* Where overflow pages are being  					 * allocated */
-name|int
+name|int32_t
 name|last_freed
 decl_stmt|;
 comment|/* Last overflow page freed */
-name|int
+name|int32_t
 name|max_bucket
 decl_stmt|;
 comment|/* ID of Maximum bucket in use */
-name|int
+name|int32_t
 name|high_mask
 decl_stmt|;
 comment|/* Mask to modulo into entire table */
-name|int
+name|int32_t
 name|low_mask
 decl_stmt|;
 comment|/* Mask to modulo into lower half of  					 * table */
-name|int
+name|int32_t
 name|ffactor
 decl_stmt|;
 comment|/* Fill factor */
-name|int
+name|int32_t
 name|nkeys
 decl_stmt|;
 comment|/* Number of keys in hash table */
-name|int
+name|int32_t
 name|hdrpages
 decl_stmt|;
 comment|/* Size of table header */
-name|int
+name|int32_t
 name|h_charkey
 decl_stmt|;
 comment|/* value of hash(CHARKEY) */
@@ -192,7 +192,7 @@ directive|define
 name|NCACHED
 value|32
 comment|/* number of bit maps and spare  					 * points */
-name|int
+name|int32_t
 name|spares
 index|[
 name|NCACHED
