@@ -414,6 +414,17 @@ name|LINUX_CTL_MAXNAME
 value|10
 end_define
 
+begin_define
+define|#
+directive|define
+name|LINUX_AT_COUNT
+value|16
+end_define
+
+begin_comment
+comment|/* Count of used aux entry types. 					 * Keep this synchronized with 					 * elf_linux_fixup() code. 					 */
+end_comment
+
 begin_struct
 struct|struct
 name|l___sysctl_args

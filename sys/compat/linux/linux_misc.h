@@ -88,6 +88,85 @@ name|LINUX_MREMAP_FIXED
 value|2
 end_define
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|linux_platform
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Non-standard aux entry types used in Linux ELF binaries.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_AT_PLATFORM
+value|15
+end_define
+
+begin_comment
+comment|/* String identifying CPU */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_AT_HWCAP
+value|16
+end_define
+
+begin_comment
+comment|/* CPU capabilities */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_AT_CLKTCK
+value|17
+end_define
+
+begin_comment
+comment|/* frequency at which times() increments */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_AT_SECURE
+value|23
+end_define
+
+begin_comment
+comment|/* secure mode boolean */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_AT_BASE_PLATFORM
+value|24
+end_define
+
+begin_comment
+comment|/* string identifying real platform, may 					 * differ from AT_PLATFORM. 					 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_AT_EXECFN
+value|31
+end_define
+
+begin_comment
+comment|/* filename of program */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
