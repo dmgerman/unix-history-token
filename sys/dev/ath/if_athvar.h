@@ -1060,6 +1060,11 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* TDMA in use */
+name|sc_setcca
+range|:
+literal|1
+decl_stmt|,
+comment|/* set/clr CCA with TDMA */
 name|sc_resetcal
 range|:
 literal|1
