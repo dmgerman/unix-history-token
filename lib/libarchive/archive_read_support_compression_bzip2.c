@@ -366,7 +366,7 @@ name|char
 modifier|*
 name|buffer
 decl_stmt|;
-name|size_t
+name|ssize_t
 name|avail
 decl_stmt|;
 name|int
@@ -769,7 +769,7 @@ name|char
 modifier|*
 name|read_buf
 decl_stmt|;
-name|int
+name|ssize_t
 name|ret
 decl_stmt|;
 name|state

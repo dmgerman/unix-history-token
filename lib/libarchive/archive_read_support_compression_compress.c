@@ -410,7 +410,7 @@ name|char
 modifier|*
 name|buffer
 decl_stmt|;
-name|size_t
+name|ssize_t
 name|avail
 decl_stmt|;
 name|int
@@ -1539,7 +1539,8 @@ name|data
 decl_stmt|;
 name|int
 name|code
-decl_stmt|,
+decl_stmt|;
+name|ssize_t
 name|ret
 decl_stmt|;
 specifier|static
