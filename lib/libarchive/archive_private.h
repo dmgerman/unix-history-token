@@ -160,7 +160,7 @@ block|{
 name|int
 function_decl|(
 modifier|*
-name|archive_write_close
+name|archive_close
 function_decl|)
 parameter_list|(
 name|struct
@@ -171,7 +171,7 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|archive_write_finish
+name|archive_finish
 function_decl|)
 parameter_list|(
 name|struct

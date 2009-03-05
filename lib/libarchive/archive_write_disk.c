@@ -1353,13 +1353,13 @@ condition|)
 block|{
 name|av
 operator|.
-name|archive_write_close
+name|archive_close
 operator|=
 name|_archive_write_close
 expr_stmt|;
 name|av
 operator|.
-name|archive_write_finish
+name|archive_finish
 operator|=
 name|_archive_write_finish
 expr_stmt|;
