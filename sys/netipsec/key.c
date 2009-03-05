@@ -19762,34 +19762,6 @@ operator|->
 name|addtime
 condition|)
 block|{
-comment|/* 				 * check SA to be used whether or not. 				 * when SA hasn't been used, delete it. 				 */
-if|if
-condition|(
-name|sav
-operator|->
-name|lft_c
-operator|->
-name|usetime
-operator|==
-literal|0
-condition|)
-block|{
-name|key_sa_chgstate
-argument_list|(
-name|sav
-argument_list|,
-name|SADB_SASTATE_DEAD
-argument_list|)
-expr_stmt|;
-name|KEY_FREESAV
-argument_list|(
-operator|&
-name|sav
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|key_sa_chgstate
 argument_list|(
 name|sav
@@ -19797,13 +19769,22 @@ argument_list|,
 name|SADB_SASTATE_DYING
 argument_list|)
 expr_stmt|;
-comment|/* 					 * XXX If we keep to send expire 					 * message in the status of 					 * DYING. Do remove below code. 					 */
+comment|/* Actually, only send expire message if SA has been used, as it 				 * was done before, but should we always send such message, and let IKE 				 * daemon decide if it should be renegociated or not ? 				 * XXX expire message will actually NOT be sent if SA is only used 				 * after soft lifetime has been reached, see below (DYING state) 				 */
+if|if
+condition|(
+name|sav
+operator|->
+name|lft_c
+operator|->
+name|usetime
+operator|!=
+literal|0
+condition|)
 name|key_expire
 argument_list|(
 name|sav
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* check SOFT lifetime by bytes */
 comment|/* 			 * XXX I don't know the way to delete this SA 			 * when new SA is installed.  Caution when it's 			 * installed too big lifetime by time. 			 */
