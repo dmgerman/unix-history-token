@@ -2090,7 +2090,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This is meaningless outside of this header. */
+comment|/* These are meaningless outside of this header. */
 end_comment
 
 begin_undef
@@ -2108,20 +2108,20 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|__LA_INT64_T
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|__LA_SSIZE_T
-end_undef
-
-begin_undef
-undef|#
-directive|undef
 name|__LA_UID_T
 end_undef
+
+begin_comment
+comment|/* These need to remain defined because they're used in the  * callback type definitions.  XXX Fix this.  This is ugly. XXX */
+end_comment
+
+begin_comment
+comment|/* #undef __LA_INT64_T */
+end_comment
+
+begin_comment
+comment|/* #undef __LA_SSIZE_T */
+end_comment
 
 begin_endif
 endif|#
