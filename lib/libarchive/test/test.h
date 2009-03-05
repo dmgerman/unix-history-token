@@ -244,6 +244,13 @@ end_ifdef
 begin_define
 define|#
 directive|define
+name|snprintf
+value|sprintf_s
+end_define
+
+begin_define
+define|#
+directive|define
 name|LOCALE_DE
 value|"deu"
 end_define

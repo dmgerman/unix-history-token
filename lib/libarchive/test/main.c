@@ -37,6 +37,23 @@ directive|include
 file|<time.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<crtdbg.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * This same file is used pretty much verbatim for all test harnesses.  *  * The next few lines are the only differences.  */
 end_comment
@@ -4836,6 +4853,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* You should have to add "$(TargetDir)" to 	 * Properties> Configuration Properties> Debugging> Working Directory, 	 * if you are running libarchive_test.exe on Visual Studio. 	 */
 name|printf
 argument_list|(
 literal|"Unable to locate known reference file %s\n"
@@ -5103,6 +5121,9 @@ expr_stmt|;
 comment|/* 	 * Parse options, without using getopt(), which isn't available 	 * on all platforms. 	 */
 operator|++
 name|argv
+expr_stmt|;
+operator|--
+name|argc
 expr_stmt|;
 comment|/* Skip program name */
 while|while

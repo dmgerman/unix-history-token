@@ -264,7 +264,7 @@ name|assertEqualIntA
 argument_list|(
 name|a
 argument_list|,
-literal|0
+name|ARCHIVE_OK
 argument_list|,
 name|archive_read_support_compression_none
 argument_list|(
@@ -304,10 +304,12 @@ argument_list|,
 name|r
 argument_list|)
 expr_stmt|;
-name|assert
+name|assertEqualIntA
 argument_list|(
-literal|0
-operator|==
+name|a
+argument_list|,
+name|ARCHIVE_OK
+argument_list|,
 name|archive_read_support_format_all
 argument_list|(
 name|a
@@ -318,7 +320,7 @@ name|assertEqualIntA
 argument_list|(
 name|a
 argument_list|,
-literal|0
+name|ARCHIVE_OK
 argument_list|,
 name|archive_read_open_memory
 argument_list|(
@@ -337,7 +339,7 @@ name|assertEqualIntA
 argument_list|(
 name|a
 argument_list|,
-literal|0
+name|ARCHIVE_OK
 argument_list|,
 name|archive_read_next_header
 argument_list|(
