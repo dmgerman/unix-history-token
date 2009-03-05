@@ -2603,6 +2603,8 @@ block|}
 comment|/* Seek if necessary to the specified offset. */
 if|if
 condition|(
+name|a
+operator|->
 name|offset
 operator|!=
 name|a
@@ -2618,6 +2620,8 @@ name|a
 operator|->
 name|fd
 argument_list|,
+name|a
+operator|->
 name|offset
 argument_list|,
 name|SEEK_SET
