@@ -2861,7 +2861,7 @@ operator|<<=
 literal|32
 expr_stmt|;
 name|addr
-operator|=
+operator||=
 name|REG
 argument_list|(
 name|ptr
