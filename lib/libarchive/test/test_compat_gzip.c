@@ -296,7 +296,11 @@ directive|if
 name|HAVE_ZLIB_H
 comment|/* This sample has been 'split', each piece compressed separately, 	 * then concatenated.  Gunzip will emit the concatenated result. */
 comment|/* Not supported in libarchive 2.6 and earlier */
-comment|/* verify("test_compat_gzip_1.tgz"); */
+name|verify
+argument_list|(
+literal|"test_compat_gzip_1.tgz"
+argument_list|)
+expr_stmt|;
 comment|/* This sample has been compressed as a single stream, but then 	 * some unrelated garbage text has been appended to the end. */
 name|verify
 argument_list|(
