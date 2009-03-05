@@ -418,7 +418,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|size_t
+name|vm_size_t
 name|shm_committed
 decl_stmt|;
 end_decl_stmt
@@ -1208,7 +1208,7 @@ modifier|*
 name|shmseg
 decl_stmt|;
 block|{
-name|size_t
+name|vm_size_t
 name|size
 decl_stmt|;
 name|GIANT_REQUIRED
@@ -1298,7 +1298,7 @@ name|segnum
 decl_stmt|,
 name|result
 decl_stmt|;
-name|size_t
+name|vm_size_t
 name|size
 decl_stmt|;
 name|GIANT_REQUIRED
@@ -1805,8 +1805,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|size
+name|shmmap_s
 operator|=
+name|malloc
+argument_list|(
 name|shminfo
 operator|.
 name|shmseg
@@ -1816,12 +1818,6 @@ argument_list|(
 expr|struct
 name|shmmap_state
 argument_list|)
-expr_stmt|;
-name|shmmap_s
-operator|=
-name|malloc
-argument_list|(
-name|size
 argument_list|,
 name|M_SHM
 argument_list|,
@@ -3689,6 +3685,8 @@ condition|(
 name|uap
 operator|->
 name|size
+operator|!=
+literal|0
 operator|&&
 name|uap
 operator|->
