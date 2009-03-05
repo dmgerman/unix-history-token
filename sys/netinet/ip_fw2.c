@@ -577,15 +577,6 @@ end_struct
 begin_decl_stmt
 specifier|static
 name|int
-name|fw_debug
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|autoinc_step
 init|=
 literal|100
@@ -699,27 +690,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Only do a single pass through ipfw when using dummynet(4)"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_net_inet_ip_fw
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|debug
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|fw_debug
-argument_list|,
-literal|0
-argument_list|,
-literal|"Enable printing of debug ip_fw statements"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -9994,6 +9964,13 @@ operator|)
 return|;
 comment|/* accept */
 name|dst_ip
+operator|.
+name|s_addr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* make sure it is initialized */
+name|src_ip
 operator|.
 name|s_addr
 operator|=

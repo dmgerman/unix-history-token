@@ -739,26 +739,21 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|SYSCTL_LONG
-argument_list|(
-name|_net_inet_ip_dummynet
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|curr_time
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|curr_time
-argument_list|,
+begin_if
+if|#
+directive|if
 literal|0
-argument_list|,
-literal|"Current tick"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_if
+
+begin_comment
+comment|/* curr_time is 64 bit */
+end_comment
+
+begin_endif
+unit|SYSCTL_LONG(_net_inet_ip_dummynet, OID_AUTO, curr_time,     CTLFLAG_RD,&curr_time, 0, "Current tick");
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_INT
