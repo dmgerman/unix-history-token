@@ -49,6 +49,18 @@ directive|include
 file|<crtdbg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<windows.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<winbase.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -4853,7 +4865,23 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_DEBUG
+argument_list|)
 comment|/* You should have to add "$(TargetDir)" to 	 * Properties> Configuration Properties> Debugging> Working Directory, 	 * if you are running libarchive_test.exe on Visual Studio. 	 */
+name|DebugBreak
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"Unable to locate known reference file %s\n"
@@ -5566,6 +5594,11 @@ literal|"*** INVALID Test %s\n"
 argument_list|,
 operator|*
 name|argv
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|refdir_alloc
 argument_list|)
 expr_stmt|;
 name|usage
