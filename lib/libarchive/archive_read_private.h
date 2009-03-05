@@ -41,30 +41,30 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|archive_reader
+name|archive_read_filter_bidder
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|archive_read_source
+name|archive_read_filter
 struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * A "reader" knows how to provide blocks.  That can include something  * that reads blocks from disk or socket or a transformation layer  * that reads blocks from another source and transforms them.  This  * includes decompression and decryption filters.  *  * How bidding works:  *   * The bid manager reads the first block from the current source.  *   * It shows that block to each registered bidder.  *   * The winning bidder is initialized (with the block and information  *     about the source)  *   * The winning bidder becomes the new source and the process repeats  * This ends only when no reader provides a non-zero bid.  */
+comment|/*  * How bidding works for filters:  *   * The bid manager reads the first block from the current source.  *   * It shows that block to each registered bidder.  *   * The bid manager creates a new filter structure for the winning  *     bidder and gives the winning bidder a chance to initialize it.  *   * The new filter becomes the top filter in the archive_read structure  *     and we repeat the process.  * This ends only when no bidder provides a non-zero bid.  */
 end_comment
 
 begin_struct
 struct|struct
-name|archive_reader
+name|archive_read_filter_bidder
 block|{
-comment|/* Configuration data for the reader. */
+comment|/* Configuration data for the bidder. */
 name|void
 modifier|*
 name|data
 decl_stmt|;
-comment|/* Bidder is handed the initial block from its source. */
+comment|/* Taste the upstream filter to see if we handle this. */
 name|int
 function_decl|(
 modifier|*
@@ -72,47 +72,27 @@ name|bid
 function_decl|)
 parameter_list|(
 name|struct
-name|archive_reader
+name|archive_read_filter_bidder
 modifier|*
 parameter_list|,
-specifier|const
-name|void
+name|struct
+name|archive_read_filter
 modifier|*
-name|buff
-parameter_list|,
-name|size_t
 parameter_list|)
 function_decl|;
-comment|/* Init() is given the archive, upstream source, and the initial 	 * block above.  It returns a populated source structure. */
-name|struct
-name|archive_read_source
-modifier|*
+comment|/* Initialize a newly-created filter. */
+name|int
 function_decl|(
 modifier|*
 name|init
 function_decl|)
 parameter_list|(
 name|struct
-name|archive_read
+name|archive_read_filter
 modifier|*
-parameter_list|,
-name|struct
-name|archive_reader
-modifier|*
-parameter_list|,
-name|struct
-name|archive_read_source
-modifier|*
-name|source
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-parameter_list|,
-name|size_t
 parameter_list|)
 function_decl|;
-comment|/* Release the reader and any configuration data it allocated. */
+comment|/* Release the bidder's configuration data. */
 name|int
 function_decl|(
 modifier|*
@@ -120,7 +100,7 @@ name|free
 function_decl|)
 parameter_list|(
 name|struct
-name|archive_reader
+name|archive_read_filter_bidder
 modifier|*
 parameter_list|)
 function_decl|;
@@ -129,32 +109,32 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * A "source" is an instance of a reader.  This structure is  * allocated and initialized by the init() method of a reader  * above.  */
+comment|/*  * This structure is allocated within the archive_read core  * and initialized by archive_read and the init() method of the  * corresponding bidder above.  */
 end_comment
 
 begin_struct
 struct|struct
-name|archive_read_source
+name|archive_read_filter
 block|{
-comment|/* Essentially all sources will need these values, so 	 * just declare them here. */
+comment|/* Essentially all filters will need these values, so 	 * just declare them here. */
 name|struct
-name|archive_reader
+name|archive_read_filter_bidder
 modifier|*
-name|reader
+name|bidder
 decl_stmt|;
-comment|/* Reader that I'm an instance of. */
+comment|/* My bidder. */
 name|struct
-name|archive_read_source
+name|archive_read_filter
 modifier|*
 name|upstream
 decl_stmt|;
-comment|/* Who I get blocks from. */
+comment|/* Who I read from. */
 name|struct
 name|archive_read
 modifier|*
 name|archive
 decl_stmt|;
-comment|/* associated archive. */
+comment|/* Associated archive. */
 comment|/* Return next block. */
 name|ssize_t
 function_decl|(
@@ -163,7 +143,7 @@ name|read
 function_decl|)
 parameter_list|(
 name|struct
-name|archive_read_source
+name|archive_read_filter
 modifier|*
 parameter_list|,
 specifier|const
@@ -180,7 +160,7 @@ name|skip
 function_decl|)
 parameter_list|(
 name|struct
-name|archive_read_source
+name|archive_read_filter
 modifier|*
 name|self
 parameter_list|,
@@ -188,7 +168,7 @@ name|int64_t
 name|request
 parameter_list|)
 function_decl|;
-comment|/* Close (recursively) and free(self). */
+comment|/* Close (just this filter) and free(self). */
 name|int
 function_decl|(
 modifier|*
@@ -196,7 +176,7 @@ name|close
 function_decl|)
 parameter_list|(
 name|struct
-name|archive_read_source
+name|archive_read_filter
 modifier|*
 name|self
 parameter_list|)
@@ -206,22 +186,69 @@ name|void
 modifier|*
 name|data
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|int
+name|code
+decl_stmt|;
+comment|/* Used by reblocking logic. */
+name|char
+modifier|*
+name|buffer
+decl_stmt|;
+name|size_t
+name|buffer_size
+decl_stmt|;
+name|char
+modifier|*
+name|next
+decl_stmt|;
+comment|/* Current read location. */
+name|size_t
+name|avail
+decl_stmt|;
+comment|/* Bytes in my buffer. */
+specifier|const
+name|void
+modifier|*
+name|client_buff
+decl_stmt|;
+comment|/* Client buffer information. */
+name|size_t
+name|client_total
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|client_next
+decl_stmt|;
+name|size_t
+name|client_avail
+decl_stmt|;
+name|int64_t
+name|position
+decl_stmt|;
+name|char
+name|end_of_file
+decl_stmt|;
+name|char
+name|fatal
+decl_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * The client source is almost the same as an internal source.  *  * TODO: Make archive_read_source and archive_read_client identical so  * that users of the library can easily register their own  * transformation filters.  This will probably break the API/ABI and  * so should be deferred until libarchive 3.0.  */
+comment|/*  * The client looks a lot like a filter, so we just wrap it here.  *  * TODO: Make archive_read_filter and archive_read_client identical so  * that users of the library can easily register their own  * transformation filters.  This will probably break the API/ABI and  * so should be deferred at least until libarchive 3.0.  */
 end_comment
 
 begin_struct
 struct|struct
 name|archive_read_client
 block|{
-name|archive_open_callback
-modifier|*
-name|opener
-decl_stmt|;
 name|archive_read_callback
 modifier|*
 name|reader
@@ -233,10 +260,6 @@ decl_stmt|;
 name|archive_close_callback
 modifier|*
 name|closer
-decl_stmt|;
-name|void
-modifier|*
-name|data
 decl_stmt|;
 block|}
 struct|;
@@ -282,63 +305,23 @@ name|struct
 name|archive_read_client
 name|client
 decl_stmt|;
-comment|/* Registered readers. */
+comment|/* Registered filter bidders. */
 name|struct
-name|archive_reader
-name|readers
+name|archive_read_filter_bidder
+name|bidders
 index|[
 literal|8
 index|]
 decl_stmt|;
-comment|/* Source */
+comment|/* Last filter in chain */
 name|struct
-name|archive_read_source
+name|archive_read_filter
 modifier|*
-name|source
+name|filter
 decl_stmt|;
 comment|/* File offset of beginning of most recently-read header. */
 name|off_t
 name|header_position
-decl_stmt|;
-comment|/* Used by reblocking logic. */
-name|char
-modifier|*
-name|buffer
-decl_stmt|;
-name|size_t
-name|buffer_size
-decl_stmt|;
-name|char
-modifier|*
-name|next
-decl_stmt|;
-comment|/* Current read location. */
-name|size_t
-name|avail
-decl_stmt|;
-comment|/* Bytes in my buffer. */
-specifier|const
-name|void
-modifier|*
-name|client_buff
-decl_stmt|;
-comment|/* Client buffer information. */
-name|size_t
-name|client_total
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|client_next
-decl_stmt|;
-name|size_t
-name|client_avail
-decl_stmt|;
-name|char
-name|end_of_file
-decl_stmt|;
-name|char
-name|fatal
 decl_stmt|;
 comment|/* 	 * Format detection is mostly the same as compression 	 * detection, with one significant difference: The bidders 	 * use the read_ahead calls above to examine the stream rather 	 * than having the supervisor hand them a block of data to 	 * examine. 	 */
 struct|struct
@@ -539,9 +522,9 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|archive_reader
+name|archive_read_filter_bidder
 modifier|*
-name|__archive_read_get_reader
+name|__archive_read_get_bidder
 parameter_list|(
 name|struct
 name|archive_read
@@ -570,6 +553,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
+name|void
+modifier|*
+name|__archive_read_filter_ahead
+parameter_list|(
+name|struct
+name|archive_read_filter
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|ssize_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|ssize_t
 name|__archive_read_consume
 parameter_list|(
@@ -583,11 +584,37 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|ssize_t
+name|__archive_read_filter_consume
+parameter_list|(
+name|struct
+name|archive_read_filter
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int64_t
 name|__archive_read_skip
 parameter_list|(
 name|struct
 name|archive_read
+modifier|*
+parameter_list|,
+name|int64_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int64_t
+name|__archive_read_filter_skip
+parameter_list|(
+name|struct
+name|archive_read_filter
 modifier|*
 parameter_list|,
 name|int64_t
