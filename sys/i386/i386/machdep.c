@@ -6825,7 +6825,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Clear registers on exec  */
+comment|/*  * Reset registers to default values on exec.  */
 end_comment
 
 begin_function
@@ -7069,6 +7069,12 @@ name|pcb_flags
 operator|&=
 operator|~
 name|FP_SOFTFP
+expr_stmt|;
+name|pcb
+operator|->
+name|pcb_initial_npxcw
+operator|=
+name|__INITIAL_NPXCW__
 expr_stmt|;
 comment|/* 	 * Drop the FP state if we hold it, so that the process gets a 	 * clean FP state if it uses the FPU again. 	 */
 name|fpstate_drop

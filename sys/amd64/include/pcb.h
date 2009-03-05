@@ -130,6 +130,9 @@ name|struct
 name|savefpu
 name|pcb_save
 decl_stmt|;
+name|uint16_t
+name|pcb_initial_fpucw
+decl_stmt|;
 name|caddr_t
 name|pcb_onfault
 decl_stmt|;

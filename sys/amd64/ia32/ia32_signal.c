@@ -3982,6 +3982,12 @@ name|pcb_gs
 operator|=
 name|_udatasel
 expr_stmt|;
+name|pcb
+operator|->
+name|pcb_initial_fpucw
+operator|=
+name|__INITIAL_FPUCW_I386__
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|(

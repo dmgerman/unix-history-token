@@ -3133,7 +3133,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Clear registers on exec  */
+comment|/*  * Reset registers to default values on exec.  */
 end_comment
 
 begin_function
@@ -3268,6 +3268,12 @@ operator|->
 name|pcb_gs
 operator|=
 name|_udatasel
+expr_stmt|;
+name|pcb
+operator|->
+name|pcb_initial_fpucw
+operator|=
+name|__INITIAL_FPUCW__
 expr_stmt|;
 name|bzero
 argument_list|(

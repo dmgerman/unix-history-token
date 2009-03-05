@@ -315,23 +315,6 @@ name|LINUX_SYS_linux_sendsig
 value|0
 end_define
 
-begin_define
-define|#
-directive|define
-name|fldcw
-parameter_list|(
-name|addr
-parameter_list|)
-value|__asm("fldcw %0" : : "m" (*(addr)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|__LINUX_NPXCW__
-value|0x37f
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|char
@@ -4836,13 +4819,6 @@ name|u_long
 name|ps_strings
 parameter_list|)
 block|{
-specifier|static
-specifier|const
-name|u_short
-name|control
-init|=
-name|__LINUX_NPXCW__
-decl_stmt|;
 name|struct
 name|pcb
 modifier|*
@@ -4875,12 +4851,11 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Linux sets the i387 to extended precision. */
-name|fldcw
-argument_list|(
-operator|&
-name|control
-argument_list|)
+name|pcb
+operator|->
+name|pcb_initial_npxcw
+operator|=
+name|__LINUX_NPXCW__
 expr_stmt|;
 block|}
 end_function

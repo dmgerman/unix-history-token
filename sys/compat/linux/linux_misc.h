@@ -167,6 +167,36 @@ begin_comment
 comment|/* filename of program */
 end_comment
 
+begin_comment
+comment|/* Linux sets the i387 to extended precision. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__LINUX_NPXCW__
+value|0x37f
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif

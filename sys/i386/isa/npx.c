@@ -653,6 +653,18 @@ define|\
 value|(cpu_fxsr ? \ 		(thread)->td_pcb->pcb_save.sv_xmm.sv_env.en_sw : \ 		(thread)->td_pcb->pcb_save.sv_87.sv_env.en_sw)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SET_FPU_CW
+parameter_list|(
+name|savefpu
+parameter_list|,
+name|value
+parameter_list|)
+value|do { \ 	if (cpu_fxsr) \ 		(savefpu)->sv_xmm.sv_env.en_cw = (value); \ 	else \ 		(savefpu)->sv_87.sv_env.en_cw = (value); \ } while (0)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -682,6 +694,19 @@ name|thread
 parameter_list|)
 define|\
 value|(thread->td_pcb->pcb_save.sv_87.sv_env.en_sw)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_FPU_CW
+parameter_list|(
+name|savefpu
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|(savefpu)->sv_87.sv_env.en_cw = (value)
 end_define
 
 begin_endif
@@ -2720,6 +2745,22 @@ operator|&
 name|npx_cleanstate
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pcb
+operator|->
+name|pcb_initial_npxcw
+operator|!=
+name|__INITIAL_NPXCW__
+condition|)
+name|fldcw
+argument_list|(
+operator|&
+name|pcb
+operator|->
+name|pcb_initial_npxcw
+argument_list|)
+expr_stmt|;
 name|pcb
 operator|->
 name|pcb_flags
@@ -2908,6 +2949,17 @@ sizeof|sizeof
 argument_list|(
 name|npx_cleanstate
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|SET_FPU_CW
+argument_list|(
+name|addr
+argument_list|,
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_initial_npxcw
 argument_list|)
 expr_stmt|;
 return|return
