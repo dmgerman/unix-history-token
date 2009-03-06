@@ -25,6 +25,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_ACL_GET_PERM_NP
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_ACL_INIT
 value|1
 end_define
