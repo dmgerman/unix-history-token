@@ -631,7 +631,11 @@ name|a
 argument_list|,
 name|zip
 argument_list|,
+literal|"zip"
+argument_list|,
 name|archive_read_format_zip_bid
+argument_list|,
+name|NULL
 argument_list|,
 name|archive_read_format_zip_read_header
 argument_list|,

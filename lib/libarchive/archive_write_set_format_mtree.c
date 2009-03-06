@@ -467,6 +467,18 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static void strappend_bin(struct archive_string *s, const unsigned char *bin, int n) { 	static const char hex[] = "0123456789abcdef"; 	int i;  	for (i = 0; i< n; i++) { 		archive_strappend_char(s, hex[bin[i]>> 4]); 		archive_strappend_char(s, hex[bin[i]& 0x0f]); 	} }
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|int
@@ -1207,6 +1219,12 @@ operator|->
 name|pad_uncompressed
 operator|=
 literal|0
+expr_stmt|;
+name|a
+operator|->
+name|format_name
+operator|=
+literal|"mtree"
 expr_stmt|;
 name|a
 operator|->

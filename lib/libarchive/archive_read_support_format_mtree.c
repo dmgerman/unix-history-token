@@ -740,7 +740,11 @@ name|a
 argument_list|,
 name|mtree
 argument_list|,
+literal|"mtree"
+argument_list|,
 name|mtree_bid
+argument_list|,
+name|NULL
 argument_list|,
 name|read_header
 argument_list|,

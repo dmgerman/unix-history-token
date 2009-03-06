@@ -1752,6 +1752,12 @@ expr_stmt|;
 comment|/* Mimic gtar in this respect. */
 name|a
 operator|->
+name|format_name
+operator|=
+literal|"ustar"
+expr_stmt|;
+name|a
+operator|->
 name|format_write_header
 operator|=
 name|archive_write_ustar_header

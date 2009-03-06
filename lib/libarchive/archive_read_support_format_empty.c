@@ -125,7 +125,11 @@ name|a
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|archive_read_format_empty_bid
+argument_list|,
+name|NULL
 argument_list|,
 name|archive_read_format_empty_read_header
 argument_list|,

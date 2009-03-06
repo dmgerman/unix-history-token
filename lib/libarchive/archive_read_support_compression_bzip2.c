@@ -303,6 +303,12 @@ name|bzip2_reader_init
 expr_stmt|;
 name|reader
 operator|->
+name|options
+operator|=
+name|NULL
+expr_stmt|;
+name|reader
+operator|->
 name|free
 operator|=
 name|bzip2_reader_free

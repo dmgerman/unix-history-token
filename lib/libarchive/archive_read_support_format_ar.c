@@ -494,7 +494,11 @@ name|a
 argument_list|,
 name|ar
 argument_list|,
+literal|"ar"
+argument_list|,
 name|archive_read_format_ar_bid
+argument_list|,
+name|NULL
 argument_list|,
 name|archive_read_format_ar_read_header
 argument_list|,

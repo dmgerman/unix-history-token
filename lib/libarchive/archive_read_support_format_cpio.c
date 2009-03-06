@@ -836,7 +836,11 @@ name|a
 argument_list|,
 name|cpio
 argument_list|,
+literal|"cpio"
+argument_list|,
 name|archive_read_format_cpio_bid
+argument_list|,
+name|NULL
 argument_list|,
 name|archive_read_format_cpio_read_header
 argument_list|,

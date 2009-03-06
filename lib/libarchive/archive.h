@@ -1177,6 +1177,55 @@ name|int
 name|fd
 parameter_list|)
 function_decl|;
+comment|/*  * Set read options.  */
+comment|/* Apply option string to the format only. */
+name|__LA_DECL
+name|int
+name|archive_read_set_format_options
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|_a
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+comment|/* Apply option string to the filter only. */
+name|__LA_DECL
+name|int
+name|archive_read_set_filter_options
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|_a
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+comment|/* Apply option string to both the format and the filter. */
+name|__LA_DECL
+name|int
+name|archive_read_set_options
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|_a
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
 comment|/*-  * Convenience function to recreate the current entry (whose header  * has just been read) on disk.  *  * This does quite a bit more than just copy data to disk. It also:  *  - Creates intermediate directories as required.  *  - Manages directory permissions:  non-writable directories will  *    be initially created with write permission enabled; when the  *    archive is closed, dir permissions are edited to the values specified  *    in the archive.  *  - Checks hardlinks:  hardlinks will not be extracted unless the  *    linked-to file was also extracted within the same session. (TODO)  */
 comment|/* The "flags" argument selects optional behavior, 'OR' the flags you want. */
 comment|/* Default: Do not try to set owner/group. */
@@ -1835,6 +1884,55 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
+comment|/*  * Set write options.  */
+comment|/* Apply option string to the format only. */
+name|__LA_DECL
+name|int
+name|archive_write_set_format_options
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|_a
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+comment|/* Apply option string to the compressor only. */
+name|__LA_DECL
+name|int
+name|archive_write_set_compressor_options
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|_a
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+comment|/* Apply option string to both the format and the compressor. */
+name|__LA_DECL
+name|int
+name|archive_write_set_options
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|_a
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
 comment|/*-  * To create objects on disk:  *   1) Ask archive_write_disk_new for a new archive_write_disk object.  *   2) Set any global properties.  In particular, you should set  *      the compression and format to use.  *   3) For each entry:  *      - construct an appropriate struct archive_entry structure  *      - archive_write_header to create the file/dir/etc on disk  *      - archive_write_data to write the entry data  *   4) archive_write_finish to cleanup the writer and release resources  *  * In particular, you can use this in conjunction with archive_read()  * to pull entries out of an archive and create them on disk.  */
 name|__LA_DECL
 name|struct

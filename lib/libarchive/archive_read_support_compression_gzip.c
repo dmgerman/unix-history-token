@@ -292,11 +292,16 @@ name|gzip_bidder_init
 expr_stmt|;
 name|bidder
 operator|->
+name|options
+operator|=
+name|NULL
+expr_stmt|;
+name|bidder
+operator|->
 name|free
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* No data, so no cleanup necessary. */
 return|return
 operator|(
 name|ARCHIVE_OK

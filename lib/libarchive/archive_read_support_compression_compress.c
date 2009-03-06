@@ -372,6 +372,12 @@ name|compress_bidder_init
 expr_stmt|;
 name|bidder
 operator|->
+name|options
+operator|=
+name|NULL
+expr_stmt|;
+name|bidder
+operator|->
 name|free
 operator|=
 name|compress_bidder_free

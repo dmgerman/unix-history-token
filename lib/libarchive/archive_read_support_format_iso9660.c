@@ -1399,7 +1399,11 @@ name|a
 argument_list|,
 name|iso9660
 argument_list|,
+literal|"iso9660"
+argument_list|,
 name|archive_read_format_iso9660_bid
+argument_list|,
+name|NULL
 argument_list|,
 name|archive_read_format_iso9660_read_header
 argument_list|,

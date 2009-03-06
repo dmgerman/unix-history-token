@@ -563,6 +563,12 @@ literal|1
 expr_stmt|;
 name|a
 operator|->
+name|format_name
+operator|=
+literal|"pax"
+expr_stmt|;
+name|a
+operator|->
 name|format_write_header
 operator|=
 name|archive_write_pax_header
