@@ -10165,6 +10165,9 @@ operator|->
 name|bus
 argument_list|)
 decl_stmt|;
+name|uint32_t
+name|temp
+decl_stmt|;
 comment|/* setup TD's and QH */
 name|ehci_setup_standard_chain
 argument_list|(
@@ -10180,6 +10183,36 @@ comment|/* put transfer on interrupt queue */
 name|ehci_transfer_intr_enqueue
 argument_list|(
 name|xfer
+argument_list|)
+expr_stmt|;
+comment|/* XXX Performance quirk: Some Host Controllers have a too low 	 * interrupt rate. Issue an IAAD to stimulate the Host 	 * Controller after queueing the BULK transfer. 	 */
+name|temp
+operator|=
+name|EOREAD4
+argument_list|(
+name|sc
+argument_list|,
+name|EHCI_USBCMD
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|temp
+operator|&
+name|EHCI_CMD_IAAD
+operator|)
+condition|)
+name|EOWRITE4
+argument_list|(
+name|sc
+argument_list|,
+name|EHCI_USBCMD
+argument_list|,
+name|temp
+operator||
+name|EHCI_CMD_IAAD
 argument_list|)
 expr_stmt|;
 block|}
