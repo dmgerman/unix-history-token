@@ -15121,7 +15121,7 @@ expr_stmt|;
 if|if
 condition|(
 name|rid
-operator|>
+operator|==
 literal|0
 condition|)
 block|{
