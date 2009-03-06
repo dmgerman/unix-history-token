@@ -2765,6 +2765,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|poll_no_poll
+parameter_list|(
+name|int
+name|events
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* XXX: Should be void nanodelay(u_int nsec); */
 end_comment
