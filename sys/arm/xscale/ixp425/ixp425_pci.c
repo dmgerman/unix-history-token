@@ -1513,46 +1513,6 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|slot
-operator|==
-literal|0
-operator|&&
-name|func
-operator|==
-literal|0
-condition|)
-block|{
-name|PCI_CSR_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
-name|PCI_NP_AD
-argument_list|,
-operator|(
-name|reg
-operator|&
-operator|~
-literal|3
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|bus
-operator|&=
-literal|0xff
-expr_stmt|;
-name|slot
-operator|&=
-literal|0x1f
-expr_stmt|;
-name|func
-operator|&=
-literal|0x07
-expr_stmt|;
 comment|/* configuration type 0 */
 name|PCI_CSR_WRITE_4
 argument_list|(
@@ -1566,12 +1526,20 @@ operator|<<
 operator|(
 literal|32
 operator|-
+operator|(
 name|slot
+operator|&
+literal|0x1f
+operator|)
 operator|)
 operator|)
 operator||
 operator|(
+operator|(
 name|func
+operator|&
+literal|0x7
+operator|)
 operator|<<
 literal|8
 operator|)
@@ -1584,7 +1552,6 @@ literal|3
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -1744,7 +1711,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|device_printf(dev, "read config: %u:%u:%u %#x(%d) = %#x\n", bus, slot, func, reg, bytes, ret);
+block|device_printf(dev, "%s: %u:%u:%u %#x(%d) = %#x\n", 	    __func__, bus, slot, func, reg, bytes, ret);
 endif|#
 directive|endif
 comment|/* check& clear PCI abort */
@@ -1852,7 +1819,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|device_printf(dev, "write config: %u:%u:%u %#x(%d) = %#x\n", bus, slot, func, reg, bytes, val);
+block|device_printf(dev, "%s: %u:%u:%u %#x(%d) = %#x\n", 	    __func__, bus, slot, func, reg, bytes, val);
 endif|#
 directive|endif
 name|ixppcib_conf_setup
