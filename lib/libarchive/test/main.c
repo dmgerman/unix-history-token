@@ -4876,7 +4876,6 @@ name|defined
 argument_list|(
 name|_DEBUG
 argument_list|)
-comment|/* You should have to add "$(TargetDir)" to 	 * Properties> Configuration Properties> Debugging> Working Directory, 	 * if you are running libarchive_test.exe on Visual Studio. 	 */
 name|DebugBreak
 argument_list|()
 expr_stmt|;
@@ -5667,7 +5666,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" Total of %d assertions skipped.\n"
+literal|" Total of %d reported skips.\n"
 argument_list|,
 name|skips
 argument_list|)
