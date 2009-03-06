@@ -9699,11 +9699,16 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|UPDATER_ERR_PROTO
-operator|)
-return|;
+name|lprintf
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"Error writing %s\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 name|finish
 label|:
 name|sr
