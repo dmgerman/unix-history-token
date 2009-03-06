@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2003-2007 Tim Kientzle  * All rights reserved.  *  
 end_comment
 
 begin_comment
-comment|/* FreeBSD 5.0 and later have ACL support. */
+comment|/* FreeBSD 5.0 and later have ACL and extattr support. */
 end_comment
 
 begin_if
@@ -521,13 +521,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRUCT_STAT_ST_MTIMESPEC_TV_NSEC
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_SYS_ACL_H
 value|1
 end_define
 
