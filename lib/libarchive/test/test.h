@@ -27,7 +27,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../../config.h"
+file|"config.h"
 end_include
 
 begin_elif
@@ -46,7 +46,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../config_freebsd.h"
+file|"config_freebsd.h"
 end_include
 
 begin_elif
@@ -65,7 +65,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../config_windows.h"
+file|"config_windows.h"
 end_include
 
 begin_else
