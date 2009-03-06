@@ -100,6 +100,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ARCHIVE_READ_DISK_MAGIC
+value|(0xbadb0c5U)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARCHIVE_STATE_ANY
 value|0xFFFFU
 end_define

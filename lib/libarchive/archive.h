@@ -22,6 +22,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -1947,6 +1953,182 @@ name|void
 function_decl|(
 modifier|*
 comment|/* cleanup */
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+parameter_list|)
+function_decl|;
+comment|/*  * ARCHIVE_READ_DISK API  *  * This is still evolving and somewhat experimental.  */
+name|__LA_DECL
+name|struct
+name|archive
+modifier|*
+name|archive_read_disk_new
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* The names for symlink modes here correspond to an old BSD  * command-line argument convention: -L, -P, -H */
+comment|/* Follow all symlinks. */
+name|__LA_DECL
+name|int
+name|archive_read_disk_set_symlink_logical
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Follow no symlinks. */
+name|__LA_DECL
+name|int
+name|archive_read_disk_set_symlink_physical
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Follow symlink initially, then not. */
+name|__LA_DECL
+name|int
+name|archive_read_disk_set_symlink_hybrid
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* TODO: Handle Linux stat32/stat64 ugliness.<sigh> */
+name|__LA_DECL
+name|int
+name|archive_read_disk_entry_from_file
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+name|int
+comment|/* fd */
+parameter_list|,
+specifier|const
+name|struct
+name|stat
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Look up gname for gid or uname for uid. */
+comment|/* Default implementations are very, very stupid. */
+name|__LA_DECL
+specifier|const
+name|char
+modifier|*
+name|archive_read_disk_gname
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+name|__LA_GID_T
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+specifier|const
+name|char
+modifier|*
+name|archive_read_disk_uname
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+name|__LA_UID_T
+parameter_list|)
+function_decl|;
+comment|/* "Standard" implementation uses getpwuid_r, getgrgid_r and caches the  * results for performance. */
+name|__LA_DECL
+name|int
+name|archive_read_disk_set_standard_lookup
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* You can install your own lookups if you like. */
+name|__LA_DECL
+name|int
+name|archive_read_disk_set_gname_lookup
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+comment|/* private_data */
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+function_decl|(
+modifier|*
+comment|/* lookup_fn */
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|__LA_GID_T
+parameter_list|)
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+comment|/* cleanup_fn */
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
+name|archive_read_disk_set_uname_lookup
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+comment|/* private_data */
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+function_decl|(
+modifier|*
+comment|/* lookup_fn */
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|__LA_UID_T
+parameter_list|)
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+comment|/* cleanup_fn */
 function_decl|)
 parameter_list|(
 name|void
