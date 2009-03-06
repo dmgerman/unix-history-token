@@ -4834,12 +4834,6 @@ block|{
 case|case
 name|USB_ST_TRANSFERRED
 case|:
-name|rqp
-operator|=
-name|xfer
-operator|->
-name|priv_fifo
-expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
@@ -4848,11 +4842,29 @@ name|ZYD_DEBUG_CMD
 argument_list|,
 literal|"command %p transferred\n"
 argument_list|,
-name|rqp
+name|xfer
+operator|->
+name|priv_fifo
 argument_list|)
 expr_stmt|;
+name|STAILQ_FOREACH
+argument_list|(
+argument|rqp
+argument_list|,
+argument|&sc->sc_rqh
+argument_list|,
+argument|rq
+argument_list|)
+block|{
+comment|/* Ensure the cached rq pointer is still valid */
 if|if
 condition|(
+name|rqp
+operator|==
+name|xfer
+operator|->
+name|priv_fifo
+operator|&&
 operator|(
 name|rqp
 operator|->
@@ -4869,6 +4881,7 @@ name|rqp
 argument_list|)
 expr_stmt|;
 comment|/* wakeup caller */
+block|}
 comment|/* FALLTHROUGH */
 case|case
 name|USB_ST_SETUP
