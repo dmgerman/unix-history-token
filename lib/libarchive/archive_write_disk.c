@@ -2346,6 +2346,17 @@ name|bytes_to_write
 decl_stmt|;
 if|if
 condition|(
+name|size
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ARCHIVE_OK
+operator|)
+return|;
+if|if
+condition|(
 name|a
 operator|->
 name|filesize
