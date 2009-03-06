@@ -686,7 +686,7 @@ name|void
 modifier|*
 name|buff
 decl_stmt|;
-name|size_t
+name|ssize_t
 name|bytes_avail
 decl_stmt|,
 name|offset
@@ -1011,7 +1011,8 @@ name|q
 decl_stmt|;
 name|size_t
 name|skip
-decl_stmt|,
+decl_stmt|;
+name|ssize_t
 name|bytes
 decl_stmt|;
 comment|/* 	 * TODO: We should be able to skip forward by a bunch 	 * by lifting some values from the PE header.  We don't 	 * need to be exact (we're still going to search forward 	 * to find the header), but it will speed things up and 	 * reduce the chance of a false positive. 	 */
