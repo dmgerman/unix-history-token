@@ -455,86 +455,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * Byte-order conversion functions.  */
-end_comment
-
-begin_function
-specifier|static
-name|uint32_t
-name|htoehci32
-parameter_list|(
-name|ehci_softc_t
-modifier|*
-name|sc
-parameter_list|,
-specifier|const
-name|uint32_t
-name|v
-parameter_list|)
-block|{
-return|return
-operator|(
-operator|(
-name|sc
-operator|->
-name|sc_flags
-operator|&
-name|EHCI_SCFLG_BIGEDESC
-operator|)
-condition|?
-name|htobe32
-argument_list|(
-name|v
-argument_list|)
-else|:
-name|htole32
-argument_list|(
-name|v
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|uint32_t
-name|ehci32toh
-parameter_list|(
-name|ehci_softc_t
-modifier|*
-name|sc
-parameter_list|,
-specifier|const
-name|uint32_t
-name|v
-parameter_list|)
-block|{
-return|return
-operator|(
-operator|(
-name|sc
-operator|->
-name|sc_flags
-operator|&
-name|EHCI_SCFLG_BIGEDESC
-operator|)
-condition|?
-name|be32toh
-argument_list|(
-name|v
-argument_list|)
-else|:
-name|le32toh
-argument_list|(
-name|v
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
 begin_function
 name|void
 name|ehci_iterate_hw_softc
@@ -748,9 +668,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|usb2_error_t
-name|ehci_hc_reset
+name|ehci_reset
 parameter_list|(
 name|ehci_softc_t
 modifier|*
@@ -760,8 +679,197 @@ block|{
 name|uint32_t
 name|hcr
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|EOWRITE4
+argument_list|(
+name|sc
+argument_list|,
+name|EHCI_USBCMD
+argument_list|,
+name|EHCI_CMD_HCRESET
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|100
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|usb2_pause_mtx
+argument_list|(
+name|NULL
+argument_list|,
+name|hz
+operator|/
+literal|1000
+argument_list|)
+expr_stmt|;
+name|hcr
+operator|=
+name|EOREAD4
+argument_list|(
+name|sc
+argument_list|,
+name|EHCI_USBCMD
+argument_list|)
+operator|&
+name|EHCI_CMD_HCRESET
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|hcr
+condition|)
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+operator|(
+name|EHCI_SCFLG_SETMODE
+operator||
+name|EHCI_SCFLG_BIGEMMIO
+operator|)
+condition|)
+block|{
+comment|/* 				 * Force USBMODE as requested.  Controllers 				 * may have multiple operating modes. 				 */
 name|uint32_t
-name|n
+name|usbmode
+init|=
+name|EOREAD4
+argument_list|(
+name|sc
+argument_list|,
+name|EHCI_USBMODE
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|EHCI_SCFLG_SETMODE
+condition|)
+block|{
+name|usbmode
+operator|=
+operator|(
+name|usbmode
+operator|&
+operator|~
+name|EHCI_UM_CM
+operator|)
+operator||
+name|EHCI_UM_CM_HOST
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bdev
+argument_list|,
+literal|"set host controller mode\n"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|EHCI_SCFLG_BIGEMMIO
+condition|)
+block|{
+name|usbmode
+operator|=
+operator|(
+name|usbmode
+operator|&
+operator|~
+name|EHCI_UM_ES
+operator|)
+operator||
+name|EHCI_UM_ES_BE
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bdev
+argument_list|,
+literal|"set big-endian mode\n"
+argument_list|)
+expr_stmt|;
+block|}
+name|EOWRITE4
+argument_list|(
+name|sc
+argument_list|,
+name|EHCI_USBMODE
+argument_list|,
+name|usbmode
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+block|}
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bdev
+argument_list|,
+literal|"reset timeout\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|USB_ERR_IOERROR
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|usb2_error_t
+name|ehci_hcreset
+parameter_list|(
+name|ehci_softc_t
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|uint32_t
+name|hcr
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 name|EOWRITE4
 argument_list|(
@@ -775,26 +883,21 @@ expr_stmt|;
 comment|/* Halt controller */
 for|for
 control|(
-name|n
+name|i
 operator|=
 literal|0
 init|;
-name|n
-operator|!=
+name|i
+operator|<
 literal|100
 condition|;
-name|n
+name|i
 operator|++
 control|)
 block|{
 name|usb2_pause_mtx
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_bus
-operator|.
-name|bus_mtx
+name|NULL
 argument_list|,
 name|hz
 operator|/
@@ -809,117 +912,37 @@ name|sc
 argument_list|,
 name|EHCI_USBSTS
 argument_list|)
+operator|&
+name|EHCI_STS_HCH
 expr_stmt|;
 if|if
 condition|(
 name|hcr
-operator|&
-name|EHCI_STS_HCH
 condition|)
-block|{
-name|hcr
-operator|=
-literal|0
-expr_stmt|;
 break|break;
 block|}
-block|}
-comment|/* 	 * Fall through and try reset anyway even though 	 * Table 2-9 in the EHCI spec says this will result 	 * in undefined behavior. 	 */
-name|EOWRITE4
+if|if
+condition|(
+operator|!
+name|hcr
+condition|)
+comment|/*                  * Fall through and try reset anyway even though                  * Table 2-9 in the EHCI spec says this will result                  * in undefined behavior.                  */
+name|device_printf
 argument_list|(
-name|sc
-argument_list|,
-name|EHCI_USBCMD
-argument_list|,
-name|EHCI_CMD_HCRESET
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|n
-operator|=
-literal|0
-init|;
-name|n
-operator|!=
-literal|100
-condition|;
-name|n
-operator|++
-control|)
-block|{
-name|usb2_pause_mtx
-argument_list|(
-operator|&
 name|sc
 operator|->
 name|sc_bus
 operator|.
-name|bus_mtx
+name|bdev
 argument_list|,
-name|hz
-operator|/
-literal|1000
+literal|"stop timeout\n"
 argument_list|)
 expr_stmt|;
-name|hcr
-operator|=
-name|EOREAD4
+return|return
+name|ehci_reset
 argument_list|(
 name|sc
-argument_list|,
-name|EHCI_USBCMD
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|hcr
-operator|&
-name|EHCI_CMD_HCRESET
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_flags
-operator|&
-name|EHCI_SCFLG_SETMODE
-condition|)
-name|EOWRITE4
-argument_list|(
-name|sc
-argument_list|,
-literal|0x68
-argument_list|,
-literal|0x3
-argument_list|)
-expr_stmt|;
-name|hcr
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-block|}
-block|}
-if|if
-condition|(
-name|hcr
-condition|)
-block|{
-return|return
-operator|(
-name|USB_ERR_IOERROR
-operator|)
-return|;
-block|}
-return|return
-operator|(
-literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -1133,27 +1156,11 @@ name|bdev
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|USB_BUS_LOCK
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_bus
-argument_list|)
-expr_stmt|;
 name|err
 operator|=
-name|ehci_hc_reset
+name|ehci_hcreset
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|USB_BUS_UNLOCK
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_bus
 argument_list|)
 expr_stmt|;
 if|if
@@ -1294,7 +1301,7 @@ name|qh
 operator|->
 name|qh_self
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -1303,7 +1310,7 @@ operator|.
 name|physaddr
 argument_list|)
 operator||
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -1314,7 +1321,7 @@ name|qh
 operator|->
 name|qh_endp
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -1328,7 +1335,7 @@ name|qh
 operator|->
 name|qh_endphub
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -1350,7 +1357,7 @@ name|qh_qtd
 operator|.
 name|qtd_next
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -1363,7 +1370,7 @@ name|qh_qtd
 operator|.
 name|qtd_altnext
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -1376,7 +1383,7 @@ name|qh_qtd
 operator|.
 name|qtd_status
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -1488,7 +1495,7 @@ name|qh
 operator|->
 name|qh_link
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -1568,7 +1575,7 @@ name|sitd
 operator|->
 name|sitd_self
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -1577,7 +1584,7 @@ operator|.
 name|physaddr
 argument_list|)
 operator||
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -1588,7 +1595,7 @@ name|sitd
 operator|->
 name|sitd_back
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -1664,7 +1671,7 @@ name|itd
 operator|->
 name|itd_self
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -1673,7 +1680,7 @@ operator|.
 name|physaddr
 argument_list|)
 operator||
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -1822,7 +1829,7 @@ name|qh
 operator|->
 name|qh_self
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -1831,7 +1838,7 @@ operator|.
 name|physaddr
 argument_list|)
 operator||
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -1843,7 +1850,7 @@ name|qh
 operator|->
 name|qh_endp
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -1859,7 +1866,7 @@ name|qh
 operator|->
 name|qh_endphub
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -1890,7 +1897,7 @@ name|qh_qtd
 operator|.
 name|qtd_next
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -1903,7 +1910,7 @@ name|qh_qtd
 operator|.
 name|qtd_altnext
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -1916,7 +1923,7 @@ name|qh_qtd
 operator|.
 name|qtd_status
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -2149,9 +2156,17 @@ operator|->
 name|sc_eintrs
 argument_list|)
 expr_stmt|;
+name|USB_BUS_UNLOCK
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_bus
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|ehci_hc_reset
+name|ehci_hcreset
 argument_list|(
 name|sc
 argument_list|)
@@ -2163,14 +2178,6 @@ literal|"reset failed!\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|USB_BUS_UNLOCK
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_bus
-argument_list|)
-expr_stmt|;
 comment|/* XXX let stray task complete */
 name|usb2_pause_mtx
 argument_list|(
@@ -2875,17 +2882,9 @@ argument_list|(
 literal|"stopping the HC\n"
 argument_list|)
 expr_stmt|;
-name|USB_BUS_LOCK
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_bus
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|ehci_hc_reset
+name|ehci_hcreset
 argument_list|(
 name|sc
 argument_list|)
@@ -2897,14 +2896,6 @@ literal|"reset failed!\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|USB_BUS_UNLOCK
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_bus
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3345,7 +3336,7 @@ parameter_list|)
 block|{
 name|link
 operator|=
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -3493,7 +3484,7 @@ argument_list|)
 expr_stmt|;
 name|s
 operator|=
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -3644,7 +3635,7 @@ literal|"  buffer[%d]=0x%08x\n"
 argument_list|,
 name|s
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -3678,7 +3669,7 @@ literal|"  buffer_hi[%d]=0x%08x\n"
 argument_list|,
 name|s
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -3725,7 +3716,7 @@ literal|"QTD(%p) at 0x%08x:\n"
 argument_list|,
 name|sqtd
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -3749,7 +3740,7 @@ name|sqtd
 operator|->
 name|qtd_next
 operator|&
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -3877,7 +3868,7 @@ literal|"QH(%p) at 0x%08x:\n"
 argument_list|,
 name|qh
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -3913,7 +3904,7 @@ argument_list|)
 expr_stmt|;
 name|endp
 operator|=
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -3986,7 +3977,7 @@ argument_list|)
 expr_stmt|;
 name|endphub
 operator|=
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4102,7 +4093,7 @@ literal|"SITD(%p) at 0x%08x\n"
 argument_list|,
 name|sitd
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4119,7 +4110,7 @@ name|printf
 argument_list|(
 literal|" next=0x%08x\n"
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4133,7 +4124,7 @@ name|printf
 argument_list|(
 literal|" portaddr=0x%08x dir=%s addr=%d endpt=0x%x port=0x%x huba=0x%x\n"
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4147,7 +4138,7 @@ name|sitd
 operator|->
 name|sitd_portaddr
 operator|&
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -4161,7 +4152,7 @@ literal|"out"
 argument_list|,
 name|EHCI_SITD_GET_ADDR
 argument_list|(
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4173,7 +4164,7 @@ argument_list|)
 argument_list|,
 name|EHCI_SITD_GET_ENDPT
 argument_list|(
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4185,7 +4176,7 @@ argument_list|)
 argument_list|,
 name|EHCI_SITD_GET_PORT
 argument_list|(
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4197,7 +4188,7 @@ argument_list|)
 argument_list|,
 name|EHCI_SITD_GET_HUBA
 argument_list|(
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4212,7 +4203,7 @@ name|printf
 argument_list|(
 literal|" mask=0x%08x\n"
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4226,7 +4217,7 @@ name|printf
 argument_list|(
 literal|" status=0x%08x<%s> len=0x%x\n"
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4240,7 +4231,7 @@ name|sitd
 operator|->
 name|sitd_status
 operator|&
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -4254,7 +4245,7 @@ literal|""
 argument_list|,
 name|EHCI_SITD_GET_LEN
 argument_list|(
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4269,7 +4260,7 @@ name|printf
 argument_list|(
 literal|" back=0x%08x, bp=0x%08x,0x%08x,0x%08x,0x%08x\n"
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4278,7 +4269,7 @@ operator|->
 name|sitd_back
 argument_list|)
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4290,7 +4281,7 @@ literal|0
 index|]
 argument_list|)
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4302,7 +4293,7 @@ literal|1
 index|]
 argument_list|)
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4314,7 +4305,7 @@ literal|0
 index|]
 argument_list|)
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4357,7 +4348,7 @@ literal|"ITD(%p) at 0x%08x\n"
 argument_list|,
 name|itd
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4374,7 +4365,7 @@ name|printf
 argument_list|(
 literal|" next=0x%08x\n"
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4388,7 +4379,7 @@ name|printf
 argument_list|(
 literal|" status[0]=0x%08x;<%s>\n"
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4408,7 +4399,7 @@ index|[
 literal|0
 index|]
 operator|&
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -4425,7 +4416,7 @@ name|printf
 argument_list|(
 literal|" status[1]=0x%08x;<%s>\n"
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4445,7 +4436,7 @@ index|[
 literal|1
 index|]
 operator|&
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -4462,7 +4453,7 @@ name|printf
 argument_list|(
 literal|" status[2]=0x%08x;<%s>\n"
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4482,7 +4473,7 @@ index|[
 literal|2
 index|]
 operator|&
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -4499,7 +4490,7 @@ name|printf
 argument_list|(
 literal|" status[3]=0x%08x;<%s>\n"
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4519,7 +4510,7 @@ index|[
 literal|3
 index|]
 operator|&
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -4536,7 +4527,7 @@ name|printf
 argument_list|(
 literal|" status[4]=0x%08x;<%s>\n"
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4556,7 +4547,7 @@ index|[
 literal|4
 index|]
 operator|&
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -4573,7 +4564,7 @@ name|printf
 argument_list|(
 literal|" status[5]=0x%08x;<%s>\n"
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4593,7 +4584,7 @@ index|[
 literal|5
 index|]
 operator|&
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -4610,7 +4601,7 @@ name|printf
 argument_list|(
 literal|" status[6]=0x%08x;<%s>\n"
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4630,7 +4621,7 @@ index|[
 literal|6
 index|]
 operator|&
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -4647,7 +4638,7 @@ name|printf
 argument_list|(
 literal|" status[7]=0x%08x;<%s>\n"
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4667,7 +4658,7 @@ index|[
 literal|7
 index|]
 operator|&
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -4684,7 +4675,7 @@ name|printf
 argument_list|(
 literal|" bp[0]=0x%08x\n"
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4703,7 +4694,7 @@ literal|"  addr=0x%02x; endpt=0x%01x\n"
 argument_list|,
 name|EHCI_ITD_GET_ADDR
 argument_list|(
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4718,7 +4709,7 @@ argument_list|)
 argument_list|,
 name|EHCI_ITD_GET_ENDPT
 argument_list|(
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4736,7 +4727,7 @@ name|printf
 argument_list|(
 literal|" bp[1]=0x%08x\n"
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4754,7 +4745,7 @@ argument_list|(
 literal|" dir=%s; mpl=0x%02x\n"
 argument_list|,
 operator|(
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4775,7 +4766,7 @@ literal|"out"
 argument_list|,
 name|EHCI_ITD_GET_MPL
 argument_list|(
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4793,7 +4784,7 @@ name|printf
 argument_list|(
 literal|" bp[2..6]=0x%08x,0x%08x,0x%08x,0x%08x,0x%08x\n"
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4805,7 +4796,7 @@ literal|2
 index|]
 argument_list|)
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4817,7 +4808,7 @@ literal|3
 index|]
 argument_list|)
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4829,7 +4820,7 @@ literal|4
 index|]
 argument_list|)
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4841,7 +4832,7 @@ literal|5
 index|]
 argument_list|)
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4859,7 +4850,7 @@ argument_list|(
 literal|" bp_hi=0x%08x,0x%08x,0x%08x,0x%08x,\n"
 literal|"       0x%08x,0x%08x,0x%08x\n"
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4871,7 +4862,7 @@ literal|0
 index|]
 argument_list|)
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4883,7 +4874,7 @@ literal|1
 index|]
 argument_list|)
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4895,7 +4886,7 @@ literal|2
 index|]
 argument_list|)
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4907,7 +4898,7 @@ literal|3
 index|]
 argument_list|)
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4919,7 +4910,7 @@ literal|4
 index|]
 argument_list|)
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -4931,7 +4922,7 @@ literal|5
 index|]
 argument_list|)
 argument_list|,
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -5909,7 +5900,7 @@ argument_list|)
 expr_stmt|;
 name|status
 operator|=
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -6510,7 +6501,7 @@ argument_list|)
 expr_stmt|;
 name|status
 operator|=
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -6535,7 +6526,7 @@ argument_list|)
 expr_stmt|;
 name|status
 operator||=
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -6730,7 +6721,7 @@ operator|!
 operator|(
 name|status
 operator|&
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -6779,7 +6770,7 @@ argument_list|)
 expr_stmt|;
 name|status
 operator|=
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -7428,7 +7419,7 @@ name|precompute
 decl_stmt|;
 name|qtd_altnext
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|->
@@ -7603,7 +7594,7 @@ name|temp
 operator|->
 name|qtd_status
 operator||
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|->
@@ -7636,7 +7627,7 @@ name|temp
 operator|->
 name|qtd_status
 operator|^=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|->
@@ -7729,7 +7720,7 @@ name|temp
 operator|->
 name|qtd_status
 operator|^=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|->
@@ -7773,7 +7764,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|->
@@ -7831,7 +7822,7 @@ index|[
 name|x
 index|]
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|->
@@ -7886,7 +7877,7 @@ index|[
 name|x
 index|]
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|->
@@ -8221,7 +8212,7 @@ name|temp
 operator|.
 name|qtd_status
 operator||=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|.
@@ -8269,7 +8260,7 @@ name|temp
 operator|.
 name|qtd_status
 operator||=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|.
@@ -8305,7 +8296,7 @@ name|temp
 operator|.
 name|qtd_status
 operator|&=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|.
@@ -8321,7 +8312,7 @@ name|temp
 operator|.
 name|qtd_status
 operator||=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|.
@@ -8447,7 +8438,7 @@ name|temp
 operator|.
 name|qtd_status
 operator|&=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|.
@@ -8517,7 +8508,7 @@ operator|==
 name|UE_DIR_IN
 operator|)
 condition|?
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|.
@@ -8531,7 +8522,7 @@ name|EHCI_QTD_PID_IN
 argument_list|)
 argument_list|)
 else|:
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|.
@@ -8574,7 +8565,7 @@ name|temp
 operator|.
 name|qtd_status
 operator|&=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|.
@@ -8606,7 +8597,7 @@ operator|==
 name|UE_DIR_OUT
 operator|)
 condition|?
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|.
@@ -8625,7 +8616,7 @@ literal|1
 argument_list|)
 argument_list|)
 else|:
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|.
@@ -8680,7 +8671,7 @@ name|td
 operator|->
 name|qtd_next
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|.
@@ -8693,7 +8684,7 @@ name|td
 operator|->
 name|qtd_altnext
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|.
@@ -8706,7 +8697,7 @@ name|td
 operator|->
 name|qtd_status
 operator||=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|.
@@ -8931,7 +8922,7 @@ name|qh
 operator|->
 name|qh_endp
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|.
@@ -8993,7 +8984,7 @@ name|qh
 operator|->
 name|qh_endphub
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|.
@@ -9006,7 +8997,7 @@ name|qh
 operator|->
 name|qh_curqtd
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|.
@@ -9022,7 +9013,7 @@ name|qh_qtd
 operator|.
 name|qtd_status
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|.
@@ -9043,7 +9034,7 @@ name|qh
 operator|->
 name|qh_endp
 operator|&=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|.
@@ -9069,7 +9060,7 @@ name|qh_qtd
 operator|.
 name|qtd_status
 operator||=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|.
@@ -9105,7 +9096,7 @@ name|qh_qtd
 operator|.
 name|qtd_altnext
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|temp
 operator|.
@@ -9519,7 +9510,7 @@ argument_list|)
 expr_stmt|;
 name|status
 operator|=
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -9756,7 +9747,7 @@ argument_list|)
 expr_stmt|;
 name|status
 operator|=
-name|ehci32toh
+name|hc32toh
 argument_list|(
 name|sc
 argument_list|,
@@ -10905,7 +10896,7 @@ expr_stmt|;
 block|}
 name|sitd_portaddr
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -10958,7 +10949,7 @@ name|td
 operator|->
 name|sitd_back
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -11496,7 +11487,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -11703,7 +11694,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -11714,7 +11705,7 @@ name|td
 operator|->
 name|sitd_mask
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -11732,7 +11723,7 @@ name|td
 operator|->
 name|sitd_status
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -11754,7 +11745,7 @@ name|td
 operator|->
 name|sitd_status
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -12078,7 +12069,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -12137,7 +12128,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -12152,7 +12143,7 @@ index|[
 literal|2
 index|]
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -12645,7 +12636,7 @@ index|[
 name|td_no
 index|]
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -12767,7 +12758,7 @@ index|[
 literal|0
 index|]
 operator|&=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -12781,7 +12772,7 @@ index|[
 literal|0
 index|]
 operator||=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -12827,7 +12818,7 @@ index|[
 name|x
 index|]
 operator||=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -12934,7 +12925,7 @@ index|[
 name|page_no
 index|]
 operator|&=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -12948,7 +12939,7 @@ index|[
 name|page_no
 index|]
 operator||=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -12973,7 +12964,7 @@ index|[
 literal|7
 index|]
 operator||=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -14953,7 +14944,11 @@ name|sc
 operator|->
 name|sc_flags
 operator|&
+operator|(
 name|EHCI_SCFLG_FORCESPEED
+operator||
+name|EHCI_SCFLG_TT
+operator|)
 condition|)
 block|{
 if|if
@@ -15316,6 +15311,16 @@ name|EHCI_PS_IS_LOWSPEED
 argument_list|(
 name|v
 argument_list|)
+operator|&&
+operator|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|EHCI_SCFLG_TT
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* Low speed device, give up ownership. */
@@ -15456,9 +15461,19 @@ name|v
 operator|&
 name|EHCI_PS_PE
 operator|)
+operator|&&
+operator|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|EHCI_SCFLG_TT
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
-comment|/* 				 * Not a high speed device, give up 				 * ownership. 				 */
+comment|/* Not a high speed device, give up ownership.*/
 name|ehci_disown
 argument_list|(
 name|sc
@@ -16398,7 +16413,7 @@ name|td
 operator|->
 name|itd_self
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -16512,7 +16527,7 @@ name|td
 operator|->
 name|sitd_self
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -16626,7 +16641,7 @@ name|qtd
 operator|->
 name|qtd_self
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,
@@ -16755,7 +16770,7 @@ name|qh
 operator|->
 name|qh_self
 operator|=
-name|htoehci32
+name|htohc32
 argument_list|(
 name|sc
 argument_list|,

@@ -852,6 +852,14 @@ name|EHCI_SCFLG_BIGEMMIO
 operator||
 name|EHCI_SCFLG_NORESTERM
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|ehci_reset
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|err
 operator|=
 name|ehci_init
