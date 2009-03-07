@@ -944,5 +944,22 @@ define|\
 value|test_assert_equal_string(__FILE__, __LINE__, (v1), #v1, (v2), #v2, (a))
 end_define
 
+begin_comment
+comment|/*  * A compression is not supported  * Use this define after archive_read_next_header() is called  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UnsupportedCompress
+parameter_list|(
+name|r
+parameter_list|,
+name|a
+parameter_list|)
+define|\
+value|(r != ARCHIVE_OK&& \ 	 (strcmp(archive_error_string(a), \ 	    "Unrecognized archive format") == 0&& \ 	  archive_compression(a) == ARCHIVE_COMPRESSION_NONE))
+end_define
+
 end_unit
 

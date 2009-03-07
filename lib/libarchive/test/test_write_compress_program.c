@@ -391,24 +391,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|UnsupportedCompress
+argument_list|(
 name|r
-operator|!=
-name|ARCHIVE_OK
-condition|)
-block|{
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|archive_error_string
-argument_list|(
+argument_list|,
 name|a
 argument_list|)
-argument_list|,
-literal|"Unrecognized archive format"
-argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 name|skipping
@@ -427,7 +415,7 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Try using an external "gunzip","gzip -d" program 			 */
+comment|/* 		 * Try using an external "gunzip","gzip -d" program 		 */
 if|if
 condition|(
 operator|(
@@ -522,7 +510,6 @@ operator|&
 name|ae
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|assertA
 argument_list|(

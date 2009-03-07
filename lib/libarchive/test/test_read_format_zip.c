@@ -30,9 +30,6 @@ end_macro
 
 begin_block
 block|{
-if|#
-directive|if
-name|HAVE_ZLIB_H
 specifier|const
 name|char
 modifier|*
@@ -67,6 +64,9 @@ name|s
 decl_stmt|;
 name|off_t
 name|o
+decl_stmt|;
+name|int
+name|r
 decl_stmt|;
 name|extract_reference_file
 argument_list|(
@@ -241,10 +241,8 @@ argument_list|(
 literal|"archive_read_data() returns number of bytes read"
 argument_list|)
 expr_stmt|;
-name|assertEqualInt
-argument_list|(
-literal|18
-argument_list|,
+name|r
+operator|=
 name|archive_read_data
 argument_list|(
 name|a
@@ -253,6 +251,49 @@ name|buff
 argument_list|,
 literal|19
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|<
+name|ARCHIVE_OK
+condition|)
+block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|archive_error_string
+argument_list|(
+name|a
+argument_list|)
+argument_list|,
+literal|"libarchive compiled without deflate support (no libz)"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|skipping
+argument_list|(
+literal|"Skipping ZIP compression check: %s"
+argument_list|,
+name|archive_error_string
+argument_list|(
+name|a
+argument_list|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|finish
+goto|;
+block|}
+block|}
+name|assertEqualInt
+argument_list|(
+literal|18
+argument_list|,
+name|r
 argument_list|)
 expr_stmt|;
 name|assert
@@ -380,6 +421,8 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|finish
+label|:
 if|#
 directive|if
 name|ARCHIVE_VERSION_NUMBER
@@ -400,15 +443,6 @@ name|archive_read_finish
 argument_list|(
 name|a
 argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-else|#
-directive|else
-name|skipping
-argument_list|(
-literal|"Need zlib"
 argument_list|)
 expr_stmt|;
 endif|#

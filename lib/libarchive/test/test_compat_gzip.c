@@ -157,6 +157,27 @@ operator|&
 name|ae
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|UnsupportedCompress
+argument_list|(
+name|r
+argument_list|,
+name|a
+argument_list|)
+condition|)
+block|{
+name|skipping
+argument_list|(
+literal|"Skipping GZIP compression check: "
+literal|"This version of libarchive was compiled "
+literal|"without gzip support"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|finish
+goto|;
+block|}
 name|failure
 argument_list|(
 literal|"Could not read file %d (%s) from %s"
@@ -265,6 +286,8 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|finish
+label|:
 if|#
 directive|if
 name|ARCHIVE_VERSION_NUMBER
@@ -301,9 +324,6 @@ end_macro
 
 begin_block
 block|{
-if|#
-directive|if
-name|HAVE_ZLIB_H
 comment|/* This sample has been 'split', each piece compressed separately, 	 * then concatenated.  Gunzip will emit the concatenated result. */
 comment|/* Not supported in libarchive 2.6 and earlier */
 name|verify
@@ -317,15 +337,6 @@ argument_list|(
 literal|"test_compat_gzip_2.tgz"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|skipping
-argument_list|(
-literal|"Need zlib"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 
