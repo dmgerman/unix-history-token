@@ -770,7 +770,7 @@ name|read_avail
 decl_stmt|,
 name|decompressed
 decl_stmt|;
-name|unsigned
+specifier|const
 name|char
 modifier|*
 name|read_buf
@@ -1031,14 +1031,6 @@ block|}
 comment|/* stream.next_in is really const, but bzlib 		 * doesn't declare it so.<sigh> */
 name|read_buf
 operator|=
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-operator|(
-name|uintptr_t
-operator|)
 name|__archive_read_filter_ahead
 argument_list|(
 name|self
@@ -1068,6 +1060,13 @@ name|stream
 operator|.
 name|next_in
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|read_buf
 expr_stmt|;
 name|state
@@ -1136,11 +1135,6 @@ name|self
 operator|->
 name|upstream
 argument_list|,
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
 name|state
 operator|->
 name|stream
