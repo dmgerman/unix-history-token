@@ -248,6 +248,33 @@ name|archive
 modifier|*
 name|a
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|extprog
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|extprog
+operator|=
+name|external_gzip_program
+argument_list|(
+literal|1
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|skipping
+argument_list|(
+literal|"There is no gzip uncompression "
+literal|"program in this platform"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|assert
 argument_list|(
 operator|(
@@ -278,7 +305,7 @@ name|archive_read_support_compression_program
 argument_list|(
 name|a
 argument_list|,
-literal|"gunzip"
+name|extprog
 argument_list|)
 expr_stmt|;
 if|if
@@ -290,7 +317,8 @@ condition|)
 block|{
 name|skipping
 argument_list|(
-literal|"archive_read_support_compression_program() unsupported on this platform"
+literal|"archive_read_support_compression_program() "
+literal|"unsupported on this platform"
 argument_list|)
 expr_stmt|;
 return|return;

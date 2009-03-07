@@ -802,6 +802,22 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Get external gzip program name */
+end_comment
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|external_gzip_program
+parameter_list|(
+name|int
+name|un
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Special interfaces for libarchive test harness.  */
 end_comment
 

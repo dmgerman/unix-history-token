@@ -908,6 +908,11 @@ argument_list|,
 name|FILE_BUFF_SIZE
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|failure
 argument_list|(
 literal|"The file contents read from disk are the wrong size"
