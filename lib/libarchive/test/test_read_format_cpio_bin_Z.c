@@ -293,6 +293,16 @@ argument_list|,
 name|ARCHIVE_COMPRESSION_COMPRESS
 argument_list|)
 expr_stmt|;
+name|assertEqualString
+argument_list|(
+name|archive_compression_name
+argument_list|(
+name|a
+argument_list|)
+argument_list|,
+literal|"compress (.Z)"
+argument_list|)
+expr_stmt|;
 name|failure
 argument_list|(
 literal|"archive_format_name(a)=\"%s\""

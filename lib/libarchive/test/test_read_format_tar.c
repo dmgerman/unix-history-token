@@ -1150,6 +1150,16 @@ argument_list|,
 name|ARCHIVE_COMPRESSION_NONE
 argument_list|)
 expr_stmt|;
+name|assertEqualString
+argument_list|(
+name|archive_compression_name
+argument_list|(
+name|a
+argument_list|)
+argument_list|,
+literal|"none"
+argument_list|)
+expr_stmt|;
 name|failure
 argument_list|(
 literal|"512 zero bytes should be recognized as a tar archive."

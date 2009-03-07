@@ -235,6 +235,16 @@ argument_list|,
 name|ARCHIVE_COMPRESSION_GZIP
 argument_list|)
 expr_stmt|;
+name|assertEqualString
+argument_list|(
+name|archive_compression_name
+argument_list|(
+name|a
+argument_list|)
+argument_list|,
+literal|"gzip"
+argument_list|)
+expr_stmt|;
 name|assertEqualInt
 argument_list|(
 name|archive_format

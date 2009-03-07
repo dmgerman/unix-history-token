@@ -1354,28 +1354,23 @@ name|close
 operator|=
 name|client_close_proxy
 expr_stmt|;
-name|a
-operator|->
 name|filter
+operator|->
+name|name
 operator|=
-name|filter
+literal|"none"
 expr_stmt|;
-comment|/* In case there's no filter. */
-name|a
+name|filter
 operator|->
-name|archive
-operator|.
-name|compression_code
+name|code
 operator|=
 name|ARCHIVE_COMPRESSION_NONE
 expr_stmt|;
 name|a
 operator|->
-name|archive
-operator|.
-name|compression_name
+name|filter
 operator|=
-literal|"none"
+name|filter
 expr_stmt|;
 comment|/* Build out the input pipeline. */
 name|e
