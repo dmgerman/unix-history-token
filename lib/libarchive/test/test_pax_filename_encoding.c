@@ -848,6 +848,27 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* If wctomb is broken, warn and return. */
+if|if
+condition|(
+name|wctomb
+argument_list|(
+name|buff
+argument_list|,
+literal|0x1234
+argument_list|)
+operator|>
+literal|0
+condition|)
+block|{
+name|skipping
+argument_list|(
+literal|"Cannot test conversion failures because \"C\" "
+literal|"locale on this system has no invalid characters."
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|assert
 argument_list|(
 operator|(
