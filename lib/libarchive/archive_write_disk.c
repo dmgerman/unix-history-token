@@ -1858,6 +1858,9 @@ operator|->
 name|user_umask
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|_WIN32
 if|if
 condition|(
 name|a
@@ -1872,6 +1875,8 @@ name|todo
 operator||=
 name|TODO_OWNER
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|a
@@ -8533,6 +8538,9 @@ operator|&=
 operator|~
 name|S_ISGID
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
 if|if
 condition|(
 name|a
@@ -8561,6 +8569,8 @@ operator|=
 name|ARCHIVE_WARN
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 comment|/* While we're here, double-check the UID. */
 if|if
@@ -8589,6 +8599,9 @@ operator|&=
 operator|~
 name|S_ISUID
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
 if|if
 condition|(
 name|a
@@ -8616,6 +8629,8 @@ operator|=
 name|ARCHIVE_WARN
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 name|a
 operator|->
@@ -8659,6 +8674,9 @@ operator|&=
 operator|~
 name|S_ISUID
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
 if|if
 condition|(
 name|a
@@ -8686,6 +8704,8 @@ operator|=
 name|ARCHIVE_WARN
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 name|a
 operator|->
