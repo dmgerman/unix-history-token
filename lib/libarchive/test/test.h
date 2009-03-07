@@ -840,6 +840,28 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* "2" version exercises a slightly different set of libarchive APIs. */
+end_comment
+
+begin_function_decl
+name|int
+name|read_open_memory2
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * ARCHIVE_VERSION_STAMP first appeared in 1.9 and libarchive 2.2.4.  * We can approximate it for earlier versions, though.  * This is used to disable tests of features not present in the current  * version.  */
 end_comment
 

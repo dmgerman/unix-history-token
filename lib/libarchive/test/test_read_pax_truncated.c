@@ -336,7 +336,7 @@ name|assertA
 argument_list|(
 literal|0
 operator|==
-name|read_open_memory
+name|read_open_memory2
 argument_list|(
 name|a
 argument_list|,
