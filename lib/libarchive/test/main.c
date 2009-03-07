@@ -321,7 +321,7 @@ end_ifdef
 begin_function
 specifier|static
 name|void
-name|invalid_paramter_handler
+name|invalid_parameter_handler
 parameter_list|(
 specifier|const
 name|wchar_t
@@ -5277,7 +5277,7 @@ name|_WIN32
 comment|/* To stop to run the default invalid parameter handler. */
 name|_set_invalid_parameter_handler
 argument_list|(
-name|invalid_paramter_handler
+name|invalid_parameter_handler
 argument_list|)
 expr_stmt|;
 comment|/* for open() to a binary mode. */
