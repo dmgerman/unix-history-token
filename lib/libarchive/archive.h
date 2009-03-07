@@ -49,10 +49,16 @@ name|defined
 argument_list|(
 name|_MSC_VER
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__INTERIX
+argument_list|)
 end_if
 
 begin_comment
-comment|/* Header unavailable on Watcom C or MS Visual C++. */
+comment|/* Header unavailable on Watcom C or MS Visual C++ or SFU. */
 end_comment
 
 begin_include
