@@ -11032,25 +11032,6 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* Definitely younger. */
-if|if
-condition|(
-name|st
-operator|->
-name|st_mtimespec
-operator|.
-name|tv_nsec
-operator|>
-name|archive_entry_mtime_nsec
-argument_list|(
-name|entry
-argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 elif|#
 directive|elif
 name|HAVE_STRUCT_STAT_ST_MTIM_TV_NSEC
@@ -11073,15 +11054,16 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* Definitely older. */
+elif|#
+directive|elif
+name|HAVE_STRUCT_STAT_ST_MTIME_N
+comment|/* older. */
 if|if
 condition|(
 name|st
 operator|->
-name|st_mtim
-operator|.
-name|tv_nsec
-operator|>
+name|st_mtime_n
+operator|<
 name|archive_entry_mtime_nsec
 argument_list|(
 name|entry
@@ -11089,7 +11071,51 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|0
+literal|1
+operator|)
+return|;
+elif|#
+directive|elif
+name|HAVE_STRUCT_STAT_ST_UMTIME
+comment|/* older. */
+if|if
+condition|(
+name|st
+operator|->
+name|st_umtime
+operator|*
+literal|1000
+operator|<
+name|archive_entry_mtime_nsec
+argument_list|(
+name|entry
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+elif|#
+directive|elif
+name|HAVE_STRUCT_STAT_ST_MTIME_USEC
+comment|/* older. */
+if|if
+condition|(
+name|st
+operator|->
+name|st_mtime_usec
+operator|*
+literal|1000
+operator|<
+name|archive_entry_mtime_nsec
+argument_list|(
+name|entry
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|1
 operator|)
 return|;
 else|#
@@ -11097,7 +11123,7 @@ directive|else
 comment|/* This system doesn't have high-res timestamps. */
 endif|#
 directive|endif
-comment|/* Same age, so not older. */
+comment|/* Same age or newer, so not older. */
 return|return
 operator|(
 literal|0
