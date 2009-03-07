@@ -808,6 +808,26 @@ parameter_list|)
 function_decl|;
 name|__LA_DECL
 name|int
+name|archive_read_support_compression_program_signature
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+comment|/* match */
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
 name|archive_read_support_format_all
 parameter_list|(
 name|struct
