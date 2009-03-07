@@ -133,13 +133,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<legacy/dev/usb/usb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<legacy/dev/usb/usbdi.h>
+file|<dev/usb/usb.h>
 end_include
 
 begin_include

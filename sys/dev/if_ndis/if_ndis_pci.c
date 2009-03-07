@@ -122,13 +122,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<legacy/dev/usb/usb.h>
+file|<dev/usb/usb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<legacy/dev/usb/usbdi.h>
+file|<dev/usb/usb_core.h>
 end_include
 
 begin_include

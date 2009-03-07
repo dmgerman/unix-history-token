@@ -212,13 +212,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<legacy/dev/usb/usb.h>
+file|<dev/usb/usb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<legacy/dev/usb/usbdi.h>
+file|<dev/usb/usb_core.h>
 end_include
 
 begin_include
@@ -3117,7 +3117,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|ndisusb_xferlock
+name|ndisusb_xferdonelock
 argument_list|)
 expr_stmt|;
 name|InitializeListHead
@@ -3133,7 +3133,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|ndisusb_xferlist
+name|ndisusb_xferdonelist
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -3433,7 +3433,7 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|ndisusb_xferitem
+name|ndisusb_xferdoneitem
 operator|=
 name|IoAllocateWorkItem
 argument_list|(
@@ -3810,20 +3810,6 @@ operator||
 name|IFF_SIMPLEX
 operator||
 name|IFF_MULTICAST
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|ndis_iftype
-operator|==
-name|PNPBus
-condition|)
-name|ifp
-operator|->
-name|if_flags
-operator||=
-name|IFF_NEEDSGIANT
 expr_stmt|;
 name|ifp
 operator|->
@@ -5130,10 +5116,24 @@ operator|(
 name|error
 operator|)
 return|;
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"attach done.\n"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* We're done talking to the NIC for now; halt it. */
 name|ndis_halt_nic
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"halting done.\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5574,7 +5574,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|ndisusb_xferitem
+name|ndisusb_xferdoneitem
 operator|!=
 name|NULL
 condition|)
@@ -5582,7 +5582,7 @@ name|IoFreeWorkItem
 argument_list|(
 name|sc
 operator|->
-name|ndisusb_xferitem
+name|ndisusb_xferdoneitem
 argument_list|)
 expr_stmt|;
 name|bus_generic_detach
@@ -7669,7 +7669,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|NDISMTX_LOCK
+name|NDIS_LOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -7718,7 +7718,7 @@ operator|&=
 operator|~
 name|IFF_DRV_OACTIVE
 expr_stmt|;
-name|NDISMTX_UNLOCK
+name|NDIS_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -7801,7 +7801,7 @@ operator|=
 name|status
 expr_stmt|;
 comment|/* Event list is all full up, drop this one. */
-name|NDISMTX_LOCK
+name|NDIS_LOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -7820,7 +7820,7 @@ operator|.
 name|ne_sts
 condition|)
 block|{
-name|NDISMTX_UNLOCK
+name|NDIS_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -7869,7 +7869,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|NDISMTX_UNLOCK
+name|NDIS_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -7932,7 +7932,7 @@ operator|->
 name|ndis_evtpidx
 argument_list|)
 expr_stmt|;
-name|NDISMTX_UNLOCK
+name|NDIS_UNLOCK
 argument_list|(
 name|sc
 argument_list|)

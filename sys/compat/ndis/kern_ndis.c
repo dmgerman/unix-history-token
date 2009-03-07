@@ -188,13 +188,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<legacy/dev/usb/usb.h>
+file|<dev/usb/usb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<legacy/dev/usb/usbdi.h>
+file|<dev/usb/usb_core.h>
 end_include
 
 begin_include
@@ -5924,7 +5924,7 @@ argument_list|(
 name|fdo
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Stash pointers to the miniport block and miniport 	 * characteristics info in the if_ndis softc so the 	 * UNIX wrapper driver can get to them later.          */
+comment|/* 	 * Stash pointers to the miniport block and miniport 	 * characteristics info in the if_ndis softc so the 	 * UNIX wrapper driver can get to them later. 	 */
 name|sc
 operator|->
 name|ndis_block

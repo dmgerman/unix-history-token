@@ -529,6 +529,25 @@ block|}
 end_function
 
 begin_function
+name|struct
+name|mtx
+modifier|*
+name|hal_getdisplock
+parameter_list|()
+block|{
+return|return
+operator|&
+name|disp_lock
+index|[
+name|curthread
+operator|->
+name|td_oncpu
+index|]
+return|;
+block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|KeStallExecutionProcessor

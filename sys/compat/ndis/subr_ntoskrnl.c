@@ -8401,7 +8401,7 @@ name|td
 argument_list|)
 condition|)
 block|{
-comment|/* 		 	 * There's a limit to how many times 		 	 * we can recursively acquire a mutant. 		 	 * If we hit the limit, something 			 * is very wrong. 		 	 */
+comment|/* 			 * There's a limit to how many times 			 * we can recursively acquire a mutant. 			 * If we hit the limit, something 			 * is very wrong. 			 */
 if|if
 condition|(
 name|obj

@@ -32,6 +32,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|URB_FUNCTION_ABORT_PIPE
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
 name|URB_FUNCTION_BULK_OR_INTERRUPT_TRANSFER
 value|0x0009
 end_define
@@ -466,6 +473,22 @@ end_struct
 
 begin_struct
 struct|struct
+name|usbd_urb_pipe_request
+block|{
+name|struct
+name|usbd_urb_header
+name|upr_hdr
+decl_stmt|;
+name|usb_endpoint_descriptor_t
+modifier|*
+name|upr_handle
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|usbd_hcd_area
 block|{
 name|void
@@ -678,6 +701,10 @@ name|struct
 name|usbd_urb_vendor_or_class_request
 name|uu_vcreq
 decl_stmt|;
+name|struct
+name|usbd_urb_pipe_request
+name|uu_pipe
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -734,28 +761,6 @@ name|usbd_version_info
 name|usbd_version_info
 typedef|;
 end_typedef
-
-begin_comment
-comment|/* used for IRP cancel.  */
-end_comment
-
-begin_struct
-struct|struct
-name|ndisusb_cancel
-block|{
-name|device_t
-name|dev
-decl_stmt|;
-name|usbd_xfer_handle
-name|xfer
-decl_stmt|;
-name|struct
-name|usb_task
-name|task
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_decl_stmt
 specifier|extern
