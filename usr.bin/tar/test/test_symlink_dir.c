@@ -120,9 +120,16 @@ block|{
 name|struct
 name|stat
 name|st
-decl_stmt|,
+decl_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
+name|struct
+name|stat
 name|st2
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|oldumask
 decl_stmt|;
@@ -335,6 +342,9 @@ literal|0755
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
 name|assertEqualInt
 argument_list|(
 literal|0
@@ -360,6 +370,15 @@ literal|"dest1/dir2"
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|skipping
+argument_list|(
+literal|"symlink does not work on this platform"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* "dir3" is a symlink to an existing "non_dir3" */
 name|assertEqualInt
 argument_list|(
@@ -418,6 +437,9 @@ literal|"dest1/file"
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
 comment|/* "file2" is a symlink to non-existing "real_file2" */
 name|assertEqualInt
 argument_list|(
@@ -431,6 +453,15 @@ literal|"dest1/file2"
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|skipping
+argument_list|(
+literal|"symlink does not work on this platform"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|assertEqualInt
 argument_list|(
 literal|0
@@ -614,6 +645,9 @@ literal|0755
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
 name|assertEqualInt
 argument_list|(
 literal|0
@@ -639,6 +673,15 @@ literal|"dest2/dir2"
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|skipping
+argument_list|(
+literal|"symlink does not work on this platform"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* "dir3" is a symlink to an existing "non_dir3" */
 name|assertEqualInt
 argument_list|(
@@ -697,6 +740,9 @@ literal|"dest2/file"
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
 comment|/* "file2" is a symlink to non-existing "real_file2" */
 name|assertEqualInt
 argument_list|(
@@ -710,6 +756,15 @@ literal|"dest2/file2"
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|skipping
+argument_list|(
+literal|"symlink does not work on this platform"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|assertEqualInt
 argument_list|(
 literal|0
@@ -741,6 +796,9 @@ argument_list|(
 literal|"tar -xP removed symlink instead of following it"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
 if|if
 condition|(
 name|assert
@@ -839,6 +897,15 @@ name|st_ino
 argument_list|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+name|skipping
+argument_list|(
+literal|"symlink does not work on this platform"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Contents of 'dir' should be restored */
 name|assertEqualInt
 argument_list|(

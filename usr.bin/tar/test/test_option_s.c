@@ -133,6 +133,10 @@ end_macro
 
 begin_block
 block|{
+name|struct
+name|stat
+name|st
+decl_stmt|;
 comment|/* Create a sample file heirarchy. */
 name|assertEqualInt
 argument_list|(
@@ -182,6 +186,43 @@ literal|"bar"
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Does bsdtar support -s option ? */
+name|systemf
+argument_list|(
+literal|"%s -cf - -s /foo/bar/ in/d1/foo> NUL 2> check.err"
+argument_list|,
+name|testprog
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+literal|0
+argument_list|,
+name|stat
+argument_list|(
+literal|"check.err"
+argument_list|,
+operator|&
+name|st
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|st
+operator|.
+name|st_size
+operator|!=
+literal|0
+condition|)
+block|{
+name|skipping
+argument_list|(
+literal|"bsdtar does not support -s option on this platform"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* 	 * Test 1: Filename substitution when creating archives. 	 */
 name|assertEqualInt
 argument_list|(

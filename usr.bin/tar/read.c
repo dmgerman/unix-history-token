@@ -1610,6 +1610,50 @@ name|st
 operator|->
 name|st_mtime
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_WIN32
+comment|/* Windows' strftime function does not support %e format. */
+if|if
+condition|(
+name|abs
+argument_list|(
+name|tim
+operator|-
+name|now
+argument_list|)
+operator|>
+operator|(
+literal|365
+operator|/
+literal|2
+operator|)
+operator|*
+literal|86400
+condition|)
+name|fmt
+operator|=
+name|bsdtar
+operator|->
+name|day_first
+condition|?
+literal|"%d %b  %Y"
+else|:
+literal|"%b %d  %Y"
+expr_stmt|;
+else|else
+name|fmt
+operator|=
+name|bsdtar
+operator|->
+name|day_first
+condition|?
+literal|"%d %b %H:%M"
+else|:
+literal|"%b %d %H:%M"
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|abs
@@ -1648,6 +1692,8 @@ literal|"%e %b %H:%M"
 else|:
 literal|"%b %e %H:%M"
 expr_stmt|;
+endif|#
+directive|endif
 name|strftime
 argument_list|(
 name|tmp

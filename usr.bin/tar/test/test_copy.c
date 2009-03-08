@@ -278,6 +278,9 @@ name|buff2
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
 comment|/* Create a symlink named "s/abcdef..." to the above. */
 name|strcpy
 argument_list|(
@@ -328,6 +331,15 @@ name|buff
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|skipping
+argument_list|(
+literal|"create a symlink to the above"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Create a dir named "d/abcdef...". */
 name|buff
 index|[
@@ -751,6 +763,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+ifndef|#
+directive|ifndef
+name|_WIN32
 comment|/* 		 * Symlink text doesn't include the 'original/' prefix, 		 * so the limit here is 100 characters. 		 */
 comment|/* Verify symlink "s/abcdef..." */
 name|strcpy
@@ -875,6 +890,15 @@ expr_stmt|;
 block|}
 block|}
 block|}
+else|#
+directive|else
+name|skipping
+argument_list|(
+literal|"verify symlink"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Verify dir "d/abcdef...". */
 name|strcpy
 argument_list|(

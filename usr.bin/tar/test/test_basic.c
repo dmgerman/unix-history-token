@@ -36,6 +36,11 @@ specifier|const
 name|char
 modifier|*
 name|unpack_options
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|flist
 parameter_list|)
 block|{
 name|struct
@@ -44,12 +49,17 @@ name|st
 decl_stmt|,
 name|st2
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
 name|char
 name|buff
 index|[
 literal|128
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|r
 decl_stmt|;
@@ -66,21 +76,47 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Use the tar program to create an archive. */
+ifndef|#
+directive|ifndef
+name|_WIN32
 name|r
 operator|=
 name|systemf
 argument_list|(
-literal|"%s cf - %s `cat filelist`>%s/archive 2>%s/pack.err"
+literal|"%s cf - %s `cat %s`>%s/archive 2>%s/pack.err"
 argument_list|,
 name|testprog
 argument_list|,
 name|pack_options
+argument_list|,
+name|flist
 argument_list|,
 name|target
 argument_list|,
 name|target
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|r
+operator|=
+name|systemf
+argument_list|(
+literal|"%s cf - %s %s>%s/archive 2>%s/pack.err"
+argument_list|,
+name|testprog
+argument_list|,
+name|pack_options
+argument_list|,
+name|flist
+argument_list|,
+name|target
+argument_list|,
+name|target
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|failure
 argument_list|(
 literal|"Error invoking %s cf -"
@@ -187,6 +223,9 @@ name|st_mode
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
 name|assertEqualInt
 argument_list|(
 literal|0644
@@ -198,6 +237,21 @@ operator|&
 literal|0777
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|assertEqualInt
+argument_list|(
+literal|0600
+argument_list|,
+name|st
+operator|.
+name|st_mode
+operator|&
+literal|0700
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|assertEqualInt
 argument_list|(
 literal|10
@@ -268,6 +322,9 @@ name|st_mode
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
 name|assertEqualInt
 argument_list|(
 literal|0644
@@ -279,6 +336,21 @@ operator|&
 literal|0777
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|assertEqualInt
+argument_list|(
+literal|0600
+argument_list|,
+name|st2
+operator|.
+name|st_mode
+operator|&
+literal|0700
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|assertEqualInt
 argument_list|(
 literal|10
@@ -337,6 +409,9 @@ name|st_ino
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|_WIN32
 comment|/* Symlink */
 name|r
 operator|=
@@ -437,6 +512,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 comment|/* dir */
 name|r
 operator|=
@@ -472,6 +549,9 @@ name|st_mode
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
 name|assertEqualInt
 argument_list|(
 literal|0775
@@ -483,6 +563,21 @@ operator|&
 literal|0777
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|assertEqualInt
+argument_list|(
+literal|0700
+argument_list|,
+name|st
+operator|.
+name|st_mode
+operator|&
+literal|0700
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|chdir
 argument_list|(
@@ -509,6 +604,11 @@ name|filelist
 decl_stmt|;
 name|int
 name|oldumask
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|flist
 decl_stmt|;
 name|oldumask
 operator|=
@@ -652,6 +752,21 @@ argument_list|(
 name|filelist
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
+name|flist
+operator|=
+literal|"filelist"
+expr_stmt|;
+else|#
+directive|else
+name|flist
+operator|=
+literal|"file linkfile symlink dir"
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Archive/dearchive with a variety of options. */
 name|basic_tar
 argument_list|(
@@ -660,6 +775,8 @@ argument_list|,
 literal|""
 argument_list|,
 literal|""
+argument_list|,
+name|flist
 argument_list|)
 expr_stmt|;
 comment|/* tar doesn't handle cpio symlinks correctly */
@@ -671,6 +788,8 @@ argument_list|,
 literal|"--format=ustar"
 argument_list|,
 literal|""
+argument_list|,
+name|flist
 argument_list|)
 expr_stmt|;
 name|umask

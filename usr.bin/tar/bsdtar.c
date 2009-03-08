@@ -255,6 +255,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_PATH_DEFTAPE
+value|"\\\\.\\tape0"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -427,6 +445,17 @@ name|option_o
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_WIN32
+comment|/* open() function is always with a binary mode. */
+name|_set_fmode
+argument_list|(
+name|_O_BINARY
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Need bsdtar->progname before calling bsdtar_warnc. */
 if|if
 condition|(
@@ -443,6 +472,23 @@ literal|"bsdtar"
 expr_stmt|;
 else|else
 block|{
+if|#
+directive|if
+name|_WIN32
+name|bsdtar
+operator|->
+name|progname
+operator|=
+name|strrchr
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|'\\'
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|bsdtar
 operator|->
 name|progname
@@ -455,6 +501,8 @@ argument_list|,
 literal|'/'
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|bsdtar
@@ -577,11 +625,10 @@ expr_stmt|;
 comment|/* Defaults for root user: */
 if|if
 condition|(
+name|bsdtar_is_privileged
+argument_list|(
 name|bsdtar
-operator|->
-name|user_uid
-operator|==
-literal|0
+argument_list|)
 condition|)
 block|{
 comment|/* --same-owner */
@@ -617,6 +664,19 @@ operator||=
 name|ARCHIVE_EXTRACT_FFLAGS
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|_WIN32
+comment|/* Windows cannot set UNIX like uid/gid. */
+name|bsdtar
+operator|->
+name|extract_flags
+operator|&=
+operator|~
+name|ARCHIVE_EXTRACT_OWNER
+expr_stmt|;
+endif|#
+directive|endif
 name|bsdtar
 operator|->
 name|argv

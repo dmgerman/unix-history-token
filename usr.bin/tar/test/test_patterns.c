@@ -36,14 +36,14 @@ name|char
 modifier|*
 name|reffile2
 init|=
-literal|"test_patterns_2.tgz"
+literal|"test_patterns_2.tar"
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|reffile3
 init|=
-literal|"test_patterns_3.tgz"
+literal|"test_patterns_3.tar"
 decl_stmt|;
 specifier|const
 name|char
@@ -81,7 +81,7 @@ name|r
 operator|=
 name|systemf
 argument_list|(
-literal|"%s zcfv tar1.tgz foo> tar1a.out 2> tar1a.err"
+literal|"%s cfv tar1.tgz foo> tar1a.out 2> tar1a.err"
 argument_list|,
 name|testprog
 argument_list|)
@@ -97,7 +97,7 @@ name|r
 operator|=
 name|systemf
 argument_list|(
-literal|"%s zxfv tar1.tgz foo bar> tar1b.out 2> tar1b.err"
+literal|"%s xfv tar1.tgz foo bar> tar1b.out 2> tar1b.err"
 argument_list|,
 name|testprog
 argument_list|)
@@ -138,10 +138,21 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
 name|p
 operator|=
 literal|"/tmp/foo/bar/\n/tmp/foo/bar/baz\n"
 expr_stmt|;
+else|#
+directive|else
+name|p
+operator|=
+literal|"/tmp/foo/bar/\r\n/tmp/foo/bar/baz\r\n"
+expr_stmt|;
+endif|#
+directive|endif
 name|assertFileContents
 argument_list|(
 name|p

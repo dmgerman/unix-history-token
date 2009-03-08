@@ -307,6 +307,9 @@ argument_list|(
 literal|"d0/d1/s2 is a symlink to something that won't be extracted"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
 name|assertEqualInt
 argument_list|(
 operator|-
@@ -321,6 +324,15 @@ name|st
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|skipping
+argument_list|(
+literal|"symlink with stat()"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|assertEqualInt
 argument_list|(
 literal|0
