@@ -1030,7 +1030,7 @@ parameter_list|(
 name|struct
 name|ucred
 modifier|*
-name|ucred
+name|cred
 parameter_list|,
 name|struct
 name|socket
@@ -1055,7 +1055,7 @@ name|MAC_CHECK
 argument_list|(
 name|socket_check_bind
 argument_list|,
-name|ucred
+name|cred
 argument_list|,
 name|so
 argument_list|,
@@ -1072,7 +1072,7 @@ name|socket_check_bind
 argument_list|,
 name|error
 argument_list|,
-name|ucred
+name|cred
 argument_list|,
 name|so
 argument_list|,
