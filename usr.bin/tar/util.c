@@ -1981,11 +1981,11 @@ name|char
 modifier|*
 name|subst_name
 decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|r
 decl_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|HAVE_REGEX_H
