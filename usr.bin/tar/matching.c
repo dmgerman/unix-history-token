@@ -758,6 +758,7 @@ comment|/*  * This is a little odd, but it matches the default behavior of  * gt
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|match_exclusion
 parameter_list|(

@@ -217,10 +217,17 @@ decl_stmt|;
 comment|/* Used for -C parsing in -cT */
 comment|/* 	 * Data for various subsystems.  Full definitions are located in 	 * the file where they are used. 	 */
 name|struct
+name|archive
+modifier|*
+name|diskreader
+decl_stmt|;
+comment|/* for write.c */
+name|struct
 name|archive_entry_linkresolver
 modifier|*
 name|resolver
 decl_stmt|;
+comment|/* for write.c */
 name|struct
 name|archive_dir
 modifier|*
