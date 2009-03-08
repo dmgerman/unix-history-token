@@ -1381,7 +1381,7 @@ name|device_printf
 argument_list|(
 name|bus
 argument_list|,
-literal|"%s called activate_resource\n"
+literal|"%s called activate_resource (unexpected)\n"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
@@ -1424,7 +1424,7 @@ name|device_printf
 argument_list|(
 name|bus
 argument_list|,
-literal|"%s called deactivate_resource\n"
+literal|"%s called deactivate_resource (unexpected)\n"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
@@ -1467,7 +1467,7 @@ name|device_printf
 argument_list|(
 name|bus
 argument_list|,
-literal|"%s called release_resource\n"
+literal|"%s called release_resource (unexpected)\n"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
