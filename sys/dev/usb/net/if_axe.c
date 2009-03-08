@@ -1458,7 +1458,7 @@ name|locked
 decl_stmt|;
 name|val
 operator|=
-name|htole16
+name|htole32
 argument_list|(
 name|val
 argument_list|)
