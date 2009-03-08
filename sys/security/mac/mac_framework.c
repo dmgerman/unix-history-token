@@ -112,13 +112,21 @@ file|<security/mac/mac_policy.h>
 end_include
 
 begin_comment
-comment|/*  * DTrace SDT provider for MAC.  */
+comment|/*  * DTrace SDT providers for MAC.  */
 end_comment
 
 begin_expr_stmt
 name|SDT_PROVIDER_DEFINE
 argument_list|(
 name|mac
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROVIDER_DEFINE
+argument_list|(
+name|mac_framework
 argument_list|)
 expr_stmt|;
 end_expr_stmt
