@@ -663,6 +663,10 @@ name|len
 argument_list|)
 operator|<
 literal|0
+operator|&&
+name|errno
+operator|!=
+name|EINPROGRESS
 condition|)
 name|err
 argument_list|(
