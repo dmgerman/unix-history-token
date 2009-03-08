@@ -17,6 +17,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|LOOP_MAX
+value|170
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -128,7 +135,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|200
+name|LOOP_MAX
 condition|;
 name|i
 operator|++
@@ -442,7 +449,7 @@ literal|1
 init|;
 name|i
 operator|<
-literal|200
+name|LOOP_MAX
 condition|;
 name|i
 operator|++
@@ -1175,7 +1182,7 @@ literal|'\0'
 operator|&&
 name|i
 operator|<
-literal|200
+name|LOOP_MAX
 condition|;
 name|i
 operator|++
