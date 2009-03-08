@@ -119,6 +119,12 @@ name|char
 name|option_fast_read
 decl_stmt|;
 comment|/* --fast-read */
+specifier|const
+name|char
+modifier|*
+name|option_format_options
+decl_stmt|;
+comment|/* --format-options */
 name|char
 name|option_honor_nodump
 decl_stmt|;
@@ -295,6 +301,8 @@ block|,
 name|OPTION_EXCLUDE
 block|,
 name|OPTION_FORMAT
+block|,
+name|OPTION_FORMAT_OPTIONS
 block|,
 name|OPTION_HELP
 block|,

@@ -863,6 +863,18 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
+name|OPTION_FORMAT_OPTIONS
+case|:
+name|bsdtar
+operator|->
+name|option_format_options
+operator|=
+name|bsdtar
+operator|->
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'f'
 case|:
 comment|/* SUSv2 */

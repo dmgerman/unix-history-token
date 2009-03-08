@@ -289,6 +289,14 @@ name|OPTION_FORMAT
 block|}
 block|,
 block|{
+literal|"format-options"
+block|,
+literal|1
+block|,
+name|OPTION_FORMAT_OPTIONS
+block|}
+block|,
+block|{
 literal|"gunzip"
 block|,
 literal|0
