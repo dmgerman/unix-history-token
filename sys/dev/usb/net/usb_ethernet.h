@@ -455,6 +455,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|mbuf
+modifier|*
+name|usb2_ether_newbuf
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|usb2_ether_rxmbuf
 parameter_list|(
