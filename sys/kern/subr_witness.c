@@ -2420,6 +2420,20 @@ block|}
 block|,
 comment|/* 	 * UNIX Domain Sockets 	 */
 block|{
+literal|"unp_global_rwlock"
+block|,
+operator|&
+name|lock_class_rw
+block|}
+block|,
+block|{
+literal|"unp_list_lock"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
 literal|"unp"
 block|,
 operator|&

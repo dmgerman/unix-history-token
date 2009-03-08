@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  * Copyright (c) 2004-2008 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	From: @(#)uipc_usrreq.c	8.3 (Berkeley) 1/4/94  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  * Copyright (c) 2004-2009 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	From: @(#)uipc_usrreq.c	8.3 (Berkeley) 1/4/94  */
 end_comment
 
 begin_comment
@@ -240,6 +240,10 @@ directive|include
 file|<vm/uma.h>
 end_include
 
+begin_comment
+comment|/*  * Locking key:  * (l)	Locked using list lock  * (g)	Locked using linkage lock  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|uma_zone_t
@@ -254,6 +258,10 @@ name|unp_gencnt
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* (l) */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|u_int
@@ -262,7 +270,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Count of local sockets. */
+comment|/* (l) Count of local sockets. */
 end_comment
 
 begin_decl_stmt
@@ -284,7 +292,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* File descriptors in flight. */
+comment|/* (g) File descriptors in flight. */
 end_comment
 
 begin_decl_stmt
@@ -296,7 +304,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* List of local stream sockets. */
+comment|/* (l) List of stream sockets. */
 end_comment
 
 begin_decl_stmt
@@ -308,7 +316,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* List of local datagram sockets. */
+comment|/* (l) List of datagram sockets. */
 end_comment
 
 begin_decl_stmt
@@ -567,95 +575,111 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*-  * Locking and synchronization:  *  * The global UNIX domain socket rwlock (unp_global_rwlock) protects all  * global variables, including the linked lists tracking the set of allocated  * UNIX domain sockets.  The global rwlock also serves to prevent deadlock  * when more than one PCB lock is acquired at a time (i.e., during  * connect()).  Finally, the global rwlock protects uncounted references from  * vnodes to sockets bound to those vnodes: to safely dereference the  * v_socket pointer, the global rwlock must be held while a full reference is  * acquired.  *  * UNIX domain sockets each have an unpcb hung off of their so_pcb pointer,  * allocated in pru_attach() and freed in pru_detach().  The validity of that  * pointer is an invariant, so no lock is required to dereference the so_pcb  * pointer if a valid socket reference is held by the caller.  In practice,  * this is always true during operations performed on a socket.  Each unpcb  * has a back-pointer to its socket, unp_socket, which will be stable under  * the same circumstances.  *  * This pointer may only be safely dereferenced as long as a valid reference  * to the unpcb is held.  Typically, this reference will be from the socket,  * or from another unpcb when the referring unpcb's lock is held (in order  * that the reference not be invalidated during use).  For example, to follow  * unp->unp_conn->unp_socket, you need unlock the lock on unp, not unp_conn,  * as unp_socket remains valid as long as the reference to unp_conn is valid.  *  * Fields of unpcbss are locked using a per-unpcb lock, unp_mtx.  Individual  * atomic reads without the lock may be performed "lockless", but more  * complex reads and read-modify-writes require the mutex to be held.  No  * lock order is defined between unpcb locks -- multiple unpcb locks may be  * acquired at the same time only when holding the global UNIX domain socket  * rwlock exclusively, which prevents deadlocks.  *  * Blocking with UNIX domain sockets is a tricky issue: unlike most network  * protocols, bind() is a non-atomic operation, and connect() requires  * potential sleeping in the protocol, due to potentially waiting on local or  * distributed file systems.  We try to separate "lookup" operations, which  * may sleep, and the IPC operations themselves, which typically can occur  * with relative atomicity as locks can be held over the entire operation.  *  * Another tricky issue is simultaneous multi-threaded or multi-process  * access to a single UNIX domain socket.  These are handled by the flags  * UNP_CONNECTING and UNP_BINDING, which prevent concurrent connecting or  * binding, both of which involve dropping UNIX domain socket locks in order  * to perform namei() and other file system operations.  */
+comment|/*-  * Locking and synchronization:  *  * Three types of locks exit in the local domain socket implementation: a  * global list mutex, a global linkage rwlock, and per-unpcb mutexes.  Of the  * global locks, the list lock protects the socket count, global generation  * number, and stream/datagram global lists.  The linkage lock protects the  * interconnection of unpcbs, the v_socket and unp_vnode pointers, and can be  * held exclusively over the acquisition of multiple unpcb locks to prevent  * deadlock.  *  * UNIX domain sockets each have an unpcb hung off of their so_pcb pointer,  * allocated in pru_attach() and freed in pru_detach().  The validity of that  * pointer is an invariant, so no lock is required to dereference the so_pcb  * pointer if a valid socket reference is held by the caller.  In practice,  * this is always true during operations performed on a socket.  Each unpcb  * has a back-pointer to its socket, unp_socket, which will be stable under  * the same circumstances.  *  * This pointer may only be safely dereferenced as long as a valid reference  * to the unpcb is held.  Typically, this reference will be from the socket,  * or from another unpcb when the referring unpcb's lock is held (in order  * that the reference not be invalidated during use).  For example, to follow  * unp->unp_conn->unp_socket, you need unlock the lock on unp, not unp_conn,  * as unp_socket remains valid as long as the reference to unp_conn is valid.  *  * Fields of unpcbss are locked using a per-unpcb lock, unp_mtx.  Individual  * atomic reads without the lock may be performed "lockless", but more  * complex reads and read-modify-writes require the mutex to be held.  No  * lock order is defined between unpcb locks -- multiple unpcb locks may be  * acquired at the same time only when holding the linkage rwlock  * exclusively, which prevents deadlocks.  *  * Blocking with UNIX domain sockets is a tricky issue: unlike most network  * protocols, bind() is a non-atomic operation, and connect() requires  * potential sleeping in the protocol, due to potentially waiting on local or  * distributed file systems.  We try to separate "lookup" operations, which  * may sleep, and the IPC operations themselves, which typically can occur  * with relative atomicity as locks can be held over the entire operation.  *  * Another tricky issue is simultaneous multi-threaded or multi-process  * access to a single UNIX domain socket.  These are handled by the flags  * UNP_CONNECTING and UNP_BINDING, which prevent concurrent connecting or  * binding, both of which involve dropping UNIX domain socket locks in order  * to perform namei() and other file system operations.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|struct
 name|rwlock
-name|unp_global_rwlock
+name|unp_link_rwlock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|unp_list_lock
 decl_stmt|;
 end_decl_stmt
 
 begin_define
 define|#
 directive|define
-name|UNP_GLOBAL_LOCK_INIT
+name|UNP_LINK_LOCK_INIT
 parameter_list|()
-value|rw_init(&unp_global_rwlock,	\ 					    "unp_global_rwlock")
+value|rw_init(&unp_link_rwlock,	\ 					    "unp_link_rwlock")
 end_define
 
 begin_define
 define|#
 directive|define
-name|UNP_GLOBAL_LOCK_ASSERT
+name|UNP_LINK_LOCK_ASSERT
 parameter_list|()
-value|rw_assert(&unp_global_rwlock,	\ 					    RA_LOCKED)
+value|rw_assert(&unp_link_rwlock,	\ 					    RA_LOCKED)
 end_define
 
 begin_define
 define|#
 directive|define
-name|UNP_GLOBAL_UNLOCK_ASSERT
+name|UNP_LINK_UNLOCK_ASSERT
 parameter_list|()
-value|rw_assert(&unp_global_rwlock,	\ 					    RA_UNLOCKED)
+value|rw_assert(&unp_link_rwlock,	\ 					    RA_UNLOCKED)
 end_define
 
 begin_define
 define|#
 directive|define
-name|UNP_GLOBAL_WLOCK
+name|UNP_LINK_RLOCK
 parameter_list|()
-value|rw_wlock(&unp_global_rwlock)
+value|rw_rlock(&unp_link_rwlock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|UNP_GLOBAL_WUNLOCK
+name|UNP_LINK_RUNLOCK
 parameter_list|()
-value|rw_wunlock(&unp_global_rwlock)
+value|rw_runlock(&unp_link_rwlock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|UNP_GLOBAL_WLOCK_ASSERT
+name|UNP_LINK_WLOCK
 parameter_list|()
-value|rw_assert(&unp_global_rwlock,	\ 					    RA_WLOCKED)
+value|rw_wlock(&unp_link_rwlock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|UNP_GLOBAL_WOWNED
+name|UNP_LINK_WUNLOCK
 parameter_list|()
-value|rw_wowned(&unp_global_rwlock)
+value|rw_wunlock(&unp_link_rwlock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|UNP_GLOBAL_RLOCK
+name|UNP_LINK_WLOCK_ASSERT
 parameter_list|()
-value|rw_rlock(&unp_global_rwlock)
+value|rw_assert(&unp_link_rwlock,	\ 					    RA_WLOCKED)
 end_define
 
 begin_define
 define|#
 directive|define
-name|UNP_GLOBAL_RUNLOCK
+name|UNP_LIST_LOCK_INIT
 parameter_list|()
-value|rw_runlock(&unp_global_rwlock)
+value|mtx_init(&unp_list_lock,	\ 					    "unp_list_lock", NULL, MTX_DEF)
 end_define
 
 begin_define
 define|#
 directive|define
-name|UNP_GLOBAL_RLOCK_ASSERT
+name|UNP_LIST_LOCK
 parameter_list|()
-value|rw_assert(&unp_global_rwlock,	\ 					    RA_RLOCKED)
+value|mtx_lock(&unp_list_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNP_LIST_UNLOCK
+parameter_list|()
+value|mtx_unlock(&unp_list_lock)
 end_define
 
 begin_define
@@ -1185,7 +1209,7 @@ literal|"uipc_abort: unp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|UNP_GLOBAL_WLOCK
+name|UNP_LINK_WLOCK
 argument_list|()
 expr_stmt|;
 name|UNP_PCB_LOCK
@@ -1229,7 +1253,7 @@ argument_list|(
 name|unp
 argument_list|)
 expr_stmt|;
-name|UNP_GLOBAL_WUNLOCK
+name|UNP_LINK_WUNLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -1301,7 +1325,7 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|UNP_GLOBAL_RLOCK
+name|UNP_LINK_RLOCK
 argument_list|()
 expr_stmt|;
 name|unp2
@@ -1377,7 +1401,7 @@ name|sa_len
 argument_list|)
 expr_stmt|;
 block|}
-name|UNP_GLOBAL_RUNLOCK
+name|UNP_LINK_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -1419,8 +1443,6 @@ name|unp
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|locked
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -1566,26 +1588,9 @@ name|unp_refcount
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * uipc_attach() may be called indirectly from within the UNIX domain 	 * socket code via sonewconn() in unp_connect().  Since rwlocks can 	 * not be recursed, we do the closest thing. 	 */
-name|locked
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|UNP_GLOBAL_WOWNED
-argument_list|()
-condition|)
-block|{
-name|UNP_GLOBAL_WLOCK
+name|UNP_LIST_LOCK
 argument_list|()
 expr_stmt|;
-name|locked
-operator|=
-literal|1
-expr_stmt|;
-block|}
 name|unp
 operator|->
 name|unp_gencnt
@@ -1615,11 +1620,7 @@ argument_list|,
 name|unp_link
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|locked
-condition|)
-name|UNP_GLOBAL_WUNLOCK
+name|UNP_LIST_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -2144,7 +2145,7 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|UNP_GLOBAL_WLOCK
+name|UNP_LINK_WLOCK
 argument_list|()
 expr_stmt|;
 name|UNP_PCB_LOCK
@@ -2184,7 +2185,7 @@ argument_list|(
 name|unp
 argument_list|)
 expr_stmt|;
-name|UNP_GLOBAL_WUNLOCK
+name|UNP_LINK_WUNLOCK
 argument_list|()
 expr_stmt|;
 name|VOP_UNLOCK
@@ -2290,7 +2291,7 @@ literal|"uipc_connect: td != curthread"
 operator|)
 argument_list|)
 expr_stmt|;
-name|UNP_GLOBAL_WLOCK
+name|UNP_LINK_WLOCK
 argument_list|()
 expr_stmt|;
 name|error
@@ -2304,7 +2305,7 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|UNP_GLOBAL_WUNLOCK
+name|UNP_LINK_WUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -2352,7 +2353,7 @@ literal|"uipc_close: unp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|UNP_GLOBAL_WLOCK
+name|UNP_LINK_WLOCK
 argument_list|()
 expr_stmt|;
 name|UNP_PCB_LOCK
@@ -2396,7 +2397,7 @@ argument_list|(
 name|unp
 argument_list|)
 expr_stmt|;
-name|UNP_GLOBAL_WUNLOCK
+name|UNP_LINK_WUNLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -2429,7 +2430,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|UNP_GLOBAL_WLOCK
+name|UNP_LINK_WLOCK
 argument_list|()
 expr_stmt|;
 name|unp
@@ -2497,7 +2498,7 @@ argument_list|(
 name|unp
 argument_list|)
 expr_stmt|;
-name|UNP_GLOBAL_WUNLOCK
+name|UNP_LINK_WUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -2560,7 +2561,10 @@ literal|"uipc_detach: unp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|UNP_GLOBAL_WLOCK
+name|UNP_LINK_WLOCK
+argument_list|()
+expr_stmt|;
+name|UNP_LIST_LOCK
 argument_list|()
 expr_stmt|;
 name|UNP_PCB_LOCK
@@ -2584,6 +2588,9 @@ name|unp_gencnt
 expr_stmt|;
 operator|--
 name|unp_count
+expr_stmt|;
+name|UNP_LIST_UNLOCK
+argument_list|()
 expr_stmt|;
 comment|/* 	 * XXXRW: Should assert vp->v_socket == so. 	 */
 if|if
@@ -2645,7 +2652,7 @@ name|unp2
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * We hold the global lock exclusively, so it's OK to acquire 	 * multiple pcb locks at a time. 	 */
+comment|/* 	 * We hold the linkage lock exclusively, so it's OK to acquire 	 * multiple pcb locks at a time. 	 */
 while|while
 condition|(
 operator|!
@@ -2693,7 +2700,7 @@ name|local_unp_rights
 operator|=
 name|unp_rights
 expr_stmt|;
-name|UNP_GLOBAL_WUNLOCK
+name|UNP_LINK_WUNLOCK
 argument_list|()
 expr_stmt|;
 name|unp
@@ -2848,7 +2855,7 @@ literal|"uipc_disconnect: unp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|UNP_GLOBAL_WLOCK
+name|UNP_LINK_WLOCK
 argument_list|()
 expr_stmt|;
 name|UNP_PCB_LOCK
@@ -2892,7 +2899,7 @@ argument_list|(
 name|unp
 argument_list|)
 expr_stmt|;
-name|UNP_GLOBAL_WUNLOCK
+name|UNP_LINK_WUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -3565,11 +3572,11 @@ operator|&
 name|PRUS_EOF
 operator|)
 condition|)
-name|UNP_GLOBAL_WLOCK
+name|UNP_LINK_WLOCK
 argument_list|()
 expr_stmt|;
 else|else
-name|UNP_GLOBAL_RLOCK
+name|UNP_LINK_RLOCK
 argument_list|()
 expr_stmt|;
 switch|switch
@@ -3602,7 +3609,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|UNP_GLOBAL_WLOCK_ASSERT
+name|UNP_LINK_WLOCK_ASSERT
 argument_list|()
 expr_stmt|;
 if|if
@@ -3770,7 +3777,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|UNP_GLOBAL_WLOCK_ASSERT
+name|UNP_LINK_WLOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|UNP_PCB_LOCK
@@ -3821,7 +3828,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|UNP_GLOBAL_WLOCK_ASSERT
+name|UNP_LINK_WLOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|error
@@ -3869,7 +3876,7 @@ name|EPIPE
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Because connect() and send() are non-atomic in a sendto() 		 * with a target address, it's possible that the socket will 		 * have disconnected before the send() can run.  In that case 		 * return the slightly counter-intuitive but otherwise 		 * correct error that the socket is not connected. 		 * 		 * Locking here must be done carefully: the global lock 		 * prevents interconnections between unpcbs from changing, so 		 * we can traverse from unp to unp2 without acquiring unp's 		 * lock.  Socket buffer locks follow unpcb locks, so we can 		 * acquire both remote and lock socket buffer locks. 		 */
+comment|/* 		 * Because connect() and send() are non-atomic in a sendto() 		 * with a target address, it's possible that the socket will 		 * have disconnected before the send() can run.  In that case 		 * return the slightly counter-intuitive but otherwise 		 * correct error that the socket is not connected. 		 * 		 * Locking here must be done carefully: the inkage lock 		 * prevents interconnections between unpcbs from changing, so 		 * we can traverse from unp to unp2 without acquiring unp's 		 * lock.  Socket buffer locks follow unpcb locks, so we can 		 * acquire both remote and lock socket buffer locks. 		 */
 name|unp2
 operator|=
 name|unp
@@ -4137,11 +4144,11 @@ operator|&
 name|PRUS_EOF
 operator|)
 condition|)
-name|UNP_GLOBAL_WUNLOCK
+name|UNP_LINK_WUNLOCK
 argument_list|()
 expr_stmt|;
 else|else
-name|UNP_GLOBAL_RUNLOCK
+name|UNP_LINK_RUNLOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -4248,7 +4255,7 @@ name|so_snd
 operator|.
 name|sb_hiwat
 expr_stmt|;
-name|UNP_GLOBAL_RLOCK
+name|UNP_LINK_RLOCK
 argument_list|()
 expr_stmt|;
 name|UNP_PCB_LOCK
@@ -4335,7 +4342,7 @@ argument_list|(
 name|unp
 argument_list|)
 expr_stmt|;
-name|UNP_GLOBAL_RUNLOCK
+name|UNP_LINK_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -4380,7 +4387,7 @@ literal|"uipc_shutdown: unp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|UNP_GLOBAL_WLOCK
+name|UNP_LINK_WLOCK
 argument_list|()
 expr_stmt|;
 name|UNP_PCB_LOCK
@@ -4403,7 +4410,7 @@ argument_list|(
 name|unp
 argument_list|)
 expr_stmt|;
-name|UNP_GLOBAL_WUNLOCK
+name|UNP_LINK_WUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -5126,7 +5133,7 @@ name|sockaddr
 modifier|*
 name|sa
 decl_stmt|;
-name|UNP_GLOBAL_WLOCK_ASSERT
+name|UNP_LINK_WLOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|unp
@@ -5215,7 +5222,7 @@ name|EALREADY
 operator|)
 return|;
 block|}
-name|UNP_GLOBAL_WUNLOCK
+name|UNP_LINK_WUNLOCK
 argument_list|()
 expr_stmt|;
 name|unp
@@ -5406,8 +5413,8 @@ literal|"unp_connect: unp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Lock global lock for two reasons: make sure v_socket is stable, 	 * and to protect simultaneous locking of multiple pcbs. 	 */
-name|UNP_GLOBAL_WLOCK
+comment|/* 	 * Lock linkage lock for two reasons: make sure v_socket is stable, 	 * and to protect simultaneous locking of multiple pcbs. 	 */
+name|UNP_LINK_WLOCK
 argument_list|()
 expr_stmt|;
 name|so2
@@ -5470,7 +5477,6 @@ operator|&
 name|SO_ACCEPTCONN
 condition|)
 block|{
-comment|/* 			 * We can't drop the global lock here or 'so2' may 			 * become invalid.  As a result, we need to handle 			 * possibly lock recursion in uipc_attach. 			 */
 name|so3
 operator|=
 name|sonewconn
@@ -5768,7 +5774,7 @@ argument_list|)
 expr_stmt|;
 name|bad2
 label|:
-name|UNP_GLOBAL_WUNLOCK
+name|UNP_LINK_WUNLOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -5807,7 +5813,7 @@ argument_list|,
 name|M_SONAME
 argument_list|)
 expr_stmt|;
-name|UNP_GLOBAL_WLOCK
+name|UNP_LINK_WLOCK
 argument_list|()
 expr_stmt|;
 name|UNP_PCB_LOCK
@@ -5900,7 +5906,7 @@ literal|"unp_connect2: unp2 == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|UNP_GLOBAL_WLOCK_ASSERT
+name|UNP_LINK_WLOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|UNP_PCB_LOCK_ASSERT
@@ -6055,7 +6061,7 @@ literal|"unp_disconnect: unp2 == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|UNP_GLOBAL_WLOCK_ASSERT
+name|UNP_LINK_WLOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|UNP_PCB_LOCK_ASSERT
@@ -6286,7 +6292,7 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|UNP_GLOBAL_RLOCK
+name|UNP_LIST_LOCK
 argument_list|()
 expr_stmt|;
 name|gencnt
@@ -6297,7 +6303,7 @@ name|n
 operator|=
 name|unp_count
 expr_stmt|;
-name|UNP_GLOBAL_RUNLOCK
+name|UNP_LIST_UNLOCK
 argument_list|()
 expr_stmt|;
 name|xug
@@ -6372,7 +6378,7 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|UNP_GLOBAL_RLOCK
+name|UNP_LIST_LOCK
 argument_list|()
 expr_stmt|;
 for|for
@@ -6463,7 +6469,7 @@ name|unp
 argument_list|)
 expr_stmt|;
 block|}
-name|UNP_GLOBAL_RUNLOCK
+name|UNP_LIST_UNLOCK
 argument_list|()
 expr_stmt|;
 name|n
@@ -6848,7 +6854,7 @@ name|socket
 modifier|*
 name|so
 decl_stmt|;
-name|UNP_GLOBAL_WLOCK_ASSERT
+name|UNP_LINK_WLOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|UNP_PCB_LOCK_ASSERT
@@ -6926,7 +6932,7 @@ name|unpcb
 modifier|*
 name|unp2
 decl_stmt|;
-name|UNP_GLOBAL_WLOCK_ASSERT
+name|UNP_LINK_WLOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|UNP_PCB_LOCK_ASSERT
@@ -7111,7 +7117,7 @@ decl_stmt|;
 name|u_int
 name|newlen
 decl_stmt|;
-name|UNP_GLOBAL_UNLOCK_ASSERT
+name|UNP_LINK_UNLOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|error
@@ -7675,7 +7681,10 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|UNP_GLOBAL_LOCK_INIT
+name|UNP_LINK_LOCK_INIT
+argument_list|()
+expr_stmt|;
+name|UNP_LIST_LOCK_INIT
 argument_list|()
 expr_stmt|;
 block|}
@@ -7788,7 +7797,7 @@ decl_stmt|;
 name|u_int
 name|newlen
 decl_stmt|;
-name|UNP_GLOBAL_UNLOCK_ASSERT
+name|UNP_LINK_UNLOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|error
@@ -8797,7 +8806,7 @@ name|unpcb
 modifier|*
 name|unp
 decl_stmt|;
-name|UNP_GLOBAL_WLOCK
+name|UNP_LINK_WLOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -8834,7 +8843,7 @@ expr_stmt|;
 name|unp_rights
 operator|++
 expr_stmt|;
-name|UNP_GLOBAL_WUNLOCK
+name|UNP_LINK_WUNLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -8856,7 +8865,7 @@ name|unpcb
 modifier|*
 name|unp
 decl_stmt|;
-name|UNP_GLOBAL_WLOCK
+name|UNP_LINK_WLOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -8880,7 +8889,7 @@ expr_stmt|;
 name|unp_rights
 operator|--
 expr_stmt|;
-name|UNP_GLOBAL_WUNLOCK
+name|UNP_LINK_WUNLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -9241,7 +9250,7 @@ decl_stmt|;
 name|unp_taskcount
 operator|++
 expr_stmt|;
-name|UNP_GLOBAL_RLOCK
+name|UNP_LIST_LOCK
 argument_list|()
 expr_stmt|;
 comment|/* 	 * First clear all gc flags from previous runs. 	 */
@@ -9317,7 +9326,7 @@ condition|(
 name|unp_marked
 condition|)
 do|;
-name|UNP_GLOBAL_RUNLOCK
+name|UNP_LIST_UNLOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -9347,7 +9356,7 @@ name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Iterate looking for sockets which have been specifically marked 	 * as as unreachable and store them locally. 	 */
-name|UNP_GLOBAL_RLOCK
+name|UNP_LIST_LOCK
 argument_list|()
 expr_stmt|;
 for|for
@@ -9427,7 +9436,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|UNP_GLOBAL_RUNLOCK
+name|UNP_LIST_UNLOCK
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Now flush all sockets, free'ing rights.  This will free the 	 * struct files associated with these sockets but leave each socket 	 * with one remaining ref. 	 */
