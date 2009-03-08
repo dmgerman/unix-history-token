@@ -2049,6 +2049,9 @@ name|struct
 name|usb2_device_request
 name|req
 decl_stmt|;
+name|usb2_error_t
+name|err
+decl_stmt|;
 name|uint16_t
 name|len
 decl_stmt|;
@@ -2171,8 +2174,8 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-if|if
-condition|(
+name|err
+operator|=
 name|usb2_do_request
 argument_list|(
 name|udev
@@ -2184,23 +2187,7 @@ name|req
 argument_list|,
 name|buf
 argument_list|)
-condition|)
-block|{
-name|DPRINTFN
-argument_list|(
-literal|0
-argument_list|,
-literal|"request %u failed\n"
-argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
-name|n
-argument_list|)
 expr_stmt|;
-break|break;
-block|}
 block|}
 else|else
 block|{
@@ -2230,8 +2217,8 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-if|if
-condition|(
+name|err
+operator|=
 name|usb2_do_request
 argument_list|(
 name|udev
@@ -2256,11 +2243,16 @@ literal|8
 index|]
 argument_list|)
 argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|err
 condition|)
 block|{
 name|DPRINTFN
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 literal|"request %u failed\n"
 argument_list|,
@@ -2271,11 +2263,16 @@ operator|)
 name|n
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Some of the requests will fail. Stop doing 			 * requests when we are getting timeouts so 			 * that we don't block the explore/attach 			 * thread forever. 			 */
+if|if
+condition|(
+name|err
+operator|==
+name|USB_ERR_TIMEOUT
+condition|)
 break|break;
 block|}
 block|}
-block|}
-return|return;
 block|}
 end_function
 
