@@ -38,7 +38,7 @@ argument_list|,
 name|O_RDWR
 operator||
 name|O_CREAT
-operator||
+argument_list|,
 literal|0644
 argument_list|)
 decl_stmt|;
