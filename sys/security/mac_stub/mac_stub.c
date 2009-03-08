@@ -4602,11 +4602,6 @@ specifier|const
 name|char
 modifier|*
 name|name
-parameter_list|,
-name|struct
-name|uio
-modifier|*
-name|uio
 parameter_list|)
 block|{
 return|return
@@ -5197,11 +5192,6 @@ specifier|const
 name|char
 modifier|*
 name|name
-parameter_list|,
-name|struct
-name|uio
-modifier|*
-name|uio
 parameter_list|)
 block|{
 return|return

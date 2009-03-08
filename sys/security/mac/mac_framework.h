@@ -230,12 +230,6 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|uio
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|vattr
 struct_decl|;
 end_struct_decl
@@ -3507,11 +3501,6 @@ specifier|const
 name|char
 modifier|*
 name|name
-parameter_list|,
-name|struct
-name|uio
-modifier|*
-name|uio
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3846,11 +3835,6 @@ specifier|const
 name|char
 modifier|*
 name|name
-parameter_list|,
-name|struct
-name|uio
-modifier|*
-name|uio
 parameter_list|)
 function_decl|;
 end_function_decl

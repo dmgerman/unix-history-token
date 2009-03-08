@@ -2018,11 +2018,6 @@ specifier|const
 name|char
 modifier|*
 name|name
-parameter_list|,
-name|struct
-name|uio
-modifier|*
-name|uio
 parameter_list|)
 block|{
 name|int
@@ -2050,8 +2045,6 @@ argument_list|,
 name|attrnamespace
 argument_list|,
 name|name
-argument_list|,
-name|uio
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK_PROBE4
@@ -3412,11 +3405,6 @@ specifier|const
 name|char
 modifier|*
 name|name
-parameter_list|,
-name|struct
-name|uio
-modifier|*
-name|uio
 parameter_list|)
 block|{
 name|int
@@ -3444,8 +3432,6 @@ argument_list|,
 name|attrnamespace
 argument_list|,
 name|name
-argument_list|,
-name|uio
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK_PROBE4
