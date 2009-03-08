@@ -144,12 +144,6 @@ name|struct
 name|hid_location
 name|loc
 decl_stmt|;
-comment|/* */
-name|struct
-name|hid_item
-modifier|*
-name|next
-decl_stmt|;
 block|}
 struct|;
 end_struct
