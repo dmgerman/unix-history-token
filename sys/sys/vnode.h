@@ -3713,6 +3713,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|vop_stdvptocnp
+parameter_list|(
+name|struct
+name|vop_vptocnp_args
+modifier|*
+name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vop_stdvptofh
 parameter_list|(
 name|struct
