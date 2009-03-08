@@ -1955,7 +1955,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_proc_check_setauid
+name|mac_cred_check_setauid
 argument_list|(
 name|oldcred
 argument_list|,
@@ -2337,7 +2337,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_proc_check_setaudit
+name|mac_cred_check_setaudit
 argument_list|(
 name|oldcred
 argument_list|,
@@ -2741,7 +2741,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_proc_check_setaudit_addr
+name|mac_cred_check_setaudit_addr
 argument_list|(
 name|oldcred
 argument_list|,

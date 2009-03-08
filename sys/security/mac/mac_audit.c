@@ -86,7 +86,7 @@ end_include
 begin_expr_stmt
 name|MAC_CHECK_PROBE_DEFINE2
 argument_list|(
-name|proc_check_setaudit
+name|cred_check_setaudit
 argument_list|,
 literal|"struct ucred *"
 argument_list|,
@@ -97,7 +97,7 @@ end_expr_stmt
 
 begin_function
 name|int
-name|mac_proc_check_setaudit
+name|mac_cred_check_setaudit
 parameter_list|(
 name|struct
 name|ucred
@@ -115,7 +115,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|proc_check_setaudit
+name|cred_check_setaudit
 argument_list|,
 name|cred
 argument_list|,
@@ -124,7 +124,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK_PROBE2
 argument_list|(
-name|proc_check_setaudit
+name|cred_check_setaudit
 argument_list|,
 name|error
 argument_list|,
@@ -144,7 +144,7 @@ end_function
 begin_expr_stmt
 name|MAC_CHECK_PROBE_DEFINE2
 argument_list|(
-name|proc_check_setaudit_addr
+name|cred_check_setaudit_addr
 argument_list|,
 literal|"struct ucred *"
 argument_list|,
@@ -155,7 +155,7 @@ end_expr_stmt
 
 begin_function
 name|int
-name|mac_proc_check_setaudit_addr
+name|mac_cred_check_setaudit_addr
 parameter_list|(
 name|struct
 name|ucred
@@ -173,7 +173,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|proc_check_setaudit_addr
+name|cred_check_setaudit_addr
 argument_list|,
 name|cred
 argument_list|,
@@ -182,7 +182,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK_PROBE2
 argument_list|(
-name|proc_check_setaudit_addr
+name|cred_check_setaudit_addr
 argument_list|,
 name|error
 argument_list|,
@@ -202,7 +202,7 @@ end_function
 begin_expr_stmt
 name|MAC_CHECK_PROBE_DEFINE2
 argument_list|(
-name|proc_check_setauid
+name|cred_check_setauid
 argument_list|,
 literal|"struct ucred *"
 argument_list|,
@@ -213,7 +213,7 @@ end_expr_stmt
 
 begin_function
 name|int
-name|mac_proc_check_setauid
+name|mac_cred_check_setauid
 parameter_list|(
 name|struct
 name|ucred
@@ -229,7 +229,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|proc_check_setauid
+name|cred_check_setauid
 argument_list|,
 name|cred
 argument_list|,
@@ -238,7 +238,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK_PROBE2
 argument_list|(
-name|proc_check_setauid
+name|cred_check_setauid
 argument_list|,
 name|error
 argument_list|,
