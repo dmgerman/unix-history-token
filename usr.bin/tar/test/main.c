@@ -4687,6 +4687,17 @@ operator|)
 name|argc
 expr_stmt|;
 comment|/* UNUSED */
+ifdef|#
+directive|ifdef
+name|_WIN32
+comment|/* Make sure open() function will be used with a binary mode. */
+name|_set_fmode
+argument_list|(
+name|_O_BINARY
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Name of this program, used to build root of our temp directory 	 * tree. 	 */
 name|progname
 operator|=

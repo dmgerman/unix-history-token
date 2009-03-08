@@ -453,7 +453,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|_WIN32
-comment|/* open() function is always with a binary mode. */
+comment|/* Make sure open() function will be used with a binary mode. */
 name|_set_fmode
 argument_list|(
 name|_O_BINARY
