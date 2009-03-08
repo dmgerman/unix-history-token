@@ -758,6 +758,7 @@ comment|/* Pathname of exe to be tested. */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|testprog
