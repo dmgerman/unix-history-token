@@ -299,6 +299,8 @@ begin_function_decl
 name|time_t
 name|get_date
 parameter_list|(
+name|time_t
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -414,6 +416,9 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+name|time_t
+name|now
+decl_stmt|;
 comment|/* 	 * Use a pointer for consistency, but stack-allocated storage 	 * for ease of cleanup. 	 */
 name|bsdtar
 operator|=
@@ -525,6 +530,12 @@ operator|*
 name|argv
 expr_stmt|;
 block|}
+name|time
+argument_list|(
+operator|&
+name|now
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|setlocale
@@ -1106,6 +1117,8 @@ name|newer_ctime_sec
 operator|=
 name|get_date
 argument_list|(
+name|now
+argument_list|,
 name|bsdtar
 operator|->
 name|optarg
@@ -1179,6 +1192,8 @@ name|newer_mtime_sec
 operator|=
 name|get_date
 argument_list|(
+name|now
+argument_list|,
 name|bsdtar
 operator|->
 name|optarg
