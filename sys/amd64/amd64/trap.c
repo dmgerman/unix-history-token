@@ -1253,7 +1253,6 @@ case|case
 name|T_NMI
 case|:
 comment|/* machine/parity/power fail/"kitchen sink" faults */
-comment|/* XXX Giant */
 if|if
 condition|(
 name|isa_nmi
@@ -1589,7 +1588,6 @@ name|DEV_ISA
 case|case
 name|T_NMI
 case|:
-comment|/* XXX Giant */
 comment|/* machine/parity/power fail/"kitchen sink" faults */
 if|if
 condition|(
@@ -2878,7 +2876,6 @@ operator|->
 name|sv_prepsyscall
 condition|)
 block|{
-comment|/* 		 * The prep code is MP aware. 		 */
 call|(
 modifier|*
 name|p
@@ -2988,7 +2985,6 @@ name|callp
 operator|->
 name|sy_narg
 expr_stmt|;
-comment|/* 	 * copyin and the ktrsyscall()/ktrsysret() code is MP-aware 	 */
 name|KASSERT
 argument_list|(
 name|narg
