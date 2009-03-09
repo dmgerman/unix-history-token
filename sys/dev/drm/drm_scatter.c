@@ -320,11 +320,9 @@ name|dmah
 operator|->
 name|vaddr
 argument_list|,
-name|BUS_DMA_NOWAIT
+name|BUS_DMA_WAITOK
 operator||
 name|BUS_DMA_ZERO
-operator||
-name|BUS_DMA_NOCACHE
 argument_list|,
 operator|&
 name|dmah
@@ -397,7 +395,9 @@ name|drm_sg_alloc_cb
 argument_list|,
 name|entry
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_NOCACHE
 argument_list|)
 expr_stmt|;
 if|if
