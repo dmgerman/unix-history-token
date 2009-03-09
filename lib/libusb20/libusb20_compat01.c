@@ -56,7 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"libusb20_compat01.h"
+file|"usb.h"
 end_include
 
 begin_comment
