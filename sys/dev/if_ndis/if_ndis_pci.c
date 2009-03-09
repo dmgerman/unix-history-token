@@ -409,24 +409,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|ndis
-argument_list|,
-name|cardbus
-argument_list|,
-name|ndis_driver
-argument_list|,
-name|ndis_devclass
-argument_list|,
-name|ndisdrv_modevent
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 specifier|static
 name|int
