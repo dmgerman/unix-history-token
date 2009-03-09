@@ -8365,7 +8365,7 @@ name|flags
 operator|&
 name|RADEON_FAMILY_MASK
 operator|)
-operator|<
+operator|>=
 name|CHIP_R600
 condition|)
 block|{
