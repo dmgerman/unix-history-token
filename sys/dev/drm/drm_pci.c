@@ -262,7 +262,7 @@ argument_list|,
 name|size
 argument_list|,
 comment|/* maxsize, nsegs, maxsegsize */
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -306,7 +306,9 @@ name|dmah
 operator|->
 name|vaddr
 argument_list|,
-name|BUS_DMA_NOWAIT
+name|BUS_DMA_WAITOK
+operator||
+name|BUS_DMA_ZERO
 argument_list|,
 operator|&
 name|dmah
@@ -361,7 +363,7 @@ name|drm_pci_busdma_callback
 argument_list|,
 name|dmah
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
