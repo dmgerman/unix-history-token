@@ -2071,7 +2071,7 @@ name|bp
 operator|->
 name|b_bufsize
 expr_stmt|;
-name|atomic_add_int
+name|atomic_add_long
 argument_list|(
 operator|&
 name|runningbufspace
@@ -3834,7 +3834,7 @@ name|bp
 operator|->
 name|b_bufsize
 expr_stmt|;
-name|atomic_add_int
+name|atomic_add_long
 argument_list|(
 operator|&
 name|runningbufspace
