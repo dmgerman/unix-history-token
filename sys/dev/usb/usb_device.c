@@ -335,6 +335,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|USB_HAVE_UGEN
+end_if
+
 begin_function_decl
 specifier|static
 name|void
@@ -403,6 +409,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* This variable is global to allow easy access to it: */
@@ -1989,6 +2000,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_UGEN
 comment|/* free all FIFOs except control endpoint FIFOs */
 name|usb2_fifo_free_wrap
 argument_list|(
@@ -2005,6 +2019,8 @@ argument_list|(
 name|udev
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|usb2_free_iface_data
 argument_list|(
 name|udev
@@ -2472,12 +2488,17 @@ name|done
 goto|;
 block|}
 block|}
+if|#
+directive|if
+name|USB_HAVE_UGEN
 comment|/* create device nodes for each endpoint */
 name|usb2_cdev_create
 argument_list|(
 name|udev
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|done
 label|:
 name|DPRINTF
@@ -2495,11 +2516,16 @@ condition|(
 name|err
 condition|)
 block|{
+if|#
+directive|if
+name|USB_HAVE_UGEN
 name|usb2_cdev_free
 argument_list|(
 name|udev
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|usb2_free_iface_data
 argument_list|(
 name|udev
@@ -2658,6 +2684,9 @@ name|done
 goto|;
 block|}
 block|}
+if|#
+directive|if
+name|USB_HAVE_UGEN
 comment|/* 	 * Free all generic FIFOs for this interface, except control 	 * endpoint FIFOs: 	 */
 name|usb2_fifo_free_wrap
 argument_list|(
@@ -2668,6 +2697,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|err
 operator|=
 name|usb2_fill_iface_data
@@ -5189,23 +5220,7 @@ name|device_index
 operator|=
 name|device_index
 expr_stmt|;
-comment|/* Create the control endpoint device */
-name|udev
-operator|->
-name|default_dev
-operator|=
-name|usb2_make_dev
-argument_list|(
-name|udev
-argument_list|,
-literal|0
-argument_list|,
-name|FREAD
-operator||
-name|FWRITE
-argument_list|)
-expr_stmt|;
-comment|/* Create a link from /dev/ugenX.X to the default endpoint */
+comment|/* Create ugen name */
 name|snprintf
 argument_list|(
 name|udev
@@ -5232,6 +5247,26 @@ argument_list|,
 name|device_index
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_UGEN
+comment|/* Create the control endpoint device */
+name|udev
+operator|->
+name|default_dev
+operator|=
+name|usb2_make_dev
+argument_list|(
+name|udev
+argument_list|,
+literal|0
+argument_list|,
+name|FREAD
+operator||
+name|FWRITE
+argument_list|)
+expr_stmt|;
+comment|/* Create a link from /dev/ugenX.X to the default endpoint */
 name|make_dev_alias
 argument_list|(
 name|udev
@@ -5243,6 +5278,8 @@ operator|->
 name|ugen_name
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|udev
@@ -6270,6 +6307,9 @@ name|device_index
 argument_list|)
 expr_stmt|;
 comment|/* Link and announce the ugen device name */
+if|#
+directive|if
+name|USB_HAVE_UGEN
 name|udev
 operator|->
 name|ugen_symlink
@@ -6281,6 +6321,8 @@ operator|->
 name|ugen_name
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"%s:<%s> at %s\n"
@@ -6335,6 +6377,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|USB_HAVE_UGEN
+end_if
 
 begin_function
 specifier|static
@@ -6892,6 +6940,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_free_device  *  * This function is NULL safe and will free an USB device.  *------------------------------------------------------------------------*/
 end_comment
@@ -6964,6 +7017,9 @@ operator|->
 name|ugen_symlink
 condition|)
 block|{
+if|#
+directive|if
+name|USB_HAVE_UGEN
 name|usb2_free_symlink
 argument_list|(
 name|udev
@@ -6971,6 +7027,8 @@ operator|->
 name|ugen_symlink
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|udev
 operator|->
 name|ugen_symlink
@@ -7006,6 +7064,9 @@ argument_list|,
 name|USB_ROOT_HUB_ADDR
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_UGEN
 comment|/* wait for all pending references to go away: */
 name|mtx_lock
 argument_list|(
@@ -7046,6 +7107,8 @@ operator|&
 name|usb2_ref_lock
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|udev
@@ -7068,6 +7131,9 @@ name|USB_DEFAULT_XFER_MAX
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|USB_HAVE_UGEN
 comment|/* free all FIFOs */
 name|usb2_fifo_free_wrap
 argument_list|(
@@ -7084,11 +7150,16 @@ argument_list|(
 name|udev
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|usb2_free_iface_data
 argument_list|(
 name|udev
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_UGEN
 name|destroy_dev_sched_cb
 argument_list|(
 name|udev
@@ -7104,6 +7175,8 @@ operator|->
 name|si_drv1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* unsetup any leftover default USB transfers */
 name|usb2_transfer_unsetup
 argument_list|(
@@ -8632,6 +8705,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|USB_HAVE_UGEN
+end_if
+
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_fifo_free_wrap  *  * This function will free the FIFOs.  *  * Flag values, if "iface_index" is equal to "USB_IFACE_INDEX_ANY".  * 0: Free all FIFOs except generic control endpoints.  * 1: Free all FIFOs.  *  * Flag values, if "iface_index" is not equal to "USB_IFACE_INDEX_ANY".  * Not used.  *------------------------------------------------------------------------*/
 end_comment
@@ -8800,6 +8879,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_peer_can_wakeup  *  * Return values:  * 0: Peer cannot do resume signalling.  * Else: Peer can do resume signalling.  *------------------------------------------------------------------------*/

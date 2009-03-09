@@ -4726,12 +4726,17 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|#
+directive|if
+name|USB_HAVE_UGEN
 name|mtx_lock
 argument_list|(
 operator|&
 name|usb2_ref_lock
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|bus
 operator|->
 name|devices
@@ -4741,12 +4746,17 @@ index|]
 operator|=
 name|udev
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_UGEN
 name|mtx_unlock
 argument_list|(
 operator|&
 name|usb2_ref_lock
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* 	 * Debug print 	 */
 name|DPRINTFN
