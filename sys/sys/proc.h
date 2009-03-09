@@ -2203,7 +2203,7 @@ modifier|*
 name|p_textvp
 decl_stmt|;
 comment|/* (b) Vnode of executable. */
-name|char
+name|u_int
 name|p_lock
 decl_stmt|;
 comment|/* (c) Proclock (prevent swap) count. */
