@@ -70,7 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/controller/mus2_otg.h>
+file|<dev/usb/controller/musb_otg.h>
 end_include
 
 begin_include
