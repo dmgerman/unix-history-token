@@ -1160,7 +1160,7 @@ comment|/**  * Default AGP aperture size detection which simply returns the size
 end_comment
 
 begin_function
-name|int
+name|u_int32_t
 name|agp_generic_get_aperture
 parameter_list|(
 name|device_t

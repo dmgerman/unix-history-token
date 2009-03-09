@@ -308,7 +308,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|u_int32_t
 name|agp_generic_get_aperture
 parameter_list|(
 name|device_t

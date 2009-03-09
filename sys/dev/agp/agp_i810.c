@@ -3610,7 +3610,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|int
+name|vm_offset_t
 name|offset
 parameter_list|,
 name|vm_offset_t
@@ -3650,8 +3650,11 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"failed: offset is 0x%08x, shift is %d, entries is %d\n"
+literal|"failed: offset is 0x%08jx, shift is %d, entries is %d\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|offset
 argument_list|,
 name|AGP_PAGE_SHIFT
@@ -3726,7 +3729,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|int
+name|vm_offset_t
 name|offset
 parameter_list|)
 block|{
