@@ -202,7 +202,6 @@ comment|/*  * Begin writing into a new block/sector.  We read the sector into  *
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|cfi_block_start
 parameter_list|(
@@ -465,7 +464,6 @@ comment|/*  * Finish updating the current block/sector by writing the compound  
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|cfi_block_finish
 parameter_list|(
