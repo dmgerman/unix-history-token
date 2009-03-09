@@ -14364,7 +14364,28 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * If this is a direct child, check to see if the interrupt is 	 * MSI or MSI-X.  If so, ask our parent to map the MSI and give 	 * us the address and data register values.  If we fail for some 	 * reason, teardown the interrupt handler. 	 */
+comment|/* If this is not a direct child, just bail out. */
+if|if
+condition|(
+name|device_get_parent
+argument_list|(
+name|child
+argument_list|)
+operator|!=
+name|dev
+condition|)
+block|{
+operator|*
+name|cookiep
+operator|=
+name|cookie
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|rid
 operator|=
 name|rman_get_rid
@@ -14374,18 +14395,25 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|device_get_parent
-argument_list|(
-name|child
-argument_list|)
-operator|==
-name|dev
-operator|&&
 name|rid
-operator|>
+operator|==
 literal|0
 condition|)
 block|{
+comment|/* Make sure that INTx is enabled */
+name|pci_clear_command_bit
+argument_list|(
+name|dev
+argument_list|,
+name|child
+argument_list|,
+name|PCIM_CMD_INTxDIS
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * Check to see if the interrupt is MSI or MSI-X. 		 * Ask our parent to map the MSI and give 		 * us the address and data register values. 		 * If we fail for some reason, teardown the 		 * interrupt handler. 		 */
 name|dinfo
 operator|=
 name|device_get_ivars
@@ -14712,7 +14740,7 @@ name|mte_handlers
 operator|++
 expr_stmt|;
 block|}
-comment|/* Disable INTx if we are using MSI/MSIX */
+comment|/* Make sure that INTx is disabled if we are using MSI/MSIX */
 name|pci_set_command_bit
 argument_list|(
 name|dev
@@ -14803,7 +14831,6 @@ name|error
 decl_stmt|,
 name|rid
 decl_stmt|;
-comment|/* 	 * If this is a direct child, check to see if the interrupt is 	 * MSI or MSI-X.  If so, decrement the appropriate handlers 	 * count and mask the MSI-X message, or disable MSI messages 	 * if the count drops to 0. 	 */
 if|if
 condition|(
 name|irq
@@ -14825,6 +14852,30 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+comment|/* If this isn't a direct child, just bail out */
+if|if
+condition|(
+name|device_get_parent
+argument_list|(
+name|child
+argument_list|)
+operator|!=
+name|dev
+condition|)
+return|return
+operator|(
+name|bus_generic_teardown_intr
+argument_list|(
+name|dev
+argument_list|,
+name|child
+argument_list|,
+name|irq
+argument_list|,
+name|cookie
+argument_list|)
+operator|)
+return|;
 name|rid
 operator|=
 name|rman_get_rid
@@ -14834,18 +14885,25 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|device_get_parent
-argument_list|(
-name|child
-argument_list|)
-operator|==
-name|dev
-operator|&&
 name|rid
-operator|>
+operator|==
 literal|0
 condition|)
 block|{
+comment|/* Mask INTx */
+name|pci_set_command_bit
+argument_list|(
+name|dev
+argument_list|,
+name|child
+argument_list|,
+name|PCIM_CMD_INTxDIS
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * Check to see if the interrupt is MSI or MSI-X.  If so, 		 * decrement the appropriate handlers count and mask the 		 * MSI-X message, or disable MSI messages if the count 		 * drops to 0. 		 */
 name|dinfo
 operator|=
 name|device_get_ivars
@@ -15042,16 +15100,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Restore INTx capability for MSI/MSIX */
-name|pci_clear_command_bit
-argument_list|(
-name|dev
-argument_list|,
-name|child
-argument_list|,
-name|PCIM_CMD_INTxDIS
-argument_list|)
-expr_stmt|;
 block|}
 name|error
 operator|=
@@ -15068,13 +15116,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|device_get_parent
-argument_list|(
-name|child
-argument_list|)
-operator|==
-name|dev
-operator|&&
 name|rid
 operator|>
 literal|0
