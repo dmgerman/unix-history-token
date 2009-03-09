@@ -645,14 +645,6 @@ name|u_int
 name|td_uticks
 decl_stmt|;
 comment|/* (t) Statclock hits in user mode. */
-name|u_int
-name|td_uuticks
-decl_stmt|;
-comment|/* (k) Statclock hits (usr), for UTS. */
-name|u_int
-name|td_usticks
-decl_stmt|;
-comment|/* (k) Statclock hits (sys), for UTS. */
 name|int
 name|td_intrval
 decl_stmt|;
