@@ -1600,6 +1600,17 @@ begin_comment
 comment|/* Permission to ignore the MNTK_SUSPEND* */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TDP_AUDITREC
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* Audit record pending on thread */
+end_comment
+
 begin_comment
 comment|/*  * Reasons that the current thread can not be run yet.  * More than one may apply.  */
 end_comment
