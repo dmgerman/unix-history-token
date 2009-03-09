@@ -750,6 +750,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSCALL_COMPAT
+end_ifdef
+
 begin_function_decl
 specifier|extern
 name|int
@@ -763,6 +769,11 @@ modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int
@@ -1466,6 +1477,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+ifdef|#
+directive|ifdef
+name|SYSCALL_COMPAT
 name|ret
 operator|=
 name|__fcntl_compat
@@ -1483,6 +1497,14 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|ret
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|va_end
 argument_list|(
