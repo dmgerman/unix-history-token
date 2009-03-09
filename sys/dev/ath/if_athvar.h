@@ -1339,6 +1339,15 @@ name|task
 name|sc_txtask
 decl_stmt|;
 comment|/* tx int processing */
+name|int
+name|sc_wd_timer
+decl_stmt|;
+comment|/* count down for wd timer */
+name|struct
+name|callout
+name|sc_wd_ch
+decl_stmt|;
+comment|/* tx watchdog timer */
 name|struct
 name|ath_descdma
 name|sc_bdma
