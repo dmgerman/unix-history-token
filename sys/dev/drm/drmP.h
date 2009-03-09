@@ -3214,7 +3214,7 @@ name|int
 name|drm_probe
 parameter_list|(
 name|device_t
-name|nbdev
+name|kdev
 parameter_list|,
 name|drm_pci_id_list_t
 modifier|*
@@ -3228,7 +3228,7 @@ name|int
 name|drm_attach
 parameter_list|(
 name|device_t
-name|nbdev
+name|kdev
 parameter_list|,
 name|drm_pci_id_list_t
 modifier|*
@@ -3253,7 +3253,7 @@ name|int
 name|drm_detach
 parameter_list|(
 name|device_t
-name|nbdev
+name|kdev
 parameter_list|)
 function_decl|;
 end_function_decl
