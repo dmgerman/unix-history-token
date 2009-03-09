@@ -17664,6 +17664,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|kdb_active
+operator|&&
 name|tty_opened
 argument_list|(
 name|tp
