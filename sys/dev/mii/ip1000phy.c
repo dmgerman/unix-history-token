@@ -1146,11 +1146,7 @@ name|sc
 operator|->
 name|mii_anegticks
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 name|sc
 operator|->
 name|mii_ticks
