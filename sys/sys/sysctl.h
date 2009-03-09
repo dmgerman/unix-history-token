@@ -924,7 +924,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|static struct sysctl_oid sysctl__##parent##_##name = {		 \&sysctl_##parent##_children, { NULL }, nbr, kind,	 \ 		a1, a2, #name, handler, fmt, 0, __DESCR(descr) };        \ 	DATA_SET(sysctl_set, sysctl__##parent##_##name)
+value|static struct sysctl_oid sysctl__##parent##_##name = {		 \&sysctl_##parent##_children, { NULL }, nbr, kind,	 \ 		a1, a2, #name, handler, fmt, 0, __DESCR(descr) };     \ 	DATA_SET(sysctl_set, sysctl__##parent##_##name)
 end_define
 
 begin_ifdef
@@ -3890,6 +3890,14 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
+name|_dev
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
 name|_hw
 argument_list|)
 expr_stmt|;
@@ -3899,6 +3907,22 @@ begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
 name|_hw_bus
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_hw_bus_devices
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_hw_bus_info
 argument_list|)
 expr_stmt|;
 end_expr_stmt
