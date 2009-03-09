@@ -813,11 +813,6 @@ operator|=
 name|rip_ctloutput
 block|,
 operator|.
-name|pr_init
-operator|=
-name|igmp_init
-block|,
-operator|.
 name|pr_fasttimo
 operator|=
 name|igmp_fasttimo

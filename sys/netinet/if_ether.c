@@ -251,7 +251,8 @@ name|LLTABLE
 parameter_list|(
 name|ifp
 parameter_list|)
-value|((struct lltable *)(ifp)->if_afdata[AF_INET])
+define|\
+value|((struct in_ifinfo *)(ifp)->if_afdata[AF_INET])->ii_llt
 end_define
 
 begin_expr_stmt

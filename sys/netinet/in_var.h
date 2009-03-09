@@ -27,6 +27,60 @@ directive|include
 file|<sys/fnv_hash.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/tree.h>
+end_include
+
+begin_struct_decl
+struct_decl|struct
+name|igmp_ifinfo
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|in_multi
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|lltable
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/*  * IPv4 per-interface state.  */
+end_comment
+
+begin_struct
+struct|struct
+name|in_ifinfo
+block|{
+name|struct
+name|lltable
+modifier|*
+name|ii_llt
+decl_stmt|;
+comment|/* ARP state */
+name|struct
+name|igmp_ifinfo
+modifier|*
+name|ii_igmp
+decl_stmt|;
+comment|/* IGMP state */
+name|struct
+name|in_multi
+modifier|*
+name|ii_allhosts
+decl_stmt|;
+comment|/* 224.0.0.1 membership */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Interface address, Internet version.  One of these structures  * is allocated for each Internet address on an interface.  * The ifaddr structure contains the protocol-independent part  * of the structure and is assumed to be first.  */
 end_comment
@@ -394,7 +448,7 @@ value|(((((x)& 0xF) | ((((x)>> 8)& 0xF)<< 4)) ^ (y))& IPREASS_HMASK)
 end_define
 
 begin_comment
-comment|/*  * This information should be part of the ifnet structure but we don't wish  * to change that - as it might break a number of things  */
+comment|/*  * Legacy IPv4 IGMP per-link structure.  */
 end_comment
 
 begin_struct
@@ -420,33 +474,296 @@ argument|router_info
 argument_list|)
 name|rti_list
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
-name|int
-name|rti_timev1
-decl_stmt|;
-comment|/* IGMPv1 querier present */
-name|int
-name|rti_timev2
-decl_stmt|;
-comment|/* IGMPv2 querier present */
-name|int
-name|rti_timer
-decl_stmt|;
-comment|/* report to general query */
-name|int
-name|rti_qrv
-decl_stmt|;
-comment|/* querier robustness */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Internet multicast address structure.  There is one of these for each IP  * multicast group to which this host belongs on a given network interface.  * For every entry on the interface's if_multiaddrs list which represents  * an IP multicast group, there is one of these structures.  They are also  * kept on a system-wide list to make it easier to keep our legacy IGMP code  * compatible with the rest of the world (see IN_FIRST_MULTI et al, below).  */
+comment|/*  * Per-interface IGMP router version information.  */
+end_comment
+
+begin_struct
+struct|struct
+name|igmp_ifinfo
+block|{
+name|LIST_ENTRY
+argument_list|(
+argument|igmp_ifinfo
+argument_list|)
+name|igi_link
+expr_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|igi_ifp
+decl_stmt|;
+comment|/* interface this instance belongs to */
+name|uint32_t
+name|igi_version
+decl_stmt|;
+comment|/* IGMPv3 Host Compatibility Mode */
+name|uint32_t
+name|igi_v1_timer
+decl_stmt|;
+comment|/* IGMPv1 Querier Present timer (s) */
+name|uint32_t
+name|igi_v2_timer
+decl_stmt|;
+comment|/* IGMPv2 Querier Present timer (s) */
+name|uint32_t
+name|igi_v3_timer
+decl_stmt|;
+comment|/* IGMPv3 General Query (interface) timer (s)*/
+name|uint32_t
+name|igi_flags
+decl_stmt|;
+comment|/* IGMP per-interface flags */
+name|uint32_t
+name|igi_rv
+decl_stmt|;
+comment|/* IGMPv3 Robustness Variable */
+name|uint32_t
+name|igi_qi
+decl_stmt|;
+comment|/* IGMPv3 Query Interval (s) */
+name|uint32_t
+name|igi_qri
+decl_stmt|;
+comment|/* IGMPv3 Query Response Interval (s) */
+name|uint32_t
+name|igi_uri
+decl_stmt|;
+comment|/* IGMPv3 Unsolicited Report Interval (s) */
+name|SLIST_HEAD
+argument_list|(
+argument_list|,
+argument|in_multi
+argument_list|)
+name|igi_relinmhead
+expr_stmt|;
+comment|/* released groups */
+name|struct
+name|ifqueue
+name|igi_gq
+decl_stmt|;
+comment|/* queue of general query responses */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|IGIF_SILENT
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Do not use IGMP on this ifp */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGIF_LOOPBACK
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Send IGMP reports to loopback */
+end_comment
+
+begin_comment
+comment|/*  * IPv4 multicast IGMP-layer source entry.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ip_msource
+block|{
+name|RB_ENTRY
+argument_list|(
+argument|ip_msource
+argument_list|)
+name|ims_link
+expr_stmt|;
+comment|/* RB tree links */
+name|in_addr_t
+name|ims_haddr
+decl_stmt|;
+comment|/* host byte order */
+struct|struct
+name|ims_st
+block|{
+name|uint16_t
+name|ex
+decl_stmt|;
+comment|/* # of exclusive members */
+name|uint16_t
+name|in
+decl_stmt|;
+comment|/* # of inclusive members */
+block|}
+name|ims_st
+index|[
+literal|2
+index|]
+struct|;
+comment|/* state at t0, t1 */
+name|uint8_t
+name|ims_stp
+decl_stmt|;
+comment|/* pending query */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * IPv4 multicast PCB-layer source entry.  */
+end_comment
+
+begin_struct
+struct|struct
+name|in_msource
+block|{
+name|RB_ENTRY
+argument_list|(
+argument|ip_msource
+argument_list|)
+name|ims_link
+expr_stmt|;
+comment|/* RB tree links */
+name|in_addr_t
+name|ims_haddr
+decl_stmt|;
+comment|/* host byte order */
+name|uint8_t
+name|imsl_st
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* state before/at commit */
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|RB_HEAD
+argument_list|(
+name|ip_msource_tree
+argument_list|,
+name|ip_msource
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* define struct ip_msource_tree */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|ip_msource_cmp
+parameter_list|(
+specifier|const
+name|struct
+name|ip_msource
+modifier|*
+name|a
+parameter_list|,
+specifier|const
+name|struct
+name|ip_msource
+modifier|*
+name|b
+parameter_list|)
+block|{
+if|if
+condition|(
+name|a
+operator|->
+name|ims_haddr
+operator|<
+name|b
+operator|->
+name|ims_haddr
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+if|if
+condition|(
+name|a
+operator|->
+name|ims_haddr
+operator|==
+name|b
+operator|->
+name|ims_haddr
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|RB_PROTOTYPE
+argument_list|(
+name|ip_msource_tree
+argument_list|,
+name|ip_msource
+argument_list|,
+name|ims_link
+argument_list|,
+name|ip_msource_cmp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * IPv4 multicast PCB-layer group filter descriptor.  */
+end_comment
+
+begin_struct
+struct|struct
+name|in_mfilter
+block|{
+name|struct
+name|ip_msource_tree
+name|imf_sources
+decl_stmt|;
+comment|/* source list for (S,G) */
+name|u_long
+name|imf_nsrc
+decl_stmt|;
+comment|/* # of source entries */
+name|uint8_t
+name|imf_st
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* state before/at commit */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * IPv4 group descriptor.  *  * For every entry on an ifnet's if_multiaddrs list which represents  * an IP multicast group, there is one of these structures.  *  * If any source filters are present, then a node will exist in the RB-tree  * to permit fast lookup by source whenever an operation takes place.  * This permits pre-order traversal when we issue reports.  * Source filter trees are kept separately from the socket layer to  * greatly simplify locking.  *  * When IGMPv3 is active, inm_timer is the response to group query timer.  * The state-change timer inm_sctimer is separate; whenever state changes  * for the group the state change record is generated and transmitted,  * and kept if retransmissions are necessary.  *  * FUTURE: inm_link is now only used when groups are being purged  * on a detaching ifnet. It could be demoted to a SLIST_ENTRY, but  * because it is at the very start of the struct, we can't do this  * w/o breaking the ABI for ifmcstat.  */
 end_comment
 
 begin_struct
@@ -459,7 +776,7 @@ argument|in_multi
 argument_list|)
 name|inm_link
 expr_stmt|;
-comment|/* queue macro glue */
+comment|/* to-be-released by in_ifdetach */
 name|struct
 name|in_addr
 name|inm_addr
@@ -480,153 +797,201 @@ comment|/* back pointer to ifmultiaddr */
 name|u_int
 name|inm_timer
 decl_stmt|;
-comment|/* IGMP membership report timer */
+comment|/* IGMPv1/v2 group / v3 query timer */
 name|u_int
 name|inm_state
 decl_stmt|;
-comment|/*  state of the membership */
-name|struct
-name|router_info
+comment|/* state of the membership */
+name|void
 modifier|*
 name|inm_rti
 decl_stmt|;
-comment|/* router info*/
+comment|/* unused, legacy field */
 name|u_int
 name|inm_refcount
 decl_stmt|;
 comment|/* reference count */
-ifdef|#
-directive|ifdef
-name|notyet
-comment|/* IGMPv3 source-specific multicast fields */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|in_msfentry
-argument_list|)
-name|inm_msf
-expr_stmt|;
-comment|/* all active source filters */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|in_msfentry
-argument_list|)
-name|inm_msf_record
-expr_stmt|;
-comment|/* recorded sources */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|in_msfentry
-argument_list|)
-name|inm_msf_exclude
-expr_stmt|;
-comment|/* exclude sources */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|in_msfentry
-argument_list|)
-name|inm_msf_include
-expr_stmt|;
-comment|/* include sources */
-comment|/* XXX: should this lot go to the router_info structure? */
-comment|/* XXX: can/should these be callouts? */
-comment|/* IGMP protocol timers */
-name|int32_t
-name|inm_ti_curstate
+comment|/* New fields for IGMPv3 follow. */
+name|struct
+name|igmp_ifinfo
+modifier|*
+name|inm_igi
 decl_stmt|;
-comment|/* current state timer */
-name|int32_t
-name|inm_ti_statechg
+comment|/* IGMP info */
+name|SLIST_ENTRY
+argument_list|(
+argument|in_multi
+argument_list|)
+name|inm_nrele
+expr_stmt|;
+comment|/* to-be-released by IGMP */
+name|struct
+name|ip_msource_tree
+name|inm_srcs
 decl_stmt|;
-comment|/* state change timer */
-comment|/* IGMP report timers */
+comment|/* tree of sources */
+name|u_long
+name|inm_nsrc
+decl_stmt|;
+comment|/* # of tree entries */
+name|struct
+name|ifqueue
+name|inm_scq
+decl_stmt|;
+comment|/* queue of pending 						 * state-change packets */
+name|struct
+name|timeval
+name|inm_lastgsrtv
+decl_stmt|;
+comment|/* Time of last G-S-R query */
 name|uint16_t
-name|inm_rpt_statechg
+name|inm_sctimer
 decl_stmt|;
-comment|/* state change report timer */
+comment|/* state-change timer */
 name|uint16_t
-name|inm_rpt_toxx
+name|inm_scrv
 decl_stmt|;
-comment|/* fmode change report timer */
-comment|/* IGMP protocol state */
+comment|/* state-change rexmit count */
+comment|/* 	 * SSM state counters which track state at T0 (the time the last 	 * state-change report's RV timer went to zero) and T1 	 * (time of pending report, i.e. now). 	 * Used for computing IGMPv3 state-change reports. Several refcounts 	 * are maintained here to optimize for common use-cases. 	 */
+struct|struct
+name|inm_st
+block|{
 name|uint16_t
-name|inm_fmode
+name|iss_fmode
 decl_stmt|;
-comment|/* filter mode */
-name|uint32_t
-name|inm_recsrc_count
+comment|/* IGMP filter mode */
+name|uint16_t
+name|iss_asm
+decl_stmt|;
+comment|/* # of ASM listeners */
+name|uint16_t
+name|iss_ex
+decl_stmt|;
+comment|/* # of exclusive members */
+name|uint16_t
+name|iss_in
+decl_stmt|;
+comment|/* # of inclusive members */
+name|uint16_t
+name|iss_rec
 decl_stmt|;
 comment|/* # of recorded sources */
-name|uint16_t
-name|inm_exclude_sock_count
-decl_stmt|;
-comment|/* # of exclude-mode sockets */
-name|uint16_t
-name|inm_gass_count
-decl_stmt|;
-comment|/* # of g-a-s queries */
-endif|#
-directive|endif
+block|}
+name|inm_st
+index|[
+literal|2
+index|]
+struct|;
+comment|/* state at t0, t1 */
 block|}
 struct|;
 end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
 
 begin_comment
-comment|/*  * Internet multicast source filter list. This list is used to store  * IP multicast source addresses for each membership on an interface.  * TODO: Allocate these structures using UMA.  * TODO: Find an easier way of linking the struct into two lists at once.  */
+comment|/*  * Helper function to derive the filter mode on a source entry  * from its internal counters. Predicates are:  *  A source is only excluded if all listeners exclude it.  *  A source is only included if no listeners exclude it,  *  and at least one listener includes it.  * May be used by ifmcstat(8).  */
 end_comment
 
-begin_struct
-struct|struct
-name|in_msfentry
-block|{
-name|TAILQ_ENTRY
-argument_list|(
-argument|in_msfentry
-argument_list|)
-name|isf_link
-expr_stmt|;
-comment|/* next filter in all-list */
-name|TAILQ_ENTRY
-argument_list|(
-argument|in_msfentry
-argument_list|)
-name|isf_next
-expr_stmt|;
-comment|/* next filter in queue */
+begin_function
+specifier|static
+name|__inline
+name|uint8_t
+name|ims_get_mode
+parameter_list|(
+specifier|const
 name|struct
-name|in_addr
-name|isf_addr
-decl_stmt|;
-comment|/* the address of this source */
-name|uint16_t
-name|isf_refcount
-decl_stmt|;
-comment|/* reference count */
-name|uint16_t
-name|isf_reporttag
-decl_stmt|;
-comment|/* what to report to the IGMP router */
-name|uint16_t
-name|isf_rexmit
-decl_stmt|;
-comment|/* retransmission state/count */
+name|in_multi
+modifier|*
+name|inm
+parameter_list|,
+specifier|const
+name|struct
+name|ip_msource
+modifier|*
+name|ims
+parameter_list|,
+name|uint8_t
+name|t
+parameter_list|)
+block|{
+name|t
+operator|=
+operator|!
+operator|!
+name|t
+expr_stmt|;
+if|if
+condition|(
+name|inm
+operator|->
+name|inm_st
+index|[
+name|t
+index|]
+operator|.
+name|iss_ex
+operator|>
+literal|0
+operator|&&
+name|inm
+operator|->
+name|inm_st
+index|[
+name|t
+index|]
+operator|.
+name|iss_ex
+operator|==
+name|ims
+operator|->
+name|ims_st
+index|[
+name|t
+index|]
+operator|.
+name|ex
+condition|)
+return|return
+operator|(
+name|MCAST_EXCLUDE
+operator|)
+return|;
+elseif|else
+if|if
+condition|(
+name|ims
+operator|->
+name|ims_st
+index|[
+name|t
+index|]
+operator|.
+name|in
+operator|>
+literal|0
+operator|&&
+name|ims
+operator|->
+name|ims_st
+index|[
+name|t
+index|]
+operator|.
+name|ex
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|MCAST_INCLUDE
+operator|)
+return|;
+return|return
+operator|(
+name|MCAST_UNDEFINED
+operator|)
+return|;
 block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+end_function
 
 begin_ifdef
 ifdef|#
@@ -679,6 +1044,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* XXX unused */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -697,6 +1066,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* BURN_BRIDGES */
+end_comment
 
 begin_comment
 comment|/*  * Lock macros for IPv4 layer multicast address lists.  IPv4 lock goes  * before link layer multicast locks in the lock order.  In most cases,  * consumers of IN_*_MULTI() macros should acquire the locks before  * calling them; users of the in_{add,del}multi() functions should not.  */
@@ -734,85 +1107,244 @@ parameter_list|()
 value|mtx_assert(&in_multi_mtx, MA_OWNED)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IN_MULTI_UNLOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&in_multi_mtx, MA_NOTOWNED)
+end_define
+
 begin_comment
-comment|/*  * Structure used by macros below to remember position when stepping through  * all of the in_multi records.  */
+comment|/*  * Function for looking up an in_multi record for an IPv4 multicast address  * on a given interface. ifp must be valid. If no record found, return NULL.  * The IN_MULTI_LOCK and IF_ADDR_LOCK on ifp must be held.  */
 end_comment
 
-begin_struct
-struct|struct
-name|in_multistep
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|in_multi
+operator|*
+name|inm_lookup_locked
+argument_list|(
+argument|struct ifnet *ifp
+argument_list|,
+argument|const struct in_addr ina
+argument_list|)
+block|{ 	struct
+name|ifmultiaddr
+operator|*
+name|ifma
+block|; 	struct
+name|in_multi
+operator|*
+name|inm
+block|;
+name|IN_MULTI_LOCK_ASSERT
+argument_list|()
+block|;
+name|IF_ADDR_LOCK_ASSERT
+argument_list|(
+name|ifp
+argument_list|)
+block|;
+name|inm
+operator|=
+name|NULL
+block|;
+name|TAILQ_FOREACH
+argument_list|(
+argument|ifma
+argument_list|,
+argument|&((ifp)->if_multiaddrs)
+argument_list|,
+argument|ifma_link
+argument_list|)
+block|{
+if|if
+condition|(
+name|ifma
+operator|->
+name|ifma_addr
+operator|->
+name|sa_family
+operator|==
+name|AF_INET
+condition|)
+block|{
+name|inm
+operator|=
+operator|(
+expr|struct
+name|in_multi
+operator|*
+operator|)
+name|ifma
+operator|->
+name|ifma_protospec
+expr_stmt|;
+if|if
+condition|(
+name|inm
+operator|->
+name|inm_addr
+operator|.
+name|s_addr
+operator|==
+name|ina
+operator|.
+name|s_addr
+condition|)
+break|break;
+name|inm
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+block|}
+end_expr_stmt
+
+begin_return
+return|return
+operator|(
+name|inm
+operator|)
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/*  * Wrapper for inm_lookup_locked().  * The IF_ADDR_LOCK will be taken on ifp and released on return.  */
+end_comment
+
+begin_function
+unit|static
+name|__inline
+name|struct
+name|in_multi
+modifier|*
+name|inm_lookup
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+specifier|const
+name|struct
+name|in_addr
+name|ina
+parameter_list|)
 block|{
 name|struct
 name|in_multi
 modifier|*
-name|i_inm
+name|inm
 decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Macro for looking up the in_multi record for a given IP multicast address  * on a given interface.  If no matching record is found, "inm" is set null.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN_LOOKUP_MULTI
-parameter_list|(
-name|addr
-parameter_list|,
+name|IN_MULTI_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
 name|ifp
-parameter_list|,
+argument_list|)
+expr_stmt|;
 name|inm
-parameter_list|)
-define|\
-comment|/* struct in_addr addr; */
-define|\
-comment|/* struct ifnet *ifp; */
-define|\
-comment|/* struct in_multi *inm; */
-define|\
-value|do { \ 	struct ifmultiaddr *ifma; \ \ 	IN_MULTI_LOCK_ASSERT(); \ 	IF_ADDR_LOCK(ifp); \ 	TAILQ_FOREACH(ifma,&((ifp)->if_multiaddrs), ifma_link) { \ 		if (ifma->ifma_addr->sa_family == AF_INET \&& ((struct sockaddr_in *)ifma->ifma_addr)->sin_addr.s_addr == \ 		    (addr).s_addr) \ 			break; \ 	} \ 	(inm) = ifma ? ifma->ifma_protospec : 0; \ 	IF_ADDR_UNLOCK(ifp); \ } while(0)
-end_define
+operator|=
+name|inm_lookup_locked
+argument_list|(
+name|ifp
+argument_list|,
+name|ina
+argument_list|)
+expr_stmt|;
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|inm
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
-comment|/*  * Macro to step through all of the in_multi records, one at a time.  * The current position is remembered in "step", which the caller must  * provide.  IN_FIRST_MULTI(), below, must be called to initialize "step"  * and get the first record.  Both macros return a NULL "inm" when there  * are no remaining records.  */
+comment|/* Acquire an in_multi record. */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|inm_acquire_locked
+parameter_list|(
+name|struct
+name|in_multi
+modifier|*
+name|inm
+parameter_list|)
+block|{
+name|IN_MULTI_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
+operator|++
+name|inm
+operator|->
+name|inm_refcount
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Return values for imo_multi_filter().  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IN_NEXT_MULTI
-parameter_list|(
-name|step
-parameter_list|,
-name|inm
-parameter_list|)
-define|\
-comment|/* struct in_multistep  step; */
-define|\
-comment|/* struct in_multi *inm; */
-define|\
-value|do { \ 	IN_MULTI_LOCK_ASSERT(); \ 	if (((inm) = (step).i_inm) != NULL) \ 		(step).i_inm = LIST_NEXT((step).i_inm, inm_link); \ } while(0)
+name|MCAST_PASS
+value|0
 end_define
+
+begin_comment
+comment|/* Pass */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|IN_FIRST_MULTI
-parameter_list|(
-name|step
-parameter_list|,
-name|inm
-parameter_list|)
-define|\
-comment|/* struct in_multistep step; */
-define|\
-comment|/* struct in_multi *inm; */
-define|\
-value|do { \ 	IN_MULTI_LOCK_ASSERT(); \ 	(step).i_inm = LIST_FIRST(&V_in_multihead); \ 	IN_NEXT_MULTI((step), (inm)); \ } while(0)
+name|MCAST_NOTGMEMBER
+value|1
 end_define
+
+begin_comment
+comment|/* This host not a member of group */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCAST_NOTSMEMBER
+value|2
+end_define
+
+begin_comment
+comment|/* This host excluded source */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCAST_MUTED
+value|3
+end_define
+
+begin_comment
+comment|/* [deprecated] */
+end_comment
 
 begin_struct_decl
 struct_decl|struct
@@ -833,17 +1365,25 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
-name|size_t
-name|imo_match_group
+name|int
+name|imo_multi_filter
 parameter_list|(
+specifier|const
 name|struct
 name|ip_moptions
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|ifnet
 modifier|*
 parameter_list|,
+specifier|const
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -852,19 +1392,71 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|in_msource
-modifier|*
-name|imo_match_source
+name|void
+name|inm_commit
 parameter_list|(
 name|struct
-name|ip_moptions
+name|in_multi
 modifier|*
-parameter_list|,
-name|size_t
-parameter_list|,
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|inm_clear_recorded
+parameter_list|(
 name|struct
-name|sockaddr
+name|in_multi
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|inm_print
+parameter_list|(
+specifier|const
+name|struct
+name|in_multi
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|inm_record_source
+parameter_list|(
+name|struct
+name|in_multi
+modifier|*
+name|inm
+parameter_list|,
+specifier|const
+name|in_addr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|inm_release
+parameter_list|(
+name|struct
+name|in_multi
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|inm_release_locked
+parameter_list|(
+name|struct
+name|in_multi
 modifier|*
 parameter_list|)
 function_decl|;
@@ -899,11 +1491,84 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|in_delmulti_locked
+name|int
+name|in_joingroup
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|in_addr
+modifier|*
+parameter_list|,
+comment|/*const*/
+name|struct
+name|in_mfilter
+modifier|*
+parameter_list|,
+name|struct
+name|in_multi
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|in_joingroup_locked
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|in_addr
+modifier|*
+parameter_list|,
+comment|/*const*/
+name|struct
+name|in_mfilter
+modifier|*
+parameter_list|,
+name|struct
+name|in_multi
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|in_leavegroup
 parameter_list|(
 name|struct
 name|in_multi
+modifier|*
+parameter_list|,
+comment|/*const*/
+name|struct
+name|in_mfilter
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|in_leavegroup_locked
+parameter_list|(
+name|struct
+name|in_multi
+modifier|*
+parameter_list|,
+comment|/*const*/
+name|struct
+name|in_mfilter
 modifier|*
 parameter_list|)
 function_decl|;

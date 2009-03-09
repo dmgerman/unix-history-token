@@ -2986,6 +2986,17 @@ begin_comment
 comment|/* sources per socket/group */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_MAX_SOCK_MUTE_FILTER
+value|128
+end_define
+
+begin_comment
+comment|/* XXX no longer used */
+end_comment
+
 begin_comment
 comment|/*  * Argument structure for IP_ADD_MEMBERSHIP and IP_DROP_MEMBERSHIP.  */
 end_comment
