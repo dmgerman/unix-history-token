@@ -739,8 +739,8 @@ argument_list|()
 expr_stmt|;
 name|DRM_SYSCTL_PRINT
 argument_list|(
-literal|"\nslot	 offset	      size type flags	 "
-literal|"address mtrr\n"
+literal|"\nslot offset	        size       "
+literal|"type flags address            mtrr\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -811,7 +811,7 @@ literal|"yes"
 expr_stmt|;
 name|DRM_SYSCTL_PRINT
 argument_list|(
-literal|"%4d 0x%08lx 0x%08lx %4.4s  0x%02x 0x%08lx %s\n"
+literal|"%4d 0x%016lx 0x%08lx %4.4s  0x%02x 0x%016lx %s\n"
 argument_list|,
 name|i
 argument_list|,
