@@ -1672,6 +1672,8 @@ name|res_irq
 argument_list|,
 name|INTR_TYPE_MISC
 argument_list|,
+name|NULL
+argument_list|,
 name|evtchn_interrupt
 argument_list|,
 name|NULL
@@ -1806,6 +1808,8 @@ argument_list|,
 name|INTR_MPSAFE
 operator||
 name|INTR_TYPE_MISC
+argument_list|,
+name|NULL
 argument_list|,
 name|evtchn_interrupt
 argument_list|,
