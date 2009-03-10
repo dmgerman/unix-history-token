@@ -557,7 +557,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ENXIO
+name|ENETDOWN
 operator|)
 return|;
 block|}
@@ -1502,7 +1502,7 @@ name|link_ok
 condition|)
 name|initerr
 operator|=
-name|ENXIO
+name|ENETDOWN
 expr_stmt|;
 elseif|else
 if|if
@@ -1515,7 +1515,7 @@ name|QS_EXITING
 condition|)
 name|initerr
 operator|=
-name|ENXIO
+name|ENETDOWN
 expr_stmt|;
 elseif|else
 if|if
@@ -1534,7 +1534,7 @@ literal|0
 condition|)
 name|initerr
 operator|=
-name|ENXIO
+name|ENETDOWN
 expr_stmt|;
 elseif|else
 if|if
@@ -1553,7 +1553,7 @@ literal|0
 condition|)
 name|initerr
 operator|=
-name|ENXIO
+name|ENETDOWN
 expr_stmt|;
 elseif|else
 if|if
