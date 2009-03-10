@@ -1712,7 +1712,7 @@ condition|(
 operator|(
 name|inp
 operator|->
-name|in6p_fport
+name|inp_fport
 operator|==
 literal|0
 operator|&&
@@ -1723,7 +1723,7 @@ operator|||
 operator|(
 name|inp
 operator|->
-name|in6p_fport
+name|inp_fport
 operator|!=
 literal|0
 operator|&&
@@ -1903,7 +1903,7 @@ name|in6p_laddr
 argument_list|,
 name|inp
 operator|->
-name|in6p_lport
+name|inp_lport
 argument_list|)
 expr_stmt|;
 name|sockaddr
@@ -1924,7 +1924,7 @@ name|in6p_faddr
 argument_list|,
 name|inp
 operator|->
-name|in6p_fport
+name|inp_fport
 argument_list|)
 expr_stmt|;
 block|}
