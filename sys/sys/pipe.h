@@ -125,7 +125,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|u_long
+name|long
 name|maxpipekva
 decl_stmt|;
 end_decl_stmt

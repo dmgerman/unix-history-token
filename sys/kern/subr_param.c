@@ -340,7 +340,7 @@ comment|/* max buffer cache KVA storage */
 end_comment
 
 begin_decl_stmt
-name|u_long
+name|long
 name|maxpipekva
 decl_stmt|;
 end_decl_stmt
@@ -1251,7 +1251,7 @@ literal|512
 operator|*
 literal|1024
 expr_stmt|;
-name|TUNABLE_ULONG_FETCH
+name|TUNABLE_LONG_FETCH
 argument_list|(
 literal|"kern.ipc.maxpipekva"
 argument_list|,
