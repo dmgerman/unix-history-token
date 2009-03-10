@@ -2302,6 +2302,11 @@ operator|=
 name|null_unlock
 block|,
 operator|.
+name|vop_vptocnp
+operator|=
+name|vop_stdvptocnp
+block|,
+operator|.
 name|vop_vptofh
 operator|=
 name|null_vptofh
