@@ -12529,6 +12529,17 @@ block|{
 name|int
 name|t
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|KTR_COMPILE
+operator|&
+name|KTR_IGMPV3
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
 name|printf
 argument_list|(
 literal|"%s: --- begin inm %p ---\n"
