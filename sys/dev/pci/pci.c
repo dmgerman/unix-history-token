@@ -17924,6 +17924,8 @@ operator|+
 literal|4
 argument_list|,
 name|map
+operator|>>
+literal|32
 argument_list|,
 literal|4
 argument_list|)
