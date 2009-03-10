@@ -159,7 +159,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Locking - this locks the sysctl tree in memory.  */
+comment|/*  * The sysctllock protects the MIB tree.  It also protects sysctl  * contexts used with dynamic sysctls.  The sysctl_register_oid() and  * sysctl_unregister_oid() routines require the sysctllock to already  * be held, so the sysctl_lock() and sysctl_unlock() routines are  * provided for the few places in the kernel which need to use that  * API rather than using the dynamic API.  Use of the dynamic API is  * strongly encouraged for most code.  *  * This lock is also used to serialize userland sysctl requests.  Some  * sysctls wire user memory, and serializing the requests limits the  * amount of wired user memory in use.  */
 end_comment
 
 begin_decl_stmt
@@ -173,7 +173,23 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|SYSCTL_LOCK
+name|SYSCTL_SLOCK
+parameter_list|()
+value|sx_slock(&sysctllock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_SUNLOCK
+parameter_list|()
+value|sx_sunlock(&sysctllock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_XLOCK
 parameter_list|()
 value|sx_xlock(&sysctllock)
 end_define
@@ -181,7 +197,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYSCTL_UNLOCK
+name|SYSCTL_XUNLOCK
 parameter_list|()
 value|sx_xunlock(&sysctllock)
 end_define
@@ -189,9 +205,17 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYSCTL_LOCK_ASSERT
+name|SYSCTL_ASSERT_XLOCKED
 parameter_list|()
-value|sx_assert(&sysctllock, SX_XLOCKED)
+value|sx_assert(&sysctllock, SA_XLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_ASSERT_LOCKED
+parameter_list|()
+value|sx_assert(&sysctllock, SA_LOCKED)
 end_define
 
 begin_define
@@ -223,6 +247,25 @@ begin_comment
 comment|/* root list */
 end_comment
 
+begin_function_decl
+specifier|static
+name|int
+name|sysctl_remove_oid_locked
+parameter_list|(
+name|struct
+name|sysctl_oid
+modifier|*
+name|oidp
+parameter_list|,
+name|int
+name|del
+parameter_list|,
+name|int
+name|recurse
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|struct
@@ -246,6 +289,9 @@ name|sysctl_oid
 modifier|*
 name|oidp
 decl_stmt|;
+name|SYSCTL_ASSERT_LOCKED
+argument_list|()
+expr_stmt|;
 name|SLIST_FOREACH
 argument_list|(
 argument|oidp
@@ -290,6 +336,32 @@ end_comment
 
 begin_function
 name|void
+name|sysctl_lock
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|SYSCTL_XLOCK
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|sysctl_unlock
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|SYSCTL_XUNLOCK
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|sysctl_register_oid
 parameter_list|(
 name|struct
@@ -318,6 +390,9 @@ modifier|*
 name|q
 decl_stmt|;
 comment|/* 	 * First check if another oid with the same name already 	 * exists in the parent's list. 	 */
+name|SYSCTL_ASSERT_XLOCKED
+argument_list|()
+expr_stmt|;
 name|p
 operator|=
 name|sysctl_find_oidname
@@ -487,6 +562,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|SYSCTL_ASSERT_XLOCKED
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|ENOENT
@@ -586,6 +664,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
+comment|/* 	 * No locking here, the caller is responsible for not adding 	 * new nodes to a context until after this function has 	 * returned. 	 */
 name|TAILQ_INIT
 argument_list|(
 name|c
@@ -629,6 +708,9 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * First perform a "dry run" to check if it's ok to remove oids. 	 * XXX FIXME 	 * XXX This algorithm is a hack. But I don't know any 	 * XXX better solution for now... 	 */
+name|SYSCTL_XLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|e
@@ -640,7 +722,7 @@ argument_list|)
 block|{
 name|error
 operator|=
-name|sysctl_remove_oid
+name|sysctl_remove_oid_locked
 argument_list|(
 name|e
 operator|->
@@ -713,11 +795,16 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|SYSCTL_XUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|EBUSY
 operator|)
 return|;
+block|}
 comment|/* Now really delete the entries */
 name|e
 operator|=
@@ -744,7 +831,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|sysctl_remove_oid
+name|sysctl_remove_oid_locked
 argument_list|(
 name|e
 operator|->
@@ -782,6 +869,9 @@ operator|=
 name|e1
 expr_stmt|;
 block|}
+name|SYSCTL_XUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -816,6 +906,9 @@ name|sysctl_ctx_entry
 modifier|*
 name|e
 decl_stmt|;
+name|SYSCTL_ASSERT_XLOCKED
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|clist
@@ -895,6 +988,9 @@ name|sysctl_ctx_entry
 modifier|*
 name|e
 decl_stmt|;
+name|SYSCTL_ASSERT_LOCKED
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|clist
@@ -980,6 +1076,9 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|SYSCTL_XLOCK
+argument_list|()
+expr_stmt|;
 name|e
 operator|=
 name|sysctl_ctx_entry_find
@@ -1005,6 +1104,9 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
+name|SYSCTL_XUNLOCK
+argument_list|()
+expr_stmt|;
 name|free
 argument_list|(
 name|e
@@ -1019,11 +1121,16 @@ operator|)
 return|;
 block|}
 else|else
+block|{
+name|SYSCTL_XUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|ENOENT
 operator|)
 return|;
+block|}
 block|}
 end_function
 
@@ -1047,6 +1154,51 @@ name|int
 name|recurse
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
+name|SYSCTL_XLOCK
+argument_list|()
+expr_stmt|;
+name|error
+operator|=
+name|sysctl_remove_oid_locked
+argument_list|(
+name|oidp
+argument_list|,
+name|del
+argument_list|,
+name|recurse
+argument_list|)
+expr_stmt|;
+name|SYSCTL_XUNLOCK
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|sysctl_remove_oid_locked
+parameter_list|(
+name|struct
+name|sysctl_oid
+modifier|*
+name|oidp
+parameter_list|,
+name|int
+name|del
+parameter_list|,
+name|int
+name|recurse
+parameter_list|)
+block|{
 name|struct
 name|sysctl_oid
 modifier|*
@@ -1055,6 +1207,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|SYSCTL_ASSERT_XLOCKED
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|oidp
@@ -1134,7 +1289,7 @@ operator|)
 return|;
 name|error
 operator|=
-name|sysctl_remove_oid
+name|sysctl_remove_oid_locked
 argument_list|(
 name|p
 argument_list|,
@@ -1372,6 +1527,9 @@ name|NULL
 operator|)
 return|;
 comment|/* Check if the node already exists, otherwise create it */
+name|SYSCTL_XLOCK
+argument_list|()
+expr_stmt|;
 name|oidp
 operator|=
 name|sysctl_find_oidname
@@ -1420,6 +1578,9 @@ argument_list|,
 name|oidp
 argument_list|)
 expr_stmt|;
+name|SYSCTL_XUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|oidp
@@ -1428,6 +1589,9 @@ return|;
 block|}
 else|else
 block|{
+name|SYSCTL_XUNLOCK
+argument_list|()
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"can't re-use a leaf (%s)!\n"
@@ -1680,6 +1844,9 @@ argument_list|(
 name|oidp
 argument_list|)
 expr_stmt|;
+name|SYSCTL_XUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|oidp
@@ -1718,24 +1885,6 @@ name|void
 modifier|*
 name|oldname
 decl_stmt|;
-name|oldname
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|uintptr_t
-operator|)
-operator|(
-specifier|const
-name|void
-operator|*
-operator|)
-name|oidp
-operator|->
-name|oid_name
-expr_stmt|;
 name|len
 operator|=
 name|strlen
@@ -1774,11 +1923,35 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+name|SYSCTL_XLOCK
+argument_list|()
+expr_stmt|;
+name|oldname
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|uintptr_t
+operator|)
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
+name|oidp
+operator|->
+name|oid_name
+expr_stmt|;
 name|oidp
 operator|->
 name|oid_name
 operator|=
 name|newname
+expr_stmt|;
+name|SYSCTL_XUNLOCK
+argument_list|()
 expr_stmt|;
 name|free
 argument_list|(
@@ -1814,6 +1987,9 @@ name|sysctl_oid
 modifier|*
 name|oidp
 decl_stmt|;
+name|SYSCTL_XLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|oid
@@ -1822,11 +1998,16 @@ name|oid_parent
 operator|==
 name|parent
 condition|)
+block|{
+name|SYSCTL_XUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 name|oidp
 operator|=
 name|sysctl_find_oidname
@@ -1844,11 +2025,16 @@ name|oidp
 operator|!=
 name|NULL
 condition|)
+block|{
+name|SYSCTL_XUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|EEXIST
 operator|)
 return|;
+block|}
 name|sysctl_unregister_oid
 argument_list|(
 name|oid
@@ -1870,6 +2056,9 @@ name|sysctl_register_oid
 argument_list|(
 name|oid
 argument_list|)
+expr_stmt|;
+name|SYSCTL_XUNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1913,6 +2102,9 @@ decl_stmt|;
 name|SYSCTL_INIT
 argument_list|()
 expr_stmt|;
+name|SYSCTL_XLOCK
+argument_list|()
+expr_stmt|;
 name|SET_FOREACH
 argument_list|(
 argument|oidp
@@ -1924,6 +2116,9 @@ argument_list|(
 operator|*
 name|oidp
 argument_list|)
+expr_stmt|;
+name|SYSCTL_XUNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1976,6 +2171,9 @@ name|sysctl_oid
 modifier|*
 name|oidp
 decl_stmt|;
+name|SYSCTL_ASSERT_LOCKED
+argument_list|()
+expr_stmt|;
 name|SLIST_FOREACH
 argument_list|(
 argument|oidp
@@ -2265,6 +2463,9 @@ index|[
 literal|10
 index|]
 decl_stmt|;
+name|SYSCTL_ASSERT_LOCKED
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 name|namelen
@@ -2534,6 +2735,9 @@ name|sysctl_oid
 modifier|*
 name|oidp
 decl_stmt|;
+name|SYSCTL_ASSERT_LOCKED
+argument_list|()
+expr_stmt|;
 operator|*
 name|len
 operator|=
@@ -2996,7 +3200,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|SYSCTL_LOCK_ASSERT
+name|SYSCTL_ASSERT_LOCKED
 argument_list|()
 expr_stmt|;
 if|if
@@ -3263,7 +3467,7 @@ name|op
 init|=
 literal|0
 decl_stmt|;
-name|SYSCTL_LOCK_ASSERT
+name|SYSCTL_ASSERT_LOCKED
 argument_list|()
 expr_stmt|;
 if|if
@@ -4776,7 +4980,7 @@ name|lock
 operator|=
 name|REQ_LOCKED
 expr_stmt|;
-name|SYSCTL_LOCK
+name|SYSCTL_SLOCK
 argument_list|()
 expr_stmt|;
 name|error
@@ -4793,7 +4997,7 @@ operator|&
 name|req
 argument_list|)
 expr_stmt|;
-name|SYSCTL_UNLOCK
+name|SYSCTL_SUNLOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -4950,7 +5154,7 @@ argument_list|(
 name|oid
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX: Prone to a possible race condition between lookup and 	 * execution? Maybe put locking around it? 	 */
+comment|/* 	 * XXX: Prone to a possible race condition between lookup and 	 * execution? Maybe put locking around it? 	 * 	 * Userland is just as racy, so I think the current implementation 	 * is fine. 	 */
 name|error
 operator|=
 name|kernel_sysctl
@@ -5514,6 +5718,9 @@ decl_stmt|;
 name|int
 name|indx
 decl_stmt|;
+name|SYSCTL_ASSERT_LOCKED
+argument_list|()
+expr_stmt|;
 name|oid
 operator|=
 name|SLIST_FIRST
@@ -5711,7 +5918,7 @@ name|indx
 decl_stmt|,
 name|lvl
 decl_stmt|;
-name|SYSCTL_LOCK_ASSERT
+name|SYSCTL_ASSERT_LOCKED
 argument_list|()
 expr_stmt|;
 name|error
@@ -6096,6 +6303,8 @@ block|{
 name|int
 name|error
 decl_stmt|,
+name|i
+decl_stmt|,
 name|name
 index|[
 name|CTL_MAXNAME
@@ -6209,9 +6418,8 @@ operator|->
 name|oldlenp
 condition|)
 block|{
-name|int
 name|i
-init|=
+operator|=
 name|copyout
 argument_list|(
 operator|&
@@ -6226,7 +6434,7 @@ argument_list|(
 name|j
 argument_list|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|i
@@ -6464,7 +6672,7 @@ name|lock
 operator|=
 name|REQ_LOCKED
 expr_stmt|;
-name|SYSCTL_LOCK
+name|SYSCTL_XLOCK
 argument_list|()
 expr_stmt|;
 for|for
@@ -6510,7 +6718,7 @@ name|uio_yield
 argument_list|()
 expr_stmt|;
 block|}
-name|SYSCTL_UNLOCK
+name|SYSCTL_XUNLOCK
 argument_list|()
 expr_stmt|;
 if|if

@@ -772,6 +772,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ia64_mca_populate
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ia64_mca_save_state
 parameter_list|(
 name|int

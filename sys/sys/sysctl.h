@@ -3604,6 +3604,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|sysctl_lock
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sysctl_unlock
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|sysctl_wire_old_buffer
 parameter_list|(
