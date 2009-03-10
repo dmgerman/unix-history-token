@@ -7580,6 +7580,8 @@ argument_list|,
 name|CTLTYPE_STRUCT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,
@@ -7653,6 +7655,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,

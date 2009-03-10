@@ -441,6 +441,8 @@ argument_list|,
 name|CTLTYPE_STRUCT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,
@@ -507,8 +509,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Mark all objects as inactive. 	 */
-name|GIANT_REQUIRED
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1174,6 +1174,8 @@ argument_list|,
 name|CTLTYPE_OPAQUE
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,
@@ -1278,6 +1280,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -1307,6 +1311,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -1336,6 +1342,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -1365,6 +1373,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -1394,6 +1404,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -1423,6 +1435,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -1452,6 +1466,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -1481,6 +1497,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -1510,6 +1528,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -1539,6 +1559,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -1568,6 +1590,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -1597,6 +1621,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -1626,6 +1652,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -1655,6 +1683,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -1684,6 +1714,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -1713,6 +1745,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -1742,6 +1776,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -1771,6 +1807,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -1800,6 +1838,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -1829,6 +1869,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -1858,6 +1900,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -1887,6 +1931,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -1916,6 +1962,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -1945,6 +1993,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -1974,6 +2024,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -2003,6 +2055,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -2032,6 +2086,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -2061,6 +2117,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -2090,6 +2148,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -2119,6 +2179,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -2148,6 +2210,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -2177,6 +2241,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -2206,6 +2272,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -2235,6 +2303,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -2264,6 +2334,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -2293,6 +2365,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -2322,6 +2396,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -2351,6 +2427,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -2380,6 +2458,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -2409,6 +2489,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -2438,6 +2520,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -2467,6 +2551,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -2496,6 +2582,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -2525,6 +2613,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -2554,6 +2644,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -2583,6 +2675,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -2612,6 +2706,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -2641,6 +2737,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt
@@ -2670,6 +2768,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|cnt

@@ -6694,6 +6694,8 @@ name|freebuf
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|vfslocked
 decl_stmt|;
 if|if
 condition|(
@@ -6841,9 +6843,23 @@ operator|&
 name|freebuf
 argument_list|)
 expr_stmt|;
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
+argument_list|(
+name|vp
+operator|->
+name|v_mount
+argument_list|)
+expr_stmt|;
 name|vrele
 argument_list|(
 name|vp
+argument_list|)
+expr_stmt|;
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|vfslocked
 argument_list|)
 expr_stmt|;
 if|if
@@ -9422,6 +9438,8 @@ argument_list|,
 name|CTLFLAG_RD
 operator||
 name|CTLTYPE_STRUCT
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,
@@ -9447,6 +9465,8 @@ argument_list|,
 name|gid
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc
 argument_list|,
@@ -9466,6 +9486,8 @@ argument_list|,
 name|pgrp
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc
 argument_list|,
@@ -9485,6 +9507,8 @@ argument_list|,
 name|rgid
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc
 argument_list|,
@@ -9504,6 +9528,8 @@ argument_list|,
 name|sid
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc
 argument_list|,
@@ -9523,6 +9549,8 @@ argument_list|,
 name|tty
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc
 argument_list|,
@@ -9542,6 +9570,8 @@ argument_list|,
 name|uid
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc
 argument_list|,
@@ -9561,6 +9591,8 @@ argument_list|,
 name|ruid
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc
 argument_list|,
@@ -9580,6 +9612,8 @@ argument_list|,
 name|pid
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc
 argument_list|,
@@ -9599,6 +9633,8 @@ argument_list|,
 name|proc
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc
 argument_list|,
@@ -9620,6 +9656,8 @@ argument_list|,
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_ANYBODY
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc_args
 argument_list|,
@@ -9639,6 +9677,8 @@ argument_list|,
 name|pathname
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc_pathname
 argument_list|,
@@ -9658,6 +9698,8 @@ argument_list|,
 name|sv_name
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc_sv_name
 argument_list|,
@@ -9681,6 +9723,8 @@ argument_list|,
 name|gid_td
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc
 argument_list|,
@@ -9704,6 +9748,8 @@ argument_list|,
 name|pgrp_td
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc
 argument_list|,
@@ -9727,6 +9773,8 @@ argument_list|,
 name|rgid_td
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc
 argument_list|,
@@ -9750,6 +9798,8 @@ argument_list|,
 name|sid_td
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc
 argument_list|,
@@ -9773,6 +9823,8 @@ argument_list|,
 name|tty_td
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc
 argument_list|,
@@ -9796,6 +9848,8 @@ argument_list|,
 name|uid_td
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc
 argument_list|,
@@ -9819,6 +9873,8 @@ argument_list|,
 name|ruid_td
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc
 argument_list|,
@@ -9842,6 +9898,8 @@ argument_list|,
 name|pid_td
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc
 argument_list|,
@@ -9865,6 +9923,8 @@ argument_list|,
 name|proc_td
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc
 argument_list|,
@@ -9884,6 +9944,8 @@ argument_list|,
 name|ovmmap
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc_ovmmap
 argument_list|,
@@ -9903,6 +9965,8 @@ argument_list|,
 name|vmmap
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc_vmmap
 argument_list|,
@@ -9936,6 +10000,8 @@ argument_list|,
 name|kstack
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc_kstack
 argument_list|,

@@ -384,6 +384,8 @@ operator||
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_ANYBODY
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,
