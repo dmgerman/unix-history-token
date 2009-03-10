@@ -763,6 +763,20 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|teken_set_curattr
+parameter_list|(
+name|teken_t
+modifier|*
+parameter_list|,
+specifier|const
+name|teken_attr_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|teken_set_defattr
 parameter_list|(
 name|teken_t

@@ -1405,6 +1405,9 @@ name|buf
 parameter_list|,
 name|int
 name|len
+parameter_list|,
+name|int
+name|kernel
 parameter_list|)
 function_decl|;
 end_typedef
@@ -2219,6 +2222,9 @@ name|buf
 parameter_list|,
 name|int
 name|len
+parameter_list|,
+name|int
+name|kernel
 parameter_list|)
 function_decl|;
 end_function_decl
