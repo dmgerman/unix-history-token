@@ -446,6 +446,8 @@ name|parent
 operator|->
 name|sc_regions
 condition|)
+block|{
+comment|/* 		 * Multiple regions, use the last one.  This is a 		 * total hack as it's (presently) used only by 		 * geom_redboot to locate the FIS directory which 		 * lies at the start of the last erase region. 		 */
 name|sc
 operator|->
 name|disk
@@ -457,9 +459,19 @@ operator|->
 name|parent
 operator|->
 name|sc_region
+index|[
+name|sc
 operator|->
+name|parent
+operator|->
+name|sc_regions
+operator|-
+literal|1
+index|]
+operator|.
 name|r_blksz
 expr_stmt|;
+block|}
 else|else
 name|sc
 operator|->
