@@ -1137,6 +1137,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|s
+operator|->
+name|ncount
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* make sure we have a usage */
 if|if
 condition|(
@@ -1147,6 +1154,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* use the undefined HID PAGE */
 name|s
 operator|->
 name|usages_min
@@ -1156,7 +1164,7 @@ operator|->
 name|nusage
 index|]
 operator|=
-literal|0
+literal|0x0000
 expr_stmt|;
 name|s
 operator|->
@@ -1167,20 +1175,15 @@ operator|->
 name|nusage
 index|]
 operator|=
-literal|0
+literal|0xFFFF
 expr_stmt|;
 name|s
 operator|->
 name|nusage
 operator|=
-literal|1
-expr_stmt|;
-block|}
 name|s
 operator|->
 name|ncount
-operator|=
-literal|1
 expr_stmt|;
 block|}
 goto|goto
