@@ -1814,6 +1814,21 @@ name|dot3Compliance
 operator|=
 name|DOT3COMPLIANCE_STATS
 expr_stmt|;
+comment|/* device supports oversided vlan frames */
+name|ifp
+operator|->
+name|if_capabilities
+operator||=
+name|IFCAP_VLAN_MTU
+expr_stmt|;
+name|ifp
+operator|->
+name|if_capenable
+operator|=
+name|ifp
+operator|->
+name|if_capabilities
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
