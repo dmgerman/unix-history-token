@@ -1556,6 +1556,7 @@ name|NULL
 condition|)
 block|{
 comment|/* confxml: scheme information */
+return|return;
 block|}
 name|type
 operator|=
