@@ -384,26 +384,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|int
-name|cardbus_write_ivar
-parameter_list|(
-name|device_t
-name|cbdev
-parameter_list|,
-name|device_t
-name|child
-parameter_list|,
-name|int
-name|which
-parameter_list|,
-name|uintptr_t
-name|value
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/************************************************************************/
 end_comment
