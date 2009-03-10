@@ -5164,7 +5164,6 @@ argument_list|(
 name|oid
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX: Prone to a possible race condition between lookup and 	 * execution? Maybe put locking around it? 	 * 	 * Userland is just as racy, so I think the current implementation 	 * is fine. 	 */
 name|error
 operator|=
 name|kernel_sysctl
@@ -6760,9 +6759,6 @@ block|}
 name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
-name|SYSCTL_XUNLOCK
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|req
@@ -6787,6 +6783,9 @@ name|req
 operator|.
 name|validlen
 argument_list|)
+expr_stmt|;
+name|SYSCTL_XUNLOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
