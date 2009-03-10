@@ -3497,9 +3497,13 @@ operator|-
 literal|1
 operator|)
 return|;
+comment|/* 	 * Be compatible with LibUSB from sourceforge and close the 	 * handle after reset! 	 */
 return|return
 operator|(
-literal|0
+name|usb_close
+argument_list|(
+name|dev
+argument_list|)
 operator|)
 return|;
 block|}
