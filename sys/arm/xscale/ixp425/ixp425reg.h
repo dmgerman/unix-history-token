@@ -3344,6 +3344,12 @@ name|IXP425_EXP_BUS_CS0_VBASE
 value|0xFD000000UL
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IXP4XX_FLASH_SIZE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -3354,6 +3360,23 @@ end_define
 begin_comment
 comment|/* NB: 16M */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|IXP425_EXP_BUS_CS0_SIZE
+value|IXP4XX_FLASH_SIZE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
