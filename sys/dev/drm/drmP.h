@@ -1569,6 +1569,20 @@ name|drm_pci_id_list_t
 typedef|;
 end_typedef
 
+begin_struct
+struct|struct
+name|drm_msi_blacklist_entry
+block|{
+name|int
+name|vendor
+decl_stmt|;
+name|int
+name|device
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
