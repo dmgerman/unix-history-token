@@ -4594,6 +4594,8 @@ operator||=
 name|MNTK_MPSAFE
 operator||
 name|MNTK_LOOKUP_SHARED
+operator||
+name|MNTK_EXTENDED_SHARED
 expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(
@@ -7210,13 +7212,8 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * FFS supports recursive and shared locking. 	 */
+comment|/* 	 * FFS supports recursive locking. 	 */
 name|VN_LOCK_AREC
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-name|VN_LOCK_ASHARE
 argument_list|(
 name|vp
 argument_list|)
@@ -7587,6 +7584,22 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Finish inode initialization. 	 */
+if|if
+condition|(
+name|vp
+operator|->
+name|v_type
+operator|!=
+name|VFIFO
+condition|)
+block|{
+comment|/* FFS supports shared locking for all files except fifos. */
+name|VN_LOCK_ASHARE
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Set up a generation number for this inode if it does not 	 * already have one. This should only happen on old filesystems. 	 */
 if|if
 condition|(
