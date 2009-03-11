@@ -5280,11 +5280,22 @@ operator|)
 operator|==
 name|PG_FICTITIOUS
 condition|)
+block|{
+name|pvo_flags
+operator|&=
+operator|~
+name|PVO_MANAGED
+expr_stmt|;
 name|pvo_head
 operator|=
 operator|&
 name|moea_pvo_kunmanaged
 expr_stmt|;
+name|zone
+operator|=
+name|moea_upvo_zone
+expr_stmt|;
+block|}
 comment|/* 	 * If this is a managed page, and it's the first reference to the page, 	 * clear the execness of the page.  Otherwise fetch the execness. 	 */
 if|if
 condition|(
