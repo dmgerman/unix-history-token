@@ -359,7 +359,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|drm_vblank_cleanup
 parameter_list|(
@@ -884,11 +883,6 @@ argument_list|)
 expr_stmt|;
 name|DRM_LOCK
 argument_list|()
-expr_stmt|;
-name|drm_vblank_cleanup
-argument_list|(
-name|dev
-argument_list|)
 expr_stmt|;
 return|return
 literal|0

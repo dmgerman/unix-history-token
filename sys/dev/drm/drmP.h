@@ -3925,6 +3925,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|drm_vblank_cleanup
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|drm_vblank_wait
 parameter_list|(

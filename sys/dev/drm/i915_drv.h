@@ -84,6 +84,13 @@ block|, }
 enum|;
 end_enum
 
+begin_define
+define|#
+directive|define
+name|I915_NUM_PIPE
+value|2
+end_define
+
 begin_comment
 comment|/* Interface history:  *  * 1.1: Original.  * 1.2: Add Power Management  * 1.3: Add vblank support  * 1.4: Fix cmdbuffer path, add heap destroy  * 1.5: Add vblank pipe configuration  * 1.6: - New ioctl for scheduling buffer swaps on vertical blank  *      - Support vertical blank on secondary display pipe  */
 end_comment
