@@ -18,7 +18,7 @@ comment|/*-  * Copyright (c) 2009 Hans Petter Selasky. All rights reserved.  *  
 end_comment
 
 begin_comment
-comment|/*  * This file contains the driver for the ATMEGA series USB Device  * Controller  */
+comment|/*  * This file contains the driver for the ATMEGA series USB OTG  * Controller. This driver currently only supports the DCI mode of the  * USB hardware.  */
 end_comment
 
 begin_comment
@@ -846,15 +846,6 @@ argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
-name|ATMEGA_WRITE_1
-argument_list|(
-name|sc
-argument_list|,
-name|ATMEGA_UDADDR
-argument_list|,
-name|addr
-argument_list|)
-expr_stmt|;
 name|addr
 operator||=
 name|ATMEGA_UDADDR_ADDEN
@@ -1147,6 +1138,18 @@ literal|0
 index|]
 operator|&
 literal|0x7F
+expr_stmt|;
+comment|/* must write address before ZLP */
+name|ATMEGA_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|ATMEGA_UDADDR
+argument_list|,
+name|sc
+operator|->
+name|sc_dv_addr
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -2432,6 +2435,15 @@ operator|~
 name|status
 argument_list|)
 expr_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|14
+argument_list|,
+literal|"UDINT=0x%02x\n"
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
 comment|/* check for any bus state change interrupts */
 if|if
 condition|(
@@ -2671,6 +2683,15 @@ block|{
 name|uint8_t
 name|temp
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|5
+argument_list|,
+literal|"USBINT=0x%02x\n"
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
 name|temp
 operator|=
 name|ATMEGA_READ_1
@@ -2720,7 +2741,7 @@ name|DPRINTFN
 argument_list|(
 literal|5
 argument_list|,
-literal|"real endpoint interrupt 0x%02x\n"
+literal|"real endpoint interrupt UEINT=0x%02x\n"
 argument_list|,
 name|status
 argument_list|)
@@ -4057,7 +4078,7 @@ argument_list|)
 expr_stmt|;
 name|DPRINTFN
 argument_list|(
-literal|2
+literal|9
 argument_list|,
 literal|"xfer=%p, pipe=%p, error=%d\n"
 argument_list|,
@@ -4340,41 +4361,7 @@ operator||
 name|ATMEGA_UECONX_STALLRQC
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ep_type
-operator|==
-name|UE_CONTROL
-condition|)
-block|{
-comment|/* one bank, 64-bytes wMaxPacket */
-name|ATMEGA_WRITE_1
-argument_list|(
-name|sc
-argument_list|,
-name|ATMEGA_UECFG0X
-argument_list|,
-name|ATMEGA_UECFG0X_EPTYPE0
-argument_list|)
-expr_stmt|;
-name|ATMEGA_WRITE_1
-argument_list|(
-name|sc
-argument_list|,
-name|ATMEGA_UECFG1X
-argument_list|,
-name|ATMEGA_UECFG1X_ALLOC
-operator||
-name|ATMEGA_UECFG1X_EPBK0
-operator||
-name|ATMEGA_UECFG1X_EPSIZE
-argument_list|(
-literal|7
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-else|else
+do|do
 block|{
 name|temp
 operator|=
@@ -4446,7 +4433,7 @@ name|ATMEGA_UECFG1X_EPBK1
 operator||
 name|ATMEGA_UECFG1X_EPSIZE
 argument_list|(
-literal|7
+literal|3
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4478,6 +4465,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+do|while
+condition|(
+literal|0
+condition|)
+do|;
 block|}
 end_function
 
@@ -4638,16 +4630,14 @@ operator|->
 name|sc_bus
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* XXX TODO - currently done by boot strap */
 comment|/* enable USB PAD regulator */
-name|ATMEGA_WRITE_1
-argument_list|(
-name|sc
-argument_list|,
-name|ATMEGA_UHWCON
-argument_list|,
-name|ATMEGA_UHWCON_UVREGE
-argument_list|)
-expr_stmt|;
+block|ATMEGA_WRITE_1(sc, ATMEGA_UHWCON, 	    ATMEGA_UHWCON_UVREGE | ATMEGA_UHWCON_UIMOD);
+endif|#
+directive|endif
 comment|/* turn on clocks */
 call|(
 name|sc
@@ -4659,6 +4649,16 @@ operator|&
 name|sc
 operator|->
 name|sc_bus
+argument_list|)
+expr_stmt|;
+comment|/* make sure device is re-enumerated */
+name|ATMEGA_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|ATMEGA_UDCON
+argument_list|,
+name|ATMEGA_UDCON_DETACH
 argument_list|)
 expr_stmt|;
 comment|/* wait a little for things to stabilise */
@@ -4673,7 +4673,7 @@ name|bus_mtx
 argument_list|,
 name|hz
 operator|/
-literal|1000
+literal|20
 argument_list|)
 expr_stmt|;
 comment|/* enable interrupts */
@@ -4719,7 +4719,7 @@ for|for
 control|(
 name|n
 operator|=
-literal|1
+literal|0
 init|;
 name|n
 operator|!=
@@ -4764,6 +4764,25 @@ comment|/* turn off clocks */
 name|atmegadci_clocks_off
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+comment|/* read initial VBUS state */
+name|n
+operator|=
+name|ATMEGA_READ_1
+argument_list|(
+name|sc
+argument_list|,
+name|ATMEGA_USBSTA
+argument_list|)
+expr_stmt|;
+name|atmegadci_vbus_interrupt
+argument_list|(
+name|sc
+argument_list|,
+name|n
+operator|&
+name|ATMEGA_USBSTA_VBUS
 argument_list|)
 expr_stmt|;
 name|USB_BUS_UNLOCK
@@ -6296,6 +6315,9 @@ decl_stmt|;
 name|uint16_t
 name|index
 decl_stmt|;
+name|uint8_t
+name|temp
+decl_stmt|;
 name|USB_BUS_LOCK_ASSERT
 argument_list|(
 operator|&
@@ -7245,6 +7267,7 @@ break|break;
 case|case
 name|UHF_C_PORT_CONNECTION
 case|:
+comment|/* clear connect change flag */
 name|sc
 operator|->
 name|sc_flags
@@ -7253,6 +7276,106 @@ name|change_connect
 operator|=
 literal|0
 expr_stmt|;
+comment|/* configure the control endpoint */
+comment|/* select endpoint number */
+name|ATMEGA_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|ATMEGA_UENUM
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* set endpoint reset */
+name|ATMEGA_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|ATMEGA_UERST
+argument_list|,
+name|ATMEGA_UERST_MASK
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* clear endpoint reset */
+name|ATMEGA_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|ATMEGA_UERST
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* enable and stall endpoint */
+name|ATMEGA_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|ATMEGA_UECONX
+argument_list|,
+name|ATMEGA_UECONX_EPEN
+operator||
+name|ATMEGA_UECONX_STALLRQ
+argument_list|)
+expr_stmt|;
+comment|/* one bank, 64-bytes wMaxPacket */
+name|ATMEGA_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|ATMEGA_UECFG0X
+argument_list|,
+name|ATMEGA_UECFG0X_EPTYPE0
+argument_list|)
+expr_stmt|;
+name|ATMEGA_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|ATMEGA_UECFG1X
+argument_list|,
+name|ATMEGA_UECFG1X_ALLOC
+operator||
+name|ATMEGA_UECFG1X_EPBK0
+operator||
+name|ATMEGA_UECFG1X_EPSIZE
+argument_list|(
+literal|3
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* check valid config */
+name|temp
+operator|=
+name|ATMEGA_READ_1
+argument_list|(
+name|sc
+argument_list|,
+name|ATMEGA_UESTA0X
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|temp
+operator|&
+name|ATMEGA_UESTA0X_CFGOK
+operator|)
+condition|)
+block|{
+name|DPRINTFN
+argument_list|(
+literal|0
+argument_list|,
+literal|"Chip rejected EP0 configuration\n"
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|UHF_C_PORT_SUSPEND
@@ -8265,7 +8388,7 @@ name|DPRINTFN
 argument_list|(
 literal|2
 argument_list|,
-literal|"pipe=%p, addr=%d, endpt=%d, mode=%d (%d)\n"
+literal|"pipe=%p, addr=%d, endpt=%d, mode=%d (%d,%d)\n"
 argument_list|,
 name|pipe
 argument_list|,
@@ -8286,6 +8409,10 @@ argument_list|,
 name|sc
 operator|->
 name|sc_rt_addr
+argument_list|,
+name|udev
+operator|->
+name|device_index
 argument_list|)
 expr_stmt|;
 if|if

@@ -825,6 +825,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATMEGA_UHWCON_UVCONE
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMEGA_UHWCON_UIDE
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMEGA_UHWCON_UIMOD
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATMEGA_READ_1
 parameter_list|(
 name|sc
