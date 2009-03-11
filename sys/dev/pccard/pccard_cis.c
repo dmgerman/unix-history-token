@@ -5226,16 +5226,9 @@ name|DPRINTF
 argument_list|(
 operator|(
 literal|"cfe memspace "
-literal|"lengthsize == 0"
+literal|"lengthsize == 0\n"
 operator|)
 argument_list|)
-expr_stmt|;
-name|state
-operator|->
-name|card
-operator|->
-name|error
-operator|++
 expr_stmt|;
 block|}
 for|for
@@ -5315,18 +5308,11 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"cfe->memspace[%d].length == 0"
+literal|"cfe->memspace[%d].length == 0\n"
 operator|,
 name|i
 operator|)
 argument_list|)
-expr_stmt|;
-name|state
-operator|->
-name|card
-operator|->
-name|error
-operator|++
 expr_stmt|;
 block|}
 if|if
