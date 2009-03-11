@@ -70,24 +70,58 @@ end_define
 begin_define
 define|#
 directive|define
-name|DOSMID_386BSD
-value|(0x14|0x80)
+name|PC98_MID_BOOTABLE
+value|0x80
 end_define
 
-begin_comment
-comment|/* 386BSD | bootable */
-end_comment
+begin_define
+define|#
+directive|define
+name|PC98_MID_MASK
+value|0x7f
+end_define
+
+begin_define
+define|#
+directive|define
+name|PC98_MID_386BSD
+value|0x14
+end_define
+
+begin_define
+define|#
+directive|define
+name|PC98_SID_ACTIVE
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|PC98_SID_MASK
+value|0x7f
+end_define
+
+begin_define
+define|#
+directive|define
+name|PC98_SID_386BSD
+value|0x44
+end_define
+
+begin_define
+define|#
+directive|define
+name|DOSMID_386BSD
+value|(PC98_MID_386BSD | PC98_MID_BOOTABLE)
+end_define
 
 begin_define
 define|#
 directive|define
 name|DOSSID_386BSD
-value|(0x44|0x80)
+value|(PC98_SID_386BSD | PC98_SID_ACTIVE)
 end_define
-
-begin_comment
-comment|/* 386BSD | active */
-end_comment
 
 begin_define
 define|#
