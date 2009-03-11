@@ -1044,11 +1044,8 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Cannot allocate %jd bytes buffer"
+literal|"Cannot allocate %zu bytes buffer"
 argument_list|,
-operator|(
-name|intmax_t
-operator|)
 name|bigsize
 argument_list|)
 expr_stmt|;
