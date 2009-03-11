@@ -1018,7 +1018,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Bigsize = %u, medsize = %u, minsize = %u\n"
+literal|"Bigsize = %zu, medsize = %zu, minsize = %zu\n"
 argument_list|,
 name|bigsize
 argument_list|,
