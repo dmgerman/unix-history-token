@@ -1740,7 +1740,7 @@ block|}
 comment|/* 	 * Lookup requests outside of open() that specify LOCKSHARED 	 * only need a shared lock on the leaf vnode. 	 */
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
