@@ -792,6 +792,29 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|drm_msi
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Enable by default. */
+end_comment
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.drm.msi"
+argument_list|,
+operator|&
+name|drm_msi
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 specifier|static
 name|struct
 name|drm_msi_blacklist_entry
@@ -1235,6 +1258,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|drm_msi
+operator|&&
 operator|!
 name|drm_msi_is_blacklisted
 argument_list|(
