@@ -4931,7 +4931,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|drm_addbufs_ioctl
+name|drm_addbufs
 parameter_list|(
 name|struct
 name|drm_device
