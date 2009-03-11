@@ -2968,6 +2968,10 @@ name|irq_enabled
 decl_stmt|;
 comment|/* True if the irq handler is enabled */
 name|int
+name|msi_enabled
+decl_stmt|;
+comment|/* MSI enabled */
+name|int
 name|irqrid
 decl_stmt|;
 comment|/* Interrupt used by board */

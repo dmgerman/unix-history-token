@@ -238,14 +238,6 @@ name|dev
 operator|->
 name|driver
 operator|->
-name|firstopen
-operator|=
-name|i915_driver_firstopen
-expr_stmt|;
-name|dev
-operator|->
-name|driver
-operator|->
 name|preclose
 operator|=
 name|i915_driver_preclose
