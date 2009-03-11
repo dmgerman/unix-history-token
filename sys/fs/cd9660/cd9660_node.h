@@ -97,14 +97,6 @@ name|doff_t
 name|i_diroff
 decl_stmt|;
 comment|/* offset in dir, where we found last entry */
-name|doff_t
-name|i_offset
-decl_stmt|;
-comment|/* offset of free space in directory */
-name|ino_t
-name|i_ino
-decl_stmt|;
-comment|/* inode number of found directory */
 name|long
 name|iso_extent
 decl_stmt|;
