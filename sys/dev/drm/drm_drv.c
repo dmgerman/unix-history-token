@@ -3428,9 +3428,6 @@ name|drm_file
 modifier|*
 name|file_priv
 decl_stmt|;
-name|DRM_LOCK
-argument_list|()
-expr_stmt|;
 name|retcode
 operator|=
 name|devfs_get_cdevpriv
@@ -3443,9 +3440,6 @@ operator|)
 operator|&
 name|file_priv
 argument_list|)
-expr_stmt|;
-name|DRM_UNLOCK
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
