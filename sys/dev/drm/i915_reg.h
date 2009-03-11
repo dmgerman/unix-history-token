@@ -6645,6 +6645,24 @@ value|0
 end_define
 
 begin_comment
+comment|/* GM45+ just has to be different */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PIPEA_FRMCOUNT_GM45
+value|0x70040
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIPEA_FLIPCOUNT_GM45
+value|0x70044
+end_define
+
+begin_comment
 comment|/* Cursor A& B regs */
 end_comment
 
@@ -7089,6 +7107,20 @@ begin_define
 define|#
 directive|define
 name|PIPEBFRAMEPIXEL
+value|0x71044
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIPEB_FRMCOUNT_GM45
+value|0x71040
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIPEB_FLIPCOUNT_GM45
 value|0x71044
 end_define
 
