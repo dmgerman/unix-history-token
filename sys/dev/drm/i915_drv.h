@@ -544,16 +544,6 @@ name|val_bufs
 decl_stmt|;
 endif|#
 directive|endif
-name|DRM_SPINTYPE
-name|swaps_lock
-decl_stmt|;
-name|drm_i915_vbl_swap_t
-name|vbl_swaps
-decl_stmt|;
-name|unsigned
-name|int
-name|swaps_pending
-decl_stmt|;
 if|#
 directive|if
 name|defined
