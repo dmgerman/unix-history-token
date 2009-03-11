@@ -3805,11 +3805,11 @@ modifier|*
 name|driver
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
 name|devclass_t
 name|parent
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 comment|/* 	 * Call BUS_DRIVER_ADDED for any existing busses in this class. 	 */
 for|for
@@ -3848,7 +3848,7 @@ argument_list|,
 name|driver
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Walk through the children classes.  Since we only keep a 	 * single parent pointer around, we walk the entire list of 	 * devclasses looking for children.  We set the 	 * DC_HAS_CHILDREN flag when a child devclass is created on 	 * the parent, so we only walk thoe list for those devclasses 	 * that have children. 	 */
+comment|/* 	 * Walk through the children classes.  Since we only keep a 	 * single parent pointer around, we walk the entire list of 	 * devclasses looking for children.  We set the 	 * DC_HAS_CHILDREN flag when a child devclass is created on 	 * the parent, so we only walk the list for those devclasses 	 * that have children. 	 */
 if|if
 condition|(
 operator|!
