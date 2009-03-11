@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -118,7 +124,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/priv.h>
+file|<sys/kdb.h>
 end_include
 
 begin_include
@@ -682,7 +688,17 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* polling without sleeping in Xen doesn't work well.  			 * Sleeping gives other things like clock a chance to  			 * run 			 */
+ifdef|#
+directive|ifdef
+name|KDB
+if|if
+condition|(
+operator|!
+name|kdb_active
+condition|)
+endif|#
+directive|endif
+comment|/* 				 * Polling without sleeping in Xen 				 * doesn't work well.  Sleeping gives 				 * other things like clock a chance to 				 * run 				 */
 name|tsleep
 argument_list|(
 operator|&
@@ -759,6 +775,19 @@ name|rc
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|kdb_active
+condition|)
+name|printf
+argument_list|(
+literal|"%s:%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|__LINE__
+argument_list|)
+expr_stmt|;
 comment|/* we need to return only one char */
 name|ret
 operator|=
@@ -1154,8 +1183,6 @@ name|NULL
 argument_list|,
 name|xencons_priv_interrupt
 argument_list|,
-name|sc
-argument_list|,
 name|INTR_TYPE_TTY
 argument_list|,
 name|NULL
@@ -1256,6 +1283,14 @@ decl_stmt|;
 if|if
 condition|(
 name|xen_console_up
+ifdef|#
+directive|ifdef
+name|DDB
+operator|&&
+operator|!
+name|kdb_active
+endif|#
+directive|endif
 condition|)
 block|{
 name|tty_lock
@@ -1902,10 +1937,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/*  * Local variables:  * mode: C  * c-set-style: "BSD"  * c-basic-offset: 8  * tab-width: 4  * indent-tabs-mode: t  * End:  */
-end_comment
 
 end_unit
 

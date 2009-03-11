@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * Copyright (c) 2004 Christian Limpach.  * Copyright (c) 2004,2005 Kip Macy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Christian Limpach.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * $FreeBSD$  */
+comment|/*  *  * Copyright (c) 2004 Christian Limpach.  * Copyright (c) 2004,2005 Kip Macy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Christian Limpach.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,12 @@ define|#
 directive|define
 name|_XEN_XENPMAP_H_
 end_define
+
+begin_include
+include|#
+directive|include
+file|<machine/xen/features.h>
+end_include
 
 begin_function_decl
 name|void
@@ -108,26 +114,24 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|pmap_ref
-parameter_list|(
-name|pt_entry_t
-modifier|*
-name|pte
-parameter_list|,
-name|vm_paddr_t
-name|ma
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|xen_check_queue
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|void pmap_ref(pt_entry_t *pte, vm_paddr_t ma);
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -168,18 +172,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/pcpu.h>
-end_include
 
 begin_ifdef
 ifdef|#
@@ -856,28 +848,6 @@ index|]
 operator|=
 name|mfn
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|int
-name|phys_to_machine_mapping_valid
-parameter_list|(
-name|unsigned
-name|long
-name|pfn
-parameter_list|)
-block|{
-return|return
-name|xen_phys_machine
-index|[
-name|pfn
-index|]
-operator|!=
-name|INVALID_P2M_ENTRY
-return|;
 block|}
 end_function
 
