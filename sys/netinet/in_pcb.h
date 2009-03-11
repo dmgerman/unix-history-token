@@ -1531,6 +1531,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INP_INHASHLIST
+value|0x2000
+end_define
+
+begin_comment
+comment|/* in_pcbinshash() has been called */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IN6P_IPV6_V6ONLY
 value|0x008000
 end_define
