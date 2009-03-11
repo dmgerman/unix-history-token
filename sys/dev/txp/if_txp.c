@@ -2256,7 +2256,6 @@ operator|->
 name|sc_ifp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3820,7 +3819,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4218,7 +4216,6 @@ name|r_roff
 operator|=
 name|woff
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4426,7 +4423,6 @@ name|sc_rxbufprod
 operator|=
 name|i
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6177,7 +6173,6 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -6852,7 +6847,6 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7375,7 +7369,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8573,7 +8566,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8587,9 +8579,7 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|)
-block|{
-return|return;
-block|}
+block|{  }
 end_function
 
 begin_function
@@ -9787,7 +9777,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10094,7 +10083,6 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
