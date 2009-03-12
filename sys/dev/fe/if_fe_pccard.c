@@ -689,10 +689,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  *      Initialize the device - called from Slot manager.  */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -1190,7 +1186,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|sn_pccard_xircom_mac
+name|fe_pccard_xircom_mac
 parameter_list|(
 specifier|const
 name|struct
@@ -1383,7 +1379,7 @@ block|,
 literal|0x00
 block|}
 block|,
-comment|/*  { FE_DLCR5, 0x80, 0x00 },       Does not work well.  */
+comment|/*		{ FE_DLCR5, 0x80, 0x00 },	Does not work well.  */
 block|{
 literal|0
 block|}
@@ -1408,7 +1404,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/*          * See if C-NET(PC)C is on its address.          */
+comment|/* 	 * See if C-NET(PC)C is on its address. 	 */
 if|if
 condition|(
 operator|!
@@ -1462,7 +1458,7 @@ name|pccard_cis_scan
 argument_list|(
 name|dev
 argument_list|,
-name|sn_pccard_xircom_mac
+name|fe_pccard_xircom_mac
 argument_list|,
 name|sc
 operator|->
