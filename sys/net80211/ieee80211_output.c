@@ -5881,6 +5881,13 @@ operator|!=
 literal|0
 condition|)
 do|;
+comment|/* set the last fragment */
+name|m
+operator|->
+name|m_flags
+operator||=
+name|M_LASTFRAG
+expr_stmt|;
 name|whf
 operator|->
 name|i_fc

@@ -328,65 +328,6 @@ name|CX_LOCK_NAME
 value|"cxX"
 end_define
 
-begin_decl_stmt
-specifier|static
-name|int
-name|cx_mpsafenet
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"debug.cx.mpsafenet"
-argument_list|,
-operator|&
-name|cx_mpsafenet
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(
-name|_debug
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|cx
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-literal|0
-argument_list|,
-literal|"Cronyx Sigma Adapters"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_debug_cx
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|mpsafenet
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|cx_mpsafenet
-argument_list|,
-literal|0
-argument_list|,
-literal|"Enable/disable MPSAFE network support for Cronyx Sigma Adapters"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_define
 define|#
 directive|define
@@ -394,7 +335,7 @@ name|CX_LOCK
 parameter_list|(
 name|_bd
 parameter_list|)
-value|do { \ 				    if (cx_mpsafenet) \ 					mtx_lock (&(_bd)->cx_mtx); \ 				} while (0)
+value|mtx_lock (&(_bd)->cx_mtx)
 end_define
 
 begin_define
@@ -404,7 +345,7 @@ name|CX_UNLOCK
 parameter_list|(
 name|_bd
 parameter_list|)
-value|do { \ 				    if (cx_mpsafenet) \ 					mtx_unlock (&(_bd)->cx_mtx); \ 				} while (0)
+value|mtx_unlock (&(_bd)->cx_mtx)
 end_define
 
 begin_define
@@ -414,7 +355,7 @@ name|CX_LOCK_ASSERT
 parameter_list|(
 name|_bd
 parameter_list|)
-value|do { \ 				    if (cx_mpsafenet) \ 					mtx_assert (&(_bd)->cx_mtx, MA_OWNED); \ 				} while (0)
+value|mtx_assert (&(_bd)->cx_mtx, MA_OWNED)
 end_define
 
 begin_typedef
@@ -1328,8 +1269,6 @@ operator|.
 name|d_flags
 operator|=
 name|D_TTY
-operator||
-name|D_NEEDGIANT
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -4347,11 +4286,7 @@ operator|->
 name|num
 index|]
 argument_list|,
-name|cx_mpsafenet
-condition|?
 name|CALLOUT_MPSAFE
-else|:
-literal|0
 argument_list|)
 expr_stmt|;
 name|s
@@ -4371,13 +4306,7 @@ name|irq_res
 argument_list|,
 name|INTR_TYPE_NET
 operator||
-operator|(
-name|cx_mpsafenet
-condition|?
 name|INTR_MPSAFE
-else|:
-literal|0
-operator|)
 argument_list|,
 name|NULL
 argument_list|,
@@ -4901,11 +4830,7 @@ name|d
 operator|->
 name|timeout_handle
 argument_list|,
-name|cx_mpsafenet
-condition|?
 name|CALLOUT_MPSAFE
-else|:
-literal|0
 argument_list|)
 expr_stmt|;
 else|#
@@ -5013,19 +4938,6 @@ operator|=
 name|IFF_POINTOPOINT
 operator||
 name|IFF_MULTICAST
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|cx_mpsafenet
-condition|)
-name|d
-operator|->
-name|ifp
-operator|->
-name|if_flags
-operator||=
-name|IFF_NEEDSGIANT
 expr_stmt|;
 name|d
 operator|->
@@ -5331,11 +5243,7 @@ name|d
 operator|->
 name|dcd_timeout_handle
 argument_list|,
-name|cx_mpsafenet
-condition|?
 name|CALLOUT_MPSAFE
-else|:
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -14293,17 +14201,6 @@ name|load_count
 init|=
 literal|0
 decl_stmt|;
-if|if
-condition|(
-name|cx_mpsafenet
-condition|)
-name|cx_cdevsw
-operator|.
-name|d_flags
-operator|&=
-operator|~
-name|D_NEEDGIANT
-expr_stmt|;
 switch|switch
 condition|(
 name|type
@@ -14338,11 +14235,7 @@ argument_list|(
 operator|&
 name|timeout_handle
 argument_list|,
-name|cx_mpsafenet
-condition|?
 name|CALLOUT_MPSAFE
-else|:
-literal|0
 argument_list|)
 expr_stmt|;
 name|callout_reset
@@ -14373,13 +14266,7 @@ name|NULL
 argument_list|,
 name|SWI_TTY
 argument_list|,
-operator|(
-name|cx_mpsafenet
-condition|?
 name|INTR_MPSAFE
-else|:
-literal|0
-operator|)
 argument_list|,
 operator|&
 name|cx_fast_ih

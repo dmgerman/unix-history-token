@@ -93,27 +93,6 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_EXT2FS_EXT2_FS_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<ext2fs/ext2_fs.h>
-end_include
-
-begin_comment
-comment|/* for Linux file flags */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|HAVE_LIMITS_H
 end_ifdef
 
@@ -149,6 +128,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Some Linux distributions have both linux/ext2_fs.h and ext2fs/ext2_fs.h.  * As the include guards don't agree, the order of include is important.  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -159,6 +142,36 @@ begin_include
 include|#
 directive|include
 file|<linux/ext2_fs.h>
+end_include
+
+begin_comment
+comment|/* for Linux file flags */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_EXT2FS_EXT2_FS_H
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<ext2fs/ext2_fs.h>
 end_include
 
 begin_comment
@@ -1416,13 +1429,6 @@ argument_list|,
 name|wcs_length
 argument_list|)
 expr_stmt|;
-name|w
-index|[
-name|wcs_length
-index|]
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|r
@@ -1430,6 +1436,13 @@ operator|>
 literal|0
 condition|)
 block|{
+name|w
+index|[
+name|r
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|aes
 operator|->
 name|aes_set

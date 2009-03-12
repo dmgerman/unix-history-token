@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2006-2008 Broadcom Corporation  *	David Christensen<davidch@broadcom.com>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of Broadcom Corporation nor the name of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written consent.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS'  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2006-2009 Broadcom Corporation  *	David Christensen<davidch@broadcom.com>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of Broadcom Corporation nor the name of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written consent.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS'  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_BCE_H_DEFINED
+name|_BCEREG_H_DEFINED
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_BCE_H_DEFINED
+name|_BCEREG_H_DEFINED
 end_define
 
 begin_ifdef
@@ -5436,7 +5436,7 @@ name|u32
 name|stat_EtherStatsUndersizePkts
 decl_stmt|;
 name|u32
-name|stat_EtherStatsOverrsizePkts
+name|stat_EtherStatsOversizePkts
 decl_stmt|;
 name|u32
 name|stat_EtherStatsPktsRx64Octets
@@ -34729,6 +34729,10 @@ name|MAX_TX_BD
 value|(TOTAL_TX_BD - 1)
 end_define
 
+begin_comment
+comment|/* Advance to the next tx_bd, skipping any next page pointers. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -34815,6 +34819,10 @@ name|MAX_RX_BD
 value|(TOTAL_RX_BD - 1)
 end_define
 
+begin_comment
+comment|/* Advance to the next rx_bd, skipping any next page pointers. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -34854,6 +34862,12 @@ name|x
 parameter_list|)
 value|((x)& USABLE_RX_BD_PER_PAGE)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ZERO_COPY_SOCKETS
+end_ifdef
 
 begin_comment
 comment|/*  * To accomodate jumbo frames, the page chain should  * be 4 times larger than the receive chain.  */
@@ -34901,6 +34915,10 @@ name|MAX_PG_BD
 value|(TOTAL_PG_BD - 1)
 end_define
 
+begin_comment
+comment|/* Advance to the next pg_bd, skipping any next page pointers. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -34940,6 +34958,15 @@ name|x
 parameter_list|)
 value|((x)& USABLE_PG_BD_PER_PAGE)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ZERO_COPY_SOCKETS */
+end_comment
 
 begin_comment
 comment|/* Context size. */
@@ -35770,7 +35797,7 @@ decl_stmt|;
 comment|/* Name string */
 comment|/* Tracks the version of bootcode firmware. */
 name|u32
-name|bce_fw_ver
+name|bce_bc_ver
 decl_stmt|;
 comment|/* Tracks the state of the firmware.  0 = Running while any     */
 comment|/* other value indicates that the firmware is not responding.   */
@@ -35872,12 +35899,17 @@ name|u32
 name|tx_prod_bseq
 decl_stmt|;
 comment|/* Counts the bytes used.  */
+ifdef|#
+directive|ifdef
+name|ZERO_COPY_SOCKETS
 name|u16
 name|pg_prod
 decl_stmt|;
 name|u16
 name|pg_cons
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|bce_link
 decl_stmt|;
@@ -35906,9 +35938,14 @@ decl_stmt|;
 name|int
 name|rx_bd_mbuf_align_pad
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ZERO_COPY_SOCKETS
 name|int
 name|pg_bd_mbuf_alloc_size
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* Receive mode settings (i.e promiscuous, multicast, etc.). */
 name|u32
 name|rx_mode
@@ -35965,6 +36002,9 @@ index|[
 name|RX_PAGES
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ZERO_COPY_SOCKETS
 comment|/* H/W maintained page buffer descriptor chain structure. */
 name|bus_dma_tag_t
 name|pg_bd_chain_tag
@@ -35989,6 +36029,8 @@ index|[
 name|PG_PAGES
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* H/W maintained status block. */
 name|bus_dma_tag_t
 name|status_tag
@@ -36069,9 +36111,14 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|tx_mbuf_tag
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ZERO_COPY_SOCKETS
 name|bus_dma_tag_t
 name|pg_mbuf_tag
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* S/W maintained mbuf TX chain structure. */
 name|bus_dmamap_t
 name|tx_mbuf_map
@@ -36102,6 +36149,9 @@ index|[
 name|TOTAL_RX_BD
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ZERO_COPY_SOCKETS
 comment|/* S/W maintained mbuf page chain structure. */
 name|bus_dmamap_t
 name|pg_mbuf_map
@@ -36117,6 +36167,8 @@ index|[
 name|TOTAL_PG_BD
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* Track the number of buffer descriptors in use. */
 name|u16
 name|free_rx_bd
@@ -36130,12 +36182,17 @@ decl_stmt|;
 name|u16
 name|max_tx_bd
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ZERO_COPY_SOCKETS
 name|u16
 name|free_pg_bd
 decl_stmt|;
 name|u16
 name|max_pg_bd
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* Provides access to hardware statistics through sysctl. */
 name|u64
 name|stat_IfHCInOctets
@@ -36207,7 +36264,7 @@ name|u32
 name|stat_EtherStatsUndersizePkts
 decl_stmt|;
 name|u32
-name|stat_EtherStatsOverrsizePkts
+name|stat_EtherStatsOversizePkts
 decl_stmt|;
 name|u32
 name|stat_EtherStatsPktsRx64Octets
@@ -36303,14 +36360,43 @@ comment|/* Provides access to certain firmware statistics. */
 name|u32
 name|com_no_buffers
 decl_stmt|;
-comment|/* Mbuf allocation failure counter. */
+comment|/* Recoverable failure counters. */
 name|u32
-name|mbuf_alloc_failed
+name|mbuf_alloc_failed_count
 decl_stmt|;
-comment|/* TX DMA mapping failure counter. */
 name|u32
-name|tx_dma_map_failures
+name|fragmented_mbuf_count
 decl_stmt|;
+name|u32
+name|unexpected_attention_count
+decl_stmt|;
+name|u32
+name|l2fhdr_error_count
+decl_stmt|;
+name|u32
+name|dma_map_addr_tx_failed_count
+decl_stmt|;
+name|u32
+name|dma_map_addr_rx_failed_count
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|BCE_DEBUG
+comment|/* Simulated recoverable failure counters. */
+name|u32
+name|mbuf_alloc_failed_sim_count
+decl_stmt|;
+name|u32
+name|unexpected_attention_sim_count
+decl_stmt|;
+name|u32
+name|l2fhdr_error_sim_count
+decl_stmt|;
+name|u32
+name|dma_map_addr_failed_sim_count
+decl_stmt|;
+endif|#
+directive|endif
 name|u32
 name|hc_command
 decl_stmt|;
@@ -36324,9 +36410,14 @@ decl_stmt|;
 name|int
 name|debug_rx_mbuf_alloc
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ZERO_COPY_SOCKETS
 name|int
 name|debug_pg_mbuf_alloc
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* Track how many and what type of interrupts are generated. */
 name|u32
 name|interrupts_generated
@@ -36355,6 +36446,9 @@ name|u32
 name|rx_empty_count
 decl_stmt|;
 comment|/* Number of times the RX chain was empty. */
+ifdef|#
+directive|ifdef
+name|ZERO_COPY_SOCKETS
 name|u32
 name|pg_low_watermark
 decl_stmt|;
@@ -36363,6 +36457,8 @@ name|u32
 name|pg_empty_count
 decl_stmt|;
 comment|/* Number of times the page chain was empty. */
+endif|#
+directive|endif
 name|u32
 name|tx_hi_watermark
 decl_stmt|;
@@ -36371,19 +36467,6 @@ name|u32
 name|tx_full_count
 decl_stmt|;
 comment|/* Number of times the TX chain was full. */
-comment|/* Simulated mbuf allocation failure counter. */
-name|u32
-name|debug_mbuf_sim_alloc_failed
-decl_stmt|;
-name|u32
-name|l2fhdr_status_errors
-decl_stmt|;
-name|u32
-name|unexpected_attentions
-decl_stmt|;
-name|u32
-name|lost_status_block_updates
-decl_stmt|;
 name|u32
 name|requested_tso_frames
 decl_stmt|;
@@ -36400,7 +36483,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* #ifndef _BCE_H_DEFINED */
+comment|/* __BCEREG_H_DEFINED */
 end_comment
 
 end_unit

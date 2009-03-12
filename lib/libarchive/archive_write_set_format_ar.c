@@ -577,6 +577,12 @@ name|ar
 expr_stmt|;
 name|a
 operator|->
+name|format_name
+operator|=
+literal|"ar"
+expr_stmt|;
+name|a
+operator|->
 name|format_write_header
 operator|=
 name|archive_write_ar_header

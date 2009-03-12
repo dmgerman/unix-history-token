@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20090113_0125"
+value|"20090226_0129"
 end_define
 
 begin_expr_stmt
@@ -165,43 +165,6 @@ name|sc
 parameter_list|)
 value|mtx_owned((sc)->lock)
 end_define
-
-begin_undef
-undef|#
-directive|undef
-name|HDAC_MSI_ENABLED
-end_undef
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700026
-operator|||
-expr|\
-operator|(
-name|__FreeBSD_version
-operator|<
-literal|700000
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|602106
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HDAC_MSI_ENABLED
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -2169,6 +2132,13 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|HDAC_NO_MSI
+value|1
+end_define
+
 begin_struct
 specifier|static
 specifier|const
@@ -2181,6 +2151,9 @@ name|char
 modifier|*
 name|desc
 decl_stmt|;
+name|char
+name|flags
+decl_stmt|;
 block|}
 name|hdac_devices
 index|[]
@@ -2190,258 +2163,344 @@ block|{
 name|HDA_INTEL_82801F
 block|,
 literal|"Intel 82801F"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_INTEL_63XXESB
 block|,
 literal|"Intel 631x/632xESB"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_INTEL_82801G
 block|,
 literal|"Intel 82801G"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_INTEL_82801H
 block|,
 literal|"Intel 82801H"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_INTEL_82801I
 block|,
 literal|"Intel 82801I"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_INTEL_82801J
 block|,
 literal|"Intel 82801J"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_INTEL_PCH
 block|,
 literal|"Intel PCH"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_INTEL_SCH
 block|,
 literal|"Intel SCH"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP51
 block|,
 literal|"NVidia MCP51"
+block|,
+name|HDAC_NO_MSI
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP55
 block|,
 literal|"NVidia MCP55"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP61_1
 block|,
 literal|"NVidia MCP61"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP61_2
 block|,
 literal|"NVidia MCP61"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP65_1
 block|,
 literal|"NVidia MCP65"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP65_2
 block|,
 literal|"NVidia MCP65"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP67_1
 block|,
 literal|"NVidia MCP67"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP67_2
 block|,
 literal|"NVidia MCP67"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP73_1
 block|,
 literal|"NVidia MCP73"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP73_2
 block|,
 literal|"NVidia MCP73"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP78_1
 block|,
 literal|"NVidia MCP78"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP78_2
 block|,
 literal|"NVidia MCP78"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP78_3
 block|,
 literal|"NVidia MCP78"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP78_4
 block|,
 literal|"NVidia MCP78"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP79_1
 block|,
 literal|"NVidia MCP79"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP79_2
 block|,
 literal|"NVidia MCP79"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP79_3
 block|,
 literal|"NVidia MCP79"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP79_4
 block|,
 literal|"NVidia MCP79"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_SB450
 block|,
 literal|"ATI SB450"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_SB600
 block|,
 literal|"ATI SB600"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_RS600
 block|,
 literal|"ATI RS600"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_RS690
 block|,
 literal|"ATI RS690"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_RS780
 block|,
 literal|"ATI RS780"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_R600
 block|,
 literal|"ATI R600"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_RV610
 block|,
 literal|"ATI RV610"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_RV620
 block|,
 literal|"ATI RV620"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_RV630
 block|,
 literal|"ATI RV630"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_RV635
 block|,
 literal|"ATI RV635"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_RV710
 block|,
 literal|"ATI RV710"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_RV730
 block|,
 literal|"ATI RV730"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_RV740
 block|,
 literal|"ATI RV740"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_RV770
 block|,
 literal|"ATI RV770"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_VIA_VT82XX
 block|,
 literal|"VIA VT8251/8237A"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_SIS_966
 block|,
 literal|"SiS 966"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ULI_M5461
 block|,
 literal|"ULI M5461"
+block|,
+literal|0
 block|}
 block|,
 comment|/* Unknown */
@@ -4145,6 +4204,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_NVIDIAMCP78_2
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0006)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_NVIDIAMCP7A
 value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0007)
 end_define
@@ -4154,6 +4220,13 @@ define|#
 directive|define
 name|HDA_CODEC_NVIDIAMCP67
 value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0067)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIAMCP73
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x8001)
 end_define
 
 begin_define
@@ -4992,7 +5065,19 @@ literal|"NVidia MCP67 HDMI"
 block|}
 block|,
 block|{
+name|HDA_CODEC_NVIDIAMCP73
+block|,
+literal|"NVidia MCP73 HDMI"
+block|}
+block|,
+block|{
 name|HDA_CODEC_NVIDIAMCP78
+block|,
+literal|"NVidia MCP78 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_NVIDIAMCP78_2
 block|,
 literal|"NVidia MCP78 HDMI"
 block|}
@@ -9073,9 +9158,6 @@ name|irq_rid
 operator|=
 literal|0x0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HDAC_MSI_ENABLED
 if|if
 condition|(
 operator|(
@@ -9118,8 +9200,6 @@ operator|=
 literal|0x1
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|sc
 operator|->
 name|flags
@@ -9326,19 +9406,8 @@ operator|->
 name|irq_res
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HDAC_MSI_ENABLED
 if|if
 condition|(
-operator|(
-name|sc
-operator|->
-name|flags
-operator|&
-name|HDAC_F_MSI
-operator|)
-operator|&&
 name|irq
 operator|->
 name|irq_rid
@@ -9352,8 +9421,6 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|irq
 operator|->
 name|irq_handle
@@ -12925,10 +12992,31 @@ name|id
 condition|)
 block|{
 case|case
+name|HDA_CODEC_AD1882
+case|:
+case|case
+name|HDA_CODEC_AD1883
+case|:
+case|case
+name|HDA_CODEC_AD1984
+case|:
+case|case
+name|HDA_CODEC_AD1984A
+case|:
+case|case
+name|HDA_CODEC_AD1984B
+case|:
+case|case
+name|HDA_CODEC_AD1987
+case|:
+case|case
 name|HDA_CODEC_AD1988
 case|:
 case|case
 name|HDA_CODEC_AD1988B
+case|:
+case|case
+name|HDA_CODEC_AD1989B
 case|:
 name|beeper
 operator|=
@@ -20506,6 +20594,19 @@ name|result
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|devid
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|uint32_t
+name|model
+decl_stmt|;
+name|uint16_t
+name|class
+decl_stmt|,
+name|subclass
 decl_stmt|;
 name|uint16_t
 name|vendor
@@ -20522,6 +20623,106 @@ argument_list|,
 name|HDA_DRV_TEST_REV
 argument_list|)
 expr_stmt|;
+name|model
+operator|=
+operator|(
+name|uint32_t
+operator|)
+name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+operator|<<
+literal|16
+expr_stmt|;
+name|model
+operator||=
+operator|(
+name|uint32_t
+operator|)
+name|pci_get_vendor
+argument_list|(
+name|dev
+argument_list|)
+operator|&
+literal|0x0000ffff
+expr_stmt|;
+name|class
+operator|=
+name|pci_get_class
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|subclass
+operator|=
+name|pci_get_subclass
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|HDAC_DEVICES_LEN
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|hdac_devices
+index|[
+name|i
+index|]
+operator|.
+name|model
+operator|==
+name|model
+condition|)
+block|{
+name|devid
+operator|=
+name|i
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|HDA_DEV_MATCH
+argument_list|(
+name|hdac_devices
+index|[
+name|i
+index|]
+operator|.
+name|model
+argument_list|,
+name|model
+argument_list|)
+operator|&&
+name|class
+operator|==
+name|PCIC_MULTIMEDIA
+operator|&&
+name|subclass
+operator|==
+name|PCIS_MULTIMEDIA_HDA
+condition|)
+block|{
+name|devid
+operator|=
+name|i
+expr_stmt|;
+break|break;
+block|}
+block|}
 name|sc
 operator|=
 name|device_get_softc
@@ -20865,9 +21066,37 @@ argument|));
 argument_list|)
 empty_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|HDAC_MSI_ENABLED
+if|if
+condition|(
+name|devid
+operator|>=
+literal|0
+operator|&&
+operator|(
+name|hdac_devices
+index|[
+name|devid
+index|]
+operator|.
+name|flags
+operator|&
+name|HDAC_NO_MSI
+operator|)
+condition|)
+name|sc
+operator|->
+name|flags
+operator|&=
+operator|~
+name|HDAC_F_MSI
+expr_stmt|;
+else|else
+name|sc
+operator|->
+name|flags
+operator||=
+name|HDAC_F_MSI
+expr_stmt|;
 if|if
 condition|(
 name|resource_int_value
@@ -20889,27 +21118,14 @@ name|i
 argument_list|)
 operator|==
 literal|0
-operator|&&
-name|i
-operator|!=
-literal|0
-operator|&&
-name|pci_msi_count
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|1
 condition|)
-name|sc
-operator|->
-name|flags
-operator||=
-name|HDAC_F_MSI
-expr_stmt|;
-else|else
-endif|#
-directive|endif
+block|{
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
 name|sc
 operator|->
 name|flags
@@ -20917,6 +21133,14 @@ operator|&=
 operator|~
 name|HDAC_F_MSI
 expr_stmt|;
+else|else
+name|sc
+operator|->
+name|flags
+operator||=
+name|HDAC_F_MSI
+expr_stmt|;
+block|}
 if|#
 directive|if
 name|defined
@@ -25367,7 +25591,7 @@ name|i
 operator|++
 control|)
 empty_stmt|;
-comment|/* Check if there is no any left. If so - we succeded. */
+comment|/* Check if there is no any left. If so - we succeeded. */
 if|if
 condition|(
 name|i
@@ -25542,7 +25766,7 @@ index|]
 operator|=
 name|res
 expr_stmt|;
-comment|/* We succeded, so call next. */
+comment|/* We succeeded, so call next. */
 if|if
 condition|(
 name|hdac_audio_trace_as_out
@@ -30487,7 +30711,7 @@ block|{
 name|HDA_BOOTVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
-literal|"Association %d (%d) trace succeded\n"
+literal|"Association %d (%d) trace succeeded\n"
 argument|, 				    j, as[j].index);
 argument_list|)
 empty_stmt|;
@@ -37334,7 +37558,7 @@ operator|.
 name|key
 argument_list|)
 condition|)
-break|break;
+continue|continue;
 name|HDA_BOOTVERBOSE
 argument_list|(
 argument|printf(

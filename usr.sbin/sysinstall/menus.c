@@ -6631,53 +6631,6 @@ block|}
 block|,
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|PCCARD_ARCH
-block|{
-literal|" pccard"
-block|,
-literal|"Enable PCCARD (AKA PCMCIA) services (also laptops)"
-block|,
-name|dmenuVarCheck
-block|,
-name|dmenuToggleVariable
-block|,
-name|NULL
-block|,
-literal|"pccard_enable=YES"
-block|}
-block|,
-block|{
-literal|" pccard mem"
-block|,
-literal|"Set PCCARD memory address (if enabled)"
-block|,
-name|dmenuVarCheck
-block|,
-name|dmenuISetVariable
-block|,
-name|NULL
-block|,
-literal|"pccard_mem"
-block|}
-block|,
-block|{
-literal|" pccard ifconfig"
-block|,
-literal|"List of PCCARD ethernet devices to configure"
-block|,
-name|dmenuVarCheck
-block|,
-name|dmenuISetVariable
-block|,
-name|NULL
-block|,
-literal|"pccard_ifconfig"
-block|}
-block|,
-endif|#
-directive|endif
 block|{
 literal|" "
 block|,

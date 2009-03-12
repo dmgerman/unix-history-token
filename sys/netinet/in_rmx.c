@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_route.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -710,6 +716,13 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+name|RADIX_NODE_HEAD_WLOCK_ASSERT
+argument_list|(
+name|ap
+operator|->
+name|rnh
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rt
@@ -780,6 +793,8 @@ argument_list|,
 name|rt
 operator|->
 name|rt_flags
+operator||
+name|RTF_RNH_LOCKED
 argument_list|,
 literal|0
 argument_list|,

@@ -1337,7 +1337,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
+operator|<=
 name|mp_maxid
 condition|;
 name|i
@@ -1365,6 +1365,19 @@ argument_list|)
 condition|)
 name|ncpus
 operator|++
+expr_stmt|;
+if|if
+condition|(
+name|ncpus
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"ncpus is 0 with map=0x%x"
+argument_list|,
+name|map
+argument_list|)
 expr_stmt|;
 comment|/* obtain rendezvous lock */
 name|mtx_lock_spin

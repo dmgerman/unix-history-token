@@ -46,7 +46,7 @@ name|char
 name|testname
 index|[]
 init|=
-literal|"test_pax_filename_encoding.tar.gz"
+literal|"test_pax_filename_encoding.tar"
 decl_stmt|;
 comment|/* 	 * \314\214 is a valid 2-byte UTF-8 sequence. 	 * \374 is invalid in UTF-8. 	 */
 name|char
@@ -237,14 +237,16 @@ name|setlocale
 argument_list|(
 name|LC_ALL
 argument_list|,
-literal|"de_DE.UTF-8"
+name|LOCALE_DE
 argument_list|)
 condition|)
 block|{
 name|skipping
 argument_list|(
 literal|"invalid encoding tests require a suitable locale;"
-literal|" de_DE.UTF-8 not available on this system"
+literal|" %s not available on this system"
+argument_list|,
+name|LOCALE_DE
 argument_list|)
 expr_stmt|;
 return|return;
@@ -821,6 +823,48 @@ name|skipping
 argument_list|(
 literal|"Can't set \"C\" locale, so can't exercise "
 literal|"certain character-conversion failures"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* If wctomb is broken, warn and return. */
+if|if
+condition|(
+name|wctomb
+argument_list|(
+name|buff
+argument_list|,
+literal|0x1234
+argument_list|)
+operator|>
+literal|0
+condition|)
+block|{
+name|skipping
+argument_list|(
+literal|"Cannot test conversion failures because \"C\" "
+literal|"locale on this system has no invalid characters."
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* If wctomb is broken, warn and return. */
+if|if
+condition|(
+name|wctomb
+argument_list|(
+name|buff
+argument_list|,
+literal|0x1234
+argument_list|)
+operator|>
+literal|0
+condition|)
+block|{
+name|skipping
+argument_list|(
+literal|"Cannot test conversion failures because \"C\" "
+literal|"locale on this system has no invalid characters."
 argument_list|)
 expr_stmt|;
 return|return;

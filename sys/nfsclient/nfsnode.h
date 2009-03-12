@@ -239,6 +239,10 @@ name|n_ctime
 decl_stmt|;
 comment|/* Prev create time. */
 name|time_t
+name|n_dmtime
+decl_stmt|;
+comment|/* Prev dir modify time. */
+name|time_t
 name|n_expiry
 decl_stmt|;
 comment|/* Lease expiry time */

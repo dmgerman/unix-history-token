@@ -4099,7 +4099,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	swp_pager_async_iodone:  *  *	Completion routine for asynchronous reads and writes from/to swap.  *	Also called manually by synchronous code to finish up a bp.  *  *	For READ operations, the pages are PG_BUSY'd.  For WRITE operations,   *	the pages are vm_page_t->busy'd.  For READ operations, we PG_BUSY   *	unbusy all pages except the 'main' request page.  For WRITE   *	operations, we vm_page_t->busy'd unbusy all pages ( we can do this   *	because we marked them all VM_PAGER_PEND on return from putpages ).  *  *	This routine may not block.  *	This routine is called at splbio() or better  *  *	We up ourselves to splvm() as required for various vm_page related  *	calls.  */
+comment|/*  *	swp_pager_async_iodone:  *  *	Completion routine for asynchronous reads and writes from/to swap.  *	Also called manually by synchronous code to finish up a bp.  *  *	For READ operations, the pages are PG_BUSY'd.  For WRITE operations,   *	the pages are vm_page_t->busy'd.  For READ operations, we PG_BUSY   *	unbusy all pages except the 'main' request page.  For WRITE   *	operations, we vm_page_t->busy'd unbusy all pages ( we can do this   *	because we marked them all VM_PAGER_PEND on return from putpages ).  *  *	This routine may not block.  */
 end_comment
 
 begin_function

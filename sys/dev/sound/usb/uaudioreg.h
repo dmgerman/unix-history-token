@@ -103,7 +103,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* The first fields are identical to usb_endpoint_descriptor_t */
+comment|/* The first fields are identical to struct usb2_endpoint_descriptor */
 end_comment
 
 begin_typedef
@@ -136,14 +136,14 @@ name|uByte
 name|bSynchAddress
 decl_stmt|;
 block|}
-name|UPACKED
-name|usb_endpoint_descriptor_audio_t
+name|__packed
+name|usb2_endpoint_descriptor_audio_t
 typedef|;
 end_typedef
 
 begin_struct
 struct|struct
-name|usb_audio_control_descriptor
+name|usb2_audio_control_descriptor
 block|{
 name|uByte
 name|bLength
@@ -170,13 +170,13 @@ literal|1
 index|]
 decl_stmt|;
 block|}
-name|UPACKED
+name|__packed
 struct|;
 end_struct
 
 begin_struct
 struct|struct
-name|usb_audio_streaming_interface_descriptor
+name|usb2_audio_streaming_interface_descriptor
 block|{
 name|uByte
 name|bLength
@@ -197,13 +197,13 @@ name|uWord
 name|wFormatTag
 decl_stmt|;
 block|}
-name|UPACKED
+name|__packed
 struct|;
 end_struct
 
 begin_struct
 struct|struct
-name|usb_audio_streaming_endpoint_descriptor
+name|usb2_audio_streaming_endpoint_descriptor
 block|{
 name|uByte
 name|bLength
@@ -236,13 +236,13 @@ name|uWord
 name|wLockDelay
 decl_stmt|;
 block|}
-name|UPACKED
+name|__packed
 struct|;
 end_struct
 
 begin_struct
 struct|struct
-name|usb_audio_streaming_type1_descriptor
+name|usb2_audio_streaming_type1_descriptor
 block|{
 name|uByte
 name|bLength
@@ -275,12 +275,9 @@ value|0
 name|uByte
 name|tSamFreq
 index|[
-literal|3
-operator|*
-literal|2
+literal|0
 index|]
 decl_stmt|;
-comment|/* room for low and high */
 define|#
 directive|define
 name|UA_GETSAMP
@@ -289,7 +286,7 @@ name|p
 parameter_list|,
 name|n
 parameter_list|)
-value|((p)->tSamFreq[(n)*3+0] | ((p)->tSamFreq[(n)*3+1]<< 8) | ((p)->tSamFreq[(n)*3+2]<< 16))
+value|(((p)->tSamFreq[((n)*3)+0]) |	    \ 			  ((p)->tSamFreq[((n)*3)+1]<< 8) | \ 			  ((p)->tSamFreq[((n)*3)+2]<< 16))
 define|#
 directive|define
 name|UA_SAMP_LO
@@ -305,13 +302,13 @@ name|p
 parameter_list|)
 value|UA_GETSAMP(p, 1)
 block|}
-name|UPACKED
+name|__packed
 struct|;
 end_struct
 
 begin_struct
 struct|struct
-name|usb_audio_cluster
+name|usb2_audio_cluster
 block|{
 name|uByte
 name|bNrChannels
@@ -371,7 +368,7 @@ name|uByte
 name|iChannelNames
 decl_stmt|;
 block|}
-name|UPACKED
+name|__packed
 struct|;
 end_struct
 
@@ -381,7 +378,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb_audio_unit
+name|usb2_audio_unit
 block|{
 name|uByte
 name|bLength
@@ -405,7 +402,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb_audio_input_terminal
+name|usb2_audio_input_terminal
 block|{
 name|uByte
 name|bLength
@@ -434,11 +431,9 @@ decl_stmt|;
 name|uByte
 name|iChannelNames
 decl_stmt|;
-name|uByte
-name|iTerminal
-decl_stmt|;
+comment|/*	uByte		iTerminal; */
 block|}
-name|UPACKED
+name|__packed
 struct|;
 end_struct
 
@@ -448,7 +443,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb_audio_output_terminal
+name|usb2_audio_output_terminal
 block|{
 name|uByte
 name|bLength
@@ -475,7 +470,7 @@ name|uByte
 name|iTerminal
 decl_stmt|;
 block|}
-name|UPACKED
+name|__packed
 struct|;
 end_struct
 
@@ -485,7 +480,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb_audio_mixer_unit
+name|usb2_audio_mixer_unit_0
 block|{
 name|uByte
 name|bLength
@@ -505,19 +500,19 @@ decl_stmt|;
 name|uByte
 name|baSourceId
 index|[
-literal|255
+literal|0
 index|]
 decl_stmt|;
 comment|/* [bNrInPins] */
-comment|/* struct usb_audio_mixer_unit_1 */
+comment|/* struct usb2_audio_mixer_unit_1 */
 block|}
-name|UPACKED
+name|__packed
 struct|;
 end_struct
 
 begin_struct
 struct|struct
-name|usb_audio_mixer_unit_1
+name|usb2_audio_mixer_unit_1
 block|{
 name|uByte
 name|bNrChannels
@@ -531,13 +526,13 @@ decl_stmt|;
 name|uByte
 name|bmControls
 index|[
-literal|255
+literal|0
 index|]
 decl_stmt|;
-comment|/* [bNrChannels] */
-comment|/*uByte		iMixer;*/
+comment|/* [see source code] */
+comment|/* uByte		iMixer; */
 block|}
-name|UPACKED
+name|__packed
 struct|;
 end_struct
 
@@ -547,7 +542,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb_audio_selector_unit
+name|usb2_audio_selector_unit
 block|{
 name|uByte
 name|bLength
@@ -567,13 +562,13 @@ decl_stmt|;
 name|uByte
 name|baSourceId
 index|[
-literal|255
+literal|0
 index|]
 decl_stmt|;
 comment|/* [bNrInPins] */
 comment|/* uByte	iSelector; */
 block|}
-name|UPACKED
+name|__packed
 struct|;
 end_struct
 
@@ -583,7 +578,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb_audio_feature_unit
+name|usb2_audio_feature_unit
 block|{
 name|uByte
 name|bLength
@@ -606,13 +601,13 @@ decl_stmt|;
 name|uByte
 name|bmaControls
 index|[
-literal|255
+literal|0
 index|]
 decl_stmt|;
-comment|/* size for more than enough */
+comment|/* [bControlSize * x] */
 comment|/* uByte	iFeature; */
 block|}
-name|UPACKED
+name|__packed
 struct|;
 end_struct
 
@@ -622,7 +617,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb_audio_processing_unit
+name|usb2_audio_processing_unit_0
 block|{
 name|uByte
 name|bLength
@@ -645,19 +640,19 @@ decl_stmt|;
 name|uByte
 name|baSourceId
 index|[
-literal|255
+literal|0
 index|]
 decl_stmt|;
 comment|/* [bNrInPins] */
-comment|/* struct usb_audio_processing_unit_1 */
+comment|/* struct usb2_audio_processing_unit_1 */
 block|}
-name|UPACKED
+name|__packed
 struct|;
 end_struct
 
 begin_struct
 struct|struct
-name|usb_audio_processing_unit_1
+name|usb2_audio_processing_unit_1
 block|{
 name|uByte
 name|bNrChannels
@@ -674,7 +669,7 @@ decl_stmt|;
 name|uByte
 name|bmControls
 index|[
-literal|255
+literal|0
 index|]
 decl_stmt|;
 comment|/* [bControlSize] */
@@ -683,13 +678,13 @@ directive|define
 name|UA_PROC_ENABLE_MASK
 value|1
 block|}
-name|UPACKED
+name|__packed
 struct|;
 end_struct
 
 begin_struct
 struct|struct
-name|usb_audio_processing_unit_updown
+name|usb2_audio_processing_unit_updown
 block|{
 name|uByte
 name|iProcessing
@@ -700,12 +695,12 @@ decl_stmt|;
 name|uWord
 name|waModes
 index|[
-literal|255
+literal|0
 index|]
 decl_stmt|;
 comment|/* [bNrModes] */
 block|}
-name|UPACKED
+name|__packed
 struct|;
 end_struct
 
@@ -715,7 +710,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb_audio_extension_unit
+name|usb2_audio_extension_unit_0
 block|{
 name|uByte
 name|bLength
@@ -738,19 +733,19 @@ decl_stmt|;
 name|uByte
 name|baSourceId
 index|[
-literal|255
+literal|0
 index|]
 decl_stmt|;
 comment|/* [bNrInPins] */
-comment|/* struct usb_audio_extension_unit_1 */
+comment|/* struct usb2_audio_extension_unit_1 */
 block|}
-name|UPACKED
+name|__packed
 struct|;
 end_struct
 
 begin_struct
 struct|struct
-name|usb_audio_extension_unit_1
+name|usb2_audio_extension_unit_1
 block|{
 name|uByte
 name|bNrChannels
@@ -767,7 +762,7 @@ decl_stmt|;
 name|uByte
 name|bmControls
 index|[
-literal|255
+literal|0
 index|]
 decl_stmt|;
 comment|/* [bControlSize] */
@@ -779,9 +774,9 @@ define|#
 directive|define
 name|UA_EXT_ENABLE
 value|1
-comment|/*uByte		iExtension;*/
+comment|/* uByte		iExtension; */
 block|}
-name|UPACKED
+name|__packed
 struct|;
 end_struct
 

@@ -7783,6 +7783,9 @@ operator|<
 literal|0
 operator|)
 operator|||
+operator|!
+name|beVerbose
+operator|||
 name|is_posix
 operator|||
 name|beQuiet

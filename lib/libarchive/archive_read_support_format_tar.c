@@ -1559,7 +1559,11 @@ name|a
 argument_list|,
 name|tar
 argument_list|,
+literal|"tar"
+argument_list|,
 name|archive_read_format_tar_bid
+argument_list|,
+name|NULL
 argument_list|,
 name|archive_read_format_tar_read_header
 argument_list|,

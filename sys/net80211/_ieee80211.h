@@ -42,6 +42,12 @@ comment|/* high rate OFDM, aka turbo mode */
 name|IEEE80211_T_HT
 block|,
 comment|/* high throughput */
+name|IEEE80211_T_OFDM_HALF
+block|,
+comment|/* 1/2 rate OFDM */
+name|IEEE80211_T_OFDM_QUARTER
+block|,
+comment|/* 1/4 rate OFDM */
 block|}
 enum|;
 end_enum
@@ -115,6 +121,16 @@ init|=
 literal|9
 block|,
 comment|/* 2GHz, w/ HT */
+name|IEEE80211_MODE_HALF
+init|=
+literal|10
+block|,
+comment|/* OFDM, 1/2x clock */
+name|IEEE80211_MODE_QUARTER
+init|=
+literal|11
+block|,
+comment|/* OFDM, 1/4x clock */
 block|}
 enum|;
 end_enum
@@ -123,7 +139,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_MODE_MAX
-value|(IEEE80211_MODE_11NG+1)
+value|(IEEE80211_MODE_QUARTER+1)
 end_define
 
 begin_comment
@@ -311,6 +327,17 @@ name|uint8_t
 name|ic_extieee
 decl_stmt|;
 comment|/* HT40 extension channel number */
+name|int8_t
+name|ic_maxantgain
+decl_stmt|;
+comment|/* maximum antenna gain in .5 dBm */
+name|uint8_t
+name|ic_pad
+decl_stmt|;
+name|uint16_t
+name|ic_devdata
+decl_stmt|;
+comment|/* opaque device/driver data */
 block|}
 struct|;
 end_struct
@@ -353,11 +380,51 @@ value|((struct ieee80211_channel *) IEEE80211_CHAN_ANY)
 end_define
 
 begin_comment
-comment|/* bits 0-3 are for private use by drivers */
+comment|/* channel attributes */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_PRIV0
+value|0x00000001
+end_define
+
 begin_comment
-comment|/* channel attributes */
+comment|/* driver private bit 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_PRIV1
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* driver private bit 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_PRIV2
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* driver private bit 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_PRIV3
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* driver private bit 3 */
 end_comment
 
 begin_define
@@ -594,6 +661,14 @@ name|IEEE80211_CHAN_HT
 value|(IEEE80211_CHAN_HT20 | IEEE80211_CHAN_HT40)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_BITS
+define|\
+value|"\20\1PRIV0\2PRIV2\3PRIV3\4PRIV4\5TURBO\6CCK\7OFDM\0102GHZ\0115GHZ" \ 	"\12PASSIVE\13DYN\14GFSK\15GSM\16STURBO\17HALF\20QUARTER\21HT20" \ 	"\22HT40U\23HT40D\24DFS\0254MSXMIT\26NOADHOC\27NOHOSTAP\03011D"
+end_define
+
 begin_comment
 comment|/*  * Useful combinations of channel characteristics.  */
 end_comment
@@ -643,7 +718,7 @@ define|#
 directive|define
 name|IEEE80211_CHAN_108A
 define|\
-value|(IEEE80211_CHAN_5GHZ | IEEE80211_CHAN_OFDM | IEEE80211_CHAN_TURBO)
+value|(IEEE80211_CHAN_A | IEEE80211_CHAN_TURBO)
 end_define
 
 begin_define
@@ -651,7 +726,7 @@ define|#
 directive|define
 name|IEEE80211_CHAN_108G
 define|\
-value|(IEEE80211_CHAN_2GHZ | IEEE80211_CHAN_OFDM | IEEE80211_CHAN_TURBO)
+value|(IEEE80211_CHAN_PUREG | IEEE80211_CHAN_TURBO)
 end_define
 
 begin_define
@@ -818,7 +893,7 @@ parameter_list|(
 name|_c
 parameter_list|)
 define|\
-value|(((_c)->ic_flags& IEEE80211_CHAN_OFDM) != 0)
+value|(((_c)->ic_flags& (IEEE80211_CHAN_OFDM | IEEE80211_CHAN_DYN)) != 0)
 end_define
 
 begin_define
@@ -829,7 +904,7 @@ parameter_list|(
 name|_c
 parameter_list|)
 define|\
-value|(((_c)->ic_flags& IEEE80211_CHAN_CCK) != 0)
+value|(((_c)->ic_flags& (IEEE80211_CHAN_CCK | IEEE80211_CHAN_DYN)) != 0)
 end_define
 
 begin_define
@@ -1080,6 +1155,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_CHANSTATE_CWINT
+value|0x04
+end_define
+
+begin_comment
+comment|/* interference detected */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_CHANSTATE_NORADAR
 value|0x10
 end_define
@@ -1108,6 +1194,17 @@ name|_c
 parameter_list|)
 define|\
 value|(((_c)->ic_state& IEEE80211_CHANSTATE_CACDONE) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_CWINT
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_state& IEEE80211_CHANSTATE_CWINT) != 0)
 end_define
 
 begin_comment

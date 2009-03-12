@@ -471,7 +471,7 @@ value|0x30
 end_define
 
 begin_comment
-comment|/*-  * The ndis_kspin_lock type is called KSPIN_LOCK in MS-Windows.  * According to the Windows DDK header files, KSPIN_LOCK is defined like this:  *	typedef ULONG_PTR KSPIN_LOCK;  *  * From basetsd.h (SDK, Feb. 2003):  * 	typedef [public] unsigned __int3264 ULONG_PTR, *PULONG_PTR;  * 	typedef unsigned __int64 ULONG_PTR, *PULONG_PTR;  * 	typedef _W64 unsigned long ULONG_PTR, *PULONG_PTR;  *   * The keyword __int3264 specifies an integral type that has the following  * properties:  *	+ It is 32-bit on 32-bit platforms  *	+ It is 64-bit on 64-bit platforms  *	+ It is 32-bit on the wire for backward compatibility.  *	  It gets truncated on the sending side and extended appropriately  *	  (signed or unsigned) on the receiving side.  *  * Thus register_t seems the proper mapping onto FreeBSD for spin locks.  */
+comment|/*-  * The ndis_kspin_lock type is called KSPIN_LOCK in MS-Windows.  * According to the Windows DDK header files, KSPIN_LOCK is defined like this:  *	typedef ULONG_PTR KSPIN_LOCK;  *  * From basetsd.h (SDK, Feb. 2003):  *	typedef [public] unsigned __int3264 ULONG_PTR, *PULONG_PTR;  *	typedef unsigned __int64 ULONG_PTR, *PULONG_PTR;  *	typedef _W64 unsigned long ULONG_PTR, *PULONG_PTR;  *  * The keyword __int3264 specifies an integral type that has the following  * properties:  *	+ It is 32-bit on 32-bit platforms  *	+ It is 64-bit on 64-bit platforms  *	+ It is 32-bit on the wire for backward compatibility.  *	  It gets truncated on the sending side and extended appropriately  *	  (signed or unsigned) on the receiving side.  *  * Thus register_t seems the proper mapping onto FreeBSD for spin locks.  */
 end_comment
 
 begin_typedef
@@ -3621,7 +3621,7 @@ struct|struct
 block|{
 name|void
 modifier|*
-name|irp_xfer
+name|irp_ep
 decl_stmt|;
 name|void
 modifier|*
@@ -3671,11 +3671,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|IRP_NDISUSB_XFER
+name|IRP_NDISUSB_EP
 parameter_list|(
 name|irp
 parameter_list|)
-value|(irp)->irp_tail.irp_misc.irp_usb.irp_xfer
+value|(irp)->irp_tail.irp_misc.irp_usb.irp_ep
 end_define
 
 begin_typedef

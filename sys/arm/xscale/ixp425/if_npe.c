@@ -1814,6 +1814,21 @@ name|dot3Compliance
 operator|=
 name|DOT3COMPLIANCE_STATS
 expr_stmt|;
+comment|/* device supports oversided vlan frames */
+name|ifp
+operator|->
+name|if_capabilities
+operator||=
+name|IFCAP_VLAN_MTU
+expr_stmt|;
+name|ifp
+operator|->
+name|if_capenable
+operator|=
+name|ifp
+operator|->
+name|if_capabilities
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
@@ -5922,12 +5937,6 @@ name|rcvif
 operator|=
 name|ifp
 expr_stmt|;
-name|mrx
-operator|->
-name|m_flags
-operator||=
-name|M_HASFCS
-expr_stmt|;
 name|ifp
 operator|->
 name|if_ipackets
@@ -6487,19 +6496,16 @@ argument_list|)
 expr_stmt|;
 comment|/* pad runt frames */
 comment|/* XXX pad strip? */
+comment|/* ena pause frame handling */
 name|WR4
 argument_list|(
 name|sc
 argument_list|,
 name|NPE_MAC_RX_CNTRL1
 argument_list|,
-name|NPE_RX_CNTRL1_CRC_EN
-comment|/* include CRC/FCS */
-operator||
 name|NPE_RX_CNTRL1_PAUSE_EN
 argument_list|)
 expr_stmt|;
-comment|/* ena pause frame handling */
 name|WR4
 argument_list|(
 name|sc

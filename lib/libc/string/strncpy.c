@@ -115,7 +115,7 @@ name|s
 operator|++
 operator|)
 operator|==
-literal|0
+literal|'\0'
 condition|)
 block|{
 comment|/* NUL pad the remaining n-1 bytes */
@@ -130,7 +130,7 @@ operator|*
 name|d
 operator|++
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 break|break;
 block|}

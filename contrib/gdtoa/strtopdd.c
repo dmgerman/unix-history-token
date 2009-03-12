@@ -66,7 +66,7 @@ directive|ifdef
 name|Sudden_Underflow
 specifier|static
 name|FPI
-name|fpi
+name|fpi0
 init|=
 block|{
 literal|106
@@ -92,7 +92,7 @@ else|#
 directive|else
 specifier|static
 name|FPI
-name|fpi
+name|fpi0
 init|=
 block|{
 literal|106
@@ -158,6 +158,20 @@ name|U
 modifier|*
 name|u
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|Honor_FLT_ROUNDS
+include|#
+directive|include
+file|"gdtoa_fltrnds.h"
+else|#
+directive|else
+define|#
+directive|define
+name|fpi
+value|&fpi0
+endif|#
+directive|endif
 name|rv
 operator|=
 name|strtodg
@@ -166,7 +180,6 @@ name|s
 argument_list|,
 name|sp
 argument_list|,
-operator|&
 name|fpi
 argument_list|,
 operator|&

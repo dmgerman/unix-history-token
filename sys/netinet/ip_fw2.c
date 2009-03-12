@@ -121,6 +121,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_route.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -235,6 +241,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/ethernet.h>
+end_include
+
+begin_comment
+comment|/* for ETHERTYPE_IP */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -276,12 +292,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
 end_include
 
 begin_include
@@ -347,25 +357,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/tcp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcp_timer.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/tcp_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcpip.h>
 end_include
 
 begin_include
@@ -401,12 +393,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<altq/if_altq.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/ip6.h>
 end_include
 
@@ -436,16 +422,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<netinet/if_ether.h>
-end_include
-
-begin_comment
-comment|/* XXX for ETHERTYPE_IP */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<machine/in_cksum.h>
 end_include
 
@@ -453,11 +429,22 @@ begin_comment
 comment|/* XXX for in_cksum */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MAC
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<security/mac/mac_framework.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -689,13 +676,6 @@ end_ifdef
 begin_decl_stmt
 specifier|static
 name|int
-name|fw_debug
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|autoinc_step
 decl_stmt|;
 end_decl_stmt
@@ -832,30 +812,6 @@ name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|debug
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-name|fw_debug
-argument_list|,
-literal|0
-argument_list|,
-literal|"Enable printing of debug ip_fw statements"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_V_INT
-argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipfw
-argument_list|,
-name|_net_inet_ip_fw
-argument_list|,
-name|OID_AUTO
-argument_list|,
 name|verbose
 argument_list|,
 name|CTLFLAG_RW
@@ -934,6 +890,15 @@ literal|"The maximum number of tables."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SYSCTL_NODE */
+end_comment
 
 begin_comment
 comment|/*  * Description of dynamic rules.  *  * Dynamic rules are stored in lists accessed through a hash table  * (ipfw_dyn_v) whose size is curr_dyn_buckets. This value can  * be modified through the sysctl variable dyn_buckets which is  * updated when the table becomes empty.  *  * XXX currently there is only one list, ipfw_dyn.  *  * When a packet is received, its address fields are first masked  * with the mask defined for the rule, then hashed, then matched  * against the entries in the corresponding list.  * Dynamic rules can be used for different purposes:  *  + stateful rules;  *  + enforcing limits on the number of sessions;  *  + in-kernel NAT (not implemented yet)  *  * The lifetime of dynamic rules is regulated by dyn_*_lifetime,  * measured in seconds and depending on the flags.  *  * The total number of dynamic rules is stored in dyn_count.  * The max number of dynamic rules is dyn_max. When we reach  * the maximum number of rules we do not create anymore. This is  * done to avoid consuming too much memory, but also too much  * time when searching on each packet (ideally, we should try instead  * to put a limit on the length of the list on each bucket...).  *  * Each dynamic rule holds a pointer to the parent ipfw rule so  * we know what action to perform. Dynamic rules are removed when  * the parent rule is deleted. XXX we should make them survive.  *  * There are some limitations with dynamic rules -- we do not  * obey the 'randomized match', and we do not do multiple  * passes through the firewall. XXX check the latter!!!  */
@@ -1155,6 +1120,12 @@ end_endif
 begin_comment
 comment|/* VIMAGE_GLOBALS */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSCTL_NODE
+end_ifdef
 
 begin_expr_stmt
 name|SYSCTL_V_INT
@@ -1444,6 +1415,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SYSCTL_NODE */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1454,6 +1434,12 @@ begin_comment
 comment|/*  * IPv6 specific variables  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSCTL_NODE
+end_ifdef
+
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -1461,6 +1447,15 @@ name|_net_inet6_ip6
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SYSCTL_NODE */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1486,15 +1481,6 @@ end_endif
 
 begin_comment
 comment|/* INET6 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SYSCTL_NODE */
 end_comment
 
 begin_ifdef
@@ -10204,6 +10190,13 @@ name|IP_FW_PASS
 operator|)
 return|;
 comment|/* accept */
+name|dst_ip
+operator|.
+name|s_addr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* make sure it is initialized */
 name|pktlen
 operator|=
 name|m
@@ -12253,6 +12246,8 @@ name|s_addr
 decl_stmt|;
 name|uint32_t
 name|v
+init|=
+literal|0
 decl_stmt|;
 name|match
 operator|=
@@ -16673,9 +16668,9 @@ name|msg
 operator|=
 name|log_only
 condition|?
-literal|"ipfw: All logging counts reset.\n"
+literal|"All logging counts reset"
 else|:
-literal|"ipfw: Accounting cleared.\n"
+literal|"Accounting cleared"
 expr_stmt|;
 block|}
 else|else
@@ -16776,9 +16771,9 @@ name|msg
 operator|=
 name|log_only
 condition|?
-literal|"ipfw: Entry %d logging count reset.\n"
+literal|"logging count reset"
 else|:
-literal|"ipfw: Entry %d cleared.\n"
+literal|"cleared"
 expr_stmt|;
 block|}
 name|IPFW_WUNLOCK
@@ -16790,17 +16785,40 @@ if|if
 condition|(
 name|V_fw_verbose
 condition|)
-name|log
-argument_list|(
+block|{
+name|int
+name|lev
+init|=
 name|LOG_SECURITY
 operator||
 name|LOG_NOTICE
+decl_stmt|;
+if|if
+condition|(
+name|rulenum
+condition|)
+name|log
+argument_list|(
+name|lev
 argument_list|,
-name|msg
+literal|"ipfw: Entry %d %s.\n"
 argument_list|,
 name|rulenum
+argument_list|,
+name|msg
 argument_list|)
 expr_stmt|;
+else|else
+name|log
+argument_list|(
+name|lev
+argument_list|,
+literal|"ipfw: %s.\n"
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -19726,10 +19744,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|V_fw_debug
-operator|=
-literal|1
-expr_stmt|;
 name|V_autoinc_step
 operator|=
 literal|100

@@ -27,7 +27,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../../config.h"
+file|"config.h"
 end_include
 
 begin_elif
@@ -46,7 +46,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../config_freebsd.h"
+file|"config_freebsd.h"
 end_include
 
 begin_elif
@@ -65,7 +65,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../config_windows.h"
+file|"config_windows.h"
 end_include
 
 begin_else
@@ -88,11 +88,33 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_WIN32
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<dirent.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<direct.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -207,6 +229,61 @@ end_define
 begin_comment
 comment|/* null */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|snprintf
+value|sprintf_s
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCALE_DE
+value|"deu"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LOCALE_DE
+value|"de_DE.UTF-8"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|O_BINARY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|O_BINARY
+value|0
+end_define
 
 begin_endif
 endif|#
@@ -725,6 +802,22 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Get external gzip program name */
+end_comment
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|external_gzip_program
+parameter_list|(
+name|int
+name|un
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Special interfaces for libarchive test harness.  */
 end_comment
 
@@ -747,6 +840,28 @@ end_comment
 begin_function_decl
 name|int
 name|read_open_memory
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* "2" version exercises a slightly different set of libarchive APIs. */
+end_comment
+
+begin_function_decl
+name|int
+name|read_open_memory2
 parameter_list|(
 name|struct
 name|archive
@@ -827,6 +942,23 @@ name|v2
 parameter_list|)
 define|\
 value|test_assert_equal_string(__FILE__, __LINE__, (v1), #v1, (v2), #v2, (a))
+end_define
+
+begin_comment
+comment|/*  * A compression is not supported  * Use this define after archive_read_next_header() is called  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UnsupportedCompress
+parameter_list|(
+name|r
+parameter_list|,
+name|a
+parameter_list|)
+define|\
+value|(r != ARCHIVE_OK&& \ 	 (strcmp(archive_error_string(a), \ 	    "Unrecognized archive format") == 0&& \ 	  archive_compression(a) == ARCHIVE_COMPRESSION_NONE))
 end_define
 
 end_unit

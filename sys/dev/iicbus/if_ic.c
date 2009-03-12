@@ -369,7 +369,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|icintr
 parameter_list|(
 name|device_t
@@ -1152,7 +1152,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|icintr
 parameter_list|(
 name|device_t
@@ -1494,7 +1494,11 @@ operator|->
 name|ic_lock
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

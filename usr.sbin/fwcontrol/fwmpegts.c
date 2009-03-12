@@ -558,15 +558,8 @@ argument_list|,
 literal|"(EAGAIN) - push 'Play'?\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|len
-operator|<=
-literal|0
-condition|)
 continue|continue;
 block|}
-else|else
 name|err
 argument_list|(
 literal|1

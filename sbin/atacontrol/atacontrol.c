@@ -407,6 +407,71 @@ name|strcasecmp
 argument_list|(
 name|str
 argument_list|,
+literal|"SATA150"
+argument_list|)
+condition|)
+return|return
+name|ATA_SA150
+return|;
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+name|str
+argument_list|,
+literal|"SATA300"
+argument_list|)
+condition|)
+return|return
+name|ATA_SA300
+return|;
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+name|str
+argument_list|,
+literal|"USB"
+argument_list|)
+condition|)
+return|return
+name|ATA_USB
+return|;
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+name|str
+argument_list|,
+literal|"USB1"
+argument_list|)
+condition|)
+return|return
+name|ATA_USB1
+return|;
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+name|str
+argument_list|,
+literal|"USB2"
+argument_list|)
+condition|)
+return|return
+name|ATA_USB2
+return|;
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+name|str
+argument_list|,
 literal|"BIOSDMA"
 argument_list|)
 condition|)
@@ -556,7 +621,7 @@ name|ATA_SATA_GEN2
 condition|)
 name|printf
 argument_list|(
-literal|"Serial ATA II\n"
+literal|"SATA revision 2.x\n"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -570,13 +635,13 @@ name|ATA_SATA_GEN1
 condition|)
 name|printf
 argument_list|(
-literal|"Serial ATA v1.0\n"
+literal|"SATA revision 1.x\n"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"Unknown serial ATA version\n"
+literal|"Unknown SATA revision\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -706,7 +771,7 @@ name|ATA_SATA_GEN2
 condition|)
 name|printf
 argument_list|(
-literal|"Serial ATA II\n"
+literal|"SATA revision 2.x\n"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -720,13 +785,13 @@ name|ATA_SATA_GEN1
 condition|)
 name|printf
 argument_list|(
-literal|"Serial ATA v1.0\n"
+literal|"SATA revision 1.x\n"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"Unknown serial ATA version\n"
+literal|"Unknown SATA revision\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1958,6 +2023,20 @@ name|argv
 index|[
 literal|3
 index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mode
+operator|==
+operator|-
+literal|1
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"unknown mode"
 argument_list|)
 expr_stmt|;
 if|if

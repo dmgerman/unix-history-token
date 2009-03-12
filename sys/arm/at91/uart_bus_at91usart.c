@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/pci/pcivar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/uart/uart.h>
 end_include
 
@@ -105,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<arm/at91/at91rm92reg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arm/at91/at91var.h>
 end_include
 
 begin_include
@@ -339,6 +339,24 @@ name|sc_class
 operator|=
 operator|&
 name|at91_usart_class
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_class
+operator|->
+name|uc_rclk
+operator|==
+literal|0
+condition|)
+name|sc
+operator|->
+name|sc_class
+operator|->
+name|uc_rclk
+operator|=
+name|at91_master_clock
 expr_stmt|;
 return|return
 operator|(

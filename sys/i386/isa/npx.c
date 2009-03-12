@@ -653,6 +653,18 @@ define|\
 value|(cpu_fxsr ? \ 		(thread)->td_pcb->pcb_save.sv_xmm.sv_env.en_sw : \ 		(thread)->td_pcb->pcb_save.sv_87.sv_env.en_sw)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SET_FPU_CW
+parameter_list|(
+name|savefpu
+parameter_list|,
+name|value
+parameter_list|)
+value|do { \ 	if (cpu_fxsr) \ 		(savefpu)->sv_xmm.sv_env.en_cw = (value); \ 	else \ 		(savefpu)->sv_87.sv_env.en_cw = (value); \ } while (0)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -682,6 +694,19 @@ name|thread
 parameter_list|)
 define|\
 value|(thread->td_pcb->pcb_save.sv_87.sv_env.en_sw)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_FPU_CW
+parameter_list|(
+name|savefpu
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|(savefpu)->sv_87.sv_env.en_cw = (value)
 end_define
 
 begin_endif
@@ -861,7 +886,7 @@ name|hw_float
 argument_list|,
 literal|0
 argument_list|,
-literal|"Floatingpoint instructions executed in hardware"
+literal|"Floating point instructions executed in hardware"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -887,13 +912,6 @@ specifier|static
 name|union
 name|savefpu
 name|npx_cleanstate
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bool_t
-name|npx_cleanstate_ready
 decl_stmt|;
 end_decl_stmt
 
@@ -1493,26 +1511,17 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 			 * Worse, even IRQ13 is broken.  Use emulator. 			 */
+comment|/* 			 * Worse, even IRQ13 is broken. 			 */
 block|}
 block|}
-comment|/* 	 * Probe failed, but we want to get to npxattach to initialize the 	 * emulator and say that it has been installed.  XXX handle devices 	 * that aren't really devices better. 	 */
-ifdef|#
-directive|ifdef
-name|SMP
-if|if
-condition|(
-name|mp_ncpus
-operator|>
-literal|1
-condition|)
-name|panic
+comment|/* Probe failed.  Floating point simply won't work. */
+name|device_printf
 argument_list|(
-literal|"npx0 cannot be emulated on an SMP system"
+name|dev
+argument_list|,
+literal|"WARNING: no FPU!\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* FALLTHROUGH */
 name|no_irq13
 label|:
@@ -1564,7 +1573,11 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|npx_exists
+condition|?
 literal|0
+else|:
+name|ENXIO
 operator|)
 return|;
 block|}
@@ -1613,19 +1626,6 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|npx_ex16
-condition|)
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"WARNING: no FPU!\n"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|!
 name|device_is_quiet
 argument_list|(
 name|dev
@@ -1641,17 +1641,8 @@ literal|"INT 16 interface\n"
 argument_list|)
 expr_stmt|;
 name|npxinit
-argument_list|(
-name|__INITIAL_NPXCW__
-argument_list|)
+argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|npx_cleanstate_ready
-operator|==
-literal|0
-condition|)
-block|{
 name|s
 operator|=
 name|intr_disable
@@ -1702,19 +1693,70 @@ name|cpu_mxcsr_mask
 operator|=
 literal|0xFFBF
 expr_stmt|;
+name|bzero
+argument_list|(
+name|npx_cleanstate
+operator|.
+name|sv_xmm
+operator|.
+name|sv_fp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|npx_cleanstate
+operator|.
+name|sv_xmm
+operator|.
+name|sv_fp
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|npx_cleanstate
+operator|.
+name|sv_xmm
+operator|.
+name|sv_xmm
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|npx_cleanstate
+operator|.
+name|sv_xmm
+operator|.
+name|sv_xmm
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* XXX might need even more zeroing. */
 block|}
+else|else
 endif|#
 directive|endif
-name|npx_cleanstate_ready
-operator|=
-literal|1
+name|bzero
+argument_list|(
+name|npx_cleanstate
+operator|.
+name|sv_87
+operator|.
+name|sv_ac
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|npx_cleanstate
+operator|.
+name|sv_87
+operator|.
+name|sv_ac
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|intr_restore
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|I586_CPU_XXX
@@ -1725,8 +1767,6 @@ operator|==
 name|CPUCLASS_586
 operator|&&
 name|npx_ex16
-operator|&&
-name|npx_exists
 operator|&&
 name|timezero
 argument_list|(
@@ -1812,11 +1852,8 @@ begin_function
 name|void
 name|npxinit
 parameter_list|(
-name|control
+name|void
 parameter_list|)
-name|u_short
-name|control
-decl_stmt|;
 block|{
 specifier|static
 name|union
@@ -1825,6 +1862,9 @@ name|dummy
 decl_stmt|;
 name|register_t
 name|savecrit
+decl_stmt|;
+name|u_short
+name|control
 decl_stmt|;
 if|if
 condition|(
@@ -1860,6 +1900,10 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|control
+operator|=
+name|__INITIAL_NPXCW__
+expr_stmt|;
 name|fldcw
 argument_list|(
 operator|&
@@ -2566,7 +2610,9 @@ end_decl_stmt
 begin_function
 name|int
 name|npxdna
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|pcb
@@ -2575,17 +2621,6 @@ name|pcb
 decl_stmt|;
 name|register_t
 name|s
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
-name|int
-name|mxcsr
-decl_stmt|;
-endif|#
-directive|endif
-name|u_short
-name|control
 decl_stmt|;
 if|if
 condition|(
@@ -2703,40 +2738,29 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * This is the first time this thread has used the FPU or 		 * the PCB doesn't contain a clean FPU state.  Explicitly 		 * initialize the FPU and load the default control word. 		 */
-name|fninit
-argument_list|()
+comment|/* 		 * This is the first time this thread has used the FPU or 		 * the PCB doesn't contain a clean FPU state.  Explicitly 		 * load sanitized registers. 		 */
+name|fpurstor
+argument_list|(
+operator|&
+name|npx_cleanstate
+argument_list|)
 expr_stmt|;
-name|control
-operator|=
+if|if
+condition|(
+name|pcb
+operator|->
+name|pcb_initial_npxcw
+operator|!=
 name|__INITIAL_NPXCW__
-expr_stmt|;
+condition|)
 name|fldcw
 argument_list|(
 operator|&
-name|control
+name|pcb
+operator|->
+name|pcb_initial_npxcw
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
-if|if
-condition|(
-name|cpu_fxsr
-condition|)
-block|{
-name|mxcsr
-operator|=
-name|__INITIAL_MXCSR__
-expr_stmt|;
-name|ldmxcsr
-argument_list|(
-name|mxcsr
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|pcb
 operator|->
 name|pcb_flags
@@ -2746,7 +2770,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * The following frstor may cause an IRQ13 when the state 		 * being restored has a pending error.  The error will 		 * appear to have been triggered by the current (npx) user 		 * instruction even when that instruction is a no-wait 		 * instruction that should not trigger an error (e.g., 		 * fnclex).  On at least one 486 system all of the no-wait 		 * instructions are broken the same as frstor, so our 		 * treatment does not amplify the breakage.  On at least 		 * one 386/Cyrix 387 system, fnclex works correctly while 		 * frstor and fnsave are broken, so our treatment breaks 		 * fnclex if it is the first FPU instruction after a context 		 * switch. 		 */
+comment|/* 		 * The following fpurstor() may cause an IRQ13 when the 		 * state being restored has a pending error.  The error will 		 * appear to have been triggered by the current (npx) user 		 * instruction even when that instruction is a no-wait 		 * instruction that should not trigger an error (e.g., 		 * fnclex).  On at least one 486 system all of the no-wait 		 * instructions are broken the same as frstor, so our 		 * treatment does not amplify the breakage.  On at least 		 * one 386/Cyrix 387 system, fnclex works correctly while 		 * frstor and fnsave are broken, so our treatment breaks 		 * fnclex if it is the first FPU instruction after a context 		 * switch. 		 */
 name|fpurstor
 argument_list|(
 operator|&
@@ -2914,10 +2938,6 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|npx_cleanstate_ready
-condition|)
 name|bcopy
 argument_list|(
 operator|&
@@ -2931,16 +2951,15 @@ name|npx_cleanstate
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|else
-name|bzero
+name|SET_FPU_CW
 argument_list|(
 name|addr
 argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|addr
-argument_list|)
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_initial_npxcw
 argument_list|)
 expr_stmt|;
 return|return

@@ -53,6 +53,13 @@ end_endif
 
 begin_decl_stmt
 name|__BEGIN_DECLS
+if|#
+directive|if
+name|__BSD_VISIBLE
+operator|||
+name|__POSIX_VISIBLE
+operator|<=
+literal|200112
 name|int
 name|bcmp
 argument_list|(
@@ -110,6 +117,17 @@ begin_comment
 comment|/* LEGACY */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__XSI_VISIBLE
+end_if
+
 begin_decl_stmt
 name|int
 name|ffs
@@ -119,6 +137,11 @@ argument_list|)
 name|__pure2
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -183,6 +206,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+operator|||
+name|__POSIX_VISIBLE
+operator|<=
+literal|200112
+end_if
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -220,6 +253,11 @@ end_decl_stmt
 begin_comment
 comment|/* LEGACY */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int

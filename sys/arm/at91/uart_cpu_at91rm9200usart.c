@@ -50,6 +50,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -62,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/uart/uart_bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/uart/uart_cpu.h>
 end_include
 
@@ -69,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|<arm/at91/at91rm92reg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arm/at91/at91var.h>
 end_include
 
 begin_decl_stmt
@@ -164,6 +188,20 @@ name|class
 operator|=
 operator|&
 name|at91_usart_class
+expr_stmt|;
+if|if
+condition|(
+name|class
+operator|->
+name|uc_rclk
+operator|==
+literal|0
+condition|)
+name|class
+operator|->
+name|uc_rclk
+operator|=
+name|at91_master_clock
 expr_stmt|;
 name|di
 operator|->

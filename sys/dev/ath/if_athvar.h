@@ -1060,6 +1060,11 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* TDMA in use */
+name|sc_setcca
+range|:
+literal|1
+decl_stmt|,
+comment|/* set/clr CCA with TDMA */
 name|sc_resetcal
 range|:
 literal|1
@@ -1074,22 +1079,12 @@ name|sc_eecc
 decl_stmt|;
 comment|/* country code from EEPROM */
 comment|/* rate tables */
-define|#
-directive|define
-name|IEEE80211_MODE_HALF
-value|(IEEE80211_MODE_MAX+0)
-define|#
-directive|define
-name|IEEE80211_MODE_QUARTER
-value|(IEEE80211_MODE_MAX+1)
 specifier|const
 name|HAL_RATE_TABLE
 modifier|*
 name|sc_rates
 index|[
 name|IEEE80211_MODE_MAX
-operator|+
-literal|2
 index|]
 decl_stmt|;
 specifier|const
@@ -1115,10 +1110,12 @@ name|u_int16_t
 name|sc_curaid
 decl_stmt|;
 comment|/* current association id */
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
+modifier|*
 name|sc_curchan
 decl_stmt|;
-comment|/* current h/w channel */
+comment|/* current installed channel */
 name|u_int8_t
 name|sc_curbssid
 index|[
@@ -1342,6 +1339,15 @@ name|task
 name|sc_txtask
 decl_stmt|;
 comment|/* tx int processing */
+name|int
+name|sc_wd_timer
+decl_stmt|;
+comment|/* count down for wd timer */
+name|struct
+name|callout
+name|sc_wd_ch
+decl_stmt|;
+comment|/* tx watchdog timer */
 name|struct
 name|ath_descdma
 name|sc_bdma
@@ -3664,9 +3670,11 @@ parameter_list|(
 name|_ah
 parameter_list|,
 name|_gpio
+parameter_list|,
+name|_type
 parameter_list|)
 define|\
-value|((*(_ah)->ah_gpioCfgOutput)((_ah), (_gpio)))
+value|((*(_ah)->ah_gpioCfgOutput)((_ah), (_gpio), (_type)))
 end_define
 
 begin_define

@@ -1482,6 +1482,9 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
+operator|(
+name|int
+operator|)
 name|xsize
 argument_list|,
 literal|12
@@ -1532,6 +1535,9 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
+operator|(
+name|int
+operator|)
 name|xsize
 argument_list|,
 literal|0
@@ -1587,6 +1593,9 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
+operator|(
+name|int
+operator|)
 name|xsize
 argument_list|,
 literal|0
@@ -1707,6 +1716,9 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
+operator|(
+name|int
+operator|)
 name|xsize
 argument_list|,
 literal|0
@@ -2525,6 +2537,9 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
+operator|(
+name|int
+operator|)
 name|xsize
 argument_list|,
 literal|11
@@ -2565,6 +2580,9 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
+operator|(
+name|int
+operator|)
 name|xsize
 argument_list|,
 literal|0
@@ -4807,7 +4825,7 @@ name|setlocale
 argument_list|(
 name|LC_ALL
 argument_list|,
-literal|"de_DE.UTF-8"
+name|LOCALE_DE
 argument_list|)
 condition|)
 block|{
@@ -4990,6 +5008,9 @@ index|[
 literal|3
 index|]
 operator|=
+operator|(
+name|wchar_t
+operator|)
 literal|0x12345678
 expr_stmt|;
 name|wbuff
@@ -4997,6 +5018,9 @@ index|[
 literal|7
 index|]
 operator|=
+operator|(
+name|wchar_t
+operator|)
 literal|0x5678
 expr_stmt|;
 comment|/* A wide filename that cannot be converted to narrow. */

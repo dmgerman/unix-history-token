@@ -22,6 +22,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -43,10 +49,16 @@ name|defined
 argument_list|(
 name|_MSC_VER
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__INTERIX
+argument_list|)
 end_if
 
 begin_comment
-comment|/* Header unavailable on Watcom C or MS Visual C++. */
+comment|/* Header unavailable on Watcom C or MS Visual C++ or SFU. */
 end_comment
 
 begin_include
@@ -95,12 +107,38 @@ name|__LA_INT64_T
 value|__int64
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN64
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__LA_SSIZE_T
+value|__int64
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|__LA_SSIZE_T
 value|long
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -303,7 +341,7 @@ comment|/*  * The version number is expressed as a single integer that makes it 
 define|#
 directive|define
 name|ARCHIVE_VERSION_NUMBER
-value|2005903
+value|2006901
 name|__LA_DECL
 name|int
 name|archive_version_number
@@ -315,7 +353,7 @@ comment|/*  * Textual name/version of the library, useful for version displays. 
 define|#
 directive|define
 name|ARCHIVE_VERSION_STRING
-value|"libarchive 2.5.903a"
+value|"libarchive 2.6.901a"
 name|__LA_DECL
 specifier|const
 name|char
@@ -611,6 +649,10 @@ define|#
 directive|define
 name|ARCHIVE_COMPRESSION_LZMA
 value|5
+define|#
+directive|define
+name|ARCHIVE_COMPRESSION_XZ
+value|6
 comment|/*  * Codes returned by archive_format.  *  * Top 16 bits identifies the format family (e.g., "tar"); lower  * 16 bits indicate the variant.  This is updated by read_next_header.  * Note that the lower 16 bits will often vary from entry to entry.  * In some cases, this variation occurs as libarchive learns more about  * the archive (for example, later entries might utilize extensions that  * weren't necessary earlier in the archive; in this case, libarchive  * will change the format code to indicate the extended format that  * was used).  In other cases, it's because different tools have  * modified the archive and so different parts of the archive  * actually have slightly different formts.  (Both tar and cpio store  * format codes in each entry, so it is quite possible for each  * entry to be in a different format.)  */
 define|#
 directive|define
@@ -772,6 +814,26 @@ specifier|const
 name|char
 modifier|*
 name|command
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
+name|archive_read_support_compression_program_signature
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+comment|/* match */
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 name|__LA_DECL
@@ -1143,6 +1205,55 @@ modifier|*
 parameter_list|,
 name|int
 name|fd
+parameter_list|)
+function_decl|;
+comment|/*  * Set read options.  */
+comment|/* Apply option string to the format only. */
+name|__LA_DECL
+name|int
+name|archive_read_set_format_options
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|_a
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+comment|/* Apply option string to the filter only. */
+name|__LA_DECL
+name|int
+name|archive_read_set_filter_options
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|_a
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+comment|/* Apply option string to both the format and the filter. */
+name|__LA_DECL
+name|int
+name|archive_read_set_options
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|_a
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s
 parameter_list|)
 function_decl|;
 comment|/*-  * Convenience function to recreate the current entry (whose header  * has just been read) on disk.  *  * This does quite a bit more than just copy data to disk. It also:  *  - Creates intermediate directories as required.  *  - Manages directory permissions:  non-writable directories will  *    be initially created with write permission enabled; when the  *    archive is closed, dir permissions are edited to the values specified  *    in the archive.  *  - Checks hardlinks:  hardlinks will not be extracted unless the  *    linked-to file was also extracted within the same session. (TODO)  */
@@ -1803,6 +1914,55 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
+comment|/*  * Set write options.  */
+comment|/* Apply option string to the format only. */
+name|__LA_DECL
+name|int
+name|archive_write_set_format_options
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|_a
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+comment|/* Apply option string to the compressor only. */
+name|__LA_DECL
+name|int
+name|archive_write_set_compressor_options
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|_a
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+comment|/* Apply option string to both the format and the compressor. */
+name|__LA_DECL
+name|int
+name|archive_write_set_options
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|_a
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
 comment|/*-  * To create objects on disk:  *   1) Ask archive_write_disk_new for a new archive_write_disk object.  *   2) Set any global properties.  In particular, you should set  *      the compression and format to use.  *   3) For each entry:  *      - construct an appropriate struct archive_entry structure  *      - archive_write_header to create the file/dir/etc on disk  *      - archive_write_data to write the entry data  *   4) archive_write_finish to cleanup the writer and release resources  *  * In particular, you can use this in conjunction with archive_read()  * to pull entries out of an archive and create them on disk.  */
 name|__LA_DECL
 name|struct
@@ -1921,6 +2081,182 @@ name|void
 function_decl|(
 modifier|*
 comment|/* cleanup */
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+parameter_list|)
+function_decl|;
+comment|/*  * ARCHIVE_READ_DISK API  *  * This is still evolving and somewhat experimental.  */
+name|__LA_DECL
+name|struct
+name|archive
+modifier|*
+name|archive_read_disk_new
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* The names for symlink modes here correspond to an old BSD  * command-line argument convention: -L, -P, -H */
+comment|/* Follow all symlinks. */
+name|__LA_DECL
+name|int
+name|archive_read_disk_set_symlink_logical
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Follow no symlinks. */
+name|__LA_DECL
+name|int
+name|archive_read_disk_set_symlink_physical
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Follow symlink initially, then not. */
+name|__LA_DECL
+name|int
+name|archive_read_disk_set_symlink_hybrid
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* TODO: Handle Linux stat32/stat64 ugliness.<sigh> */
+name|__LA_DECL
+name|int
+name|archive_read_disk_entry_from_file
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+name|int
+comment|/* fd */
+parameter_list|,
+specifier|const
+name|struct
+name|stat
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Look up gname for gid or uname for uid. */
+comment|/* Default implementations are very, very stupid. */
+name|__LA_DECL
+specifier|const
+name|char
+modifier|*
+name|archive_read_disk_gname
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+name|__LA_GID_T
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+specifier|const
+name|char
+modifier|*
+name|archive_read_disk_uname
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+name|__LA_UID_T
+parameter_list|)
+function_decl|;
+comment|/* "Standard" implementation uses getpwuid_r, getgrgid_r and caches the  * results for performance. */
+name|__LA_DECL
+name|int
+name|archive_read_disk_set_standard_lookup
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* You can install your own lookups if you like. */
+name|__LA_DECL
+name|int
+name|archive_read_disk_set_gname_lookup
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+comment|/* private_data */
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+function_decl|(
+modifier|*
+comment|/* lookup_fn */
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|__LA_GID_T
+parameter_list|)
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+comment|/* cleanup_fn */
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
+name|archive_read_disk_set_uname_lookup
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+comment|/* private_data */
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+function_decl|(
+modifier|*
+comment|/* lookup_fn */
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|__LA_UID_T
+parameter_list|)
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+comment|/* cleanup_fn */
 function_decl|)
 parameter_list|(
 name|void
@@ -2064,7 +2400,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This is meaningless outside of this header. */
+comment|/* These are meaningless outside of this header. */
 end_comment
 
 begin_undef
@@ -2082,20 +2418,20 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|__LA_INT64_T
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|__LA_SSIZE_T
-end_undef
-
-begin_undef
-undef|#
-directive|undef
 name|__LA_UID_T
 end_undef
+
+begin_comment
+comment|/* These need to remain defined because they're used in the  * callback type definitions.  XXX Fix this.  This is ugly. XXX */
+end_comment
+
+begin_comment
+comment|/* #undef __LA_INT64_T */
+end_comment
+
+begin_comment
+comment|/* #undef __LA_SSIZE_T */
+end_comment
 
 begin_endif
 endif|#

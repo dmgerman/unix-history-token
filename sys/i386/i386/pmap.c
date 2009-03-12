@@ -648,6 +648,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|static
+name|int
+name|pat_works
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Is page attribute table sane? */
+end_comment
+
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -2073,10 +2084,30 @@ name|CPUID_PAT
 operator|)
 condition|)
 return|return;
-ifdef|#
-directive|ifdef
-name|PAT_WORKS
-comment|/* 	 * Leave the indices 0-3 at the default of WB, WT, UC, and UC-. 	 * Program 4 and 5 as WP and WC. 	 * Leave 6 and 7 as UC and UC-. 	 */
+if|if
+condition|(
+name|cpu_vendor_id
+operator|!=
+name|CPU_VENDOR_INTEL
+operator|||
+operator|(
+name|I386_CPU_FAMILY
+argument_list|(
+name|cpu_id
+argument_list|)
+operator|==
+literal|6
+operator|&&
+name|I386_CPU_MODEL
+argument_list|(
+name|cpu_id
+argument_list|)
+operator|>=
+literal|0xe
+operator|)
+condition|)
+block|{
+comment|/* 		 * Leave the indices 0-3 at the default of WB, WT, UC, and UC-. 		 * Program 4 and 5 as WP and WC. 		 * Leave 6 and 7 as UC and UC-. 		 */
 name|pat_msr
 operator|=
 name|rdmsr
@@ -2115,9 +2146,14 @@ argument_list|,
 name|PAT_WRITE_COMBINING
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* 	 * Due to some Intel errata, we can only safely use the lower 4 	 * PAT entries.  Thus, just replace PAT Index 2 with WC instead 	 * of UC-. 	 * 	 *   Intel Pentium III Processor Specification Update 	 * Errata E.27 (Upper Four PAT Entries Not Usable With Mode B 	 * or Mode C Paging) 	 * 	 *   Intel Pentium IV  Processor Specification Update 	 * Errata N46 (PAT Index MSB May Be Calculated Incorrectly) 	 */
+name|pat_works
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * Due to some Intel errata, we can only safely use the lower 4 		 * PAT entries.  Thus, just replace PAT Index 2 with WC instead 		 * of UC-. 		 * 		 *   Intel Pentium III Processor Specification Update 		 * Errata E.27 (Upper Four PAT Entries Not Usable With Mode B 		 * or Mode C Paging) 		 * 		 *   Intel Pentium IV  Processor Specification Update 		 * Errata N46 (PAT Index MSB May Be Calculated Incorrectly) 		 */
 name|pat_msr
 operator|=
 name|rdmsr
@@ -2142,8 +2178,11 @@ argument_list|,
 name|PAT_WRITE_COMBINING
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+name|pat_works
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|wrmsr
 argument_list|(
 name|MSR_PAT
@@ -3195,14 +3234,16 @@ break|break;
 block|}
 block|}
 comment|/* Map the caching mode to a PAT index. */
+if|if
+condition|(
+name|pat_works
+condition|)
+block|{
 switch|switch
 condition|(
 name|mode
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|PAT_WORKS
 case|case
 name|PAT_UNCACHEABLE
 case|:
@@ -3251,8 +3292,23 @@ operator|=
 literal|4
 expr_stmt|;
 break|break;
-else|#
-directive|else
+default|default:
+name|panic
+argument_list|(
+literal|"Unknown caching mode %d\n"
+argument_list|,
+name|mode
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+switch|switch
+condition|(
+name|mode
+condition|)
+block|{
 case|case
 name|PAT_UNCACHED
 case|:
@@ -3291,8 +3347,6 @@ operator|=
 literal|2
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 default|default:
 name|panic
 argument_list|(
@@ -3301,6 +3355,7 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Map the 3-bit index value into the PAT, PCD, and PWT bits. */
 name|cache_bits
@@ -8428,18 +8483,6 @@ argument_list|,
 name|pc_list
 argument_list|)
 expr_stmt|;
-name|TAILQ_INSERT_HEAD
-argument_list|(
-operator|&
-name|pmap
-operator|->
-name|pm_pvchunk
-argument_list|,
-name|pc
-argument_list|,
-name|pc_list
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|idx
@@ -8467,7 +8510,21 @@ index|[
 name|idx
 index|]
 condition|)
+block|{
+name|TAILQ_INSERT_HEAD
+argument_list|(
+operator|&
+name|pmap
+operator|->
+name|pm_pvchunk
+argument_list|,
+name|pc
+argument_list|,
+name|pc_list
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|PV_STAT
 argument_list|(
 name|pv_entry_spare
@@ -8488,18 +8545,6 @@ operator|++
 argument_list|)
 expr_stmt|;
 comment|/* entire chunk is free, return it */
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|pmap
-operator|->
-name|pm_pvchunk
-argument_list|,
-name|pc
-argument_list|,
-name|pc_list
-argument_list|)
-expr_stmt|;
 name|m
 operator|=
 name|PHYS_TO_VM_PAGE
@@ -14968,16 +15013,10 @@ argument_list|,
 name|pindex
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_wakeup
 argument_list|(
 name|p
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 name|ptepa

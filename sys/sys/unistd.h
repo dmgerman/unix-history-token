@@ -833,7 +833,7 @@ value|(1<<18)
 end_define
 
 begin_comment
-comment|/* use a pid higher then 10 (idleproc) */
+comment|/* use a pid higher than 10 (idleproc) */
 end_comment
 
 begin_define

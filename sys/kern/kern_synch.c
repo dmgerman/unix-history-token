@@ -615,10 +615,6 @@ name|priority
 operator|&
 name|PRIMASK
 expr_stmt|;
-name|rval
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 	 * If we are already on a sleep queue, then remove us from that 	 * sleep queue first.  We have to do this to handle recursive 	 * sleeps. 	 */
 if|if
 condition|(

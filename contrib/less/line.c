@@ -2397,15 +2397,16 @@ argument_list|)
 condition|)
 block|{
 comment|/* Remove whole unrecognized sequence.  */
-do|do
+while|while
+condition|(
+name|curr
+condition|)
 block|{
 operator|--
 name|curr
 expr_stmt|;
-block|}
-do|while
+if|if
 condition|(
-operator|!
 name|IS_CSI_START
 argument_list|(
 name|linebuf
@@ -2414,7 +2415,8 @@ name|curr
 index|]
 argument_list|)
 condition|)
-do|;
+break|break;
+block|}
 return|return
 literal|0
 return|;

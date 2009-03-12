@@ -11727,7 +11727,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|fbsd_shutdown
 parameter_list|(
 name|device_t

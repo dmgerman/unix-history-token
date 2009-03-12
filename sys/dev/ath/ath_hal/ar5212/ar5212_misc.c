@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2002-2009 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -93,21 +93,6 @@ end_define
 begin_comment
 comment|/* GPIO data reg r/w mask */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|ar5212SetRateDurationTable
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|,
-name|HAL_CHANNEL
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|void
@@ -1077,7 +1062,9 @@ modifier|*
 name|rs
 parameter_list|)
 block|{
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 init|=
@@ -1104,7 +1091,7 @@ operator|==
 name|AH_NULL
 operator|||
 operator|!
-name|IS_CHAN_CCK
+name|IEEE80211_IS_CHAN_CCK
 argument_list|(
 name|chan
 argument_list|)
@@ -1638,9 +1625,10 @@ name|ah
 argument_list|)
 decl_stmt|;
 specifier|const
-name|HAL_CHANNEL_INTERNAL
+name|struct
+name|ieee80211_channel
 modifier|*
-name|ichan
+name|chan
 init|=
 name|AH_PRIVATE
 argument_list|(
@@ -1656,7 +1644,7 @@ name|ahp
 operator|->
 name|ah_phyPowerOn
 operator|||
-name|ichan
+name|chan
 operator|==
 name|AH_NULL
 condition|)
@@ -1689,7 +1677,7 @@ name|ah
 argument_list|,
 name|setting
 argument_list|,
-name|ichan
+name|chan
 argument_list|)
 return|;
 block|}
@@ -1788,6 +1776,8 @@ argument_list|(
 name|ah
 argument_list|,
 name|us
+operator|-
+literal|2
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1833,6 +1823,8 @@ name|ah
 argument_list|,
 name|clks
 argument_list|)
+operator|+
+literal|2
 return|;
 comment|/* convert from system clocks */
 block|}
@@ -2477,7 +2469,7 @@ comment|/* Don't apply coverage class to non A channels */
 if|if
 condition|(
 operator|!
-name|IS_CHAN_A
+name|IEEE80211_IS_CHAN_A
 argument_list|(
 name|AH_PRIVATE
 argument_list|(
@@ -2517,7 +2509,7 @@ name|clkRate
 expr_stmt|;
 if|if
 condition|(
-name|IS_CHAN_HALF_RATE
+name|IEEE80211_IS_CHAN_HALF
 argument_list|(
 name|AH_PRIVATE
 argument_list|(
@@ -2540,7 +2532,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|IS_CHAN_QUARTER_RATE
+name|IEEE80211_IS_CHAN_QUARTER
 argument_list|(
 name|AH_PRIVATE
 argument_list|(

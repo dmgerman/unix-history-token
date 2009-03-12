@@ -1693,7 +1693,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|bge_shutdown
 parameter_list|(
 name|device_t
@@ -13123,6 +13123,10 @@ block|}
 else|else
 block|{
 comment|/* 		 * Do transceiver setup and tell the firmware the 		 * driver is down so we can try to get access the 		 * probe if ASF is running.  Retry a couple of times 		 * if we get a conflict with the ASF firmware accessing 		 * the PHY. 		 */
+name|trys
+operator|=
+literal|0
+expr_stmt|;
 name|BGE_CLRBIT
 argument_list|(
 name|sc
@@ -13138,10 +13142,6 @@ name|bge_asf_driver_up
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
-name|trys
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -19861,7 +19861,7 @@ expr_stmt|;
 block|}
 comment|/*  * Stop all chip I/O so that the kernel's probe routines don't  * get confused by errant DMAs when rebooting.  */
 specifier|static
-name|void
+name|int
 name|bge_shutdown
 parameter_list|(
 name|device_t
@@ -19900,6 +19900,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 specifier|static
 name|int

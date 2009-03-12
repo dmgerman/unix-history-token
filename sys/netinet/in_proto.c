@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_route.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_pf.h"
 end_include
 
@@ -805,11 +811,6 @@ operator|.
 name|pr_ctloutput
 operator|=
 name|rip_ctloutput
-block|,
-operator|.
-name|pr_init
-operator|=
-name|igmp_init
 block|,
 operator|.
 name|pr_fasttimo

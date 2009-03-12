@@ -2495,6 +2495,9 @@ literal|1024
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
+operator|(
+name|int
+operator|)
 name|used
 argument_list|,
 name|e

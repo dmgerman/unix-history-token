@@ -302,6 +302,9 @@ operator|&
 name|_kevent
 block|,
 operator|&
+name|_kqueue
+block|,
+operator|&
 name|_listen
 block|,
 operator|&

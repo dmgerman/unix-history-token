@@ -3242,6 +3242,17 @@ name|cpu_id
 argument_list|)
 operator|>=
 literal|0xf
+operator|&&
+operator|(
+name|rdmsr
+argument_list|(
+literal|0x1203
+argument_list|)
+operator|&
+literal|0x100000000ULL
+operator|)
+operator|==
+literal|0
 condition|)
 name|tsc_is_invariant
 operator|=

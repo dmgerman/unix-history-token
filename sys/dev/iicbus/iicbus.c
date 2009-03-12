@@ -117,8 +117,7 @@ expr_stmt|;
 comment|/* Allow other subclasses to override this driver. */
 return|return
 operator|(
-operator|-
-literal|1000
+name|BUS_PROBE_GENERIC
 operator|)
 return|;
 block|}
@@ -636,7 +635,7 @@ parameter_list|,
 name|int
 name|which
 parameter_list|,
-name|u_char
+name|uintptr_t
 modifier|*
 name|result
 parameter_list|)

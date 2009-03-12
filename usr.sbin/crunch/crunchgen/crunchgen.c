@@ -3662,7 +3662,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|".NOTPARALLEL:\n.NO_PARALLEL:\n.POSIX:\n"
+literal|".POSIX:\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3782,7 +3782,7 @@ name|line
 argument_list|,
 name|MAXLINELEN
 argument_list|,
-literal|"cd %s&& make -f %s -Q crunchgen_objs"
+literal|"cd %s&& make -f %s -B crunchgen_objs"
 argument_list|,
 name|p
 operator|->

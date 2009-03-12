@@ -27,7 +27,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../../config.h"
+file|"config.h"
 end_include
 
 begin_elif
@@ -46,7 +46,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../config_freebsd.h"
+file|"config_freebsd.h"
 end_include
 
 begin_elif
@@ -65,7 +65,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../config_windows.h"
+file|"config_windows.h"
 end_include
 
 begin_else
@@ -88,11 +88,46 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_WIN32
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<dirent.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|dirent
+value|direct
+end_define
+
+begin_include
+include|#
+directive|include
+file|"../bsdtar_windows.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<direct.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -758,6 +793,7 @@ comment|/* Pathname of exe to be tested. */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|testprog

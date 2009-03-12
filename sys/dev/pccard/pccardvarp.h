@@ -186,8 +186,11 @@ begin_struct
 struct|struct
 name|pccard_funce_disk
 block|{
-name|int
+name|uint8_t
 name|pfd_interface
+decl_stmt|;
+name|uint8_t
+name|pfd_power
 decl_stmt|;
 block|}
 struct|;
@@ -339,6 +342,10 @@ define|#
 directive|define
 name|pf_funce_disk_interface
 value|pf_funce.pfv_disk.pfd_interface
+define|#
+directive|define
+name|pf_funce_disk_power
+value|pf_funce.pfv_disk.pfd_power
 define|#
 directive|define
 name|pf_funce_lan_nid

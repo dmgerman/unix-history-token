@@ -1381,6 +1381,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|strcmp
 argument_list|(
 name|fs
@@ -1406,6 +1407,16 @@ operator|->
 name|fs_type
 argument_list|,
 name|FSTAB_RQ
+argument_list|)
+operator|)
+operator|||
+name|strcmp
+argument_list|(
+name|fs
+operator|->
+name|fs_vfstype
+argument_list|,
+literal|"ufs"
 argument_list|)
 condition|)
 continue|continue;

@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* radeon_state.c -- State support for Radeon -*- linux-c -*- */
-end_comment
-
-begin_comment
 comment|/*-  * Copyright 2000 VA Linux Systems, Inc., Fremont, California.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * PRECISION INSIGHT AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Gareth Hughes<gareth@valinux.com>  *    Kevin E. Martin<martin@valinux.com>  */
 end_comment
 
@@ -934,26 +930,16 @@ case|:
 comment|/* safe but r200 only */
 if|if
 condition|(
-operator|(
 name|dev_priv
 operator|->
-name|chip_family
-operator|<
-name|CHIP_R200
-operator|)
-operator|||
-operator|(
-name|dev_priv
-operator|->
-name|chip_family
-operator|>
-name|CHIP_RV280
-operator|)
+name|microcode_version
+operator|!=
+name|UCODE_R200
 condition|)
 block|{
 name|DRM_ERROR
 argument_list|(
-literal|"Invalid 3d packet for non r200-class chip\n"
+literal|"Invalid 3d packet for r100-class chip\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1169,14 +1155,14 @@ if|if
 condition|(
 name|dev_priv
 operator|->
-name|chip_family
-operator|>
-name|CHIP_RS200
+name|microcode_version
+operator|!=
+name|UCODE_R100
 condition|)
 block|{
 name|DRM_ERROR
 argument_list|(
-literal|"Invalid 3d packet for non-r100-class chip\n"
+literal|"Invalid 3d packet for r200-class chip\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1214,29 +1200,18 @@ break|break;
 case|case
 name|RADEON_CP_INDX_BUFFER
 case|:
-comment|/* safe but r200 only */
 if|if
 condition|(
-operator|(
 name|dev_priv
 operator|->
-name|chip_family
-operator|<
-name|CHIP_R200
-operator|)
-operator|||
-operator|(
-name|dev_priv
-operator|->
-name|chip_family
-operator|>
-name|CHIP_RV280
-operator|)
+name|microcode_version
+operator|!=
+name|UCODE_R200
 condition|)
 block|{
 name|DRM_ERROR
 argument_list|(
-literal|"Invalid 3d packet for non-r200-class chip\n"
+literal|"Invalid 3d packet for r100-class chip\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4068,8 +4043,6 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|dev_priv
-operator|->
 name|sarea_priv
 operator|->
 name|pfCurrentPage
@@ -4154,8 +4127,6 @@ name|ADVANCE_RING
 argument_list|()
 expr_stmt|;
 comment|/* Make sure we restore the 3D state next time. 		 */
-name|dev_priv
-operator|->
 name|sarea_priv
 operator|->
 name|ctx_owner
@@ -4475,8 +4446,6 @@ literal|24
 operator|)
 decl_stmt|;
 comment|/* Make sure we restore the 3D state next time. 		 * we haven't touched any "normal" state - still need this? 		 */
-name|dev_priv
-operator|->
 name|sarea_priv
 operator|->
 name|ctx_owner
@@ -4596,12 +4565,13 @@ operator|&
 name|RADEON_HAS_HIERZ
 operator|)
 operator|&&
+operator|!
 operator|(
 name|dev_priv
 operator|->
-name|chip_family
-operator|<
-name|CHIP_R200
+name|microcode_version
+operator|==
+name|UCODE_R200
 operator|)
 condition|)
 block|{
@@ -4751,21 +4721,11 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
 name|dev_priv
 operator|->
-name|chip_family
-operator|>=
-name|CHIP_R200
-operator|)
-operator|&&
-operator|(
-name|dev_priv
-operator|->
-name|chip_family
-operator|<=
-name|CHIP_RV280
-operator|)
+name|microcode_version
+operator|==
+name|UCODE_R200
 condition|)
 block|{
 comment|/* works for rv250. */
@@ -5066,21 +5026,11 @@ name|RADEON_HAS_HIERZ
 operator|)
 operator|&&
 operator|(
-operator|(
 name|dev_priv
 operator|->
-name|chip_family
-operator|>=
-name|CHIP_R200
-operator|)
-operator|&&
-operator|(
-name|dev_priv
-operator|->
-name|chip_family
-operator|<=
-name|CHIP_RV280
-operator|)
+name|microcode_version
+operator|==
+name|UCODE_R200
 operator|)
 operator|&&
 operator|(
@@ -5147,17 +5097,9 @@ condition|(
 operator|(
 name|dev_priv
 operator|->
-name|chip_family
-operator|>=
-name|CHIP_R200
-operator|)
-operator|&&
-operator|(
-name|dev_priv
-operator|->
-name|chip_family
-operator|<=
-name|CHIP_RV280
+name|microcode_version
+operator|==
+name|UCODE_R200
 operator|)
 operator|&&
 operator|(
@@ -5450,8 +5392,6 @@ name|ADVANCE_RING
 argument_list|()
 expr_stmt|;
 comment|/* Make sure we restore the 3D state next time. 		 */
-name|dev_priv
-operator|->
 name|sarea_priv
 operator|->
 name|ctx_owner
@@ -5819,8 +5759,6 @@ name|ADVANCE_RING
 argument_list|()
 expr_stmt|;
 comment|/* Make sure we restore the 3D state next time. 		 */
-name|dev_priv
-operator|->
 name|sarea_priv
 operator|->
 name|ctx_owner
@@ -6034,8 +5972,6 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Increment the clear counter.  The client-side 3D driver must 	 * wait on this value before performing the clear ioctl.  We 	 * need this because the card's so damned fast... 	 */
-name|dev_priv
-operator|->
 name|sarea_priv
 operator|->
 name|last_clear
@@ -6048,8 +5984,6 @@ argument_list|)
 expr_stmt|;
 name|RADEON_CLEAR_AGE
 argument_list|(
-name|dev_priv
-operator|->
 name|sarea_priv
 operator|->
 name|last_clear
@@ -6267,8 +6201,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dev_priv
-operator|->
 name|sarea_priv
 operator|->
 name|pfCurrentPage
@@ -6356,8 +6288,6 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/* Increment the frame counter.  The client-side 3D driver must 	 * throttle the framerate by waiting for this value before 	 * performing the swapbuffer ioctl. 	 */
-name|dev_priv
-operator|->
 name|sarea_priv
 operator|->
 name|last_frame
@@ -6370,8 +6300,6 @@ argument_list|)
 expr_stmt|;
 name|RADEON_FRAME_AGE
 argument_list|(
-name|dev_priv
-operator|->
 name|sarea_priv
 operator|->
 name|last_frame
@@ -6975,6 +6903,37 @@ operator|->
 name|last_dispatch
 expr_stmt|;
 comment|/* Emit the vertex buffer age */
+if|if
+condition|(
+operator|(
+name|dev_priv
+operator|->
+name|flags
+operator|&
+name|RADEON_FAMILY_MASK
+operator|)
+operator|>=
+name|CHIP_R600
+condition|)
+block|{
+name|BEGIN_RING
+argument_list|(
+literal|3
+argument_list|)
+expr_stmt|;
+name|R600_DISPATCH_AGE
+argument_list|(
+name|buf_priv
+operator|->
+name|age
+argument_list|)
+expr_stmt|;
+name|ADVANCE_RING
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
 name|BEGIN_RING
 argument_list|(
 literal|2
@@ -6990,6 +6949,7 @@ expr_stmt|;
 name|ADVANCE_RING
 argument_list|()
 expr_stmt|;
+block|}
 name|buf
 operator|->
 name|pending
@@ -9782,22 +9742,6 @@ name|data
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|dev_priv
-condition|)
-block|{
-name|DRM_ERROR
-argument_list|(
-literal|"called with no initialization\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-name|EINVAL
-return|;
-block|}
-if|if
-condition|(
 name|alloc_surface
 argument_list|(
 name|alloc
@@ -9855,22 +9799,6 @@ name|memfree
 init|=
 name|data
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|dev_priv
-condition|)
-block|{
-name|DRM_ERROR
-argument_list|(
-literal|"called with no initialization\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-name|EINVAL
-return|;
-block|}
 if|if
 condition|(
 name|free_surface
@@ -10278,8 +10206,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|dev_priv
-operator|->
 name|sarea_priv
 operator|->
 name|ctx_owner
@@ -10357,22 +10283,6 @@ argument_list|,
 name|file_priv
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|dev_priv
-condition|)
-block|{
-name|DRM_ERROR
-argument_list|(
-literal|"called with no initialization\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-name|EINVAL
-return|;
-block|}
 name|sarea_priv
 operator|=
 name|dev_priv
@@ -10642,8 +10552,6 @@ name|prim
 operator|.
 name|vc_format
 operator|=
-name|dev_priv
-operator|->
 name|sarea_priv
 operator|->
 name|vc_format
@@ -10748,22 +10656,6 @@ argument_list|,
 name|file_priv
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|dev_priv
-condition|)
-block|{
-name|DRM_ERROR
-argument_list|(
-literal|"called with no initialization\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-name|EINVAL
-return|;
-block|}
 name|sarea_priv
 operator|=
 name|dev_priv
@@ -11111,8 +11003,6 @@ name|prim
 operator|.
 name|vc_format
 operator|=
-name|dev_priv
-operator|->
 name|sarea_priv
 operator|->
 name|vc_format
@@ -11599,7 +11489,37 @@ name|indirect
 operator|->
 name|end
 expr_stmt|;
-comment|/* Wait for the 3D stream to idle before the indirect buffer 	 * containing 2D acceleration commands is processed. 	 */
+comment|/* Dispatch the indirect buffer full of commands from the 	 * X server.  This is insecure and is thus only available to 	 * privileged clients. 	 */
+if|if
+condition|(
+operator|(
+name|dev_priv
+operator|->
+name|flags
+operator|&
+name|RADEON_FAMILY_MASK
+operator|)
+operator|>=
+name|CHIP_R600
+condition|)
+name|r600_cp_dispatch_indirect
+argument_list|(
+name|dev
+argument_list|,
+name|buf
+argument_list|,
+name|indirect
+operator|->
+name|start
+argument_list|,
+name|indirect
+operator|->
+name|end
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+comment|/* Wait for the 3D stream to idle before the indirect buffer 		 * containing 2D acceleration commands is processed. 		 */
 name|BEGIN_RING
 argument_list|(
 literal|2
@@ -11611,7 +11531,6 @@ expr_stmt|;
 name|ADVANCE_RING
 argument_list|()
 expr_stmt|;
-comment|/* Dispatch the indirect buffer full of commands from the 	 * X server.  This is insecure and is thus only available to 	 * privileged clients. 	 */
 name|radeon_cp_dispatch_indirect
 argument_list|(
 name|dev
@@ -11627,13 +11546,13 @@ operator|->
 name|end
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|indirect
 operator|->
 name|discard
 condition|)
-block|{
 name|radeon_cp_discard_buffer
 argument_list|(
 name|dev
@@ -11641,7 +11560,6 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-block|}
 name|COMMIT_RING
 argument_list|()
 expr_stmt|;
@@ -11717,22 +11635,6 @@ argument_list|,
 name|file_priv
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|dev_priv
-condition|)
-block|{
-name|DRM_ERROR
-argument_list|(
-literal|"called with no initialization\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-name|EINVAL
-return|;
-block|}
 name|sarea_priv
 operator|=
 name|dev_priv
@@ -13382,22 +13284,6 @@ argument_list|,
 name|file_priv
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|dev_priv
-condition|)
-block|{
-name|DRM_ERROR
-argument_list|(
-literal|"called with no initialization\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-name|EINVAL
-return|;
-block|}
 name|RING_SPACE_TEST_WITH_RETURN
 argument_list|(
 name|dev_priv
@@ -13517,9 +13403,9 @@ if|if
 condition|(
 name|dev_priv
 operator|->
-name|chip_family
-operator|>=
-name|CHIP_R300
+name|microcode_version
+operator|==
+name|UCODE_R300
 condition|)
 block|{
 name|int
@@ -14062,22 +13948,6 @@ decl_stmt|;
 name|int
 name|value
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|dev_priv
-condition|)
-block|{
-name|DRM_ERROR
-argument_list|(
-literal|"called with no initialization\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-name|EINVAL
-return|;
-block|}
 name|DRM_DEBUG
 argument_list|(
 literal|"pid=%d\n"
@@ -14116,6 +13986,8 @@ name|value
 operator|=
 name|GET_SCRATCH
 argument_list|(
+name|dev_priv
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -14127,6 +13999,8 @@ name|value
 operator|=
 name|GET_SCRATCH
 argument_list|(
+name|dev_priv
+argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -14145,6 +14019,8 @@ name|value
 operator|=
 name|GET_SCRATCH
 argument_list|(
+name|dev_priv
+argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
@@ -14237,6 +14113,23 @@ return|return
 operator|-
 name|EINVAL
 return|;
+if|if
+condition|(
+operator|(
+name|dev_priv
+operator|->
+name|flags
+operator|&
+name|RADEON_FAMILY_MASK
+operator|)
+operator|>=
+name|CHIP_R600
+condition|)
+name|value
+operator|=
+name|R600_SCRATCH_REG_OFFSET
+expr_stmt|;
+else|else
 name|value
 operator|=
 name|RADEON_SCRATCH_REG_OFFSET
@@ -14396,22 +14289,6 @@ name|drm_radeon_driver_file_fields
 modifier|*
 name|radeon_priv
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|dev_priv
-condition|)
-block|{
-name|DRM_ERROR
-argument_list|(
-literal|"called with no initialization\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-name|EINVAL
-return|;
-block|}
 switch|switch
 condition|(
 name|sp
@@ -14706,41 +14583,15 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
-if|if
-condition|(
-name|dev
-operator|->
-name|dev_private
-condition|)
-block|{
-name|drm_radeon_private_t
-modifier|*
-name|dev_priv
-init|=
-name|dev
-operator|->
-name|dev_private
-decl_stmt|;
-if|if
-condition|(
-name|dev_priv
-operator|->
-name|sarea_priv
-operator|&&
-name|dev_priv
-operator|->
-name|sarea_priv
-operator|->
-name|pfCurrentPage
-operator|!=
-literal|0
-condition|)
-name|radeon_cp_dispatch_flip
+name|radeon_surfaces_release
 argument_list|(
+name|PCIGART_FILE_PRIV
+argument_list|,
 name|dev
+operator|->
+name|dev_private
 argument_list|)
 expr_stmt|;
-block|}
 name|radeon_do_release
 argument_list|(
 name|dev
@@ -15036,8 +14887,6 @@ argument_list|,
 name|radeon_cp_indirect
 argument_list|,
 name|DRM_AUTH
-operator||
-name|DRM_MASTER
 operator||
 name|DRM_ROOT_ONLY
 argument_list|)

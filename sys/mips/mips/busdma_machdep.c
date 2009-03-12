@@ -514,12 +514,6 @@ begin_comment
 comment|/*  * dflt_lock should never get called.  It gets put into the dma tag when  * lockfunc == NULL, which is only valid if the maps that are associated  * with the tag are meant to never be defered.  * XXX Should have a way to identify which driver is responsible here.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_DMA
-end_ifndef
-
 begin_function
 specifier|static
 name|void
@@ -552,11 +546,6 @@ endif|#
 directive|endif
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -758,9 +747,6 @@ modifier|*
 name|dmat
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|NO_DMA
 name|bus_dma_tag_t
 name|newtag
 decl_stmt|;
@@ -1182,13 +1168,6 @@ operator|(
 name|error
 operator|)
 return|;
-else|#
-directive|else
-return|return
-name|ENOSYS
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -2591,8 +2570,7 @@ name|m
 operator|->
 name|m_len
 argument_list|,
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 name|flags
 argument_list|,
@@ -2843,8 +2821,7 @@ name|m
 operator|->
 name|m_len
 argument_list|,
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 name|flags
 argument_list|,

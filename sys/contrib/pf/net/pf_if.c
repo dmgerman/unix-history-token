@@ -31,6 +31,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_route.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -163,6 +169,12 @@ ifdef|#
 directive|ifdef
 name|__FreeBSD__
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net/route.h>
+end_include
 
 begin_include
 include|#

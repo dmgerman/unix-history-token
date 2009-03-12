@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_route.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -211,6 +217,12 @@ name|__FreeBSD_version
 operator|>=
 literal|800056
 end_if
+
+begin_include
+include|#
+directive|include
+file|<net/route.h>
+end_include
 
 begin_include
 include|#

@@ -449,7 +449,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|unsigned
 name|int
 name|ae_detach
 parameter_list|(
@@ -3912,7 +3911,6 @@ end_function
 
 begin_function
 specifier|static
-name|unsigned
 name|int
 name|ae_detach
 parameter_list|(

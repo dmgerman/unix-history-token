@@ -951,7 +951,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Set the active channel list.  Note this list is  * intersected with the available channel list in  * calculating the set of channels actually used in  * scanning.  */
+comment|/*  * Set the active channel list by IEEE channel #: each channel  * to be marked active is set in a bit vector.  Note this list is  * intersected with the available channel list in calculating  * the set of channels actually used in scanning.  */
 end_comment
 
 begin_struct
@@ -961,9 +961,10 @@ block|{
 name|uint8_t
 name|ic_channels
 index|[
-name|IEEE80211_CHAN_BYTES
+literal|32
 index|]
 decl_stmt|;
+comment|/* NB: can be variable length */
 block|}
 struct|;
 end_struct
@@ -983,12 +984,35 @@ name|struct
 name|ieee80211_channel
 name|ic_chans
 index|[
-name|IEEE80211_CHAN_MAX
+literal|1
 index|]
 decl_stmt|;
+comment|/* NB: variable length */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHANINFO_SIZE
+parameter_list|(
+name|_nchan
+parameter_list|)
+define|\
+value|(sizeof(struct ieee80211req_chaninfo) + \ 	 (((_nchan)-1) * sizeof(struct ieee80211_channel)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHANINFO_SPACE
+parameter_list|(
+name|_ci
+parameter_list|)
+define|\
+value|IEEE80211_CHANINFO_SIZE((_ci)->ic_nchans)
+end_define
 
 begin_comment
 comment|/*  * Retrieve the WPA/RSN information element for an associated station.  */
@@ -1372,6 +1396,28 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_REGDOMAIN_SIZE
+parameter_list|(
+name|_nchan
+parameter_list|)
+define|\
+value|(sizeof(struct ieee80211_regdomain_req) + \ 	 (((_nchan)-1) * sizeof(struct ieee80211_channel)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_REGDOMAIN_SPACE
+parameter_list|(
+name|_req
+parameter_list|)
+define|\
+value|IEEE80211_REGDOMAIN_SIZE((_req)->chaninfo.ic_nchans)
+end_define
+
 begin_comment
 comment|/*  * Get driver capabilities.  Driver, hardware crypto, and  * HT/802.11n capabilities, and a table that describes what  * the radio can do.  */
 end_comment
@@ -1399,6 +1445,28 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_DEVCAPS_SIZE
+parameter_list|(
+name|_nchan
+parameter_list|)
+define|\
+value|(sizeof(struct ieee80211_devcaps_req) + \ 	 (((_nchan)-1) * sizeof(struct ieee80211_channel)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_DEVCAPS_SPACE
+parameter_list|(
+name|_dc
+parameter_list|)
+define|\
+value|IEEE80211_DEVCAPS_SIZE((_dc)->dc_chaninfo.ic_nchans)
+end_define
 
 begin_struct
 struct|struct

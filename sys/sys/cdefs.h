@@ -1054,6 +1054,13 @@ end_if
 begin_define
 define|#
 directive|define
+name|__malloc_like
+value|__attribute__((__malloc__))
+end_define
+
+begin_define
+define|#
+directive|define
 name|__pure
 value|__attribute__((__pure__))
 end_define
@@ -1062,6 +1069,12 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_define
+define|#
+directive|define
+name|__malloc_like
+end_define
 
 begin_define
 define|#
@@ -1339,6 +1352,11 @@ operator|||
 name|__STDC_VERSION__
 operator|<
 literal|199901
+operator|||
+name|defined
+argument_list|(
+name|lint
+argument_list|)
 end_if
 
 begin_define
@@ -2233,7 +2251,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*-  * The following definitions are an extension of the behavior originally  * implemented in<sys/_posix.h>, but with a different level of granularity.  * POSIX.1 requires that the macros we test be defined before any standard  * header file is included.  *  * Here's a quick run-down of the versions:  *  defined(_POSIX_SOURCE)		1003.1-1988  *  _POSIX_C_SOURCE == 1		1003.1-1990  *  _POSIX_C_SOURCE == 2		1003.2-1992 C Language Binding Option  *  _POSIX_C_SOURCE == 199309		1003.1b-1993  *  _POSIX_C_SOURCE == 199506		1003.1c-1995, 1003.1i-1995,  *					and the omnibus ISO/IEC 9945-1: 1996  *  _POSIX_C_SOURCE == 200112		1003.1-2001  *  * In addition, the X/Open Portability Guide, which is now the Single UNIX  * Specification, defines a feature-test macro which indicates the version of  * that specification, and which subsumes _POSIX_C_SOURCE.  *  * Our macros begin with two underscores to avoid namespace screwage.  */
+comment|/*-  * The following definitions are an extension of the behavior originally  * implemented in<sys/_posix.h>, but with a different level of granularity.  * POSIX.1 requires that the macros we test be defined before any standard  * header file is included.  *  * Here's a quick run-down of the versions:  *  defined(_POSIX_SOURCE)		1003.1-1988  *  _POSIX_C_SOURCE == 1		1003.1-1990  *  _POSIX_C_SOURCE == 2		1003.2-1992 C Language Binding Option  *  _POSIX_C_SOURCE == 199309		1003.1b-1993  *  _POSIX_C_SOURCE == 199506		1003.1c-1995, 1003.1i-1995,  *					and the omnibus ISO/IEC 9945-1: 1996  *  _POSIX_C_SOURCE == 200112		1003.1-2001  *  _POSIX_C_SOURCE == 200809		1003.1-2008  *  * In addition, the X/Open Portability Guide, which is now the Single UNIX  * Specification, defines a feature-test macro which indicates the version of  * that specification, and which subsumes _POSIX_C_SOURCE.  *  * Our macros begin with two underscores to avoid namespace screwage.  */
 end_comment
 
 begin_comment
@@ -2327,8 +2345,38 @@ name|_XOPEN_SOURCE
 operator|-
 literal|0
 operator|>=
-literal|600
+literal|700
 end_if
+
+begin_define
+define|#
+directive|define
+name|__XSI_VISIBLE
+value|700
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|_POSIX_C_SOURCE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|_POSIX_C_SOURCE
+value|200809
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|_XOPEN_SOURCE
+operator|-
+literal|0
+operator|>=
+literal|600
+end_elif
 
 begin_define
 define|#
@@ -2432,8 +2480,30 @@ if|#
 directive|if
 name|_POSIX_C_SOURCE
 operator|>=
-literal|200112
+literal|200809
 end_if
+
+begin_define
+define|#
+directive|define
+name|__POSIX_VISIBLE
+value|200809
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ISO_C_VISIBLE
+value|1999
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|_POSIX_C_SOURCE
+operator|>=
+literal|200112
+end_elif
 
 begin_define
 define|#
@@ -2669,14 +2739,14 @@ begin_define
 define|#
 directive|define
 name|__POSIX_VISIBLE
-value|200112
+value|200809
 end_define
 
 begin_define
 define|#
 directive|define
 name|__XSI_VISIBLE
-value|600
+value|700
 end_define
 
 begin_define

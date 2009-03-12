@@ -349,9 +349,21 @@ name|ast_tdma_tsfadjm
 decl_stmt|;
 comment|/* TDMA slot adjust- (usec, smoothed)*/
 name|u_int32_t
+name|ast_tdma_ack
+decl_stmt|;
+comment|/* TDMA tx failed 'cuz ACK required */
+name|u_int32_t
+name|ast_tx_raw_fail
+decl_stmt|;
+comment|/* raw tx failed 'cuz h/w down */
+name|u_int32_t
+name|ast_tx_nofrag
+decl_stmt|;
+comment|/* tx dropped 'cuz no ath frag buffer */
+name|u_int32_t
 name|ast_pad
 index|[
-literal|17
+literal|14
 index|]
 decl_stmt|;
 block|}
@@ -363,6 +375,13 @@ define|#
 directive|define
 name|SIOCGATHSTATS
 value|_IOWR('i', 137, struct ifreq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCZATHSTATS
+value|_IOWR('i', 139, struct ifreq)
 end_define
 
 begin_struct

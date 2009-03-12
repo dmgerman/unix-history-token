@@ -5638,7 +5638,7 @@ operator|||
 name|args
 operator|.
 name|acregmin
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
@@ -5659,6 +5659,12 @@ goto|goto
 name|out
 goto|;
 block|}
+name|args
+operator|.
+name|flags
+operator||=
+name|NFSMNT_ACREGMIN
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -5707,7 +5713,7 @@ operator|||
 name|args
 operator|.
 name|acregmax
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
@@ -5728,6 +5734,12 @@ goto|goto
 name|out
 goto|;
 block|}
+name|args
+operator|.
+name|flags
+operator||=
+name|NFSMNT_ACREGMAX
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -5776,7 +5788,7 @@ operator|||
 name|args
 operator|.
 name|acdirmin
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
@@ -5797,6 +5809,12 @@ goto|goto
 name|out
 goto|;
 block|}
+name|args
+operator|.
+name|flags
+operator||=
+name|NFSMNT_ACDIRMIN
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -5845,7 +5863,7 @@ operator|||
 name|args
 operator|.
 name|acdirmax
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
@@ -5866,6 +5884,12 @@ goto|goto
 name|out
 goto|;
 block|}
+name|args
+operator|.
+name|flags
+operator||=
+name|NFSMNT_ACDIRMAX
+expr_stmt|;
 block|}
 if|if
 condition|(

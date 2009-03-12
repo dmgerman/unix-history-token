@@ -1869,10 +1869,6 @@ name|Elf_Addr
 name|ssym
 init|=
 literal|0
-decl_stmt|,
-name|esym
-init|=
-literal|0
 decl_stmt|;
 name|Elf_Dyn
 modifier|*
@@ -1887,8 +1883,6 @@ operator|)
 name|kstart
 expr_stmt|;
 name|ssym
-operator|=
-name|esym
 operator|=
 literal|0
 expr_stmt|;

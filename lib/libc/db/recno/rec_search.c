@@ -82,7 +82,7 @@ file|"recno.h"
 end_include
 
 begin_comment
-comment|/*  * __REC_SEARCH -- Search a btree for a key.  *  * Parameters:  *	t:	tree to search  *	recno:	key to find  *	op: 	search operation  *  * Returns:  *	EPG for matching record, if any, or the EPG for the location of the  *	key, if it were inserted into the tree.  *  * Returns:  *	The EPG for matching record, if any, or the EPG for the location  *	of the key, if it were inserted into the tree, is entered into  *	the bt_cur field of the tree.  A pointer to the field is returned.  */
+comment|/*  * __REC_SEARCH -- Search a btree for a key.  *  * Parameters:  *	t:	tree to search  *	recno:	key to find  *	op:	search operation  *  * Returns:  *	EPG for matching record, if any, or the EPG for the location of the  *	key, if it were inserted into the tree.  *  * Returns:  *	The EPG for matching record, if any, or the EPG for the location  *	of the key, if it were inserted into the tree, is entered into  *	the bt_cur field of the tree.  A pointer to the field is returned.  */
 end_comment
 
 begin_function
@@ -90,26 +90,20 @@ name|EPG
 modifier|*
 name|__rec_search
 parameter_list|(
-name|t
-parameter_list|,
-name|recno
-parameter_list|,
-name|op
-parameter_list|)
 name|BTREE
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|,
 name|recno_t
 name|recno
-decl_stmt|;
+parameter_list|,
 name|enum
 name|SRCHOP
 name|op
-decl_stmt|;
+parameter_list|)
 block|{
 name|indx_t
-name|index
+name|idx
 decl_stmt|;
 name|PAGE
 modifier|*
@@ -213,7 +207,7 @@ return|;
 block|}
 for|for
 control|(
-name|index
+name|idx
 operator|=
 literal|0
 operator|,
@@ -233,13 +227,13 @@ name|GETRINTERNAL
 argument_list|(
 name|h
 argument_list|,
-name|index
+name|idx
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|++
-name|index
+name|idx
 operator|==
 name|top
 operator|||
@@ -265,7 +259,7 @@ name|t
 argument_list|,
 name|pg
 argument_list|,
-name|index
+name|idx
 operator|-
 literal|1
 argument_list|)
@@ -290,7 +284,7 @@ argument_list|(
 name|h
 argument_list|,
 operator|(
-name|index
+name|idx
 operator|-
 literal|1
 operator|)
@@ -319,7 +313,7 @@ argument_list|(
 name|h
 argument_list|,
 operator|(
-name|index
+name|idx
 operator|-
 literal|1
 operator|)

@@ -1712,7 +1712,7 @@ condition|(
 operator|(
 name|inp
 operator|->
-name|in6p_fport
+name|inp_fport
 operator|==
 literal|0
 operator|&&
@@ -1723,7 +1723,7 @@ operator|||
 operator|(
 name|inp
 operator|->
-name|in6p_fport
+name|inp_fport
 operator|!=
 literal|0
 operator|&&
@@ -1903,7 +1903,7 @@ name|in6p_laddr
 argument_list|,
 name|inp
 operator|->
-name|in6p_lport
+name|inp_lport
 argument_list|)
 expr_stmt|;
 name|sockaddr
@@ -1924,7 +1924,7 @@ name|in6p_faddr
 argument_list|,
 name|inp
 operator|->
-name|in6p_fport
+name|inp_fport
 argument_list|)
 expr_stmt|;
 block|}
@@ -3353,7 +3353,7 @@ name|pos
 operator|+=
 name|xprintf
 argument_list|(
-literal|"%lu"
+literal|"%lu "
 argument_list|,
 operator|(
 name|u_long
@@ -3368,7 +3368,7 @@ name|pos
 operator|+=
 name|xprintf
 argument_list|(
-literal|"%s"
+literal|"%s "
 argument_list|,
 name|pwd
 operator|->
@@ -3419,7 +3419,7 @@ name|pos
 operator|+=
 name|xprintf
 argument_list|(
-literal|"%lu"
+literal|"%lu "
 argument_list|,
 operator|(
 name|u_long
@@ -3446,7 +3446,7 @@ name|pos
 operator|+=
 name|xprintf
 argument_list|(
-literal|"%d"
+literal|"%d "
 argument_list|,
 name|xf
 operator|->
@@ -3489,7 +3489,7 @@ name|pos
 operator|+=
 name|xprintf
 argument_list|(
-literal|"4"
+literal|"4 "
 argument_list|)
 expr_stmt|;
 if|if
@@ -3504,7 +3504,7 @@ name|pos
 operator|+=
 name|xprintf
 argument_list|(
-literal|"6"
+literal|"6 "
 argument_list|)
 expr_stmt|;
 while|while

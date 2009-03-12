@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysent.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysproto.h>
 end_include
 
@@ -172,14 +178,6 @@ include|#
 directive|include
 file|<compat/ia32/ia32_reg.h>
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|sysentvec
-name|ia32_freebsd_sysvec
-decl_stmt|;
-end_decl_stmt
 
 begin_struct
 struct|struct
@@ -1182,14 +1180,10 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_sysent
-operator|==
-operator|&
-name|ia32_freebsd_sysvec
+name|SV_CURPROC_FLAG
+argument_list|(
+name|SV_ILP32
+argument_list|)
 condition|)
 name|wrap32
 operator|=
@@ -2073,14 +2067,10 @@ name|COMPAT_IA32
 comment|/* 	 * Test if we're a 32 bit client and what the target is. 	 * Set the wrap controls accordingly. 	 */
 if|if
 condition|(
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_sysent
-operator|==
-operator|&
-name|ia32_freebsd_sysvec
+name|SV_CURPROC_FLAG
+argument_list|(
+name|SV_ILP32
+argument_list|)
 condition|)
 block|{
 if|if
@@ -2090,9 +2080,10 @@ operator|->
 name|td_proc
 operator|->
 name|p_sysent
-operator|==
+operator|->
+name|sv_flags
 operator|&
-name|ia32_freebsd_sysvec
+name|SV_ILP32
 condition|)
 name|safe
 operator|=

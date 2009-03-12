@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/callout.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -847,7 +853,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AAC_SETREG4
+name|AAC_MEM0_SETREG4
 parameter_list|(
 name|sc
 parameter_list|,
@@ -855,51 +861,25 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_4(sc->aac_btag, \ 					sc->aac_bhandle, reg, val)
+value|bus_space_write_4(sc->aac_btag0, \ 					sc->aac_bhandle0, reg, val)
 end_define
 
 begin_define
 define|#
 directive|define
-name|AAC_GETREG4
+name|AAC_MEM0_GETREG4
 parameter_list|(
 name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-value|bus_space_read_4 (sc->aac_btag, \ 					sc->aac_bhandle, reg)
+value|bus_space_read_4(sc->aac_btag0, \ 					sc->aac_bhandle0, reg)
 end_define
 
 begin_define
 define|#
 directive|define
-name|AAC_SETREG2
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|,
-name|val
-parameter_list|)
-value|bus_space_write_2(sc->aac_btag, \ 					sc->aac_bhandle, reg, val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AAC_GETREG2
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|)
-value|bus_space_read_2 (sc->aac_btag, \ 					sc->aac_bhandle, reg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AAC_SETREG1
+name|AAC_MEM0_SETREG2
 parameter_list|(
 name|sc
 parameter_list|,
@@ -907,19 +887,123 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_1(sc->aac_btag, \ 					sc->aac_bhandle, reg, val)
+value|bus_space_write_2(sc->aac_btag0, \ 					sc->aac_bhandle0, reg, val)
 end_define
 
 begin_define
 define|#
 directive|define
-name|AAC_GETREG1
+name|AAC_MEM0_GETREG2
 parameter_list|(
 name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-value|bus_space_read_1 (sc->aac_btag, \ 					sc->aac_bhandle, reg)
+value|bus_space_read_2(sc->aac_btag0, \ 					sc->aac_bhandle0, reg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_MEM0_SETREG1
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+value|bus_space_write_1(sc->aac_btag0, \ 					sc->aac_bhandle0, reg, val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_MEM0_GETREG1
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+value|bus_space_read_1(sc->aac_btag0, \ 					sc->aac_bhandle0, reg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_MEM1_SETREG4
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+value|bus_space_write_4(sc->aac_btag1, \ 					sc->aac_bhandle1, reg, val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_MEM1_GETREG4
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+value|bus_space_read_4(sc->aac_btag1, \ 					sc->aac_bhandle1, reg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_MEM1_SETREG2
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+value|bus_space_write_2(sc->aac_btag1, \ 					sc->aac_bhandle1, reg, val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_MEM1_GETREG2
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+value|bus_space_read_2(sc->aac_btag1, \ 					sc->aac_bhandle1, reg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_MEM1_SETREG1
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+value|bus_space_write_1(sc->aac_btag1, \ 					sc->aac_bhandle1, reg, val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_MEM1_GETREG1
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+value|bus_space_read_1(sc->aac_btag1, \ 					sc->aac_bhandle1, reg)
 end_define
 
 begin_comment
@@ -966,19 +1050,28 @@ decl_stmt|;
 name|struct
 name|resource
 modifier|*
-name|aac_regs_resource
+name|aac_regs_res0
+decl_stmt|,
+modifier|*
+name|aac_regs_res1
 decl_stmt|;
-comment|/* register interface 							 * window */
+comment|/* reg. if. window */
 name|int
-name|aac_regs_rid
+name|aac_regs_rid0
+decl_stmt|,
+name|aac_regs_rid1
 decl_stmt|;
 comment|/* resource ID */
 name|bus_space_handle_t
-name|aac_bhandle
+name|aac_bhandle0
+decl_stmt|,
+name|aac_bhandle1
 decl_stmt|;
 comment|/* bus space handle */
 name|bus_space_tag_t
-name|aac_btag
+name|aac_btag0
+decl_stmt|,
+name|aac_btag1
 decl_stmt|;
 comment|/* bus space tag */
 name|bus_dma_tag_t
@@ -1053,6 +1146,10 @@ define|#
 directive|define
 name|AAC_HWIF_RKT
 value|3
+define|#
+directive|define
+name|AAC_HWIF_NARK
+value|4
 define|#
 directive|define
 name|AAC_HWIF_UNKNOWN
@@ -1336,6 +1433,11 @@ argument|aac_sim
 argument_list|)
 name|aac_sim_tqh
 expr_stmt|;
+name|struct
+name|callout
+name|aac_daemontime
+decl_stmt|;
+comment|/* clock daemon callout */
 name|u_int32_t
 name|aac_max_fibs
 decl_stmt|;

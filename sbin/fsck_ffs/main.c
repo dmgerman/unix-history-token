@@ -290,7 +290,7 @@ name|skipclean
 operator|=
 literal|1
 expr_stmt|;
-name|catastrophicflag
+name|inoopt
 operator|=
 literal|0
 expr_stmt|;
@@ -305,7 +305,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:Bc:CdfFm:npy"
+literal|"b:Bc:CdfFm:npry"
 argument_list|)
 operator|)
 operator|!=
@@ -398,14 +398,6 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
-literal|'C'
-case|:
-name|catastrophicflag
-operator|=
-literal|1
-expr_stmt|;
-comment|/* FALLTHROUGH */
-case|case
 literal|'f'
 case|:
 name|skipclean
@@ -478,6 +470,20 @@ case|:
 name|preen
 operator|++
 expr_stmt|;
+comment|/*FALLTHROUGH*/
+case|case
+literal|'C'
+case|:
+name|ckclean
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+name|inoopt
+operator|++
+expr_stmt|;
 break|break;
 case|case
 literal|'y'
@@ -535,7 +541,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|preen
+name|ckclean
 condition|)
 operator|(
 name|void
@@ -839,7 +845,7 @@ if|if
 condition|(
 name|debug
 operator|&&
-name|preen
+name|ckclean
 condition|)
 name|pwarn
 argument_list|(
@@ -1016,7 +1022,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|preen
+name|ckclean
 operator|&&
 name|skipclean
 condition|)
@@ -1279,7 +1285,7 @@ literal|0
 operator|&&
 name|skipclean
 operator|&&
-name|preen
+name|ckclean
 condition|)
 block|{
 comment|/* 					 * file system is clean; 					 * skip snapshot and report it clean 					 */
@@ -2888,7 +2894,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-BCFpfny] [-b block] [-c level] [-m mode] "
+literal|"usage: %s [-BFprfny] [-b block] [-c level] [-m mode] "
 literal|"filesystem ...\n"
 argument_list|,
 name|getprogname

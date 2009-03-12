@@ -71,6 +71,31 @@ decl_stmt|;
 name|u_long
 name|pcb_flags
 decl_stmt|;
+define|#
+directive|define
+name|PCB_DBREGS
+value|0x02
+comment|/* process using debug registers */
+define|#
+directive|define
+name|PCB_FPUINITDONE
+value|0x08
+comment|/* fpu state is initialized */
+define|#
+directive|define
+name|PCB_GS32BIT
+value|0x20
+comment|/* linux gs switch */
+define|#
+directive|define
+name|PCB_32BIT
+value|0x40
+comment|/* process has 32 bit context (segs etc) */
+define|#
+directive|define
+name|PCB_FULLCTX
+value|0x80
+comment|/* full context restore on sysret */
 name|u_int32_t
 name|pcb_ds
 decl_stmt|;
@@ -105,31 +130,9 @@ name|struct
 name|savefpu
 name|pcb_save
 decl_stmt|;
-define|#
-directive|define
-name|PCB_DBREGS
-value|0x02
-comment|/* process using debug registers */
-define|#
-directive|define
-name|PCB_FPUINITDONE
-value|0x08
-comment|/* fpu state is initialized */
-define|#
-directive|define
-name|PCB_GS32BIT
-value|0x20
-comment|/* linux gs switch */
-define|#
-directive|define
-name|PCB_32BIT
-value|0x40
-comment|/* process has 32 bit context (segs etc) */
-define|#
-directive|define
-name|PCB_FULLCTX
-value|0x80
-comment|/* full context restore on sysret */
+name|uint16_t
+name|pcb_initial_fpucw
+decl_stmt|;
 name|caddr_t
 name|pcb_onfault
 decl_stmt|;

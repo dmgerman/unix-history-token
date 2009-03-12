@@ -285,20 +285,6 @@ name|TODO
 value|panic("%s: not implemented", __func__);
 end_define
 
-begin_define
-define|#
-directive|define
-name|memmove
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|,
-name|l
-parameter_list|)
-value|bcopy(s, d, l)
-end_define
-
 begin_include
 include|#
 directive|include

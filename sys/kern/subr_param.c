@@ -320,7 +320,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|long
 name|maxswzone
 decl_stmt|;
 end_decl_stmt
@@ -330,7 +330,7 @@ comment|/* max swmeta KVA storage */
 end_comment
 
 begin_decl_stmt
-name|int
+name|long
 name|maxbcache
 decl_stmt|;
 end_decl_stmt
@@ -340,7 +340,7 @@ comment|/* max buffer cache KVA storage */
 end_comment
 
 begin_decl_stmt
-name|int
+name|long
 name|maxpipekva
 decl_stmt|;
 end_decl_stmt
@@ -953,7 +953,7 @@ name|VM_SWZONE_SIZE_MAX
 expr_stmt|;
 endif|#
 directive|endif
-name|TUNABLE_INT_FETCH
+name|TUNABLE_LONG_FETCH
 argument_list|(
 literal|"kern.maxswzone"
 argument_list|,
@@ -970,7 +970,7 @@ name|VM_BCACHE_SIZE_MAX
 expr_stmt|;
 endif|#
 directive|endif
-name|TUNABLE_INT_FETCH
+name|TUNABLE_LONG_FETCH
 argument_list|(
 literal|"kern.maxbcache"
 argument_list|,
@@ -1251,7 +1251,7 @@ literal|512
 operator|*
 literal|1024
 expr_stmt|;
-name|TUNABLE_INT_FETCH
+name|TUNABLE_LONG_FETCH
 argument_list|(
 literal|"kern.ipc.maxpipekva"
 argument_list|,

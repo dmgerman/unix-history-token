@@ -632,6 +632,9 @@ argument_list|,
 name|retval
 argument_list|)
 expr_stmt|;
+name|s
+operator|++
+expr_stmt|;
 name|e
 operator|=
 name|fifolog_reader_findsync

@@ -2116,6 +2116,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * Try to read all configuration files. Since those will be present as 	 * C string in the macro, we have to slash their ends then the line 	 * wraps. 	 */
 name|STAILQ_FOREACH
 argument_list|(
 argument|cf
@@ -2301,7 +2302,6 @@ argument_list|(
 name|sb
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Try to read all configuration files. Since those will be present as 	 * C string in the macro, we have to slash their ends then the line 	 * wraps. 	 */
 if|if
 condition|(
 name|filebased
@@ -2609,15 +2609,6 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|MAP_FAILED
-define|#
-directive|define
-name|MAP_FAILED
-value|((caddr_t) -1)
-endif|#
-directive|endif
 if|if
 condition|(
 name|p
@@ -3168,6 +3159,8 @@ name|r
 decl_stmt|;
 name|unsigned
 name|int
+name|i
+decl_stmt|,
 name|off
 decl_stmt|,
 name|size
@@ -3425,24 +3418,49 @@ argument_list|,
 literal|"fseek() failed"
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-operator|(
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|size
+operator|-
+literal|1
+condition|;
+name|i
+operator|++
+control|)
+block|{
 name|r
 operator|=
 name|fgetc
 argument_list|(
 name|fp
 argument_list|)
-operator|)
-operator|!=
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|==
 name|EOF
-operator|&&
-name|size
-operator|--
-operator|>
-literal|0
 condition|)
+break|break;
+comment|/*  		 * If '\0' is present in the middle of the configuration 		 * string, this means something very weird is happening. 		 * Make such case very visible. 		 */
+name|assert
+argument_list|(
+name|r
+operator|!=
+literal|'\0'
+operator|&&
+operator|(
+literal|"Char present in the configuration "
+literal|"string mustn't be equal to 0"
+operator|)
+argument_list|)
+expr_stmt|;
 name|fputc
 argument_list|(
 name|r
@@ -3450,6 +3468,7 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
+block|}
 name|fclose
 argument_list|(
 name|fp

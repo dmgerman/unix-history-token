@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_route.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -208,16 +214,6 @@ include|#
 directive|include
 file|<netinet6/vinet6.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|SDL
-parameter_list|(
-name|s
-parameter_list|)
-value|((struct sockaddr_dl *)s)
-end_define
 
 begin_function_decl
 specifier|static
@@ -2940,11 +2936,17 @@ name|ln
 operator|!=
 name|NULL
 condition|)
+block|{
 name|LLE_RUNLOCK
 argument_list|(
 name|ln
 argument_list|)
 expr_stmt|;
+name|ln
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|dr

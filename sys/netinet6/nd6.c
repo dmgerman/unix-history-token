@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_route.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -129,6 +135,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vimage.h>
 end_include
 
 begin_include
@@ -258,12 +270,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
@@ -297,16 +303,6 @@ parameter_list|(
 name|s
 parameter_list|)
 value|((struct sockaddr_in6 *)s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SDL
-parameter_list|(
-name|s
-parameter_list|)
-value|((struct sockaddr_dl *)s)
 end_define
 
 begin_ifdef

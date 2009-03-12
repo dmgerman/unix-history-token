@@ -616,7 +616,7 @@ parameter_list|,
 name|int
 name|rid
 parameter_list|,
-name|uint32_t
+name|u_long
 name|flags
 parameter_list|)
 function_decl|;
@@ -693,7 +693,7 @@ parameter_list|,
 name|int
 name|which
 parameter_list|,
-name|u_char
+name|uintptr_t
 modifier|*
 name|result
 parameter_list|)
@@ -1163,7 +1163,7 @@ name|str
 argument_list|,
 literal|100
 argument_list|,
-literal|"vendor=0x%x product=0x%x"
+literal|"vendor=%#x product=%#x"
 argument_list|,
 name|vendor
 argument_list|,
@@ -1646,8 +1646,8 @@ name|sc
 operator|->
 name|dev
 operator|,
-literal|"function %d CCR at %d offset %x mask %x: "
-literal|"%x %x %x %x, %x %x %x %x, %x\n"
+literal|"function %d CCR at %d offset %#x "
+literal|"mask %#x: %#x %#x %#x %#x, %#x %#x %#x %#x, %#x\n"
 operator|,
 name|pf
 operator|->
@@ -2749,7 +2749,7 @@ argument_list|(
 operator|(
 name|bus
 operator|,
-literal|"I/O rid %d start %lx end %lx\n"
+literal|"I/O rid %d start %#lx end %#lx\n"
 operator|,
 name|i
 operator|,
@@ -2916,7 +2916,7 @@ argument_list|(
 operator|(
 name|bus
 operator|,
-literal|"Memory rid %d start %lx end %lx\n"
+literal|"Memory rid %d start %#lx end %#lx\n"
 operator|,
 name|i
 operator|,
@@ -3245,7 +3245,7 @@ name|dev
 argument_list|,
 literal|"function_free: Resource still owned by "
 literal|"child, oops. "
-literal|"(type=%d, rid=%d, addr=%lx)\n"
+literal|"(type=%d, rid=%d, addr=%#lx)\n"
 argument_list|,
 name|rle
 operator|->
@@ -3760,7 +3760,7 @@ argument_list|(
 operator|(
 name|dev
 operator|,
-literal|"ccr_res == %lx-%lx, base=%x\n"
+literal|"ccr_res == %#lx-%#lx, base=%#x\n"
 operator|,
 name|rman_get_start
 argument_list|(
@@ -3996,8 +3996,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"function %d CCR at %d offset %x: "
-literal|"%x %x %x %x, %x %x %x %x, %x\n"
+literal|"function %d CCR at %d offset %#x: "
+literal|"%#x %#x %#x %#x, %#x %#x %#x %#x, %#x\n"
 argument_list|,
 name|tmp
 operator|->
@@ -5231,7 +5231,7 @@ parameter_list|,
 name|int
 name|rid
 parameter_list|,
-name|uint32_t
+name|u_long
 name|flags
 parameter_list|)
 block|{
@@ -5744,7 +5744,7 @@ parameter_list|,
 name|int
 name|which
 parameter_list|,
-name|u_char
+name|uintptr_t
 modifier|*
 name|result
 parameter_list|)
@@ -5799,6 +5799,29 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+case|case
+name|PCCARD_IVAR_FUNCE_DISK
+case|:
+operator|*
+operator|(
+name|uint16_t
+operator|*
+operator|)
+name|result
+operator|=
+name|pf
+operator|->
+name|pf_funce_disk_interface
+operator||
+operator|(
+name|pf
+operator|->
+name|pf_funce_disk_power
+operator|<<
+literal|8
+operator|)
+expr_stmt|;
+break|break;
 case|case
 name|PCCARD_IVAR_ETHADDR
 case|:
@@ -6493,7 +6516,7 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Allocated resource not found, "
-literal|"%d %x %lx %lx\n"
+literal|"%d %#x %#lx %#lx\n"
 argument_list|,
 name|type
 argument_list|,

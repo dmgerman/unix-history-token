@@ -789,30 +789,31 @@ operator||
 name|attrmem
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|EXCA_DEBUG
-if|if
-condition|(
+name|DPRINTF
+argument_list|(
+literal|"%s %d-bit memory"
+argument_list|,
 name|mem
 operator|->
 name|kind
 operator|&
 name|PCCARD_MEM_ATTR
-condition|)
-name|printf
-argument_list|(
-literal|"attribtue memory\n"
+condition|?
+literal|"attribute"
+else|:
+literal|"common"
+argument_list|,
+name|mem
+operator|->
+name|kind
+operator|&
+name|PCCARD_MEM_16BIT
+condition|?
+literal|16
+else|:
+literal|8
 argument_list|)
 expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"common memory\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|exca_setb
 argument_list|(
 name|sc
@@ -929,8 +930,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"exca_do_mem_map win %d: %02x%02x %02x%02x "
-literal|"%02x%02x %02x (%08x+%06x.%06x*%06x)\n"
+literal|"exca_do_mem_map win %d: %#02x%#02x %#02x%#02x "
+literal|"%#02x%#02x %#02x (%#08x+%#06x.%#06x*%#06x) flags %#x\n"
 argument_list|,
 name|win
 argument_list|,
@@ -963,6 +964,10 @@ argument_list|,
 name|mem
 operator|->
 name|cardaddr
+argument_list|,
+name|mem
+operator|->
+name|kind
 argument_list|)
 expr_stmt|;
 block|}
@@ -1053,29 +1058,29 @@ operator|)
 return|;
 if|if
 condition|(
-operator|(
-operator|(
-name|rman_get_start
-argument_list|(
-name|res
-argument_list|)
-operator|>>
-name|EXCA_MEMREG_WIN_SHIFT
-operator|)
-operator|&
-literal|0xff
-operator|)
-operator|!=
-literal|0
-operator|&&
-operator|(
 name|sc
 operator|->
 name|flags
 operator|&
 name|EXCA_HAS_MEMREG_WIN
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|__LP64__
+if|if
+condition|(
+name|rman_get_start
+argument_list|(
+name|res
+argument_list|)
+operator|>>
+operator|(
+name|EXCA_MEMREG_WIN_SHIFT
+operator|+
+literal|8
 operator|)
-operator|==
+operator|!=
 literal|0
 condition|)
 block|{
@@ -1085,7 +1090,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"Does not support mapping above 24M."
+literal|"Does not support mapping above 4GB."
 argument_list|)
 expr_stmt|;
 return|return
@@ -1093,6 +1098,39 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
+endif|#
+directive|endif
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|rman_get_start
+argument_list|(
+name|res
+argument_list|)
+operator|>>
+name|EXCA_MEMREG_WIN_SHIFT
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"Does not support mapping above 16M."
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 block|}
 name|sc
 operator|->

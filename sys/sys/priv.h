@@ -31,26 +31,22 @@ begin_define
 define|#
 directive|define
 name|_PRIV_LOWEST
-value|0
+value|1
 end_define
 
 begin_comment
-comment|/*  * PRIV_ROOT is a catch-all for as yet unnamed privileges.  No new  * references to this privilege should be added.  */
+comment|/*  * The remaining privileges typically correspond to one or a small  * number of specific privilege checks, and have (relatively) precise  * meanings.  They are loosely sorted into a set of base system  * privileges, such as the ability to reboot, and then loosely by  * subsystem, indicated by a subsystem name.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PRIV_ROOT
+name|_PRIV_ROOT
 value|1
 end_define
 
 begin_comment
-comment|/* Catch-all during development. */
-end_comment
-
-begin_comment
-comment|/*  * The remaining privileges typically correspond to one or a small  * number of specific privilege checks, and have (relatively) precise  * meanings.  They are loosely sorted into a set of base system  * privileges, such as the ability to reboot, and then loosely by  * subsystem, indicated by a subsystem name.  */
+comment|/* Removed. */
 end_comment
 
 begin_define

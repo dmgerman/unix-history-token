@@ -1441,7 +1441,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|fxp_miibus_writereg
 parameter_list|(
 name|device_t
@@ -1667,24 +1667,6 @@ argument_list|(
 name|fxp
 argument_list|,
 name|pci
-argument_list|,
-name|fxp_driver
-argument_list|,
-name|fxp_devclass
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|fxp
-argument_list|,
-name|cardbus
 argument_list|,
 name|fxp_driver
 argument_list|,
@@ -12414,7 +12396,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|fxp_miibus_writereg
 parameter_list|(
 name|device_t
@@ -12512,6 +12494,11 @@ argument_list|,
 literal|"fxp_miibus_writereg: timed out\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

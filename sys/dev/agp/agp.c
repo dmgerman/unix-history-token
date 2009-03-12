@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_agp.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_bus.h"
 end_include
 
@@ -1154,7 +1160,7 @@ comment|/**  * Default AGP aperture size detection which simply returns the size
 end_comment
 
 begin_function
-name|int
+name|u_int32_t
 name|agp_generic_get_aperture
 parameter_list|(
 name|device_t
@@ -2391,8 +2397,11 @@ argument_list|)
 expr_stmt|;
 name|AGP_DPF
 argument_list|(
-literal|"found page pa=%#x\n"
+literal|"found page pa=%#jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|VM_PAGE_TO_PHYS
 argument_list|(
 name|m
@@ -2523,14 +2532,20 @@ name|j
 decl_stmt|;
 name|AGP_DPF
 argument_list|(
-literal|"binding offset %#x to pa %#x\n"
+literal|"binding offset %#jx to pa %#jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|offset
 operator|+
 name|i
 operator|+
 name|j
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|pa
 argument_list|)
 expr_stmt|;

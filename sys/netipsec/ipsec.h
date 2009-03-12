@@ -1413,7 +1413,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|ipsec4_set_policy
+name|ipsec_set_policy
 name|__P
 argument_list|(
 operator|(
@@ -1443,7 +1443,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|ipsec4_get_policy
+name|ipsec_get_policy
 name|__P
 argument_list|(
 operator|(
@@ -1551,7 +1551,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|size_t
-name|ipsec4_hdrsiz
+name|ipsec_hdrsiz
 name|__P
 argument_list|(
 operator|(

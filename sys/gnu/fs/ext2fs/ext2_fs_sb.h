@@ -106,6 +106,16 @@ name|long
 name|s_groups_count
 decl_stmt|;
 comment|/* Number of groups in the fs */
+name|unsigned
+name|long
+name|s_first_inode
+decl_stmt|;
+comment|/* First inode on fs */
+name|unsigned
+name|int
+name|s_inode_size
+decl_stmt|;
+comment|/* Size for inode with extra data */
 name|struct
 name|buffer_head
 modifier|*

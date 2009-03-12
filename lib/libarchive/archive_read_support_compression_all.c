@@ -49,16 +49,12 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|HAVE_ZLIB_H
+comment|/* Gzip decompress falls back to "gunzip" command-line. */
 name|archive_read_support_compression_gzip
 argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|#
 directive|if
 name|HAVE_LZMADEC_H

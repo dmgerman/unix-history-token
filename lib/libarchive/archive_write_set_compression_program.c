@@ -24,6 +24,7 @@ end_comment
 begin_if
 if|#
 directive|if
+operator|(
 operator|!
 name|defined
 argument_list|(
@@ -49,6 +50,13 @@ argument_list|(
 name|HAVE_VFORK
 argument_list|)
 operator|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
 end_if
 
 begin_include

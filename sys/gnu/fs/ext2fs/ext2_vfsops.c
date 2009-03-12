@@ -4,7 +4,7 @@ comment|/*-  *  modified for EXT2FS support in Lites 1.1  *  *  Aug 1995, Godmar
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1989, 1991, 1993, 1994	  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_vfsops.c	8.8 (Berkeley) 4/18/94  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_vfsops.c	8.8 (Berkeley) 4/18/94  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -1798,7 +1798,7 @@ name|V
 parameter_list|(
 name|v
 parameter_list|)
-value|printf(#v"= %d\n", fs->v);
+value|printf(#v"= %lu\n", (unsigned long)fs->v);
 endif|#
 directive|endif
 name|fs
@@ -1855,7 +1855,7 @@ literal|1
 expr_stmt|;
 name|V
 argument_list|(
-argument|s_bmask
+argument|s_qbmask
 argument_list|)
 name|fs
 operator|->
@@ -1944,6 +1944,31 @@ argument|s_inodes_per_group
 argument_list|)
 name|fs
 operator|->
+name|s_inode_size
+operator|=
+name|es
+operator|->
+name|s_inode_size
+expr_stmt|;
+name|V
+argument_list|(
+argument|s_inode_size
+argument_list|)
+name|fs
+operator|->
+name|s_first_inode
+operator|=
+name|es
+operator|->
+name|s_first_ino
+expr_stmt|;
+name|V
+argument_list|(
+name|s_first_inode
+argument_list|)
+expr_stmt|;
+name|fs
+operator|->
 name|s_inodes_per_block
 operator|=
 name|fs
@@ -1951,6 +1976,9 @@ operator|->
 name|s_blocksize
 operator|/
 name|EXT2_INODE_SIZE
+argument_list|(
+name|fs
+argument_list|)
 expr_stmt|;
 name|V
 argument_list|(
@@ -2080,7 +2108,7 @@ name|s_blocksize
 operator|>
 name|SBSIZE
 condition|)
-comment|/* Godmar thinks: if the blocksize is greater than 1024, then 	   the superblock is logically part of block zero.  	 */
+comment|/* Godmar thinks: if the blocksize is greater than 1024, then 	   the superblock is logically part of block zero. 	 */
 name|logic_sb_block
 operator|=
 literal|0
@@ -2764,6 +2792,9 @@ operator|->
 name|b_data
 operator|+
 name|EXT2_INODE_SIZE
+argument_list|(
+name|fs
+argument_list|)
 operator|*
 name|ino_to_fsbo
 argument_list|(
@@ -3301,7 +3332,7 @@ operator|=
 name|ronly
 expr_stmt|;
 comment|/* ronly is set according to mnt_flags */
-comment|/* if the fs is not mounted read-only, make sure the super block is  	   always written back on a sync() 	 */
+comment|/* if the fs is not mounted read-only, make sure the super block is 	   always written back on a sync() 	 */
 name|fs
 operator|->
 name|s_wasvalid
@@ -4867,7 +4898,7 @@ comment|/* Read in the disk contents for the inode, copy into the inode. */
 if|#
 directive|if
 literal|0
-block|printf("ext2_vget(%d) dbn= %d ", ino, fsbtodb(fs, ino_to_fsba(fs, ino)));
+block|printf("ext2_vget(%d) dbn= %lu ", ino, fsbtodb(fs, ino_to_fsba(fs, ino)));
 endif|#
 directive|endif
 if|if
@@ -4950,6 +4981,9 @@ operator|->
 name|b_data
 operator|+
 name|EXT2_INODE_SIZE
+argument_list|(
+name|fs
+argument_list|)
 operator|*
 name|ino_to_fsbo
 argument_list|(
@@ -4997,7 +5031,7 @@ name|i_prealloc_block
 operator|=
 literal|0
 expr_stmt|;
-comment|/* now we want to make sure that block pointers for unused            blocks are zeroed out - ext2_balloc depends on this  	   although for regular files and directories only 	*/
+comment|/* now we want to make sure that block pointers for unused            blocks are zeroed out - ext2_balloc depends on this 	   although for regular files and directories only 	*/
 if|if
 condition|(
 name|S_ISDIR

@@ -304,7 +304,7 @@ specifier|static
 name|void
 name|atapi_cam_identify
 parameter_list|(
-name|device_t
+name|driver_t
 modifier|*
 name|dev
 parameter_list|,
@@ -725,9 +725,9 @@ specifier|static
 name|void
 name|atapi_cam_identify
 parameter_list|(
-name|device_t
+name|driver_t
 modifier|*
-name|dev
+name|driver
 parameter_list|,
 name|device_t
 name|parent

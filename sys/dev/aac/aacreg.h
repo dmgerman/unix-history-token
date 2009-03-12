@@ -4445,7 +4445,7 @@ name|AAC_FA_HACK
 parameter_list|(
 name|sc
 parameter_list|)
-value|(void)AAC_GETREG4(sc, AAC_FA_INTSRC)
+value|(void)AAC_MEM0_GETREG4(sc, AAC_FA_INTSRC)
 end_define
 
 begin_comment
@@ -4550,6 +4550,28 @@ end_define
 
 begin_comment
 comment|/*  * Register definitions for the Adaptec 'Pablano' adapters, based on the i960Rx,  * and other related adapters.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAC_RX_OMR0
+value|0x18
+end_define
+
+begin_comment
+comment|/* outbound message register 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAC_RX_OMR1
+value|0x1c
+end_define
+
+begin_comment
+comment|/* outbound message register 1 */
 end_comment
 
 begin_define
@@ -4660,6 +4682,28 @@ end_define
 
 begin_comment
 comment|/*  * Register definitions for the Adaptec 'Rocket' RAID-On-Chip adapters.  * Unsurprisingly, it's quite similar to the i960!  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAC_RKT_OMR0
+value|0x18
+end_define
+
+begin_comment
+comment|/* outbound message register 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAC_RKT_OMR1
+value|0x1c
+end_define
+
+begin_comment
+comment|/* outbound message register 1 */
 end_comment
 
 begin_define

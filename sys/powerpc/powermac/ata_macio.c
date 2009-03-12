@@ -660,6 +660,13 @@ operator|==
 literal|0
 condition|)
 block|{
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Apple MacIO Ultra ATA Controller"
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|rev
@@ -675,6 +682,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Apple MacIO ATA Controller"
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|rev

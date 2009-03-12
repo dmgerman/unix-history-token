@@ -124,31 +124,23 @@ begin_function
 name|int
 name|__bt_put
 parameter_list|(
-name|dbp
-parameter_list|,
-name|key
-parameter_list|,
-name|data
-parameter_list|,
-name|flags
-parameter_list|)
 specifier|const
 name|DB
 modifier|*
 name|dbp
-decl_stmt|;
+parameter_list|,
 name|DBT
 modifier|*
 name|key
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|DBT
 modifier|*
 name|data
-decl_stmt|;
+parameter_list|,
 name|u_int
 name|flags
-decl_stmt|;
+parameter_list|)
 block|{
 name|BTREE
 modifier|*
@@ -168,7 +160,7 @@ modifier|*
 name|h
 decl_stmt|;
 name|indx_t
-name|index
+name|idx
 decl_stmt|,
 name|nxtindex
 decl_stmt|;
@@ -574,7 +566,7 @@ operator|(
 name|RET_ERROR
 operator|)
 return|;
-name|index
+name|idx
 operator|=
 name|t
 operator|->
@@ -644,7 +636,7 @@ name|e
 operator|->
 name|page
 expr_stmt|;
-name|index
+name|idx
 operator|=
 name|e
 operator|->
@@ -709,7 +701,7 @@ name|key
 argument_list|,
 name|h
 argument_list|,
-name|index
+name|idx
 argument_list|)
 operator|==
 name|RET_ERROR
@@ -785,7 +777,7 @@ name|dflags
 argument_list|,
 name|nbytes
 argument_list|,
-name|index
+name|idx
 argument_list|)
 operator|)
 operator|!=
@@ -802,7 +794,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|index
+name|idx
 operator|<
 operator|(
 name|nxtindex
@@ -819,7 +811,7 @@ name|h
 operator|->
 name|linp
 operator|+
-name|index
+name|idx
 operator|+
 literal|1
 argument_list|,
@@ -827,12 +819,12 @@ name|h
 operator|->
 name|linp
 operator|+
-name|index
+name|idx
 argument_list|,
 operator|(
 name|nxtindex
 operator|-
-name|index
+name|idx
 operator|)
 operator|*
 sizeof|sizeof
@@ -854,7 +846,7 @@ name|h
 operator|->
 name|linp
 index|[
-name|index
+name|idx
 index|]
 operator|=
 name|h
@@ -930,7 +922,7 @@ name|pg
 operator|.
 name|index
 operator|>=
-name|index
+name|idx
 condition|)
 operator|++
 name|t
@@ -961,7 +953,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|index
+name|idx
 operator|==
 name|NEXTINDEX
 argument_list|(
@@ -983,7 +975,7 @@ name|bt_last
 operator|.
 name|index
 operator|=
-name|index
+name|idx
 expr_stmt|;
 name|t
 operator|->
@@ -1009,7 +1001,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|index
+name|idx
 operator|==
 literal|0
 condition|)
@@ -1110,7 +1102,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * BT_FAST -- Do a quick check for sorted data.  *  * Parameters:  *	t:	tree  *	key:	key to insert  *  * Returns:  * 	EPG for new record or NULL if not found.  */
+comment|/*  * BT_FAST -- Do a quick check for sorted data.  *  * Parameters:  *	t:	tree  *	key:	key to insert  *  * Returns:  *	EPG for new record or NULL if not found.  */
 end_comment
 
 begin_function
@@ -1119,36 +1111,24 @@ name|EPG
 modifier|*
 name|bt_fast
 parameter_list|(
-name|t
-parameter_list|,
-name|key
-parameter_list|,
-name|data
-parameter_list|,
-name|exactp
-parameter_list|)
 name|BTREE
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|DBT
 modifier|*
 name|key
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|DBT
+modifier|*
 name|data
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 name|int
 modifier|*
 name|exactp
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|PAGE
 modifier|*
@@ -1455,7 +1435,7 @@ name|NULL
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

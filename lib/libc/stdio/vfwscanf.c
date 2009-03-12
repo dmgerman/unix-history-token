@@ -458,6 +458,14 @@ define|\
 value|(cclcompl ? (wmemchr(ccls, (_c), ccle - ccls) == NULL) : \ 	(wmemchr(ccls, (_c), ccle - ccls) != NULL))
 end_define
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|mbstate_t
+name|initial_mbs
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * MT-safe version.  */
 end_comment
@@ -628,11 +636,6 @@ name|MB_LEN_MAX
 index|]
 decl_stmt|;
 comment|/* temporary mb. character buffer */
-specifier|static
-specifier|const
-name|mbstate_t
-name|initial
-decl_stmt|;
 name|mbstate_t
 name|mbs
 decl_stmt|;
@@ -1602,7 +1605,7 @@ literal|0
 expr_stmt|;
 name|mbs
 operator|=
-name|initial
+name|initial_mbs
 expr_stmt|;
 while|while
 condition|(
@@ -1979,7 +1982,7 @@ literal|0
 expr_stmt|;
 name|mbs
 operator|=
-name|initial
+name|initial_mbs
 expr_stmt|;
 while|while
 condition|(
@@ -2336,7 +2339,7 @@ argument_list|)
 expr_stmt|;
 name|mbs
 operator|=
-name|initial
+name|initial_mbs
 expr_stmt|;
 while|while
 condition|(
@@ -3388,6 +3391,12 @@ modifier|*
 name|end
 parameter_list|)
 block|{
+name|mbstate_t
+name|mbs
+decl_stmt|;
+name|size_t
+name|nconv
+decl_stmt|;
 name|wchar_t
 modifier|*
 name|commit
@@ -3410,6 +3419,8 @@ name|S_INF
 block|,
 name|S_NAN
 block|,
+name|S_DONE
+block|,
 name|S_MAYBEHEX
 block|,
 name|S_DIGITS
@@ -3429,19 +3440,6 @@ name|c
 decl_stmt|;
 name|wchar_t
 name|decpt
-init|=
-operator|(
-name|wchar_t
-operator|)
-operator|(
-name|unsigned
-name|char
-operator|)
-operator|*
-name|localeconv
-argument_list|()
-operator|->
-name|decimal_point
 decl_stmt|;
 name|_Bool
 name|gotmantdig
@@ -3452,6 +3450,51 @@ name|ishex
 init|=
 literal|0
 decl_stmt|;
+name|mbs
+operator|=
+name|initial_mbs
+expr_stmt|;
+name|nconv
+operator|=
+name|mbrtowc
+argument_list|(
+operator|&
+name|decpt
+argument_list|,
+name|localeconv
+argument_list|()
+operator|->
+name|decimal_point
+argument_list|,
+name|MB_CUR_MAX
+argument_list|,
+operator|&
+name|mbs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nconv
+operator|==
+operator|(
+name|size_t
+operator|)
+operator|-
+literal|1
+operator|||
+name|nconv
+operator|==
+operator|(
+name|size_t
+operator|)
+operator|-
+literal|2
+condition|)
+name|decpt
+operator|=
+literal|'.'
+expr_stmt|;
+comment|/* failsafe */
 comment|/* 	 * We set commit = p whenever the string we have read so far 	 * constitutes a valid representation of a floating point 	 * number by itself.  At some point, the parse will complete 	 * or fail, and we will ungetc() back to the last commit point. 	 * To ensure that the file offset gets updated properly, it is 	 * always necessary to read at least one character that doesn't 	 * match; thus, we can't short-circuit "infinity" or "nan(...)". 	 */
 name|commit
 operator|=
@@ -3626,14 +3669,6 @@ name|infnanpos
 condition|)
 block|{
 case|case
-operator|-
-literal|1
-case|:
-comment|/* XXX kludge to deal with nan(...) */
-goto|goto
-name|parsedone
-goto|;
-case|case
 literal|0
 case|:
 if|if
@@ -3697,10 +3732,9 @@ name|commit
 operator|=
 name|p
 expr_stmt|;
-name|infnanpos
+name|state
 operator|=
-operator|-
-literal|2
+name|S_DONE
 expr_stmt|;
 block|}
 elseif|else
@@ -3725,6 +3759,12 @@ name|infnanpos
 operator|++
 expr_stmt|;
 break|break;
+case|case
+name|S_DONE
+case|:
+goto|goto
+name|parsedone
+goto|;
 case|case
 name|S_MAYBEHEX
 case|:

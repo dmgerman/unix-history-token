@@ -189,12 +189,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/taskqueue.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 
@@ -1512,7 +1506,7 @@ parameter_list|,
 name|condition
 parameter_list|)
 define|\
-value|for ( ret = 0 ; !ret&& !(condition) ; ) {			\ 	DRM_UNLOCK();						\ 	mtx_lock(&dev->irq_lock);				\ 	if (!(condition))					\ 	   ret = -mtx_sleep(&(queue),&dev->irq_lock, 		\ 			 PZERO | PCATCH, "drmwtq", (timeout));	\ 	mtx_unlock(&dev->irq_lock);				\ 	DRM_LOCK();						\ }
+value|for ( ret = 0 ; !ret&& !(condition) ; ) {			\ 	DRM_UNLOCK();						\ 	mtx_lock(&dev->irq_lock);				\ 	if (!(condition))					\ 	    ret = -mtx_sleep(&(queue),&dev->irq_lock, 		\ 		PCATCH, "drmwtq", (timeout));			\ 	mtx_unlock(&dev->irq_lock);				\ 	DRM_LOCK();						\ }
 end_define
 
 begin_define
@@ -1574,6 +1568,20 @@ block|}
 name|drm_pci_id_list_t
 typedef|;
 end_typedef
+
+begin_struct
+struct|struct
+name|drm_msi_blacklist_entry
+block|{
+name|int
+name|vendor
+decl_stmt|;
+name|int
+name|device
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -2905,9 +2913,6 @@ comment|/* protects everything else */
 name|DRM_SPINTYPE
 name|drw_lock
 decl_stmt|;
-name|DRM_SPINTYPE
-name|tsk_lock
-decl_stmt|;
 comment|/* Usage Counters */
 name|int
 name|open_count
@@ -2976,6 +2981,10 @@ name|int
 name|irq_enabled
 decl_stmt|;
 comment|/* True if the irq handler is enabled */
+name|int
+name|msi_enabled
+decl_stmt|;
+comment|/* MSI enabled */
 name|int
 name|irqrid
 decl_stmt|;
@@ -3101,22 +3110,6 @@ argument|bsd_drm_drawable_info
 argument_list|)
 name|drw_head
 expr_stmt|;
-name|struct
-name|task
-name|locked_task
-decl_stmt|;
-name|void
-function_decl|(
-modifier|*
-name|locked_task_call
-function_decl|)
-parameter_list|(
-name|struct
-name|drm_device
-modifier|*
-name|dev
-parameter_list|)
-function_decl|;
 block|}
 struct|;
 end_struct
@@ -3221,7 +3214,7 @@ name|int
 name|drm_probe
 parameter_list|(
 name|device_t
-name|nbdev
+name|kdev
 parameter_list|,
 name|drm_pci_id_list_t
 modifier|*
@@ -3235,7 +3228,7 @@ name|int
 name|drm_attach
 parameter_list|(
 name|device_t
-name|nbdev
+name|kdev
 parameter_list|,
 name|drm_pci_id_list_t
 modifier|*
@@ -3260,7 +3253,7 @@ name|int
 name|drm_detach
 parameter_list|(
 name|device_t
-name|nbdev
+name|kdev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3927,6 +3920,18 @@ name|dev
 parameter_list|,
 name|int
 name|crtc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|drm_vblank_cleanup
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4938,7 +4943,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|drm_addbufs_ioctl
+name|drm_addbufs
 parameter_list|(
 name|struct
 name|drm_device
@@ -5108,30 +5113,6 @@ name|struct
 name|drm_file
 modifier|*
 name|file_priv
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|drm_locked_tasklet
-parameter_list|(
-name|struct
-name|drm_device
-modifier|*
-name|dev
-parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|tasklet
-function_decl|)
-parameter_list|(
-name|struct
-name|drm_device
-modifier|*
-name|dev
-parameter_list|)
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1602,20 +1602,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|p1a
-argument_list|(
-name|ip6s_forward_cachehit
-argument_list|,
-literal|"\t%ju forward cache hit\n"
-argument_list|)
-expr_stmt|;
-name|p1a
-argument_list|(
-name|ip6s_forward_cachemiss
-argument_list|,
-literal|"\t%ju forward cache miss\n"
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"\tSource addresses selection rule applied:\n"

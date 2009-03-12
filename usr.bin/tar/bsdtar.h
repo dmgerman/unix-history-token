@@ -119,6 +119,12 @@ name|char
 name|option_fast_read
 decl_stmt|;
 comment|/* --fast-read */
+specifier|const
+name|char
+modifier|*
+name|option_format_options
+decl_stmt|;
+comment|/* --format-options */
 name|char
 name|option_honor_nodump
 decl_stmt|;
@@ -217,10 +223,17 @@ decl_stmt|;
 comment|/* Used for -C parsing in -cT */
 comment|/* 	 * Data for various subsystems.  Full definitions are located in 	 * the file where they are used. 	 */
 name|struct
+name|archive
+modifier|*
+name|diskreader
+decl_stmt|;
+comment|/* for write.c */
+name|struct
 name|archive_entry_linkresolver
 modifier|*
 name|resolver
 decl_stmt|;
+comment|/* for write.c */
 name|struct
 name|archive_dir
 modifier|*
@@ -288,6 +301,8 @@ block|,
 name|OPTION_EXCLUDE
 block|,
 name|OPTION_FORMAT
+block|,
+name|OPTION_FORMAT_OPTIONS
 block|,
 name|OPTION_HELP
 block|,

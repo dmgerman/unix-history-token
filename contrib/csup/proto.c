@@ -3177,33 +3177,6 @@ name|filerefuse
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* At this point we don't need the pattern lists anymore. */
-name|pattlist_free
-argument_list|(
-name|coll
-operator|->
-name|co_accepts
-argument_list|)
-expr_stmt|;
-name|pattlist_free
-argument_list|(
-name|coll
-operator|->
-name|co_refusals
-argument_list|)
-expr_stmt|;
-name|coll
-operator|->
-name|co_accepts
-operator|=
-name|NULL
-expr_stmt|;
-name|coll
-operator|->
-name|co_refusals
-operator|=
-name|NULL
-expr_stmt|;
 comment|/* Set up a mask of file attributes that we don't want to sync 		   with the server. */
 if|if
 condition|(

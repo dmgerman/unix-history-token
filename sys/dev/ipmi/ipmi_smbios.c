@@ -687,8 +687,6 @@ operator|=
 name|s
 operator|->
 name|i2c_slave_address
-operator|>>
-literal|1
 expr_stmt|;
 break|break;
 block|}
@@ -702,8 +700,6 @@ name|s
 operator|->
 name|base_address
 argument_list|)
-operator|>>
-literal|1
 expr_stmt|;
 break|break;
 default|default:

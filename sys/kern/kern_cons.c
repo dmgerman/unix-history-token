@@ -1382,13 +1382,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|int
-name|ocn_mute
-decl_stmt|;
-name|ocn_mute
-operator|=
-name|cn_mute
-expr_stmt|;
 name|error
 operator|=
 name|sysctl_handle_int

@@ -506,6 +506,20 @@ literal|0x10
 block|}
 block|,
 block|{
+literal|0x1407
+block|,
+literal|0x0510
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Lava SP Serial 550 PCI"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
 literal|0x1409
 block|,
 literal|0x7168
@@ -621,6 +635,20 @@ block|,
 literal|0
 block|,
 literal|"TOPIC Semiconductor TP560 56k modem"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x9710
+block|,
+literal|0x9835
+block|,
+literal|0x1000
+block|,
+literal|1
+block|,
+literal|"NetMos NM9835 Serial Port"
 block|,
 literal|0x10
 block|}
@@ -922,24 +950,6 @@ argument_list|(
 name|uart
 argument_list|,
 name|pci
-argument_list|,
-name|uart_pci_driver
-argument_list|,
-name|uart_devclass
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|uart
-argument_list|,
-name|cardbus
 argument_list|,
 name|uart_pci_driver
 argument_list|,

@@ -224,13 +224,13 @@ name|int
 name|savage_probe
 parameter_list|(
 name|device_t
-name|dev
+name|kdev
 parameter_list|)
 block|{
 return|return
 name|drm_probe
 argument_list|(
-name|dev
+name|kdev
 argument_list|,
 name|savage_pciidlist
 argument_list|)
@@ -244,7 +244,7 @@ name|int
 name|savage_attach
 parameter_list|(
 name|device_t
-name|nbdev
+name|kdev
 parameter_list|)
 block|{
 name|struct
@@ -254,7 +254,7 @@ name|dev
 init|=
 name|device_get_softc
 argument_list|(
-name|nbdev
+name|kdev
 argument_list|)
 decl_stmt|;
 name|dev
@@ -284,7 +284,7 @@ expr_stmt|;
 return|return
 name|drm_attach
 argument_list|(
-name|nbdev
+name|kdev
 argument_list|,
 name|savage_pciidlist
 argument_list|)
@@ -298,7 +298,7 @@ name|int
 name|savage_detach
 parameter_list|(
 name|device_t
-name|nbdev
+name|kdev
 parameter_list|)
 block|{
 name|struct
@@ -308,7 +308,7 @@ name|dev
 init|=
 name|device_get_softc
 argument_list|(
-name|nbdev
+name|kdev
 argument_list|)
 decl_stmt|;
 name|int
@@ -318,7 +318,7 @@ name|ret
 operator|=
 name|drm_detach
 argument_list|(
-name|nbdev
+name|kdev
 argument_list|)
 expr_stmt|;
 name|free

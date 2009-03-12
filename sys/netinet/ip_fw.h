@@ -1969,6 +1969,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_struct_decl
+struct_decl|struct
+name|eventhandler_entry
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Stack virtualization support.  */
 end_comment
@@ -1998,6 +2004,7 @@ decl_stmt|;
 name|int
 name|_fw_debug
 decl_stmt|;
+comment|/* actually unused */
 name|int
 name|_autoinc_step
 decl_stmt|;
@@ -2062,7 +2069,9 @@ name|struct
 name|callout
 name|_ipfw_timeout
 decl_stmt|;
-name|eventhandler_tag
+name|struct
+name|eventhandler_entry
+modifier|*
 name|_ifaddr_event_tag
 decl_stmt|;
 block|}

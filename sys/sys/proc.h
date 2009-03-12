@@ -645,14 +645,6 @@ name|u_int
 name|td_uticks
 decl_stmt|;
 comment|/* (t) Statclock hits in user mode. */
-name|u_int
-name|td_uuticks
-decl_stmt|;
-comment|/* (k) Statclock hits (usr), for UTS. */
-name|u_int
-name|td_usticks
-decl_stmt|;
-comment|/* (k) Statclock hits (sys), for UTS. */
 name|int
 name|td_intrval
 decl_stmt|;
@@ -1600,6 +1592,17 @@ begin_comment
 comment|/* Permission to ignore the MNTK_SUSPEND* */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TDP_AUDITREC
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* Audit record pending on thread */
+end_comment
+
 begin_comment
 comment|/*  * Reasons that the current thread can not be run yet.  * More than one may apply.  */
 end_comment
@@ -2200,7 +2203,7 @@ modifier|*
 name|p_textvp
 decl_stmt|;
 comment|/* (b) Vnode of executable. */
-name|char
+name|u_int
 name|p_lock
 decl_stmt|;
 comment|/* (c) Proclock (prevent swap) count. */

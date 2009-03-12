@@ -40,19 +40,17 @@ begin_define
 define|#
 directive|define
 name|_PATH_STDPATH
-define|\
 value|"/usr/bin:/bin:/usr/sbin:/sbin:"
 end_define
 
 begin_comment
-comment|/* Locate system binaries */
+comment|/* Locate system binaries. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|_PATH_SYSPATH
-define|\
 value|"/sbin:/usr/sbin"
 end_define
 

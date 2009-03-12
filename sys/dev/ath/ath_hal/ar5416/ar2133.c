@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar2133.c,v 1.13 2008/11/11 00:11:30 sam Exp $  */
+comment|/*  * Copyright (c) 2002-2009 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -120,7 +120,6 @@ comment|/*XXX*/
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|ar5416ModifyRfBuffer
 parameter_list|(
@@ -139,65 +138,6 @@ name|firstBit
 parameter_list|,
 name|uint32_t
 name|column
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|HAL_BOOL
-name|ar2133GetChipPowerLimits
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-name|ah
-parameter_list|,
-name|HAL_CHANNEL
-modifier|*
-name|chans
-parameter_list|,
-name|uint32_t
-name|nchans
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|HAL_BOOL
-name|ar2133GetChannelMaxMinPower
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|,
-name|HAL_CHANNEL
-modifier|*
-parameter_list|,
-name|int16_t
-modifier|*
-name|maxPow
-parameter_list|,
-name|int16_t
-modifier|*
-name|minPow
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int16_t
-name|ar2133GetNfAdjust
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-name|ah
-parameter_list|,
-specifier|const
-name|HAL_CHANNEL_INTERNAL
-modifier|*
-name|c
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -259,7 +199,9 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -298,7 +240,7 @@ name|AH_MARK_SETCHANNEL
 argument_list|,
 name|chan
 operator|->
-name|channel
+name|ic_freq
 argument_list|)
 expr_stmt|;
 name|ar5416GetChannelCenters
@@ -829,7 +771,9 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -952,7 +896,7 @@ expr_stmt|;
 comment|/* Only the 5 or 2 GHz OB/DB need to be set for a mode */
 if|if
 condition|(
-name|IS_CHAN_2GHZ
+name|IEEE80211_IS_CHAN_2GHZ
 argument_list|(
 name|chan
 argument_list|)
@@ -1227,7 +1171,9 @@ name|int16_t
 modifier|*
 name|pPowerMax
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -1269,7 +1215,9 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -1681,6 +1629,7 @@ comment|/*  * Adjust NF based on statistical values for 5GHz frequencies.  * Stu
 end_comment
 
 begin_function
+specifier|static
 name|int16_t
 name|ar2133GetNfAdjust
 parameter_list|(
@@ -1788,6 +1737,17 @@ name|uint32_t
 modifier|*
 name|bankData
 decl_stmt|;
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_ATTACH
+argument_list|,
+literal|"%s: attach AR2133 radio\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|HALASSERT
 argument_list|(
 name|ahp

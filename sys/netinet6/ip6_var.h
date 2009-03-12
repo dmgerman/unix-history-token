@@ -547,12 +547,6 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-name|u_quad_t
-name|ip6s_forward_cachehit
-decl_stmt|;
-name|u_quad_t
-name|ip6s_forward_cachemiss
-decl_stmt|;
 comment|/* number of times that each rule of source selection is applied. */
 name|u_quad_t
 name|ip6s_sources_rule
@@ -771,17 +765,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|ip6_forward_srcrt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* forward src-routed? */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|ip6_gif_hlim
 decl_stmt|;
 end_decl_stmt
@@ -889,28 +872,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Maximum fragments in reassembly queue */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ip6_sourcecheck
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Verify source interface */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ip6_sourcecheck_interval
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Interval between log messages */
 end_comment
 
 begin_decl_stmt

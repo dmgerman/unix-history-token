@@ -169,7 +169,7 @@ block|{
 name|vm_offset_t
 name|zb_uaddr
 decl_stmt|;
-comment|/* User address, may be stale. */
+comment|/* User address at time of setup. */
 name|size_t
 name|zb_size
 decl_stmt|;
@@ -206,7 +206,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ZBUF_FLAG_IMMUTABLE
+name|ZBUF_FLAG_ASSIGNED
 value|0x00000001
 end_define
 
@@ -872,13 +872,13 @@ name|zb
 operator|->
 name|zb_flags
 operator|&
-name|ZBUF_FLAG_IMMUTABLE
+name|ZBUF_FLAG_ASSIGNED
 operator|)
 operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"bpf_zerocopy_append_bytes: ZBUF_FLAG_IMMUTABLE"
+literal|"bpf_zerocopy_append_bytes: ZBUF_FLAG_ASSIGNED"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1106,13 +1106,13 @@ name|zb
 operator|->
 name|zb_flags
 operator|&
-name|ZBUF_FLAG_IMMUTABLE
+name|ZBUF_FLAG_ASSIGNED
 operator|)
 operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"bpf_zerocopy_append_mbuf: ZBUF_FLAG_IMMUTABLE"
+literal|"bpf_zerocopy_append_mbuf: ZBUF_FLAG_ASSIGNED"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1361,7 +1361,7 @@ name|zb
 operator|->
 name|zb_flags
 operator|&
-name|ZBUF_FLAG_IMMUTABLE
+name|ZBUF_FLAG_ASSIGNED
 operator|)
 operator|==
 literal|0
@@ -1371,7 +1371,7 @@ name|zb
 operator|->
 name|zb_flags
 operator||=
-name|ZBUF_FLAG_IMMUTABLE
+name|ZBUF_FLAG_ASSIGNED
 expr_stmt|;
 name|zb
 operator|->
@@ -1400,7 +1400,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Notification from the BPF framework that a buffer has moved into the held  * slot on a descriptor.  Zero-copy BPF will update the shared page to let  * the user process know and flag the buffer as immutable if it hasn't  * already been marked immutable due to filling while it was in the store  * position.  *  * Note: identical logic as in bpf_zerocopy_buffull(), except that we operate  * on bd_hbuf and bd_hlen.  */
+comment|/*  * Notification from the BPF framework that a buffer has moved into the held  * slot on a descriptor.  Zero-copy BPF will update the shared page to let  * the user process know and flag the buffer as assigned if it hasn't already  * been marked assigned due to filling while it was in the store position.  *  * Note: identical logic as in bpf_zerocopy_buffull(), except that we operate  * on bd_hbuf and bd_hlen.  */
 end_comment
 
 begin_function
@@ -1460,7 +1460,7 @@ name|zb
 operator|->
 name|zb_flags
 operator|&
-name|ZBUF_FLAG_IMMUTABLE
+name|ZBUF_FLAG_ASSIGNED
 operator|)
 operator|==
 literal|0
@@ -1470,7 +1470,7 @@ name|zb
 operator|->
 name|zb_flags
 operator||=
-name|ZBUF_FLAG_IMMUTABLE
+name|ZBUF_FLAG_ASSIGNED
 expr_stmt|;
 name|zb
 operator|->
@@ -1499,7 +1499,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Notification from the BPF framework that the free buffer has been been  * re-assigned.  This happens when the user ackknowledges the buffer.  */
+comment|/*  * Notification from the BPF framework that the free buffer has been been  * rotated out of the held position to the free position.  This happens when  * the user acknowledges the held buffer.  */
 end_comment
 
 begin_function
@@ -1539,7 +1539,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"bpf_zerocopy_buf_reclaimed: NULL free buff"
+literal|"bpf_zerocopy_buf_reclaimed: NULL free buf"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1559,7 +1559,7 @@ operator|->
 name|zb_flags
 operator|&=
 operator|~
-name|ZBUF_FLAG_IMMUTABLE
+name|ZBUF_FLAG_ASSIGNED
 expr_stmt|;
 block|}
 end_function
@@ -1709,7 +1709,7 @@ name|zb
 operator|->
 name|zb_flags
 operator|&
-name|ZBUF_FLAG_IMMUTABLE
+name|ZBUF_FLAG_ASSIGNED
 condition|)
 return|return
 operator|(
@@ -1877,7 +1877,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Ioctl to force rotation of the two buffers, if there's any data available.  * This can be used by user space to implement time outs when waiting for a  * buffer to fill.  */
+comment|/*  * Ioctl to force rotation of the two buffers, if there's any data available.  * This can be used by user space to implement timeouts when waiting for a  * buffer to fill.  */
 end_comment
 
 begin_function

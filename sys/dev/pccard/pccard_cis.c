@@ -598,7 +598,7 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"cis mem map 0x%x (resource: 0x%lx)\n"
+literal|"cis mem map %#x (resource: %#lx)\n"
 operator|,
 operator|(
 name|unsigned
@@ -942,7 +942,7 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"CISTPL_LONGLINK_%s %lx\n"
+literal|"CISTPL_LONGLINK_%s %#lx\n"
 operator|,
 name|longlink_common
 condition|?
@@ -1101,8 +1101,8 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"CISTPL_CHECKSUM addr=%lx "
-literal|"len=%lx cksum=%x"
+literal|"CISTPL_CHECKSUM addr=%#lx "
+literal|"len=%#lx cksum=%#x"
 operator|,
 name|addr
 operator|,
@@ -1194,7 +1194,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|" failed sum=%x\n"
+literal|" failed sum=%#x\n"
 operator|,
 name|sum
 operator|)
@@ -1432,7 +1432,7 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|" %s:%lx"
+literal|" %s:%#lx"
 operator|,
 name|mfc
 index|[
@@ -1503,7 +1503,7 @@ decl_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|" %02x %02x"
+literal|" %#02x %#02x"
 operator|,
 name|tuple
 operator|.
@@ -1534,7 +1534,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|" %02x"
+literal|" %#02x"
 operator|,
 name|pccard_tuple_read_1
 argument_list|(
@@ -1627,7 +1627,7 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"cis mem map %x\n"
+literal|"cis mem map %#x\n"
 operator|,
 operator|(
 name|unsigned
@@ -1705,7 +1705,7 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"cis mem map %x\n"
+literal|"cis mem map %#x\n"
 operator|,
 operator|(
 name|unsigned
@@ -1782,7 +1782,7 @@ name|DPRINTF
 argument_list|(
 operator|(
 literal|"CISTPL_LINKTARGET expected, "
-literal|"code %02x observed\n"
+literal|"code %#02x observed\n"
 operator|,
 name|tuple
 operator|.
@@ -2126,7 +2126,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Manufacturer code 0x%x, product 0x%x\n"
+literal|"Manufacturer code %#x, product %#x\n"
 argument_list|,
 name|card
 operator|->
@@ -2286,7 +2286,7 @@ break|break;
 block|}
 name|printf
 argument_list|(
-literal|", ccr addr %x mask %x\n"
+literal|", ccr addr %#x mask %#x\n"
 argument_list|,
 name|pf
 operator|->
@@ -2357,7 +2357,7 @@ break|break;
 block|}
 name|printf
 argument_list|(
-literal|"; irq mask %x"
+literal|"; irq mask %#x"
 argument_list|,
 name|cfe
 operator|->
@@ -2373,7 +2373,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"; iomask %lx, iospace"
+literal|"; iomask %#lx, iospace"
 argument_list|,
 name|cfe
 operator|->
@@ -2398,7 +2398,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|" %lx"
+literal|" %#lx"
 argument_list|,
 name|cfe
 operator|->
@@ -2423,7 +2423,7 @@ name|length
 condition|)
 name|printf
 argument_list|(
-literal|"-%lx"
+literal|"-%#lx"
 argument_list|,
 name|cfe
 operator|->
@@ -2478,7 +2478,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|" %lx"
+literal|" %#lx"
 argument_list|,
 name|cfe
 operator|->
@@ -2503,7 +2503,7 @@ name|length
 condition|)
 name|printf
 argument_list|(
-literal|"-%lx"
+literal|"-%#lx"
 argument_list|,
 name|cfe
 operator|->
@@ -2539,7 +2539,7 @@ name|hostaddr
 condition|)
 name|printf
 argument_list|(
-literal|"@%lx"
+literal|"@%#lx"
 argument_list|,
 name|cfe
 operator|->
@@ -5226,16 +5226,9 @@ name|DPRINTF
 argument_list|(
 operator|(
 literal|"cfe memspace "
-literal|"lengthsize == 0"
+literal|"lengthsize == 0\n"
 operator|)
 argument_list|)
-expr_stmt|;
-name|state
-operator|->
-name|card
-operator|->
-name|error
-operator|++
 expr_stmt|;
 block|}
 for|for
@@ -5315,18 +5308,11 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"cfe->memspace[%d].length == 0"
+literal|"cfe->memspace[%d].length == 0\n"
 operator|,
 name|i
 operator|)
 argument_list|)
-expr_stmt|;
-name|state
-operator|->
-name|card
-operator|->
-name|error
-operator|++
 expr_stmt|;
 block|}
 if|if
@@ -5554,7 +5540,7 @@ default|default:
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"unhandled CISTPL %x\n"
+literal|"unhandled CISTPL %#x\n"
 operator|,
 name|tuple
 operator|->
@@ -5631,6 +5617,17 @@ argument_list|(
 name|tuple
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|pf
+operator|->
+name|pf_funce_disk_power
+operator|=
+name|pccard_tuple_read_1
+argument_list|(
+name|tuple
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 block|}

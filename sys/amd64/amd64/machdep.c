@@ -3133,7 +3133,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Clear registers on exec  */
+comment|/*  * Reset registers to default values on exec.  */
 end_comment
 
 begin_function
@@ -3268,6 +3268,12 @@ operator|->
 name|pcb_gs
 operator|=
 name|_udatasel
+expr_stmt|;
+name|pcb
+operator|->
+name|pcb_initial_fpucw
+operator|=
+name|__INITIAL_FPUCW__
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -3520,6 +3526,34 @@ literal|16
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|nmi0_stack
+index|[
+name|PAGE_SIZE
+index|]
+name|__aligned
+argument_list|(
+literal|16
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|nmi_pcpu
+argument_list|)
+operator|==
+literal|16
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|struct
@@ -5564,6 +5598,11 @@ name|pcpu
 modifier|*
 name|pc
 decl_stmt|;
+name|struct
+name|nmi_pcpu
+modifier|*
+name|np
+decl_stmt|;
 name|u_int64_t
 name|msr
 decl_stmt|;
@@ -6028,7 +6067,7 @@ name|SDT_SYSIGT
 argument_list|,
 name|SEL_KPL
 argument_list|,
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 name|setidt
@@ -6497,6 +6536,48 @@ name|dblfault_stack
 argument_list|)
 index|]
 expr_stmt|;
+comment|/* 	 * NMI stack, runs on ist2.  The pcpu pointer is stored just 	 * above the start of the ist2 stack. 	 */
+name|np
+operator|=
+operator|(
+operator|(
+expr|struct
+name|nmi_pcpu
+operator|*
+operator|)
+operator|&
+name|nmi0_stack
+index|[
+sizeof|sizeof
+argument_list|(
+name|nmi0_stack
+argument_list|)
+index|]
+operator|)
+operator|-
+literal|1
+expr_stmt|;
+name|np
+operator|->
+name|np_pcpu
+operator|=
+operator|(
+name|register_t
+operator|)
+name|pc
+expr_stmt|;
+name|common_tss
+index|[
+literal|0
+index|]
+operator|.
+name|tss_ist2
+operator|=
+operator|(
+name|long
+operator|)
+name|np
+expr_stmt|;
 comment|/* Set the IO permission bitmap (empty due to tss seg limit) */
 name|common_tss
 index|[
@@ -6735,6 +6816,38 @@ name|kernelname
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XENHVM
+if|if
+condition|(
+name|inw
+argument_list|(
+literal|0x10
+argument_list|)
+operator|==
+literal|0x49d2
+condition|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"Xen detected: disabling emulated block and network devices\n"
+argument_list|)
+expr_stmt|;
+name|outw
+argument_list|(
+literal|0x10
+argument_list|,
+literal|3
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* Location of kernel stack for locore */
 return|return
 operator|(

@@ -1019,7 +1019,7 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-break|break;
+continue|continue;
 name|got_match
 operator|=
 literal|1

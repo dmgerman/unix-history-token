@@ -64,11 +64,13 @@ name|stpcpy
 parameter_list|(
 name|char
 modifier|*
+name|__restrict
 name|to
 parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|__restrict
 name|from
 parameter_list|)
 block|{

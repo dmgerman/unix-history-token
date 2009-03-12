@@ -54,7 +54,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../config.h"
+file|"config.h"
 end_include
 
 begin_else
@@ -504,16 +504,11 @@ parameter_list|)
 value|(st)->st_mtimespec.tv_nsec
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
+begin_elif
+elif|#
+directive|elif
 name|HAVE_STRUCT_STAT_ST_MTIM_TV_NSEC
-end_if
+end_elif
 
 begin_define
 define|#
@@ -535,6 +530,84 @@ parameter_list|)
 value|(st)->st_mtim.tv_nsec
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|HAVE_STRUCT_STAT_ST_MTIME_N
+end_elif
+
+begin_define
+define|#
+directive|define
+name|ARCHIVE_STAT_CTIME_NANOS
+parameter_list|(
+name|st
+parameter_list|)
+value|(st)->st_ctime_n
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCHIVE_STAT_MTIME_NANOS
+parameter_list|(
+name|st
+parameter_list|)
+value|(st)->st_mtime_n
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|HAVE_STRUCT_STAT_ST_UMTIME
+end_elif
+
+begin_define
+define|#
+directive|define
+name|ARCHIVE_STAT_CTIME_NANOS
+parameter_list|(
+name|st
+parameter_list|)
+value|(st)->st_uctime * 1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCHIVE_STAT_MTIME_NANOS
+parameter_list|(
+name|st
+parameter_list|)
+value|(st)->st_umtime * 1000
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|HAVE_STRUCT_STAT_ST_MTIME_USEC
+end_elif
+
+begin_define
+define|#
+directive|define
+name|ARCHIVE_STAT_CTIME_NANOS
+parameter_list|(
+name|st
+parameter_list|)
+value|(st)->st_ctime_usec * 1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCHIVE_STAT_MTIME_NANOS
+parameter_list|(
+name|st
+parameter_list|)
+value|(st)->st_mtime_usec * 1000
+end_define
+
 begin_else
 else|#
 directive|else
@@ -559,11 +632,6 @@ name|st
 parameter_list|)
 value|(0)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -626,6 +694,38 @@ begin_define
 define|#
 directive|define
 name|__LA_DEAD
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"bsdtar_windows.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|bsdtar_is_privileged
+parameter_list|(
+name|bsdtar
+parameter_list|)
+value|(bsdtar->user_uid == 0)
 end_define
 
 begin_endif

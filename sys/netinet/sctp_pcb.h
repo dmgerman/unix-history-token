@@ -491,6 +491,11 @@ struct|struct
 name|sctp_epinfo
 block|{
 name|struct
+name|socket
+modifier|*
+name|udp_tun_socket
+decl_stmt|;
+name|struct
 name|sctpasochead
 modifier|*
 name|sctp_asochash

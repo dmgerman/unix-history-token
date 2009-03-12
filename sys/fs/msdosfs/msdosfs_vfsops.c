@@ -2038,10 +2038,6 @@ name|struct
 name|cdev
 modifier|*
 name|dev
-init|=
-name|devvp
-operator|->
-name|v_rdev
 decl_stmt|;
 name|union
 name|bootsector
@@ -2084,6 +2080,15 @@ name|bufobj
 modifier|*
 name|bo
 decl_stmt|;
+name|bp
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* This and pmp both used in error_exit. */
+name|pmp
+operator|=
+name|NULL
+expr_stmt|;
 name|ronly
 operator|=
 operator|(
@@ -2096,7 +2101,17 @@ operator|)
 operator|!=
 literal|0
 expr_stmt|;
-comment|/* XXX: use VOP_ACCESS to check FS perms */
+name|dev
+operator|=
+name|devvp
+operator|->
+name|v_rdev
+expr_stmt|;
+name|dev_ref
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|DROP_GIANT
 argument_list|()
 expr_stmt|;
@@ -2138,26 +2153,15 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|error_exit
+goto|;
 name|bo
 operator|=
 operator|&
 name|devvp
 operator|->
 name|v_bufobj
-expr_stmt|;
-name|bp
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* This and pmp both used in error_exit. */
-name|pmp
-operator|=
-name|NULL
 expr_stmt|;
 comment|/* 	 * Read the boot sector of the filesystem, and then check the 	 * boot signature.  If not a dos boot sector then error out. 	 * 	 * NOTE: 8192 is a magic size that works for ffs. 	 */
 name|error
@@ -3395,6 +3399,12 @@ name|pm_devvp
 operator|=
 name|devvp
 expr_stmt|;
+name|pmp
+operator|->
+name|pm_dev
+operator|=
+name|dev
+expr_stmt|;
 comment|/* 	 * Have the inuse map filled in. 	 */
 if|if
 condition|(
@@ -3618,6 +3628,11 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|dev_rel
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -3689,6 +3704,10 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|&&
+name|error
+operator|!=
+name|ENXIO
 condition|)
 return|return
 name|error
@@ -3725,6 +3744,10 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|&&
+name|error
+operator|!=
+name|ENXIO
 condition|)
 block|{
 operator|(
@@ -3958,6 +3981,13 @@ operator|->
 name|pm_devvp
 argument_list|)
 expr_stmt|;
+name|dev_rel
+argument_list|(
+name|pmp
+operator|->
+name|pm_dev
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|pmp
@@ -4012,7 +4042,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}

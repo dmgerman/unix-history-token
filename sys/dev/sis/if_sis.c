@@ -7162,6 +7162,8 @@ name|SIS_ISR_RX_DESC_OK
 operator||
 name|SIS_ISR_RX_OK
 operator||
+name|SIS_ISR_RX_ERR
+operator||
 name|SIS_ISR_RX_IDLE
 operator|)
 condition|)
@@ -7174,11 +7176,7 @@ if|if
 condition|(
 name|status
 operator|&
-operator|(
-name|SIS_ISR_RX_ERR
-operator||
 name|SIS_ISR_RX_OFLOW
-operator|)
 condition|)
 name|sis_rxeoc
 argument_list|(
@@ -9741,7 +9739,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|sis_shutdown
 parameter_list|(
 name|device_t
@@ -9780,6 +9778,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

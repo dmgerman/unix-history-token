@@ -857,6 +857,11 @@ name|cpu_disabled
 range|:
 literal|1
 decl_stmt|;
+name|int
+name|cpu_hyperthread
+range|:
+literal|1
+decl_stmt|;
 block|}
 decl|static
 name|cpu_info
@@ -873,6 +878,17 @@ name|int
 name|cpu_apic_ids
 index|[
 name|MAXCPU
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|apic_cpuids
+index|[
+name|MAX_APIC_ID
+operator|+
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1677,12 +1693,12 @@ index|]
 operator|=
 name|boot_cpu_id
 expr_stmt|;
-name|assign_cpu_ids
-argument_list|()
-expr_stmt|;
-comment|/* Start each Application Processor */
-name|start_all_aps
-argument_list|()
+name|apic_cpuids
+index|[
+name|boot_cpu_id
+index|]
+operator|=
+literal|0
 expr_stmt|;
 comment|/* Setup the initial logical CPUs info. */
 name|logical_cpus
@@ -1809,6 +1825,13 @@ operator|=
 name|logical_cpus
 expr_stmt|;
 block|}
+name|assign_cpu_ids
+argument_list|()
+expr_stmt|;
+comment|/* Start each Application Processor */
+name|start_all_aps
+argument_list|()
+expr_stmt|;
 name|set_interrupt_apic_ids
 argument_list|()
 expr_stmt|;
@@ -1830,6 +1853,11 @@ name|int
 name|i
 decl_stmt|,
 name|x
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|hyperthread
 decl_stmt|;
 comment|/* List CPUs */
 name|printf
@@ -1882,11 +1910,35 @@ index|[
 name|x
 index|]
 operator|.
+name|cpu_hyperthread
+condition|)
+block|{
+name|hyperthread
+operator|=
+literal|"/HT"
+expr_stmt|;
+block|}
+else|else
+block|{
+name|hyperthread
+operator|=
+literal|""
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|cpu_info
+index|[
+name|x
+index|]
+operator|.
 name|cpu_disabled
 condition|)
 name|printf
 argument_list|(
-literal|"  cpu (AP): APIC ID: %2d (disabled)\n"
+literal|"  cpu (AP%s): APIC ID: %2d (disabled)\n"
+argument_list|,
+name|hyperthread
 argument_list|,
 name|x
 argument_list|)
@@ -1906,10 +1958,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" cpu%d (AP): APIC ID: %2d\n"
+literal|" cpu%d (AP%s): APIC ID: %2d\n"
 argument_list|,
 name|i
 operator|++
+argument_list|,
+name|hyperthread
 argument_list|,
 name|x
 argument_list|)
@@ -2342,9 +2396,7 @@ argument_list|()
 expr_stmt|;
 comment|/* set up FPU state on the AP */
 name|npxinit
-argument_list|(
-name|__INITIAL_NPXCW__
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* set up SSE registers */
 name|enable_sse
@@ -2731,6 +2783,14 @@ block|{
 name|u_int
 name|i
 decl_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"machdep.hyperthreading_allowed"
+argument_list|,
+operator|&
+name|hyperthreading_allowed
+argument_list|)
+expr_stmt|;
 comment|/* Check for explicitly disabled CPUs. */
 for|for
 control|(
@@ -2764,6 +2824,56 @@ operator|.
 name|cpu_bsp
 condition|)
 continue|continue;
+if|if
+condition|(
+name|hyperthreading_cpus
+operator|>
+literal|1
+operator|&&
+name|i
+operator|%
+name|hyperthreading_cpus
+operator|!=
+literal|0
+condition|)
+block|{
+name|cpu_info
+index|[
+name|i
+index|]
+operator|.
+name|cpu_hyperthread
+operator|=
+literal|1
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SCHED_ULE
+argument_list|)
+comment|/* 			 * Don't use HT CPU if it has been disabled by a 			 * tunable. 			 */
+if|if
+condition|(
+name|hyperthreading_allowed
+operator|==
+literal|0
+condition|)
+block|{
+name|cpu_info
+index|[
+name|i
+index|]
+operator|.
+name|cpu_disabled
+operator|=
+literal|1
+expr_stmt|;
+continue|continue;
+block|}
+endif|#
+directive|endif
+block|}
 comment|/* Don't use this CPU if it has been disabled by a tunable. */
 if|if
 condition|(
@@ -2844,6 +2954,13 @@ name|mp_ncpus
 index|]
 operator|=
 name|i
+expr_stmt|;
+name|apic_cpuids
+index|[
+name|i
+index|]
+operator|=
+name|mp_ncpus
 expr_stmt|;
 name|mp_ncpus
 operator|++
@@ -5717,6 +5834,28 @@ operator|(
 name|error
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|SCHED_ULE
+comment|/* 	 * SCHED_ULE doesn't allow enabling/disabling HT cores at 	 * run-time. 	 */
+if|if
+condition|(
+name|allowed
+operator|!=
+name|hyperthreading_allowed
+condition|)
+return|return
+operator|(
+name|ENOTSUP
+operator|)
+return|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|allowed
@@ -5886,14 +6025,6 @@ condition|(
 name|hyperthreading_cpus_mask
 condition|)
 block|{
-name|TUNABLE_INT_FETCH
-argument_list|(
-literal|"machdep.hyperthreading_allowed"
-argument_list|,
-operator|&
-name|hyperthreading_allowed
-argument_list|)
-expr_stmt|;
 name|SYSCTL_ADD_PROC
 argument_list|(
 operator|&

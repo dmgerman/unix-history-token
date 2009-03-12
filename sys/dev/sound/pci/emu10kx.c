@@ -21305,24 +21305,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|snd_emu10kx
-argument_list|,
-name|cardbus
-argument_list|,
-name|emu_driver
-argument_list|,
-name|emu_devclass
-argument_list|,
-name|emu_modevent
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
 name|snd_emu10kx

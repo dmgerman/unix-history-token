@@ -135,16 +135,14 @@ directive|include
 file|<net/if.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/netisr.h>
-end_include
+begin_comment
+comment|/* IFNAMSIZ, struct ifaddr, ifq head, lock.h mutex.h */
+end_comment
 
 begin_include
 include|#
 directive|include
-file|<net/route.h>
+file|<net/netisr.h>
 end_include
 
 begin_include
@@ -156,20 +154,12 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/ip.h>
 end_include
+
+begin_comment
+comment|/* ip_len, ip_off */
+end_comment
 
 begin_include
 include|#
@@ -189,6 +179,10 @@ directive|include
 file|<netinet/ip_var.h>
 end_include
 
+begin_comment
+comment|/* ip_output(), IP_FORWARDING */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -196,7 +190,7 @@ file|<netinet/if_ether.h>
 end_include
 
 begin_comment
-comment|/* for struct arpcom */
+comment|/* various ether_* routines */
 end_comment
 
 begin_include
@@ -691,6 +685,22 @@ name|SYSCTL_NODE
 end_ifdef
 
 begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_inet
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_inet_ip
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
 name|_net_inet_ip
@@ -729,26 +739,21 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|SYSCTL_LONG
-argument_list|(
-name|_net_inet_ip_dummynet
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|curr_time
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|curr_time
-argument_list|,
+begin_if
+if|#
+directive|if
 literal|0
-argument_list|,
-literal|"Current tick"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_if
+
+begin_comment
+comment|/* curr_time is 64 bit */
+end_comment
+
+begin_endif
+unit|SYSCTL_LONG(_net_inet_ip_dummynet, OID_AUTO, curr_time,     CTLFLAG_RD,&curr_time, 0, "Current tick");
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_INT

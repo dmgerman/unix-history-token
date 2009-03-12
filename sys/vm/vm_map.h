@@ -462,6 +462,9 @@ name|pmap_t
 name|pmap
 decl_stmt|;
 comment|/* (c) Physical map */
+name|vm_map_entry_t
+name|deferred_freelist
+decl_stmt|;
 define|#
 directive|define
 name|min_offset

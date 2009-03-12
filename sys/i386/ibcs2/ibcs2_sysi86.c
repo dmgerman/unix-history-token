@@ -190,13 +190,11 @@ name|val
 operator|=
 name|IBCS2_FP_387
 expr_stmt|;
-comment|/* FPU hardware */
 else|else
 name|val
 operator|=
-name|IBCS2_FP_SW
+name|IBCS2_FP_NO
 expr_stmt|;
-comment|/* FPU emulator */
 if|if
 condition|(
 operator|(

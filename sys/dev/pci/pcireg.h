@@ -137,6 +137,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIM_CMD_INTxDIS
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIR_STATUS
 value|0x06
 end_define
@@ -532,6 +539,28 @@ begin_comment
 comment|/* MSI-X */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PCIY_SATA
+value|0x12
+end_define
+
+begin_comment
+comment|/* SATA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIY_PCIAF
+value|0x13
+end_define
+
+begin_comment
+comment|/* PCI Advanced Features */
+end_comment
+
 begin_comment
 comment|/* config registers for header type 0 devices */
 end_comment
@@ -556,13 +585,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCI_MAX_BAR_0
+name|PCIR_MAX_BAR_0
 value|5
 end_define
-
-begin_comment
-comment|/* Number of standard bars */
-end_comment
 
 begin_define
 define|#
@@ -658,7 +683,7 @@ begin_define
 define|#
 directive|define
 name|PCIM_BAR_MEM_BASE
-value|0xfffffff0
+value|0xfffffffffffffff0ULL
 end_define
 
 begin_define
@@ -843,6 +868,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIR_MAX_BAR_1
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIR_SECSTAT_1
 value|0x1e
 end_define
@@ -997,6 +1029,13 @@ end_define
 begin_comment
 comment|/* config registers for header type 2 (CardBus) devices */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIR_MAX_BAR_2
+value|0
+end_define
 
 begin_define
 define|#
@@ -3676,6 +3715,59 @@ define|#
 directive|define
 name|PCIM_MSIX_VCTRL_MASK
 value|0x1
+end_define
+
+begin_comment
+comment|/* PCI Advanced Features definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIR_PCIAF_CAP
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_PCIAFCAP_TP
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_PCIAFCAP_FLR
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIR_PCIAF_CTRL
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIR_PCIAFCTRL_FLR
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIR_PCIAF_STATUS
+value|0x5
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIR_PCIAFSTATUS_TP
+value|0x01
 end_define
 
 end_unit

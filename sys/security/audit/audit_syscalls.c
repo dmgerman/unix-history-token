@@ -243,6 +243,12 @@ operator|(
 name|ENOTSUP
 operator|)
 return|;
+name|td
+operator|->
+name|td_pflags
+operator||=
+name|TDP_AUDITREC
+expr_stmt|;
 name|ar
 operator|=
 name|td
@@ -1955,7 +1961,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_proc_check_setauid
+name|mac_cred_check_setauid
 argument_list|(
 name|oldcred
 argument_list|,
@@ -2337,7 +2343,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_proc_check_setaudit
+name|mac_cred_check_setaudit
 argument_list|(
 name|oldcred
 argument_list|,
@@ -2741,7 +2747,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_proc_check_setaudit_addr
+name|mac_cred_check_setaudit_addr
 argument_list|(
 name|oldcred
 argument_list|,

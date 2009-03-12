@@ -20,7 +20,18 @@ comment|/*  * Internet Group Management Protocol (IGMP) definitions.  *  * Writt
 end_comment
 
 begin_comment
-comment|/*  * IGMP packet format.  */
+comment|/* Minimum length of any IGMP protocol message. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_MINLEN
+value|8
+end_define
+
+begin_comment
+comment|/*  * IGMPv1/v2 query and host report format.  */
 end_comment
 
 begin_struct
@@ -50,6 +61,10 @@ end_struct
 
 begin_comment
 comment|/*  (zero for queries)             */
+end_comment
+
+begin_comment
+comment|/*  * IGMP v3 query format.  */
 end_comment
 
 begin_struct
@@ -92,6 +107,63 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|IGMP_V3_QUERY_MINLEN
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_EXP
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 4)& 0x07)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_MANT
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0x0f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_QRESV
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 4)& 0x0f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_SFLAG
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 3)& 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_QRV
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0x07)
+end_define
+
 begin_struct
 struct|struct
 name|igmp_grouprec
@@ -119,6 +191,17 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|IGMP_GRPREC_HDRLEN
+value|8
+end_define
+
+begin_comment
+comment|/*  * IGMPv3 host membership report header.  */
+end_comment
+
 begin_struct
 struct|struct
 name|igmp_report
@@ -126,11 +209,11 @@ block|{
 name|u_char
 name|ir_type
 decl_stmt|;
-comment|/* record type */
+comment|/* IGMP_v3_HOST_MEMBERSHIP_REPORT */
 name|u_char
 name|ir_rsv1
 decl_stmt|;
-comment|/* reserved */
+comment|/* must be zero */
 name|u_short
 name|ir_cksum
 decl_stmt|;
@@ -138,18 +221,12 @@ comment|/* checksum */
 name|u_short
 name|ir_rsv2
 decl_stmt|;
-comment|/* reserved */
+comment|/* must be zero */
 name|u_short
 name|ir_numgrps
 decl_stmt|;
 comment|/* number of group records */
-name|struct
-name|igmp_grouprec
-name|ir_groups
-index|[
-literal|1
-index|]
-decl_stmt|;
+comment|/*struct	igmp_grouprec ir_groups[1];*/
 comment|/* group records */
 block|}
 struct|;
@@ -158,69 +235,16 @@ end_struct
 begin_define
 define|#
 directive|define
-name|IGMP_MINLEN
+name|IGMP_V3_REPORT_MINLEN
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|IGMP_HDRLEN
-value|8
+name|IGMP_V3_REPORT_MAXRECS
+value|65535
 end_define
-
-begin_define
-define|#
-directive|define
-name|IGMP_GRPREC_HDRLEN
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGMP_PREPEND
-value|0
-end_define
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|IGMP_QRV
-parameter_list|(
-name|pigmp
-parameter_list|)
-value|((pigmp)->igmp_misc& (0x07))
-end_define
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IGMP_MAXSOURCES
-parameter_list|(
-name|len
-parameter_list|)
-value|(((len) - 12)>> 2)
-end_define
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Message types, including version number.  */
@@ -229,7 +253,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IGMP_MEMBERSHIP_QUERY
+name|IGMP_HOST_MEMBERSHIP_QUERY
 value|0x11
 end_define
 
@@ -240,34 +264,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IGMP_V1_MEMBERSHIP_REPORT
+name|IGMP_v1_HOST_MEMBERSHIP_REPORT
 value|0x12
 end_define
 
 begin_comment
 comment|/* Ver. 1 membership report */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IGMP_V2_MEMBERSHIP_REPORT
-value|0x16
-end_define
-
-begin_comment
-comment|/* Ver. 2 membership report */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IGMP_V2_LEAVE_GROUP
-value|0x17
-end_define
-
-begin_comment
-comment|/* Leave-group message	    */
 end_comment
 
 begin_define
@@ -289,35 +291,57 @@ value|0x14
 end_define
 
 begin_comment
-comment|/* PIM routing message	    */
+comment|/* PIM routing message     */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IGMP_MTRACE_RESP
+name|IGMP_v2_HOST_MEMBERSHIP_REPORT
+value|0x16
+end_define
+
+begin_comment
+comment|/* Ver. 2 membership report */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_HOST_LEAVE_MESSAGE
+value|0x17
+end_define
+
+begin_comment
+comment|/* Leave-group message     */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_MTRACE_REPLY
 value|0x1e
 end_define
 
 begin_comment
-comment|/* traceroute resp.(to sender)*/
+comment|/* mtrace(8) reply */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IGMP_MTRACE
+name|IGMP_MTRACE_QUERY
 value|0x1f
 end_define
 
 begin_comment
-comment|/* mcast traceroute messages  */
+comment|/* mtrace(8) probe */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IGMP_V3_MEMBERSHIP_REPORT
+name|IGMP_v3_HOST_MEMBERSHIP_REPORT
 value|0x22
 end_define
 
@@ -325,23 +349,200 @@ begin_comment
 comment|/* Ver. 3 membership report */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
+begin_comment
+comment|/*  * Legacy FreeBSD definitions for the above message types.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_MEMBERSHIP_QUERY
+value|IGMP_HOST_MEMBERSHIP_QUERY
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_V1_MEMBERSHIP_REPORT
+value|IGMP_v1_HOST_MEMBERSHIP_REPORT
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_V2_MEMBERSHIP_REPORT
+value|IGMP_v2_HOST_MEMBERSHIP_REPORT
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_MTRACE_RESP
+value|IGMP_MTRACE_REPLY
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_MTRACE
+value|IGMP_MTRACE_QUERY
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_V2_LEAVE_GROUP
+value|IGMP_HOST_LEAVE_MESSAGE
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_V3_MEMBERSHIP_REPORT
+value|IGMP_v3_HOST_MEMBERSHIP_REPORT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BURN_BRIDGES */
+end_comment
+
+begin_comment
+comment|/*  * IGMPv3 report modes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_DO_NOTHING
+value|0
+end_define
+
+begin_comment
+comment|/* don't send a record */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_MODE_IS_INCLUDE
+value|1
+end_define
+
+begin_comment
+comment|/* MODE_IN */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_MODE_IS_EXCLUDE
+value|2
+end_define
+
+begin_comment
+comment|/* MODE_EX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_CHANGE_TO_INCLUDE_MODE
+value|3
+end_define
+
+begin_comment
+comment|/* TO_IN */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_CHANGE_TO_EXCLUDE_MODE
+value|4
+end_define
+
+begin_comment
+comment|/* TO_EX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_ALLOW_NEW_SOURCES
+value|5
+end_define
+
+begin_comment
+comment|/* ALLOW_NEW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_BLOCK_OLD_SOURCES
+value|6
+end_define
+
+begin_comment
+comment|/* BLOCK_OLD */
+end_comment
+
+begin_comment
+comment|/*  * IGMPv3 query types.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_V3_GENERAL_QUERY
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_V3_GROUP_QUERY
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_V3_GROUP_SOURCE_QUERY
+value|3
+end_define
+
+begin_comment
+comment|/*  * Maximum report interval for IGMP v1/v2 host membership reports [RFC 1112]  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_V1V2_MAX_RI
+value|10
+end_define
+
 begin_define
 define|#
 directive|define
 name|IGMP_MAX_HOST_REPORT_DELAY
-value|10
+value|IGMP_V1V2_MAX_RI
 end_define
 
 begin_comment
-comment|/* max delay for response to     */
-end_comment
-
-begin_comment
-comment|/*  query (in seconds) according */
-end_comment
-
-begin_comment
-comment|/*  to RFC1112                   */
+comment|/*  * IGMP_TIMER_SCALE denotes that the igmp code field specifies  * time in tenths of a second.  */
 end_comment
 
 begin_define
@@ -349,46 +550,6 @@ define|#
 directive|define
 name|IGMP_TIMER_SCALE
 value|10
-end_define
-
-begin_comment
-comment|/* denotes that the igmp code field */
-end_comment
-
-begin_comment
-comment|/* specifies time in 10th of seconds*/
-end_comment
-
-begin_comment
-comment|/*  * The following four defininitions are for backwards compatibility.  * They should be removed as soon as all applications are updated to  * use the new constant names.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IGMP_HOST_MEMBERSHIP_QUERY
-value|IGMP_MEMBERSHIP_QUERY
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGMP_HOST_MEMBERSHIP_REPORT
-value|IGMP_V1_MEMBERSHIP_REPORT
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGMP_HOST_NEW_MEMBERSHIP_REPORT
-value|IGMP_V2_MEMBERSHIP_REPORT
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGMP_HOST_LEAVE_MESSAGE
-value|IGMP_V2_LEAVE_GROUP
 end_define
 
 begin_endif

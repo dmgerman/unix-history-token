@@ -1230,7 +1230,7 @@ argument_list|,
 operator|&
 name|offset
 argument_list|,
-literal|"time=%ld.%ld"
+literal|"time=%ld.%09ld"
 argument_list|,
 operator|(
 name|long

@@ -337,10 +337,19 @@ name|u_int16_t
 name|tso_segsz
 decl_stmt|;
 comment|/* TSO segment size */
+union|union
+block|{
 name|u_int16_t
-name|ether_vtag
+name|vt_vtag
 decl_stmt|;
 comment|/* Ethernet 802.1p+q vlan tag */
+name|u_int16_t
+name|vt_nrecs
+decl_stmt|;
+comment|/* # of IGMPv3 records in this chain */
+block|}
+name|PH_vt
+union|;
 name|SLIST_HEAD
 argument_list|(
 argument|packet_tags
@@ -353,6 +362,13 @@ comment|/* list of packet tags */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|ether_vtag
+value|PH_vt.vt_vtag
+end_define
 
 begin_comment
 comment|/*  * Description of external storage mapped into mbuf; valid only if M_EXT is  * set.  */

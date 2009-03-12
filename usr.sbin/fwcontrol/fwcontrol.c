@@ -3076,7 +3076,7 @@ continue|continue;
 block|}
 name|printf
 argument_list|(
-literal|"%02d   %2d      %2d  %4s     %d    %d   %3s"
+literal|"%02d   %2d      %2d  %4s     %d   %3s"
 literal|"     %s     %s     %s   %d    %d\n"
 argument_list|,
 name|sid
@@ -3105,12 +3105,6 @@ name|p0
 operator|.
 name|phy_speed
 index|]
-argument_list|,
-name|sid
-operator|.
-name|p0
-operator|.
-name|phy_delay
 argument_list|,
 name|sid
 operator|.

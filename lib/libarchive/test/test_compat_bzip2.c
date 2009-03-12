@@ -157,6 +157,27 @@ operator|&
 name|ae
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|UnsupportedCompress
+argument_list|(
+name|r
+argument_list|,
+name|a
+argument_list|)
+condition|)
+block|{
+name|skipping
+argument_list|(
+literal|"Skipping BZIP2 compression check: "
+literal|"This version of libarchive was compiled "
+literal|"without bzip2 support"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|finish
+goto|;
+block|}
 name|failure
 argument_list|(
 literal|"Could not read file %d (%s) from %s"
@@ -235,6 +256,16 @@ argument_list|,
 name|ARCHIVE_COMPRESSION_BZIP2
 argument_list|)
 expr_stmt|;
+name|assertEqualString
+argument_list|(
+name|archive_compression_name
+argument_list|(
+name|a
+argument_list|)
+argument_list|,
+literal|"bzip2"
+argument_list|)
+expr_stmt|;
 name|assertEqualInt
 argument_list|(
 name|archive_format
@@ -255,6 +286,8 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|finish
+label|:
 if|#
 directive|if
 name|ARCHIVE_VERSION_NUMBER

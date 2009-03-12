@@ -1968,6 +1968,14 @@ case|:
 case|case
 name|CRYPTO_SHA1_KPDK
 case|:
+block|{
+comment|/* We need a buffer that can hold an md5 and a sha1 result. */
+name|u_char
+name|buf
+index|[
+name|SHA1_RESULTLEN
+index|]
+decl_stmt|;
 name|sw
 operator|->
 name|sw_klen
@@ -2011,7 +2019,7 @@ name|axf
 operator|->
 name|Final
 argument_list|(
-name|NULL
+name|buf
 argument_list|,
 name|sw
 operator|->
@@ -2019,6 +2027,7 @@ name|sw_ictx
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 default|default:
 name|printf
 argument_list|(
@@ -4422,9 +4431,9 @@ specifier|static
 name|void
 name|swcr_identify
 parameter_list|(
-name|device_t
+name|driver_t
 modifier|*
-name|dev
+name|drv
 parameter_list|,
 name|device_t
 name|parent
@@ -4666,7 +4675,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|swcr_detach
 parameter_list|(
 name|device_t
@@ -4691,6 +4700,9 @@ argument_list|,
 name|M_CRYPTO_DATA
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

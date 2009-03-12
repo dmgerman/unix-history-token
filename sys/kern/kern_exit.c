@@ -2014,11 +2014,6 @@ name|i
 decl_stmt|,
 name|sig
 decl_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
-comment|/* satisfy compiler */
 comment|/* 	 * Do it right now so we can log either proper call of abort2(), or 	 * note, that invalid argument was passed. 512 is big enough to 	 * handle 16 arguments' descriptions with additional comments. 	 */
 name|sb
 operator|=

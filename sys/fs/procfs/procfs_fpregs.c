@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysent.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/uio.h>
 end_include
 
@@ -92,14 +98,6 @@ include|#
 directive|include
 file|<compat/ia32/ia32_reg.h>
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|sysentvec
-name|ia32_freebsd_sysvec
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * PROC(write, fpregs, td2,&r) becomes  * proc_write_fpregs(td2,&r)   or  * proc_write_fpregs32(td2,&r32)  *  * UIOMOVE_FROMBUF(r, uio) becomes  * uiomove_frombuf(&r, sizeof(r), uio)  or  * uiomove_frombuf(&r32, sizeof(r32), uio)  */
@@ -269,26 +267,27 @@ directive|ifdef
 name|COMPAT_IA32
 if|if
 condition|(
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_sysent
-operator|==
-operator|&
-name|ia32_freebsd_sysvec
+name|SV_CURPROC_FLAG
+argument_list|(
+name|SV_ILP32
+argument_list|)
 condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|td2
 operator|->
 name|td_proc
 operator|->
 name|p_sysent
-operator|!=
+operator|->
+name|sv_flags
 operator|&
-name|ia32_freebsd_sysvec
+name|SV_ILP32
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|PROC_UNLOCK

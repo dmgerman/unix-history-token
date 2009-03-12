@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2006 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar5211.h,v 1.8 2008/11/10 22:08:47 sam Exp $  */
+comment|/*  * Copyright (c) 2002-2009 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2006 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -380,10 +380,6 @@ decl_stmt|;
 name|HAL_BOOL
 name|ah_bIQCalibration
 decl_stmt|;
-name|HAL_CHANNEL
-name|ah_curchan
-decl_stmt|;
-comment|/* XXX */
 name|int
 name|ah_rfgainState
 decl_stmt|;
@@ -453,27 +449,6 @@ end_struct_decl
 
 begin_function_decl
 specifier|extern
-name|struct
-name|ath_hal
-modifier|*
-name|ar5211Attach
-parameter_list|(
-name|uint16_t
-parameter_list|,
-name|HAL_SOFTC
-parameter_list|,
-name|HAL_BUS_TAG
-parameter_list|,
-name|HAL_BUS_HANDLE
-parameter_list|,
-name|HAL_STATUS
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|void
 name|ar5211Detach
 parameter_list|(
@@ -495,7 +470,8 @@ modifier|*
 parameter_list|,
 name|HAL_OPMODE
 parameter_list|,
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|,
 name|HAL_BOOL
@@ -540,7 +516,10 @@ name|struct
 name|ath_hal
 modifier|*
 parameter_list|,
-name|uint16_t
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -554,7 +533,8 @@ name|struct
 name|ath_hal
 modifier|*
 parameter_list|,
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|,
 name|HAL_BOOL
@@ -573,7 +553,8 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -600,9 +581,10 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
-name|chan
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -625,28 +607,15 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|HAL_BOOL
-name|ar5211SetTransmitPower
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|,
-name|HAL_CHANNEL
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|HAL_BOOL
 name|ar5211CalNoiseFloor
 parameter_list|(
 name|struct
 name|ath_hal
 modifier|*
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -664,7 +633,8 @@ parameter_list|,
 name|HAL_ANT_SETTING
 parameter_list|,
 specifier|const
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1502,6 +1472,8 @@ modifier|*
 parameter_list|,
 name|uint32_t
 name|gpio
+parameter_list|,
+name|HAL_GPIO_MUX_TYPE
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2273,7 +2245,9 @@ specifier|const
 name|HAL_NODE_STATS
 modifier|*
 parameter_list|,
-name|HAL_CHANNEL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|)
 function_decl|;

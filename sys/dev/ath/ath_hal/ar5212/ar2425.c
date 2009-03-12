@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar2425.c,v 1.8 2008/11/16 21:33:05 sam Exp $  */
+comment|/*  * Copyright (c) 2002-2009 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -228,7 +228,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * for SWAN similar to Condor 	 * Bit 0 enables link to go to L1 when MAC goes to sleep. 	 * Bit 3 enables the loop back the link down to reset. 	 */
-block|if (IS_PCIE(ah)&& ath_hal_pcieL1SKPEnable) { 		OS_REG_WRITE(ah, AR_PCIE_PMC, 		    AR_PCIE_PMC_ENA_L1 | AR_PCIE_PMC_ENA_RESET); 	}
+block|if (AH_PRIVATE(ah)->ah_ispcie&&&& ath_hal_pcieL1SKPEnable) { 		OS_REG_WRITE(ah, AR_PCIE_PMC, 		    AR_PCIE_PMC_ENA_L1 | AR_PCIE_PMC_ENA_RESET); 	}
 comment|/* 	 * for Standby issue in Swan/Condor. 	 * Bit 9 (MAC_WOW_PWR_STATE_MASK_D2)to be set to avoid skips 	 *	before last Training Sequence 2 (TS2) 	 * Bit 8 (MAC_WOW_PWR_STATE_MASK_D1)to be unset to assert 	 *	Power Reset along with PCI Reset 	 */
 block|OS_REG_SET_BIT(ah, AR_PCIE_PMC, MAC_WOW_PWR_STATE_MASK_D2);
 endif|#
@@ -250,11 +250,23 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|)
 block|{
+name|uint16_t
+name|freq
+init|=
+name|ath_hal_gethwchannel
+argument_list|(
+name|ah
+argument_list|,
+name|chan
+argument_list|)
+decl_stmt|;
 name|uint32_t
 name|channelSel
 init|=
@@ -275,25 +287,18 @@ name|reg32
 init|=
 literal|0
 decl_stmt|;
-name|uint16_t
-name|freq
-decl_stmt|;
 name|OS_MARK
 argument_list|(
 name|ah
 argument_list|,
 name|AH_MARK_SETCHANNEL
 argument_list|,
-name|chan
-operator|->
-name|channel
+name|freq
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|chan
-operator|->
-name|channel
+name|freq
 operator|<
 literal|4800
 condition|)
@@ -303,9 +308,7 @@ name|txctl
 decl_stmt|;
 name|channelSel
 operator|=
-name|chan
-operator|->
-name|channel
+name|freq
 operator|-
 literal|2272
 expr_stmt|;
@@ -329,9 +332,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|chan
-operator|->
-name|channel
+name|freq
 operator|==
 literal|2484
 condition|)
@@ -370,9 +371,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|chan
-operator|->
-name|channel
+name|freq
 operator|%
 literal|5
 operator|)
@@ -381,9 +380,7 @@ literal|2
 operator|)
 operator|&&
 operator|(
-name|chan
-operator|->
-name|channel
+name|freq
 operator|<=
 literal|5435
 operator|)
@@ -391,9 +388,7 @@ condition|)
 block|{
 name|freq
 operator|=
-name|chan
-operator|->
-name|channel
+name|freq
 operator|-
 literal|2
 expr_stmt|;
@@ -438,18 +433,14 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|chan
-operator|->
-name|channel
+name|freq
 operator|%
 literal|20
 operator|)
 operator|==
 literal|0
 operator|&&
-name|chan
-operator|->
-name|channel
+name|freq
 operator|>=
 literal|5120
 condition|)
@@ -460,9 +451,7 @@ name|ath_hal_reverseBits
 argument_list|(
 operator|(
 operator|(
-name|chan
-operator|->
-name|channel
+name|freq
 operator|-
 literal|4800
 operator|)
@@ -489,9 +478,7 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|chan
-operator|->
-name|channel
+name|freq
 operator|%
 literal|10
 operator|)
@@ -505,9 +492,7 @@ name|ath_hal_reverseBits
 argument_list|(
 operator|(
 operator|(
-name|chan
-operator|->
-name|channel
+name|freq
 operator|-
 literal|4800
 operator|)
@@ -534,9 +519,7 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|chan
-operator|->
-name|channel
+name|freq
 operator|%
 literal|5
 operator|)
@@ -549,9 +532,7 @@ operator|=
 name|ath_hal_reverseBits
 argument_list|(
 operator|(
-name|chan
-operator|->
-name|channel
+name|freq
 operator|-
 literal|4800
 operator|)
@@ -583,9 +564,7 @@ literal|"%s: invalid channel %u MHz\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|chan
-operator|->
-name|channel
+name|freq
 argument_list|)
 expr_stmt|;
 return|return
@@ -681,7 +660,9 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -756,17 +737,17 @@ name|ah
 argument_list|,
 name|HAL_DEBUG_RFPARAM
 argument_list|,
-literal|"==>%s:chan 0x%x flag 0x%x modesIndex 0x%x\n"
+literal|"%s: chan %u/0x%x modesIndex %u\n"
 argument_list|,
 name|__func__
 argument_list|,
 name|chan
 operator|->
-name|channel
+name|ic_freq
 argument_list|,
 name|chan
 operator|->
-name|channelFlags
+name|ic_flags
 argument_list|,
 name|modesIndex
 argument_list|)
@@ -777,18 +758,14 @@ name|priv
 argument_list|)
 expr_stmt|;
 comment|/* Setup rf parameters */
-switch|switch
+if|if
 condition|(
+name|IEEE80211_IS_CHAN_B
+argument_list|(
 name|chan
-operator|->
-name|channelFlags
-operator|&
-name|CHANNEL_ALL
+argument_list|)
 condition|)
 block|{
-case|case
-name|CHANNEL_B
-case|:
 name|ob2GHz
 operator|=
 name|ee
@@ -801,13 +778,9 @@ name|ee
 operator|->
 name|ee_dbFor24
 expr_stmt|;
-break|break;
-case|case
-name|CHANNEL_G
-case|:
-case|case
-name|CHANNEL_108G
-case|:
+block|}
+else|else
+block|{
 name|ob2GHz
 operator|=
 name|ee
@@ -820,26 +793,6 @@ name|ee
 operator|->
 name|ee_dbFor24g
 expr_stmt|;
-break|break;
-default|default:
-name|HALDEBUG
-argument_list|(
-name|ah
-argument_list|,
-name|HAL_DEBUG_ANY
-argument_list|,
-literal|"%s: invalid channel flags 0x%x\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|chan
-operator|->
-name|channelFlags
-argument_list|)
-expr_stmt|;
-return|return
-name|AH_FALSE
-return|;
 block|}
 comment|/* Bank 1 Write */
 name|RF_BANK_SETUP
@@ -2707,7 +2660,9 @@ name|int16_t
 modifier|*
 name|maxPower
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -2716,6 +2671,16 @@ modifier|*
 name|rfXpdGain
 parameter_list|)
 block|{
+name|uint16_t
+name|freq
+init|=
+name|ath_hal_gethwchannel
+argument_list|(
+name|ah
+argument_list|,
+name|chan
+argument_list|)
+decl_stmt|;
 name|struct
 name|ath_hal_5212
 modifier|*
@@ -2782,23 +2747,21 @@ literal|"%s:chan 0x%x flag 0x%x\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|chan
-operator|->
-name|channel
+name|freq
 argument_list|,
 name|chan
 operator|->
-name|channelFlags
+name|ic_flags
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|IS_CHAN_G
+name|IEEE80211_IS_CHAN_G
 argument_list|(
 name|chan
 argument_list|)
 operator|||
-name|IS_CHAN_108G
+name|IEEE80211_IS_CHAN_108G
 argument_list|(
 name|chan
 argument_list|)
@@ -2816,7 +2779,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|IS_CHAN_B
+name|IEEE80211_IS_CHAN_B
 argument_list|(
 name|chan
 argument_list|)
@@ -2869,9 +2832,7 @@ name|ar2425getGainBoundariesAndPdadcsForPowers
 argument_list|(
 name|ah
 argument_list|,
-name|chan
-operator|->
-name|channel
+name|freq
 argument_list|,
 name|pRawDataset
 argument_list|,
@@ -3304,7 +3265,9 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -3317,6 +3280,14 @@ modifier|*
 name|minPow
 parameter_list|)
 block|{
+name|uint16_t
+name|freq
+init|=
+name|chan
+operator|->
+name|ic_freq
+decl_stmt|;
+comment|/* NB: never mapped */
 specifier|const
 name|HAL_EEPROM
 modifier|*
@@ -3364,12 +3335,12 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|IS_CHAN_G
+name|IEEE80211_IS_CHAN_G
 argument_list|(
 name|chan
 argument_list|)
 operator|||
-name|IS_CHAN_108G
+name|IEEE80211_IS_CHAN_108G
 argument_list|(
 name|chan
 argument_list|)
@@ -3387,7 +3358,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|IS_CHAN_B
+name|IEEE80211_IS_CHAN_B
 argument_list|(
 name|chan
 argument_list|)
@@ -3435,9 +3406,7 @@ return|;
 if|if
 condition|(
 operator|(
-name|chan
-operator|->
-name|channel
+name|freq
 operator|<
 name|data
 index|[
@@ -3448,9 +3417,7 @@ name|channelValue
 operator|)
 operator|||
 operator|(
-name|chan
-operator|->
-name|channel
+name|freq
 operator|>
 name|data
 index|[
@@ -3465,9 +3432,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|chan
-operator|->
-name|channel
+name|freq
 operator|<
 name|data
 index|[
@@ -3570,9 +3535,7 @@ name|numChannels
 operator|)
 operator|&&
 operator|(
-name|chan
-operator|->
-name|channel
+name|freq
 operator|>
 name|data
 index|[
@@ -3646,9 +3609,7 @@ operator|(
 name|totalF
 operator|*
 operator|(
-name|chan
-operator|->
-name|channel
+name|freq
 operator|-
 name|data
 index|[
@@ -3710,9 +3671,7 @@ operator|(
 name|totalMin
 operator|*
 operator|(
-name|chan
-operator|->
-name|channel
+name|freq
 operator|-
 name|data
 index|[
@@ -3749,9 +3708,7 @@ else|else
 block|{
 if|if
 condition|(
-name|chan
-operator|->
-name|channel
+name|freq
 operator|==
 name|data
 index|[

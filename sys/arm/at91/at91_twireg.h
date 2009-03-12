@@ -344,7 +344,7 @@ name|TWI_CWGR_DIV
 parameter_list|(
 name|rate
 parameter_list|)
-value|((AT91C_MASTER_CLOCK /(4*(rate))) - 2)
+value|((at91_master_clock /(4*(rate))) - 2)
 end_define
 
 begin_comment

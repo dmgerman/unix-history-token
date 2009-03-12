@@ -212,7 +212,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Read in a superblock finding an alternate if necessary.  * Return 1 if successful, 0 if unsuccessful, -1 if file system  * is already clean (preen mode only).  */
+comment|/*  * Read in a superblock finding an alternate if necessary.  * Return 1 if successful, 0 if unsuccessful, -1 if file system  * is already clean (ckclean and preen mode only).  */
 end_comment
 
 begin_function
@@ -939,7 +939,7 @@ if|if
 condition|(
 name|skipclean
 operator|&&
-name|preen
+name|ckclean
 operator|&&
 name|sblock
 operator|.

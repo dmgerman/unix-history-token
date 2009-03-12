@@ -175,58 +175,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Multicast source list entry.  */
-end_comment
-
-begin_struct
-struct|struct
-name|in_msource
-block|{
-name|TAILQ_ENTRY
-argument_list|(
-argument|in_msource
-argument_list|)
-name|ims_next
-expr_stmt|;
-comment|/* next source */
-name|struct
-name|sockaddr_storage
-name|ims_addr
-decl_stmt|;
-comment|/* address of this source */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Multicast filter descriptor; there is one instance per group membership  * on a socket, allocated as an expandable vector hung off ip_moptions.  * struct in_multi contains separate IPv4-stack-wide state for IGMPv3.  */
-end_comment
-
-begin_struct
-struct|struct
-name|in_mfilter
-block|{
-name|uint16_t
-name|imf_fmode
-decl_stmt|;
-comment|/* filter mode for this socket/group */
-name|uint16_t
-name|imf_nsources
-decl_stmt|;
-comment|/* # of sources for this socket/group */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|in_msource
-argument_list|)
-name|imf_sources
-expr_stmt|;
-comment|/* source list */
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Structure attached to inpcb.ip_moptions and  * passed to ip_output when IP multicast options are in use.  * This structure is lazy-allocated.  */
 end_comment
 

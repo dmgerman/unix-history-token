@@ -326,9 +326,6 @@ block|{
 name|struct
 name|pcb
 modifier|*
-name|pcb1
-decl_stmt|,
-modifier|*
 name|pcb2
 decl_stmt|;
 name|struct
@@ -357,12 +354,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|pcb1
-operator|=
-name|td1
-operator|->
-name|td_pcb
-expr_stmt|;
 name|pcb2
 operator|=
 operator|(

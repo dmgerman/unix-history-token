@@ -233,6 +233,9 @@ name|archive
 modifier|*
 name|a
 decl_stmt|;
+name|int
+name|r
+decl_stmt|;
 name|assert
 argument_list|(
 operator|(
@@ -282,10 +285,8 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
-literal|0
-operator|==
+name|r
+operator|=
 name|archive_read_next_header
 argument_list|(
 name|a
@@ -293,6 +294,33 @@ argument_list|,
 operator|&
 name|ae
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|UnsupportedCompress
+argument_list|(
+name|r
+argument_list|,
+name|a
+argument_list|)
+condition|)
+block|{
+name|skipping
+argument_list|(
+literal|"Skipping GZIP compression check: "
+literal|"This version of libarchive was compiled "
+literal|"without gzip support"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|finish
+goto|;
+block|}
+name|assert
+argument_list|(
+literal|0
+operator|==
+name|r
 argument_list|)
 expr_stmt|;
 name|assert
@@ -325,6 +353,8 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|finish
+label|:
 if|#
 directive|if
 name|ARCHIVE_VERSION_NUMBER

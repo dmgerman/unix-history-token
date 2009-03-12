@@ -78,6 +78,9 @@ decl_stmt|;
 name|register_t
 name|esr
 decl_stmt|;
+name|register_t
+name|dbcr0
+decl_stmt|;
 block|}
 name|booke
 struct|;

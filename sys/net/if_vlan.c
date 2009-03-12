@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_route.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_vlan.h"
 end_include
 
@@ -131,6 +137,12 @@ begin_include
 include|#
 directive|include
 file|<net/if_vlan_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/route.h>
 end_include
 
 begin_include
@@ -3616,6 +3628,13 @@ argument_list|,
 name|IFT_ETHER
 argument_list|)
 expr_stmt|;
+name|ifc_free_unit
+argument_list|(
+name|ifc
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|ifv
@@ -5764,11 +5783,6 @@ name|data
 parameter_list|)
 block|{
 name|struct
-name|ifaddr
-modifier|*
-name|ifa
-decl_stmt|;
-name|struct
 name|ifnet
 modifier|*
 name|p
@@ -5797,15 +5811,6 @@ operator|=
 operator|(
 expr|struct
 name|ifreq
-operator|*
-operator|)
-name|data
-expr_stmt|;
-name|ifa
-operator|=
-operator|(
-expr|struct
-name|ifaddr
 operator|*
 operator|)
 name|data

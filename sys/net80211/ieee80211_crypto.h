@@ -261,6 +261,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|IEEE80211_KEY_BITS
+define|\
+value|"\20\1XMIT\2RECV\3GROUP\4SWENCRYPT\5SWDECRYPT\6SWENMIC\7SWDEMIC" \ 	"\10DEVKEY\11CIPHER0\12CIPHER1"
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_KEYIX_NONE
 value|((ieee80211_keyix) -1)
 end_define
@@ -377,6 +385,14 @@ define|#
 directive|define
 name|IEEE80211_CRYPTO_CKIP
 value|(1<<IEEE80211_CIPHER_CKIP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CRYPTO_BITS
+define|\
+value|"\20\1WEP\2TKIP\3AES\4AES_CCM\5TKIPMIC\6CKIP"
 end_define
 
 begin_if

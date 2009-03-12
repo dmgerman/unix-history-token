@@ -982,12 +982,6 @@ argument_list|(
 name|vfsp
 argument_list|)
 decl_stmt|;
-name|struct
-name|vnode
-modifier|*
-modifier|*
-name|result
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1016,10 +1010,6 @@ name|MARK_ENTRY
 argument_list|(
 name|CODA_ROOT_STATS
 argument_list|)
-expr_stmt|;
-name|result
-operator|=
-name|NULL
 expr_stmt|;
 if|if
 condition|(

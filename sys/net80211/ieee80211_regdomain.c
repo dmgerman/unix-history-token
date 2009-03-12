@@ -86,6 +86,9 @@ modifier|*
 name|ic
 parameter_list|,
 name|int
+name|maxchan
+parameter_list|,
+name|int
 modifier|*
 name|n
 parameter_list|,
@@ -96,8 +99,15 @@ name|c
 parameter_list|)
 block|{
 comment|/* just feed back the current channel list */
-operator|*
-name|n
+if|if
+condition|(
+name|maxchan
+operator|>
+name|ic
+operator|->
+name|ic_nchans
+condition|)
+name|maxchan
 operator|=
 name|ic
 operator|->
@@ -111,9 +121,7 @@ name|ic
 operator|->
 name|ic_channels
 argument_list|,
-name|ic
-operator|->
-name|ic_nchans
+name|maxchan
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -121,6 +129,11 @@ expr|struct
 name|ieee80211_channel
 argument_list|)
 argument_list|)
+expr_stmt|;
+operator|*
+name|n
+operator|=
+name|maxchan
 expr_stmt|;
 block|}
 end_function
@@ -227,7 +240,7 @@ operator|=
 literal|'S'
 expr_stmt|;
 comment|/* XXX */
-comment|/* XXX? too late to setup default channel list */
+comment|/* NB: driver calls ieee80211_init_channels or similar */
 block|}
 name|ic
 operator|->
@@ -856,7 +869,7 @@ name|CHAN_UNINTERESTING
 define|\
 value|(IEEE80211_CHAN_TURBO | IEEE80211_CHAN_STURBO | \      IEEE80211_CHAN_HALF | IEEE80211_CHAN_QUARTER)
 comment|/* XXX what about auto? */
-comment|/* flag set of channels to be excluded */
+comment|/* flag set of channels to be excluded (band added below) */
 specifier|static
 specifier|const
 name|int
@@ -866,59 +879,88 @@ name|IEEE80211_MODE_MAX
 index|]
 init|=
 block|{
+index|[
+name|IEEE80211_MODE_AUTO
+index|]
+operator|=
 name|CHAN_UNINTERESTING
 block|,
-comment|/* MODE_AUTO */
+index|[
+name|IEEE80211_MODE_11A
+index|]
+operator|=
 name|CHAN_UNINTERESTING
-operator||
-name|IEEE80211_CHAN_2GHZ
 block|,
-comment|/* MODE_11A */
+index|[
+name|IEEE80211_MODE_11B
+index|]
+operator|=
 name|CHAN_UNINTERESTING
-operator||
-name|IEEE80211_CHAN_5GHZ
 block|,
-comment|/* MODE_11B */
+index|[
+name|IEEE80211_MODE_11G
+index|]
+operator|=
 name|CHAN_UNINTERESTING
-operator||
-name|IEEE80211_CHAN_5GHZ
 block|,
-comment|/* MODE_11G */
+index|[
+name|IEEE80211_MODE_FH
+index|]
+operator|=
 name|CHAN_UNINTERESTING
 operator||
 name|IEEE80211_CHAN_OFDM
 operator||
-comment|/* MODE_FH */
 name|IEEE80211_CHAN_CCK
 operator||
 name|IEEE80211_CHAN_DYN
 block|,
+index|[
+name|IEEE80211_MODE_TURBO_A
+index|]
+operator|=
 name|CHAN_UNINTERESTING
-operator||
-name|IEEE80211_CHAN_2GHZ
 block|,
-comment|/* MODE_TURBO_A */
+index|[
+name|IEEE80211_MODE_TURBO_G
+index|]
+operator|=
 name|CHAN_UNINTERESTING
-operator||
-name|IEEE80211_CHAN_5GHZ
 block|,
-comment|/* MODE_TURBO_G */
+index|[
+name|IEEE80211_MODE_STURBO_A
+index|]
+operator|=
 name|CHAN_UNINTERESTING
-operator||
-name|IEEE80211_CHAN_2GHZ
 block|,
-comment|/* MODE_STURBO_A */
+index|[
+name|IEEE80211_MODE_HALF
+index|]
+operator|=
+name|IEEE80211_CHAN_TURBO
+operator||
+name|IEEE80211_CHAN_STURBO
+block|,
+index|[
+name|IEEE80211_MODE_QUARTER
+index|]
+operator|=
+name|IEEE80211_CHAN_TURBO
+operator||
+name|IEEE80211_CHAN_STURBO
+block|,
+index|[
+name|IEEE80211_MODE_11NA
+index|]
+operator|=
 name|CHAN_UNINTERESTING
-operator||
-name|IEEE80211_CHAN_2GHZ
 block|,
-comment|/* MODE_11NA */
+index|[
+name|IEEE80211_MODE_11NG
+index|]
+operator|=
 name|CHAN_UNINTERESTING
-operator||
-name|IEEE80211_CHAN_5GHZ
-block|,
-comment|/* MODE_11NG */
-block|}
+block|, 	}
 decl_stmt|;
 specifier|const
 name|struct
@@ -1161,6 +1203,33 @@ operator|->
 name|ic_bsschan
 argument_list|)
 index|]
+expr_stmt|;
+if|if
+condition|(
+name|IEEE80211_IS_CHAN_5GHZ
+argument_list|(
+name|ic
+operator|->
+name|ic_bsschan
+argument_list|)
+condition|)
+name|skip
+operator||=
+name|IEEE80211_CHAN_2GHZ
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|IEEE80211_IS_CHAN_2GHZ
+argument_list|(
+name|ic
+operator|->
+name|ic_bsschan
+argument_list|)
+condition|)
+name|skip
+operator||=
+name|IEEE80211_CHAN_5GHZ
 expr_stmt|;
 for|for
 control|(
@@ -1792,6 +1861,36 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
+comment|/* XXX bandaid; a running vap will likely crash */
+if|if
+condition|(
+operator|!
+name|allvapsdown
+argument_list|(
+name|ic
+argument_list|)
+condition|)
+block|{
+name|IEEE80211_UNLOCK
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_IOCTL
+argument_list|,
+literal|"%s: reject: vaps are running\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return
+name|EBUSY
+return|;
+block|}
 name|error
 operator|=
 name|ic
@@ -1845,36 +1944,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|error
-return|;
-block|}
-comment|/* XXX bandaid; a running vap will likely crash */
-if|if
-condition|(
-operator|!
-name|allvapsdown
-argument_list|(
-name|ic
-argument_list|)
-condition|)
-block|{
-name|IEEE80211_UNLOCK
-argument_list|(
-name|ic
-argument_list|)
-expr_stmt|;
-name|IEEE80211_DPRINTF
-argument_list|(
-name|vap
-argument_list|,
-name|IEEE80211_MSG_IOCTL
-argument_list|,
-literal|"%s: reject: vaps are running\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-return|return
-name|EBUSY
 return|;
 block|}
 comment|/* 	 * Commit: copy in new channel table and reset media state. 	 * On return the state machines will be clocked so all vaps 	 * will reset their state. 	 * 	 * XXX ic_bsschan is marked undefined, must have vap's in 	 *     INIT state or we blow up forcing stations off 	 */
@@ -2041,10 +2110,7 @@ operator|!=
 name|IEEE80211_CHAN_ANYC
 condition|)
 block|{
-comment|/* NB: may be NULL if not present in new channel list */
-name|vap
-operator|->
-name|iv_des_chan
+name|c
 operator|=
 name|ieee80211_find_channel
 argument_list|(
@@ -2054,6 +2120,21 @@ name|desfreq
 argument_list|,
 name|desflags
 argument_list|)
+expr_stmt|;
+comment|/* NB: may be NULL if not present in new channel list */
+name|vap
+operator|->
+name|iv_des_chan
+operator|=
+operator|(
+name|c
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|c
+else|:
+name|IEEE80211_CHAN_ANYC
 expr_stmt|;
 block|}
 name|IEEE80211_UNLOCK

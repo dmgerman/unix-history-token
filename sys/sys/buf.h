@@ -1660,7 +1660,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|long
 name|maxswzone
 decl_stmt|;
 end_decl_stmt
@@ -1671,7 +1671,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|long
 name|maxbcache
 decl_stmt|;
 end_decl_stmt
@@ -1682,14 +1682,14 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|long
 name|runningbufspace
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|long
 name|hibufspace
 decl_stmt|;
 end_decl_stmt

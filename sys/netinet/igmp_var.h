@@ -19,9 +19,19 @@ begin_comment
 comment|/*  * Internet Group Management Protocol (IGMP),  * implementation-specific definitions.  *  * Written by Steve Deering, Stanford, May 1988.  *  * MULTICAST Revision: 3.5.1.3  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
+begin_comment
+comment|/*  * Pre-IGMPV3 igmpstat structure.  */
+end_comment
+
 begin_struct
 struct|struct
-name|igmpstat
+name|oigmpstat
 block|{
 name|u_int
 name|igps_rcv_total
@@ -67,6 +77,149 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * IGMPv3 protocol statistics.  */
+end_comment
+
+begin_struct
+struct|struct
+name|igmpstat
+block|{
+comment|/* 	 * Structure header (to insulate ABI changes). 	 */
+name|uint32_t
+name|igps_version
+decl_stmt|;
+comment|/* version of this structure */
+name|uint32_t
+name|igps_len
+decl_stmt|;
+comment|/* length of this structure */
+comment|/* 	 * Message statistics. 	 */
+name|uint64_t
+name|igps_rcv_total
+decl_stmt|;
+comment|/* total IGMP messages received */
+name|uint64_t
+name|igps_rcv_tooshort
+decl_stmt|;
+comment|/* received with too few bytes */
+name|uint64_t
+name|igps_rcv_badttl
+decl_stmt|;
+comment|/* received with ttl other than 1 */
+name|uint64_t
+name|igps_rcv_badsum
+decl_stmt|;
+comment|/* received with bad checksum */
+comment|/* 	 * Query statistics. 	 */
+name|uint64_t
+name|igps_rcv_v1v2_queries
+decl_stmt|;
+comment|/* received IGMPv1/IGMPv2 queries */
+name|uint64_t
+name|igps_rcv_v3_queries
+decl_stmt|;
+comment|/* received IGMPv3 queries */
+name|uint64_t
+name|igps_rcv_badqueries
+decl_stmt|;
+comment|/* received invalid queries */
+name|uint64_t
+name|igps_rcv_gen_queries
+decl_stmt|;
+comment|/* received general queries */
+name|uint64_t
+name|igps_rcv_group_queries
+decl_stmt|;
+comment|/* received group queries */
+name|uint64_t
+name|igps_rcv_gsr_queries
+decl_stmt|;
+comment|/* received group-source queries */
+name|uint64_t
+name|igps_drop_gsr_queries
+decl_stmt|;
+comment|/* dropped group-source queries */
+comment|/* 	 * Report statistics. 	 */
+name|uint64_t
+name|igps_rcv_reports
+decl_stmt|;
+comment|/* received membership reports */
+name|uint64_t
+name|igps_rcv_badreports
+decl_stmt|;
+comment|/* received invalid reports */
+name|uint64_t
+name|igps_rcv_ourreports
+decl_stmt|;
+comment|/* received reports for our groups */
+name|uint64_t
+name|igps_rcv_nora
+decl_stmt|;
+comment|/* received w/o Router Alert option */
+name|uint64_t
+name|igps_snd_reports
+decl_stmt|;
+comment|/* sent membership reports */
+comment|/* 	 * Padding for future additions. 	 */
+name|uint64_t
+name|__igps_pad
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|IGPS_VERSION_3
+value|3
+end_define
+
+begin_comment
+comment|/* as of FreeBSD 8.x */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGPS_VERSION3_LEN
+value|168
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CTASSERT
+end_ifdef
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|igmpstat
+argument_list|)
+operator|==
+literal|168
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -83,403 +236,466 @@ parameter_list|)
 value|(random() % (X) + 1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IGMP_MAX_STATE_CHANGES
+value|24
+end_define
+
 begin_comment
-comment|/*  * States for IGMPv2's leave processing  */
+comment|/* Max pending changes per group */
+end_comment
+
+begin_comment
+comment|/*  * IGMP per-group states.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IGMP_OTHERMEMBER
+name|IGMP_NOT_MEMBER
 value|0
 end_define
+
+begin_comment
+comment|/* Can garbage collect in_multi */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|IGMP_IREPORTEDLAST
+name|IGMP_SILENT_MEMBER
 value|1
 end_define
 
 begin_comment
-comment|/*  * State masks for IGMPv3  */
+comment|/* Do not perform IGMP for group */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IGMP_V3_NONEXISTENT
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGMP_V3_OTHERMEMBER
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGMP_V3_IREPORTEDLAST
-value|0x04
-end_define
-
-begin_comment
-comment|/*  * We must remember what version the subnet's querier is.  * We conveniently use the IGMP message type for the proper  * membership report to keep this state.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IGMP_V1_ROUTER
-value|IGMP_V1_MEMBERSHIP_REPORT
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGMP_V2_ROUTER
-value|IGMP_V2_MEMBERSHIP_REPORT
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGMP_V3_ROUTER
-value|IGMP_V3_MEMBERSHIP_REPORT
-end_define
-
-begin_comment
-comment|/*  * Revert to new router if we haven't heard from an old router in  * this amount of time.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IGMP_AGE_THRESHOLD
-value|540
-end_define
-
-begin_comment
-comment|/*  * IGMPv3 protocol defaults  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IGMP_INIT_ROBVAR
+name|IGMP_REPORTING_MEMBER
 value|2
 end_define
 
 begin_comment
-comment|/* Robustness */
+comment|/* IGMPv1/2/3 we are reporter */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IGMP_MAX_ROBVAR
+name|IGMP_IDLE_MEMBER
+value|3
+end_define
+
+begin_comment
+comment|/* IGMPv1/2 we reported last */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_LAZY_MEMBER
+value|4
+end_define
+
+begin_comment
+comment|/* IGMPv1/2 other member reporting */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_SLEEPING_MEMBER
+value|5
+end_define
+
+begin_comment
+comment|/* IGMPv1/2 start query response */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_AWAKENING_MEMBER
+value|6
+end_define
+
+begin_comment
+comment|/* IGMPv1/2 group timer will start */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_G_QUERY_PENDING_MEMBER
+value|7
+end_define
+
+begin_comment
+comment|/* IGMPv3 group query pending */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_SG_QUERY_PENDING_MEMBER
+value|8
+end_define
+
+begin_comment
+comment|/* IGMPv3 source query pending */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_LEAVING_MEMBER
+value|9
+end_define
+
+begin_comment
+comment|/* IGMPv3 dying gasp (pending last */
+end_comment
+
+begin_comment
+comment|/* retransmission of INCLUDE {}) */
+end_comment
+
+begin_comment
+comment|/*  * IGMP version tag.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_VERSION_NONE
+value|0
+end_define
+
+begin_comment
+comment|/* Invalid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_VERSION_1
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_VERSION_2
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_VERSION_3
+value|3
+end_define
+
+begin_comment
+comment|/* Default */
+end_comment
+
+begin_comment
+comment|/*  * IGMPv3 protocol control variables.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_RV_INIT
+value|2
+end_define
+
+begin_comment
+comment|/* Robustness Variable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_RV_MIN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_RV_MAX
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|IGMP_INIT_QRYINT
+name|IGMP_QI_INIT
 value|125
 end_define
 
 begin_comment
-comment|/* Querier's Query interval */
+comment|/* Query Interval (s) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IGMP_MAX_QRYINT
+name|IGMP_QI_MIN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_QI_MAX
 value|255
 end_define
 
 begin_define
 define|#
 directive|define
-name|IGMP_INIT_QRYRSP
+name|IGMP_QRI_INIT
 value|10
 end_define
 
 begin_comment
-comment|/* Query Response interval */
+comment|/* Query Response Interval (s) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IGMP_DEF_QRYMRT
-value|10
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGMP_UNSOL_INT
+name|IGMP_QRI_MIN
 value|1
 end_define
 
-begin_comment
-comment|/* Unsolicited Report interval */
-end_comment
-
-begin_comment
-comment|/*  * IGMPv3 report types  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|IGMP_REPORT_MODE_IN
-value|1
+name|IGMP_QRI_MAX
+value|255
 end_define
 
-begin_comment
-comment|/* mode-is-include */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|IGMP_REPORT_MODE_EX
-value|2
-end_define
-
-begin_comment
-comment|/* mode-is-exclude */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IGMP_REPORT_TO_IN
+name|IGMP_URI_INIT
 value|3
 end_define
 
 begin_comment
-comment|/* change-to-include */
+comment|/* Unsolicited Report Interval (s) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IGMP_REPORT_TO_EX
+name|IGMP_URI_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_URI_MAX
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_MAX_G_GS_PACKETS
+value|8
+end_define
+
+begin_comment
+comment|/* # of packets to answer G/GS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_MAX_STATE_CHANGE_PACKETS
+value|8
+end_define
+
+begin_comment
+comment|/* # of packets per state change */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_MAX_RESPONSE_PACKETS
+value|16
+end_define
+
+begin_comment
+comment|/* # of packets for general query */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_MAX_RESPONSE_BURST
 value|4
 end_define
 
 begin_comment
-comment|/* change-to-exclude */
+comment|/* # of responses to send at once */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IGMP_REPORT_ALLOW_NEW
-value|5
+name|IGMP_RESPONSE_BURST_INTERVAL
+value|(PR_FASTHZ / 2)
 end_define
 
 begin_comment
-comment|/* allow-new-sources */
+comment|/* 500ms */
+end_comment
+
+begin_comment
+comment|/*  * IGMP-specific mbuf flags.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IGMP_REPORT_BLOCK_OLD
-value|6
+name|M_IGMPV2
+value|M_PROTO1
 end_define
 
 begin_comment
-comment|/* block-old-sources */
-end_comment
-
-begin_comment
-comment|/*  * Report types  */
+comment|/* Packet is IGMPv2 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IGMP_MASK_CUR_STATE
-value|0x01
+name|M_IGMPV3_HDR
+value|M_PROTO2
 end_define
 
 begin_comment
-comment|/* Report current-state */
+comment|/* Packet has IGMPv3 headers */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IGMP_MASK_ALLOW_NEW
-value|0x02
+name|M_GROUPREC
+value|M_PROTO3
 end_define
 
 begin_comment
-comment|/* Report source as allow-new */
+comment|/* mbuf chain is a group record */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IGMP_MASK_BLOCK_OLD
-value|0x04
+name|M_IGMP_LOOP
+value|M_PROTO4
 end_define
 
 begin_comment
-comment|/* Report source as block-old */
+comment|/* transmit on loif, not real ifp */
+end_comment
+
+begin_comment
+comment|/*  * Default amount of leading space for IGMPv3 to allocate at the  * beginning of its mbuf packet chains, to avoid fragmentation and  * unnecessary allocation of leading mbufs.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IGMP_MASK_TO_IN
-value|0x08
+name|RAOPT_LEN
+value|4
 end_define
 
 begin_comment
-comment|/* Report source as to_in */
+comment|/* Length of IP Router Alert option */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IGMP_MASK_TO_EX
-value|0x10
+name|IGMP_LEADINGSPACE
+define|\
+value|(sizeof(struct ip) + RAOPT_LEN + sizeof(struct igmp_report))
 end_define
 
 begin_comment
-comment|/* Report source as to_ex */
+comment|/*  * Subsystem lock macros.  * The IGMP lock is only taken with IGMP. Currently it is system-wide.  * VIMAGE: The lock could be pushed to per-VIMAGE granularity in future.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IGMP_MASK_STATE_T1
-value|0x20
-end_define
-
-begin_comment
-comment|/* State at T1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IGMP_MASK_STATE_T2
-value|0x40
-end_define
-
-begin_comment
-comment|/* State at T2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IGMP_MASK_IF_STATE
-value|0x80
-end_define
-
-begin_comment
-comment|/* Report current-state per interface */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IGMP_MASK_STATE_TX
-value|(IGMP_MASK_STATE_T1 | IGMP_MASK_STATE_T2)
+name|IGMP_LOCK_INIT
+parameter_list|()
+value|mtx_init(&igmp_mtx, "igmp_mtx", NULL, MTX_DEF)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IGMP_MASK_PENDING
-value|(IGMP_MASK_CUR_STATE |			\ 				 IGMP_MASK_ALLOW_NEW |			\ 				 IGMP_MASK_BLOCK_OLD)
+name|IGMP_LOCK_DESTROY
+parameter_list|()
+value|mtx_destroy(&igmp_mtx)
 end_define
-
-begin_comment
-comment|/*  * List identifiers  */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|IGMP_EXCLUDE_LIST
-value|1
+name|IGMP_LOCK
+parameter_list|()
+value|mtx_lock(&igmp_mtx)
 end_define
-
-begin_comment
-comment|/* exclude list used to tag report */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|IGMP_INCLUDE_LIST
-value|2
+name|IGMP_LOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&igmp_mtx, MA_OWNED)
 end_define
-
-begin_comment
-comment|/* include list used to tag report */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|IGMP_RECORDED_LIST
-value|3
+name|IGMP_UNLOCK
+parameter_list|()
+value|mtx_unlock(&igmp_mtx)
 end_define
 
-begin_comment
-comment|/* recorded list used to tag report */
-end_comment
+begin_define
+define|#
+directive|define
+name|IGMP_UNLOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&igmp_mtx, MA_NOTOWNED)
+end_define
+
+begin_struct_decl
+struct_decl|struct
+name|igmp_ifinfo
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
-name|void
-name|igmp_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|igmp_input
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|igmp_joingroup
-parameter_list|(
-name|struct
-name|in_multi
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|igmp_leavegroup
+name|igmp_change_state
 parameter_list|(
 name|struct
 name|in_multi
@@ -493,6 +709,54 @@ name|void
 name|igmp_fasttimo
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|igmp_ifinfo
+modifier|*
+name|igmp_domifattach
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|igmp_domifdetach
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|igmp_ifdetach
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|igmp_input
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -518,6 +782,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_comment
 comment|/*  * Names for IGMP sysctl objects  */

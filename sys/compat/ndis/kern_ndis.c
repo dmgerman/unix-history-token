@@ -194,7 +194,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usbdi.h>
+file|<dev/usb/usb_core.h>
 end_include
 
 begin_include
@@ -949,21 +949,15 @@ specifier|static
 name|void
 name|ndis_resetdone_func
 parameter_list|(
-name|adapter
-parameter_list|,
-name|status
-parameter_list|,
-name|addressingreset
-parameter_list|)
 name|ndis_handle
 name|adapter
-decl_stmt|;
+parameter_list|,
 name|ndis_status
 name|status
-decl_stmt|;
+parameter_list|,
 name|uint8_t
 name|addressingreset
-decl_stmt|;
+parameter_list|)
 block|{
 name|ndis_miniport_block
 modifier|*
@@ -5930,7 +5924,7 @@ argument_list|(
 name|fdo
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Stash pointers to the miniport block and miniport 	 * characteristics info in the if_ndis softc so the 	 * UNIX wrapper driver can get to them later.          */
+comment|/* 	 * Stash pointers to the miniport block and miniport 	 * characteristics info in the if_ndis softc so the 	 * UNIX wrapper driver can get to them later. 	 */
 name|sc
 operator|->
 name|ndis_block

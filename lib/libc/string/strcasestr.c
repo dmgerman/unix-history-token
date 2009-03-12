@@ -38,21 +38,16 @@ name|char
 modifier|*
 name|strcasestr
 parameter_list|(
-name|s
-parameter_list|,
-name|find
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|s
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 name|find
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|char
 name|c
@@ -161,7 +156,7 @@ name|s
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

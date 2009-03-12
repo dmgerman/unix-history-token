@@ -235,16 +235,6 @@ name|AR_fmag_size
 value|2
 end_define
 
-begin_define
-define|#
-directive|define
-name|isdigit
-parameter_list|(
-name|x
-parameter_list|)
-value|(x)>= '0'&& (x)<= '9'
-end_define
-
 begin_function_decl
 specifier|static
 name|int
@@ -494,7 +484,11 @@ name|a
 argument_list|,
 name|ar
 argument_list|,
+literal|"ar"
+argument_list|,
 name|archive_read_format_ar_bid
+argument_list|,
+name|NULL
 argument_list|,
 name|archive_read_format_ar_read_header
 argument_list|,
@@ -1337,7 +1331,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/* 	 * GNU variant handles long filenames by storing /<number> 	 * to indicate a name stored in the filename table. 	 */
+comment|/* 	 * GNU variant handles long filenames by storing /<number> 	 * to indicate a name stored in the filename table. 	 * XXX TODO: Verify that it's all digits... Don't be fooled 	 * by "/9xyz" XXX 	 */
 if|if
 condition|(
 name|filename
@@ -1347,13 +1341,19 @@ index|]
 operator|==
 literal|'/'
 operator|&&
-name|isdigit
-argument_list|(
 name|filename
 index|[
 literal|1
 index|]
-argument_list|)
+operator|>=
+literal|'0'
+operator|&&
+name|filename
+index|[
+literal|1
+index|]
+operator|<=
+literal|'9'
 condition|)
 block|{
 name|number
@@ -2355,7 +2355,7 @@ literal|'\0'
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Sanity check, last two chars must be `/\n' or '\n\n', 	 * depending on whether the string table is padded by a '\n' 	 * (string table produced by GNU ar always has a even size). 	 */
+comment|/* 	 * GNU ar always pads the table to an even size. 	 * The pad character is either '\n' or '`'. 	 */
 if|if
 condition|(
 name|p
@@ -2370,6 +2370,11 @@ operator|*
 name|p
 operator|!=
 literal|'\n'
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'`'
 condition|)
 goto|goto
 name|bad_string_table

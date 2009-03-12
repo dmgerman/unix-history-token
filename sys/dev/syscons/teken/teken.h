@@ -481,6 +481,39 @@ name|teken_funcs_t
 typedef|;
 end_typedef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TEKEN_XTERM
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|TEKEN_UTF8
+argument_list|)
+end_if
+
+begin_typedef
+typedef|typedef
+name|teken_char_t
+name|teken_scs_t
+parameter_list|(
+name|teken_char_t
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TEKEN_XTERM&& TEKEN_UTF8 */
+end_comment
+
 begin_comment
 comment|/*  * Terminal state.  */
 end_comment
@@ -597,6 +630,53 @@ begin_comment
 comment|/* TEKEN_UTF8 */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TEKEN_XTERM
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|TEKEN_UTF8
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|unsigned
+name|int
+name|t_curscs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|teken_scs_t
+modifier|*
+name|t_saved_curscs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|teken_scs_t
+modifier|*
+name|t_scs
+index|[
+literal|2
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TEKEN_XTERM&& TEKEN_UTF8 */
+end_comment
+
 begin_comment
 unit|};
 comment|/* Initialize teken structure. */
@@ -640,8 +720,32 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Set teken attributes. */
+comment|/* Get/set teken attributes. */
 end_comment
+
+begin_function_decl
+specifier|const
+name|teken_attr_t
+modifier|*
+name|teken_get_curattr
+parameter_list|(
+name|teken_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|teken_attr_t
+modifier|*
+name|teken_get_defattr
+parameter_list|(
+name|teken_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -652,6 +756,20 @@ modifier|*
 parameter_list|,
 specifier|const
 name|teken_pos_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|teken_set_curattr
+parameter_list|(
+name|teken_t
+modifier|*
+parameter_list|,
+specifier|const
+name|teken_attr_t
 modifier|*
 parameter_list|)
 function_decl|;

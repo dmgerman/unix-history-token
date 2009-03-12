@@ -1798,6 +1798,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|R600_SCRATCH_REG_OFFSET
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
 name|RADEON_NR_SAREA_CLIPRECTS
 value|12
 end_define
@@ -2711,7 +2718,11 @@ block|,
 name|RADEON_INIT_R300_CP
 init|=
 literal|0x04
-block|}
+block|,
+name|RADEON_INIT_R600_CP
+init|=
+literal|0x05
+block|, 	}
 name|func
 enum|;
 name|unsigned
@@ -3143,6 +3154,20 @@ block|}
 name|drm_radeon_indirect_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|RADEON_INDIRECT_DISCARD
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_INDIRECT_NOFLUSH
+value|(1<< 1)
+end_define
 
 begin_comment
 comment|/* enum for card type parameters */

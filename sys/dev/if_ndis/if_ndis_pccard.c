@@ -110,19 +110,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net80211/ieee80211_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb/usb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usbdi.h>
+file|<dev/usb/usb_core.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net80211/ieee80211_var.h>
 end_include
 
 begin_include

@@ -61,29 +61,19 @@ begin_function
 name|int
 name|strncmp
 parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|,
-name|n
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|s1
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 name|s2
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 name|size_t
 name|n
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -138,7 +128,7 @@ operator|*
 name|s1
 operator|++
 operator|==
-literal|0
+literal|'\0'
 condition|)
 break|break;
 block|}
@@ -156,7 +146,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -2385,6 +2385,11 @@ name|vpo_nibble
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize mode dependent in/out microsequences 	 */
+name|ppb_lock
+argument_list|(
+name|ppbus
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2542,6 +2547,11 @@ argument_list|)
 expr_stmt|;
 name|error
 label|:
+name|ppb_unlock
+argument_list|(
+name|ppbus
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error

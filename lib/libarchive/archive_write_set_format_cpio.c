@@ -402,6 +402,12 @@ literal|1
 expr_stmt|;
 name|a
 operator|->
+name|format_name
+operator|=
+literal|"cpio"
+expr_stmt|;
+name|a
+operator|->
 name|format_write_header
 operator|=
 name|archive_write_cpio_header

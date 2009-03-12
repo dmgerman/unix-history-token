@@ -2829,13 +2829,6 @@ expr_stmt|;
 name|IP6Q_UNLOCK
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * Routing changes might produce a better route than we last used; 	 * make sure we notice eventually, even if forwarding only for one 	 * destination and the cache is never replaced. 	 */
-block|if (V_ip6_forward_rt.ro_rt) { 		RTFREE(V_ip6_forward_rt.ro_rt); 		V_ip6_forward_rt.ro_rt = 0; 	} 	if (ipsrcchk_rt.ro_rt) { 		RTFREE(ipsrcchk_rt.ro_rt); 		ipsrcchk_rt.ro_rt = 0; 	}
-endif|#
-directive|endif
 block|}
 end_function
 

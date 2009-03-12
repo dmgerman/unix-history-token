@@ -49,6 +49,12 @@ directive|include
 file|"opt_inet6.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_route.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -135,6 +141,23 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -153,11 +176,28 @@ directive|include
 file|<net/if_types.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net/route.h>
+end_include
+
 begin_include
 include|#
 directive|include
 file|<net/vnet.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -284,12 +324,6 @@ begin_include
 include|#
 directive|include
 file|<sys/eventhandler.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vimage.h>
 end_include
 
 begin_include
@@ -3481,25 +3515,19 @@ begin_function
 name|void
 name|write_dsfield
 parameter_list|(
-name|m
-parameter_list|,
-name|pktattr
-parameter_list|,
-name|dsfield
-parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
 name|struct
 name|altq_pktattr
 modifier|*
 name|pktattr
-decl_stmt|;
+parameter_list|,
 name|u_int8_t
 name|dsfield
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|mbuf
@@ -3976,7 +4004,7 @@ directive|if
 operator|(
 name|__FreeBSD_version
 operator|>=
-literal|800050
+literal|701102
 operator|)
 operator|&&
 operator|(

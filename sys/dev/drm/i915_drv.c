@@ -73,7 +73,7 @@ name|int
 name|i915_suspend
 parameter_list|(
 name|device_t
-name|nbdev
+name|kdev
 parameter_list|)
 block|{
 name|struct
@@ -83,7 +83,7 @@ name|dev
 init|=
 name|device_get_softc
 argument_list|(
-name|nbdev
+name|kdev
 argument_list|)
 decl_stmt|;
 name|struct
@@ -140,7 +140,7 @@ return|return
 operator|(
 name|bus_generic_suspend
 argument_list|(
-name|nbdev
+name|kdev
 argument_list|)
 operator|)
 return|;
@@ -153,7 +153,7 @@ name|int
 name|i915_resume
 parameter_list|(
 name|device_t
-name|nbdev
+name|kdev
 parameter_list|)
 block|{
 name|struct
@@ -163,7 +163,7 @@ name|dev
 init|=
 name|device_get_softc
 argument_list|(
-name|nbdev
+name|kdev
 argument_list|)
 decl_stmt|;
 name|i915_restore_state
@@ -175,7 +175,7 @@ return|return
 operator|(
 name|bus_generic_resume
 argument_list|(
-name|nbdev
+name|kdev
 argument_list|)
 operator|)
 return|;
@@ -238,14 +238,6 @@ name|dev
 operator|->
 name|driver
 operator|->
-name|firstopen
-operator|=
-name|i915_driver_firstopen
-expr_stmt|;
-name|dev
-operator|->
-name|driver
-operator|->
 name|preclose
 operator|=
 name|i915_driver_preclose
@@ -265,14 +257,6 @@ operator|->
 name|device_is_agp
 operator|=
 name|i915_driver_device_is_agp
-expr_stmt|;
-name|dev
-operator|->
-name|driver
-operator|->
-name|get_vblank_counter
-operator|=
-name|i915_get_vblank_counter
 expr_stmt|;
 name|dev
 operator|->
@@ -395,13 +379,13 @@ name|int
 name|i915_probe
 parameter_list|(
 name|device_t
-name|dev
+name|kdev
 parameter_list|)
 block|{
 return|return
 name|drm_probe
 argument_list|(
-name|dev
+name|kdev
 argument_list|,
 name|i915_pciidlist
 argument_list|)
@@ -415,7 +399,7 @@ name|int
 name|i915_attach
 parameter_list|(
 name|device_t
-name|nbdev
+name|kdev
 parameter_list|)
 block|{
 name|struct
@@ -425,7 +409,7 @@ name|dev
 init|=
 name|device_get_softc
 argument_list|(
-name|nbdev
+name|kdev
 argument_list|)
 decl_stmt|;
 name|dev
@@ -455,7 +439,7 @@ expr_stmt|;
 return|return
 name|drm_attach
 argument_list|(
-name|nbdev
+name|kdev
 argument_list|,
 name|i915_pciidlist
 argument_list|)
@@ -469,7 +453,7 @@ name|int
 name|i915_detach
 parameter_list|(
 name|device_t
-name|nbdev
+name|kdev
 parameter_list|)
 block|{
 name|struct
@@ -479,7 +463,7 @@ name|dev
 init|=
 name|device_get_softc
 argument_list|(
-name|nbdev
+name|kdev
 argument_list|)
 decl_stmt|;
 name|int
@@ -489,7 +473,7 @@ name|ret
 operator|=
 name|drm_detach
 argument_list|(
-name|nbdev
+name|kdev
 argument_list|)
 expr_stmt|;
 name|free

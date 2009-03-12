@@ -1567,6 +1567,9 @@ return|;
 case|case
 name|AR5212_AR2317_REV1
 case|:
+case|case
+name|AR5212_AR2317_REV2
+case|:
 return|return
 literal|"Atheros 2317 WiSoC"
 return|;

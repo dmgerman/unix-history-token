@@ -3456,6 +3456,11 @@ argument_list|,
 literal|"removing device entry\n"
 argument_list|)
 expr_stmt|;
+name|cam_periph_unlock
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If we can't free the sysctl tree, oh well... 	 */
 if|if
 condition|(
@@ -3490,11 +3495,6 @@ literal|"can't remove sysctl context\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|cam_periph_unlock
-argument_list|(
-name|periph
-argument_list|)
-expr_stmt|;
 name|disk_destroy
 argument_list|(
 name|softc
@@ -3510,16 +3510,16 @@ operator|->
 name|sendordered_c
 argument_list|)
 expr_stmt|;
-name|cam_periph_lock
-argument_list|(
-name|periph
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|softc
 argument_list|,
 name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+name|cam_periph_lock
+argument_list|(
+name|periph
 argument_list|)
 expr_stmt|;
 block|}
@@ -3841,12 +3841,6 @@ operator|->
 name|unit_number
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|sysctl_ctx_init
 argument_list|(
 operator|&
@@ -3902,12 +3896,6 @@ argument_list|(
 literal|"dasysctlinit: unable to allocate sysctl tree\n"
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|cam_periph_release
 argument_list|(
 name|periph
@@ -3950,12 +3938,6 @@ argument_list|,
 literal|"I"
 argument_list|,
 literal|"Minimum CDB size"
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|cam_periph_release

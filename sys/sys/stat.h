@@ -1775,6 +1775,10 @@ begin_if
 if|#
 directive|if
 name|__BSD_VISIBLE
+operator|||
+name|__POSIX_VISIBLE
+operator|>=
+literal|200809
 end_if
 
 begin_function_decl

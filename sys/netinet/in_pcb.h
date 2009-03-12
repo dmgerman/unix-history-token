@@ -585,22 +585,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|in6p_ip6_nxt
-value|inp_ip_p
-end_define
-
-begin_define
-define|#
-directive|define
 name|in6p_flowinfo
 value|inp_flow
-end_define
-
-begin_define
-define|#
-directive|define
-name|in6p_vflag
-value|inp_vflag
 end_define
 
 begin_define
@@ -637,61 +623,6 @@ directive|define
 name|in6p_cksum
 value|inp_depend6.inp6_cksum
 end_define
-
-begin_define
-define|#
-directive|define
-name|in6p_flags
-value|inp_flags
-end_define
-
-begin_comment
-comment|/* for KAME src sync over BSD*'s */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|in6p_socket
-value|inp_socket
-end_define
-
-begin_comment
-comment|/* for KAME src sync over BSD*'s */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|in6p_lport
-value|inp_lport
-end_define
-
-begin_comment
-comment|/* for KAME src sync over BSD*'s */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|in6p_fport
-value|inp_fport
-end_define
-
-begin_comment
-comment|/* for KAME src sync over BSD*'s */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|in6p_ppcb
-value|inp_ppcb
-end_define
-
-begin_comment
-comment|/* for KAME src sync over BSD*'s */
-end_comment
 
 begin_comment
 comment|/*  * The range of the generation count, as used in this implementation, is 9e19.  * We would have to create 300 billion connections per second for this number  * to roll over in a year.  This seems sufficiently unlikely that we simply  * don't concern ourselves with that possibility.  */
@@ -1600,6 +1531,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INP_INHASHLIST
+value|0x2000
+end_define
+
+begin_comment
+comment|/* in_pcbinshash() has been called */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IN6P_IPV6_V6ONLY
 value|0x008000
 end_define
@@ -1724,70 +1666,6 @@ directive|define
 name|INP_CONTROLOPTS
 value|(INP_RECVOPTS|INP_RECVRETOPTS|INP_RECVDSTADDR|\ 				 INP_RECVIF|INP_RECVTTL|\ 				 IN6P_PKTINFO|IN6P_HOPLIMIT|IN6P_HOPOPTS|\ 				 IN6P_DSTOPTS|IN6P_RTHDR|IN6P_RTHDRDSTOPTS|\ 				 IN6P_TCLASS|IN6P_AUTOFLOWLABEL|IN6P_RFC2292|\ 				 IN6P_MTU)
 end_define
-
-begin_define
-define|#
-directive|define
-name|INP_UNMAPPABLEOPTS
-value|(IN6P_HOPOPTS|IN6P_DSTOPTS|IN6P_RTHDR|\ 				 IN6P_TCLASS|IN6P_AUTOFLOWLABEL)
-end_define
-
-begin_comment
-comment|/* for KAME src sync over BSD*'s */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN6P_HIGHPORT
-value|INP_HIGHPORT
-end_define
-
-begin_define
-define|#
-directive|define
-name|IN6P_LOWPORT
-value|INP_LOWPORT
-end_define
-
-begin_define
-define|#
-directive|define
-name|IN6P_ANONPORT
-value|INP_ANONPORT
-end_define
-
-begin_define
-define|#
-directive|define
-name|IN6P_RECVIF
-value|INP_RECVIF
-end_define
-
-begin_define
-define|#
-directive|define
-name|IN6P_MTUDISC
-value|INP_MTUDISC
-end_define
-
-begin_define
-define|#
-directive|define
-name|IN6P_FAITH
-value|INP_FAITH
-end_define
-
-begin_define
-define|#
-directive|define
-name|IN6P_CONTROLOPTS
-value|INP_CONTROLOPTS
-end_define
-
-begin_comment
-comment|/* 	 * socket AF version is {newer than,or include} 	 * actual datagram AF version 	 */
-end_comment
 
 begin_define
 define|#

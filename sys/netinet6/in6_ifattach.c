@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_route.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -3271,7 +3277,7 @@ name|rt
 operator|->
 name|rt_flags
 expr_stmt|;
-name|rtfree
+name|RTFREE_LOCKED
 argument_list|(
 name|rt
 argument_list|)
@@ -3882,20 +3888,6 @@ name|in6_multi
 modifier|*
 name|oin6m
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"%s: purging ifp %p\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|ifp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|IFF_LOCKGIANT
 argument_list|(
 name|ifp

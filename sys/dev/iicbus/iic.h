@@ -160,6 +160,17 @@ begin_comment
 comment|/* General read/write interface */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|I2CRPTSTART
+value|_IOW('i', 7, struct iiccmd)
+end_define
+
+begin_comment
+comment|/* repeated start */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

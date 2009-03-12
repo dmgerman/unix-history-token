@@ -5003,6 +5003,10 @@ expr|struct
 name|if_msghdr
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|rtm
 expr_stmt|;
 name|mib_extract_addrs

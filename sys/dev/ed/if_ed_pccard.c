@@ -1226,6 +1226,17 @@ block|,
 block|{
 name|PCMCIA_CARD
 argument_list|(
+name|TJ
+argument_list|,
+name|PTJ_LAN_T
+argument_list|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|PCMCIA_CARD
+argument_list|(
 name|ZONET
 argument_list|,
 name|ZEN
@@ -5253,7 +5264,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ed_miibus_writereg
 parameter_list|(
 name|device_t
@@ -5281,7 +5292,11 @@ name|phy
 operator|>=
 literal|0x11
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|sc
 operator|=
 name|device_get_softc
@@ -5401,6 +5416,11 @@ argument_list|,
 name|ED_MII_IDLE_BITS
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

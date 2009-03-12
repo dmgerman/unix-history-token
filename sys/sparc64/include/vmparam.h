@@ -371,6 +371,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PROMBASE
+value|(VM_MIN_PROM_ADDRESS)
+end_define
+
+begin_define
+define|#
+directive|define
 name|USRSTACK
 value|(VM_MAX_USER_ADDRESS)
 end_define

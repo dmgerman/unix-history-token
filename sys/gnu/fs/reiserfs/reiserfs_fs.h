@@ -5284,7 +5284,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|inline
 name|int
 name|bin_search
 parameter_list|(

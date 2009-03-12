@@ -63,7 +63,7 @@ directive|endif
 block|{
 specifier|static
 name|FPI
-name|fpi
+name|fpi0
 init|=
 block|{
 literal|24
@@ -104,6 +104,20 @@ decl_stmt|;
 name|int
 name|k
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|Honor_FLT_ROUNDS
+include|#
+directive|include
+file|"gdtoa_fltrnds.h"
+else|#
+directive|else
+define|#
+directive|define
+name|fpi
+value|&fpi0
+endif|#
+directive|endif
 name|k
 operator|=
 name|strtodg
@@ -112,7 +126,6 @@ name|s
 argument_list|,
 name|sp
 argument_list|,
-operator|&
 name|fpi
 argument_list|,
 operator|&

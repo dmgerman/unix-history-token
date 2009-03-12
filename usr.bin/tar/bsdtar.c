@@ -255,6 +255,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_PATH_DEFTAPE
+value|"\\\\.\\tape0"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -281,6 +299,8 @@ begin_function_decl
 name|time_t
 name|get_date
 parameter_list|(
+name|time_t
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -396,6 +416,9 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+name|time_t
+name|now
+decl_stmt|;
 comment|/* 	 * Use a pointer for consistency, but stack-allocated storage 	 * for ease of cleanup. 	 */
 name|bsdtar
 operator|=
@@ -427,6 +450,17 @@ name|option_o
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_WIN32
+comment|/* Make sure open() function will be used with a binary mode. */
+name|_set_fmode
+argument_list|(
+name|_O_BINARY
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Need bsdtar->progname before calling bsdtar_warnc. */
 if|if
 condition|(
@@ -443,6 +477,23 @@ literal|"bsdtar"
 expr_stmt|;
 else|else
 block|{
+if|#
+directive|if
+name|_WIN32
+name|bsdtar
+operator|->
+name|progname
+operator|=
+name|strrchr
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|'\\'
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|bsdtar
 operator|->
 name|progname
@@ -455,6 +506,8 @@ argument_list|,
 literal|'/'
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|bsdtar
@@ -477,6 +530,12 @@ operator|*
 name|argv
 expr_stmt|;
 block|}
+name|time
+argument_list|(
+operator|&
+name|now
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|setlocale
@@ -577,11 +636,10 @@ expr_stmt|;
 comment|/* Defaults for root user: */
 if|if
 condition|(
+name|bsdtar_is_privileged
+argument_list|(
 name|bsdtar
-operator|->
-name|user_uid
-operator|==
-literal|0
+argument_list|)
 condition|)
 block|{
 comment|/* --same-owner */
@@ -617,6 +675,19 @@ operator||=
 name|ARCHIVE_EXTRACT_FFLAGS
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|_WIN32
+comment|/* Windows cannot set UNIX like uid/gid. */
+name|bsdtar
+operator|->
+name|extract_flags
+operator|&=
+operator|~
+name|ARCHIVE_EXTRACT_OWNER
+expr_stmt|;
+endif|#
+directive|endif
 name|bsdtar
 operator|->
 name|argv
@@ -785,6 +856,18 @@ comment|/* GNU tar, others */
 name|bsdtar
 operator|->
 name|create_format
+operator|=
+name|bsdtar
+operator|->
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_FORMAT_OPTIONS
+case|:
+name|bsdtar
+operator|->
+name|option_format_options
 operator|=
 name|bsdtar
 operator|->
@@ -1046,6 +1129,8 @@ name|newer_ctime_sec
 operator|=
 name|get_date
 argument_list|(
+name|now
+argument_list|,
 name|bsdtar
 operator|->
 name|optarg
@@ -1119,6 +1204,8 @@ name|newer_mtime_sec
 operator|=
 name|get_date
 argument_list|(
+name|now
+argument_list|,
 name|bsdtar
 operator|->
 name|optarg

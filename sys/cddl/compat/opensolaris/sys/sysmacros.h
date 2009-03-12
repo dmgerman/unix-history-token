@@ -254,22 +254,6 @@ name|type
 parameter_list|)
 define|\
 value|(((type)(x) ^ (type)(y))< ((type)(x)& (type)(y)))
-ifdef|#
-directive|ifdef
-name|_KERNEL
-define|#
-directive|define
-name|memmove
-parameter_list|(
-name|dst
-parameter_list|,
-name|src
-parameter_list|,
-name|size
-parameter_list|)
-value|bcopy((src), (dst), (size))
-endif|#
-directive|endif
 comment|/*  * Find highest one bit set.  *      Returns bit number + 1 of highest bit that is set, otherwise returns 0.  * High order bit is 31 (or 63 in _LP64 kernel).  */
 specifier|static
 name|__inline

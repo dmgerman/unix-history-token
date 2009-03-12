@@ -750,6 +750,20 @@ argument_list|(
 name|smbdev
 argument_list|)
 expr_stmt|;
+comment|/* Make sure that LSB bit is cleared. */
+if|if
+condition|(
+name|s
+operator|->
+name|slave
+operator|&
+literal|0x1
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 comment|/* Allocate the bus. */
 if|if
 condition|(

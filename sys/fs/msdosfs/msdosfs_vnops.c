@@ -531,14 +531,6 @@ literal|0
 expr_stmt|;
 name|ndirent
 operator|.
-name|de_dev
-operator|=
-name|pdep
-operator|->
-name|de_dev
-expr_stmt|;
-name|ndirent
-operator|.
 name|de_pmp
 operator|=
 name|pdep
@@ -1052,9 +1044,9 @@ name|va_fsid
 operator|=
 name|dev2udev
 argument_list|(
-name|dep
+name|pmp
 operator|->
-name|de_dev
+name|pm_dev
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The following computation of the fileid must be the same as that 	 * used in msdosfs_readdir() to compute d_fileno. If not, pwd 	 * doesn't work. 	 */
@@ -6142,14 +6134,6 @@ name|de_FileSize
 operator|=
 literal|0
 expr_stmt|;
-name|ndirent
-operator|.
-name|de_dev
-operator|=
-name|pdep
-operator|->
-name|de_dev
-expr_stmt|;
 name|error
 operator|=
 name|createde
@@ -8316,7 +8300,9 @@ name|devtoname
 argument_list|(
 name|dep
 operator|->
-name|de_dev
+name|de_pmp
+operator|->
+name|pm_dev
 argument_list|)
 argument_list|)
 expr_stmt|;

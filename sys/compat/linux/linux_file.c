@@ -1534,6 +1534,7 @@ name|nbytes
 operator|=
 sizeof|sizeof
 argument_list|(
+operator|*
 name|linux_dirent
 argument_list|)
 expr_stmt|;
@@ -1696,7 +1697,7 @@ name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|)

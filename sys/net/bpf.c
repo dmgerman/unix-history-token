@@ -665,6 +665,8 @@ name|OID_AUTO
 argument_list|,
 name|stats
 argument_list|,
+name|CTLFLAG_MPSAFE
+operator||
 name|CTLFLAG_RW
 argument_list|,
 name|bpf_stats_sysctl
@@ -3619,7 +3621,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reset a descriptor by flushing its packet buffer and clearing the  * receive and drop counts.  */
+comment|/*  * Reset a descriptor by flushing its packet buffer and clearing the receive  * and drop counts.  This is doable for kernel-only buffers, but with  * zero-copy buffers, we can't write to (or rotate) buffers that are  * currently owned by userspace.  It would be nice if we could encapsulate  * this logic in the buffer code rather than here.  */
 end_comment
 
 begin_function
@@ -3645,9 +3647,26 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|d
 operator|->
 name|bd_hbuf
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|d
+operator|->
+name|bd_bufmode
+operator|!=
+name|BPF_BUFMODE_ZBUF
+operator|||
+name|bpf_canfreebuf
+argument_list|(
+name|d
+argument_list|)
+operator|)
 condition|)
 block|{
 comment|/* Free the hold buffer. */
@@ -3665,21 +3684,28 @@ name|bd_hbuf
 operator|=
 name|NULL
 expr_stmt|;
+name|d
+operator|->
+name|bd_hlen
+operator|=
+literal|0
+expr_stmt|;
 name|bpf_buf_reclaimed
 argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|bpf_canwritebuf
+argument_list|(
+name|d
+argument_list|)
+condition|)
 name|d
 operator|->
 name|bd_slen
-operator|=
-literal|0
-expr_stmt|;
-name|d
-operator|->
-name|bd_hlen
 operator|=
 literal|0
 expr_stmt|;

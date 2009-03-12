@@ -44,12 +44,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
@@ -75,12 +69,6 @@ begin_include
 include|#
 directive|include
 file|<usbhid.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/usb.h>
 end_include
 
 begin_include
@@ -939,12 +927,6 @@ name|u_char
 modifier|*
 name|dbuf
 decl_stmt|;
-specifier|static
-name|int
-name|one
-init|=
-literal|1
-decl_stmt|;
 name|u_int32_t
 name|colls
 index|[
@@ -1107,14 +1089,11 @@ name|loop
 condition|)
 if|if
 condition|(
-name|ioctl
+name|hid_set_immed
 argument_list|(
 name|f
 argument_list|,
-name|USB_SET_IMMED
-argument_list|,
-operator|&
-name|one
+literal|1
 argument_list|)
 operator|<
 literal|0

@@ -839,6 +839,13 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"urtw"
+argument_list|,
+literal|"Realtek 8187L USB wireless adapter"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"vge"
 argument_list|,
 literal|"VIA VT612x PCI Gigabit Ethernet card"

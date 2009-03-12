@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999-2002 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2005 McAfee, Inc.  * Copyright (c) 2005-2006 SPARTA, Inc.  * Copyright (c) 2008 Apple Inc.  * All rights reserved.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by McAfee  * Research, the Security Research Division of McAfee, Inc. under  * DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"), as part of the DARPA  * CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1999-2002, 2009 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2005 McAfee, Inc.  * Copyright (c) 2005-2006 SPARTA, Inc.  * Copyright (c) 2008 Apple Inc.  * All rights reserved.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by McAfee  * Research, the Security Research Division of McAfee, Inc. under  * DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"), as part of the DARPA  * CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * This software was developed at the University of Cambridge Computer  * Laboratory with support from a grant from Google, Inc.   *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -16,6 +16,12 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|"opt_kdtrace.h"
+end_include
 
 begin_include
 include|#
@@ -111,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|<sys/namei.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sdt.h>
 end_include
 
 begin_include
@@ -1333,6 +1345,20 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE3
+argument_list|(
+name|vnode_check_access
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"accmode_t"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
 name|mac_vnode_check_access
@@ -1376,6 +1402,19 @@ argument_list|,
 name|accmode
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE3
+argument_list|(
+name|vnode_check_access
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|vp
+argument_list|,
+name|accmode
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1383,6 +1422,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE2
+argument_list|(
+name|vnode_check_chdir
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -1422,6 +1473,17 @@ operator|->
 name|v_label
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE2
+argument_list|(
+name|vnode_check_chdir
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|dvp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1429,6 +1491,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE2
+argument_list|(
+name|vnode_check_chroot
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -1468,6 +1542,17 @@ operator|->
 name|v_label
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE2
+argument_list|(
+name|vnode_check_chroot
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|dvp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1475,6 +1560,22 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE4
+argument_list|(
+name|vnode_check_create
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"struct componentname *"
+argument_list|,
+literal|"struct vattr *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -1528,6 +1629,21 @@ argument_list|,
 name|vap
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE4
+argument_list|(
+name|vnode_check_create
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|dvp
+argument_list|,
+name|cnp
+argument_list|,
+name|vap
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1535,6 +1651,20 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE3
+argument_list|(
+name|vnode_check_deleteacl
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"acl_type_t"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -1579,6 +1709,19 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE3
+argument_list|(
+name|vnode_check_deleteacl
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|vp
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1586,6 +1729,22 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE4
+argument_list|(
+name|vnode_check_deleteextattr
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"int"
+argument_list|,
+literal|"const char *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -1637,6 +1796,21 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE4
+argument_list|(
+name|vnode_check_deleteextattr
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|vp
+argument_list|,
+name|attrnamespace
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1644,6 +1818,20 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE3
+argument_list|(
+name|vnode_check_exec
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"struct image_params *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -1694,6 +1882,19 @@ operator|->
 name|execlabel
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE3
+argument_list|(
+name|vnode_check_exec
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|vp
+argument_list|,
+name|imgp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1701,6 +1902,20 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE3
+argument_list|(
+name|vnode_check_getacl
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"acl_type_t"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -1745,6 +1960,19 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE3
+argument_list|(
+name|vnode_check_getacl
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|vp
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1752,6 +1980,22 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE4
+argument_list|(
+name|vnode_check_getextattr
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"int"
+argument_list|,
+literal|"const char *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -1774,11 +2018,6 @@ specifier|const
 name|char
 modifier|*
 name|name
-parameter_list|,
-name|struct
-name|uio
-modifier|*
-name|uio
 parameter_list|)
 block|{
 name|int
@@ -1806,8 +2045,21 @@ argument_list|,
 name|attrnamespace
 argument_list|,
 name|name
+argument_list|)
+expr_stmt|;
+name|MAC_CHECK_PROBE4
+argument_list|(
+name|vnode_check_getextattr
 argument_list|,
-name|uio
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|vp
+argument_list|,
+name|attrnamespace
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 return|return
@@ -1817,6 +2069,22 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE4
+argument_list|(
+name|vnode_check_link
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"struct componentname *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -1881,6 +2149,21 @@ argument_list|,
 name|cnp
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE4
+argument_list|(
+name|vnode_check_link
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|dvp
+argument_list|,
+name|vp
+argument_list|,
+name|cnp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1888,6 +2171,20 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE3
+argument_list|(
+name|vnode_check_listextattr
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"int"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -1932,6 +2229,19 @@ argument_list|,
 name|attrnamespace
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE3
+argument_list|(
+name|vnode_check_listextattr
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|vp
+argument_list|,
+name|attrnamespace
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1939,6 +2249,20 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE3
+argument_list|(
+name|vnode_check_lookup
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"struct componentname *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -1985,6 +2309,19 @@ argument_list|,
 name|cnp
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE3
+argument_list|(
+name|vnode_check_lookup
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|dvp
+argument_list|,
+name|cnp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1992,6 +2329,22 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE4
+argument_list|(
+name|vnode_check_mmap
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"int"
+argument_list|,
+literal|"int"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -2035,6 +2388,21 @@ argument_list|,
 name|vp
 operator|->
 name|v_label
+argument_list|,
+name|prot
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+name|MAC_CHECK_PROBE4
+argument_list|(
+name|vnode_check_mmap
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|vp
 argument_list|,
 name|prot
 argument_list|,
@@ -2105,6 +2473,20 @@ expr_stmt|;
 block|}
 end_function
 
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE3
+argument_list|(
+name|vnode_check_mprotect
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"int"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
 name|mac_vnode_check_mprotect
@@ -2148,6 +2530,19 @@ argument_list|,
 name|prot
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE3
+argument_list|(
+name|vnode_check_mprotect
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|vp
+argument_list|,
+name|prot
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2155,6 +2550,20 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE3
+argument_list|(
+name|vnode_check_open
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"accmode_t"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -2207,6 +2616,20 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE3
+argument_list|(
+name|vnode_check_poll
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
 name|mac_vnode_check_poll
@@ -2252,6 +2675,19 @@ operator|->
 name|v_label
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE3
+argument_list|(
+name|vnode_check_poll
+argument_list|,
+name|error
+argument_list|,
+name|active_cred
+argument_list|,
+name|file_cred
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2259,6 +2695,20 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE3
+argument_list|(
+name|vnode_check_read
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -2305,6 +2755,19 @@ operator|->
 name|v_label
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE3
+argument_list|(
+name|vnode_check_read
+argument_list|,
+name|error
+argument_list|,
+name|active_cred
+argument_list|,
+name|file_cred
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2312,6 +2775,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE2
+argument_list|(
+name|vnode_check_readdir
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -2351,6 +2826,17 @@ operator|->
 name|v_label
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE2
+argument_list|(
+name|vnode_check_readdir
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|dvp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2358,6 +2844,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE2
+argument_list|(
+name|vnode_check_readlink
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -2397,6 +2895,17 @@ operator|->
 name|v_label
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE2
+argument_list|(
+name|vnode_check_readlink
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2404,6 +2913,20 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE3
+argument_list|(
+name|vnode_check_relabel
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"struct label *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -2451,6 +2974,19 @@ argument_list|,
 name|newlabel
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE3
+argument_list|(
+name|vnode_check_relabel
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|vp
+argument_list|,
+name|newlabel
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2458,6 +2994,22 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE4
+argument_list|(
+name|vnode_check_rename_from
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"struct componentname *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -2522,6 +3074,21 @@ argument_list|,
 name|cnp
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE4
+argument_list|(
+name|vnode_check_rename_from
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|dvp
+argument_list|,
+name|vp
+argument_list|,
+name|cnp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2529,6 +3096,22 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE4
+argument_list|(
+name|vnode_check_rename_to
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"struct componentname *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -2604,6 +3187,21 @@ argument_list|,
 name|cnp
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE4
+argument_list|(
+name|vnode_check_rename_to
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|dvp
+argument_list|,
+name|vp
+argument_list|,
+name|cnp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2611,6 +3209,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE2
+argument_list|(
+name|vnode_check_revoke
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -2650,6 +3260,17 @@ operator|->
 name|v_label
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE2
+argument_list|(
+name|vnode_check_revoke
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2657,6 +3278,22 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE4
+argument_list|(
+name|vnode_check_setacl
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"acl_tpe_t"
+argument_list|,
+literal|"struct acl *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -2708,6 +3345,21 @@ argument_list|,
 name|acl
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE4
+argument_list|(
+name|vnode_check_setacl
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|vp
+argument_list|,
+name|type
+argument_list|,
+name|acl
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2715,6 +3367,22 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE4
+argument_list|(
+name|vnode_check_setextattr
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"int"
+argument_list|,
+literal|"const char *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -2737,11 +3405,6 @@ specifier|const
 name|char
 modifier|*
 name|name
-parameter_list|,
-name|struct
-name|uio
-modifier|*
-name|uio
 parameter_list|)
 block|{
 name|int
@@ -2769,8 +3432,21 @@ argument_list|,
 name|attrnamespace
 argument_list|,
 name|name
+argument_list|)
+expr_stmt|;
+name|MAC_CHECK_PROBE4
+argument_list|(
+name|vnode_check_setextattr
 argument_list|,
-name|uio
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|vp
+argument_list|,
+name|attrnamespace
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 return|return
@@ -2780,6 +3456,20 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE3
+argument_list|(
+name|vnode_check_setflags
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"u_long"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -2824,6 +3514,19 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE3
+argument_list|(
+name|vnode_check_setflags
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|vp
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2831,6 +3534,20 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE3
+argument_list|(
+name|vnode_check_setmode
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"mode_t"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -2875,6 +3592,19 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE3
+argument_list|(
+name|vnode_check_setmode
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|vp
+argument_list|,
+name|mode
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2882,6 +3612,22 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE4
+argument_list|(
+name|vnode_check_setowner
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"uid_t"
+argument_list|,
+literal|"gid_t"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -2931,6 +3677,21 @@ argument_list|,
 name|gid
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE4
+argument_list|(
+name|vnode_check_setowner
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|vp
+argument_list|,
+name|uid
+argument_list|,
+name|gid
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2938,6 +3699,22 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE4
+argument_list|(
+name|vnode_check_setutimes
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"struct timespec *"
+argument_list|,
+literal|"struct timespec *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -2989,6 +3766,23 @@ argument_list|,
 name|mtime
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE4
+argument_list|(
+name|vnode_check_setutimes
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|vp
+argument_list|,
+operator|&
+name|atime
+argument_list|,
+operator|&
+name|mtime
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2996,6 +3790,20 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE3
+argument_list|(
+name|vnode_check_stat
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -3042,6 +3850,19 @@ operator|->
 name|v_label
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE3
+argument_list|(
+name|vnode_check_stat
+argument_list|,
+name|error
+argument_list|,
+name|active_cred
+argument_list|,
+name|file_cred
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -3049,6 +3870,22 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE4
+argument_list|(
+name|vnode_check_unlink
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|,
+literal|"struct componentname *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -3113,6 +3950,21 @@ argument_list|,
 name|cnp
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE4
+argument_list|(
+name|vnode_check_unlink
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|dvp
+argument_list|,
+name|vp
+argument_list|,
+name|cnp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -3120,6 +3972,20 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE3
+argument_list|(
+name|vnode_check_write
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -3164,6 +4030,19 @@ argument_list|,
 name|vp
 operator|->
 name|v_label
+argument_list|)
+expr_stmt|;
+name|MAC_CHECK_PROBE3
+argument_list|(
+name|vnode_check_write
+argument_list|,
+name|error
+argument_list|,
+name|active_cred
+argument_list|,
+name|file_cred
+argument_list|,
+name|vp
 argument_list|)
 expr_stmt|;
 return|return
@@ -3243,6 +4122,18 @@ expr_stmt|;
 block|}
 end_function
 
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE2
+argument_list|(
+name|mount_check_stat
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct mount *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
 name|mac_mount_check_stat
@@ -3272,6 +4163,17 @@ argument_list|,
 name|mount
 operator|->
 name|mnt_label
+argument_list|)
+expr_stmt|;
+name|MAC_CHECK_PROBE2
+argument_list|(
+name|mount_check_stat
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|mount
 argument_list|)
 expr_stmt|;
 return|return

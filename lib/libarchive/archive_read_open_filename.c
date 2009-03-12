@@ -1098,7 +1098,17 @@ operator|)
 name|a
 expr_stmt|;
 comment|/* UNUSED */
-comment|/* 	 * Sometimes, we should flush the input before closing. 	 *   Regular files: faster to just close without flush. 	 *   Devices: must not flush (user might need to 	 *      read the "next" item on a non-rewind device). 	 *   Pipes and sockets:  must flush (otherwise, the 	 *      program feeding the pipe or socket may complain). 	 * Here, I flush everything except for regular files and 	 * device nodes. 	 */
+comment|/* Only flush and close if open succeeded. */
+if|if
+condition|(
+name|mine
+operator|->
+name|fd
+operator|>=
+literal|0
+condition|)
+block|{
+comment|/* 		 * Sometimes, we should flush the input before closing. 		 *   Regular files: faster to just close without flush. 		 *   Devices: must not flush (user might need to 		 *      read the "next" item on a non-rewind device). 		 *   Pipes and sockets:  must flush (otherwise, the 		 *      program feeding the pipe or socket may complain). 		 * Here, I flush everything except for regular files and 		 * device nodes. 		 */
 if|if
 condition|(
 operator|!
@@ -1176,14 +1186,7 @@ operator|->
 name|fd
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mine
-operator|->
-name|buffer
-operator|!=
-name|NULL
-condition|)
+block|}
 name|free
 argument_list|(
 name|mine

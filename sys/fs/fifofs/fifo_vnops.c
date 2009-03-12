@@ -643,7 +643,7 @@ name|vp
 operator|->
 name|v_fifoinfo
 decl_stmt|;
-name|ASSERT_VOP_LOCKED
+name|ASSERT_VOP_ELOCKED
 argument_list|(
 name|vp
 argument_list|,
@@ -1963,24 +1963,33 @@ name|vp
 operator|->
 name|v_fifoinfo
 decl_stmt|;
-name|ASSERT_VOP_LOCKED
+name|ASSERT_VOP_ELOCKED
 argument_list|(
 name|vp
 argument_list|,
 literal|"fifo_close"
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|fip
-operator|!=
+operator|==
 name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"fifo_close: no v_fifoinfo %p\n"
 argument_list|,
-operator|(
-literal|"fifo_close: no v_fifoinfo"
-operator|)
+name|vp
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|ap
@@ -2137,6 +2146,11 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
+name|printf
+argument_list|(
+literal|"    "
+argument_list|)
+expr_stmt|;
 name|fifo_printinfo
 argument_list|(
 name|ap

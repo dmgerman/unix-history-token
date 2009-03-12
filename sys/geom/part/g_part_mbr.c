@@ -224,7 +224,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|g_part_mbr_dumpconf
 parameter_list|(
 name|struct
@@ -284,6 +284,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|g_part_mbr_name
@@ -1456,7 +1457,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|g_part_mbr_dumpconf
 parameter_list|(
 name|struct
@@ -1564,11 +1565,6 @@ else|else
 block|{
 comment|/* confxml: scheme information */
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -1706,6 +1702,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|g_part_mbr_name
@@ -1765,6 +1762,12 @@ modifier|*
 name|cp
 parameter_list|)
 block|{
+name|char
+name|psn
+index|[
+literal|8
+index|]
+decl_stmt|;
 name|struct
 name|g_provider
 modifier|*
@@ -1828,6 +1831,41 @@ condition|)
 return|return
 operator|(
 name|ENXIO
+operator|)
+return|;
+comment|/* We don't nest under an MBR (see EBR instead). */
+name|error
+operator|=
+name|g_getattr
+argument_list|(
+literal|"PART::scheme"
+argument_list|,
+name|cp
+argument_list|,
+operator|&
+name|psn
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|psn
+argument_list|,
+name|g_part_mbr_scheme
+operator|.
+name|name
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ELOOP
 operator|)
 return|;
 comment|/* Check that there's a MBR. */

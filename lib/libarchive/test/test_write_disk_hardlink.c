@@ -42,6 +42,11 @@ directive|if
 name|ARCHIVE_VERSION_NUMBER
 operator|<
 literal|1009000
+operator|||
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
 name|skipping
 argument_list|(
 literal|"archive_write_disk_hardlink tests"

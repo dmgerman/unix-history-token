@@ -1010,11 +1010,6 @@ name|nwnode
 modifier|*
 name|dnp
 decl_stmt|;
-name|struct
-name|ncp_conn
-modifier|*
-name|conn
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1053,13 +1048,6 @@ operator|=
 name|VTONWFS
 argument_list|(
 name|dvp
-argument_list|)
-expr_stmt|;
-name|conn
-operator|=
-name|NWFSTOCONN
-argument_list|(
-name|nmp
 argument_list|)
 expr_stmt|;
 if|if

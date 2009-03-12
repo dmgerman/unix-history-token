@@ -583,14 +583,6 @@ parameter_list|)
 value|(!TAILQ_EMPTY(&(m)->md.pv_list))
 end_define
 
-begin_define
-define|#
-directive|define
-name|pmap_kernel
-parameter_list|()
-value|kernel_pmap
-end_define
-
 begin_function_decl
 name|void
 name|pmap_bootstrap

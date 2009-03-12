@@ -634,8 +634,12 @@ end_typedef
 
 begin_function_decl
 name|void
-name|clone_setcallback
+name|clone_setdefcallback
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
 name|clone_callback_func
 modifier|*
 parameter_list|)

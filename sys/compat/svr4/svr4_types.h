@@ -262,7 +262,7 @@ name|bsd_to_svr4_odev_t
 parameter_list|(
 name|d
 parameter_list|)
-value|svr4_omakedev(umajor(d), uminor(d))
+value|svr4_omakedev(major(d), minor(d))
 end_define
 
 begin_define
@@ -314,7 +314,7 @@ name|bsd_to_svr4_dev_t
 parameter_list|(
 name|d
 parameter_list|)
-value|svr4_makedev(umajor(d), uminor(d))
+value|svr4_makedev(major(d), minor(d))
 end_define
 
 begin_endif

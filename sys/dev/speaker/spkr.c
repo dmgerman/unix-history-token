@@ -2015,21 +2015,6 @@ directive|endif
 comment|/* DEBUG */
 if|if
 condition|(
-name|dev2unit
-argument_list|(
-name|dev
-argument_list|)
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-elseif|else
-if|if
-condition|(
 name|spkr_active
 condition|)
 return|return
@@ -2125,21 +2110,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEBUG */
-if|if
-condition|(
-name|dev2unit
-argument_list|(
-name|dev
-argument_list|)
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-elseif|else
 if|if
 condition|(
 name|uio
@@ -2270,22 +2240,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEBUG */
-if|if
-condition|(
-name|dev2unit
-argument_list|(
-name|dev
-argument_list|)
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-else|else
-block|{
 name|wakeup
 argument_list|(
 operator|&
@@ -2314,7 +2268,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
 block|}
 end_function
 
@@ -2375,21 +2328,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEBUG */
-if|if
-condition|(
-name|dev2unit
-argument_list|(
-name|dev
-argument_list|)
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-elseif|else
 if|if
 condition|(
 name|cmd

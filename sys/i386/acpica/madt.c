@@ -2194,6 +2194,26 @@ operator|->
 name|Id
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|apic
+operator|->
+name|GlobalIrqBase
+operator|>=
+name|FIRST_MSI_INT
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"MADT: Ignoring bogus I/O APIC ID %u"
+argument_list|,
+name|apic
+operator|->
+name|Id
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|ioapics
 index|[
 name|apic

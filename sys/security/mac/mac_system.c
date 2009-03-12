@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2003 Networks Associates Technology, Inc.  * Copyright (c) 2006 SPARTA, Inc.  * Copyright (c) 2007 Robert N. M. Watson  * All rights reserved.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * Portions of this software were developed by Robert Watson for the  * TrustedBSD Project.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2002-2003 Networks Associates Technology, Inc.  * Copyright (c) 2006 SPARTA, Inc.  * Copyright (c) 2007, 2009 Robert N. M. Watson  * All rights reserved.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * Portions of this software were developed by Robert Watson for the  * TrustedBSD Project.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * This software was developed at the University of Cambridge Computer  * Laboratory with support from a grant from Google, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -20,6 +20,12 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|"opt_kdtrace.h"
+end_include
 
 begin_include
 include|#
@@ -66,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sdt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -99,6 +111,16 @@ directive|include
 file|<security/mac/mac_policy.h>
 end_include
 
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE1
+argument_list|(
+name|kenv_check_dump
+argument_list|,
+literal|"struct ucred *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
 name|mac_kenv_check_dump
@@ -119,6 +141,15 @@ argument_list|,
 name|cred
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE1
+argument_list|(
+name|kenv_check_dump
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -126,6 +157,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE2
+argument_list|(
+name|kenv_check_get
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"char *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -153,6 +196,17 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE2
+argument_list|(
+name|kenv_check_get
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -160,6 +214,20 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE3
+argument_list|(
+name|kenv_check_set
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"char *"
+argument_list|,
+literal|"char *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -193,6 +261,19 @@ argument_list|,
 name|value
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE3
+argument_list|(
+name|kenv_check_set
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|name
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -200,6 +281,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE2
+argument_list|(
+name|kenv_check_unset
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"char *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -227,6 +320,17 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE2
+argument_list|(
+name|kenv_check_unset
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -234,6 +338,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE2
+argument_list|(
+name|kld_check_load
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -273,6 +389,17 @@ operator|->
 name|v_label
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE2
+argument_list|(
+name|kld_check_load
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -280,6 +407,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE1
+argument_list|(
+name|kld_check_stat
+argument_list|,
+literal|"struct ucred *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -301,6 +438,15 @@ argument_list|,
 name|cred
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE1
+argument_list|(
+name|kld_check_stat
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -308,6 +454,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE2
+argument_list|(
+name|system_check_acct
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -361,6 +519,17 @@ else|:
 name|NULL
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE2
+argument_list|(
+name|system_check_acct
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -368,6 +537,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE2
+argument_list|(
+name|system_check_reboot
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"int"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -394,6 +575,17 @@ argument_list|,
 name|howto
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE2
+argument_list|(
+name|system_check_reboot
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|howto
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -401,6 +593,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE2
+argument_list|(
+name|system_check_swapon
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -440,6 +644,17 @@ operator|->
 name|v_label
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE2
+argument_list|(
+name|system_check_swapon
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -447,6 +662,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE2
+argument_list|(
+name|system_check_swapoff
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct vnode *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -486,6 +713,17 @@ operator|->
 name|v_label
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE2
+argument_list|(
+name|system_check_swapoff
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -493,6 +731,20 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE3
+argument_list|(
+name|system_check_sysctl
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct sysctl_oid *"
+argument_list|,
+literal|"struct sysctl_req *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -536,6 +788,19 @@ argument_list|,
 name|arg1
 argument_list|,
 name|arg2
+argument_list|,
+name|req
+argument_list|)
+expr_stmt|;
+name|MAC_CHECK_PROBE3
+argument_list|(
+name|system_check_sysctl
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|oidp
 argument_list|,
 name|req
 argument_list|)

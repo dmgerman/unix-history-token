@@ -511,7 +511,7 @@ condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|"%sSS_FDREF"
+literal|"%sSS_NOFDREF"
 argument_list|,
 name|comma
 condition|?
@@ -663,10 +663,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|comma
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|so_state

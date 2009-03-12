@@ -385,6 +385,9 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
+operator|(
+name|int
+operator|)
 name|datasize
 argument_list|,
 name|archive_entry_size

@@ -288,11 +288,35 @@ literal|"VIA 82C8363 (Apollo KT133x/KM133) host to PCI bridge"
 operator|)
 return|;
 case|case
+literal|0x03141106
+case|:
+return|return
+operator|(
+literal|"VIA 3314 (P4M800CE) host to PCI bridge"
+operator|)
+return|;
+case|case
 literal|0x03241106
 case|:
 return|return
 operator|(
 literal|"VIA VT3324 (CX700) host to PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x03271106
+case|:
+return|return
+operator|(
+literal|"VIA 3327 (P4M890) host to PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x03641106
+case|:
+return|return
+operator|(
+literal|"VIA 3364 (P4M900) host to PCI bridge"
 operator|)
 return|;
 case|case
@@ -591,7 +615,16 @@ case|case
 literal|0x02961106
 case|:
 case|case
+literal|0x03141106
+case|:
+case|case
 literal|0x03241106
+case|:
+case|case
+literal|0x03271106
+case|:
+case|case
+literal|0x03641106
 case|:
 case|case
 literal|0x31231106
@@ -1361,7 +1394,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|int
+name|vm_offset_t
 name|offset
 parameter_list|,
 name|vm_offset_t
@@ -1426,7 +1459,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|int
+name|vm_offset_t
 name|offset
 parameter_list|)
 block|{

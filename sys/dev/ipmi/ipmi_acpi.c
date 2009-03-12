@@ -399,8 +399,6 @@ operator|.
 name|address
 operator|=
 name|flags
-operator|>>
-literal|1
 expr_stmt|;
 name|device_printf
 argument_list|(

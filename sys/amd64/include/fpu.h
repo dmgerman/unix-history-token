@@ -160,6 +160,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|__INITIAL_FPUCW_I386__
+value|0x127F
+end_define
+
+begin_define
+define|#
+directive|define
 name|__INITIAL_MXCSR__
 value|0x1F80
 end_define
@@ -178,7 +185,7 @@ name|_KERNEL
 end_ifdef
 
 begin_function_decl
-name|int
+name|void
 name|fpudna
 parameter_list|(
 name|void

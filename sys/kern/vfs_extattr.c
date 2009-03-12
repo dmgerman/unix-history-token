@@ -743,9 +743,6 @@ argument_list|,
 name|attrnamespace
 argument_list|,
 name|attrname
-argument_list|,
-operator|&
-name|auio
 argument_list|)
 expr_stmt|;
 if|if
@@ -1541,9 +1538,6 @@ argument_list|,
 name|attrnamespace
 argument_list|,
 name|attrname
-argument_list|,
-operator|&
-name|auio
 argument_list|)
 expr_stmt|;
 if|if

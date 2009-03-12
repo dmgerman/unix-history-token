@@ -15672,6 +15672,10 @@ name|fd
 argument_list|,
 name|buff
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|used
 argument_list|)
 argument_list|)
@@ -15760,6 +15764,9 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
+operator|(
+name|int
+operator|)
 name|used
 argument_list|,
 sizeof|sizeof

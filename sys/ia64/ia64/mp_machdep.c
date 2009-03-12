@@ -984,6 +984,13 @@ name|pc_cpuid
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|pc
+operator|->
+name|pc_awake
+operator|=
+literal|1
+expr_stmt|;
 block|}
 block|}
 end_function

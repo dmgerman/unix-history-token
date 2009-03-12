@@ -276,14 +276,14 @@ begin_define
 define|#
 directive|define
 name|TS_NAME_LEN
-value|(MAXCOMLEN + sizeof(" td ") + sizeof(__STRING(UINT_MAX)))
+value|(MAXCOMLEN + sizeof(" td ") + sizeof(__XSTRING(UINT_MAX)))
 end_define
 
 begin_define
 define|#
 directive|define
 name|TDQ_NAME_LEN
-value|(sizeof("sched lock ") + sizeof(__STRING(MAXCPU)))
+value|(sizeof("sched lock ") + sizeof(__XSTRING(MAXCPU)))
 end_define
 
 begin_define

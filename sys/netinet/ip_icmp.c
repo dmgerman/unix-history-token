@@ -705,7 +705,7 @@ parameter_list|,
 name|int
 name|code
 parameter_list|,
-name|n_long
+name|uint32_t
 name|dest
 parameter_list|,
 name|int
@@ -4104,8 +4104,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Return milliseconds since 00:00 GMT in network format.  */
+end_comment
+
 begin_function
-name|n_time
+name|uint32_t
 name|iptime
 parameter_list|(
 name|void

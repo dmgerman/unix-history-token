@@ -29,6 +29,53 @@ name|TSEC_TX_NUM_DESC
 value|256
 end_define
 
+begin_comment
+comment|/* Interrupt Coalescing types */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_IC_RX
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSEC_IC_TX
+value|1
+end_define
+
+begin_comment
+comment|/* eTSEC ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_ETSEC_ID
+value|0x0124
+end_define
+
+begin_comment
+comment|/* Frame sizes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_MIN_FRAME_SIZE
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSEC_MAX_FRAME_SIZE
+value|9600
+end_define
+
 begin_struct
 struct|struct
 name|tsec_softc
@@ -199,6 +246,9 @@ decl_stmt|;
 name|int
 name|tsec_if_flags
 decl_stmt|;
+name|int
+name|is_etsec
+decl_stmt|;
 comment|/* Watchdog and MII tick related */
 name|struct
 name|callout
@@ -256,6 +306,31 @@ name|tx_mbuf_used_data
 index|[
 name|TSEC_TX_NUM_DESC
 index|]
+decl_stmt|;
+comment|/* interrupt coalescing */
+name|struct
+name|mtx
+name|ic_lock
+decl_stmt|;
+name|uint32_t
+name|rx_ic_time
+decl_stmt|;
+comment|/* RW, valid values 0..65535 */
+name|uint32_t
+name|rx_ic_count
+decl_stmt|;
+comment|/* RW, valid values 0..255 */
+name|uint32_t
+name|tx_ic_time
+decl_stmt|;
+name|uint32_t
+name|tx_ic_count
+decl_stmt|;
+comment|/* currently received frame */
+name|struct
+name|mbuf
+modifier|*
+name|frame
 decl_stmt|;
 block|}
 struct|;
@@ -336,7 +411,7 @@ name|count
 parameter_list|,
 name|wrap
 parameter_list|)
-value|do {				\ 		if ((sc)->count> 0)					\ 			(sc)->count--;					\ 		else							\ 			(sc)->count = (wrap) - 1;			\ } while (0)
+value|do {			\ 		if ((sc)->count> 0)				\ 			(sc)->count--;				\ 		else						\ 			(sc)->count = (wrap) - 1;		\ } while (0)
 end_define
 
 begin_comment
@@ -480,7 +555,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|&TSEC_GET_GENERIC(sc, tsec_tx_vaddr, tx_cur_desc_cnt,	\ 		TSEC_TX_NUM_DESC)
+value|&TSEC_GET_GENERIC(sc, tsec_tx_vaddr, tx_cur_desc_cnt,		\ 		TSEC_TX_NUM_DESC)
 end_define
 
 begin_define
@@ -491,7 +566,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|&TSEC_GET_GENERIC(sc, tsec_tx_vaddr, tx_dirty_desc_cnt,	\ 		TSEC_TX_NUM_DESC)
+value|&TSEC_GET_GENERIC(sc, tsec_tx_vaddr, tx_dirty_desc_cnt,		\ 		TSEC_TX_NUM_DESC)
 end_define
 
 begin_define
@@ -665,7 +740,7 @@ name|TSEC_RECEIVE_LOCK
 parameter_list|(
 name|sc
 parameter_list|)
-value|do {				\ 		mtx_assert(&(sc)->transmit_lock, MA_NOTOWNED);	\ 		mtx_lock(&(sc)->receive_lock);			\ } while (0)
+value|do {					\ 		mtx_assert(&(sc)->transmit_lock, MA_NOTOWNED);		\ 		mtx_lock(&(sc)->receive_lock);				\ } while (0)
 end_define
 
 begin_define
@@ -686,6 +761,40 @@ parameter_list|(
 name|sc
 parameter_list|)
 value|mtx_assert(&(sc)->receive_lock, MA_OWNED)
+end_define
+
+begin_comment
+comment|/* Lock for interrupts coalescing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_IC_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|do {						\ 		mtx_assert(&(sc)->ic_lock, MA_NOTOWNED);		\ 		mtx_lock(&(sc)->ic_lock);				\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSEC_IC_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_unlock(&(sc)->ic_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSEC_IC_LOCK_ASSERT
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_assert(&(sc)->ic_lock, MA_OWNED)
 end_define
 
 begin_comment
@@ -781,6 +890,123 @@ define|#
 directive|define
 name|TSEC_READ_DELAY
 value|100
+end_define
+
+begin_comment
+comment|/* Structures and defines for TCP/IP Off-load */
+end_comment
+
+begin_struct
+struct|struct
+name|tsec_tx_fcb
+block|{
+specifier|volatile
+name|uint16_t
+name|flags
+decl_stmt|;
+specifier|volatile
+name|uint8_t
+name|l4_offset
+decl_stmt|;
+specifier|volatile
+name|uint8_t
+name|l3_offset
+decl_stmt|;
+specifier|volatile
+name|uint16_t
+name|ph_chsum
+decl_stmt|;
+specifier|volatile
+name|uint16_t
+name|vlan
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|tsec_rx_fcb
+block|{
+specifier|volatile
+name|uint16_t
+name|flags
+decl_stmt|;
+specifier|volatile
+name|uint8_t
+name|rq_index
+decl_stmt|;
+specifier|volatile
+name|uint8_t
+name|protocol
+decl_stmt|;
+specifier|volatile
+name|uint16_t
+name|unused
+decl_stmt|;
+specifier|volatile
+name|uint16_t
+name|vlan
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|TSEC_CHECKSUM_FEATURES
+value|(CSUM_IP | CSUM_TCP | CSUM_UDP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSEC_TX_FCB_IP4
+value|TSEC_TX_FCB_L3_IS_IP
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSEC_TX_FCB_IP6
+value|(TSEC_TX_FCB_L3_IS_IP | TSEC_TX_FCB_L3_IS_IP6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSEC_TX_FCB_TCP
+value|TSEC_TX_FCB_L4_IS_TCP_UDP
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSEC_TX_FCB_UDP
+value|(TSEC_TX_FCB_L4_IS_TCP_UDP | TSEC_TX_FCB_L4_IS_UDP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSEC_RX_FCB_IP_CSUM_CHECKED
+parameter_list|(
+name|flags
+parameter_list|)
+define|\
+value|((flags& (TSEC_RX_FCB_IP_FOUND | TSEC_RX_FCB_IP6_FOUND |	\ 		TSEC_RX_FCB_IP_CSUM | TSEC_RX_FCB_PARSE_ERROR))			\ 		 == (TSEC_RX_FCB_IP_FOUND | TSEC_RX_FCB_IP_CSUM))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSEC_RX_FCB_TCP_UDP_CSUM_CHECKED
+parameter_list|(
+name|flags
+parameter_list|)
+define|\
+value|((flags& (TSEC_RX_FCB_TCP_UDP_FOUND | TSEC_RX_FCB_TCP_UDP_CSUM	\ 		| TSEC_RX_FCB_PARSE_ERROR))					\ 		== (TSEC_RX_FCB_TCP_UDP_FOUND | TSEC_RX_FCB_TCP_UDP_CSUM))
 end_define
 
 begin_comment
@@ -954,6 +1180,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _IF_TSEC_H */
+end_comment
 
 end_unit
 

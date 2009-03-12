@@ -1546,7 +1546,6 @@ else|#
 directive|else
 comment|/* !POWERFAIL_NMI */
 comment|/* machine/parity/power fail/"kitchen sink" faults */
-comment|/* XXX Giant */
 if|if
 condition|(
 name|isa_nmi
@@ -2082,7 +2081,6 @@ name|out
 goto|;
 block|}
 comment|/* 			 * Ignore debug register trace traps due to 			 * accesses in the user's address space, which 			 * can happen under several conditions such as 			 * if a user sets a watchpoint on a buffer and 			 * then passes that buffer to a system call. 			 * We still want to get TRCTRAPS for addresses 			 * in kernel space because that is useful when 			 * debugging the kernel. 			 */
-comment|/* XXX Giant */
 if|if
 condition|(
 name|user_dbreg_trap
@@ -2182,7 +2180,6 @@ goto|;
 else|#
 directive|else
 comment|/* !POWERFAIL_NMI */
-comment|/* XXX Giant */
 comment|/* machine/parity/power fail/"kitchen sink" faults */
 if|if
 condition|(
@@ -3533,7 +3530,6 @@ operator|->
 name|sv_prepsyscall
 condition|)
 block|{
-comment|/* 		 * The prep code is MP aware. 		 */
 call|(
 modifier|*
 name|p
@@ -3557,7 +3553,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Need to check if this is a 32 bit or 64 bit syscall. 		 * fuword is MP aware. 		 */
+comment|/* 		 * Need to check if this is a 32 bit or 64 bit syscall. 		 */
 if|if
 condition|(
 name|code
@@ -3663,7 +3659,6 @@ name|callp
 operator|->
 name|sy_narg
 expr_stmt|;
-comment|/* 	 * copyin and the ktrsyscall()/ktrsysret() code is MP-aware 	 */
 if|if
 condition|(
 name|params

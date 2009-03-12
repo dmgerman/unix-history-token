@@ -2395,6 +2395,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * XXX: This function is provided for backwards  *      compatibility with older kernels which did not support  *      passing NFS mount options to nmount() as individual  *      parameters.  It should be eventually be removed.  */
+end_comment
+
 begin_function
 name|int
 name|fallback_mount
@@ -3329,7 +3333,7 @@ operator|||
 name|args
 operator|.
 name|acregmin
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
@@ -3343,6 +3347,12 @@ name|opt
 argument_list|)
 expr_stmt|;
 block|}
+name|args
+operator|.
+name|flags
+operator||=
+name|NFSMNT_ACREGMIN
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3386,7 +3396,7 @@ operator|||
 name|args
 operator|.
 name|acregmax
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
@@ -3400,6 +3410,12 @@ name|opt
 argument_list|)
 expr_stmt|;
 block|}
+name|args
+operator|.
+name|flags
+operator||=
+name|NFSMNT_ACREGMAX
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3443,7 +3459,7 @@ operator|||
 name|args
 operator|.
 name|acdirmin
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
@@ -3457,6 +3473,12 @@ name|opt
 argument_list|)
 expr_stmt|;
 block|}
+name|args
+operator|.
+name|flags
+operator||=
+name|NFSMNT_ACDIRMIN
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3500,7 +3522,7 @@ operator|||
 name|args
 operator|.
 name|acdirmax
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
@@ -3514,6 +3536,12 @@ name|opt
 argument_list|)
 expr_stmt|;
 block|}
+name|args
+operator|.
+name|flags
+operator||=
+name|NFSMNT_ACDIRMAX
+expr_stmt|;
 block|}
 if|if
 condition|(

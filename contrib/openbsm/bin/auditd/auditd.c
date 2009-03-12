@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004-2008 Apple Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/bin/auditd/auditd.c#41 $  */
+comment|/*-  * Copyright (c) 2004-2009 Apple Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/bin/auditd/auditd.c#43 $  */
 end_comment
 
 begin_include
@@ -189,7 +189,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * XXX the following is temporary until this can be added to the kernel  * audit.h header.  */
+comment|/*  * XXX The following are temporary until these can be added to the kernel  * audit.h header.  */
 end_comment
 
 begin_ifndef
@@ -203,6 +203,24 @@ define|#
 directive|define
 name|AUDIT_TRIGGER_INITIALIZE
 value|7
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AUDIT_TRIGGER_EXPIRE_TRAILS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|AUDIT_TRIGGER_EXPIRE_TRAILS
+value|8
 end_define
 
 begin_endif
@@ -468,13 +486,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|strlcpy
+name|memcpy
 argument_list|(
 name|ptr
 argument_list|,
 name|TS
 argument_list|,
-name|TIMESTAMP_LEN
+name|POSTFIX_LEN
 argument_list|)
 expr_stmt|;
 if|if
@@ -793,6 +811,28 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* 	 * Finally, see if there are any trail files to expire. 	 */
+name|err
+operator|=
+name|auditd_expire_trails
+argument_list|(
+name|audit_warn_expired
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+name|auditd_log_err
+argument_list|(
+literal|"auditd_expire_trails(): %s"
+argument_list|,
+name|auditd_strerror
+argument_list|(
+name|err
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1664,6 +1704,36 @@ name|audit_setup
 argument_list|()
 expr_stmt|;
 break|break;
+case|case
+name|AUDIT_TRIGGER_EXPIRE_TRAILS
+case|:
+name|auditd_log_info
+argument_list|(
+literal|"Got audit expire trails trigger"
+argument_list|)
+expr_stmt|;
+name|err
+operator|=
+name|auditd_expire_trails
+argument_list|(
+name|audit_warn_expired
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+name|auditd_log_err
+argument_list|(
+literal|"auditd_expire_trails(): %s"
+argument_list|,
+name|auditd_strerror
+argument_list|(
+name|err
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|auditd_log_err
 argument_list|(
@@ -2018,6 +2088,21 @@ condition|(
 name|err
 condition|)
 block|{
+if|if
+condition|(
+name|err
+operator|==
+name|ADE_PARSE
+condition|)
+block|{
+name|auditd_log_notice
+argument_list|(
+literal|"audit_control(5) may be missing 'host:' field"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|auditd_log_err
 argument_list|(
 literal|"auditd_set_host() %s: %m"
@@ -2033,6 +2118,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+block|}
 block|}
 else|else
 name|auditd_log_debug

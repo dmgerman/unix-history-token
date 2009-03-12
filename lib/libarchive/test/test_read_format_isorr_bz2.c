@@ -58,6 +58,9 @@ decl_stmt|;
 name|off_t
 name|offset
 decl_stmt|;
+name|int
+name|r
+decl_stmt|;
 name|extract_reference_file
 argument_list|(
 name|refname
@@ -79,7 +82,7 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|archive_read_support_compression_all
+name|archive_read_support_compression_bzip2
 argument_list|(
 name|a
 argument_list|)
@@ -95,10 +98,8 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assertEqualInt
-argument_list|(
-literal|0
-argument_list|,
+name|r
+operator|=
 name|archive_read_open_filename
 argument_list|(
 name|a
@@ -107,6 +108,31 @@ name|refname
 argument_list|,
 literal|10240
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|==
+name|ARCHIVE_FATAL
+condition|)
+block|{
+name|skipping
+argument_list|(
+literal|"Bzip2 decompression unsupported on this platform"
+argument_list|)
+expr_stmt|;
+name|archive_read_finish
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|assertEqualInt
+argument_list|(
+literal|0
+argument_list|,
+name|r
 argument_list|)
 expr_stmt|;
 comment|/* First entry is '.' root directory. */
@@ -231,6 +257,9 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
+operator|(
+name|int
+operator|)
 name|size
 argument_list|,
 literal|0
@@ -405,6 +434,9 @@ name|assertEqualInt
 argument_list|(
 literal|6
 argument_list|,
+operator|(
+name|int
+operator|)
 name|size
 argument_list|)
 expr_stmt|;

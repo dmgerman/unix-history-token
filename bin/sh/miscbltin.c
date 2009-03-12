@@ -507,6 +507,16 @@ operator|&
 name|tnew
 argument_list|)
 expr_stmt|;
+name|tnew
+operator|.
+name|c_iflag
+operator||=
+name|told
+operator|.
+name|c_iflag
+operator|&
+name|ICRNL
+expr_stmt|;
 name|tcsetattr
 argument_list|(
 literal|0

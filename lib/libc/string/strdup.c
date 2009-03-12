@@ -74,13 +74,11 @@ name|char
 modifier|*
 name|strdup
 parameter_list|(
-name|str
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|)
 block|{
 name|size_t
 name|len
