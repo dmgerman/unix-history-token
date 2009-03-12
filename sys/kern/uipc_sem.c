@@ -3571,7 +3571,7 @@ operator|->
 name|ks_atime
 argument_list|)
 expr_stmt|;
-if|if
+while|while
 condition|(
 name|ks
 operator|->
