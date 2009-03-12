@@ -90,18 +90,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|struct
-name|mtx
-modifier|*
-name|hal_getdisplock
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|uint8_t
 name|KfAcquireSpinLock
 parameter_list|(
