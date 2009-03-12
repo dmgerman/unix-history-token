@@ -2628,6 +2628,22 @@ modifier|*
 name|uap
 parameter_list|)
 block|{
+name|DP
+argument_list|(
+operator|(
+literal|">>> ksem_open start, pid=%d\n"
+operator|,
+operator|(
+name|int
+operator|)
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3436,7 +3452,16 @@ decl_stmt|;
 name|DP
 argument_list|(
 operator|(
-literal|">>> kern_sem_wait entered!\n"
+literal|">>> kern_sem_wait entered! pid=%d\n"
+operator|,
+operator|(
+name|int
+operator|)
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3471,6 +3496,22 @@ name|mtx_lock
 argument_list|(
 operator|&
 name|sem_lock
+argument_list|)
+expr_stmt|;
+name|DP
+argument_list|(
+operator|(
+literal|">>> kern_sem_wait critical section entered! pid=%d\n"
+operator|,
+operator|(
+name|int
+operator|)
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
+operator|)
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3672,6 +3713,17 @@ operator|->
 name|ks_value
 operator|--
 expr_stmt|;
+name|DP
+argument_list|(
+operator|(
+literal|"kern_sem_wait value post-decrement = %d\n"
+operator|,
+name|ks
+operator|->
+name|ks_value
+operator|)
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 literal|0
@@ -3694,7 +3746,16 @@ expr_stmt|;
 name|DP
 argument_list|(
 operator|(
-literal|"<<< kern_sem_wait leaving, error = %d\n"
+literal|"<<< kern_sem_wait leaving, pid=%d, error = %d\n"
+operator|,
+operator|(
+name|int
+operator|)
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
 operator|,
 name|error
 operator|)
