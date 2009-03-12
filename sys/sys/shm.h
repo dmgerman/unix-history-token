@@ -306,6 +306,9 @@ modifier|*
 name|label
 decl_stmt|;
 comment|/* MAC label */
+name|size_t
+name|shm_bsegsz
+decl_stmt|;
 block|}
 struct|;
 end_struct
