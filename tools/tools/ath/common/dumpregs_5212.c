@@ -2298,11 +2298,13 @@ argument_list|,
 literal|"PHY_RFBUS_GNT"
 argument_list|)
 block|,
-name|DEFVOID
+name|DEFVOIDfmt
 argument_list|(
 name|AR_PHY_MODE
 argument_list|,
 literal|"PHY_MODE"
+argument_list|,
+literal|"\20\1CCK\2RF2GHZ\3DYNAMIC\4AR5112\5HALF\6QUARTER"
 argument_list|)
 block|,
 name|DEFVOID
