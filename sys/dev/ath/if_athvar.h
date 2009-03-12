@@ -22,13 +22,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<contrib/dev/ath/ah.h>
+file|<dev/ath/ath_hal/ah.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/ath/ah_desc.h>
+file|<dev/ath/ath_hal/ah_desc.h>
 end_include
 
 begin_include
@@ -1272,11 +1272,6 @@ name|HAL_NODE_STATS
 name|sc_halstats
 decl_stmt|;
 comment|/* station-mode rssi stats */
-name|struct
-name|callout
-name|sc_dfs_ch
-decl_stmt|;
-comment|/* callout handle for dfs */
 block|}
 struct|;
 end_struct
@@ -2343,7 +2338,7 @@ parameter_list|,
 name|_rd
 parameter_list|)
 define|\
-value|((*(_ah)->ah_setRegulatoryDomain)((_ah), (_rd), NULL))
+value|ath_hal_setcapability(_ah, HAL_CAP_REG_DMN, 0, _rd, NULL)
 end_define
 
 begin_define
@@ -3172,19 +3167,6 @@ name|_b
 parameter_list|)
 define|\
 value|((*(_ah)->ah_gpioSetIntr)((_ah), (_gpio), (_b)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ath_hal_radar_wait
-parameter_list|(
-name|_ah
-parameter_list|,
-name|_chan
-parameter_list|)
-define|\
-value|((*(_ah)->ah_radarWait)((_ah), (_chan)))
 end_define
 
 begin_endif
