@@ -1180,58 +1180,13 @@ name|vm_page_array_size
 operator|=
 name|page_range
 expr_stmt|;
-comment|/* 	 * This assertion tests the hypothesis that npages and total are 	 * redundant.  XXX 	 */
-name|page_range
-operator|=
+if|#
+directive|if
 literal|0
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|phys_avail
-index|[
-name|i
-operator|+
-literal|1
-index|]
-operator|!=
-literal|0
-condition|;
-name|i
-operator|+=
-literal|2
-control|)
-name|page_range
-operator|+=
-name|atop
-argument_list|(
-name|phys_avail
-index|[
-name|i
-operator|+
-literal|1
-index|]
-operator|-
-name|phys_avail
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|page_range
-operator|==
-name|npages
-argument_list|,
-operator|(
-literal|"vm_page_startup: inconsistent page counts"
-operator|)
-argument_list|)
-expr_stmt|;
+comment|/* 	 * This assertion tests the hypothesis that npages and total are 	 * redundant.  XXX 	 * 	 * XXX: This always fails if VM_NRESERVLEVEL> 0 because 	 * npages includes the memory for vm_reserv_startup() but 	 * page_range doesn't. 	 */
+block|page_range = 0; 	for (i = 0; phys_avail[i + 1] != 0; i += 2) 		page_range += atop(phys_avail[i + 1] - phys_avail[i]); 	KASSERT(page_range == npages, 	    ("vm_page_startup: inconsistent page counts"));
+endif|#
+directive|endif
 comment|/* 	 * Initialize the physical memory allocator. 	 */
 name|vm_phys_init
 argument_list|()
