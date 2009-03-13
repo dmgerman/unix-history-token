@@ -4924,12 +4924,6 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* 	 * We have correct key, let's attach provider. 	 */
-name|md
-operator|.
-name|md_flags
-operator||=
-name|G_ELI_FLAG_WO_DETACH
-expr_stmt|;
 name|gp
 operator|=
 name|g_eli_create
