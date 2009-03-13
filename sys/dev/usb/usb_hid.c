@@ -1844,7 +1844,7 @@ operator|(
 name|c
 operator|->
 name|usage_minimum
-operator|<
+operator|<=
 name|c
 operator|->
 name|usage_maximum
