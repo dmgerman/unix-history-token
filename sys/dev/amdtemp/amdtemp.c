@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2008 Rui Paulo<rpaulo@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2008, 2009 Rui Paulo<rpaulo@FreeBSD.org>  * Copyright (c) 2009 Norikatsu Shigemura<nork@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * Driver for the AMD K8 thermal sensors. Based on a Linux driver by the  * same name.  */
+comment|/*  * Driver for the AMD K8/K10/K11 thermal sensors. Initially based on the  * amdtemp Linux driver.  */
 end_comment
 
 begin_include
@@ -99,9 +99,29 @@ directive|include
 file|<dev/pci/pcivar.h>
 end_include
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|SENSOR0_CORE0
+block|,
+name|SENSOR0_CORE1
+block|,
+name|SENSOR1_CORE0
+block|,
+name|SENSOR1_CORE1
+block|,
+name|CORE0
+block|,
+name|CORE1
+block|}
+name|amdsensor_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
-name|k8temp_softc
+name|amdtemp_softc
 block|{
 name|device_t
 name|sc_dev
@@ -132,6 +152,17 @@ name|struct
 name|intr_config_hook
 name|sc_ich
 decl_stmt|;
+name|int32_t
+function_decl|(
+modifier|*
+name|sc_gettemp
+function_decl|)
+parameter_list|(
+name|device_t
+parameter_list|,
+name|amdsensor_t
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -146,30 +177,56 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEVICEID_AMD_MISC
+name|DEVICEID_AMD_MISC0F
 value|0x1103
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_AMD_MISC10
+value|0x1203
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_AMD_MISC11
+value|0x1303
 end_define
 
 begin_struct
 specifier|static
 struct|struct
-name|k8temp_product
+name|amdtemp_product
 block|{
 name|uint16_t
-name|k8temp_vendorid
+name|amdtemp_vendorid
 decl_stmt|;
 name|uint16_t
-name|k8temp_deviceid
+name|amdtemp_deviceid
 decl_stmt|;
 block|}
-name|k8temp_products
+name|amdtemp_products
 index|[]
 init|=
 block|{
 block|{
 name|VENDORID_AMD
 block|,
-name|DEVICEID_AMD_MISC
+name|DEVICEID_AMD_MISC0F
+block|}
+block|,
+block|{
+name|VENDORID_AMD
+block|,
+name|DEVICEID_AMD_MISC10
+block|}
+block|,
+block|{
+name|VENDORID_AMD
+block|,
+name|DEVICEID_AMD_MISC11
 block|}
 block|,
 block|{
@@ -182,60 +239,65 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Register control  */
+comment|/*  * Register control (K8 family)  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|K8TEMP_REG
+name|AMDTEMP_REG0F
 value|0xe4
 end_define
 
 begin_define
 define|#
 directive|define
-name|K8TEMP_REG_SELSENSOR
+name|AMDTEMP_REG_SELSENSOR
 value|0x40
 end_define
 
 begin_define
 define|#
 directive|define
-name|K8TEMP_REG_SELCORE
+name|AMDTEMP_REG_SELCORE
 value|0x04
+end_define
+
+begin_comment
+comment|/*  * Register control (K10& K11) family  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AMDTEMP_REG
+value|0xa4
 end_define
 
 begin_define
 define|#
 directive|define
-name|K8TEMP_MINTEMP
-value|49
+name|TZ_ZEROC
+value|2732
 end_define
 
 begin_comment
 comment|/* -49 C is the mininum temperature */
 end_comment
 
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|SENSOR0_CORE0
-block|,
-name|SENSOR0_CORE1
-block|,
-name|SENSOR1_CORE0
-block|,
-name|SENSOR1_CORE1
-block|,
-name|CORE0
-block|,
-name|CORE1
-block|}
-name|k8sensor_t
-typedef|;
-end_typedef
+begin_define
+define|#
+directive|define
+name|AMDTEMP_OFFSET0F
+value|(TZ_ZEROC-490)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDTEMP_OFFSET
+value|(TZ_ZEROC)
+end_define
 
 begin_comment
 comment|/*  * Device methods.  */
@@ -244,7 +306,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|void
-name|k8temp_identify
+name|amdtemp_identify
 parameter_list|(
 name|driver_t
 modifier|*
@@ -259,7 +321,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|k8temp_probe
+name|amdtemp_probe
 parameter_list|(
 name|device_t
 name|dev
@@ -270,7 +332,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|k8temp_attach
+name|amdtemp_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -281,7 +343,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|k8temp_intrhook
+name|amdtemp_intrhook
 parameter_list|(
 name|void
 modifier|*
@@ -293,7 +355,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|k8temp_detach
+name|amdtemp_detach
 parameter_list|(
 name|device_t
 name|dev
@@ -304,7 +366,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|k8temp_match
+name|amdtemp_match
 parameter_list|(
 name|device_t
 name|dev
@@ -315,12 +377,26 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int32_t
-name|k8temp_gettemp
+name|amdtemp_gettemp0f
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|k8sensor_t
+name|amdsensor_t
+name|sensor
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int32_t
+name|amdtemp_gettemp
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|amdsensor_t
 name|sensor
 parameter_list|)
 function_decl|;
@@ -329,7 +405,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|k8temp_sysctl
+name|amdtemp_sysctl
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
@@ -339,7 +415,7 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|k8temp_methods
+name|amdtemp_methods
 index|[]
 init|=
 block|{
@@ -348,28 +424,28 @@ name|DEVMETHOD
 argument_list|(
 name|device_identify
 argument_list|,
-name|k8temp_identify
+name|amdtemp_identify
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_probe
 argument_list|,
-name|k8temp_probe
+name|amdtemp_probe
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|k8temp_attach
+name|amdtemp_attach
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_detach
 argument_list|,
-name|k8temp_detach
+name|amdtemp_detach
 argument_list|)
 block|,
 block|{
@@ -384,17 +460,17 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|driver_t
-name|k8temp_driver
+name|amdtemp_driver
 init|=
 block|{
-literal|"k8temp"
+literal|"amdtemp"
 block|,
-name|k8temp_methods
+name|amdtemp_methods
 block|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|k8temp_softc
+name|amdtemp_softc
 argument_list|)
 block|, }
 decl_stmt|;
@@ -403,20 +479,20 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|devclass_t
-name|k8temp_devclass
+name|amdtemp_devclass
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|k8temp
+name|amdtemp
 argument_list|,
 name|hostb
 argument_list|,
-name|k8temp_driver
+name|amdtemp_driver
 argument_list|,
-name|k8temp_devclass
+name|amdtemp_devclass
 argument_list|,
 name|NULL
 argument_list|,
@@ -428,7 +504,7 @@ end_expr_stmt
 begin_function
 specifier|static
 name|int
-name|k8temp_match
+name|amdtemp_match
 parameter_list|(
 name|device_t
 name|dev
@@ -462,12 +538,12 @@ name|i
 operator|=
 literal|0
 init|;
-name|k8temp_products
+name|amdtemp_products
 index|[
 name|i
 index|]
 operator|.
-name|k8temp_vendorid
+name|amdtemp_vendorid
 operator|!=
 literal|0
 condition|;
@@ -479,21 +555,21 @@ if|if
 condition|(
 name|vendor
 operator|==
-name|k8temp_products
+name|amdtemp_products
 index|[
 name|i
 index|]
 operator|.
-name|k8temp_vendorid
+name|amdtemp_vendorid
 operator|&&
 name|devid
 operator|==
-name|k8temp_products
+name|amdtemp_products
 index|[
 name|i
 index|]
 operator|.
-name|k8temp_deviceid
+name|amdtemp_deviceid
 condition|)
 return|return
 operator|(
@@ -512,7 +588,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|k8temp_identify
+name|amdtemp_identify
 parameter_list|(
 name|driver_t
 modifier|*
@@ -532,7 +608,7 @@ name|device_find_child
 argument_list|(
 name|parent
 argument_list|,
-literal|"k8temp"
+literal|"amdtemp"
 argument_list|,
 operator|-
 literal|1
@@ -543,7 +619,7 @@ condition|)
 return|return;
 if|if
 condition|(
-name|k8temp_match
+name|amdtemp_match
 argument_list|(
 name|parent
 argument_list|)
@@ -555,7 +631,7 @@ name|device_add_child
 argument_list|(
 name|parent
 argument_list|,
-literal|"k8temp"
+literal|"amdtemp"
 argument_list|,
 operator|-
 literal|1
@@ -571,7 +647,7 @@ name|device_printf
 argument_list|(
 name|parent
 argument_list|,
-literal|"add k8temp child failed\n"
+literal|"add amdtemp child failed\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -581,7 +657,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|k8temp_probe
+name|amdtemp_probe
 parameter_list|(
 name|device_t
 name|dev
@@ -597,7 +673,7 @@ if|if
 condition|(
 name|resource_disabled
 argument_list|(
-literal|"k8temp"
+literal|"amdtemp"
 argument_list|,
 literal|0
 argument_list|)
@@ -655,14 +731,14 @@ end_function
 begin_function
 specifier|static
 name|int
-name|k8temp_attach
+name|amdtemp_attach
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|)
 block|{
 name|struct
-name|k8temp_softc
+name|amdtemp_softc
 modifier|*
 name|sc
 init|=
@@ -688,7 +764,7 @@ name|sc_ich
 operator|.
 name|ich_func
 operator|=
-name|k8temp_intrhook
+name|amdtemp_intrhook
 expr_stmt|;
 name|sc
 operator|->
@@ -725,7 +801,36 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* 	 * dev.k8temp.N tree. 	 */
+if|if
+condition|(
+name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|DEVICEID_AMD_MISC0F
+condition|)
+name|sc
+operator|->
+name|sc_gettemp
+operator|=
+name|amdtemp_gettemp0f
+expr_stmt|;
+else|else
+block|{
+name|sc
+operator|->
+name|sc_gettemp
+operator|=
+name|amdtemp_gettemp
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/* 	 * dev.amdtemp.N tree. 	 */
 name|sysctlctx
 operator|=
 name|device_get_sysctl_ctx
@@ -779,9 +884,9 @@ name|dev
 argument_list|,
 name|SENSOR0_CORE0
 argument_list|,
-name|k8temp_sysctl
+name|amdtemp_sysctl
 argument_list|,
-literal|"I"
+literal|"IK"
 argument_list|,
 literal|"Sensor 0 / Core 0 temperature"
 argument_list|)
@@ -807,9 +912,9 @@ name|dev
 argument_list|,
 name|SENSOR0_CORE1
 argument_list|,
-name|k8temp_sysctl
+name|amdtemp_sysctl
 argument_list|,
-literal|"I"
+literal|"IK"
 argument_list|,
 literal|"Sensor 0 / Core 1 temperature"
 argument_list|)
@@ -860,9 +965,9 @@ name|dev
 argument_list|,
 name|SENSOR1_CORE0
 argument_list|,
-name|k8temp_sysctl
+name|amdtemp_sysctl
 argument_list|,
-literal|"I"
+literal|"IK"
 argument_list|,
 literal|"Sensor 1 / Core 0 temperature"
 argument_list|)
@@ -888,9 +993,9 @@ name|dev
 argument_list|,
 name|SENSOR1_CORE1
 argument_list|,
-name|k8temp_sysctl
+name|amdtemp_sysctl
 argument_list|,
-literal|"I"
+literal|"IK"
 argument_list|,
 literal|"Sensor 1 / Core 1 temperature"
 argument_list|)
@@ -905,7 +1010,7 @@ end_function
 
 begin_function
 name|void
-name|k8temp_intrhook
+name|amdtemp_intrhook
 parameter_list|(
 name|void
 modifier|*
@@ -931,7 +1036,7 @@ operator|)
 name|arg
 decl_stmt|;
 name|struct
-name|k8temp_softc
+name|amdtemp_softc
 modifier|*
 name|sc
 decl_stmt|;
@@ -1045,9 +1150,9 @@ name|dev
 argument_list|,
 name|CORE0
 argument_list|,
-name|k8temp_sysctl
+name|amdtemp_sysctl
 argument_list|,
-literal|"I"
+literal|"IK"
 argument_list|,
 literal|"Max of sensor 0 / 1"
 argument_list|)
@@ -1067,7 +1172,7 @@ end_function
 
 begin_function
 name|int
-name|k8temp_detach
+name|amdtemp_detach
 parameter_list|(
 name|device_t
 name|dev
@@ -1077,7 +1182,7 @@ name|int
 name|i
 decl_stmt|;
 name|struct
-name|k8temp_softc
+name|amdtemp_softc
 modifier|*
 name|sc
 init|=
@@ -1124,7 +1229,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* NewBus removes the dev.k8temp.N tree by itself. */
+comment|/* NewBus removes the dev.amdtemp.N tree by itself. */
 return|return
 operator|(
 literal|0
@@ -1136,7 +1241,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|k8temp_sysctl
+name|amdtemp_sysctl
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
@@ -1148,6 +1253,16 @@ operator|(
 name|device_t
 operator|)
 name|arg1
+decl_stmt|;
+name|struct
+name|amdtemp_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
 decl_stmt|;
 name|int
 name|error
@@ -1173,7 +1288,9 @@ index|[
 literal|0
 index|]
 operator|=
-name|k8temp_gettemp
+name|sc
+operator|->
+name|sc_gettemp
 argument_list|(
 name|dev
 argument_list|,
@@ -1185,7 +1302,9 @@ index|[
 literal|1
 index|]
 operator|=
-name|k8temp_gettemp
+name|sc
+operator|->
+name|sc_gettemp
 argument_list|(
 name|dev
 argument_list|,
@@ -1216,7 +1335,9 @@ index|[
 literal|0
 index|]
 operator|=
-name|k8temp_gettemp
+name|sc
+operator|->
+name|sc_gettemp
 argument_list|(
 name|dev
 argument_list|,
@@ -1228,7 +1349,9 @@ index|[
 literal|1
 index|]
 operator|=
-name|k8temp_gettemp
+name|sc
+operator|->
+name|sc_gettemp
 argument_list|(
 name|dev
 argument_list|,
@@ -1254,7 +1377,9 @@ break|break;
 default|default:
 name|temp
 operator|=
-name|k8temp_gettemp
+name|sc
+operator|->
+name|sc_gettemp
 argument_list|(
 name|dev
 argument_list|,
@@ -1288,12 +1413,12 @@ end_function
 begin_function
 specifier|static
 name|int32_t
-name|k8temp_gettemp
+name|amdtemp_gettemp0f
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|k8sensor_t
+name|amdsensor_t
 name|sensor
 parameter_list|)
 block|{
@@ -1309,7 +1434,7 @@ name|pci_read_config
 argument_list|(
 name|dev
 argument_list|,
-name|K8TEMP_REG
+name|AMDTEMP_REG0F
 argument_list|,
 literal|1
 argument_list|)
@@ -1326,9 +1451,9 @@ name|cfg
 operator|&=
 operator|~
 operator|(
-name|K8TEMP_REG_SELSENSOR
+name|AMDTEMP_REG_SELSENSOR
 operator||
-name|K8TEMP_REG_SELCORE
+name|AMDTEMP_REG_SELCORE
 operator|)
 expr_stmt|;
 break|break;
@@ -1338,11 +1463,11 @@ case|:
 name|cfg
 operator|&=
 operator|~
-name|K8TEMP_REG_SELSENSOR
+name|AMDTEMP_REG_SELSENSOR
 expr_stmt|;
 name|cfg
 operator||=
-name|K8TEMP_REG_SELCORE
+name|AMDTEMP_REG_SELCORE
 expr_stmt|;
 break|break;
 case|case
@@ -1351,11 +1476,11 @@ case|:
 name|cfg
 operator|&=
 operator|~
-name|K8TEMP_REG_SELCORE
+name|AMDTEMP_REG_SELCORE
 expr_stmt|;
 name|cfg
 operator||=
-name|K8TEMP_REG_SELSENSOR
+name|AMDTEMP_REG_SELSENSOR
 expr_stmt|;
 break|break;
 case|case
@@ -1364,9 +1489,9 @@ case|:
 name|cfg
 operator||=
 operator|(
-name|K8TEMP_REG_SELSENSOR
+name|AMDTEMP_REG_SELSENSOR
 operator||
-name|K8TEMP_REG_SELCORE
+name|AMDTEMP_REG_SELCORE
 operator|)
 expr_stmt|;
 break|break;
@@ -1381,7 +1506,7 @@ name|pci_write_config
 argument_list|(
 name|dev
 argument_list|,
-name|K8TEMP_REG
+name|AMDTEMP_REG0F
 argument_list|,
 name|cfg
 argument_list|,
@@ -1394,7 +1519,7 @@ name|pci_read_config
 argument_list|(
 name|dev
 argument_list|,
-name|K8TEMP_REG
+name|AMDTEMP_REG0F
 argument_list|,
 literal|4
 argument_list|)
@@ -1410,8 +1535,62 @@ operator|)
 operator|&
 literal|0xff
 operator|)
-operator|-
-name|K8TEMP_MINTEMP
+operator|*
+literal|10
+operator|+
+name|AMDTEMP_OFFSET0F
+expr_stmt|;
+return|return
+operator|(
+name|temp
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int32_t
+name|amdtemp_gettemp
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|amdsensor_t
+name|sensor
+parameter_list|)
+block|{
+name|uint32_t
+name|temp
+decl_stmt|;
+name|temp
+operator|=
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|AMDTEMP_REG
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|temp
+operator|=
+operator|(
+operator|(
+name|temp
+operator|>>
+literal|21
+operator|)
+operator|&
+literal|0x3ff
+operator|)
+operator|*
+literal|10
+operator|/
+literal|8
+operator|+
+name|AMDTEMP_OFFSET
 expr_stmt|;
 return|return
 operator|(
