@@ -135,8 +135,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|__inline
 name|int
 name|law_getmax
 parameter_list|(
@@ -169,6 +167,22 @@ condition|)
 return|return
 operator|(
 literal|12
+operator|)
+return|;
+elseif|else
+if|if
+condition|(
+name|ver
+operator|==
+name|SVR_MPC8548E
+operator|||
+name|ver
+operator|==
+name|SVR_MPC8548
+condition|)
+return|return
+operator|(
+literal|10
 operator|)
 return|;
 else|else
@@ -501,6 +515,14 @@ operator|||
 name|ver
 operator|==
 name|SVR_MPC8572
+operator|||
+name|ver
+operator|==
+name|SVR_MPC8548E
+operator|||
+name|ver
+operator|==
+name|SVR_MPC8548
 condition|)
 comment|/* Systems with dedicated reset register */
 name|ccsr_write4
