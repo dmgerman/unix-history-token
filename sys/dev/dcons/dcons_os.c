@@ -1605,6 +1605,13 @@ name|tty
 operator|=
 name|tp
 expr_stmt|;
+name|tty_init_console
+argument_list|(
+name|tp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|tty_makedev
 argument_list|(
 name|tp
