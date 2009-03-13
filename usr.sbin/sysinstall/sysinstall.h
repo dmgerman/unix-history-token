@@ -987,6 +987,13 @@ name|VAR_CONSTERM
 value|"_consterm"
 end_define
 
+begin_define
+define|#
+directive|define
+name|VAR_KEEPRCCONF
+value|"keeprcconf"
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2285,6 +2292,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* Prototype KLD menu				*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuConfig
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Prototype config menu				*/
 end_comment
 
 begin_decl_stmt
@@ -3717,6 +3735,18 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
+name|dispatch_load_cdrom
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
 name|dispatch_load_file_int
 parameter_list|(
 name|int
@@ -3728,6 +3758,18 @@ begin_function_decl
 specifier|extern
 name|int
 name|dispatch_load_file
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|dispatch_load_menu
 parameter_list|(
 name|dialogMenuItem
 modifier|*
