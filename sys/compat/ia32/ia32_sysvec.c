@@ -794,6 +794,12 @@ operator|=
 literal|"/libexec/ld-elf32.so.1"
 block|,
 operator|.
+name|brand_note
+operator|=
+operator|&
+name|elf32_freebsd_brandnote
+block|,
+operator|.
 name|flags
 operator|=
 name|BI_CAN_EXEC_DYN
@@ -864,10 +870,16 @@ operator|=
 literal|"/libexec/ld-elf32.so.1"
 block|,
 operator|.
+name|brand_note
+operator|=
+operator|&
+name|elf32_freebsd_brandnote
+block|,
+operator|.
 name|flags
 operator|=
 name|BI_CAN_EXEC_DYN
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 

@@ -321,6 +321,12 @@ operator|=
 literal|"/libexec/ld-elf.so.1"
 block|,
 operator|.
+name|brand_note
+operator|=
+operator|&
+name|elf64_freebsd_brandnote
+block|,
+operator|.
 name|flags
 operator|=
 name|BI_CAN_EXEC_DYN
@@ -389,6 +395,12 @@ operator|.
 name|interp_newpath
 operator|=
 name|NULL
+block|,
+operator|.
+name|brand_note
+operator|=
+operator|&
+name|elf64_freebsd_brandnote
 block|,
 operator|.
 name|flags
