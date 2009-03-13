@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2008, 2009 Rui Paulo<rpaulo@FreeBSD.org>  * Copyrig
 end_comment
 
 begin_comment
-comment|/*  * Driver for the AMD K8/K10/K11 thermal sensors. Initially based on the  * amdtemp Linux driver.  */
+comment|/*  * Driver for the AMD K8/K10/K11 thermal sensors. Initially based on the  * k8temp Linux driver.  */
 end_comment
 
 begin_include
