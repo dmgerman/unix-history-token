@@ -252,7 +252,7 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|cred_destroy_label
 argument_list|,
@@ -317,7 +317,7 @@ modifier|*
 name|cred
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|cred_associate_nfsd
 argument_list|,
@@ -341,7 +341,7 @@ modifier|*
 name|cred
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|cred_create_swapper
 argument_list|,
@@ -365,7 +365,7 @@ modifier|*
 name|cred
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|cred_create_init
 argument_list|,
@@ -473,7 +473,7 @@ modifier|*
 name|dest
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|cred_copy_label
 argument_list|,
@@ -508,7 +508,7 @@ modifier|*
 name|newlabel
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|cred_relabel
 argument_list|,
@@ -550,7 +550,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|cred_check_relabel
 argument_list|,
@@ -606,7 +606,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|cred_check_setuid
 argument_list|,
@@ -662,7 +662,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|cred_check_seteuid
 argument_list|,
@@ -718,7 +718,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|cred_check_setgid
 argument_list|,
@@ -774,7 +774,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|cred_check_setegid
 argument_list|,
@@ -836,7 +836,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|cred_check_setgroups
 argument_list|,
@@ -901,7 +901,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|cred_check_setreuid
 argument_list|,
@@ -966,7 +966,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|cred_check_setregid
 argument_list|,
@@ -1036,7 +1036,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|cred_check_setresuid
 argument_list|,
@@ -1110,7 +1110,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|cred_check_setresgid
 argument_list|,
@@ -1176,7 +1176,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|cred_check_visible
 argument_list|,

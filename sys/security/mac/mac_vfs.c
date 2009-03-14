@@ -435,7 +435,7 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|devfs_destroy_label
 argument_list|,
@@ -497,7 +497,7 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|mount_destroy_label
 argument_list|,
@@ -558,7 +558,7 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|vnode_destroy_label
 argument_list|,
@@ -624,7 +624,7 @@ modifier|*
 name|dest
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|vnode_copy_label
 argument_list|,
@@ -735,7 +735,7 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|devfs_update
 argument_list|,
@@ -777,7 +777,7 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|devfs_vnode_associate
 argument_list|,
@@ -868,7 +868,7 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|vnode_associate_singlelabel
 argument_list|,
@@ -1314,7 +1314,8 @@ name|result
 operator|=
 literal|0
 expr_stmt|;
-name|MAC_BOOLEAN
+comment|/* No sleeping since the process lock will be held by the caller. */
+name|MAC_BOOLEAN_NOSLEEP
 argument_list|(
 name|vnode_execve_will_transition
 argument_list|,
@@ -4152,7 +4153,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|mount_check_stat
 argument_list|,
@@ -4209,7 +4210,7 @@ modifier|*
 name|de
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|devfs_create_device
 argument_list|,
@@ -4254,7 +4255,7 @@ modifier|*
 name|de
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|devfs_create_symlink
 argument_list|,
@@ -4300,7 +4301,7 @@ modifier|*
 name|de
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|devfs_create_directory
 argument_list|,

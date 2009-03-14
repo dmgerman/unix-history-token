@@ -339,7 +339,7 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|proc_destroy_label
 argument_list|,
@@ -1489,7 +1489,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|proc_check_debug
 argument_list|,
@@ -1554,7 +1554,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|proc_check_sched
 argument_list|,
@@ -1624,7 +1624,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|proc_check_signal
 argument_list|,
@@ -1693,7 +1693,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|proc_check_wait
 argument_list|,

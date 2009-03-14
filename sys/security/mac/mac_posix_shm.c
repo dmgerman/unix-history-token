@@ -176,7 +176,7 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|posixshm_destroy_label
 argument_list|,
@@ -242,7 +242,7 @@ modifier|*
 name|shmfd
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|posixshm_create
 argument_list|,
@@ -298,7 +298,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|posixshm_check_mmap
 argument_list|,
@@ -368,7 +368,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|posixshm_check_open
 argument_list|,
@@ -437,7 +437,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|posixshm_check_stat
 argument_list|,
@@ -510,7 +510,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|posixshm_check_truncate
 argument_list|,
@@ -576,7 +576,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|posixshm_check_unlink
 argument_list|,

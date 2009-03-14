@@ -113,7 +113,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|cred_check_setaudit
 argument_list|,
@@ -171,7 +171,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|cred_check_setaudit_addr
 argument_list|,
@@ -227,7 +227,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|cred_check_setauid
 argument_list|,
@@ -289,7 +289,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|system_check_audit
 argument_list|,
@@ -435,7 +435,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|system_check_auditon
 argument_list|,

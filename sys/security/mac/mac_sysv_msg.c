@@ -282,7 +282,7 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|sysvmsg_destroy_label
 argument_list|,
@@ -344,7 +344,7 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|sysvmsq_destroy_label
 argument_list|,
@@ -415,7 +415,7 @@ modifier|*
 name|msgptr
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|sysvmsg_create
 argument_list|,
@@ -452,7 +452,7 @@ modifier|*
 name|msqkptr
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|sysvmsq_create
 argument_list|,
@@ -478,7 +478,7 @@ modifier|*
 name|msgptr
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|sysvmsg_cleanup
 argument_list|,
@@ -500,7 +500,7 @@ modifier|*
 name|msqkptr
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|sysvmsq_cleanup
 argument_list|,
@@ -549,7 +549,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|sysvmsq_check_msgmsq
 argument_list|,
@@ -619,7 +619,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|sysvmsq_check_msgrcv
 argument_list|,
@@ -681,7 +681,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|sysvmsq_check_msgrmid
 argument_list|,
@@ -743,7 +743,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|sysvmsq_check_msqget
 argument_list|,
@@ -805,7 +805,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|sysvmsq_check_msqsnd
 argument_list|,
@@ -867,7 +867,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|sysvmsq_check_msqrcv
 argument_list|,
@@ -934,7 +934,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|sysvmsq_check_msqctl
 argument_list|,

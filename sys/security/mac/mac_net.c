@@ -452,7 +452,23 @@ argument_list|(
 name|label
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flag
+operator|&
+name|M_WAITOK
+condition|)
 name|MAC_CHECK
+argument_list|(
+name|mbuf_init_label
+argument_list|,
+name|label
+argument_list|,
+name|flag
+argument_list|)
+expr_stmt|;
+else|else
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|mbuf_init_label
 argument_list|,
@@ -466,7 +482,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|mbuf_destroy_label
 argument_list|,
@@ -598,7 +614,7 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|bpfdesc_destroy_label
 argument_list|,
@@ -660,7 +676,7 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|ifnet_destroy_label
 argument_list|,
@@ -739,7 +755,7 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|mbuf_destroy_label
 argument_list|,
@@ -808,7 +824,7 @@ literal|1
 operator|)
 expr_stmt|;
 comment|/* 	 * mac_mbuf_tag_init() is called on the target tag in m_tag_copy(), 	 * so we don't need to call it here. 	 */
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|mbuf_copy_label
 argument_list|,
@@ -857,7 +873,7 @@ argument_list|(
 name|m_to
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|mbuf_copy_label
 argument_list|,
@@ -885,7 +901,7 @@ modifier|*
 name|dest
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|ifnet_copy_label
 argument_list|,
@@ -993,7 +1009,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|ifnet_create
 argument_list|,
@@ -1027,7 +1043,7 @@ modifier|*
 name|d
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|bpfdesc_create
 argument_list|,
@@ -1075,7 +1091,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|bpfdesc_create_mbuf
 argument_list|,
@@ -1125,7 +1141,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|ifnet_create_mbuf
 argument_list|,
@@ -1188,7 +1204,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|bpfdesc_check_receive
 argument_list|,
@@ -1281,7 +1297,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|ifnet_check_transmit
 argument_list|,
@@ -1784,7 +1800,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|ifnet_check_relabel
 argument_list|,
@@ -1820,7 +1836,7 @@ name|error
 operator|)
 return|;
 block|}
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|ifnet_relabel
 argument_list|,
