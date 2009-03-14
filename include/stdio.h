@@ -1808,7 +1808,7 @@ begin_if
 if|#
 directive|if
 name|_POSIX_C_SOURCE
-operator|>
+operator|>=
 literal|200809
 end_if
 
@@ -1903,7 +1903,7 @@ begin_if
 if|#
 directive|if
 name|_POSIX_C_SOURCE
-operator|>
+operator|>=
 literal|200809
 end_if
 
