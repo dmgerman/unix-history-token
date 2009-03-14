@@ -416,11 +416,17 @@ block|}
 struct|;
 end_struct
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_KERNEL
-end_ifndef
+argument_list|)
+operator|&&
+name|__BSD_VISIBLE
+end_if
 
 begin_ifndef
 ifndef|#
@@ -543,7 +549,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_KERNEL */
+comment|/* !_KERNEL&& __BSD_VISIBLE */
 end_comment
 
 begin_if
