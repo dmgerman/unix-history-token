@@ -3454,13 +3454,6 @@ operator||
 name|SCTP_NOTIFY_DATAGRAM_SENT
 operator|)
 argument_list|,
-operator|&
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|sent_queue
-argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
@@ -3517,13 +3510,6 @@ name|SCTP_RESPONSE_TO_USER_REQ
 operator||
 name|SCTP_NOTIFY_DATAGRAM_SENT
 operator|)
-argument_list|,
-operator|&
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|sent_queue
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)

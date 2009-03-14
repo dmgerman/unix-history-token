@@ -1076,8 +1076,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_LOG_MAX_TYPES
+name|SCTP_FWD_TSN_CHECK
 value|123
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_LOG_MAX_TYPES
+value|124
 end_define
 
 begin_comment
