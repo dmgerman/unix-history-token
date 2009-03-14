@@ -3498,6 +3498,14 @@ operator|->
 name|td_locks
 operator|--
 expr_stmt|;
+name|lock_profile_release_lock
+argument_list|(
+operator|&
+name|m
+operator|->
+name|lock_object
+argument_list|)
+expr_stmt|;
 comment|/* Tell witness this isn't locked to make it happy. */
 name|WITNESS_UNLOCK
 argument_list|(
