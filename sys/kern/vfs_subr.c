@@ -12373,6 +12373,11 @@ operator|.
 name|f_fstypename
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+break|break;
 block|}
 name|db_printf
 argument_list|(
@@ -13159,6 +13164,7 @@ name|v_type
 operator|!=
 name|VMARKER
 condition|)
+block|{
 name|vn_printf
 argument_list|(
 name|vp
@@ -13166,6 +13172,12 @@ argument_list|,
 literal|"vnode "
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+break|break;
+block|}
 block|}
 block|}
 end_block
