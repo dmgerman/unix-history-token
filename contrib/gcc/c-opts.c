@@ -7,6 +7,10 @@ begin_comment
 comment|/* $FreeBSD$ */
 end_comment
 
+begin_comment
+comment|/* Merged C99 inline changes from gcc trunk 122565 2007-03-05 */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -3137,15 +3141,31 @@ name|flag_inline_trees
 operator|=
 literal|2
 expr_stmt|;
-comment|/* We recognize -fgnu89-inline in preparation for 4.3 where the      option will be meaningful.  Here we just reject      -fno-gnu89-inline, since we don't support it.  */
+comment|/* By default we use C99 inline semantics in GNU99 or C99 mode.  C99      inline semantics are not supported in GNU89 or C89 mode.  */
+if|if
+condition|(
+name|flag_gnu89_inline
+operator|==
+operator|-
+literal|1
+condition|)
+name|flag_gnu89_inline
+operator|=
+operator|!
+name|flag_isoc99
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 operator|!
 name|flag_gnu89_inline
+operator|&&
+operator|!
+name|flag_isoc99
 condition|)
 name|error
 argument_list|(
-literal|"-fno-gnu89-inline is not supported"
+literal|"-fno-gnu89-inline is only supported in GNU99 or C99 mode"
 argument_list|)
 expr_stmt|;
 comment|/* If we are given more than one input file, we must use      unit-at-a-time mode.  */

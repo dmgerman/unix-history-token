@@ -934,9 +934,6 @@ decl_stmt|;
 name|int
 name|warn_about_return_type
 decl_stmt|;
-name|int
-name|extern_inline
-decl_stmt|;
 block|}
 end_decl_stmt
 
