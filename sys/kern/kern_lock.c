@@ -2933,6 +2933,12 @@ operator|--
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|tid
+operator|!=
+name|LK_KERNPROC
+condition|)
 name|lock_profile_release_lock
 argument_list|(
 operator|&
@@ -3690,6 +3696,14 @@ operator|!=
 name|tid
 condition|)
 return|return;
+name|lock_profile_release_lock
+argument_list|(
+operator|&
+name|lk
+operator|->
+name|lock_object
+argument_list|)
+expr_stmt|;
 name|LOCK_LOG_LOCK
 argument_list|(
 literal|"XDISOWN"
