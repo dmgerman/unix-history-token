@@ -2421,7 +2421,7 @@ directive|define
 name|SJARG
 parameter_list|()
 define|\
-value|(flags&INTMAXT ? GETARG(intmax_t) : \ 	    flags&SIZET ? (intmax_t)GETARG(size_t) : \ 	    flags&PTRDIFFT ? (intmax_t)GETARG(ptrdiff_t) : \ 	    (intmax_t)GETARG(long long))
+value|(flags&INTMAXT ? GETARG(intmax_t) : \ 	    flags&SIZET ? (intmax_t)GETARG(ssize_t) : \ 	    flags&PTRDIFFT ? (intmax_t)GETARG(ptrdiff_t) : \ 	    (intmax_t)GETARG(long long))
 define|#
 directive|define
 name|UJARG
