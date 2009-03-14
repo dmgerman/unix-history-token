@@ -1124,9 +1124,13 @@ argument_list|(
 name|_MKTEMP_DECLARED
 argument_list|)
 operator|&&
+operator|(
+name|__BSD_VISIBLE
+operator|||
 name|__XSI_VISIBLE
 operator|<=
 literal|600
+operator|)
 end_if
 
 begin_function_decl
