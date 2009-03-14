@@ -198,10 +198,6 @@ if|#
 directive|if
 name|__BSD_VISIBLE
 operator|||
-name|__POSIX_VISIBLE
-operator|>=
-literal|200112
-operator|||
 name|__XSI_VISIBLE
 end_if
 
@@ -217,6 +213,23 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+operator|||
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+operator|||
+name|__XSI_VISIBLE
+end_if
 
 begin_function_decl
 name|int
