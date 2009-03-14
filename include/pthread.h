@@ -963,17 +963,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pthread_kill
-parameter_list|(
-name|pthread_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|pthread_mutexattr_init
 parameter_list|(
 name|pthread_mutexattr_t
@@ -1304,22 +1293,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pthread_sigmask
-parameter_list|(
-name|int
-parameter_list|,
-specifier|const
-name|__sigset_t
-modifier|*
-parameter_list|,
-name|__sigset_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|pthread_spin_init
 parameter_list|(
 name|pthread_spinlock_t
@@ -1412,6 +1385,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_function_decl
 name|int
 name|pthread_getprio
@@ -1440,6 +1419,11 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int
@@ -1660,6 +1644,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|__XSI_VISIBLE
+end_if
+
 begin_function_decl
 name|int
 name|pthread_getconcurrency
@@ -1677,6 +1667,11 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void

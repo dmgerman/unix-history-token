@@ -95,6 +95,12 @@ begin_comment
 comment|/*  * Primitive system data type definitions required by P1003.1c.  *  * Note that P1003.1c specifies that there are no defined comparison  * or assignment operators for the types pthread_attr_t, pthread_cond_t,  * pthread_condattr_t, pthread_mutex_t, pthread_mutexattr_t.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PTHREAD_T_DECLARED
+end_ifndef
+
 begin_typedef
 typedef|typedef
 name|struct
@@ -103,6 +109,17 @@ modifier|*
 name|pthread_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|_PTHREAD_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
