@@ -10675,6 +10675,13 @@ argument_list|,
 name|mpte
 argument_list|)
 expr_stmt|;
+name|pmap
+operator|->
+name|pm_stats
+operator|.
+name|resident_count
+operator|--
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|mpte
@@ -17244,6 +17251,13 @@ name|pmap
 argument_list|,
 name|mpte
 argument_list|)
+expr_stmt|;
+name|pmap
+operator|->
+name|pm_stats
+operator|.
+name|resident_count
+operator|--
 expr_stmt|;
 name|KASSERT
 argument_list|(
