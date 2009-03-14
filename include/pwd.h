@@ -513,10 +513,6 @@ end_function_decl
 begin_if
 if|#
 directive|if
-name|__POSIX_VISIBLE
-operator|>=
-literal|200112
-operator|||
 name|__XSI_VISIBLE
 operator|>=
 literal|500
@@ -550,6 +546,23 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+operator|||
+name|__XSI_VISIBLE
+operator|>=
+literal|500
+end_if
 
 begin_function_decl
 name|int
