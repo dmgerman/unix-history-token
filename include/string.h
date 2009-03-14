@@ -82,11 +82,9 @@ begin_function_decl
 name|__BEGIN_DECLS
 if|#
 directive|if
-name|__POSIX_VISIBLE
-operator|>=
-literal|200112
-operator|||
 name|__XSI_VISIBLE
+operator|>=
+literal|600
 name|void
 modifier|*
 name|memccpy
@@ -129,6 +127,12 @@ name|__pure
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_decl_stmt
 name|void
 modifier|*
@@ -145,6 +149,11 @@ argument_list|)
 name|__pure
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
