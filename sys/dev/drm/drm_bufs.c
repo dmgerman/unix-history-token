@@ -5059,6 +5059,8 @@ argument_list|,
 name|VM_PROT_ALL
 argument_list|,
 name|MAP_SHARED
+operator||
+name|MAP_NOSYNC
 argument_list|,
 name|OBJT_DEVICE
 argument_list|,
@@ -5092,6 +5094,8 @@ argument_list|,
 name|VM_PROT_ALL
 argument_list|,
 name|MAP_SHARED
+operator||
+name|MAP_NOSYNC
 argument_list|,
 name|SLIST_FIRST
 argument_list|(
