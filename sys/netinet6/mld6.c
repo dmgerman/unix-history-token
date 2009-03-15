@@ -2056,11 +2056,6 @@ name|in6m
 operator|=
 name|NULL
 expr_stmt|;
-name|IFF_LOCKGIANT
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 comment|/*IN6_MULTI_LOCK();*/
 name|IN6_LOOKUP_MULTI
 argument_list|(
@@ -2370,11 +2365,6 @@ literal|0
 condition|)
 do|;
 comment|/*IN6_MULTI_UNLOCK();*/
-name|IFF_UNLOCKGIANT
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|in6m

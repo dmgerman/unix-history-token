@@ -6501,11 +6501,6 @@ operator|->
 name|if_ioctl
 condition|)
 block|{
-name|IFF_LOCKGIANT
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 call|(
@@ -6523,11 +6518,6 @@ operator|(
 name|caddr_t
 operator|)
 name|ia
-argument_list|)
-expr_stmt|;
-name|IFF_UNLOCKGIANT
-argument_list|(
-name|ifp
 argument_list|)
 expr_stmt|;
 if|if

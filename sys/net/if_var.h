@@ -594,11 +594,6 @@ name|if_afdata_lock
 decl_stmt|;
 name|struct
 name|task
-name|if_starttask
-decl_stmt|;
-comment|/* task for IFF_NEEDSGIANT */
-name|struct
-name|task
 name|if_linktask
 decl_stmt|;
 comment|/* task for link change events */
@@ -1455,26 +1450,6 @@ parameter_list|(
 name|ifp
 parameter_list|)
 value|rw_assert(&(ifp)->if_afdata_lock, RA_UNLOCKED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFF_LOCKGIANT
-parameter_list|(
-name|ifp
-parameter_list|)
-value|do {						\ 	if ((ifp)->if_flags& IFF_NEEDSGIANT)				\ 		mtx_lock(&Giant);					\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFF_UNLOCKGIANT
-parameter_list|(
-name|ifp
-parameter_list|)
-value|do {					\ 	if ((ifp)->if_flags& IFF_NEEDSGIANT)				\ 		mtx_unlock(&Giant);					\ } while (0)
 end_define
 
 begin_function_decl

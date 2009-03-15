@@ -3888,11 +3888,6 @@ name|in6_multi
 modifier|*
 name|oin6m
 decl_stmt|;
-name|IFF_LOCKGIANT
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|LIST_FOREACH_SAFE
 argument_list|(
 argument|in6m
@@ -3918,11 +3913,6 @@ name|in6m
 argument_list|)
 expr_stmt|;
 block|}
-name|IFF_UNLOCKGIANT
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

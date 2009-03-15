@@ -2277,12 +2277,6 @@ operator|&
 operator|~
 name|IFCAP_POLLING
 expr_stmt|;
-name|IFF_LOCKGIANT
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-comment|/* LOR here */
 call|(
 name|void
 call|)
@@ -2302,11 +2296,6 @@ name|caddr_t
 operator|)
 operator|&
 name|ifr
-argument_list|)
-expr_stmt|;
-name|IFF_UNLOCKGIANT
-argument_list|(
-name|ifp
 argument_list|)
 expr_stmt|;
 block|}
