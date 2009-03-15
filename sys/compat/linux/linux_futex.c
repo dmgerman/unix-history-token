@@ -160,13 +160,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<compat/linux/linux_emul.h>
+file|<compat/linux/linux_futex.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<compat/linux/linux_futex.h>
+file|<compat/linux/linux_emul.h>
 end_include
 
 begin_struct_decl
