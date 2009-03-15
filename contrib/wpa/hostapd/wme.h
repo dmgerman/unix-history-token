@@ -77,7 +77,7 @@ comment|/* defined(__FreeBSD__) || defined(__NetBSD__) || 	* defined(__DragonFly
 end_comment
 
 begin_function
-specifier|extern
+specifier|static
 specifier|inline
 name|u16
 name|tsinfo
