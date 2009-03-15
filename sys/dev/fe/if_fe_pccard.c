@@ -190,6 +190,9 @@ decl_stmt|;
 name|int
 name|mpp_flags
 decl_stmt|;
+name|int
+name|mpp_cfe
+decl_stmt|;
 define|#
 directive|define
 name|MPP_MBH10302
@@ -200,7 +203,7 @@ name|MPP_ANYFUNC
 value|2
 define|#
 directive|define
-name|MPP_SKIP_TO_CFE_10
+name|MPP_SKIP_TO_CFE
 value|4
 block|}
 name|fe_pccard_products
@@ -290,7 +293,9 @@ argument_list|,
 name|CNETPC
 argument_list|)
 block|,
-literal|0
+name|MPP_SKIP_TO_CFE
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -337,7 +342,9 @@ argument_list|)
 block|,
 name|MPP_MBH10302
 operator||
-name|MPP_SKIP_TO_CFE_10
+name|MPP_SKIP_TO_CFE
+block|,
+literal|10
 block|}
 block|,
 block|{
@@ -508,18 +515,20 @@ name|pp
 operator|->
 name|mpp_flags
 operator|&
-name|MPP_SKIP_TO_CFE_10
+name|MPP_SKIP_TO_CFE
 condition|)
 block|{
 for|for
 control|(
 name|i
 operator|=
-literal|10
+name|pp
+operator|->
+name|mpp_cfe
 init|;
 name|i
 operator|<
-literal|27
+literal|32
 condition|;
 name|i
 operator|++
@@ -544,7 +553,11 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Hitachi HT-4840-11 workaround failed\n"
+literal|"Failed to map CFE %d or higher\n"
+argument_list|,
+name|pp
+operator|->
+name|mpp_cfe
 argument_list|)
 expr_stmt|;
 return|return
