@@ -124,7 +124,7 @@ name|s
 operator|=
 name|socket
 argument_list|(
-name|AF_INET
+name|AF_LOCAL
 argument_list|,
 name|SOCK_DGRAM
 argument_list|,
@@ -142,7 +142,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"socket(AF_INET,SOCK_DGRAM)"
+literal|"socket(AF_LOCAL,SOCK_DGRAM)"
 argument_list|)
 expr_stmt|;
 name|memset
