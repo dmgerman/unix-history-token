@@ -197,7 +197,7 @@ operator|&
 name|RADEON_FAMILY_MASK
 operator|)
 operator|>=
-name|CHIP_RS690
+name|CHIP_RS600
 condition|)
 block|{
 switch|switch
@@ -327,7 +327,7 @@ operator|&
 name|RADEON_FAMILY_MASK
 operator|)
 operator|>=
-name|CHIP_RS690
+name|CHIP_RS600
 condition|)
 block|{
 switch|switch
@@ -462,7 +462,7 @@ operator|&
 name|RADEON_FAMILY_MASK
 operator|)
 operator|>=
-name|CHIP_RS690
+name|CHIP_RS600
 condition|)
 block|{
 comment|/* vbl interrupts in a different place */
@@ -648,7 +648,7 @@ operator|&
 name|RADEON_FAMILY_MASK
 operator|)
 operator|>=
-name|CHIP_RS690
+name|CHIP_RS600
 condition|)
 block|{
 if|if
@@ -1046,7 +1046,7 @@ operator|&
 name|RADEON_FAMILY_MASK
 operator|)
 operator|>=
-name|CHIP_RS690
+name|CHIP_RS600
 condition|)
 block|{
 if|if
@@ -1304,7 +1304,7 @@ operator|&
 name|RADEON_FAMILY_MASK
 operator|)
 operator|>=
-name|CHIP_RS690
+name|CHIP_RS600
 condition|)
 name|RADEON_WRITE
 argument_list|(
@@ -1437,7 +1437,7 @@ operator|&
 name|RADEON_FAMILY_MASK
 operator|)
 operator|>=
-name|CHIP_RS690
+name|CHIP_RS600
 condition|)
 name|RADEON_WRITE
 argument_list|(
