@@ -40,6 +40,10 @@ name|LINUX_FUTEX_FD
 value|2
 end_define
 
+begin_comment
+comment|/* unused */
+end_comment
+
 begin_define
 define|#
 directive|define
