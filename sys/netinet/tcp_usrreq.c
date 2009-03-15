@@ -700,7 +700,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_TIMEWAIT
 condition|)
@@ -710,7 +710,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_DROPPED
 condition|)
@@ -759,7 +759,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_DROPPED
 operator|||
@@ -1022,7 +1022,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -1227,7 +1227,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -1487,7 +1487,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -1697,7 +1697,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -2020,7 +2020,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -2241,7 +2241,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -2569,7 +2569,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -2731,7 +2731,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -2914,7 +2914,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -3119,7 +3119,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -3162,7 +3162,7 @@ operator|!
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_DROPPED
 operator|)
@@ -3264,7 +3264,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -3447,7 +3447,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -3690,7 +3690,7 @@ operator|!
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_DROPPED
 operator|)
@@ -4063,7 +4063,7 @@ operator|!
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_TIMEWAIT
 operator|)
@@ -4072,7 +4072,7 @@ operator|!
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_DROPPED
 operator|)
@@ -4107,7 +4107,7 @@ operator|!
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_DROPPED
 operator|)
@@ -4131,7 +4131,7 @@ argument_list|)
 expr_stmt|;
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator||=
 name|INP_SOCKREF
 expr_stmt|;
@@ -4235,7 +4235,7 @@ operator|!
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_TIMEWAIT
 operator|)
@@ -4244,7 +4244,7 @@ operator|!
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_DROPPED
 operator|)
@@ -4277,7 +4277,7 @@ operator|!
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_DROPPED
 operator|)
@@ -4301,7 +4301,7 @@ argument_list|)
 expr_stmt|;
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator||=
 name|INP_SOCKREF
 expr_stmt|;
@@ -4389,7 +4389,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -5613,7 +5613,7 @@ name|INP_WLOCK_RECHECK
 parameter_list|(
 name|inp
 parameter_list|)
-value|do {					\ 	INP_WLOCK(inp);							\ 	if (inp->inp_vflag& (INP_TIMEWAIT | INP_DROPPED)) {		\ 		INP_WUNLOCK(inp);					\ 		return (ECONNRESET);					\ 	}								\ 	tp = intotcpcb(inp);						\ } while(0)
+value|do {					\ 	INP_WLOCK(inp);							\ 	if (inp->inp_flags& (INP_TIMEWAIT | INP_DROPPED)) {		\ 		INP_WUNLOCK(inp);					\ 		return (ECONNRESET);					\ 	}								\ 	tp = intotcpcb(inp);						\ } while(0)
 end_define
 
 begin_function
@@ -5757,7 +5757,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -6808,7 +6808,7 @@ operator|!
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_DROPPED
 operator|)
