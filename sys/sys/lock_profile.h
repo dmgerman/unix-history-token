@@ -77,6 +77,7 @@ end_endif
 
 begin_decl_stmt
 specifier|extern
+specifier|volatile
 name|int
 name|lock_prof_enable
 decl_stmt|;
@@ -116,6 +117,18 @@ name|struct
 name|lock_object
 modifier|*
 name|lo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|lock_profile_thread_exit
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -180,69 +193,53 @@ begin_comment
 comment|/* !LOCK_PROFILING */
 end_comment
 
-begin_function
-specifier|static
-specifier|inline
-name|void
+begin_define
+define|#
+directive|define
 name|lock_profile_release_lock
 parameter_list|(
-name|struct
-name|lock_object
-modifier|*
 name|lo
 parameter_list|)
-block|{ }
-end_function
+end_define
 
-begin_function
-specifier|static
-specifier|inline
-name|void
+begin_define
+define|#
+directive|define
 name|lock_profile_obtain_lock_failed
 parameter_list|(
-name|struct
-name|lock_object
-modifier|*
 name|lo
 parameter_list|,
-name|int
-modifier|*
 name|contested
 parameter_list|,
-name|uint64_t
-modifier|*
 name|waittime
 parameter_list|)
-block|{ }
-end_function
+end_define
 
-begin_function
-specifier|static
-specifier|inline
-name|void
+begin_define
+define|#
+directive|define
 name|lock_profile_obtain_lock_success
 parameter_list|(
-name|struct
-name|lock_object
-modifier|*
 name|lo
 parameter_list|,
-name|int
 name|contested
 parameter_list|,
-name|uint64_t
 name|waittime
 parameter_list|,
-specifier|const
-name|char
-modifier|*
 name|file
 parameter_list|,
-name|int
 name|line
 parameter_list|)
-block|{ }
-end_function
+end_define
+
+begin_define
+define|#
+directive|define
+name|lock_profile_thread_exit
+parameter_list|(
+name|td
+parameter_list|)
+end_define
 
 begin_endif
 endif|#
