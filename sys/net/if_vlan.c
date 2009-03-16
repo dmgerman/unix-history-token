@@ -5740,11 +5740,6 @@ name|data
 parameter_list|)
 block|{
 name|struct
-name|ifaddr
-modifier|*
-name|ifa
-decl_stmt|;
-name|struct
 name|ifnet
 modifier|*
 name|p
@@ -5773,15 +5768,6 @@ operator|=
 operator|(
 expr|struct
 name|ifreq
-operator|*
-operator|)
-name|data
-expr_stmt|;
-name|ifa
-operator|=
-operator|(
-expr|struct
-name|ifaddr
 operator|*
 operator|)
 name|data
