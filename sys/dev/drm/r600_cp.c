@@ -9261,13 +9261,6 @@ literal|28
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Start with assuming that writeback doesn't work */
-name|dev_priv
-operator|->
-name|writeback_works
-operator|=
-literal|0
-expr_stmt|;
 comment|/* Initialize the scratch register pointer.  This will cause 	 * the scratch register values to be written out to memory 	 * whenever they are updated. 	 * 	 * We simply put this behind the ring read pointer, this works 	 * with PCI GART as well as (whatever kind of) AGP GART 	 */
 block|{
 name|u64
