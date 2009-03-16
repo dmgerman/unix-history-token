@@ -9032,8 +9032,19 @@ argument_list|(
 name|bp
 operator|->
 name|b_bufsize
+argument_list|,
+name|GB_NOWAIT_BD
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|newbp
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|normal_write
+goto|;
 comment|/* 		 * set it to be identical to the old block.  We have to 		 * set b_lblkno and BKGRDMARKER before calling bgetvp() 		 * to avoid confusing the splay tree and gbincore(). 		 */
 name|memcpy
 argument_list|(
@@ -9175,6 +9186,8 @@ name|newbp
 expr_stmt|;
 block|}
 comment|/* Let the normal bufwrite do the rest for us */
+name|normal_write
+label|:
 return|return
 operator|(
 name|bufwrite

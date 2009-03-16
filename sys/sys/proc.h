@@ -1364,12 +1364,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDP_UNUSED8
+name|TDP_BUFNEED
 value|0x00000008
 end_define
 
 begin_comment
-comment|/* available */
+comment|/* Do not recurse into the buf flush */
 end_comment
 
 begin_define
