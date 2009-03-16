@@ -580,10 +580,6 @@ name|ifqmaxlen
 expr_stmt|;
 name|ifp
 operator|->
-name|if_hwassist
-operator|=
-name|ifp
-operator|->
 name|if_capabilities
 operator|=
 name|ifp
@@ -591,6 +587,16 @@ operator|->
 name|if_capenable
 operator|=
 name|IFCAP_HWCSUM
+expr_stmt|;
+name|ifp
+operator|->
+name|if_hwassist
+operator|=
+name|CSUM_IP
+operator||
+name|CSUM_TCP
+operator||
+name|CSUM_UDP
 expr_stmt|;
 name|if_attach
 argument_list|(
