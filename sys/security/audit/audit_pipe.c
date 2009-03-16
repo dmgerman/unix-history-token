@@ -195,7 +195,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_AUDIT_PIPE_PRESELECT
 argument_list|,
-literal|"audit_pipe_preselect"
+literal|"audit_pipe_presel"
 argument_list|,
 literal|"Audit pipe preselection structure"
 argument_list|)
