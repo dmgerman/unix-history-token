@@ -3449,8 +3449,6 @@ name|dev
 operator|->
 name|dev_lock
 argument_list|,
-name|PZERO
-operator||
 name|PCATCH
 argument_list|,
 literal|"drmlk2"
