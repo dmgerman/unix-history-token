@@ -41202,11 +41202,11 @@ literal|"+--------------------------------------+\n"
 argument|); 		hdac_dump_pcmchannels(pdevinfo); 		device_printf(dev,
 literal|"\n"
 argument|); 		device_printf(dev,
-literal|"+--------------------------------+\n"
+literal|"+-------------------------------+\n"
 argument|); 		device_printf(dev,
-literal|"| DUMPING Playback/Record Pathes |\n"
+literal|"| DUMPING Playback/Record Paths |\n"
 argument|); 		device_printf(dev,
-literal|"+--------------------------------+\n"
+literal|"+-------------------------------+\n"
 argument|); 		hdac_dump_dac(pdevinfo); 		hdac_dump_adc(pdevinfo); 		hdac_dump_mix(pdevinfo); 		device_printf(dev,
 literal|"\n"
 argument|); 		device_printf(dev,
