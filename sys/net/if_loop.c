@@ -312,6 +312,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|LO_CSUM_FEATURES
+value|(CSUM_IP | CSUM_TCP | CSUM_UDP | CSUM_SCTP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LO_CSUM_SET
+value|(CSUM_DATA_VALID | CSUM_PSEUDO_HDR | \ 				    CSUM_IP_CHECKED | CSUM_IP_VALID | \ 				    CSUM_SCTP_VALID)
+end_define
+
 begin_function_decl
 name|int
 name|loioctl
@@ -592,11 +606,7 @@ name|ifp
 operator|->
 name|if_hwassist
 operator|=
-name|CSUM_IP
-operator||
-name|CSUM_TCP
-operator||
-name|CSUM_UDP
+name|LO_CSUM_FEATURES
 expr_stmt|;
 name|if_attach
 argument_list|(
@@ -928,15 +938,7 @@ name|m_pkthdr
 operator|.
 name|csum_flags
 operator|=
-name|CSUM_DATA_VALID
-operator||
-name|CSUM_PSEUDO_HDR
-operator||
-name|CSUM_IP_CHECKED
-operator||
-name|CSUM_IP_VALID
-operator||
-name|CSUM_SCTP_VALID
+name|LO_CSUM_SET
 expr_stmt|;
 block|}
 name|m
@@ -946,13 +948,7 @@ operator|.
 name|csum_flags
 operator|&=
 operator|~
-operator|(
-name|CSUM_IP
-operator||
-name|CSUM_TCP
-operator||
-name|CSUM_UDP
-operator|)
+name|LO_CSUM_FEATURES
 expr_stmt|;
 case|case
 name|AF_INET6
@@ -1622,11 +1618,7 @@ name|ifp
 operator|->
 name|if_hwassist
 operator|=
-name|CSUM_IP
-operator||
-name|CSUM_TCP
-operator||
-name|CSUM_UDP
+name|LO_CSUM_FEATURES
 expr_stmt|;
 else|else
 name|ifp
