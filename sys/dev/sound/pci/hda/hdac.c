@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20090226_0129"
+value|"20090316_0130"
 end_define
 
 begin_expr_stmt
@@ -930,6 +930,13 @@ define|#
 directive|define
 name|ACER_T6292_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(ACER, 0x011b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACER_T5320_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(ACER, 0x011f)
 end_define
 
 begin_define
@@ -12305,15 +12312,15 @@ condition|(
 name|id
 operator|==
 name|HDA_CODEC_ALC268
-operator|&&
-name|HDA_DEV_MATCH
-argument_list|(
-name|ACER_ALL_SUBVENDOR
-argument_list|,
+condition|)
+block|{
+if|if
+condition|(
 name|sc
 operator|->
 name|pci_subvendor
-argument_list|)
+operator|==
+name|ACER_T5320_SUBVENDOR
 condition|)
 block|{
 switch|switch
@@ -12322,13 +12329,15 @@ name|nid
 condition|)
 block|{
 case|case
-literal|28
+literal|20
 case|:
+comment|/* Headphones Jack */
 name|patch
 operator|=
-literal|"device=CD conn=fixed"
+literal|"as=1 seq=15"
 expr_stmt|;
 break|break;
+block|}
 block|}
 block|}
 if|if
