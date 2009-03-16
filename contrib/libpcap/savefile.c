@@ -2060,6 +2060,13 @@ block|,
 name|LINKTYPE_IPMB
 block|}
 block|,
+comment|/* enc0 device */
+block|{
+name|DLT_ENC
+block|,
+name|LINKTYPE_ENC
+block|}
+block|,
 block|{
 operator|-
 literal|1
