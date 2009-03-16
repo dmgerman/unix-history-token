@@ -243,6 +243,12 @@ operator|(
 name|ENOTSUP
 operator|)
 return|;
+name|td
+operator|->
+name|td_pflags
+operator||=
+name|TDP_AUDITREC
+expr_stmt|;
 name|ar
 operator|=
 name|td

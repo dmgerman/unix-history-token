@@ -1138,7 +1138,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {					\ 	if (td->td_ar != NULL)						\ 		audit_arg_ ## op (args);				\ } while (0)
+value|do {					\ 	if (td->td_pflags& TDP_AUDITREC)				\ 		audit_arg_ ## op (args);				\ } while (0)
 end_define
 
 begin_define
@@ -1166,7 +1166,7 @@ name|error
 parameter_list|,
 name|td
 parameter_list|)
-value|do {				\ 	if (td->td_ar != NULL)						\ 		audit_syscall_exit(error, td);				\ } while (0)
+value|do {				\ 	if (td->td_pflags& TDP_AUDITREC)				\ 		audit_syscall_exit(error, td);				\ } while (0)
 end_define
 
 begin_comment
@@ -1182,7 +1182,7 @@ name|td
 parameter_list|,
 name|fd
 parameter_list|)
-value|do {					\ 	if (audit_enabled)						\ 		audit_sysclose(td, fd);					\ } while (0)
+value|do {					\ 	if (td->td_pflags& TDP_AUDITREC)				\ 		audit_sysclose(td, fd);					\ } while (0)
 end_define
 
 begin_else
