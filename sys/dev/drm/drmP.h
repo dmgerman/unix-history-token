@@ -1253,7 +1253,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|*(volatile u_int8_t *) (((unsigned long)(map)->handle) + (offset))
+value|*(volatile u_int8_t *)(((vm_offset_t)(map)->handle) +		\ 	    (vm_offset_t)(offset))
 end_define
 
 begin_define
@@ -1266,7 +1266,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|*(volatile u_int16_t *) (((unsigned long)(map)->handle) + (offset))
+value|*(volatile u_int16_t *)(((vm_offset_t)(map)->handle) +		\ 	    (vm_offset_t)(offset))
 end_define
 
 begin_define
@@ -1279,7 +1279,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|*(volatile u_int32_t *)(((unsigned long)(map)->handle) + (offset))
+value|*(volatile u_int32_t *)(((vm_offset_t)(map)->handle) +		\ 	    (vm_offset_t)(offset))
 end_define
 
 begin_define
@@ -1294,7 +1294,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|*(volatile u_int8_t *) (((unsigned long)(map)->handle) + (offset)) = val
+value|*(volatile u_int8_t *)(((vm_offset_t)(map)->handle) +		\ 	    (vm_offset_t)(offset)) = val
 end_define
 
 begin_define
@@ -1309,7 +1309,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|*(volatile u_int16_t *) (((unsigned long)(map)->handle) + (offset)) = val
+value|*(volatile u_int16_t *)(((vm_offset_t)(map)->handle) +		\ 	    (vm_offset_t)(offset)) = val
 end_define
 
 begin_define
@@ -1324,7 +1324,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|*(volatile u_int32_t *)(((unsigned long)(map)->handle) + (offset)) = val
+value|*(volatile u_int32_t *)(((vm_offset_t)(map)->handle) +		\ 	    (vm_offset_t)(offset)) = val
 end_define
 
 begin_define
