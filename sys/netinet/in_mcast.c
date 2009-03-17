@@ -2056,6 +2056,12 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* XXX ifma_protospec must be covered by IF_ADDR_LOCK */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If something other than netinet is occupying the link-layer 	 * group, print a meaningful error message and back out of 	 * the allocation. 	 * Otherwise, bump the refcount on the existing network-layer 	 * group association and return it. 	 */
 if|if
 condition|(
@@ -2179,12 +2185,22 @@ name|pinm
 operator|=
 name|inm
 expr_stmt|;
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
+name|IF_ADDR_LOCK_ASSERT
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * A new in_multi record is needed; allocate and initialize it. 	 * We DO NOT perform an IGMP join as the in_ layer may need to 	 * push an initial source list down to IGMP to support SSM. 	 * 	 * The initial source filter state is INCLUDE, {} as per the RFC. 	 */
 name|inm
 operator|=
@@ -2213,6 +2229,11 @@ block|{
 name|if_delmulti_ifma
 argument_list|(
 name|ifma
+argument_list|)
+expr_stmt|;
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 return|return
@@ -2311,6 +2332,11 @@ operator|*
 name|pinm
 operator|=
 name|inm
+expr_stmt|;
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2423,6 +2449,7 @@ name|inm
 operator|->
 name|inm_ifma
 expr_stmt|;
+comment|/* XXX this access is not covered by IF_ADDR_LOCK */
 name|CTR2
 argument_list|(
 name|KTR_IGMPV3

@@ -4969,7 +4969,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Delete all IPv4 multicast address records, and associated link-layer  * multicast address records, associated with ifp.  * XXX It looks like domifdetach runs AFTER the link layer cleanup.  */
+comment|/*  * Delete all IPv4 multicast address records, and associated link-layer  * multicast address records, associated with ifp.  * XXX It looks like domifdetach runs AFTER the link layer cleanup.  * XXX This should not race with ifma_protospec being set during  * a new allocation, if it does, we have bigger problems.  */
 end_comment
 
 begin_function
@@ -5043,8 +5043,20 @@ operator|->
 name|sa_family
 operator|!=
 name|AF_INET
+operator|||
+name|ifma
+operator|->
+name|ifma_protospec
+operator|==
+name|NULL
 condition|)
 continue|continue;
+if|#
+directive|if
+literal|0
+block|KASSERT(ifma->ifma_protospec != NULL, 		    ("%s: ifma_protospec is NULL", __func__));
+endif|#
+directive|endif
 name|inm
 operator|=
 operator|(

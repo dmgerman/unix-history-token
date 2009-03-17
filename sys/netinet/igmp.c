@@ -821,7 +821,7 @@ comment|/* VIMAGE */
 end_comment
 
 begin_comment
-comment|/*  * System-wide globals.  *  * Unlocked access to these is OK, except for the global IGMP output  * queue. The IGMP subsystem lock ends up being system-wide for the moment,  * because all VIMAGEs have to share a global output queue, as netisrs  * themselves are not virtualized.  *  * Locking:  *  * The permitted lock order is: IN_MULTI_LOCK, IGMP_LOCK, IF_ADDR_LOCK.  *    Any may be taken independently; if any are held at the same  *    time, the above lock order must be followed.  *  * All output is delegated to the netisr to handle IFF_NEEDSGIANT.  *    Most of the time, direct dispatch will be fine.  *  * IN_MULTI_LOCK covers in_multi.  *  * IGMP_LOCK covers igmp_ifinfo and any global variables in this file,  *    including the output queue.  *  * IF_ADDR_LOCK covers if_multiaddrs, which is used for a variety of  *    per-link state iterators.  *  * igmp_ifinfo is valid as long as PF_INET is attached to the interface,  *    therefore it is not refcounted.  *    We allow unlocked reads of igmp_ifinfo when accessed via in_multi.  *  * Reference counting  *  * IGMP acquires its own reference every time an in_multi is passed to  *    it and the group is being joined for the first time.  *  * IGMP releases its reference(s) on in_multi in a deferred way,  *    because the operations which process the release run as part of  *    a loop whose control variables are directly affected by the release  *    (that, and not recursing on the IF_ADDR_LOCK).  *  * VIMAGE: Each in_multi corresponds to an ifp, and each ifp corresponds  * to a vnet in ifp->if_vnet.  *  */
+comment|/*  * System-wide globals.  *  * Unlocked access to these is OK, except for the global IGMP output  * queue. The IGMP subsystem lock ends up being system-wide for the moment,  * because all VIMAGEs have to share a global output queue, as netisrs  * themselves are not virtualized.  *  * Locking:  *  * The permitted lock order is: IN_MULTI_LOCK, IGMP_LOCK, IF_ADDR_LOCK.  *    Any may be taken independently; if any are held at the same  *    time, the above lock order must be followed.  *  * All output is delegated to the netisr to handle IFF_NEEDSGIANT.  *    Most of the time, direct dispatch will be fine.  *  * IN_MULTI_LOCK covers in_multi.  *  * IGMP_LOCK covers igmp_ifinfo and any global variables in this file,  *    including the output queue.  *  * IF_ADDR_LOCK covers if_multiaddrs, which is used for a variety of  *    per-link state iterators.  *  * igmp_ifinfo is valid as long as PF_INET is attached to the interface,  *    therefore it is not refcounted.  *    We allow unlocked reads of igmp_ifinfo when accessed via in_multi.  *  * Reference counting  *  * IGMP acquires its own reference every time an in_multi is passed to  *    it and the group is being joined for the first time.  *  * IGMP releases its reference(s) on in_multi in a deferred way,  *    because the operations which process the release run as part of  *    a loop whose control variables are directly affected by the release  *    (that, and not recursing on the IF_ADDR_LOCK).  *  * VIMAGE: Each in_multi corresponds to an ifp, and each ifp corresponds  * to a vnet in ifp->if_vnet.  *  * SMPng: XXX We may potentially race operations on ifma_protospec.  * The problem is that we currently lack a clean way of taking the  * IF_ADDR_LOCK() between the ifnet and in layers w/o recursing,  * as anything which modifies ifma needs to be covered by that lock.  * So check for ifma_protospec being NULL before proceeding.  */
 end_comment
 
 begin_decl_stmt
@@ -2400,7 +2400,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Hook for ifdetach.  *  * NOTE: Some finalization tasks need to run before the protocol domain  * is detached, but also before the link layer does its cleanup.  *  * SMPNG: igmp_ifdetach() needs to take IF_ADDR_LOCK().  *  * VIMAGE: curvnet should have been set by caller, but let's not assume  * that for now.  */
+comment|/*  * Hook for ifdetach.  *  * NOTE: Some finalization tasks need to run before the protocol domain  * is detached, but also before the link layer does its cleanup.  *  * SMPNG: igmp_ifdetach() needs to take IF_ADDR_LOCK().  * XXX This is also bitten by unlocked ifma_protospec access.  *  * VIMAGE: curvnet should have been set by caller, but let's not assume  * that for now.  */
 end_comment
 
 begin_function
@@ -2506,8 +2506,20 @@ operator|->
 name|sa_family
 operator|!=
 name|AF_INET
+operator|||
+name|ifma
+operator|->
+name|ifma_protospec
+operator|==
+name|NULL
 condition|)
 continue|continue;
+if|#
+directive|if
+literal|0
+block|KASSERT(ifma->ifma_protospec != NULL, 			    ("%s: ifma_protospec is NULL", __func__));
+endif|#
+directive|endif
 name|inm
 operator|=
 operator|(
@@ -3023,6 +3035,12 @@ operator|->
 name|sa_family
 operator|!=
 name|AF_INET
+operator|||
+name|ifma
+operator|->
+name|ifma_protospec
+operator|==
+name|NULL
 condition|)
 continue|continue;
 name|inm
@@ -3381,6 +3399,12 @@ operator|->
 name|sa_family
 operator|!=
 name|AF_INET
+operator|||
+name|ifma
+operator|->
+name|ifma_protospec
+operator|==
+name|NULL
 condition|)
 continue|continue;
 name|inm
@@ -6191,6 +6215,12 @@ operator|->
 name|sa_family
 operator|!=
 name|AF_INET
+operator|||
+name|ifma
+operator|->
+name|ifma_protospec
+operator|==
+name|NULL
 condition|)
 continue|continue;
 name|inm
@@ -12513,6 +12543,12 @@ operator|->
 name|sa_family
 operator|!=
 name|AF_INET
+operator|||
+name|ifma
+operator|->
+name|ifma_protospec
+operator|==
+name|NULL
 condition|)
 continue|continue;
 name|inm
