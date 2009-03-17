@@ -2451,24 +2451,6 @@ ifdef|#
 directive|ifdef
 name|TCP_SIGNATURE
 comment|/* TCP-MD5 (RFC2385). */
-ifdef|#
-directive|ifdef
-name|INET6
-if|if
-condition|(
-operator|!
-name|isipv6
-operator|&&
-operator|(
-name|tp
-operator|->
-name|t_flags
-operator|&
-name|TF_SIGNATURE
-operator|)
-condition|)
-else|#
-directive|else
 if|if
 condition|(
 name|tp
@@ -2477,9 +2459,6 @@ name|t_flags
 operator|&
 name|TF_SIGNATURE
 condition|)
-endif|#
-directive|endif
-comment|/* INET6 */
 name|to
 operator|.
 name|to_flags
@@ -3698,16 +3677,6 @@ comment|/* drag it along */
 ifdef|#
 directive|ifdef
 name|TCP_SIGNATURE
-ifdef|#
-directive|ifdef
-name|INET6
-if|if
-condition|(
-operator|!
-name|isipv6
-condition|)
-endif|#
-directive|endif
 if|if
 condition|(
 name|tp
@@ -3730,11 +3699,7 @@ name|tcp_signature_compute
 argument_list|(
 name|m
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ip
-argument_list|)
+literal|0
 argument_list|,
 name|len
 argument_list|,

@@ -6423,11 +6423,7 @@ name|tcp_signature_compute
 argument_list|(
 name|m
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ip
-argument_list|)
+literal|0
 argument_list|,
 literal|0
 argument_list|,
