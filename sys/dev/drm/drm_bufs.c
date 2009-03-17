@@ -5370,7 +5370,7 @@ literal|0
 return|;
 name|order
 operator|=
-name|ffsl
+name|flsl
 argument_list|(
 name|size
 argument_list|)
