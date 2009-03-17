@@ -264,8 +264,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AT_COUNT
+name|AT_EXECPATH
 value|13
+end_define
+
+begin_comment
+comment|/* Path to the executable. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_COUNT
+value|14
 end_define
 
 begin_comment
