@@ -2902,11 +2902,6 @@ break|break;
 case|case
 name|SIOCSIFMTU
 case|:
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 name|ifp
 operator|->
 name|if_mtu
@@ -2914,11 +2909,6 @@ operator|=
 name|ifr
 operator|->
 name|ifr_mtu
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
