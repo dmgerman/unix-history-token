@@ -794,12 +794,16 @@ return|return;
 block|}
 name|DPRINTF
 argument_list|(
-literal|"state=0x%x\n"
+literal|"state=0x%x actlen=%u\n"
 argument_list|,
 name|USB_GET_STATE
 argument_list|(
 name|xfer
 argument_list|)
+argument_list|,
+name|xfer
+operator|->
+name|actlen
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1422,11 +1426,6 @@ operator|=
 block|{
 operator|.
 name|pipe_bof
-operator|=
-literal|1
-block|,
-operator|.
-name|force_short_xfer
 operator|=
 literal|1
 block|,

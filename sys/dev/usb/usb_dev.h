@@ -333,6 +333,9 @@ name|int
 name|ep_addr
 decl_stmt|;
 comment|/* endpoint address */
+name|int
+name|fflags
+decl_stmt|;
 name|uint8_t
 name|fifo_index
 decl_stmt|;
@@ -353,9 +356,6 @@ name|uint8_t
 name|is_usbfs
 decl_stmt|;
 comment|/* USB-FS is active */
-name|int
-name|fflags
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -472,10 +472,12 @@ modifier|*
 name|priv_mtx
 decl_stmt|;
 comment|/* client data */
-name|int
-name|opened
+comment|/* set if FIFO is opened by a FILE: */
+name|struct
+name|usb2_cdev_privdata
+modifier|*
+name|curr_cpd
 decl_stmt|;
-comment|/* set if FIFO is opened by a FILE */
 name|void
 modifier|*
 name|priv_sc0
@@ -971,6 +973,19 @@ name|startentry
 parameter_list|,
 name|uint32_t
 name|user_len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usb2_fifo_set_close_zlp
+parameter_list|(
+name|struct
+name|usb2_fifo
+modifier|*
+parameter_list|,
+name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl

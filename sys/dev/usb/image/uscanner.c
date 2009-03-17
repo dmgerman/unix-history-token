@@ -473,17 +473,7 @@ operator|=
 literal|1
 block|,
 operator|.
-name|force_short_xfer
-operator|=
-literal|1
-block|,
-operator|.
 name|proxy_buffer
-operator|=
-literal|1
-block|,
-operator|.
-name|force_short_xfer
 operator|=
 literal|1
 block|,}

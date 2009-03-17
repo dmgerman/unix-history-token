@@ -265,6 +265,10 @@ name|int
 name|usb2_fifo_open
 parameter_list|(
 name|struct
+name|usb2_cdev_privdata
+modifier|*
+parameter_list|,
+name|struct
 name|usb2_fifo
 modifier|*
 parameter_list|,
@@ -719,9 +723,6 @@ name|usb2_fifo
 modifier|*
 name|f
 decl_stmt|;
-name|int
-name|dev_ep_index
-decl_stmt|;
 name|DPRINTFN
 argument_list|(
 literal|2
@@ -838,12 +839,6 @@ name|error
 goto|;
 block|}
 comment|/* check if we are doing an open */
-name|dev_ep_index
-operator|=
-name|cpd
-operator|->
-name|ep_addr
-expr_stmt|;
 if|if
 condition|(
 name|cpd
@@ -951,6 +946,17 @@ condition|)
 goto|goto
 name|error
 goto|;
+if|if
+condition|(
+name|f
+operator|->
+name|curr_cpd
+operator|!=
+name|cpd
+condition|)
+goto|goto
+name|error
+goto|;
 comment|/* check if USB-FS is active */
 if|if
 condition|(
@@ -968,13 +974,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* 			 * Get real endpoint index associated with 			 * this FIFO: 			 */
-name|dev_ep_index
-operator|=
-name|f
-operator|->
-name|dev_ep_index
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -1049,6 +1048,17 @@ condition|)
 goto|goto
 name|error
 goto|;
+if|if
+condition|(
+name|f
+operator|->
+name|curr_cpd
+operator|!=
+name|cpd
+condition|)
+goto|goto
+name|error
+goto|;
 comment|/* check if USB-FS is active */
 if|if
 condition|(
@@ -1066,13 +1076,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* 			 * Get real endpoint index associated with 			 * this FIFO: 			 */
-name|dev_ep_index
-operator|=
-name|f
-operator|->
-name|dev_ep_index
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -1966,7 +1969,9 @@ if|if
 condition|(
 name|f
 operator|->
-name|opened
+name|curr_cpd
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* FIFO is opened */
@@ -2026,7 +2031,9 @@ if|if
 condition|(
 name|f
 operator|->
-name|opened
+name|curr_cpd
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* FIFO is opened */
@@ -2071,7 +2078,7 @@ name|DPRINTFN
 argument_list|(
 literal|5
 argument_list|,
-literal|"dev_ep_index out of range\n"
+literal|"ep out of range\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2084,6 +2091,31 @@ name|EINVAL
 operator|)
 return|;
 block|}
+block|}
+if|if
+condition|(
+operator|(
+name|ep
+operator|!=
+literal|0
+operator|)
+operator|&&
+name|is_busy
+condition|)
+block|{
+comment|/* 		 * Only the default control endpoint is allowed to be 		 * opened multiple times! 		 */
+name|DPRINTFN
+argument_list|(
+literal|5
+argument_list|,
+literal|"busy\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
 block|}
 comment|/* Check TX FIFO */
 if|if
@@ -2892,6 +2924,11 @@ name|int
 name|usb2_fifo_open
 parameter_list|(
 name|struct
+name|usb2_cdev_privdata
+modifier|*
+name|cpd
+parameter_list|,
+name|struct
 name|usb2_fifo
 modifier|*
 name|f
@@ -2966,7 +3003,9 @@ if|if
 condition|(
 name|f
 operator|->
-name|opened
+name|curr_cpd
+operator|!=
+name|NULL
 condition|)
 block|{
 name|err
@@ -2977,6 +3016,13 @@ goto|goto
 name|done
 goto|;
 block|}
+comment|/* reset short flag before open */
+name|f
+operator|->
+name|flag_short
+operator|=
+literal|0
+expr_stmt|;
 comment|/* call open method */
 name|err
 operator|=
@@ -3051,18 +3097,18 @@ name|async_p
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* flag the fifo as opened to prevent others */
 name|mtx_lock
 argument_list|(
 operator|&
 name|usb2_ref_lock
 argument_list|)
 expr_stmt|;
+comment|/* flag the fifo as opened to prevent others */
 name|f
 operator|->
-name|opened
+name|curr_cpd
 operator|=
-literal|1
+name|cpd
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
@@ -3184,10 +3230,11 @@ decl_stmt|;
 comment|/* check if we are not opened */
 if|if
 condition|(
-operator|!
 name|f
 operator|->
-name|opened
+name|curr_cpd
+operator|==
+name|NULL
 condition|)
 block|{
 comment|/* nothing to do - already closed */
@@ -3200,12 +3247,12 @@ operator|->
 name|priv_mtx
 argument_list|)
 expr_stmt|;
-comment|/* clear current file flag */
+comment|/* clear current cdev private data pointer */
 name|f
 operator|->
-name|opened
+name|curr_cpd
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 comment|/* check if we are selected */
 if|if
@@ -3651,115 +3698,6 @@ operator|=
 name|fflags
 expr_stmt|;
 comment|/* access mode for open lifetime */
-comment|/* Check if the endpoint is already open, we always allow EP0 */
-if|if
-condition|(
-name|ep
-operator|>
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|fflags
-operator|&
-name|FREAD
-operator|&&
-name|cpd
-operator|->
-name|udev
-operator|->
-name|ep_rd_opened
-operator|&
-operator|(
-literal|1
-operator|<<
-name|ep
-operator|)
-operator|)
-operator|||
-operator|(
-name|fflags
-operator|&
-name|FWRITE
-operator|&&
-name|cpd
-operator|->
-name|udev
-operator|->
-name|ep_wr_opened
-operator|&
-operator|(
-literal|1
-operator|<<
-name|ep
-operator|)
-operator|)
-condition|)
-block|{
-name|DPRINTFN
-argument_list|(
-literal|2
-argument_list|,
-literal|"endpoint already open\n"
-argument_list|)
-expr_stmt|;
-name|usb2_unref_device
-argument_list|(
-name|cpd
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|cpd
-argument_list|,
-name|M_USBDEV
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EBUSY
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|fflags
-operator|&
-name|FREAD
-condition|)
-name|cpd
-operator|->
-name|udev
-operator|->
-name|ep_rd_opened
-operator||=
-operator|(
-literal|1
-operator|<<
-name|ep
-operator|)
-expr_stmt|;
-if|if
-condition|(
-name|fflags
-operator|&
-name|FWRITE
-condition|)
-name|cpd
-operator|->
-name|udev
-operator|->
-name|ep_wr_opened
-operator||=
-operator|(
-literal|1
-operator|<<
-name|ep
-operator|)
-expr_stmt|;
-block|}
 comment|/* create FIFOs, if any */
 name|err
 operator|=
@@ -3811,6 +3749,8 @@ operator|=
 name|usb2_fifo_open
 argument_list|(
 name|cpd
+argument_list|,
+name|cpd
 operator|->
 name|rxfifo
 argument_list|,
@@ -3859,6 +3799,8 @@ name|err
 operator|=
 name|usb2_fifo_open
 argument_list|(
+name|cpd
+argument_list|,
 name|cpd
 operator|->
 name|txfifo
@@ -3955,11 +3897,6 @@ name|cpd
 init|=
 name|arg
 decl_stmt|;
-name|struct
-name|usb2_device
-modifier|*
-name|udev
-decl_stmt|;
 name|int
 name|err
 decl_stmt|;
@@ -3967,7 +3904,7 @@ name|DPRINTFN
 argument_list|(
 literal|2
 argument_list|,
-literal|"usb2_close, cpd=%p\n"
+literal|"cpd=%p\n"
 argument_list|,
 name|cpd
 argument_list|)
@@ -3995,12 +3932,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|udev
-operator|=
-name|cpd
-operator|->
-name|udev
-expr_stmt|;
 if|if
 condition|(
 name|cpd
@@ -4020,20 +3951,6 @@ name|cpd
 operator|->
 name|fflags
 argument_list|)
-expr_stmt|;
-comment|/* clear read bitmask */
-name|udev
-operator|->
-name|ep_rd_opened
-operator|&=
-operator|~
-operator|(
-literal|1
-operator|<<
-name|cpd
-operator|->
-name|ep_addr
-operator|)
 expr_stmt|;
 block|}
 if|if
@@ -4055,20 +3972,6 @@ name|cpd
 operator|->
 name|fflags
 argument_list|)
-expr_stmt|;
-comment|/* clear write bitmask */
-name|udev
-operator|->
-name|ep_wr_opened
-operator|&=
-operator|~
-operator|(
-literal|1
-operator|<<
-name|cpd
-operator|->
-name|ep_addr
-operator|)
 expr_stmt|;
 block|}
 name|usb2_unref_device
@@ -6848,22 +6751,6 @@ name|USB_FIFO_TX
 expr_stmt|;
 name|f_tx
 operator|->
-name|dev_ep_index
-operator|=
-operator|(
-name|n
-operator|/
-literal|2
-operator|)
-operator|+
-operator|(
-name|USB_EP_MAX
-operator|/
-literal|2
-operator|)
-expr_stmt|;
-name|f_tx
-operator|->
 name|priv_mtx
 operator|=
 name|priv_mtx
@@ -6899,22 +6786,6 @@ operator|=
 name|n
 operator|+
 name|USB_FIFO_RX
-expr_stmt|;
-name|f_rx
-operator|->
-name|dev_ep_index
-operator|=
-operator|(
-name|n
-operator|/
-literal|2
-operator|)
-operator|+
-operator|(
-name|USB_EP_MAX
-operator|/
-literal|2
-operator|)
 expr_stmt|;
 name|f_rx
 operator|->
@@ -7217,6 +7088,10 @@ operator|=
 name|f_tx
 operator|->
 name|fifo_index
+operator|&
+name|f_rx
+operator|->
+name|fifo_index
 expr_stmt|;
 name|pd
 operator|->
@@ -7247,6 +7122,7 @@ argument_list|,
 name|devname
 argument_list|)
 expr_stmt|;
+comment|/* XXX setting si_drv1 and creating the device is not atomic! */
 name|f_sc
 operator|->
 name|dev
@@ -7537,6 +7413,12 @@ name|dev
 operator|->
 name|si_drv1
 argument_list|)
+expr_stmt|;
+name|f_sc
+operator|->
+name|dev
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 name|DPRINTFN
@@ -8239,6 +8121,29 @@ operator|->
 name|flag_flushing
 condition|)
 block|{
+comment|/* check if we should send a short packet */
+if|if
+condition|(
+name|f
+operator|->
+name|flag_short
+operator|!=
+literal|0
+condition|)
+block|{
+name|f
+operator|->
+name|flag_short
+operator|=
+literal|0
+expr_stmt|;
+name|tr_data
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+comment|/* flushing complete */
 name|f
 operator|->
 name|flag_flushing
@@ -8466,6 +8371,29 @@ operator|->
 name|flag_flushing
 condition|)
 block|{
+comment|/* check if we should send a short packet */
+if|if
+condition|(
+name|f
+operator|->
+name|flag_short
+operator|!=
+literal|0
+condition|)
+block|{
+name|f
+operator|->
+name|flag_short
+operator|=
+literal|0
+expr_stmt|;
+name|tr_data
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+comment|/* flushing complete */
 name|f
 operator|->
 name|flag_flushing
@@ -9098,6 +9026,36 @@ operator|(
 name|error
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|usb2_fifo_set_close_zlp
+parameter_list|(
+name|struct
+name|usb2_fifo
+modifier|*
+name|f
+parameter_list|,
+name|uint8_t
+name|onoff
+parameter_list|)
+block|{
+if|if
+condition|(
+name|f
+operator|==
+name|NULL
+condition|)
+return|return;
+comment|/* send a Zero Length Packet, ZLP, before close */
+name|f
+operator|->
+name|flag_short
+operator|=
+name|onoff
+expr_stmt|;
 block|}
 end_function
 

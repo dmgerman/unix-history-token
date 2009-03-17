@@ -382,14 +382,6 @@ name|plugtime
 decl_stmt|;
 comment|/* copy of "ticks" */
 name|uint16_t
-name|ep_rd_opened
-decl_stmt|;
-comment|/* bitmask of endpoints opened */
-name|uint16_t
-name|ep_wr_opened
-decl_stmt|;
-comment|/*  from the device nodes. */
-name|uint16_t
 name|refcount
 decl_stmt|;
 define|#
