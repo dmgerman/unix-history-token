@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -1237,9 +1243,13 @@ literal|"HTTP/1.0 200 OK\r\n"
 argument_list|)
 expr_stmt|;
 comment|/* Plug in environment variable, others in log_line */
-name|putenv
+name|setenv
 argument_list|(
-literal|"SERVER_SOFTWARE=FreeBSD/PicoBSD"
+literal|"SERVER_SOFTWARE"
+argument_list|,
+literal|"FreeBSD/PicoBSD"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|execlp
@@ -1471,8 +1481,11 @@ name|sprintf
 argument_list|(
 name|buff
 argument_list|,
-literal|"Content-length: %lld\r\n"
+literal|"Content-length: %jd\r\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|file_status
 operator|.
 name|st_size
