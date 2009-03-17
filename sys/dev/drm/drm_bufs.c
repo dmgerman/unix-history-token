@@ -789,11 +789,7 @@ block|}
 name|map
 operator|->
 name|offset
-operator|=
-name|map
-operator|->
-name|offset
-operator|+
+operator|+=
 name|dev
 operator|->
 name|sg
