@@ -269,6 +269,10 @@ name|DRM_DEBUG
 argument_list|(
 literal|"Can't find map, requested offset = %016lx\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|offset
 argument_list|)
 expr_stmt|;
@@ -285,6 +289,10 @@ name|DRM_DEBUG
 argument_list|(
 literal|"map offset = %016lx, handle = %016lx\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|map
 operator|->
 name|offset
