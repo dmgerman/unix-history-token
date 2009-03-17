@@ -6649,7 +6649,7 @@ modifier|*
 name|note_end
 decl_stmt|;
 specifier|const
-name|Elf32_Phdr
+name|Elf_Phdr
 modifier|*
 name|phdr
 decl_stmt|,
@@ -6657,7 +6657,7 @@ modifier|*
 name|pnote
 decl_stmt|;
 specifier|const
-name|Elf32_Ehdr
+name|Elf_Ehdr
 modifier|*
 name|hdr
 decl_stmt|;
@@ -6677,7 +6677,7 @@ name|hdr
 operator|=
 operator|(
 specifier|const
-name|Elf32_Ehdr
+name|Elf_Ehdr
 operator|*
 operator|)
 name|imgp
@@ -6688,7 +6688,7 @@ name|phdr
 operator|=
 operator|(
 specifier|const
-name|Elf32_Phdr
+name|Elf_Phdr
 operator|*
 operator|)
 operator|(
