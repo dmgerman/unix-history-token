@@ -113,10 +113,33 @@ directive|include
 file|<sys/sbuf.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/sched.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/timetc.h>
 end_include
 
 begin_if
@@ -10257,6 +10280,20 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_if
+
 begin_function
 specifier|static
 name|void
@@ -10307,6 +10344,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Request that the system enter the given suspend state.  All /dev/apm  * devices and devd(8) will be notified.  Userland then has a chance to  * save state and acknowledge the request.  The system sleeps once all  * acks are in.  */
 end_comment
@@ -10324,11 +10366,19 @@ name|int
 name|state
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
 name|struct
 name|apm_clone_data
 modifier|*
 name|clone
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|state
@@ -10378,19 +10428,15 @@ return|;
 block|}
 if|#
 directive|if
-operator|!
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
 name|defined
 argument_list|(
 name|__i386__
 argument_list|)
-comment|/* This platform does not support acpi suspend/resume. */
-return|return
-operator|(
-name|EOPNOTSUPP
-operator|)
-return|;
-endif|#
-directive|endif
 comment|/* If a suspend request is already in progress, just return. */
 name|ACPI_LOCK
 argument_list|(
@@ -10424,6 +10470,12 @@ name|acpi_next_sstate
 operator|=
 name|state
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
 name|STAILQ_FOREACH
 argument_list|(
 argument|clone
@@ -10476,6 +10528,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 comment|/* If devd(8) is not running, immediately enter the sleep state. */
 if|if
 condition|(
@@ -10557,6 +10611,16 @@ operator|(
 literal|0
 operator|)
 return|;
+else|#
+directive|else
+comment|/* This platform does not support acpi suspend/resume. */
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -10577,6 +10641,17 @@ name|int
 name|error
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
 name|struct
 name|acpi_softc
 modifier|*
@@ -10587,21 +10662,6 @@ name|ret
 decl_stmt|,
 name|sleeping
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-comment|/* This platform does not support acpi suspend/resume. */
-return|return
-operator|(
-name|EOPNOTSUPP
-operator|)
-return|;
-endif|#
-directive|endif
 comment|/* If no pending sleep state, return an error. */
 name|ACPI_LOCK
 argument_list|(
@@ -10678,15 +10738,21 @@ operator|)
 return|;
 block|}
 comment|/*      * Mark this device as acking the suspend request.  Then, walk through      * all devices, seeing if they agree yet.  We only count devices that      * are writable since read-only devices couldn't ack the request.      */
+name|sleeping
+operator|=
+name|TRUE
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
 name|clone
 operator|->
 name|notify_status
 operator|=
 name|APM_EV_ACKED
-expr_stmt|;
-name|sleeping
-operator|=
-name|TRUE
 expr_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
@@ -10723,6 +10789,8 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+endif|#
+directive|endif
 comment|/* If all devices have voted "yes", we will suspend now. */
 if|if
 condition|(
@@ -10774,6 +10842,16 @@ operator|(
 name|ret
 operator|)
 return|;
+else|#
+directive|else
+comment|/* This platform does not support acpi suspend/resume. */
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -10909,6 +10987,28 @@ argument_list|(
 name|acpi
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+name|thread_lock
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+name|sched_bind
+argument_list|(
+name|curthread
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|thread_unlock
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/*      * Be sure to hold Giant across DEVICE_SUSPEND/RESUME since non-MPSAFE      * drivers need this.      */
 name|mtx_lock
 argument_list|(
@@ -11275,6 +11375,47 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+comment|/* Warm up timecounter again */
+operator|(
+name|void
+operator|)
+name|timecounter
+operator|->
+name|tc_get_timecount
+argument_list|(
+name|timecounter
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|timecounter
+operator|->
+name|tc_get_timecount
+argument_list|(
+name|timecounter
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+name|thread_lock
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+name|sched_unbind
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+name|thread_unlock
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|return_ACPI_STATUS
 argument_list|(
 name|status

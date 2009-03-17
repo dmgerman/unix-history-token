@@ -212,6 +212,17 @@ begin_comment
 comment|/* Stop CPU until restarted. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IPI_SUSPEND
+value|(APIC_IPI_INTS + 8)
+end_define
+
+begin_comment
+comment|/* Suspend CPU until restarted. */
+end_comment
+
 begin_comment
 comment|/*  * The spurious interrupt can share the priority class with the IPIs since  * it is not a normal interrupt. (Does not use the APIC's interrupt fifo)  */
 end_comment
