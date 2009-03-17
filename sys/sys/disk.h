@@ -206,6 +206,17 @@ begin_comment
 comment|/*- 	 * Get the ident of the given provider. Ident is (most of the time) 	 * a uniqe and fixed provider's identifier. Ident's properties are as 	 * follow: 	 * - ident value is preserved between reboots, 	 * - provider can be detached/attached and ident is preserved, 	 * - provider's name can change - ident can't, 	 * - ident value should not be based on on-disk metadata; in other 	 *   words copying whole data from one disk to another should not 	 *   yield the same ident for the other disk, 	 * - there could be more than one provider with the same ident, but 	 *   only if they point at exactly the same physical storage, this is 	 *   the case for multipathing for example, 	 * - GEOM classes that consumes single providers and provide single 	 *   providers, like geli, gbde, should just attach class name to the 	 *   ident of the underlying provider, 	 * - ident is an ASCII string (is printable), 	 * - ident is optional and applications can't relay on its presence. 	 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DIOCGPROVIDERALIAS
+value|_IOR('d', 139, char[MAXPATHLEN])
+end_define
+
+begin_comment
+comment|/*- 	 * Store the provider alias, if present, in a buffer. The buffer must 	 * be at least MAXPATHLEN bytes long. 	 */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

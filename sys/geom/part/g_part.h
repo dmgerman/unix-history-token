@@ -235,10 +235,6 @@ decl_stmt|;
 name|uint32_t
 name|gpt_heads
 decl_stmt|;
-comment|/* 	 * gpt_offset holds the absolute block address of the scheme 	 * on disk. Some partitioning schemes (historically) use 	 * absolute addressing. Relative addresses are obtained by 	 * subtracting gpt_offset from the absolute addresses. 	 */
-name|uint64_t
-name|gpt_offset
-decl_stmt|;
 name|int
 name|gpt_depth
 decl_stmt|;
@@ -295,6 +291,41 @@ name|quad_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_enum
+enum|enum
+name|g_part_ctl
+block|{
+name|G_PART_CTL_NONE
+block|,
+name|G_PART_CTL_ADD
+block|,
+name|G_PART_CTL_BOOTCODE
+block|,
+name|G_PART_CTL_COMMIT
+block|,
+name|G_PART_CTL_CREATE
+block|,
+name|G_PART_CTL_DELETE
+block|,
+name|G_PART_CTL_DESTROY
+block|,
+name|G_PART_CTL_MODIFY
+block|,
+name|G_PART_CTL_MOVE
+block|,
+name|G_PART_CTL_RECOVER
+block|,
+name|G_PART_CTL_RESIZE
+block|,
+name|G_PART_CTL_SET
+block|,
+name|G_PART_CTL_UNDO
+block|,
+name|G_PART_CTL_UNSET
+block|}
+enum|;
+end_enum
 
 begin_comment
 comment|/* G_PART ctlreq parameters. */

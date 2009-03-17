@@ -1124,6 +1124,7 @@ name|char
 modifier|*
 name|attribute
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|val
@@ -1188,6 +1189,7 @@ name|char
 modifier|*
 name|attribute
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str

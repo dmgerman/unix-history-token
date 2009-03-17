@@ -368,7 +368,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|g_part_gpt_dumpconf
 parameter_list|(
 name|struct
@@ -428,6 +428,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|g_part_gpt_name
@@ -2257,6 +2258,13 @@ name|g_part_gpt_table
 modifier|*
 name|table
 decl_stmt|;
+name|size_t
+name|codesz
+decl_stmt|;
+name|codesz
+operator|=
+name|DOSPARTOFF
+expr_stmt|;
 name|table
 operator|=
 operator|(
@@ -2266,6 +2274,32 @@ operator|*
 operator|)
 name|basetable
 expr_stmt|;
+name|bzero
+argument_list|(
+name|table
+operator|->
+name|mbr
+argument_list|,
+name|codesz
+argument_list|)
+expr_stmt|;
+name|codesz
+operator|=
+name|MIN
+argument_list|(
+name|codesz
+argument_list|,
+name|gpp
+operator|->
+name|gpp_codesize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|codesz
+operator|>
+literal|0
+condition|)
 name|bcopy
 argument_list|(
 name|gpp
@@ -2276,7 +2310,7 @@ name|table
 operator|->
 name|mbr
 argument_list|,
-name|DOSPARTOFF
+name|codesz
 argument_list|)
 expr_stmt|;
 return|return
@@ -2735,7 +2769,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|g_part_gpt_dumpconf
 parameter_list|(
 name|struct
@@ -2881,11 +2915,6 @@ else|else
 block|{
 comment|/* confxml: scheme information */
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -3070,6 +3099,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|g_part_gpt_name

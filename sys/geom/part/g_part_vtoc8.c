@@ -186,7 +186,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|g_part_vtoc8_dumpconf
 parameter_list|(
 name|struct
@@ -246,6 +246,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|g_part_vtoc8_name
@@ -1451,7 +1452,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|g_part_vtoc8_dumpconf
 parameter_list|(
 name|struct
@@ -1577,11 +1578,6 @@ else|else
 block|{
 comment|/* confxml: scheme information */
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -1609,7 +1605,7 @@ decl_stmt|;
 name|uint16_t
 name|tag
 decl_stmt|;
-comment|/* Allow dumping to a swap partition only. */
+comment|/* 	 * Allow dumping to a swap partition or a partition that 	 * has no type. 	 */
 name|table
 operator|=
 operator|(
@@ -1643,6 +1639,10 @@ expr_stmt|;
 return|return
 operator|(
 operator|(
+name|tag
+operator|==
+literal|0
+operator|||
 name|tag
 operator|==
 name|VTOC_TAG_FREEBSD_SWAP
@@ -1772,6 +1772,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|g_part_vtoc8_name
@@ -2151,10 +2152,6 @@ condition|(
 name|sectors
 operator|<
 literal|1
-operator|||
-name|sectors
-operator|>
-literal|63
 condition|)
 goto|goto
 name|invalid_label
@@ -2224,10 +2221,6 @@ condition|(
 name|heads
 operator|<
 literal|1
-operator|||
-name|heads
-operator|>
-literal|255
 condition|)
 goto|goto
 name|invalid_label
@@ -2251,8 +2244,12 @@ name|gpt_heads
 operator|=
 name|heads
 expr_stmt|;
+comment|/* 	 * Except for ATA disks> 32GB, Solaris uses the native geometry 	 * as reported by the target for the labels while da(4) typically 	 * uses a synthetic one so we don't complain too loudly if these 	 * geometries don't match. 	 */
 if|if
 condition|(
+name|bootverbose
+operator|&&
+operator|(
 name|sectors
 operator|!=
 name|basetable
@@ -2264,14 +2261,28 @@ operator|!=
 name|basetable
 operator|->
 name|gpt_heads
+operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"GEOM: %s: geometry does not match label.\n"
+literal|"GEOM: %s: geometry does not match VTOC8 label "
+literal|"(label: %uh,%us GEOM: %uh,%us).\n"
 argument_list|,
 name|pp
 operator|->
 name|name
+argument_list|,
+name|heads
+argument_list|,
+name|sectors
+argument_list|,
+name|basetable
+operator|->
+name|gpt_heads
+argument_list|,
+name|basetable
+operator|->
+name|gpt_sectors
 argument_list|)
 expr_stmt|;
 name|table
@@ -2363,7 +2374,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"GEOM: %s: adding VTOC information.\n"
+literal|"GEOM: %s: adding VTOC8 information.\n"
 argument_list|,
 name|pp
 operator|->
@@ -2655,7 +2666,7 @@ name|invalid_label
 label|:
 name|printf
 argument_list|(
-literal|"GEOM: %s: invalid disklabel.\n"
+literal|"GEOM: %s: invalid VTOC8 label.\n"
 argument_list|,
 name|pp
 operator|->
