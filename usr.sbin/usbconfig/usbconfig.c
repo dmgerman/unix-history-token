@@ -2184,10 +2184,6 @@ init|=
 operator|&
 name|options
 decl_stmt|;
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 name|int
 name|n
 decl_stmt|;
