@@ -1977,6 +1977,27 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|ipport_randomized
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipport_stoprandom
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipport_tcpallocs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|struct
 name|callout
 name|ipport_tick_callout
