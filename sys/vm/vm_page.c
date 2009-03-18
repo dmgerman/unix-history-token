@@ -473,9 +473,6 @@ block|{
 name|vm_offset_t
 name|mapped
 decl_stmt|;
-name|vm_size_t
-name|npages
-decl_stmt|;
 name|vm_paddr_t
 name|page_range
 decl_stmt|;
@@ -513,13 +510,6 @@ decl_stmt|;
 name|int
 name|biggestone
 decl_stmt|;
-name|vm_paddr_t
-name|total
-decl_stmt|;
-name|total
-operator|=
-literal|0
-expr_stmt|;
 name|biggestsize
 operator|=
 literal|0
@@ -689,10 +679,6 @@ index|]
 expr_stmt|;
 operator|++
 name|nblocks
-expr_stmt|;
-name|total
-operator|+=
-name|size
 expr_stmt|;
 block|}
 name|end
@@ -1006,30 +992,6 @@ directive|error
 literal|"Either VM_PHYSSEG_DENSE or VM_PHYSSEG_SPARSE must be defined."
 endif|#
 directive|endif
-name|npages
-operator|=
-operator|(
-name|total
-operator|-
-operator|(
-name|page_range
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|vm_page
-argument_list|)
-operator|)
-operator|-
-operator|(
-name|end
-operator|-
-name|new_end
-operator|)
-operator|)
-operator|/
-name|PAGE_SIZE
-expr_stmt|;
 name|end
 operator|=
 name|new_end
@@ -1180,13 +1142,6 @@ name|vm_page_array_size
 operator|=
 name|page_range
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * This assertion tests the hypothesis that npages and total are 	 * redundant.  XXX 	 * 	 * XXX: This always fails if VM_NRESERVLEVEL> 0 because 	 * npages includes the memory for vm_reserv_startup() but 	 * page_range doesn't. 	 */
-block|page_range = 0; 	for (i = 0; phys_avail[i + 1] != 0; i += 2) 		page_range += atop(phys_avail[i + 1] - phys_avail[i]); 	KASSERT(page_range == npages, 	    ("vm_page_startup: inconsistent page counts"));
-endif|#
-directive|endif
 comment|/* 	 * Initialize the physical memory allocator. 	 */
 name|vm_phys_init
 argument_list|()
