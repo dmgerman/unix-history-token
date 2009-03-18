@@ -3411,6 +3411,11 @@ argument_list|)
 expr_stmt|;
 name|CLEAR
 argument_list|(
+name|confpasswd
+argument_list|)
+expr_stmt|;
+name|CLEAR
+argument_list|(
 name|umemb
 argument_list|)
 expr_stmt|;
