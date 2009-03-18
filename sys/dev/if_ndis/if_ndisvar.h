@@ -425,6 +425,10 @@ define|#
 directive|define
 name|NDISUSB_TASK_IRPCANCEL
 value|1
+define|#
+directive|define
+name|NDISUSB_TASK_VENDOR
+value|2
 name|void
 modifier|*
 name|nt_ctx
@@ -727,6 +731,14 @@ name|struct
 name|mtx
 name|ndisusb_mtx
 decl_stmt|;
+name|struct
+name|ndisusb_ep
+name|ndisusb_dread_ep
+decl_stmt|;
+name|struct
+name|ndisusb_ep
+name|ndisusb_dwrite_ep
+decl_stmt|;
 define|#
 directive|define
 name|NDISUSB_GET_ENDPT
@@ -773,6 +785,10 @@ define|#
 directive|define
 name|NDISUSB_STATUS_DETACH
 value|0x1
+define|#
+directive|define
+name|NDISUSB_STATUS_SETUP_EP
+value|0x2
 block|}
 struct|;
 end_struct
