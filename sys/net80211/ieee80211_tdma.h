@@ -50,11 +50,6 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* mask of slots in use */
-name|void
-modifier|*
-name|tdma_peer
-decl_stmt|;
-comment|/* peer station cookie */
 name|uint8_t
 name|tdma_active
 index|[
@@ -66,6 +61,20 @@ name|int
 name|tdma_count
 decl_stmt|;
 comment|/* active/inuse countdown */
+name|void
+modifier|*
+name|tdma_peer
+decl_stmt|;
+comment|/* peer station cookie */
+name|struct
+name|timeval
+name|tdma_lastprint
+decl_stmt|;
+comment|/* time of last rate-limited printf */
+name|int
+name|tdma_fails
+decl_stmt|;
+comment|/* fail count for rate-limiting */
 comment|/* parent method pointers */
 name|int
 function_decl|(
