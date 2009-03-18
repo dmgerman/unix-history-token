@@ -2219,6 +2219,11 @@ operator|=
 name|null_inactive
 block|,
 operator|.
+name|vop_islocked
+operator|=
+name|vop_stdislocked
+block|,
+operator|.
 name|vop_lock1
 operator|=
 name|null_lock
