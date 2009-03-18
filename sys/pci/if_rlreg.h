@@ -959,14 +959,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|RL_HWREV_8110S
+name|RL_HWREV_8169S
 value|0x00800000
 end_define
 
 begin_define
 define|#
 directive|define
-name|RL_HWREV_8169S
+name|RL_HWREV_8110S
 value|0x04000000
 end_define
 
@@ -1136,6 +1136,13 @@ define|#
 directive|define
 name|RL_HWREV_8169_8110SBL
 value|0x7CC00000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_HWREV_8169_8110SCE
+value|0x98000000
 end_define
 
 begin_define
@@ -4438,12 +4445,8 @@ name|RL_FLAG_CMDSTOP
 value|0x0200
 define|#
 directive|define
-name|RL_FLAG_PHY8169
+name|RL_FLAG_MACRESET
 value|0x0400
-define|#
-directive|define
-name|RL_FLAG_PHY8110S
-value|0x0800
 define|#
 directive|define
 name|RL_FLAG_WOLRXENB
