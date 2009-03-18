@@ -2802,7 +2802,7 @@ name|sc
 operator|->
 name|rl_flags
 operator|&
-name|RL_FLAG_INVMAR
+name|RL_FLAG_PCIE
 operator|)
 operator|!=
 literal|0
@@ -5614,8 +5614,6 @@ name|rl_flags
 operator||=
 name|RL_FLAG_NOJUMBO
 operator||
-name|RL_FLAG_INVMAR
-operator||
 name|RL_FLAG_PHYWAKE
 operator||
 name|RL_FLAG_FASTETHER
@@ -5632,8 +5630,6 @@ operator|->
 name|rl_flags
 operator||=
 name|RL_FLAG_NOJUMBO
-operator||
-name|RL_FLAG_INVMAR
 operator||
 name|RL_FLAG_PHYWAKE
 operator||
@@ -5668,8 +5664,6 @@ name|sc
 operator|->
 name|rl_flags
 operator||=
-name|RL_FLAG_INVMAR
-operator||
 name|RL_FLAG_PHYWAKE
 operator||
 name|RL_FLAG_MACSTAT
@@ -5715,8 +5709,6 @@ name|sc
 operator|->
 name|rl_flags
 operator||=
-name|RL_FLAG_INVMAR
-operator||
 name|RL_FLAG_PHYWAKE
 operator||
 name|RL_FLAG_PAR
