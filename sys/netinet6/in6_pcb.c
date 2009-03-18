@@ -1843,7 +1843,9 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"in6_pcbdetach: inp_socket == NULL"
+literal|"%s: inp_socket == NULL"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1892,15 +1894,15 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"in6_pcbfree: inp_socket != NULL"
+literal|"%s: inp_socket != NULL"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
-name|inp
-operator|->
-name|inp_pcbinfo
+name|ipi
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK_ASSERT
