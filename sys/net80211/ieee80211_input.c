@@ -294,7 +294,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function reassemble fragments.  *  * XXX should handle 3 concurrent reassemblies per-spec.  */
+comment|/*  * This function reassembles fragments.  *  * XXX should handle 3 concurrent reassemblies per-spec.  */
 end_comment
 
 begin_function
