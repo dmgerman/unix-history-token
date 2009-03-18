@@ -410,6 +410,17 @@ value|0x03
 end_define
 
 begin_comment
+comment|/* mbuf adjust factor to force 32-bit alignment of IP header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHERIP_ALIGN
+value|2
+end_define
+
+begin_comment
 comment|/* Prototypes */
 end_comment
 
