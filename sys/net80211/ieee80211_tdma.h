@@ -28,6 +28,10 @@ name|tdma_slotlen
 decl_stmt|;
 comment|/* bss slot length (us) */
 name|uint8_t
+name|tdma_version
+decl_stmt|;
+comment|/* protocol version to use */
+name|uint8_t
 name|tdma_slotcnt
 decl_stmt|;
 comment|/* bss slot count */
@@ -46,10 +50,6 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* mask of slots in use */
-define|#
-directive|define
-name|IEEE80211_TDMA_MAXSLOTS
-value|8
 name|void
 modifier|*
 name|tdma_peer
@@ -121,6 +121,50 @@ function_decl|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|TDMA_UPDATE_SLOT
+value|0x0001
+end_define
+
+begin_comment
+comment|/* tdma_slot changed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDMA_UPDATE_SLOTCNT
+value|0x0002
+end_define
+
+begin_comment
+comment|/* tdma_slotcnt changed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDMA_UPDATE_SLOTLEN
+value|0x0004
+end_define
+
+begin_comment
+comment|/* tdma_slotlen changed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDMA_UPDATE_BINTVAL
+value|0x0008
+end_define
+
+begin_comment
+comment|/* tdma_bintval changed */
+end_comment
 
 begin_function_decl
 name|void

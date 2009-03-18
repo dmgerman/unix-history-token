@@ -1594,6 +1594,8 @@ name|struct
 name|ieee80211_tdma_param
 modifier|*
 name|tdma
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -35795,6 +35797,9 @@ name|struct
 name|ieee80211_tdma_param
 modifier|*
 name|tdma
+parameter_list|,
+name|int
+name|changed
 parameter_list|)
 block|{
 define|#
@@ -35899,19 +35904,9 @@ expr_stmt|;
 comment|/* 	 * Check for and adopt configuration changes. 	 */
 if|if
 condition|(
-name|isset
-argument_list|(
-name|ATH_VAP
-argument_list|(
-name|vap
-argument_list|)
-operator|->
-name|av_boff
-operator|.
-name|bo_flags
-argument_list|,
-name|IEEE80211_BEACON_TDMA
-argument_list|)
+name|changed
+operator|!=
+literal|0
 condition|)
 block|{
 specifier|const

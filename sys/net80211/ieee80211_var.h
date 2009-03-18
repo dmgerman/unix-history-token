@@ -888,6 +888,8 @@ specifier|const
 name|struct
 name|ieee80211_tdma_param
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 comment|/* node state management */

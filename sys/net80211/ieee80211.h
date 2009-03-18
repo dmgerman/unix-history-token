@@ -4990,6 +4990,60 @@ name|ATH_FF_SNAP_ORGCODE_2
 value|0x7f
 end_define
 
+begin_comment
+comment|/* NB: Atheros allocated the OUI for this purpose ~2005 but beware ... */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDMA_OUI
+value|ATH_OUI
+end_define
+
+begin_define
+define|#
+directive|define
+name|TDMA_OUI_TYPE
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|TDMA_VERSION_V2
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|TDMA_VERSION
+value|TDMA_VERSION_V2
+end_define
+
+begin_comment
+comment|/* NB: we only support 2 right now but protocol handles up to 8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDMA_MAXSLOTS
+value|2
+end_define
+
+begin_comment
+comment|/* max slots/sta's */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDMA_PARAM_LEN_V2
+value|sizeof(struct ieee80211_tdma_param)
+end_define
+
 begin_struct
 struct|struct
 name|ieee80211_tdma_param
@@ -5016,6 +5070,10 @@ name|u_int8_t
 name|tdma_subtype
 decl_stmt|;
 comment|/* OUI subtype */
+define|#
+directive|define
+name|TDMA_SUBTYPE_PARAM
+value|0x01
 name|u_int8_t
 name|tdma_version
 decl_stmt|;
@@ -5023,11 +5081,11 @@ comment|/* spec revision */
 name|u_int8_t
 name|tdma_slot
 decl_stmt|;
-comment|/* station slot # */
+comment|/* station slot # [0..7] */
 name|u_int8_t
 name|tdma_slotcnt
 decl_stmt|;
-comment|/* bss slot count */
+comment|/* bss slot count [1..8] */
 name|u_int16_t
 name|tdma_slotlen
 decl_stmt|;
@@ -5061,36 +5119,55 @@ name|__packed
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|TDMA_VERSION_VALID
+parameter_list|(
+name|_version
+parameter_list|)
+define|\
+value|(TDMA_VERSION_V2<= (_version)&& (_version)<= TDMA_VERSION)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TDMA_SLOTCNT_VALID
+parameter_list|(
+name|_slotcnt
+parameter_list|)
+define|\
+value|(2<= (_slotcnt)&& (_slotcnt)<= TDMA_MAXSLOTS)
+end_define
+
 begin_comment
-comment|/* NB: Atheros allocated the OUI for this purpose ~3 years ago but beware ... */
+comment|/* XXX magic constants */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TDMA_OUI
-value|ATH_OUI
+name|TDMA_SLOTLEN_VALID
+parameter_list|(
+name|_slotlen
+parameter_list|)
+define|\
+value|(2*100<= (_slotlen)&& (unsigned)(_slotlen)<= 0xfffff)
 end_define
+
+begin_comment
+comment|/* XXX probably should set a max */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|TDMA_OUI_TYPE
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|TDMA_SUBTYPE_PARAM
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|TDMA_VERSION
-value|2
+name|TDMA_BINTVAL_VALID
+parameter_list|(
+name|_bintval
+parameter_list|)
+value|(1<= (_bintval))
 end_define
 
 begin_endif
