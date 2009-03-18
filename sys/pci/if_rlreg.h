@@ -4086,7 +4086,7 @@ begin_define
 define|#
 directive|define
 name|RL_MSI_MESSAGES
-value|2
+value|1
 end_define
 
 begin_define
