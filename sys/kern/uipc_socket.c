@@ -847,7 +847,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Initialise maxsockets.  */
+comment|/*  * Initialise maxsockets.  This SYSINIT must be run after  * tunable_mbinit().  */
 end_comment
 
 begin_function

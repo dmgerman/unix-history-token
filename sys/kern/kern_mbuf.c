@@ -176,6 +176,10 @@ name|mbstat
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * tunable_mbinit() has to be run before init_maxsockets() thus  * the SYSINIT order below is SI_ORDER_MIDDLE while init_maxsockets()  * runs at SI_ORDER_ANY.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -231,7 +235,7 @@ name|tunable_mbinit
 argument_list|,
 name|SI_SUB_TUNABLES
 argument_list|,
-name|SI_ORDER_ANY
+name|SI_ORDER_MIDDLE
 argument_list|,
 name|tunable_mbinit
 argument_list|,
