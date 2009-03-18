@@ -1389,7 +1389,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|xpt_bus_register
+name|mpt_xpt_bus_register
 argument_list|(
 name|mpt
 operator|->
@@ -1554,7 +1554,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|xpt_bus_register
+name|mpt_xpt_bus_register
 argument_list|(
 name|mpt
 operator|->
@@ -18661,7 +18661,7 @@ argument_list|(
 name|mpt
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|mpt_kthread_exit
 argument_list|(
 literal|0
 argument_list|)
