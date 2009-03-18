@@ -482,7 +482,7 @@ name|cn
 operator|.
 name|cn_lkflags
 operator|=
-name|LK_EXCLUSIVE
+name|LK_SHARED
 expr_stmt|;
 comment|/* 	 * At this point, lvp is locked and will be unlocked by the lookup. 	 * On successful return, *uvpp will be locked 	 */
 ifdef|#

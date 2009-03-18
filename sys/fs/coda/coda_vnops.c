@@ -6143,7 +6143,7 @@ name|cp
 operator|->
 name|c_ovp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|,

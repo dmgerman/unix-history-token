@@ -18870,7 +18870,7 @@ name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|,
@@ -19730,12 +19730,11 @@ name|uio_resid
 operator|=
 name|count
 expr_stmt|;
-comment|/* vn_lock(vp, LK_SHARED | LK_RETRY, td); */
 name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|,
