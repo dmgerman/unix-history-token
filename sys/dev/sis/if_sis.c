@@ -195,7 +195,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<pci/if_sisreg.h>
+file|<dev/sis/if_sisreg.h>
 end_include
 
 begin_expr_stmt
