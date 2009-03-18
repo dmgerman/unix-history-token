@@ -1022,7 +1022,9 @@ if|if
 condition|(
 name|inc
 operator|->
-name|inc_isipv6
+name|inc_flags
+operator|&
+name|INC_ISIPV6
 condition|)
 name|hash
 operator|=
@@ -1078,7 +1080,9 @@ if|if
 condition|(
 name|inc
 operator|->
-name|inc_isipv6
+name|inc_flags
+operator|&
+name|INC_ISIPV6
 condition|)
 block|{
 if|if
@@ -1201,7 +1205,9 @@ if|if
 condition|(
 name|inc
 operator|->
-name|inc_isipv6
+name|inc_flags
+operator|&
+name|INC_ISIPV6
 condition|)
 name|hash
 operator|=
@@ -1384,7 +1390,9 @@ if|if
 condition|(
 name|inc
 operator|->
-name|inc_isipv6
+name|inc_flags
+operator|&
+name|INC_ISIPV6
 condition|)
 name|bcopy
 argument_list|(

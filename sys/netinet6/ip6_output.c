@@ -5327,10 +5327,9 @@ expr_stmt|;
 name|inc
 operator|.
 name|inc_flags
-operator|=
-literal|1
+operator||=
+name|INC_ISIPV6
 expr_stmt|;
-comment|/* IPv6 */
 name|inc
 operator|.
 name|inc6_faddr

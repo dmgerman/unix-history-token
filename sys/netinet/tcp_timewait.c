@@ -1918,7 +1918,9 @@ name|inp
 operator|->
 name|inp_inc
 operator|.
-name|inc_isipv6
+name|inc_flags
+operator|&
+name|INC_ISIPV6
 decl_stmt|;
 endif|#
 directive|endif
