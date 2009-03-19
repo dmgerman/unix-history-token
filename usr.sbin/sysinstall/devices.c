@@ -414,7 +414,7 @@ name|NETWORK
 argument_list|(
 literal|"ae"
 argument_list|,
-literal|"Attansic/Atheros L2 FastEthernet"
+literal|"Attansic/Atheros L2 Fast Ethernet"
 argument_list|)
 block|,
 name|NETWORK
@@ -566,6 +566,13 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"et"
+argument_list|,
+literal|"Agere ET1310 based PCI Express Gigabit Ethernet card"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"ex"
 argument_list|,
 literal|"Intel EtherExpress Pro/10 Ethernet card"
@@ -601,7 +608,21 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"igb"
+argument_list|,
+literal|"Intel(R) PRO/1000 PCI Express Gigabit Ethernet card"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"ixgb"
+argument_list|,
+literal|"Intel(R) PRO/10Gb Ethernet card"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
+literal|"ixgbe"
 argument_list|,
 literal|"Intel(R) PRO/10Gb Ethernet card"
 argument_list|)
@@ -667,6 +688,13 @@ argument_list|(
 literal|"nve"
 argument_list|,
 literal|"NVIDIA nForce MCP Ethernet"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
+literal|"nxge"
+argument_list|,
+literal|"Neterion Xframe 10GbE Server/Storage adapter"
 argument_list|)
 block|,
 name|NETWORK
