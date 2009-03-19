@@ -1234,8 +1234,11 @@ literal|0
 condition|)
 name|warnx
 argument_list|(
-literal|"print_mfc: %d trailing bytes"
+literal|"print_mfc: %lu trailing bytes"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
