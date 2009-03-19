@@ -207,26 +207,12 @@ name|ofw_pcibus_get_devinfo
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
-name|ofw_pcibus_child_pnpinfo_str_method
-parameter_list|(
-name|device_t
-name|cbdev
-parameter_list|,
-name|device_t
-name|child
-parameter_list|,
-name|char
-modifier|*
-name|buf
-parameter_list|,
-name|size_t
-name|buflen
-parameter_list|)
-function_decl|;
-end_function_decl
+name|bus_child_pnpinfo_str_t
+name|ofw_pcibus_pnpinfo_str
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -255,7 +241,7 @@ name|DEVMETHOD
 argument_list|(
 name|bus_child_pnpinfo_str
 argument_list|,
-name|ofw_pcibus_child_pnpinfo_str_method
+name|ofw_pcibus_pnpinfo_str
 argument_list|)
 block|,
 comment|/* PCI interface */
@@ -1305,10 +1291,10 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ofw_pcibus_child_pnpinfo_str_method
+name|ofw_pcibus_pnpinfo_str
 parameter_list|(
 name|device_t
-name|cbdev
+name|dev
 parameter_list|,
 name|device_t
 name|child
@@ -1323,7 +1309,7 @@ parameter_list|)
 block|{
 name|pci_child_pnpinfo_str_method
 argument_list|(
-name|cbdev
+name|dev
 argument_list|,
 name|child
 argument_list|,
@@ -1352,10 +1338,10 @@ argument_list|,
 name|buflen
 argument_list|)
 expr_stmt|;
-comment|/* Separate info */
+comment|/* Separate info. */
 name|ofw_bus_gen_child_pnpinfo_str
 argument_list|(
-name|cbdev
+name|dev
 argument_list|,
 name|child
 argument_list|,
