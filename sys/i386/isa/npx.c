@@ -1757,11 +1757,9 @@ begin_function
 name|void
 name|npxinit
 parameter_list|(
-name|control
-parameter_list|)
 name|u_short
 name|control
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|union
