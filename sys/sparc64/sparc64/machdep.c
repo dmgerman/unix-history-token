@@ -1989,9 +1989,6 @@ expr_stmt|;
 name|kdb_init
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KDB
 if|if
 condition|(
 name|boothowto
@@ -2005,8 +2002,6 @@ argument_list|,
 literal|"Boot flags requested debugger"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
