@@ -2490,9 +2490,9 @@ argument_list|,
 name|TLB_CTX_KERNEL
 argument_list|)
 expr_stmt|;
-name|membar
+name|flush
 argument_list|(
-name|Sync
+name|KERNBASE
 argument_list|)
 expr_stmt|;
 name|intr_restore
@@ -9348,9 +9348,9 @@ argument_list|,
 name|context
 argument_list|)
 expr_stmt|;
-name|membar
+name|flush
 argument_list|(
-name|Sync
+name|KERNBASE
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
