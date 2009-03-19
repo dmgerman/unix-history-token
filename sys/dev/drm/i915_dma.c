@@ -854,7 +854,7 @@ name|mtrr
 operator|=
 literal|0
 expr_stmt|;
-name|drm_core_ioremap
+name|drm_core_ioremap_wc
 argument_list|(
 operator|&
 name|dev_priv
@@ -946,9 +946,7 @@ name|sarea_priv
 operator|->
 name|pf_current_page
 operator|=
-name|dev_priv
-operator|->
-name|current_page
+literal|0
 expr_stmt|;
 comment|/* Allow hardware batchbuffers unless told otherwise. 	 */
 name|dev_priv
@@ -3325,7 +3323,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|LOCK_TEST_WITH_RETURN
+name|RING_LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
 argument_list|,
@@ -3464,7 +3462,7 @@ literal|0
 expr_stmt|;
 break|break;
 default|default:
-name|DRM_ERROR
+name|DRM_DEBUG
 argument_list|(
 literal|"Unknown parameter %d\n"
 argument_list|,
@@ -3598,7 +3596,7 @@ name|value
 expr_stmt|;
 break|break;
 default|default:
-name|DRM_ERROR
+name|DRM_DEBUG
 argument_list|(
 literal|"unknown parameter %d\n"
 argument_list|,
@@ -3756,7 +3754,7 @@ name|mtrr
 operator|=
 literal|0
 expr_stmt|;
-name|drm_core_ioremap
+name|drm_core_ioremap_wc
 argument_list|(
 operator|&
 name|dev_priv
@@ -4089,9 +4087,33 @@ name|ret
 operator|!=
 literal|0
 condition|)
+block|{
+name|drm_rmmap
+argument_list|(
+name|dev
+argument_list|,
+name|dev_priv
+operator|->
+name|mmio_map
+argument_list|)
+expr_stmt|;
+name|drm_free
+argument_list|(
+name|dev_priv
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|drm_i915_private
+argument_list|)
+argument_list|,
+name|DRM_MEM_DRIVER
+argument_list|)
+expr_stmt|;
 return|return
 name|ret
 return|;
+block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -4147,6 +4169,12 @@ name|user_irq_lock
 argument_list|,
 literal|"userirq"
 argument_list|)
+expr_stmt|;
+name|dev_priv
+operator|->
+name|user_irq_refcount
+operator|=
+literal|0
 expr_stmt|;
 name|ret
 operator|=
