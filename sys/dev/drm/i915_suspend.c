@@ -555,42 +555,6 @@ argument_list|(
 name|VGA_DACMASK
 argument_list|)
 expr_stmt|;
-comment|/* DACCRX automatically increments during read */
-name|I915_WRITE8
-argument_list|(
-name|VGA_DACRX
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* Read 3 bytes of color data from each index */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|256
-operator|*
-literal|3
-condition|;
-name|i
-operator|++
-control|)
-name|dev_priv
-operator|->
-name|saveDACDATA
-index|[
-name|i
-index|]
-operator|=
-name|I915_READ8
-argument_list|(
-name|VGA_DACDATA
-argument_list|)
-expr_stmt|;
 comment|/* MSR bits */
 name|dev_priv
 operator|->
@@ -1210,42 +1174,6 @@ operator|->
 name|saveDACMASK
 argument_list|)
 expr_stmt|;
-comment|/* DACCRX automatically increments during read */
-name|I915_WRITE8
-argument_list|(
-name|VGA_DACWX
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* Read 3 bytes of color data from each index */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|256
-operator|*
-literal|3
-condition|;
-name|i
-operator|++
-control|)
-name|I915_WRITE8
-argument_list|(
-name|VGA_DACDATA
-argument_list|,
-name|dev_priv
-operator|->
-name|saveDACDATA
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1313,6 +1241,38 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Render Standby */
+if|if
+condition|(
+name|IS_I965G
+argument_list|(
+name|dev
+argument_list|)
+operator|&&
+name|IS_MOBILE
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+name|dev_priv
+operator|->
+name|saveRENDERSTANDBY
+operator|=
+name|I915_READ
+argument_list|(
+name|MCHBAR_RENDER_STANDBY
+argument_list|)
+expr_stmt|;
+comment|/* Hardware status page */
+name|dev_priv
+operator|->
+name|saveHWS
+operator|=
+name|I915_READ
+argument_list|(
+name|HWS_PGA
+argument_list|)
+expr_stmt|;
 comment|/* Display arbitration control */
 name|dev_priv
 operator|->
@@ -2176,6 +2136,39 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Render Standby */
+if|if
+condition|(
+name|IS_I965G
+argument_list|(
+name|dev
+argument_list|)
+operator|&&
+name|IS_MOBILE
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+name|I915_WRITE
+argument_list|(
+name|MCHBAR_RENDER_STANDBY
+argument_list|,
+name|dev_priv
+operator|->
+name|saveRENDERSTANDBY
+argument_list|)
+expr_stmt|;
+comment|/* Hardware status page */
+name|I915_WRITE
+argument_list|(
+name|HWS_PGA
+argument_list|,
+name|dev_priv
+operator|->
+name|saveHWS
+argument_list|)
+expr_stmt|;
+comment|/* Display arbitration */
 name|I915_WRITE
 argument_list|(
 name|DSPARB

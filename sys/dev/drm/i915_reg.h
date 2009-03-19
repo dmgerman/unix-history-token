@@ -71,8 +71,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|INTEL_855_GMCH_GMS_MASK
-value|(0x7<< 4)
+name|INTEL_GMCH_GMS_MASK
+value|(0xf<< 4)
 end_define
 
 begin_define
@@ -129,6 +129,48 @@ define|#
 directive|define
 name|INTEL_915G_GMCH_GMS_STOLEN_64M
 value|(0x7<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTEL_GMCH_GMS_STOLEN_128M
+value|(0x8<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTEL_GMCH_GMS_STOLEN_256M
+value|(0x9<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTEL_GMCH_GMS_STOLEN_96M
+value|(0xa<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTEL_GMCH_GMS_STOLEN_160M
+value|(0xb<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTEL_GMCH_GMS_STOLEN_224M
+value|(0xc<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTEL_GMCH_GMS_STOLEN_352M
+value|(0xd<< 4)
 end_define
 
 begin_comment
@@ -919,6 +961,107 @@ define|#
 directive|define
 name|DISPLAY_PLANE_B
 value|(1<<20)
+end_define
+
+begin_comment
+comment|/*  * Fence registers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FENCE_REG_830_0
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|FENCE_REG_945_8
+value|0x3000
+end_define
+
+begin_define
+define|#
+directive|define
+name|I830_FENCE_START_MASK
+value|0x07f80000
+end_define
+
+begin_define
+define|#
+directive|define
+name|I830_FENCE_TILING_Y_SHIFT
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|I830_FENCE_SIZE_BITS
+parameter_list|(
+name|size
+parameter_list|)
+value|((ffs((size)>> 19) - 1)<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I830_FENCE_PITCH_SHIFT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|I830_FENCE_REG_VALID
+value|(1<<0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I915_FENCE_START_MASK
+value|0x0ff00000
+end_define
+
+begin_define
+define|#
+directive|define
+name|I915_FENCE_SIZE_BITS
+parameter_list|(
+name|size
+parameter_list|)
+value|((ffs((size)>> 20) - 1)<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FENCE_REG_965_0
+value|0x03000
+end_define
+
+begin_define
+define|#
+directive|define
+name|I965_FENCE_PITCH_SHIFT
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|I965_FENCE_TILING_Y_SHIFT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|I965_FENCE_REG_VALID
+value|(1<<0)
 end_define
 
 begin_comment
@@ -2913,6 +3056,13 @@ name|DCC_CHANNEL_XOR_DISABLE
 value|(1<< 10)
 end_define
 
+begin_define
+define|#
+directive|define
+name|DCC_CHANNEL_XOR_BIT_17
+value|(1<< 9)
+end_define
+
 begin_comment
 comment|/** 965 MCH register controlling DRAM channel configuration */
 end_comment
@@ -2929,6 +3079,24 @@ define|#
 directive|define
 name|C1DRB3
 value|0x10606
+end_define
+
+begin_comment
+comment|/** GM965 GM45 render standby register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCHBAR_RENDER_STANDBY
+value|0x111B8
+end_define
+
+begin_define
+define|#
+directive|define
+name|PEG_BAND_GAP_DATA
+value|0x14d68
 end_define
 
 begin_comment
@@ -3287,6 +3455,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDMIB_HOTPLUG_INT_EN
+value|(1<< 29)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDMIC_HOTPLUG_INT_EN
+value|(1<< 28)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDMID_HOTPLUG_INT_EN
+value|(1<< 27)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SDVOB_HOTPLUG_INT_EN
 value|(1<< 26)
 end_define
@@ -3324,6 +3513,27 @@ define|#
 directive|define
 name|PORT_HOTPLUG_STAT
 value|0x61114
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDMIB_HOTPLUG_INT_STATUS
+value|(1<< 29)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDMIC_HOTPLUG_INT_STATUS
+value|(1<< 28)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDMID_HOTPLUG_INT_STATUS
+value|(1<< 27)
 end_define
 
 begin_define
@@ -3477,8 +3687,62 @@ end_define
 begin_define
 define|#
 directive|define
+name|SDVO_ENCODING_SDVO
+value|(0x0<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDVO_ENCODING_HDMI
+value|(0x2<< 10)
+end_define
+
+begin_comment
+comment|/** Requird for HDMI operation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDVO_NULL_PACKETS_DURING_VSYNC
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SDVO_BORDER_ENABLE
 value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDVO_AUDIO_ENABLE
+value|(1<< 6)
+end_define
+
+begin_comment
+comment|/** New with 965, default is to be set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDVO_VSYNC_ACTIVE_HIGH
+value|(1<< 4)
+end_define
+
+begin_comment
+comment|/** New with 965, default is to be set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDVO_HSYNC_ACTIVE_HIGH
+value|(1<< 3)
 end_define
 
 begin_define
