@@ -421,6 +421,7 @@ specifier|extern
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|trap_msg
 index|[]
 decl_stmt|;

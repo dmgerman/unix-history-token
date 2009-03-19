@@ -181,12 +181,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/ofw_machdep.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 
@@ -247,7 +241,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/pcb.h>
+file|<machine/ofw_machdep.h>
 end_include
 
 begin_include
@@ -435,6 +429,7 @@ begin_decl_stmt
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|trap_msg
 index|[]
 init|=
@@ -1240,9 +1235,6 @@ literal|"trap: kernel trap isn't"
 operator|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KDB
 if|if
 condition|(
 name|kdb_active
@@ -1253,8 +1245,6 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|tf
@@ -1265,9 +1255,6 @@ operator|~
 name|T_KERNEL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|KDB
 case|case
 name|T_BREAKPOINT
 case|:
@@ -1314,8 +1301,6 @@ name|tf
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 endif|#
 directive|endif
 case|case
@@ -1587,11 +1572,6 @@ modifier|*
 name|vm
 decl_stmt|;
 name|struct
-name|pcb
-modifier|*
-name|pcb
-decl_stmt|;
-name|struct
 name|proc
 modifier|*
 name|p
@@ -1688,12 +1668,6 @@ name|tf
 operator|->
 name|tf_tar
 argument_list|)
-expr_stmt|;
-name|pcb
-operator|=
-name|td
-operator|->
-name|td_pcb
 expr_stmt|;
 name|type
 operator|=
@@ -2274,22 +2248,6 @@ operator|.
 name|v_syscall
 argument_list|)
 expr_stmt|;
-name|narg
-operator|=
-literal|0
-expr_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
-name|reg
-operator|=
-literal|0
-expr_stmt|;
-name|regcnt
-operator|=
-name|REG_MAXARGS
-expr_stmt|;
 name|td
 operator|->
 name|td_pticks
@@ -2337,6 +2295,14 @@ name|TF_DONE
 argument_list|(
 name|tf
 argument_list|)
+expr_stmt|;
+name|reg
+operator|=
+literal|0
+expr_stmt|;
+name|regcnt
+operator|=
+name|REG_MAXARGS
 expr_stmt|;
 if|if
 condition|(
