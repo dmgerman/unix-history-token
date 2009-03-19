@@ -1326,6 +1326,11 @@ name|pc_node
 operator|=
 name|child
 expr_stmt|;
+name|cache_init
+argument_list|(
+name|pc
+argument_list|)
+expr_stmt|;
 name|all_cpus
 operator||=
 literal|1

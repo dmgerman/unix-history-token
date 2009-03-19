@@ -15,23 +15,6 @@ directive|define
 name|_MACHINE_CACHE_H_
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<dev/ofw/openfirm.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -173,19 +156,9 @@ struct|struct
 name|cacheinfo
 block|{
 name|u_int
-name|c_enabled
-decl_stmt|;
-comment|/* true => cache is enabled */
-name|u_int
 name|ic_size
 decl_stmt|;
 comment|/* instruction cache */
-name|u_int
-name|ic_set
-decl_stmt|;
-name|u_int
-name|ic_l2set
-decl_stmt|;
 name|u_int
 name|ic_assoc
 decl_stmt|;
@@ -196,9 +169,6 @@ name|u_int
 name|dc_size
 decl_stmt|;
 comment|/* data cache */
-name|u_int
-name|dc_l2size
-decl_stmt|;
 name|u_int
 name|dc_assoc
 decl_stmt|;
@@ -213,13 +183,7 @@ name|u_int
 name|ec_assoc
 decl_stmt|;
 name|u_int
-name|ec_l2set
-decl_stmt|;
-name|u_int
 name|ec_linesize
-decl_stmt|;
-name|u_int
-name|ec_l2linesize
 decl_stmt|;
 block|}
 struct|;
@@ -230,6 +194,12 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_struct_decl
+struct_decl|struct
+name|pcpu
+struct_decl|;
+end_struct_decl
 
 begin_typedef
 typedef|typedef
@@ -277,8 +247,10 @@ begin_function_decl
 name|void
 name|cache_init
 parameter_list|(
-name|phandle_t
-name|node
+name|struct
+name|pcpu
+modifier|*
+name|pcpu
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -360,14 +332,6 @@ specifier|extern
 name|icache_page_inval_t
 modifier|*
 name|icache_page_inval
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|cacheinfo
-name|cache
 decl_stmt|;
 end_decl_stmt
 
