@@ -42,13 +42,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/ofw/openfirm.h>
+file|<dev/ofw/ofw_bus_subr.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/ofw/ofw_bus_subr.h>
+file|<dev/ofw/openfirm.h>
 end_include
 
 begin_include
