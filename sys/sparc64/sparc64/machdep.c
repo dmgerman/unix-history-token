@@ -1673,6 +1673,25 @@ case|:
 case|case
 name|CPU_IMPL_ULTRASPARCIIe
 case|:
+case|case
+name|CPU_IMPL_ULTRASPARCIII
+case|:
+comment|/* NB: we've disabled P$. */
+case|case
+name|CPU_IMPL_ULTRASPARCIIIp
+case|:
+case|case
+name|CPU_IMPL_ULTRASPARCIIIi
+case|:
+case|case
+name|CPU_IMPL_ULTRASPARCIV
+case|:
+case|case
+name|CPU_IMPL_ULTRASPARCIVp
+case|:
+case|case
+name|CPU_IMPL_ULTRASPARCIIIip
+case|:
 name|cpu_block_copy
 operator|=
 name|spitfire_block_copy
@@ -3363,7 +3382,7 @@ operator|&
 name|args
 argument_list|)
 expr_stmt|;
-comment|/* In case of halt, return to the firmware */
+comment|/* In case of halt, return to the firmware. */
 if|if
 condition|(
 operator|(
