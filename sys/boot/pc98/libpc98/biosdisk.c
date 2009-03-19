@@ -3049,13 +3049,11 @@ name|dp
 operator|->
 name|dp_mid
 operator|&
-literal|0x7f
+name|PC98_MID_MASK
 condition|)
 block|{
 case|case
-name|DOSMID_386BSD
-operator|&
-literal|0x7f
+name|PC98_MID_386BSD
 case|:
 comment|/* FreeBSD */
 if|if
@@ -3065,7 +3063,7 @@ name|dp
 operator|->
 name|dp_mid
 operator|&
-literal|0x80
+name|PC98_MID_BOOTABLE
 operator|)
 operator|&&
 operator|(
@@ -3128,7 +3126,7 @@ name|dp
 operator|->
 name|dp_mid
 operator|&
-literal|0x80
+name|PC98_MID_BOOTABLE
 operator|)
 operator|&&
 operator|(
