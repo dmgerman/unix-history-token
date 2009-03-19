@@ -285,6 +285,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|intr_shuffle_irqs
+parameter_list|(
+name|void
+modifier|*
+name|arg
+name|__unused
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -2272,7 +2285,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Distribute all the interrupt sources among the available CPUs once the  * AP's have been launched.  */
+comment|/*  * Distribute all the interrupt sources among the available CPUs once the  * APs have been launched.  */
 end_comment
 
 begin_function
@@ -2307,7 +2320,6 @@ operator|==
 literal|1
 condition|)
 return|return;
-comment|/* Round-robin assign a CPU to each enabled source. */
 name|sx_xlock
 argument_list|(
 operator|&
