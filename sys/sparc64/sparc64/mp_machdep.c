@@ -1897,12 +1897,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* XXX: delay a bit to allow the CPUs to actually enter the PROM. */
-name|DELAY
-argument_list|(
-literal|100000
-argument_list|)
-expr_stmt|;
 name|critical_exit
 argument_list|()
 expr_stmt|;
@@ -2340,13 +2334,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-ifdef|#
-directive|ifdef
-name|KDB
 name|kdb_active
+operator|!=
+literal|0
 operator|||
-endif|#
-directive|endif
 name|panicstr
 operator|!=
 name|NULL
@@ -2721,13 +2712,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-ifdef|#
-directive|ifdef
-name|KDB
 name|kdb_active
+operator|!=
+literal|0
 operator|||
-endif|#
-directive|endif
 name|panicstr
 operator|!=
 name|NULL
