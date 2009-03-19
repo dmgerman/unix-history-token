@@ -757,6 +757,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|CHIP_RS600
+case|:
+case|case
 name|CHIP_RS690
 case|:
 case|case
