@@ -2642,6 +2642,29 @@ block|,
 literal|0
 block|, 	}
 block|,
+comment|/* 	 * This is more specific than the generic NM9835 entry that follows, and 	 * is placed here to _prevent_ puc from claiming this single port card. 	 * 	 * uart(4) will claim this device. 	 */
+block|{
+literal|0x9710
+block|,
+literal|0x9835
+block|,
+literal|0x1000
+block|,
+literal|1
+block|,
+literal|"NetMos NM9835 based 1-port serial"
+block|,
+name|DEFAULT_RCLK
+block|,
+name|PUC_PORT_1S
+block|,
+literal|0x10
+block|,
+literal|4
+block|,
+literal|0
+block|, 	}
+block|,
 block|{
 literal|0x9710
 block|,
