@@ -216,6 +216,18 @@ block|}
 name|DRM_UNLOCK
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+name|ERESTART
+condition|)
+name|DRM_DEBUG
+argument_list|(
+literal|"restarting syscall\n"
+argument_list|)
+expr_stmt|;
+else|else
 name|DRM_DEBUG
 argument_list|(
 literal|"%d %s\n"

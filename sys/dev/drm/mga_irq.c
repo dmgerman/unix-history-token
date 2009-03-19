@@ -435,6 +435,18 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+operator|-
+name|ERESTART
+condition|)
+name|DRM_DEBUG
+argument_list|(
+literal|"restarting syscall\n"
+argument_list|)
+expr_stmt|;
 operator|*
 name|sequence
 operator|=
