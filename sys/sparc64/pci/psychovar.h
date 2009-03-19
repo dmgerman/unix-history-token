@@ -48,11 +48,11 @@ decl_stmt|;
 define|#
 directive|define
 name|PSYCHO_MODE_SABRE
-value|1
+value|0
 define|#
 directive|define
 name|PSYCHO_MODE_PSYCHO
-value|2
+value|1
 comment|/* Bus A or B of a psycho pair? */
 name|u_int
 name|sc_half
