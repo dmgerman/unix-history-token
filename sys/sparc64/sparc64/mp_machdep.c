@@ -1760,6 +1760,15 @@ operator|=
 operator|&
 name|cpu_start_args
 expr_stmt|;
+if|if
+condition|(
+name|cpu_impl
+operator|>=
+name|CPU_IMPL_ULTRASPARCIII
+condition|)
+name|cheetah_init
+argument_list|()
+expr_stmt|;
 name|pmap_map_tsb
 argument_list|()
 expr_stmt|;

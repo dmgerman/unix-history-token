@@ -104,6 +104,15 @@ end_decl_stmt
 
 begin_function_decl
 name|void
+name|cheetah_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|cpu_halt
 parameter_list|(
 name|void
