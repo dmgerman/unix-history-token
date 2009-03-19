@@ -2045,7 +2045,7 @@ name|buf
 argument_list|,
 name|bufsz
 argument_list|,
-literal|".%08u"
+literal|"+%08x"
 argument_list|,
 name|entry
 operator|->
