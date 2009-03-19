@@ -581,6 +581,50 @@ value|do {					\ 	__asm __volatile("wrpr %0, %1, %%" #name			\ 	    : : "r" (val
 end_define
 
 begin_comment
+comment|/*  * Trick GAS/GCC into compiling access to STICK/STICK_COMPARE independently  * of the selected instruction set.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|rdstick
+parameter_list|()
+value|rd(asr24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|rdstickcmpr
+parameter_list|()
+value|rd(asr25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|wrstick
+parameter_list|(
+name|val
+parameter_list|,
+name|xor
+parameter_list|)
+value|wr(asr24, (val), (xor))
+end_define
+
+begin_define
+define|#
+directive|define
+name|wrstickcmpr
+parameter_list|(
+name|val
+parameter_list|,
+name|xor
+parameter_list|)
+value|wr(asr25, (val), (xor))
+end_define
+
+begin_comment
 comment|/*  * Macro intended to be used instead of wr(asr23, val, xor) for writing to  * the TICK_COMPARE register in order to avoid a bug in BlackBird CPUs that  * can cause these writes to fail under certain condidtions which in turn  * causes the hardclock to stop.  The workaround is to read the TICK_COMPARE  * register back immediately after writing to it with these two instructions  * aligned to a quadword boundary in order to ensure that I$ misses won't  * split them up.  */
 end_comment
 

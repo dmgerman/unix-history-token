@@ -15,12 +15,18 @@ directive|define
 name|_MACHINE_TICK_H_
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|hardclock_use_stick
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
-name|tick_init
+name|tick_clear
 parameter_list|(
-name|u_long
-name|clock
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
