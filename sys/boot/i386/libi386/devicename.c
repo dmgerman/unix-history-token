@@ -439,6 +439,9 @@ goto|goto
 name|fail
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|LOADER_GPT_SUPPORT
 if|if
 condition|(
 operator|*
@@ -509,6 +512,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
+endif|#
+directive|endif
 if|if
 condition|(
 operator|*
@@ -600,7 +605,12 @@ name|cp
 operator|++
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|LOADER_GPT_SUPPORT
 block|}
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -951,6 +961,9 @@ operator|->
 name|d_unit
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOADER_GPT_SUPPORT
 if|if
 condition|(
 name|dev
@@ -984,6 +997,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
+endif|#
+directive|endif
 if|if
 condition|(
 name|dev
@@ -1044,7 +1059,12 @@ operator|+
 literal|'a'
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOADER_GPT_SUPPORT
 block|}
+endif|#
+directive|endif
 name|strcat
 argument_list|(
 name|cp
