@@ -450,9 +450,19 @@ if|if
 condition|(
 name|unlock_malloc
 condition|)
+block|{
+name|__isthreaded
+operator|=
+literal|1
+expr_stmt|;
 name|_malloc_postfork
 argument_list|()
 expr_stmt|;
+name|__isthreaded
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* Run down atfork child handlers. */
 name|TAILQ_FOREACH
 argument_list|(
