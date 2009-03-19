@@ -166,16 +166,6 @@ begin_comment
 comment|/* delete bandwidth monitor */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|GET_TIME
-parameter_list|(
-name|t
-parameter_list|)
-value|microtime(&t)
-end_define
-
 begin_comment
 comment|/*  * Types and macros for handling bitmaps with one bit per virtual interface.  */
 end_comment
@@ -744,16 +734,6 @@ name|u_char
 name|v_threshold
 decl_stmt|;
 comment|/* min ttl required to forward on vif*/
-name|u_int
-name|v_rate_limit
-decl_stmt|;
-comment|/* ignored; kept for compatibility */
-name|struct
-name|tbf
-modifier|*
-name|v_tbf
-decl_stmt|;
-comment|/* ignored; kept for compatibility */
 name|struct
 name|in_addr
 name|v_lcl_addr
@@ -791,28 +771,24 @@ name|route
 name|v_route
 decl_stmt|;
 comment|/* cached route */
-name|u_int
-name|v_rsvp_on
-decl_stmt|;
-comment|/* RSVP listening on this vif */
-name|struct
-name|socket
-modifier|*
-name|v_rsvpd
-decl_stmt|;
-comment|/* RSVP daemon socket */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * The kernel's multicast forwarding cache entry structure  * (A field for the type of service (mfc_tos) is to be added  * at a future point)  */
+comment|/*  * The kernel's multicast forwarding cache entry structure  */
 end_comment
 
 begin_struct
 struct|struct
 name|mfc
 block|{
+name|LIST_ENTRY
+argument_list|(
+argument|mfc
+argument_list|)
+name|mfc_hash
+expr_stmt|;
 name|struct
 name|in_addr
 name|mfc_origin
@@ -855,18 +831,6 @@ name|timeval
 name|mfc_last_assert
 decl_stmt|;
 comment|/* last time I sent an assert*/
-name|struct
-name|rtdetq
-modifier|*
-name|mfc_stall
-decl_stmt|;
-comment|/* q of packets awaiting mfc */
-name|struct
-name|mfc
-modifier|*
-name|mfc_next
-decl_stmt|;
-comment|/* next mfc entry            */
 name|uint8_t
 name|mfc_flags
 index|[
@@ -885,6 +849,18 @@ modifier|*
 name|mfc_bw_meter
 decl_stmt|;
 comment|/* list of bandwidth meters  */
+name|u_long
+name|mfc_nstall
+decl_stmt|;
+comment|/* # of packets awaiting mfc */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|rtdetq
+argument_list|)
+name|mfc_stall
+expr_stmt|;
+comment|/* q of packets awaiting mfc */
 block|}
 struct|;
 end_struct
@@ -956,6 +932,12 @@ begin_struct
 struct|struct
 name|rtdetq
 block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|rtdetq
+argument_list|)
+name|rte_link
+expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -972,72 +954,9 @@ name|vifi_t
 name|xmt_vif
 decl_stmt|;
 comment|/* Saved copy of imo_multicast_vif  */
-name|struct
-name|rtdetq
-modifier|*
-name|next
-decl_stmt|;
-comment|/* Next in list of packets          */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|MFCTBLSIZ
-value|256
-end_define
-
-begin_if
-if|#
-directive|if
-operator|(
-name|MFCTBLSIZ
-operator|&
-operator|(
-name|MFCTBLSIZ
-operator|-
-literal|1
-operator|)
-operator|)
-operator|==
-literal|0
-end_if
-
-begin_comment
-comment|/* from sys:route.h */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MFCHASHMOD
-parameter_list|(
-name|h
-parameter_list|)
-value|((h)& (MFCTBLSIZ - 1))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MFCHASHMOD
-parameter_list|(
-name|h
-parameter_list|)
-value|((h) % MFCTBLSIZ)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

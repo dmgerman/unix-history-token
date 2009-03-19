@@ -707,7 +707,7 @@ name|struct
 name|route_in6
 name|m6_route
 decl_stmt|;
-comment|/* cached route if this is a tunnel */
+comment|/* cached route */
 ifdef|#
 directive|ifdef
 name|notyet
