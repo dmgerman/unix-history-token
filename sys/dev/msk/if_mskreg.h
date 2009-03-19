@@ -11789,6 +11789,18 @@ end_comment
 begin_define
 define|#
 directive|define
+name|GM_RXF_SPARE1
+define|\
+value|(GM_MIB_CNT_BASE + 40)
+end_define
+
+begin_comment
+comment|/* Rx spare 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|GM_RXO_OK_LO
 define|\
 value|(GM_MIB_CNT_BASE + 48)
@@ -11969,6 +11981,18 @@ end_comment
 begin_define
 define|#
 directive|define
+name|GM_RXF_SPARE2
+define|\
+value|(GM_MIB_CNT_BASE + 168)
+end_define
+
+begin_comment
+comment|/* Rx spare 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|GM_RXE_FIFO_OV
 define|\
 value|(GM_MIB_CNT_BASE + 176)
@@ -11976,6 +12000,18 @@ end_define
 
 begin_comment
 comment|/* Rx FIFO overflow Event */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GM_RXF_SPARE3
+define|\
+value|(GM_MIB_CNT_BASE + 184)
+end_define
+
+begin_comment
+comment|/* Rx spare 3 */
 end_comment
 
 begin_define
@@ -12132,6 +12168,18 @@ end_define
 
 begin_comment
 comment|/* 1519-MaxSize Byte Tx Frame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GM_TXF_SPARE1
+define|\
+value|(GM_MIB_CNT_BASE + 296)
+end_define
+
+begin_comment
+comment|/* Tx spare 1 */
 end_comment
 
 begin_define
@@ -15796,6 +15844,139 @@ name|msk_if_softc
 struct_decl|;
 end_struct_decl
 
+begin_struct
+struct|struct
+name|msk_hw_stats
+block|{
+comment|/* Rx stats. */
+name|uint32_t
+name|rx_ucast_frames
+decl_stmt|;
+name|uint32_t
+name|rx_bcast_frames
+decl_stmt|;
+name|uint32_t
+name|rx_pause_frames
+decl_stmt|;
+name|uint32_t
+name|rx_mcast_frames
+decl_stmt|;
+name|uint32_t
+name|rx_crc_errs
+decl_stmt|;
+name|uint32_t
+name|rx_spare1
+decl_stmt|;
+name|uint64_t
+name|rx_good_octets
+decl_stmt|;
+name|uint64_t
+name|rx_bad_octets
+decl_stmt|;
+name|uint32_t
+name|rx_runts
+decl_stmt|;
+name|uint32_t
+name|rx_runt_errs
+decl_stmt|;
+name|uint32_t
+name|rx_pkts_64
+decl_stmt|;
+name|uint32_t
+name|rx_pkts_65_127
+decl_stmt|;
+name|uint32_t
+name|rx_pkts_128_255
+decl_stmt|;
+name|uint32_t
+name|rx_pkts_256_511
+decl_stmt|;
+name|uint32_t
+name|rx_pkts_512_1023
+decl_stmt|;
+name|uint32_t
+name|rx_pkts_1024_1518
+decl_stmt|;
+name|uint32_t
+name|rx_pkts_1519_max
+decl_stmt|;
+name|uint32_t
+name|rx_pkts_too_long
+decl_stmt|;
+name|uint32_t
+name|rx_pkts_jabbers
+decl_stmt|;
+name|uint32_t
+name|rx_spare2
+decl_stmt|;
+name|uint32_t
+name|rx_fifo_oflows
+decl_stmt|;
+name|uint32_t
+name|rx_spare3
+decl_stmt|;
+comment|/* Tx stats. */
+name|uint32_t
+name|tx_ucast_frames
+decl_stmt|;
+name|uint32_t
+name|tx_bcast_frames
+decl_stmt|;
+name|uint32_t
+name|tx_pause_frames
+decl_stmt|;
+name|uint32_t
+name|tx_mcast_frames
+decl_stmt|;
+name|uint64_t
+name|tx_octets
+decl_stmt|;
+name|uint32_t
+name|tx_pkts_64
+decl_stmt|;
+name|uint32_t
+name|tx_pkts_65_127
+decl_stmt|;
+name|uint32_t
+name|tx_pkts_128_255
+decl_stmt|;
+name|uint32_t
+name|tx_pkts_256_511
+decl_stmt|;
+name|uint32_t
+name|tx_pkts_512_1023
+decl_stmt|;
+name|uint32_t
+name|tx_pkts_1024_1518
+decl_stmt|;
+name|uint32_t
+name|tx_pkts_1519_max
+decl_stmt|;
+name|uint32_t
+name|tx_spare1
+decl_stmt|;
+name|uint32_t
+name|tx_colls
+decl_stmt|;
+name|uint32_t
+name|tx_late_colls
+decl_stmt|;
+name|uint32_t
+name|tx_excess_colls
+decl_stmt|;
+name|uint32_t
+name|tx_multi_colls
+decl_stmt|;
+name|uint32_t
+name|tx_single_colls
+decl_stmt|;
+name|uint32_t
+name|tx_underflows
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* Softc for the Marvell Yukon II controller. */
 end_comment
@@ -16117,6 +16298,10 @@ modifier|*
 name|msk_softc
 decl_stmt|;
 comment|/* parent controller */
+name|struct
+name|msk_hw_stats
+name|msk_stats
+decl_stmt|;
 name|struct
 name|task
 name|msk_link_task
