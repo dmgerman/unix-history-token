@@ -602,6 +602,13 @@ expr_stmt|;
 block|}
 block|}
 block|}
+else|else
+block|{
+name|cp
+operator|=
+name|np
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|*
@@ -727,6 +734,13 @@ goto|goto
 name|fail
 goto|;
 block|}
+block|}
+else|else
+block|{
+name|cp
+operator|=
+name|np
+expr_stmt|;
 block|}
 if|if
 condition|(
