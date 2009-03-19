@@ -26,7 +26,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * UltraSPARC IOMMU support; used by both the PCI and SBus code.  *  * TODO:  * - Support sub-page boundaries.  * - Fix alignment handling for small allocations (the possible page offset  *   of malloc()ed memory is not handled at all).  Revise interaction of  *   alignment with the load_mbuf and load_uio functions.  * - Handle lowaddr and highaddr in some way, and try to work out a way  *   for filter callbacks to work.  Currently, only lowaddr is honored  *   in that no addresses above it are considered at all.  * - Implement BUS_DMA_ALLOCNOW in bus_dma_tag_create as far as possible.  * - Check the possible return values and callback error arguments;  *   the callback currently gets called in error conditions where it should  *   not be.  * - When running out of DVMA space, return EINPROGRESS in the non-  *   BUS_DMA_NOWAIT case and delay the callback until sufficient space  *   becomes available.  * - Use the streaming cache unless BUS_DMA_COHERENT is specified; do not  *   flush the streaming cache when coherent mappings are synced.  */
+comment|/*  * UltraSPARC IOMMU support; used by both the PCI and SBus code.  *  * TODO:  * - Support sub-page boundaries.  * - Fix alignment handling for small allocations (the possible page offset  *   of malloc()ed memory is not handled at all).  Revise interaction of  *   alignment with the load_mbuf and load_uio functions.  * - Handle lowaddr and highaddr in some way, and try to work out a way  *   for filter callbacks to work.  Currently, only lowaddr is honored  *   in that no addresses above it are considered at all.  * - Implement BUS_DMA_ALLOCNOW in bus_dma_tag_create as far as possible.  * - Check the possible return values and callback error arguments;  *   the callback currently gets called in error conditions where it should  *   not be.  * - When running out of DVMA space, return EINPROGRESS in the non-  *   BUS_DMA_NOWAIT case and delay the callback until sufficient space  *   becomes available.  * - Use the streaming cache unless BUS_DMA_COHERENT is specified.  */
 end_comment
 
 begin_include
@@ -150,7 +150,7 @@ file|<machine/iommuvar.h>
 end_include
 
 begin_comment
-comment|/*  * Tuning constants.  */
+comment|/*  * Tuning constants  */
 end_comment
 
 begin_define
@@ -168,7 +168,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* Threshold for using the streaming buffer. */
+comment|/* Threshold for using the streaming buffer */
 end_comment
 
 begin_define
@@ -793,7 +793,7 @@ name|is_tsbsize
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s: DVMA map: %#lx to %#lx\n"
+literal|"%s: DVMA map: %#lx to %#lx%s\n"
 argument_list|,
 name|name
 argument_list|,
@@ -816,6 +816,15 @@ operator|)
 operator|)
 operator|-
 literal|1
+argument_list|,
+name|IOMMU_HAS_SB
+argument_list|(
+name|is
+argument_list|)
+condition|?
+literal|", streaming buffer"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set up resource mamangement. 	 */
@@ -1131,7 +1140,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* Enable diagnostics mode? */
 name|IOMMU_WRITE8
 argument_list|(
 name|is
@@ -1144,11 +1152,28 @@ argument_list|,
 name|ISR_CTL
 argument_list|,
 name|STRBUF_EN
+operator||
+operator|(
+operator|(
+name|is
+operator|->
+name|is_flags
+operator|&
+name|IOMMU_RERUN_DISABLE
+operator|)
+operator|!=
+literal|0
+condition|?
+name|STRBUF_RR_DIS
+else|:
+literal|0
+operator|)
 argument_list|)
 expr_stmt|;
-comment|/* No streaming buffers? Disable them */
+comment|/* No streaming buffers?  Disable them. */
 if|if
 condition|(
+operator|(
 name|IOMMU_READ8
 argument_list|(
 name|is
@@ -1160,6 +1185,9 @@ index|]
 argument_list|,
 name|ISR_CTL
 argument_list|)
+operator|&
+name|STRBUF_EN
+operator|)
 operator|==
 literal|0
 condition|)
@@ -2104,7 +2132,7 @@ argument_list|(
 name|is
 argument_list|)
 expr_stmt|;
-comment|/* for iommu_strbuf_sync() below. */
+comment|/* for iommu_strbuf_sync() below */
 name|SLIST_FOREACH
 argument_list|(
 argument|r
@@ -3300,7 +3328,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * IOMMU DVMA operations, common to PCI and SBus.  */
+comment|/*  * IOMMU DVMA operations, common to PCI and SBus  */
 end_comment
 
 begin_function
@@ -3364,19 +3392,17 @@ decl_stmt|;
 name|vm_paddr_t
 name|curaddr
 decl_stmt|;
-name|int
-name|error
-decl_stmt|,
-name|sgcnt
-decl_stmt|,
-name|firstpg
-decl_stmt|,
-name|stream
-decl_stmt|;
 name|pmap_t
 name|pmap
 init|=
 name|NULL
+decl_stmt|;
+name|int
+name|error
+decl_stmt|,
+name|firstpg
+decl_stmt|,
+name|sgcnt
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -3487,8 +3513,17 @@ name|firstpg
 operator|=
 literal|1
 expr_stmt|;
-name|stream
-operator|=
+name|map
+operator|->
+name|dm_flags
+operator|&=
+operator|~
+name|DMF_STREAMED
+expr_stmt|;
+name|map
+operator|->
+name|dm_flags
+operator||=
 name|iommu_use_streaming
 argument_list|(
 name|is
@@ -3497,6 +3532,12 @@ name|map
 argument_list|,
 name|buflen
 argument_list|)
+operator|!=
+literal|0
+condition|?
+name|DMF_STREAMED
+else|:
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -3577,7 +3618,15 @@ argument_list|(
 name|curaddr
 argument_list|)
 argument_list|,
-name|stream
+operator|(
+name|map
+operator|->
+name|dm_flags
+operator|&
+name|DMF_STREAMED
+operator|)
+operator|!=
+literal|0
 argument_list|,
 name|flags
 argument_list|)
@@ -4953,10 +5002,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|IOMMU_HAS_SB
-argument_list|(
-name|is
-argument_list|)
+operator|(
+name|map
+operator|->
+name|dm_flags
+operator|&
+name|DMF_STREAMED
+operator|)
+operator|!=
+literal|0
 operator|&&
 operator|(
 operator|(
