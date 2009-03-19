@@ -1667,6 +1667,11 @@ argument_list|,
 name|port
 argument_list|)
 expr_stmt|;
+name|m_freem
+argument_list|(
+name|mreq
+argument_list|)
+expr_stmt|;
 name|svcerr_weakauth
 argument_list|(
 name|rqst
@@ -1706,6 +1711,11 @@ name|nd_credflavor
 argument_list|)
 condition|)
 block|{
+name|m_freem
+argument_list|(
+name|mreq
+argument_list|)
+expr_stmt|;
 name|svcerr_weakauth
 argument_list|(
 name|rqst
