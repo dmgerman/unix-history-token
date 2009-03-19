@@ -2452,7 +2452,6 @@ name|TD_P
 operator||
 name|TD_W
 expr_stmt|;
-comment|/* XXX - cheetah */
 name|stxa
 argument_list|(
 name|AA_DMMU_TAR
@@ -2487,6 +2486,17 @@ name|AA_DMMU_SCXR
 argument_list|,
 name|ASI_DMMU
 argument_list|,
+operator|(
+name|ldxa
+argument_list|(
+name|AA_DMMU_SCXR
+argument_list|,
+name|ASI_DMMU
+argument_list|)
+operator|&
+name|TLB_SCXR_PGSZ_MASK
+operator|)
+operator||
 name|TLB_CTX_KERNEL
 argument_list|)
 expr_stmt|;
@@ -9345,6 +9355,17 @@ name|AA_DMMU_PCXR
 argument_list|,
 name|ASI_DMMU
 argument_list|,
+operator|(
+name|ldxa
+argument_list|(
+name|AA_DMMU_PCXR
+argument_list|,
+name|ASI_DMMU
+argument_list|)
+operator|&
+name|TLB_PCXR_PGSZ_MASK
+operator|)
+operator||
 name|context
 argument_list|)
 expr_stmt|;
