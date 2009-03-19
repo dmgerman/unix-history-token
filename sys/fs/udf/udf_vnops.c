@@ -4153,16 +4153,7 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"uiomove returned %d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 break|break;
-block|}
 block|}
 comment|/* tell the calling layer whether we need to be called again */
 operator|*
@@ -4185,6 +4176,16 @@ operator|+
 name|ds
 operator|->
 name|off
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|<
+literal|0
+condition|)
+name|error
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
