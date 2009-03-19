@@ -7156,6 +7156,8 @@ name|SIS_ISR_RX_DESC_OK
 operator||
 name|SIS_ISR_RX_OK
 operator||
+name|SIS_ISR_RX_ERR
+operator||
 name|SIS_ISR_RX_IDLE
 operator|)
 condition|)
@@ -7168,11 +7170,7 @@ if|if
 condition|(
 name|status
 operator|&
-operator|(
-name|SIS_ISR_RX_ERR
-operator||
 name|SIS_ISR_RX_OFLOW
-operator|)
 condition|)
 name|sis_rxeoc
 argument_list|(
