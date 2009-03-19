@@ -1618,6 +1618,9 @@ argument_list|(
 name|pc
 argument_list|)
 expr_stmt|;
+name|cache_enable
+argument_list|()
+expr_stmt|;
 name|uma_set_align
 argument_list|(
 name|pc

@@ -1769,6 +1769,9 @@ condition|)
 name|cheetah_init
 argument_list|()
 expr_stmt|;
+name|cache_enable
+argument_list|()
+expr_stmt|;
 name|pmap_map_tsb
 argument_list|()
 expr_stmt|;
