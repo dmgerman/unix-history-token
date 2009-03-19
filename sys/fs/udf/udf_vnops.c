@@ -3659,6 +3659,10 @@ name|this_off
 operator|=
 name|ds
 operator|->
+name|offset
+operator|+
+name|ds
+operator|->
 name|off
 expr_stmt|;
 if|if
