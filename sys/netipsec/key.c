@@ -13177,7 +13177,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-comment|/* do NOT call KEY_FREESAV here: it will only delete the sav if refcnt == 1, 				 * where we already know that refcnt == 0 				 */
+comment|/*  				 * do NOT call KEY_FREESAV here: 				 * it will only delete the sav if refcnt == 1, 				 * where we already know that refcnt == 0 				 */
 name|key_delsav
 argument_list|(
 name|sav
@@ -19675,7 +19675,7 @@ argument_list|,
 argument|nextsav
 argument_list|)
 block|{
-comment|/* Need to also check refcnt for a larval SA ??? 			 */
+comment|/* Need to also check refcnt for a larval SA ??? */
 if|if
 condition|(
 name|now
