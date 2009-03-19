@@ -237,11 +237,7 @@ argument_list|,
 name|schppm_attach
 argument_list|)
 block|,
-block|{
-name|NULL
-block|,
-name|NULL
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
