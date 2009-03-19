@@ -291,7 +291,7 @@ value|0x14
 end_define
 
 begin_comment
-comment|/* PIM routing message     */
+comment|/* PIMv1 message (historic) */
 end_comment
 
 begin_define
