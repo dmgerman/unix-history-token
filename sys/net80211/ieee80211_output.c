@@ -723,7 +723,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* XXX AUTH'd */
 if|if
 condition|(
 name|ni
