@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Pseudo-driver for media selection on the Lite-On PNIC 82c168  * chip. The NWAY support on this chip is horribly broken, so we  * only support manual mode selection. This is lame, but getting  * NWAY to work right is amazingly difficult.  */
+comment|/*  * Pseudo-driver for media selection on the Lite-On PNIC 82c168  * chip.  The NWAY support on this chip is horribly broken, so we  * only support manual mode selection.  This is lame, but getting  * NWAY to work right is amazingly difficult.  */
 end_comment
 
 begin_include
@@ -627,13 +627,11 @@ name|sc
 operator|->
 name|mii_inst
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 break|break;
 case|case
 name|MII_MEDIACHG
@@ -971,7 +969,6 @@ name|mii_media_active
 operator||=
 name|IFM_FDX
 expr_stmt|;
-return|return;
 block|}
 end_function
 

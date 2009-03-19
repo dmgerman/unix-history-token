@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Pseudo-driver for internal NWAY support on DEC 21143 and workalike  * controllers. Technically we're abusing the miibus code to handle  * media selection and NWAY support here since there is no MII  * interface. However the logical operations are roughly the same,  * and the alternative is to create a fake MII interface in the driver,  * which is harder to do.  */
+comment|/*  * Pseudo-driver for internal NWAY support on DEC 21143 and workalike  * controllers.  Technically we're abusing the miibus code to handle  * media selection and NWAY support here since there is no MII  * interface.  However the logical operations are roughly the same,  * and the alternative is to create a fake MII interface in the driver,  * which is harder to do.  */
 end_comment
 
 begin_include
@@ -185,7 +185,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/*  * This is the subsystem ID for the built-in 21143 ethernet  * in several Compaq Presario systems. Apparently these are  * 10Mbps only, so we need to treat them specially.  */
+comment|/*  * This is the subsystem ID for the built-in 21143 ethernet  * in several Compaq Presario systems.  Apparently these are  * 10Mbps only, so we need to treat them specially.  */
 end_comment
 
 begin_define
@@ -631,7 +631,6 @@ name|dc_pmode
 operator|==
 name|DC_PMODE_SIA
 condition|)
-block|{
 name|sc
 operator|->
 name|mii_capabilities
@@ -642,29 +641,7 @@ name|BMSR_10TFDX
 operator||
 name|BMSR_10THDX
 expr_stmt|;
-block|}
 else|else
-block|{
-name|ADD
-argument_list|(
-name|IFM_MAKEWORD
-argument_list|(
-name|IFM_ETHER
-argument_list|,
-name|IFM_100_TX
-argument_list|,
-name|IFM_LOOP
-argument_list|,
-name|sc
-operator|->
-name|mii_inst
-argument_list|)
-argument_list|,
-name|BMCR_LOOP
-operator||
-name|BMCR_S100
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|mii_capabilities
@@ -679,7 +656,6 @@ name|BMSR_10TFDX
 operator||
 name|BMSR_10THDX
 expr_stmt|;
-block|}
 break|break;
 block|}
 name|sc
@@ -796,13 +772,11 @@ name|sc
 operator|->
 name|mii_inst
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 break|break;
 case|case
 name|MII_MEDIACHG
@@ -821,13 +795,11 @@ name|sc
 operator|->
 name|mii_inst
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 comment|/* 		 * If the interface is not up, don't do anything. 		 */
 if|if
 condition|(
@@ -1505,7 +1477,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 		 * If the other side doesn't support NWAY, then the 		 * best we can do is determine if we have a 10Mbps or 		 * 100Mbps link. There's no way to know if the link  		 * is full or half duplex, so we default to half duplex 		 * and hope that the user is clever enough to manually 		 * change the media settings if we're wrong. 		 */
+comment|/* 		 * If the other side doesn't support NWAY, then the 		 * best we can do is determine if we have a 10Mbps or 		 * 100Mbps link.  There's no way to know if the link 		 * is full or half duplex, so we default to half duplex 		 * and hope that the user is clever enough to manually 		 * change the media settings if we're wrong. 		 */
 if|if
 condition|(
 operator|!
@@ -1605,7 +1577,6 @@ name|mii_media_active
 operator||=
 name|IFM_FDX
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1773,7 +1744,6 @@ argument_list|,
 name|DC_SIA_RESET
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
