@@ -1879,7 +1879,7 @@ name|in6p_sp
 operator|!=
 name|NULL
 condition|)
-name|ipsec6_delete_pcbpolicy
+name|ipsec_delete_pcbpolicy
 argument_list|(
 name|inp
 argument_list|)
