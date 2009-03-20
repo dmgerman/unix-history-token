@@ -1904,15 +1904,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|teken_assert
-argument_list|(
-name|p
-operator|->
-name|tp_col
-operator|<=
-name|T_NUMCOL
-argument_list|)
-expr_stmt|;
 name|t
 operator|->
 name|t_winsize
