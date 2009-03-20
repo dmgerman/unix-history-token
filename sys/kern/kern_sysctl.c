@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -6249,7 +6255,11 @@ expr_stmt|;
 name|SYSCTL_LOCK
 argument_list|()
 expr_stmt|;
-do|do
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|req
 operator|.
@@ -6277,14 +6287,17 @@ operator|&
 name|req
 argument_list|)
 expr_stmt|;
-block|}
-do|while
+if|if
 condition|(
 name|error
-operator|==
+operator|!=
 name|EAGAIN
 condition|)
-do|;
+break|break;
+name|uio_yield
+argument_list|()
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|req
