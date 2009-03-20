@@ -81,7 +81,7 @@ begin_if
 if|#
 directive|if
 operator|(
-name|USB_USE_CONDVAR
+name|USB_HAVE_CONDVAR
 operator|==
 literal|0
 operator|)
@@ -123,6 +123,12 @@ end_endif
 begin_comment
 comment|/*------------------------------------------------------------------------*  * device_delete_all_children - delete all children of a device  *------------------------------------------------------------------------*/
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|device_delete_all_children
+end_ifndef
 
 begin_function
 name|int
@@ -206,6 +212,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	device_set_usb2_desc  *  * This function can be called at probe or attach to set the USB  * device supplied textual description for the given device.  *------------------------------------------------------------------------*/
 end_comment
@@ -218,6 +229,9 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+if|#
+directive|if
+name|USB_HAVE_STRINGS
 name|struct
 name|usb2_attach_arg
 modifier|*
@@ -417,6 +431,8 @@ name|bdev
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -518,6 +534,12 @@ begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_printBCD  *  * This function will print the version number "bcd" to the string  * pointed to by "p" having a maximum length of "p_len" bytes  * including the terminating zero.  *------------------------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|USB_HAVE_STRINGS
+end_if
+
 begin_function
 name|void
 name|usb2_printBCD
@@ -558,9 +580,20 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_trim_spaces  *  * This function removes spaces at the beginning and the end of the string  * pointed to by the "p" argument.  *------------------------------------------------------------------------*/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|USB_HAVE_STRINGS
+end_if
 
 begin_function
 name|void
@@ -636,6 +669,11 @@ expr_stmt|;
 comment|/* kill trailing spaces */
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_get_devid  *  * This function returns the USB Vendor and Product ID like a 32-bit  * unsigned integer.  *------------------------------------------------------------------------*/
@@ -844,7 +882,7 @@ begin_if
 if|#
 directive|if
 operator|(
-name|USB_USE_CONDVAR
+name|USB_HAVE_CONDVAR
 operator|==
 literal|0
 operator|)

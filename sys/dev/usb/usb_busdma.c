@@ -86,6 +86,12 @@ directive|include
 file|<dev/usb/usb_bus.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+end_if
+
 begin_function_decl
 specifier|static
 name|void
@@ -114,11 +120,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+operator|&&
+name|defined
+argument_list|(
 name|__FreeBSD__
-end_ifdef
+argument_list|)
+end_if
 
 begin_function_decl
 specifier|static
@@ -129,22 +145,6 @@ name|void
 modifier|*
 parameter_list|,
 name|bus_dma_lock_op_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int32_t
-name|usb2_m_copy_in_cb
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -210,26 +210,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+operator|&&
+name|defined
+argument_list|(
 name|__NetBSD__
-end_ifdef
-
-begin_function_decl
-specifier|static
-name|int32_t
-name|usb2_m_copy_in_cb
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|caddr_t
-parameter_list|,
-name|uint32_t
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+end_if
 
 begin_function_decl
 specifier|static
@@ -284,6 +274,9 @@ name|usb2_page
 modifier|*
 name|page
 decl_stmt|;
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 if|if
 condition|(
 name|pc
@@ -409,9 +402,10 @@ name|offset
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
-else|else
-block|{
+endif|#
+directive|endif
 comment|/* Case 2 - Plain PIO */
 name|res
 operator|->
@@ -434,13 +428,17 @@ literal|0
 operator|-
 literal|1
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 name|res
 operator|->
 name|physaddr
 operator|=
 literal|0
 expr_stmt|;
-block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -549,6 +547,12 @@ end_function
 begin_comment
 comment|/*------------------------------------------------------------------------*  *  usb2_copy_in_user - copy directly to DMA-able memory from userland  *  * Return values:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|USB_HAVE_USER_IO
+end_if
 
 begin_function
 name|int
@@ -668,9 +672,20 @@ comment|/* success */
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*------------------------------------------------------------------------*  *  usb2_m_copy_in - copy a mbuf chain directly into DMA-able memory  *------------------------------------------------------------------------*/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|USB_HAVE_MBUF
+end_if
 
 begin_struct
 struct|struct
@@ -819,9 +834,20 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*------------------------------------------------------------------------*  *  usb2_uiomove - factored out code  *------------------------------------------------------------------------*/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|USB_HAVE_USER_IO
+end_if
 
 begin_function
 name|int
@@ -930,6 +956,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*------------------------------------------------------------------------*  *  usb2_copy_out - copy directly from DMA-able memory  *------------------------------------------------------------------------*/
 end_comment
@@ -1034,6 +1065,12 @@ end_function
 begin_comment
 comment|/*------------------------------------------------------------------------*  *  usb2_copy_out_user - copy directly from DMA-able memory to userland  *  * Return values:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|USB_HAVE_USER_IO
+end_if
 
 begin_function
 name|int
@@ -1152,6 +1189,11 @@ comment|/* success */
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*------------------------------------------------------------------------*  *  usb2_bzero - zero DMA-able memory  *------------------------------------------------------------------------*/
 end_comment
@@ -1236,11 +1278,16 @@ block|}
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+operator|&&
+name|defined
+argument_list|(
 name|__FreeBSD__
-end_ifdef
+argument_list|)
+end_if
 
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_dma_lock_cb - dummy callback  *------------------------------------------------------------------------*/
@@ -2540,11 +2587,12 @@ decl_stmt|;
 comment|/* get info */
 name|info
 operator|=
+name|USB_DMATAG_TO_XROOT
+argument_list|(
 name|pc
 operator|->
 name|tag_parent
-operator|->
-name|info
+argument_list|)
 expr_stmt|;
 comment|/* sanity check */
 if|if
@@ -2692,11 +2740,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+operator|&&
+name|defined
+argument_list|(
 name|__NetBSD__
-end_ifdef
+argument_list|)
+end_if
 
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_dma_tag_create - allocate a DMA tag  *  * NOTE: If the "align" parameter has a value of 1 the DMA-tag will  * allow multi-segment mappings. Else all mappings are single-segment.  *------------------------------------------------------------------------*/
@@ -4045,11 +4098,12 @@ decl_stmt|;
 comment|/* get info */
 name|info
 operator|=
+name|USB_DMATAG_TO_XROOT
+argument_list|(
 name|pc
 operator|->
 name|tag_parent
-operator|->
-name|info
+argument_list|)
 expr_stmt|;
 comment|/* sanity check */
 if|if
@@ -4233,6 +4287,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_if
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+end_if
 
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_dma_tag_find - factored out code  *------------------------------------------------------------------------*/
@@ -4422,11 +4482,6 @@ name|usb2_dma_callback_t
 modifier|*
 name|func
 parameter_list|,
-name|struct
-name|usb2_xfer_root
-modifier|*
-name|info
-parameter_list|,
 name|uint8_t
 name|ndmabits
 parameter_list|,
@@ -4491,12 +4546,6 @@ operator|->
 name|mtx
 operator|=
 name|mtx
-expr_stmt|;
-name|udpt
-operator|->
-name|info
-operator|=
-name|info
 expr_stmt|;
 name|udpt
 operator|->
@@ -5122,9 +5171,10 @@ name|info
 decl_stmt|;
 name|info
 operator|=
+name|USB_DMATAG_TO_XROOT
+argument_list|(
 name|udpt
-operator|->
-name|info
+argument_list|)
 expr_stmt|;
 name|mtx_assert
 argument_list|(
@@ -5327,6 +5377,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

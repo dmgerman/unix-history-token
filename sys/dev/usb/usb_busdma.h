@@ -150,6 +150,9 @@ begin_struct
 struct|struct
 name|usb2_page
 block|{
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 name|bus_size_t
 name|physaddr
 decl_stmt|;
@@ -158,6 +161,8 @@ modifier|*
 name|buffer
 decl_stmt|;
 comment|/* non Kernel Virtual Address */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -174,9 +179,14 @@ name|void
 modifier|*
 name|buffer
 decl_stmt|;
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 name|bus_size_t
 name|physaddr
 decl_stmt|;
+endif|#
+directive|endif
 name|uint32_t
 name|length
 decl_stmt|;
@@ -192,9 +202,14 @@ begin_struct
 struct|struct
 name|usb2_page_cache
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+operator|&&
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 name|bus_dma_tag_t
 name|tag
 decl_stmt|;
@@ -203,9 +218,14 @@ name|map
 decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+operator|&&
+name|defined
+argument_list|(
 name|__NetBSD__
+argument_list|)
 name|bus_dma_tag_t
 name|tag
 decl_stmt|;
@@ -218,11 +238,16 @@ name|p_seg
 decl_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 name|struct
 name|usb2_page
 modifier|*
 name|page_start
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|usb2_dma_parent_tag
 modifier|*
@@ -234,14 +259,22 @@ modifier|*
 name|buffer
 decl_stmt|;
 comment|/* virtual buffer pointer */
-ifdef|#
-directive|ifdef
-name|__NetBSD__
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+operator|&&
+name|defined
+argument_list|(
+name|_NetBSD__
+argument_list|)
 name|int
 name|n_seg
 decl_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 name|uint32_t
 name|page_offset_buf
 decl_stmt|;
@@ -260,6 +293,8 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* set if we can have multiple 					 * segments */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -272,9 +307,14 @@ begin_struct
 struct|struct
 name|usb2_dma_parent_tag
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+operator|&&
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 name|struct
 name|cv
 name|cv
@@ -285,6 +325,9 @@ decl_stmt|;
 comment|/* internal condition variable */
 endif|#
 directive|endif
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 name|bus_dma_tag_t
 name|tag
 decl_stmt|;
@@ -295,12 +338,6 @@ modifier|*
 name|mtx
 decl_stmt|;
 comment|/* private mutex, always set */
-name|struct
-name|usb2_xfer_root
-modifier|*
-name|info
-decl_stmt|;
-comment|/* used by the callback function */
 name|usb2_dma_callback_t
 modifier|*
 name|func
@@ -324,6 +361,8 @@ name|uint8_t
 name|utag_max
 decl_stmt|;
 comment|/* number of USB DMA tags */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -336,15 +375,23 @@ begin_struct
 struct|struct
 name|usb2_dma_tag
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+operator|&&
+name|defined
+argument_list|(
 name|__NetBSD__
+argument_list|)
 name|bus_dma_segment_t
 modifier|*
 name|p_seg
 decl_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 name|struct
 name|usb2_dma_parent_tag
 modifier|*
@@ -359,9 +406,16 @@ decl_stmt|;
 name|uint32_t
 name|size
 decl_stmt|;
-ifdef|#
-directive|ifdef
+endif|#
+directive|endif
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+operator|&&
+name|defined
+argument_list|(
 name|__NetBSD__
+argument_list|)
 name|uint32_t
 name|n_seg
 decl_stmt|;
@@ -655,11 +709,6 @@ parameter_list|,
 name|usb2_dma_callback_t
 modifier|*
 name|func
-parameter_list|,
-name|struct
-name|usb2_xfer_root
-modifier|*
-name|info
 parameter_list|,
 name|uint8_t
 name|ndmabits

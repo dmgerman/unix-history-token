@@ -119,13 +119,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_dev.h>
+file|<dev/usb/usb_msctest.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|USB_HAVE_UGEN
+end_if
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_msctest.h>
+file|<dev/usb/usb_dev.h>
 end_include
 
 begin_include
@@ -133,6 +139,11 @@ include|#
 directive|include
 file|<dev/usb/usb_generic.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -284,6 +295,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|USB_HAVE_STRINGS
+end_if
+
 begin_function_decl
 specifier|static
 name|void
@@ -295,6 +312,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -1789,6 +1811,9 @@ operator|+
 name|USB_IFACE_MAX
 decl_stmt|;
 comment|/* mtx_assert() */
+if|#
+directive|if
+name|USB_HAVE_COMPAT_LINUX
 comment|/* free Linux compat device, if any */
 if|if
 condition|(
@@ -1811,6 +1836,8 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* free all pipes, if any */
 name|usb2_free_pipe_data
 argument_list|(
@@ -5735,6 +5762,9 @@ name|power
 operator|=
 name|USB_MIN_POWER
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_STRINGS
 comment|/* get serial number string */
 name|err
 operator|=
@@ -5873,6 +5903,8 @@ argument_list|(
 name|udev
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|udev
@@ -7736,6 +7768,12 @@ end_function
 begin_if
 if|#
 directive|if
+name|USB_HAVE_STRINGS
+end_if
+
+begin_if
+if|#
+directive|if
 name|USB_VERBOSE
 end_if
 
@@ -8155,6 +8193,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Returns:  * See: USB_MODE_XXX  */

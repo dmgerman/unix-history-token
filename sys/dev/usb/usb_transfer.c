@@ -932,6 +932,12 @@ begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_transfer_setup_sub_malloc  *  * This function will allocate one or more DMA'able memory chunks  * according to "size", "align" and "count" arguments. "ppc" is  * pointed to a linear array of USB page caches afterwards.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+end_if
+
 begin_function
 name|uint8_t
 name|usb2_transfer_setup_sub_malloc
@@ -1436,6 +1442,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_transfer_setup_sub - transfer setup subroutine  *  * This function must be called from the "xfer_setup" callback of the  * USB Host or Device controller driver when setting up an USB  * transfer. This function will setup correct packet sizes, buffer  * sizes, flags and more, that are stored in the "usb2_xfer"  * structure.  *------------------------------------------------------------------------*/
@@ -2693,6 +2704,9 @@ operator|->
 name|bufsize
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 if|if
 condition|(
 name|xfer
@@ -2734,6 +2748,8 @@ name|USB_PAGE_SIZE
 operator|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|zmps
@@ -2834,6 +2850,9 @@ name|xroot
 operator|->
 name|dma_parent_tag
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 if|if
 condition|(
 name|xfer
@@ -2878,6 +2897,8 @@ name|done
 goto|;
 block|}
 block|}
+endif|#
+directive|endif
 block|}
 block|}
 name|done
@@ -3310,6 +3331,9 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 name|info
 operator|->
 name|dma_page_cache_start
@@ -3342,6 +3366,8 @@ literal|5
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|info
 operator|->
 name|xfer_page_cache_start
@@ -3390,6 +3416,9 @@ name|xfer_mtx
 operator|=
 name|xfer_mtx
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 name|usb2_dma_tag_setup
 argument_list|(
 operator|&
@@ -3417,8 +3446,6 @@ argument_list|,
 operator|&
 name|usb2_bdma_done_event
 argument_list|,
-name|info
-argument_list|,
 literal|32
 argument_list|,
 name|parm
@@ -3426,6 +3453,8 @@ operator|.
 name|dma_tag_max
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|info
 operator|->
 name|bus
@@ -3459,6 +3488,9 @@ operator|=
 operator|&
 name|usb2_callback_wrapper
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -3478,6 +3510,8 @@ operator|=
 operator|&
 name|usb2_bdma_work_loop
 expr_stmt|;
+endif|#
+directive|endif
 name|info
 operator|->
 name|done_m
@@ -4597,6 +4631,9 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 comment|/* free DMA'able memory, if any */
 name|pc
 operator|=
@@ -4656,6 +4693,8 @@ operator|->
 name|dma_parent_tag
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|usb2_cv_destroy
 argument_list|(
 operator|&
@@ -4784,6 +4823,9 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 if|if
 condition|(
 name|xfer
@@ -4796,6 +4838,8 @@ name|needs_delay
 operator|=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 		 * NOTE: default pipe does not have an 		 * interface, even if pipe->iface_index == 0 		 */
 name|xfer
 operator|->
@@ -5572,6 +5616,9 @@ name|did_close
 operator|=
 literal|0
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 comment|/* clear "bdma_setup" flag */
 name|xfer
 operator|->
@@ -5581,6 +5628,8 @@ name|bdma_setup
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* by default we cannot cancel any USB transfer immediately */
 name|xfer
 operator|->
@@ -5934,6 +5983,9 @@ block|}
 block|}
 block|}
 comment|/* 	 * Check if BUS-DMA support is enabled and try to load virtual 	 * buffers into DMA, if any: 	 */
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 if|if
 condition|(
 name|xfer
@@ -5958,6 +6010,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+endif|#
+directive|endif
 comment|/* 	 * Enter the USB transfer into the Host Controller or 	 * Device Controller schedule: 	 */
 name|usb2_pipe_enter
 argument_list|(
@@ -7199,6 +7253,9 @@ name|usb2_state
 operator|=
 name|USB_ST_TRANSFERRED
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 comment|/* sync DMA memory, if any */
 if|if
 condition|(
@@ -7224,6 +7281,8 @@ name|xfer
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 block|}
 comment|/* call processing routine */
@@ -7519,11 +7578,6 @@ name|usb2_error_t
 name|error
 parameter_list|)
 block|{
-name|struct
-name|usb2_xfer_queue
-modifier|*
-name|pq
-decl_stmt|;
 name|USB_BUS_LOCK_ASSERT
 argument_list|(
 name|xfer
@@ -7594,6 +7648,9 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 if|if
 condition|(
 name|mtx_owned
@@ -7606,6 +7663,11 @@ name|xfer_mtx
 argument_list|)
 condition|)
 block|{
+name|struct
+name|usb2_xfer_queue
+modifier|*
+name|pq
+decl_stmt|;
 comment|/* 		 * If the private USB lock is not locked, then we assume 		 * that the BUS-DMA load stage has been passed: 		 */
 name|pq
 operator|=
@@ -7635,6 +7697,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 comment|/* keep some statistics */
 if|if
 condition|(

@@ -25,6 +25,16 @@ name|usb2_symlink
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|usb_device
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/* linux compat */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -325,11 +335,16 @@ modifier|*
 name|hub
 decl_stmt|;
 comment|/* only if this is a hub */
+if|#
+directive|if
+name|USB_HAVE_COMPAT_LINUX
 name|struct
 name|usb_device
 modifier|*
 name|linux_dev
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|usb2_xfer
 modifier|*

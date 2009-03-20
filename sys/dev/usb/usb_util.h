@@ -115,7 +115,7 @@ begin_if
 if|#
 directive|if
 operator|(
-name|USB_USE_CONDVAR
+name|USB_HAVE_CONDVAR
 operator|==
 literal|0
 operator|)

@@ -133,7 +133,7 @@ parameter_list|(
 name|pc
 parameter_list|)
 define|\
-value|USS820_DCI_BUS2SC((pc)->tag_parent->info->bus)
+value|USS820_DCI_BUS2SC(USB_DMATAG_TO_XROOT((pc)->tag_parent)->bus)
 end_define
 
 begin_if

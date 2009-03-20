@@ -780,6 +780,26 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|#
+directive|if
+operator|(
+name|USB_HAVE_USER_IO
+operator|==
+literal|0
+operator|)
+if|if
+condition|(
+name|flags
+operator|&
+name|USB_USER_DATA_PTR
+condition|)
+return|return
+operator|(
+name|USB_ERR_INVAL
+operator|)
+return|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|udev
@@ -857,6 +877,9 @@ operator|>
 literal|0
 condition|)
 block|{
+if|#
+directive|if
+name|USB_HAVE_USER_IO
 if|if
 condition|(
 name|flags
@@ -884,7 +907,8 @@ return|;
 block|}
 block|}
 else|else
-block|{
+endif|#
+directive|endif
 name|bcopy
 argument_list|(
 name|desc
@@ -894,7 +918,6 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -1107,6 +1130,9 @@ name|UT_READ
 operator|)
 condition|)
 block|{
+if|#
+directive|if
+name|USB_HAVE_USER_IO
 if|if
 condition|(
 name|flags
@@ -1154,7 +1180,8 @@ break|break;
 block|}
 block|}
 else|else
-block|{
+endif|#
+directive|endif
 name|usb2_copy_in
 argument_list|(
 name|xfer
@@ -1170,7 +1197,6 @@ argument_list|,
 name|temp
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|xfer
 operator|->
@@ -1392,6 +1418,9 @@ operator|&
 name|UT_READ
 condition|)
 block|{
+if|#
+directive|if
+name|USB_HAVE_USER_IO
 if|if
 condition|(
 name|flags
@@ -1439,7 +1468,8 @@ break|break;
 block|}
 block|}
 else|else
-block|{
+endif|#
+directive|endif
 name|usb2_copy_out
 argument_list|(
 name|xfer
@@ -1455,7 +1485,6 @@ argument_list|,
 name|temp
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 comment|/* 		 * Clear "frlengths[0]" so that we don't send the setup 		 * packet again: 		 */

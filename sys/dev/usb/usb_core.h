@@ -24,19 +24,39 @@ name|_USB2_CORE_H_
 end_define
 
 begin_comment
+comment|/* Allow defines in "opt_usb.h" to override configuration */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"opt_usb.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_bus.h"
+end_include
+
+begin_comment
 comment|/* Default USB configuration */
+end_comment
+
+begin_comment
+comment|/*  * The following macro defines if the code shall use cv_xxx() instead  * of msleep() and wakeup().  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|USB_USE_CONDVAR
+name|USB_HAVE_CONDVAR
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|USB_USE_CONDVAR
+name|USB_HAVE_CONDVAR
 value|0
 end_define
 
@@ -45,6 +65,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * The following macro defines if the code shall support  * /dev/usb/x.y.z.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -55,6 +79,160 @@ begin_define
 define|#
 directive|define
 name|USB_HAVE_UGEN
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The following macro defines if the code shall support any forms of  * ASCII strings.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HAVE_STRINGS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_HAVE_STRINGS
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The following macro defines if the code shall support BUS-DMA.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HAVE_BUSDMA
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_HAVE_BUSDMA
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The following macro defines if the code shall support the Linux  * compatibility layer.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HAVE_COMPAT_LINUX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_HAVE_COMPAT_LINUX
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The following macro defines if the code shall support  * userland data transfer via copyin() and copyout()  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HAVE_USER_IO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_HAVE_USER_IO
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The following macro defines if the code shall support copy in via  * bsd-mbufs to USB.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HAVE_MBUF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_HAVE_MBUF
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The following macro defines if the code shall compile a table  * describing USB vendor and product IDs.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_VERBOSE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_VERBOSE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The following macro defines if USB debugging support shall be  * compiled for the USB core and all drivers.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_DEBUG
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_DEBUG
 value|1
 end_define
 
@@ -241,18 +419,6 @@ directive|include
 file|"usb_if.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_usb.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_bus.h"
-end_include
-
 begin_define
 define|#
 directive|define
@@ -350,24 +516,6 @@ end_define
 begin_comment
 comment|/* maximum size of the initial USB 					 * data packet */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|USB_VERBOSE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|USB_VERBOSE
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1035,6 +1183,9 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* filtered version */
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 name|uint8_t
 name|bdma_enable
 range|:
@@ -1053,6 +1204,8 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* set if BUS-DMA has been setup */
+endif|#
+directive|endif
 name|uint8_t
 name|isochronous_xfr
 range|:

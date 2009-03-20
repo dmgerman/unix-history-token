@@ -139,78 +139,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_bus_mem_flush_all_cb
-parameter_list|(
-name|struct
-name|usb2_bus
-modifier|*
-parameter_list|,
-name|struct
-name|usb2_page_cache
-modifier|*
-parameter_list|,
-name|struct
-name|usb2_page
-modifier|*
-parameter_list|,
-name|uint32_t
-parameter_list|,
-name|uint32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|usb2_bus_mem_alloc_all_cb
-parameter_list|(
-name|struct
-name|usb2_bus
-modifier|*
-parameter_list|,
-name|struct
-name|usb2_page_cache
-modifier|*
-parameter_list|,
-name|struct
-name|usb2_page
-modifier|*
-parameter_list|,
-name|uint32_t
-parameter_list|,
-name|uint32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|usb2_bus_mem_free_all_cb
-parameter_list|(
-name|struct
-name|usb2_bus
-modifier|*
-parameter_list|,
-name|struct
-name|usb2_page_cache
-modifier|*
-parameter_list|,
-name|struct
-name|usb2_page
-modifier|*
-parameter_list|,
-name|uint32_t
-parameter_list|,
-name|uint32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|usb2_bus_roothub
 parameter_list|(
 name|struct
@@ -1988,6 +1916,12 @@ begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_bus_mem_flush_all_cb  *------------------------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+end_if
+
 begin_function
 specifier|static
 name|void
@@ -2023,9 +1957,20 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_bus_mem_flush_all - factored out code  *------------------------------------------------------------------------*/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+end_if
 
 begin_function
 name|void
@@ -2058,9 +2003,20 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_bus_mem_alloc_all_cb  *------------------------------------------------------------------------*/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+end_if
 
 begin_function
 specifier|static
@@ -2121,6 +2077,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_bus_mem_alloc_all - factored out code  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
@@ -2195,6 +2156,9 @@ operator|.
 name|head
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 name|usb2_dma_tag_setup
 argument_list|(
 name|bus
@@ -2214,13 +2178,13 @@ name|bus_mtx
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
-argument_list|,
 literal|32
 argument_list|,
 name|USB_BUS_DMA_TAG_MAX
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -2264,6 +2228,9 @@ literal|1
 expr_stmt|;
 comment|/* failure */
 block|}
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 if|if
 condition|(
 name|cb
@@ -2278,6 +2245,8 @@ name|usb2_bus_mem_alloc_all_cb
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|bus
@@ -2306,6 +2275,12 @@ end_function
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_bus_mem_free_all_cb  *------------------------------------------------------------------------*/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+end_if
 
 begin_function
 specifier|static
@@ -2342,6 +2317,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_bus_mem_free_all - factored out code  *------------------------------------------------------------------------*/
 end_comment
@@ -2360,6 +2340,9 @@ modifier|*
 name|cb
 parameter_list|)
 block|{
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 if|if
 condition|(
 name|cb
@@ -2381,6 +2364,8 @@ operator|->
 name|dma_parent_tag
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|mtx_destroy
 argument_list|(
 operator|&

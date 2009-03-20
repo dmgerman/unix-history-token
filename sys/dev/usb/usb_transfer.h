@@ -40,6 +40,17 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|USB_DMATAG_TO_XROOT
+parameter_list|(
+name|dpt
+parameter_list|)
+define|\
+value|((struct usb2_xfer_root *)(					\    ((uint8_t *)(dpt)) -						\    ((uint8_t *)&((struct usb2_xfer_root *)0)->dma_parent_tag) +	\    ((uint8_t *)0)))
+end_define
+
 begin_comment
 comment|/*  * The following structure is used to keep information about memory  * that should be automatically freed at the moment all USB transfers  * have been freed.  */
 end_comment
@@ -49,9 +60,18 @@ struct|struct
 name|usb2_xfer_root
 block|{
 name|struct
+name|usb2_dma_parent_tag
+name|dma_parent_tag
+decl_stmt|;
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+name|struct
 name|usb2_xfer_queue
 name|dma_q
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|usb2_xfer_queue
 name|done_q
@@ -66,10 +86,6 @@ decl_stmt|;
 name|struct
 name|cv
 name|cv_drain
-decl_stmt|;
-name|struct
-name|usb2_dma_parent_tag
-name|dma_parent_tag
 decl_stmt|;
 name|struct
 name|usb2_process
@@ -87,6 +103,9 @@ modifier|*
 name|xfer_mtx
 decl_stmt|;
 comment|/* cannot be changed during operation */
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 name|struct
 name|usb2_page_cache
 modifier|*
@@ -97,6 +116,8 @@ name|usb2_page_cache
 modifier|*
 name|dma_page_cache_end
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|usb2_page_cache
 modifier|*

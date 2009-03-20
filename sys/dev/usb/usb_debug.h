@@ -47,28 +47,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Force debugging until further */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|USB_DEBUG
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|USB_DEBUG
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* Check if USB debugging is enabled. */
 end_comment
 
