@@ -865,6 +865,18 @@ name|crtc
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|dev
+operator|->
+name|vblank
+index|[
+name|crtc
+index|]
+operator|.
+name|enabled
+condition|)
+block|{
 name|DRM_WAKEUP
 argument_list|(
 operator|&
@@ -909,6 +921,7 @@ argument_list|,
 name|crtc
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|DRM_SPINUNLOCK
 argument_list|(
