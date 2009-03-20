@@ -4724,8 +4724,6 @@ operator|-=
 name|ncp
 operator|->
 name|nc_nlen
-operator|-
-literal|1
 expr_stmt|;
 for|for
 control|(
