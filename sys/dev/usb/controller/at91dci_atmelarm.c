@@ -848,7 +848,7 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|(
-name|void
+name|driver_intr_t
 operator|*
 operator|)
 name|at91dci_interrupt
@@ -882,7 +882,7 @@ operator||
 name|INTR_MPSAFE
 argument_list|,
 operator|(
-name|void
+name|driver_intr_t
 operator|*
 operator|)
 name|at91dci_interrupt
@@ -940,7 +940,7 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|(
-name|void
+name|driver_intr_t
 operator|*
 operator|)
 name|at91_vbus_poll
@@ -970,7 +970,7 @@ operator||
 name|INTR_MPSAFE
 argument_list|,
 operator|(
-name|void
+name|driver_intr_t
 operator|*
 operator|)
 name|at91_vbus_poll

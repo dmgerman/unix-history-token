@@ -1093,11 +1093,7 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|void
+name|driver_intr_t
 operator|*
 operator|)
 name|ohci_interrupt
@@ -1127,11 +1123,7 @@ operator||
 name|INTR_MPSAFE
 argument_list|,
 operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|void
+name|driver_intr_t
 operator|*
 operator|)
 name|ohci_interrupt

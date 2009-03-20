@@ -804,11 +804,7 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|void
+name|driver_intr_t
 operator|*
 operator|)
 name|ehci_interrupt
