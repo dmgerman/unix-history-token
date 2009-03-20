@@ -1543,10 +1543,6 @@ expr_stmt|;
 if|if
 condition|(
 name|offset
-operator|<
-literal|0
-operator|||
-name|offset
 operator|>=
 operator|(
 name|sc
@@ -1612,10 +1608,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|offset
-operator|<
-literal|0
-operator|||
 name|offset
 operator|>=
 operator|(

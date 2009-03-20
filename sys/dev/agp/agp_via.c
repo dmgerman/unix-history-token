@@ -1414,10 +1414,6 @@ decl_stmt|;
 if|if
 condition|(
 name|offset
-operator|<
-literal|0
-operator|||
-name|offset
 operator|>=
 operator|(
 name|sc
@@ -1475,10 +1471,6 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|offset
-operator|<
-literal|0
-operator|||
 name|offset
 operator|>=
 operator|(
