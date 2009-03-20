@@ -4204,6 +4204,11 @@ condition|(
 name|mp
 operator|==
 name|NULL
+operator|&&
+name|vops
+operator|!=
+operator|&
+name|dead_vnodeops
 condition|)
 name|printf
 argument_list|(
