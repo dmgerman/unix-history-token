@@ -4496,6 +4496,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|buflen
+operator|-=
+name|ncp
+operator|->
+name|nc_nlen
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -4511,7 +4517,7 @@ operator|>=
 literal|0
 operator|&&
 name|bp
-operator|>
+operator|!=
 name|buf
 condition|;
 name|i
