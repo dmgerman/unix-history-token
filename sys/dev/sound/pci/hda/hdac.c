@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20090131_0127"
+value|"20090316_0130"
 end_define
 
 begin_expr_stmt
@@ -967,6 +967,13 @@ define|#
 directive|define
 name|ACER_T6292_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(ACER, 0x011b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACER_T5320_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(ACER, 0x011f)
 end_define
 
 begin_define
@@ -12264,15 +12271,15 @@ condition|(
 name|id
 operator|==
 name|HDA_CODEC_ALC268
-operator|&&
-name|HDA_DEV_MATCH
-argument_list|(
-name|ACER_ALL_SUBVENDOR
-argument_list|,
+condition|)
+block|{
+if|if
+condition|(
 name|sc
 operator|->
 name|pci_subvendor
-argument_list|)
+operator|==
+name|ACER_T5320_SUBVENDOR
 condition|)
 block|{
 switch|switch
@@ -12281,13 +12288,15 @@ name|nid
 condition|)
 block|{
 case|case
-literal|28
+literal|20
 case|:
+comment|/* Headphones Jack */
 name|patch
 operator|=
-literal|"device=CD conn=fixed"
+literal|"as=1 seq=15"
 expr_stmt|;
 break|break;
+block|}
 block|}
 block|}
 if|if
@@ -25414,7 +25423,7 @@ name|i
 operator|++
 control|)
 empty_stmt|;
-comment|/* Check if there is no any left. If so - we succeded. */
+comment|/* Check if there is no any left. If so - we succeeded. */
 if|if
 condition|(
 name|i
@@ -25589,7 +25598,7 @@ index|]
 operator|=
 name|res
 expr_stmt|;
-comment|/* We succeded, so call next. */
+comment|/* We succeeded, so call next. */
 if|if
 condition|(
 name|hdac_audio_trace_as_out
@@ -30534,7 +30543,7 @@ block|{
 name|HDA_BOOTVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
-literal|"Association %d (%d) trace succeded\n"
+literal|"Association %d (%d) trace succeeded\n"
 argument|, 				    j, as[j].index);
 argument_list|)
 empty_stmt|;
@@ -41025,11 +41034,11 @@ literal|"+--------------------------------------+\n"
 argument|); 		hdac_dump_pcmchannels(pdevinfo); 		device_printf(dev,
 literal|"\n"
 argument|); 		device_printf(dev,
-literal|"+--------------------------------+\n"
+literal|"+-------------------------------+\n"
 argument|); 		device_printf(dev,
-literal|"| DUMPING Playback/Record Pathes |\n"
+literal|"| DUMPING Playback/Record Paths |\n"
 argument|); 		device_printf(dev,
-literal|"+--------------------------------+\n"
+literal|"+-------------------------------+\n"
 argument|); 		hdac_dump_dac(pdevinfo); 		hdac_dump_adc(pdevinfo); 		hdac_dump_mix(pdevinfo); 		device_printf(dev,
 literal|"\n"
 argument|); 		device_printf(dev,
