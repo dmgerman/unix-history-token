@@ -676,52 +676,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_get_devid  *  * This function returns the USB Vendor and Product ID like a 32-bit  * unsigned integer.  *------------------------------------------------------------------------*/
-end_comment
-
-begin_function
-name|uint32_t
-name|usb2_get_devid
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-block|{
-name|struct
-name|usb2_attach_arg
-modifier|*
-name|uaa
-init|=
-name|device_get_ivars
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
-return|return
-operator|(
-operator|(
-name|uaa
-operator|->
-name|info
-operator|.
-name|idVendor
-operator|<<
-literal|16
-operator|)
-operator||
-operator|(
-name|uaa
-operator|->
-name|info
-operator|.
-name|idProduct
-operator|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_make_str_desc - convert an ASCII string into a UNICODE string  *------------------------------------------------------------------------*/
 end_comment
 
