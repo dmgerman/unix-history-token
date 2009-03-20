@@ -640,13 +640,6 @@ block|,
 operator|.
 name|mh
 operator|.
-name|flags
-operator|=
-block|{}
-block|,
-operator|.
-name|mh
-operator|.
 name|callback
 operator|=
 operator|&
@@ -5041,6 +5034,36 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* Check for invalid number of frames */
+if|if
+condition|(
+name|xfer
+operator|->
+name|nframes
+operator|>
+literal|2
+condition|)
+block|{
+comment|/* 		 * If you need to split a control transfer, you 		 * have to do one part at a time. Only with 		 * non-control transfers you can do multiple 		 * parts a time. 		 */
+name|DPRINTFN
+argument_list|(
+literal|0
+argument_list|,
+literal|"Too many frames: %u\n"
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|xfer
+operator|->
+name|nframes
+argument_list|)
+expr_stmt|;
+goto|goto
+name|error
+goto|;
+block|}
 comment|/*          * Check if there is a control          * transfer in progress:          */
 if|if
 condition|(
@@ -5916,37 +5939,6 @@ if|if
 condition|(
 name|xfer
 operator|->
-name|flags_int
-operator|.
-name|control_xfr
-condition|)
-block|{
-comment|/* 			 * Control transfers do not support reception 			 * of multiple short USB frames ! 			 */
-if|if
-condition|(
-name|xfer
-operator|->
-name|flags
-operator|.
-name|short_xfer_ok
-condition|)
-block|{
-name|xfer
-operator|->
-name|flags_int
-operator|.
-name|short_xfer_ok
-operator|=
-literal|1
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|xfer
-operator|->
 name|flags
 operator|.
 name|short_frames_ok
@@ -5984,6 +5976,25 @@ operator|->
 name|flags_int
 operator|.
 name|short_xfer_ok
+operator|=
+literal|1
+expr_stmt|;
+comment|/* check for control transfer */
+if|if
+condition|(
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|control_xfr
+condition|)
+block|{
+comment|/* 				 * 1) Control transfers do not support 				 * reception of multiple short USB 				 * frames in host mode and device side 				 * mode, with exception of: 				 * 				 * 2) Due to sometimes buggy device 				 * side firmware we need to do a 				 * STATUS stage in case of short 				 * control transfers in USB host mode. 				 * The STATUS stage then becomes the 				 * "alt_next" to the DATA stage. 				 */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|short_frames_ok
 operator|=
 literal|1
 expr_stmt|;
@@ -9557,7 +9568,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_clear_stall_callback - factored out clear stall callback  *  * Input parameters:  *  xfer1: Clear Stall Control Transfer  *  xfer2: Stalled USB Transfer  *  * This function is NULL safe.  *  * Return values:  *   0: In progress  *   Else: Finished  *  * Clear stall config example:  *  * static const struct usb2_config my_clearstall =  {  *	.type = UE_CONTROL,  *	.endpoint = 0,  *	.direction = UE_DIR_ANY,  *	.interval = 50, //50 milliseconds  *	.bufsize = sizeof(struct usb2_device_request),  *	.mh.timeout = 1000, //1.000 seconds  *	.mh.flags = { },  *	.mh.callback =&my_clear_stall_callback, // **  * };  *  * ** "my_clear_stall_callback" calls "usb2_clear_stall_callback"  * passing the correct parameters.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_clear_stall_callback - factored out clear stall callback  *  * Input parameters:  *  xfer1: Clear Stall Control Transfer  *  xfer2: Stalled USB Transfer  *  * This function is NULL safe.  *  * Return values:  *   0: In progress  *   Else: Finished  *  * Clear stall config example:  *  * static const struct usb2_config my_clearstall =  {  *	.type = UE_CONTROL,  *	.endpoint = 0,  *	.direction = UE_DIR_ANY,  *	.interval = 50, //50 milliseconds  *	.bufsize = sizeof(struct usb2_device_request),  *	.mh.timeout = 1000, //1.000 seconds  *	.mh.callback =&my_clear_stall_callback, // **  * };  *  * ** "my_clear_stall_callback" calls "usb2_clear_stall_callback"  * passing the correct parameters.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
