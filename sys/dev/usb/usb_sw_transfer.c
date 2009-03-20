@@ -109,7 +109,7 @@ name|usb2_xfer
 modifier|*
 name|xfer
 decl_stmt|;
-name|uint32_t
+name|usb2_frlength_t
 name|len
 decl_stmt|;
 name|uint8_t

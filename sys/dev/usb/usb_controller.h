@@ -114,10 +114,10 @@ name|usb2_page
 modifier|*
 name|pg
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|size
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|align
 parameter_list|)
 function_decl|;
@@ -605,7 +605,7 @@ name|void
 modifier|*
 name|buf
 decl_stmt|;
-name|uint32_t
+name|usb2_size_t
 name|size
 decl_stmt|;
 name|uint8_t

@@ -141,6 +141,12 @@ begin_comment
 comment|/* Define some limits */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USTORAGE_FS_BULK_SIZE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -148,12 +154,25 @@ name|USTORAGE_FS_BULK_SIZE
 value|(1UL<< 17)
 end_define
 
+begin_comment
+comment|/* bytes */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|USTORAGE_FS_MAX_LUN
 value|8
 end_define
+
+begin_comment
+comment|/* units */
+end_comment
 
 begin_comment
 comment|/*  * The SCSI ID string must be exactly 28 characters long  * exluding the terminating zero.  */
@@ -427,7 +446,7 @@ begin_struct
 struct|struct
 name|ustorage_fs_lun
 block|{
-name|void
+name|uint8_t
 modifier|*
 name|memory_image
 decl_stmt|;
@@ -5884,17 +5903,11 @@ name|sc_transfer
 operator|.
 name|data_ptr
 operator|=
-name|USB_ADD_BYTES
-argument_list|(
 name|currlun
 operator|->
 name|memory_image
-argument_list|,
-operator|(
-name|uint32_t
-operator|)
+operator|+
 name|file_offset
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -6138,17 +6151,11 @@ name|sc_transfer
 operator|.
 name|data_ptr
 operator|=
-name|USB_ADD_BYTES
-argument_list|(
 name|currlun
 operator|->
 name|memory_image
-argument_list|,
-operator|(
-name|uint32_t
-operator|)
+operator|+
 name|file_offset
-argument_list|)
 expr_stmt|;
 return|return
 operator|(

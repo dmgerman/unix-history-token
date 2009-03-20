@@ -524,6 +524,28 @@ name|USB_HUB_MAX_DEPTH
 value|5
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_EP0_BUFSIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_EP0_BUFSIZE
+value|1024
+end_define
+
+begin_comment
+comment|/* bytes */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* USB transfer states */
 end_comment
@@ -838,13 +860,13 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|USB_HAVE_LENGTH_T
+name|USB_HAVE_FRLENGTH_T
 end_ifndef
 
 begin_typedef
 typedef|typedef
 name|uint32_t
-name|usb2_length_t
+name|usb2_frlength_t
 typedef|;
 end_typedef
 
@@ -860,40 +882,18 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|USB_HAVE_FRAMES_T
+name|USB_HAVE_FRCOUNT_T
 end_ifndef
 
 begin_typedef
 typedef|typedef
 name|uint32_t
-name|usb2_frames_t
+name|usb2_frcount_t
 typedef|;
 end_typedef
 
 begin_comment
 comment|/* units */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|USB_HAVE_INTERVAL_T
-end_ifndef
-
-begin_typedef
-typedef|typedef
-name|uint32_t
-name|usb2_interval_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* milliseconds */
 end_comment
 
 begin_endif
@@ -926,28 +926,6 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|USB_HAVE_REFS_T
-end_ifndef
-
-begin_typedef
-typedef|typedef
-name|uint32_t
-name|usb2_refs_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* units */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|USB_HAVE_TICKS_T
 end_ifndef
 
@@ -960,6 +938,28 @@ end_typedef
 
 begin_comment
 comment|/* system defined */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HAVE_POWER_MASK_T
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|usb2_power_mask_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* see "USB_HW_POWER_XXX" */
 end_comment
 
 begin_endif
@@ -1247,15 +1247,15 @@ modifier|*
 name|callback
 decl_stmt|;
 comment|/* USB transfer callback */
-name|uint32_t
+name|usb2_frlength_t
 name|bufsize
 decl_stmt|;
 comment|/* total pipe buffer size in bytes */
-name|uint32_t
+name|usb2_frcount_t
 name|frames
 decl_stmt|;
 comment|/* maximum number of USB frames */
-name|uint16_t
+name|usb2_timeout_t
 name|interval
 decl_stmt|;
 comment|/* interval in milliseconds */
@@ -1263,7 +1263,7 @@ define|#
 directive|define
 name|USB_DEFAULT_INTERVAL
 value|0
-name|uint16_t
+name|usb2_timeout_t
 name|timeout
 decl_stmt|;
 comment|/* transfer timeout in milliseconds */
@@ -1411,7 +1411,7 @@ name|void
 modifier|*
 name|local_buffer
 decl_stmt|;
-name|uint32_t
+name|usb2_frlength_t
 modifier|*
 name|frlengths
 decl_stmt|;
@@ -1424,21 +1424,21 @@ name|usb2_callback_t
 modifier|*
 name|callback
 decl_stmt|;
-name|uint32_t
-name|max_usb2_frame_size
+name|usb2_frlength_t
+name|max_hc_frame_size
 decl_stmt|;
-name|uint32_t
+name|usb2_frlength_t
 name|max_data_length
 decl_stmt|;
-name|uint32_t
+name|usb2_frlength_t
 name|sumlen
 decl_stmt|;
 comment|/* sum of all lengths in bytes */
-name|uint32_t
+name|usb2_frlength_t
 name|actlen
 decl_stmt|;
 comment|/* actual length in bytes */
-name|uint32_t
+name|usb2_timeout_t
 name|timeout
 decl_stmt|;
 comment|/* milliseconds */
@@ -1451,15 +1451,15 @@ directive|define
 name|USB_DEFAULT_TIMEOUT
 value|5000
 comment|/* 5000 ms = 5 seconds */
-name|uint32_t
+name|usb2_frcount_t
 name|max_frame_count
 decl_stmt|;
 comment|/* initial value of "nframes" after 					 * setup */
-name|uint32_t
+name|usb2_frcount_t
 name|nframes
 decl_stmt|;
 comment|/* number of USB frames to transfer */
-name|uint32_t
+name|usb2_frcount_t
 name|aframes
 decl_stmt|;
 comment|/* actual number of USB frames 					 * transferred */
@@ -1476,7 +1476,7 @@ name|uint16_t
 name|isoc_time_complete
 decl_stmt|;
 comment|/* in ms */
-name|uint16_t
+name|usb2_timeout_t
 name|interval
 decl_stmt|;
 comment|/* milliseconds */
@@ -1879,7 +1879,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|uint32_t
+name|usb2_frcount_t
 name|frindex
 parameter_list|)
 function_decl|;
@@ -1894,10 +1894,10 @@ name|usb2_xfer
 modifier|*
 name|xfer
 parameter_list|,
-name|uint32_t
+name|usb2_frlength_t
 name|offset
 parameter_list|,
-name|uint32_t
+name|usb2_frcount_t
 name|frindex
 parameter_list|)
 function_decl|;

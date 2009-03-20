@@ -48,7 +48,7 @@ parameter_list|(
 name|dpt
 parameter_list|)
 define|\
-value|((struct usb2_xfer_root *)(					\    ((uint8_t *)(dpt)) -						\    ((uint8_t *)&((struct usb2_xfer_root *)0)->dma_parent_tag) +	\    ((uint8_t *)0)))
+value|((struct usb2_xfer_root *)(					\    ((uint8_t *)(dpt)) -						\    ((uint8_t *)&((struct usb2_xfer_root *)0)->dma_parent_tag)))
 end_define
 
 begin_comment
@@ -140,24 +140,24 @@ modifier|*
 name|udev
 decl_stmt|;
 comment|/* pointer to USB device */
-name|uint32_t
+name|usb2_size_t
 name|memory_size
 decl_stmt|;
-name|uint32_t
+name|usb2_size_t
 name|setup_refcount
 decl_stmt|;
-name|uint32_t
-name|page_size
-decl_stmt|;
-name|uint32_t
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+name|usb2_frcount_t
 name|dma_nframes
 decl_stmt|;
 comment|/* number of page caches to load */
-name|uint32_t
+name|usb2_frcount_t
 name|dma_currframe
 decl_stmt|;
 comment|/* currect page cache number */
-name|uint32_t
+name|usb2_frlength_t
 name|dma_frlength_0
 decl_stmt|;
 comment|/* length of page cache zero */
@@ -165,6 +165,8 @@ name|uint8_t
 name|dma_error
 decl_stmt|;
 comment|/* set if virtual memory could not be 					 * loaded */
+endif|#
+directive|endif
 name|uint8_t
 name|done_sleep
 decl_stmt|;
@@ -235,23 +237,23 @@ name|void
 modifier|*
 name|buf
 decl_stmt|;
-name|uint32_t
+name|usb2_frlength_t
 modifier|*
 name|xfer_length_ptr
 decl_stmt|;
-name|uint32_t
+name|usb2_size_t
 name|size
 index|[
 literal|7
 index|]
 decl_stmt|;
-name|uint32_t
+name|usb2_frlength_t
 name|bufsize
 decl_stmt|;
-name|uint32_t
+name|usb2_frlength_t
 name|bufsize_max
 decl_stmt|;
-name|uint32_t
+name|uint16_t
 name|hc_max_frame_size
 decl_stmt|;
 name|uint16_t
@@ -292,13 +294,13 @@ modifier|*
 modifier|*
 name|ppc
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|size
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|align
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|count
 parameter_list|)
 function_decl|;
@@ -484,14 +486,14 @@ modifier|*
 name|arg
 parameter_list|)
 parameter_list|,
-name|uint32_t
+name|usb2_timeout_t
 name|ms
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|uint32_t
+name|usb2_timeout_t
 name|usb2_get_dma_delay
 parameter_list|(
 name|struct

@@ -5039,7 +5039,7 @@ operator|->
 name|plugtime
 operator|=
 operator|(
-name|uint32_t
+name|usb2_ticks_t
 operator|)
 name|ticks
 expr_stmt|;

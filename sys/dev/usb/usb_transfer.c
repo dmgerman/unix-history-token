@@ -542,7 +542,7 @@ name|mh
 operator|.
 name|bufsize
 operator|=
-literal|1024
+name|USB_EP0_BUFSIZE
 block|,
 comment|/* bytes */
 operator|.
@@ -575,7 +575,7 @@ name|md
 operator|.
 name|bufsize
 operator|=
-literal|1024
+name|USB_EP0_BUFSIZE
 block|,
 comment|/* bytes */
 operator|.
@@ -873,7 +873,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|uint32_t
+name|usb2_timeout_t
 name|usb2_get_dma_delay
 parameter_list|(
 name|struct
@@ -953,13 +953,13 @@ modifier|*
 modifier|*
 name|ppc
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|size
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|align
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|count
 parameter_list|)
 block|{
@@ -977,22 +977,22 @@ name|void
 modifier|*
 name|buf
 decl_stmt|;
-name|uint32_t
+name|usb2_size_t
 name|n_dma_pc
 decl_stmt|;
-name|uint32_t
+name|usb2_size_t
 name|n_obj
 decl_stmt|;
-name|uint32_t
+name|usb2_size_t
 name|x
 decl_stmt|;
-name|uint32_t
+name|usb2_size_t
 name|y
 decl_stmt|;
-name|uint32_t
+name|usb2_size_t
 name|r
 decl_stmt|;
-name|uint32_t
+name|usb2_size_t
 name|z
 decl_stmt|;
 name|USB_ASSERT
@@ -1501,13 +1501,13 @@ name|struct
 name|usb2_std_packet_size
 name|std_size
 decl_stmt|;
-name|uint32_t
+name|usb2_frcount_t
 name|n_frlengths
 decl_stmt|;
-name|uint32_t
+name|usb2_frcount_t
 name|n_frbuffers
 decl_stmt|;
-name|uint32_t
+name|usb2_frcount_t
 name|x
 decl_stmt|;
 name|uint8_t
@@ -1931,7 +1931,7 @@ operator|==
 name|UE_ISOCHRONOUS
 condition|)
 block|{
-name|uint32_t
+name|uint16_t
 name|frame_limit
 decl_stmt|;
 name|xfer
@@ -2766,7 +2766,7 @@ block|}
 comment|/* subtract USB frame remainder from "hc_max_frame_size" */
 name|xfer
 operator|->
-name|max_usb2_frame_size
+name|max_hc_frame_size
 operator|=
 operator|(
 name|parm
@@ -2788,7 +2788,7 @@ if|if
 condition|(
 name|xfer
 operator|->
-name|max_usb2_frame_size
+name|max_hc_frame_size
 operator|==
 literal|0
 condition|)
@@ -2913,7 +2913,7 @@ block|{
 comment|/* 		 * Set some dummy values so that we avoid division by zero: 		 */
 name|xfer
 operator|->
-name|max_usb2_frame_size
+name|max_hc_frame_size
 operator|=
 literal|1
 expr_stmt|;
@@ -3162,7 +3162,11 @@ name|mh
 operator|.
 name|bufsize
 operator|==
-literal|0xffffffff
+operator|(
+name|usb2_frlength_t
+operator|)
+operator|-
+literal|1
 operator|)
 operator|||
 operator|(
@@ -3172,7 +3176,11 @@ name|md
 operator|.
 name|bufsize
 operator|==
-literal|0xffffffff
+operator|(
+name|usb2_frlength_t
+operator|)
+operator|-
+literal|1
 operator|)
 condition|)
 block|{
@@ -4557,9 +4565,6 @@ name|usb2_page_cache
 modifier|*
 name|pc
 decl_stmt|;
-name|uint32_t
-name|temp
-decl_stmt|;
 name|USB_BUS_LOCK_ASSERT
 argument_list|(
 name|info
@@ -4575,6 +4580,9 @@ condition|(
 name|needs_delay
 condition|)
 block|{
+name|usb2_timeout_t
+name|temp
+decl_stmt|;
 name|temp
 operator|=
 name|usb2_get_dma_delay
@@ -5010,7 +5018,7 @@ modifier|*
 name|xfer
 parameter_list|)
 block|{
-name|uint32_t
+name|usb2_frlength_t
 name|len
 decl_stmt|;
 comment|/* Check for control endpoint stall */
@@ -5410,7 +5418,7 @@ modifier|*
 name|xfer
 parameter_list|)
 block|{
-name|uint32_t
+name|usb2_frcount_t
 name|x
 decl_stmt|;
 name|DPRINTF
@@ -6741,7 +6749,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|uint32_t
+name|usb2_frcount_t
 name|frindex
 parameter_list|)
 block|{
@@ -6773,10 +6781,10 @@ name|usb2_xfer
 modifier|*
 name|xfer
 parameter_list|,
-name|uint32_t
+name|usb2_frlength_t
 name|offset
 parameter_list|,
-name|uint32_t
+name|usb2_frcount_t
 name|frindex
 parameter_list|)
 block|{
@@ -8395,7 +8403,7 @@ modifier|*
 name|arg
 parameter_list|)
 parameter_list|,
-name|uint32_t
+name|usb2_timeout_t
 name|ms
 parameter_list|)
 block|{
@@ -8451,7 +8459,7 @@ name|usb2_pipe
 modifier|*
 name|pipe
 decl_stmt|;
-name|uint32_t
+name|usb2_frcount_t
 name|x
 decl_stmt|;
 if|if
@@ -8558,7 +8566,7 @@ name|did_dma_delay
 operator|)
 condition|)
 block|{
-name|uint32_t
+name|usb2_timeout_t
 name|temp
 decl_stmt|;
 comment|/* only delay once */

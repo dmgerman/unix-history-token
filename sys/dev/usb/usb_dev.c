@@ -7158,7 +7158,7 @@ name|usb2_fifo
 modifier|*
 name|f
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|bufsize
 parameter_list|,
 name|uint16_t
@@ -7428,7 +7428,7 @@ block|}
 end_function
 
 begin_function
-name|uint32_t
+name|usb2_size_t
 name|usb2_fifo_put_bytes_max
 parameter_list|(
 name|struct
@@ -7442,7 +7442,7 @@ name|usb2_mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|uint32_t
+name|usb2_size_t
 name|len
 decl_stmt|;
 name|USB_IF_POLL
@@ -7500,10 +7500,10 @@ name|usb2_page_cache
 modifier|*
 name|pc
 parameter_list|,
-name|uint32_t
+name|usb2_frlength_t
 name|offset
 parameter_list|,
-name|uint32_t
+name|usb2_frlength_t
 name|len
 parameter_list|,
 name|uint8_t
@@ -7515,7 +7515,7 @@ name|usb2_mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|uint32_t
+name|usb2_frlength_t
 name|io_len
 decl_stmt|;
 while|while
@@ -7663,7 +7663,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|len
 parameter_list|,
 name|uint8_t
@@ -7675,7 +7675,7 @@ name|usb2_mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|uint32_t
+name|usb2_size_t
 name|io_len
 decl_stmt|;
 while|while
@@ -7826,7 +7826,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|len
 parameter_list|)
 block|{
@@ -7933,13 +7933,13 @@ name|usb2_page_cache
 modifier|*
 name|pc
 parameter_list|,
-name|uint32_t
+name|usb2_frlength_t
 name|offset
 parameter_list|,
-name|uint32_t
+name|usb2_frlength_t
 name|len
 parameter_list|,
-name|uint32_t
+name|usb2_frlength_t
 modifier|*
 name|actlen
 parameter_list|,
@@ -7952,7 +7952,7 @@ name|usb2_mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|uint32_t
+name|usb2_frlength_t
 name|io_len
 decl_stmt|;
 name|uint8_t
@@ -8183,10 +8183,10 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|len
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 modifier|*
 name|actlen
 parameter_list|,
@@ -8199,7 +8199,7 @@ name|usb2_mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|uint32_t
+name|usb2_size_t
 name|io_len
 decl_stmt|;
 name|uint8_t
@@ -8434,7 +8434,7 @@ modifier|*
 modifier|*
 name|pptr
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 modifier|*
 name|plen
 parameter_list|)

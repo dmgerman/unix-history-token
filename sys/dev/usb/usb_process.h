@@ -111,7 +111,7 @@ name|usb2_proc_callback_t
 modifier|*
 name|pm_callback
 decl_stmt|;
-name|uint32_t
+name|usb2_size_t
 name|pm_num
 decl_stmt|;
 block|}
@@ -156,7 +156,7 @@ name|mtx
 modifier|*
 name|up_mtx
 decl_stmt|;
-name|uint32_t
+name|usb2_size_t
 name|up_msg_num
 decl_stmt|;
 name|uint8_t

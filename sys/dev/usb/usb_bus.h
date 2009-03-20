@@ -171,20 +171,14 @@ modifier|*
 modifier|*
 name|devices
 decl_stmt|;
-name|uint32_t
+name|usb2_power_mask_t
 name|hw_power_state
 decl_stmt|;
 comment|/* see USB_HW_POWER_XXX */
-name|uint32_t
+name|usb2_size_t
 name|uframe_usage
 index|[
 name|USB_HS_MICRO_FRAMES_MAX
-index|]
-decl_stmt|;
-name|uint32_t
-name|transfer_count
-index|[
-literal|4
 index|]
 decl_stmt|;
 name|uint16_t

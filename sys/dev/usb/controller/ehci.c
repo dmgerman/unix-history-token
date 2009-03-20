@@ -129,7 +129,8 @@ name|EHCI_BUS2SC
 parameter_list|(
 name|bus
 parameter_list|)
-value|((ehci_softc_t *)(((uint8_t *)(bus)) - \    USB_P2U(&(((ehci_softc_t *)0)->sc_bus))))
+define|\
+value|((ehci_softc_t *)(((uint8_t *)(bus)) - \     ((uint8_t *)&(((ehci_softc_t *)0)->sc_bus))))
 end_define
 
 begin_if
@@ -8087,7 +8088,7 @@ name|average
 operator|=
 name|xfer
 operator|->
-name|max_usb2_frame_size
+name|max_hc_frame_size
 expr_stmt|;
 name|temp
 operator|.
@@ -15992,7 +15993,7 @@ name|max_data_length
 operator|/
 name|xfer
 operator|->
-name|max_usb2_frame_size
+name|max_hc_frame_size
 operator|)
 operator|)
 expr_stmt|;
@@ -16061,7 +16062,7 @@ name|max_data_length
 operator|/
 name|xfer
 operator|->
-name|max_usb2_frame_size
+name|max_hc_frame_size
 operator|)
 operator|)
 expr_stmt|;
@@ -16180,7 +16181,7 @@ name|max_data_length
 operator|/
 name|xfer
 operator|->
-name|max_usb2_frame_size
+name|max_hc_frame_size
 operator|)
 operator|)
 expr_stmt|;

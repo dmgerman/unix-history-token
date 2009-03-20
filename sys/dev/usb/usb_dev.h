@@ -492,15 +492,15 @@ name|void
 modifier|*
 name|queue_data
 decl_stmt|;
-name|uint32_t
+name|usb2_timeout_t
 name|timeout
 decl_stmt|;
 comment|/* timeout in milliseconds */
-name|uint32_t
+name|usb2_frlength_t
 name|bufsize
 decl_stmt|;
 comment|/* BULK and INTERRUPT buffer size */
-name|uint16_t
+name|usb2_frcount_t
 name|nframes
 decl_stmt|;
 comment|/* for isochronous mode */
@@ -732,10 +732,10 @@ name|usb2_page_cache
 modifier|*
 name|pc
 parameter_list|,
-name|uint32_t
+name|usb2_frlength_t
 name|offset
 parameter_list|,
-name|uint32_t
+name|usb2_frlength_t
 name|len
 parameter_list|,
 name|uint8_t
@@ -757,7 +757,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|len
 parameter_list|,
 name|uint8_t
@@ -779,7 +779,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|len
 parameter_list|)
 function_decl|;
@@ -811,13 +811,13 @@ name|usb2_page_cache
 modifier|*
 name|pc
 parameter_list|,
-name|uint32_t
+name|usb2_frlength_t
 name|offset
 parameter_list|,
-name|uint32_t
+name|usb2_frlength_t
 name|len
 parameter_list|,
-name|uint32_t
+name|usb2_frlength_t
 modifier|*
 name|actlen
 parameter_list|,
@@ -840,10 +840,10 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|len
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 modifier|*
 name|actlen
 parameter_list|,
@@ -867,7 +867,7 @@ modifier|*
 modifier|*
 name|pptr
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 modifier|*
 name|plen
 parameter_list|)

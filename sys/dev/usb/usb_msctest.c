@@ -289,19 +289,19 @@ name|uint8_t
 modifier|*
 name|data_ptr
 decl_stmt|;
-name|uint32_t
+name|usb2_size_t
 name|data_len
 decl_stmt|;
 comment|/* bytes */
-name|uint32_t
+name|usb2_size_t
 name|data_rem
 decl_stmt|;
 comment|/* bytes */
-name|uint32_t
+name|usb2_timeout_t
 name|data_timeout
 decl_stmt|;
 comment|/* ms */
-name|uint32_t
+name|usb2_frlength_t
 name|actlen
 decl_stmt|;
 comment|/* bytes */
@@ -1070,6 +1070,9 @@ name|cbw
 operator|.
 name|dCBWDataTransferLength
 argument_list|,
+operator|(
+name|uint32_t
+operator|)
 name|sc
 operator|->
 name|data_len
@@ -1222,7 +1225,7 @@ name|xfer
 operator|->
 name|priv_sc
 decl_stmt|;
-name|uint32_t
+name|usb2_frlength_t
 name|max_bulk
 init|=
 name|xfer
@@ -1442,7 +1445,7 @@ name|xfer
 operator|->
 name|priv_sc
 decl_stmt|;
-name|uint32_t
+name|usb2_frlength_t
 name|max_bulk
 init|=
 name|xfer
@@ -1854,13 +1857,13 @@ name|void
 modifier|*
 name|data_ptr
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|data_len
 parameter_list|,
 name|uint8_t
 name|cmd_len
 parameter_list|,
-name|uint32_t
+name|usb2_timeout_t
 name|data_timeout
 parameter_list|)
 block|{

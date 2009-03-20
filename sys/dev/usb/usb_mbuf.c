@@ -38,7 +38,7 @@ name|usb2_ifqueue
 modifier|*
 name|ifq
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|block_size
 parameter_list|,
 name|uint16_t
@@ -60,7 +60,7 @@ name|free_ptr
 init|=
 name|NULL
 decl_stmt|;
-name|uint32_t
+name|usb2_size_t
 name|alloc_size
 decl_stmt|;
 comment|/* align data */

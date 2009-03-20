@@ -132,7 +132,8 @@ name|UHCI_BUS2SC
 parameter_list|(
 name|bus
 parameter_list|)
-value|((uhci_softc_t *)(((uint8_t *)(bus)) - \    USB_P2U(&(((uhci_softc_t *)0)->sc_bus))))
+define|\
+value|((uhci_softc_t *)(((uint8_t *)(bus)) - \     ((uint8_t *)&(((uhci_softc_t *)0)->sc_bus))))
 end_define
 
 begin_if

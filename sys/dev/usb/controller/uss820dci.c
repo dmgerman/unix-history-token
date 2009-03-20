@@ -122,7 +122,7 @@ parameter_list|(
 name|bus
 parameter_list|)
 define|\
-value|((struct uss820dci_softc *)(((uint8_t *)(bus)) - \    USB_P2U(&(((struct uss820dci_softc *)0)->sc_bus))))
+value|((struct uss820dci_softc *)(((uint8_t *)(bus)) - \     ((uint8_t *)&(((struct uss820dci_softc *)0)->sc_bus))))
 end_define
 
 begin_define

@@ -3841,7 +3841,7 @@ specifier|static
 name|uint8_t
 name|usb2_intr_find_best_slot
 parameter_list|(
-name|uint32_t
+name|usb2_size_t
 modifier|*
 name|ptr
 parameter_list|,
@@ -3852,10 +3852,12 @@ name|uint8_t
 name|end
 parameter_list|)
 block|{
-name|uint32_t
+name|usb2_size_t
 name|max
 init|=
-literal|0xffffffff
+literal|0
+operator|-
+literal|1
 decl_stmt|;
 name|uint8_t
 name|x
@@ -5012,7 +5014,7 @@ parameter_list|)
 block|{
 specifier|static
 specifier|const
-name|uint32_t
+name|usb2_power_mask_t
 name|power_mask
 index|[
 literal|4
@@ -5366,19 +5368,16 @@ name|usb2_device
 modifier|*
 name|udev
 decl_stmt|;
-name|unsigned
-name|int
+name|usb2_ticks_t
 name|temp
 decl_stmt|;
-name|unsigned
-name|int
+name|usb2_ticks_t
 name|limit
 decl_stmt|;
-name|unsigned
-name|int
+name|usb2_ticks_t
 name|mintime
 decl_stmt|;
-name|uint32_t
+name|usb2_size_t
 name|type_refs
 index|[
 literal|5
@@ -6315,9 +6314,6 @@ name|usb2_device
 modifier|*
 name|child
 decl_stmt|;
-name|uint32_t
-name|temp
-decl_stmt|;
 name|int
 name|err
 decl_stmt|;
@@ -6561,6 +6557,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|usb2_timeout_t
+name|temp
+decl_stmt|;
 comment|/* suspend device on the USB controller */
 call|(
 name|udev

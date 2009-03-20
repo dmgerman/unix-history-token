@@ -214,22 +214,22 @@ begin_struct
 struct|struct
 name|usb2_power_save
 block|{
-name|int
+name|usb2_ticks_t
 name|last_xfer_time
 decl_stmt|;
 comment|/* copy of "ticks" */
-name|uint32_t
+name|usb2_size_t
 name|type_refs
 index|[
 literal|4
 index|]
 decl_stmt|;
 comment|/* transfer reference count */
-name|uint32_t
+name|usb2_size_t
 name|read_refs
 decl_stmt|;
 comment|/* data read references */
-name|uint32_t
+name|usb2_size_t
 name|write_refs
 decl_stmt|;
 comment|/* data write references */
@@ -392,7 +392,7 @@ argument|usb2_fs_privdata
 argument_list|)
 name|pd_list
 expr_stmt|;
-name|uint32_t
+name|usb2_ticks_t
 name|plugtime
 decl_stmt|;
 comment|/* copy of "ticks" */
