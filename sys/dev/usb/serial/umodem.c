@@ -3455,8 +3455,7 @@ name|usb2_do_request
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|req

@@ -6529,8 +6529,7 @@ expr_stmt|;
 comment|/* 	 * some devices need a delay after that the configuration value is 	 * set to function properly: 	 */
 name|usb2_pause_mtx
 argument_list|(
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|hz
 argument_list|)
@@ -6768,8 +6767,7 @@ name|sc
 operator|->
 name|sc_udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|req
@@ -9119,8 +9117,7 @@ name|sc
 operator|->
 name|sc_udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|req

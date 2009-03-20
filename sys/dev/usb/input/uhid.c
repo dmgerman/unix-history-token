@@ -2897,8 +2897,7 @@ name|uaa
 operator|->
 name|device
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|reportbuf
 argument_list|,
@@ -3041,8 +3040,7 @@ name|uaa
 operator|->
 name|device
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|sc
@@ -3088,8 +3086,7 @@ name|uaa
 operator|->
 name|device
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 name|uaa
 operator|->
