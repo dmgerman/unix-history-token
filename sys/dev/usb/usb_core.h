@@ -23,6 +23,17 @@ directive|define
 name|_USB2_CORE_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|USB_STACK_VERSION
+value|2000
+end_define
+
+begin_comment
+comment|/* 2.0 */
+end_comment
+
 begin_comment
 comment|/* Allow defines in "opt_usb.h" to override configuration */
 end_comment
@@ -404,7 +415,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_mfunc.h>
+file|<dev/usb/usb_defs.h>
 end_include
 
 begin_include
@@ -419,16 +430,11 @@ directive|include
 file|"usb_if.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|USB_STACK_VERSION
-value|2000
-end_define
-
-begin_comment
-comment|/* 2.0 */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HOST_ALIGN
+end_ifndef
 
 begin_define
 define|#
@@ -441,16 +447,16 @@ begin_comment
 comment|/* bytes, must be power of two */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|USB_ISOC_TIME_MAX
-value|128
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_comment
-comment|/* ms */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_FS_ISOC_UFRAME_MAX
+end_ifndef
 
 begin_define
 define|#
@@ -462,6 +468,11 @@ end_define
 begin_comment
 comment|/* exclusive unit */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -477,6 +488,136 @@ begin_error
 error|#
 directive|error
 literal|"USB_FS_ISOC_UFRAME_MAX cannot be set higher than 6"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_BUS_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_BUS_MAX
+value|256
+end_define
+
+begin_comment
+comment|/* units */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_MAX_DEVICES
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_MAX_DEVICES
+value|128
+end_define
+
+begin_comment
+comment|/* units */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|(
+name|USB_MAX_DEVICES
+operator|<
+name|USB_MIN_DEVICES
+operator|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"Minimum number of devices is greater than maximum number of devices."
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_IFACE_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_IFACE_MAX
+value|32
+end_define
+
+begin_comment
+comment|/* units */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_FIFO_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_FIFO_MAX
+value|128
+end_define
+
+begin_comment
+comment|/* units */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|(
+name|USB_FIFO_MAX
+operator|&
+literal|1
+operator|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"Number of FIFOs must be odd."
 end_error
 
 begin_endif
@@ -506,16 +647,11 @@ begin_comment
 comment|/* units */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|USB_MAX_IPACKET
-value|8
-end_define
-
-begin_comment
-comment|/* maximum size of the initial USB 					 * data packet */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HUB_MAX_DEPTH
+end_ifndef
 
 begin_define
 define|#
@@ -523,6 +659,11 @@ directive|define
 name|USB_HUB_MAX_DEPTH
 value|5
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
