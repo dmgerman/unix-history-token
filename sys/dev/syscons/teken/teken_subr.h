@@ -97,8 +97,8 @@ return|return
 operator|(
 operator|(
 name|col
-operator|&
-literal|0x7
+operator|%
+literal|8
 operator|)
 operator|==
 literal|0
