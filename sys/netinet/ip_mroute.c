@@ -65,6 +65,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -3983,7 +3989,6 @@ name|vifc_vifi
 argument_list|,
 name|inet_ntoa
 argument_list|(
-operator|&
 name|vifcp
 operator|->
 name|vifc_lcl_addr
@@ -4524,7 +4529,6 @@ name|__func__
 argument_list|,
 name|inet_ntoa
 argument_list|(
-operator|&
 name|mfccp
 operator|->
 name|mfcc_origin
@@ -4637,7 +4641,6 @@ name|__func__
 argument_list|,
 name|inet_ntoa
 argument_list|(
-operator|&
 name|mfccp
 operator|->
 name|mfcc_origin
@@ -5260,7 +5263,9 @@ name|u_long
 operator|)
 name|ntohl
 argument_list|(
-name|mcastgrp
+name|ip
+operator|->
+name|ip_dst
 operator|.
 name|s_addr
 argument_list|)
@@ -10916,7 +10921,6 @@ name|datalen
 argument_list|,
 name|inet_ntoa
 argument_list|(
-operator|&
 name|ip
 operator|->
 name|ip_src
