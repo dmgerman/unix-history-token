@@ -145,6 +145,9 @@ name|device_t
 name|bdev
 decl_stmt|;
 comment|/* filled by HC driver */
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 name|struct
 name|usb2_dma_parent_tag
 name|dma_parent_tag
@@ -159,6 +162,8 @@ index|[
 name|USB_BUS_DMA_TAG_MAX
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|usb2_bus_methods
 modifier|*

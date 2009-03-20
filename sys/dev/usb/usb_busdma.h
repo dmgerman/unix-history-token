@@ -123,6 +123,12 @@ name|usb2_dma_parent_tag
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|usb2_dma_tag
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * The following typedef defines the USB DMA load done callback.  */
 end_comment
@@ -303,14 +309,18 @@ begin_comment
 comment|/*  * The following structure describes the parent USB DMA tag.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+end_if
+
 begin_struct
 struct|struct
 name|usb2_dma_parent_tag
 block|{
 if|#
 directive|if
-name|USB_HAVE_BUSDMA
-operator|&&
 name|defined
 argument_list|(
 name|__FreeBSD__
@@ -325,9 +335,6 @@ decl_stmt|;
 comment|/* internal condition variable */
 endif|#
 directive|endif
-if|#
-directive|if
-name|USB_HAVE_BUSDMA
 name|bus_dma_tag_t
 name|tag
 decl_stmt|;
@@ -361,15 +368,40 @@ name|uint8_t
 name|utag_max
 decl_stmt|;
 comment|/* number of USB DMA tags */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_struct
+struct|struct
+name|usb2_dma_parent_tag
+block|{}
+struct|;
+end_struct
+
+begin_comment
+comment|/* empty struct */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * The following structure describes an USB DMA tag.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+end_if
 
 begin_struct
 struct|struct
@@ -377,8 +409,6 @@ name|usb2_dma_tag
 block|{
 if|#
 directive|if
-name|USB_HAVE_BUSDMA
-operator|&&
 name|defined
 argument_list|(
 name|__NetBSD__
@@ -389,9 +419,6 @@ name|p_seg
 decl_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|USB_HAVE_BUSDMA
 name|struct
 name|usb2_dma_parent_tag
 modifier|*
@@ -406,12 +433,8 @@ decl_stmt|;
 name|usb2_size_t
 name|size
 decl_stmt|;
-endif|#
-directive|endif
 if|#
 directive|if
-name|USB_HAVE_BUSDMA
-operator|&&
 name|defined
 argument_list|(
 name|__NetBSD__
@@ -424,6 +447,27 @@ directive|endif
 block|}
 struct|;
 end_struct
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_struct
+struct|struct
+name|usb2_dma_tag
+block|{}
+struct|;
+end_struct
+
+begin_comment
+comment|/* empty struct */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* function prototypes */

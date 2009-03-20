@@ -25,6 +25,10 @@ name|usb2_symlink
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/* UGEN */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|usb_device
@@ -364,6 +368,9 @@ modifier|*
 name|pipe_curr
 decl_stmt|;
 comment|/* current clear stall pipe */
+if|#
+directive|if
+name|USB_HAVE_UGEN
 name|struct
 name|usb2_fifo
 modifier|*
@@ -372,13 +379,6 @@ index|[
 name|USB_FIFO_MAX
 index|]
 decl_stmt|;
-name|char
-name|ugen_name
-index|[
-literal|20
-index|]
-decl_stmt|;
-comment|/* name of ugenX.X device */
 name|struct
 name|usb2_symlink
 modifier|*
@@ -392,6 +392,15 @@ argument|usb2_fs_privdata
 argument_list|)
 name|pd_list
 expr_stmt|;
+name|char
+name|ugen_name
+index|[
+literal|20
+index|]
+decl_stmt|;
+comment|/* name of ugenX.X device */
+endif|#
+directive|endif
 name|usb2_ticks_t
 name|plugtime
 decl_stmt|;
@@ -474,6 +483,9 @@ name|usb2_device_descriptor
 name|ddesc
 decl_stmt|;
 comment|/* device descriptor */
+if|#
+directive|if
+name|USB_HAVE_STRINGS
 name|char
 name|serial
 index|[
@@ -495,6 +507,8 @@ literal|64
 index|]
 decl_stmt|;
 comment|/* product string */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct

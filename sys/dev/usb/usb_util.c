@@ -534,12 +534,6 @@ begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_printBCD  *  * This function will print the version number "bcd" to the string  * pointed to by "p" having a maximum length of "p_len" bytes  * including the terminating zero.  *------------------------------------------------------------------------*/
 end_comment
 
-begin_if
-if|#
-directive|if
-name|USB_HAVE_STRINGS
-end_if
-
 begin_function
 name|void
 name|usb2_printBCD
@@ -579,11 +573,6 @@ comment|/* ignore any errors */
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_trim_spaces  *  * This function removes spaces at the beginning and the end of the string  * pointed to by the "p" argument.  *------------------------------------------------------------------------*/

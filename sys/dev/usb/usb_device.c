@@ -334,6 +334,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|USB_HAVE_UGEN
+end_if
+
 begin_function_decl
 specifier|static
 name|void
@@ -350,12 +356,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_if
-if|#
-directive|if
-name|USB_HAVE_UGEN
-end_if
 
 begin_function_decl
 specifier|static
@@ -4917,14 +4917,6 @@ argument_list|,
 literal|"UGONE"
 argument_list|)
 expr_stmt|;
-name|LIST_INIT
-argument_list|(
-operator|&
-name|udev
-operator|->
-name|pd_list
-argument_list|)
-expr_stmt|;
 comment|/* initialise our mutex */
 name|mtx_init
 argument_list|(
@@ -5241,6 +5233,9 @@ name|device_index
 operator|=
 name|device_index
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_UGEN
 comment|/* Create ugen name */
 name|snprintf
 argument_list|(
@@ -5268,9 +5263,14 @@ argument_list|,
 name|device_index
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|USB_HAVE_UGEN
+name|LIST_INIT
+argument_list|(
+operator|&
+name|udev
+operator|->
+name|pd_list
+argument_list|)
+expr_stmt|;
 comment|/* Create the control endpoint device */
 name|udev
 operator|->
@@ -6332,10 +6332,10 @@ argument_list|,
 name|device_index
 argument_list|)
 expr_stmt|;
-comment|/* Link and announce the ugen device name */
 if|#
 directive|if
 name|USB_HAVE_UGEN
+comment|/* Symlink the ugen device name */
 name|udev
 operator|->
 name|ugen_symlink
@@ -6347,8 +6347,10 @@ operator|->
 name|ugen_name
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+comment|/* Announce device */
+if|#
+directive|if
+name|USB_HAVE_STRINGS
 name|printf
 argument_list|(
 literal|"%s:<%s> at %s\n"
@@ -6371,6 +6373,8 @@ name|bdev
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|usb2_notify_addq
 argument_list|(
 literal|"+"
@@ -6378,6 +6382,8 @@ argument_list|,
 name|udev
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|done
 label|:
 if|if
@@ -6905,19 +6911,6 @@ literal|"privdata corrupt"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|pd
-operator|->
-name|ep_addr
-operator|>
-literal|0
-argument_list|,
-operator|(
-literal|"freeing EP0"
-operator|)
-argument_list|)
-expr_stmt|;
 name|destroy_dev_sched_cb
 argument_list|(
 name|pd
@@ -7008,6 +7001,9 @@ operator|->
 name|port_no
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_UGEN
 name|usb2_notify_addq
 argument_list|(
 literal|"-"
@@ -7015,6 +7011,9 @@ argument_list|,
 name|udev
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_STRINGS
 name|printf
 argument_list|(
 literal|"%s:<%s> at %s (disconnected)\n"
@@ -7035,6 +7034,8 @@ name|bdev
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Destroy UGEN symlink, if any */
 if|if
 condition|(
@@ -7043,9 +7044,6 @@ operator|->
 name|ugen_symlink
 condition|)
 block|{
-if|#
-directive|if
-name|USB_HAVE_UGEN
 name|usb2_free_symlink
 argument_list|(
 name|udev
@@ -7053,8 +7051,6 @@ operator|->
 name|ugen_symlink
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|udev
 operator|->
 name|ugen_symlink
@@ -7062,6 +7058,8 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* 	 * Unregister our device first which will prevent any further 	 * references: 	 */
 name|usb2_bus_port_set_device
 argument_list|(
@@ -7301,6 +7299,9 @@ operator|->
 name|default_mtx
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_UGEN
 name|KASSERT
 argument_list|(
 name|LIST_FIRST
@@ -7318,6 +7319,8 @@ literal|"leaked cdev entries"
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* free device */
 name|free
 argument_list|(
@@ -7675,6 +7678,9 @@ argument_list|,
 literal|"%s %s, class %d/%d, rev %x.%02x/"
 literal|"%x.%02x, addr %d"
 argument_list|,
+if|#
+directive|if
+name|USB_HAVE_STRINGS
 name|udev
 operator|->
 name|manufacturer
@@ -7683,6 +7689,14 @@ name|udev
 operator|->
 name|product
 argument_list|,
+else|#
+directive|else
+literal|"-"
+argument_list|,
+literal|"-"
+argument_list|,
+endif|#
+directive|endif
 name|udd
 operator|->
 name|bDeviceClass
@@ -7728,6 +7742,9 @@ argument_list|,
 literal|"%s %s, rev %x.%02x/"
 literal|"%x.%02x, addr %d"
 argument_list|,
+if|#
+directive|if
+name|USB_HAVE_STRINGS
 name|udev
 operator|->
 name|manufacturer
@@ -7736,6 +7753,14 @@ name|udev
 operator|->
 name|product
 argument_list|,
+else|#
+directive|else
+literal|"-"
+argument_list|,
+literal|"-"
+argument_list|,
+endif|#
+directive|endif
 operator|(
 name|bcdUSB
 operator|>>
@@ -8503,6 +8528,12 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|USB_HAVE_UGEN
+end_if
+
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_notify_addq  *  * This function will generate events for dev.  *------------------------------------------------------------------------*/
 end_comment
@@ -8641,10 +8672,19 @@ name|ddesc
 operator|.
 name|bDeviceSubClass
 argument_list|,
+if|#
+directive|if
+name|USB_HAVE_STRINGS
 name|udev
 operator|->
 name|serial
 argument_list|,
+else|#
+directive|else
+literal|""
+argument_list|,
+endif|#
+directive|endif
 name|udev
 operator|->
 name|port_no
@@ -8652,74 +8692,15 @@ argument_list|,
 name|udev
 operator|->
 name|parent_hub
+operator|!=
+name|NULL
+condition|?
+name|udev
+operator|->
+name|parent_hub
 operator|->
 name|ugen_name
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|snprintf
-argument_list|(
-name|data
-argument_list|,
-literal|1024
-argument_list|,
-literal|"%s"
-literal|"%s "
-literal|"vendor=0x%04x "
-literal|"product=0x%04x "
-literal|"devclass=0x%02x "
-literal|"devsubclass=0x%02x "
-literal|"sernum=\"%s\" "
-literal|"at port=%u "
-literal|"on "
-literal|"%s\n"
-argument_list|,
-name|type
-argument_list|,
-name|udev
-operator|->
-name|ugen_name
-argument_list|,
-name|UGETW
-argument_list|(
-name|udev
-operator|->
-name|ddesc
-operator|.
-name|idVendor
-argument_list|)
-argument_list|,
-name|UGETW
-argument_list|(
-name|udev
-operator|->
-name|ddesc
-operator|.
-name|idProduct
-argument_list|)
-argument_list|,
-name|udev
-operator|->
-name|ddesc
-operator|.
-name|bDeviceClass
-argument_list|,
-name|udev
-operator|->
-name|ddesc
-operator|.
-name|bDeviceSubClass
-argument_list|,
-name|udev
-operator|->
-name|serial
-argument_list|,
-name|udev
-operator|->
-name|port_no
-argument_list|,
+else|:
 name|device_get_nameunit
 argument_list|(
 name|device_get_parent
@@ -8741,12 +8722,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-name|USB_HAVE_UGEN
-end_if
 
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_fifo_free_wrap  *  * This function will free the FIFOs.  *  * Flag values, if "iface_index" is equal to "USB_IFACE_INDEX_ANY".  * 0: Free all FIFOs except generic control endpoints.  * 1: Free all FIFOs.  *  * Flag values, if "iface_index" is not equal to "USB_IFACE_INDEX_ANY".  * Not used.  *------------------------------------------------------------------------*/
