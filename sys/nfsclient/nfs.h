@@ -232,6 +232,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFS_ACCESSCACHESIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NFS_ACCESSCACHESIZE
+value|8
+end_define
+
+begin_comment
+comment|/* Per-node access cache entries */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
