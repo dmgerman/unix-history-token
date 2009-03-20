@@ -1261,7 +1261,7 @@ name|v86
 operator|.
 name|ebx
 operator|=
-name|blks
+name|x
 operator|*
 name|BIOSCD_SECSIZE
 expr_stmt|;
@@ -1291,7 +1291,7 @@ name|ebp
 operator|=
 name|VTOPOFF
 argument_list|(
-name|dest
+name|xp
 argument_list|)
 expr_stmt|;
 name|v86
@@ -1300,7 +1300,7 @@ name|es
 operator|=
 name|VTOPSEG
 argument_list|(
-name|dest
+name|xp
 argument_list|)
 expr_stmt|;
 name|v86int
