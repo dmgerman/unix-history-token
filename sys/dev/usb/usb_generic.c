@@ -2272,6 +2272,22 @@ operator|!=
 name|USB_ERR_CANCELLED
 condition|)
 block|{
+comment|/* send a zero length packet to userland */
+name|usb2_fifo_put_data
+argument_list|(
+name|f
+argument_list|,
+name|xfer
+operator|->
+name|frbuffers
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|f
 operator|->
 name|flag_stall
@@ -7841,12 +7857,13 @@ operator|*
 operator|)
 name|addr
 operator|<
-literal|1024
+literal|0
 condition|)
 name|t
 operator|=
-literal|1024
+literal|0
 expr_stmt|;
+comment|/* use "wMaxPacketSize" */
 elseif|else
 if|if
 condition|(
