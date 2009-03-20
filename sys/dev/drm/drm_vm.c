@@ -133,10 +133,6 @@ operator|->
 name|dma
 operator|&&
 name|offset
-operator|>=
-literal|0
-operator|&&
-name|offset
 operator|<
 name|ptoa
 argument_list|(
