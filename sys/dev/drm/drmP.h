@@ -2833,7 +2833,7 @@ begin_define
 define|#
 directive|define
 name|DRM_MAX_PCI_RESOURCE
-value|3
+value|6
 end_define
 
 begin_comment
