@@ -4811,9 +4811,7 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 break|break;
-block|}
 block|}
 operator|*
 operator|--
