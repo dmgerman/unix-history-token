@@ -715,6 +715,8 @@ name|OID_AUTO
 argument_list|,
 name|stats
 argument_list|,
+name|CTLFLAG_MPSAFE
+operator||
 name|CTLFLAG_RW
 argument_list|,
 name|bpf_stats_sysctl
