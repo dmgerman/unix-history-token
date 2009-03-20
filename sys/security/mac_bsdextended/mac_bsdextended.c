@@ -902,6 +902,8 @@ name|OID_AUTO
 argument_list|,
 name|rules
 argument_list|,
+name|CTLFLAG_MPSAFE
+operator||
 name|CTLFLAG_RW
 argument_list|,
 name|sysctl_rule
