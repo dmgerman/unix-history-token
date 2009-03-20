@@ -1758,12 +1758,12 @@ condition|)
 operator|(
 name|void
 operator|)
-name|sbuf_cat
+name|sbuf_putc
 argument_list|(
 operator|&
 name|sbf
 argument_list|,
-literal|"/"
+literal|'/'
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now that we have processed any alternate root and relative path 	 * names, add the supplied pathname. 	 */
