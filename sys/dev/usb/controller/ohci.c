@@ -39,12 +39,6 @@ directive|include
 file|<dev/usb/usb_error.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/usb/usb_defs.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -9409,7 +9403,7 @@ if|if
 condition|(
 name|value
 operator|>=
-name|USB_MAX_DEVICES
+name|OHCI_MAX_DEVICES
 condition|)
 block|{
 name|std

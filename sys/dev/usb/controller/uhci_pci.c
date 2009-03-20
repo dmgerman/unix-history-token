@@ -34,12 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_defs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb/usb.h>
 end_include
 

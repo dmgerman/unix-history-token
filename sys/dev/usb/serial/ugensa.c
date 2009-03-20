@@ -45,12 +45,6 @@ directive|include
 file|<dev/usb/usb_cdc.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/usb/usb_defs.h>
-end_include
-
 begin_define
 define|#
 directive|define

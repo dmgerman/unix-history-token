@@ -23,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|UHCI_MAX_DEVICES
-value|USB_MAX_DEVICES
+value|MIN(USB_MAX_DEVICES, 128)
 end_define
 
 begin_comment
