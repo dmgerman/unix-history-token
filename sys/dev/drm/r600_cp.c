@@ -809,11 +809,6 @@ argument_list|,
 name|gart_info
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
-operator|-
-name|EINVAL
-expr_stmt|;
 goto|goto
 name|done
 goto|;
@@ -908,6 +903,10 @@ name|ATI_PCIGART_PAGE_SIZE
 expr_stmt|;
 block|}
 block|}
+name|ret
+operator|=
+literal|1
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__linux__
@@ -11068,6 +11067,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|r600_page_table_init
 argument_list|(
 name|dev
