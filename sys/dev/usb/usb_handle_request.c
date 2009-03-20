@@ -696,7 +696,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|DEVMETHOD(usb2_handle_request, NULL);
+block|DEVMETHOD(usb_handle_request, NULL);
 comment|/* dummy */
 endif|#
 directive|endif

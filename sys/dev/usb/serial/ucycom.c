@@ -461,13 +461,6 @@ block|,
 operator|.
 name|mh
 operator|.
-name|flags
-operator|=
-block|{}
-block|,
-operator|.
-name|mh
-operator|.
 name|callback
 operator|=
 operator|&

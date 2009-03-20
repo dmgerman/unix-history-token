@@ -612,13 +612,6 @@ block|,
 operator|.
 name|mh
 operator|.
-name|flags
-operator|=
-block|{}
-block|,
-operator|.
-name|mh
-operator|.
 name|callback
 operator|=
 operator|&
@@ -673,13 +666,6 @@ argument_list|(
 expr|struct
 name|usb2_device_request
 argument_list|)
-block|,
-operator|.
-name|mh
-operator|.
-name|flags
-operator|=
-block|{}
 block|,
 operator|.
 name|mh
