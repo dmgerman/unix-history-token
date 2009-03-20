@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* $FreeBSD: vendor/tcpdump/dist/contrib/tcpdump/ieee802_11_radio.h 172683 2007-10-16 02:20:42Z mlaier $ */
 end_comment
 
 begin_comment
