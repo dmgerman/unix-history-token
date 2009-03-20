@@ -1503,6 +1503,8 @@ operator||
 name|NO_START_STOP
 operator||
 name|IGNORE_RESIDUE
+operator||
+name|NO_SYNCHRONIZE_CACHE
 block|}
 block|,
 block|{
