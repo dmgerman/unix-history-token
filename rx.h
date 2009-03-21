@@ -4,7 +4,7 @@ comment|/*  * Copyright: (c) 2000 United States Government as represented by the
 end_comment
 
 begin_comment
-comment|/*  * Rx protocol format  *  * $Id: rx.h,v 1.8 2002/12/11 07:14:11 guy Exp $  */
+comment|/*  * Rx protocol format  *  * $Id: rx.h,v 1.8 2002-12-11 07:14:11 guy Exp $  */
 end_comment
 
 begin_define

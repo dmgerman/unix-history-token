@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD: vendor/tcpdump/dist/contrib/tcpdump/ieee802_11_radio.h 172683 2007-10-16 02:20:42Z mlaier $ */
+comment|/* $FreeBSD: src/sys/net80211/ieee80211_radiotap.h,v 1.5 2005/01/22 20:12:05 sam Exp $ */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: ieee802_11_radio.h,v 1.2 2006/02/26 03:04:03 dyoung Exp $ */
+comment|/* NetBSD: ieee802_11_radio.h,v 1.2 2006/02/26 03:04:03 dyoung Exp  */
 end_comment
 
 begin_comment
-comment|/* $Header: /tcpdump/master/tcpdump/ieee802_11_radio.h,v 1.1.2.1 2006/06/13 22:24:45 guy Exp $ */
+comment|/* $Header: /tcpdump/master/tcpdump/ieee802_11_radio.h,v 1.3 2007-08-29 02:31:44 mcr Exp $ */
 end_comment
 
 begin_comment

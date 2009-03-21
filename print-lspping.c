@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-lspping.c,v 1.12.2.6 2006/06/23 02:07:27 hannes Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-lspping.c,v 1.18.2.1 2008-01-28 13:48:16 hannes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1736,8 +1736,13 @@ operator|->
 name|length
 argument_list|)
 expr_stmt|;
+comment|/* some little sanity checking */
 if|if
 condition|(
+name|lspping_tlv_type
+operator|==
+literal|0
+operator|||
 name|lspping_tlv_len
 operator|==
 literal|0
@@ -1746,15 +1751,10 @@ return|return;
 if|if
 condition|(
 name|lspping_tlv_len
-operator|%
-literal|4
-operator|||
-name|lspping_tlv_len
 operator|<
 literal|4
 condition|)
 block|{
-comment|/* aligned to four octet boundary */
 name|printf
 argument_list|(
 literal|"\n\t  ERROR: TLV %u bogus size %u"
@@ -2963,6 +2963,25 @@ argument_list|,
 name|lspping_tlv_len
 argument_list|)
 expr_stmt|;
+comment|/* All TLVs are aligned to four octet boundary */
+if|if
+condition|(
+name|lspping_tlv_len
+operator|%
+literal|4
+condition|)
+block|{
+name|lspping_tlv_len
+operator|+=
+operator|(
+literal|4
+operator|-
+name|lspping_tlv_len
+operator|%
+literal|4
+operator|)
+expr_stmt|;
+block|}
 name|tptr
 operator|+=
 name|lspping_tlv_len

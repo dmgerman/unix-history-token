@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/dccp.h,v 1.1.2.4 2006/05/12 01:46:17 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/dccp.h,v 1.5 2006-11-02 09:05:23 hannes Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -63,7 +63,7 @@ name|DCCPH_CCVAL
 parameter_list|(
 name|dh
 parameter_list|)
-value|(((dh)->dccph_ccval_cscov)& 0x0F)
+value|(((dh)->dccph_ccval_cscov>> 4)& 0xF)
 end_define
 
 begin_define
@@ -73,7 +73,7 @@ name|DCCPH_CSCOV
 parameter_list|(
 name|dh
 parameter_list|)
-value|(((dh)->dccph_ccval_cscov>> 4)& 0x0F)
+value|(((dh)->dccph_ccval_cscov)& 0xF)
 end_define
 
 begin_define

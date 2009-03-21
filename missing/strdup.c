@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/missing/strdup.c,v 1.1 2001/01/20 07:26:08 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/missing/strdup.c,v 1.1 2001-01-20 07:26:08 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 

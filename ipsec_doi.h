@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All righ
 end_comment
 
 begin_comment
-comment|/* YIPS @(#)$Id: ipsec_doi.h,v 1.7 2002/12/11 07:13:53 guy Exp $ */
+comment|/* YIPS @(#)$Id: ipsec_doi.h,v 1.7 2002-12-11 07:13:53 guy Exp $ */
 end_comment
 
 begin_comment

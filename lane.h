@@ -4,7 +4,7 @@ comment|/*  * Marko Kiiskila carnil@cs.tut.fi  *  * Tampere University of Techno
 end_comment
 
 begin_comment
-comment|/* $Id: lane.h,v 1.7 2002/12/11 07:13:54 guy Exp $ */
+comment|/* $Id: lane.h,v 1.7 2002-12-11 07:13:54 guy Exp $ */
 end_comment
 
 begin_ifndef

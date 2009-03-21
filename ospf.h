@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/ospf.h,v 1.16.2.2 2006/12/13 08:24:27 hannes Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/ospf.h,v 1.23 2007-10-08 07:53:21 hannes Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -74,7 +74,7 @@ comment|/* Link State Ack */
 end_comment
 
 begin_comment
-comment|/* Options field  *  * +------------------------------------+  * | * | O | DC | EA | N/P | MC | E | T |  * +------------------------------------+  *  */
+comment|/* Options field  *  * +------------------------------------+  * | DN | O | DC | L | N/P | MC | E | T |  * +------------------------------------+  *  */
 end_comment
 
 begin_define
@@ -130,6 +130,17 @@ end_define
 
 begin_comment
 comment|/* EA bit: External Attribute capable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OSPF_OPTION_L
+value|0x10
+end_define
+
+begin_comment
+comment|/* L bit: Packet contains LLS data block */
 end_comment
 
 begin_define
@@ -235,10 +246,6 @@ name|OSPF_DB_INIT
 value|0x04
 end_define
 
-begin_comment
-comment|/*	*/
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -252,6 +259,17 @@ directive|define
 name|OSPF_DB_MASTER
 value|0x01
 end_define
+
+begin_define
+define|#
+directive|define
+name|OSPF_DB_RESYNC
+value|0x08
+end_define
+
+begin_comment
+comment|/* RFC4811 */
+end_comment
 
 begin_comment
 comment|/* ls_type	*/
@@ -533,7 +551,7 @@ value|11
 end_define
 
 begin_comment
-comment|/* draft-ietf-ccamp-ospf-gmpls-extensions */
+comment|/* rfc4203 */
 end_comment
 
 begin_define
@@ -544,7 +562,7 @@ value|14
 end_define
 
 begin_comment
-comment|/* draft-ietf-ccamp-ospf-gmpls-extensions */
+comment|/* rfc4203 */
 end_comment
 
 begin_define
@@ -555,7 +573,7 @@ value|15
 end_define
 
 begin_comment
-comment|/* draft-ietf-ccamp-ospf-gmpls-extensions */
+comment|/* rfc4203 */
 end_comment
 
 begin_define
@@ -566,7 +584,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* draft-ietf-ccamp-ospf-gmpls-extensions */
+comment|/* rfc4203 */
 end_comment
 
 begin_define
@@ -688,10 +706,6 @@ end_define
 
 begin_comment
 comment|/* draft-ietf-ospf-cap-03 */
-end_comment
-
-begin_comment
-comment|/*************************************************  *  * is the above a bug in the documentation?  *  *************************************************/
 end_comment
 
 begin_comment
@@ -850,6 +864,114 @@ value|2
 end_define
 
 begin_comment
+comment|/* Link-Local-Signaling */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OSPF_LLS_EO
+value|1
+end_define
+
+begin_comment
+comment|/* RFC4811, RFC4812 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OSPF_LLS_MD5
+value|2
+end_define
+
+begin_comment
+comment|/* RFC4813 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OSPF_LLS_EO_LR
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* RFC4811 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OSPF_LLS_EO_RS
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* RFC4812 */
+end_comment
+
+begin_comment
+comment|/*  * TOS metric struct (will be 0 or more in router links update)  */
+end_comment
+
+begin_struct
+struct|struct
+name|tos_metric
+block|{
+name|u_int8_t
+name|tos_type
+decl_stmt|;
+name|u_int8_t
+name|reserved
+decl_stmt|;
+name|u_int8_t
+name|tos_metric
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|tos_link
+block|{
+name|u_int8_t
+name|link_type
+decl_stmt|;
+name|u_int8_t
+name|link_tos_count
+decl_stmt|;
+name|u_int8_t
+name|tos_metric
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_union
+union|union
+name|un_tos
+block|{
+name|struct
+name|tos_link
+name|link
+decl_stmt|;
+name|struct
+name|tos_metric
+name|metrics
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
 comment|/* link state advertisement header */
 end_comment
 
@@ -948,14 +1070,9 @@ name|struct
 name|in_addr
 name|link_data
 decl_stmt|;
-name|u_int8_t
-name|link_type
-decl_stmt|;
-name|u_int8_t
-name|link_toscount
-decl_stmt|;
-name|u_int16_t
-name|link_tos0metric
+name|union
+name|un_tos
+name|un_tos
 decl_stmt|;
 block|}
 name|rla_link
@@ -1131,27 +1248,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * TOS metric struct (will be 0 or more in router links update)  */
-end_comment
-
-begin_struct
-struct|struct
-name|tos_metric
-block|{
-name|u_int8_t
-name|tos_type
-decl_stmt|;
-name|u_int8_t
-name|tos_zero
-decl_stmt|;
-name|u_int16_t
-name|tos_metric
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
@@ -1239,11 +1335,8 @@ struct|;
 comment|/* Database Description packet */
 struct|struct
 block|{
-name|u_int8_t
-name|db_zero
-index|[
-literal|2
-index|]
+name|u_int16_t
+name|db_ifmtu
 decl_stmt|;
 name|u_int8_t
 name|db_options
@@ -1382,6 +1475,36 @@ directive|define
 name|ospf_lsa
 value|ospf_un.un_lsa
 end_define
+
+begin_comment
+comment|/* Functions shared by ospf and ospf6 */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|ospf_print_te_lsa
+parameter_list|(
+name|u_int8_t
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|ospf_print_grace_lsa
+parameter_list|(
+name|u_int8_t
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

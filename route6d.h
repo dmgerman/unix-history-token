@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 1995, 1996, 1997 and 1998 WIDE Project.  * All right
 end_comment
 
 begin_comment
-comment|/*  * $Header: /tcpdump/master/tcpdump/route6d.h,v 1.5 2002/12/11 07:14:10 guy Exp $  */
+comment|/*  * $Header: /tcpdump/master/tcpdump/route6d.h,v 1.5 2002-12-11 07:14:10 guy Exp $  */
 end_comment
 
 begin_define

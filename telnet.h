@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/telnet.h,v 1.4 2002/06/11 17:09:01 itojun Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/telnet.h,v 1.5 2007-08-29 02:31:44 mcr Exp $ (LBL) */
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: telnet.h,v 1.9 2001/06/11 01:50:50 wiz Exp $	*/
+comment|/*	NetBSD: telnet.h,v 1.9 2001/06/11 01:50:50 wiz Exp 	*/
 end_comment
 
 begin_comment

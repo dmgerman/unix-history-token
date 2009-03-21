@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ip.c,v 1.149.2.9 2007/09/14 01:30:02 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ip.c,v 1.159 2007-09-14 01:29:28 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2796,7 +2796,7 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|") "
+literal|")\n    "
 argument_list|)
 expr_stmt|;
 block|}

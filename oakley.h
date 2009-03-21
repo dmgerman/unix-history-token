@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All righ
 end_comment
 
 begin_comment
-comment|/* YIPS @(#)$Id: oakley.h,v 1.4 2002/12/11 07:13:56 guy Exp $ */
+comment|/* YIPS @(#)$Id: oakley.h,v 1.4 2002-12-11 07:13:56 guy Exp $ */
 end_comment
 
 begin_comment

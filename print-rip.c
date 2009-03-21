@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rip.c,v 1.57 2003/11/16 09:36:34 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rip.c,v 1.59 2006-03-23 14:58:44 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,6 +82,12 @@ end_include
 begin_comment
 comment|/* must come after interface.h */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"af.h"
+end_include
 
 begin_struct
 struct|struct
@@ -303,14 +309,21 @@ if|if
 condition|(
 name|family
 operator|!=
-name|AF_INET
+name|BSD_AFNUM_INET
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n\t AFI: %u:"
+literal|"\n\t AFI %s, "
+argument_list|,
+name|tok2str
+argument_list|(
+name|bsd_af_values
+argument_list|,
+literal|"Unknown (%u)"
 argument_list|,
 name|family
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|print_unknown_data
@@ -377,7 +390,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* AF_INET */
+comment|/* BSD_AFNUM_INET */
 name|printf
 argument_list|(
 literal|"\n\t  %s, metric: %u"
@@ -559,14 +572,21 @@ if|if
 condition|(
 name|family
 operator|!=
-name|AF_INET
+name|BSD_AFNUM_INET
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n\t  AFI: %u"
+literal|"\n\t  AFI %s"
+argument_list|,
+name|tok2str
+argument_list|(
+name|bsd_af_values
+argument_list|,
+literal|"Unknown (%u)"
 argument_list|,
 name|family
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|print_unknown_data
@@ -591,10 +611,19 @@ return|return;
 block|}
 else|else
 block|{
-comment|/* AF_INET */
+comment|/* BSD_AFNUM_INET */
 name|printf
 argument_list|(
-literal|"\n\t  AFI: IPv4: %15s/%-2d, tag 0x%04x, metric: %u, next-hop: "
+literal|"\n\t  AFI %s, %15s/%-2d, tag 0x%04x, metric: %u, next-hop: "
+argument_list|,
+name|tok2str
+argument_list|(
+name|bsd_af_values
+argument_list|,
+literal|"Unknown (%u)"
+argument_list|,
+name|family
+argument_list|)
 argument_list|,
 name|ipaddr_string
 argument_list|(

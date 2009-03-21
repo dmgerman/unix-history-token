@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-802_11.c,v 1.31.2.15 2007/07/22 23:14:14 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-802_11.c,v 1.47.2.2 2007-12-29 23:25:28 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1093,6 +1093,9 @@ name|length
 operator|-
 literal|3
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 name|pbody
 operator|->
@@ -5559,6 +5562,22 @@ block|{
 name|u_int32_t
 name|caphdr_len
 decl_stmt|;
+if|if
+condition|(
+name|caplen
+operator|<
+literal|8
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"[|802.11]"
+argument_list|)
+expr_stmt|;
+return|return
+name|caplen
+return|;
+block|}
 name|caphdr_len
 operator|=
 name|EXTRACT_32BITS
@@ -5634,12 +5653,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|WLANCAP_MAGIC_COOKIE_BASE
+value|0x80211000
+end_define
+
+begin_define
+define|#
+directive|define
 name|WLANCAP_MAGIC_COOKIE_V1
 value|0x80211001
 end_define
 
+begin_define
+define|#
+directive|define
+name|WLANCAP_MAGIC_COOKIE_V2
+value|0x80211002
+end_define
+
 begin_comment
-comment|/*  * For DLT_PRISM_HEADER; like DLT_IEEE802_11, but with an extra header,  * containing information such as radio information, which we  * currently ignore.  *  * If, however, the packet begins with WLANCAP_MAGIC_COOKIE_V1, it's  * really DLT_IEEE802_11_RADIO (currently, on Linux, there's no  * ARPHRD_ type for DLT_IEEE802_11_RADIO, as there is a  * ARPHRD_IEEE80211_PRISM for DLT_PRISM_HEADER, so  * ARPHRD_IEEE80211_PRISM is used for DLT_IEEE802_11_RADIO, and  * the first 4 bytes of the header are used to indicate which it is).  */
+comment|/*  * For DLT_PRISM_HEADER; like DLT_IEEE802_11, but with an extra header,  * containing information such as radio information, which we  * currently ignore.  *  * If, however, the packet begins with WLANCAP_MAGIC_COOKIE_V1 or  * WLANCAP_MAGIC_COOKIE_V2, it's really DLT_IEEE802_11_RADIO_AVS  * (currently, on Linux, there's no ARPHRD_ type for  * DLT_IEEE802_11_RADIO_AVS, as there is a ARPHRD_IEEE80211_PRISM  * for DLT_PRISM_HEADER, so ARPHRD_IEEE80211_PRISM is used for  * the AVS header, and the first 4 bytes of the header are used to  * indicate whether it's a Prism header or an AVS header).  */
 end_comment
 
 begin_function
@@ -5672,6 +5705,9 @@ name|h
 operator|->
 name|len
 decl_stmt|;
+name|u_int32_t
+name|msgcode
+decl_stmt|;
 if|if
 condition|(
 name|caplen
@@ -5688,14 +5724,22 @@ return|return
 name|caplen
 return|;
 block|}
-if|if
-condition|(
+name|msgcode
+operator|=
 name|EXTRACT_32BITS
 argument_list|(
 name|p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|msgcode
 operator|==
 name|WLANCAP_MAGIC_COOKIE_V1
+operator|||
+name|msgcode
+operator|==
+name|WLANCAP_MAGIC_COOKIE_V2
 condition|)
 return|return
 name|ieee802_11_avs_radio_print
@@ -5747,7 +5791,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * For DLT_IEEE802_11_RADIO; like DLT_IEEE802_11, but with an extra  * header, containing information such as radio information, which we  * currently ignore.  */
+comment|/*  * For DLT_IEEE802_11_RADIO; like DLT_IEEE802_11, but with an extra  * header, containing information such as radio information.  */
 end_comment
 
 begin_function
@@ -5766,43 +5810,54 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|u_int
-name|caplen
-init|=
-name|h
-operator|->
-name|caplen
-decl_stmt|;
-name|u_int
-name|length
-init|=
-name|h
-operator|->
-name|len
-decl_stmt|;
-if|if
-condition|(
-name|caplen
-operator|<
-literal|8
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"[|802.11]"
-argument_list|)
-expr_stmt|;
-return|return
-name|caplen
-return|;
-block|}
 return|return
 name|ieee802_11_radio_print
 argument_list|(
 name|p
 argument_list|,
-name|length
+name|h
+operator|->
+name|len
 argument_list|,
+name|h
+operator|->
+name|caplen
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * For DLT_IEEE802_11_RADIO_AVS; like DLT_IEEE802_11, but with an  * extra header, containing information such as radio information,  * which we currently ignore.  */
+end_comment
+
+begin_function
+name|u_int
+name|ieee802_11_radio_avs_if_print
+parameter_list|(
+specifier|const
+name|struct
+name|pcap_pkthdr
+modifier|*
+name|h
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
+name|p
+parameter_list|)
+block|{
+return|return
+name|ieee802_11_avs_radio_print
+argument_list|(
+name|p
+argument_list|,
+name|h
+operator|->
+name|len
+argument_list|,
+name|h
+operator|->
 name|caplen
 argument_list|)
 return|;

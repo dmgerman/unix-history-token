@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rx.c,v 1.37.2.2 2007/06/15 19:43:15 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rx.c,v 1.39.2.3 2008-07-01 07:45:09 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -480,6 +480,42 @@ literal|"residency"
 block|}
 block|,
 block|{
+literal|65536
+block|,
+literal|"inline-bulk-status"
+block|}
+block|,
+block|{
+literal|65537
+block|,
+literal|"fetch-data-64"
+block|}
+block|,
+block|{
+literal|65538
+block|,
+literal|"store-data-64"
+block|}
+block|,
+block|{
+literal|65539
+block|,
+literal|"give-up-all-cbs"
+block|}
+block|,
+block|{
+literal|65540
+block|,
+literal|"get-caps"
+block|}
+block|,
+block|{
+literal|65541
+block|,
+literal|"cb-rx-conn-addr"
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL
@@ -584,6 +620,24 @@ block|{
 literal|218
 block|,
 literal|"getcacheconf"
+block|}
+block|,
+block|{
+literal|65536
+block|,
+literal|"getce64"
+block|}
+block|,
+block|{
+literal|65537
+block|,
+literal|"getcellbynum"
+block|}
+block|,
+block|{
+literal|65538
+block|,
+literal|"tellmeaboutyourself"
 block|}
 block|,
 block|{
@@ -733,6 +787,12 @@ block|{
 literal|521
 block|,
 literal|"list-entries"
+block|}
+block|,
+block|{
+literal|530
+block|,
+literal|"list-super-groups"
 block|}
 block|,
 block|{
@@ -1273,6 +1333,24 @@ literal|"forward-multiple"
 block|}
 block|,
 block|{
+literal|65536
+block|,
+literal|"convert-ro"
+block|}
+block|,
+block|{
+literal|65537
+block|,
+literal|"get-size"
+block|}
+block|,
+block|{
+literal|65538
+block|,
+literal|"dump-v2"
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL
@@ -1565,6 +1643,18 @@ literal|"vote-sdebug"
 block|}
 block|,
 block|{
+literal|10006
+block|,
+literal|"vote-xdebug"
+block|}
+block|,
+block|{
+literal|10007
+block|,
+literal|"vote-xsdebug"
+block|}
+block|,
+block|{
 literal|20000
 block|,
 literal|"disk-begin"
@@ -1668,7 +1758,7 @@ begin_define
 define|#
 directive|define
 name|VOTE_HIGH
-value|10005
+value|10007
 end_define
 
 begin_define
@@ -3287,6 +3377,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|UINT64OUT
+parameter_list|()
+value|{ u_int64_t i; \ 			TCHECK2(bp[0], sizeof(u_int64_t)); \ 			i = EXTRACT_64BITS(bp); \ 			bp += sizeof(u_int64_t); \ 			printf(" %" PRIu64, i); \ 		}
+end_define
+
+begin_define
+define|#
+directive|define
 name|DATEOUT
 parameter_list|()
 value|{ time_t t; struct tm *tm; char str[256]; \ 			TCHECK2(bp[0], sizeof(int32_t)); \ 			t = (time_t) EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			tm = localtime(&t); \ 			strftime(str, 256, "%Y/%m/%d %T", tm); \ 			printf(" %s", str); \ 		}
@@ -3330,6 +3428,14 @@ parameter_list|(
 name|MAX
 parameter_list|)
 value|{ u_char *sp; \ 			u_char s[AFSNAMEMAX]; \ 			int k; \ 			if ((MAX) + 1> sizeof(s)) \ 				goto trunc; \ 			TCHECK2(bp[0], (MAX) * sizeof(int32_t)); \ 			sp = s; \ 			for (k = 0; k< (MAX); k++) { \ 				*sp++ = (u_char) EXTRACT_32BITS(bp); \ 				bp += sizeof(int32_t); \ 			} \ 			s[(MAX)] = '\0'; \ 			printf(" \""); \ 			fn_print(s, NULL); \ 			printf("\""); \ 		}
+end_define
+
+begin_define
+define|#
+directive|define
+name|DESTSERVEROUT
+parameter_list|()
+value|{ unsigned long n1, n2, n3; \ 			TCHECK2(bp[0], sizeof(int32_t) * 3); \ 			n1 = EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			n2 = EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			n3 = EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			printf(" server %d:%d:%d", (int) n1, (int) n2, (int) n3); \ 		}
 end_define
 
 begin_comment
@@ -3813,6 +3919,10 @@ case|case
 literal|155
 case|:
 comment|/* Bulk stat */
+case|case
+literal|65536
+case|:
+comment|/* Inline bulk stat */
 block|{
 name|unsigned
 name|long
@@ -3885,6 +3995,77 @@ literal|"<none!>"
 argument_list|)
 expr_stmt|;
 block|}
+case|case
+literal|65537
+case|:
+comment|/* Fetch data 64 */
+name|FIDOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" offset"
+argument_list|)
+expr_stmt|;
+name|UINT64OUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" length"
+argument_list|)
+expr_stmt|;
+name|UINT64OUT
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|65538
+case|:
+comment|/* Store data 64 */
+name|FIDOUT
+argument_list|()
+expr_stmt|;
+name|STOREATTROUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" offset"
+argument_list|)
+expr_stmt|;
+name|UINT64OUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" length"
+argument_list|)
+expr_stmt|;
+name|UINT64OUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" flen"
+argument_list|)
+expr_stmt|;
+name|UINT64OUT
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|65541
+case|:
+comment|/* CallBack rx conn address */
+name|printf
+argument_list|(
+literal|" addr"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
 default|default:
 empty_stmt|;
 block|}
@@ -5166,6 +5347,10 @@ case|case
 literal|519
 case|:
 comment|/* Get host CPS */
+case|case
+literal|530
+case|:
+comment|/* List super groups */
 name|printf
 argument_list|(
 literal|" id"
@@ -7746,7 +7931,646 @@ name|vol_op
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Normally there would be a switch statement here to decode the 	 * arguments to the AFS call, but since I don't have access to 	 * an AFS server (yet) and I'm not an AFS admin, I can't 	 * test any of these calls.  Leave this blank for now. 	 */
+name|bp
+operator|+=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|rx_header
+argument_list|)
+operator|+
+literal|4
+expr_stmt|;
+switch|switch
+condition|(
+name|vol_op
+condition|)
+block|{
+case|case
+literal|100
+case|:
+comment|/* Create volume */
+name|printf
+argument_list|(
+literal|" partition"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" name"
+argument_list|)
+expr_stmt|;
+name|STROUT
+argument_list|(
+name|AFSNAMEMAX
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" type"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" parent"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|101
+case|:
+comment|/* Delete volume */
+case|case
+literal|107
+case|:
+comment|/* Get flags */
+name|printf
+argument_list|(
+literal|" trans"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|102
+case|:
+comment|/* Restore */
+name|printf
+argument_list|(
+literal|" totrans"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" flags"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|103
+case|:
+comment|/* Forward */
+name|printf
+argument_list|(
+literal|" fromtrans"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" fromdate"
+argument_list|)
+expr_stmt|;
+name|DATEOUT
+argument_list|()
+expr_stmt|;
+name|DESTSERVEROUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" desttrans"
+argument_list|)
+expr_stmt|;
+name|INTOUT
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|104
+case|:
+comment|/* End trans */
+name|printf
+argument_list|(
+literal|" trans"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|105
+case|:
+comment|/* Clone */
+name|printf
+argument_list|(
+literal|" trans"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" purgevol"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" newtype"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" newname"
+argument_list|)
+expr_stmt|;
+name|STROUT
+argument_list|(
+name|AFSNAMEMAX
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|106
+case|:
+comment|/* Set flags */
+name|printf
+argument_list|(
+literal|" trans"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" flags"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|108
+case|:
+comment|/* Trans create */
+name|printf
+argument_list|(
+literal|" vol"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" partition"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" flags"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|109
+case|:
+comment|/* Dump */
+case|case
+literal|655537
+case|:
+comment|/* Get size */
+name|printf
+argument_list|(
+literal|" fromtrans"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" fromdate"
+argument_list|)
+expr_stmt|;
+name|DATEOUT
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|110
+case|:
+comment|/* Get n-th volume */
+name|printf
+argument_list|(
+literal|" index"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|111
+case|:
+comment|/* Set forwarding */
+name|printf
+argument_list|(
+literal|" tid"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" newsite"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|112
+case|:
+comment|/* Get name */
+case|case
+literal|113
+case|:
+comment|/* Get status */
+name|printf
+argument_list|(
+literal|" tid"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|114
+case|:
+comment|/* Signal restore */
+name|printf
+argument_list|(
+literal|" name"
+argument_list|)
+expr_stmt|;
+name|STROUT
+argument_list|(
+name|AFSNAMEMAX
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" type"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" pid"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" cloneid"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|116
+case|:
+comment|/* List volumes */
+name|printf
+argument_list|(
+literal|" partition"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" flags"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|117
+case|:
+comment|/* Set id types */
+name|printf
+argument_list|(
+literal|" tid"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" name"
+argument_list|)
+expr_stmt|;
+name|STROUT
+argument_list|(
+name|AFSNAMEMAX
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" type"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" pid"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" clone"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" backup"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|119
+case|:
+comment|/* Partition info */
+name|printf
+argument_list|(
+literal|" name"
+argument_list|)
+expr_stmt|;
+name|STROUT
+argument_list|(
+name|AFSNAMEMAX
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|120
+case|:
+comment|/* Reclone */
+name|printf
+argument_list|(
+literal|" tid"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|121
+case|:
+comment|/* List one volume */
+case|case
+literal|122
+case|:
+comment|/* Nuke volume */
+case|case
+literal|124
+case|:
+comment|/* Extended List volumes */
+case|case
+literal|125
+case|:
+comment|/* Extended List one volume */
+case|case
+literal|65536
+case|:
+comment|/* Convert RO to RW volume */
+name|printf
+argument_list|(
+literal|" partid"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" volid"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|123
+case|:
+comment|/* Set date */
+name|printf
+argument_list|(
+literal|" tid"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" date"
+argument_list|)
+expr_stmt|;
+name|DATEOUT
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|126
+case|:
+comment|/* Set info */
+name|printf
+argument_list|(
+literal|" tid"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|128
+case|:
+comment|/* Forward multiple */
+name|printf
+argument_list|(
+literal|" fromtrans"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" fromdate"
+argument_list|)
+expr_stmt|;
+name|DATEOUT
+argument_list|()
+expr_stmt|;
+block|{
+name|unsigned
+name|long
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
+name|TCHECK2
+argument_list|(
+name|bp
+index|[
+literal|0
+index|]
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|j
+operator|=
+name|EXTRACT_32BITS
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+name|bp
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|int32_t
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|j
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|DESTSERVEROUT
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|!=
+name|j
+operator|-
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|","
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|j
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"<none!>"
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|65538
+case|:
+comment|/* Dump version 2 */
+name|printf
+argument_list|(
+literal|" fromtrans"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" fromdate"
+argument_list|)
+expr_stmt|;
+name|DATEOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" flags"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+break|break;
+default|default:
+empty_stmt|;
+block|}
 return|return;
 name|trunc
 label|:
@@ -7840,8 +8664,360 @@ name|type
 operator|==
 name|RX_PACKET_TYPE_DATA
 condition|)
-comment|/* Well, no, not really.  Leave this for later */
+block|{
+switch|switch
+condition|(
+name|opcode
+condition|)
+block|{
+case|case
+literal|100
+case|:
+comment|/* Create volume */
+name|printf
+argument_list|(
+literal|" volid"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" trans"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|104
+case|:
+comment|/* End transaction */
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|105
+case|:
+comment|/* Clone */
+name|printf
+argument_list|(
+literal|" newvol"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|107
+case|:
+comment|/* Get flags */
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|108
+case|:
+comment|/* Transaction create */
+name|printf
+argument_list|(
+literal|" trans"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|110
+case|:
+comment|/* Get n-th volume */
+name|printf
+argument_list|(
+literal|" volume"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" partition"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|112
+case|:
+comment|/* Get name */
+name|STROUT
+argument_list|(
+name|AFSNAMEMAX
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|113
+case|:
+comment|/* Get status */
+name|printf
+argument_list|(
+literal|" volid"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" nextuniq"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" type"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" parentid"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" clone"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" backup"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" restore"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" maxquota"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" minquota"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" owner"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" create"
+argument_list|)
+expr_stmt|;
+name|DATEOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" access"
+argument_list|)
+expr_stmt|;
+name|DATEOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" update"
+argument_list|)
+expr_stmt|;
+name|DATEOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" expire"
+argument_list|)
+expr_stmt|;
+name|DATEOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" backup"
+argument_list|)
+expr_stmt|;
+name|DATEOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" copy"
+argument_list|)
+expr_stmt|;
+name|DATEOUT
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|115
+case|:
+comment|/* Old list partitions */
+break|break;
+case|case
+literal|116
+case|:
+comment|/* List volumes */
+case|case
+literal|121
+case|:
+comment|/* List one volume */
+block|{
+name|unsigned
+name|long
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
+name|TCHECK2
+argument_list|(
+name|bp
+index|[
+literal|0
+index|]
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|j
+operator|=
+name|EXTRACT_32BITS
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+name|bp
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|int32_t
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|j
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|printf
+argument_list|(
+literal|" name"
+argument_list|)
+expr_stmt|;
+name|VECOUT
+argument_list|(
+literal|32
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" volid"
+argument_list|)
+expr_stmt|;
+name|UINTOUT
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" type"
+argument_list|)
+expr_stmt|;
+name|bp
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|int32_t
+argument_list|)
+operator|*
+literal|21
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|!=
+name|j
+operator|-
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|","
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|j
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"<none!>"
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+default|default:
 empty_stmt|;
+block|}
+block|}
 else|else
 block|{
 comment|/* 		 * Otherwise, just print out the return code 		 */

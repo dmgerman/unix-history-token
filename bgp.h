@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/bgp.h,v 1.3 2004/06/16 08:45:15 hannes Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/bgp.h,v 1.3 2004-06-16 08:45:15 hannes Exp $ (LBL) */
 end_comment
 
 begin_comment

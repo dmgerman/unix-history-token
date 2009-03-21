@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-domain.c,v 1.89.2.8 2007/02/13 19:19:27 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-domain.c,v 1.97.2.1 2007-12-09 01:51:12 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2117,18 +2117,18 @@ literal|" (Cache flush)"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* ignore ttl */
-name|cp
-operator|+=
-literal|2
-expr_stmt|;
-comment|/* if T_OPT, save opt_flags */
 if|if
 condition|(
 name|typ
 operator|==
 name|T_OPT
 condition|)
+block|{
+comment|/* get opt flags */
+name|cp
+operator|+=
+literal|2
+expr_stmt|;
 name|opt_flags
 operator|=
 name|EXTRACT_16BITS
@@ -2136,11 +2136,52 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* ignore rest of ttl */
+comment|/* ignore rest of ttl field */
 name|cp
 operator|+=
 literal|2
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|vflag
+operator|>
+literal|2
+condition|)
+block|{
+comment|/* print ttl */
+name|printf
+argument_list|(
+literal|" ["
+argument_list|)
+expr_stmt|;
+name|relts_print
+argument_list|(
+name|EXTRACT_32BITS
+argument_list|(
+name|cp
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"]"
+argument_list|)
+expr_stmt|;
+name|cp
+operator|+=
+literal|4
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* ignore ttl */
+name|cp
+operator|+=
+literal|4
+expr_stmt|;
+block|}
 name|len
 operator|=
 name|EXTRACT_16BITS
@@ -2215,9 +2256,15 @@ name|printf
 argument_list|(
 literal|" %s"
 argument_list|,
-name|ipaddr_string
+name|intoa
+argument_list|(
+name|htonl
+argument_list|(
+name|EXTRACT_32BITS
 argument_list|(
 name|cp
+argument_list|)
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2575,6 +2622,17 @@ name|INET6
 case|case
 name|T_AAAA
 case|:
+block|{
+name|struct
+name|in6_addr
+name|addr
+decl_stmt|;
+name|char
+name|ntop_buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -2595,17 +2653,42 @@ operator|(
 name|NULL
 operator|)
 return|;
+name|memcpy
+argument_list|(
+operator|&
+name|addr
+argument_list|,
+name|cp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|" %s"
 argument_list|,
-name|ip6addr_string
+name|inet_ntop
 argument_list|(
-name|cp
+name|AF_INET6
+argument_list|,
+operator|&
+name|addr
+argument_list|,
+name|ntop_buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ntop_buf
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 case|case
 name|T_A6
 case|:
@@ -2618,6 +2701,12 @@ name|int
 name|pbit
 decl_stmt|,
 name|pbyte
+decl_stmt|;
+name|char
+name|ntop_buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
 decl_stmt|;
 if|if
 condition|(
@@ -2741,10 +2830,19 @@ literal|" %u %s"
 argument_list|,
 name|pbit
 argument_list|,
-name|ip6addr_string
+name|inet_ntop
 argument_list|(
+name|AF_INET6
+argument_list|,
 operator|&
 name|a
+argument_list|,
+name|ntop_buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ntop_buf
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
