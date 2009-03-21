@@ -1594,7 +1594,7 @@ operator||
 operator|(
 name|inp
 operator|->
-name|in6p_flowinfo
+name|inp_flow
 operator|&
 name|IPV6_FLOWINFO_MASK
 operator|)

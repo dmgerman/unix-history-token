@@ -5831,7 +5831,7 @@ condition|(
 operator|(
 name|in6p
 operator|->
-name|in6p_vflag
+name|inp_vflag
 operator|&
 name|INP_IPV4
 operator|)
@@ -5853,7 +5853,7 @@ parameter_list|(
 name|bit
 parameter_list|)
 define|\
-value|do { \ 	if (optval) \ 		in6p->in6p_flags |= (bit); \ 	else \ 		in6p->in6p_flags&= ~(bit); \ } while (
+value|do { \ 	if (optval) \ 		in6p->inp_flags |= (bit); \ 	else \ 		in6p->inp_flags&= ~(bit); \ } while (
 comment|/*CONSTCOND*/
 value|0)
 define|#
@@ -5863,7 +5863,7 @@ parameter_list|(
 name|bit
 parameter_list|)
 define|\
-value|do { \ 	in6p->in6p_flags |= IN6P_RFC2292; \ 	if (optval) \ 		in6p->in6p_flags |= (bit); \ 	else \ 		in6p->in6p_flags&= ~(bit); \ } while (
+value|do { \ 	in6p->inp_flags |= IN6P_RFC2292; \ 	if (optval) \ 		in6p->inp_flags |= (bit); \ 	else \ 		in6p->inp_flags&= ~(bit); \ } while (
 comment|/*CONSTCOND*/
 value|0)
 define|#
@@ -5872,7 +5872,7 @@ name|OPTBIT
 parameter_list|(
 name|bit
 parameter_list|)
-value|(in6p->in6p_flags& (bit) ? 1 : 0)
+value|(in6p->inp_flags& (bit) ? 1 : 0)
 case|case
 name|IPV6_RECVPKTINFO
 case|:
@@ -6119,7 +6119,7 @@ if|if
 condition|(
 name|in6p
 operator|->
-name|in6p_lport
+name|inp_lport
 operator|||
 operator|!
 name|IN6_IS_ADDR_UNSPECIFIED
@@ -6148,7 +6148,7 @@ name|optval
 condition|)
 name|in6p
 operator|->
-name|in6p_vflag
+name|inp_vflag
 operator|&=
 operator|~
 name|INP_IPV4
@@ -6156,7 +6156,7 @@ expr_stmt|;
 else|else
 name|in6p
 operator|->
-name|in6p_vflag
+name|inp_vflag
 operator||=
 name|INP_IPV4
 expr_stmt|;
@@ -6819,7 +6819,7 @@ name|IPV6_PORTRANGE_DEFAULT
 case|:
 name|in6p
 operator|->
-name|in6p_flags
+name|inp_flags
 operator|&=
 operator|~
 operator|(
@@ -6828,7 +6828,7 @@ operator|)
 expr_stmt|;
 name|in6p
 operator|->
-name|in6p_flags
+name|inp_flags
 operator|&=
 operator|~
 operator|(
@@ -6841,7 +6841,7 @@ name|IPV6_PORTRANGE_HIGH
 case|:
 name|in6p
 operator|->
-name|in6p_flags
+name|inp_flags
 operator|&=
 operator|~
 operator|(
@@ -6850,7 +6850,7 @@ operator|)
 expr_stmt|;
 name|in6p
 operator|->
-name|in6p_flags
+name|inp_flags
 operator||=
 name|IN6P_HIGHPORT
 expr_stmt|;
@@ -6860,7 +6860,7 @@ name|IPV6_PORTRANGE_LOW
 case|:
 name|in6p
 operator|->
-name|in6p_flags
+name|inp_flags
 operator|&=
 operator|~
 operator|(
@@ -6869,7 +6869,7 @@ operator|)
 expr_stmt|;
 name|in6p
 operator|->
-name|in6p_flags
+name|inp_flags
 operator||=
 name|IN6P_LOWPORT
 expr_stmt|;
@@ -7181,7 +7181,7 @@ name|flags
 operator|=
 name|in6p
 operator|->
-name|in6p_flags
+name|inp_flags
 expr_stmt|;
 if|if
 condition|(
@@ -7830,11 +7830,11 @@ name|icmp6_cksum
 argument_list|)
 decl_stmt|;
 name|struct
-name|in6pcb
+name|inpcb
 modifier|*
 name|in6p
 init|=
-name|sotoin6pcb
+name|sotoinpcb
 argument_list|(
 name|so
 argument_list|)
@@ -13146,7 +13146,7 @@ name|int
 name|ip6_optlen
 parameter_list|(
 name|struct
-name|in6pcb
+name|inpcb
 modifier|*
 name|in6p
 parameter_list|)

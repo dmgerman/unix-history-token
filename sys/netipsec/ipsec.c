@@ -1188,7 +1188,7 @@ name|mbuf
 operator|*
 operator|,
 expr|struct
-name|in6pcb
+name|inpcb
 operator|*
 name|pcb
 operator|)
@@ -1798,7 +1798,7 @@ name|pcbsp
 operator|=
 name|inp
 operator|->
-name|in6p_sp
+name|inp_sp
 expr_stmt|;
 else|#
 directive|else
@@ -2755,7 +2755,7 @@ modifier|*
 name|m
 decl_stmt|;
 name|struct
-name|in6pcb
+name|inpcb
 modifier|*
 name|pcb
 decl_stmt|;
@@ -2783,7 +2783,7 @@ name|IPSEC_ASSERT
 argument_list|(
 name|pcb
 operator|->
-name|in6p_sp
+name|inp_sp
 operator|!=
 name|NULL
 argument_list|,
@@ -2796,7 +2796,7 @@ name|IPSEC_ASSERT
 argument_list|(
 name|pcb
 operator|->
-name|in6p_sp
+name|inp_sp
 operator|->
 name|sp_out
 operator|!=
@@ -2804,7 +2804,7 @@ name|NULL
 operator|&&
 name|pcb
 operator|->
-name|in6p_sp
+name|inp_sp
 operator|->
 name|sp_in
 operator|!=
@@ -2820,7 +2820,7 @@ argument_list|(
 operator|&
 name|pcb
 operator|->
-name|in6p_sp
+name|inp_sp
 operator|->
 name|sp_in
 operator|->
@@ -2838,7 +2838,7 @@ argument_list|(
 operator|&
 name|pcb
 operator|->
-name|in6p_sp
+name|inp_sp
 operator|->
 name|sp_out
 operator|->
@@ -2856,7 +2856,7 @@ operator|=
 operator|&
 name|pcb
 operator|->
-name|in6p_sp
+name|inp_sp
 operator|->
 name|sp_in
 operator|->
@@ -2891,7 +2891,7 @@ operator|=
 operator|&
 name|pcb
 operator|->
-name|in6p_sp
+name|inp_sp
 operator|->
 name|sp_out
 operator|->
@@ -2931,7 +2931,7 @@ argument_list|(
 operator|&
 name|pcb
 operator|->
-name|in6p_sp
+name|inp_sp
 operator|->
 name|sp_in
 operator|->
@@ -2949,7 +2949,7 @@ argument_list|(
 operator|&
 name|pcb
 operator|->
-name|in6p_sp
+name|inp_sp
 operator|->
 name|sp_out
 operator|->
@@ -6252,7 +6252,7 @@ parameter_list|,
 name|cred
 parameter_list|)
 name|struct
-name|in6pcb
+name|inpcb
 modifier|*
 name|in6p
 decl_stmt|;
@@ -6334,7 +6334,7 @@ operator|=
 operator|&
 name|in6p
 operator|->
-name|in6p_sp
+name|inp_sp
 operator|->
 name|sp_in
 expr_stmt|;
@@ -6347,7 +6347,7 @@ operator|=
 operator|&
 name|in6p
 operator|->
-name|in6p_sp
+name|inp_sp
 operator|->
 name|sp_out
 expr_stmt|;
@@ -6402,7 +6402,7 @@ parameter_list|,
 name|mp
 parameter_list|)
 name|struct
-name|in6pcb
+name|inpcb
 modifier|*
 name|in6p
 decl_stmt|;
@@ -6451,12 +6451,12 @@ name|IPSEC_ASSERT
 argument_list|(
 name|in6p
 operator|->
-name|in6p_sp
+name|inp_sp
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"null in6p_sp"
+literal|"null inp_sp"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6497,7 +6497,7 @@ name|pcb_sp
 operator|=
 name|in6p
 operator|->
-name|in6p_sp
+name|inp_sp
 operator|->
 name|sp_in
 expr_stmt|;
@@ -6509,7 +6509,7 @@ name|pcb_sp
 operator|=
 name|in6p
 operator|->
-name|in6p_sp
+name|inp_sp
 operator|->
 name|sp_out
 expr_stmt|;
@@ -7851,7 +7851,7 @@ name|u_int
 name|dir
 decl_stmt|;
 name|struct
-name|in6pcb
+name|inpcb
 modifier|*
 name|in6p
 decl_stmt|;
@@ -7886,7 +7886,7 @@ name|NULL
 operator|||
 name|in6p
 operator|->
-name|in6p_socket
+name|inp_socket
 operator|!=
 name|NULL
 argument_list|,

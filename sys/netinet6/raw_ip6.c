@@ -539,7 +539,7 @@ condition|(
 operator|(
 name|in6p
 operator|->
-name|in6p_vflag
+name|inp_vflag
 operator|&
 name|INP_IPV6
 operator|)
@@ -551,11 +551,11 @@ if|if
 condition|(
 name|in6p
 operator|->
-name|in6p_ip6_nxt
+name|inp_ip_p
 operator|&&
 name|in6p
 operator|->
-name|in6p_ip6_nxt
+name|inp_ip_p
 operator|!=
 name|proto
 condition|)
@@ -747,13 +747,13 @@ if|if
 condition|(
 name|last
 operator|->
-name|in6p_flags
+name|inp_flags
 operator|&
 name|IN6P_CONTROLOPTS
 operator|||
 name|last
 operator|->
-name|in6p_socket
+name|inp_socket
 operator|->
 name|so_options
 operator|&
@@ -785,7 +785,7 @@ argument_list|(
 operator|&
 name|last
 operator|->
-name|in6p_socket
+name|inp_socket
 operator|->
 name|so_rcv
 argument_list|,
@@ -830,7 +830,7 @@ name|sorwakeup
 argument_list|(
 name|last
 operator|->
-name|in6p_socket
+name|inp_socket
 argument_list|)
 expr_stmt|;
 name|opts
@@ -906,13 +906,13 @@ if|if
 condition|(
 name|last
 operator|->
-name|in6p_flags
+name|inp_flags
 operator|&
 name|IN6P_CONTROLOPTS
 operator|||
 name|last
 operator|->
-name|in6p_socket
+name|inp_socket
 operator|->
 name|so_options
 operator|&
@@ -944,7 +944,7 @@ argument_list|(
 operator|&
 name|last
 operator|->
-name|in6p_socket
+name|inp_socket
 operator|->
 name|so_rcv
 argument_list|,
@@ -989,7 +989,7 @@ name|sorwakeup
 argument_list|(
 name|last
 operator|->
-name|in6p_socket
+name|inp_socket
 argument_list|)
 expr_stmt|;
 name|INP_RUNLOCK
@@ -1475,7 +1475,7 @@ argument_list|)
 expr_stmt|;
 name|in6p
 operator|=
-name|sotoin6pcb
+name|sotoinpcb
 argument_list|(
 name|so
 argument_list|)
@@ -1839,7 +1839,7 @@ operator||
 operator|(
 name|in6p
 operator|->
-name|in6p_flowinfo
+name|inp_flow
 operator|&
 name|IPV6_FLOWINFO_MASK
 operator|)
@@ -1870,7 +1870,7 @@ name|ip6_nxt
 operator|=
 name|in6p
 operator|->
-name|in6p_ip6_nxt
+name|inp_ip_p
 expr_stmt|;
 name|ip6
 operator|->
@@ -2555,7 +2555,7 @@ name|INP_IPV6
 expr_stmt|;
 name|inp
 operator|->
-name|in6p_ip6_nxt
+name|inp_ip_p
 operator|=
 operator|(
 name|long

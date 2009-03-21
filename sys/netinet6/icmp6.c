@@ -7866,12 +7866,12 @@ operator|*
 argument_list|)
 decl_stmt|;
 name|struct
-name|in6pcb
+name|inpcb
 modifier|*
 name|in6p
 decl_stmt|;
 name|struct
-name|in6pcb
+name|inpcb
 modifier|*
 name|last
 init|=
@@ -8038,7 +8038,7 @@ if|if
 condition|(
 name|in6p
 operator|->
-name|in6p_ip6_nxt
+name|inp_ip_p
 operator|!=
 name|IPPROTO_ICMPV6
 condition|)
@@ -8254,7 +8254,7 @@ if|if
 condition|(
 name|last
 operator|->
-name|in6p_flags
+name|inp_flags
 operator|&
 name|IN6P_CONTROLOPTS
 condition|)
@@ -8281,7 +8281,7 @@ argument_list|(
 operator|&
 name|last
 operator|->
-name|in6p_socket
+name|inp_socket
 operator|->
 name|so_rcv
 argument_list|)
@@ -8293,7 +8293,7 @@ argument_list|(
 operator|&
 name|last
 operator|->
-name|in6p_socket
+name|inp_socket
 operator|->
 name|so_rcv
 argument_list|,
@@ -8335,7 +8335,7 @@ argument_list|(
 operator|&
 name|last
 operator|->
-name|in6p_socket
+name|inp_socket
 operator|->
 name|so_rcv
 argument_list|)
@@ -8346,7 +8346,7 @@ name|sorwakeup_locked
 argument_list|(
 name|last
 operator|->
-name|in6p_socket
+name|inp_socket
 argument_list|)
 expr_stmt|;
 name|opts
@@ -8380,7 +8380,7 @@ if|if
 condition|(
 name|last
 operator|->
-name|in6p_flags
+name|inp_flags
 operator|&
 name|IN6P_CONTROLOPTS
 condition|)
@@ -8513,7 +8513,7 @@ argument_list|(
 operator|&
 name|last
 operator|->
-name|in6p_socket
+name|inp_socket
 operator|->
 name|so_rcv
 argument_list|)
@@ -8525,7 +8525,7 @@ argument_list|(
 operator|&
 name|last
 operator|->
-name|in6p_socket
+name|inp_socket
 operator|->
 name|so_rcv
 argument_list|,
@@ -8564,7 +8564,7 @@ argument_list|(
 operator|&
 name|last
 operator|->
-name|in6p_socket
+name|inp_socket
 operator|->
 name|so_rcv
 argument_list|)
@@ -8575,7 +8575,7 @@ name|sorwakeup_locked
 argument_list|(
 name|last
 operator|->
-name|in6p_socket
+name|inp_socket
 argument_list|)
 expr_stmt|;
 name|INP_RUNLOCK

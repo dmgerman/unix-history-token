@@ -4320,7 +4320,7 @@ condition|(
 operator|(
 name|in6p
 operator|->
-name|in6p_flags
+name|inp_flags
 operator|&
 name|IN6P_TCLASS
 operator|)
@@ -4401,7 +4401,7 @@ condition|(
 operator|(
 name|in6p
 operator|->
-name|in6p_flags
+name|inp_flags
 operator|&
 name|IN6P_HOPOPTS
 operator|)
@@ -4603,7 +4603,7 @@ condition|(
 operator|(
 name|in6p
 operator|->
-name|in6p_flags
+name|inp_flags
 operator|&
 operator|(
 name|IN6P_RTHDR
@@ -4872,7 +4872,7 @@ operator|!
 operator|(
 name|in6p
 operator|->
-name|in6p_flags
+name|inp_flags
 operator|&
 name|IN6P_DSTOPTS
 operator|)
@@ -4926,7 +4926,7 @@ condition|(
 operator|!
 name|in6p
 operator|->
-name|in6p_flags
+name|inp_flags
 operator|&
 name|IN6P_RTHDR
 condition|)

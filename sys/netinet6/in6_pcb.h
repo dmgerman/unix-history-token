@@ -425,7 +425,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|in6pcb
+name|inpcb
 operator|*
 operator|,
 expr|struct
