@@ -8256,7 +8256,7 @@ name|last
 operator|->
 name|inp_flags
 operator|&
-name|IN6P_CONTROLOPTS
+name|INP_CONTROLOPTS
 condition|)
 name|ip6_savecontrol
 argument_list|(
@@ -8382,7 +8382,7 @@ name|last
 operator|->
 name|inp_flags
 operator|&
-name|IN6P_CONTROLOPTS
+name|INP_CONTROLOPTS
 condition|)
 name|ip6_savecontrol
 argument_list|(

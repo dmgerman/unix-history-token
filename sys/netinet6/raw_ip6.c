@@ -749,7 +749,7 @@ name|last
 operator|->
 name|inp_flags
 operator|&
-name|IN6P_CONTROLOPTS
+name|INP_CONTROLOPTS
 operator|||
 name|last
 operator|->
@@ -908,7 +908,7 @@ name|last
 operator|->
 name|inp_flags
 operator|&
-name|IN6P_CONTROLOPTS
+name|INP_CONTROLOPTS
 operator|||
 name|last
 operator|->

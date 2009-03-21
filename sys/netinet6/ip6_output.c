@@ -6091,7 +6091,7 @@ name|IPV6_FAITH
 case|:
 name|OPTSET
 argument_list|(
-name|IN6P_FAITH
+name|INP_FAITH
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6823,7 +6823,7 @@ name|inp_flags
 operator|&=
 operator|~
 operator|(
-name|IN6P_LOWPORT
+name|INP_LOWPORT
 operator|)
 expr_stmt|;
 name|in6p
@@ -6832,7 +6832,7 @@ name|inp_flags
 operator|&=
 operator|~
 operator|(
-name|IN6P_HIGHPORT
+name|INP_HIGHPORT
 operator|)
 expr_stmt|;
 break|break;
@@ -6845,14 +6845,14 @@ name|inp_flags
 operator|&=
 operator|~
 operator|(
-name|IN6P_LOWPORT
+name|INP_LOWPORT
 operator|)
 expr_stmt|;
 name|in6p
 operator|->
 name|inp_flags
 operator||=
-name|IN6P_HIGHPORT
+name|INP_HIGHPORT
 expr_stmt|;
 break|break;
 case|case
@@ -6864,14 +6864,14 @@ name|inp_flags
 operator|&=
 operator|~
 operator|(
-name|IN6P_HIGHPORT
+name|INP_HIGHPORT
 operator|)
 expr_stmt|;
 name|in6p
 operator|->
 name|inp_flags
 operator||=
-name|IN6P_LOWPORT
+name|INP_LOWPORT
 expr_stmt|;
 break|break;
 default|default:
@@ -7155,7 +7155,7 @@ name|optval
 operator|=
 name|OPTBIT
 argument_list|(
-name|IN6P_FAITH
+name|INP_FAITH
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7187,7 +7187,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|IN6P_HIGHPORT
+name|INP_HIGHPORT
 condition|)
 name|optval
 operator|=
@@ -7198,7 +7198,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|IN6P_LOWPORT
+name|INP_LOWPORT
 condition|)
 name|optval
 operator|=
