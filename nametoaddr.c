@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/nametoaddr.c,v 1.77.2.4 2007/06/11 09:52:05 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/nametoaddr.c,v 1.82.2.1 2008/02/06 10:21:47 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -291,7 +291,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pcap-namedb.h>
+file|<pcap/namedb.h>
 end_include
 
 begin_ifdef
@@ -1647,7 +1647,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert 's' which has the form "xx:xx:xx:xx:xx:xx" into a new  * ethernet address.  Assumes 's' is well formed.  */
+comment|/*  * Convert 's', which can have the one of the forms:  *  *	"xx:xx:xx:xx:xx:xx"  *	"xx.xx.xx.xx.xx.xx"  *	"xx-xx-xx-xx-xx-xx"  *	"xxxx.xxxx.xxxx"  *	"xxxxxxxxxxxx"  *  * (or various mixes of ':', '.', and '-') into a new  * ethernet address.  Assumes 's' is well formed.  */
 end_comment
 
 begin_function
@@ -1698,6 +1698,16 @@ operator|*
 name|s
 operator|==
 literal|':'
+operator|||
+operator|*
+name|s
+operator|==
+literal|'.'
+operator|||
+operator|*
+name|s
+operator|==
+literal|'-'
 condition|)
 name|s
 operator|+=

@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/fad-gifc.c,v 1.8.2.2 2005/06/29 06:43:31 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/fad-gifc.c,v 1.11.2.1 2008-08-06 07:35:01 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,12 +51,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
 end_include
 
 begin_include

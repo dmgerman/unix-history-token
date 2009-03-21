@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/fad-glifc.c,v 1.5.2.1 2005/04/19 00:54:16 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/fad-glifc.c,v 1.6.2.1 2008/01/30 09:36:09 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -196,7 +196,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Get a list of all interfaces that are up and that we can open.  * Returns -1 on error, 0 otherwise.  * The list, as returned through "alldevsp", may be null if no interfaces  * were up and could be opened.  *  * This is the implementation used on platforms that have SIOCLGIFCONF  * but don't have "getifaddrs()".  (Solaris 8 and later; we use  * SIOCLGIFCONF rather than SIOCGIFCONF in order to get IPv6 addresses.)  */
+comment|/*  * Get a list of all interfaces that are up and that we can open.  * Returns -1 on error, 0 otherwise.  * The list, as returned through "alldevsp", may be null if no interfaces  * were up and could be opened.  *  * This is the implementation used on platforms that have SIOCGLIFCONF  * but don't have "getifaddrs()".  (Solaris 8 and later; we use  * SIOCGLIFCONF rather than SIOCGIFCONF in order to get IPv6 addresses.)  */
 end_comment
 
 begin_function
