@@ -34,7 +34,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-mobility.c,v 1.11.2.1 2005/04/20 22:21:16 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-mobility.c,v 1.12 2005-04-20 22:21:00 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 

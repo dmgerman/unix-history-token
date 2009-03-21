@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-icmp6.c,v 1.79.2.6 2005/09/05 09:29:28 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-icmp6.c,v 1.85.2.1 2008-02-05 19:36:58 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6151,9 +6151,13 @@ name|printf
 argument_list|(
 literal|"maxdelay=%u"
 argument_list|,
+name|EXTRACT_16BITS
+argument_list|(
+operator|&
 name|rr6
 operator|->
 name|rr_maxdelay
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -6166,7 +6170,7 @@ name|printf
 argument_list|(
 literal|"rsvd=0x%x"
 argument_list|,
-name|EXTRACT_16BITS
+name|EXTRACT_32BITS
 argument_list|(
 operator|&
 name|rr6

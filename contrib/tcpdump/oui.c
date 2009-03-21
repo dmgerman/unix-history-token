@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/oui.c,v 1.4.2.1 2005/04/17 01:20:56 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/oui.c,v 1.8.2.1 2008-01-09 09:44:39 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -130,6 +130,24 @@ block|{
 name|OUI_HP
 block|,
 literal|"Hewlett-Packard"
+block|}
+block|,
+block|{
+name|OUI_IEEE_8021_PRIVATE
+block|,
+literal|"IEEE 802.1 Private"
+block|}
+block|,
+block|{
+name|OUI_IEEE_8023_PRIVATE
+block|,
+literal|"IEEE 802.3 Private"
+block|}
+block|,
+block|{
+name|OUI_TIA
+block|,
+literal|"ANSI/TIA"
 block|}
 block|,
 block|{

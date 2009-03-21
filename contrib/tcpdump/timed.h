@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/timed.h,v 1.5 2002/12/11 07:14:12 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/timed.h,v 1.5.6.1 2008-02-05 19:46:58 guy Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -39,6 +39,20 @@ end_define
 
 begin_struct
 struct|struct
+name|tsp_timeval
+block|{
+name|u_int32_t
+name|tv_sec
+decl_stmt|;
+name|u_int32_t
+name|tv_usec
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|tsp
 block|{
 name|u_int8_t
@@ -53,7 +67,7 @@ decl_stmt|;
 union|union
 block|{
 name|struct
-name|timeval
+name|tsp_timeval
 name|tspu_time
 decl_stmt|;
 name|int8_t

@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#)$Header: /tcpdump/master/tcpdump/print-fr.c,v 1.32.2.15 2006/02/01 14:39:56 hannes Exp $ (LBL)"
+literal|"@(#)$Header: /tcpdump/master/tcpdump/print-fr.c,v 1.51 2006-06-23 22:20:32 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -309,10 +309,6 @@ name|dlci
 parameter_list|,
 name|u_int
 modifier|*
-name|sdlcore
-parameter_list|,
-name|u_int
-modifier|*
 name|addr_len
 parameter_list|,
 name|u_int8_t
@@ -507,26 +503,6 @@ index|]
 operator|&
 literal|0x02
 expr_stmt|;
-if|if
-condition|(
-name|p
-index|[
-literal|0
-index|]
-operator|&
-literal|0x02
-condition|)
-operator|*
-name|sdlcore
-operator|=
-name|p
-index|[
-literal|0
-index|]
-operator|>>
-literal|2
-expr_stmt|;
-else|else
 operator|*
 name|dlci
 operator|=
@@ -548,6 +524,91 @@ operator|)
 expr_stmt|;
 return|return
 literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|char
+modifier|*
+name|q922_string
+parameter_list|(
+specifier|const
+name|u_char
+modifier|*
+name|p
+parameter_list|)
+block|{
+specifier|static
+name|u_int
+name|dlci
+decl_stmt|,
+name|addr_len
+decl_stmt|;
+specifier|static
+name|u_int8_t
+name|flags
+index|[
+literal|4
+index|]
+decl_stmt|;
+specifier|static
+name|char
+name|buffer
+index|[
+sizeof|sizeof
+argument_list|(
+literal|"DLCI xxxxxxxxxx"
+argument_list|)
+index|]
+decl_stmt|;
+name|memset
+argument_list|(
+name|buffer
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|parse_q922_addr
+argument_list|(
+name|p
+argument_list|,
+operator|&
+name|dlci
+argument_list|,
+operator|&
+name|addr_len
+argument_list|,
+name|flags
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|buffer
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
+argument_list|,
+literal|"DLCI %u"
+argument_list|,
+name|dlci
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|buffer
 return|;
 block|}
 end_function
@@ -835,9 +896,6 @@ name|u_int
 name|dlci
 decl_stmt|;
 name|u_int
-name|sdlcore
-decl_stmt|;
-name|u_int
 name|addr_len
 decl_stmt|;
 name|u_int16_t
@@ -860,9 +918,6 @@ name|p
 argument_list|,
 operator|&
 name|dlci
-argument_list|,
-operator|&
-name|sdlcore
 argument_list|,
 operator|&
 name|addr_len
@@ -2790,10 +2845,12 @@ index|]
 operator|==
 name|MSG_ANSI_LOCKING_SHIFT
 condition|)
+block|{
 name|is_ansi
 operator|=
 literal|1
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"%s"
@@ -2826,6 +2883,7 @@ index|[
 literal|0
 index|]
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|", Call Ref: 0x%02x"
@@ -2836,10 +2894,12 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|vflag
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|", %s (0x%02x), length %u"
@@ -2864,7 +2924,9 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|printf
 argument_list|(
 literal|", %s"
@@ -2882,6 +2944,7 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|olen
 operator|=
 name|length
@@ -2911,7 +2974,7 @@ block|}
 name|length
 operator|-=
 literal|2
-operator|-
+operator|+
 name|is_ansi
 expr_stmt|;
 name|ptemp
@@ -2968,13 +3031,16 @@ if|if
 condition|(
 name|vflag
 condition|)
+block|{
 comment|/* not bark if there is just a trailer */
 name|printf
 argument_list|(
 literal|"\n[|q.933]"
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|printf
 argument_list|(
 literal|", length %u"
@@ -2982,13 +3048,15 @@ argument_list|,
 name|olen
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 block|}
-comment|/* lets do the full IE parsing only in verbose mode                  * however some IEs (DLCI Status, Link Verify)                  * are also intereststing in non-verbose mode */
+comment|/* lets do the full IE parsing only in verbose mode                  * however some IEs (DLCI Status, Link Verify)                  * are also interestting in non-verbose mode */
 if|if
 condition|(
 name|vflag
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"\n\t%s IE (0x%02x), length %u: "
@@ -3016,6 +3084,7 @@ operator|->
 name|ie_len
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* sanity check */
 if|if
 condition|(
@@ -3031,7 +3100,9 @@ name|ie_len
 operator|==
 literal|0
 condition|)
+block|{
 return|return;
+block|}
 if|if
 condition|(
 name|fr_q933_print_ie_codeset
@@ -3041,6 +3112,7 @@ index|]
 operator|!=
 name|NULL
 condition|)
+block|{
 name|ie_is_known
 operator|=
 name|fr_q933_print_ie_codeset
@@ -3053,6 +3125,7 @@ operator|,
 name|ptemp
 operator|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|vflag
@@ -3062,6 +3135,7 @@ operator|&&
 operator|!
 name|ie_is_known
 condition|)
+block|{
 name|print_unknown_data
 argument_list|(
 name|ptemp
@@ -3075,6 +3149,7 @@ operator|->
 name|ie_len
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* do we want to see a hexdump of the IE ? */
 if|if
 condition|(
@@ -3084,6 +3159,7 @@ literal|1
 operator|&&
 name|ie_is_known
 condition|)
+block|{
 name|print_unknown_data
 argument_list|(
 name|ptemp
@@ -3097,6 +3173,7 @@ operator|->
 name|ie_len
 argument_list|)
 expr_stmt|;
+block|}
 name|length
 operator|=
 name|length
@@ -3123,6 +3200,7 @@ condition|(
 operator|!
 name|vflag
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|", length %u"
@@ -3130,6 +3208,7 @@ argument_list|,
 name|olen
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3171,6 +3250,7 @@ if|if
 condition|(
 name|vflag
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%s (%u)"
@@ -3193,6 +3273,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 literal|1
 return|;
@@ -3211,11 +3292,13 @@ condition|(
 operator|!
 name|vflag
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|", "
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"TX Seq: %3d, RX Seq: %3d"
@@ -3246,11 +3329,13 @@ condition|(
 operator|!
 name|vflag
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|", "
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* now parse the DLCI information element. */
 if|if
 condition|(
@@ -3384,11 +3469,13 @@ operator|&
 literal|0x80
 operator|)
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"Invalid DLCI IE"
 argument_list|)
 expr_stmt|;
+block|}
 name|dlci
 operator|=
 operator|(
@@ -3425,6 +3512,7 @@ name|ie_len
 operator|==
 literal|4
 condition|)
+block|{
 name|dlci
 operator|=
 operator|(
@@ -3446,6 +3534,7 @@ operator|>>
 literal|1
 operator|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -3455,6 +3544,7 @@ name|ie_len
 operator|==
 literal|5
 condition|)
+block|{
 name|dlci
 operator|=
 operator|(
@@ -3485,6 +3575,7 @@ operator|>>
 literal|1
 operator|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"DLCI %u: status %s%s"

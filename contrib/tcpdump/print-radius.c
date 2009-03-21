@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"$Id: print-radius.c,v 1.27.2.1 2005/09/26 01:02:40 guy Exp $"
+literal|"$Id: print-radius.c,v 1.28 2005-09-26 01:01:55 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 

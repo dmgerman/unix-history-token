@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-enc.c,v 1.4 2005/04/06 21:32:39 mcr Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-enc.c,v 1.4.4.1 2008-02-06 10:34:15 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -220,18 +220,46 @@ name|length
 operator|-=
 name|ENC_HDRLEN
 expr_stmt|;
-comment|/* XXX - use the address family */
+name|caplen
+operator|-=
+name|ENC_HDRLEN
+expr_stmt|;
+name|p
+operator|+=
+name|ENC_HDRLEN
+expr_stmt|;
+switch|switch
+condition|(
+name|hdr
+operator|->
+name|af
+condition|)
+block|{
+case|case
+name|AF_INET
+case|:
 name|ip_print
 argument_list|(
 name|gndo
 argument_list|,
 name|p
-operator|+
-name|ENC_HDRLEN
 argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|AF_INET6
+case|:
+name|ip6_print
+argument_list|(
+name|p
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|out
 label|:
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988-1997  *	The Regents of the University of California.  All rights reserved.  *  * Copyright (c) 1998-2004  Michael Richardson<mcr@tcpdump.org>  *      The TCPDUMP project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * @(#) $Header: /tcpdump/master/tcpdump/netdissect.h,v 1.16.2.4 2006/02/08 01:40:09 hannes Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1988-1997  *	The Regents of the University of California.  All rights reserved.  *  * Copyright (c) 1998-2004  Michael Richardson<mcr@tcpdump.org>  *      The TCPDUMP project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * @(#) $Header: /tcpdump/master/tcpdump/netdissect.h,v 1.23.2.2 2008-04-04 19:42:52 guy Exp $ (LBL)  */
 end_comment
 
 begin_ifndef
@@ -374,6 +374,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|bittok2str_nosep
+parameter_list|(
+specifier|const
+name|struct
+name|tok
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_typedef
 typedef|typedef
 name|struct
@@ -398,6 +418,10 @@ name|int
 name|ndo_fflag
 decl_stmt|;
 comment|/* don't translate "foreign" IP address */
+name|int
+name|ndo_Kflag
+decl_stmt|;
+comment|/* don't check TCP checksums */
 name|int
 name|ndo_nflag
 decl_stmt|;
@@ -451,6 +475,14 @@ name|ndo_Aflag
 decl_stmt|;
 comment|/* print packet only in ascii observing TAB, 				 * LF, CR and SPACE as graphical chars 				 */
 name|int
+name|ndo_Bflag
+decl_stmt|;
+comment|/* buffer size */
+name|int
+name|ndo_Iflag
+decl_stmt|;
+comment|/* rfmon (monitor) mode */
+name|int
 name|ndo_Oflag
 decl_stmt|;
 comment|/* run filter code optimizer */
@@ -470,6 +502,18 @@ name|int
 name|ndo_Cflag_count
 decl_stmt|;
 comment|/* Keep track of which file number we're writing */
+name|int
+name|ndo_Gflag
+decl_stmt|;
+comment|/* rotate dump files after this many seconds */
+name|int
+name|ndo_Gflag_count
+decl_stmt|;
+comment|/* number of files created with Gflag rotation */
+name|time_t
+name|ndo_Gflag_time
+decl_stmt|;
+comment|/* The last time_t the dump file was rotated. */
 name|int
 name|ndo_Wflag
 decl_stmt|;
@@ -1259,6 +1303,23 @@ specifier|const
 name|u_char
 modifier|*
 name|bp2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|rrcp_print
+parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl

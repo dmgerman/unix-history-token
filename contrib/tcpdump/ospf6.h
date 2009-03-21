@@ -1,21 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/ospf6.h,v 1.6 2002/12/11 07:13:56 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/ospf6.h,v 1.7 2006-09-05 15:50:26 hannes Exp $ (LBL) */
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 1991, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * OSPF support contributed by Jeffrey Honig (jch@mitchell.cit.cornell.edu)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OSPF_TYPE_UMD
-value|0
-end_define
-
-begin_comment
-comment|/* UMd's special monitoring packets */
 end_comment
 
 begin_define
@@ -32,7 +21,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OSPF_TYPE_DB
+name|OSPF_TYPE_DD
 value|2
 end_define
 
@@ -43,7 +32,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OSPF_TYPE_LSR
+name|OSPF_TYPE_LS_REQ
 value|3
 end_define
 
@@ -54,7 +43,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OSPF_TYPE_LSU
+name|OSPF_TYPE_LS_UPDATE
 value|4
 end_define
 
@@ -65,20 +54,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OSPF_TYPE_LSA
+name|OSPF_TYPE_LS_ACK
 value|5
 end_define
 
 begin_comment
 comment|/* Link State Ack */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|OSPF_TYPE_MAX
-value|6
-end_define
 
 begin_comment
 comment|/* Options *_options	*/
@@ -252,12 +234,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LS_TYPE_TYPE7
+name|LS_TYPE_NSSA
 value|7
 end_define
 
 begin_comment
-comment|/* Type 7 LSA */
+comment|/* NSSA */
 end_comment
 
 begin_define
@@ -285,9 +267,24 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LS_TYPE_MAX
+name|LS_TYPE_INTRA_ATE
 value|10
 end_define
+
+begin_comment
+comment|/* Intra-Area-TE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_TYPE_GRACE
+value|11
+end_define
+
+begin_comment
+comment|/* Grace LSA */
+end_comment
 
 begin_define
 define|#
@@ -324,9 +321,12 @@ name|LS_SCOPE_MASK
 value|0x6000
 end_define
 
-begin_comment
-comment|/*************************************************  *  * is the above a bug in the documentation?  *  *************************************************/
-end_comment
+begin_define
+define|#
+directive|define
+name|LS_SCOPE_U
+value|0x8000
+end_define
 
 begin_comment
 comment|/* rla_link.link_type	*/
@@ -397,6 +397,52 @@ name|RLA_FLAG_W
 value|0x08
 end_define
 
+begin_define
+define|#
+directive|define
+name|RLA_FLAG_N
+value|0x10
+end_define
+
+begin_comment
+comment|/* lsa_prefix options */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LSA_PREFIX_OPT_NU
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|LSA_PREFIX_OPT_LA
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|LSA_PREFIX_OPT_MC
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|LSA_PREFIX_OPT_P
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|LSA_PREFIX_OPT_DN
+value|0x10
+end_define
+
 begin_comment
 comment|/* sla_tosmetric breakdown	*/
 end_comment
@@ -429,13 +475,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ASLA_FLAG_EXTERNAL
-value|0x04000000
-end_define
-
-begin_define
-define|#
-directive|define
 name|ASLA_FLAG_FWDADDR
 value|0x02000000
 end_define
@@ -454,24 +493,6 @@ name|ASLA_MASK_METRIC
 value|0x00ffffff
 end_define
 
-begin_comment
-comment|/* multicast vertex type */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCLA_VERTEX_ROUTER
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|MCLA_VERTEX_NETWORK
-value|2
-end_define
-
 begin_typedef
 typedef|typedef
 name|u_int32_t
@@ -485,7 +506,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|lsa_hdr
+name|lsa6_hdr
 block|{
 name|u_int16_t
 name|ls_age
@@ -514,7 +535,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|lsa_prefix
+name|lsa6_prefix
 block|{
 name|u_int8_t
 name|lsa_p_len
@@ -523,7 +544,7 @@ name|u_int8_t
 name|lsa_p_opt
 decl_stmt|;
 name|u_int16_t
-name|lsa_p_mbz
+name|lsa_p_metric
 decl_stmt|;
 name|u_int8_t
 name|lsa_p_prefix
@@ -541,10 +562,10 @@ end_comment
 
 begin_struct
 struct|struct
-name|lsa
+name|lsa6
 block|{
 name|struct
-name|lsa_hdr
+name|lsa6_hdr
 name|ls_hdr
 decl_stmt|;
 comment|/* Link state types */
@@ -573,7 +594,7 @@ directive|define
 name|rla_options
 value|rla_flgandopt.opt
 struct|struct
-name|rlalink
+name|rlalink6
 block|{
 name|u_int8_t
 name|link_type
@@ -629,7 +650,7 @@ name|u_int32_t
 name|inter_ap_metric
 decl_stmt|;
 name|struct
-name|lsa_prefix
+name|lsa6_prefix
 name|inter_ap_prefix
 index|[
 literal|1
@@ -645,7 +666,7 @@ name|u_int32_t
 name|asla_metric
 decl_stmt|;
 name|struct
-name|lsa_prefix
+name|lsa6_prefix
 name|asla_prefix
 index|[
 literal|1
@@ -698,7 +719,7 @@ name|u_int32_t
 name|llsa_nprefix
 decl_stmt|;
 name|struct
-name|lsa_prefix
+name|lsa6_prefix
 name|llsa_prefix
 index|[
 literal|1
@@ -723,7 +744,7 @@ name|rtrid_t
 name|intra_ap_rtid
 decl_stmt|;
 name|struct
-name|lsa_prefix
+name|lsa6_prefix
 name|intra_ap_prefix
 index|[
 literal|1
@@ -735,27 +756,6 @@ struct|;
 block|}
 name|lsa_un
 union|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * TOS metric struct (will be 0 or more in router links update)  */
-end_comment
-
-begin_struct
-struct|struct
-name|tos_metric
-block|{
-name|u_int8_t
-name|tos_type
-decl_stmt|;
-name|u_int8_t
-name|tos_zero
-decl_stmt|;
-name|u_int16_t
-name|tos_metric
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -867,7 +867,7 @@ name|u_int32_t
 name|db_seq
 decl_stmt|;
 name|struct
-name|lsa_hdr
+name|lsa6_hdr
 name|db_lshdr
 index|[
 literal|1
@@ -879,7 +879,7 @@ name|un_db
 struct|;
 comment|/* Link State Request */
 struct|struct
-name|lsr
+name|lsr6
 block|{
 name|u_int16_t
 name|ls_mbz
@@ -907,7 +907,7 @@ name|u_int32_t
 name|lsu_count
 decl_stmt|;
 name|struct
-name|lsa
+name|lsa6
 name|lsu_lsa
 index|[
 literal|1
@@ -921,7 +921,7 @@ comment|/* Link State Acknowledgement */
 struct|struct
 block|{
 name|struct
-name|lsa_hdr
+name|lsa6_hdr
 name|lsa_lshdr
 index|[
 literal|1

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * Original code by Hannes Gredler (hannes@juniper.net)  * Support for LMP service discovery extensions (defined by UNI 1.0) added  * by Manu Pathak (mapathak@cisco.com), May 2005  */
+comment|/*  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * Support for the Link Management Protocol as per rfc 4204.  *  * Original code by Hannes Gredler (hannes@juniper.net)  * Support for LMP service discovery extensions (defined by UNI 1.0) added  * by Manu Pathak (mapathak@cisco.com), May 2005  */
 end_comment
 
 begin_ifndef
@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-lmp.c,v 1.5.2.4 2006/06/23 02:07:27 hannes Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-lmp.c,v 1.11 2007-08-02 17:32:49 hannes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -318,31 +318,31 @@ block|{
 block|{
 literal|0x01
 block|,
-literal|"\n\t\tLink Verification Procedure Not supported"
+literal|"Link Verification Procedure Not supported"
 block|}
 block|,
 block|{
 literal|0x02
 block|,
-literal|"\n\t\tUnwilling to verify"
+literal|"Unwilling to verify"
 block|}
 block|,
 block|{
 literal|0x04
 block|,
-literal|"\n\t\tUnsupported verification transport mechanism"
+literal|"Unsupported verification transport mechanism"
 block|}
 block|,
 block|{
 literal|0x08
 block|,
-literal|"\n\t\tLink_Id configuration error"
+literal|"Link-Id configuration error"
 block|}
 block|,
 block|{
 literal|0x10
 block|,
-literal|"\n\t\tUnknown object c-type"
+literal|"Unknown object c-type"
 block|}
 block|,
 block|{
@@ -366,37 +366,37 @@ block|{
 block|{
 literal|0x01
 block|,
-literal|"\n\t\tUnacceptable non-negotiable LINK_SUMMARY parameters"
+literal|"Unacceptable non-negotiable LINK-SUMMARY parameters"
 block|}
 block|,
 block|{
 literal|0x02
 block|,
-literal|"\n\t\tRenegotiate LINK_SUMMARY parameters"
+literal|"Renegotiate LINK-SUMMARY parameters"
 block|}
 block|,
 block|{
 literal|0x04
 block|,
-literal|"\n\t\tInvalid TE-LINK Object"
+literal|"Invalid TE-LINK Object"
 block|}
 block|,
 block|{
 literal|0x08
 block|,
-literal|"\n\t\tInvalid DATA-LINK Object"
+literal|"Invalid DATA-LINK Object"
 block|}
 block|,
 block|{
 literal|0x10
 block|,
-literal|"\n\t\tUnknown TE-LINK Object c-type"
+literal|"Unknown TE-LINK Object c-type"
 block|}
 block|,
 block|{
 literal|0x20
 block|,
-literal|"\n\t\tUnknown DATA-LINK Object c-type"
+literal|"Unknown DATA-LINK Object c-type"
 block|}
 block|,
 block|{
@@ -2501,7 +2501,7 @@ name|LMP_CTYPE_HELLO
 case|:
 name|printf
 argument_list|(
-literal|"\n\t    TxSeqNum: %u\n\t    RcvSeqNum: %u"
+literal|"\n\t    Tx Seq: %u, Rx Seq: %u"
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(

@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/util.c,v 1.95.2.6 2006/02/08 01:40:09 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/util.c,v 1.109 2007-01-29 09:59:42 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,6 +113,20 @@ include|#
 directive|include
 file|"interface.h"
 end_include
+
+begin_function_decl
+name|char
+modifier|*
+name|ts_format
+parameter_list|(
+specifier|register
+name|int
+parameter_list|,
+specifier|register
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Print out a null-terminated filename (or other ascii string).  * If ep is NULL, assume no truncation check is needed.  * Return true if truncated.  */
@@ -506,6 +520,73 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Format the timestamp  */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|ts_format
+parameter_list|(
+specifier|register
+name|int
+name|sec
+parameter_list|,
+specifier|register
+name|int
+name|usec
+parameter_list|)
+block|{
+specifier|static
+name|char
+name|buf
+index|[
+sizeof|sizeof
+argument_list|(
+literal|"00:00:00.000000"
+argument_list|)
+index|]
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%02d:%02d:%02d.%06u"
+argument_list|,
+name|sec
+operator|/
+literal|3600
+argument_list|,
+operator|(
+name|sec
+operator|%
+literal|3600
+operator|)
+operator|/
+literal|60
+argument_list|,
+name|sec
+operator|%
+literal|60
+argument_list|,
+name|usec
+argument_list|)
+expr_stmt|;
+return|return
+name|buf
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Print the timestamp  */
 end_comment
 
@@ -541,6 +622,12 @@ specifier|static
 name|unsigned
 name|b_usec
 decl_stmt|;
+name|int
+name|d_usec
+decl_stmt|;
+name|int
+name|d_sec
+decl_stmt|;
 switch|switch
 condition|(
 name|tflag
@@ -567,30 +654,16 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%02d:%02d:%02d.%06u "
+literal|"%s "
 argument_list|,
+name|ts_format
+argument_list|(
 name|s
-operator|/
-literal|3600
 argument_list|,
-operator|(
-name|s
-operator|%
-literal|3600
-operator|)
-operator|/
-literal|60
-argument_list|,
-name|s
-operator|%
-literal|60
-argument_list|,
-operator|(
-name|unsigned
-operator|)
 name|tvp
 operator|->
 name|tv_usec
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -630,6 +703,10 @@ case|case
 literal|3
 case|:
 comment|/* Microseconds since previous packet */
+case|case
+literal|5
+case|:
+comment|/* Microseconds since first packet */
 if|if
 condition|(
 name|b_sec
@@ -637,32 +714,36 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"000000 "
-argument_list|)
+comment|/* init timestamp for first packet */
+name|b_usec
+operator|=
+name|tvp
+operator|->
+name|tv_usec
+expr_stmt|;
+name|b_sec
+operator|=
+name|tvp
+operator|->
+name|tv_sec
 expr_stmt|;
 block|}
-else|else
-block|{
-name|int
 name|d_usec
-init|=
+operator|=
 name|tvp
 operator|->
 name|tv_usec
 operator|-
 name|b_usec
-decl_stmt|;
-name|int
+expr_stmt|;
 name|d_sec
-init|=
+operator|=
 name|tvp
 operator|->
 name|tv_sec
 operator|-
 name|b_sec
-decl_stmt|;
+expr_stmt|;
 while|while
 condition|(
 name|d_usec
@@ -678,25 +759,29 @@ name|d_sec
 operator|--
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|d_sec
-condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"%d. "
+literal|"%s "
 argument_list|,
-name|d_sec
-argument_list|)
-expr_stmt|;
-name|printf
+name|ts_format
 argument_list|(
-literal|"%06d "
+name|d_sec
 argument_list|,
 name|d_usec
 argument_list|)
+argument_list|)
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|tflag
+operator|==
+literal|3
+condition|)
+block|{
+comment|/* set timestamp for last packet */
 name|b_sec
 operator|=
 name|tvp
@@ -709,6 +794,7 @@ name|tvp
 operator|->
 name|tv_usec
 expr_stmt|;
+block|}
 break|break;
 case|case
 literal|4
@@ -759,7 +845,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%04d-%02d-%02d "
+literal|"%04d-%02d-%02d %s "
 argument_list|,
 name|tm
 operator|->
@@ -776,34 +862,15 @@ argument_list|,
 name|tm
 operator|->
 name|tm_mday
-argument_list|)
-expr_stmt|;
-name|printf
+argument_list|,
+name|ts_format
 argument_list|(
-literal|"%02d:%02d:%02d.%06u "
-argument_list|,
 name|s
-operator|/
-literal|3600
 argument_list|,
-operator|(
-name|s
-operator|%
-literal|3600
-operator|)
-operator|/
-literal|60
-argument_list|,
-name|s
-operator|%
-literal|60
-argument_list|,
-operator|(
-name|unsigned
-operator|)
 name|tvp
 operator|->
 name|tv_usec
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1260,13 +1327,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert a bit token value to a string; use "fmt" if not found.  * this is useful for parsing bitfields, the output strings are comma seperated  */
+comment|/*  * Convert a bit token value to a string; use "fmt" if not found.  * this is useful for parsing bitfields, the output strings are seperated  * if the s field is positive.  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
-name|bittok2str
+name|bittok2str_internal
 parameter_list|(
 specifier|register
 specifier|const
@@ -1284,6 +1352,10 @@ parameter_list|,
 specifier|register
 name|int
 name|v
+parameter_list|,
+specifier|register
+name|int
+name|sep
 parameter_list|)
 block|{
 specifier|static
@@ -1367,11 +1439,17 @@ argument_list|)
 operator|-
 name|buflen
 argument_list|,
-literal|"%s, "
+literal|"%s%s"
 argument_list|,
 name|lp
 operator|->
 name|s
+argument_list|,
+name|sep
+condition|?
+literal|", "
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1387,6 +1465,19 @@ block|}
 name|lp
 operator|++
 expr_stmt|;
+block|}
+comment|/* user didn't want string seperation - no need to cut off trailing seperators */
+if|if
+condition|(
+operator|!
+name|sep
+condition|)
+block|{
+return|return
+operator|(
+name|buf
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -1448,6 +1539,94 @@ name|buf
 operator|)
 return|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Convert a bit token value to a string; use "fmt" if not found.  * this is useful for parsing bitfields, the output strings are not seperated.  */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|bittok2str_nosep
+parameter_list|(
+specifier|register
+specifier|const
+name|struct
+name|tok
+modifier|*
+name|lp
+parameter_list|,
+specifier|register
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+specifier|register
+name|int
+name|v
+parameter_list|)
+block|{
+return|return
+operator|(
+name|bittok2str_internal
+argument_list|(
+name|lp
+argument_list|,
+name|fmt
+argument_list|,
+name|v
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Convert a bit token value to a string; use "fmt" if not found.  * this is useful for parsing bitfields, the output strings are comma seperated.  */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|bittok2str
+parameter_list|(
+specifier|register
+specifier|const
+name|struct
+name|tok
+modifier|*
+name|lp
+parameter_list|,
+specifier|register
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+specifier|register
+name|int
+name|v
+parameter_list|)
+block|{
+return|return
+operator|(
+name|bittok2str_internal
+argument_list|(
+name|lp
+argument_list|,
+name|fmt
+argument_list|,
+name|v
+argument_list|,
+literal|1
+argument_list|)
+operator|)
+return|;
 block|}
 end_function
 
@@ -2364,7 +2543,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"\\%03o"
+literal|"\\0x%02x"
 argument_list|,
 name|ch
 argument_list|)

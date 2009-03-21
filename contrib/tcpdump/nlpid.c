@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/nlpid.c,v 1.4 2004/10/19 15:27:55 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/nlpid.c,v 1.4 2004-10-19 15:27:55 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 

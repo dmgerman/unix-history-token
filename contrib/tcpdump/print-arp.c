@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-arp.c,v 1.64 2004/04/30 16:42:14 mcr Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-arp.c,v 1.66 2006-03-03 22:53:21 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,6 +129,11 @@ value|15
 comment|/* frame relay hardware format */
 define|#
 directive|define
+name|ARPHRD_ATM2225
+value|19
+comment|/* ATM (RFC 2225) */
+define|#
+directive|define
 name|ARPHRD_STRIP
 value|23
 comment|/* Ricochet Starmode Radio hardware format */
@@ -183,6 +188,11 @@ directive|define
 name|ARPOP_INVREPLY
 value|9
 comment|/* response identifying peer */
+define|#
+directive|define
+name|ARPOP_NAK
+value|10
+comment|/* NAK - only valif for ATM ARP */
 comment|/*  * The remaining fields are variable in size,  * according to the sizes above.  */
 ifdef|#
 directive|ifdef
@@ -261,7 +271,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|HLN
+name|HRD_LEN
 parameter_list|(
 name|ap
 parameter_list|)
@@ -271,7 +281,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PLN
+name|PROTO_LEN
 parameter_list|(
 name|ap
 parameter_list|)
@@ -338,6 +348,122 @@ parameter_list|)
 value|(ar_tpa(ap))
 end_define
 
+begin_decl_stmt
+name|struct
+name|tok
+name|arpop_values
+index|[]
+init|=
+block|{
+block|{
+name|ARPOP_REQUEST
+block|,
+literal|"Request"
+block|}
+block|,
+block|{
+name|ARPOP_REPLY
+block|,
+literal|"Reply"
+block|}
+block|,
+block|{
+name|ARPOP_REVREQUEST
+block|,
+literal|"Reverse Request"
+block|}
+block|,
+block|{
+name|ARPOP_REVREPLY
+block|,
+literal|"Reverse Reply"
+block|}
+block|,
+block|{
+name|ARPOP_INVREQUEST
+block|,
+literal|"Inverse Request"
+block|}
+block|,
+block|{
+name|ARPOP_INVREPLY
+block|,
+literal|"Inverse Reply"
+block|}
+block|,
+block|{
+name|ARPOP_NAK
+block|,
+literal|"NACK Reply"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|tok
+name|arphrd_values
+index|[]
+init|=
+block|{
+block|{
+name|ARPHRD_ETHER
+block|,
+literal|"Ethernet"
+block|}
+block|,
+block|{
+name|ARPHRD_IEEE802
+block|,
+literal|"TokenRing"
+block|}
+block|,
+block|{
+name|ARPHRD_ARCNET
+block|,
+literal|"ArcNet"
+block|}
+block|,
+block|{
+name|ARPHRD_FRELAY
+block|,
+literal|"FrameRelay"
+block|}
+block|,
+block|{
+name|ARPHRD_STRIP
+block|,
+literal|"Strip"
+block|}
+block|,
+block|{
+name|ARPHRD_IEEE1394
+block|,
+literal|"IEEE 1394"
+block|}
+block|,
+block|{
+name|ARPHRD_ATM2225
+block|,
+literal|"ATM"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * ATM Address Resolution Protocol.  *  * See RFC 2225 for protocol description.  ATMARP packets are similar  * to ARP packets, except that there are no length fields for the  * protocol address - instead, there are type/length fields for  * the ATM number and subaddress - and the hardware addresses consist  * of an ATM number and an ATM subaddress.  */
 end_comment
@@ -350,11 +476,6 @@ name|u_short
 name|aar_hrd
 decl_stmt|;
 comment|/* format of hardware address */
-define|#
-directive|define
-name|ARPHRD_ATM2225
-value|19
-comment|/* ATM (RFC 2225) */
 name|u_short
 name|aar_pro
 decl_stmt|;
@@ -381,11 +502,6 @@ name|u_short
 name|aar_op
 decl_stmt|;
 comment|/* same as regular ARP */
-define|#
-directive|define
-name|ATMARPOP_NAK
-value|10
-comment|/* NAK */
 name|u_char
 name|aar_spln
 decl_stmt|;
@@ -447,7 +563,7 @@ parameter_list|)
 value|EXTRACT_16BITS(&(ap)->aar_hrd)
 define|#
 directive|define
-name|ATMSHLN
+name|ATMSHRD_LEN
 parameter_list|(
 name|ap
 parameter_list|)
@@ -461,7 +577,7 @@ parameter_list|)
 value|((ap)->aar_sstl& ATMARP_LEN_MASK)
 define|#
 directive|define
-name|ATMSPLN
+name|ATMSPROTO_LEN
 parameter_list|(
 name|ap
 parameter_list|)
@@ -482,7 +598,7 @@ parameter_list|)
 value|EXTRACT_16BITS(&(ap)->aar_pro)
 define|#
 directive|define
-name|ATMTHLN
+name|ATMTHRD_LEN
 parameter_list|(
 name|ap
 parameter_list|)
@@ -496,7 +612,7 @@ parameter_list|)
 value|((ap)->aar_tstl& ATMARP_LEN_MASK)
 define|#
 directive|define
-name|ATMTPLN
+name|ATMTPROTO_LEN
 parameter_list|(
 name|ap
 parameter_list|)
@@ -514,7 +630,7 @@ name|aar_ssa
 parameter_list|(
 name|ap
 parameter_list|)
-value|(aar_sha(ap) + ATMSHLN(ap))
+value|(aar_sha(ap) + ATMSHRD_LEN(ap))
 define|#
 directive|define
 name|aar_spa
@@ -528,14 +644,14 @@ name|aar_tha
 parameter_list|(
 name|ap
 parameter_list|)
-value|(aar_spa(ap) + ATMSPLN(ap))
+value|(aar_spa(ap) + ATMSPROTO_LEN(ap))
 define|#
 directive|define
 name|aar_tsa
 parameter_list|(
 name|ap
 parameter_list|)
-value|(aar_tha(ap) + ATMTHLN(ap))
+value|(aar_tha(ap) + ATMTHRD_LEN(ap))
 define|#
 directive|define
 name|aar_tpa
@@ -671,6 +787,8 @@ name|linkaddr_string
 argument_list|(
 name|ha
 argument_list|,
+name|LINKADDR_ATM
+argument_list|,
 name|ha_len
 argument_list|)
 operator|)
@@ -692,6 +810,8 @@ operator|,
 name|linkaddr_string
 argument_list|(
 name|srca
+argument_list|,
+name|LINKADDR_ATM
 argument_list|,
 name|srca_len
 argument_list|)
@@ -784,7 +904,7 @@ argument_list|(
 name|ap
 argument_list|)
 argument_list|,
-name|ATMTPLN
+name|ATMTPROTO_LEN
 argument_list|(
 name|ap
 argument_list|)
@@ -796,7 +916,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"truncated-atmarp"
+literal|"[|ARP]"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -816,6 +936,24 @@ return|return;
 block|}
 if|if
 condition|(
+operator|!
+name|ndo
+operator|->
+name|ndo_eflag
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"ARP, "
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|(
 name|pro
 operator|!=
@@ -826,19 +964,23 @@ operator|!=
 name|ETHERTYPE_TRAIL
 operator|)
 operator|||
-name|ATMSPLN
+name|ATMSPROTO_LEN
 argument_list|(
 name|ap
 argument_list|)
 operator|!=
 literal|4
 operator|||
-name|ATMTPLN
+name|ATMTPROTO_LEN
 argument_list|(
 name|ap
 argument_list|)
 operator|!=
 literal|4
+operator|||
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 block|{
 name|ND_PRINT
@@ -846,41 +988,73 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"atmarp-#%d for proto #%d (%d/%d) hardware #%d"
+literal|"%s, %s (len %u/%u)"
 operator|,
-name|op
-operator|,
-name|pro
-operator|,
-name|ATMSPLN
+name|tok2str
 argument_list|(
-name|ap
-argument_list|)
-operator|,
-name|ATMTPLN
-argument_list|(
-name|ap
-argument_list|)
-operator|,
+name|arphrd_values
+argument_list|,
+literal|"Unknown Hardware (%u)"
+argument_list|,
 name|hrd
+argument_list|)
+operator|,
+name|tok2str
+argument_list|(
+name|ethertype_values
+argument_list|,
+literal|"Unknown Protocol (0x%04x)"
+argument_list|,
+name|pro
+argument_list|)
+operator|,
+name|ATMSPROTO_LEN
+argument_list|(
+name|ap
+argument_list|)
+operator|,
+name|ATMTPROTO_LEN
+argument_list|(
+name|ap
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
+comment|/* don't know know about the address formats */
 if|if
 condition|(
-name|pro
-operator|==
-name|ETHERTYPE_TRAIL
-condition|)
-name|ND_PRINT
-argument_list|(
-operator|(
+operator|!
 name|ndo
-operator|,
-literal|"trailer-"
-operator|)
+operator|->
+name|ndo_vflag
+condition|)
+block|{
+goto|goto
+name|out
+goto|;
+block|}
+block|}
+comment|/* print operation */
+name|printf
+argument_list|(
+literal|"%s%s "
+argument_list|,
+name|ndo
+operator|->
+name|ndo_vflag
+condition|?
+literal|", "
+else|:
+literal|""
+argument_list|,
+name|tok2str
+argument_list|(
+name|arpop_values
+argument_list|,
+literal|"Unknown (%u)"
+argument_list|,
+name|op
+argument_list|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -896,7 +1070,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"arp who-has %s"
+literal|"who-has %s"
 operator|,
 name|ipaddr_string
 argument_list|(
@@ -910,7 +1084,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ATMTHLN
+name|ATMTHRD_LEN
 argument_list|(
 name|ap
 argument_list|)
@@ -936,7 +1110,7 @@ argument_list|(
 name|ap
 argument_list|)
 argument_list|,
-name|ATMTHLN
+name|ATMTHRD_LEN
 argument_list|(
 name|ap
 argument_list|)
@@ -967,7 +1141,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|" tell %s"
+literal|"tell %s"
 operator|,
 name|ipaddr_string
 argument_list|(
@@ -988,7 +1162,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"arp reply %s"
+literal|"%s is-at "
 operator|,
 name|ipaddr_string
 argument_list|(
@@ -997,15 +1171,6 @@ argument_list|(
 name|ap
 argument_list|)
 argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-name|ND_PRINT
-argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|" is-at "
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1018,7 +1183,7 @@ argument_list|(
 name|ap
 argument_list|)
 argument_list|,
-name|ATMSHLN
+name|ATMSHRD_LEN
 argument_list|(
 name|ap
 argument_list|)
@@ -1043,7 +1208,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"invarp who-is "
+literal|"who-is "
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1056,7 +1221,7 @@ argument_list|(
 name|ap
 argument_list|)
 argument_list|,
-name|ATMTHLN
+name|ATMTHRD_LEN
 argument_list|(
 name|ap
 argument_list|)
@@ -1090,7 +1255,7 @@ argument_list|(
 name|ap
 argument_list|)
 argument_list|,
-name|ATMSHLN
+name|ATMSHRD_LEN
 argument_list|(
 name|ap
 argument_list|)
@@ -1110,15 +1275,6 @@ break|break;
 case|case
 name|ARPOP_INVREPLY
 case|:
-name|ND_PRINT
-argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|"invarp reply "
-operator|)
-argument_list|)
-expr_stmt|;
 name|atmarp_addr_print
 argument_list|(
 name|ndo
@@ -1128,7 +1284,7 @@ argument_list|(
 name|ap
 argument_list|)
 argument_list|,
-name|ATMSHLN
+name|ATMSHRD_LEN
 argument_list|(
 name|ap
 argument_list|)
@@ -1149,7 +1305,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|" at %s"
+literal|"at %s"
 operator|,
 name|ipaddr_string
 argument_list|(
@@ -1163,14 +1319,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ATMARPOP_NAK
+name|ARPOP_NAK
 case|:
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"nak reply for %s"
+literal|"for %s"
 operator|,
 name|ipaddr_string
 argument_list|(
@@ -1184,17 +1340,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|ND_PRINT
-argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|"atmarp-#%d"
-operator|,
-name|op
-operator|)
-argument_list|)
-expr_stmt|;
 name|ND_DEFAULTPRINT
 argument_list|(
 operator|(
@@ -1209,6 +1354,19 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|out
+label|:
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|", length %u"
+operator|,
+name|length
+operator|)
+argument_list|)
+expr_stmt|;
 return|return;
 name|trunc
 label|:
@@ -1217,7 +1375,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"[|atmarp]"
+literal|"[|ARP]"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1256,6 +1414,8 @@ decl_stmt|,
 name|hrd
 decl_stmt|,
 name|op
+decl_stmt|,
+name|linkaddr
 decl_stmt|;
 name|ap
 operator|=
@@ -1280,26 +1440,6 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|hrd
-operator|==
-name|ARPHRD_ATM2225
-condition|)
-block|{
-name|atmarp_print
-argument_list|(
-name|ndo
-argument_list|,
-name|bp
-argument_list|,
-name|length
-argument_list|,
-name|caplen
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|pro
 operator|=
 name|PRO
@@ -1314,6 +1454,41 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+comment|/* if its ATM then call the ATM ARP printer            for Frame-relay ARP most of the fields            are similar to Ethernet so overload the Ethernet Printer            and set the linkaddr type for linkaddr_string() accordingly */
+switch|switch
+condition|(
+name|hrd
+condition|)
+block|{
+case|case
+name|ARPHRD_ATM2225
+case|:
+name|atmarp_print
+argument_list|(
+name|ndo
+argument_list|,
+name|bp
+argument_list|,
+name|length
+argument_list|,
+name|caplen
+argument_list|)
+expr_stmt|;
+return|return;
+case|case
+name|ARPHRD_FRELAY
+case|:
+name|linkaddr
+operator|=
+name|LINKADDR_FRELAY
+expr_stmt|;
+default|default:
+name|linkaddr
+operator|=
+name|LINKADDR_ETHER
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 operator|!
@@ -1325,7 +1500,7 @@ argument_list|(
 name|ap
 argument_list|)
 argument_list|,
-name|PLN
+name|PROTO_LEN
 argument_list|(
 name|ap
 argument_list|)
@@ -1337,7 +1512,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"truncated-arp"
+literal|"[|ARP]"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1357,6 +1532,25 @@ return|return;
 block|}
 if|if
 condition|(
+operator|!
+name|ndo
+operator|->
+name|ndo_eflag
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"ARP, "
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* print hardware type/len and proto type/len */
+if|if
+condition|(
 operator|(
 name|pro
 operator|!=
@@ -1367,19 +1561,23 @@ operator|!=
 name|ETHERTYPE_TRAIL
 operator|)
 operator|||
-name|PLN
+name|PROTO_LEN
 argument_list|(
 name|ap
 argument_list|)
 operator|!=
 literal|4
 operator|||
-name|HLN
+name|HRD_LEN
 argument_list|(
 name|ap
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 block|{
 name|ND_PRINT
@@ -1387,41 +1585,73 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"arp-#%d for proto #%d (%d) hardware #%d (%d)"
+literal|"%s (len %u), %s (len %u)"
 operator|,
-name|op
+name|tok2str
+argument_list|(
+name|arphrd_values
+argument_list|,
+literal|"Unknown Hardware (%u)"
+argument_list|,
+name|hrd
+argument_list|)
 operator|,
-name|pro
-operator|,
-name|PLN
+name|HRD_LEN
 argument_list|(
 name|ap
 argument_list|)
 operator|,
-name|hrd
+name|tok2str
+argument_list|(
+name|ethertype_values
+argument_list|,
+literal|"Unknown Protocol (0x%04x)"
+argument_list|,
+name|pro
+argument_list|)
 operator|,
-name|HLN
+name|PROTO_LEN
 argument_list|(
 name|ap
 argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
+comment|/* don't know know about the address formats */
 if|if
 condition|(
-name|pro
-operator|==
-name|ETHERTYPE_TRAIL
-condition|)
-name|ND_PRINT
-argument_list|(
-operator|(
+operator|!
 name|ndo
-operator|,
-literal|"trailer-"
-operator|)
+operator|->
+name|ndo_vflag
+condition|)
+block|{
+goto|goto
+name|out
+goto|;
+block|}
+block|}
+comment|/* print operation */
+name|printf
+argument_list|(
+literal|"%s%s "
+argument_list|,
+name|ndo
+operator|->
+name|ndo_vflag
+condition|?
+literal|", "
+else|:
+literal|""
+argument_list|,
+name|tok2str
+argument_list|(
+name|arpop_values
+argument_list|,
+literal|"Unknown (%u)"
+argument_list|,
+name|op
+argument_list|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1437,7 +1667,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"arp who-has %s"
+literal|"who-has %s"
 operator|,
 name|ipaddr_string
 argument_list|(
@@ -1470,7 +1700,7 @@ argument_list|(
 name|ap
 argument_list|)
 argument_list|,
-name|HLN
+name|HRD_LEN
 argument_list|(
 name|ap
 argument_list|)
@@ -1492,7 +1722,9 @@ argument_list|(
 name|ap
 argument_list|)
 argument_list|,
-name|HLN
+name|linkaddr
+argument_list|,
+name|HRD_LEN
 argument_list|(
 name|ap
 argument_list|)
@@ -1526,7 +1758,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"arp reply %s"
+literal|"%s is-at %s"
 operator|,
 name|ipaddr_string
 argument_list|(
@@ -1535,15 +1767,6 @@ argument_list|(
 name|ap
 argument_list|)
 argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-name|ND_PRINT
-argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|" is-at %s"
 operator|,
 name|linkaddr_string
 argument_list|(
@@ -1552,7 +1775,9 @@ argument_list|(
 name|ap
 argument_list|)
 argument_list|,
-name|HLN
+name|linkaddr
+argument_list|,
+name|HRD_LEN
 argument_list|(
 name|ap
 argument_list|)
@@ -1569,7 +1794,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"rarp who-is %s tell %s"
+literal|"who-is %s tell %s"
 operator|,
 name|linkaddr_string
 argument_list|(
@@ -1578,7 +1803,9 @@ argument_list|(
 name|ap
 argument_list|)
 argument_list|,
-name|HLN
+name|linkaddr
+argument_list|,
+name|HRD_LEN
 argument_list|(
 name|ap
 argument_list|)
@@ -1591,7 +1818,9 @@ argument_list|(
 name|ap
 argument_list|)
 argument_list|,
-name|HLN
+name|linkaddr
+argument_list|,
+name|HRD_LEN
 argument_list|(
 name|ap
 argument_list|)
@@ -1608,7 +1837,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"rarp reply %s at %s"
+literal|"%s at %s"
 operator|,
 name|linkaddr_string
 argument_list|(
@@ -1617,7 +1846,9 @@ argument_list|(
 name|ap
 argument_list|)
 argument_list|,
-name|HLN
+name|linkaddr
+argument_list|,
+name|HRD_LEN
 argument_list|(
 name|ap
 argument_list|)
@@ -1642,7 +1873,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"invarp who-is %s tell %s"
+literal|"who-is %s tell %s"
 operator|,
 name|linkaddr_string
 argument_list|(
@@ -1651,7 +1882,9 @@ argument_list|(
 name|ap
 argument_list|)
 argument_list|,
-name|HLN
+name|linkaddr
+argument_list|,
+name|HRD_LEN
 argument_list|(
 name|ap
 argument_list|)
@@ -1664,7 +1897,9 @@ argument_list|(
 name|ap
 argument_list|)
 argument_list|,
-name|HLN
+name|linkaddr
+argument_list|,
+name|HRD_LEN
 argument_list|(
 name|ap
 argument_list|)
@@ -1681,7 +1916,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"invarp reply %s at %s"
+literal|"%s at %s"
 operator|,
 name|linkaddr_string
 argument_list|(
@@ -1690,7 +1925,9 @@ argument_list|(
 name|ap
 argument_list|)
 argument_list|,
-name|HLN
+name|linkaddr
+argument_list|,
+name|HRD_LEN
 argument_list|(
 name|ap
 argument_list|)
@@ -1708,17 +1945,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|ND_PRINT
-argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|"arp-#%d"
-operator|,
-name|op
-operator|)
-argument_list|)
-expr_stmt|;
 name|ND_DEFAULTPRINT
 argument_list|(
 operator|(
@@ -1733,20 +1959,16 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|hrd
-operator|!=
-name|ARPHRD_ETHER
-condition|)
+name|out
+label|:
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|" hardware #%d"
+literal|", length %u"
 operator|,
-name|hrd
+name|length
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1758,7 +1980,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"[|arp]"
+literal|"[|ARP]"
 operator|)
 argument_list|)
 expr_stmt|;
