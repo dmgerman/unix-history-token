@@ -3912,7 +3912,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|in6_pcbfree
+name|in_pcbfree
 argument_list|(
 name|inp
 argument_list|)
