@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/bpf_image.c,v 1.26.2.1 2007/06/11 09:52:04 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/bpf_image.c,v 1.27.2.1 2008/01/02 04:22:16 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,6 +87,7 @@ name|p
 parameter_list|,
 name|n
 parameter_list|)
+specifier|const
 name|struct
 name|bpf_insn
 modifier|*

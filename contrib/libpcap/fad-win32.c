@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/fad-win32.c,v 1.11.2.3 2006/02/22 17:09:32 gianluca Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/fad-win32.c,v 1.15 2007/09/25 20:34:36 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -987,6 +987,33 @@ argument_list|(
 name|desc
 argument_list|)
 operator|+
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ret
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* 		 * We haven't had any errors yet; do any platform-specific 		 * operations to add devices. 		 */
+if|if
+condition|(
+name|pcap_platform_finddevs
+argument_list|(
+operator|&
+name|devlist
+argument_list|,
+name|errbuf
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|ret
+operator|=
+operator|-
 literal|1
 expr_stmt|;
 block|}

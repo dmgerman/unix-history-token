@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-septel.c,v 1.1.2.2 2005/06/21 01:03:23 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-septel.c,v 1.2.2.2 2008-04-14 20:41:52 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -171,14 +171,14 @@ file|"pcap-septel.h"
 end_include
 
 begin_comment
-comment|/* Replace dag function names with pcap equivalent. */
+comment|/* Replace septel function names with pcap equivalent. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|septel_open_live
-value|pcap_open_live
+name|septel_create
+value|pcap_create
 end_define
 
 begin_define
@@ -249,18 +249,6 @@ name|errbuf
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function
-specifier|static
-name|void
-name|septel_platform_close
-parameter_list|(
-name|pcap_t
-modifier|*
-name|p
-parameter_list|)
-block|{  }
-end_function
 
 begin_comment
 comment|/*  *  Read at most max_packets from the capture queue and call the callback  *  for each of them. Returns the number of packets handled, -1 if an  *  error occured, or -2 if we were told to break out of the loop.  */
@@ -618,95 +606,21 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Get a handle for a live capture from the given Septel device.  Always pass a NULL device  *  The promisc flag is ignored because Septel cards have built-in tracing.  *  The to_ms parameter is also ignored as it is  *  not supported in hardware.  *  *  See also pcap(3).  */
+comment|/*  *  Activate a handle for a live capture from the given Septel device.  Always pass a NULL device  *  The promisc flag is ignored because Septel cards have built-in tracing.  *  The timeout is also ignored as it is not supported in hardware.  *  *  See also pcap(3).  */
 end_comment
 
 begin_function
+specifier|static
 name|pcap_t
 modifier|*
-name|septel_open_live
+name|septel_activate
 parameter_list|(
-specifier|const
-name|char
+name|pcap_t
 modifier|*
-name|device
-parameter_list|,
-name|int
-name|snaplen
-parameter_list|,
-name|int
-name|promisc
-parameter_list|,
-name|int
-name|to_ms
-parameter_list|,
-name|char
-modifier|*
-name|ebuf
+name|handle
 parameter_list|)
 block|{
-name|pcap_t
-modifier|*
-name|handle
-decl_stmt|;
-name|handle
-operator|=
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-operator|*
-name|handle
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|handle
-operator|==
-name|NULL
-condition|)
-block|{
-name|snprintf
-argument_list|(
-name|ebuf
-argument_list|,
-name|PCAP_ERRBUF_SIZE
-argument_list|,
-literal|"malloc %s: %s"
-argument_list|,
-name|device
-argument_list|,
-name|pcap_strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
 comment|/* Initialize some components of the pcap structure. */
-name|memset
-argument_list|(
-name|handle
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|handle
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|handle
-operator|->
-name|snapshot
-operator|=
-name|snaplen
-expr_stmt|;
 name|handle
 operator|->
 name|linktype
@@ -770,32 +684,57 @@ name|stats_op
 operator|=
 name|septel_stats
 expr_stmt|;
-name|handle
-operator|->
-name|close_op
-operator|=
-name|septel_platform_close
-expr_stmt|;
 return|return
-name|handle
+literal|0
 return|;
-name|fail
-label|:
-if|if
-condition|(
-name|handle
-operator|!=
-name|NULL
-condition|)
+block|}
+end_function
+
+begin_function
+name|pcap_t
+modifier|*
+name|septel_create
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|device
+parameter_list|,
+name|char
+modifier|*
+name|ebuf
+parameter_list|)
 block|{
-name|free
+name|pcap_t
+modifier|*
+name|p
+decl_stmt|;
+name|p
+operator|=
+name|pcap_create_common
 argument_list|(
-name|handle
+name|device
+argument_list|,
+name|ebuf
 argument_list|)
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
 return|return
 name|NULL
+return|;
+name|p
+operator|->
+name|activate_op
+operator|=
+name|septel_activate
+expr_stmt|;
+return|return
+name|p
 return|;
 block|}
 end_function
