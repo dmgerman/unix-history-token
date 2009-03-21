@@ -43,6 +43,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* define if you have dag_get_stream_erf_types() */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DAG_GET_STREAM_ERF_TYPES */
+end_comment
+
+begin_comment
 comment|/* define if you have the DAG API */
 end_comment
 
@@ -78,6 +86,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* if passive_req_t primitive exists */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DLPI_PASSIVE */
+end_comment
+
+begin_comment
 comment|/* define if you have a /dev/dlpi */
 end_comment
 
@@ -93,6 +109,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_ETHER_HOSTTON
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if fseeko (and presumably ftello) exists and is declared. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FSEEKO
 value|1
 end_define
 
@@ -132,6 +159,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* if libdlpi exists */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBDLPI */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<limits.h> header file. */
 end_comment
 
@@ -141,6 +176,22 @@ directive|define
 name|HAVE_LIMITS_H
 value|1
 end_define
+
+begin_comment
+comment|/* if tp_vlan_tci exists */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LINUX_TPACKET_AUXDATA_TP_VLAN_TCI */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<linux/wireless.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LINUX_WIRELESS_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<memory.h> header file. */
@@ -169,6 +220,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_NETINET_IF_ETHER_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<net/if_media.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_NET_IF_MEDIA_H
 value|1
 end_define
 
@@ -249,6 +311,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_SOCKADDR_STORAGE
+value|1
+end_define
+
+begin_comment
+comment|/* define if socklen_t is defined */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SOCKLEN_T
 value|1
 end_define
 
@@ -436,6 +509,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* define if the system supports zerocopy BPF */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ZEROCOPY_BPF
+value|1
+end_define
+
+begin_comment
 comment|/* define if your compiler has __attribute__ */
 end_comment
 
@@ -460,6 +544,14 @@ end_comment
 
 begin_comment
 comment|/* #undef LBL_ALIGN */
+end_comment
+
+begin_comment
+comment|/* path for device for USB sniffing */
+end_comment
+
+begin_comment
+comment|/* #undef LINUX_USB_MON_DEV */
 end_comment
 
 begin_comment
@@ -552,6 +644,30 @@ comment|/* #undef PCAP_DEV_PREFIX */
 end_comment
 
 begin_comment
+comment|/* target host supports Bluetooth sniffing */
+end_comment
+
+begin_comment
+comment|/* #undef PCAP_SUPPORT_BT */
+end_comment
+
+begin_comment
+comment|/* target host supports USB sniffing */
+end_comment
+
+begin_comment
+comment|/* #undef PCAP_SUPPORT_USB */
+end_comment
+
+begin_comment
+comment|/* include ACN support */
+end_comment
+
+begin_comment
+comment|/* #undef SITA */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the ANSI C header files. */
 end_comment
 
@@ -576,6 +692,30 @@ end_comment
 
 begin_comment
 comment|/* #undef _HPUX_SOURCE */
+end_comment
+
+begin_comment
+comment|/* Number of bits in a file offset, on hosts where this is settable. */
+end_comment
+
+begin_comment
+comment|/* #undef _FILE_OFFSET_BITS */
+end_comment
+
+begin_comment
+comment|/* Define to 1 to make fseeko visible on some hosts (e.g. glibc 2.2).  */
+end_comment
+
+begin_comment
+comment|/* #undef _LARGEFILE_SOURCE */
+end_comment
+
+begin_comment
+comment|/* Define for large files, on AIX-style hosts. */
+end_comment
+
+begin_comment
+comment|/* #undef _LARGE_FILES */
 end_comment
 
 begin_comment
@@ -619,6 +759,14 @@ end_comment
 
 begin_comment
 comment|/* #undef u_int32_t */
+end_comment
+
+begin_comment
+comment|/* if we have u_int64_t */
+end_comment
+
+begin_comment
+comment|/* #undef u_int64_t */
 end_comment
 
 begin_comment
