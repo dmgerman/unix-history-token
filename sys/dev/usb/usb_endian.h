@@ -95,7 +95,7 @@ parameter_list|(
 name|w
 parameter_list|)
 define|\
-value|((w)[0] |				\   (((uint16_t)((w)[1]))<< 8))
+value|((w)[0] |				\   ((w)[1]<< 8))
 end_define
 
 begin_define
@@ -106,7 +106,7 @@ parameter_list|(
 name|w
 parameter_list|)
 define|\
-value|((w)[0] |				\   (((uint16_t)((w)[1]))<< 8) |		\   (((uint32_t)((w)[2]))<< 16) |	\   (((uint32_t)((w)[3]))<< 24))
+value|((w)[0] |				\   ((w)[1]<< 8) |			\   ((w)[2]<< 16) |			\   ((w)[3]<< 24))
 end_define
 
 begin_define
@@ -117,7 +117,7 @@ parameter_list|(
 name|w
 parameter_list|)
 define|\
-value|((w)[0] |				\   (((uint16_t)((w)[1]))<< 8) |		\   (((uint32_t)((w)[2]))<< 16) |	\   (((uint32_t)((w)[3]))<< 24) |	\   (((uint64_t)((w)[4]))<< 32) |	\   (((uint64_t)((w)[5]))<< 40) |	\   (((uint64_t)((w)[6]))<< 48) |	\   (((uint64_t)((w)[7]))<< 56))
+value|((w)[0] |				\   ((w)[1]<< 8) |			\   ((w)[2]<< 16) |			\   ((w)[3]<< 24) |			\   (((uint64_t)((w)[4]))<< 32) |	\   (((uint64_t)((w)[5]))<< 40) |	\   (((uint64_t)((w)[6]))<< 48) |	\   (((uint64_t)((w)[7]))<< 56))
 end_define
 
 begin_define
