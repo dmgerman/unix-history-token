@@ -336,23 +336,6 @@ begin_comment
 comment|/* _AIX */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BIOCSETBUFMODE
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/atomic.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -7310,17 +7293,6 @@ name|bad
 goto|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|BIOCSETBUFMODE
-name|p
-operator|->
-name|timeout
-operator|=
-name|to_ms
-expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|_AIX
