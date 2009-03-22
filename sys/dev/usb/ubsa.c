@@ -962,11 +962,25 @@ name|ubsa_products
 index|[]
 init|=
 block|{
+comment|/* AnyData ADU-500A */
+block|{
+name|USB_VENDOR_ANYDATA
+block|,
+name|USB_PRODUCT_ANYDATA_ADU_500A
+block|}
+block|,
 comment|/* AnyData ADU-E100A/H */
 block|{
 name|USB_VENDOR_ANYDATA
 block|,
 name|USB_PRODUCT_ANYDATA_ADU_E100X
+block|}
+block|,
+comment|/* Axesstel MV100H */
+block|{
+name|USB_VENDOR_AXESSTEL
+block|,
+name|USB_PRODUCT_AXESSTEL_DATAMODEM
 block|}
 block|,
 comment|/* BELKIN F5U103 */
@@ -1002,69 +1016,6 @@ block|{
 name|USB_VENDOR_PERACOM
 block|,
 name|USB_PRODUCT_PERACOM_SERIAL1
-block|}
-block|,
-comment|/* Novatel Wireless Merlin cards */
-block|{
-name|USB_VENDOR_NOVATEL
-block|,
-name|USB_PRODUCT_NOVATEL_U740
-block|}
-block|,
-comment|/* Novatel Wireless Merlin v740 */
-block|{
-name|USB_VENDOR_NOVATEL
-block|,
-name|USB_PRODUCT_NOVATEL_V740
-block|}
-block|,
-comment|/* Option Vodafone MC3G */
-block|{
-name|USB_VENDOR_OPTION
-block|,
-name|USB_PRODUCT_OPTION_VODAFONEMC3G
-block|}
-block|,
-comment|/* Option GlobeTrotter 3G */
-block|{
-name|USB_VENDOR_OPTION
-block|,
-name|USB_PRODUCT_OPTION_GT3G
-block|}
-block|,
-comment|/* Option GlobeTrotter 3G QUAD */
-block|{
-name|USB_VENDOR_OPTION
-block|,
-name|USB_PRODUCT_OPTION_GT3GQUAD
-block|}
-block|,
-comment|/* Option GlobeTrotter 3G+ */
-block|{
-name|USB_VENDOR_OPTION
-block|,
-name|USB_PRODUCT_OPTION_GT3GPLUS
-block|}
-block|,
-comment|/* Huawei Mobile */
-block|{
-name|USB_VENDOR_HUAWEI
-block|,
-name|USB_PRODUCT_HUAWEI_MOBILE
-block|}
-block|,
-comment|/* Sierra Wireless LENOVO UMTS card */
-block|{
-name|USB_VENDOR_SIERRA
-block|,
-name|USB_PRODUCT_SIERRA_MC8755_3
-block|}
-block|,
-comment|/* Qualcomm, Inc. ZTE CDMA */
-block|{
-name|USB_VENDOR_QUALCOMMINC
-block|,
-name|USB_PRODUCT_QUALCOMMINC_CDMA_MSM
 block|}
 block|,
 block|{
@@ -1876,6 +1827,18 @@ expr_stmt|;
 comment|/* bulkin, bulkout set above */
 name|ucom
 operator|->
+name|sc_ibufsize
+operator|=
+literal|1024
+expr_stmt|;
+name|ucom
+operator|->
+name|sc_obufsize
+operator|=
+literal|1024
+expr_stmt|;
+name|ucom
+operator|->
 name|sc_ibufsizepad
 operator|=
 name|ucom
@@ -2138,7 +2101,11 @@ name|sc_ucom
 operator|.
 name|sc_dev
 argument_list|,
-literal|"ubsa_request: %s\n"
+literal|"ubsa_request(%x, %x): %s\n"
+argument_list|,
+name|request
+argument_list|,
+name|value
 argument_list|,
 name|usbd_errstr
 argument_list|(

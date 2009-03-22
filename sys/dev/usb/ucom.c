@@ -672,6 +672,27 @@ name|t_ioctl
 operator|=
 name|ucomioctl
 expr_stmt|;
+comment|/* Leave the settings of this level to the drivers if needed. */
+name|tp
+operator|->
+name|t_ispeedwat
+operator|=
+operator|(
+name|speed_t
+operator|)
+operator|-
+literal|1
+expr_stmt|;
+name|tp
+operator|->
+name|t_ospeedwat
+operator|=
+operator|(
+name|speed_t
+operator|)
+operator|-
+literal|1
+expr_stmt|;
 return|return
 name|ttycreate
 argument_list|(
@@ -2241,7 +2262,9 @@ name|tp
 operator|->
 name|t_ispeed
 operator|=
-literal|0
+name|t
+operator|->
+name|c_ospeed
 expr_stmt|;
 name|tp
 operator|->
@@ -3854,7 +3877,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%s: lost %d chars\n"
+literal|"%s: lost %d chars (t_rawq)\n"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
@@ -3906,7 +3929,7 @@ block|{
 comment|/* XXX what should we do? */
 name|printf
 argument_list|(
-literal|"%s: lost %d chars\n"
+literal|"%s: lost %d chars (ttyld_rint)\n"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
