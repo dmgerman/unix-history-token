@@ -1180,36 +1180,7 @@ name|void
 parameter_list|)
 function_decl|;
 comment|/* XXX this guy lives in the bpf tree */
-name|u_int
-name|bpf_filter
-parameter_list|(
-specifier|const
-name|struct
-name|bpf_insn
-modifier|*
-parameter_list|,
-specifier|const
-name|u_char
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-name|int
-name|bpf_validate
-parameter_list|(
-specifier|const
-name|struct
-name|bpf_insn
-modifier|*
-name|f
-parameter_list|,
-name|int
-name|len
-parameter_list|)
-function_decl|;
+comment|/* u_int	bpf_filter(const struct bpf_insn *, const u_char *, u_int, u_int);  int	bpf_validate(const struct bpf_insn *f, int len); */
 name|char
 modifier|*
 name|bpf_image
