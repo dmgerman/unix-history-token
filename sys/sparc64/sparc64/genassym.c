@@ -341,6 +341,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
 begin_expr_stmt
 name|ASSYM
 argument_list|(
@@ -491,6 +497,11 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -566,6 +577,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
 begin_expr_stmt
 name|ASSYM
 argument_list|(
@@ -581,6 +598,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|ASSYM
@@ -1858,6 +1880,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
 begin_expr_stmt
 name|ASSYM
 argument_list|(
@@ -1937,6 +1965,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|ASSYM

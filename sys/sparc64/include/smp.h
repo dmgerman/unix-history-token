@@ -15,6 +15,12 @@ directive|define
 name|_MACHINE_SMP_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -299,39 +305,6 @@ end_decl_stmt
 
 begin_function_decl
 name|void
-name|ipi_selected
-parameter_list|(
-name|u_int
-name|cpus
-parameter_list|,
-name|u_int
-name|ipi
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ipi_all
-parameter_list|(
-name|u_int
-name|ipi
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ipi_all_but_self
-parameter_list|(
-name|u_int
-name|ipi
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|mp_init
 parameter_list|(
 name|void
@@ -458,11 +431,65 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ipi_all_but_self
+parameter_list|(
+name|u_int
+name|ipi
+parameter_list|)
+block|{
+name|cpu_ipi_selected
+argument_list|(
+name|PCPU_GET
+argument_list|(
+name|other_cpus
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|tl_ipi_level
+argument_list|,
+name|ipi
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ipi_selected
+parameter_list|(
+name|u_int
+name|cpus
+parameter_list|,
+name|u_int
+name|ipi
+parameter_list|)
+block|{
+name|cpu_ipi_selected
+argument_list|(
+name|cpus
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|tl_ipi_level
+argument_list|,
+name|ipi
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_if
 if|#
@@ -1075,10 +1102,25 @@ begin_comment
 comment|/* _MACHINE_PMAP_H_&& _SYS_MUTEX_H_ */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !LOCORE */
+end_comment
+
 begin_else
 else|#
 directive|else
 end_else
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
 
 begin_function
 specifier|static
@@ -1211,14 +1253,38 @@ parameter_list|)
 block|{  }
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function
+specifier|static
+name|__inline
+name|void
+name|tl_ipi_cheetah_dcache_page_inval
+parameter_list|(
+name|void
+parameter_list|)
+block|{  }
+end_function
 
-begin_comment
-comment|/* SMP */
-end_comment
+begin_function
+specifier|static
+name|__inline
+name|void
+name|tl_ipi_spitfire_dcache_page_inval
+parameter_list|(
+name|void
+parameter_list|)
+block|{  }
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|tl_ipi_spitfire_icache_page_inval
+parameter_list|(
+name|void
+parameter_list|)
+block|{  }
+end_function
 
 begin_endif
 endif|#
@@ -1227,6 +1293,15 @@ end_endif
 
 begin_comment
 comment|/* !LOCORE */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SMP */
 end_comment
 
 begin_endif
