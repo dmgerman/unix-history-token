@@ -421,6 +421,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 parameter_list|)
 function_decl|;
@@ -625,20 +626,6 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|bus_setup_intr
-argument_list|,
-name|sbus_setup_intr
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_teardown_intr
-argument_list|,
-name|bus_generic_teardown_intr
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
 name|bus_alloc_resource
 argument_list|,
 name|sbus_alloc_resource
@@ -667,9 +654,16 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|bus_get_resource_list
+name|bus_setup_intr
 argument_list|,
-name|sbus_get_resource_list
+name|sbus_setup_intr
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_teardown_intr
+argument_list|,
+name|bus_generic_teardown_intr
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -677,6 +671,13 @@ argument_list|(
 name|bus_get_resource
 argument_list|,
 name|bus_generic_rl_get_resource
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_get_resource_list
+argument_list|,
+name|sbus_get_resource_list
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -729,11 +730,7 @@ argument_list|,
 name|ofw_bus_gen_get_type
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -849,6 +846,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|sbus_order_first
 index|[]
 init|=
@@ -875,6 +873,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|list
 parameter_list|)
@@ -1070,14 +1069,13 @@ name|child
 decl_stmt|,
 name|node
 decl_stmt|;
+name|uint32_t
+name|prop
+decl_stmt|;
 name|int
-name|clock
-decl_stmt|,
 name|i
 decl_stmt|,
-name|intr
-decl_stmt|,
-name|rid
+name|j
 decl_stmt|;
 name|sc
 operator|=
@@ -1099,7 +1097,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|rid
+name|i
 operator|=
 literal|0
 expr_stmt|;
@@ -1114,7 +1112,7 @@ argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
 operator|&
-name|rid
+name|i
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -1143,11 +1141,11 @@ argument_list|,
 literal|"interrupts"
 argument_list|,
 operator|&
-name|intr
+name|prop
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|intr
+name|prop
 argument_list|)
 argument_list|)
 operator|==
@@ -1167,7 +1165,7 @@ name|sc_ign
 operator|=
 name|INTIGN
 argument_list|(
-name|intr
+name|prop
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1189,18 +1187,18 @@ argument_list|,
 literal|"clock-frequency"
 argument_list|,
 operator|&
-name|clock
+name|prop
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|clock
+name|prop
 argument_list|)
 argument_list|)
 operator|==
 operator|-
 literal|1
 condition|)
-name|clock
+name|prop
 operator|=
 literal|25000000
 expr_stmt|;
@@ -1208,9 +1206,9 @@ name|sc
 operator|->
 name|sc_clockfreq
 operator|=
-name|clock
+name|prop
 expr_stmt|;
-name|clock
+name|prop
 operator|/=
 literal|1000
 expr_stmt|;
@@ -1220,11 +1218,11 @@ name|dev
 argument_list|,
 literal|"clock %d.%03d MHz\n"
 argument_list|,
-name|clock
+name|prop
 operator|/
 literal|1000
 argument_list|,
-name|clock
+name|prop
 operator|%
 literal|1000
 argument_list|)
@@ -1427,7 +1425,7 @@ name|rd_coffset
 operator|+
 name|size
 expr_stmt|;
-name|rid
+name|j
 operator|=
 name|resource_list_add_next
 argument_list|(
@@ -1458,7 +1456,7 @@ argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
 operator|&
-name|rid
+name|j
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -1599,14 +1597,14 @@ argument_list|,
 name|M_OFWPROP
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Get the SBus burst transfer size if burst transfers are supported. 	 * XXX: is the default correct? 	 */
+comment|/* 	 * Get the SBus burst transfer size if burst transfers are supported. 	 */
 if|if
 condition|(
 name|OF_getprop
 argument_list|(
 name|node
 argument_list|,
-literal|"burst-sizes"
+literal|"up-burst-sizes"
 argument_list|,
 operator|&
 name|sc
@@ -1634,6 +1632,12 @@ name|sc
 operator|->
 name|sc_burst
 operator|=
+operator|(
+name|SBUS_BURST64_DEF
+operator|<<
+name|SBUS_BURST64_SHIFT
+operator|)
+operator||
 name|SBUS_BURST_DEF
 expr_stmt|;
 comment|/* initalise the IOMMU */
@@ -1845,7 +1849,7 @@ operator|=
 operator|&
 name|iommu_dma_methods
 expr_stmt|;
-comment|/* 	 * Hunt through all the interrupt mapping regs and register our 	 * interrupt controller for the corresponding interrupt vectors. 	 */
+comment|/* 	 * Hunt through all the interrupt mapping regs and register our 	 * interrupt controller for the corresponding interrupt vectors. 	 * We do this early in order to be able to catch stray interrupts. 	 */
 for|for
 control|(
 name|i
@@ -1971,8 +1975,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
+name|j
+operator|=
 name|intr_controller_register
 argument_list|(
 name|INTMAP_VEC
@@ -1989,22 +1993,28 @@ name|sbus_ic
 argument_list|,
 name|sica
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|j
 operator|!=
 literal|0
 condition|)
-name|panic
+name|device_printf
 argument_list|(
-literal|"%s: could not register interrupt controller "
-literal|"for INO %d"
+name|dev
 argument_list|,
-name|__func__
+literal|"could not register interrupt "
+literal|"controller for INO %d (%d)\n"
 argument_list|,
 name|i
+argument_list|,
+name|j
 argument_list|)
 expr_stmt|;
 block|}
 comment|/* Enable the over-temperature and power-fail interrupts. */
-name|rid
+name|i
 operator|=
 literal|4
 expr_stmt|;
@@ -2019,7 +2029,7 @@ argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
 operator|&
-name|rid
+name|i
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -2079,6 +2089,8 @@ operator|->
 name|sc_ot_ires
 argument_list|,
 name|INTR_TYPE_MISC
+operator||
+name|INTR_FAST
 argument_list|,
 name|NULL
 argument_list|,
@@ -2101,7 +2113,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|rid
+name|i
 operator|=
 literal|3
 expr_stmt|;
@@ -2116,7 +2128,7 @@ argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
 operator|&
-name|rid
+name|i
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -2176,6 +2188,8 @@ operator|->
 name|sc_pf_ires
 argument_list|,
 name|INTR_TYPE_MISC
+operator||
+name|INTR_FAST
 argument_list|,
 name|NULL
 argument_list|,
@@ -4300,7 +4314,7 @@ operator|==
 name|SYS_RES_MEMORY
 condition|)
 block|{
-comment|/* 		 * Need to memory-map the device space, as some drivers depend 		 * on the virtual address being set and useable. 		 */
+comment|/* 		 * Need to memory-map the device space, as some drivers 		 * depend on the virtual address being set and usable. 		 */
 name|error
 operator|=
 name|sparc64_bus_mem_map
