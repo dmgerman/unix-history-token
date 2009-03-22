@@ -6786,6 +6786,13 @@ name|USB_FIFO_TX
 expr_stmt|;
 name|f_tx
 operator|->
+name|dev_ep_index
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|f_tx
+operator|->
 name|priv_mtx
 operator|=
 name|priv_mtx
@@ -6821,6 +6828,13 @@ operator|=
 name|n
 operator|+
 name|USB_FIFO_RX
+expr_stmt|;
+name|f_rx
+operator|->
+name|dev_ep_index
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 name|f_rx
 operator|->
