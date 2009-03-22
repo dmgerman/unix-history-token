@@ -421,6 +421,7 @@ name|uint32_t
 name|id
 decl_stmt|;
 block|}
+decl|const
 name|ofw_isa_pnp_map
 index|[]
 init|=
@@ -502,6 +503,13 @@ literal|0x030fd041
 block|}
 block|,
 comment|/* PNP0F03 */
+block|{
+literal|"bscbus"
+block|,
+literal|0x0400ae4e
+block|}
+block|,
+comment|/* SUN0004 */
 block|{
 literal|"power"
 block|,
