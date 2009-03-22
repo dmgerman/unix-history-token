@@ -288,6 +288,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 parameter_list|)
 function_decl|;
@@ -461,6 +462,13 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
+name|bus_set_resource
+argument_list|,
+name|bus_generic_rl_set_resource
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
 name|bus_get_resource
 argument_list|,
 name|bus_generic_rl_get_resource
@@ -588,6 +596,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|nexus_excl_name
 index|[]
 init|=
@@ -623,6 +632,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|nexus_excl_type
 index|[]
 init|=
@@ -663,6 +673,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|list
 parameter_list|)
