@@ -518,43 +518,19 @@ name|mii_pdata
 operator|=
 name|mii
 expr_stmt|;
+comment|/* 	 * Apparently, we can neither isolate nor do loopback. 	 */
 name|sc
 operator|->
 name|mii_flags
 operator||=
 name|MIIF_NOISOLATE
+operator||
+name|MIIF_NOLOOP
 expr_stmt|;
 name|mii
 operator|->
 name|mii_instance
 operator|++
-expr_stmt|;
-define|#
-directive|define
-name|ADD
-parameter_list|(
-name|m
-parameter_list|,
-name|c
-parameter_list|)
-value|ifmedia_add(&mii->mii_media, (m), (c), NULL)
-name|ADD
-argument_list|(
-name|IFM_MAKEWORD
-argument_list|(
-name|IFM_ETHER
-argument_list|,
-name|IFM_NONE
-argument_list|,
-literal|0
-argument_list|,
-name|sc
-operator|->
-name|mii_inst
-argument_list|)
-argument_list|,
-name|BMCR_ISO
-argument_list|)
 expr_stmt|;
 comment|/*dcphy_reset(sc);*/
 name|dc_sc
@@ -673,7 +649,7 @@ argument_list|,
 literal|" "
 argument_list|)
 expr_stmt|;
-name|mii_add_media
+name|mii_phy_add_media
 argument_list|(
 name|sc
 argument_list|)
@@ -683,9 +659,6 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|ADD
 name|MIIBUS_MEDIAINIT
 argument_list|(
 name|sc
