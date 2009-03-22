@@ -268,7 +268,7 @@ parameter_list|,
 name|size
 parameter_list|)
 define|\ 							\
-value|struct kobj_class classvar = {				\ 	#name, methods, size, 0				\ }
+value|struct kobj_class classvar = {				\ 	#name, methods, size, NULL			\ }
 end_define
 
 begin_comment
@@ -291,7 +291,7 @@ parameter_list|,	\
 name|base1
 parameter_list|)
 define|\ 							\
-value|static kobj_class_t name ## _baseclasses[] =		\ 	{&base1, 0 };					\ struct kobj_class classvar = {				\ 	#name, methods, size, name ## _baseclasses	\ }
+value|static kobj_class_t name ## _baseclasses[] =		\ 	{&base1, NULL };					\ struct kobj_class classvar = {				\ 	#name, methods, size, name ## _baseclasses	\ }
 end_define
 
 begin_comment
@@ -314,7 +314,7 @@ parameter_list|,
 name|base2
 parameter_list|)
 define|\ 							\
-value|static kobj_class_t name ## _baseclasses[] =		\ 	{&base1,					\&base2, 0 };					\ struct kobj_class name ## _class = {			\ 	#name, methods, size, name ## _baseclasses	\ }
+value|static kobj_class_t name ## _baseclasses[] =		\ 	{&base1,					\&base2, NULL };				\ struct kobj_class name ## _class = {			\ 	#name, methods, size, name ## _baseclasses	\ }
 end_define
 
 begin_comment
@@ -339,7 +339,7 @@ parameter_list|,
 name|base3
 parameter_list|)
 define|\ 							\
-value|static kobj_class_t name ## _baseclasses[] =		\ 	{&base1,					\&base2,					\&base3, 0 };					\ struct kobj_class name ## _class = {			\ 	#name, methods, size, name ## _baseclasses	\ }
+value|static kobj_class_t name ## _baseclasses[] =		\ 	{&base1,					\&base2,					\&base3, NULL };				\ struct kobj_class name ## _class = {			\ 	#name, methods, size, name ## _baseclasses	\ }
 end_define
 
 begin_comment
