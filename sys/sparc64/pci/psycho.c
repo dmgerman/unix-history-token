@@ -292,7 +292,7 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|driver_filter_t
-name|psycho_dmasync
+name|psycho_dma_sync_stub
 decl_stmt|;
 end_decl_stmt
 
@@ -684,11 +684,7 @@ argument_list|,
 name|psycho_get_node
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -792,7 +788,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|psycho_dmasync
+name|psycho_dma_sync
 block|{
 name|struct
 name|psycho_softc
@@ -927,6 +923,7 @@ specifier|static
 specifier|const
 name|struct
 name|psycho_desc
+specifier|const
 name|psycho_compats
 index|[]
 init|=
@@ -971,6 +968,7 @@ specifier|static
 specifier|const
 name|struct
 name|psycho_desc
+specifier|const
 name|psycho_models
 index|[]
 init|=
@@ -1275,16 +1273,14 @@ name|int32_t
 name|rev
 decl_stmt|;
 name|u_int
+name|rerun
+decl_stmt|,
 name|ver
 decl_stmt|;
 name|int
 name|i
 decl_stmt|,
 name|n
-decl_stmt|,
-name|nrange
-decl_stmt|,
-name|rid
 decl_stmt|;
 name|node
 operator|=
@@ -1337,7 +1333,7 @@ operator|==
 name|PSYCHO_MODE_PSYCHO
 condition|)
 block|{
-name|rid
+name|i
 operator|=
 literal|2
 expr_stmt|;
@@ -1403,7 +1399,7 @@ block|}
 block|}
 else|else
 block|{
-name|rid
+name|i
 operator|=
 literal|0
 expr_stmt|;
@@ -1431,7 +1427,7 @@ argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
 operator|&
-name|rid
+name|i
 argument_list|,
 operator|(
 name|sc
@@ -1463,7 +1459,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Match other Psycho's that are already configured against 	 * the base physical address.  This will be the same for a 	 * pair of devices that share register space. 	 */
+comment|/* 	 * Match other Psychos that are already configured against 	 * the base physical address.  This will be the same for a 	 * pair of devices that share register space. 	 */
 name|osc
 operator|=
 name|NULL
@@ -1561,6 +1557,21 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_mode
+operator|!=
+name|PSYCHO_MODE_PSYCHO
+condition|)
+name|panic
+argument_list|(
+literal|"%s: no partner expected"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mtx_initialized
@@ -1842,7 +1853,10 @@ operator|&=
 operator|~
 name|DIAG_DWSYNC_DIS
 expr_stmt|;
-comment|/* XXX need to also disable rerun of the streaming buffers. */
+name|rerun
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 literal|1
@@ -1858,7 +1872,10 @@ name|DIAG_RTRY_DIS
 operator||
 name|DIAG_DWSYNC_DIS
 expr_stmt|;
-comment|/* XXX need to also disable rerun of the streaming buffers. */
+name|rerun
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 default|default:
 name|dr
@@ -1869,6 +1886,10 @@ name|dr
 operator|&=
 operator|~
 name|DIAG_RTRY_DIS
+expr_stmt|;
+name|rerun
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 block|}
@@ -2123,7 +2144,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|nrange
+name|n
 operator|=
 name|OF_getprop_alloc
 argument_list|(
@@ -2149,7 +2170,7 @@ expr_stmt|;
 comment|/* 	 * Make sure that the expected ranges are present.  The 	 * OFW_PCI_CS_MEM64 one is not currently used though. 	 */
 if|if
 condition|(
-name|nrange
+name|n
 operator|!=
 name|PSYCHO_NRANGE
 condition|)
@@ -2249,7 +2270,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Hunt through all the interrupt mapping regs and register 		 * our interrupt controller for the corresponding interrupt 		 * vectors. 		 */
+comment|/* 		 * Hunt through all the interrupt mapping regs and register 		 * our interrupt controller for the corresponding interrupt 		 * vectors.  We do this early in order to be able to catch 		 * stray interrupts. 		 */
 for|for
 control|(
 name|n
@@ -2423,8 +2444,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
+name|i
+operator|=
 name|intr_controller_register
 argument_list|(
 name|INTMAP_VEC
@@ -2441,17 +2462,23 @@ name|psycho_ic
 argument_list|,
 name|pica
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
 operator|!=
 literal|0
 condition|)
-name|panic
+name|device_printf
 argument_list|(
-literal|"%s: could not register interrupt "
-literal|"controller for INO %d"
+name|dev
 argument_list|,
-name|__func__
+literal|"could not register "
+literal|"interrupt controller for INO %d (%d)\n"
 argument_list|,
 name|n
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 block|}
@@ -2463,8 +2490,6 @@ name|sc_mode
 operator|==
 name|PSYCHO_MODE_PSYCHO
 condition|)
-block|{
-comment|/* Initialize the counter-timer. */
 name|sparc64_counter_init
 argument_list|(
 name|device_get_nameunit
@@ -2489,8 +2514,7 @@ argument_list|,
 name|PSR_TC0
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* 		 * Set up IOMMU and PCI configuration if we're the first 		 * of a pair of Psycho's to arrive here. 		 * 		 * We should calculate a TSB size based on amount of RAM 		 * and number of bus controllers and number and type of 		 * child devices. 		 * 		 * For the moment, 32KB should be more than enough. 		 */
+comment|/* 		 * Set up IOMMU and PCI configuration if we're the first 		 * of a pair of Psychos to arrive here or a Hummingbird 		 * or Sabre. 		 * 		 * We should calculate a TSB size based on amount of RAM 		 * and number of bus controllers and number and type of 		 * child devices. 		 * 		 * For the moment, 32KB should be more than enough. 		 */
 name|sc
 operator|->
 name|sc_is
@@ -2565,8 +2589,6 @@ index|[
 literal|0
 index|]
 operator|=
-literal|0
-expr_stmt|;
 name|sc
 operator|->
 name|sc_is
@@ -2603,6 +2625,22 @@ operator|->
 name|sc_pcictl
 operator|+
 name|PCR_STRBUF
+expr_stmt|;
+name|sc
+operator|->
+name|sc_is
+operator|->
+name|is_flags
+operator||=
+operator|(
+name|rerun
+operator|!=
+literal|1
+operator|)
+condition|?
+name|IOMMU_RERUN_DISABLE
+else|:
+literal|0
 expr_stmt|;
 name|psycho_iommu_init
 argument_list|(
@@ -3328,6 +3366,25 @@ name|index
 index|]
 operator|==
 name|NULL
+operator|&&
+name|intrmap
+operator|>=
+name|PSR_POWER_INT_MAP
+condition|)
+block|{
+comment|/* 		 * These interrupts aren't mandatory and not available 		 * with all controllers (not even Psychos). 		 */
+return|return;
+block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_irq_res
+index|[
+name|index
+index|]
+operator|==
+name|NULL
 operator|||
 name|INTIGN
 argument_list|(
@@ -3384,6 +3441,8 @@ name|index
 index|]
 argument_list|,
 name|INTR_TYPE_MISC
+operator||
+name|INTR_FAST
 argument_list|,
 name|filt
 argument_list|,
@@ -5038,7 +5097,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|psycho_dmasync
+name|psycho_dma_sync_stub
 parameter_list|(
 name|void
 modifier|*
@@ -5046,7 +5105,7 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|psycho_dmasync
+name|psycho_dma_sync
 modifier|*
 name|pds
 init|=
@@ -5368,7 +5427,7 @@ modifier|*
 name|sc
 decl_stmt|;
 name|struct
-name|psycho_dmasync
+name|psycho_dma_sync
 modifier|*
 name|pds
 decl_stmt|;
@@ -5430,7 +5489,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/* 	 * The Sabre-APB-combination has a bug where it does not drain 	 * DMA write data for devices behind additional PCI-PCI bridges 	 * underneath the APB PCI-PCI bridge.  The workaround is to do 	 * a read on the farest PCI-PCI bridge followed by a read of the 	 * PCI DMA write sync register of the Sabre. 	 * XXX installing the wrapper for an affected device and the 	 * actual workaround in psycho_dmasync() should be moved to 	 * psycho(4)-specific bus_dma_tag_create() and bus_dmamap_sync() 	 * methods, respectively, once DMA tag creation is newbus'ified, 	 * so the workaround isn't only applied for interrupt handlers 	 * but also for polling(4) callbacks. 	 */
+comment|/* 	 * The Sabre-APB-combination does not automatically flush DMA 	 * write data for devices behind additional PCI-PCI bridges 	 * underneath the APB PCI-PCI bridge.  The procedure for a 	 * manual flush is to do a PIO read on the far side of the 	 * farthest PCI-PCI bridge followed by a read of the PCI DMA 	 * write sync register of the Sabre. 	 */
 if|if
 condition|(
 name|sc
@@ -5658,7 +5717,7 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"installed DMA sync "
-literal|"workaround for device %d.%d on bus %d\n"
+literal|"wrapper for device %d.%d on bus %d\n"
 argument_list|,
 name|pds
 operator|->
@@ -5698,7 +5757,7 @@ name|ires
 argument_list|,
 name|flags
 argument_list|,
-name|psycho_dmasync
+name|psycho_dma_sync_stub
 argument_list|,
 name|intr
 argument_list|,
@@ -5738,7 +5797,7 @@ operator|(
 name|driver_intr_t
 operator|*
 operator|)
-name|psycho_dmasync
+name|psycho_dma_sync_stub
 argument_list|,
 name|pds
 argument_list|,
@@ -5859,7 +5918,7 @@ modifier|*
 name|sc
 decl_stmt|;
 name|struct
-name|psycho_dmasync
+name|psycho_dma_sync
 modifier|*
 name|pds
 decl_stmt|;
@@ -6294,7 +6353,7 @@ operator|==
 name|SYS_RES_MEMORY
 condition|)
 block|{
-comment|/* 		 * Need to memory-map the device space, as some drivers depend 		 * on the virtual address being set and useable. 		 */
+comment|/* 		 * Need to memory-map the device space, as some drivers 		 * depend on the virtual address being set and usable. 		 */
 name|error
 operator|=
 name|sparc64_bus_mem_map
