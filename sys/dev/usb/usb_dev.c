@@ -3553,7 +3553,11 @@ name|DPRINTFN
 argument_list|(
 literal|2
 argument_list|,
-literal|"fflags=0x%08x\n"
+literal|"%s fflags=0x%08x\n"
+argument_list|,
+name|dev
+operator|->
+name|si_name
 argument_list|,
 name|fflags
 argument_list|)
@@ -4323,6 +4327,17 @@ name|ENOIOCTL
 operator|)
 return|;
 block|}
+name|DPRINTFN
+argument_list|(
+literal|3
+argument_list|,
+literal|"cmd 0x%lx = %d\n"
+argument_list|,
+name|cmd
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -4376,6 +4391,15 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+literal|"cmd=0x%lx\n"
+argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
 name|err
 operator|=
 name|devfs_get_cdevpriv
@@ -4427,17 +4451,6 @@ operator|=
 name|cpd
 operator|->
 name|fflags
-expr_stmt|;
-name|DPRINTFN
-argument_list|(
-literal|2
-argument_list|,
-literal|"fflags=%u, cmd=0x%lx\n"
-argument_list|,
-name|fflags
-argument_list|,
-name|cmd
-argument_list|)
 expr_stmt|;
 name|f
 operator|=
@@ -4540,6 +4553,17 @@ argument_list|,
 name|fflags
 argument_list|)
 expr_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+literal|"f_ioctl cmd 0x%lx = %d\n"
+argument_list|,
+name|cmd
+argument_list|,
+name|err
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|err
@@ -4580,6 +4604,17 @@ argument_list|,
 name|addr
 argument_list|,
 name|fflags
+argument_list|)
+expr_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+literal|"f_ioctl_post cmd 0x%lx = %d\n"
+argument_list|,
+name|cmd
+argument_list|,
+name|err
 argument_list|)
 expr_stmt|;
 block|}
