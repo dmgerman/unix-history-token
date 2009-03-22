@@ -466,7 +466,7 @@ name|NULL
 condition|)
 name|ifs
 operator|=
-name|nullstr
+literal|" \t\n"
 expr_stmt|;
 if|if
 condition|(
