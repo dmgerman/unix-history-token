@@ -772,12 +772,33 @@ condition|)
 block|{
 name|out1fmt
 argument_list|(
-literal|"alias %s="
+literal|"%s="
 argument_list|,
 name|ap
 operator|->
 name|name
 argument_list|)
+expr_stmt|;
+comment|/* Don't print the space added 					 * above. */
+name|v
+operator|=
+name|ap
+operator|->
+name|val
+operator|+
+name|strlen
+argument_list|(
+name|ap
+operator|->
+name|val
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+operator|*
+name|v
+operator|=
+literal|'\0'
 expr_stmt|;
 name|out1qstr
 argument_list|(
@@ -785,6 +806,11 @@ name|ap
 operator|->
 name|val
 argument_list|)
+expr_stmt|;
+operator|*
+name|v
+operator|=
+literal|' '
 expr_stmt|;
 name|out1c
 argument_list|(
