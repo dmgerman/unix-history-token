@@ -8973,7 +8973,17 @@ name|g_io_deliver
 argument_list|(
 name|bp
 argument_list|,
-name|ENXIO
+name|ENODEV
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"GEOM_PART: Partition '%s' not suitable"
+literal|" for kernel dumps (wrong type?)\n"
+argument_list|,
+name|pp
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 return|return;
