@@ -2043,8 +2043,6 @@ name|UMASS_PROTO_SCSI
 operator||
 name|UMASS_PROTO_BBB
 block|,
-name|NO_INQUIRY
-operator||
 name|IGNORE_RESIDUE
 operator||
 name|NO_SYNCHRONIZE_CACHE
