@@ -2768,17 +2768,6 @@ comment|/* use multicast filter */
 end_comment
 
 begin_comment
-comment|/* multicast polynomial */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TXP_POLYNOMIAL
-value|0x04c11db7
-end_define
-
-begin_comment
 comment|/*  * boot record (pointers to rings)  */
 end_comment
 
