@@ -8898,6 +8898,14 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|device_is_quiet
+argument_list|(
+name|dev
+argument_list|)
+condition|)
 name|device_printf
 argument_list|(
 name|dev
