@@ -307,13 +307,6 @@ name|fd
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|ACTIVE
-value|0x80
-end_define
-
 begin_decl_stmt
 specifier|static
 name|uint
@@ -2672,7 +2665,7 @@ index|]
 operator|.
 name|dp_sid
 operator|&
-name|ACTIVE
+name|PC98_SID_ACTIVE
 operator|)
 operator|==
 literal|0
@@ -2806,7 +2799,7 @@ index|]
 operator|.
 name|dp_sid
 operator||=
-name|ACTIVE
+name|PC98_SID_ACTIVE
 expr_stmt|;
 block|}
 end_function
