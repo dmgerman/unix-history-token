@@ -3214,6 +3214,13 @@ name|USB_SET_TIMEOUT
 value|_IOW ('U', 114, int)
 end_define
 
+begin_define
+define|#
+directive|define
+name|USB_RESET_DEVICE
+value|_IO  ('U', 115)
+end_define
+
 begin_comment
 comment|/* Modem device */
 end_comment
