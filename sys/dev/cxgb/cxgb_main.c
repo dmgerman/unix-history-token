@@ -1850,14 +1850,14 @@ begin_define
 define|#
 directive|define
 name|TPEEPROM_NAME
-value|"t3%c_tp_eeprom"
+value|"cxgb_t3%c_tp_eeprom"
 end_define
 
 begin_define
 define|#
 directive|define
 name|TPSRAM_NAME
-value|"t3%c_protocol_sram"
+value|"cxgb_t3%c_protocol_sram"
 end_define
 
 begin_function
@@ -6694,11 +6694,6 @@ index|[
 name|port_id
 index|]
 decl_stmt|;
-name|ADAPTER_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|pi
 operator|->
 name|link_fault
@@ -6715,11 +6710,6 @@ operator|&
 name|pi
 operator|->
 name|link_fault_task
-argument_list|)
-expr_stmt|;
-name|ADAPTER_UNLOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -8467,7 +8457,7 @@ name|dev
 argument_list|,
 literal|"could not load TP EEPROM: unable to load %s\n"
 argument_list|,
-name|TPEEPROM_NAME
+name|name
 argument_list|)
 expr_stmt|;
 return|return;
@@ -8517,7 +8507,7 @@ name|dev
 argument_list|,
 literal|"%s length is wrong len=%d expected=%d\n"
 argument_list|,
-name|TPEEPROM_NAME
+name|name
 argument_list|,
 name|len
 argument_list|,
@@ -13206,7 +13196,7 @@ if|if
 condition|(
 name|mmd
 operator|>
-name|MDIO_DEV_XGXS
+name|MDIO_DEV_VEND2
 condition|)
 return|return
 operator|(
@@ -13347,7 +13337,7 @@ if|if
 condition|(
 name|mmd
 operator|>
-name|MDIO_DEV_XGXS
+name|MDIO_DEV_VEND2
 condition|)
 return|return
 operator|(
