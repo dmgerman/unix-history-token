@@ -1333,6 +1333,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|acpi_resync_clock
+parameter_list|(
+name|struct
+name|acpi_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|acpi_wake_init
 parameter_list|(
