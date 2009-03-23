@@ -938,6 +938,12 @@ name|NCF_WHITE
 value|1
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+end_ifdef
+
 begin_comment
 comment|/*  * Grab an atomic snapshot of the name cache hash chain lengths  */
 end_comment
@@ -1384,6 +1390,11 @@ literal|"nchash chain lengths"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * cache_zap():  *  *   Removes a namecache entry from cache, whether it contains an actual  *   pointer to a vnode or if it is just a negative cache entry.  */
