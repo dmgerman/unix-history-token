@@ -249,6 +249,8 @@ name|nr
 decl_stmt|;
 name|int
 name|machine_lorder
+decl_stmt|,
+name|saved_errno
 decl_stmt|;
 name|t
 operator|=
@@ -1368,6 +1370,10 @@ name|err
 goto|;
 name|err
 label|:
+name|saved_errno
+operator|=
+name|errno
+expr_stmt|;
 if|if
 condition|(
 name|t
@@ -1411,6 +1417,10 @@ name|t
 argument_list|)
 expr_stmt|;
 block|}
+name|errno
+operator|=
+name|saved_errno
+expr_stmt|;
 return|return
 operator|(
 name|NULL
