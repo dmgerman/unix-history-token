@@ -74,7 +74,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|uint32_t
+name|int
 name|acpi_resume_beep
 decl_stmt|;
 end_decl_stmt
@@ -91,7 +91,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_debug_acpi
 argument_list|,
@@ -112,7 +112,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|uint32_t
+name|int
 name|acpi_reset_video
 decl_stmt|;
 end_decl_stmt
