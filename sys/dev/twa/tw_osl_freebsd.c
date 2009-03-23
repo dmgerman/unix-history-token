@@ -1875,10 +1875,10 @@ operator|->
 name|alignment
 argument_list|,
 comment|/* alignment */
-literal|0
+name|TW_OSLI_DMA_BOUNDARY
 argument_list|,
 comment|/* boundary */
-name|BUS_SPACE_MAXADDR_32BIT
+name|BUS_SPACE_MAXADDR
 argument_list|,
 comment|/* lowaddr */
 name|BUS_SPACE_MAXADDR
@@ -1956,7 +1956,7 @@ comment|/* alignment */
 literal|0
 argument_list|,
 comment|/* boundary */
-name|BUS_SPACE_MAXADDR_32BIT
+name|BUS_SPACE_MAXADDR
 argument_list|,
 comment|/* lowaddr */
 name|BUS_SPACE_MAXADDR
@@ -2131,7 +2131,7 @@ comment|/* alignment */
 literal|0
 argument_list|,
 comment|/* boundary */
-name|BUS_SPACE_MAXADDR_32BIT
+name|BUS_SPACE_MAXADDR
 argument_list|,
 comment|/* lowaddr */
 name|BUS_SPACE_MAXADDR
@@ -2211,7 +2211,7 @@ comment|/* alignment */
 literal|0
 argument_list|,
 comment|/* boundary */
-name|BUS_SPACE_MAXADDR_32BIT
+name|BUS_SPACE_MAXADDR
 argument_list|,
 comment|/* lowaddr */
 name|BUS_SPACE_MAXADDR
@@ -4917,7 +4917,7 @@ block|{
 operator|*
 operator|(
 operator|(
-name|bus_addr_t
+name|TW_UINT64
 operator|*
 operator|)
 name|arg
