@@ -2489,6 +2489,17 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+comment|/* 	 * Do not allow empty strings to be queued, as they 	 * cause devd to exit prematurely. 	 */
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|data
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return;
 name|n1
 operator|=
 name|malloc
