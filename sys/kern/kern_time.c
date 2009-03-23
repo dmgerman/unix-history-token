@@ -5204,6 +5204,12 @@ operator|)
 operator|||
 operator|(
 name|timerid
+operator|<
+literal|0
+operator|)
+operator|||
+operator|(
+name|timerid
 operator|>=
 name|TIMER_MAX
 operator|)
