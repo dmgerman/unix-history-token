@@ -134,7 +134,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: pgsz %d"
+literal|"%s: pgsz %u"
 argument_list|,
 name|F_ISSET
 argument_list|(
@@ -590,7 +590,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"    page %d: ("
+literal|"    page %u: ("
 argument_list|,
 name|h
 operator|->
@@ -673,7 +673,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tprev %2d next %2d"
+literal|"\tprev %2u next %2u"
 argument_list|,
 name|h
 operator|->
@@ -1447,7 +1447,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%d level%s with %ld keys"
+literal|"%d level%s with %lu keys"
 argument_list|,
 name|levels
 argument_list|,
@@ -1478,7 +1478,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" (%d header count)"
+literal|" (%u header count)"
 argument_list|,
 name|t
 operator|->
@@ -1492,7 +1492,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n%u pages (leaf %d, internal %d, overflow %d)\n"
+literal|"\n%u pages (leaf %u, internal %u, overflow %u)\n"
 argument_list|,
 name|pinternal
 operator|+
@@ -1514,7 +1514,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%ld cache hits, %ld cache misses\n"
+literal|"%lu cache hits, %lu cache misses\n"
 argument_list|,
 name|bt_cache_hit
 argument_list|,
@@ -1556,7 +1556,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%.0f%% leaf fill (%ld bytes used, %ld bytes free)\n"
+literal|"%.0f%% leaf fill (%lu bytes used, %lu bytes free)\n"
 argument_list|,
 operator|(
 call|(
@@ -1599,7 +1599,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%.0f%% internal fill (%ld bytes used, %ld bytes free\n"
+literal|"%.0f%% internal fill (%lu bytes used, %lu bytes free\n"
 argument_list|,
 operator|(
 call|(

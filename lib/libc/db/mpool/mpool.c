@@ -1680,7 +1680,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%u pages in the file\n"
+literal|"%lu pages in the file\n"
 argument_list|,
 name|mp
 operator|->
@@ -1694,7 +1694,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"page size %lu, cacheing %u pages of %u page max cache\n"
+literal|"page size %lu, cacheing %lu pages of %lu page max cache\n"
 argument_list|,
 name|mp
 operator|->
