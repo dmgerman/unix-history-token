@@ -2330,13 +2330,13 @@ name|udev
 argument_list|,
 name|cdp
 argument_list|,
-name|cdp
-operator|->
-name|bConfigurationValue
-argument_list|,
 name|udev
 operator|->
 name|address
+argument_list|,
+name|cdp
+operator|->
+name|bConfigurationValue
 argument_list|,
 name|cdp
 operator|->
