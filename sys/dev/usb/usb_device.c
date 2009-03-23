@@ -8611,13 +8611,6 @@ name|NULL
 condition|)
 return|return;
 comment|/* String it all together. */
-if|if
-condition|(
-name|udev
-operator|->
-name|parent_hub
-condition|)
-block|{
 name|snprintf
 argument_list|(
 name|data
@@ -8714,7 +8707,6 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|devctl_queue_data
 argument_list|(
 name|data
