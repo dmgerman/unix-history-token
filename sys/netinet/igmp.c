@@ -13005,11 +13005,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|m0
-argument_list|)
-expr_stmt|;
 goto|goto
 name|out
 goto|;
