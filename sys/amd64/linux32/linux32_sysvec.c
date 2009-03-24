@@ -4218,7 +4218,7 @@ literal|1
 decl_stmt|,
 name|len
 decl_stmt|;
-comment|/*      * The interpreter for shell scripts run from a linux binary needs      * to be located in /compat/linux if possible in order to recursively      * maintain linux path emulation.      */
+comment|/* 	 * The interpreter for shell scripts run from a linux binary needs 	 * to be located in /compat/linux if possible in order to recursively 	 * maintain linux path emulation. 	 */
 if|if
 condition|(
 operator|(
@@ -4236,7 +4236,7 @@ operator|==
 name|SHELLMAGIC
 condition|)
 block|{
-comment|/* 	     * Run our normal shell image activator.  If it succeeds attempt 	     * to use the alternate path for the interpreter.  If an alternate 	     * path is found, use our stringspace to store it. 	     */
+comment|/* 		 * Run our normal shell image activator.  If it succeeds 		 * attempt to use the alternate path for the interpreter.  If 		 * an alternate path is found, use our stringspace to store it. 		 */
 if|if
 condition|(
 operator|(
