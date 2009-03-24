@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/pmc.h>
 end_include
 
@@ -128,6 +134,7 @@ comment|/*  * Prototypes  */
 end_comment
 
 begin_function_decl
+name|__BEGIN_DECLS
 name|int
 name|pmc_allocate
 parameter_list|(
@@ -544,6 +551,10 @@ name|_nevents
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
