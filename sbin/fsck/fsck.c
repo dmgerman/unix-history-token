@@ -460,7 +460,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"BdvpfFnyl:t:T:"
+literal|"BCdvpfFnyl:t:T:"
 argument_list|)
 operator|)
 operator|!=
@@ -536,6 +536,14 @@ case|:
 name|flags
 operator||=
 name|CHECK_PREEN
+expr_stmt|;
+comment|/*FALLTHROUGH*/
+case|case
+literal|'C'
+case|:
+name|flags
+operator||=
+name|CHECK_CLEAN
 expr_stmt|;
 comment|/*FALLTHROUGH*/
 case|case
@@ -2665,7 +2673,7 @@ name|char
 name|common
 index|[]
 init|=
-literal|"[-dfnpvy] [-B | -F] [-T fstype:fsoptions] [-t fstype]"
+literal|"[-Cdfnpvy] [-B | -F] [-T fstype:fsoptions] [-t fstype]"
 decl_stmt|;
 operator|(
 name|void
