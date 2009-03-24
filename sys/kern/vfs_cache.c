@@ -1651,7 +1651,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Lookup an entry in the cache  *  * Lookup is called with dvp pointing to the directory to search,  * cnp pointing to the name of the entry being sought. If the lookup  * succeeds, the vnode is returned in *vpp, and a status of -1 is  * returned. If the lookup determines that the name does not exist  * (negative cacheing), a status of ENOENT is returned. If the lookup  * fails, a status of zero is returned.  If the directory vnode is  * recycled out from under us due to a forced unmount, a status of  * EBADF is returned.  *  * vpp is locked and ref'd on return.  If we're looking up DOTDOT, dvp is  * unlocked.  If we're looking up . an extra ref is taken, but the lock is  * not recursively acquired.  */
+comment|/*  * Lookup an entry in the cache  *  * Lookup is called with dvp pointing to the directory to search,  * cnp pointing to the name of the entry being sought. If the lookup  * succeeds, the vnode is returned in *vpp, and a status of -1 is  * returned. If the lookup determines that the name does not exist  * (negative cacheing), a status of ENOENT is returned. If the lookup  * fails, a status of zero is returned.  If the directory vnode is  * recycled out from under us due to a forced unmount, a status of  * ENOENT is returned.  *  * vpp is locked and ref'd on return.  If we're looking up DOTDOT, dvp is  * unlocked.  If we're looking up . an extra ref is taken, but the lock is  * not recursively acquired.  */
 end_comment
 
 begin_function
@@ -2278,7 +2278,7 @@ name|NULL
 expr_stmt|;
 return|return
 operator|(
-name|EBADF
+name|ENOENT
 operator|)
 return|;
 block|}
@@ -4656,7 +4656,7 @@ argument_list|()
 expr_stmt|;
 name|error
 operator|=
-name|EBADF
+name|ENOENT
 expr_stmt|;
 break|break;
 block|}
