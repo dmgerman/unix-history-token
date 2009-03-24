@@ -5672,6 +5672,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|INP_INFO_WUNLOCK
+argument_list|(
+name|pcbinfo
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|EINVAL
@@ -5879,6 +5884,11 @@ name|sopt
 operator|->
 name|sopt_name
 expr_stmt|;
+name|INP_INFO_WLOCK
+argument_list|(
+name|pcbinfo
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|so
@@ -5888,6 +5898,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|INP_INFO_WUNLOCK
+argument_list|(
+name|pcbinfo
+argument_list|)
+expr_stmt|;
 name|m_free
 argument_list|(
 name|m
