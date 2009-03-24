@@ -1342,15 +1342,6 @@ comment|/* XXX nothing to do until the rate control framework arrives */
 value|\ }									\ TEXT_SET(rate##_set, alg##_modevent)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
 begin_struct_decl
 struct_decl|struct
 name|ieee80211req
@@ -1432,6 +1423,15 @@ name|_set
 parameter_list|)
 value|TEXT_SET(ieee80211_ioctl_setset, _set)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_comment
 comment|/* XXX this stuff belongs elsewhere */
