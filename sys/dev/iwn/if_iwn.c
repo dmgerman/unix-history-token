@@ -11420,11 +11420,6 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
-name|IWN_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 block|}
