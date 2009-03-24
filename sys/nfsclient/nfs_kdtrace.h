@@ -110,7 +110,7 @@ name|rmode
 parameter_list|,
 name|error
 parameter_list|)
-value|do {	\ 	if (error&& dtrace_nfsclient_accesscache_load_done_probe !=	\ 	    NULL)							\ 		(dtrace_nfsclient_accesscache_load_done_probe)(		\ 		    nfsclient_accesscache_load_done_id, (vp), (uid),	\ 		    (rmode), (error));					\ } while (0)
+value|do {	\ 	if (dtrace_nfsclient_accesscache_load_done_probe != NULL)	\ 		(dtrace_nfsclient_accesscache_load_done_probe)(		\ 		    nfsclient_accesscache_load_done_id, (vp), (uid),	\ 		    (rmode), (error));					\ } while (0)
 end_define
 
 begin_comment

@@ -1646,6 +1646,14 @@ argument_list|)
 expr_stmt|;
 name|nfsmout
 label|:
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
+if|if
+condition|(
+name|error
+condition|)
+block|{
 name|KDTRACE_NFS_ACCESSCACHE_LOAD_DONE
 argument_list|(
 name|vp
@@ -1659,6 +1667,9 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|error
