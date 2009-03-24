@@ -3234,8 +3234,9 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
-name|ieee80211_tdma_ioctl_get80211
+name|tdma_ioctl_get80211
 parameter_list|(
 name|struct
 name|ieee80211vap
@@ -3329,7 +3330,7 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
-name|EINVAL
+name|ENOSYS
 return|;
 block|}
 return|return
@@ -3338,9 +3339,20 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|IEEE80211_IOCTL_GET
+argument_list|(
+name|tdma
+argument_list|,
+name|tdma_ioctl_get80211
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
+specifier|static
 name|int
-name|ieee80211_tdma_ioctl_set80211
+name|tdma_ioctl_set80211
 parameter_list|(
 name|struct
 name|ieee80211vap
@@ -3556,7 +3568,7 @@ block|}
 break|break;
 default|default:
 return|return
-name|EINVAL
+name|ENOSYS
 return|;
 block|}
 return|return
@@ -3564,6 +3576,16 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|IEEE80211_IOCTL_SET
+argument_list|(
+name|tdma
+argument_list|,
+name|tdma_ioctl_set80211
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 
