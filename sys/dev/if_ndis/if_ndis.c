@@ -15290,6 +15290,7 @@ name|ne_buf
 operator|!=
 name|NULL
 condition|)
+block|{
 name|free
 argument_list|(
 name|sc
@@ -15304,6 +15305,18 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|ndis_evt
+index|[
+name|i
+index|]
+operator|.
+name|ne_buf
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|sc
 operator|->
 name|ndis_evt
