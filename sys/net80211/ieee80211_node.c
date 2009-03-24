@@ -92,6 +92,23 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|IEEE80211_SUPPORT_SUPERG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net80211/ieee80211_superg.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|IEEE80211_SUPPORT_TDMA
 end_ifdef
 
@@ -3535,6 +3552,9 @@ operator|->
 name|ni_ies
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_SUPERG
 if|if
 condition|(
 name|ni
@@ -3556,6 +3576,8 @@ operator|.
 name|ath_ie
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ni
@@ -4084,6 +4106,9 @@ name|wme_ie
 operator|=
 name|ie
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_SUPERG
 elseif|else
 if|if
 condition|(
@@ -4098,6 +4123,8 @@ name|ath_ie
 operator|=
 name|ie
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|IEEE80211_SUPPORT_TDMA
@@ -5387,6 +5414,9 @@ name|ni_flags
 operator||=
 name|IEEE80211_NODE_QOS
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_SUPERG
 if|if
 condition|(
 name|vap
@@ -5401,6 +5431,8 @@ name|ni_flags
 operator||=
 name|IEEE80211_NODE_FF
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -6086,6 +6118,9 @@ name|ni_flags
 operator||=
 name|IEEE80211_NODE_QOS
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_SUPERG
 if|if
 condition|(
 name|vap
@@ -6100,6 +6135,8 @@ name|ni_flags
 operator||=
 name|IEEE80211_NODE_FF
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|node_setuptxparms
 argument_list|(
@@ -6329,6 +6366,9 @@ operator|&=
 operator|~
 name|IEEE80211_NODE_QOS
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_SUPERG
 if|if
 condition|(
 name|ni
@@ -6350,6 +6390,8 @@ operator|.
 name|ath_ie
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* NB: must be after ni_chan is setup */
 name|ieee80211_setup_rates
