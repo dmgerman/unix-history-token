@@ -380,6 +380,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 name|_thr_is_smp
 condition|)
 block|{

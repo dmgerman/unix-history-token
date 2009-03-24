@@ -442,7 +442,7 @@ condition|(
 name|waitok
 condition|)
 block|{
-name|_thr_umtx_wait
+name|_thr_umtx_wait_uint
 argument_list|(
 operator|&
 name|thread
@@ -452,6 +452,8 @@ argument_list|,
 name|tmp
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|THR_THREAD_LOCK

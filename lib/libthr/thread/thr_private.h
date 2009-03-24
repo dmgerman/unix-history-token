@@ -46,6 +46,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/cpuset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/atomic.h>
 end_include
 
@@ -347,13 +359,16 @@ modifier|*
 name|m_owner
 decl_stmt|;
 name|int
-name|m_flags
-decl_stmt|;
-name|int
 name|m_count
 decl_stmt|;
 name|int
 name|m_refcount
+decl_stmt|;
+name|int
+name|m_spinloops
+decl_stmt|;
+name|int
+name|m_yieldloops
 decl_stmt|;
 comment|/* 	 * Link for all mutexes a thread currently owns. 	 */
 name|TAILQ_ENTRY
@@ -365,31 +380,6 @@ expr_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * Flags for mutexes.   */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MUTEX_FLAGS_PRIVATE
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|MUTEX_FLAGS_INITED
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|MUTEX_FLAGS_BUSY
-value|0x04
-end_define
 
 begin_struct
 struct|struct
@@ -404,9 +394,6 @@ name|m_protocol
 decl_stmt|;
 name|int
 name|m_ceiling
-decl_stmt|;
-name|int
-name|m_flags
 decl_stmt|;
 block|}
 struct|;
@@ -543,7 +530,7 @@ block|{
 name|struct
 name|pthread_cleanup
 modifier|*
-name|next
+name|prev
 decl_stmt|;
 name|void
 function_decl|(
@@ -553,7 +540,6 @@ function_decl|)
 parameter_list|(
 name|void
 modifier|*
-name|args
 parameter_list|)
 function_decl|;
 name|void
@@ -561,7 +547,7 @@ modifier|*
 name|routine_arg
 decl_stmt|;
 name|int
-name|onstack
+name|onheap
 decl_stmt|;
 block|}
 struct|;
@@ -578,7 +564,7 @@ name|func
 parameter_list|,
 name|arg
 parameter_list|)
-value|{		\ 	struct pthread_cleanup __cup;			\ 							\ 	__cup.routine = func;				\ 	__cup.routine_arg = arg;			\ 	__cup.onstack = 1;				\ 	__cup.next = (td)->cleanup;			\ 	(td)->cleanup =&__cup;
+value|{		\ 	struct pthread_cleanup __cup;			\ 							\ 	__cup.routine = func;				\ 	__cup.routine_arg = arg;			\ 	__cup.onheap = 0;				\ 	__cup.prev = (td)->cleanup;			\ 	(td)->cleanup =&__cup;
 end_define
 
 begin_define
@@ -591,7 +577,7 @@ parameter_list|,
 name|exec
 parameter_list|)
 define|\
-value|(td)->cleanup = __cup.next;			\ 	if ((exec) != 0)				\ 		__cup.routine(__cup.routine_arg);	\ }
+value|(td)->cleanup = __cup.prev;			\ 	if ((exec) != 0)				\ 		__cup.routine(__cup.routine_arg);	\ }
 end_define
 
 begin_struct
@@ -668,6 +654,13 @@ name|stacksize_attr
 decl_stmt|;
 name|size_t
 name|guardsize_attr
+decl_stmt|;
+name|cpuset_t
+modifier|*
+name|cpuset
+decl_stmt|;
+name|size_t
+name|cpusetsize
 decl_stmt|;
 block|}
 struct|;
@@ -921,7 +914,7 @@ name|umutex
 name|lock
 decl_stmt|;
 comment|/* Internal condition variable cycle number. */
-name|long
+name|uint32_t
 name|cycle
 decl_stmt|;
 comment|/* How many low level locks the thread held. */
@@ -1025,6 +1018,10 @@ decl_stmt|;
 comment|/* New thread should unblock SIGCANCEL. */
 name|int
 name|unblock_sigcancel
+decl_stmt|;
+comment|/* Force new thread to exit. */
+name|int
+name|force_exit
 decl_stmt|;
 comment|/* Thread state: */
 name|enum
@@ -1179,7 +1176,7 @@ parameter_list|(
 name|thrd
 parameter_list|)
 define|\
-value|(thrd)->critical_count--;			\ 	_thr_ast(thrd);
+value|do {						\ 		(thrd)->critical_count--;		\ 		_thr_ast(thrd);				\ 	} while (0)
 end_define
 
 begin_define
@@ -1775,18 +1772,6 @@ expr|struct
 name|pthread
 operator|*
 name|curthread
-argument_list|)
-name|__hidden
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|_mutex_unlock_private
-argument_list|(
-expr|struct
-name|pthread
-operator|*
 argument_list|)
 name|__hidden
 decl_stmt|;
@@ -2412,6 +2397,34 @@ name|int
 name|_sched_yield
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_pthread_cleanup_push
+parameter_list|(
+name|void
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_pthread_cleanup_pop
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

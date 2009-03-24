@@ -19800,6 +19800,19 @@ comment|/*  * End non-standard functions.  */
 end_comment
 
 begin_comment
+comment|/*  * We provide an unpublished interface in order to receive notifications from  * the pthreads library whenever a thread exits.  This allows us to clean up  * thread caches.  */
+end_comment
+
+begin_function
+name|void
+name|_malloc_thread_cleanup
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
 comment|/******************************************************************************/
 end_comment
 

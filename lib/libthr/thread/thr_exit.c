@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -25,6 +31,18 @@ begin_include
 include|#
 directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
 end_include
 
 begin_include
@@ -104,24 +122,7 @@ name|_thr_exit_cleanup
 parameter_list|(
 name|void
 parameter_list|)
-block|{
-name|struct
-name|pthread
-modifier|*
-name|curthread
-init|=
-name|_get_curthread
-argument_list|()
-decl_stmt|;
-comment|/* 	 * POSIX states that cancellation/termination of a thread should 	 * not release any visible resources (such as mutexes) and that 	 * it is the applications responsibility.  Resources that are 	 * internal to the threads library, including file and fd locks, 	 * are not visible to the application and need to be released. 	 */
-comment|/* Unlock all private mutexes: */
-name|_mutex_unlock_private
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
-comment|/* 	 * This still isn't quite correct because we don't account 	 * for held spinlocks (see libc/stdlib/malloc.c). 	 */
-block|}
+block|{ }
 end_function
 
 begin_function
@@ -203,7 +204,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|pthread_cleanup_pop
+name|_pthread_cleanup_pop
 argument_list|(
 literal|1
 argument_list|)
@@ -262,6 +263,20 @@ argument_list|)
 expr_stmt|;
 comment|/* Never reach! */
 block|}
+name|THREAD_LIST_UNLOCK
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+comment|/* Tell malloc that the thread is exiting. */
+name|_malloc_thread_cleanup
+argument_list|()
+expr_stmt|;
+name|THREAD_LIST_LOCK
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 name|THR_LOCK
 argument_list|(
 name|curthread
@@ -273,6 +288,33 @@ name|state
 operator|=
 name|PS_DEAD
 expr_stmt|;
+if|if
+condition|(
+name|curthread
+operator|->
+name|flags
+operator|&
+name|THR_FLAGS_NEED_SUSPEND
+condition|)
+block|{
+name|curthread
+operator|->
+name|cycle
+operator|++
+expr_stmt|;
+name|_thr_umtx_wake
+argument_list|(
+operator|&
+name|curthread
+operator|->
+name|cycle
+argument_list|,
+name|INT_MAX
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 name|THR_UNLOCK
 argument_list|(
 name|curthread
@@ -304,6 +346,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|curthread
+operator|->
+name|force_exit
+operator|&&
 name|SHOULD_REPORT_EVENT
 argument_list|(
 name|curthread

@@ -1271,6 +1271,8 @@ operator|->
 name|state
 argument_list|,
 name|INT_MAX
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
