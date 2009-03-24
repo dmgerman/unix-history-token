@@ -811,13 +811,11 @@ argument_list|(
 name|ln
 argument_list|)
 expr_stmt|;
-name|Var_Set
+name|Var_SetGlobal
 argument_list|(
 name|var
 argument_list|,
 name|val
-argument_list|,
-name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
 name|DEBUGF

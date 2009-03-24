@@ -144,7 +144,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|Job_Finish
 parameter_list|(
 name|void
@@ -164,6 +164,15 @@ end_function_decl
 begin_function_decl
 name|void
 name|Job_AbortAll
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|Job_SetPrefix
 parameter_list|(
 name|void
 parameter_list|)
