@@ -437,7 +437,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|savefpu
-name|fpu_cleanstate
+name|fpu_initialstate
 decl_stmt|;
 end_decl_stmt
 
@@ -504,12 +504,12 @@ block|{
 name|fxsave
 argument_list|(
 operator|&
-name|fpu_cleanstate
+name|fpu_initialstate
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fpu_cleanstate
+name|fpu_initialstate
 operator|.
 name|sv_env
 operator|.
@@ -517,7 +517,7 @@ name|en_mxcsr_mask
 condition|)
 name|cpu_mxcsr_mask
 operator|=
-name|fpu_cleanstate
+name|fpu_initialstate
 operator|.
 name|sv_env
 operator|.
@@ -530,13 +530,13 @@ literal|0xFFBF
 expr_stmt|;
 name|bzero
 argument_list|(
-name|fpu_cleanstate
+name|fpu_initialstate
 operator|.
 name|sv_fp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|fpu_cleanstate
+name|fpu_initialstate
 operator|.
 name|sv_fp
 argument_list|)
@@ -544,13 +544,13 @@ argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
-name|fpu_cleanstate
+name|fpu_initialstate
 operator|.
 name|sv_xmm
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|fpu_cleanstate
+name|fpu_initialstate
 operator|.
 name|sv_xmm
 argument_list|)
@@ -1281,11 +1281,11 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * This is the first time this thread has used the FPU, 		 * explicitly load sanitized registers. 		 */
+comment|/* 		 * This is the first time this thread has used the FPU or 		 * the PCB doesn't contain a clean FPU state.  Explicitly 		 * load an initial state. 		 */
 name|fxrstor
 argument_list|(
 operator|&
-name|fpu_cleanstate
+name|fpu_initialstate
 argument_list|)
 expr_stmt|;
 if|if
@@ -1411,13 +1411,13 @@ block|{
 name|bcopy
 argument_list|(
 operator|&
-name|fpu_cleanstate
+name|fpu_initialstate
 argument_list|,
 name|addr
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|fpu_cleanstate
+name|fpu_initialstate
 argument_list|)
 argument_list|)
 expr_stmt|;
