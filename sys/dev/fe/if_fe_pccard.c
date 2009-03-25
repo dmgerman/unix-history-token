@@ -261,6 +261,17 @@ name|PCMCIA_CARD
 argument_list|(
 name|TDK
 argument_list|,
+name|LAK_CD011
+argument_list|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|PCMCIA_CARD
+argument_list|(
+name|TDK
+argument_list|,
 name|LAK_CD021BX
 argument_list|)
 block|,
