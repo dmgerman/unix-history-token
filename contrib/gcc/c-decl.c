@@ -2570,6 +2570,14 @@ name|p
 argument_list|)
 operator|==
 literal|0
+operator|&&
+name|scope
+operator|!=
+name|file_scope
+operator|&&
+name|scope
+operator|!=
+name|external_scope
 condition|)
 block|{
 name|error
