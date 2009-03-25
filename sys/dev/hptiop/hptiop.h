@@ -972,12 +972,7 @@ name|lpBytesReturned
 decl_stmt|;
 comment|/* count of HPT_U8s returned */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
