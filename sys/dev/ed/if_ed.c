@@ -2972,15 +2972,13 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 			 * Length is a wild value. There's a good chance that 			 * this was caused by the NIC being old and buggy. 			 * The bug is that the length low byte is duplicated in 			 * the high byte. Try to recalculate the length based on 			 * the pointer to the next packet. 			 */
-comment|/* 			 * NOTE: sc->next_packet is pointing at the current packet. 			 */
+comment|/* 			 * Length is a wild value. There's a good chance that 			 * this was caused by the NIC being old and buggy. 			 * The bug is that the length low byte is duplicated 			 * in the high byte. Try to recalculate the length 			 * based on the pointer to the next packet.  Also, 			 * need ot preserve offset into page. 			 * 			 * NOTE: sc->next_packet is pointing at the current 			 * packet. 			 */
 name|len
 operator|&=
 name|ED_PAGE_SIZE
 operator|-
 literal|1
 expr_stmt|;
-comment|/* preserve offset into page */
 if|if
 condition|(
 name|packet_hdr
@@ -3067,7 +3065,7 @@ name|dot3StatsFrameTooLongs
 operator|++
 expr_stmt|;
 block|}
-comment|/* 		 * Be fairly liberal about what we allow as a "reasonable" length 		 * so that a [crufty] packet will make it to BPF (and can thus 		 * be analyzed). Note that all that is really important is that 		 * we have a length that will fit into one mbuf cluster or less; 		 * the upper layer protocols can then figure out the length from 		 * their own length field(s). 		 * But make sure that we have at least a full ethernet header 		 * or we would be unable to call ether_input() later. 		 */
+comment|/* 		 * Be fairly liberal about what we allow as a "reasonable" 		 * length so that a [crufty] packet will make it to BPF (and 		 * can thus be analyzed). Note that all that is really 		 * important is that we have a length that will fit into one 		 * mbuf cluster or less; the upper layer protocols can then 		 * figure out the length from their own length field(s).  But 		 * make sure that we have at least a full ethernet header or 		 * we would be unable to call ether_input() later. 		 */
 if|if
 condition|(
 operator|(
