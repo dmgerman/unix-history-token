@@ -1541,9 +1541,6 @@ name|fpcurthread
 argument_list|)
 condition|)
 block|{
-name|fpu_clean_state
-argument_list|()
-expr_stmt|;
 name|fxrstor
 argument_list|(
 name|addr
@@ -1596,15 +1593,6 @@ begin_comment
 comment|/*  * On AuthenticAMD processors, the fxrstor instruction does not restore  * the x87's stored last instruction pointer, last data pointer, and last  * opcode values, except in the rare case in which the exception summary  * (ES) bit in the x87 status word is set to 1.  *  * In order to avoid leaking this information across processes, we clean  * these values by performing a dummy load before executing fxrstor().  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|double
-name|dummy_variable
-init|=
-literal|0.0
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
@@ -1613,6 +1601,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|static
+name|float
+name|dummy_variable
+init|=
+literal|0.0
+decl_stmt|;
 name|u_short
 name|status
 decl_stmt|;
