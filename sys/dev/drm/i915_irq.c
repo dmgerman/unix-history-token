@@ -979,18 +979,9 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|DRM_DEBUG
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|dev_priv
-operator|->
-name|counter
-operator|++
-expr_stmt|;
 if|if
 condition|(
+operator|++
 name|dev_priv
 operator|->
 name|counter
@@ -1001,7 +992,7 @@ name|dev_priv
 operator|->
 name|counter
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1018,6 +1009,15 @@ operator|=
 name|dev_priv
 operator|->
 name|counter
+expr_stmt|;
+name|DRM_DEBUG
+argument_list|(
+literal|"emitting: %d\n"
+argument_list|,
+name|dev_priv
+operator|->
+name|counter
+argument_list|)
 expr_stmt|;
 name|BEGIN_LP_RING
 argument_list|(
@@ -1236,18 +1236,6 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|DRM_DEBUG
-argument_list|(
-literal|"irq_nr=%d breadcrumb=%d\n"
-argument_list|,
-name|irq_nr
-argument_list|,
-name|READ_BREADCRUMB
-argument_list|(
-name|dev_priv
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|READ_BREADCRUMB
@@ -1294,6 +1282,18 @@ operator|->
 name|perf_boxes
 operator||=
 name|I915_BOX_WAIT
+expr_stmt|;
+name|DRM_DEBUG
+argument_list|(
+literal|"irq_nr=%d breadcrumb=%d\n"
+argument_list|,
+name|irq_nr
+argument_list|,
+name|READ_BREADCRUMB
+argument_list|(
+name|dev_priv
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|i915_user_irq_get
 argument_list|(
