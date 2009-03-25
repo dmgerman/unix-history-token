@@ -9575,6 +9575,17 @@ name|coname
 argument_list|)
 expr_stmt|;
 comment|/* Install new attributes. */
+name|fattr_umask
+argument_list|(
+name|sr
+operator|->
+name|sr_serverattr
+argument_list|,
+name|coll
+operator|->
+name|co_umask
+argument_list|)
+expr_stmt|;
 name|fattr_install
 argument_list|(
 name|sr
