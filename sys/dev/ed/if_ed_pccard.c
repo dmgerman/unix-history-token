@@ -1050,6 +1050,17 @@ block|,
 block|{
 name|PCMCIA_CARD
 argument_list|(
+name|RIOS
+argument_list|,
+name|PCCARD3
+argument_list|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|PCMCIA_CARD
+argument_list|(
 name|RPTI
 argument_list|,
 name|EP400
