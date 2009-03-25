@@ -1367,32 +1367,12 @@ case|case
 name|T_DNA
 case|:
 comment|/* transparent fault (due to context switch "late") */
-if|if
-condition|(
 name|fpudna
 argument_list|()
-condition|)
+expr_stmt|;
 goto|goto
 name|userout
 goto|;
-name|printf
-argument_list|(
-literal|"pid %d killed due to lack of floating point\n"
-argument_list|,
-name|p
-operator|->
-name|p_pid
-argument_list|)
-expr_stmt|;
-name|i
-operator|=
-name|SIGKILL
-expr_stmt|;
-name|ucode
-operator|=
-literal|0
-expr_stmt|;
-break|break;
 case|case
 name|T_FPOPFLT
 case|:
@@ -1466,12 +1446,9 @@ case|case
 name|T_DNA
 case|:
 comment|/* 			 * The kernel is apparently using fpu for copying. 			 * XXX this should be fatal unless the kernel has 			 * registered such use. 			 */
-if|if
-condition|(
 name|fpudna
 argument_list|()
-condition|)
-block|{
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"fpudna in kernel mode!\n"
@@ -1480,8 +1457,6 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
-block|}
-break|break;
 case|case
 name|T_STKFLT
 case|:

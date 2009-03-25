@@ -2363,9 +2363,7 @@ argument_list|()
 expr_stmt|;
 comment|/* set up FPU state on the AP */
 name|npxinit
-argument_list|(
-name|__INITIAL_NPXCW__
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* set up SSE registers */
 name|enable_sse

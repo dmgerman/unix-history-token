@@ -4452,6 +4452,12 @@ name|pcb_gs
 operator|=
 name|_udatasel
 expr_stmt|;
+name|pcb
+operator|->
+name|pcb_initial_fpucw
+operator|=
+name|__LINUX_NPXCW__
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
