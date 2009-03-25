@@ -1936,7 +1936,9 @@ end_ifdef
 
 begin_function_decl
 name|int
+function_decl|(
 name|dprintf
+function_decl|)
 parameter_list|(
 name|int
 parameter_list|,
