@@ -1750,6 +1750,11 @@ decl_stmt|;
 comment|/* start of HT info element */
 name|uint8_t
 modifier|*
+name|bo_ath
+decl_stmt|;
+comment|/* start of ATH parameters */
+name|uint8_t
+modifier|*
 name|bo_appie
 decl_stmt|;
 comment|/* start of AppIE element */
@@ -1838,6 +1843,11 @@ init|=
 literal|9
 block|,
 comment|/* TDMA Info */
+name|IEEE80211_BEACON_ATH
+init|=
+literal|10
+block|,
+comment|/* ATH parameters */
 block|}
 enum|;
 end_enum
