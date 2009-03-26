@@ -289,7 +289,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|l_long
+name|l_ulong
 name|l_off_t
 typedef|;
 end_typedef
