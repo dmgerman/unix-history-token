@@ -2409,7 +2409,7 @@ goto|;
 block|}
 name|res
 operator|=
-name|G_PART_PROBE_PRI_HIGH
+name|G_PART_PROBE_PRI_NORM
 expr_stmt|;
 name|out
 label|:
