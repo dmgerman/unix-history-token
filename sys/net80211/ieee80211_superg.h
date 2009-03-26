@@ -19,6 +19,116 @@ begin_comment
 comment|/*  * Atheros' 802.11 SuperG protocol support.  */
 end_comment
 
+begin_comment
+comment|/*  * Atheros advanced capability information element.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ieee80211_ath_ie
+block|{
+name|uint8_t
+name|ath_id
+decl_stmt|;
+comment|/* IEEE80211_ELEMID_VENDOR */
+name|uint8_t
+name|ath_len
+decl_stmt|;
+comment|/* length in bytes */
+name|uint8_t
+name|ath_oui
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* ATH_OUI */
+name|uint8_t
+name|ath_oui_type
+decl_stmt|;
+comment|/* ATH_OUI_TYPE */
+name|uint8_t
+name|ath_oui_subtype
+decl_stmt|;
+comment|/* ATH_OUI_SUBTYPE */
+name|uint8_t
+name|ath_version
+decl_stmt|;
+comment|/* spec revision */
+name|uint8_t
+name|ath_capability
+decl_stmt|;
+comment|/* capability info */
+define|#
+directive|define
+name|ATHEROS_CAP_TURBO_PRIME
+value|0x01
+comment|/* dynamic turbo--aka Turbo' */
+define|#
+directive|define
+name|ATHEROS_CAP_COMPRESSION
+value|0x02
+comment|/* data compression */
+define|#
+directive|define
+name|ATHEROS_CAP_FAST_FRAME
+value|0x04
+comment|/* fast (jumbo) frames */
+define|#
+directive|define
+name|ATHEROS_CAP_XR
+value|0x08
+comment|/* Xtended Range support */
+define|#
+directive|define
+name|ATHEROS_CAP_AR
+value|0x10
+comment|/* Advanded Radar support */
+define|#
+directive|define
+name|ATHEROS_CAP_BURST
+value|0x20
+comment|/* Bursting - not negotiated */
+define|#
+directive|define
+name|ATHEROS_CAP_WME
+value|0x40
+comment|/* CWMin tuning */
+define|#
+directive|define
+name|ATHEROS_CAP_BOOST
+value|0x80
+comment|/* use turbo/!turbo mode */
+name|uint8_t
+name|ath_defkeyix
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|ATH_OUI_VERSION
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_OUI_SUBTYPE
+value|0x01
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_function_decl
 name|void
 name|ieee80211_superg_attach
@@ -203,6 +313,15 @@ name|m
 return|;
 block|}
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#

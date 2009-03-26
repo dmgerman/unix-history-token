@@ -41,6 +41,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_tdma.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_wlan.h"
 end_include
 
@@ -156,12 +162,6 @@ begin_include
 include|#
 directive|include
 file|<net80211/ieee80211_input.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_tdma.h"
 end_include
 
 begin_ifndef
@@ -373,6 +373,57 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|TDMA_VERSION_VALID
+parameter_list|(
+name|_version
+parameter_list|)
+define|\
+value|(TDMA_VERSION_V2<= (_version)&& (_version)<= TDMA_VERSION)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TDMA_SLOTCNT_VALID
+parameter_list|(
+name|_slotcnt
+parameter_list|)
+define|\
+value|(2<= (_slotcnt)&& (_slotcnt)<= TDMA_MAXSLOTS)
+end_define
+
+begin_comment
+comment|/* XXX magic constants */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDMA_SLOTLEN_VALID
+parameter_list|(
+name|_slotlen
+parameter_list|)
+define|\
+value|(2*100<= (_slotlen)&& (unsigned)(_slotlen)<= 0xfffff)
+end_define
+
+begin_comment
+comment|/* XXX probably should set a max */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDMA_BINTVAL_VALID
+parameter_list|(
+name|_bintval
+parameter_list|)
+value|(1<= (_bintval))
+end_define
 
 begin_function_decl
 specifier|static
