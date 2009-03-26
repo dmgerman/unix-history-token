@@ -2182,7 +2182,7 @@ condition|)
 name|ipport_tcpallocs
 operator|++
 expr_stmt|;
-comment|/* 		 * Simple check to ensure all ports are not used up causing 		 * a deadlock here. 		 * 		 * We split the two cases (up and down) so that the direction 		 * is not being tested on each round of the loop. 		 */
+comment|/* 		 * Instead of having two loops further down counting up or down 		 * make sure that first is always<= last and go with only one 		 * code path implementing all logic. 		 * 		 * We split the two cases (up and down) so that the direction 		 * is not being tested on each round of the loop. 		 */
 if|if
 condition|(
 name|first
