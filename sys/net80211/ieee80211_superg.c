@@ -174,13 +174,22 @@ name|iv_flags
 operator||=
 name|IEEE80211_F_FF
 expr_stmt|;
+comment|/* NB: we only implement sta mode */
 if|if
 condition|(
+name|vap
+operator|->
+name|iv_opmode
+operator|==
+name|IEEE80211_M_STA
+operator|&&
+operator|(
 name|vap
 operator|->
 name|iv_caps
 operator|&
 name|IEEE80211_C_TURBOP
+operator|)
 condition|)
 name|vap
 operator|->
