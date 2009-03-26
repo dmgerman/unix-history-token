@@ -529,7 +529,7 @@ argument_list|(
 literal|"ip6_init"
 argument_list|)
 expr_stmt|;
-comment|/* Initialize the entire ip_protox[] array to IPPROTO_RAW. */
+comment|/* Initialize the entire ip6_protox[] array to IPPROTO_RAW. */
 for|for
 control|(
 name|i
