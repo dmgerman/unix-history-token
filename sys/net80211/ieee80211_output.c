@@ -12465,6 +12465,16 @@ argument_list|)
 expr_stmt|;
 name|bo
 operator|->
+name|bo_htinfo
+operator|+=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|csa
+argument_list|)
+expr_stmt|;
+name|bo
+operator|->
 name|bo_wme
 operator|+=
 sizeof|sizeof
