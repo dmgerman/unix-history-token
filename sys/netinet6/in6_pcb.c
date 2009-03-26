@@ -713,7 +713,7 @@ operator|(
 operator|(
 name|t
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_TIMEWAIT
 operator|)
@@ -846,7 +846,7 @@ operator|(
 operator|(
 name|t
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_TIMEWAIT
 operator|)
@@ -923,7 +923,7 @@ operator|(
 operator|(
 name|t
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_TIMEWAIT
 operator|)
@@ -1006,7 +1006,7 @@ name|t
 operator|&&
 name|t
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_TIMEWAIT
 condition|)

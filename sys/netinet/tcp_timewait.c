@@ -1009,7 +1009,7 @@ name|tw
 expr_stmt|;
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator||=
 name|INP_TIMEWAIT
 expr_stmt|;
@@ -1025,7 +1025,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_SOCKREF
 condition|)
@@ -1045,7 +1045,7 @@ argument_list|)
 expr_stmt|;
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&=
 operator|~
 name|INP_SOCKREF
@@ -1653,7 +1653,7 @@ argument_list|(
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_TIMEWAIT
 operator|)
@@ -1729,14 +1729,14 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_SOCKREF
 condition|)
 block|{
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&=
 operator|~
 name|INP_SOCKREF

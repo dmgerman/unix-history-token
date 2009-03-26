@@ -766,7 +766,7 @@ condition|(
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_DROPPED
 operator|)
@@ -919,7 +919,7 @@ condition|(
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_DROPPED
 operator|)
@@ -1213,7 +1213,7 @@ condition|(
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_DROPPED
 operator|)
@@ -1623,7 +1623,7 @@ condition|(
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_DROPPED
 operator|)
@@ -1904,7 +1904,7 @@ condition|(
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_DROPPED
 operator|)

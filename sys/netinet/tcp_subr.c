@@ -3764,7 +3764,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_SOCKREF
 condition|)
@@ -3784,7 +3784,7 @@ argument_list|)
 expr_stmt|;
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&=
 operator|~
 name|INP_SOCKREF
@@ -3875,7 +3875,7 @@ if|if
 condition|(
 name|inpb
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_TIMEWAIT
 condition|)
@@ -4009,7 +4009,7 @@ condition|(
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_TIMEWAIT
 operator|)
@@ -4017,7 +4017,7 @@ operator|||
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_DROPPED
 operator|)
@@ -4470,7 +4470,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_TIMEWAIT
 condition|)
@@ -4668,7 +4668,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_TIMEWAIT
 condition|)
@@ -5864,7 +5864,7 @@ operator|!
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_TIMEWAIT
 operator|)
@@ -5873,7 +5873,7 @@ operator|!
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_DROPPED
 operator|)
@@ -7056,7 +7056,7 @@ condition|(
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_TIMEWAIT
 operator|)
@@ -7064,7 +7064,7 @@ operator|||
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_DROPPED
 operator|)
@@ -7184,7 +7184,7 @@ condition|(
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_TIMEWAIT
 operator|)
@@ -7192,7 +7192,7 @@ operator|||
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_DROPPED
 operator|)
@@ -9954,7 +9954,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_TIMEWAIT
 condition|)
@@ -9994,7 +9994,7 @@ operator|!
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_DROPPED
 operator|)

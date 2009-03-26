@@ -975,7 +975,7 @@ if|if
 condition|(
 name|inpcb
 operator|.
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_TIMEWAIT
 condition|)

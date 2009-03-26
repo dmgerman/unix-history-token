@@ -1499,50 +1499,6 @@ begin_comment
 comment|/* opened under IPv6 protocol */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|INP_TIMEWAIT
-value|0x8
-end_define
-
-begin_comment
-comment|/* inpcb in TIMEWAIT, ppcb is tcptw */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INP_ONESBCAST
-value|0x10
-end_define
-
-begin_comment
-comment|/* send all-ones broadcast */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INP_DROPPED
-value|0x20
-end_define
-
-begin_comment
-comment|/* protocol drop flag */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INP_SOCKREF
-value|0x40
-end_define
-
-begin_comment
-comment|/* strong socket reference */
-end_comment
-
 begin_comment
 comment|/*  * Flags for inp_flag.  */
 end_comment
@@ -1551,7 +1507,7 @@ begin_define
 define|#
 directive|define
 name|INP_RECVOPTS
-value|0x01
+value|0x00000001
 end_define
 
 begin_comment
@@ -1562,7 +1518,7 @@ begin_define
 define|#
 directive|define
 name|INP_RECVRETOPTS
-value|0x02
+value|0x00000002
 end_define
 
 begin_comment
@@ -1573,7 +1529,7 @@ begin_define
 define|#
 directive|define
 name|INP_RECVDSTADDR
-value|0x04
+value|0x00000004
 end_define
 
 begin_comment
@@ -1584,7 +1540,7 @@ begin_define
 define|#
 directive|define
 name|INP_HDRINCL
-value|0x08
+value|0x00000008
 end_define
 
 begin_comment
@@ -1595,7 +1551,7 @@ begin_define
 define|#
 directive|define
 name|INP_HIGHPORT
-value|0x10
+value|0x00000010
 end_define
 
 begin_comment
@@ -1606,7 +1562,7 @@ begin_define
 define|#
 directive|define
 name|INP_LOWPORT
-value|0x20
+value|0x00000020
 end_define
 
 begin_comment
@@ -1617,7 +1573,7 @@ begin_define
 define|#
 directive|define
 name|INP_ANONPORT
-value|0x40
+value|0x00000040
 end_define
 
 begin_comment
@@ -1628,7 +1584,7 @@ begin_define
 define|#
 directive|define
 name|INP_RECVIF
-value|0x80
+value|0x00000080
 end_define
 
 begin_comment
@@ -1639,7 +1595,7 @@ begin_define
 define|#
 directive|define
 name|INP_MTUDISC
-value|0x100
+value|0x00000100
 end_define
 
 begin_comment
@@ -1650,7 +1606,7 @@ begin_define
 define|#
 directive|define
 name|INP_FAITH
-value|0x200
+value|0x00000200
 end_define
 
 begin_comment
@@ -1661,7 +1617,7 @@ begin_define
 define|#
 directive|define
 name|INP_RECVTTL
-value|0x400
+value|0x00000400
 end_define
 
 begin_comment
@@ -1672,7 +1628,7 @@ begin_define
 define|#
 directive|define
 name|INP_DONTFRAG
-value|0x800
+value|0x00000800
 end_define
 
 begin_comment
@@ -1682,8 +1638,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INP_NONLOCALOK
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* Allow bind to spoof any address */
+end_comment
+
+begin_comment
+comment|/* - requires options IP_NONLOCALBIND */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|INP_INHASHLIST
-value|0x2000
+value|0x00002000
 end_define
 
 begin_comment
@@ -1694,7 +1665,7 @@ begin_define
 define|#
 directive|define
 name|IN6P_IPV6_V6ONLY
-value|0x008000
+value|0x00008000
 end_define
 
 begin_comment
@@ -1705,7 +1676,7 @@ begin_define
 define|#
 directive|define
 name|IN6P_PKTINFO
-value|0x010000
+value|0x00010000
 end_define
 
 begin_comment
@@ -1716,7 +1687,7 @@ begin_define
 define|#
 directive|define
 name|IN6P_HOPLIMIT
-value|0x020000
+value|0x00020000
 end_define
 
 begin_comment
@@ -1727,7 +1698,7 @@ begin_define
 define|#
 directive|define
 name|IN6P_HOPOPTS
-value|0x040000
+value|0x00040000
 end_define
 
 begin_comment
@@ -1738,7 +1709,7 @@ begin_define
 define|#
 directive|define
 name|IN6P_DSTOPTS
-value|0x080000
+value|0x00080000
 end_define
 
 begin_comment
@@ -1749,7 +1720,7 @@ begin_define
 define|#
 directive|define
 name|IN6P_RTHDR
-value|0x100000
+value|0x00100000
 end_define
 
 begin_comment
@@ -1760,7 +1731,7 @@ begin_define
 define|#
 directive|define
 name|IN6P_RTHDRDSTOPTS
-value|0x200000
+value|0x00200000
 end_define
 
 begin_comment
@@ -1771,7 +1742,7 @@ begin_define
 define|#
 directive|define
 name|IN6P_TCLASS
-value|0x400000
+value|0x00400000
 end_define
 
 begin_comment
@@ -1782,11 +1753,55 @@ begin_define
 define|#
 directive|define
 name|IN6P_AUTOFLOWLABEL
-value|0x800000
+value|0x00800000
 end_define
 
 begin_comment
 comment|/* attach flowlabel automatically */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_TIMEWAIT
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* in TIMEWAIT, ppcb is tcptw */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_ONESBCAST
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* send all-ones broadcast */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_DROPPED
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* protocol drop flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_SOCKREF
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* strong socket reference */
 end_comment
 
 begin_define
@@ -1816,13 +1831,6 @@ define|#
 directive|define
 name|INP_CONTROLOPTS
 value|(INP_RECVOPTS|INP_RECVRETOPTS|INP_RECVDSTADDR|\ 				 INP_RECVIF|INP_RECVTTL|\ 				 IN6P_PKTINFO|IN6P_HOPLIMIT|IN6P_HOPOPTS|\ 				 IN6P_DSTOPTS|IN6P_RTHDR|IN6P_RTHDRDSTOPTS|\ 				 IN6P_TCLASS|IN6P_AUTOFLOWLABEL|IN6P_RFC2292|\ 				 IN6P_MTU)
-end_define
-
-begin_define
-define|#
-directive|define
-name|INP_UNMAPPABLEOPTS
-value|(IN6P_HOPOPTS|IN6P_DSTOPTS|IN6P_RTHDR|\ 				 IN6P_TCLASS|IN6P_AUTOFLOWLABEL)
 end_define
 
 begin_comment
