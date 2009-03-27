@@ -6253,7 +6253,7 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/* 		 * ffs_lock_ea is not needed there, because the vnode 		 * must be exlusively locked. 		 */
+comment|/* 		 * ffs_lock_ea is not needed there, because the vnode 		 * must be exclusively locked. 		 */
 if|if
 condition|(
 name|ip
@@ -7290,7 +7290,7 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/* 		 * ffs_lock_ea is not needed there, because the vnode 		 * must be exlusively locked. 		 */
+comment|/* 		 * ffs_lock_ea is not needed there, because the vnode 		 * must be exclusively locked. 		 */
 if|if
 condition|(
 name|ip
