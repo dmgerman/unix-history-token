@@ -329,6 +329,17 @@ name|PCMCIA_CARD
 argument_list|(
 name|BROMAX
 argument_list|,
+name|AXNET
+argument_list|)
+block|,
+name|NE2000DVF_AX88X90
+block|}
+block|,
+block|{
+name|PCMCIA_CARD
+argument_list|(
+name|BROMAX
+argument_list|,
 name|IPORT
 argument_list|)
 block|,
@@ -865,6 +876,18 @@ block|,
 block|{
 name|PCMCIA_CARD
 argument_list|(
+name|MITSUBISHI
+argument_list|,
+name|B8895
+argument_list|)
+block|,
+name|NE2000DVF_ANYFUNC
+block|}
+block|,
+comment|/* NG */
+block|{
+name|PCMCIA_CARD
+argument_list|(
 name|MICRORESEARCH
 argument_list|,
 name|MR10TPC
@@ -1245,6 +1268,18 @@ block|,
 literal|0
 block|}
 block|,
+block|{
+name|PCMCIA_CARD
+argument_list|(
+name|TOSHIBA2
+argument_list|,
+name|LANCT00A
+argument_list|)
+block|,
+name|NE2000DVF_ANYFUNC
+block|}
+block|,
+comment|/* NG */
 block|{
 name|PCMCIA_CARD
 argument_list|(
