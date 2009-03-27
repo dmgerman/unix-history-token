@@ -1081,14 +1081,14 @@ comment|/* seq heuristic in upper 16 bits */
 end_comment
 
 begin_comment
-comment|/*  *  Flags for accmode_t.  */
+comment|/*  * Flags for accmode_t.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|VEXEC
-value|000100
+value|000000000100
 end_define
 
 begin_comment
@@ -1099,7 +1099,7 @@ begin_define
 define|#
 directive|define
 name|VWRITE
-value|000200
+value|000000000200
 end_define
 
 begin_comment
@@ -1110,7 +1110,7 @@ begin_define
 define|#
 directive|define
 name|VREAD
-value|000400
+value|000000000400
 end_define
 
 begin_comment
@@ -1121,18 +1121,18 @@ begin_define
 define|#
 directive|define
 name|VADMIN
-value|010000
+value|000000010000
 end_define
 
 begin_comment
-comment|/* permission to administer */
+comment|/* being the file owner */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|VSTAT
-value|020000
+value|000000020000
 end_define
 
 begin_comment
@@ -1143,18 +1143,157 @@ begin_define
 define|#
 directive|define
 name|VAPPEND
-value|040000
+value|000000040000
 end_define
 
 begin_comment
 comment|/* permission to write/append */
 end_comment
 
+begin_comment
+comment|/*  * VEXPLICIT_DENY makes VOP_ACCESS(9) return EPERM or EACCES only  * if permission was denied explicitly, by a "deny" rule in NFS4 ACL,  * and 0 otherwise.  This never happens with ordinary unix access rights  * or POSIX.1e ACLs.  Obviously, VEXPLICIT_DENY must be OR-ed with  * some other V* constant.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|VALLPERM
-value|(VEXEC | VWRITE | VREAD | VADMIN | VSTAT | VAPPEND)
+name|VEXPLICIT_DENY
+value|000000100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|VREAD_NAMED_ATTRS
+value|000000200000
+end_define
+
+begin_comment
+comment|/* not used */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VWRITE_NAMED_ATTRS
+value|000000400000
+end_define
+
+begin_comment
+comment|/* not used */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDELETE_CHILD
+value|000001000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|VREAD_ATTRIBUTES
+value|000002000000
+end_define
+
+begin_comment
+comment|/* permission to stat(2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VWRITE_ATTRIBUTES
+value|000004000000
+end_define
+
+begin_comment
+comment|/* change {m,c,a}time */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDELETE
+value|000010000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|VREAD_ACL
+value|000020000000
+end_define
+
+begin_comment
+comment|/* read ACL and file mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VWRITE_ACL
+value|000040000000
+end_define
+
+begin_comment
+comment|/* change ACL and/or file mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VWRITE_OWNER
+value|000100000000
+end_define
+
+begin_comment
+comment|/* change file owner */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VSYNCHRONIZE
+value|000200000000
+end_define
+
+begin_comment
+comment|/* not used */
+end_comment
+
+begin_comment
+comment|/*  * Permissions that were traditionally granted only to the file owner.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VADMIN_PERMS
+value|(VADMIN | VWRITE_ATTRIBUTES | VWRITE_ACL | \     VWRITE_OWNER)
+end_define
+
+begin_comment
+comment|/*  * Permissions that were traditionally granted to everyone.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VSTAT_PERMS
+value|(VSTAT | VREAD_ATTRIBUTES | VREAD_ACL | VSYNCHRONIZE)
+end_define
+
+begin_comment
+comment|/*  * Permissions that allow to change the state of the file in any way.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMODIFY_PERMS
+value|(VWRITE | VAPPEND | VADMIN_PERMS | VDELETE_CHILD | \     VDELETE)
 end_define
 
 begin_comment
