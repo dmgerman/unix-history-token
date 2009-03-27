@@ -8500,7 +8500,7 @@ condition|)
 block|{
 name|DPRINTFN
 argument_list|(
-literal|3
+name|WPI_DEBUG_TX
 argument_list|,
 operator|(
 literal|"%d retries\n"
