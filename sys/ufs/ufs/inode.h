@@ -202,6 +202,11 @@ comment|/* UFS2 on-disk dinode. */
 block|}
 name|dinode_u
 union|;
+comment|/* 	 * i_ea_refs is added at the end of the structure to 	 * keep struct inode layout on releng branch. 	 */
+name|int
+name|i_ea_refs
+decl_stmt|;
+comment|/* Number of users of EA area */
 block|}
 struct|;
 end_struct
@@ -297,6 +302,20 @@ end_define
 begin_comment
 comment|/* Process IN_ACCESS after the 					   suspension finished */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IN_EA_LOCKED
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_EA_LOCKWAIT
+value|0x0400
+end_define
 
 begin_define
 define|#
