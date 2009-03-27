@@ -548,7 +548,7 @@ name|bufspace
 argument_list|,
 literal|0
 argument_list|,
-literal|"KVA memory used for bufs"
+literal|"Virtual memory used for buffers"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
