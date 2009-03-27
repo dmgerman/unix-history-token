@@ -2018,6 +2018,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PCIM_CMD_INTxDIS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PCIM_CMD_INTxDIS
+value|0x0400
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * High priority mailbox registers  * Each mailbox is 64-bits wide, though we only use the  * lower 32 bits. To write a 64-bit value, write the upper 32 bits  * first. The NIC will load the mailbox after the lower 32 bit word  * has been updated.  */
 end_comment

@@ -6553,7 +6553,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Do endian, PCI and DMA initialization. Also check the on-board ROM  * self-test results.  */
+comment|/*  * Do endian, PCI and DMA initialization.  */
 end_comment
 
 begin_function
@@ -6955,7 +6955,7 @@ argument_list|,
 name|BGE_MODECTL_STACKUP
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Disable memory write invalidate.  Apparently it is not supported 	 * properly by these devices. 	 */
+comment|/* 	 * Disable memory write invalidate.  Apparently it is not supported 	 * properly by these devices.  Also ensure that INTx isn't disabled, 	 * as these chips need it even when using MSI. 	 */
 name|PCI_CLRBIT
 argument_list|(
 name|sc
@@ -6964,6 +6964,8 @@ name|bge_dev
 argument_list|,
 name|BGE_PCI_CMD
 argument_list|,
+name|PCIM_CMD_INTxDIS
+operator||
 name|PCIM_CMD_MWIEN
 argument_list|,
 literal|4
