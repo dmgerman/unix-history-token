@@ -5608,6 +5608,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 			 * The buffer start and end phys addresses should be 			 * 0x0 for a zero length packet. 			 */
 name|td
 operator|->
 name|td_cbp
@@ -5618,7 +5619,6 @@ name|td
 operator|->
 name|td_be
 operator|=
-operator|~
 literal|0
 expr_stmt|;
 name|td
