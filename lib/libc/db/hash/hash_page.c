@@ -681,6 +681,23 @@ name|pairlen
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|ndx
+operator|==
+name|hashp
+operator|->
+name|cndx
+condition|)
+block|{
+comment|/* 			 * We just removed pair we were "pointing" to. 			 * By moving back the cndx we ensure subsequent 			 * hash_seq() calls won't skip over any entries. 			 */
+name|hashp
+operator|->
+name|cndx
+operator|-=
+literal|2
+expr_stmt|;
+block|}
 block|}
 comment|/* Finally adjust the page data */
 name|bp
