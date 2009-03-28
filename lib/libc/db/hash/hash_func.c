@@ -81,6 +81,12 @@ directive|include
 file|"extern.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|u_int32_t
@@ -126,6 +132,11 @@ name|__unused
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|u_int32_t
@@ -141,7 +152,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Global default hash function */
+comment|/* Default hash function. */
 end_comment
 
 begin_function_decl
@@ -162,8 +173,14 @@ name|hash4
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_comment
-comment|/*  * HASH FUNCTIONS  *  * Assume that we've already split the bucket to which this key hashes,  * calculate that bucket, and check that in fact we did already split it.  *  * This came from ejb's hsearch.  */
+comment|/*  * Assume that we've already split the bucket to which this key hashes,  * calculate that bucket, and check that in fact we did already split it.  *  * EJB's original hsearch hash.  */
 end_comment
 
 begin_define
@@ -181,46 +198,43 @@ value|1048583
 end_define
 
 begin_function
-specifier|static
 name|u_int32_t
 name|hash1
 parameter_list|(
-name|keyarg
-parameter_list|,
-name|len
-parameter_list|)
 specifier|const
 name|void
 modifier|*
-name|keyarg
-decl_stmt|;
+name|key
+parameter_list|,
 name|size_t
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|const
-name|u_char
-modifier|*
-name|key
-decl_stmt|;
 name|u_int32_t
 name|h
 decl_stmt|;
-comment|/* Convert string to integer */
-for|for
-control|(
-name|key
-operator|=
-name|keyarg
-operator|,
+name|u_int8_t
+modifier|*
+name|k
+decl_stmt|;
 name|h
 operator|=
 literal|0
-init|;
+expr_stmt|;
+name|k
+operator|=
+operator|(
+name|u_int8_t
+operator|*
+operator|)
+name|key
+expr_stmt|;
+comment|/* Convert string to integer */
+while|while
+condition|(
 name|len
 operator|--
-condition|;
-control|)
+condition|)
 name|h
 operator|=
 name|h
@@ -229,7 +243,7 @@ name|PRIME1
 operator|^
 operator|(
 operator|*
-name|key
+name|k
 operator|++
 operator|-
 literal|' '
@@ -248,7 +262,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Phong's linear congruential hash  */
+comment|/*  * Phong Vo's linear congruential hash  */
 end_comment
 
 begin_define
@@ -264,44 +278,41 @@ value|((h) = 0x63c63cd9*(h) + 0x9c39c33d + (c))
 end_define
 
 begin_function
-specifier|static
 name|u_int32_t
 name|hash2
 parameter_list|(
-name|keyarg
-parameter_list|,
-name|len
-parameter_list|)
 specifier|const
 name|void
 modifier|*
-name|keyarg
-decl_stmt|;
+name|key
+parameter_list|,
 name|size_t
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|const
-name|u_char
-modifier|*
-name|e
-decl_stmt|,
-modifier|*
-name|key
-decl_stmt|;
 name|u_int32_t
 name|h
 decl_stmt|;
-name|u_char
+name|u_int8_t
+modifier|*
+name|e
+decl_stmt|,
 name|c
+decl_stmt|,
+modifier|*
+name|k
 decl_stmt|;
-name|key
+name|k
 operator|=
-name|keyarg
+operator|(
+name|u_int8_t
+operator|*
+operator|)
+name|key
 expr_stmt|;
 name|e
 operator|=
-name|key
+name|k
 operator|+
 name|len
 expr_stmt|;
@@ -311,7 +322,7 @@ name|h
 operator|=
 literal|0
 init|;
-name|key
+name|k
 operator|!=
 name|e
 condition|;
@@ -320,7 +331,7 @@ block|{
 name|c
 operator|=
 operator|*
-name|key
+name|k
 operator|++
 expr_stmt|;
 if|if
@@ -328,7 +339,7 @@ condition|(
 operator|!
 name|c
 operator|&&
-name|key
+name|k
 operator|>
 name|e
 condition|)
@@ -350,49 +361,46 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is INCREDIBLY ugly, but fast.  We break the string up into 8 byte  * units.  On the first time through the loop we get the "leftover bytes"  * (strlen % 8).  On every other iteration, we perform 8 HASHC's so we handle  * all 8 bytes.  Essentially, this saves us 7 cmp& branch instructions.  If  * this routine is heavily used enough, it's worth the ugly coding.  *  * OZ's original sdbm hash  */
+comment|/*  * This is INCREDIBLY ugly, but fast.  We break the string up into 8 byte  * units.  On the first time through the loop we get the "leftover bytes"  * (strlen % 8).  On every other iteration, we perform 8 HASHC's so we handle  * all 8 bytes.  Essentially, this saves us 7 cmp& branch instructions.  If  * this routine is heavily used enough, it's worth the ugly coding.  *  * Ozan Yigit's original sdbm hash.  */
 end_comment
 
 begin_function
-specifier|static
 name|u_int32_t
 name|hash3
 parameter_list|(
-name|keyarg
-parameter_list|,
-name|len
-parameter_list|)
 specifier|const
 name|void
 modifier|*
-name|keyarg
-decl_stmt|;
+name|key
+parameter_list|,
 name|size_t
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|const
-name|u_char
-modifier|*
-name|key
-decl_stmt|;
-name|size_t
+name|u_int32_t
+name|n
+decl_stmt|,
 name|loop
 decl_stmt|;
-name|u_int32_t
-name|h
+name|u_int8_t
+modifier|*
+name|k
 decl_stmt|;
 define|#
 directive|define
 name|HASHC
-value|h = *key++ + 65599 * h
-name|h
+value|n = *k++ + 65599 * n
+name|n
 operator|=
 literal|0
 expr_stmt|;
-name|key
+name|k
 operator|=
-name|keyarg
+operator|(
+name|u_int8_t
+operator|*
+operator|)
+name|key
 expr_stmt|;
 if|if
 condition|(
@@ -429,45 +437,39 @@ literal|0
 case|:
 do|do
 block|{
+comment|/* All fall throughs */
 name|HASHC
 expr_stmt|;
-comment|/* FALLTHROUGH */
 case|case
 literal|7
 case|:
 name|HASHC
 expr_stmt|;
-comment|/* FALLTHROUGH */
 case|case
 literal|6
 case|:
 name|HASHC
 expr_stmt|;
-comment|/* FALLTHROUGH */
 case|case
 literal|5
 case|:
 name|HASHC
 expr_stmt|;
-comment|/* FALLTHROUGH */
 case|case
 literal|4
 case|:
 name|HASHC
 expr_stmt|;
-comment|/* FALLTHROUGH */
 case|case
 literal|3
 case|:
 name|HASHC
 expr_stmt|;
-comment|/* FALLTHROUGH */
 case|case
 literal|2
 case|:
 name|HASHC
 expr_stmt|;
-comment|/* FALLTHROUGH */
 case|case
 literal|1
 case|:
@@ -484,53 +486,56 @@ block|}
 block|}
 return|return
 operator|(
-name|h
+name|n
 operator|)
 return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* Hash function from Chris Torek. */
+comment|/* notdef */
+end_comment
+
+begin_comment
+comment|/* Chris Torek's hash function. */
 end_comment
 
 begin_function
-specifier|static
 name|u_int32_t
 name|hash4
 parameter_list|(
-name|keyarg
-parameter_list|,
-name|len
-parameter_list|)
 specifier|const
 name|void
 modifier|*
-name|keyarg
-decl_stmt|;
+name|key
+parameter_list|,
 name|size_t
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|const
-name|u_char
-modifier|*
-name|key
-decl_stmt|;
-name|size_t
-name|loop
-decl_stmt|;
 name|u_int32_t
 name|h
+decl_stmt|,
+name|loop
+decl_stmt|;
+specifier|const
+name|u_int8_t
+modifier|*
+name|k
 decl_stmt|;
 define|#
 directive|define
 name|HASH4a
-value|h = (h<< 5) - h + *key++;
+value|h = (h<< 5) - h + *k++;
 define|#
 directive|define
 name|HASH4b
-value|h = (h<< 5) + h + *key++;
+value|h = (h<< 5) + h + *k++;
 define|#
 directive|define
 name|HASH4
@@ -539,9 +544,9 @@ name|h
 operator|=
 literal|0
 expr_stmt|;
-name|key
+name|k
 operator|=
-name|keyarg
+name|key
 expr_stmt|;
 if|if
 condition|(
@@ -578,45 +583,39 @@ literal|0
 case|:
 do|do
 block|{
+comment|/* All fall throughs */
 name|HASH4
 expr_stmt|;
-comment|/* FALLTHROUGH */
 case|case
 literal|7
 case|:
 name|HASH4
 expr_stmt|;
-comment|/* FALLTHROUGH */
 case|case
 literal|6
 case|:
 name|HASH4
 expr_stmt|;
-comment|/* FALLTHROUGH */
 case|case
 literal|5
 case|:
 name|HASH4
 expr_stmt|;
-comment|/* FALLTHROUGH */
 case|case
 literal|4
 case|:
 name|HASH4
 expr_stmt|;
-comment|/* FALLTHROUGH */
 case|case
 literal|3
 case|:
 name|HASH4
 expr_stmt|;
-comment|/* FALLTHROUGH */
 case|case
 literal|2
 case|:
 name|HASH4
 expr_stmt|;
-comment|/* FALLTHROUGH */
 case|case
 literal|1
 case|:
