@@ -894,6 +894,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|int32_t
+operator|)
 name|hashp
 operator|->
 name|hash
@@ -3877,6 +3880,9 @@ name|bucket
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|u_int32_t
+operator|)
 name|hashp
 operator|->
 name|cbucket
@@ -4550,6 +4556,7 @@ name|int
 name|len
 parameter_list|)
 block|{
+name|unsigned
 name|int
 name|n
 decl_stmt|,

@@ -200,7 +200,9 @@ name|int
 name|key_size
 decl_stmt|,
 name|n
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|int
 name|val_size
 decl_stmt|;
 name|u_int16_t
