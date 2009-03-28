@@ -136,6 +136,7 @@ comment|/*  * Map a region of device bus space into CPU virtual address space.  
 end_comment
 
 begin_function_decl
+specifier|static
 name|__inline
 name|int
 name|bus_space_map
