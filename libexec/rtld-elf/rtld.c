@@ -5911,6 +5911,10 @@ block|}
 if|if
 condition|(
 name|refobj
+operator|!=
+name|NULL
+operator|&&
+name|refobj
 operator|->
 name|z_origin
 condition|)
