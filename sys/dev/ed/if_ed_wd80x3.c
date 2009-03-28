@@ -954,6 +954,16 @@ operator|->
 name|mem_res
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|ED_FLAGS_PCCARD
+operator|)
+condition|)
+block|{
 name|error
 operator|=
 name|ed_isa_mem_ok
@@ -974,6 +984,7 @@ operator|(
 name|error
 operator|)
 return|;
+block|}
 comment|/* 	 * (note that if the user specifies both of the following flags that 	 * '8bit' mode intentionally has precedence) 	 */
 if|if
 condition|(
