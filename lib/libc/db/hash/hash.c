@@ -1796,8 +1796,7 @@ name|int
 name|nbuckets
 decl_stmt|,
 name|nsegs
-decl_stmt|;
-name|int
+decl_stmt|,
 name|l2
 decl_stmt|;
 comment|/* 	 * Divide number of elements by the fill factor and determine a 	 * desired number of buckets.  Allocate space for the next greater 	 * power of two number of buckets. 	 */

@@ -452,12 +452,11 @@ modifier|*
 name|bp
 decl_stmt|,
 name|newoff
+decl_stmt|,
+name|pairlen
 decl_stmt|;
 name|int
 name|n
-decl_stmt|;
-name|u_int16_t
-name|pairlen
 decl_stmt|;
 name|bp
 operator|=
@@ -2445,8 +2444,7 @@ block|{
 name|u_int16_t
 modifier|*
 name|sp
-decl_stmt|;
-name|u_int16_t
+decl_stmt|,
 name|ndx
 decl_stmt|,
 name|ovfl_num
@@ -2720,8 +2718,7 @@ decl_stmt|,
 name|page
 decl_stmt|,
 name|size
-decl_stmt|;
-name|int
+decl_stmt|,
 name|rsize
 decl_stmt|;
 name|u_int16_t
@@ -3013,8 +3010,7 @@ decl_stmt|,
 name|page
 decl_stmt|,
 name|size
-decl_stmt|;
-name|int
+decl_stmt|,
 name|wsize
 decl_stmt|;
 name|size
@@ -3062,8 +3058,7 @@ condition|)
 block|{
 name|int
 name|i
-decl_stmt|;
-name|int
+decl_stmt|,
 name|max
 decl_stmt|;
 if|if
