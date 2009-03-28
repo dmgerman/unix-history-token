@@ -501,6 +501,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|udp_soreceive_dgram
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
