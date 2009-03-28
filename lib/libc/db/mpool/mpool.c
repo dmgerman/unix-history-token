@@ -938,6 +938,9 @@ name|off
 argument_list|)
 operator|)
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|mp
 operator|->
 name|pagesize
@@ -1724,6 +1727,9 @@ argument_list|,
 name|off
 argument_list|)
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|mp
 operator|->
 name|pagesize

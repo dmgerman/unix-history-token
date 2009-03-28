@@ -4619,6 +4619,9 @@ literal|0
 operator|||
 name|len
 operator|>=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|path
