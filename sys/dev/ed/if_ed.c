@@ -4489,9 +4489,11 @@ operator|*
 operator|)
 name|dst
 argument_list|,
+operator|(
 name|amount
 operator|+
 literal|1
+operator|)
 operator|/
 literal|2
 argument_list|)
