@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004 Lukas Ertl  * Copyright (c) 1997, 1998, 1999  *      Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  */
+comment|/*-  * Copyright (c) 2004, 2007 Lukas Ertl  * Copyright (c) 1997, 1998, 1999  *      Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  */
 end_comment
 
 begin_comment
@@ -32,30 +32,6 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/bio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kthread.h>
-end_include
 
 begin_include
 include|#
@@ -136,12 +112,6 @@ end_endif
 begin_comment
 comment|/* _KERNEL */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
-end_include
 
 begin_include
 include|#
@@ -742,6 +712,22 @@ name|strcmp
 argument_list|(
 name|buf
 argument_list|,
+literal|"initializing"
+argument_list|)
+condition|)
+return|return
+operator|(
+name|GV_SD_INITIALIZING
+operator|)
+return|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|buf
+argument_list|,
 literal|"stale"
 argument_list|)
 condition|)
@@ -876,6 +862,22 @@ operator|(
 name|GV_PLEX_DEGRADED
 operator|)
 return|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|buf
+argument_list|,
+literal|"growable"
+argument_list|)
+condition|)
+return|return
+operator|(
+name|GV_PLEX_GROWABLE
+operator|)
+return|;
 else|else
 return|return
 operator|(
@@ -921,6 +923,12 @@ name|GV_PLEX_DEGRADED
 case|:
 return|return
 literal|"degraded"
+return|;
+case|case
+name|GV_PLEX_GROWABLE
+case|:
+return|return
+literal|"growable"
 return|;
 case|case
 name|GV_PLEX_UP
@@ -1239,9 +1247,7 @@ expr|struct
 name|gv_drive
 argument_list|)
 argument_list|,
-name|M_WAITOK
-operator||
-name|M_ZERO
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 else|#
@@ -1257,6 +1263,8 @@ name|gv_drive
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|d
@@ -1279,8 +1287,6 @@ name|gv_drive
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|errors
 operator|=
 literal|0
@@ -1395,7 +1401,7 @@ name|ptr
 operator|+=
 literal|5
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|d
 operator|->
@@ -1403,14 +1409,19 @@ name|device
 argument_list|,
 name|ptr
 argument_list|,
-name|GV_MAXDRIVENAME
+sizeof|sizeof
+argument_list|(
+name|d
+operator|->
+name|device
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
 comment|/* We assume this is the drive name. */
-name|strncpy
+name|strlcpy
 argument_list|(
 name|d
 operator|->
@@ -1421,7 +1432,12 @@ index|[
 name|j
 index|]
 argument_list|,
-name|GV_MAXDRIVENAME
+sizeof|sizeof
+argument_list|(
+name|d
+operator|->
+name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1537,9 +1553,7 @@ expr|struct
 name|gv_volume
 argument_list|)
 argument_list|,
-name|M_WAITOK
-operator||
-name|M_ZERO
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 else|#
@@ -1555,6 +1569,8 @@ name|gv_volume
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|v
@@ -1577,8 +1593,6 @@ name|gv_volume
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|errors
 operator|=
 literal|0
@@ -1642,7 +1656,7 @@ block|}
 else|else
 block|{
 comment|/* We assume this is the volume name. */
-name|strncpy
+name|strlcpy
 argument_list|(
 name|v
 operator|->
@@ -1653,7 +1667,12 @@ index|[
 name|j
 index|]
 argument_list|,
-name|GV_MAXVOLNAME
+sizeof|sizeof
+argument_list|(
+name|v
+operator|->
+name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1760,9 +1779,7 @@ expr|struct
 name|gv_plex
 argument_list|)
 argument_list|,
-name|M_WAITOK
-operator||
-name|M_ZERO
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 else|#
@@ -1778,6 +1795,8 @@ name|gv_plex
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|p
@@ -1800,8 +1819,6 @@ name|gv_plex
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|errors
 operator|=
 literal|0
@@ -1849,7 +1866,7 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
-name|strncpy
+name|strlcpy
 argument_list|(
 name|p
 operator|->
@@ -1860,7 +1877,12 @@ index|[
 name|j
 index|]
 argument_list|,
-name|GV_MAXPLEXNAME
+sizeof|sizeof
+argument_list|(
+name|p
+operator|->
+name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2052,7 +2074,7 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
-name|strncpy
+name|strlcpy
 argument_list|(
 name|p
 operator|->
@@ -2063,7 +2085,12 @@ index|[
 name|j
 index|]
 argument_list|,
-name|GV_MAXVOLNAME
+sizeof|sizeof
+argument_list|(
+name|p
+operator|->
+name|volume
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2146,7 +2173,9 @@ operator|==
 literal|'\0'
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 ifdef|#
 directive|ifdef
@@ -2161,9 +2190,7 @@ expr|struct
 name|gv_sd
 argument_list|)
 argument_list|,
-name|M_WAITOK
-operator||
-name|M_ZERO
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 else|#
@@ -2179,6 +2206,8 @@ name|gv_sd
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|s
@@ -2186,7 +2215,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 name|bzero
 argument_list|(
@@ -2199,8 +2230,6 @@ name|gv_sd
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|s
 operator|->
 name|plex_offset
@@ -2269,7 +2298,7 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
-name|strncpy
+name|strlcpy
 argument_list|(
 name|s
 operator|->
@@ -2280,7 +2309,12 @@ index|[
 name|j
 index|]
 argument_list|,
-name|GV_MAXSDNAME
+sizeof|sizeof
+argument_list|(
+name|s
+operator|->
+name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2314,7 +2348,7 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
-name|strncpy
+name|strlcpy
 argument_list|(
 name|s
 operator|->
@@ -2325,7 +2359,12 @@ index|[
 name|j
 index|]
 argument_list|,
-name|GV_MAXDRIVENAME
+sizeof|sizeof
+argument_list|(
+name|s
+operator|->
+name|drive
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2359,7 +2398,7 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
-name|strncpy
+name|strlcpy
 argument_list|(
 name|s
 operator|->
@@ -2370,7 +2409,12 @@ index|[
 name|j
 index|]
 argument_list|,
-name|GV_MAXPLEXNAME
+sizeof|sizeof
+argument_list|(
+name|s
+operator|->
+name|plex
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

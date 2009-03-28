@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  *  Copyright (c) 2004 Lukas Ertl  *  All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*-  *  Copyright (c) 2004, 2007 Lukas Ertl  *  All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -16,12 +16,6 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
 
 begin_include
 include|#
@@ -1626,7 +1620,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"\t\tState: %s\n\t\tOrganization: %s"
+literal|"\t\tState: %s\n"
 argument_list|,
 name|gv_plexstate
 argument_list|(
@@ -1634,6 +1628,89 @@ name|p
 operator|->
 name|state
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|flags
+operator|&
+name|GV_PLEX_SYNCING
+operator|)
+operator|||
+operator|(
+name|p
+operator|->
+name|flags
+operator|&
+name|GV_PLEX_GROWING
+operator|)
+operator|||
+operator|(
+name|p
+operator|->
+name|flags
+operator|&
+name|GV_PLEX_REBUILDING
+operator|)
+condition|)
+block|{
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"\t\tSynced: "
+argument_list|)
+expr_stmt|;
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"%16jd bytes (%d%%)\n"
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|p
+operator|->
+name|synced
+argument_list|,
+operator|(
+name|p
+operator|->
+name|size
+operator|>
+literal|0
+operator|)
+condition|?
+call|(
+name|int
+call|)
+argument_list|(
+operator|(
+name|p
+operator|->
+name|synced
+operator|*
+literal|100
+operator|)
+operator|/
+name|p
+operator|->
+name|size
+argument_list|)
+else|:
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"\t\tOrganization: %s"
 argument_list|,
 name|gv_plexorg
 argument_list|(
@@ -1668,6 +1745,17 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"\t\tFlags: %d\n"
+argument_list|,
+name|p
+operator|->
+name|flags
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -1696,8 +1784,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"P %-18s %2s State: %s\tSubdisks: %5d"
-literal|"\tSize: %s\n"
+literal|"P %-18s %2s State: "
 argument_list|,
 name|p
 operator|->
@@ -1709,6 +1796,67 @@ name|p
 operator|->
 name|org
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|flags
+operator|&
+name|GV_PLEX_SYNCING
+operator|)
+operator|||
+operator|(
+name|p
+operator|->
+name|flags
+operator|&
+name|GV_PLEX_GROWING
+operator|)
+operator|||
+operator|(
+name|p
+operator|->
+name|flags
+operator|&
+name|GV_PLEX_REBUILDING
+operator|)
+condition|)
+block|{
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"S %d%%\t"
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+operator|(
+name|p
+operator|->
+name|synced
+operator|*
+literal|100
+operator|)
+operator|/
+name|p
+operator|->
+name|size
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"%s\t"
 argument_list|,
 name|gv_plexstate
 argument_list|(
@@ -1716,6 +1864,14 @@ name|p
 operator|->
 name|state
 argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"Subdisks: %5d\tSize: %s\n"
 argument_list|,
 name|p
 operator|->
@@ -2205,6 +2361,17 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"\t\tFlags: %d\n"
+argument_list|,
+name|s
+operator|->
+name|flags
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -2591,6 +2758,17 @@ name|state
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"\t\tFlags: %d\n"
+argument_list|,
+name|d
+operator|->
+name|flags
+argument_list|)
+expr_stmt|;
 comment|/* Be very verbose. */
 if|if
 condition|(
@@ -2690,6 +2868,12 @@ name|size
 operator|/
 name|MEGABYTE
 argument_list|,
+name|d
+operator|->
+name|size
+operator|>
+literal|0
+condition|?
 call|(
 name|int
 call|)
@@ -2706,6 +2890,8 @@ name|d
 operator|->
 name|size
 argument_list|)
+else|:
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
