@@ -261,11 +261,11 @@ name|v_cache_dst
 expr_stmt|;
 comment|/* c Cache entries to us */
 name|struct
-name|vnode
+name|namecache
 modifier|*
-name|v_dd
+name|v_cache_dd
 decl_stmt|;
-comment|/* c .. vnode */
+comment|/* c Cache entry for .. vnode */
 comment|/* 	 * clustering stuff 	 */
 name|daddr_t
 name|v_cstart

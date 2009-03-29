@@ -3881,6 +3881,21 @@ literal|"vp has namecache src"
 operator|)
 argument_list|)
 expr_stmt|;
+name|VNASSERT
+argument_list|(
+name|vp
+operator|->
+name|v_cache_dd
+operator|==
+name|NULL
+argument_list|,
+name|vp
+argument_list|,
+operator|(
+literal|"vp has namecache for .."
+operator|)
+argument_list|)
+expr_stmt|;
 name|VI_UNLOCK
 argument_list|(
 name|vp
