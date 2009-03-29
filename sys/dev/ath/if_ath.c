@@ -2399,6 +2399,12 @@ decl_stmt|;
 name|u_int
 name|wmodes
 decl_stmt|;
+name|uint8_t
+name|macaddr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
@@ -3816,9 +3822,7 @@ name|ath_hal_getmac
 argument_list|(
 name|ah
 argument_list|,
-name|ic
-operator|->
-name|ic_myaddr
+name|macaddr
 argument_list|)
 expr_stmt|;
 if|if
@@ -3849,6 +3853,8 @@ comment|/* call MI attach routine. */
 name|ieee80211_ifattach
 argument_list|(
 name|ic
+argument_list|,
+name|macaddr
 argument_list|)
 expr_stmt|;
 name|ic
@@ -12825,15 +12831,6 @@ operator|->
 name|sc_ifp
 decl_stmt|;
 name|struct
-name|ieee80211com
-modifier|*
-name|ic
-init|=
-name|ifp
-operator|->
-name|if_l2com
-decl_stmt|;
-name|struct
 name|ath_hal
 modifier|*
 name|ah
@@ -12866,26 +12863,15 @@ argument_list|(
 name|ah
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Handle any link-level address change.  Note that we only 	 * need to force ic_myaddr; any other addresses are handled 	 * as a byproduct of the ifnet code marking the interface 	 * down then up. 	 * 	 * XXX should get from lladdr instead of arpcom but that's more work 	 */
-name|IEEE80211_ADDR_COPY
+comment|/* handle any link-level address change */
+name|ath_hal_setmac
 argument_list|(
-name|ic
-operator|->
-name|ic_myaddr
+name|ah
 argument_list|,
 name|IF_LLADDR
 argument_list|(
 name|ifp
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|ath_hal_setmac
-argument_list|(
-name|ah
-argument_list|,
-name|ic
-operator|->
-name|ic_myaddr
 argument_list|)
 expr_stmt|;
 comment|/* calculate and install multicast filter */

@@ -442,12 +442,6 @@ name|ifmedia
 name|ic_media
 decl_stmt|;
 comment|/* interface media config */
-name|uint8_t
-name|ic_myaddr
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
-decl_stmt|;
 name|struct
 name|callout
 name|ic_inact
@@ -3008,6 +3002,13 @@ parameter_list|(
 name|struct
 name|ieee80211com
 modifier|*
+parameter_list|,
+specifier|const
+name|uint8_t
+name|macaddr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
 parameter_list|)
 function_decl|;
 end_function_decl

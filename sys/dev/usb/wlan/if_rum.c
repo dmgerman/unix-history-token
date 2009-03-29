@@ -3651,17 +3651,6 @@ operator|=
 name|IEEE80211_T_OFDM
 expr_stmt|;
 comment|/* not only, but not used */
-name|IEEE80211_ADDR_COPY
-argument_list|(
-name|ic
-operator|->
-name|ic_myaddr
-argument_list|,
-name|sc
-operator|->
-name|sc_bssid
-argument_list|)
-expr_stmt|;
 comment|/* set device capabilities */
 name|ic
 operator|->
@@ -3749,6 +3738,10 @@ expr_stmt|;
 name|ieee80211_ifattach
 argument_list|(
 name|ic
+argument_list|,
+name|sc
+operator|->
+name|sc_bssid
 argument_list|)
 expr_stmt|;
 name|ic
@@ -12108,25 +12101,14 @@ operator|->
 name|sta
 argument_list|)
 expr_stmt|;
-name|IEEE80211_ADDR_COPY
+name|rum_set_macaddr
 argument_list|(
-name|ic
-operator|->
-name|ic_myaddr
+name|sc
 argument_list|,
 name|IF_LLADDR
 argument_list|(
 name|ifp
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|rum_set_macaddr
-argument_list|(
-name|sc
-argument_list|,
-name|ic
-operator|->
-name|ic_myaddr
 argument_list|)
 expr_stmt|;
 comment|/* initialize ASIC */

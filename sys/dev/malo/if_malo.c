@@ -1000,37 +1000,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|uint8_t
-name|malo_bar1_read1
-parameter_list|(
-name|struct
-name|malo_softc
-modifier|*
-name|sc
-parameter_list|,
-name|bus_size_t
-name|off
-parameter_list|)
-block|{
-return|return
-name|bus_space_read_1
-argument_list|(
-name|sc
-operator|->
-name|malo_io1t
-argument_list|,
-name|sc
-operator|->
-name|malo_io1h
-argument_list|,
-name|off
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
 name|int
 name|malo_attach
 parameter_list|(
@@ -1045,8 +1014,6 @@ parameter_list|)
 block|{
 name|int
 name|error
-decl_stmt|,
-name|i
 decl_stmt|;
 name|struct
 name|ieee80211com
@@ -1128,44 +1095,6 @@ name|malo_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * NB: get mac address from hardware directly here before we set DMAs 	 * for HAL because we don't want to disturb operations of HAL at BAR 1. 	 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|IEEE80211_ADDR_LEN
-condition|;
-name|i
-operator|++
-control|)
-block|{
-comment|/* XXX remove a magic number but we don't have documents.  */
-name|ic
-operator|->
-name|ic_myaddr
-index|[
-name|i
-index|]
-operator|=
-name|malo_bar1_read1
-argument_list|(
-name|sc
-argument_list|,
-literal|0xa528
-operator|+
-name|i
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|1000
-argument_list|)
-expr_stmt|;
-block|}
 name|mh
 operator|=
 name|malo_hal_attach
@@ -1681,24 +1610,16 @@ expr|struct
 name|ieee80211_frame
 argument_list|)
 expr_stmt|;
-comment|/* get mac address from hardware */
-name|IEEE80211_ADDR_COPY
+comment|/* call MI attach routine. */
+name|ieee80211_ifattach
 argument_list|(
 name|ic
-operator|->
-name|ic_myaddr
 argument_list|,
 name|sc
 operator|->
 name|malo_hwspecs
 operator|.
 name|macaddr
-argument_list|)
-expr_stmt|;
-comment|/* call MI attach routine. */
-name|ieee80211_ifattach
-argument_list|(
-name|ic
 argument_list|)
 expr_stmt|;
 comment|/* override default methods */
@@ -7860,19 +7781,6 @@ name|sc
 operator|->
 name|malo_mh
 decl_stmt|;
-comment|/* 	 * Handle any link-level address change.  Note that we only 	 * need to force ic_myaddr; any other addresses are handled 	 * as a byproduct of the ifnet code marking the interface 	 * down then up. 	 */
-name|IEEE80211_ADDR_COPY
-argument_list|(
-name|ic
-operator|->
-name|ic_myaddr
-argument_list|,
-name|IF_LLADDR
-argument_list|(
-name|ifp
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * NB: Ignore promisc in hostap mode; it's set by the 	 * bridge.  This is wrong but we have no way to 	 * identify internal requests (from the bridge) 	 * versus external requests such as for tcpdump. 	 */
 name|malo_hal_setpromisc
 argument_list|(

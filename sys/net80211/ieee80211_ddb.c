@@ -2805,18 +2805,6 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|" myaddr %s"
-argument_list|,
-name|ether_sprintf
-argument_list|(
-name|ic
-operator|->
-name|ic_myaddr
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
 literal|" inact %p"
 argument_list|,
 operator|&

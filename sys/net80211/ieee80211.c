@@ -1313,6 +1313,13 @@ name|struct
 name|ieee80211com
 modifier|*
 name|ic
+parameter_list|,
+specifier|const
+name|uint8_t
+name|macaddr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
 parameter_list|)
 block|{
 name|struct
@@ -1558,9 +1565,7 @@ argument_list|(
 name|sdl
 argument_list|)
 argument_list|,
-name|ic
-operator|->
-name|ic_myaddr
+name|macaddr
 argument_list|)
 expr_stmt|;
 block|}

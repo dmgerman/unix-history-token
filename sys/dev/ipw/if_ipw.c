@@ -1496,6 +1496,12 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|;
+name|uint8_t
+name|macaddr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
 name|sc
 operator|->
 name|sc_dev
@@ -1943,9 +1949,7 @@ operator|+
 literal|0
 argument_list|)
 expr_stmt|;
-name|ic
-operator|->
-name|ic_myaddr
+name|macaddr
 index|[
 literal|0
 index|]
@@ -1954,9 +1958,7 @@ name|val
 operator|>>
 literal|8
 expr_stmt|;
-name|ic
-operator|->
-name|ic_myaddr
+name|macaddr
 index|[
 literal|1
 index|]
@@ -1976,9 +1978,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|ic
-operator|->
-name|ic_myaddr
+name|macaddr
 index|[
 literal|2
 index|]
@@ -1987,9 +1987,7 @@ name|val
 operator|>>
 literal|8
 expr_stmt|;
-name|ic
-operator|->
-name|ic_myaddr
+name|macaddr
 index|[
 literal|3
 index|]
@@ -2009,9 +2007,7 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
-name|ic
-operator|->
-name|ic_myaddr
+name|macaddr
 index|[
 literal|4
 index|]
@@ -2020,9 +2016,7 @@ name|val
 operator|>>
 literal|8
 expr_stmt|;
-name|ic
-operator|->
-name|ic_myaddr
+name|macaddr
 index|[
 literal|5
 index|]
@@ -2143,6 +2137,8 @@ expr_stmt|;
 name|ieee80211_ifattach
 argument_list|(
 name|ic
+argument_list|,
+name|macaddr
 argument_list|)
 expr_stmt|;
 name|ic

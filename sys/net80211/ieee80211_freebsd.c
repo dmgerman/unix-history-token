@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_dl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_clone.h>
 end_include
 
@@ -603,9 +609,15 @@ name|cp
 operator|.
 name|icp_macaddr
 else|:
-name|ic
-operator|->
-name|ic_myaddr
+operator|(
+specifier|const
+name|uint8_t
+operator|*
+operator|)
+name|IF_LLADDR
+argument_list|(
+name|ifp
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
