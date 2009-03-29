@@ -12404,7 +12404,7 @@ name|VREAD
 operator||
 name|VEXEC
 operator||
-name|VSTAT
+name|VSTAT_PERMS
 operator|)
 condition|)
 block|{
@@ -12428,13 +12428,7 @@ if|if
 condition|(
 name|accmode
 operator|&
-operator|(
-name|VWRITE
-operator||
-name|VAPPEND
-operator||
-name|VADMIN
-operator|)
+name|VMODIFY_PERMS
 condition|)
 block|{
 if|if

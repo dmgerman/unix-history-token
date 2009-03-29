@@ -1131,17 +1131,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VSTAT
-value|000000020000
-end_define
-
-begin_comment
-comment|/* permission to retrieve attrs */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|VAPPEND
 value|000000040000
 end_define
@@ -1282,7 +1271,7 @@ begin_define
 define|#
 directive|define
 name|VSTAT_PERMS
-value|(VSTAT | VREAD_ATTRIBUTES | VREAD_ACL | VSYNCHRONIZE)
+value|(VREAD_ATTRIBUTES | VREAD_ACL)
 end_define
 
 begin_comment
