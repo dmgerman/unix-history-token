@@ -2487,7 +2487,7 @@ operator|~
 name|IEEE80211_F_FF
 expr_stmt|;
 return|return
-name|ERESTART
+name|ENETRESET
 return|;
 case|case
 name|IEEE80211_IOC_TURBOP
