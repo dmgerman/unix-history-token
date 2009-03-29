@@ -1096,6 +1096,17 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+name|ic
+operator|->
+name|ic_rt
+operator|=
+name|ieee80211_get_ratetable
+argument_list|(
+name|ic
+operator|->
+name|ic_curchan
+argument_list|)
+expr_stmt|;
 comment|/* fillin well-known rate sets if driver has not specified */
 name|DEFAULTRATES
 argument_list|(

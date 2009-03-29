@@ -112,6 +112,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<net80211/ieee80211_phy.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net80211/ieee80211_power.h>
 end_include
 
@@ -558,6 +564,13 @@ modifier|*
 name|ic_curchan
 decl_stmt|;
 comment|/* current channel */
+specifier|const
+name|struct
+name|ieee80211_rate_table
+modifier|*
+name|ic_rt
+decl_stmt|;
+comment|/* table for ic_curchan */
 name|struct
 name|ieee80211_channel
 modifier|*

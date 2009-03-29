@@ -2279,6 +2279,15 @@ name|chan
 expr_stmt|;
 name|ic
 operator|->
+name|ic_rt
+operator|=
+name|ieee80211_get_ratetable
+argument_list|(
+name|chan
+argument_list|)
+expr_stmt|;
+name|ic
+operator|->
 name|ic_set_channel
 argument_list|(
 name|ic
