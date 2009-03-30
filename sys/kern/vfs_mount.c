@@ -6905,6 +6905,15 @@ name|root_hold_token
 modifier|*
 name|h
 decl_stmt|;
+name|struct
+name|timeval
+name|lastfail
+decl_stmt|;
+name|int
+name|curfail
+init|=
+literal|0
+decl_stmt|;
 for|for
 control|(
 init|;
@@ -6943,6 +6952,20 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|ppsratecheck
+argument_list|(
+operator|&
+name|lastfail
+argument_list|,
+operator|&
+name|curfail
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"Root mount waiting for:"
@@ -6970,6 +6993,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 name|msleep
 argument_list|(
 operator|&
