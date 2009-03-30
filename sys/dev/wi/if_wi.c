@@ -8199,6 +8199,17 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
+name|vap
+operator|->
+name|iv_bss
+operator|->
+name|ni_associd
+operator|=
+literal|1
+operator||
+literal|0xc000
+expr_stmt|;
+comment|/* NB: anything will do */
 name|WI_VAP
 argument_list|(
 name|vap
@@ -8269,6 +8280,14 @@ operator|==
 name|IEEE80211_S_RUN
 condition|)
 block|{
+name|vap
+operator|->
+name|iv_bss
+operator|->
+name|ni_associd
+operator|=
+literal|0
+expr_stmt|;
 name|vap
 operator|->
 name|iv_stats
