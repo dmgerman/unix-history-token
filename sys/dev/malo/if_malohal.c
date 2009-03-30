@@ -429,7 +429,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"unable to allocate memory for cmd buffer, "
+literal|"unable to allocate memory for cmd tag, "
 literal|"error %u\n"
 argument_list|,
 name|error
