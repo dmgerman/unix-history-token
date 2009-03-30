@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_wlan.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -198,7 +204,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ATH_SUPPORT_TDMA
+name|IEEE80211_SUPPORT_TDMA
 end_ifdef
 
 begin_include
@@ -1506,7 +1512,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ATH_SUPPORT_TDMA
+name|IEEE80211_SUPPORT_TDMA
 end_ifdef
 
 begin_function_decl
@@ -1774,7 +1780,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ATH_SUPPORT_TDMA */
+comment|/* IEEE80211_SUPPORT_TDMA */
 end_comment
 
 begin_expr_stmt
@@ -3763,7 +3769,7 @@ name|IEEE80211_C_TURBOP
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ATH_SUPPORT_TDMA
+name|IEEE80211_SUPPORT_TDMA
 if|if
 condition|(
 name|ath_hal_macversion
@@ -4713,7 +4719,7 @@ name|IEEE80211_M_AHDEMO
 case|:
 ifdef|#
 directive|ifdef
-name|ATH_SUPPORT_TDMA
+name|IEEE80211_SUPPORT_TDMA
 if|if
 condition|(
 name|flags
@@ -5234,7 +5240,7 @@ name|IEEE80211_M_AHDEMO
 case|:
 ifdef|#
 directive|ifdef
-name|ATH_SUPPORT_TDMA
+name|IEEE80211_SUPPORT_TDMA
 if|if
 condition|(
 name|vap
@@ -5658,7 +5664,7 @@ operator|--
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ATH_SUPPORT_TDMA
+name|IEEE80211_SUPPORT_TDMA
 comment|/* TDMA operation ceases when the last vap is destroyed */
 if|if
 condition|(
@@ -6315,7 +6321,7 @@ block|{
 comment|/* 			 * Software beacon alert--time to send a beacon. 			 * Handle beacon transmission directly; deferring 			 * this is too slow to meet timing constraints 			 * under load. 			 */
 ifdef|#
 directive|ifdef
-name|ATH_SUPPORT_TDMA
+name|IEEE80211_SUPPORT_TDMA
 if|if
 condition|(
 name|sc
@@ -7790,7 +7796,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|ATH_SUPPORT_TDMA
+name|IEEE80211_SUPPORT_TDMA
 if|if
 condition|(
 name|sc
@@ -19737,7 +19743,7 @@ block|{
 comment|/* 			 * Sending station is known, dispatch directly. 			 */
 ifdef|#
 directive|ifdef
-name|ATH_SUPPORT_TDMA
+name|IEEE80211_SUPPORT_TDMA
 name|sc
 operator|->
 name|sc_tdmars
@@ -20510,7 +20516,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ATH_SUPPORT_TDMA
+name|IEEE80211_SUPPORT_TDMA
 if|if
 condition|(
 name|sc
@@ -20626,7 +20632,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ATH_SUPPORT_TDMA
+name|IEEE80211_SUPPORT_TDMA
 block|}
 endif|#
 directive|endif
@@ -21545,7 +21551,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|ATH_SUPPORT_TDMA
+name|IEEE80211_SUPPORT_TDMA
 name|int
 name|qbusy
 decl_stmt|;
@@ -21880,7 +21886,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* ATH_SUPPORT_TDMA */
+comment|/* IEEE80211_SUPPORT_TDMA */
 name|txq
 operator|->
 name|axq_link
@@ -22980,7 +22986,7 @@ operator|++
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ATH_SUPPORT_TDMA
+name|IEEE80211_SUPPORT_TDMA
 if|if
 condition|(
 name|sc
@@ -24008,7 +24014,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ATH_SUPPORT_TDMA
+name|IEEE80211_SUPPORT_TDMA
 if|if
 condition|(
 name|txq
@@ -27570,7 +27576,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|ATH_SUPPORT_TDMA
+name|IEEE80211_SUPPORT_TDMA
 case|case
 name|IEEE80211_M_AHDEMO
 case|:
@@ -27660,7 +27666,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|ATH_SUPPORT_TDMA
+name|IEEE80211_SUPPORT_TDMA
 if|if
 condition|(
 name|vap
@@ -27861,7 +27867,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|ATH_SUPPORT_TDMA
+name|IEEE80211_SUPPORT_TDMA
 name|ath_hal_setcca
 argument_list|(
 name|ah
@@ -30789,7 +30795,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ATH_SUPPORT_TDMA
+name|IEEE80211_SUPPORT_TDMA
 name|sc
 operator|->
 name|sc_stats
@@ -32335,7 +32341,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ATH_SUPPORT_TDMA
+name|IEEE80211_SUPPORT_TDMA
 end_ifdef
 
 begin_function
@@ -32412,7 +32418,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ATH_SUPPORT_TDMA */
+comment|/* IEEE80211_SUPPORT_TDMA */
 end_comment
 
 begin_function
@@ -33210,7 +33216,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ATH_SUPPORT_TDMA
+name|IEEE80211_SUPPORT_TDMA
 if|if
 condition|(
 name|ath_hal_macversion
@@ -35062,7 +35068,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ATH_SUPPORT_TDMA
+name|IEEE80211_SUPPORT_TDMA
 end_ifdef
 
 begin_function
@@ -36493,7 +36499,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ATH_SUPPORT_TDMA */
+comment|/* IEEE80211_SUPPORT_TDMA */
 end_comment
 
 end_unit

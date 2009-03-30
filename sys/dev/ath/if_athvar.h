@@ -1435,9 +1435,6 @@ name|HAL_NODE_STATS
 name|sc_halstats
 decl_stmt|;
 comment|/* station-mode rssi stats */
-ifdef|#
-directive|ifdef
-name|ATH_SUPPORT_TDMA
 name|u_int
 name|sc_tdmadbaprep
 decl_stmt|;
@@ -1480,8 +1477,6 @@ name|u_int32_t
 name|sc_avgtsfdeltam
 decl_stmt|;
 comment|/* TDMA slot adjust (-) */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
