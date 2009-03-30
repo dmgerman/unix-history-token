@@ -3802,12 +3802,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_MSG_RADKEYS
+name|IEEE80211_MSG_MESH
 value|0x00002000
 end_define
 
 begin_comment
-comment|/* dump 802.1x keys */
+comment|/* mesh networking */
 end_comment
 
 begin_define
