@@ -2166,7 +2166,10 @@ name|init_connect
 operator|->
 name|features
 operator||=
+name|TW_CL_SWAP32
+argument_list|(
 name|TWA_64BIT_SG_ADDRESSES
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

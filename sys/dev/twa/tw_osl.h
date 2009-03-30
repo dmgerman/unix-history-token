@@ -55,6 +55,36 @@ begin_comment
 comment|//#define TW_OSLI_DEFERRED_INTR_USED
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PAE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TW_OSLI_DMA_BOUNDARY
+value|(1u<< 31)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TW_OSLI_DMA_BOUNDARY
+value|((bus_size_t)((uint64_t)1<< 32))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Possible values of req->state. */
 end_comment
