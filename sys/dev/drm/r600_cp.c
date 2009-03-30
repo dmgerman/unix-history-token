@@ -2141,7 +2141,7 @@ name|RADEON_WRITE
 argument_list|(
 name|R600_CP_ME_RAM_DATA
 argument_list|,
-name|RV670_cp_microcode
+name|RS780_cp_microcode
 index|[
 name|i
 index|]
@@ -2154,7 +2154,7 @@ name|RADEON_WRITE
 argument_list|(
 name|R600_CP_ME_RAM_DATA
 argument_list|,
-name|RV670_cp_microcode
+name|RS780_cp_microcode
 index|[
 name|i
 index|]
@@ -2167,7 +2167,7 @@ name|RADEON_WRITE
 argument_list|(
 name|R600_CP_ME_RAM_DATA
 argument_list|,
-name|RV670_cp_microcode
+name|RS780_cp_microcode
 index|[
 name|i
 index|]
@@ -2206,7 +2206,7 @@ name|RADEON_WRITE
 argument_list|(
 name|R600_CP_PFP_UCODE_DATA
 argument_list|,
-name|RV670_pfp_microcode
+name|RS780_pfp_microcode
 index|[
 name|i
 index|]
