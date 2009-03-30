@@ -1830,7 +1830,7 @@ operator||
 name|ED_CR_STP
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Wait for interface to enter stopped state, but limit # of checks to 	 * 'n' (about 5ms). It shouldn't even take 5us on modern DS8390's, but 	 * just in case it's an old one. 	 */
+comment|/* 	 * Wait for interface to enter stopped state, but limit # of checks to 	 * 'n' (about 5ms). It shouldn't even take 5us on modern DS8390's, but 	 * just in case it's an old one. 	 * 	 * The AX88190 and AX88190A chips have a problem with this, it seems, 	 * but there's no evidence that I've found for excluding the check. 	 * This may be due to the cryptic references to the ISR register being 	 * fixed in the AX88790. 	 */
 if|if
 condition|(
 name|sc
@@ -1860,6 +1860,21 @@ operator|--
 name|n
 condition|)
 continue|continue;
+if|if
+condition|(
+name|n
+operator|<=
+literal|0
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"ed_stop_hw RST never set\n"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3330,7 +3345,7 @@ operator||
 name|ED_CR_STA
 argument_list|)
 expr_stmt|;
-comment|/* 	 * loop until there are no more new interrupts.  When the card 	 * goes away, the hardware will read back 0xff.  Looking at 	 * the interrupts, it would appear that 0xff is impossible, 	 * or at least extremely unlikely. 	 */
+comment|/* 	 * loop until there are no more new interrupts.  When the card goes 	 * away, the hardware will read back 0xff.  Looking at the interrupts, 	 * it would appear that 0xff is impossible, or at least extremely 	 * unlikely. 	 */
 while|while
 condition|(
 operator|(
@@ -3361,7 +3376,7 @@ argument_list|,
 name|isr
 argument_list|)
 expr_stmt|;
-comment|/*  		 * XXX workaround for AX88190 		 * We limit this to 5000 iterations.  At 1us per inb/outb, 		 * this translates to about 15ms, which should be plenty 		 * of time, and also gives protection in the card eject 		 * case. 		 */
+comment|/* 		 * The AX88190 and AX88190A has problems acking an interrupt 		 * and having them clear.  This interferes with top-level loop 		 * here.  Wait for all the bits to clear. 		 * 		 * We limit this to 5000 iterations.  At 1us per inb/outb, 		 * this translates to about 15ms, which should be plenty of 		 * time, and also gives protection in the card eject case. 		 */
 if|if
 condition|(
 name|sc
@@ -5326,6 +5341,12 @@ operator|->
 name|chip_type
 operator|==
 name|ED_CHIP_TYPE_AX88190
+operator|||
+name|sc
+operator|->
+name|chip_type
+operator|==
+name|ED_CHIP_TYPE_AX88790
 condition|)
 name|reg1
 operator|=

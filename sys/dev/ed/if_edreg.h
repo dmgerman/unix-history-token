@@ -3652,6 +3652,13 @@ name|ED_CHIP_TYPE_RTL8029
 value|7
 end_define
 
+begin_define
+define|#
+directive|define
+name|ED_CHIP_TYPE_AX88790
+value|8
+end_define
+
 begin_comment
 comment|/*  * MII bus definitions.  These are common to both DL100xx and AX88x90  * MII definitions, most likely because they are standards based.  */
 end_comment
@@ -3729,15 +3736,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ED_MII_DATA_BITS
-value|16
+name|ED_MII_ACK_BITS
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ED_MII_ACK_BITS
-value|1
+name|ED_MII_DATA_BITS
+value|16
 end_define
 
 begin_define
