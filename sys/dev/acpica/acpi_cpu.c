@@ -2879,21 +2879,6 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/* Update the largest cx_count seen so far */
-if|if
-condition|(
-name|sc
-operator|->
-name|cpu_cx_count
-operator|>
-name|cpu_cx_count
-condition|)
-name|cpu_cx_count
-operator|=
-name|sc
-operator|->
-name|cpu_cx_count
-expr_stmt|;
 block|}
 end_function
 
@@ -3527,6 +3512,20 @@ name|acpi_cpu_generic_cx_probe
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|cpu_cx_count
+operator|>
+name|cpu_cx_count
+condition|)
+name|cpu_cx_count
+operator|=
+name|sc
+operator|->
+name|cpu_cx_count
 expr_stmt|;
 block|}
 comment|/* 	 * Find the highest Cx state common to all CPUs 	 * in the system, taking quirks into account. 	 */
