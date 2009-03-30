@@ -386,6 +386,10 @@ modifier|*
 name|ieee80211_encap
 parameter_list|(
 name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+name|struct
 name|ieee80211_node
 modifier|*
 parameter_list|,

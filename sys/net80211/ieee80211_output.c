@@ -865,30 +865,72 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* 802.11 tx path */
-comment|/* 		 * XXX When ni is associated with a WDS link then 		 * the vap will be the WDS vap but ni_vap will point 		 * to the ap vap the station associated to.  Once 		 * we handoff the packet to the driver the callback 		 * to ieee80211_encap won't be able to tell if the 		 * packet should be encapsulated for WDS or not (e.g. 		 * multicast frames will not be handled correctly). 		 * We hack this by marking the mbuf so ieee80211_encap 		 * can do the right thing. 		 */
+comment|/* 802.3 tx */
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_SUPERG
 if|if
 condition|(
+name|IEEE80211_ATH_CAP
+argument_list|(
 name|vap
-operator|->
-name|iv_opmode
-operator|==
-name|IEEE80211_M_WDS
+argument_list|,
+name|ni
+argument_list|,
+name|IEEE80211_NODE_FF
+argument_list|)
 condition|)
+block|{
 name|m
-operator|->
-name|m_flags
-operator||=
-name|M_WDS
-expr_stmt|;
-else|else
+operator|=
+name|ieee80211_ff_check
+argument_list|(
+name|ni
+argument_list|,
 name|m
-operator|->
-name|m_flags
-operator|&=
-operator|~
-name|M_WDS
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* NB: any ni ref held on stageq */
+continue|continue;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* IEEE80211_SUPPORT_SUPERG */
+comment|/* 		 * Encapsulate the packet in prep for transmission. 		 */
+name|m
+operator|=
+name|ieee80211_encap
+argument_list|(
+name|vap
+argument_list|,
+name|ni
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* NB: stat+msg handled in ieee80211_encap */
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 comment|/* 		 * Stash the node pointer and hand the frame off to 		 * the underlying device.  Note that we do this after 		 * any call to ieee80211_dwds_mcast because that code 		 * uses any existing value for rcvif. 		 */
 name|m
 operator|->
@@ -902,7 +944,6 @@ operator|*
 operator|)
 name|ni
 expr_stmt|;
-comment|/* XXX defer if_start calls? */
 name|error
 operator|=
 name|parent
@@ -3385,6 +3426,11 @@ modifier|*
 name|ieee80211_encap
 parameter_list|(
 name|struct
+name|ieee80211vap
+modifier|*
+name|vap
+parameter_list|,
+name|struct
 name|ieee80211_node
 modifier|*
 name|ni
@@ -3402,15 +3448,6 @@ parameter_list|(
 name|wh
 parameter_list|)
 value|((struct ieee80211_frame_addr4 *)(wh))
-name|struct
-name|ieee80211vap
-modifier|*
-name|vap
-init|=
-name|ni
-operator|->
-name|ni_vap
-decl_stmt|;
 name|struct
 name|ieee80211com
 modifier|*
@@ -3858,6 +3895,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|IEEE80211_SUPPORT_SUPERG
+comment|/* 		 * Aggregated frame. 		 */
 name|m
 operator|=
 name|ieee80211_ff_encap

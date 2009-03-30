@@ -4304,6 +4304,25 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_SUPERG
+elseif|else
+if|if
+condition|(
+name|ni
+operator|->
+name|ni_ath_flags
+operator|&
+name|IEEE80211_NODE_ATH
+condition|)
+name|ieee80211_ff_node_cleanup
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Clear AREF flag that marks the authorization refcnt bump 	 * has happened.  This is probably not needed as the node 	 * should always be removed from the table so not found but 	 * do it just in case. 	 * Likewise clear the ASSOCID flag as these flags are intended 	 * to be managed in tandem. 	 */
 name|ni
 operator|->

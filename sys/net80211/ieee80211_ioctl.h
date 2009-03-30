@@ -719,9 +719,13 @@ name|is_rx_badstate
 decl_stmt|;
 comment|/* rx discard state != RUN */
 name|uint32_t
+name|is_ff_flush
+decl_stmt|;
+comment|/* ff's flush'd from stageq */
+name|uint32_t
 name|is_spare
 index|[
-literal|12
+literal|11
 index|]
 decl_stmt|;
 block|}

@@ -6534,45 +6534,6 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Encapsulate the packet in prep for transmission. 		 */
-name|m
-operator|=
-name|ieee80211_encap
-argument_list|(
-name|ni
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-block|{
-name|DPRINTF
-argument_list|(
-name|sc
-argument_list|,
-name|MALO_DEBUG_XMIT
-argument_list|,
-literal|"%s: encapsulation failure\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|malo_stats
-operator|.
-name|mst_tx_encap
-operator|++
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
 comment|/* 		 * Pass the frame to the h/w for transmission. 		 */
 if|if
 condition|(
@@ -6588,8 +6549,6 @@ name|m
 argument_list|)
 condition|)
 block|{
-name|bad
-label|:
 name|ifp
 operator|->
 name|if_oerrors

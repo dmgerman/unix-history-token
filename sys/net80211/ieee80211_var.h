@@ -407,6 +407,36 @@ name|ieee80211_tdma_param
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|ieee80211_rate_table
+struct_decl|;
+end_struct_decl
+
+begin_struct
+struct|struct
+name|ieee80211_stageq
+block|{
+name|struct
+name|mbuf
+modifier|*
+name|head
+decl_stmt|;
+comment|/* frames linked w/ m_nextpkt */
+name|struct
+name|mbuf
+modifier|*
+name|tail
+decl_stmt|;
+comment|/* last frame in queue */
+name|int
+name|depth
+decl_stmt|;
+comment|/* # items on head */
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|ieee80211com
@@ -688,6 +718,18 @@ name|int
 name|ic_lastnonht
 decl_stmt|;
 comment|/* last time non-HT sta noted */
+comment|/* fast-frames staging q */
+name|struct
+name|ieee80211_stageq
+name|ic_ff_stageq
+index|[
+name|WME_NUM_AC
+index|]
+decl_stmt|;
+name|int
+name|ic_stageqdepth
+decl_stmt|;
+comment|/* cumulative depth */
 comment|/* virtual ap create/delete */
 name|struct
 name|ieee80211vap

@@ -214,39 +214,6 @@ begin_comment
 comment|/* storage space in bytes */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ATH_FF_TXQMIN
-value|2
-end_define
-
-begin_comment
-comment|/* min txq depth for staging */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATH_FF_TXQMAX
-value|50
-end_define
-
-begin_comment
-comment|/* maximum # of queued frames allowed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATH_FF_STAGEMAX
-value|5
-end_define
-
-begin_comment
-comment|/* max waiting period for staged frame*/
-end_comment
-
 begin_struct_decl
 struct_decl|struct
 name|taskqueue
@@ -416,17 +383,6 @@ argument|ath_buf
 argument_list|)
 name|bf_list
 expr_stmt|;
-name|TAILQ_ENTRY
-argument_list|(
-argument|ath_buf
-argument_list|)
-name|bf_stagelist
-expr_stmt|;
-comment|/* stage queue list */
-name|u_int32_t
-name|bf_age
-decl_stmt|;
-comment|/* age when placed on stageq */
 name|int
 name|bf_nseg
 decl_stmt|;
@@ -575,6 +531,10 @@ name|ATH_TXQ_SWQ
 value|(HAL_NUM_TX_QUEUES+1)
 comment|/* qnum for s/w only queue */
 name|u_int
+name|axq_ac
+decl_stmt|;
+comment|/* WME AC */
+name|u_int
 name|axq_flags
 decl_stmt|;
 define|#
@@ -615,19 +575,6 @@ literal|12
 index|]
 decl_stmt|;
 comment|/* e.g. "ath0_txq4" */
-comment|/* 	 * Fast-frame state.  The staging queue holds awaiting 	 * a fast-frame pairing.  Buffers on this queue are 	 * assigned an ``age'' and flushed when they wait too long. 	 */
-name|TAILQ_HEAD
-argument_list|(
-argument|axq_headtype
-argument_list|,
-argument|ath_buf
-argument_list|)
-name|axq_stageq
-expr_stmt|;
-name|u_int32_t
-name|axq_curage
-decl_stmt|;
-comment|/* queue age */
 block|}
 struct|;
 end_struct
@@ -695,7 +642,7 @@ name|_elm
 parameter_list|,
 name|_field
 parameter_list|)
-value|do { \ 	STAILQ_INSERT_TAIL(&(_tq)->axq_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	(_tq)->axq_curage++; \ } while (0)
+value|do { \ 	STAILQ_INSERT_TAIL(&(_tq)->axq_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ } while (0)
 end_define
 
 begin_define
