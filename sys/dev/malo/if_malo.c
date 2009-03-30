@@ -1417,7 +1417,7 @@ literal|0
 condition|)
 comment|/* NB: malo_setupdma prints msg */
 goto|goto
-name|bad1
+name|bad2
 goto|;
 name|sc
 operator|->
@@ -1700,6 +1700,13 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+name|bad2
+label|:
+name|malo_dma_cleanup
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|bad1
 label|:
 name|malo_hal_detach
