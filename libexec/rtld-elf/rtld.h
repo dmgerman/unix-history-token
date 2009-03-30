@@ -844,6 +844,18 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* Process rpath and soname tokens */
+name|bool
+name|z_nodelete
+range|:
+literal|1
+decl_stmt|;
+comment|/* Do not unload the object and dependencies */
+name|bool
+name|ref_nodel
+range|:
+literal|1
+decl_stmt|;
+comment|/* refcount increased to prevent dlclose */
 name|struct
 name|link_map
 name|linkmap

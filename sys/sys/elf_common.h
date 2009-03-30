@@ -3568,6 +3568,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DF_1_NODELETE
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* Set the RTLD_NODELETE for object */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DF_1_ORIGIN
 value|0x00000080
 end_define
