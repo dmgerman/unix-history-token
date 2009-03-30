@@ -581,13 +581,6 @@ operator|)
 return|;
 name|fail
 label|:
-name|free
-argument_list|(
-name|mh
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mh
@@ -654,6 +647,13 @@ argument_list|(
 name|mh
 operator|->
 name|mh_dmat
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|mh
+argument_list|,
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 return|return
