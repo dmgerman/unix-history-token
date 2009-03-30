@@ -1739,6 +1739,21 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|miibus
+condition|)
+name|device_delete_child
+argument_list|(
+name|dev
+argument_list|,
+name|sc
+operator|->
+name|miibus
+argument_list|)
+expr_stmt|;
 name|ED_LOCK_DESTROY
 argument_list|(
 name|sc
@@ -1830,15 +1845,22 @@ operator||
 name|ED_CR_STP
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Wait for interface to enter stopped state, but limit # of checks to 	 * 'n' (about 5ms). It shouldn't even take 5us on modern DS8390's, but 	 * just in case it's an old one. 	 * 	 * The AX88190 and AX88190A chips have a problem with this, it seems, 	 * but there's no evidence that I've found for excluding the check. 	 * This may be due to the cryptic references to the ISR register being 	 * fixed in the AX88790. 	 */
+comment|/* 	 * Wait for interface to enter stopped state, but limit # of checks to 	 * 'n' (about 5ms). It shouldn't even take 5us on modern DS8390's, but 	 * just in case it's an old one. 	 * 	 * The AX88x90 chips don't seem to implement this behavor.  The 	 * datasheets say it is only turned on when the chip enters a RESET 	 * state and is silent about behavior for the stopped state we just 	 * entered. 	 */
 if|if
 condition|(
 name|sc
 operator|->
 name|chip_type
-operator|!=
+operator|==
 name|ED_CHIP_TYPE_AX88190
+operator|||
+name|sc
+operator|->
+name|chip_type
+operator|==
+name|ED_CHIP_TYPE_AX88790
 condition|)
+return|return;
 while|while
 condition|(
 operator|(
