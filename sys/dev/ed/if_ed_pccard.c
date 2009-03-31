@@ -3889,22 +3889,15 @@ name|ED_NOVELL_RESET
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Wait for the interrupt to fire */
+comment|/* Wait for the RST bit to assert, but cap it at 10ms */
 for|for
 control|(
 name|i
 operator|=
 literal|10000
 init|;
-name|i
-operator|>
-literal|0
-condition|;
-name|i
-operator|--
-control|)
-if|if
-condition|(
+operator|!
+operator|(
 name|ed_nic_inb
 argument_list|(
 name|sc
@@ -3913,8 +3906,16 @@ name|ED_P0_ISR
 argument_list|)
 operator|&
 name|ED_ISR_RST
-condition|)
-break|break;
+operator|)
+operator|&&
+name|i
+operator|>
+literal|0
+condition|;
+name|i
+operator|--
+control|)
+continue|continue;
 name|ed_nic_outb
 argument_list|(
 name|sc
@@ -3992,13 +3993,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|DELAY
-argument_list|(
-literal|10
-operator|*
-literal|1000
-argument_list|)
-expr_stmt|;
 comment|/* Make sure that we really have an 8390 based board */
 if|if
 condition|(
@@ -4031,8 +4025,7 @@ name|cr_proto
 operator|=
 name|ED_CR_RD2
 expr_stmt|;
-comment|/* 	 * Test the ability to read and write to the NIC memory. 	 */
-comment|/* 	 * This prevents packets from being stored in the NIC memory when the 	 * readmem routine turns on the start bit in the CR. 	 */
+comment|/* 	 * This prevents packets from being stored in the NIC memory when the 	 * readmem routine turns on the start bit in the CR.  We write some 	 * bytes in word mode and verify we can read them back.  If we can't 	 * then we don't have an AX88x90 chip here. 	 */
 name|ed_nic_outb
 argument_list|(
 name|sc
@@ -4040,18 +4033,6 @@ argument_list|,
 name|ED_P0_RCR
 argument_list|,
 name|ED_RCR_MON
-argument_list|)
-expr_stmt|;
-comment|/* Temporarily initialize DCR for byte operations */
-name|ed_nic_outb
-argument_list|(
-name|sc
-argument_list|,
-name|ED_P0_DCR
-argument_list|,
-name|ED_DCR_FT1
-operator||
-name|ED_DCR_LS
 argument_list|)
 expr_stmt|;
 name|sc
@@ -4095,7 +4076,6 @@ operator|/
 name|ED_PAGE_SIZE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Write a test pattern in word mode. If this also fails, then 	 * we don't know what this board is. 	 */
 name|ed_pio_writemem
 argument_list|(
 name|sc
@@ -4145,6 +4125,7 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+comment|/* 	 * Hard code values based on the datasheet.  We're NE-2000 compatible 	 * NIC with 16kb of packet memory starting at 16k offset.  We assume 	 * that the writes to ED_P0_START and ED_P0_STOP reflect the values 	 * below. 	 */
 name|sc
 operator|->
 name|type
@@ -4175,16 +4156,11 @@ name|chip_type
 operator|=
 name|ED_CHIP_TYPE_AX88190
 expr_stmt|;
-comment|/* 8k of memory plus an additional 8k if 16bit */
 name|memsize
 operator|=
-literal|8192
-operator|+
-name|sc
-operator|->
-name|isa16bit
+literal|16
 operator|*
-literal|8192
+literal|1024
 expr_stmt|;
 name|sc
 operator|->
@@ -4192,19 +4168,13 @@ name|mem_size
 operator|=
 name|memsize
 expr_stmt|;
-comment|/* NIC memory doesn't start at zero on an NE board */
-comment|/* The start address is tied to the bus width */
 name|sc
 operator|->
 name|mem_start
 operator|=
-literal|8192
-operator|+
-name|sc
-operator|->
-name|isa16bit
+literal|16
 operator|*
-literal|8192
+literal|1024
 expr_stmt|;
 name|sc
 operator|->
@@ -4312,158 +4282,7 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-struct|struct
-block|{
-name|unsigned
-name|char
-name|offset
-decl_stmt|,
-name|value
-decl_stmt|;
-block|}
-name|pg_seq
-index|[]
-init|=
-block|{
-comment|/* Select Page0 */
-block|{
-name|ED_P0_CR
-block|,
-name|ED_CR_RD2
-operator||
-name|ED_CR_STP
-operator||
-name|ED_CR_PAGE_0
-block|}
-block|,
-block|{
-name|ED_P0_DCR
-block|,
-literal|0x01
-block|}
-block|,
-block|{
-name|ED_P0_RBCR0
-block|,
-literal|0x00
-block|}
-block|,
-comment|/* Clear the count regs. */
-block|{
-name|ED_P0_RBCR1
-block|,
-literal|0x00
-block|}
-block|,
-block|{
-name|ED_P0_IMR
-block|,
-literal|0x00
-block|}
-block|,
-comment|/* Mask completion irq. */
-block|{
-name|ED_P0_ISR
-block|,
-literal|0xff
-block|}
-block|,
-block|{
-name|ED_P0_RCR
-block|,
-name|ED_RCR_MON
-operator||
-name|ED_RCR_INTT
-block|}
-block|,
-comment|/* Set To Monitor */
-block|{
-name|ED_P0_TCR
-block|,
-name|ED_TCR_LB0
-block|}
-block|,
-comment|/* loopback mode. */
-block|{
-name|ED_P0_RBCR0
-block|,
-literal|0x20
-block|}
-block|,
-block|{
-name|ED_P0_RBCR1
-block|,
-literal|0x00
-block|}
-block|,
-block|{
-name|ED_P0_RSAR0
-block|,
-literal|0x00
-block|}
-block|,
-block|{
-name|ED_P0_RSAR1
-block|,
-literal|0x04
-block|}
-block|,
-block|{
-name|ED_P0_CR
-block|,
-name|ED_CR_RD0
-operator||
-name|ED_CR_STA
-operator||
-name|ED_CR_PAGE_0
-block|}
-block|, 	}
-struct|;
-comment|/* Card Settings */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-sizeof|sizeof
-argument_list|(
-name|pg_seq
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|pg_seq
-index|[
-literal|0
-index|]
-argument_list|)
-condition|;
-name|i
-operator|++
-control|)
-name|ed_nic_outb
-argument_list|(
-name|sc
-argument_list|,
-name|pg_seq
-index|[
-name|i
-index|]
-operator|.
-name|offset
-argument_list|,
-name|pg_seq
-index|[
-name|i
-index|]
-operator|.
-name|value
-argument_list|)
-expr_stmt|;
-comment|/* Get Data */
+comment|/* Get MAC address */
 for|for
 control|(
 name|i
