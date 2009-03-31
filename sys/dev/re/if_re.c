@@ -1858,6 +1858,11 @@ operator|<<
 literal|16
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1981,6 +1986,11 @@ name|RL_PHYAR_PHYDATA
 operator|)
 operator||
 name|RL_PHYAR_BUSY
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1000
 argument_list|)
 expr_stmt|;
 for|for
