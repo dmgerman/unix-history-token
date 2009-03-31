@@ -553,6 +553,15 @@ block|,
 block|{
 name|USB_VP
 argument_list|(
+argument|USB_VENDOR_QCOM
+argument_list|,
+argument|USB_PRODUCT_QCOM_RT2573_3
+argument_list|)
+block|}
+block|,
+block|{
+name|USB_VP
+argument_list|(
 argument|USB_VENDOR_RALINK
 argument_list|,
 argument|USB_PRODUCT_RALINK_RT2573
