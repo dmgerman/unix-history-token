@@ -724,6 +724,8 @@ block|{
 name|uint32_t
 name|start
 decl_stmt|,
+name|tmp
+decl_stmt|,
 name|ras_start
 init|=
 name|ARM_RAS_START
@@ -733,14 +735,15 @@ literal|"adr	%1, 1b\n"
 literal|"str	%1, [%0]\n"
 literal|"adr	%1, 2f\n"
 literal|"str	%1, [%0, #4]\n"
-literal|"ldr	%1, [%2]\n"
-literal|"add	%1, %1, %3\n"
-literal|"str	%0, [%2]\n"
+literal|"ldr	%1, [%3]\n"
+literal|"mov	%2, %1\n"
+literal|"add	%2, %2, %4\n"
+literal|"str	%2, [%3]\n"
 literal|"2:\n"
-literal|"mov	%3, #0\n"
-literal|"str	%3, [%0]\n"
-literal|"mov	%3, #0xffffffff\n"
-literal|"str	%3, [%0, #4]\n"
+literal|"mov	%2, #0\n"
+literal|"str	%2, [%0]\n"
+literal|"mov	%2, #0xffffffff\n"
+literal|"str	%2, [%0, #4]\n"
 operator|:
 literal|"+r"
 operator|(
@@ -750,6 +753,11 @@ operator|,
 literal|"=r"
 operator|(
 name|start
+operator|)
+operator|,
+literal|"=r"
+operator|(
+name|tmp
 operator|)
 operator|,
 literal|"+r"
