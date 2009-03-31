@@ -884,6 +884,8 @@ operator|(
 name|RTF_HOST
 operator||
 name|RTF_STATIC
+operator||
+name|RTF_LLDATA
 operator|)
 expr_stmt|;
 name|sin_m
