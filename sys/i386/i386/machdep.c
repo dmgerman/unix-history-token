@@ -1307,6 +1307,11 @@ name|sysenv
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|memsize
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|memsize
