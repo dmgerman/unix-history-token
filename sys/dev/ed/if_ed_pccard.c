@@ -5630,7 +5630,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The AX88790 has an interesting quirk.  It has an internal phy that 	 * needs a special bit set to access, but can also have additional 	 * external PHYs set for things like HomeNET media.  When accessing 	 * the internal PHY, a bit has to be set, when accessing the external 	 * PHYs, it must be clear.  See Errata 1, page 51, in the AX88790 	 * datasheet for more details. 	 * 	 * Also, PHYs above 16 appear to be phantoms on some cards, but not 	 * others.  Registers read for this are often the same as prior values 	 * read.  Filter all register requests to 17-31. 	 */
+comment|/* 	 * The AX88790 has an interesting quirk.  It has an internal phy that 	 * needs a special bit set to access, but can also have additional 	 * external PHYs set for things like HomeNET media.  When accessing 	 * the internal PHY, a bit has to be set, when accessing the external 	 * PHYs, it must be clear.  See Errata 1, page 51, in the AX88790 	 * datasheet for more details. 	 * 	 * Also, PHYs above 16 appear to be phantoms on some cards, but not 	 * others.  Registers read for this are often the same as prior values 	 * read.  Filter all register requests to 17-31. 	 * 	 * I can't explain it, since I don't have the DL100xx data sheets, but 	 * the DL100xx chips do 13-bits before the 'ACK' but, but the AX88x90 	 * chips have 14.  The linux pcnet and axnet drivers confirm this. 	 */
 if|if
 condition|(
 name|sc
