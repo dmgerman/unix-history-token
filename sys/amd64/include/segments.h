@@ -1123,8 +1123,41 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GCODE_SEL
+name|GNULL2_SEL
 value|1
+end_define
+
+begin_comment
+comment|/* Null Descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GUFS32_SEL
+value|2
+end_define
+
+begin_comment
+comment|/* User 32 bit %fs Descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GUGS32_SEL
+value|3
+end_define
+
+begin_comment
+comment|/* User 32 bit %gs Descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GCODE_SEL
+value|4
 end_define
 
 begin_comment
@@ -1135,7 +1168,7 @@ begin_define
 define|#
 directive|define
 name|GDATA_SEL
-value|2
+value|5
 end_define
 
 begin_comment
@@ -1146,7 +1179,7 @@ begin_define
 define|#
 directive|define
 name|GUCODE32_SEL
-value|3
+value|6
 end_define
 
 begin_comment
@@ -1157,7 +1190,7 @@ begin_define
 define|#
 directive|define
 name|GUDATA_SEL
-value|4
+value|7
 end_define
 
 begin_comment
@@ -1168,7 +1201,7 @@ begin_define
 define|#
 directive|define
 name|GUCODE_SEL
-value|5
+value|8
 end_define
 
 begin_comment
@@ -1179,7 +1212,7 @@ begin_define
 define|#
 directive|define
 name|GPROC0_SEL
-value|6
+value|9
 end_define
 
 begin_comment
@@ -1187,25 +1220,29 @@ comment|/* TSS for entering kernel etc */
 end_comment
 
 begin_comment
-comment|/* slot 7 is second half of GPROC0_SEL */
+comment|/* slot 10 is second half of GPROC0_SEL */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|GUGS32_SEL
-value|8
+name|GUSERLDT_SEL
+value|11
 end_define
 
 begin_comment
-comment|/* User 32 bit GS Descriptor */
+comment|/* LDT */
+end_comment
+
+begin_comment
+comment|/* slot 11 is second half of GUSERLDT_SEL */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NGDT
-value|9
+value|13
 end_define
 
 begin_ifdef
