@@ -235,12 +235,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/specialreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/segments.h>
 end_include
 
@@ -2474,16 +2468,6 @@ argument_list|(
 name|SEL_RPL_MASK
 argument_list|,
 name|SEL_RPL_MASK
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|ASSYM
-argument_list|(
-name|MSR_GSBASE
-argument_list|,
-name|MSR_GSBASE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
