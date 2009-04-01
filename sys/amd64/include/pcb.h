@@ -160,9 +160,6 @@ decl_stmt|;
 name|register_t
 name|xpcb_kgsbase
 decl_stmt|;
-name|uint32_t
-name|xpcb_ss
-decl_stmt|;
 name|struct
 name|region_descriptor
 name|xpcb_gdt
