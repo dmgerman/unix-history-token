@@ -911,6 +911,12 @@ goto|goto
 name|again
 goto|;
 comment|/* continue with packet */
+case|case
+name|IP_FW_REASS
+case|:
+goto|goto
+name|again
+goto|;
 default|default:
 name|KASSERT
 argument_list|(
@@ -1540,6 +1546,12 @@ goto|goto
 name|again
 goto|;
 comment|/* continue with packet */
+case|case
+name|IP_FW_REASS
+case|:
+goto|goto
+name|again
+goto|;
 default|default:
 name|KASSERT
 argument_list|(

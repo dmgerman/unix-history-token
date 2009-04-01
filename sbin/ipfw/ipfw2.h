@@ -159,6 +159,8 @@ name|TOK_CHECKSTATE
 block|,
 name|TOK_NAT
 block|,
+name|TOK_REASS
+block|,
 name|TOK_ALTQ
 block|,
 name|TOK_LOG

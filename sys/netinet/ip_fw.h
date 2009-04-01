@@ -217,6 +217,9 @@ comment|/* fwd mac			*/
 name|O_NAT
 block|,
 comment|/* nope                         */
+name|O_REASS
+block|,
+comment|/* none                         */
 comment|/* 	 * More opcodes. 	 */
 name|O_IPSEC
 block|,
@@ -1447,6 +1450,8 @@ block|,
 name|IP_FW_NGTEE
 block|,
 name|IP_FW_NAT
+block|,
+name|IP_FW_REASS
 block|, }
 enum|;
 end_enum
