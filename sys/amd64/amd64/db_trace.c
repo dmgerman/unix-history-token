@@ -240,12 +240,50 @@ block|,
 name|db_frame
 block|}
 block|,
-if|#
-directive|if
-literal|0
-block|{ "ds",		DB_OFFSET(tf_ds),	db_frame }, 	{ "es",		DB_OFFSET(tf_es),	db_frame }, 	{ "fs",		DB_OFFSET(tf_fs),	db_frame }, 	{ "gs",		DB_OFFSET(tf_gs),	db_frame },
-endif|#
-directive|endif
+block|{
+literal|"ds"
+block|,
+name|DB_OFFSET
+argument_list|(
+name|tf_ds
+argument_list|)
+block|,
+name|db_frame
+block|}
+block|,
+block|{
+literal|"es"
+block|,
+name|DB_OFFSET
+argument_list|(
+name|tf_es
+argument_list|)
+block|,
+name|db_frame
+block|}
+block|,
+block|{
+literal|"fs"
+block|,
+name|DB_OFFSET
+argument_list|(
+name|tf_fs
+argument_list|)
+block|,
+name|db_frame
+block|}
+block|,
+block|{
+literal|"gs"
+block|,
+name|DB_OFFSET
+argument_list|(
+name|tf_gs
+argument_list|)
+block|,
+name|db_frame
+block|}
+block|,
 block|{
 literal|"ss"
 block|,
@@ -452,7 +490,7 @@ block|,
 define|#
 directive|define
 name|DB_N_SHOW_REGS
-value|20
+value|24
 comment|/* Don't show registers after here. */
 block|{
 literal|"dr0"
@@ -1833,7 +1871,7 @@ name|TRAP
 case|:
 name|db_printf
 argument_list|(
-literal|"--- trap %#lr"
+literal|"--- trap %#r"
 argument_list|,
 name|tf
 operator|->

@@ -96,18 +96,6 @@ directive|define
 name|PCB_FULLCTX
 value|0x80
 comment|/* full context restore on sysret */
-name|u_int32_t
-name|pcb_ds
-decl_stmt|;
-name|u_int32_t
-name|pcb_es
-decl_stmt|;
-name|u_int32_t
-name|pcb_fs
-decl_stmt|;
-name|u_int32_t
-name|pcb_gs
-decl_stmt|;
 name|u_int64_t
 name|pcb_dr0
 decl_stmt|;
@@ -141,6 +129,12 @@ comment|/* 32-bit segment descriptor */
 name|struct
 name|user_segment_descriptor
 name|pcb_gs32sd
+decl_stmt|;
+comment|/* local tss, with i/o bitmap; NULL for common */
+name|struct
+name|amd64tss
+modifier|*
+name|pcb_tssp
 decl_stmt|;
 block|}
 struct|;

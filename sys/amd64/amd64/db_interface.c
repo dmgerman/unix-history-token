@@ -468,12 +468,69 @@ modifier|*
 name|pc
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|db_printf("currentldt   = 0x%x\n", pc->pc_currentldt);
-endif|#
-directive|endif
+name|db_printf
+argument_list|(
+literal|"curpmap		= %p\n"
+argument_list|,
+name|pc
+operator|->
+name|pc_curpmap
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"tssp		= %p\n"
+argument_list|,
+name|pc
+operator|->
+name|pc_tssp
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"commontssp	= %p\n"
+argument_list|,
+name|pc
+operator|->
+name|pc_commontssp
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"rsp0		= 0x%lx\n"
+argument_list|,
+name|pc
+operator|->
+name|pc_rsp0
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"gs32p		= %p\n"
+argument_list|,
+name|pc
+operator|->
+name|pc_gs32p
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"ldt		= %p\n"
+argument_list|,
+name|pc
+operator|->
+name|pc_ldt
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"tss		= %p\n"
+argument_list|,
+name|pc
+operator|->
+name|pc_tss
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
