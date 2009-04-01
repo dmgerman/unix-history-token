@@ -137,10 +137,16 @@ index|]
 name|__aligned
 decl|(16
 decl_stmt|);
+name|__register_t
+name|mc_fsbase
+decl_stmt|;
+name|__register_t
+name|mc_gsbase
+decl_stmt|;
 name|int
 name|mc_spare2
 index|[
-literal|8
+literal|6
 index|]
 decl_stmt|;
 block|}
