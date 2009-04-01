@@ -372,6 +372,26 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Generic descriptor  */
+end_comment
+
+begin_union
+union|union
+name|descriptor
+block|{
+name|struct
+name|user_segment_descriptor
+name|sd
+decl_stmt|;
+name|struct
+name|gate_descriptor
+name|gd
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
 comment|/* system segments and gate types */
 end_comment
 
@@ -389,6 +409,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SDT_SYS286TSS
+value|1
+end_define
+
+begin_comment
+comment|/* system 286 TSS available */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SDT_SYSLDT
 value|2
 end_define
@@ -400,12 +431,89 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SDT_SYS286BSY
+value|3
+end_define
+
+begin_comment
+comment|/* system 286 TSS busy */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDT_SYS286CGT
+value|4
+end_define
+
+begin_comment
+comment|/* system 286 call gate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDT_SYSTASKGT
+value|5
+end_define
+
+begin_comment
+comment|/* system task gate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDT_SYS286IGT
+value|6
+end_define
+
+begin_comment
+comment|/* system 286 interrupt gate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDT_SYS286TGT
+value|7
+end_define
+
+begin_comment
+comment|/* system 286 trap gate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDT_SYSNULL2
+value|8
+end_define
+
+begin_comment
+comment|/* system null again */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SDT_SYSTSS
 value|9
 end_define
 
 begin_comment
 comment|/* system available 64 bit TSS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDT_SYSNULL3
+value|10
+end_define
+
+begin_comment
+comment|/* system null again */
 end_comment
 
 begin_define
@@ -428,6 +536,17 @@ end_define
 
 begin_comment
 comment|/* system 64 bit call gate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDT_SYSNULL4
+value|13
+end_define
+
+begin_comment
+comment|/* system null again */
 end_comment
 
 begin_define
