@@ -949,6 +949,25 @@ operator|-
 name|OFFSET
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|count
+operator|<
+literal|0
+operator|||
+name|count
+operator|>
+name|MAXPATHLEN
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"corrupted database: %s"
+argument_list|,
+name|database
+argument_list|)
+expr_stmt|;
 comment|/* overlay old path */
 name|p
 operator|=
