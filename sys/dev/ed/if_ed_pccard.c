@@ -2289,7 +2289,7 @@ name|ed_asic_outb
 argument_list|(
 name|sc
 argument_list|,
-name|ED_DL100XX_DIAG
+name|ED_DL10022_DIAG
 argument_list|,
 operator|(
 name|mii
@@ -2299,7 +2299,7 @@ operator|&
 name|IFM_FDX
 operator|)
 condition|?
-name|ED_DL100XX_COLLISON_DIS
+name|ED_DL10022_COLLISON_DIS
 else|:
 literal|0
 argument_list|)
@@ -3622,7 +3622,7 @@ name|sc
 argument_list|,
 name|ED_DL100XX_MIIBUS
 argument_list|,
-name|ED_DL100XX_MII_RESET2
+name|ED_DL10022_MII_RESET2
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -3636,9 +3636,9 @@ name|sc
 argument_list|,
 name|ED_DL100XX_MIIBUS
 argument_list|,
-name|ED_DL100XX_MII_RESET2
+name|ED_DL10022_MII_RESET2
 operator||
-name|ED_DL100XX_MII_RESET1
+name|ED_DL10022_MII_RESET1
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -3652,7 +3652,7 @@ name|sc
 argument_list|,
 name|ED_DL100XX_MIIBUS
 argument_list|,
-name|ED_DL100XX_MII_RESET2
+name|ED_DL10022_MII_RESET2
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -3666,9 +3666,9 @@ name|sc
 argument_list|,
 name|ED_DL100XX_MIIBUS
 argument_list|,
-name|ED_DL100XX_MII_RESET2
+name|ED_DL10022_MII_RESET2
 operator||
-name|ED_DL100XX_MII_RESET1
+name|ED_DL10022_MII_RESET1
 argument_list|)
 expr_stmt|;
 name|DELAY
