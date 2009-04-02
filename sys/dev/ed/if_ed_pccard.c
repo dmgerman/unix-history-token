@@ -5706,20 +5706,7 @@ argument_list|,
 name|ED_MII_IDLE_BITS
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Reading phy %d reg %#x returning %#x (valid %d)\n"
-argument_list|,
-name|phy
-argument_list|,
-name|reg
-argument_list|,
-name|val
-argument_list|,
-operator|!
-name|failed
-argument_list|)
-expr_stmt|;
+comment|/*	printf("Reading phy %d reg %#x returning %#x (valid %d)\n", phy, reg, val, !failed); */
 return|return
 operator|(
 name|failed
@@ -5755,17 +5742,7 @@ name|ed_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"Writing phy %d reg %#x data %#x\n"
-argument_list|,
-name|phy
-argument_list|,
-name|reg
-argument_list|,
-name|data
-argument_list|)
-expr_stmt|;
+comment|/*	printf("Writing phy %d reg %#x data %#x\n", phy, reg, data); */
 name|sc
 operator|=
 name|device_get_softc
