@@ -323,6 +323,8 @@ argument_list|,
 name|BUS_DMA_WAITOK
 operator||
 name|BUS_DMA_ZERO
+operator||
+name|BUS_DMA_NOCACHE
 argument_list|,
 operator|&
 name|dmah
@@ -396,8 +398,6 @@ argument_list|,
 name|entry
 argument_list|,
 name|BUS_DMA_NOWAIT
-operator||
-name|BUS_DMA_NOCACHE
 argument_list|)
 expr_stmt|;
 if|if
