@@ -74,6 +74,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ED_DL100XX_MII_DIROUT
+value|0x30
+end_define
+
+begin_define
+define|#
+directive|define
 name|ED_DL100XX_MII_DATAOUT
 value|0x40
 end_define
