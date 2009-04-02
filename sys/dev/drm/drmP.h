@@ -2143,16 +2143,9 @@ decl_stmt|;
 name|struct
 name|drm_dma_handle
 modifier|*
-name|sg_dmah
-decl_stmt|;
-comment|/* Handle for sg_pages   */
-name|struct
-name|drm_dma_handle
-modifier|*
 name|dmah
 decl_stmt|;
 comment|/* Handle to PCI memory  */
-comment|/* for ATI PCIGART table */
 block|}
 name|drm_sg_mem_t
 typedef|;
@@ -2385,6 +2378,12 @@ decl_stmt|;
 name|int
 name|table_size
 decl_stmt|;
+name|struct
+name|drm_dma_handle
+modifier|*
+name|dmah
+decl_stmt|;
+comment|/* handle for ATI PCIGART table */
 block|}
 struct|;
 end_struct

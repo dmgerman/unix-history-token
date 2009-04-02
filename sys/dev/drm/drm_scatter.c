@@ -458,7 +458,7 @@ return|;
 block|}
 name|entry
 operator|->
-name|sg_dmah
+name|dmah
 operator|=
 name|dmah
 expr_stmt|;
@@ -668,7 +668,7 @@ name|dmah
 init|=
 name|entry
 operator|->
-name|sg_dmah
+name|dmah
 decl_stmt|;
 name|bus_dmamap_unload
 argument_list|(

@@ -373,9 +373,7 @@ return|return
 name|ENOMEM
 return|;
 block|}
-name|dev
-operator|->
-name|sg
+name|gart_info
 operator|->
 name|dmah
 operator|=
@@ -408,9 +406,7 @@ name|drm_dma_handle
 modifier|*
 name|dmah
 init|=
-name|dev
-operator|->
-name|sg
+name|gart_info
 operator|->
 name|dmah
 decl_stmt|;
@@ -443,9 +439,7 @@ argument_list|,
 name|DRM_MEM_DMA
 argument_list|)
 expr_stmt|;
-name|dev
-operator|->
-name|sg
+name|gart_info
 operator|->
 name|dmah
 operator|=
@@ -512,9 +506,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|dev
-operator|->
-name|sg
+name|gart_info
 operator|->
 name|dmah
 condition|)
@@ -646,9 +638,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|dev
-operator|->
-name|sg
+name|gart_info
 operator|->
 name|dmah
 operator|->
@@ -656,9 +646,7 @@ name|vaddr
 expr_stmt|;
 name|bus_address
 operator|=
-name|dev
-operator|->
-name|sg
+name|gart_info
 operator|->
 name|dmah
 operator|->
