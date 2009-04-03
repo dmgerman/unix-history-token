@@ -7706,6 +7706,8 @@ argument_list|(
 name|mp
 operator|->
 name|name
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock

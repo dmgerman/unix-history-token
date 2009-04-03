@@ -2091,6 +2091,8 @@ name|sc
 operator|->
 name|dev
 argument_list|)
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 return|return

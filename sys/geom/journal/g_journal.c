@@ -11280,6 +11280,8 @@ operator|=
 name|root_mount_hold
 argument_list|(
 literal|"GJOURNAL"
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|GJ_DEBUG

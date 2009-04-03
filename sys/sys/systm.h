@@ -2809,6 +2809,9 @@ specifier|const
 name|char
 modifier|*
 name|identifier
+parameter_list|,
+name|int
+name|how
 parameter_list|)
 function_decl|;
 end_function_decl

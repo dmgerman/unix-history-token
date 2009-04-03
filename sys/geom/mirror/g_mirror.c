@@ -14565,6 +14565,8 @@ operator|=
 name|root_mount_hold
 argument_list|(
 literal|"GMIRROR"
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|G_MIRROR_DEBUG
