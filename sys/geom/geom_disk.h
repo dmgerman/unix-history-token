@@ -225,6 +225,11 @@ name|void
 modifier|*
 name|d_drv1
 decl_stmt|;
+name|struct
+name|root_hold_token
+modifier|*
+name|d_roothold
+decl_stmt|;
 block|}
 struct|;
 end_struct

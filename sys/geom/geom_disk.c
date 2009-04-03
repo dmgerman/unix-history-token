@@ -1856,6 +1856,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|root_mount_rel
+argument_list|(
+name|dp
+operator|->
+name|d_roothold
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2312,6 +2319,19 @@ operator|->
 name|d_geom
 operator|=
 name|NULL
+expr_stmt|;
+name|dp
+operator|->
+name|d_roothold
+operator|=
+name|root_mount_hold
+argument_list|(
+name|dp
+operator|->
+name|d_name
+argument_list|,
+name|M_WAITOK
+argument_list|)
 expr_stmt|;
 name|g_disk_ident_adjust
 argument_list|(

@@ -775,6 +775,11 @@ decl_stmt|;
 name|u_int
 name|index
 decl_stmt|;
+name|struct
+name|root_hold_token
+modifier|*
+name|roothold
+decl_stmt|;
 block|}
 struct|;
 end_struct
