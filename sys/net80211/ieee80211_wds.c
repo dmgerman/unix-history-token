@@ -994,7 +994,7 @@ operator|.
 name|rcvif
 condition|)
 continue|continue;
-comment|/* 		 * Duplicate the frame and send it.  We don't need 		 * to classify or lookup the tx node; this was already 		 * done by the caller so we can just re-use the info. 		 */
+comment|/* 		 * Duplicate the frame and send it. 		 */
 name|mcopy
 operator|=
 name|m_copypacket
@@ -1050,6 +1050,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* calculate priority so drivers can find the tx queue */
 if|if
 condition|(
 name|ieee80211_classify
@@ -1103,13 +1104,38 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 		 * Encapsulate the packet in prep for transmission. 		 */
+name|mcopy
+operator|=
+name|ieee80211_encap
+argument_list|(
+name|vap
+argument_list|,
+name|ni
+argument_list|,
+name|mcopy
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* NB: stat+msg handled in ieee80211_encap */
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|mcopy
 operator|->
 name|m_flags
 operator||=
 name|M_MCAST
-operator||
-name|M_WDS
 expr_stmt|;
 name|mcopy
 operator|->
