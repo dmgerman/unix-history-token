@@ -1416,6 +1416,10 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* # of first request for this connection */
+name|int
+name|val
+decl_stmt|;
+comment|/* Value used for setsockopt call */
 comment|/* Check that the arguments are sensible */
 if|if
 condition|(
@@ -1675,6 +1679,32 @@ operator|)
 sizeof|sizeof
 argument_list|(
 name|timo
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* ... disable SIGPIPE generation ... */
+name|val
+operator|=
+literal|1
+expr_stmt|;
+name|setsockopt
+argument_list|(
+name|sd
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_NOSIGPIPE
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|val
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
