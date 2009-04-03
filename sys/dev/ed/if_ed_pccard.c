@@ -4914,27 +4914,6 @@ name|ED_AX88X90_MII_CLK
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"AX88x90 %#x+%#x Reading %d bits: %x\n"
-argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
-name|sc
-operator|->
-name|port_bsh
-argument_list|,
-name|sc
-operator|->
-name|asic_offset
-argument_list|,
-name|nbits
-argument_list|,
-name|val
-argument_list|)
-expr_stmt|;
 return|return
 name|val
 return|;
@@ -5387,13 +5366,6 @@ decl_stmt|;
 name|uint8_t
 name|cr
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"Reading %d bits\n"
-argument_list|,
-name|nbits
-argument_list|)
-expr_stmt|;
 name|cr
 operator|=
 name|ed_nic_inb
