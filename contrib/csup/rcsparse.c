@@ -1528,7 +1528,8 @@ name|NUM
 condition|)
 return|return
 operator|(
-name|token
+operator|-
+literal|1
 operator|)
 return|;
 do|do
