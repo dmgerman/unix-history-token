@@ -429,7 +429,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"unable to allocate memory for cmd buffer, "
+literal|"unable to allocate memory for cmd tag, "
 literal|"error %u\n"
 argument_list|,
 name|error
@@ -581,13 +581,6 @@ operator|)
 return|;
 name|fail
 label|:
-name|free
-argument_list|(
-name|mh
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mh
@@ -654,6 +647,13 @@ argument_list|(
 name|mh
 operator|->
 name|mh_dmat
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|mh
+argument_list|,
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 return|return
