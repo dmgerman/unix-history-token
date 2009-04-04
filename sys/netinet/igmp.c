@@ -3762,7 +3762,7 @@ operator|>=
 literal|128
 condition|)
 block|{
-name|maxresp
+name|qqi
 operator|=
 name|IGMP_MANT
 argument_list|(
