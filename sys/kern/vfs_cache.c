@@ -4624,9 +4624,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|CACHE_RLOCK
-argument_list|()
-expr_stmt|;
 name|numfullpathfail2
 operator|++
 expr_stmt|;
@@ -4665,6 +4662,9 @@ name|VI_DOOMED
 condition|)
 block|{
 comment|/* forced unmount */
+name|CACHE_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|vdrop
 argument_list|(
 operator|*
