@@ -521,6 +521,10 @@ decl_stmt|;
 name|int
 name|lastsv
 decl_stmt|;
+name|int
+name|rtt
+decl_stmt|;
+comment|/* last measured rtt value in ms */
 name|unsigned
 name|int
 name|RTO
@@ -1836,7 +1840,7 @@ comment|/* For CMT */
 name|struct
 name|sctp_nets
 modifier|*
-name|last_net_data_came_from
+name|last_net_cmt_send_started
 decl_stmt|;
 comment|/* last place I got a data chunk from */
 name|struct

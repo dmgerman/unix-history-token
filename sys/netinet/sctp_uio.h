@@ -1956,13 +1956,13 @@ name|cwnd_new_value
 decl_stmt|;
 comment|/* cwnd in k */
 name|uint32_t
+name|pseudo_cumack
+decl_stmt|;
+name|uint16_t
 name|inflight
 decl_stmt|;
 comment|/* flightsize in k */
-name|uint32_t
-name|pseudo_cumack
-decl_stmt|;
-name|uint32_t
+name|uint16_t
 name|cwnd_augment
 decl_stmt|;
 comment|/* increment to it */

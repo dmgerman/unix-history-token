@@ -2575,6 +2575,7 @@ name|net
 operator|->
 name|mtu
 expr_stmt|;
+comment|/* xraddr.rtt = net->rtt;  Not yet */
 name|xraddr
 operator|.
 name|start_time
