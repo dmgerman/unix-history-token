@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/bat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/bus.h>
 end_include
 
@@ -991,11 +985,23 @@ expr_stmt|;
 name|isync
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|l3cr_config
+operator|!=
+literal|0
+condition|)
 name|reg
 operator|=
 name|l3_enable
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|l2cr_config
+operator|!=
+literal|0
+condition|)
 name|reg
 operator|=
 name|l2_enable

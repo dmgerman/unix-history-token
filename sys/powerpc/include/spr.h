@@ -45,6 +45,40 @@ define|\
 value|( { register_t val;						\ 	  __asm __volatile("mfspr %0,%1" : "=r"(val) : "K"(reg));	\ 	  val; } )
 end_define
 
+begin_comment
+comment|/* The following routines allow manipulation of the full 64-bit width   * of SPRs on 64 bit CPUs in bridge mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|mtspr64
+parameter_list|(
+name|reg
+parameter_list|,
+name|valhi
+parameter_list|,
+name|vallo
+parameter_list|,
+name|scratch
+parameter_list|)
+define|\
+value|__asm __volatile("						\ 		mfmsr %0; 						\ 		insrdi %0,1,1,0; 					\ 		mtmsrd %0; 						\ 		isync; 							\ 									\ 		sld %1,%1,%4;						\ 		or %1,%1,%2;						\ 		mtspr %3,%1;						\ 		srd %1,%1,%4;						\ 									\ 		clrldi %0,%0,1; 					\ 		mtmsrd %0; 						\ 		isync;"							\ 	: "=r"(scratch), "=r"(valhi) : "r"(vallo), "K"(reg), "r"(32))
+end_define
+
+begin_define
+define|#
+directive|define
+name|mfspr64upper
+parameter_list|(
+name|reg
+parameter_list|,
+name|scratch
+parameter_list|)
+define|\
+value|( { register_t val;						\ 	    __asm __volatile("						\ 		mfmsr %0; 						\ 		insrdi %0,1,1,0; 					\ 		mtmsrd %0; 						\ 		isync; 							\ 									\ 		mfspr %1,%2;						\ 		srd %1,%1,%3;						\ 									\ 		clrldi %0,%0,1; 					\ 		mtmsrd %0; 						\ 		isync;" 						\ 	    : "=r"(scratch), "=r"(val) : "K"(reg), "r"(32)); 			\ 	    val; } )
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -638,8 +672,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|IBM970
+value|0x0039
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBM970FX
+value|0x003c
+end_define
+
+begin_define
+define|#
+directive|define
 name|IBMPOWER3
 value|0x0041
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBM970MP
+value|0x0044
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBM970GX
+value|0x0045
 end_define
 
 begin_define

@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mmu_if.h"
 end_include
 
@@ -1640,6 +1646,28 @@ argument_list|,
 name|end
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|pmap_cpu_bootstrap
+parameter_list|(
+name|int
+name|ap
+parameter_list|)
+block|{
+comment|/* 	 * No KTR here because our console probably doesn't work yet 	 */
+return|return
+operator|(
+name|MMU_CPU_BOOTSTRAP
+argument_list|(
+name|mmu_obj
+argument_list|,
+name|ap
+argument_list|)
+operator|)
+return|;
 block|}
 end_function
 

@@ -1034,6 +1034,9 @@ decl_stmt|;
 name|phandle_t
 name|node
 decl_stmt|;
+name|bus_addr_t
+name|fb_phys
+decl_stmt|;
 name|int
 name|depth
 decl_stmt|;
@@ -1336,7 +1339,7 @@ name|sc_stride
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX the physical address of the frame buffer is assumed to be 	 * BAT-mapped so it can be accessed directly 	 */
+comment|/* 	 * Grab the physical address of the framebuffer, and then map it 	 * into our memory space. If the MMU is not yet up, it will be 	 * remapped for us when relocation turns on. 	 * 	 * XXX We assume #address-cells is 1 at this point. 	 */
 name|OF_getprop
 argument_list|(
 name|node
@@ -1344,16 +1347,35 @@ argument_list|,
 literal|"address"
 argument_list|,
 operator|&
-name|sc
-operator|->
-name|sc_addr
+name|fb_phys
 argument_list|,
 sizeof|sizeof
 argument_list|(
+name|fb_phys
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bus_space_map
+argument_list|(
+operator|&
+name|bs_be_tag
+argument_list|,
+name|fb_phys
+argument_list|,
+name|sc
+operator|->
+name|sc_height
+operator|*
+name|sc
+operator|->
+name|sc_stride
+argument_list|,
+literal|0
+argument_list|,
+operator|&
 name|sc
 operator|->
 name|sc_addr
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Get the PCI addresses of the adapter. The node may be the 	 * child of the PCI device: in that case, try the parent for 	 * the assigned-addresses property. 	 */
@@ -4707,20 +4729,9 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-comment|/* This is a fake device, so make sure there is no OF node for it */
-if|if
-condition|(
-name|ofw_bus_get_node
-argument_list|(
-name|dev
-argument_list|)
-operator|!=
-operator|-
-literal|1
-condition|)
-return|return
-name|ENXIO
-return|;
+name|int
+name|error
+decl_stmt|;
 name|device_set_desc
 argument_list|(
 name|dev
@@ -4728,8 +4739,8 @@ argument_list|,
 literal|"System console"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|sc_probe_unit
 argument_list|(
 name|device_get_unit
@@ -4744,6 +4755,22 @@ argument_list|)
 operator||
 name|SC_AUTODETECT_KBD
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+comment|/* This is a fake device, so make sure we added it ourselves */
+return|return
+operator|(
+name|BUS_PROBE_NOWILDCARD
 operator|)
 return|;
 block|}

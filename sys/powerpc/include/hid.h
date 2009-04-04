@@ -187,6 +187,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HID0_TG
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* Timebase Granularity (OEA64) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HID0_BHTCLR
 value|0x00040000
 end_define

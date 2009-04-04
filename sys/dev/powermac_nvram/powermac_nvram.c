@@ -497,13 +497,15 @@ decl_stmt|;
 name|u_int32_t
 name|reg
 index|[
-literal|2
+literal|3
 index|]
 decl_stmt|;
 name|int
 name|gen0
 decl_stmt|,
 name|gen1
+decl_stmt|,
+name|i
 decl_stmt|;
 name|node
 operator|=
@@ -521,6 +523,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|i
+operator|=
 name|OF_getprop
 argument_list|(
 name|node
@@ -534,6 +539,7 @@ argument_list|(
 name|reg
 argument_list|)
 argument_list|)
+operator|)
 operator|<
 literal|8
 condition|)
@@ -552,6 +558,17 @@ name|sc_node
 operator|=
 name|node
 expr_stmt|;
+comment|/* 	 * Find which byte of reg corresponds to the 32-bit physical address. 	 * We should probably read #address-cells from /chosen instead. 	 */
+name|i
+operator|=
+operator|(
+name|i
+operator|/
+literal|4
+operator|)
+operator|-
+literal|2
+expr_stmt|;
 name|sc
 operator|->
 name|sc_bank0
@@ -563,7 +580,7 @@ name|pmap_mapdev
 argument_list|(
 name|reg
 index|[
-literal|0
+name|i
 index|]
 argument_list|,
 name|NVRAM_SIZE
