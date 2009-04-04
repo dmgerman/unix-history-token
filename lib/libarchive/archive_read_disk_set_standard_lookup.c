@@ -870,7 +870,7 @@ block|{
 name|char
 name|buffer
 index|[
-literal|64
+literal|512
 index|]
 decl_stmt|;
 name|struct
@@ -1024,7 +1024,7 @@ block|{
 name|char
 name|buffer
 index|[
-literal|64
+literal|512
 index|]
 decl_stmt|;
 name|struct
