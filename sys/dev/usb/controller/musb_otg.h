@@ -1973,14 +1973,6 @@ name|musbotg_hub_temp
 name|sc_hub_temp
 decl_stmt|;
 name|struct
-name|usb2_sw_transfer
-name|sc_root_ctrl
-decl_stmt|;
-name|struct
-name|usb2_sw_transfer
-name|sc_root_intr
-decl_stmt|;
-name|struct
 name|usb2_hw_ep_profile
 name|sc_hw_ep_profile
 index|[

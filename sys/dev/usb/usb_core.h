@@ -253,7 +253,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The following macro defines if USB transaction translator support  * shall be compiled for the USB HUB and USB controller drivers.  */
+comment|/*  * The following macro defines if USB transaction translator support  * shall be supported for the USB HUB and USB controller drivers.  */
 end_comment
 
 begin_ifndef
@@ -275,7 +275,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The following macro defines if the USB power daemon shall  * be compiled for the USB core.  */
+comment|/*  * The following macro defines if the USB power daemon shall  * be supported in the USB core.  */
 end_comment
 
 begin_ifndef
@@ -288,6 +288,28 @@ begin_define
 define|#
 directive|define
 name|USB_HAVE_POWERD
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The following macro defines if the USB autoinstall detection shall  * be supported in the USB core.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HAVE_MSCTEST
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_HAVE_MSCTEST
 value|1
 end_define
 

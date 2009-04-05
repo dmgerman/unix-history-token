@@ -3278,8 +3278,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
+operator|(
 name|pipe
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|pipe
+operator|->
+name|methods
+operator|==
+name|NULL
+operator|)
 condition|)
 block|{
 if|if
@@ -8937,6 +8948,16 @@ decl_stmt|;
 name|uint8_t
 name|iface_index
 decl_stmt|;
+comment|/* check for root HUB */
+if|if
+condition|(
+name|udev
+operator|->
+name|parent_hub
+operator|==
+name|NULL
+condition|)
+return|return;
 name|repeat
 label|:
 name|xfer

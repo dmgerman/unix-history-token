@@ -1113,11 +1113,7 @@ name|uhci_hub_desc
 name|sc_hub_desc
 decl_stmt|;
 name|struct
-name|usb2_sw_transfer
-name|sc_root_ctrl
-decl_stmt|;
-name|struct
-name|usb2_sw_transfer
+name|usb2_callout
 name|sc_root_intr
 decl_stmt|;
 name|struct
@@ -1128,6 +1124,7 @@ index|[
 name|UHCI_MAX_DEVICES
 index|]
 decl_stmt|;
+comment|/* pointer to last TD for isochronous */
 name|struct
 name|uhci_td
 modifier|*
@@ -1136,7 +1133,7 @@ index|[
 name|UHCI_VFRAMELIST_COUNT
 index|]
 decl_stmt|;
-comment|/* pointer to last TD 								 * for isochronous */
+comment|/* pointer to last QH for interrupt */
 name|struct
 name|uhci_qh
 modifier|*
@@ -1145,25 +1142,24 @@ index|[
 name|UHCI_IFRAMELIST_COUNT
 index|]
 decl_stmt|;
-comment|/* pointer to last QH 								 * for interrupt */
+comment|/* pointer to last QH for low speed control */
 name|struct
 name|uhci_qh
 modifier|*
 name|sc_ls_ctl_p_last
 decl_stmt|;
-comment|/* pointer to last QH for low 						 * speed control */
+comment|/* pointer to last QH for full speed control */
 name|struct
 name|uhci_qh
 modifier|*
 name|sc_fs_ctl_p_last
 decl_stmt|;
-comment|/* pointer to last QH for full 						 * speed control */
+comment|/* pointer to last QH for bulk */
 name|struct
 name|uhci_qh
 modifier|*
 name|sc_bulk_p_last
 decl_stmt|;
-comment|/* pointer to last QH for bulk */
 name|struct
 name|uhci_qh
 modifier|*

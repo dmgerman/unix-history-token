@@ -1211,16 +1211,6 @@ argument_list|,
 name|pipe
 argument_list|)
 expr_stmt|;
-comment|/* check for invalid pipe */
-if|if
-condition|(
-name|pipe
-operator|->
-name|methods
-operator|==
-name|NULL
-condition|)
-return|return;
 comment|/* initialise USB pipe structure */
 name|pipe
 operator|->
@@ -1253,6 +1243,16 @@ operator|=
 operator|&
 name|usb2_pipe_start
 expr_stmt|;
+comment|/* the pipe is not supported by the hardware */
+if|if
+condition|(
+name|pipe
+operator|->
+name|methods
+operator|==
+name|NULL
+condition|)
+return|return;
 comment|/* clear stall, if any */
 if|if
 condition|(

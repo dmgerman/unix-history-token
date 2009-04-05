@@ -689,18 +689,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|usb2_bus_roothub_exec
-parameter_list|(
-name|struct
-name|usb2_bus
-modifier|*
-name|bus
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|uint16_t
 name|usb2_isoc_time_expand
 parameter_list|(

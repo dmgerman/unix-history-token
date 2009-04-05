@@ -30,24 +30,6 @@ name|ATMEGA_MAX_DEVICES
 value|(USB_MIN_DEVICES + 1)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ATMEGA_HAVE_BUS_SPACE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ATMEGA_HAVE_BUS_SPACE
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -1176,14 +1158,6 @@ argument|usb2_xfer
 argument_list|)
 name|sc_interrupt_list_head
 expr_stmt|;
-name|struct
-name|usb2_sw_transfer
-name|sc_root_ctrl
-decl_stmt|;
-name|struct
-name|usb2_sw_transfer
-name|sc_root_intr
-decl_stmt|;
 comment|/* must be set by by the bus interface layer */
 name|atmegadci_clocks_t
 modifier|*
@@ -1210,13 +1184,6 @@ name|void
 modifier|*
 name|sc_intr_hdl
 decl_stmt|;
-if|#
-directive|if
-operator|(
-name|ATMEGA_HAVE_BUS_SPACE
-operator|!=
-literal|0
-operator|)
 name|struct
 name|resource
 modifier|*
@@ -1228,8 +1195,6 @@ decl_stmt|;
 name|bus_space_handle_t
 name|sc_io_hdl
 decl_stmt|;
-endif|#
-directive|endif
 name|uint8_t
 name|sc_rt_addr
 decl_stmt|;

@@ -269,6 +269,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|uhub_root_intr
+parameter_list|(
+name|struct
+name|usb2_bus
+modifier|*
+parameter_list|,
+specifier|const
+name|uint8_t
+modifier|*
+parameter_list|,
+name|uint8_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

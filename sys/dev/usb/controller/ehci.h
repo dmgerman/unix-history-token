@@ -2592,14 +2592,6 @@ name|ehci_hub_desc
 name|sc_hub_desc
 decl_stmt|;
 name|struct
-name|usb2_sw_transfer
-name|sc_root_ctrl
-decl_stmt|;
-name|struct
-name|usb2_sw_transfer
-name|sc_root_intr
-decl_stmt|;
-name|struct
 name|usb2_device
 modifier|*
 name|sc_devices

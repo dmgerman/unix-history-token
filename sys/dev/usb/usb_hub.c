@@ -191,6 +191,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|USB_HAVE_POWERD
+end_if
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -224,6 +230,11 @@ literal|"USB power timeout"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -492,22 +503,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|driver_t
-name|uhub_driver
-init|=
-block|{
-operator|.
-name|name
-operator|=
-literal|"uhub"
-block|,
-operator|.
-name|methods
-operator|=
-operator|(
 name|device_method_t
+name|uhub_methods
 index|[]
-operator|)
+init|=
 block|{
 name|DEVMETHOD
 argument_list|(
@@ -578,6 +577,24 @@ block|,
 literal|0
 block|}
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|driver_t
+name|uhub_driver
+init|=
+block|{
+operator|.
+name|name
+operator|=
+literal|"uhub"
+block|,
+operator|.
+name|methods
+operator|=
+name|uhub_methods
 block|,
 operator|.
 name|size
@@ -1822,6 +1839,45 @@ block|}
 end_function
 
 begin_comment
+comment|/*------------------------------------------------------------------------*  *	uhub_root_interrupt  *  * This function is called when a Root HUB interrupt has  * happened. "ptr" and "len" makes up the Root HUB interrupt  * packet. This function is called having the "bus_mtx" locked.  *------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+name|void
+name|uhub_root_intr
+parameter_list|(
+name|struct
+name|usb2_bus
+modifier|*
+name|bus
+parameter_list|,
+specifier|const
+name|uint8_t
+modifier|*
+name|ptr
+parameter_list|,
+name|uint8_t
+name|len
+parameter_list|)
+block|{
+name|USB_BUS_LOCK_ASSERT
+argument_list|(
+name|bus
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|usb2_needs_explore
+argument_list|(
+name|bus
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*------------------------------------------------------------------------*  *	uhub_explore  *  * Returns:  *     0: Success  *  Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
@@ -2750,6 +2806,24 @@ name|iface_index
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|udev
+operator|->
+name|parent_hub
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* root HUB is special */
+name|err
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* normal HUB */
 name|err
 operator|=
 name|usb2_transfer_setup
@@ -2773,6 +2847,7 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|err
@@ -2979,7 +3054,19 @@ else|:
 literal|"bus"
 argument_list|)
 expr_stmt|;
-comment|/* start the interrupt endpoint */
+comment|/* Start the interrupt endpoint, if any */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_xfer
+index|[
+literal|0
+index|]
+operator|!=
+name|NULL
+condition|)
+block|{
 name|USB_XFER_LOCK
 argument_list|(
 name|sc
@@ -3010,6 +3097,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Enable automatic power save on all USB HUBs */
 name|usb2_set_power_mode
 argument_list|(
@@ -4815,6 +4903,9 @@ name|uint8_t
 name|do_probe
 parameter_list|)
 block|{
+name|uint8_t
+name|do_unlock
+decl_stmt|;
 name|DPRINTF
 argument_list|(
 literal|"\n"
@@ -4834,11 +4925,63 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+operator|(
+name|bus
+operator|->
+name|devices
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|bus
+operator|->
+name|devices
+index|[
+name|USB_ROOT_HUB_ADDR
+index|]
+operator|==
+name|NULL
+operator|)
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+literal|"No root HUB\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|mtx_owned
+argument_list|(
+operator|&
+name|bus
+operator|->
+name|bus_mtx
+argument_list|)
+condition|)
+block|{
+name|do_unlock
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
 name|USB_BUS_LOCK
 argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
+name|do_unlock
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|do_probe
@@ -4880,11 +5023,17 @@ condition|)
 block|{
 comment|/* ignore */
 block|}
+if|if
+condition|(
+name|do_unlock
+condition|)
+block|{
 name|USB_BUS_UNLOCK
 argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
