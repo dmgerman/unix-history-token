@@ -141,6 +141,12 @@ directive|include
 file|<sys/socket.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -861,15 +867,12 @@ begin_struct
 struct|struct
 name|interface
 block|{
-name|struct
-name|interface
-modifier|*
-name|int_next
-decl_stmt|,
-modifier|*
-modifier|*
-name|int_prev
-decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|interface
+argument_list|)
+name|int_list
+expr_stmt|;
 name|struct
 name|interface
 modifier|*
@@ -1465,6 +1468,16 @@ name|f
 parameter_list|)
 value|((f)& IFF_UP)
 end_define
+
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|ifhead
+argument_list|,
+name|interface
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Information for aggregating routes */
@@ -2152,8 +2165,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|struct
-name|interface
-modifier|*
+name|ifhead
 name|ifnet
 decl_stmt|;
 end_decl_stmt
