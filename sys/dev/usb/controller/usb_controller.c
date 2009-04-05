@@ -953,18 +953,11 @@ name|dev
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Free USB Root device, but not any sub-devices, hence they 	 * are freed by the caller of this function: 	 */
-name|usb2_detach_device
-argument_list|(
-name|udev
-argument_list|,
-name|USB_IFACE_INDEX_ANY
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|usb2_free_device
 argument_list|(
 name|udev
+argument_list|,
+name|USB_UNCFG_FLAG_FREE_EP0
 argument_list|)
 expr_stmt|;
 name|mtx_unlock

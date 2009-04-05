@@ -46,6 +46,64 @@ name|USB_DEFAULT_XFER_MAX
 value|2
 end_define
 
+begin_comment
+comment|/* "usb2_parse_config()" commands */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_CFG_ALLOC
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_CFG_FREE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_CFG_INIT
+value|2
+end_define
+
+begin_comment
+comment|/* "usb2_unconfigure()" flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_UNCFG_FLAG_NONE
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_UNCFG_FLAG_FREE_SUBDEV
+value|0x01
+end_define
+
+begin_comment
+comment|/* subdevices are freed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_UNCFG_FLAG_FREE_EP0
+value|0x02
+end_define
+
+begin_comment
+comment|/* endpoint zero is freed */
+end_comment
+
 begin_struct
 struct|struct
 name|usb2_clear_stall_msg
@@ -278,10 +336,8 @@ index|]
 decl_stmt|;
 name|struct
 name|usb2_interface
+modifier|*
 name|ifaces
-index|[
-name|USB_IFACE_MAX
-index|]
 decl_stmt|;
 name|struct
 name|usb2_pipe
@@ -289,17 +345,9 @@ name|default_pipe
 decl_stmt|;
 comment|/* Control Endpoint 0 */
 name|struct
-name|cdev
-modifier|*
-name|default_dev
-decl_stmt|;
-comment|/* Control Endpoint 0 device node */
-name|struct
 name|usb2_pipe
+modifier|*
 name|pipes
-index|[
-name|USB_EP_MAX
-index|]
 decl_stmt|;
 name|struct
 name|usb2_power_save
@@ -379,6 +427,12 @@ modifier|*
 name|ugen_symlink
 decl_stmt|;
 comment|/* our generic symlink */
+name|struct
+name|cdev
+modifier|*
+name|default_dev
+decl_stmt|;
+comment|/* Control Endpoint 0 device node */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -462,6 +516,14 @@ name|uint8_t
 name|power_mode
 decl_stmt|;
 comment|/* see USB_POWER_XXX */
+name|uint8_t
+name|ifaces_max
+decl_stmt|;
+comment|/* number of interfaces present */
+name|uint8_t
+name|pipes_max
+decl_stmt|;
+comment|/* number of pipes present */
 comment|/* the "flags" field is write-protected by "bus->mtx" */
 name|struct
 name|usb2_device_flags
@@ -697,24 +759,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_detach_device
-parameter_list|(
-name|struct
-name|usb2_device
-modifier|*
-name|udev
-parameter_list|,
-name|uint8_t
-name|iface_index
-parameter_list|,
-name|uint8_t
-name|free_subdev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|usb2_devinfo
 parameter_list|(
 name|struct
@@ -739,7 +783,8 @@ parameter_list|(
 name|struct
 name|usb2_device
 modifier|*
-name|udev
+parameter_list|,
+name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
