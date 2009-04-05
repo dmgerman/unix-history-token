@@ -252,12 +252,6 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* set if BUS powered quirk is present */
-name|uint8_t
-name|uq_power_claim
-range|:
-literal|1
-decl_stmt|;
-comment|/* set if power claim quirk is present */
 block|}
 struct|;
 end_struct
