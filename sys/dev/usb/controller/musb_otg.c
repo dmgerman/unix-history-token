@@ -1124,6 +1124,15 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
+name|MUSB2_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|MUSB2_REG_TXCSRL
+argument_list|,
+name|MUSB2_MASK_CSR0L_RXPKTRDY_CLR
+argument_list|)
+expr_stmt|;
 goto|goto
 name|not_complete
 goto|;
@@ -1146,6 +1155,15 @@ literal|"Unsupported SETUP packet "
 literal|"length, %d bytes\n"
 argument_list|,
 name|count
+argument_list|)
+expr_stmt|;
+name|MUSB2_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|MUSB2_REG_TXCSRL
+argument_list|,
+name|MUSB2_MASK_CSR0L_RXPKTRDY_CLR
 argument_list|)
 expr_stmt|;
 goto|goto

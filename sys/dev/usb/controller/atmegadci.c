@@ -1181,6 +1181,25 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|temp
+operator|&
+name|ATMEGA_UEINTX_RXSTPI
+condition|)
+block|{
+comment|/* clear SETUP packet interrupt */
+name|ATMEGA_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|ATMEGA_UEINTX
+argument_list|,
+operator|~
+name|ATMEGA_UEINTX_RXSTPI
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* we only want to know if there is a SETUP packet */
 name|ATMEGA_WRITE_1
 argument_list|(

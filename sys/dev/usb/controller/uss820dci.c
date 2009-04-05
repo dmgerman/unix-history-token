@@ -1138,7 +1138,7 @@ name|count
 argument_list|)
 expr_stmt|;
 goto|goto
-name|not_complete
+name|setup_not_complete
 goto|;
 block|}
 if|if
@@ -1162,7 +1162,7 @@ name|count
 argument_list|)
 expr_stmt|;
 goto|goto
-name|not_complete
+name|setup_not_complete
 goto|;
 block|}
 comment|/* receive data */
@@ -1375,6 +1375,48 @@ literal|0
 operator|)
 return|;
 comment|/* complete */
+name|setup_not_complete
+label|:
+comment|/* set RXFFRC bit */
+name|temp
+operator|=
+name|bus_space_read_1
+argument_list|(
+name|td
+operator|->
+name|io_tag
+argument_list|,
+name|td
+operator|->
+name|io_hdl
+argument_list|,
+name|td
+operator|->
+name|rx_cntl_reg
+argument_list|)
+expr_stmt|;
+name|temp
+operator||=
+name|USS820_RXCON_RXFFRC
+expr_stmt|;
+name|bus_space_write_1
+argument_list|(
+name|td
+operator|->
+name|io_tag
+argument_list|,
+name|td
+operator|->
+name|io_hdl
+argument_list|,
+name|td
+operator|->
+name|rx_cntl_reg
+argument_list|,
+name|temp
+argument_list|)
+expr_stmt|;
+comment|/* FALLTHROUGH */
 name|not_complete
 label|:
 comment|/* abort any ongoing transfer */
