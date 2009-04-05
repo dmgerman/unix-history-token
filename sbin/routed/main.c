@@ -371,6 +371,7 @@ comment|/* RIP socket */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|interface
 modifier|*

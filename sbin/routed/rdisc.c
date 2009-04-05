@@ -193,6 +193,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|interface
 modifier|*
@@ -233,7 +234,6 @@ comment|/* at least one per interface */
 end_comment
 
 begin_struct
-specifier|static
 struct|struct
 name|dr
 block|{
@@ -264,15 +264,29 @@ name|dr_pref
 decl_stmt|;
 comment|/* preference adjusted by metric */
 block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|dr
 modifier|*
 name|cur_drp
-struct|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|dr
 name|drs
 index|[
 name|MAX_ADS
 index|]
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* convert between signed, balanced around zero,  * and unsigned zero-based preferences */
