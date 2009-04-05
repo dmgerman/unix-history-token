@@ -252,6 +252,50 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * The following macro defines if USB transaction translator support  * shall be compiled for the USB HUB and USB controller drivers.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HAVE_TT_SUPPORT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_HAVE_TT_SUPPORT
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The following macro defines if the USB power daemon shall  * be compiled for the USB core.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HAVE_POWERD
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_HAVE_POWERD
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1094,7 +1138,7 @@ end_ifndef
 
 begin_typedef
 typedef|typedef
-name|uint32_t
+name|uint16_t
 name|usb2_power_mask_t
 typedef|;
 end_typedef
@@ -1376,12 +1420,12 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The following structure defines the symmetric part of an USB config  * structure.  */
+comment|/*  * The following structure define an USB configuration, that basically  * is used when setting up an USB transfer.  */
 end_comment
 
 begin_struct
 struct|struct
-name|usb2_config_sub
+name|usb2_config
 block|{
 name|usb2_callback_t
 modifier|*
@@ -1413,28 +1457,6 @@ name|usb2_xfer_flags
 name|flags
 decl_stmt|;
 comment|/* transfer flags */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * The following structure define an USB configuration, that basically  * is used when setting up an USB transfer.  */
-end_comment
-
-begin_struct
-struct|struct
-name|usb2_config
-block|{
-name|struct
-name|usb2_config_sub
-name|mh
-decl_stmt|;
-comment|/* parameters for USB_MODE_HOST */
-name|struct
-name|usb2_config_sub
-name|md
-decl_stmt|;
-comment|/* parameters for USB_MODE_DEVICE */
 name|uint8_t
 name|type
 decl_stmt|;
@@ -1455,6 +1477,10 @@ name|uint8_t
 name|if_index
 decl_stmt|;
 comment|/* "ifaces" index to use */
+name|uint8_t
+name|usb_mode
+decl_stmt|;
+comment|/* see "USB_MODE_XXX",  					 * "USB_MODE_MAX" means any mode! */
 block|}
 struct|;
 end_struct

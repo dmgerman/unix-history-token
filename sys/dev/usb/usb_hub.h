@@ -82,6 +82,9 @@ begin_struct
 struct|struct
 name|usb2_hub
 block|{
+if|#
+directive|if
+name|USB_HAVE_TT_SUPPORT
 name|struct
 name|usb2_fs_isoc_schedule
 name|fs_isoc_schedule
@@ -89,6 +92,8 @@ index|[
 name|USB_ISOC_TIME_MAX
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|usb2_device
 modifier|*

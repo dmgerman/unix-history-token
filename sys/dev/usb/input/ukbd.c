@@ -3001,8 +3001,6 @@ operator|=
 name|UE_DIR_IN
 block|,
 operator|.
-name|mh
-operator|.
 name|flags
 operator|=
 block|{
@@ -3018,15 +3016,11 @@ literal|1
 block|,}
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 literal|0
 block|,
 comment|/* use wMaxPacketSize */
-operator|.
-name|mh
 operator|.
 name|callback
 operator|=
@@ -3056,8 +3050,6 @@ operator|=
 name|UE_DIR_ANY
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 sizeof|sizeof
@@ -3067,23 +3059,17 @@ name|usb2_device_request
 argument_list|)
 block|,
 operator|.
-name|mh
-operator|.
 name|callback
 operator|=
 operator|&
 name|ukbd_clear_stall_callback
 block|,
 operator|.
-name|mh
-operator|.
 name|timeout
 operator|=
 literal|1000
 block|,
 comment|/* 1 second */
-operator|.
-name|mh
 operator|.
 name|interval
 operator|=
@@ -3114,8 +3100,6 @@ operator|=
 name|UE_DIR_ANY
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 sizeof|sizeof
@@ -3127,15 +3111,11 @@ operator|+
 literal|1
 block|,
 operator|.
-name|mh
-operator|.
 name|callback
 operator|=
 operator|&
 name|ukbd_set_leds_callback
 block|,
-operator|.
-name|mh
 operator|.
 name|timeout
 operator|=

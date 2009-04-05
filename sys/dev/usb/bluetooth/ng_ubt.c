@@ -678,14 +678,10 @@ operator|=
 literal|0
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 name|UBT_BULK_WRITE_BUFFER_SIZE
 block|,
-operator|.
-name|mh
 operator|.
 name|flags
 operator|=
@@ -701,8 +697,6 @@ operator|=
 literal|1
 block|, }
 block|,
-operator|.
-name|mh
 operator|.
 name|callback
 operator|=
@@ -737,14 +731,10 @@ operator|=
 literal|0
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 name|UBT_BULK_READ_BUFFER_SIZE
 block|,
-operator|.
-name|mh
 operator|.
 name|flags
 operator|=
@@ -760,8 +750,6 @@ operator|=
 literal|1
 block|, }
 block|,
-operator|.
-name|mh
 operator|.
 name|callback
 operator|=
@@ -796,8 +784,6 @@ operator|=
 literal|0
 block|,
 operator|.
-name|mh
-operator|.
 name|flags
 operator|=
 block|{
@@ -813,14 +799,10 @@ literal|1
 block|, }
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 name|UBT_INTR_BUFFER_SIZE
 block|,
-operator|.
-name|mh
 operator|.
 name|callback
 operator|=
@@ -856,22 +838,16 @@ operator|=
 literal|0
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 name|UBT_CTRL_BUFFER_SIZE
 block|,
-operator|.
-name|mh
 operator|.
 name|callback
 operator|=
 operator|&
 name|ubt_ctrl_write_callback
 block|,
-operator|.
-name|mh
 operator|.
 name|timeout
 operator|=
@@ -908,22 +884,16 @@ operator|=
 literal|1
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 literal|0
 block|,
 comment|/* use "wMaxPacketSize * frames" */
 operator|.
-name|mh
-operator|.
 name|frames
 operator|=
 name|UBT_ISOC_NFRAMES
 block|,
-operator|.
-name|mh
 operator|.
 name|flags
 operator|=
@@ -934,8 +904,6 @@ operator|=
 literal|1
 block|, }
 block|,
-operator|.
-name|mh
 operator|.
 name|callback
 operator|=
@@ -970,22 +938,16 @@ operator|=
 literal|1
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 literal|0
 block|,
 comment|/* use "wMaxPacketSize * frames" */
 operator|.
-name|mh
-operator|.
 name|frames
 operator|=
 name|UBT_ISOC_NFRAMES
 block|,
-operator|.
-name|mh
 operator|.
 name|flags
 operator|=
@@ -996,8 +958,6 @@ operator|=
 literal|1
 block|, }
 block|,
-operator|.
-name|mh
 operator|.
 name|callback
 operator|=
@@ -1032,22 +992,16 @@ operator|=
 literal|1
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 literal|0
 block|,
 comment|/* use "wMaxPacketSize * frames" */
 operator|.
-name|mh
-operator|.
 name|frames
 operator|=
 name|UBT_ISOC_NFRAMES
 block|,
-operator|.
-name|mh
 operator|.
 name|flags
 operator|=
@@ -1058,8 +1012,6 @@ operator|=
 literal|1
 block|, }
 block|,
-operator|.
-name|mh
 operator|.
 name|callback
 operator|=
@@ -1094,22 +1046,16 @@ operator|=
 literal|1
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 literal|0
 block|,
 comment|/* use "wMaxPacketSize * frames" */
 operator|.
-name|mh
-operator|.
 name|frames
 operator|=
 name|UBT_ISOC_NFRAMES
 block|,
-operator|.
-name|mh
 operator|.
 name|flags
 operator|=
@@ -1120,8 +1066,6 @@ operator|=
 literal|1
 block|, }
 block|,
-operator|.
-name|mh
 operator|.
 name|callback
 operator|=

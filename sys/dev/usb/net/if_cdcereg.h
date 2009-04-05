@@ -40,11 +40,13 @@ end_comment
 begin_enum
 enum|enum
 block|{
-name|CDCE_BULK_A
+name|CDCE_BULK_RX
 block|,
-name|CDCE_BULK_B
+name|CDCE_BULK_TX
 block|,
-name|CDCE_INTR
+name|CDCE_INTR_RX
+block|,
+name|CDCE_INTR_TX
 block|,
 name|CDCE_N_TRANSFER
 block|, }

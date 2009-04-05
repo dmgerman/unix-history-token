@@ -3041,8 +3041,6 @@ index|[
 literal|0
 index|]
 operator|.
-name|mh
-operator|.
 name|callback
 operator|=
 operator|&
@@ -3053,8 +3051,6 @@ index|[
 literal|0
 index|]
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 literal|0
@@ -3064,8 +3060,6 @@ name|cfg
 index|[
 literal|0
 index|]
-operator|.
-name|mh
 operator|.
 name|frames
 operator|=
@@ -3079,8 +3073,6 @@ index|[
 literal|0
 index|]
 operator|.
-name|mh
-operator|.
 name|flags
 operator|.
 name|proxy_buffer
@@ -3091,15 +3083,13 @@ if|#
 directive|if
 literal|0
 comment|/* 		 * The Linux USB API allows non back-to-back 		 * isochronous frames which we do not support. If the 		 * isochronous frames are not back-to-back we need to 		 * do a copy, and then we need a buffer for 		 * that. Enable this at your own risk. 		 */
-block|cfg[0].mh.flags.ext_buffer = 1;
+block|cfg[0].flags.ext_buffer = 1;
 endif|#
 directive|endif
 name|cfg
 index|[
 literal|0
 index|]
-operator|.
-name|mh
 operator|.
 name|flags
 operator|.
@@ -3223,8 +3213,6 @@ index|[
 literal|0
 index|]
 operator|.
-name|mh
-operator|.
 name|callback
 operator|=
 operator|&
@@ -3235,8 +3223,6 @@ index|[
 literal|0
 index|]
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 name|bufsize
@@ -3245,8 +3231,6 @@ name|cfg
 index|[
 literal|0
 index|]
-operator|.
-name|mh
 operator|.
 name|flags
 operator|.
@@ -3260,8 +3244,6 @@ index|[
 literal|0
 index|]
 operator|.
-name|mh
-operator|.
 name|flags
 operator|.
 name|proxy_buffer
@@ -3272,8 +3254,6 @@ name|cfg
 index|[
 literal|0
 index|]
-operator|.
-name|mh
 operator|.
 name|flags
 operator|.

@@ -1196,6 +1196,45 @@ name|Giant
 argument_list|)
 expr_stmt|;
 comment|/* XXX not required by USB */
+comment|/* default power_mask value */
+name|bus
+operator|->
+name|hw_power_state
+operator|=
+name|USB_HW_POWER_CONTROL
+operator||
+name|USB_HW_POWER_BULK
+operator||
+name|USB_HW_POWER_INTERRUPT
+operator||
+name|USB_HW_POWER_ISOC
+operator||
+name|USB_HW_POWER_NON_ROOT_HUB
+expr_stmt|;
+comment|/* make sure power is set at least once */
+if|if
+condition|(
+name|bus
+operator|->
+name|methods
+operator|->
+name|set_hw_power
+operator|!=
+name|NULL
+condition|)
+block|{
+call|(
+name|bus
+operator|->
+name|methods
+operator|->
+name|set_hw_power
+call|)
+argument_list|(
+name|bus
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Allocate the Root USB device */
 name|child
 operator|=

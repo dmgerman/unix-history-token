@@ -568,14 +568,10 @@ operator|=
 name|UE_DIR_OUT
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 name|UFTDI_OBUFSIZE
 block|,
-operator|.
-name|mh
 operator|.
 name|flags
 operator|=
@@ -591,8 +587,6 @@ operator|=
 literal|1
 block|,}
 block|,
-operator|.
-name|mh
 operator|.
 name|callback
 operator|=
@@ -621,14 +615,10 @@ operator|=
 name|UE_DIR_IN
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 name|UFTDI_IBUFSIZE
 block|,
-operator|.
-name|mh
 operator|.
 name|flags
 operator|=
@@ -644,8 +634,6 @@ operator|=
 literal|1
 block|,}
 block|,
-operator|.
-name|mh
 operator|.
 name|callback
 operator|=

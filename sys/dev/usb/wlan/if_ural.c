@@ -2373,8 +2373,6 @@ operator|=
 name|UE_DIR_OUT
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 operator|(
@@ -2385,8 +2383,6 @@ operator|+
 literal|4
 operator|)
 block|,
-operator|.
-name|mh
 operator|.
 name|flags
 operator|=
@@ -2403,14 +2399,10 @@ literal|1
 block|,}
 block|,
 operator|.
-name|mh
-operator|.
 name|callback
 operator|=
 name|ural_bulk_write_callback
 block|,
-operator|.
-name|mh
 operator|.
 name|timeout
 operator|=
@@ -2440,8 +2432,6 @@ operator|=
 name|UE_DIR_IN
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 operator|(
@@ -2450,8 +2440,6 @@ operator|+
 name|RAL_RX_DESC_SIZE
 operator|)
 block|,
-operator|.
-name|mh
 operator|.
 name|flags
 operator|=
@@ -2467,8 +2455,6 @@ operator|=
 literal|1
 block|,}
 block|,
-operator|.
-name|mh
 operator|.
 name|callback
 operator|=

@@ -1952,14 +1952,10 @@ operator|=
 name|UE_DIR_OUT
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 name|ZYD_MAX_TXBUFSZ
 block|,
-operator|.
-name|mh
 operator|.
 name|flags
 operator|=
@@ -1976,8 +1972,6 @@ literal|1
 block|,}
 block|,
 operator|.
-name|mh
-operator|.
 name|callback
 operator|=
 name|zyd_bulk_write_callback
@@ -1987,8 +1981,6 @@ name|ep_index
 operator|=
 literal|0
 block|,
-operator|.
-name|mh
 operator|.
 name|timeout
 operator|=
@@ -2018,14 +2010,10 @@ operator|=
 name|UE_DIR_IN
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 name|ZYX_MAX_RXBUFSZ
 block|,
-operator|.
-name|mh
 operator|.
 name|flags
 operator|=
@@ -2041,8 +2029,6 @@ operator|=
 literal|1
 block|,}
 block|,
-operator|.
-name|mh
 operator|.
 name|callback
 operator|=
@@ -2075,8 +2061,6 @@ operator|=
 name|UE_DIR_OUT
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 sizeof|sizeof
@@ -2085,8 +2069,6 @@ expr|struct
 name|zyd_cmd
 argument_list|)
 block|,
-operator|.
-name|mh
 operator|.
 name|flags
 operator|=
@@ -2103,14 +2085,10 @@ literal|1
 block|,}
 block|,
 operator|.
-name|mh
-operator|.
 name|callback
 operator|=
 name|zyd_intr_write_callback
 block|,
-operator|.
-name|mh
 operator|.
 name|timeout
 operator|=
@@ -2144,8 +2122,6 @@ operator|=
 name|UE_DIR_IN
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 sizeof|sizeof
@@ -2154,8 +2130,6 @@ expr|struct
 name|zyd_cmd
 argument_list|)
 block|,
-operator|.
-name|mh
 operator|.
 name|flags
 operator|=
@@ -2171,8 +2145,6 @@ operator|=
 literal|1
 block|,}
 block|,
-operator|.
-name|mh
 operator|.
 name|callback
 operator|=

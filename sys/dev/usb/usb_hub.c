@@ -439,14 +439,10 @@ operator|=
 name|UE_DIR_ANY
 block|,
 operator|.
-name|mh
-operator|.
 name|timeout
 operator|=
 literal|0
 block|,
-operator|.
-name|mh
 operator|.
 name|flags
 operator|=
@@ -463,23 +459,17 @@ literal|1
 block|,}
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 literal|0
 block|,
 comment|/* use wMaxPacketSize */
 operator|.
-name|mh
-operator|.
 name|callback
 operator|=
 operator|&
 name|uhub_intr_callback
 block|,
-operator|.
-name|mh
 operator|.
 name|interval
 operator|=
@@ -2688,6 +2678,9 @@ name|hub
 operator|=
 name|hub
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_TT_SUPPORT
 comment|/* init FULL-speed ISOCHRONOUS schedule */
 name|usb2_fs_isoc_schedule_init_all
 argument_list|(
@@ -2696,6 +2689,8 @@ operator|->
 name|fs_isoc_schedule
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* initialize HUB structure */
 name|hub
 operator|->
@@ -4076,6 +4071,12 @@ begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_fs_isoc_schedule_init_sub  *  * This function initialises an USB FULL speed isochronous schedule  * entry.  *------------------------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|USB_HAVE_TT_SUPPORT
+end_if
+
 begin_function
 specifier|static
 name|void
@@ -4114,9 +4115,20 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_fs_isoc_schedule_init_all  *  * This function will reset the complete USB FULL speed isochronous  * bandwidth schedule.  *------------------------------------------------------------------------*/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|USB_HAVE_TT_SUPPORT
+end_if
 
 begin_function
 name|void
@@ -4155,6 +4167,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_isoc_time_expand  *  * This function will expand the time counter from 7-bit to 16-bit.  *  * Returns:  *   16-bit isochronous time counter.  *------------------------------------------------------------------------*/
@@ -4249,6 +4266,12 @@ end_function
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_fs_isoc_schedule_isoc_time_expand  *  * This function does multiple things. First of all it will expand the  * passed isochronous time, which is the return value. Then it will  * store where the current FULL speed isochronous schedule is  * positioned in time and where the end is. See "pp_start" and  * "pp_end" arguments.  *  * Returns:  *   Expanded version of "isoc_time".  *  * NOTE: This function depends on being called regularly with  * intervals less than "USB_ISOC_TIME_MAX".  *------------------------------------------------------------------------*/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|USB_HAVE_TT_SUPPORT
+end_if
 
 begin_function
 name|uint16_t
@@ -4433,9 +4456,20 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_fs_isoc_schedule_alloc  *  * This function will allocate bandwidth for an isochronous FULL speed  * transaction in the FULL speed schedule. The microframe slot where  * the transaction should be started is stored in the byte pointed to  * by "pstart". The "len" argument specifies the length of the  * transaction in bytes.  *  * Returns:  *    0: Success  * Else: Error  *------------------------------------------------------------------------*/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|USB_HAVE_TT_SUPPORT
+end_if
 
 begin_function
 name|uint8_t
@@ -4556,6 +4590,11 @@ return|;
 comment|/* success */
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_bus_port_get_device  *  * This function is NULL safe.  *------------------------------------------------------------------------*/
@@ -4962,6 +5001,12 @@ begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_bus_power_update  *  * This function will ensure that all USB devices on the given bus are  * properly suspended or resumed according to the device transfer  * state.  *------------------------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|USB_HAVE_POWERD
+end_if
+
 begin_function
 name|void
 name|usb2_bus_power_update
@@ -4983,9 +5028,20 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_transfer_power_ref  *  * This function will modify the power save reference counts and  * wakeup the USB device associated with the given USB transfer, if  * needed.  *------------------------------------------------------------------------*/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|USB_HAVE_POWERD
+end_if
 
 begin_function
 name|void
@@ -5333,13 +5389,23 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_bus_powerd  *  * This function implements the USB power daemon and is called  * regularly from the USB explore thread.  *------------------------------------------------------------------------*/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|USB_HAVE_POWERD
+end_if
 
 begin_function
 name|void
@@ -5902,6 +5968,11 @@ return|return;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_dev_resume_peer  *  * This function will resume an USB peer and do the required USB  * signalling to get an USB device out of the suspended state.  *------------------------------------------------------------------------*/
 end_comment
@@ -6089,6 +6160,9 @@ name|suspended
 operator|=
 literal|0
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_POWERD
 comment|/* make sure that we don't go into suspend right away */
 name|udev
 operator|->
@@ -6175,6 +6249,8 @@ name|hw_power_state
 operator||=
 name|USB_HW_POWER_ISOC
 expr_stmt|;
+endif|#
+directive|endif
 name|USB_BUS_UNLOCK
 argument_list|(
 name|bus
@@ -6679,6 +6755,9 @@ operator|=
 name|power_mode
 expr_stmt|;
 comment|/* update copy of power mode */
+if|#
+directive|if
+name|USB_HAVE_POWERD
 name|usb2_bus_power_update
 argument_list|(
 name|udev
@@ -6686,7 +6765,8 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-return|return;
+endif|#
+directive|endif
 block|}
 end_function
 

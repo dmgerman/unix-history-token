@@ -716,6 +716,37 @@ operator|->
 name|ep_index
 argument_list|)
 expr_stmt|;
+comment|/* check USB mode */
+if|if
+condition|(
+operator|(
+name|setup
+operator|->
+name|usb_mode
+operator|!=
+name|USB_MODE_MAX
+operator|)
+operator|&&
+operator|(
+name|udev
+operator|->
+name|flags
+operator|.
+name|usb2_mode
+operator|!=
+name|setup
+operator|->
+name|usb_mode
+operator|)
+condition|)
+block|{
+comment|/* wrong mode - no pipe */
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 comment|/* setup expected endpoint direction mask and value */
 if|if
 condition|(

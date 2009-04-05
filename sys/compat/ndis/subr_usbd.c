@@ -335,14 +335,10 @@ operator|=
 literal|0
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 name|USBD_CTRL_READ_BUFFER_SIZE
 block|,
-operator|.
-name|mh
 operator|.
 name|flags
 operator|=
@@ -354,15 +350,11 @@ literal|1
 block|, }
 block|,
 operator|.
-name|mh
-operator|.
 name|callback
 operator|=
 operator|&
 name|usbd_ctrl_callback
 block|,
-operator|.
-name|mh
 operator|.
 name|timeout
 operator|=
@@ -398,14 +390,10 @@ operator|=
 literal|0
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 name|USBD_CTRL_WRITE_BUFFER_SIZE
 block|,
-operator|.
-name|mh
 operator|.
 name|flags
 operator|=
@@ -417,15 +405,11 @@ literal|1
 block|, }
 block|,
 operator|.
-name|mh
-operator|.
 name|callback
 operator|=
 operator|&
 name|usbd_ctrl_callback
 block|,
-operator|.
-name|mh
 operator|.
 name|timeout
 operator|=
@@ -3224,16 +3208,12 @@ argument_list|)
 expr_stmt|;
 name|cfg
 operator|.
-name|mh
-operator|.
 name|callback
 operator|=
 operator|&
 name|usbd_non_isoc_callback
 expr_stmt|;
 name|cfg
-operator|.
-name|mh
 operator|.
 name|bufsize
 operator|=
@@ -3245,8 +3225,6 @@ name|wMaxPacketSize
 argument_list|)
 expr_stmt|;
 name|cfg
-operator|.
-name|mh
 operator|.
 name|flags
 operator|.
@@ -3266,8 +3244,6 @@ operator|==
 name|UE_DIR_IN
 condition|)
 name|cfg
-operator|.
-name|mh
 operator|.
 name|flags
 operator|.

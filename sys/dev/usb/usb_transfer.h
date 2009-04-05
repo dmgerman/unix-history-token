@@ -223,12 +223,6 @@ name|curr_setup
 decl_stmt|;
 specifier|const
 name|struct
-name|usb2_config_sub
-modifier|*
-name|curr_setup_sub
-decl_stmt|;
-specifier|const
-name|struct
 name|usb2_pipe_methods
 modifier|*
 name|methods
