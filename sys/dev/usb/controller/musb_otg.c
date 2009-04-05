@@ -980,6 +980,13 @@ operator|&
 name|MUSB2_MASK_CSR0L_DATAEND
 condition|)
 block|{
+comment|/* do not stall at this point */
+name|td
+operator|->
+name|did_stall
+operator|=
+literal|1
+expr_stmt|;
 comment|/* wait for interrupt */
 goto|goto
 name|not_complete
@@ -1062,38 +1069,6 @@ operator|->
 name|sc_ep0_busy
 condition|)
 block|{
-comment|/* abort any ongoing transfer */
-if|if
-condition|(
-operator|!
-name|td
-operator|->
-name|did_stall
-condition|)
-block|{
-name|DPRINTFN
-argument_list|(
-literal|4
-argument_list|,
-literal|"stalling\n"
-argument_list|)
-expr_stmt|;
-name|MUSB2_WRITE_1
-argument_list|(
-name|sc
-argument_list|,
-name|MUSB2_REG_TXCSRL
-argument_list|,
-name|MUSB2_MASK_CSR0L_SENDSTALL
-argument_list|)
-expr_stmt|;
-name|td
-operator|->
-name|did_stall
-operator|=
-literal|1
-expr_stmt|;
-block|}
 goto|goto
 name|not_complete
 goto|;
@@ -1112,6 +1087,13 @@ goto|goto
 name|not_complete
 goto|;
 block|}
+comment|/* clear did stall flag */
+name|td
+operator|->
+name|did_stall
+operator|=
+literal|0
+expr_stmt|;
 comment|/* get the packet byte count */
 name|count
 operator|=
@@ -1297,6 +1279,38 @@ return|;
 comment|/* complete */
 name|not_complete
 label|:
+comment|/* abort any ongoing transfer */
+if|if
+condition|(
+operator|!
+name|td
+operator|->
+name|did_stall
+condition|)
+block|{
+name|DPRINTFN
+argument_list|(
+literal|4
+argument_list|,
+literal|"stalling\n"
+argument_list|)
+expr_stmt|;
+name|MUSB2_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|MUSB2_REG_TXCSRL
+argument_list|,
+name|MUSB2_MASK_CSR0L_SENDSTALL
+argument_list|)
+expr_stmt|;
+name|td
+operator|->
+name|did_stall
+operator|=
+literal|1
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|1

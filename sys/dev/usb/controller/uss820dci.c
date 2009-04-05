@@ -1027,49 +1027,17 @@ name|USS820_RXSTAT_RXSETUP
 operator|)
 condition|)
 block|{
-comment|/* abort any ongoing transfer */
-if|if
-condition|(
-operator|!
-name|td
-operator|->
-name|did_stall
-condition|)
-block|{
-name|DPRINTFN
-argument_list|(
-literal|5
-argument_list|,
-literal|"stalling\n"
-argument_list|)
-expr_stmt|;
-comment|/* set stall */
-name|uss820dci_update_shared_1
-argument_list|(
-name|sc
-argument_list|,
-name|USS820_EPCON
-argument_list|,
-literal|0xFF
-argument_list|,
-operator|(
-name|USS820_EPCON_TXSTL
-operator||
-name|USS820_EPCON_RXSTL
-operator|)
-argument_list|)
-expr_stmt|;
-name|td
-operator|->
-name|did_stall
-operator|=
-literal|1
-expr_stmt|;
-block|}
 goto|goto
 name|not_complete
 goto|;
 block|}
+comment|/* clear did stall */
+name|td
+operator|->
+name|did_stall
+operator|=
+literal|0
+expr_stmt|;
 comment|/* clear stall and all I/O */
 name|uss820dci_update_shared_1
 argument_list|(
@@ -1409,6 +1377,45 @@ return|;
 comment|/* complete */
 name|not_complete
 label|:
+comment|/* abort any ongoing transfer */
+if|if
+condition|(
+operator|!
+name|td
+operator|->
+name|did_stall
+condition|)
+block|{
+name|DPRINTFN
+argument_list|(
+literal|5
+argument_list|,
+literal|"stalling\n"
+argument_list|)
+expr_stmt|;
+comment|/* set stall */
+name|uss820dci_update_shared_1
+argument_list|(
+name|sc
+argument_list|,
+name|USS820_EPCON
+argument_list|,
+literal|0xFF
+argument_list|,
+operator|(
+name|USS820_EPCON_TXSTL
+operator||
+name|USS820_EPCON_RXSTL
+operator|)
+argument_list|)
+expr_stmt|;
+name|td
+operator|->
+name|did_stall
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* clear end overwrite flag, if any */
 if|if
 condition|(

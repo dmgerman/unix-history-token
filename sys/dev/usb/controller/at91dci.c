@@ -1148,37 +1148,17 @@ name|AT91_UDP_CSR_RXSETUP
 operator|)
 condition|)
 block|{
-comment|/* abort any ongoing transfer */
-if|if
-condition|(
-operator|!
-name|td
-operator|->
-name|did_stall
-condition|)
-block|{
-name|DPRINTFN
-argument_list|(
-literal|5
-argument_list|,
-literal|"stalling\n"
-argument_list|)
-expr_stmt|;
-name|temp
-operator||=
-name|AT91_UDP_CSR_FORCESTALL
-expr_stmt|;
-name|td
-operator|->
-name|did_stall
-operator|=
-literal|1
-expr_stmt|;
-block|}
 goto|goto
 name|not_complete
 goto|;
 block|}
+comment|/* clear did stall */
+name|td
+operator|->
+name|did_stall
+operator|=
+literal|0
+expr_stmt|;
 comment|/* get the packet byte count */
 name|count
 operator|=
@@ -1408,6 +1388,33 @@ return|;
 comment|/* complete */
 name|not_complete
 label|:
+comment|/* abort any ongoing transfer */
+if|if
+condition|(
+operator|!
+name|td
+operator|->
+name|did_stall
+condition|)
+block|{
+name|DPRINTFN
+argument_list|(
+literal|5
+argument_list|,
+literal|"stalling\n"
+argument_list|)
+expr_stmt|;
+name|temp
+operator||=
+name|AT91_UDP_CSR_FORCESTALL
+expr_stmt|;
+name|td
+operator|->
+name|did_stall
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* clear interrupts, if any */
 if|if
 condition|(
