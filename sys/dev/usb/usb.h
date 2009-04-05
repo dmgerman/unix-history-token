@@ -2381,10 +2381,22 @@ define|#
 directive|define
 name|UE_DIR_IN
 value|0x80
+comment|/* IN-token endpoint, fixed */
 define|#
 directive|define
 name|UE_DIR_OUT
 value|0x00
+comment|/* OUT-token endpoint, fixed */
+define|#
+directive|define
+name|UE_DIR_RX
+value|0xfd
+comment|/* for internal use only! */
+define|#
+directive|define
+name|UE_DIR_TX
+value|0xfe
+comment|/* for internal use only! */
 define|#
 directive|define
 name|UE_DIR_ANY
