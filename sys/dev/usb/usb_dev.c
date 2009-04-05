@@ -431,7 +431,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|usb2_error_t
-name|usb2_uref_location
+name|usb2_usb_ref_location
 parameter_list|(
 name|struct
 name|usb2_cdev_privdata
@@ -1227,13 +1227,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_uref_location  *  * This function is used to upgrade an USB reference to include the  * USB device reference on a USB location.  *  * Return values:  *  0: Success, refcount incremented on the given USB device.  *  Else: Failure.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_usb_ref_location  *  * This function is used to upgrade an USB reference to include the  * USB device reference on a USB location.  *  * Return values:  *  0: Success, refcount incremented on the given USB device.  *  Else: Failure.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|usb2_error_t
-name|usb2_uref_location
+name|usb2_usb_ref_location
 parameter_list|(
 name|struct
 name|usb2_cdev_privdata
@@ -4573,7 +4573,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|usb2_uref_location
+name|usb2_usb_ref_location
 argument_list|(
 name|cpd
 argument_list|)
