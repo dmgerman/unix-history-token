@@ -461,6 +461,7 @@ name|OUT_MULTICAST
 case|:
 if|if
 condition|(
+operator|(
 name|ifp
 operator|->
 name|int_if_flags
@@ -469,6 +470,7 @@ operator|(
 name|IFF_POINTOPOINT
 operator||
 name|IFF_MULTICAST
+operator|)
 operator|)
 operator|==
 name|IFF_POINTOPOINT

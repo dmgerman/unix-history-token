@@ -4609,7 +4609,8 @@ begin_function
 name|int
 name|rn_inithead
 parameter_list|(
-name|void
+name|struct
+name|radix_node_head
 modifier|*
 modifier|*
 name|head
@@ -4879,11 +4880,6 @@ if|if
 condition|(
 name|rn_inithead
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
 name|mask_rnhead
 argument_list|,

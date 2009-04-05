@@ -4398,6 +4398,9 @@ name|ifp
 operator|->
 name|int_name
 argument_list|,
+operator|(
+name|long
+operator|)
 name|now
 operator|.
 name|tv_sec

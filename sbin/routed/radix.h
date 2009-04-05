@@ -552,11 +552,14 @@ begin_function_decl
 name|int
 name|rn_inithead
 parameter_list|(
-name|void
+name|struct
+name|radix_node_head
 modifier|*
 modifier|*
+name|head
 parameter_list|,
 name|int
+name|off
 parameter_list|)
 function_decl|;
 end_function_decl
