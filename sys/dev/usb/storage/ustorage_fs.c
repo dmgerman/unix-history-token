@@ -163,6 +163,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USTORAGE_FS_MAX_LUN
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -173,6 +179,40 @@ end_define
 begin_comment
 comment|/* units */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USTORAGE_QDATA_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USTORAGE_QDATA_MAX
+value|40
+end_define
+
+begin_comment
+comment|/* bytes */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|sc_cmd_data
+value|sc_cbw.CBWCDB
+end_define
 
 begin_comment
 comment|/*  * The SCSI ID string must be exactly 28 characters long  * exluding the terminating zero.  */
@@ -538,12 +578,6 @@ name|uint8_t
 name|lun
 decl_stmt|;
 name|uint8_t
-name|cmd_data
-index|[
-name|CBWCDBLENGTH
-index|]
-decl_stmt|;
-name|uint8_t
 name|cmd_len
 decl_stmt|;
 name|uint8_t
@@ -575,15 +609,6 @@ index|[
 name|USTORAGE_FS_T_BBB_MAX
 index|]
 decl_stmt|;
-name|uint32_t
-name|sc_unit
-decl_stmt|;
-name|uint8_t
-name|sc_name
-index|[
-literal|16
-index|]
-decl_stmt|;
 name|uint8_t
 name|sc_iface_no
 decl_stmt|;
@@ -597,7 +622,7 @@ decl_stmt|;
 name|uint8_t
 name|sc_qdata
 index|[
-literal|1024
+name|USTORAGE_QDATA_MAX
 index|]
 decl_stmt|;
 block|}
@@ -1094,8 +1119,6 @@ operator|=
 name|UE_DIR_OUT
 block|,
 operator|.
-name|md
-operator|.
 name|bufsize
 operator|=
 sizeof|sizeof
@@ -1103,8 +1126,6 @@ argument_list|(
 name|ustorage_fs_bbb_cbw_t
 argument_list|)
 block|,
-operator|.
-name|md
 operator|.
 name|flags
 operator|=
@@ -1116,12 +1137,15 @@ literal|1
 block|,}
 block|,
 operator|.
-name|md
-operator|.
 name|callback
 operator|=
 operator|&
 name|ustorage_fs_t_bbb_command_callback
+block|,
+operator|.
+name|usb_mode
+operator|=
+name|USB_MODE_DEVICE
 block|, 	}
 block|,
 index|[
@@ -1145,15 +1169,11 @@ operator|=
 name|UE_DIR_OUT
 block|,
 operator|.
-name|md
-operator|.
 name|bufsize
 operator|=
 literal|0
 block|,
 comment|/* use wMaxPacketSize */
-operator|.
-name|md
 operator|.
 name|flags
 operator|=
@@ -1170,12 +1190,15 @@ literal|1
 block|,}
 block|,
 operator|.
-name|md
-operator|.
 name|callback
 operator|=
 operator|&
 name|ustorage_fs_t_bbb_data_dump_callback
+block|,
+operator|.
+name|usb_mode
+operator|=
+name|USB_MODE_DEVICE
 block|, 	}
 block|,
 index|[
@@ -1199,14 +1222,10 @@ operator|=
 name|UE_DIR_OUT
 block|,
 operator|.
-name|md
-operator|.
 name|bufsize
 operator|=
 name|USTORAGE_FS_BULK_SIZE
 block|,
-operator|.
-name|md
 operator|.
 name|flags
 operator|=
@@ -1228,12 +1247,15 @@ literal|1
 block|}
 block|,
 operator|.
-name|md
-operator|.
 name|callback
 operator|=
 operator|&
 name|ustorage_fs_t_bbb_data_read_callback
+block|,
+operator|.
+name|usb_mode
+operator|=
+name|USB_MODE_DEVICE
 block|, 	}
 block|,
 index|[
@@ -1257,14 +1279,10 @@ operator|=
 name|UE_DIR_IN
 block|,
 operator|.
-name|md
-operator|.
 name|bufsize
 operator|=
 name|USTORAGE_FS_BULK_SIZE
 block|,
-operator|.
-name|md
 operator|.
 name|flags
 operator|=
@@ -1286,12 +1304,15 @@ literal|1
 block|}
 block|,
 operator|.
-name|md
-operator|.
 name|callback
 operator|=
 operator|&
 name|ustorage_fs_t_bbb_data_write_callback
+block|,
+operator|.
+name|usb_mode
+operator|=
+name|USB_MODE_DEVICE
 block|, 	}
 block|,
 index|[
@@ -1315,8 +1336,6 @@ operator|=
 name|UE_DIR_IN
 block|,
 operator|.
-name|md
-operator|.
 name|bufsize
 operator|=
 sizeof|sizeof
@@ -1324,8 +1343,6 @@ argument_list|(
 name|ustorage_fs_bbb_csw_t
 argument_list|)
 block|,
-operator|.
-name|md
 operator|.
 name|flags
 operator|=
@@ -1342,12 +1359,15 @@ literal|1
 block|,}
 block|,
 operator|.
-name|md
-operator|.
 name|callback
 operator|=
 operator|&
 name|ustorage_fs_t_bbb_status_callback
+block|,
+operator|.
+name|usb_mode
+operator|=
+name|USB_MODE_DEVICE
 block|, 	}
 block|, }
 decl_stmt|;
@@ -1506,6 +1526,9 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+name|int
+name|unit
+decl_stmt|;
 comment|/* 	 * NOTE: the softc struct is bzero-ed in device_set_driver. 	 * We can safely call ustorage_fs_detach without specifically 	 * initializing the struct. 	 */
 name|sc
 operator|->
@@ -1521,9 +1544,7 @@ name|uaa
 operator|->
 name|device
 expr_stmt|;
-name|sc
-operator|->
-name|sc_unit
+name|unit
 operator|=
 name|device_get_unit
 argument_list|(
@@ -1532,9 +1553,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sc
-operator|->
-name|sc_unit
+name|unit
 operator|==
 literal|0
 condition|)
@@ -1610,27 +1629,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|snprintf
-argument_list|(
-name|sc
-operator|->
-name|sc_name
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sc
-operator|->
-name|sc_name
-argument_list|)
-argument_list|,
-literal|"%s"
-argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|device_set_usb2_desc
 argument_list|(
 name|dev
@@ -2430,57 +2428,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|bcopy
-argument_list|(
-name|sc
-operator|->
-name|sc_cbw
-operator|.
-name|CBWCDB
-argument_list|,
-name|sc
-operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
-argument_list|,
-name|sc
-operator|->
-name|sc_transfer
-operator|.
-name|cmd_len
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|sc
-operator|->
-name|sc_cbw
-operator|.
-name|CBWCDB
-operator|+
-name|sc
-operator|->
-name|sc_transfer
-operator|.
-name|cmd_len
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sc
-operator|->
-name|sc_cbw
-operator|.
-name|CBWCDB
-argument_list|)
-operator|-
-name|sc
-operator|->
-name|sc_transfer
-operator|.
-name|cmd_len
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|ustorage_fs_do_cmd
@@ -4228,9 +4175,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|2
 index|]
@@ -4242,9 +4187,7 @@ condition|(
 operator|(
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|1
 index|]
@@ -4275,9 +4218,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|7
 index|]
@@ -4513,6 +4454,18 @@ argument_list|,
 literal|28
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|(
+name|USTORAGE_QDATA_MAX
+operator|<
+literal|36
+operator|)
+error|#
+directive|error
+literal|"(USTORAGE_QDATA_MAX< 36)"
+endif|#
+directive|endif
 return|return
 operator|(
 name|ustorage_fs_min_len
@@ -4714,6 +4667,18 @@ argument_list|(
 name|sd
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|(
+name|USTORAGE_QDATA_MAX
+operator|<
+literal|18
+operator|)
+error|#
+directive|error
+literal|"(USTORAGE_QDATA_MAX< 18)"
+endif|#
+directive|endif
 return|return
 operator|(
 name|ustorage_fs_min_len
@@ -4775,9 +4740,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|2
 index|]
@@ -4788,9 +4751,7 @@ name|pmi
 init|=
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|8
 index|]
@@ -4831,6 +4792,7 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* Max logical block */
 name|put_be32
 argument_list|(
 operator|&
@@ -4846,7 +4808,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Max logical block */
+comment|/* Block length */
 name|put_be32
 argument_list|(
 operator|&
@@ -4858,7 +4820,18 @@ argument_list|,
 literal|512
 argument_list|)
 expr_stmt|;
-comment|/* Block length */
+if|#
+directive|if
+operator|(
+name|USTORAGE_QDATA_MAX
+operator|<
+literal|8
+operator|)
+error|#
+directive|error
+literal|"(USTORAGE_QDATA_MAX< 8)"
+endif|#
+directive|endif
 return|return
 operator|(
 name|ustorage_fs_min_len
@@ -4927,9 +4900,7 @@ name|mscmnd
 init|=
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|0
 index|]
@@ -4955,9 +4926,7 @@ condition|(
 operator|(
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|1
 index|]
@@ -4986,9 +4955,7 @@ name|pc
 operator|=
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|2
 index|]
@@ -4999,9 +4966,7 @@ name|page_code
 operator|=
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|2
 index|]
@@ -5266,6 +5231,18 @@ operator|-
 literal|2
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|(
+name|USTORAGE_QDATA_MAX
+operator|<
+literal|24
+operator|)
+error|#
+directive|error
+literal|"(USTORAGE_QDATA_MAX< 24)"
+endif|#
+directive|endif
 return|return
 operator|(
 name|ustorage_fs_min_len
@@ -5342,9 +5319,7 @@ name|immed
 operator|=
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|1
 index|]
@@ -5355,9 +5330,7 @@ name|loej
 operator|=
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|4
 index|]
@@ -5368,9 +5341,7 @@ name|start
 operator|=
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|4
 index|]
@@ -5449,9 +5420,7 @@ name|prevent
 operator|=
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|4
 index|]
@@ -5463,9 +5432,7 @@ condition|(
 operator|(
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|4
 index|]
@@ -5581,6 +5548,7 @@ name|buf
 operator|+=
 literal|4
 expr_stmt|;
+comment|/* Number of blocks */
 name|put_be32
 argument_list|(
 operator|&
@@ -5594,7 +5562,7 @@ operator|->
 name|num_sectors
 argument_list|)
 expr_stmt|;
-comment|/* Number of blocks */
+comment|/* Block length */
 name|put_be32
 argument_list|(
 operator|&
@@ -5606,7 +5574,7 @@ argument_list|,
 literal|512
 argument_list|)
 expr_stmt|;
-comment|/* Block length */
+comment|/* Current capacity */
 name|buf
 index|[
 literal|4
@@ -5614,7 +5582,18 @@ index|]
 operator|=
 literal|0x02
 expr_stmt|;
-comment|/* Current capacity */
+if|#
+directive|if
+operator|(
+name|USTORAGE_QDATA_MAX
+operator|<
+literal|12
+operator|)
+error|#
+directive|error
+literal|"(USTORAGE_QDATA_MAX< 12)"
+endif|#
+directive|endif
 return|return
 operator|(
 name|ustorage_fs_min_len
@@ -5744,9 +5723,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|0
 index|]
@@ -5763,9 +5740,7 @@ name|uint32_t
 operator|)
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|1
 index|]
@@ -5779,9 +5754,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|2
 index|]
@@ -5797,9 +5770,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|2
 index|]
@@ -5811,9 +5782,7 @@ condition|(
 operator|(
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|1
 index|]
@@ -5977,9 +5946,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|0
 index|]
@@ -5995,9 +5962,7 @@ name|uint32_t
 operator|)
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|1
 index|]
@@ -6011,9 +5976,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|2
 index|]
@@ -6028,9 +5991,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|2
 index|]
@@ -6042,9 +6003,7 @@ condition|(
 operator|(
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|1
 index|]
@@ -6072,9 +6031,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|1
 index|]
@@ -6328,9 +6285,7 @@ init|=
 operator|(
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|1
 index|]
@@ -6383,9 +6338,7 @@ block|}
 comment|/* Mask away the LUN */
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|1
 index|]
@@ -6440,9 +6393,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|0
 index|]
@@ -6483,9 +6434,7 @@ operator|&&
 operator|(
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|0
 index|]
@@ -6496,9 +6445,7 @@ operator|&&
 operator|(
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|0
 index|]
@@ -6546,9 +6493,7 @@ condition|(
 operator|(
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|0
 index|]
@@ -6559,9 +6504,7 @@ operator|&&
 operator|(
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|0
 index|]
@@ -6596,9 +6539,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 name|i
 index|]
@@ -6724,9 +6665,7 @@ literal|"cmd_data[0]=0x%02x, data_rem=0x%08x\n"
 argument_list|,
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|0
 index|]
@@ -6742,9 +6681,7 @@ switch|switch
 condition|(
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|0
 index|]
@@ -6769,9 +6706,7 @@ name|sc
 argument_list|,
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|4
 index|]
@@ -6841,9 +6776,7 @@ name|sc
 argument_list|,
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|4
 index|]
@@ -6922,9 +6855,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|7
 index|]
@@ -7001,9 +6932,7 @@ name|sc
 argument_list|,
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|4
 index|]
@@ -7088,9 +7017,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|7
 index|]
@@ -7218,9 +7145,7 @@ name|i
 operator|=
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|4
 index|]
@@ -7325,9 +7250,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|7
 index|]
@@ -7417,9 +7340,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|6
 index|]
@@ -7594,9 +7515,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|7
 index|]
@@ -7667,9 +7586,7 @@ name|sc
 argument_list|,
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|4
 index|]
@@ -7962,9 +7879,7 @@ name|i
 operator|=
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|4
 index|]
@@ -8069,9 +7984,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|7
 index|]
@@ -8161,9 +8074,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|sc_transfer
-operator|.
-name|cmd_data
+name|sc_cmd_data
 index|[
 literal|6
 index|]
