@@ -53,9 +53,9 @@ end_include
 begin_expr_stmt
 name|__COPYRIGHT
 argument_list|(
-literal|"@(#) Copyright (c) 1983, 1988, 1993\n"
+literal|"@(#) Copyright (c) 1983, 1988, 1993 "
 literal|"The Regents of the University of California."
-literal|"  All rights reserved.\n"
+literal|"  All rights reserved."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
