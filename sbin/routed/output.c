@@ -73,6 +73,7 @@ comment|/* walk the tree of routes with this for output  */
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
 block|{
 name|struct
@@ -167,6 +168,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|union
 name|pkt_buf
 name|ripv12_buf
@@ -178,6 +180,7 @@ comment|/* Another for only RIPv2 listeners */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ws_buf
 name|v2buf
@@ -185,6 +188,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|union
 name|pkt_buf
 name|rip_v2_buf

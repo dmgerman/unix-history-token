@@ -152,6 +152,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+specifier|static
+name|void
+name|rtbad
+parameter_list|(
+name|struct
+name|rt_entry
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|struct
 name|radix_node_head
@@ -222,6 +234,7 @@ comment|/* zap any old routes through this gateway */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|naddr
 name|age_bad_gate
 decl_stmt|;
@@ -232,6 +245,7 @@ comment|/* It is desirable to "aggregate" routes, to combine differing routes of
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ag_info
 name|ag_slots
@@ -2029,6 +2043,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|rtm_types
 index|[]
 init|=
@@ -8092,6 +8107,7 @@ comment|/* Get rid of a bad route, and try to switch to a replacement.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|rtbad
 parameter_list|(

@@ -126,6 +126,7 @@ value|&ahash_tbl[(a)%AHASH_LEN]
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|interface
 modifier|*
@@ -158,6 +159,7 @@ value|&bhash_tbl[(a)%BHASH_LEN]
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|interface
 modifier|*
@@ -180,6 +182,7 @@ value|97
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|interface
 modifier|*
@@ -211,6 +214,7 @@ comment|/* # of interfaces doing RIP */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|foundloopback
 decl_stmt|;
@@ -231,6 +235,7 @@ comment|/* our address on loopback */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|rt_spare
 name|loop_rts
@@ -271,10 +276,35 @@ comment|/* have a RIPv1 interface */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|have_ripv1_in
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|if_bad
+parameter_list|(
+name|struct
+name|interface
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|addrouteforif
+parameter_list|(
+name|struct
+name|interface
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -766,6 +796,7 @@ comment|/* find the interface with a name  */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|interface
 modifier|*
@@ -2176,6 +2207,7 @@ comment|/* Mark an interface dead.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|if_bad
 parameter_list|(
@@ -6037,6 +6069,7 @@ comment|/* Add route for interface if not currently installed.  * Create route t
 end_comment
 
 begin_function
+specifier|static
 name|int
 comment|/* 0=bad interface */
 name|addrouteforif

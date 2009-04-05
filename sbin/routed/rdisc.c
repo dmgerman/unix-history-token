@@ -192,6 +192,7 @@ comment|/* router-discovery raw socket */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|interface
 modifier|*
@@ -232,6 +233,7 @@ comment|/* at least one per interface */
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
 name|dr
 block|{

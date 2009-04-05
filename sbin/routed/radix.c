@@ -107,6 +107,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|radix_mask
 modifier|*
@@ -115,6 +116,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|radix_node_head
 modifier|*
@@ -132,7 +134,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|char
+name|uint8_t
 name|normal_chars
 index|[]
 init|=
@@ -153,8 +155,7 @@ literal|0xfc
 block|,
 literal|0xfe
 block|,
-operator|-
-literal|1
+literal|0xff
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -214,11 +215,81 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|struct
+name|radix_node
+modifier|*
+name|rn_addmask
+parameter_list|(
+name|void
+modifier|*
+name|n_arg
+parameter_list|,
+name|int
+name|search
+parameter_list|,
+name|int
+name|skip
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|struct
+name|radix_node
+modifier|*
+name|rn_addroute
+parameter_list|(
+name|void
+modifier|*
+name|v_arg
+parameter_list|,
+name|void
+modifier|*
+name|n_arg
+parameter_list|,
+name|struct
+name|radix_node_head
+modifier|*
+name|head
+parameter_list|,
+name|struct
+name|radix_node
+name|treenodes
+index|[
+literal|2
+index|]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|struct
+name|radix_node
+modifier|*
+name|rn_match
+parameter_list|(
+name|void
+modifier|*
+name|v_arg
+parameter_list|,
+name|struct
+name|radix_node_head
+modifier|*
+name|head
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * The data structure for the keys is a radix tree with one way  * branching removed.  The index rn_b at an internal node n represents a bit  * position to be tested.  The tree is arranged so that all descendants  * of a node n have keys whose bits all agree up to position rn_b - 1.  * (We say the index of n is rn_b.)  *  * There is at least one descendant which has a one bit at position rn_b,  * and at least one with a zero there.  *  * A route is determined by a pair of key and mask.  We require that the  * bit-wise logical and of the key and mask to be the key.  * We define the index of a route to associated with the mask to be  * the first bit number in the mask where 0 occurs (with bit number 0  * representing the highest order bit).  *  * We say a mask is normal if every bit is 0, past the index of the mask.  * If a node n has a descendant (k, m) with index(m) == index(n) == rn_b,  * and m is a normal mask, then the route applies to every descendant of n.  * If the index(m)< rn_b, this implies the trailing last few bits of k  * before bit b are all 0, (and hence consequently true of every descendant  * of n), so the route applies to all descendants of the node as well.  *  * Similar logic shows that a non-normal mask m such that  * index(m)<= index(n) could potentially apply to many children of n.  * Thus, for each non-host route, we attach its mask to a list at an internal  * node as high in the tree as we can go.  *  * The present version of the code makes use of normal routes in short-  * circuiting an explict mask and compare operation when testing whether  * a key satisfies a normal route, and also in remembering the unique leaf  * that governs a subtree.  */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|radix_node
 modifier|*
@@ -296,6 +367,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|radix_node
 modifier|*
@@ -392,6 +464,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|rn_refines
 parameter_list|(
@@ -563,6 +636,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|radix_node
 modifier|*
@@ -812,6 +886,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|radix_node
 modifier|*
@@ -1355,6 +1430,7 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|struct
 name|radix_node
 modifier|*
@@ -1495,6 +1571,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|radix_node
 modifier|*
@@ -1916,6 +1993,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|radix_node
 modifier|*
@@ -2610,6 +2688,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|radix_node
 modifier|*
@@ -3409,6 +3488,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|radix_node
 modifier|*

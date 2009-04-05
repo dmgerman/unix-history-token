@@ -136,6 +136,7 @@ comment|/* system address */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|myname
 index|[
@@ -147,6 +148,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|verbose
 decl_stmt|;
@@ -169,6 +171,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ipforwarding
 init|=
@@ -181,6 +184,7 @@ comment|/* kernel forwarding on */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|default_gateway
 decl_stmt|;
@@ -191,6 +195,7 @@ comment|/* 1=advertise default */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|background
 init|=
@@ -255,7 +260,13 @@ begin_decl_stmt
 name|struct
 name|timeval
 name|clk
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|timeval
 name|prev_clk
 decl_stmt|;
 end_decl_stmt
@@ -297,6 +308,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|timeval
 name|next_bcast
@@ -324,6 +336,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|timeval
 name|flush_kern_timer
@@ -331,12 +344,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|fd_set
 name|fdbits
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sock_max
 decl_stmt|;
@@ -411,6 +426,29 @@ parameter_list|,
 name|struct
 name|timeval
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|sigalrm
+parameter_list|(
+name|int
+name|s
+name|UNUSED
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|sigterm
+parameter_list|(
+name|int
+name|sig
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2270,6 +2308,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sigalrm
 parameter_list|(
@@ -2300,6 +2339,7 @@ comment|/* watch for fatal signals */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sigterm
 parameter_list|(
