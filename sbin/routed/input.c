@@ -3861,6 +3861,9 @@ name|a_md5
 operator|.
 name|md5_auth_len
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|RIP_AUTH_MD5_HASH_LEN
 argument_list|,
 name|naddr_ntoa
