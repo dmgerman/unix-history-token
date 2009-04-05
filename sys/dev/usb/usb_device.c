@@ -6053,15 +6053,6 @@ name|config_index
 argument_list|)
 expr_stmt|;
 comment|/* get the USB device configured */
-name|sx_xlock
-argument_list|(
-name|udev
-operator|->
-name|default_sx
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
 name|err
 operator|=
 name|usb2_set_config_index
@@ -6069,15 +6060,6 @@ argument_list|(
 name|udev
 argument_list|,
 name|config_index
-argument_list|)
-expr_stmt|;
-name|sx_unlock
-argument_list|(
-name|udev
-operator|->
-name|default_sx
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
