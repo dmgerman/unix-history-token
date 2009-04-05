@@ -1377,6 +1377,10 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KDB
+comment|/* rfi_patch2 is at the end of dbleave */
 name|bcopy
 argument_list|(
 operator|&
@@ -1388,6 +1392,8 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 		 * Copy a code snippet to restore 32-bit bridge mode 		 * to the top of every non-generic trap handler 		 */
 name|trap_offset
 operator|+=
