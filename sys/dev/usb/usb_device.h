@@ -77,12 +77,6 @@ name|pipe_q
 decl_stmt|;
 comment|/* queue of USB transfers */
 name|struct
-name|usb2_xfer
-modifier|*
-name|xfer_block
-decl_stmt|;
-comment|/* blocking USB transfer */
-name|struct
 name|usb2_endpoint_descriptor
 modifier|*
 name|edesc
