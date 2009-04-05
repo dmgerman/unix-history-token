@@ -1038,7 +1038,11 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
-return|return;
+name|USB_BUS_LOCK
+argument_list|(
+name|bus
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1323,14 +1327,8 @@ argument_list|,
 name|bus
 argument_list|)
 expr_stmt|;
-comment|/* start watchdog - this function will unlock the BUS lock ! */
+comment|/* start watchdog */
 name|usb2_power_wdog
-argument_list|(
-name|bus
-argument_list|)
-expr_stmt|;
-comment|/* need to return locked */
-name|USB_BUS_LOCK
 argument_list|(
 name|bus
 argument_list|)
@@ -2145,7 +2143,7 @@ name|bus
 operator|->
 name|bus_mtx
 argument_list|,
-name|CALLOUT_RETURNUNLOCKED
+literal|0
 argument_list|)
 expr_stmt|;
 name|TAILQ_INIT
