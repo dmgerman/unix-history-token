@@ -322,7 +322,7 @@ block|,
 operator|.
 name|flags
 operator|=
-literal|0
+name|BI_BRAND_NOTE
 block|}
 decl_stmt|;
 end_decl_stmt

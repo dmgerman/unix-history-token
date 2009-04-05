@@ -330,6 +330,8 @@ operator|.
 name|flags
 operator|=
 name|BI_CAN_EXEC_DYN
+operator||
+name|BI_BRAND_NOTE
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -405,7 +407,7 @@ block|,
 operator|.
 name|flags
 operator|=
-literal|0
+name|BI_BRAND_NOTE
 block|}
 decl_stmt|;
 end_decl_stmt
