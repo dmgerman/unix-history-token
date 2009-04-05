@@ -2425,8 +2425,12 @@ name|sc
 argument_list|,
 name|ATMEGA_UDINT
 argument_list|,
+operator|(
 operator|~
 name|status
+operator|)
+operator|&
+literal|0x7D
 argument_list|)
 expr_stmt|;
 name|DPRINTFN
@@ -2663,8 +2667,12 @@ name|sc
 argument_list|,
 name|ATMEGA_USBINT
 argument_list|,
+operator|(
 operator|~
 name|status
+operator|)
+operator|&
+literal|0x03
 argument_list|)
 expr_stmt|;
 if|if
@@ -2715,17 +2723,7 @@ argument_list|,
 name|ATMEGA_UEINT
 argument_list|)
 expr_stmt|;
-comment|/* clear all set interrupts */
-name|ATMEGA_WRITE_1
-argument_list|(
-name|sc
-argument_list|,
-name|ATMEGA_UEINT
-argument_list|,
-operator|~
-name|status
-argument_list|)
-expr_stmt|;
+comment|/* the hardware will clear the UEINT bits automatically */
 if|if
 condition|(
 name|status
@@ -4667,6 +4665,20 @@ comment|/* enable USB PAD regulator */
 block|ATMEGA_WRITE_1(sc, ATMEGA_UHWCON, 	    ATMEGA_UHWCON_UVREGE | ATMEGA_UHWCON_UIMOD);
 endif|#
 directive|endif
+comment|/* make sure USB is enabled */
+name|ATMEGA_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|ATMEGA_USBCON
+argument_list|,
+name|ATMEGA_USBCON_USBE
+operator||
+name|ATMEGA_USBCON_OTGPADE
+operator||
+name|ATMEGA_USBCON_VBUSTE
+argument_list|)
+expr_stmt|;
 comment|/* turn on clocks */
 call|(
 name|sc
