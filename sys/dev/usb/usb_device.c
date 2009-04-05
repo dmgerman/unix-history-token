@@ -502,7 +502,9 @@ name|udev
 operator|->
 name|pipes
 operator|+
-name|USB_EP_MAX
+name|udev
+operator|->
+name|pipes_max
 decl_stmt|;
 enum|enum
 block|{
@@ -663,7 +665,9 @@ name|udev
 operator|->
 name|pipes
 operator|+
-name|USB_EP_MAX
+name|udev
+operator|->
+name|pipes_max
 decl_stmt|;
 name|uint8_t
 name|index
@@ -1217,7 +1221,9 @@ name|udev
 operator|->
 name|pipes
 operator|+
-name|USB_EP_MAX
+name|udev
+operator|->
+name|pipes_max
 decl_stmt|;
 comment|/* be NULL safe */
 if|if
@@ -3308,7 +3314,9 @@ name|udev
 operator|->
 name|pipes
 operator|+
-name|USB_EP_MAX
+name|udev
+operator|->
+name|pipes_max
 expr_stmt|;
 for|for
 control|(
