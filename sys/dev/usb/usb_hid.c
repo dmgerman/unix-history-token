@@ -2261,6 +2261,9 @@ name|enum
 name|hid_kind
 name|k
 parameter_list|,
+name|uint8_t
+name|index
+parameter_list|,
 name|struct
 name|hid_location
 modifier|*
@@ -2333,6 +2336,12 @@ operator|==
 name|u
 condition|)
 block|{
+if|if
+condition|(
+name|index
+operator|--
+condition|)
+continue|continue;
 if|if
 condition|(
 name|loc

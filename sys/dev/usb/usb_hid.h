@@ -243,6 +243,9 @@ name|enum
 name|hid_kind
 name|kind
 parameter_list|,
+name|uint8_t
+name|index
+parameter_list|,
 name|struct
 name|hid_location
 modifier|*
