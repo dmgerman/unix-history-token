@@ -187,6 +187,27 @@ end_function_decl
 
 begin_function_decl
 name|usb2_error_t
+name|usb2_req_get_config_desc_ptr
+parameter_list|(
+name|struct
+name|usb2_device
+modifier|*
+name|udev
+parameter_list|,
+name|struct
+name|usb2_config_descriptor
+modifier|*
+modifier|*
+name|ppcd
+parameter_list|,
+name|uint8_t
+name|config_index
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|usb2_error_t
 name|usb2_req_get_config_desc
 parameter_list|(
 name|struct

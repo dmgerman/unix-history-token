@@ -1884,8 +1884,20 @@ condition|(
 name|udev
 operator|->
 name|cdesc
+operator|!=
+name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|udev
+operator|->
+name|flags
+operator|.
+name|usb2_mode
+operator|!=
+name|USB_MODE_DEVICE
+condition|)
 name|free
 argument_list|(
 name|udev
@@ -2071,6 +2083,34 @@ name|done
 goto|;
 block|}
 comment|/* get the full config descriptor */
+if|if
+condition|(
+name|udev
+operator|->
+name|flags
+operator|.
+name|usb2_mode
+operator|==
+name|USB_MODE_DEVICE
+condition|)
+block|{
+comment|/* save some memory */
+name|err
+operator|=
+name|usb2_req_get_config_desc_ptr
+argument_list|(
+name|udev
+argument_list|,
+operator|&
+name|cdp
+argument_list|,
+name|index
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* normal request */
 name|err
 operator|=
 name|usb2_req_get_config_desc_full
@@ -2087,6 +2127,7 @@ argument_list|,
 name|index
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|err
@@ -6330,9 +6371,6 @@ name|ugen_name
 argument_list|)
 expr_stmt|;
 comment|/* Announce device */
-if|#
-directive|if
-name|USB_HAVE_STRINGS
 name|printf
 argument_list|(
 literal|"%s:<%s> at %s\n"
@@ -6355,8 +6393,6 @@ name|bdev
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|usb2_notify_addq
 argument_list|(
 literal|"+"
@@ -6993,9 +7029,6 @@ argument_list|,
 name|udev
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|USB_HAVE_STRINGS
 name|printf
 argument_list|(
 literal|"%s:<%s> at %s (disconnected)\n"
@@ -7016,8 +7049,6 @@ name|bdev
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Destroy UGEN symlink, if any */
 if|if
 condition|(
