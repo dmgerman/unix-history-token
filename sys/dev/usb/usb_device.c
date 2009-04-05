@@ -5445,13 +5445,6 @@ name|usb2_mode
 operator|=
 name|usb2_mode
 expr_stmt|;
-comment|/* speed combination should be checked by the parent HUB */
-name|hub
-operator|=
-name|udev
-operator|->
-name|parent_hub
-expr_stmt|;
 comment|/* search for our High Speed USB HUB, if any */
 name|adev
 operator|=
@@ -5639,11 +5632,16 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"set address %d failed "
-literal|"(ignored)\n"
+literal|"(%s, ignored)\n"
 argument_list|,
 name|udev
 operator|->
 name|address
+argument_list|,
+name|usb2_errstr
+argument_list|(
+name|err
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5752,11 +5750,16 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"getting device descriptor "
-literal|"at addr %d failed!\n"
+literal|"at addr %d failed, %s!\n"
 argument_list|,
 name|udev
 operator|->
 name|address
+argument_list|,
+name|usb2_errstr
+argument_list|(
+name|err
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* XXX try to re-enumerate the device */

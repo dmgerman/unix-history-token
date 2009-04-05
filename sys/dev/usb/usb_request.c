@@ -5745,9 +5745,14 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"addr=%d, port reset failed\n"
+literal|"addr=%d, port reset failed, %s\n"
 argument_list|,
 name|old_addr
+argument_list|,
+name|usb2_errstr
+argument_list|(
+name|err
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5792,9 +5797,14 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"addr=%d, set address failed! (ignored)\n"
+literal|"addr=%d, set address failed! (%s, ignored)\n"
 argument_list|,
 name|old_addr
+argument_list|,
+name|usb2_errstr
+argument_list|(
+name|err
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5855,11 +5865,16 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"getting device descriptor "
-literal|"at addr %d failed!\n"
+literal|"at addr %d failed, %s!\n"
 argument_list|,
 name|udev
 operator|->
 name|address
+argument_list|,
+name|usb2_errstr
+argument_list|(
+name|err
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5891,9 +5906,14 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"addr=%d, getting device "
-literal|"descriptor failed!\n"
+literal|"descriptor failed, %s!\n"
 argument_list|,
 name|old_addr
+argument_list|,
+name|usb2_errstr
+argument_list|(
+name|err
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
