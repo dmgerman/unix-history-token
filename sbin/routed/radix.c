@@ -134,6 +134,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|uint8_t
 name|normal_chars
 index|[]
@@ -177,12 +178,6 @@ directive|define
 name|rn_masktop
 value|(mask_rnhead->rnh_treetop)
 end_define
-
-begin_undef
-undef|#
-directive|undef
-name|Bcmp
-end_undef
 
 begin_define
 define|#

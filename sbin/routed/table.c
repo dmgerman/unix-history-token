@@ -2021,13 +2021,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|NAME0_LEN
-value|14
-end_define
-
 begin_function
 specifier|static
 specifier|const

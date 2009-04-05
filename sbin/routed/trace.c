@@ -114,17 +114,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|NRECORDS
-value|50
-end_define
-
-begin_comment
-comment|/* size of circular trace buffer */
-end_comment
-
 begin_decl_stmt
 name|int
 name|tracelevel
@@ -1030,6 +1019,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|off_msgs
 index|[
 name|MAX_TRACELEVEL
@@ -1049,6 +1039,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|on_msgs
 index|[
 name|MAX_TRACELEVEL
@@ -1918,6 +1909,7 @@ end_struct
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|bits
 name|if_bits
@@ -1953,6 +1945,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|bits
 name|is_bits
@@ -2236,6 +2229,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|bits
 name|rs_bits

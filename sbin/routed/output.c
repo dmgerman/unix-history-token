@@ -330,6 +330,13 @@ decl_stmt|;
 name|int
 name|serrno
 decl_stmt|;
+name|assert
+argument_list|(
+name|ifp
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|osin
 operator|=
 operator|*
@@ -2573,6 +2580,13 @@ decl_stmt|;
 name|int
 name|def_metric
 decl_stmt|;
+name|assert
+argument_list|(
+name|ifp
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|ws
 operator|.
 name|state

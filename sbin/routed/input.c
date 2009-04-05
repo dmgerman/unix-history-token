@@ -3550,6 +3550,13 @@ name|i
 decl_stmt|,
 name|len
 decl_stmt|;
+name|assert
+argument_list|(
+name|aifp
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(

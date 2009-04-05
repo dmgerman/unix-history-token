@@ -489,20 +489,6 @@ end_struct
 begin_define
 define|#
 directive|define
-name|Bcmp
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|n
-parameter_list|)
-value|memcmp(((void *)(a)), ((void *)(b)), (n))
-end_define
-
-begin_define
-define|#
-directive|define
 name|Bcopy
 parameter_list|(
 name|a
