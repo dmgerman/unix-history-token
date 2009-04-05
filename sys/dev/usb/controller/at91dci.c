@@ -5653,16 +5653,6 @@ operator|.
 name|start
 operator|=
 name|at91dci_device_bulk_start
-block|,
-operator|.
-name|enter_is_cancelable
-operator|=
-literal|1
-block|,
-operator|.
-name|start_is_cancelable
-operator|=
-literal|1
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -5772,16 +5762,6 @@ operator|.
 name|start
 operator|=
 name|at91dci_device_ctrl_start
-block|,
-operator|.
-name|enter_is_cancelable
-operator|=
-literal|1
-block|,
-operator|.
-name|start_is_cancelable
-operator|=
-literal|1
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -5891,16 +5871,6 @@ operator|.
 name|start
 operator|=
 name|at91dci_device_intr_start
-block|,
-operator|.
-name|enter_is_cancelable
-operator|=
-literal|1
-block|,
-operator|.
-name|start_is_cancelable
-operator|=
-literal|1
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -6179,16 +6149,6 @@ operator|.
 name|start
 operator|=
 name|at91dci_device_isoc_fs_start
-block|,
-operator|.
-name|enter_is_cancelable
-operator|=
-literal|1
-block|,
-operator|.
-name|start_is_cancelable
-operator|=
-literal|1
 block|, }
 decl_stmt|;
 end_decl_stmt

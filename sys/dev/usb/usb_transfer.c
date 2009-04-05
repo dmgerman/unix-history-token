@@ -5698,16 +5698,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-comment|/* check cancelability */
-if|if
-condition|(
-name|pipe
-operator|->
-name|methods
-operator|->
-name|enter_is_cancelable
-condition|)
-block|{
 name|xfer
 operator|->
 name|flags_int
@@ -5742,18 +5732,6 @@ name|bus
 argument_list|)
 expr_stmt|;
 return|return;
-block|}
-block|}
-else|else
-block|{
-name|xfer
-operator|->
-name|flags_int
-operator|.
-name|can_cancel_immed
-operator|=
-literal|0
-expr_stmt|;
 block|}
 comment|/* start the transfer */
 name|usb2_command_wrapper
@@ -6668,9 +6646,7 @@ name|xroot
 decl_stmt|;
 name|USB_BUS_LOCK_ASSERT
 argument_list|(
-name|xfer
-operator|->
-name|xroot
+name|info
 operator|->
 name|bus
 argument_list|,
@@ -6682,9 +6658,7 @@ condition|(
 operator|!
 name|mtx_owned
 argument_list|(
-name|xfer
-operator|->
-name|xroot
+name|info
 operator|->
 name|xfer_mtx
 argument_list|)
@@ -6748,18 +6722,14 @@ name|NULL
 expr_stmt|;
 name|USB_BUS_UNLOCK
 argument_list|(
-name|xfer
-operator|->
-name|xroot
+name|info
 operator|->
 name|bus
 argument_list|)
 expr_stmt|;
 name|USB_BUS_LOCK_ASSERT
 argument_list|(
-name|xfer
-operator|->
-name|xroot
+name|info
 operator|->
 name|bus
 argument_list|,
@@ -6796,9 +6766,7 @@ block|{
 comment|/* we got stopped before we even got started */
 name|USB_BUS_LOCK
 argument_list|(
-name|xfer
-operator|->
-name|xroot
+name|info
 operator|->
 name|bus
 argument_list|)
@@ -6821,9 +6789,7 @@ block|{
 comment|/* the callback has been deferred */
 name|USB_BUS_LOCK
 argument_list|(
-name|xfer
-operator|->
-name|xroot
+name|info
 operator|->
 name|bus
 argument_list|)
@@ -6922,9 +6888,7 @@ expr_stmt|;
 comment|/* pickup the USB mutex again */
 name|USB_BUS_LOCK
 argument_list|(
-name|xfer
-operator|->
-name|xroot
+name|info
 operator|->
 name|bus
 argument_list|)
@@ -7004,9 +6968,7 @@ expr_stmt|;
 name|usb2_cv_broadcast
 argument_list|(
 operator|&
-name|xfer
-operator|->
-name|xroot
+name|info
 operator|->
 name|cv_drain
 argument_list|)
@@ -7446,16 +7408,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-comment|/* check cancelability */
-if|if
-condition|(
-name|pipe
-operator|->
-name|methods
-operator|->
-name|start_is_cancelable
-condition|)
-block|{
 name|xfer
 operator|->
 name|flags_int
@@ -7464,6 +7416,7 @@ name|can_cancel_immed
 operator|=
 literal|1
 expr_stmt|;
+comment|/* check for error */
 if|if
 condition|(
 name|xfer
@@ -7478,18 +7431,6 @@ name|xfer
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-name|xfer
-operator|->
-name|flags_int
-operator|.
-name|can_cancel_immed
-operator|=
-literal|0
 expr_stmt|;
 block|}
 block|}
@@ -7946,16 +7887,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-comment|/* check cancelability */
-if|if
-condition|(
-name|pipe
-operator|->
-name|methods
-operator|->
-name|start_is_cancelable
-condition|)
-block|{
 name|xfer
 operator|->
 name|flags_int
@@ -7964,6 +7895,7 @@ name|can_cancel_immed
 operator|=
 literal|1
 expr_stmt|;
+comment|/* check for error */
 if|if
 condition|(
 name|xfer
@@ -7978,18 +7910,6 @@ name|xfer
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-name|xfer
-operator|->
-name|flags_int
-operator|.
-name|can_cancel_immed
-operator|=
-literal|0
 expr_stmt|;
 block|}
 block|}
