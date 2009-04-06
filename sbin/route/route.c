@@ -4253,7 +4253,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|int
+name|u_long
 name|i
 decl_stmt|,
 name|j
@@ -4266,11 +4266,11 @@ literal|0
 operator|,
 name|j
 operator|=
-literal|1
+literal|0xff
 init|;
 name|i
 operator|<
-literal|32
+literal|4
 condition|;
 name|i
 operator|++
@@ -4287,7 +4287,7 @@ break|break;
 block|}
 name|j
 operator|<<=
-literal|1
+literal|8
 expr_stmt|;
 block|}
 comment|/* i holds the first non zero bit */
@@ -4295,7 +4295,11 @@ name|bits
 operator|=
 literal|32
 operator|-
+operator|(
 name|i
+operator|*
+literal|8
+operator|)
 expr_stmt|;
 block|}
 name|mask
