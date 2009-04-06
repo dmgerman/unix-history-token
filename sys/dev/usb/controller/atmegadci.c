@@ -77,12 +77,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_sw_transfer.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb/usb_transfer.h>
 end_include
 
