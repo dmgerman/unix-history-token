@@ -1680,6 +1680,13 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|sema_mtx
+argument_list|,
+name|M_SEM
+argument_list|)
+expr_stmt|;
 name|mtx_destroy
 argument_list|(
 operator|&
