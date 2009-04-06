@@ -187,7 +187,7 @@ begin_define
 define|#
 directive|define
 name|DCONS_POLL_HZ
-value|100
+value|25
 end_define
 
 begin_endif
