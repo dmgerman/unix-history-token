@@ -6526,7 +6526,7 @@ name|error
 operator|==
 name|ESTALE
 condition|)
-name|cache_purge
+name|nfs_purgecache
 argument_list|(
 name|vp
 argument_list|)

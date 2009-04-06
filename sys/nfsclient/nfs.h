@@ -1504,6 +1504,17 @@ directive|endif
 end_endif
 
 begin_function_decl
+name|void
+name|nfs_purgecache
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|nfs_vinvalbuf
 parameter_list|(
