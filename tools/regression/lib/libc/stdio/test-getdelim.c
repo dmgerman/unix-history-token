@@ -390,7 +390,8 @@ argument_list|,
 name|fp
 argument_list|)
 operator|==
-literal|0
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|assert
@@ -639,7 +640,8 @@ argument_list|,
 name|fp
 argument_list|)
 operator|==
-literal|0
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|assert
