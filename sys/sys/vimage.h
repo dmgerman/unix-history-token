@@ -218,6 +218,16 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IS_DEFAULT_VNET
+parameter_list|(
+name|arg
+parameter_list|)
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|CURVNET_SET
 parameter_list|(
 name|arg

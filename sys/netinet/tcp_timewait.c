@@ -344,13 +344,6 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|uma_zone_t
-name|tcptw_zone
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|int
 name|maxtcptw
 decl_stmt|;
@@ -365,6 +358,13 @@ ifdef|#
 directive|ifdef
 name|VIMAGE_GLOBALS
 end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|uma_zone_t
+name|tcptw_zone
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 specifier|static
@@ -545,7 +545,7 @@ name|new
 expr_stmt|;
 name|uma_zone_set_max
 argument_list|(
-name|tcptw_zone
+name|V_tcptw_zone
 argument_list|,
 name|maxtcptw
 argument_list|)
@@ -625,7 +625,7 @@ literal|0
 condition|)
 name|uma_zone_set_max
 argument_list|(
-name|tcptw_zone
+name|V_tcptw_zone
 argument_list|,
 name|tcptw_auto_size
 argument_list|()
@@ -646,7 +646,7 @@ argument_list|(
 name|curvnet
 argument_list|)
 expr_stmt|;
-name|tcptw_zone
+name|V_tcptw_zone
 operator|=
 name|uma_zcreate
 argument_list|(
@@ -687,7 +687,7 @@ literal|0
 condition|)
 name|uma_zone_set_max
 argument_list|(
-name|tcptw_zone
+name|V_tcptw_zone
 argument_list|,
 name|tcptw_auto_size
 argument_list|()
@@ -696,7 +696,7 @@ expr_stmt|;
 else|else
 name|uma_zone_set_max
 argument_list|(
-name|tcptw_zone
+name|V_tcptw_zone
 argument_list|,
 name|maxtcptw
 argument_list|)
@@ -814,7 +814,7 @@ name|tw
 operator|=
 name|uma_zalloc
 argument_list|(
-name|tcptw_zone
+name|V_tcptw_zone
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1635,7 +1635,7 @@ condition|)
 return|return;
 name|uma_zfree
 argument_list|(
-name|tcptw_zone
+name|V_tcptw_zone
 argument_list|,
 name|tw
 argument_list|)

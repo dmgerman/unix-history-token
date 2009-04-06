@@ -427,7 +427,7 @@ literal|16
 expr_stmt|;
 name|uma_zone_set_max
 argument_list|(
-name|tcp_reass_zone
+name|V_tcp_reass_zone
 argument_list|,
 name|V_tcp_reass_maxseg
 argument_list|)
@@ -435,11 +435,22 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 name|uma_zone_t
 name|tcp_reass_zone
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -483,7 +494,7 @@ operator|&
 name|V_tcp_reass_maxseg
 argument_list|)
 expr_stmt|;
-name|tcp_reass_zone
+name|V_tcp_reass_zone
 operator|=
 name|uma_zcreate
 argument_list|(
@@ -510,7 +521,7 @@ argument_list|)
 expr_stmt|;
 name|uma_zone_set_max
 argument_list|(
-name|tcp_reass_zone
+name|V_tcp_reass_zone
 argument_list|,
 name|V_tcp_reass_maxseg
 argument_list|)
@@ -669,7 +680,7 @@ name|te
 operator|=
 name|uma_zalloc
 argument_list|(
-name|tcp_reass_zone
+name|V_tcp_reass_zone
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -803,7 +814,7 @@ argument_list|)
 expr_stmt|;
 name|uma_zfree
 argument_list|(
-name|tcp_reass_zone
+name|V_tcp_reass_zone
 argument_list|,
 name|te
 argument_list|)
@@ -944,7 +955,7 @@ argument_list|)
 expr_stmt|;
 name|uma_zfree
 argument_list|(
-name|tcp_reass_zone
+name|V_tcp_reass_zone
 argument_list|,
 name|q
 argument_list|)
@@ -1138,7 +1149,7 @@ argument_list|)
 expr_stmt|;
 name|uma_zfree
 argument_list|(
-name|tcp_reass_zone
+name|V_tcp_reass_zone
 argument_list|,
 name|q
 argument_list|)

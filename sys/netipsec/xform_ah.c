@@ -184,6 +184,18 @@ directive|include
 file|<opencrypto/cryptodev.h>
 end_include
 
+begin_function_decl
+specifier|static
+name|int
+name|ah_iattach
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Return header size in bytes.  The old protocol did not support  * the replay counter; the new protocol always includes the counter.  */
 end_comment
@@ -5550,6 +5562,37 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|xform_register
+argument_list|(
+operator|&
+name|ah_xformsw
+argument_list|)
+expr_stmt|;
+name|ah_iattach
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|ah_iattach
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|unused
+name|__unused
+parameter_list|)
+block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|V_ah_enable
 operator|=
 literal|1
@@ -5560,12 +5603,11 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* clear ip_tos when doing AH calc */
-name|xform_register
-argument_list|(
-operator|&
-name|ah_xformsw
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

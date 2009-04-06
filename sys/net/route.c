@@ -336,6 +336,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|vnet_route_iattach
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* compare two sockaddr structures */
 end_comment
@@ -366,6 +378,12 @@ parameter_list|)
 value|((struct rtentry *)(p))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|uma_zone_t
@@ -376,6 +394,11 @@ end_decl_stmt
 begin_comment
 comment|/* Routing table UMA zone. */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -476,22 +499,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-name|int
-name|table
-decl_stmt|;
-name|struct
-name|domain
-modifier|*
-name|dom
-decl_stmt|;
-name|int
-name|fam
-decl_stmt|;
 comment|/* whack the tunable ints into  line. */
 if|if
 condition|(
@@ -513,7 +520,47 @@ name|rt_numfibs
 operator|=
 literal|1
 expr_stmt|;
-name|rtzone
+name|rn_init
+argument_list|()
+expr_stmt|;
+comment|/* initialize all zeroes, all ones, mask table */
+name|vnet_route_iattach
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|vnet_route_iattach
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|unused
+name|__unused
+parameter_list|)
+block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+name|int
+name|table
+decl_stmt|;
+name|struct
+name|domain
+modifier|*
+name|dom
+decl_stmt|;
+name|int
+name|fam
+decl_stmt|;
+name|V_rtzone
 operator|=
 name|uma_zcreate
 argument_list|(
@@ -538,10 +585,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|rn_init
-argument_list|()
-expr_stmt|;
-comment|/* initialize all zeroes, all ones, mask table */
 for|for
 control|(
 name|dom
@@ -628,6 +671,11 @@ block|}
 block|}
 block|}
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1492,7 +1540,7 @@ argument_list|)
 expr_stmt|;
 name|uma_zfree
 argument_list|(
-name|rtzone
+name|V_rtzone
 argument_list|,
 name|rt
 argument_list|)
@@ -3878,7 +3926,7 @@ name|rt
 operator|=
 name|uma_zalloc
 argument_list|(
-name|rtzone
+name|V_rtzone
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -3946,7 +3994,7 @@ argument_list|)
 expr_stmt|;
 name|uma_zfree
 argument_list|(
-name|rtzone
+name|V_rtzone
 argument_list|,
 name|rt
 argument_list|)
@@ -4069,7 +4117,7 @@ argument_list|)
 expr_stmt|;
 name|uma_zfree
 argument_list|(
-name|rtzone
+name|V_rtzone
 argument_list|,
 name|rt
 argument_list|)
@@ -4136,7 +4184,7 @@ argument_list|)
 expr_stmt|;
 name|uma_zfree
 argument_list|(
-name|rtzone
+name|V_rtzone
 argument_list|,
 name|rt
 argument_list|)

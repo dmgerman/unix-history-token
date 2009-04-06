@@ -2018,6 +2018,9 @@ modifier|*
 modifier|*
 name|_ipfw_dyn_v
 decl_stmt|;
+name|uma_zone_t
+name|_ipfw_dyn_rule_zone
+decl_stmt|;
 name|struct
 name|ip_fw_chain
 name|_layer3_chain
@@ -2199,6 +2202,13 @@ define|#
 directive|define
 name|V_ipfw_dyn_v
 value|VNET_IPFW(ipfw_dyn_v)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ipfw_dyn_rule_zone
+value|VNET_IPFW(ipfw_dyn_rule_zone)
 end_define
 
 begin_define
