@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 2009 Hans Petter Selasky. All rights reserved.  *  
 end_comment
 
 begin_comment
-comment|/*  * USB Device Port register definitions, copied from ATMEGA  * documentation provided by ATMEL.  */
+comment|/*  * USB Device Port register definitions, copied from ATMEGA documentation  * provided by ATMEL.  */
 end_comment
 
 begin_ifndef

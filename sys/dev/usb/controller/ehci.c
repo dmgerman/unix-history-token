@@ -8,7 +8,7 @@ comment|/*  * USB Enhanced Host Controller Driver, a.k.a. USB 2.0 controller.  *
 end_comment
 
 begin_comment
-comment|/*  * TODO:  * 1) command failures are not recovered correctly  */
+comment|/*  * TODO:   * 1) command failures are not recovered correctly  */
 end_comment
 
 begin_include

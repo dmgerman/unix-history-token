@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * USB Open Host Controller driver.  *  * OHCI spec: http://www.compaq.com/productinfo/development/openhci.html  * USB spec: http://www.usb.org/developers/docs/usbspec.zip  */
+comment|/*  * USB Open Host Controller driver.  *  * OHCI spec: http://www.compaq.com/productinfo/development/openhci.html  * USB spec:  http://www.usb.org/developers/docs/usbspec.zip  */
 end_comment
 
 begin_include

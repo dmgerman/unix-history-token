@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 2008 Hans Petter Selasky. All rights reserved.  *  
 end_comment
 
 begin_comment
-comment|/*  * Thanks to Mentor Graphics for providing a reference driver for this  * USB chip at their homepage.  */
+comment|/*  * Thanks to Mentor Graphics for providing a reference driver for this USB chip  * at their homepage.  */
 end_comment
 
 begin_comment

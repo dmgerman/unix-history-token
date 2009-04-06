@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 2008 Hans Petter Selasky. All rights reserved.  *  
 end_comment
 
 begin_comment
-comment|/*  * This header file defines the registers of the Mentor Graphics  * USB OnTheGo Inventra chip.  */
+comment|/*  * This header file defines the registers of the Mentor Graphics USB OnTheGo  * Inventra chip.  */
 end_comment
 
 begin_ifndef

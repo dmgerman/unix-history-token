@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1998 The NetBSD Foundation, Inc. All rights reserve
 end_comment
 
 begin_comment
-comment|/*  * USB spec: http://www.usb.org/developers/docs/usbspec.zip  */
+comment|/*  * USB spec: http://www.usb.org/developers/docs/usbspec.zip   */
 end_comment
 
 begin_include

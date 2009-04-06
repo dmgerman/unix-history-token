@@ -20,7 +20,7 @@ name|_USB2_HUB_H_
 end_define
 
 begin_comment
-comment|/*  * The following structure defines an USB port.  */
+comment|/*  * The following structure defines an USB port.   */
 end_comment
 
 begin_struct

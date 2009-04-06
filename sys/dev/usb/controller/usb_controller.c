@@ -87,7 +87,7 @@ file|<dev/usb/usb_bus.h>
 end_include
 
 begin_comment
-comment|/* function prototypes */
+comment|/* function prototypes  */
 end_comment
 
 begin_decl_stmt

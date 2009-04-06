@@ -20,7 +20,7 @@ name|_USB2_BUS_H_
 end_define
 
 begin_comment
-comment|/*  * The following structure defines the USB explore message sent to the  * USB explore process.  */
+comment|/*  * The following structure defines the USB explore message sent to the USB  * explore process.  */
 end_comment
 
 begin_struct

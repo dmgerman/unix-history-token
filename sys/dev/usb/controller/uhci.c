@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * USB Universal Host Controller driver.  * Handles e.g. PIIX3 and PIIX4.  *  * UHCI spec: http://developer.intel.com/design/USB/UHCI11D.htm  * USB spec: http://www.usb.org/developers/docs/usbspec.zip  * PIIXn spec: ftp://download.intel.com/design/intarch/datashts/29055002.pdf  *             ftp://download.intel.com/design/intarch/datashts/29056201.pdf  */
+comment|/*  * USB Universal Host Controller driver.  * Handles e.g. PIIX3 and PIIX4.  *  * UHCI spec: http://developer.intel.com/design/USB/UHCI11D.htm  * USB spec:  http://www.usb.org/developers/docs/usbspec.zip  * PIIXn spec: ftp://download.intel.com/design/intarch/datashts/29055002.pdf  *             ftp://download.intel.com/design/intarch/datashts/29056201.pdf  */
 end_comment
 
 begin_include

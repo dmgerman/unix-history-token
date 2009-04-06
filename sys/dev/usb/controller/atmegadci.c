@@ -18,7 +18,7 @@ comment|/*-  * Copyright (c) 2009 Hans Petter Selasky. All rights reserved.  *  
 end_comment
 
 begin_comment
-comment|/*  * This file contains the driver for the ATMEGA series USB OTG  * Controller. This driver currently only supports the DCI mode of the  * USB hardware.  */
+comment|/*  * This file contains the driver for the ATMEGA series USB OTG Controller. This  * driver currently only supports the DCI mode of the USB hardware.  */
 end_comment
 
 begin_comment

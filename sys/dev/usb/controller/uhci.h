@@ -27,7 +27,7 @@ value|MIN(USB_MAX_DEVICES, 128)
 end_define
 
 begin_comment
-comment|/* PCI config registers */
+comment|/* PCI config registers  */
 end_comment
 
 begin_define

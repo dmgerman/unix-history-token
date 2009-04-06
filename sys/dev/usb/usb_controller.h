@@ -31,7 +31,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* structure prototypes */
+comment|/* structure prototypes  */
 end_comment
 
 begin_struct_decl

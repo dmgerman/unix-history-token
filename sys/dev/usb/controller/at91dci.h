@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 2006 ATMEL  * Copyright (c) 2007 Hans Petter Selask
 end_comment
 
 begin_comment
-comment|/*  * USB Device Port (UDP) register definition, based on  * "AT91RM9200.h" provided by ATMEL.  */
+comment|/*  * USB Device Port (UDP) register definition, based on "AT91RM9200.h" provided  * by ATMEL.  */
 end_comment
 
 begin_ifndef

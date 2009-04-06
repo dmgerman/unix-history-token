@@ -26,7 +26,7 @@ comment|/*  * Thanks to "David Brownell" for helping out regarding the hardware 
 end_comment
 
 begin_comment
-comment|/*  * NOTE: The "fifo_bank" is not reset in hardware when the endpoint is  * reset !  *  * NOTE: When the chip detects BUS-reset it will also reset the  * endpoints, Function-address and more.  */
+comment|/*  * NOTE: The "fifo_bank" is not reset in hardware when the endpoint is  * reset.  *  * NOTE: When the chip detects BUS-reset it will also reset the  * endpoints, Function-address and more.  */
 end_comment
 
 begin_include

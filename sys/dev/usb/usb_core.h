@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 2008 Hans Petter Selasky. All rights reserved.  *  
 end_comment
 
 begin_comment
-comment|/*  * Including this file is mandatory for all USB related c-files in the  * kernel.  */
+comment|/*  * Including this file is mandatory for all USB related c-files in the kernel.  */
 end_comment
 
 begin_ifndef

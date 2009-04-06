@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 2008 Hans Petter Selasky<hselasky@FreeBSD.org>  * A
 end_comment
 
 begin_comment
-comment|/*  * This file contains the driver for the USS820 series USB Device  * Controller  *  * NOTE: The datasheet does not document everything!  */
+comment|/*  * This file contains the driver for the USS820 series USB Device  * Controller  *  * NOTE: The datasheet does not document everything.  */
 end_comment
 
 begin_include
