@@ -941,7 +941,7 @@ name|char
 name|DRIVER_VERSION
 index|[]
 init|=
-literal|"v1.12"
+literal|"v1.16"
 decl_stmt|;
 end_decl_stmt
 
@@ -1122,7 +1122,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*******************************************************************************  *	Name:	hptmv_free_channel  *  *	Description:	free allocated queues for the given channel  *  *	Parameters:    	pMvSataAdapter - pointer to the RR182x controler this   * 					channel connected to.   *			channelNum - channel number.   *       ******************************************************************************/
+comment|/*******************************************************************************  *	Name:	hptmv_free_channel  *  *	Description:	free allocated queues for the given channel  *  *	Parameters:    	pMvSataAdapter - pointer to the RR18xx controler this   * 					channel connected to.   *			channelNum - channel number.   *       ******************************************************************************/
 end_comment
 
 begin_function
@@ -1300,10 +1300,6 @@ name|channel
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*void fDeviceSendCommand(_VBUS_ARG PCommand pCmd); */
-end_comment
 
 begin_function
 specifier|static
@@ -1510,7 +1506,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x[%d]: Bad channelNum=%d"
+literal|"RR18xx[%d]: Bad channelNum=%d"
 argument_list|,
 name|pAdapter
 operator|->
@@ -1628,7 +1624,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x[%d]: request queue allocated isn't 1 K aligned,"
+literal|"RR18xx[%d]: request queue allocated isn't 1 K aligned,"
 literal|" dma_addr=%llx channel=%d\n"
 argument_list|,
 name|pAdapter
@@ -1668,7 +1664,7 @@ expr_stmt|;
 name|KdPrint
 argument_list|(
 operator|(
-literal|"RR182x[%d,%d]: request queue allocated: 0x%p"
+literal|"RR18xx[%d,%d]: request queue allocated: 0x%p"
 operator|,
 name|pAdapter
 operator|->
@@ -1727,7 +1723,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x[%d,%d]: response queue allocated isn't 256 byte "
+literal|"RR18xx[%d,%d]: response queue allocated isn't 256 byte "
 literal|"aligned, dma_addr=%llx\n"
 argument_list|,
 name|pAdapter
@@ -1767,7 +1763,7 @@ expr_stmt|;
 name|KdPrint
 argument_list|(
 operator|(
-literal|"RR182x[%d,%d]: response queue allocated: 0x%p"
+literal|"RR18xx[%d,%d]: response queue allocated: 0x%p"
 operator|,
 name|pAdapter
 operator|->
@@ -1801,7 +1797,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *	Name: hptmv_parse_identify_results  *  *	Description:	this functions parses the identify command results, checks  *					that the connected deives can be accesed by RR182x EDMA,  *					and updates the channel stucture accordingly.  *  *	Parameters:     pMvSataChannel, pointer to the channel data structure.  *  *	Returns:       	=0 ->success,< 0 ->failure.  *  ******************************************************************************/
+comment|/******************************************************************************  *	Name: hptmv_parse_identify_results  *  *	Description:	this functions parses the identify command results, checks  *					that the connected deives can be accesed by RR18xx EDMA,  *					and updates the channel stucture accordingly.  *  *	Parameters:     pMvSataChannel, pointer to the channel data structure.  *  *	Returns:       	=0 ->success,< 0 ->failure.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2680,7 +2676,7 @@ decl_stmt|;
 name|KdPrint
 argument_list|(
 operator|(
-literal|"RR182x [%d]: start channel (%d)"
+literal|"RR18xx [%d]: start channel (%d)"
 operator|,
 name|pMvSataAdapter
 operator|->
@@ -2705,7 +2701,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x [%d,%d]: failed to perform Software reset\n"
+literal|"RR18xx [%d,%d]: failed to perform Software reset\n"
 argument_list|,
 name|pMvSataAdapter
 operator|->
@@ -2754,7 +2750,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x [%d,%d]: failed to perform Hard reset\n"
+literal|"RR18xx [%d,%d]: failed to perform Hard reset\n"
 argument_list|,
 name|pMvSataAdapter
 operator|->
@@ -2784,7 +2780,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x [%d,%d]: failed to perform ATA Identify command\n"
+literal|"RR18xx [%d,%d]: failed to perform ATA Identify command\n"
 argument_list|,
 name|pMvSataAdapter
 operator|->
@@ -2808,7 +2804,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x [%d,%d]: Error in parsing ATA Identify message\n"
+literal|"RR18xx [%d,%d]: Error in parsing ATA Identify message\n"
 argument_list|,
 name|pMvSataAdapter
 operator|->
@@ -2839,7 +2835,7 @@ block|{
 name|KdPrint
 argument_list|(
 operator|(
-literal|"RR182x [%d]: Disable 8 bit PIO (CFA enabled) \n"
+literal|"RR18xx [%d]: Disable 8 bit PIO (CFA enabled) \n"
 operator|,
 name|pMvSataAdapter
 operator|->
@@ -2871,7 +2867,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x [%d]: channel %d: mvStorageDevATASetFeatures"
+literal|"RR18xx [%d]: channel %d: mvStorageDevATASetFeatures"
 literal|" failed\n"
 argument_list|,
 name|pMvSataAdapter
@@ -2943,7 +2939,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x [%d]: channel %d: mvStorageDevATASetFeatures failed\n"
+literal|"RR18xx [%d]: channel %d: mvStorageDevATASetFeatures failed\n"
 argument_list|,
 name|pMvSataAdapter
 operator|->
@@ -2961,7 +2957,7 @@ block|}
 name|KdPrint
 argument_list|(
 operator|(
-literal|"RR182x [%d]: channel %d, write cache enabled\n"
+literal|"RR18xx [%d]: channel %d, write cache enabled\n"
 operator|,
 name|pMvSataAdapter
 operator|->
@@ -2977,7 +2973,7 @@ block|{
 name|KdPrint
 argument_list|(
 operator|(
-literal|"RR182x [%d]: channel %d, write cache not supported\n"
+literal|"RR18xx [%d]: channel %d, write cache not supported\n"
 operator|,
 name|pMvSataAdapter
 operator|->
@@ -3007,7 +3003,7 @@ block|{
 name|KdPrint
 argument_list|(
 operator|(
-literal|"RR182x [%d]: channel =%d, disable write cache\n"
+literal|"RR18xx [%d]: channel =%d, disable write cache\n"
 operator|,
 name|pMvSataAdapter
 operator|->
@@ -3041,7 +3037,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x [%d]: channel %d: mvStorageDevATASetFeatures failed\n"
+literal|"RR18xx [%d]: channel %d: mvStorageDevATASetFeatures failed\n"
 argument_list|,
 name|pMvSataAdapter
 operator|->
@@ -3059,7 +3055,7 @@ block|}
 name|KdPrint
 argument_list|(
 operator|(
-literal|"RR182x [%d]: channel=%d, write cache disabled\n"
+literal|"RR18xx [%d]: channel=%d, write cache disabled\n"
 operator|,
 name|pMvSataAdapter
 operator|->
@@ -3076,7 +3072,7 @@ comment|/* Set transfer mode */
 name|KdPrint
 argument_list|(
 operator|(
-literal|"RR182x [%d] Set transfer mode XFER_PIO_SLOW\n"
+literal|"RR18xx [%d] Set transfer mode XFER_PIO_SLOW\n"
 operator|,
 name|pMvSataAdapter
 operator|->
@@ -3108,7 +3104,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x [%d] channel %d: Set Features failed\n"
+literal|"RR18xx [%d] channel %d: Set Features failed\n"
 argument_list|,
 name|pMvSataAdapter
 operator|->
@@ -3172,7 +3168,7 @@ block|}
 name|KdPrint
 argument_list|(
 operator|(
-literal|"RR182x [%d] Set transfer mode XFER_PIO_4\n"
+literal|"RR18xx [%d] Set transfer mode XFER_PIO_4\n"
 operator|,
 name|pMvSataAdapter
 operator|->
@@ -3215,7 +3211,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x [%d] channel %d: Set Features failed\n"
+literal|"RR18xx [%d] channel %d: Set Features failed\n"
 argument_list|,
 name|pMvSataAdapter
 operator|->
@@ -3325,7 +3321,7 @@ block|}
 name|KdPrint
 argument_list|(
 operator|(
-literal|"RR182x [%d] Set transfer mode XFER_UDMA_%d\n"
+literal|"RR18xx [%d] Set transfer mode XFER_UDMA_%d\n"
 operator|,
 name|pMvSataAdapter
 operator|->
@@ -3343,7 +3339,7 @@ name|maxUltraDmaModeSupported
 operator|=
 name|udmaMode
 expr_stmt|;
-comment|/*if (mvStorageDevATASetFeatures(pMvSataAdapter, channelNum, 								   MV_ATA_SET_FEATURES_TRANSFER, udmaMode, 								   0, 0, 0) == MV_FALSE) 	{ 		MV_ERROR("RR182x [%d] channel %d: Set Features failed\n", 				 pMvSataAdapter->adapterId, channelNum);  		return -1; 	}*/
+comment|/*if (mvStorageDevATASetFeatures(pMvSataAdapter, channelNum, 								   MV_ATA_SET_FEATURES_TRANSFER, udmaMode, 								   0, 0, 0) == MV_FALSE) 	{ 		MV_ERROR("RR18xx [%d] channel %d: Set Features failed\n", 				 pMvSataAdapter->adapterId, channelNum);  		return -1; 	}*/
 if|if
 condition|(
 name|pChannelInfo
@@ -3535,7 +3531,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x [%d] channel %d: Set Features failed\n"
+literal|"RR18xx [%d] channel %d: Set Features failed\n"
 argument_list|,
 name|pMvSataAdapter
 operator|->
@@ -3553,7 +3549,7 @@ block|}
 name|KdPrint
 argument_list|(
 operator|(
-literal|"RR182x [%d]: channel=%d, read look ahead enabled\n"
+literal|"RR18xx [%d]: channel=%d, read look ahead enabled\n"
 operator|,
 name|pMvSataAdapter
 operator|->
@@ -3569,7 +3565,7 @@ block|{
 name|KdPrint
 argument_list|(
 operator|(
-literal|"RR182x [%d]: channel %d, Read Look Ahead not supported\n"
+literal|"RR18xx [%d]: channel %d, Read Look Ahead not supported\n"
 operator|,
 name|pMvSataAdapter
 operator|->
@@ -3598,7 +3594,7 @@ block|{
 name|KdPrint
 argument_list|(
 operator|(
-literal|"RR182x [%d]:channel %d, disable read look ahead\n"
+literal|"RR18xx [%d]:channel %d, disable read look ahead\n"
 operator|,
 name|pMvSataAdapter
 operator|->
@@ -3632,7 +3628,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x [%d]:channel %d:  ATA Set Features failed\n"
+literal|"RR18xx [%d]:channel %d:  ATA Set Features failed\n"
 argument_list|,
 name|pMvSataAdapter
 operator|->
@@ -3650,7 +3646,7 @@ block|}
 name|KdPrint
 argument_list|(
 operator|(
-literal|"RR182x [%d]:channel %d, read look ahead disabled\n"
+literal|"RR18xx [%d]:channel %d, read look ahead disabled\n"
 operator|,
 name|pMvSataAdapter
 operator|->
@@ -3667,7 +3663,7 @@ block|{
 name|KdPrint
 argument_list|(
 operator|(
-literal|"RR182x [%d]: channel %d config EDMA, Non Queued Mode\n"
+literal|"RR18xx [%d]: channel %d config EDMA, Non Queued Mode\n"
 operator|,
 name|pMvSataAdapter
 operator|->
@@ -3695,7 +3691,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x [%d] channel %d Error: mvSataConfigEdmaMode failed\n"
+literal|"RR18xx [%d] channel %d Error: mvSataConfigEdmaMode failed\n"
 argument_list|,
 name|pMvSataAdapter
 operator|->
@@ -3725,7 +3721,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x [%d] Failed to enable DMA, channel=%d\n"
+literal|"RR18xx [%d] Failed to enable DMA, channel=%d\n"
 argument_list|,
 name|pMvSataAdapter
 operator|->
@@ -3741,7 +3737,7 @@ return|;
 block|}
 name|MV_ERROR
 argument_list|(
-literal|"RR182x [%d,%d]: channel started successfully\n"
+literal|"RR18xx [%d,%d]: channel started successfully\n"
 argument_list|,
 name|pMvSataAdapter
 operator|->
@@ -3844,7 +3840,7 @@ break|break;
 name|KdPrint
 argument_list|(
 operator|(
-literal|"RR182x [%d,%d]: new device connected\n"
+literal|"RR18xx [%d,%d]: new device connected\n"
 operator|,
 name|pMvSataAdapter
 operator|->
@@ -3875,7 +3871,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x [%d,%d] Failed to configure\n"
+literal|"RR18xx [%d,%d] Failed to configure\n"
 argument_list|,
 name|pMvSataAdapter
 operator|->
@@ -3907,7 +3903,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x [%d,%d]Failed to start channel\n"
+literal|"RR18xx [%d,%d]Failed to start channel\n"
 argument_list|,
 name|pMvSataAdapter
 operator|->
@@ -3961,7 +3957,7 @@ break|break;
 name|KdPrint
 argument_list|(
 operator|(
-literal|"RR182x [%d,%d]: device disconnected\n"
+literal|"RR18xx [%d,%d]: device disconnected\n"
 operator|,
 name|pMvSataAdapter
 operator|->
@@ -4026,7 +4022,7 @@ expr_stmt|;
 name|KdPrint
 argument_list|(
 operator|(
-literal|"RR182x [%d,%d]: channel removed\n"
+literal|"RR18xx [%d,%d]: channel removed\n"
 operator|,
 name|pMvSataAdapter
 operator|->
@@ -4059,7 +4055,7 @@ block|{
 name|KdPrint
 argument_list|(
 operator|(
-literal|"RR182x [%d,%d]: channel already removed!!\n"
+literal|"RR18xx [%d,%d]: channel already removed!!\n"
 operator|,
 name|pMvSataAdapter
 operator|->
@@ -4206,7 +4202,7 @@ expr_stmt|;
 name|KdPrint
 argument_list|(
 operator|(
-literal|"RR182x [%d,%d]: device connected event received\n"
+literal|"RR18xx [%d,%d]: device connected event received\n"
 operator|,
 name|pMvSataAdapter
 operator|->
@@ -4253,7 +4249,7 @@ expr_stmt|;
 name|KdPrint
 argument_list|(
 operator|(
-literal|"RR182x [%d,%d]: device disconnected event received \n"
+literal|"RR18xx [%d,%d]: device disconnected event received \n"
 operator|,
 name|pMvSataAdapter
 operator|->
@@ -4285,7 +4281,7 @@ else|else
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x: illigal value for param1(%d) at "
+literal|"RR18xx: illigal value for param1(%d) at "
 literal|"connect/disconect event, host=%d\n"
 argument_list|,
 name|param1
@@ -4304,7 +4300,7 @@ case|:
 name|KdPrint
 argument_list|(
 operator|(
-literal|"RR182x: DEVICE error event received, pci cause "
+literal|"RR18xx: DEVICE error event received, pci cause "
 literal|"reg=%x,  don't how to handle this\n"
 operator|,
 name|param1
@@ -4317,7 +4313,7 @@ return|;
 default|default:
 name|MV_ERROR
 argument_list|(
-literal|"RR182x[%d]: unknown event type (%d)\n"
+literal|"RR18xx[%d]: unknown event type (%d)\n"
 argument_list|,
 name|pMvSataAdapter
 operator|->
@@ -4382,7 +4378,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x[%d]: Failed to allocate memory for EDMA request"
+literal|"RR18xx[%d]: Failed to allocate memory for EDMA request"
 literal|" queues\n"
 argument_list|,
 name|pAdapter
@@ -4504,7 +4500,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x[%d]: Error in Request Quueues Alignment\n"
+literal|"RR18xx[%d]: Error in Request Quueues Alignment\n"
 argument_list|,
 name|pAdapter
 operator|->
@@ -4566,7 +4562,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x[%d]: Failed to allocate memory for EDMA response"
+literal|"RR18xx[%d]: Failed to allocate memory for EDMA response"
 literal|" queues\n"
 argument_list|,
 name|pAdapter
@@ -4699,7 +4695,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x[%d]: Error in Response Quueues Alignment\n"
+literal|"RR18xx[%d]: Error in Response Quueues Alignment\n"
 argument_list|,
 name|pAdapter
 operator|->
@@ -5143,7 +5139,7 @@ name|pVBus
 operator|->
 name|OsExt
 decl_stmt|;
-name|ULONG
+name|LBA_T
 name|capacity
 init|=
 name|LongDiv
@@ -5163,7 +5159,7 @@ operator|-
 literal|1
 argument_list|)
 decl_stmt|;
-name|ULONG
+name|LBA_T
 name|thiscap
 decl_stmt|,
 name|maxcap
@@ -5482,6 +5478,640 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|int
+name|HPTLIBAPI
+name|fDeSetTCQ
+parameter_list|(
+name|PDevice
+name|pDev
+parameter_list|,
+name|int
+name|enable
+parameter_list|,
+name|int
+name|depth
+parameter_list|)
+block|{
+name|MV_SATA_CHANNEL
+modifier|*
+name|pSataChannel
+init|=
+name|pDev
+operator|->
+name|mv
+decl_stmt|;
+name|MV_SATA_ADAPTER
+modifier|*
+name|pSataAdapter
+init|=
+name|pSataChannel
+operator|->
+name|mvSataAdapter
+decl_stmt|;
+name|MV_U8
+name|channelIndex
+init|=
+name|pSataChannel
+operator|->
+name|channelNumber
+decl_stmt|;
+name|IAL_ADAPTER_T
+modifier|*
+name|pAdapter
+init|=
+name|pSataAdapter
+operator|->
+name|IALData
+decl_stmt|;
+name|MV_CHANNEL
+modifier|*
+name|channelInfo
+init|=
+operator|&
+operator|(
+name|pAdapter
+operator|->
+name|mvChannel
+index|[
+name|channelIndex
+index|]
+operator|)
+decl_stmt|;
+name|int
+name|dmaActive
+init|=
+name|pSataChannel
+operator|->
+name|queueCommandsEnabled
+decl_stmt|;
+name|int
+name|ret
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|dmaActive
+condition|)
+block|{
+name|mvSataDisableChannelDma
+argument_list|(
+name|pSataAdapter
+argument_list|,
+name|channelIndex
+argument_list|)
+expr_stmt|;
+name|mvSataFlushDmaQueue
+argument_list|(
+name|pSataAdapter
+argument_list|,
+name|channelIndex
+argument_list|,
+name|MV_FLUSH_TYPE_CALLBACK
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|enable
+condition|)
+block|{
+if|if
+condition|(
+name|pSataChannel
+operator|->
+name|queuedDMA
+operator|==
+name|MV_EDMA_MODE_NOT_QUEUED
+operator|&&
+operator|(
+name|pSataChannel
+operator|->
+name|identifyDevice
+index|[
+name|IDEN_SUPPORTED_COMMANDS2
+index|]
+operator|&
+operator|(
+literal|0x2
+operator|)
+operator|)
+condition|)
+block|{
+name|UCHAR
+name|depth
+init|=
+operator|(
+operator|(
+name|pSataChannel
+operator|->
+name|identifyDevice
+index|[
+name|IDEN_QUEUE_DEPTH
+index|]
+operator|)
+operator|&
+literal|0x1f
+operator|)
+operator|+
+literal|1
+decl_stmt|;
+name|channelInfo
+operator|->
+name|queueDepth
+operator|=
+operator|(
+name|depth
+operator|==
+literal|32
+operator|)
+condition|?
+literal|31
+else|:
+name|depth
+expr_stmt|;
+name|mvSataConfigEdmaMode
+argument_list|(
+name|pSataAdapter
+argument_list|,
+name|channelIndex
+argument_list|,
+name|MV_EDMA_MODE_QUEUED
+argument_list|,
+name|depth
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|pSataChannel
+operator|->
+name|queuedDMA
+operator|!=
+name|MV_EDMA_MODE_NOT_QUEUED
+condition|)
+block|{
+name|channelInfo
+operator|->
+name|queueDepth
+operator|=
+literal|2
+expr_stmt|;
+name|mvSataConfigEdmaMode
+argument_list|(
+name|pSataAdapter
+argument_list|,
+name|channelIndex
+argument_list|,
+name|MV_EDMA_MODE_NOT_QUEUED
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|dmaActive
+condition|)
+name|mvSataEnableChannelDma
+argument_list|(
+name|pSataAdapter
+argument_list|,
+name|channelIndex
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|HPTLIBAPI
+name|fDeSetNCQ
+parameter_list|(
+name|PDevice
+name|pDev
+parameter_list|,
+name|int
+name|enable
+parameter_list|,
+name|int
+name|depth
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|HPTLIBAPI
+name|fDeSetWriteCache
+parameter_list|(
+name|PDevice
+name|pDev
+parameter_list|,
+name|int
+name|enable
+parameter_list|)
+block|{
+name|MV_SATA_CHANNEL
+modifier|*
+name|pSataChannel
+init|=
+name|pDev
+operator|->
+name|mv
+decl_stmt|;
+name|MV_SATA_ADAPTER
+modifier|*
+name|pSataAdapter
+init|=
+name|pSataChannel
+operator|->
+name|mvSataAdapter
+decl_stmt|;
+name|MV_U8
+name|channelIndex
+init|=
+name|pSataChannel
+operator|->
+name|channelNumber
+decl_stmt|;
+name|IAL_ADAPTER_T
+modifier|*
+name|pAdapter
+init|=
+name|pSataAdapter
+operator|->
+name|IALData
+decl_stmt|;
+name|MV_CHANNEL
+modifier|*
+name|channelInfo
+init|=
+operator|&
+operator|(
+name|pAdapter
+operator|->
+name|mvChannel
+index|[
+name|channelIndex
+index|]
+operator|)
+decl_stmt|;
+name|int
+name|dmaActive
+init|=
+name|pSataChannel
+operator|->
+name|queueCommandsEnabled
+decl_stmt|;
+name|int
+name|ret
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|dmaActive
+condition|)
+block|{
+name|mvSataDisableChannelDma
+argument_list|(
+name|pSataAdapter
+argument_list|,
+name|channelIndex
+argument_list|)
+expr_stmt|;
+name|mvSataFlushDmaQueue
+argument_list|(
+name|pSataAdapter
+argument_list|,
+name|channelIndex
+argument_list|,
+name|MV_FLUSH_TYPE_CALLBACK
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|pSataChannel
+operator|->
+name|identifyDevice
+index|[
+literal|82
+index|]
+operator|&
+operator|(
+literal|0x20
+operator|)
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|enable
+condition|)
+block|{
+if|if
+condition|(
+name|mvStorageDevATASetFeatures
+argument_list|(
+name|pSataAdapter
+argument_list|,
+name|channelIndex
+argument_list|,
+name|MV_ATA_SET_FEATURES_ENABLE_WCACHE
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+block|{
+name|channelInfo
+operator|->
+name|writeCacheEnabled
+operator|=
+name|MV_TRUE
+expr_stmt|;
+name|ret
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|mvStorageDevATASetFeatures
+argument_list|(
+name|pSataAdapter
+argument_list|,
+name|channelIndex
+argument_list|,
+name|MV_ATA_SET_FEATURES_DISABLE_WCACHE
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+block|{
+name|channelInfo
+operator|->
+name|writeCacheEnabled
+operator|=
+name|MV_FALSE
+expr_stmt|;
+name|ret
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
+block|}
+if|if
+condition|(
+name|dmaActive
+condition|)
+name|mvSataEnableChannelDma
+argument_list|(
+name|pSataAdapter
+argument_list|,
+name|channelIndex
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|HPTLIBAPI
+name|fDeSetReadAhead
+parameter_list|(
+name|PDevice
+name|pDev
+parameter_list|,
+name|int
+name|enable
+parameter_list|)
+block|{
+name|MV_SATA_CHANNEL
+modifier|*
+name|pSataChannel
+init|=
+name|pDev
+operator|->
+name|mv
+decl_stmt|;
+name|MV_SATA_ADAPTER
+modifier|*
+name|pSataAdapter
+init|=
+name|pSataChannel
+operator|->
+name|mvSataAdapter
+decl_stmt|;
+name|MV_U8
+name|channelIndex
+init|=
+name|pSataChannel
+operator|->
+name|channelNumber
+decl_stmt|;
+name|IAL_ADAPTER_T
+modifier|*
+name|pAdapter
+init|=
+name|pSataAdapter
+operator|->
+name|IALData
+decl_stmt|;
+name|MV_CHANNEL
+modifier|*
+name|channelInfo
+init|=
+operator|&
+operator|(
+name|pAdapter
+operator|->
+name|mvChannel
+index|[
+name|channelIndex
+index|]
+operator|)
+decl_stmt|;
+name|int
+name|dmaActive
+init|=
+name|pSataChannel
+operator|->
+name|queueCommandsEnabled
+decl_stmt|;
+name|int
+name|ret
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|dmaActive
+condition|)
+block|{
+name|mvSataDisableChannelDma
+argument_list|(
+name|pSataAdapter
+argument_list|,
+name|channelIndex
+argument_list|)
+expr_stmt|;
+name|mvSataFlushDmaQueue
+argument_list|(
+name|pSataAdapter
+argument_list|,
+name|channelIndex
+argument_list|,
+name|MV_FLUSH_TYPE_CALLBACK
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|pSataChannel
+operator|->
+name|identifyDevice
+index|[
+literal|82
+index|]
+operator|&
+operator|(
+literal|0x40
+operator|)
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|enable
+condition|)
+block|{
+if|if
+condition|(
+name|mvStorageDevATASetFeatures
+argument_list|(
+name|pSataAdapter
+argument_list|,
+name|channelIndex
+argument_list|,
+name|MV_ATA_SET_FEATURES_ENABLE_RLA
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+block|{
+name|channelInfo
+operator|->
+name|readAheadEnabled
+operator|=
+name|MV_TRUE
+expr_stmt|;
+name|ret
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|mvStorageDevATASetFeatures
+argument_list|(
+name|pSataAdapter
+argument_list|,
+name|channelIndex
+argument_list|,
+name|MV_ATA_SET_FEATURES_DISABLE_RLA
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+block|{
+name|channelInfo
+operator|->
+name|readAheadEnabled
+operator|=
+name|MV_FALSE
+expr_stmt|;
+name|ret
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
+block|}
+if|if
+condition|(
+name|dmaActive
+condition|)
+name|mvSataEnableChannelDma
+argument_list|(
+name|pSataAdapter
+argument_list|,
+name|channelIndex
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
+return|;
+block|}
+end_function
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -5658,6 +6288,13 @@ operator|>=
 literal|500000
 end_if
 
+begin_define
+define|#
+directive|define
+name|override_kernel_driver
+parameter_list|()
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -5668,12 +6305,15 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
+name|override_kernel_driver
+argument_list|()
+expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
 name|driver_lock
 argument_list|,
-literal|"hptlock"
+literal|"hptsleeplock"
 argument_list|,
 name|NULL
 argument_list|,
@@ -5744,6 +6384,12 @@ name|rid
 decl_stmt|;
 name|PVDevice
 name|pVDev
+decl_stmt|;
+name|intrmask_t
+name|oldspl
+init|=
+name|lock_driver
+argument_list|()
 decl_stmt|;
 name|pAdapter
 operator|->
@@ -5892,7 +6538,12 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x: Failed to allocate memory for EDMA queues\n"
+literal|"RR18xx: Failed to allocate memory for EDMA queues\n"
+argument_list|)
+expr_stmt|;
+name|unlock_driver
+argument_list|(
+name|oldspl
 argument_list|)
 expr_stmt|;
 return|return
@@ -5953,12 +6604,17 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x: Failed to remap memory space\n"
+literal|"RR18xx: Failed to remap memory space\n"
 argument_list|)
 expr_stmt|;
 name|hptmv_free_edma_queues
 argument_list|(
 name|pAdapter
+argument_list|)
+expr_stmt|;
+name|unlock_driver
+argument_list|(
+name|oldspl
 argument_list|)
 expr_stmt|;
 return|return
@@ -5970,7 +6626,7 @@ block|{
 name|KdPrint
 argument_list|(
 operator|(
-literal|"RR182x: io base address 0x%p\n"
+literal|"RR18xx: io base address 0x%p\n"
 operator|,
 name|pMvSataAdapter
 operator|->
@@ -6013,7 +6669,7 @@ operator|->
 name|hpt_dev
 argument_list|)
 expr_stmt|;
-comment|/* init RR182x */
+comment|/* init RR18xx */
 name|pMvSataAdapter
 operator|->
 name|intCoalThre
@@ -6086,7 +6742,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x[%d]: core failed to initialize the adapter\n"
+literal|"RR18xx[%d]: core failed to initialize the adapter\n"
 argument_list|,
 name|pMvSataAdapter
 operator|->
@@ -6113,6 +6769,11 @@ expr_stmt|;
 name|hptmv_free_edma_queues
 argument_list|(
 name|pAdapter
+argument_list|)
+expr_stmt|;
+name|unlock_driver
+argument_list|(
+name|oldspl
 argument_list|)
 expr_stmt|;
 return|return
@@ -6565,7 +7226,7 @@ block|{
 name|KdPrint
 argument_list|(
 operator|(
-literal|"RR182x[%d]: channel %d is connected\n"
+literal|"RR18xx[%d]: channel %d is connected\n"
 operator|,
 name|pMvSataAdapter
 operator|->
@@ -6601,7 +7262,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x[%d]: Failed to configure channel"
+literal|"RR18xx[%d]: Failed to configure channel"
 literal|" %d\n"
 argument_list|,
 name|pMvSataAdapter
@@ -6633,7 +7294,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x[%d]: Failed to start channel,"
+literal|"RR18xx[%d]: Failed to start channel,"
 literal|" channel=%d\n"
 argument_list|,
 name|pMvSataAdapter
@@ -6865,7 +7526,7 @@ literal|1
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"RR182x: RAID5 write-back %s\n"
+literal|"RR18xx: RAID5 write-back %s\n"
 argument_list|,
 name|_vbus_
 argument_list|(
@@ -6884,6 +7545,11 @@ directive|endif
 name|mvSataUnmaskAdapterInterrupt
 argument_list|(
 name|pMvSataAdapter
+argument_list|)
+expr_stmt|;
+name|unlock_driver
+argument_list|(
+name|oldspl
 argument_list|)
 expr_stmt|;
 return|return
@@ -6948,7 +7614,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x [%d,%d]: failed to perform Software reset\n"
+literal|"RR18xx [%d,%d]: failed to perform Software reset\n"
 argument_list|,
 name|pMvSataAdapter
 operator|->
@@ -6984,7 +7650,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x [%d,%d] Failed to Hard reser the SATA channel\n"
+literal|"RR18xx [%d,%d] Failed to Hard reser the SATA channel\n"
 argument_list|,
 name|pMvSataAdapter
 operator|->
@@ -7019,7 +7685,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR182x [%d,%d] Failed to Connect Device\n"
+literal|"RR18xx [%d,%d] Failed to Connect Device\n"
 argument_list|,
 name|pMvSataAdapter
 operator|->
@@ -7858,7 +8524,7 @@ name|u
 operator|.
 name|disk
 decl_stmt|;
-name|ULONG
+name|LBA_T
 name|Lba
 init|=
 name|pCmd
@@ -7910,8 +8576,6 @@ name|NoneUdmaCommand
 decl_stmt|;
 name|MV_BOOLEAN
 name|is48bit
-init|=
-name|MV_FALSE
 decl_stmt|;
 name|MV_U8
 name|channel
@@ -8042,18 +8706,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|Lba
-operator|&
-literal|0xF0000000
-condition|)
-block|{
+comment|/* 	 * always use 48bit LBA if drive supports it. 	 * Some Seagate drives report error if you use a 28-bit command 	 * to access sector 0xfffffff. 	 */
 name|is48bit
 operator|=
-name|MV_TRUE
+name|pMvSataChannel
+operator|->
+name|lba48Address
 expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|pCmd
@@ -9567,6 +10226,37 @@ name|ENXIO
 operator|)
 return|;
 block|}
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|700000
+if|if
+condition|(
+name|bus_setup_intr
+argument_list|(
+name|pAdapter
+operator|->
+name|hpt_dev
+argument_list|,
+name|pAdapter
+operator|->
+name|hpt_irq
+argument_list|,
+name|INTR_TYPE_CAM
+argument_list|,
+name|hpt_intr
+argument_list|,
+name|pAdapter
+argument_list|,
+operator|&
+name|pAdapter
+operator|->
+name|hpt_intr
+argument_list|)
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|bus_setup_intr
@@ -9593,6 +10283,8 @@ operator|->
 name|hpt_intr
 argument_list|)
 condition|)
+endif|#
+directive|endif
 block|{
 name|hpt_printk
 argument_list|(
@@ -9712,9 +10404,42 @@ name|ENOMEM
 return|;
 block|}
 comment|/* 	 * Construct our SIM entry 	 */
-if|if
-condition|(
-operator|(
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|700000
+name|hpt_vsim
+operator|=
+name|cam_sim_alloc
+argument_list|(
+name|hpt_action
+argument_list|,
+name|hpt_poll
+argument_list|,
+name|__str
+argument_list|(
+name|PROC_DIR_NAME
+argument_list|)
+argument_list|,
+name|pAdapter
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|pAdapter
+operator|->
+name|hpt_dev
+argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+literal|8
+argument_list|,
+name|devq
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|hpt_vsim
 operator|=
 name|cam_sim_alloc
@@ -9740,15 +10465,18 @@ argument_list|,
 operator|&
 name|Giant
 argument_list|,
-comment|/*untagged*/
 literal|1
 argument_list|,
-comment|/*tagged*/
 literal|8
 argument_list|,
 name|devq
 argument_list|)
-operator|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|hpt_vsim
 operator|==
 name|NULL
 condition|)
@@ -9762,6 +10490,24 @@ return|return
 name|ENOMEM
 return|;
 block|}
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|700000
+if|if
+condition|(
+name|xpt_bus_register
+argument_list|(
+name|hpt_vsim
+argument_list|,
+literal|0
+argument_list|)
+operator|!=
+name|CAM_SUCCESS
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|xpt_bus_register
@@ -9775,6 +10521,8 @@ argument_list|)
 operator|!=
 name|CAM_SUCCESS
 condition|)
+endif|#
+directive|endif
 block|{
 name|cam_sim_free
 argument_list|(
@@ -11482,6 +12230,13 @@ name|YIELD_THREAD
 expr_stmt|;
 else|#
 directive|else
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>
+literal|700033
+operator|)
 name|pause
 argument_list|(
 literal|"sched"
@@ -11489,6 +12244,24 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|tsleep
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|hpt_worker_thread
+argument_list|,
+name|PPAUSE
+argument_list|,
+literal|"sched"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 if|if
@@ -11619,15 +12392,27 @@ block|}
 block|}
 block|}
 comment|/*Remove this debug option*/
-comment|/* #ifdef DEBUG 		if (SIGISMEMBER(curproc->p_siglist, SIGSTOP)) 			pause("hptrdy", 2*hz); #endif */
+comment|/* #ifdef DEBUG 		if (SIGISMEMBER(curproc->p_siglist, SIGSTOP)) #if (__FreeBSD_version> 700033) 			pause("hptrdy", 2*hz); #else 			tsleep((caddr_t)hpt_worker_thread, PPAUSE, "hptrdy", 2*hz); #endif #endif */
 if|#
 directive|if
 operator|(
 name|__FreeBSD_version
 operator|>=
-literal|500043
+literal|800002
 operator|)
 name|kproc_suspend_check
+argument_list|(
+name|curproc
+argument_list|)
+expr_stmt|;
+elif|#
+directive|elif
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|500043
+operator|)
+name|kthread_suspend_check
 argument_list|(
 name|curproc
 argument_list|)
@@ -11641,6 +12426,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>
+literal|700033
+operator|)
 name|pause
 argument_list|(
 literal|"hptrdy"
@@ -11651,6 +12443,27 @@ name|hz
 argument_list|)
 expr_stmt|;
 comment|/* wait for something to do */
+else|#
+directive|else
+name|tsleep
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|hpt_worker_thread
+argument_list|,
+name|PPAUSE
+argument_list|,
+literal|"hptrdy"
+argument_list|,
+literal|2
+operator|*
+name|hz
+argument_list|)
+expr_stmt|;
+comment|/* wait for something to do */
+endif|#
+directive|endif
 block|}
 block|}
 end_function
@@ -12393,7 +13206,7 @@ name|inquiryData
 operator|->
 name|VendorId
 argument_list|,
-literal|"RR182x  "
+literal|"RR18xx  "
 argument_list|,
 literal|8
 argument_list|)
@@ -13163,31 +13976,34 @@ name|READ_CAPACITY
 case|:
 block|{
 name|UCHAR
-name|swip
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* Claim 512 byte blocks (big-endian). */
-operator|(
-operator|(
-name|PREAD_CAPACITY_DATA
-operator|)
+modifier|*
+name|rbuf
+init|=
 name|csio
 operator|->
 name|data_ptr
-operator|)
+decl_stmt|;
+name|unsigned
+name|int
+name|cap
+decl_stmt|;
+if|if
+condition|(
+name|pVDev
 operator|->
-name|BytesPerBlock
+name|VDeviceCapacity
+operator|>
+literal|0xfffffffful
+condition|)
+block|{
+name|cap
 operator|=
-literal|0x20000
+literal|0xfffffffful
 expr_stmt|;
-operator|*
-operator|(
-name|ULONG
-operator|*
-operator|)
-name|swip
+block|}
+else|else
+block|{
+name|cap
 operator|=
 name|pVDev
 operator|->
@@ -13195,48 +14011,253 @@ name|VDeviceCapacity
 operator|-
 literal|1
 expr_stmt|;
-operator|(
-operator|(
-name|PREAD_CAPACITY_DATA
-operator|)
-name|csio
-operator|->
-name|data_ptr
-operator|)
-operator|->
-name|LogicalBlockAddress
-operator|=
-operator|(
-name|swip
+block|}
+name|rbuf
 index|[
 literal|0
 index|]
-operator|<<
+operator|=
+call|(
+name|UCHAR
+call|)
+argument_list|(
+name|cap
+operator|>>
 literal|24
-operator|)
-operator||
-operator|(
-name|swip
+argument_list|)
+expr_stmt|;
+name|rbuf
 index|[
 literal|1
 index|]
-operator|<<
+operator|=
+call|(
+name|UCHAR
+call|)
+argument_list|(
+name|cap
+operator|>>
 literal|16
-operator|)
-operator||
-operator|(
-name|swip
+argument_list|)
+expr_stmt|;
+name|rbuf
 index|[
 literal|2
 index|]
-operator|<<
+operator|=
+call|(
+name|UCHAR
+call|)
+argument_list|(
+name|cap
+operator|>>
 literal|8
-operator|)
-operator||
-name|swip
+argument_list|)
+expr_stmt|;
+name|rbuf
 index|[
 literal|3
 index|]
+operator|=
+operator|(
+name|UCHAR
+operator|)
+name|cap
+expr_stmt|;
+comment|/* Claim 512 byte blocks (big-endian). */
+name|rbuf
+index|[
+literal|4
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|rbuf
+index|[
+literal|5
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|rbuf
+index|[
+literal|6
+index|]
+operator|=
+literal|2
+expr_stmt|;
+name|rbuf
+index|[
+literal|7
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|ccb_h
+operator|->
+name|status
+operator|=
+name|CAM_REQ_CMP
+expr_stmt|;
+break|break;
+block|}
+case|case
+literal|0x9e
+case|:
+comment|/*SERVICE_ACTION_IN*/
+block|{
+name|UCHAR
+modifier|*
+name|rbuf
+init|=
+name|csio
+operator|->
+name|data_ptr
+decl_stmt|;
+name|LBA_T
+name|cap
+init|=
+name|pVDev
+operator|->
+name|VDeviceCapacity
+operator|-
+literal|1
+decl_stmt|;
+name|rbuf
+index|[
+literal|0
+index|]
+operator|=
+call|(
+name|UCHAR
+call|)
+argument_list|(
+name|cap
+operator|>>
+literal|56
+argument_list|)
+expr_stmt|;
+name|rbuf
+index|[
+literal|1
+index|]
+operator|=
+call|(
+name|UCHAR
+call|)
+argument_list|(
+name|cap
+operator|>>
+literal|48
+argument_list|)
+expr_stmt|;
+name|rbuf
+index|[
+literal|2
+index|]
+operator|=
+call|(
+name|UCHAR
+call|)
+argument_list|(
+name|cap
+operator|>>
+literal|40
+argument_list|)
+expr_stmt|;
+name|rbuf
+index|[
+literal|3
+index|]
+operator|=
+call|(
+name|UCHAR
+call|)
+argument_list|(
+name|cap
+operator|>>
+literal|32
+argument_list|)
+expr_stmt|;
+name|rbuf
+index|[
+literal|4
+index|]
+operator|=
+call|(
+name|UCHAR
+call|)
+argument_list|(
+name|cap
+operator|>>
+literal|24
+argument_list|)
+expr_stmt|;
+name|rbuf
+index|[
+literal|5
+index|]
+operator|=
+call|(
+name|UCHAR
+call|)
+argument_list|(
+name|cap
+operator|>>
+literal|16
+argument_list|)
+expr_stmt|;
+name|rbuf
+index|[
+literal|6
+index|]
+operator|=
+call|(
+name|UCHAR
+call|)
+argument_list|(
+name|cap
+operator|>>
+literal|8
+argument_list|)
+expr_stmt|;
+name|rbuf
+index|[
+literal|7
+index|]
+operator|=
+operator|(
+name|UCHAR
+operator|)
+name|cap
+expr_stmt|;
+name|rbuf
+index|[
+literal|8
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|rbuf
+index|[
+literal|9
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|rbuf
+index|[
+literal|10
+index|]
+operator|=
+literal|2
+expr_stmt|;
+name|rbuf
+index|[
+literal|11
+index|]
+operator|=
+literal|0
 expr_stmt|;
 name|ccb_h
 operator|->
@@ -13258,6 +14279,14 @@ case|:
 case|case
 name|WRITE_10
 case|:
+case|case
+literal|0x88
+case|:
+comment|/* READ_16 */
+case|case
+literal|0x8a
+case|:
+comment|/* WRITE_16 */
 case|case
 literal|0x13
 case|:
@@ -13483,6 +14512,127 @@ literal|4
 index|]
 expr_stmt|;
 break|break;
+case|case
+literal|0x88
+case|:
+comment|/* READ_16 */
+case|case
+literal|0x8a
+case|:
+comment|/* WRITE_16 */
+name|pCmd
+operator|->
+name|uCmd
+operator|.
+name|Ide
+operator|.
+name|Lba
+operator|=
+operator|(
+name|HPT_U64
+operator|)
+name|Cdb
+index|[
+literal|2
+index|]
+operator|<<
+literal|56
+operator||
+operator|(
+name|HPT_U64
+operator|)
+name|Cdb
+index|[
+literal|3
+index|]
+operator|<<
+literal|48
+operator||
+operator|(
+name|HPT_U64
+operator|)
+name|Cdb
+index|[
+literal|4
+index|]
+operator|<<
+literal|40
+operator||
+operator|(
+name|HPT_U64
+operator|)
+name|Cdb
+index|[
+literal|5
+index|]
+operator|<<
+literal|32
+operator||
+operator|(
+name|HPT_U64
+operator|)
+name|Cdb
+index|[
+literal|6
+index|]
+operator|<<
+literal|24
+operator||
+operator|(
+name|HPT_U64
+operator|)
+name|Cdb
+index|[
+literal|7
+index|]
+operator|<<
+literal|16
+operator||
+operator|(
+name|HPT_U64
+operator|)
+name|Cdb
+index|[
+literal|8
+index|]
+operator|<<
+literal|8
+operator||
+operator|(
+name|HPT_U64
+operator|)
+name|Cdb
+index|[
+literal|9
+index|]
+expr_stmt|;
+name|pCmd
+operator|->
+name|uCmd
+operator|.
+name|Ide
+operator|.
+name|nSectors
+operator|=
+operator|(
+name|USHORT
+operator|)
+name|Cdb
+index|[
+literal|12
+index|]
+operator|<<
+literal|8
+operator||
+operator|(
+name|USHORT
+operator|)
+name|Cdb
+index|[
+literal|13
+index|]
+expr_stmt|;
+break|break;
 default|default:
 name|pCmd
 operator|->
@@ -13580,6 +14730,10 @@ case|:
 case|case
 name|READ_10
 case|:
+case|case
+literal|0x88
+case|:
+comment|/* READ_16 */
 name|pCmd
 operator|->
 name|uCmd
@@ -13603,6 +14757,10 @@ case|:
 case|case
 name|WRITE_10
 case|:
+case|case
+literal|0x8a
+case|:
+comment|/* WRITE_16 */
 name|pCmd
 operator|->
 name|uCmd

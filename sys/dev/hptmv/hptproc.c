@@ -1487,6 +1487,12 @@ operator|->
 name|Magic
 operator|==
 name|HPT_IOCTL_MAGIC
+operator|||
+name|piop
+operator|->
+name|Magic
+operator|==
+name|HPT_IOCTL_MAGIC32
 condition|)
 block|{
 name|KdPrintE
@@ -2372,7 +2378,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"Rebuilding %dMB"
+literal|"Rebuilding %lldMB"
 argument_list|,
 operator|(
 name|pTmpArray
@@ -2395,6 +2401,10 @@ name|buf
 argument_list|,
 literal|"Rebuilding %d%%"
 argument_list|,
+call|(
+name|UINT
+call|)
+argument_list|(
 operator|(
 name|pTmpArray
 operator|->
@@ -2430,6 +2440,7 @@ operator|)
 operator|>>
 literal|11
 operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2457,6 +2468,10 @@ name|buf
 argument_list|,
 literal|"Verifying %d%%"
 argument_list|,
+call|(
+name|UINT
+call|)
+argument_list|(
 operator|(
 name|pTmpArray
 operator|->
@@ -2492,6 +2507,7 @@ operator|)
 operator|>>
 literal|11
 operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sStatus
@@ -2559,7 +2575,7 @@ name|hpt_copy_info
 argument_list|(
 name|pinfo
 argument_list|,
-literal|"%2d  %11s  %-20s  %5dMB  %-16s"
+literal|"%2d  %11s  %-20s  %5lldMB  %-16s"
 argument_list|,
 name|nld
 argument_list|,

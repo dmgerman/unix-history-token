@@ -61,15 +61,15 @@ name|bSectorCountReg
 decl_stmt|;
 comment|/* IDE sector count register. */
 name|BYTE
-name|bSectorNumberReg
+name|bLbaLowReg
 decl_stmt|;
 comment|/* IDE sector number register. */
 name|BYTE
-name|bCylLowReg
+name|bLbaMidReg
 decl_stmt|;
 comment|/* IDE low order cylinder value. */
 name|BYTE
-name|bCylHighReg
+name|bLbaHighReg
 decl_stmt|;
 comment|/* IDE high order cylinder value. */
 name|BYTE
@@ -694,7 +694,7 @@ begin_define
 define|#
 directive|define
 name|MAX_COMMAND_BLOCKS_FOR_EACH_VBUS
-value|(MAX_QUEUE_COMM * (1+MAX_MEMBERS*2))
+value|(MAX_QUEUE_COMM * (1+MAX_MEMBERS*2) + 1)
 end_define
 
 begin_define
