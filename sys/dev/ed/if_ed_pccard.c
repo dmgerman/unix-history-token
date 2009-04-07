@@ -6168,11 +6168,6 @@ operator|==
 name|ED_CHIP_TYPE_DL10022
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"Enabling 10022 workaround\n"
-argument_list|)
-expr_stmt|;
 name|ed_asic_outb
 argument_list|(
 name|sc
@@ -6192,6 +6187,9 @@ else|:
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
 block|}
 elseif|else
 if|if
@@ -6222,6 +6220,8 @@ else|:
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 block|}
