@@ -252,7 +252,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-literal|4
+literal|16
 index|]
 decl_stmt|;
 comment|/* locate and validate the SMBIOS */
