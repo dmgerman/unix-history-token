@@ -8842,7 +8842,7 @@ block|}
 else|else
 break|break;
 block|}
-comment|/* inesrt into sorted fwdev list */
+comment|/* 		 * If the fwdev is not found in the  		 * fc->devices TAILQ, then we will add it. 		 */
 name|pfwdev
 operator|=
 name|NULL
