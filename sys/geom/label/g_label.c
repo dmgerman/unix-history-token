@@ -295,7 +295,10 @@ index|[]
 init|=
 block|{
 operator|&
-name|g_label_ufs
+name|g_label_ufs_id
+block|,
+operator|&
+name|g_label_ufs_volume
 block|,
 operator|&
 name|g_label_iso9660
