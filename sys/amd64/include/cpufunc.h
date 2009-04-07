@@ -1589,15 +1589,7 @@ name|u_int
 name|sel
 parameter_list|)
 block|{
-specifier|register
-name|u_int32_t
-name|fsbase
-asm|__asm("ecx");
 comment|/* Preserve the fsbase value across the selector load */
-name|fsbase
-init|=
-name|MSR_FSBASE
-decl_stmt|;
 asm|__asm __volatile("rdmsr; mov %0,%%fs; wrmsr"
 block|: :
 literal|"rm"
@@ -1607,7 +1599,7 @@ operator|)
 operator|,
 literal|"c"
 operator|(
-name|fsbase
+name|MSR_FSBASE
 operator|)
 operator|:
 literal|"eax"
@@ -1646,15 +1638,7 @@ name|u_int
 name|sel
 parameter_list|)
 block|{
-specifier|register
-name|u_int32_t
-name|gsbase
-asm|__asm("ecx");
 comment|/* 	 * Preserve the gsbase value across the selector load. 	 * Note that we have to disable interrupts because the gsbase 	 * being trashed happens to be the kernel gsbase at the time. 	 */
-name|gsbase
-init|=
-name|MSR_GSBASE
-decl_stmt|;
 asm|__asm __volatile("pushfq; cli; rdmsr; mov %0,%%gs; wrmsr; popfq"
 block|: :
 literal|"rm"
@@ -1664,7 +1648,7 @@ operator|)
 operator|,
 literal|"c"
 operator|(
-name|gsbase
+name|MSR_GSBASE
 operator|)
 operator|:
 literal|"eax"
