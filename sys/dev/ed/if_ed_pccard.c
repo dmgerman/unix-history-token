@@ -2646,7 +2646,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* 	 * For the older cards, we have to get the MAC address from 	 * the card in some way.  Let's try the standard PCMCIA way 	 * first.  If that fails, then check to see if we have valid 	 * data from the standard NE-2000 data roms.  If that fails, 	 * check to see if the card has a hint about where to look in 	 * its CIS.  If that fails, maybe we should look at some 	 * default value.  In all fails, we should fail the attach, 	 * but don't right now. 	 */
+comment|/* 	 * For the older cards, we have to get the MAC address from 	 * the card in some way.  Let's try the standard PCMCIA way 	 * first.  If that fails, then check to see if we have valid 	 * data from the standard NE-2000 data roms.  If that fails, 	 * check to see if the card has a hint about where to look in 	 * its CIS.  If that fails, maybe we should look at some 	 * default value.  In all fails, we fail the attach. 	 */
 for|for
 control|(
 name|i
