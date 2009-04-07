@@ -3599,68 +3599,96 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ED_CHIP_TYPE_DP8390
+name|ED_CHIP_TYPE_AX88190
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|ED_CHIP_TYPE_WD790
+name|ED_CHIP_TYPE_AX88790
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ED_CHIP_TYPE_AX88190
+name|ED_CHIP_TYPE_DL10019
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|ED_CHIP_TYPE_DL10019
+name|ED_CHIP_TYPE_DL10022
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|ED_CHIP_TYPE_DL10022
+name|ED_CHIP_TYPE_DP8390
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|ED_CHIP_TYPE_TC5299J
+name|ED_CHIP_TYPE_NS83903
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|ED_CHIP_TYPE_RTL8019
+name|ED_CHIP_TYPE_NS83926
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|ED_CHIP_TYPE_RTL8029
+name|ED_CHIP_TYPE_RTL8019
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|ED_CHIP_TYPE_AX88790
+name|ED_CHIP_TYPE_RTL8029
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|ED_CHIP_TYPE_TC3299
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_CHIP_TYPE_TC5299J
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_CHIP_TYPE_W89C926
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_CHIP_TYPE_WD790
+value|12
+end_define
+
 begin_comment
-comment|/*  * MII bus definitions.  These are common to both DL100xx and AX88x90  * MII definitions, most likely because they are standards based.  */
+comment|/*  * MII bus definitions.  These are common to both DL100xx and AX88x90  * MII definitions, because they are standards based.  */
 end_comment
 
 begin_define
