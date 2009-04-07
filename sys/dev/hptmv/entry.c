@@ -10655,17 +10655,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-comment|/* Register shutdown handler, and start the work thread. */
-if|if
-condition|(
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
+comment|/* Register a shutdown handler to flush data for the current adapter */
 name|pAdapter
 operator|->
 name|eh
@@ -10686,17 +10676,34 @@ condition|(
 name|pAdapter
 operator|->
 name|eh
+operator|==
+name|NULL
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|pAdapter
+operator|->
+name|hpt_dev
+argument_list|,
+literal|"shutdown event registration failed\n"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Start the work thread.  XXX */
 name|launch_worker_thread
 argument_list|()
-expr_stmt|;
-else|else
-name|hpt_printk
-argument_list|(
-operator|(
-literal|"shutdown event registration failed\n"
-operator|)
-argument_list|)
 expr_stmt|;
 block|}
 return|return
