@@ -2402,6 +2402,16 @@ operator|!
 name|doingcache
 condition|)
 return|return;
+comment|/* 	 * Avoid blowout in namecache entries. 	 */
+if|if
+condition|(
+name|numcache
+operator|>=
+name|desiredvnodes
+operator|*
+literal|2
+condition|)
+return|return;
 if|if
 condition|(
 name|cnp
