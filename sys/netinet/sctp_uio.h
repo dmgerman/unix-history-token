@@ -3313,7 +3313,7 @@ decl_stmt|;
 name|uint32_t
 name|extra_padding
 index|[
-literal|8
+literal|32
 index|]
 decl_stmt|;
 comment|/* future */
@@ -3427,7 +3427,7 @@ comment|/* sctpAssocEntry 1   */
 name|uint32_t
 name|extra_padding
 index|[
-literal|8
+literal|32
 index|]
 decl_stmt|;
 comment|/* future */
@@ -3455,7 +3455,7 @@ comment|/* sctpAssocLocalAddrEntry 3   */
 name|uint32_t
 name|extra_padding
 index|[
-literal|8
+literal|32
 index|]
 decl_stmt|;
 comment|/* future */
@@ -3521,9 +3521,12 @@ name|start_time
 decl_stmt|;
 comment|/* sctpAssocLocalRemEntry 8   */
 name|uint32_t
+name|rtt
+decl_stmt|;
+name|uint32_t
 name|extra_padding
 index|[
-literal|8
+literal|32
 index|]
 decl_stmt|;
 comment|/* future */
