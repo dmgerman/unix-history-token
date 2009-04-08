@@ -4536,11 +4536,6 @@ operator|&
 name|PFS_RAWWR
 condition|)
 block|{
-name|pfs_lock
-argument_list|(
-name|pn
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|pn_fill
@@ -4554,11 +4549,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|uio
-argument_list|)
-expr_stmt|;
-name|pfs_unlock
-argument_list|(
-name|pn
 argument_list|)
 expr_stmt|;
 if|if
