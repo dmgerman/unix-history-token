@@ -1406,10 +1406,6 @@ name|u_int
 name|sc_tdmaslotlen
 decl_stmt|;
 comment|/* TDMA slot length (usec) */
-name|u_int
-name|sc_tdmabintcnt
-decl_stmt|;
-comment|/* TDMA beacon intvl (slots) */
 name|struct
 name|ath_rx_status
 modifier|*
