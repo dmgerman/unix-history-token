@@ -218,45 +218,6 @@ value|__byte_swap_long_var(x)
 endif|#
 directive|endif
 comment|/* __OPTIMIZE__ */
-define|#
-directive|define
-name|__byte_swap_word_var
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|__extension__ ({ register __uint16_t __X = (x); \    __asm ("xchgb %h0, %b0" : "+Q" (__X)); \    __X; })
-ifdef|#
-directive|ifdef
-name|__OPTIMIZE__
-define|#
-directive|define
-name|__byte_swap_word_const
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|((((x)& 0xff00)>> 8) | \ 	 (((x)& 0x00ff)<< 8))
-define|#
-directive|define
-name|__byte_swap_word
-parameter_list|(
-name|x
-parameter_list|)
-value|(__builtin_constant_p(x) ? \ 	__byte_swap_word_const(x) : __byte_swap_word_var(x))
-else|#
-directive|else
-comment|/* __OPTIMIZE__ */
-define|#
-directive|define
-name|__byte_swap_word
-parameter_list|(
-name|x
-parameter_list|)
-value|__byte_swap_word_var(x)
-endif|#
-directive|endif
-comment|/* __OPTIMIZE__ */
 specifier|static
 name|__inline
 name|__uint64_t
@@ -304,10 +265,13 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|__byte_swap_word
-argument_list|(
 name|_x
-argument_list|)
+operator|<<
+literal|8
+operator||
+name|_x
+operator|>>
+literal|8
 operator|)
 return|;
 block|}
