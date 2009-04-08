@@ -2050,7 +2050,7 @@ name|buf
 argument_list|,
 name|bufsz
 argument_list|,
-literal|"+%08x"
+literal|"+%08u"
 argument_list|,
 name|entry
 operator|->
