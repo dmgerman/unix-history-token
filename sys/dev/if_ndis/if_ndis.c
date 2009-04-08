@@ -4047,6 +4047,8 @@ name|ic
 operator|->
 name|ic_caps
 operator|=
+name|IEEE80211_C_8023ENCAP
+operator||
 name|IEEE80211_C_STA
 operator||
 name|IEEE80211_C_IBSS

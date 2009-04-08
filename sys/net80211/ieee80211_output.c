@@ -904,7 +904,23 @@ block|}
 endif|#
 directive|endif
 comment|/* IEEE80211_SUPPORT_SUPERG */
-comment|/* 		 * Encapsulate the packet in prep for transmission. 		 */
+if|if
+condition|(
+name|__predict_true
+argument_list|(
+operator|(
+name|vap
+operator|->
+name|iv_caps
+operator|&
+name|IEEE80211_C_8023ENCAP
+operator|)
+operator|==
+literal|0
+argument_list|)
+condition|)
+block|{
+comment|/* 			 * Encapsulate the packet in prep for transmission. 			 */
 name|m
 operator|=
 name|ieee80211_encap
@@ -930,6 +946,7 @@ name|ni
 argument_list|)
 expr_stmt|;
 continue|continue;
+block|}
 block|}
 comment|/* 		 * Stash the node pointer and hand the frame off to 		 * the underlying device.  Note that we do this after 		 * any call to ieee80211_dwds_mcast because that code 		 * uses any existing value for rcvif. 		 */
 name|m

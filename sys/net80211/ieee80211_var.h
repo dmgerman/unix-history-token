@@ -2706,7 +2706,7 @@ comment|/* ic_caps/iv_caps: device driver capabilities */
 end_comment
 
 begin_comment
-comment|/* 0x2f available */
+comment|/* 0x2e available */
 end_comment
 
 begin_define
@@ -2718,6 +2718,17 @@ end_define
 
 begin_comment
 comment|/* CAPABILITY: STA available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_C_8023ENCAP
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* CAPABILITY: 802.3 encap */
 end_comment
 
 begin_define
@@ -2976,7 +2987,7 @@ define|#
 directive|define
 name|IEEE80211_C_BITS
 define|\
-value|"\20\1STA\7FF\10TURBOP\11IBSS\12PMGT" \ 	"\13HOSTAP\14AHDEMO\15SWRETRY\16TXPMGT\17SHSLOT\20SHPREAMBLE" \ 	"\21MONITOR\22DFS\30WPA1\31WPA2\32BURST\33WME\34WDS\36BGSCAN" \ 	"\37TXFRAG\40TDMA"
+value|"\20\1STA\002803ENCAP\7FF\10TURBOP\11IBSS\12PMGT" \ 	"\13HOSTAP\14AHDEMO\15SWRETRY\16TXPMGT\17SHSLOT\20SHPREAMBLE" \ 	"\21MONITOR\22DFS\30WPA1\31WPA2\32BURST\33WME\34WDS\36BGSCAN" \ 	"\37TXFRAG\40TDMA"
 end_define
 
 begin_comment
