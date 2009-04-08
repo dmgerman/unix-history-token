@@ -1943,7 +1943,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * dab_align() handles the following data aborts:  *  *  FAULT_ALIGN_0 - Alignment fault  *  FAULT_ALIGN_0 - Alignment fault  *  * These faults are fatal if they happen in kernel mode. Otherwise, we  * deliver a bus error to the process.  */
+comment|/*  * dab_align() handles the following data aborts:  *  *  FAULT_ALIGN_0 - Alignment fault  *  FAULT_ALIGN_1 - Alignment fault  *  * These faults are fatal if they happen in kernel mode. Otherwise, we  * deliver a bus error to the process.  */
 end_comment
 
 begin_function
