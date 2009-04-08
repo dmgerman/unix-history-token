@@ -103,45 +103,6 @@ name|__GNUCLIKE_BUILTIN_CONSTANT_P
 argument_list|)
 define|#
 directive|define
-name|__word_swap_int_var
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|__extension__ ({ register __uint32_t __X = (x); \    __asm ("rorl $16, %0" : "+r" (__X)); \    __X; })
-ifdef|#
-directive|ifdef
-name|__OPTIMIZE__
-define|#
-directive|define
-name|__word_swap_int_const
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|((((x)& 0xffff0000)>> 16) | \ 	 (((x)& 0x0000ffff)<< 16))
-define|#
-directive|define
-name|__word_swap_int
-parameter_list|(
-name|x
-parameter_list|)
-value|(__builtin_constant_p(x) ? \ 	__word_swap_int_const(x) : __word_swap_int_var(x))
-else|#
-directive|else
-comment|/* __OPTIMIZE__ */
-define|#
-directive|define
-name|__word_swap_int
-parameter_list|(
-name|x
-parameter_list|)
-value|__word_swap_int_var(x)
-endif|#
-directive|endif
-comment|/* __OPTIMIZE__ */
-define|#
-directive|define
 name|__byte_swap_int_var
 parameter_list|(
 name|x
