@@ -155,6 +155,28 @@ modifier|*
 name|b2
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|MPC85XX
+return|return
+operator|(
+operator|(
+name|b1
+operator|->
+name|bsh
+operator|==
+name|b2
+operator|->
+name|bsh
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
+operator|)
+return|;
+else|#
+directive|else
 return|return
 operator|(
 operator|(
@@ -178,6 +200,8 @@ else|:
 literal|0
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
