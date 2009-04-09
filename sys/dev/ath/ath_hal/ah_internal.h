@@ -1296,8 +1296,7 @@ name|ath_hal_eepromDetach
 parameter_list|(
 name|_ah
 parameter_list|)
-define|\
-value|AH_PRIVATE(_ah)->ah_eepromDetach(_ah)
+value|do {				\ 	if (AH_PRIVATE(_ah)->ah_eepromDetach != AH_NULL)	\ 		AH_PRIVATE(_ah)->ah_eepromDetach(_ah);		\ } while (0)
 end_define
 
 begin_define
