@@ -269,6 +269,8 @@ name|TOK_BW
 block|,
 name|TOK_DELAY
 block|,
+name|TOK_PIPE_PROFILE
+block|,
 name|TOK_RED
 block|,
 name|TOK_GRED
