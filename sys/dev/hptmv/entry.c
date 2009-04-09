@@ -403,7 +403,13 @@ argument_list|,
 name|hpt_detach
 argument_list|)
 block|,
-comment|/*	DEVMETHOD(device_shutdown,	hpt_shutdown), */
+name|DEVMETHOD
+argument_list|(
+name|device_shutdown
+argument_list|,
+name|hpt_shutdown
+argument_list|)
+block|,
 block|{
 literal|0
 block|,
@@ -10655,42 +10661,6 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-comment|/* Register a shutdown handler to flush data for the current adapter */
-name|pAdapter
-operator|->
-name|eh
-operator|=
-name|EVENTHANDLER_REGISTER
-argument_list|(
-name|shutdown_final
-argument_list|,
-name|hpt_shutdown
-argument_list|,
-name|dev
-argument_list|,
-name|SHUTDOWN_PRI_DEFAULT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|pAdapter
-operator|->
-name|eh
-operator|==
-name|NULL
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|pAdapter
-operator|->
-name|hpt_dev
-argument_list|,
-literal|"shutdown event registration failed\n"
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
 name|device_get_unit
