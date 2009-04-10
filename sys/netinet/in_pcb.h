@@ -387,9 +387,9 @@ name|inp_ip_minttl
 decl_stmt|;
 comment|/* (i) minimum TTL or drop */
 name|uint32_t
-name|inp_ispare1
+name|inp_flowid
 decl_stmt|;
-comment|/* (x) connection id / queue id */
+comment|/* (x) flow id / queue id */
 name|u_int
 name|inp_refcount
 decl_stmt|;
@@ -1636,6 +1636,28 @@ end_define
 
 begin_comment
 comment|/* strong socket reference */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_SW_FLOWID
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* software generated flow id */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_HW_FLOWID
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* hardware generated flow id */
 end_comment
 
 begin_define

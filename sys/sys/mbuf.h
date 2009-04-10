@@ -801,6 +801,17 @@ begin_comment
 comment|/* protocol-specific */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|M_FLOWID
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* flowid is valid */
+end_comment
+
 begin_comment
 comment|/*  * For RELENG_{6,7} steal these flags for limited multiple routing table  * support. In RELENG_8 and beyond, use just one flag and a tag.  */
 end_comment
