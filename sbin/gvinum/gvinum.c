@@ -2311,14 +2311,8 @@ argument_list|)
 expr_stmt|;
 name|d
 operator|=
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|gv_drive
-argument_list|)
-argument_list|)
+name|gv_alloc_drive
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2331,19 +2325,6 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"unable to allocate for gv_drive object"
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-name|d
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|gv_drive
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|strlcpy
