@@ -3260,6 +3260,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|DT_GNU_HASH
+value|0x6ffffef5
+end_define
+
+begin_comment
+comment|/* GNU-style hash table */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DT_CONFIG
 value|0x6ffffefa
 end_define
