@@ -2452,7 +2452,7 @@ condition|)
 goto|goto
 name|bad
 goto|;
-comment|/* 	 * Determine which chipset we are.  Almost the PC Card chipsets have 	 * the ASIC and NIC offsets in the same place.  There's a tiny 	 * minority (2?) that follow the WD80x3 conventions, which are handled 	 * as a special case. 	 */
+comment|/* 	 * Determine which chipset we are.  Almost all the PC Card chipsets 	 * have the Novel ASIC and NIC offsets.  There's 2 known cards that 	 * follow the WD80x3 conventions, which are handled as a special case. 	 */
 name|sc
 operator|->
 name|asic_offset
