@@ -601,7 +601,7 @@ argument_list|,
 name|DE650
 argument_list|)
 block|,
-literal|0
+name|NE2000DVF_ANYFUNC
 block|}
 block|,
 block|{
@@ -777,6 +777,7 @@ block|,
 name|NE2000DVF_AX88X90
 block|}
 block|,
+comment|/* Same ID for many different cards, including generic NE2000 */
 block|{
 name|PCMCIA_CARD
 argument_list|(
