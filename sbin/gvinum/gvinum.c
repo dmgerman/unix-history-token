@@ -3441,7 +3441,7 @@ modifier|*
 name|device
 parameter_list|)
 block|{
-comment|/* Strip away eventual /dev/ in front. */
+comment|/* Strip possible /dev/ in front. */
 if|if
 condition|(
 name|strncmp
