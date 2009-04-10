@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2009, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -987,6 +987,47 @@ argument_list|,
 name|mdic
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HANKSVILLE_HW
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_PCH_A_SUPPORT
+argument_list|)
+comment|/* Workaround for Si errata */
+if|if
+condition|(
+operator|(
+name|hw
+operator|->
+name|phy
+operator|.
+name|type
+operator|==
+name|e1000_phy_lsi
+operator|)
+operator|&&
+operator|(
+name|hw
+operator|->
+name|revision_id
+operator|<=
+literal|2
+operator|)
+condition|)
+name|msec_delay
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HANKSVILLE_HW&& !NO_PCH_A_SUPPORT */
 comment|/* 	 * Poll the ready bit to see if the MDI read completed 	 * Increasing the time out as testing showed failures with 	 * the lower time out 	 */
 for|for
 control|(
@@ -1175,6 +1216,47 @@ argument_list|,
 name|mdic
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HANKSVILLE_HW
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_PCH_A_SUPPORT
+argument_list|)
+comment|/* Workaround for Si errata */
+if|if
+condition|(
+operator|(
+name|hw
+operator|->
+name|phy
+operator|.
+name|type
+operator|==
+name|e1000_phy_lsi
+operator|)
+operator|&&
+operator|(
+name|hw
+operator|->
+name|revision_id
+operator|<=
+literal|2
+operator|)
+condition|)
+name|msec_delay
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HANKSVILLE_HW&& !NO_PCH_A_SUPPORT */
 comment|/* 	 * Poll the ready bit to see if the MDI read completed 	 * Increasing the time out as testing showed failures with 	 * the lower time out 	 */
 for|for
 control|(
@@ -2071,14 +2153,14 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* For newer PHYs this bit is downshift enable */
+comment|/* For BM PHY this bit is downshift enable */
 if|if
 condition|(
 name|phy
 operator|->
 name|type
-operator|==
-name|e1000_phy_m88
+operator|!=
+name|e1000_phy_bm
 condition|)
 name|phy_data
 operator||=
@@ -5528,12 +5610,20 @@ expr_stmt|;
 if|if
 condition|(
 name|index
-operator|<
+operator|>=
 name|M88E1000_CABLE_LENGTH_TABLE_SIZE
 operator|+
 literal|1
 condition|)
 block|{
+name|ret_val
+operator|=
+name|E1000_ERR_PHY
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 name|phy
 operator|->
 name|min_cable_length
@@ -5570,14 +5660,6 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-block|}
-else|else
-block|{
-name|ret_val
-operator|=
-name|E1000_ERR_PHY
-expr_stmt|;
-block|}
 name|out
 label|:
 return|return
@@ -7380,6 +7462,14 @@ name|phy_type
 init|=
 name|e1000_phy_unknown
 decl_stmt|;
+name|hw
+operator|->
+name|phy
+operator|.
+name|id
+operator|=
+name|phy_type
+expr_stmt|;
 for|for
 control|(
 name|phy_addr
@@ -8307,12 +8397,10 @@ decl_stmt|;
 name|u16
 name|reg
 init|=
-operator|(
-operator|(
-name|u16
-operator|)
+name|BM_PHY_REG_NUM
+argument_list|(
 name|offset
-operator|)
+argument_list|)
 decl_stmt|;
 name|u16
 name|phy_reg
@@ -8326,7 +8414,7 @@ literal|1
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
-literal|"e1000_read_phy_wakeup_reg_bm"
+literal|"e1000_access_phy_wakeup_reg_bm"
 argument_list|)
 expr_stmt|;
 name|ret_val
@@ -8532,7 +8620,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Read the page 800 value using opcode 0x12 */
+comment|/* Write the page 800 value using opcode 0x12 */
 name|ret_val
 operator|=
 name|e1000_write_phy_reg_mdic
@@ -8553,7 +8641,7 @@ condition|)
 block|{
 name|DEBUGOUT
 argument_list|(
-literal|"Could not read data value from page 800\n"
+literal|"Could not access data value from page 800\n"
 argument_list|)
 expr_stmt|;
 goto|goto

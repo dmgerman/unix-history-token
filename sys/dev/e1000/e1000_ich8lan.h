@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2009, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -54,25 +54,29 @@ name|ICH_FLASH_FDATA0
 value|0x0010
 end_define
 
+begin_comment
+comment|/* Requires up to 10 seconds when MNG might be accessing part. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ICH_FLASH_READ_COMMAND_TIMEOUT
-value|500
+value|10000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ICH_FLASH_WRITE_COMMAND_TIMEOUT
-value|500
+value|10000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ICH_FLASH_ERASE_COMMAND_TIMEOUT
-value|3000000
+value|10000000
 end_define
 
 begin_define
@@ -210,7 +214,7 @@ begin_define
 define|#
 directive|define
 name|ID_LED_DEFAULT_ICH8LAN
-value|((ID_LED_DEF1_DEF2<< 12) | \                                  (ID_LED_DEF1_OFF2<<  8) | \                                  (ID_LED_DEF1_ON2<<  4) | \                                  (ID_LED_DEF1_DEF2))
+value|((ID_LED_DEF1_DEF2<< 12) | \                                  (ID_LED_OFF1_OFF2<<  8) | \                                  (ID_LED_OFF1_ON2<<  4) | \                                  (ID_LED_DEF1_DEF2))
 end_define
 
 begin_define
@@ -225,6 +229,20 @@ define|#
 directive|define
 name|E1000_ICH_NVM_SIG_MASK
 value|0xC000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_ICH_NVM_VALID_SIG_MASK
+value|0xC0
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_ICH_NVM_SIG_VALUE
+value|0x80
 end_define
 
 begin_define
@@ -356,6 +374,165 @@ directive|define
 name|IGP3_PM_CTRL_FORCE_PWR_DOWN
 value|0x0020
 end_define
+
+begin_comment
+comment|/* PHY Wakeup Registers and defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BM_RCTL
+value|PHY_REG(BM_WUC_PAGE, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BM_WUC
+value|PHY_REG(BM_WUC_PAGE, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BM_WUFC
+value|PHY_REG(BM_WUC_PAGE, 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BM_WUS
+value|PHY_REG(BM_WUC_PAGE, 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BM_RAR_L
+parameter_list|(
+name|_i
+parameter_list|)
+value|(BM_PHY_REG(BM_WUC_PAGE, 16 + ((_i)<< 2)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BM_RAR_M
+parameter_list|(
+name|_i
+parameter_list|)
+value|(BM_PHY_REG(BM_WUC_PAGE, 17 + ((_i)<< 2)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BM_RAR_H
+parameter_list|(
+name|_i
+parameter_list|)
+value|(BM_PHY_REG(BM_WUC_PAGE, 18 + ((_i)<< 2)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BM_RAR_CTRL
+parameter_list|(
+name|_i
+parameter_list|)
+value|(BM_PHY_REG(BM_WUC_PAGE, 19 + ((_i)<< 2)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BM_MTA
+parameter_list|(
+name|_i
+parameter_list|)
+value|(BM_PHY_REG(BM_WUC_PAGE, 128 + ((_i)<< 1)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BM_RCTL_UPE
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Unicast Promiscuous Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BM_RCTL_MPE
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Multicast Promiscuous Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BM_RCTL_MO_SHIFT
+value|3
+end_define
+
+begin_comment
+comment|/* Multicast Offset Shift */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BM_RCTL_MO_MASK
+value|(3<< 3)
+end_define
+
+begin_comment
+comment|/* Multicast Offset Mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BM_RCTL_BAM
+value|0x0020
+end_define
+
+begin_comment
+comment|/* Broadcast Accept Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BM_RCTL_PMCF
+value|0x0040
+end_define
+
+begin_comment
+comment|/* Pass MAC Control Frames */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BM_RCTL_RFCE
+value|0x0080
+end_define
+
+begin_comment
+comment|/* Rx Flow Control Enable */
+end_comment
 
 begin_comment
 comment|/*  * Additional interrupts need to be handled for ICH family:  *  DSW = The FW changed the status of the DISSW bit in FWSM  *  PHYINT = The LAN connected device generates an interrupt  *  EPRST = Manageability reset event  */
@@ -494,6 +671,38 @@ name|hw
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HANKSVILLE_HW
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_PCH_A_SUPPORT
+argument_list|)
+end_if
+
+begin_function_decl
+name|s32
+name|e1000_hv_phy_powerdown_workaround_ich8lan
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
