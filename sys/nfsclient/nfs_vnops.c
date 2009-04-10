@@ -4949,6 +4949,19 @@ operator|==
 name|ENOENT
 condition|)
 block|{
+if|if
+condition|(
+name|dvp
+operator|->
+name|v_iflag
+operator|&
+name|VI_DOOMED
+condition|)
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
 comment|/* 		 * We only accept a negative hit in the cache if the 		 * modification time of the parent directory matches 		 * our cached copy.  Otherwise, we discard all of the 		 * negative cache entries for this directory. 		 */
 if|if
 condition|(
