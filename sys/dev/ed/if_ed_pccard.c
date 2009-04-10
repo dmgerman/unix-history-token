@@ -2675,12 +2675,6 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|sc
-operator|->
-name|chip_type
-operator|==
-name|ED_CHIP_TYPE_DP8390
-operator|&&
 name|sum
 operator|==
 literal|0
