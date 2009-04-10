@@ -2464,7 +2464,7 @@ condition|)
 goto|goto
 name|bad
 goto|;
-comment|/* 	 * Determine which chipset we are.  All the PC Card chipsets have the 	 * ASIC and NIC offsets in the same place. 	 */
+comment|/* 	 * Determine which chipset we are.  Almost the PC Card chipsets have 	 * the ASIC and NIC offsets in the same place.  There's a tiny 	 * minority (2?) that follow the WD80x3 conventions, which are handled 	 * as a special case. 	 */
 name|sc
 operator|->
 name|asic_offset
@@ -2646,7 +2646,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* 	 * For the older cards, we have to get the MAC address from 	 * the card in some way.  Let's try the standard PCMCIA way 	 * first.  If that fails, then check to see if we have valid 	 * data from the standard NE-2000 data roms.  If that fails, 	 * check to see if the card has a hint about where to look in 	 * its CIS.  If that fails, maybe we should look at some 	 * default value.  In all fails, we fail the attach. 	 */
+comment|/* 	 * There are several ways to get the MAC address for the card. 	 * Some of the above probe routines can fill in the enaddr.  If 	 * not, we run through a number of 'well known' locations: 	 *	(1) From the PC Card FUNCE 	 *	(2) From offset 0 in the shared memory 	 *	(3) From a hinted offset in attribute memory 	 *	(4) From 0xff0 in attribute memory 	 * If we can't get a non-zero MAC address from this list, we fail. 	 */
 for|for
 control|(
 name|i
