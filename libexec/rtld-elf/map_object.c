@@ -251,7 +251,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/*      * Scan the program header entries, and save key information.      *      * We rely on there being exactly two load segments, text and data,      * in that order.      */
+comment|/*      * Scan the program header entries, and save key information.      *      * We expect that the loadable segments are ordered by load address.      */
 name|phdr
 operator|=
 operator|(
