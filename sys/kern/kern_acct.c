@@ -1630,17 +1630,6 @@ operator|->
 name|v_mount
 argument_list|)
 expr_stmt|;
-name|VOP_LEASE
-argument_list|(
-name|acct_vp
-argument_list|,
-name|td
-argument_list|,
-name|acct_cred
-argument_list|,
-name|LEASE_WRITE
-argument_list|)
-expr_stmt|;
 name|ret
 operator|=
 name|vn_rdwr

@@ -357,11 +357,6 @@ operator|=
 name|vop_stdislocked
 block|,
 operator|.
-name|vop_lease
-operator|=
-name|VOP_NULL
-block|,
-operator|.
 name|vop_lock1
 operator|=
 name|vop_stdlock

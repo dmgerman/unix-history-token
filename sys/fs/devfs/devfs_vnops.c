@@ -8007,11 +8007,6 @@ operator|=
 name|devfs_getattr
 block|,
 operator|.
-name|vop_lease
-operator|=
-name|VOP_NULL
-block|,
-operator|.
 name|vop_link
 operator|=
 name|VOP_PANIC

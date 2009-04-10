@@ -641,11 +641,6 @@ operator|=
 name|nfs_inactive
 block|,
 operator|.
-name|vop_lease
-operator|=
-name|VOP_NULL
-block|,
-operator|.
 name|vop_link
 operator|=
 name|nfs4_link

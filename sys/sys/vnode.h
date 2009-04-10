@@ -1642,46 +1642,6 @@ begin_comment
 comment|/* predefined null vattr structure */
 end_comment
 
-begin_comment
-comment|/*  * Macro/function to check for client cache inconsistency w.r.t. leasing.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LEASE_READ
-value|0x1
-end_define
-
-begin_comment
-comment|/* Check lease for readers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LEASE_WRITE
-value|0x2
-end_define
-
-begin_comment
-comment|/* Check lease for modifiers */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-function_decl|(
-modifier|*
-name|lease_updatetime
-function_decl|)
-parameter_list|(
-name|int
-name|deltat
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -2468,21 +2428,6 @@ name|vnode
 struct_decl|;
 end_struct_decl
 
-begin_function_decl
-specifier|extern
-name|int
-function_decl|(
-modifier|*
-name|lease_check_hook
-function_decl|)
-parameter_list|(
-name|struct
-name|vop_lease_args
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* cache_* may belong in namei.h. */
 end_comment
@@ -2721,18 +2666,6 @@ name|u_quad_t
 name|init_va_filerev
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|lease_check
-parameter_list|(
-name|struct
-name|vop_lease_args
-modifier|*
-name|ap
 parameter_list|)
 function_decl|;
 end_function_decl
