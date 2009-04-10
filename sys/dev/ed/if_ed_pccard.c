@@ -656,9 +656,7 @@ argument_list|,
 name|EEN10B
 argument_list|)
 block|,
-name|NE2000DVF_ENADDR
-block|,
-literal|0xff0
+literal|0
 block|}
 block|,
 block|{
@@ -728,9 +726,7 @@ argument_list|,
 name|INFOMOVER
 argument_list|)
 block|,
-name|NE2000DVF_ENADDR
-block|,
-literal|0xff0
+literal|0
 block|}
 block|,
 block|{
