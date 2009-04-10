@@ -4037,6 +4037,13 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|if_delgroup
+argument_list|(
+name|ifp
+argument_list|,
+name|IFG_ALL
+argument_list|)
+expr_stmt|;
 name|IF_AFDATA_LOCK
 argument_list|(
 name|ifp
