@@ -5150,11 +5150,7 @@ operator|->
 name|request_r_scale
 operator|)
 operator|<
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_hiwat
+name|sb_max
 condition|)
 name|tp
 operator|->
