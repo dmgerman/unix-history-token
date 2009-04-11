@@ -2937,6 +2937,18 @@ operator|&
 name|ad
 argument_list|)
 expr_stmt|;
+comment|/* If we cannot figure out the packet, ignore it. */
+if|if
+condition|(
+name|error
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|PKT_ALIAS_IGNORED
+operator|)
+return|;
 comment|/* If UDP checksum is not zero, then adjust since destination port */
 comment|/* is being unaliased and destination address is being altered.    */
 if|if
@@ -3104,19 +3116,6 @@ name|ip_dst
 operator|=
 name|original_address
 expr_stmt|;
-comment|/* 		 * If we cannot figure out the packet, ignore it. 		 */
-if|if
-condition|(
-name|error
-operator|<
-literal|0
-condition|)
-return|return
-operator|(
-name|PKT_ALIAS_IGNORED
-operator|)
-return|;
-else|else
 return|return
 operator|(
 name|PKT_ALIAS_OK
