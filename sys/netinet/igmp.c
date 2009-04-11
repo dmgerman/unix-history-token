@@ -12829,10 +12829,10 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_noroute
-operator|++
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -12939,10 +12939,10 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_odropped
-operator|++
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out

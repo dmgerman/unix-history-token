@@ -2005,10 +2005,10 @@ name|blocked
 operator|==
 name|MCAST_NOTGMEMBER
 condition|)
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_notmember
-operator|++
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

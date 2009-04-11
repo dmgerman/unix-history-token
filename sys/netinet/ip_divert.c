@@ -614,10 +614,10 @@ argument_list|(
 name|curvnet
 argument_list|)
 expr_stmt|;
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_noproto
-operator|++
+argument_list|)
 expr_stmt|;
 name|m_freem
 argument_list|(
@@ -1119,15 +1119,15 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_noproto
-operator|++
+argument_list|)
 expr_stmt|;
-name|V_ipstat
-operator|.
+name|IPSTAT_DEC
+argument_list|(
 name|ips_delivered
-operator|--
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -1530,10 +1530,10 @@ name|ip_off
 argument_list|)
 expr_stmt|;
 comment|/* Send packet to output processing */
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_rawout
-operator|++
+argument_list|)
 expr_stmt|;
 comment|/* XXX */
 ifdef|#
@@ -2296,10 +2296,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_toosmall
-operator|++
+argument_list|)
 expr_stmt|;
 name|m_freem
 argument_list|(
