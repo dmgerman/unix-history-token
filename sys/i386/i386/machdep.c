@@ -17522,20 +17522,8 @@ name|KDB
 end_ifdef
 
 begin_comment
-comment|/*  * Provide inb() and outb() as functions.  They are normally only  * available as macros calling inlined functions, thus cannot be  * called from the debugger.  *  * The actual code is stolen from<machine/cpufunc.h>, and de-inlined.  */
+comment|/*  * Provide inb() and outb() as functions.  They are normally only available as  * inline functions, thus cannot be called from the debugger.  */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|inb
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|outb
-end_undef
 
 begin_comment
 comment|/* silence compiler warnings */
@@ -17543,18 +17531,18 @@ end_comment
 
 begin_function_decl
 name|u_char
-name|inb
+name|inb_
 parameter_list|(
-name|u_int
+name|u_short
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|outb
+name|outb_
 parameter_list|(
-name|u_int
+name|u_short
 parameter_list|,
 name|u_char
 parameter_list|)
@@ -17563,45 +17551,39 @@ end_function_decl
 
 begin_function
 name|u_char
-name|inb
+name|inb_
 parameter_list|(
-name|u_int
+name|u_short
 name|port
 parameter_list|)
 block|{
-name|u_char
-name|data
-decl_stmt|;
-comment|/* 	 * We use %%dx and not %1 here because i/o is done at %dx and not at 	 * %edx, while gcc generates inferior code (movw instead of movl) 	 * if we tell it to load (u_short) port. 	 */
-asm|__asm __volatile("inb %%dx,%0" : "=a" (data) : "d" (port));
 return|return
-operator|(
-name|data
-operator|)
+name|inb
+argument_list|(
+name|port
+argument_list|)
 return|;
 block|}
 end_function
 
 begin_function
 name|void
-name|outb
+name|outb_
 parameter_list|(
-name|u_int
+name|u_short
 name|port
 parameter_list|,
 name|u_char
 name|data
 parameter_list|)
 block|{
-name|u_char
-name|al
-decl_stmt|;
-comment|/* 	 * Use an unnecessary assignment to help gcc's register allocator. 	 * This make a large difference for gcc-1.40 and a tiny difference 	 * for gcc-2.6.0.  For gcc-1.40, al had to be ``asm("ax")'' for 	 * best results.  gcc-2.6.0 can't handle this. 	 */
-name|al
-operator|=
+name|outb
+argument_list|(
+name|port
+argument_list|,
 name|data
+argument_list|)
 expr_stmt|;
-asm|__asm __volatile("outb %0,%%dx" : : "a" (al), "d" (port));
 block|}
 end_function
 
