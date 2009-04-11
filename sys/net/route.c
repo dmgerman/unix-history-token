@@ -348,6 +348,46 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VIMAGE_GLOBALS
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|vnet_modinfo_t
+name|vnet_rtable_modinfo
+init|=
+block|{
+operator|.
+name|vmi_id
+operator|=
+name|VNET_MOD_RTABLE
+block|,
+operator|.
+name|vmi_name
+operator|=
+literal|"rtable"
+block|,
+operator|.
+name|vmi_iattach
+operator|=
+name|vnet_route_iattach
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !VIMAGE_GLOBALS */
+end_comment
+
 begin_comment
 comment|/* compare two sockaddr structures */
 end_comment
@@ -524,11 +564,24 @@ name|rn_init
 argument_list|()
 expr_stmt|;
 comment|/* initialize all zeroes, all ones, mask table */
+ifndef|#
+directive|ifndef
+name|VIMAGE_GLOBALS
+name|vnet_mod_register
+argument_list|(
+operator|&
+name|vnet_rtable_modinfo
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|vnet_route_iattach
 argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

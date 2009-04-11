@@ -1065,27 +1065,44 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
-name|VNET_MOD_DECLARE
-argument_list|(
-argument|NET
-argument_list|,
-argument|net
-argument_list|,
-argument|vnet_net_iattach
-argument_list|,
-argument|vnet_net_idetach
-argument_list|,
-argument|NONE
-argument_list|,
-argument|vnet_net_symmap
-argument_list|)
-end_macro
+begin_decl_stmt
+specifier|static
+specifier|const
+name|vnet_modinfo_t
+name|vnet_net_modinfo
+init|=
+block|{
+operator|.
+name|vmi_id
+operator|=
+name|VNET_MOD_NET
+block|,
+operator|.
+name|vmi_name
+operator|=
+literal|"net"
+block|,
+operator|.
+name|vmi_symmap
+operator|=
+name|vnet_net_symmap
+block|,
+operator|.
+name|vmi_iattach
+operator|=
+name|vnet_net_iattach
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !VIMAGE_GLOBALS */
+end_comment
 
 begin_comment
 comment|/*  * System initialization  */

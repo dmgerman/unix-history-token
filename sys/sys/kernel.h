@@ -521,6 +521,11 @@ init|=
 literal|0xd800000
 block|,
 comment|/* register system calls */
+name|SI_SUB_VIMAGE_DONE
+init|=
+literal|0xdc00000
+block|,
+comment|/* vnet registration complete */
 name|SI_SUB_KTHREAD_INIT
 init|=
 literal|0xe000000
