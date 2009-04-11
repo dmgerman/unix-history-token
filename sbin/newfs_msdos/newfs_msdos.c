@@ -6805,7 +6805,9 @@ name|stderr
 argument_list|,
 literal|"usage: newfs_msdos [ -options ] special [disktype]\n"
 literal|"where the options are:\n"
+literal|"\t-@ create file system at specified offset\n"
 literal|"\t-B get bootstrap from file\n"
+literal|"\t-C create image file with specified size\n"
 literal|"\t-F FAT type (12, 16, or 32)\n"
 literal|"\t-I volume ID\n"
 literal|"\t-L volume label\n"
