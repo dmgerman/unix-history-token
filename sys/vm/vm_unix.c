@@ -371,7 +371,7 @@ name|old
 argument_list|,
 name|new
 argument_list|,
-name|VM_PROT_ALL
+name|VM_PROT_RW
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
