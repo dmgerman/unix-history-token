@@ -2133,6 +2133,9 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+name|opt_create
+operator|&&
+operator|!
 name|strchr
 argument_list|(
 name|fname
