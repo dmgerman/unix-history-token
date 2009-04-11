@@ -2825,10 +2825,6 @@ name|int
 name|accumulate
 decl_stmt|;
 name|int
-name|r
-init|=
-literal|0
-decl_stmt|,
 name|error
 decl_stmt|;
 name|struct
@@ -3111,7 +3107,7 @@ expr_stmt|;
 comment|/* 		 * If we cannot figure out the packet, ignore it. 		 */
 if|if
 condition|(
-name|r
+name|error
 operator|<
 literal|0
 condition|)

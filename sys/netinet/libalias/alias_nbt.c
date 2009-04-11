@@ -338,6 +338,8 @@ modifier|*
 name|ah
 parameter_list|)
 block|{
+return|return
+operator|(
 name|AliasHandleUdpNbt
 argument_list|(
 name|la
@@ -357,10 +359,6 @@ name|ah
 operator|->
 name|aport
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
@@ -533,6 +531,8 @@ modifier|*
 name|ah
 parameter_list|)
 block|{
+return|return
+operator|(
 name|AliasHandleUdpNbtNS
 argument_list|(
 name|la
@@ -560,10 +560,6 @@ name|ah
 operator|->
 name|aport
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
