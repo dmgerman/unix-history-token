@@ -4957,10 +4957,10 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|V_tcpstat
-operator|.
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_connattempt
-operator|++
+argument_list|)
 expr_stmt|;
 name|tp
 operator|->
@@ -5291,10 +5291,10 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|V_tcpstat
-operator|.
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_connattempt
-operator|++
+argument_list|)
 expr_stmt|;
 name|tp
 operator|->

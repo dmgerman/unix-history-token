@@ -884,10 +884,10 @@ name|t_flags
 operator||=
 name|TF_ACKNOW
 expr_stmt|;
-name|V_tcpstat
-operator|.
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_delack
-operator|++
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -1098,10 +1098,10 @@ name|SBS_CANTRCVMORE
 operator|)
 condition|)
 block|{
-name|V_tcpstat
-operator|.
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_finwait2_drops
-operator|++
+argument_list|)
 expr_stmt|;
 name|tp
 operator|=
@@ -1378,10 +1378,10 @@ name|tt_keep
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Keep-alive timer went off; send something 	 * or drop connection if idle for too long. 	 */
-name|V_tcpstat
-operator|.
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_keeptimeo
-operator|++
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1433,10 +1433,10 @@ goto|goto
 name|dropit
 goto|;
 comment|/* 		 * Send a packet designed to force a response 		 * if the peer is up and reachable: 		 * either an ACK if the connection is still alive, 		 * or an RST if the peer has closed the connection 		 * due to timeout or reboot. 		 * Using sequence number tp->snd_una-1 		 * causes the transmitted zero-length segment 		 * to lie outside the receive window; 		 * by the protocol spec, this requires the 		 * correspondent TCP to respond. 		 */
-name|V_tcpstat
-operator|.
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_keepprobe
-operator|++
+argument_list|)
 expr_stmt|;
 name|t_template
 operator|=
@@ -1581,10 +1581,10 @@ expr_stmt|;
 return|return;
 name|dropit
 label|:
-name|V_tcpstat
-operator|.
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_keepdrops
-operator|++
+argument_list|)
 expr_stmt|;
 name|tp
 operator|=
@@ -1814,10 +1814,10 @@ name|tt_persist
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Persistance timer into zero window. 	 * Force a byte to be output, if possible. 	 */
-name|V_tcpstat
-operator|.
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_persisttimeo
-operator|++
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Hack: if the peer is dead/unreachable, we do not 	 * time out if the window is closed.  After a full 	 * backoff, drop the connection if the idle time 	 * (no responses to probes) reaches the maximum 	 * backoff that we would use if retransmitting. 	 */
 if|if
@@ -1856,10 +1856,10 @@ name|tcp_totbackoff
 operator|)
 condition|)
 block|{
-name|V_tcpstat
-operator|.
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_persistdrop
-operator|++
+argument_list|)
 expr_stmt|;
 name|tp
 operator|=
@@ -2139,10 +2139,10 @@ name|t_rxtshift
 operator|=
 name|TCP_MAXRXTSHIFT
 expr_stmt|;
-name|V_tcpstat
-operator|.
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_timeoutdrop
-operator|++
+argument_list|)
 expr_stmt|;
 name|tp
 operator|=
@@ -2249,10 +2249,10 @@ operator|)
 operator|)
 expr_stmt|;
 block|}
-name|V_tcpstat
-operator|.
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_rexmttimeo
-operator|++
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

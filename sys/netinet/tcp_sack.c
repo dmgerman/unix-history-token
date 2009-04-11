@@ -872,10 +872,10 @@ operator|>=
 name|V_tcp_sack_globalmaxholes
 condition|)
 block|{
-name|V_tcpstat
-operator|.
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_sack_sboverflow
-operator|++
+argument_list|)
 expr_stmt|;
 return|return
 name|NULL
