@@ -1136,12 +1136,10 @@ specifier|extern
 name|u_int
 name|bpf_filter
 parameter_list|(
-specifier|const
 name|struct
 name|bpf_insn
 modifier|*
 parameter_list|,
-specifier|const
 name|u_char
 modifier|*
 parameter_list|,

@@ -59,7 +59,6 @@ begin_function
 name|void
 name|bpf_dump
 parameter_list|(
-specifier|const
 name|struct
 name|bpf_program
 modifier|*
