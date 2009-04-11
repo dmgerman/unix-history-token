@@ -4968,10 +4968,6 @@ begin_comment
 comment|/* Outside World Access  	PacketAliasSaveFragment() 	PacketAliasGetFragment() 	PacketAliasFragmentIn() 	PacketAliasIn() 	PacketAliasOut() 	PacketUnaliasOut()  (prototypes in alias.h) */
 end_comment
 
-begin_comment
-comment|// XXX ip free
-end_comment
-
 begin_function
 name|int
 name|LibAliasSaveFragment
@@ -5063,10 +5059,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|// XXX ip free
-end_comment
 
 begin_function
 name|char
@@ -5174,10 +5166,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|// XXX ip free
-end_comment
 
 begin_function
 name|void
