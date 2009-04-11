@@ -4302,6 +4302,12 @@ literal|8
 operator|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|bits
+operator|!=
+literal|0
+condition|)
 name|mask
 operator|=
 literal|0xffffffff
