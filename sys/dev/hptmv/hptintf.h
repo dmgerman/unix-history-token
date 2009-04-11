@@ -567,11 +567,6 @@ name|defined
 argument_list|(
 name|__FreeBSD_version
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_MACOSX_
-argument_list|)
 end_if
 
 begin_define
@@ -962,6 +957,34 @@ define|#
 directive|define
 name|HPT_IOCTL_DEVICE_IO_EX_V2
 value|HPT_CTL_CODE(40)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HPT_IOCTL_I2C_TRANSACTION
+value|HPT_CTL_CODE(48)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HPT_IOCTL_GET_PARAMETER_LIST
+value|HPT_CTL_CODE(49)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HPT_IOCTL_GET_PARAMETER
+value|HPT_CTL_CODE(50)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HPT_IOCTL_SET_PARAMETER
+value|HPT_CTL_CODE(51)
 end_define
 
 begin_comment
@@ -1503,12 +1526,25 @@ typedef|typedef
 struct|struct
 name|_LBA64
 block|{
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
+name|DWORD
+name|hi32
+decl_stmt|;
+name|DWORD
+name|lo32
+decl_stmt|;
+else|#
+directive|else
 name|DWORD
 name|lo32
 decl_stmt|;
 name|DWORD
 name|hi32
 decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|LBA64
 typedef|;
@@ -2703,15 +2739,15 @@ name|bSectorCountReg
 decl_stmt|;
 comment|/* IDE sector count register. */
 name|BYTE
-name|bSectorNumberReg
+name|bLbaLowReg
 decl_stmt|;
 comment|/* IDE sector number register. */
 name|BYTE
-name|bCylLowReg
+name|bLbaMidReg
 decl_stmt|;
 comment|/* IDE low order cylinder value. */
 name|BYTE
-name|bCylHighReg
+name|bLbaHighReg
 decl_stmt|;
 comment|/* IDE high order cylinder value. */
 name|BYTE
@@ -2723,24 +2759,26 @@ name|bCommandReg
 decl_stmt|;
 comment|/* Actual IDE command. Checked for validity by driver. */
 name|BYTE
-name|reserve1
+name|nSectors
 decl_stmt|;
-name|DWORD
-name|DataSize
-decl_stmt|;
-comment|/* data size in bytes, if the command has data transfer */
-ifdef|#
-directive|ifdef
-name|_MSC_VER
+comment|/* data sze in sectors, if the command has data transfer */
 name|BYTE
-name|DataBuffer
+name|protocol
+decl_stmt|;
+comment|/* IO_COMMAND_(READ,WRITE) or zero for non-DATA */
+name|BYTE
+name|reserve
 index|[
-literal|0
+literal|3
 index|]
 decl_stmt|;
-comment|/* data buffer */
-endif|#
-directive|endif
+define|#
+directive|define
+name|IDE_PASS_THROUGH_buffer
+parameter_list|(
+name|p
+parameter_list|)
+value|((unsigned char *)(p) + sizeof(IDE_PASS_THROUGH_HEADER))
 block|}
 name|IDE_PASS_THROUGH_HEADER
 operator|,
@@ -2874,8 +2912,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HPT_IOCTL_MAGIC
+name|HPT_IOCTL_MAGIC32
 value|0x1A2B3C4D
+end_define
+
+begin_define
+define|#
+directive|define
+name|HPT_IOCTL_MAGIC
+value|0xA1B2C3D4
 end_define
 
 begin_typedef
@@ -2920,7 +2965,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* for 64-bit system */
+comment|/* for 32-bit app running on 64-bit system */
 end_comment
 
 begin_typedef
@@ -3860,6 +3905,24 @@ parameter_list|,
 name|DEVICEID
 modifier|*
 name|pIds
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*-------------------------------------------------------------------------- */
+end_comment
+
+begin_comment
+comment|/* hpt_ide_pass_through  *  directly access controller's command and control registers.  *  Can only call it on physical devices.  * Version compatibility: v1.0.0.3 or later  * Parameters:  *   p - IDE_PASS_THROUGH header pointer  * Returns:  *   0  Success  */
+end_comment
+
+begin_function_decl
+name|int
+name|hpt_ide_pass_through
+parameter_list|(
+name|PIDE_PASS_THROUGH_HEADER
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl

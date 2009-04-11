@@ -270,7 +270,7 @@ parameter_list|,
 name|bytes
 parameter_list|)
 define|\
-value|do {\ 		if (((void**)src)[0]==dest)\ 			DoXor2((PULONG)(dest), ((PULONG *)src)[1], bytes);\ 		else\ 			DoXor1((PULONG)(dest), ((PULONG *)src)[0], ((PULONG *)src)[1], bytes);\ 	} while(0)
+value|do {\ 		if (((void**)(src))[0]==dest)\ 			DoXor2((PULONG)(dest), ((PULONG *)(src))[1], bytes);\ 		else\ 			DoXor1((PULONG)(dest), ((PULONG *)(src))[0], ((PULONG *)(src))[1], bytes);\ 	} while(0)
 end_define
 
 begin_define

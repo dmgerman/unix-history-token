@@ -135,9 +135,12 @@ name|dArStamp
 decl_stmt|;
 comment|/* array ID. all disks in a array has same ID */
 name|ULONG
-name|failedStamp
+name|failedStamps
+index|[
+literal|4
+index|]
 decl_stmt|;
-comment|/* stamp for failed member */
+comment|/* stamp for failed members */
 name|USHORT
 name|bStripeWitch
 decl_stmt|;
@@ -219,7 +222,7 @@ name|last_read
 decl_stmt|;
 comment|/* for RAID 1 load banlancing */
 name|UCHAR
-name|PrivateFlag1
+name|alreadyBroken
 decl_stmt|;
 name|LBA_T
 name|RebuildSectors
@@ -462,8 +465,9 @@ name|PrivateFlag1
 decl_stmt|;
 comment|/* private */
 name|UCHAR
-name|reserve1
+name|alreadyBroken
 decl_stmt|;
+comment|/* last stamp has been saved to failedStamps */
 ifdef|#
 directive|ifdef
 name|__BIG_ENDIAN_BITFIELD
@@ -574,9 +578,12 @@ literal|2
 index|]
 struct|;
 name|ULONG
-name|failedStamp
+name|failedStamps
+index|[
+literal|4
+index|]
 decl_stmt|;
-comment|/* array stamp for failed memebr */
+comment|/* failed memebrs's stamps */
 block|}
 name|ArrayDescript
 typedef|;
