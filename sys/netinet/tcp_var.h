@@ -1665,6 +1665,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1686,6 +1692,11 @@ name|name
 parameter_list|)
 value|TCPSTAT_ADD(name, 1)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * TCB structure exported to user-land via sysctl(3).  * Evil hack: declare only if in_pcb.h and sys/socketvar.h have been  * included.  Not all of our clients do.  */
