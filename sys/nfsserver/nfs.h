@@ -32,6 +32,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<nfs/nfssvc.h>
+end_include
+
 begin_comment
 comment|/*  * Tunable constants for nfs  */
 end_comment
@@ -305,31 +311,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * Flags for nfssvc() system call.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSSVC_OLDNFSD
-value|0x004
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFSSVC_ADDSOCK
-value|0x008
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFSSVC_NFSD
-value|0x010
-end_define
 
 begin_comment
 comment|/*  * vfs.nfsrv sysctl(3) identifiers  */
@@ -2442,6 +2423,36 @@ name|mrq
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * #ifdef _SYS_SYSPROTO_H_ so that it is only defined when sysproto.h  * has been included, so that "struct nfssvc_args" is defined.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_SYS_SYSPROTO_H_
+end_ifdef
+
+begin_function_decl
+name|int
+name|nfssvc_nfsserver
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|struct
+name|nfssvc_args
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
