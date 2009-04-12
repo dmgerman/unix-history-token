@@ -326,6 +326,10 @@ begin_comment
 comment|/* Append C string, which may lack trailing \0. */
 end_comment
 
+begin_comment
+comment|/* The source is declared void * here because this gets used with  * "signed char *", "unsigned char *" and "char *" arguments.  * Declaring it "char *" as with some of the other functions just  * leads to a lot of extra casts. */
+end_comment
+
 begin_function_decl
 name|struct
 name|archive_string
@@ -337,7 +341,7 @@ name|archive_string
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|size_t
