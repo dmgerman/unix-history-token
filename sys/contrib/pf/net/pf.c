@@ -17955,7 +17955,7 @@ argument|; 			ip->ip_sum = in_cksum(m0, ip->ip_hl<<
 literal|2
 argument|); 		}
 comment|/* Update relevant hardware checksum stats for TCP/UDP */
-argument|if (m0->m_pkthdr.csum_flags& M_TCPV4_CSUM_OUT) 			TCPSTAT_INC(tcpstat.tcps_outhwcsum); 		else if (m0->m_pkthdr.csum_flags& M_UDPV4_CSUM_OUT) 			V_udpstat.udps_outhwcsum++; 		error = (*ifp->if_output)(ifp, m0, sintosa(dst), NULL); 		goto done; 	}
+argument|if (m0->m_pkthdr.csum_flags& M_TCPV4_CSUM_OUT) 			TCPSTAT_INC(tcpstat.tcps_outhwcsum); 		else if (m0->m_pkthdr.csum_flags& M_UDPV4_CSUM_OUT) 			UDPSTAT_INC(udps_outhwcsum); 		error = (*ifp->if_output)(ifp, m0, sintosa(dst), NULL); 		goto done; 	}
 endif|#
 directive|endif
 comment|/* 	 * Too large for interface; fragment if possible. 	 * Must be able to put at least 8 bytes per fragment. 	 */
@@ -18148,7 +18148,7 @@ directive|endif
 comment|/* INET6 */
 argument|default: 			return (
 literal|1
-argument|); 		} 	} 	if (sum) { 		switch (p) { 		case IPPROTO_TCP: 		    { 			INIT_VNET_INET(curvnet); 			TCPSTAT_INC(tcps_rcvbadsum); 			break; 		    } 		case IPPROTO_UDP: 		    { 			INIT_VNET_INET(curvnet); 			V_udpstat.udps_badsum++; 			break; 		    } 		case IPPROTO_ICMP: 		    { 			INIT_VNET_INET(curvnet); 			V_icmpstat.icps_checksum++; 			break; 		    }
+argument|); 		} 	} 	if (sum) { 		switch (p) { 		case IPPROTO_TCP: 		    { 			INIT_VNET_INET(curvnet); 			TCPSTAT_INC(tcps_rcvbadsum); 			break; 		    } 		case IPPROTO_UDP: 		    { 			INIT_VNET_INET(curvnet); 			UDPSTAT_INC(udps_badsum); 			break; 		    } 		case IPPROTO_ICMP: 		    { 			INIT_VNET_INET(curvnet); 			V_icmpstat.icps_checksum++; 			break; 		    }
 ifdef|#
 directive|ifdef
 name|INET6
@@ -18210,7 +18210,7 @@ directive|endif
 comment|/* INET6 */
 argument|default: 		return (
 literal|1
-argument|); 	} 	if (sum) { 		m->m_pkthdr.csum_flags |= flag_bad; 		switch (p) { 		case IPPROTO_TCP: 			TCPSTAT_INC(tcps_rcvbadsum); 			break; 		case IPPROTO_UDP: 			V_udpstat.udps_badsum++; 			break; 		case IPPROTO_ICMP: 			V_icmpstat.icps_checksum++; 			break;
+argument|); 	} 	if (sum) { 		m->m_pkthdr.csum_flags |= flag_bad; 		switch (p) { 		case IPPROTO_TCP: 			TCPSTAT_INC(tcps_rcvbadsum); 			break; 		case IPPROTO_UDP: 			UDPSTAT_INC(udps_badsum); 			break; 		case IPPROTO_ICMP: 			V_icmpstat.icps_checksum++; 			break;
 ifdef|#
 directive|ifdef
 name|INET6
