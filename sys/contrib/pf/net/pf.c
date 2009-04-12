@@ -18148,11 +18148,11 @@ directive|endif
 comment|/* INET6 */
 argument|default: 			return (
 literal|1
-argument|); 		} 	} 	if (sum) { 		switch (p) { 		case IPPROTO_TCP: 		    { 			INIT_VNET_INET(curvnet); 			TCPSTAT_INC(tcps_rcvbadsum); 			break; 		    } 		case IPPROTO_UDP: 		    { 			INIT_VNET_INET(curvnet); 			UDPSTAT_INC(udps_badsum); 			break; 		    } 		case IPPROTO_ICMP: 		    { 			INIT_VNET_INET(curvnet); 			V_icmpstat.icps_checksum++; 			break; 		    }
+argument|); 		} 	} 	if (sum) { 		switch (p) { 		case IPPROTO_TCP: 		    { 			INIT_VNET_INET(curvnet); 			TCPSTAT_INC(tcps_rcvbadsum); 			break; 		    } 		case IPPROTO_UDP: 		    { 			INIT_VNET_INET(curvnet); 			UDPSTAT_INC(udps_badsum); 			break; 		    } 		case IPPROTO_ICMP: 		    { 			INIT_VNET_INET(curvnet); 			ICMPSTAT_INC(icps_checksum); 			break; 		    }
 ifdef|#
 directive|ifdef
 name|INET6
-argument|case IPPROTO_ICMPV6: 		    { 			INIT_VNET_INET6(curvnet); 			V_icmp6stat.icp6s_checksum++; 			break; 		    }
+argument|case IPPROTO_ICMPV6: 		    { 			INIT_VNET_INET6(curvnet); 			ICMP6STAT_INC(icp6s_checksum); 			break; 		    }
 endif|#
 directive|endif
 comment|/* INET6 */
@@ -18210,11 +18210,11 @@ directive|endif
 comment|/* INET6 */
 argument|default: 		return (
 literal|1
-argument|); 	} 	if (sum) { 		m->m_pkthdr.csum_flags |= flag_bad; 		switch (p) { 		case IPPROTO_TCP: 			TCPSTAT_INC(tcps_rcvbadsum); 			break; 		case IPPROTO_UDP: 			UDPSTAT_INC(udps_badsum); 			break; 		case IPPROTO_ICMP: 			V_icmpstat.icps_checksum++; 			break;
+argument|); 	} 	if (sum) { 		m->m_pkthdr.csum_flags |= flag_bad; 		switch (p) { 		case IPPROTO_TCP: 			TCPSTAT_INC(tcps_rcvbadsum); 			break; 		case IPPROTO_UDP: 			UDPSTAT_INC(udps_badsum); 			break; 		case IPPROTO_ICMP: 			ICMPSTAT_INC(icps_checksum); 			break;
 ifdef|#
 directive|ifdef
 name|INET6
-argument|case IPPROTO_ICMPV6: 			V_icmp6stat.icp6s_checksum++; 			break;
+argument|case IPPROTO_ICMPV6: 			ICMP6STAT_INC(icp6s_checksum); 			break;
 endif|#
 directive|endif
 comment|/* INET6 */

@@ -1100,10 +1100,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|V_icmp6stat
-operator|.
+name|ICMP6STAT_INC
+argument_list|(
 name|icp6s_tooshort
-operator|++
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -1931,13 +1931,13 @@ name|NULL
 operator|)
 expr_stmt|;
 comment|/* increment output statictics */
-name|V_icmp6stat
-operator|.
+name|ICMP6STAT_INC
+argument_list|(
 name|icp6s_outhist
 index|[
 name|type
 index|]
-operator|++
+argument_list|)
 expr_stmt|;
 name|ip6_output
 argument_list|(

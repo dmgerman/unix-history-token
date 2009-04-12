@@ -2172,13 +2172,13 @@ argument_list|,
 name|code
 argument_list|)
 expr_stmt|;
-name|V_icmp6stat
-operator|.
+name|ICMP6STAT_INC
+argument_list|(
 name|icp6s_outhist
 index|[
 name|type
 index|]
-operator|++
+argument_list|)
 expr_stmt|;
 block|}
 else|else
