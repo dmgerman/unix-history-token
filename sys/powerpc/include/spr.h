@@ -3201,6 +3201,28 @@ begin_comment
 comment|/* ..8 Hardware Implementation Register 1 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SPR_HID4
+value|0x3f4
+end_define
+
+begin_comment
+comment|/* ..8 Hardware Implementation Register 4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_HID5
+value|0x3f6
+end_define
+
+begin_comment
+comment|/* ..8 Hardware Implementation Register 5 */
+end_comment
+
 begin_if
 if|#
 directive|if

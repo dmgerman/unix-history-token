@@ -360,6 +360,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/spr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/trap.h>
 end_include
 
@@ -1049,13 +1055,14 @@ name|char
 modifier|*
 name|env
 decl_stmt|;
-name|int
-name|vers
-decl_stmt|;
 name|uint32_t
 name|msr
 decl_stmt|,
 name|scratch
+decl_stmt|;
+name|uint8_t
+modifier|*
+name|cache_check
 decl_stmt|;
 name|end
 operator|=
@@ -1241,17 +1248,17 @@ literal|"powerpc_init: no loader metadata.\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Set cacheline_size based on the CPU model. 	 */
-name|vers
-operator|=
+comment|/* 	 * Init KDB 	 */
+name|kdb_init
+argument_list|()
+expr_stmt|;
+comment|/* 	 * PowerPC 970 CPUs have a misfeature requested by Apple that makes 	 * them pretend they have a 32-byte cacheline. Turn this off 	 * before we measure the cacheline size. 	 */
+switch|switch
+condition|(
 name|mfpvr
 argument_list|()
 operator|>>
 literal|16
-expr_stmt|;
-switch|switch
-condition|(
-name|vers
 condition|)
 block|{
 case|case
@@ -1266,22 +1273,38 @@ case|:
 case|case
 name|IBM970GX
 case|:
-name|cacheline_size
+name|scratch
 operator|=
-literal|128
+name|mfspr64upper
+argument_list|(
+name|SPR_HID5
+argument_list|,
+name|msr
+argument_list|)
+expr_stmt|;
+name|scratch
+operator|&=
+operator|~
+name|HID5_970_DCBZ_SIZE_HI
+expr_stmt|;
+name|mtspr64
+argument_list|(
+name|SPR_HID5
+argument_list|,
+name|scratch
+argument_list|,
+name|mfspr
+argument_list|(
+name|SPR_HID5
+argument_list|)
+argument_list|,
+name|msr
+argument_list|)
 expr_stmt|;
 break|break;
-default|default:
-name|cacheline_size
-operator|=
-literal|32
-expr_stmt|;
 block|}
-comment|/* 	 * Init KDB 	 */
-name|kdb_init
-argument_list|()
-expr_stmt|;
-comment|/* 	 * XXX: Initialize the interrupt tables. 	 *      Disable translation in case the vector area 	 *      hasn't been mapped (G5) 	 */
+comment|/* 	 * Initialize the interrupt tables and figure out our cache line 	 * size and whether or not we need the 64-bit bridge code. 	 */
+comment|/* 	 * Disable translation in case the vector area hasn't been 	 * mapped (G5). 	 */
 name|msr
 operator|=
 name|mfmsr
@@ -1302,6 +1325,58 @@ expr_stmt|;
 name|isync
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Measure the cacheline size using dcbz 	 * 	 * Use EXC_PGM as a playground. We are about to overwrite it 	 * anyway, we know it exists, and we know it is cache-aligned. 	 */
+name|cache_check
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|EXC_PGM
+expr_stmt|;
+for|for
+control|(
+name|cacheline_size
+operator|=
+literal|0
+init|;
+name|cacheline_size
+operator|<
+literal|0x100
+condition|;
+name|cacheline_size
+operator|++
+control|)
+name|cache_check
+index|[
+name|cacheline_size
+index|]
+operator|=
+literal|0xff
+expr_stmt|;
+asm|__asm __volatile("dcbz %0,0":: "r" (cache_check) : "memory");
+comment|/* Find the first byte dcbz did not zero to get the cache line size */
+for|for
+control|(
+name|cacheline_size
+operator|=
+literal|0
+init|;
+name|cacheline_size
+operator|<
+literal|0x100
+operator|&&
+name|cache_check
+index|[
+name|cacheline_size
+index|]
+operator|==
+literal|0
+condition|;
+name|cacheline_size
+operator|++
+control|)
+empty_stmt|;
 comment|/* 	 * Figure out whether we need to use the 64 bit PMAP. This works by 	 * executing an instruction that is only legal on 64-bit PPC (mtmsrd), 	 * and setting ppc64 = 0 if that causes a trap. 	 */
 name|ppc64
 operator|=
