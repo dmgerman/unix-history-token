@@ -349,11 +349,21 @@ directive|elif
 name|defined
 name|mkdev
 operator|||
+operator|(
+operator|(
 name|defined
 name|_WIN32
 operator|||
 name|defined
 name|__WIN32__
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+operator|)
 end_elif
 
 begin_comment

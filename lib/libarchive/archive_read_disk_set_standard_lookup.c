@@ -125,11 +125,20 @@ directive|include
 file|"archive.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_WIN32
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
 
 begin_function
 name|int
@@ -163,6 +172,10 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* ! (_WIN32&& !__CYGWIN__) */
+end_comment
 
 begin_define
 define|#
@@ -1119,7 +1132,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _WIN32 */
+comment|/* ! (_WIN32&& !__CYGWIN__) */
 end_comment
 
 end_unit

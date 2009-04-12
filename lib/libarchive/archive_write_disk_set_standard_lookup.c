@@ -506,7 +506,16 @@ expr_stmt|;
 block|}
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 comment|/* TODO: do a gname->gid lookup for Windows. */
 endif|#
 directive|endif
@@ -693,7 +702,16 @@ expr_stmt|;
 block|}
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 comment|/* TODO: do a uname->uid lookup for Windows. */
 endif|#
 directive|endif

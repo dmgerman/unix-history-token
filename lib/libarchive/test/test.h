@@ -56,6 +56,12 @@ name|defined
 argument_list|(
 name|_WIN32
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 end_elif
 
 begin_comment
@@ -88,11 +94,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_WIN32
-end_ifndef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -152,11 +167,20 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_WIN32
-end_ifndef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -217,6 +241,16 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* Some non-FreeBSD platforms such as newlib-derived ones like   * cygwin, have __FBSDID, so this definition must be guarded.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FBSDID
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -235,11 +269,25 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_WIN32
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
 
 begin_define
 define|#

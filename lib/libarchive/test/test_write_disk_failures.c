@@ -52,10 +52,18 @@ name|ARCHIVE_VERSION_NUMBER
 operator|<
 literal|1009000
 operator|||
+operator|(
 name|defined
 argument_list|(
 name|_WIN32
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+operator|)
 name|skipping
 argument_list|(
 literal|"archive_write_disk interface"
