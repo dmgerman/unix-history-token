@@ -159,16 +159,12 @@ modifier|*
 name|a
 parameter_list|)
 block|{
-specifier|const
-name|void
-modifier|*
-name|h
-decl_stmt|;
 name|ssize_t
 name|avail
 decl_stmt|;
-name|h
-operator|=
+operator|(
+name|void
+operator|)
 name|__archive_read_ahead
 argument_list|(
 name|a
@@ -179,20 +175,22 @@ operator|&
 name|avail
 argument_list|)
 expr_stmt|;
+comment|/* Bid 1 if we successfully read exactly zero bytes. */
 if|if
 condition|(
 name|avail
-operator|!=
+operator|==
 literal|0
 condition|)
 return|return
 operator|(
-operator|-
 literal|1
 operator|)
 return|;
+comment|/* Otherwise, we don't bid on this. */
 return|return
 operator|(
+operator|-
 literal|1
 operator|)
 return|;
