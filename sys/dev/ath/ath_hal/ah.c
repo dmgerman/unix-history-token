@@ -1097,15 +1097,10 @@ break|break;
 case|case
 name|IEEE80211_T_TURBO
 case|:
-comment|/* we still save OFDM rates in kbps - so double them */
 name|bitsPerSymbol
 operator|=
 operator|(
-operator|(
 name|kbps
-operator|<<
-literal|1
-operator|)
 operator|*
 name|TURBO_SYMBOL_TIME
 operator|)
