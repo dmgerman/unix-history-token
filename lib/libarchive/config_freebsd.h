@@ -64,16 +64,6 @@ name|HAVE_ACL_USER
 value|1
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* XXX Temporarily disable support for reading extended attributes from  * disk, as it seems to be badly broken on ZFS. XXX */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -87,11 +77,6 @@ directive|define
 name|HAVE_EXTATTR_LIST_FILE
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
