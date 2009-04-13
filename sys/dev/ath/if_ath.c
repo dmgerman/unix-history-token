@@ -33852,14 +33852,6 @@ name|tdma_slotlen
 expr_stmt|;
 name|sc
 operator|->
-name|sc_tdmabintcnt
-operator|=
-name|tdma
-operator|->
-name|tdma_bintval
-expr_stmt|;
-name|sc
-operator|->
 name|sc_tdmabintval
 operator|=
 name|roundup
