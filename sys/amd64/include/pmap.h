@@ -605,7 +605,7 @@ value|(3)
 end_define
 
 begin_comment
-comment|/*  * Address of current and alternate address space page table maps  * and directories.  * XXX it might be saner to just direct map all of physical memory  * into the kernel using 2MB pages.  We have enough space to do  * it (2^47 bits of KVM, while current max physical addressability  * is 2^40 physical bits).  Then we can get rid of the evil hole  * in the page tables and the evil overlapping.  */
+comment|/*  * Address of current address space page table maps and directories.  */
 end_comment
 
 begin_ifdef
@@ -911,6 +911,10 @@ expr_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * The kernel virtual address (KVA) of the level 4 page table page is always  * within the direct map (DMAP) region.  */
+end_comment
 
 begin_struct
 struct|struct

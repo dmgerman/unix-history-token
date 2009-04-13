@@ -425,6 +425,12 @@ name|u32
 name|saveDSPARB
 decl_stmt|;
 name|u32
+name|saveRENDERSTANDBY
+decl_stmt|;
+name|u32
+name|saveHWS
+decl_stmt|;
+name|u32
 name|savePIPEACONF
 decl_stmt|;
 name|u32
@@ -691,15 +697,6 @@ decl_stmt|;
 name|u8
 name|saveDACMASK
 decl_stmt|;
-name|u8
-name|saveDACDATA
-index|[
-literal|256
-operator|*
-literal|3
-index|]
-decl_stmt|;
-comment|/* 256 3-byte colors */
 name|u8
 name|saveCR
 index|[
@@ -2600,7 +2597,7 @@ name|IS_G4X
 parameter_list|(
 name|dev
 parameter_list|)
-value|((dev)->pci_device == 0x2E02 || \ 		     (dev)->pci_device == 0x2E12 || \ 		     (dev)->pci_device == 0x2E22)
+value|((dev)->pci_device == 0x2E02 || \ 		     (dev)->pci_device == 0x2E12 || \ 		     (dev)->pci_device == 0x2E22 || \ 		     IS_GM45(dev))
 end_define
 
 begin_define

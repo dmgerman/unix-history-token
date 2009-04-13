@@ -1516,10 +1516,10 @@ name|NULL
 condition|)
 block|{
 comment|/* 			 * Message validation requires that all included 			 * options have a length that is greater than zero. 			 */
-name|V_icmp6stat
-operator|.
+name|ICMP6STAT_INC
+argument_list|(
 name|icp6s_nd_badopt
-operator|++
+argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -1677,10 +1677,10 @@ operator|>
 name|V_nd6_maxndopt
 condition|)
 block|{
-name|V_icmp6stat
-operator|.
+name|ICMP6STAT_INC
+argument_list|(
 name|icp6s_nd_toomanyopt
-operator|++
+argument_list|)
 expr_stmt|;
 name|nd6log
 argument_list|(

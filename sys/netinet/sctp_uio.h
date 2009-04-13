@@ -1956,13 +1956,13 @@ name|cwnd_new_value
 decl_stmt|;
 comment|/* cwnd in k */
 name|uint32_t
+name|pseudo_cumack
+decl_stmt|;
+name|uint16_t
 name|inflight
 decl_stmt|;
 comment|/* flightsize in k */
-name|uint32_t
-name|pseudo_cumack
-decl_stmt|;
-name|uint32_t
+name|uint16_t
 name|cwnd_augment
 decl_stmt|;
 comment|/* increment to it */
@@ -3313,7 +3313,7 @@ decl_stmt|;
 name|uint32_t
 name|extra_padding
 index|[
-literal|8
+literal|32
 index|]
 decl_stmt|;
 comment|/* future */
@@ -3427,7 +3427,7 @@ comment|/* sctpAssocEntry 1   */
 name|uint32_t
 name|extra_padding
 index|[
-literal|8
+literal|32
 index|]
 decl_stmt|;
 comment|/* future */
@@ -3455,7 +3455,7 @@ comment|/* sctpAssocLocalAddrEntry 3   */
 name|uint32_t
 name|extra_padding
 index|[
-literal|8
+literal|32
 index|]
 decl_stmt|;
 comment|/* future */
@@ -3521,9 +3521,12 @@ name|start_time
 decl_stmt|;
 comment|/* sctpAssocLocalRemEntry 8   */
 name|uint32_t
+name|rtt
+decl_stmt|;
+name|uint32_t
 name|extra_padding
 index|[
-literal|8
+literal|32
 index|]
 decl_stmt|;
 comment|/* future */

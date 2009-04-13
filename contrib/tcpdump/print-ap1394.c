@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ap1394.c,v 1.3.2.1 2005/07/07 01:24:33 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ap1394.c,v 1.5 2006-02-11 22:12:06 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -170,6 +170,8 @@ name|fp
 operator|->
 name|firewire_dhost
 argument_list|,
+name|LINKADDR_IEEE1394
+argument_list|,
 name|FIREWIRE_EUI64_LEN
 argument_list|)
 argument_list|,
@@ -178,6 +180,8 @@ argument_list|(
 name|fp
 operator|->
 name|firewire_shost
+argument_list|,
+name|LINKADDR_IEEE1394
 argument_list|,
 name|FIREWIRE_EUI64_LEN
 argument_list|)

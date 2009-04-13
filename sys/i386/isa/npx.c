@@ -911,7 +911,7 @@ begin_decl_stmt
 specifier|static
 name|union
 name|savefpu
-name|npx_cleanstate
+name|npx_initialstate
 decl_stmt|;
 end_decl_stmt
 
@@ -1654,7 +1654,7 @@ expr_stmt|;
 name|fpusave
 argument_list|(
 operator|&
-name|npx_cleanstate
+name|npx_initialstate
 argument_list|)
 expr_stmt|;
 name|start_emulating
@@ -1670,7 +1670,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|npx_cleanstate
+name|npx_initialstate
 operator|.
 name|sv_xmm
 operator|.
@@ -1680,7 +1680,7 @@ name|en_mxcsr_mask
 condition|)
 name|cpu_mxcsr_mask
 operator|=
-name|npx_cleanstate
+name|npx_initialstate
 operator|.
 name|sv_xmm
 operator|.
@@ -1695,7 +1695,7 @@ literal|0xFFBF
 expr_stmt|;
 name|bzero
 argument_list|(
-name|npx_cleanstate
+name|npx_initialstate
 operator|.
 name|sv_xmm
 operator|.
@@ -1703,7 +1703,7 @@ name|sv_fp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|npx_cleanstate
+name|npx_initialstate
 operator|.
 name|sv_xmm
 operator|.
@@ -1713,7 +1713,7 @@ argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
-name|npx_cleanstate
+name|npx_initialstate
 operator|.
 name|sv_xmm
 operator|.
@@ -1721,7 +1721,7 @@ name|sv_xmm
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|npx_cleanstate
+name|npx_initialstate
 operator|.
 name|sv_xmm
 operator|.
@@ -1736,7 +1736,7 @@ endif|#
 directive|endif
 name|bzero
 argument_list|(
-name|npx_cleanstate
+name|npx_initialstate
 operator|.
 name|sv_87
 operator|.
@@ -1744,7 +1744,7 @@ name|sv_ac
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|npx_cleanstate
+name|npx_initialstate
 operator|.
 name|sv_87
 operator|.
@@ -2725,6 +2725,18 @@ argument_list|(
 name|curpcb
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
+if|if
+condition|(
+name|cpu_fxsr
+condition|)
+name|fpu_clean_state
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -2738,11 +2750,11 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * This is the first time this thread has used the FPU or 		 * the PCB doesn't contain a clean FPU state.  Explicitly 		 * load sanitized registers. 		 */
+comment|/* 		 * This is the first time this thread has used the FPU or 		 * the PCB doesn't contain a clean FPU state.  Explicitly 		 * load an initial state. 		 */
 name|fpurstor
 argument_list|(
 operator|&
-name|npx_cleanstate
+name|npx_initialstate
 argument_list|)
 expr_stmt|;
 if|if
@@ -2941,13 +2953,13 @@ block|{
 name|bcopy
 argument_list|(
 operator|&
-name|npx_cleanstate
+name|npx_initialstate
 argument_list|,
 name|addr
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|npx_cleanstate
+name|npx_initialstate
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3202,15 +3214,6 @@ begin_comment
 comment|/*  * On AuthenticAMD processors, the fxrstor instruction does not restore  * the x87's stored last instruction pointer, last data pointer, and last  * opcode values, except in the rare case in which the exception summary  * (ES) bit in the x87 status word is set to 1.  *  * In order to avoid leaking this information across processes, we clean  * these values by performing a dummy load before executing fxrstor().  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|double
-name|dummy_variable
-init|=
-literal|0.0
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
@@ -3219,6 +3222,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|static
+name|float
+name|dummy_variable
+init|=
+literal|0.0
+decl_stmt|;
 name|u_short
 name|status
 decl_stmt|;
@@ -3272,16 +3281,11 @@ if|if
 condition|(
 name|cpu_fxsr
 condition|)
-block|{
-name|fpu_clean_state
-argument_list|()
-expr_stmt|;
 name|fxrstor
 argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 endif|#
 directive|endif

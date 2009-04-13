@@ -869,6 +869,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 name|INTSIZE
 condition|;
 name|i
@@ -929,7 +932,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"integer out of +-MAXPATHLEN (%d): %d"
+literal|"integer out of +-MAXPATHLEN (%d): %u"
 argument_list|,
 name|MAXPATHLEN
 argument_list|,
@@ -1027,7 +1030,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"integer out of +-MAXPATHLEN (%d): %d"
+literal|"integer out of +-MAXPATHLEN (%d): %u"
 argument_list|,
 name|MAXPATHLEN
 argument_list|,

@@ -214,39 +214,6 @@ begin_comment
 comment|/* storage space in bytes */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ATH_FF_TXQMIN
-value|2
-end_define
-
-begin_comment
-comment|/* min txq depth for staging */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATH_FF_TXQMAX
-value|50
-end_define
-
-begin_comment
-comment|/* maximum # of queued frames allowed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATH_FF_STAGEMAX
-value|5
-end_define
-
-begin_comment
-comment|/* max waiting period for staged frame*/
-end_comment
-
 begin_struct_decl
 struct_decl|struct
 name|taskqueue
@@ -416,17 +383,6 @@ argument|ath_buf
 argument_list|)
 name|bf_list
 expr_stmt|;
-name|TAILQ_ENTRY
-argument_list|(
-argument|ath_buf
-argument_list|)
-name|bf_stagelist
-expr_stmt|;
-comment|/* stage queue list */
-name|u_int32_t
-name|bf_age
-decl_stmt|;
-comment|/* age when placed on stageq */
 name|int
 name|bf_nseg
 decl_stmt|;
@@ -575,6 +531,10 @@ name|ATH_TXQ_SWQ
 value|(HAL_NUM_TX_QUEUES+1)
 comment|/* qnum for s/w only queue */
 name|u_int
+name|axq_ac
+decl_stmt|;
+comment|/* WME AC */
+name|u_int
 name|axq_flags
 decl_stmt|;
 define|#
@@ -615,19 +575,6 @@ literal|12
 index|]
 decl_stmt|;
 comment|/* e.g. "ath0_txq4" */
-comment|/* 	 * Fast-frame state.  The staging queue holds awaiting 	 * a fast-frame pairing.  Buffers on this queue are 	 * assigned an ``age'' and flushed when they wait too long. 	 */
-name|TAILQ_HEAD
-argument_list|(
-argument|axq_headtype
-argument_list|,
-argument|ath_buf
-argument_list|)
-name|axq_stageq
-expr_stmt|;
-name|u_int32_t
-name|axq_curage
-decl_stmt|;
-comment|/* queue age */
 block|}
 struct|;
 end_struct
@@ -695,7 +642,7 @@ name|_elm
 parameter_list|,
 name|_field
 parameter_list|)
-value|do { \ 	STAILQ_INSERT_TAIL(&(_tq)->axq_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	(_tq)->axq_curage++; \ } while (0)
+value|do { \ 	STAILQ_INSERT_TAIL(&(_tq)->axq_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ } while (0)
 end_define
 
 begin_define
@@ -1435,9 +1382,6 @@ name|HAL_NODE_STATS
 name|sc_halstats
 decl_stmt|;
 comment|/* station-mode rssi stats */
-ifdef|#
-directive|ifdef
-name|ATH_SUPPORT_TDMA
 name|u_int
 name|sc_tdmadbaprep
 decl_stmt|;
@@ -1462,10 +1406,6 @@ name|u_int
 name|sc_tdmaslotlen
 decl_stmt|;
 comment|/* TDMA slot length (usec) */
-name|u_int
-name|sc_tdmabintcnt
-decl_stmt|;
-comment|/* TDMA beacon intvl (slots) */
 name|struct
 name|ath_rx_status
 modifier|*
@@ -1480,8 +1420,6 @@ name|u_int32_t
 name|sc_avgtsfdeltam
 decl_stmt|;
 comment|/* TDMA slot adjust (-) */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -2137,14 +2075,6 @@ define|\
 value|((*(_ah)->ah_perCalibration)((_ah), (_chan), (_iqcal)))
 end_define
 
-begin_if
-if|#
-directive|if
-name|HAL_ABI_VERSION
-operator|>=
-literal|0x08111000
-end_if
-
 begin_define
 define|#
 directive|define
@@ -2174,45 +2104,6 @@ parameter_list|)
 define|\
 value|((*(_ah)->ah_resetCalValid)((_ah), (_chan)))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ath_hal_calibrateN
-parameter_list|(
-name|_ah
-parameter_list|,
-name|_chan
-parameter_list|,
-name|_lcal
-parameter_list|,
-name|_isdone
-parameter_list|)
-define|\
-value|ath_hal_calibrate(_ah, _chan, _isdone)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ath_hal_calreset
-parameter_list|(
-name|_ah
-parameter_list|,
-name|_chan
-parameter_list|)
-value|(0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -2694,68 +2585,6 @@ define|\
 value|(ath_hal_getcapability(_ah, HAL_CAP_REG_DMN, 0, (_prd)) == HAL_OK)
 end_define
 
-begin_if
-if|#
-directive|if
-name|HAL_ABI_VERSION
-operator|<
-literal|0x08090100
-end_if
-
-begin_comment
-comment|/* XXX wrong for anything but amd64 and i386 */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__LP64__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|ath_hal_setregdomain
-parameter_list|(
-name|_ah
-parameter_list|,
-name|_rd
-parameter_list|)
-define|\
-value|(*(uint16_t *)(((uint8_t *)&(_ah)[1]) + 176) = (_rd))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ath_hal_setregdomain
-parameter_list|(
-name|_ah
-parameter_list|,
-name|_rd
-parameter_list|)
-define|\
-value|(*(uint16_t *)(((uint8_t *)&(_ah)[1]) + 128) = (_rd))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -2768,11 +2597,6 @@ parameter_list|)
 define|\
 value|ath_hal_setcapability(_ah, HAL_CAP_REG_DMN, 0, _rd, NULL)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -3364,158 +3188,6 @@ parameter_list|)
 define|\
 value|((*(_ah)->ah_getChanNoise)((_ah), (_c)))
 end_define
-
-begin_if
-if|#
-directive|if
-name|HAL_ABI_VERSION
-operator|<
-literal|0x05122200
-end_if
-
-begin_define
-define|#
-directive|define
-name|HAL_TXQ_TXOKINT_ENABLE
-value|TXQ_FLAG_TXOKINT_ENABLE
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAL_TXQ_TXERRINT_ENABLE
-value|TXQ_FLAG_TXERRINT_ENABLE
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAL_TXQ_TXDESCINT_ENABLE
-value|TXQ_FLAG_TXDESCINT_ENABLE
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAL_TXQ_TXEOLINT_ENABLE
-value|TXQ_FLAG_TXEOLINT_ENABLE
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAL_TXQ_TXURNINT_ENABLE
-value|TXQ_FLAG_TXURNINT_ENABLE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|HAL_ABI_VERSION
-operator|<
-literal|0x06102501
-end_if
-
-begin_define
-define|#
-directive|define
-name|ath_hal_ispublicsafetysku
-parameter_list|(
-name|ah
-parameter_list|)
-define|\
-value|(((ah)->ah_regdomain == 0&& (ah)->ah_countryCode == 842) || \ 	 (ah)->ah_regdomain == 0x12)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|HAL_ABI_VERSION
-operator|<
-literal|0x06122400
-end_if
-
-begin_comment
-comment|/* XXX yech, can't get to regdomain so just hack a compat shim */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ath_hal_isgsmsku
-parameter_list|(
-name|ah
-parameter_list|)
-define|\
-value|((ah)->ah_countryCode == 843)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|HAL_ABI_VERSION
-operator|<
-literal|0x07050400
-end_if
-
-begin_comment
-comment|/* compat shims so code compilers--it won't work though */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHANNEL_HT20
-value|0x10000
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHANNEL_HT40PLUS
-value|0x20000
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHANNEL_HT40MINUS
-value|0x40000
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAL_MODE_11NG_HT20
-value|0x008000
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAL_MODE_11NA_HT20
-value|0x010000
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

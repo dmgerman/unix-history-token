@@ -212,7 +212,7 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|sysvshm_destroy_label
 argument_list|,
@@ -278,7 +278,7 @@ modifier|*
 name|shmsegptr
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|sysvshm_create
 argument_list|,
@@ -304,7 +304,7 @@ modifier|*
 name|shmsegptr
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|sysvshm_cleanup
 argument_list|,
@@ -351,7 +351,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|sysvshm_check_shmat
 argument_list|,
@@ -422,7 +422,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|sysvshm_check_shmctl
 argument_list|,
@@ -488,7 +488,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|sysvshm_check_shmdt
 argument_list|,
@@ -555,7 +555,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|sysvshm_check_shmget
 argument_list|,

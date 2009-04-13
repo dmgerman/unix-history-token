@@ -75,6 +75,39 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PIMSTAT_ADD
+parameter_list|(
+name|name
+parameter_list|,
+name|val
+parameter_list|)
+value|pimstat.name += (val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIMSTAT_INC
+parameter_list|(
+name|name
+parameter_list|)
+value|PIMSTAT_ADD(name, 1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Names for PIM sysctl objects  */
 end_comment

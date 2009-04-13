@@ -48,31 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
 end_include
 
 begin_include
@@ -84,7 +60,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -102,6 +90,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sched.h>
 end_include
 
@@ -109,12 +109,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sx.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
 end_include
 
 begin_ifdef
@@ -160,13 +154,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<compat/linux/linux_emul.h>
+file|<compat/linux/linux_futex.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<compat/linux/linux_futex.h>
+file|<compat/linux/linux_emul.h>
 end_include
 
 begin_struct_decl
@@ -1207,28 +1201,6 @@ expr_stmt|;
 name|FUTEX_SYSTEM_UNLOCK
 expr_stmt|;
 break|break;
-case|case
-name|LINUX_FUTEX_FD
-case|:
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"linux_sys_futex: unimplemented op %d\n"
-argument_list|,
-name|args
-operator|->
-name|op
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-return|return
-operator|(
-name|ENOSYS
-operator|)
-return|;
 case|case
 name|LINUX_FUTEX_WAKE_OP
 case|:

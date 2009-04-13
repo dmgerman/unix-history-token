@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/udp.h,v 1.8.2.2 2007/03/28 07:45:46 hannes Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/udp.h,v 1.13 2007-08-08 17:20:58 hannes Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -343,6 +343,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VQP_PORT
+value|1589
+end_define
+
+begin_define
+define|#
+directive|define
 name|ZEPHYR_SRV_PORT
 value|2103
 end_define
@@ -385,6 +392,39 @@ end_define
 
 begin_comment
 comment|/* draft-katz-ward-bfd-v4v6-1hop-00.txt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFLOW_PORT
+value|6343
+end_define
+
+begin_comment
+comment|/* http://www.sflow.org/developers/specifications.php */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LWAPP_DATA_PORT
+value|12222
+end_define
+
+begin_comment
+comment|/* draft-ohara-capwap-lwapp-04.txt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LWAPP_CONTROL_PORT
+value|12223
+end_define
+
+begin_comment
+comment|/* draft-ohara-capwap-lwapp-04.txt */
 end_comment
 
 begin_ifdef

@@ -326,12 +326,6 @@ decl_stmt|;
 name|int
 name|sc_debug
 decl_stmt|;
-specifier|const
-name|struct
-name|ieee80211_rate_table
-modifier|*
-name|sc_rates
-decl_stmt|;
 comment|/*  * The same in both up to here  * ------------------------------------------------  */
 name|uint32_t
 name|asic_rev

@@ -25,6 +25,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -139,6 +145,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
 end_include
 
 begin_ifdef
@@ -492,13 +504,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEF_PreferenceLevel
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
 name|MIN_PreferenceLevel
 value|0x80000000
 end_define
@@ -515,13 +520,6 @@ define|#
 directive|define
 name|MAX_INITIAL_ADVERTS
 value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_RESPONSE_DELAY
-value|2
 end_define
 
 begin_define
@@ -861,15 +859,18 @@ begin_struct
 struct|struct
 name|interface
 block|{
-name|struct
-name|interface
-modifier|*
-name|int_next
-decl_stmt|,
-modifier|*
-modifier|*
-name|int_prev
-decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|interface
+argument_list|)
+name|int_list
+expr_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|interface
+argument_list|)
+name|remote_list
+expr_stmt|;
 name|struct
 name|interface
 modifier|*
@@ -887,15 +888,6 @@ decl_stmt|,
 modifier|*
 modifier|*
 name|int_bhash_prev
-decl_stmt|;
-name|struct
-name|interface
-modifier|*
-name|int_rlink
-decl_stmt|,
-modifier|*
-modifier|*
-name|int_rlink_prev
 decl_stmt|;
 name|struct
 name|interface
@@ -1466,6 +1458,16 @@ parameter_list|)
 value|((f)& IFF_UP)
 end_define
 
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|ifhead
+argument_list|,
+name|interface
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Information for aggregating routes */
 end_comment
@@ -1593,7 +1595,6 @@ comment|/* parameters for interfaces */
 end_comment
 
 begin_struct
-specifier|extern
 struct|struct
 name|parm
 block|{
@@ -1644,8 +1645,6 @@ name|MAX_AUTH_KEYS
 index|]
 decl_stmt|;
 block|}
-modifier|*
-name|parms
 struct|;
 end_struct
 
@@ -1806,8 +1805,6 @@ name|type
 decl_stmt|;
 block|}
 name|v12buf
-struct|,
-name|v2buf
 struct|;
 end_struct
 
@@ -1843,13 +1840,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|sock_max
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|rip_sock
 decl_stmt|;
 end_decl_stmt
@@ -1860,6 +1850,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|interface
 modifier|*
@@ -1903,17 +1894,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|seqno
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* sequence number for messages */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|supplier
 decl_stmt|;
 end_decl_stmt
@@ -1931,17 +1911,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* -s or -q requested */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|lookforinterfaces
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 1=probe for new up interfaces */
 end_comment
 
 begin_decl_stmt
@@ -2049,18 +2018,6 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|timeval
-name|next_bcast
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* next general broadcast */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|timeval
 name|age_timer
 decl_stmt|;
 end_decl_stmt
@@ -2152,8 +2109,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|struct
-name|interface
-modifier|*
+name|ifhead
 name|ifnet
 decl_stmt|;
 end_decl_stmt
@@ -2165,8 +2121,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|struct
-name|interface
-modifier|*
+name|ifhead
 name|remote_if
 decl_stmt|;
 end_decl_stmt
@@ -2185,13 +2140,6 @@ end_decl_stmt
 begin_comment
 comment|/* have a RIPv1 interface */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|have_ripv1_in
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -2346,7 +2294,6 @@ comment|/* sgi */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|fix_sock
 parameter_list|(
@@ -2360,7 +2307,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|fix_select
 parameter_list|(
@@ -2370,7 +2316,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|rip_off
 parameter_list|(
@@ -2380,7 +2325,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|rip_on
 parameter_list|(
@@ -2392,7 +2336,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|bufinit
 parameter_list|(
@@ -2402,7 +2345,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|output
 parameter_list|(
@@ -2427,7 +2369,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|clr_ws_buf
 parameter_list|(
@@ -2443,7 +2384,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|rip_query
 parameter_list|(
@@ -2453,7 +2393,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|rip_bcast
 parameter_list|(
@@ -2463,7 +2402,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|supply
 parameter_list|(
@@ -2488,7 +2426,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|msglog
 parameter_list|(
@@ -2541,7 +2478,6 @@ struct|;
 end_struct
 
 begin_function_decl
-specifier|extern
 name|void
 name|msglim
 parameter_list|(
@@ -2580,7 +2516,6 @@ value|msglog(msg ": %s", strerror(errno))
 end_define
 
 begin_function_decl
-specifier|extern
 name|void
 name|logbad
 parameter_list|(
@@ -2657,7 +2592,6 @@ directive|endif
 end_endif
 
 begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|naddr_ntoa
@@ -2668,7 +2602,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 specifier|const
 name|char
 modifier|*
@@ -2682,7 +2615,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 modifier|*
 name|rtmalloc
@@ -2697,7 +2629,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|timevaladd
 parameter_list|(
@@ -2713,7 +2644,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|intvl_random
 parameter_list|(
@@ -2729,7 +2659,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|getnet
 parameter_list|(
@@ -2746,7 +2675,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|gethost
 parameter_list|(
@@ -2760,7 +2688,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|gwkludge
 parameter_list|(
@@ -2770,7 +2697,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 specifier|const
 name|char
 modifier|*
@@ -2785,7 +2711,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 specifier|const
 name|char
 modifier|*
@@ -2799,7 +2724,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|get_parms
 parameter_list|(
@@ -2811,7 +2735,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|lastlog
 parameter_list|(
@@ -2821,7 +2744,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|trace_close
 parameter_list|(
@@ -2831,7 +2753,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|set_tracefile
 parameter_list|(
@@ -2849,7 +2770,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|tracelevel_msg
 parameter_list|(
@@ -2863,7 +2783,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|trace_off
 parameter_list|(
@@ -2886,7 +2805,6 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-specifier|extern
 name|void
 name|set_tracelevel
 parameter_list|(
@@ -2896,7 +2814,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|trace_flush
 parameter_list|(
@@ -2906,7 +2823,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|trace_misc
 parameter_list|(
@@ -2929,7 +2845,6 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-specifier|extern
 name|void
 name|trace_act
 parameter_list|(
@@ -2952,7 +2867,6 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-specifier|extern
 name|void
 name|trace_pkt
 parameter_list|(
@@ -2975,7 +2889,6 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-specifier|extern
 name|void
 name|trace_add_del
 parameter_list|(
@@ -2991,7 +2904,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|trace_change
 parameter_list|(
@@ -3013,7 +2925,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|trace_if
 parameter_list|(
@@ -3029,7 +2940,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|trace_upslot
 parameter_list|(
@@ -3049,7 +2959,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|trace_rip
 parameter_list|(
@@ -3079,7 +2988,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|addrname
@@ -3094,7 +3002,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|rtname
@@ -3109,7 +3016,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|rdisc_age
 parameter_list|(
@@ -3119,7 +3025,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|set_rdisc_mg
 parameter_list|(
@@ -3133,7 +3038,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|set_supplier
 parameter_list|(
@@ -3143,7 +3047,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|if_bad_rdisc
 parameter_list|(
@@ -3155,7 +3058,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|if_ok_rdisc
 parameter_list|(
@@ -3167,7 +3069,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|read_rip
 parameter_list|(
@@ -3181,7 +3082,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|read_rt
 parameter_list|(
@@ -3191,7 +3091,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|read_d
 parameter_list|(
@@ -3201,7 +3100,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|rdisc_adv
 parameter_list|(
@@ -3211,7 +3109,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|rdisc_sol
 parameter_list|(
@@ -3221,27 +3118,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|void
-name|sigalrm
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|sigterm
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|void
 name|sigtrace_on
 parameter_list|(
@@ -3251,7 +3127,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|sigtrace_off
 parameter_list|(
@@ -3261,7 +3136,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|flush_kern
 parameter_list|(
@@ -3271,7 +3145,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|age
 parameter_list|(
@@ -3281,7 +3154,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ag_flush
 parameter_list|(
@@ -3303,7 +3175,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ag_check
 parameter_list|(
@@ -3339,7 +3210,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|del_static
 parameter_list|(
@@ -3355,7 +3225,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|del_redirects
 parameter_list|(
@@ -3367,7 +3236,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|rt_entry
 modifier|*
@@ -3381,7 +3249,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|rt_entry
 modifier|*
@@ -3393,7 +3260,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|rtinit
 parameter_list|(
@@ -3403,7 +3269,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|rtadd
 parameter_list|(
@@ -3421,7 +3286,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|rtchange
 parameter_list|(
@@ -3442,7 +3306,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|rtdelete
 parameter_list|(
@@ -3454,7 +3317,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|rts_delete
 parameter_list|(
@@ -3470,7 +3332,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|rtbad_sub
 parameter_list|(
@@ -3482,7 +3343,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|rtswitch
 parameter_list|(
@@ -3492,18 +3352,6 @@ modifier|*
 parameter_list|,
 name|struct
 name|rt_spare
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|rtbad
-parameter_list|(
-name|struct
-name|rt_entry
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3562,16 +3410,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|INFO_IFP
-parameter_list|(
-name|I
-parameter_list|)
-value|((I)->rti_info[RTAX_IFP])
-end_define
-
-begin_define
-define|#
-directive|define
 name|INFO_AUTHOR
 parameter_list|(
 name|I
@@ -3611,7 +3449,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|naddr
 name|std_mask
 parameter_list|(
@@ -3621,7 +3458,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|naddr
 name|ripv1_mask_net
 parameter_list|(
@@ -3635,7 +3471,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|naddr
 name|ripv1_mask_host
 parameter_list|(
@@ -3663,7 +3498,6 @@ value|(((ntohl(a) ^ (net))& (mask)) == 0)
 end_define
 
 begin_function_decl
-specifier|extern
 name|int
 name|check_dst
 parameter_list|(
@@ -3673,7 +3507,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|interface
 modifier|*
@@ -3691,7 +3524,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|check_remote
 parameter_list|(
@@ -3703,19 +3535,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|int
-name|addrouteforif
-parameter_list|(
-name|struct
-name|interface
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|void
 name|ifinit
 parameter_list|(
@@ -3725,7 +3544,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|walk_bad
 parameter_list|(
@@ -3741,7 +3559,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|if_ok
 parameter_list|(
@@ -3757,7 +3574,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|if_sick
 parameter_list|(
@@ -3769,19 +3585,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|void
-name|if_bad
-parameter_list|(
-name|struct
-name|interface
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|void
 name|if_link
 parameter_list|(
@@ -3793,38 +3596,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|interface
 modifier|*
 name|ifwithaddr
 parameter_list|(
 name|naddr
+name|addr
 parameter_list|,
 name|int
+name|bcast
 parameter_list|,
 name|int
+name|remote
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|struct
-name|interface
-modifier|*
-name|ifwithname
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|naddr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|struct
 name|interface
 modifier|*
@@ -3838,7 +3627,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|interface
 modifier|*
@@ -3850,7 +3638,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|auth
 modifier|*
@@ -3864,7 +3651,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|end_md5_auth
 parameter_list|(
@@ -3943,7 +3729,6 @@ typedef|;
 end_typedef
 
 begin_function_decl
-specifier|extern
 name|void
 name|MD5Init
 parameter_list|(
@@ -3954,7 +3739,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|MD5Update
 parameter_list|(
@@ -3970,7 +3754,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|MD5Final
 parameter_list|(

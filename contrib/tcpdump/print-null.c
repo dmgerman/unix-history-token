@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-null.c,v 1.53.2.4 2007/02/26 13:31:33 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-null.c,v 1.57 2006-03-23 14:58:44 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,12 +82,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"af.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ip.h"
 end_include
 
@@ -107,6 +101,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"af.h"
+end_include
 
 begin_comment
 comment|/*  * The DLT_NULL packet header is 4 bytes long. It contains a host-byte-order  * 32-bit integer that specifies the family, e.g. AF_INET.  *  * Note here that "host" refers to the host on which the packets were  * captured; that isn't necessarily *this* host.  *  * The OpenBSD DLT_LOOP packet header is the same, except that the integer  * is in network byte order.  */

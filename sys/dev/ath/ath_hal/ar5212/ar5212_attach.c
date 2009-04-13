@@ -101,11 +101,6 @@ operator|=
 name|AR5212_MAGIC
 block|,
 operator|.
-name|ah_abi
-operator|=
-name|HAL_ABI_VERSION
-block|,
-operator|.
 name|ah_getRateTable
 operator|=
 name|ar5212GetRateTable

@@ -659,11 +659,7 @@ argument_list|,
 name|schizo_get_node
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2208,7 +2204,7 @@ name|tc
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Set up the IOMMU.  Both Schizo and Tomatillo have one per PBM. */
+comment|/* 	 * Set up the IOMMU.  Schizo, Tomatillo and XMITS all have 	 * one per PBM.  Schizo and XMITS additionally have a streaming 	 * buffer, in Schizo version< 5 (i.e. revision< 2.3) it's 	 * affected by several errata and basically unusable though. 	 */
 name|sc
 operator|->
 name|sc_is
@@ -2229,8 +2225,6 @@ index|[
 literal|0
 index|]
 operator|=
-literal|0
-expr_stmt|;
 name|sc
 operator|->
 name|sc_is
@@ -2242,9 +2236,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 if|if
 condition|(
 name|OF_getproplen
@@ -2255,6 +2246,21 @@ literal|"no-streaming-cache"
 argument_list|)
 operator|<
 literal|0
+operator|&&
+operator|!
+operator|(
+name|sc
+operator|->
+name|sc_mode
+operator|==
+name|SCHIZO_MODE_SCZ
+operator|&&
+name|sc
+operator|->
+name|sc_ver
+operator|<
+literal|5
+operator|)
 condition|)
 name|sc
 operator|->
@@ -2267,8 +2273,6 @@ index|]
 operator|=
 name|STX_PCI_STRBUF
 expr_stmt|;
-endif|#
-directive|endif
 define|#
 directive|define
 name|TSBCASE
@@ -6197,12 +6201,16 @@ name|error
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"belatedly registered as interrupt "
-literal|"controller for vector 0x%lx\n"
+literal|"belatedly registered as "
+literal|"interrupt controller for vector 0x%lx\n"
 argument_list|,
 name|vec
 argument_list|)

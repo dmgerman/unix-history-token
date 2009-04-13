@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_defs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb/usb_mfunc.h>
 end_include
 
@@ -702,7 +696,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|DEVMETHOD(usb2_handle_request, NULL);
+block|DEVMETHOD(usb_handle_request, NULL);
 comment|/* dummy */
 endif|#
 directive|endif

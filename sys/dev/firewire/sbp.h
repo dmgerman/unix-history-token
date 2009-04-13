@@ -441,9 +441,12 @@ name|STATUS_ACCESS_DENY
 value|4
 end_define
 
-begin_comment
-comment|/*   5: Logical unit not supported */
-end_comment
+begin_define
+define|#
+directive|define
+name|STATUS_LUR
+value|5
+end_define
 
 begin_comment
 comment|/*   6: Maximum payload too small */

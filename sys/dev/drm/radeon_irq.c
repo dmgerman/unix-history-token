@@ -757,6 +757,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|CHIP_RS600
+case|:
+case|case
 name|CHIP_RS690
 case|:
 case|case
@@ -968,6 +971,18 @@ name|RADEON_LAST_SWI_REG
 argument_list|)
 operator|>=
 name|swi_nr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+operator|-
+name|ERESTART
+condition|)
+name|DRM_DEBUG
+argument_list|(
+literal|"restarting syscall"
 argument_list|)
 expr_stmt|;
 return|return

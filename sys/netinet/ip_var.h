@@ -360,6 +360,50 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|IPSTAT_ADD
+parameter_list|(
+name|name
+parameter_list|,
+name|val
+parameter_list|)
+value|V_ipstat.name += (val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPSTAT_SUB
+parameter_list|(
+name|name
+parameter_list|,
+name|val
+parameter_list|)
+value|V_ipstat.name -= (val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPSTAT_INC
+parameter_list|(
+name|name
+parameter_list|)
+value|IPSTAT_ADD(name, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPSTAT_DEC
+parameter_list|(
+name|name
+parameter_list|)
+value|IPSTAT_SUB(name, 1)
+end_define
+
 begin_comment
 comment|/* flags passed to ip_output as last parameter */
 end_comment

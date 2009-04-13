@@ -187,7 +187,7 @@ begin_define
 define|#
 directive|define
 name|DCONS_POLL_HZ
-value|100
+value|25
 end_define
 
 begin_endif
@@ -1605,6 +1605,13 @@ name|tty
 operator|=
 name|tp
 expr_stmt|;
+name|tty_init_console
+argument_list|(
+name|tp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|tty_makedev
 argument_list|(
 name|tp
@@ -1789,13 +1796,20 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
+operator|!=
+operator|-
+literal|1
+condition|)
+name|dcons_attach
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ret
 operator|==
 literal|0
 condition|)
 block|{
-name|dcons_attach
-argument_list|()
-expr_stmt|;
 name|dcons_cnprobe
 argument_list|(
 operator|&

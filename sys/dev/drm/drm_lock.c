@@ -198,8 +198,6 @@ name|dev
 operator|->
 name|dev_lock
 argument_list|,
-name|PZERO
-operator||
 name|PCATCH
 argument_list|,
 literal|"drmlk2"
@@ -218,6 +216,18 @@ block|}
 name|DRM_UNLOCK
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+name|ERESTART
+condition|)
+name|DRM_DEBUG
+argument_list|(
+literal|"restarting syscall\n"
+argument_list|)
+expr_stmt|;
+else|else
 name|DRM_DEBUG
 argument_list|(
 literal|"%d %s\n"

@@ -21,14 +21,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ED_DL100XX_DIAG
+name|ED_DL10022_DIAG
 value|0x0d
 end_define
 
 begin_define
 define|#
 directive|define
-name|ED_DL100XX_COLLISON_DIS
+name|ED_DL10022_COLLISON_DIS
 value|4
 end_define
 
@@ -39,14 +39,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ED_DL100XX_MII_RESET1
+name|ED_DL10022_MII_RESET1
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|ED_DL100XX_MII_RESET2
+name|ED_DL10022_MII_RESET2
 value|0x08
 end_define
 
@@ -60,15 +60,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|ED_DL100XX_MII_DIROUT_22
+name|ED_DL10022_MII_DIROUT
 value|0x20
 end_define
 
 begin_define
 define|#
 directive|define
-name|ED_DL100XX_MII_DIROUT_19
+name|ED_DL10019_MII_DIROUT
 value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_DL100XX_MII_DIROUT
+value|(ED_DL10022_MII_DIROUT | ED_DL10019_MII_DIROUT)
 end_define
 
 begin_define

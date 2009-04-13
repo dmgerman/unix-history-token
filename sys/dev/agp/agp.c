@@ -2305,10 +2305,6 @@ decl_stmt|;
 comment|/* Do some sanity checks first. */
 if|if
 condition|(
-name|offset
-operator|<
-literal|0
-operator|||
 operator|(
 name|offset
 operator|&

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 1995, 1996, 1997, 1998, and 1999 WIDE Project.  * Al
 end_comment
 
 begin_comment
-comment|/* $Id: addrinfo.h,v 1.4 2002/06/11 17:13:36 itojun Exp $ */
+comment|/* $Id: addrinfo.h,v 1.4 2002-06-11 17:13:36 itojun Exp $ */
 end_comment
 
 begin_ifndef

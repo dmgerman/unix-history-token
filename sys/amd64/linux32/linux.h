@@ -698,11 +698,10 @@ decl_stmt|;
 name|l_int
 name|fd
 decl_stmt|;
-name|l_off_t
+name|l_ulong
 name|pgoff
 decl_stmt|;
 block|}
-name|__packed
 struct|;
 end_struct
 

@@ -150,11 +150,6 @@ modifier|*
 name|la
 parameter_list|,
 name|struct
-name|ip
-modifier|*
-name|pip
-parameter_list|,
-name|struct
 name|alias_data
 modifier|*
 name|ah

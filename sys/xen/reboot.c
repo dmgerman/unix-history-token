@@ -592,10 +592,9 @@ name|cpumask_t
 name|map
 decl_stmt|;
 comment|/* 	 * Bind us to CPU 0 and stop any other VCPUs. 	 */
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|curthread
 argument_list|)
 expr_stmt|;
 name|sched_bind
@@ -605,10 +604,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|curthread
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -661,6 +659,9 @@ argument_list|(
 literal|"xen_suspend: device_suspend failed\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
 if|if
 condition|(
 name|map
@@ -670,6 +671,8 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 name|local_irq_disable
@@ -916,7 +919,17 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
+name|thread_lock
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 name|sched_unbind
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+name|thread_unlock
 argument_list|(
 name|curthread
 argument_list|)

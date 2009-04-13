@@ -1100,10 +1100,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|V_icmp6stat
-operator|.
+name|ICMP6STAT_INC
+argument_list|(
 name|icp6s_tooshort
-operator|++
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -1931,13 +1931,13 @@ name|NULL
 operator|)
 expr_stmt|;
 comment|/* increment output statictics */
-name|V_icmp6stat
-operator|.
+name|ICMP6STAT_INC
+argument_list|(
 name|icp6s_outhist
 index|[
 name|type
 index|]
-operator|++
+argument_list|)
 expr_stmt|;
 name|ip6_output
 argument_list|(
@@ -2055,11 +2055,6 @@ expr_stmt|;
 name|in6m
 operator|=
 name|NULL
-expr_stmt|;
-name|IFF_LOCKGIANT
-argument_list|(
-name|ifp
-argument_list|)
 expr_stmt|;
 comment|/*IN6_MULTI_LOCK();*/
 name|IN6_LOOKUP_MULTI
@@ -2370,11 +2365,6 @@ literal|0
 condition|)
 do|;
 comment|/*IN6_MULTI_UNLOCK();*/
-name|IFF_UNLOCKGIANT
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|in6m

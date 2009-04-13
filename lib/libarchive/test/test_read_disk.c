@@ -423,6 +423,31 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+name|skipping
+argument_list|(
+literal|"standard uname/gname lookup; typically no user with uid=0 on cygwin platform"
+argument_list|)
+expr_stmt|;
+name|i
+operator|=
+literal|0
+expr_stmt|;
+name|p
+operator|=
+name|zero_groups
+index|[
+literal|0
+index|]
+expr_stmt|;
+comment|/* avoid unused warnings */
+else|#
+directive|else
 comment|/* XXX Someday, we may need to generalize this the 		 * same way we generalized the group name check below. 		 * That's needed only if we encounter a system where 		 * uid 0 is not "root". XXX */
 name|assertEqualString
 argument_list|(
@@ -522,6 +547,8 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 comment|/* Deregister again and verify the default lookups again. */
 name|assertEqualInt

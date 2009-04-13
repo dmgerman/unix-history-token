@@ -94,11 +94,20 @@ begin_comment
 comment|/* These should match the types used in 'struct stat' */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_WIN32
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -219,6 +228,11 @@ operator|(
 name|defined
 name|_WIN32
 operator|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 operator|)
 operator|&&
 operator|(

@@ -168,7 +168,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Information element ``blob''.  We use this structure  * to capture management frame payloads that need to be  * retained.  Information elemnts within the payload that  * we need to consult have references recorded.  */
+comment|/*  * Information element ``blob''.  We use this structure  * to capture management frame payloads that need to be  * retained.  Information elements within the payload that  * we need to consult have references recorded.  */
 end_comment
 
 begin_struct

@@ -13177,9 +13177,9 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|KEY_FREESAV
+comment|/*  				 * do NOT call KEY_FREESAV here: 				 * it will only delete the sav if refcnt == 1, 				 * where we already know that refcnt == 0 				 */
+name|key_delsav
 argument_list|(
-operator|&
 name|sav
 argument_list|)
 expr_stmt|;
@@ -19675,6 +19675,7 @@ argument_list|,
 argument|nextsav
 argument_list|)
 block|{
+comment|/* Need to also check refcnt for a larval SA ??? */
 if|if
 condition|(
 name|now
@@ -19769,7 +19770,7 @@ argument_list|,
 name|SADB_SASTATE_DYING
 argument_list|)
 expr_stmt|;
-comment|/* Actually, only send expire message if SA has been used, as it 				 * was done before, but should we always send such message, and let IKE 				 * daemon decide if it should be renegociated or not ? 				 * XXX expire message will actually NOT be sent if SA is only used 				 * after soft lifetime has been reached, see below (DYING state) 				 */
+comment|/*  				 * Actually, only send expire message if 				 * SA has been used, as it was done before, 				 * but should we always send such message, 				 * and let IKE daemon decide if it should be 				 * renegotiated or not ? 				 * XXX expire message will actually NOT be 				 * sent if SA is only used after soft 				 * lifetime has been reached, see below 				 * (DYING state) 				 */
 if|if
 condition|(
 name|sav
@@ -33763,21 +33764,6 @@ name|V_ipsec_ah_keymin
 operator|=
 literal|128
 expr_stmt|;
-name|SPTREE_LOCK_INIT
-argument_list|()
-expr_stmt|;
-name|REGTREE_LOCK_INIT
-argument_list|()
-expr_stmt|;
-name|SAHTREE_LOCK_INIT
-argument_list|()
-expr_stmt|;
-name|ACQ_LOCK_INIT
-argument_list|()
-expr_stmt|;
-name|SPACQ_LOCK_INIT
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -33853,6 +33839,30 @@ name|refcnt
 operator|++
 expr_stmt|;
 comment|/*never reclaim this*/
+if|if
+condition|(
+operator|!
+name|IS_DEFAULT_VNET
+argument_list|(
+name|curvnet
+argument_list|)
+condition|)
+return|return;
+name|SPTREE_LOCK_INIT
+argument_list|()
+expr_stmt|;
+name|REGTREE_LOCK_INIT
+argument_list|()
+expr_stmt|;
+name|SAHTREE_LOCK_INIT
+argument_list|()
+expr_stmt|;
+name|ACQ_LOCK_INIT
+argument_list|()
+expr_stmt|;
+name|SPACQ_LOCK_INIT
+argument_list|()
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|IPSEC_DEBUG2

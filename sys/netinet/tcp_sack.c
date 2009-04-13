@@ -290,6 +290,12 @@ directive|include
 file|<machine/in_cksum.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -298,12 +304,6 @@ modifier|*
 name|sack_hole_zone
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
 
 begin_decl_stmt
 name|int
@@ -872,10 +872,10 @@ operator|>=
 name|V_tcp_sack_globalmaxholes
 condition|)
 block|{
-name|V_tcpstat
-operator|.
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_sack_sboverflow
-operator|++
+argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -890,7 +890,7 @@ operator|*
 operator|)
 name|uma_zalloc
 argument_list|(
-name|sack_hole_zone
+name|V_sack_hole_zone
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -965,7 +965,7 @@ argument_list|)
 expr_stmt|;
 name|uma_zfree
 argument_list|(
-name|sack_hole_zone
+name|V_sack_hole_zone
 argument_list|,
 name|hole
 argument_list|)

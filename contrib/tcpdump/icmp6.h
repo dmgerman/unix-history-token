@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/icmp6.h,v 1.16.2.1 2005/09/05 09:29:28 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/icmp6.h,v 1.18 2007-08-29 02:31:44 mcr Exp $ (LBL) */
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: icmp6.h,v 1.13 2000/08/03 16:30:37 itojun Exp $	*/
+comment|/*	NetBSD: icmp6.h,v 1.13 2000/08/03 16:30:37 itojun Exp 	*/
 end_comment
 
 begin_comment

@@ -5490,7 +5490,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return the offset in configuration space of the requested extended  * capability entry or 0 if the specified capability was not found.  */
+comment|/*  * Find the requested extended capability and return the offset in  * configuration space via the pointer provided. The function returns  * 0 on success and error code otherwise.  */
 end_comment
 
 begin_function

@@ -233,11 +233,6 @@ modifier|*
 name|la
 parameter_list|,
 name|struct
-name|ip
-modifier|*
-name|pip
-parameter_list|,
-name|struct
 name|alias_data
 modifier|*
 name|ah
@@ -314,11 +309,6 @@ name|struct
 name|libalias
 modifier|*
 name|la
-parameter_list|,
-name|struct
-name|ip
-modifier|*
-name|pip
 parameter_list|,
 name|struct
 name|alias_data

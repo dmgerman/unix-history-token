@@ -202,7 +202,7 @@ begin_define
 define|#
 directive|define
 name|NFS_MINDIRATTRTIMO
-value|30
+value|3
 end_define
 
 begin_comment
@@ -226,6 +226,28 @@ directive|define
 name|NFS_MAXDIRATTRTIMO
 value|60
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFS_ACCESSCACHESIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NFS_ACCESSCACHESIZE
+value|8
+end_define
+
+begin_comment
+comment|/* Per-node access cache entries */
+end_comment
 
 begin_endif
 endif|#
@@ -1480,6 +1502,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+name|void
+name|nfs_purgecache
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int

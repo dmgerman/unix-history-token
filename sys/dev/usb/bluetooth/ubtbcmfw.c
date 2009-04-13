@@ -405,14 +405,10 @@ operator|=
 name|UBTBCMFW_IFACE_IDX
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 name|UBTBCMFW_BSIZE
 block|,
-operator|.
-name|mh
 operator|.
 name|flags
 operator|=
@@ -433,8 +429,6 @@ operator|=
 literal|1
 block|, }
 block|,
-operator|.
-name|mh
 operator|.
 name|callback
 operator|=
@@ -469,14 +463,10 @@ operator|=
 name|UBTBCMFW_IFACE_IDX
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 name|UBTBCMFW_BSIZE
 block|,
-operator|.
-name|mh
 operator|.
 name|flags
 operator|=
@@ -497,8 +487,6 @@ operator|=
 literal|1
 block|, }
 block|,
-operator|.
-name|mh
 operator|.
 name|callback
 operator|=

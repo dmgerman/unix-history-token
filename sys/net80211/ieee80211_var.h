@@ -112,6 +112,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<net80211/ieee80211_phy.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net80211/ieee80211_power.h>
 end_include
 
@@ -401,6 +407,36 @@ name|ieee80211_tdma_param
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|ieee80211_rate_table
+struct_decl|;
+end_struct_decl
+
+begin_struct
+struct|struct
+name|ieee80211_stageq
+block|{
+name|struct
+name|mbuf
+modifier|*
+name|head
+decl_stmt|;
+comment|/* frames linked w/ m_nextpkt */
+name|struct
+name|mbuf
+modifier|*
+name|tail
+decl_stmt|;
+comment|/* last frame in queue */
+name|int
+name|depth
+decl_stmt|;
+comment|/* # items on head */
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|ieee80211com
@@ -442,12 +478,6 @@ name|ifmedia
 name|ic_media
 decl_stmt|;
 comment|/* interface media config */
-name|uint8_t
-name|ic_myaddr
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
-decl_stmt|;
 name|struct
 name|callout
 name|ic_inact
@@ -564,6 +594,13 @@ modifier|*
 name|ic_curchan
 decl_stmt|;
 comment|/* current channel */
+specifier|const
+name|struct
+name|ieee80211_rate_table
+modifier|*
+name|ic_rt
+decl_stmt|;
+comment|/* table for ic_curchan */
 name|struct
 name|ieee80211_channel
 modifier|*
@@ -681,6 +718,18 @@ name|int
 name|ic_lastnonht
 decl_stmt|;
 comment|/* last time non-HT sta noted */
+comment|/* fast-frames staging q */
+name|struct
+name|ieee80211_stageq
+name|ic_ff_stageq
+index|[
+name|WME_NUM_AC
+index|]
+decl_stmt|;
+name|int
+name|ic_stageqdepth
+decl_stmt|;
+comment|/* cumulative depth */
 comment|/* virtual ap create/delete */
 name|struct
 name|ieee80211vap
@@ -888,6 +937,8 @@ specifier|const
 name|struct
 name|ieee80211_tdma_param
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 comment|/* node state management */
@@ -2655,7 +2706,7 @@ comment|/* ic_caps/iv_caps: device driver capabilities */
 end_comment
 
 begin_comment
-comment|/* 0x2f available */
+comment|/* 0x2e available */
 end_comment
 
 begin_define
@@ -2667,6 +2718,17 @@ end_define
 
 begin_comment
 comment|/* CAPABILITY: STA available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_C_8023ENCAP
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* CAPABILITY: 802.3 encap */
 end_comment
 
 begin_define
@@ -2925,7 +2987,7 @@ define|#
 directive|define
 name|IEEE80211_C_BITS
 define|\
-value|"\20\1STA\7FF\10TURBOP\11IBSS\12PMGT" \ 	"\13HOSTAP\14AHDEMO\15SWRETRY\16TXPMGT\17SHSLOT\20SHPREAMBLE" \ 	"\21MONITOR\22DFS\30WPA1\31WPA2\32BURST\33WME\34WDS\36BGSCAN" \ 	"\37TXFRAG\40TDMA"
+value|"\20\1STA\002803ENCAP\7FF\10TURBOP\11IBSS\12PMGT" \ 	"\13HOSTAP\14AHDEMO\15SWRETRY\16TXPMGT\17SHSLOT\20SHPREAMBLE" \ 	"\21MONITOR\22DFS\30WPA1\31WPA2\32BURST\33WME\34WDS\36BGSCAN" \ 	"\37TXFRAG\40TDMA"
 end_define
 
 begin_comment
@@ -3006,6 +3068,13 @@ parameter_list|(
 name|struct
 name|ieee80211com
 modifier|*
+parameter_list|,
+specifier|const
+name|uint8_t
+name|macaddr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3786,12 +3855,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_MSG_RADKEYS
+name|IEEE80211_MSG_MESH
 value|0x00002000
 end_define
 
 begin_comment
-comment|/* dump 802.1x keys */
+comment|/* mesh networking */
 end_comment
 
 begin_define

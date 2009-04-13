@@ -212,7 +212,7 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|sysvsem_destroy_label
 argument_list|,
@@ -278,7 +278,7 @@ modifier|*
 name|semakptr
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|sysvsem_create
 argument_list|,
@@ -304,7 +304,7 @@ modifier|*
 name|semakptr
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|sysvsem_cleanup
 argument_list|,
@@ -351,7 +351,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|sysvsem_check_semctl
 argument_list|,
@@ -417,7 +417,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|sysvsem_check_semget
 argument_list|,
@@ -473,7 +473,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|sysvsem_check_semop
 argument_list|,

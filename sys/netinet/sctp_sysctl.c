@@ -2577,6 +2577,14 @@ name|mtu
 expr_stmt|;
 name|xraddr
 operator|.
+name|rtt
+operator|=
+name|net
+operator|->
+name|rtt
+expr_stmt|;
+name|xraddr
+operator|.
 name|start_time
 operator|.
 name|tv_sec

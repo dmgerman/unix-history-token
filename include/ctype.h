@@ -159,24 +159,6 @@ end_if
 
 begin_function_decl
 name|int
-name|_tolower
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|_toupper
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|isascii
 parameter_list|(
 name|int

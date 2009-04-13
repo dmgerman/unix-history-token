@@ -19,6 +19,134 @@ begin_comment
 comment|/*  * TDMA-mode implementation definitions.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TDMA_SUBTYPE_PARAM
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|TDMA_VERSION_V2
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|TDMA_VERSION
+value|TDMA_VERSION_V2
+end_define
+
+begin_comment
+comment|/* NB: we only support 2 right now but protocol handles up to 8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDMA_MAXSLOTS
+value|2
+end_define
+
+begin_comment
+comment|/* max slots/sta's */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDMA_PARAM_LEN_V2
+value|sizeof(struct ieee80211_tdma_param)
+end_define
+
+begin_comment
+comment|/*  * TDMA information element.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ieee80211_tdma_param
+block|{
+name|u_int8_t
+name|tdma_id
+decl_stmt|;
+comment|/* IEEE80211_ELEMID_VENDOR */
+name|u_int8_t
+name|tdma_len
+decl_stmt|;
+name|u_int8_t
+name|tdma_oui
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* TDMA_OUI */
+name|u_int8_t
+name|tdma_type
+decl_stmt|;
+comment|/* TDMA_OUI_TYPE */
+name|u_int8_t
+name|tdma_subtype
+decl_stmt|;
+comment|/* TDMA_SUBTYPE_PARAM */
+name|u_int8_t
+name|tdma_version
+decl_stmt|;
+comment|/* spec revision */
+name|u_int8_t
+name|tdma_slot
+decl_stmt|;
+comment|/* station slot # [0..7] */
+name|u_int8_t
+name|tdma_slotcnt
+decl_stmt|;
+comment|/* bss slot count [1..8] */
+name|u_int16_t
+name|tdma_slotlen
+decl_stmt|;
+comment|/* bss slot len (100us) */
+name|u_int8_t
+name|tdma_bintval
+decl_stmt|;
+comment|/* beacon interval (superframes) */
+name|u_int8_t
+name|tdma_inuse
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* slot occupancy map */
+name|u_int8_t
+name|tdma_pad
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|u_int8_t
+name|tdma_tstamp
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* timestamp from last beacon */
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
+comment|/*  * Implementation state.  */
+end_comment
+
 begin_struct
 struct|struct
 name|ieee80211_tdma_state
@@ -27,6 +155,10 @@ name|u_int
 name|tdma_slotlen
 decl_stmt|;
 comment|/* bss slot length (us) */
+name|uint8_t
+name|tdma_version
+decl_stmt|;
+comment|/* protocol version to use */
 name|uint8_t
 name|tdma_slotcnt
 decl_stmt|;
@@ -46,15 +178,6 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* mask of slots in use */
-define|#
-directive|define
-name|IEEE80211_TDMA_MAXSLOTS
-value|8
-name|void
-modifier|*
-name|tdma_peer
-decl_stmt|;
-comment|/* peer station cookie */
 name|uint8_t
 name|tdma_active
 index|[
@@ -66,6 +189,20 @@ name|int
 name|tdma_count
 decl_stmt|;
 comment|/* active/inuse countdown */
+name|void
+modifier|*
+name|tdma_peer
+decl_stmt|;
+comment|/* peer station cookie */
+name|struct
+name|timeval
+name|tdma_lastprint
+decl_stmt|;
+comment|/* time of last rate-limited printf */
+name|int
+name|tdma_fails
+decl_stmt|;
+comment|/* fail count for rate-limiting */
 comment|/* parent method pointers */
 name|int
 function_decl|(
@@ -121,6 +258,50 @@ function_decl|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|TDMA_UPDATE_SLOT
+value|0x0001
+end_define
+
+begin_comment
+comment|/* tdma_slot changed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDMA_UPDATE_SLOTCNT
+value|0x0002
+end_define
+
+begin_comment
+comment|/* tdma_slotcnt changed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDMA_UPDATE_SLOTLEN
+value|0x0004
+end_define
+
+begin_comment
+comment|/* tdma_slotlen changed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDMA_UPDATE_BINTVAL
+value|0x0008
+end_define
+
+begin_comment
+comment|/* tdma_bintval changed */
+end_comment
 
 begin_function_decl
 name|void
@@ -202,45 +383,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_struct_decl
-struct_decl|struct
-name|ieee80211req
-struct_decl|;
-end_struct_decl
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_function_decl
-name|int
-name|ieee80211_tdma_ioctl_get80211
-parameter_list|(
-name|struct
-name|ieee80211vap
-modifier|*
-name|vap
-parameter_list|,
-name|struct
-name|ieee80211req
-modifier|*
-name|ireq
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ieee80211_tdma_ioctl_set80211
-parameter_list|(
-name|struct
-name|ieee80211vap
-modifier|*
-name|vap
-parameter_list|,
-name|struct
-name|ieee80211req
-modifier|*
-name|ireq
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#

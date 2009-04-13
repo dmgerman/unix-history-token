@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004 Lukas Ertl  * Copyright (c) 1997, 1998, 1999  *      Nan Yang Computer Services Limited.  All rights reserved.  *  * Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  * Parts written by Greg Lehey.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':                                                                   *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any               * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *    * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2004, 2007 Lukas Ertl  * Copyright (c) 1997, 1998, 1999  *      Nan Yang Computer Services Limited.  All rights reserved.  *  * Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  * Parts written by Greg Lehey.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':                                                                   *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any               * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *    * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -323,7 +323,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|GV_BIO_SUCCEED
+name|GV_BIO_INIT
 value|0x10
 end_define
 
@@ -354,6 +354,172 @@ directive|define
 name|GV_BIO_RETRY
 value|0x100
 end_define
+
+begin_define
+define|#
+directive|define
+name|GV_BIO_INTERNAL
+define|\
+value|(GV_BIO_SYNCREQ | GV_BIO_INIT | GV_BIO_REBUILD |GV_BIO_CHECK)
+end_define
+
+begin_comment
+comment|/* Error codes to be used within gvinum. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GV_ERR_SETSTATE
+value|(-1)
+end_define
+
+begin_comment
+comment|/* Error setting state. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GV_ERR_BADSIZE
+value|(-2)
+end_define
+
+begin_comment
+comment|/* Object has wrong size. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GV_ERR_INVTYPE
+value|(-3)
+end_define
+
+begin_comment
+comment|/* Invalid object type. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GV_ERR_CREATE
+value|(-4)
+end_define
+
+begin_comment
+comment|/* Error creating gvinum object. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GV_ERR_ISBUSY
+value|(-5)
+end_define
+
+begin_comment
+comment|/* Object is busy. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GV_ERR_ISATTACHED
+value|(-6)
+end_define
+
+begin_comment
+comment|/* Object is attached to another. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GV_ERR_INVFLAG
+value|(-7)
+end_define
+
+begin_comment
+comment|/* Invalid flag passed. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GV_ERR_INVSTATE
+value|(-8)
+end_define
+
+begin_comment
+comment|/* Invalid state. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GV_ERR_NOTFOUND
+value|(-9)
+end_define
+
+begin_comment
+comment|/* Object not found. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GV_ERR_NAMETAKEN
+value|(-10)
+end_define
+
+begin_comment
+comment|/* Object name is taken. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GV_ERR_NOSPACE
+value|(-11)
+end_define
+
+begin_comment
+comment|/* No space left on drive/subdisk. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GV_ERR_BADOFFSET
+value|(-12)
+end_define
+
+begin_comment
+comment|/* Invalid offset specified. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GV_ERR_INVNAME
+value|(-13)
+end_define
+
+begin_comment
+comment|/* Invalid object name. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GV_ERR_PLEXORG
+value|(-14)
+end_define
+
+begin_comment
+comment|/* Invalid plex organization. */
+end_comment
 
 begin_comment
 comment|/*  * hostname is 256 bytes long, but we don't need to shlep multiple copies in  * vinum.  We use the host name just to identify this system, and 32 bytes  * should be ample for that purpose.  */
@@ -489,6 +655,265 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|GV_EVENT_DRIVE_TASTED
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_DRIVE_LOST
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_THREAD_EXIT
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_CREATE_DRIVE
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_CREATE_VOLUME
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_CREATE_PLEX
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_CREATE_SD
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_SAVE_CONFIG
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_RM_VOLUME
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_RM_PLEX
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_RM_SD
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_RM_DRIVE
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_SET_SD_STATE
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_SET_DRIVE_STATE
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_SET_VOL_STATE
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_SET_PLEX_STATE
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_RESET_CONFIG
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_PARITY_REBUILD
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_PARITY_CHECK
+value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_START_PLEX
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_START_VOLUME
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_ATTACH_PLEX
+value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_ATTACH_SD
+value|23
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_DETACH_PLEX
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_DETACH_SD
+value|25
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_RENAME_VOL
+value|26
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_RENAME_PLEX
+value|27
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_RENAME_SD
+value|28
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_RENAME_DRIVE
+value|29
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_MOVE_SD
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_EVENT_SETUP_OBJECTS
+value|31
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_struct
+struct|struct
+name|gv_event
+block|{
+name|int
+name|type
+decl_stmt|;
+name|void
+modifier|*
+name|arg1
+decl_stmt|;
+name|void
+modifier|*
+name|arg2
+decl_stmt|;
+name|intmax_t
+name|arg3
+decl_stmt|;
+name|intmax_t
+name|arg4
+decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|gv_event
+argument_list|)
+name|events
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* This struct contains the main vinum config. */
 end_comment
@@ -497,7 +922,6 @@ begin_struct
 struct|struct
 name|gv_softc
 block|{
-comment|/*struct mtx config_mtx; XXX not yet */
 comment|/* Linked lists of all objects in our setup. */
 name|LIST_HEAD
 argument_list|(
@@ -531,6 +955,41 @@ argument_list|)
 name|volumes
 expr_stmt|;
 comment|/* All volumes. */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|gv_event
+argument_list|)
+name|equeue
+expr_stmt|;
+comment|/* Event queue. */
+name|struct
+name|mtx
+name|queue_mtx
+decl_stmt|;
+comment|/* Queue lock. */
+name|struct
+name|mtx
+name|config_mtx
+decl_stmt|;
+comment|/* Configuration lock. */
+ifdef|#
+directive|ifdef
+name|_KERNEL
+name|struct
+name|bio_queue_head
+modifier|*
+name|bqueue
+decl_stmt|;
+comment|/* BIO queue. */
+else|#
+directive|else
+name|char
+modifier|*
+name|padding
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|g_geom
 modifier|*
@@ -592,30 +1051,21 @@ name|flags
 decl_stmt|;
 define|#
 directive|define
-name|GV_DRIVE_THREAD_ACTIVE
+name|GV_DRIVE_REFERENCED
 value|0x01
-comment|/* Drive has an active worker thread. */
-define|#
-directive|define
-name|GV_DRIVE_THREAD_DIE
-value|0x02
-comment|/* Signal the worker thread to die. */
-define|#
-directive|define
-name|GV_DRIVE_THREAD_DEAD
-value|0x04
-comment|/* The worker thread has died. */
-define|#
-directive|define
-name|GV_DRIVE_NEWBORN
-value|0x08
-comment|/* The drive was just created. */
+comment|/* The drive isn't really existing, 					   but was referenced by a subdisk 					   during taste. */
 name|struct
 name|gv_hdr
 modifier|*
 name|hdr
 decl_stmt|;
 comment|/* The drive header. */
+name|struct
+name|g_consumer
+modifier|*
+name|consumer
+decl_stmt|;
+comment|/* Consumer attached to this drive. */
 name|int
 name|freelist_entries
 decl_stmt|;
@@ -643,34 +1093,6 @@ argument_list|)
 name|drive
 expr_stmt|;
 comment|/* Entry in the vinum config. */
-ifdef|#
-directive|ifdef
-name|_KERNEL
-name|struct
-name|bio_queue_head
-modifier|*
-name|bqueue
-decl_stmt|;
-comment|/* BIO queue of this drive. */
-else|#
-directive|else
-name|char
-modifier|*
-name|padding
-decl_stmt|;
-endif|#
-directive|endif
-name|struct
-name|mtx
-name|bqueue_mtx
-decl_stmt|;
-comment|/* Mtx. to protect the queue. */
-name|struct
-name|g_geom
-modifier|*
-name|geom
-decl_stmt|;
-comment|/* The geom of this drive. */
 name|struct
 name|gv_softc
 modifier|*
@@ -751,12 +1173,22 @@ define|#
 directive|define
 name|GV_SD_NEWBORN
 value|0x01
-comment|/* Subdisk was just created. */
+comment|/* Subdisk is created by user. */
 define|#
 directive|define
-name|GV_SD_INITCANCEL
+name|GV_SD_TASTED
 value|0x02
-comment|/* Cancel initialization process. */
+comment|/* Subdisk is created during taste. */
+define|#
+directive|define
+name|GV_SD_CANGOUP
+value|0x04
+comment|/* Subdisk can go up immediately. */
+define|#
+directive|define
+name|GV_SD_GROW
+value|0x08
+comment|/* Subdisk is added to striped plex. */
 name|char
 name|drive
 index|[
@@ -783,18 +1215,6 @@ modifier|*
 name|plex_sc
 decl_stmt|;
 comment|/* Pointer to associated plex. */
-name|struct
-name|g_provider
-modifier|*
-name|provider
-decl_stmt|;
-comment|/* The provider this sd represents. */
-name|struct
-name|g_consumer
-modifier|*
-name|consumer
-decl_stmt|;
-comment|/* Consumer attached to our provider. */
 name|LIST_ENTRY
 argument_list|(
 argument|gv_sd
@@ -863,8 +1283,12 @@ name|GV_PLEX_DEGRADED
 value|2
 define|#
 directive|define
-name|GV_PLEX_UP
+name|GV_PLEX_GROWABLE
 value|3
+define|#
+directive|define
+name|GV_PLEX_UP
+value|4
 name|int
 name|org
 decl_stmt|;
@@ -902,6 +1326,10 @@ modifier|*
 name|vol_sc
 decl_stmt|;
 comment|/* Pointer to associated volume. */
+name|int
+name|sddetached
+decl_stmt|;
+comment|/* Number of detached subdisks. */
 name|int
 name|sdcount
 decl_stmt|;
@@ -943,41 +1371,20 @@ directive|define
 name|GV_PLEX_NEWBORN
 value|0x20
 comment|/* The plex was just created. */
+define|#
+directive|define
+name|GV_PLEX_REBUILDING
+value|0x40
+comment|/* The plex is rebuilding. */
+define|#
+directive|define
+name|GV_PLEX_GROWING
+value|0x80
+comment|/* The plex is growing. */
 name|off_t
 name|synced
 decl_stmt|;
 comment|/* Count of synced bytes. */
-name|struct
-name|mtx
-name|bqueue_mtx
-decl_stmt|;
-comment|/* Lock for the BIO queue. */
-ifdef|#
-directive|ifdef
-name|_KERNEL
-name|struct
-name|bio_queue_head
-modifier|*
-name|bqueue
-decl_stmt|;
-comment|/* BIO queue. */
-name|struct
-name|bio_queue_head
-modifier|*
-name|wqueue
-decl_stmt|;
-comment|/* Waiting BIO queue. */
-else|#
-directive|else
-name|char
-modifier|*
-name|bpad
-decl_stmt|,
-modifier|*
-name|wpad
-decl_stmt|;
-endif|#
-directive|endif
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -1008,24 +1415,42 @@ argument_list|)
 name|plex
 expr_stmt|;
 comment|/* Entry in the vinum config. */
+ifdef|#
+directive|ifdef
+name|_KERNEL
 name|struct
-name|g_provider
+name|bio_queue_head
 modifier|*
-name|provider
+name|bqueue
 decl_stmt|;
-comment|/* The provider this plex represents. */
+comment|/* BIO queue. */
 name|struct
-name|g_consumer
+name|bio_queue_head
 modifier|*
-name|consumer
+name|wqueue
 decl_stmt|;
-comment|/* Consumer attached to our provider. */
+comment|/* Waiting BIO queue. */
 name|struct
-name|g_geom
+name|bio_queue_head
 modifier|*
-name|geom
+name|rqueue
 decl_stmt|;
-comment|/* The geom of this plex. */
+comment|/* Rebuild waiting BIO queue. */
+else|#
+directive|else
+name|char
+modifier|*
+name|bpad
+decl_stmt|,
+modifier|*
+name|wpad
+decl_stmt|,
+modifier|*
+name|rpad
+decl_stmt|;
+comment|/* Padding for userland. */
+endif|#
+directive|endif
 name|struct
 name|gv_softc
 modifier|*
@@ -1089,28 +1514,11 @@ directive|define
 name|GV_VOL_THREAD_DEAD
 value|0x04
 comment|/* The thread has died. */
-name|struct
-name|mtx
-name|bqueue_mtx
-decl_stmt|;
-comment|/* Lock for the BIO queue. */
-ifdef|#
-directive|ifdef
-name|_KERNEL
-name|struct
-name|bio_queue_head
-modifier|*
-name|bqueue
-decl_stmt|;
-comment|/* BIO queue. */
-else|#
-directive|else
-name|char
-modifier|*
-name|padding
-decl_stmt|;
-endif|#
-directive|endif
+define|#
+directive|define
+name|GV_VOL_NEWBORN
+value|0x08
+comment|/* The volume was just created. */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -1127,16 +1535,34 @@ name|volume
 expr_stmt|;
 comment|/* Entry in vinum config. */
 name|struct
+name|g_provider
+modifier|*
+name|provider
+decl_stmt|;
+comment|/* Provider of this volume. */
+ifdef|#
+directive|ifdef
+name|_KERNEL
+name|struct
+name|bio_queue_head
+modifier|*
+name|wqueue
+decl_stmt|;
+comment|/* BIO delayed request queue. */
+else|#
+directive|else
+name|char
+modifier|*
+name|wpad
+decl_stmt|;
+comment|/* Padding for userland. */
+endif|#
+directive|endif
+name|struct
 name|gv_plex
 modifier|*
 name|last_read_plex
 decl_stmt|;
-name|struct
-name|g_geom
-modifier|*
-name|geom
-decl_stmt|;
-comment|/* The geom of this volume. */
 name|struct
 name|gv_softc
 modifier|*

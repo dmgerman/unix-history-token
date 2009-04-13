@@ -5013,6 +5013,11 @@ condition|(
 name|ata_sata_phy_reset
 argument_list|(
 name|dev
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 name|ata_generic_reset
@@ -5262,6 +5267,11 @@ condition|(
 name|ata_sata_phy_reset
 argument_list|(
 name|dev
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 block|{

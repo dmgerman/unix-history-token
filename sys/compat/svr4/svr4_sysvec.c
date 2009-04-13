@@ -655,6 +655,11 @@ operator|=
 name|NULL
 block|,
 operator|.
+name|brand_note
+operator|=
+name|NULL
+block|,
+operator|.
 name|flags
 operator|=
 literal|0

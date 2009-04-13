@@ -516,14 +516,10 @@ operator|=
 name|UE_DIR_OUT
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 name|MCLBYTES
 block|,
-operator|.
-name|mh
 operator|.
 name|flags
 operator|=
@@ -540,14 +536,10 @@ literal|1
 block|,}
 block|,
 operator|.
-name|mh
-operator|.
 name|callback
 operator|=
 name|rue_bulk_write_callback
 block|,
-operator|.
-name|mh
 operator|.
 name|timeout
 operator|=
@@ -577,8 +569,6 @@ operator|=
 name|UE_DIR_IN
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 operator|(
@@ -587,8 +577,6 @@ operator|+
 literal|4
 operator|)
 block|,
-operator|.
-name|mh
 operator|.
 name|flags
 operator|=
@@ -605,14 +593,10 @@ literal|1
 block|,}
 block|,
 operator|.
-name|mh
-operator|.
 name|callback
 operator|=
 name|rue_bulk_read_callback
 block|,
-operator|.
-name|mh
 operator|.
 name|timeout
 operator|=
@@ -642,8 +626,6 @@ operator|=
 name|UE_DIR_IN
 block|,
 operator|.
-name|mh
-operator|.
 name|flags
 operator|=
 block|{
@@ -659,15 +641,11 @@ literal|1
 block|,}
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 literal|0
 block|,
 comment|/* use wMaxPacketSize */
-operator|.
-name|mh
 operator|.
 name|callback
 operator|=

@@ -282,10 +282,15 @@ decl_stmt|;
 name|u_int
 name|len_bytes
 decl_stmt|;
-name|u_long
+comment|/*      * When we emulate MAC overheads, or channel unavailability due      * to other traffic on a shared medium, we augment the packet at      * the head of the queue with an 'extra_bits' field representsing      * the additional delay the packet will be subject to:      *		extra_bits = bw*unavailable_time.      * With large bandwidth and large delays, extra_bits (and also numbytes)      * can become very large, so better play safe and use 64 bit      */
+name|dn_key
 name|numbytes
 decl_stmt|;
 comment|/* credit for transmission (dynamic queues) */
+name|dn_key
+name|extra_bits
+decl_stmt|;
+comment|/* extra bits simulating unavailable channel */
 name|u_int64_t
 name|tot_pkts
 decl_stmt|;
@@ -387,6 +392,11 @@ directive|define
 name|DN_NOERROR
 value|0x0010
 comment|/* do not report ENOBUFS on drops  */
+define|#
+directive|define
+name|DN_HAS_PROFILE
+value|0x0020
+comment|/* the pipe has a delay profile. */
 define|#
 directive|define
 name|DN_IS_PIPE
@@ -605,7 +615,8 @@ name|int
 name|sum
 decl_stmt|;
 comment|/* sum of weights of all active sessions */
-name|int
+comment|/* Same as in dn_flow_queue, numbytes can become large */
+name|dn_key
 name|numbytes
 decl_stmt|;
 comment|/* bits I can transmit (more or less). */
@@ -634,6 +645,56 @@ name|dn_flow_set
 name|fs
 decl_stmt|;
 comment|/* used with fixed-rate flows */
+comment|/* fields to simulate a delay profile */
+define|#
+directive|define
+name|ED_MAX_NAME_LEN
+value|32
+name|char
+name|name
+index|[
+name|ED_MAX_NAME_LEN
+index|]
+decl_stmt|;
+name|int
+name|loss_level
+decl_stmt|;
+name|int
+name|samples_no
+decl_stmt|;
+name|int
+modifier|*
+name|samples
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* dn_pipe_max is used to pass pipe configuration from userland onto  * kernel space and back  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_MAX_SAMPLES_NO
+value|1024
+end_define
+
+begin_struct
+struct|struct
+name|dn_pipe_max
+block|{
+name|struct
+name|dn_pipe
+name|pipe
+decl_stmt|;
+name|int
+name|samples
+index|[
+name|ED_MAX_SAMPLES_NO
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct

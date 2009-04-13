@@ -2056,6 +2056,12 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* XXX ifma_protospec must be covered by IF_ADDR_LOCK */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If something other than netinet is occupying the link-layer 	 * group, print a meaningful error message and back out of 	 * the allocation. 	 * Otherwise, bump the refcount on the existing network-layer 	 * group association and return it. 	 */
 if|if
 condition|(
@@ -2179,12 +2185,22 @@ name|pinm
 operator|=
 name|inm
 expr_stmt|;
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
+name|IF_ADDR_LOCK_ASSERT
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * A new in_multi record is needed; allocate and initialize it. 	 * We DO NOT perform an IGMP join as the in_ layer may need to 	 * push an initial source list down to IGMP to support SSM. 	 * 	 * The initial source filter state is INCLUDE, {} as per the RFC. 	 */
 name|inm
 operator|=
@@ -2213,6 +2229,11 @@ block|{
 name|if_delmulti_ifma
 argument_list|(
 name|ifma
+argument_list|)
+expr_stmt|;
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 return|return
@@ -2311,6 +2332,11 @@ operator|*
 name|pinm
 operator|=
 name|inm
+expr_stmt|;
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2423,6 +2449,7 @@ name|inm
 operator|->
 name|inm_ifma
 expr_stmt|;
+comment|/* XXX this access is not covered by IF_ADDR_LOCK */
 name|CTR2
 argument_list|(
 name|KTR_IGMPV3
@@ -5155,11 +5182,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|IFF_LOCKGIANT
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|IN_MULTI_LOCK
 argument_list|()
 expr_stmt|;
@@ -5178,11 +5200,6 @@ argument_list|)
 expr_stmt|;
 name|IN_MULTI_UNLOCK
 argument_list|()
-expr_stmt|;
-name|IFF_UNLOCKGIANT
-argument_list|(
-name|ifp
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -5460,32 +5477,13 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|int
-name|detached
-decl_stmt|,
 name|error
 decl_stmt|;
-name|detached
-operator|=
-name|inm_is_ifp_detached
-argument_list|(
-name|inm
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|=
 name|inm
 operator|->
 name|inm_ifp
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|detached
-condition|)
-name|IFF_LOCKGIANT
-argument_list|(
-name|ifp
-argument_list|)
 expr_stmt|;
 name|IN_MULTI_LOCK
 argument_list|()
@@ -5501,16 +5499,6 @@ argument_list|)
 expr_stmt|;
 name|IN_MULTI_UNLOCK
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|detached
-condition|)
-name|IFF_UNLOCKGIANT
-argument_list|(
-name|ifp
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -6307,11 +6295,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|IFF_LOCKGIANT
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Check if we are actually a member of this group. 	 */
 name|imo
 operator|=
@@ -6672,11 +6655,6 @@ label|:
 name|INP_WUNLOCK
 argument_list|(
 name|inp
-argument_list|)
-expr_stmt|;
-name|IFF_UNLOCKGIANT
-argument_list|(
-name|ifp
 argument_list|)
 expr_stmt|;
 return|return
@@ -8988,11 +8966,6 @@ operator|(
 name|EADDRNOTAVAIL
 operator|)
 return|;
-name|IFF_LOCKGIANT
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * MCAST_JOIN_SOURCE on an exclusive membership is an error. 	 * On an existing inclusive membership, it just adds the 	 * source to the filter list. 	 */
 name|imo
 operator|=
@@ -9489,11 +9462,6 @@ label|:
 name|INP_WUNLOCK
 argument_list|(
 name|inp
-argument_list|)
-expr_stmt|;
-name|IFF_UNLOCKGIANT
-argument_list|(
-name|ifp
 argument_list|)
 expr_stmt|;
 return|return
@@ -10076,15 +10044,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-if|if
-condition|(
-name|ifp
-condition|)
-name|IFF_LOCKGIANT
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Find the membership in the membership array. 	 */
 name|imo
 operator|=
@@ -10450,15 +10409,6 @@ label|:
 name|INP_WUNLOCK
 argument_list|(
 name|inp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ifp
-condition|)
-name|IFF_UNLOCKGIANT
-argument_list|(
-name|ifp
 argument_list|)
 expr_stmt|;
 return|return
@@ -10983,11 +10933,6 @@ operator|(
 name|EADDRNOTAVAIL
 operator|)
 return|;
-name|IFF_LOCKGIANT
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Take the INP write lock. 	 * Check if this socket is a member of this group. 	 */
 name|imo
 operator|=
@@ -11419,11 +11364,6 @@ label|:
 name|INP_WUNLOCK
 argument_list|(
 name|inp
-argument_list|)
-expr_stmt|;
-name|IFF_UNLOCKGIANT
-argument_list|(
-name|ifp
 argument_list|)
 expr_stmt|;
 return|return
@@ -12532,7 +12472,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|KTR_COMPILE
+name|ktr_mask
 operator|&
 name|KTR_IGMPV3
 operator|)

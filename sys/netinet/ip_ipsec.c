@@ -439,10 +439,10 @@ condition|(
 name|error
 condition|)
 block|{
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_cantforward
-operator|++
+argument_list|)
 expr_stmt|;
 return|return
 literal|1

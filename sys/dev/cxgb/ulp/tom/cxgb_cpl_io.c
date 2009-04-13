@@ -18075,10 +18075,10 @@ name|tp
 operator|->
 name|t_state
 expr_stmt|;
-name|V_tcpstat
-operator|.
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_connects
-operator|++
+argument_list|)
 expr_stmt|;
 block|}
 end_function

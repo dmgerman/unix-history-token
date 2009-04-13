@@ -825,6 +825,13 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"uath"
+argument_list|,
+literal|"Atheros AR5005UG and AR5005UX USB wireless adapter"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"upgt"
 argument_list|,
 literal|"Conexant/Intersil PrismGT USB wireless adapter"

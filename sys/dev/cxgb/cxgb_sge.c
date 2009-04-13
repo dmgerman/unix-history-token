@@ -15293,6 +15293,16 @@ name|rspq_mh
 operator|.
 name|mh_head
 operator|->
+name|m_flags
+operator||=
+name|M_FLOWID
+expr_stmt|;
+name|rspq
+operator|->
+name|rspq_mh
+operator|.
+name|mh_head
+operator|->
 name|m_pkthdr
 operator|.
 name|flowid

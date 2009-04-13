@@ -1330,7 +1330,7 @@ name|g_part_mbr_table
 modifier|*
 name|table
 decl_stmt|;
-name|uint64_t
+name|uint32_t
 name|msize
 decl_stmt|;
 name|pp
@@ -1364,6 +1364,8 @@ operator|)
 return|;
 name|msize
 operator|=
+name|MIN
+argument_list|(
 name|pp
 operator|->
 name|mediasize
@@ -1371,6 +1373,9 @@ operator|/
 name|pp
 operator|->
 name|sectorsize
+argument_list|,
+literal|0xffffffff
+argument_list|)
 expr_stmt|;
 name|basetable
 operator|->

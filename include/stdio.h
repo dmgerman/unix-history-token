@@ -1808,7 +1808,7 @@ begin_if
 if|#
 directive|if
 name|_POSIX_C_SOURCE
-operator|>
+operator|>=
 literal|200809
 end_if
 
@@ -1903,7 +1903,7 @@ begin_if
 if|#
 directive|if
 name|_POSIX_C_SOURCE
-operator|>
+operator|>=
 literal|200809
 end_if
 
@@ -1936,7 +1936,9 @@ end_ifdef
 
 begin_function_decl
 name|int
+function_decl|(
 name|dprintf
+function_decl|)
 parameter_list|(
 name|int
 parameter_list|,

@@ -1247,10 +1247,10 @@ operator|.
 name|cache_count
 operator|--
 expr_stmt|;
-name|V_tcpstat
-operator|.
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_hc_bucketoverflow
-operator|++
+argument_list|)
 expr_stmt|;
 if|#
 directive|if
@@ -1384,10 +1384,10 @@ operator|.
 name|cache_count
 operator|++
 expr_stmt|;
-name|V_tcpstat
-operator|.
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_hc_added
-operator|++
+argument_list|)
 expr_stmt|;
 return|return
 name|hc_entry
@@ -1861,10 +1861,10 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-name|V_tcpstat
-operator|.
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_cachedrtt
-operator|++
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -1909,10 +1909,10 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-name|V_tcpstat
-operator|.
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_cachedrttvar
-operator|++
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -1957,10 +1957,10 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-name|V_tcpstat
-operator|.
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_cachedssthresh
-operator|++
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -2005,7 +2005,7 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-comment|/* V_tcpstat.tcps_cachedbandwidth++; */
+comment|/* TCPSTAT_INC(tcps_cachedbandwidth); */
 block|}
 if|if
 condition|(
@@ -2049,7 +2049,7 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-comment|/* V_tcpstat.tcps_cachedcwnd++; */
+comment|/* TCPSTAT_INC(tcps_cachedcwnd); */
 block|}
 if|if
 condition|(
@@ -2093,7 +2093,7 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-comment|/* V_tcpstat.tcps_cachedsendpipe++; */
+comment|/* TCPSTAT_INC(tcps_cachedsendpipe); */
 block|}
 if|if
 condition|(
@@ -2137,7 +2137,7 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-comment|/* V_tcpstat.tcps_cachedrecvpipe++; */
+comment|/* TCPSTAT_INC(tcps_cachedrecvpipe); */
 block|}
 name|TAILQ_REMOVE
 argument_list|(

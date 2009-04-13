@@ -163,7 +163,7 @@ name|void
 modifier|*
 name|d
 parameter_list|,
-name|int
+name|usb2_size_t
 name|len
 parameter_list|,
 name|int
@@ -210,7 +210,7 @@ name|void
 modifier|*
 name|buf
 parameter_list|,
-name|int
+name|usb2_size_t
 name|len
 parameter_list|,
 name|enum
@@ -233,7 +233,7 @@ name|void
 modifier|*
 name|desc
 parameter_list|,
-name|int
+name|usb2_size_t
 name|size
 parameter_list|,
 name|uint32_t
@@ -242,6 +242,9 @@ parameter_list|,
 name|enum
 name|hid_kind
 name|kind
+parameter_list|,
+name|uint8_t
+name|index
 parameter_list|,
 name|struct
 name|hid_location
@@ -268,7 +271,7 @@ name|uint8_t
 modifier|*
 name|buf
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|len
 parameter_list|,
 name|struct
@@ -288,7 +291,7 @@ name|void
 modifier|*
 name|desc
 parameter_list|,
-name|int
+name|usb2_size_t
 name|size
 parameter_list|,
 name|uint32_t

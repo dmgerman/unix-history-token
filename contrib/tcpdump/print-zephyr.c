@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-zephyr.c,v 1.8.2.1 2005/04/21 06:51:24 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-zephyr.c,v 1.10 2007-08-09 18:47:27 hannes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -551,6 +551,43 @@ name|lose
 init|=
 literal|0
 decl_stmt|;
+comment|/* squelch compiler warnings */
+name|z
+operator|.
+name|kind
+operator|=
+literal|0
+expr_stmt|;
+name|z
+operator|.
+name|class
+operator|=
+literal|0
+expr_stmt|;
+name|z
+operator|.
+name|inst
+operator|=
+literal|0
+expr_stmt|;
+name|z
+operator|.
+name|opcode
+operator|=
+literal|0
+expr_stmt|;
+name|z
+operator|.
+name|sender
+operator|=
+literal|0
+expr_stmt|;
+name|z
+operator|.
+name|recipient
+operator|=
+literal|0
+expr_stmt|;
 define|#
 directive|define
 name|PARSE_STRING

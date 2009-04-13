@@ -1464,6 +1464,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|moea_cpu_bootstrap
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|moea_bootstrap
 parameter_list|(
 name|mmu_t
@@ -1766,6 +1777,13 @@ argument_list|(
 name|mmu_bootstrap
 argument_list|,
 name|moea_bootstrap
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_cpu_bootstrap
+argument_list|,
+name|moea_cpu_bootstrap
 argument_list|)
 block|,
 name|MMUMETHOD
@@ -2776,8 +2794,11 @@ end_function
 
 begin_function
 name|void
-name|pmap_cpu_bootstrap
+name|moea_cpu_bootstrap
 parameter_list|(
+name|mmu_t
+name|mmup
+parameter_list|,
 name|int
 name|ap
 parameter_list|)
@@ -3165,6 +3186,17 @@ end_asm
 begin_expr_stmt
 name|isync
 argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* set global direct map flag */
+end_comment
+
+begin_expr_stmt
+name|hw_direct_map
+operator|=
+literal|1
 expr_stmt|;
 end_expr_stmt
 
@@ -4464,8 +4496,10 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|pmap_cpu_bootstrap
+name|moea_cpu_bootstrap
 argument_list|(
+name|mmup
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;

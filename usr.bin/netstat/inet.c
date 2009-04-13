@@ -1268,7 +1268,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_TIMEWAIT
 condition|)

@@ -1027,6 +1027,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+call|(
+name|u_int32_t
+call|)
+argument_list|(
 name|h
 operator|->
 name|upper
@@ -1034,6 +1038,7 @@ operator|-
 name|h
 operator|->
 name|lower
+argument_list|)
 operator|<
 name|nbytes
 operator|+

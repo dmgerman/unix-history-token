@@ -198,7 +198,7 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|pipe_destroy_label
 argument_list|,
@@ -264,7 +264,7 @@ modifier|*
 name|dest
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|pipe_copy_label
 argument_list|,
@@ -370,7 +370,7 @@ modifier|*
 name|pp
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|pipe_create
 argument_list|,
@@ -407,7 +407,7 @@ modifier|*
 name|newlabel
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_PERFORM_NOSLEEP
 argument_list|(
 name|pipe_relabel
 argument_list|,
@@ -477,7 +477,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|pipe_check_ioctl
 argument_list|,
@@ -557,7 +557,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|pipe_check_poll
 argument_list|,
@@ -629,7 +629,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|pipe_check_read
 argument_list|,
@@ -709,7 +709,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|pipe_check_relabel
 argument_list|,
@@ -785,7 +785,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|pipe_check_stat
 argument_list|,
@@ -857,7 +857,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_CHECK_NOSLEEP
 argument_list|(
 name|pipe_check_write
 argument_list|,

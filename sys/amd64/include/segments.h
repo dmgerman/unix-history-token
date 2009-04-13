@@ -372,6 +372,26 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Generic descriptor  */
+end_comment
+
+begin_union
+union|union
+name|descriptor
+block|{
+name|struct
+name|user_segment_descriptor
+name|sd
+decl_stmt|;
+name|struct
+name|gate_descriptor
+name|gd
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
 comment|/* system segments and gate types */
 end_comment
 
@@ -389,6 +409,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SDT_SYS286TSS
+value|1
+end_define
+
+begin_comment
+comment|/* system 286 TSS available */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SDT_SYSLDT
 value|2
 end_define
@@ -400,12 +431,89 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SDT_SYS286BSY
+value|3
+end_define
+
+begin_comment
+comment|/* system 286 TSS busy */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDT_SYS286CGT
+value|4
+end_define
+
+begin_comment
+comment|/* system 286 call gate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDT_SYSTASKGT
+value|5
+end_define
+
+begin_comment
+comment|/* system task gate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDT_SYS286IGT
+value|6
+end_define
+
+begin_comment
+comment|/* system 286 interrupt gate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDT_SYS286TGT
+value|7
+end_define
+
+begin_comment
+comment|/* system 286 trap gate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDT_SYSNULL2
+value|8
+end_define
+
+begin_comment
+comment|/* system null again */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SDT_SYSTSS
 value|9
 end_define
 
 begin_comment
 comment|/* system available 64 bit TSS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDT_SYSNULL3
+value|10
+end_define
+
+begin_comment
+comment|/* system null again */
 end_comment
 
 begin_define
@@ -428,6 +536,17 @@ end_define
 
 begin_comment
 comment|/* system 64 bit call gate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDT_SYSNULL4
+value|13
+end_define
+
+begin_comment
+comment|/* system null again */
 end_comment
 
 begin_define
@@ -1004,8 +1123,41 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GCODE_SEL
+name|GNULL2_SEL
 value|1
+end_define
+
+begin_comment
+comment|/* Null Descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GUFS32_SEL
+value|2
+end_define
+
+begin_comment
+comment|/* User 32 bit %fs Descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GUGS32_SEL
+value|3
+end_define
+
+begin_comment
+comment|/* User 32 bit %gs Descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GCODE_SEL
+value|4
 end_define
 
 begin_comment
@@ -1016,7 +1168,7 @@ begin_define
 define|#
 directive|define
 name|GDATA_SEL
-value|2
+value|5
 end_define
 
 begin_comment
@@ -1027,7 +1179,7 @@ begin_define
 define|#
 directive|define
 name|GUCODE32_SEL
-value|3
+value|6
 end_define
 
 begin_comment
@@ -1038,7 +1190,7 @@ begin_define
 define|#
 directive|define
 name|GUDATA_SEL
-value|4
+value|7
 end_define
 
 begin_comment
@@ -1049,7 +1201,7 @@ begin_define
 define|#
 directive|define
 name|GUCODE_SEL
-value|5
+value|8
 end_define
 
 begin_comment
@@ -1060,7 +1212,7 @@ begin_define
 define|#
 directive|define
 name|GPROC0_SEL
-value|6
+value|9
 end_define
 
 begin_comment
@@ -1068,25 +1220,29 @@ comment|/* TSS for entering kernel etc */
 end_comment
 
 begin_comment
-comment|/* slot 7 is second half of GPROC0_SEL */
+comment|/* slot 10 is second half of GPROC0_SEL */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|GUGS32_SEL
-value|8
+name|GUSERLDT_SEL
+value|11
 end_define
 
 begin_comment
-comment|/* User 32 bit GS Descriptor */
+comment|/* LDT */
+end_comment
+
+begin_comment
+comment|/* slot 11 is second half of GUSERLDT_SEL */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NGDT
-value|9
+value|13
 end_define
 
 begin_ifdef
@@ -1191,6 +1347,36 @@ name|struct
 name|system_segment_descriptor
 modifier|*
 name|sdp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|update_gdt_gsbase
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|uint32_t
+name|base
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|update_gdt_fsbase
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|uint32_t
+name|base
 parameter_list|)
 function_decl|;
 end_function_decl

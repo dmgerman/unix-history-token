@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/tftp.h,v 1.1.2.1 2007/09/14 01:03:12 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/tftp.h,v 1.1.4.1 2008-04-11 16:44:17 gianluca Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -85,7 +85,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ERROR
+name|TFTP_ERROR
 value|05
 end_define
 

@@ -159,19 +159,19 @@ name|int32_t
 name|last_freed
 decl_stmt|;
 comment|/* Last overflow page freed */
-name|int32_t
+name|u_int32_t
 name|max_bucket
 decl_stmt|;
 comment|/* ID of Maximum bucket in use */
-name|int32_t
+name|u_int32_t
 name|high_mask
 decl_stmt|;
 comment|/* Mask to modulo into entire table */
-name|int32_t
+name|u_int32_t
 name|low_mask
 decl_stmt|;
 comment|/* Mask to modulo into lower half of  					 * table */
-name|int32_t
+name|u_int32_t
 name|ffactor
 decl_stmt|;
 comment|/* Fill factor */

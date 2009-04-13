@@ -14391,17 +14391,6 @@ operator||
 name|LK_RETRY
 argument_list|)
 expr_stmt|;
-name|VOP_LEASE
-argument_list|(
-name|vp
-argument_list|,
-name|td
-argument_list|,
-name|cred
-argument_list|,
-name|LEASE_WRITE
-argument_list|)
-expr_stmt|;
 name|VOP_SETATTR
 argument_list|(
 name|vp

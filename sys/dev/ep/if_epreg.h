@@ -698,6 +698,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EP_W2_PHY_MGMT
+value|0x0c
+end_define
+
+begin_define
+define|#
+directive|define
 name|EP_W2_ALT_EEPROM
 value|0x0a
 end_define
@@ -1596,6 +1603,123 @@ define|#
 directive|define
 name|DISABLE_UTP
 value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MT_CSD
+value|0x0004
+end_define
+
+begin_comment
+comment|/* CRC Strip disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_SQE
+value|0x0008
+end_define
+
+begin_comment
+comment|/* SQE Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_C0
+value|0x0010
+end_define
+
+begin_comment
+comment|/* Collison */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_CS
+value|0x0020
+end_define
+
+begin_comment
+comment|/* Carrier Sense */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_J
+value|0x0200
+end_define
+
+begin_comment
+comment|/* Jabber detected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_PL
+value|0x0400
+end_define
+
+begin_comment
+comment|/* Plarity Inverted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_LB
+value|0x0800
+end_define
+
+begin_comment
+comment|/* Link Beat detected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_SQ
+value|0x1000
+end_define
+
+begin_comment
+comment|/* SQE Present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_IN
+value|0x2000
+end_define
+
+begin_comment
+comment|/* Reserved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_CE
+value|0x4000
+end_define
+
+begin_comment
+comment|/* Coax */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_TPE
+value|0x8000
 end_define
 
 begin_comment

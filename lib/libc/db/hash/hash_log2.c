@@ -54,13 +54,25 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<db.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<db.h>
+file|"hash.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"page.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_function

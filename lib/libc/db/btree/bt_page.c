@@ -227,6 +227,8 @@ operator|->
 name|bt_mp
 argument_list|,
 name|npg
+argument_list|,
+name|MPOOL_PAGE_NEXT
 argument_list|)
 operator|)
 return|;

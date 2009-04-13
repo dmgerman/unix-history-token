@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2009, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -886,6 +886,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_CTRL_EXT_DMA_DYN_CLK_EN
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* DMA Dynamic Clock Gating */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_CTRL_EXT_LINK_MODE_MASK
 value|0x00C00000
 end_define
@@ -1016,17 +1027,6 @@ end_define
 
 begin_comment
 comment|/* Int acknowledge Auto-mask */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_EXT_INT_TIMER_CLR
-value|0x20000000
-end_define
-
-begin_comment
-comment|/* Clear Interrupt timers                                                   * after IMS clear */
 end_comment
 
 begin_define
@@ -2805,6 +2805,17 @@ end_define
 
 begin_comment
 comment|/* SWDPIN 2 value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_ADVD3WUC
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* D3 WUC */
 end_comment
 
 begin_define
@@ -4879,12 +4890,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_PBA_10K
+value|0x000A
+end_define
+
+begin_comment
+comment|/* 10KB */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_PBA_12K
 value|0x000C
 end_define
 
 begin_comment
 comment|/* 12KB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PBA_14K
+value|0x000E
+end_define
+
+begin_comment
+comment|/* 14KB */
 end_comment
 
 begin_define
@@ -4897,6 +4930,13 @@ end_define
 begin_comment
 comment|/* 16KB */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PBA_18K
+value|0x0012
+end_define
 
 begin_define
 define|#
@@ -4922,6 +4962,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_PBA_26K
+value|0x001A
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_PBA_30K
 value|0x001E
 end_define
@@ -4938,6 +4985,13 @@ define|#
 directive|define
 name|E1000_PBA_34K
 value|0x0022
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PBA_35K
+value|0x0023
 end_define
 
 begin_define
@@ -5463,6 +5517,65 @@ end_define
 
 begin_comment
 comment|/* Other Interrupts */
+end_comment
+
+begin_comment
+comment|/* PBA ECC Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PBA_ECC_COUNTER_MASK
+value|0xFFF00000
+end_define
+
+begin_comment
+comment|/* ECC counter mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PBA_ECC_COUNTER_SHIFT
+value|20
+end_define
+
+begin_comment
+comment|/* ECC counter shift value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PBA_ECC_CORR_EN
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Enable ECC error correction */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PBA_ECC_STAT_CLR
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Clear ECC error counter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PBA_ECC_INT_EN
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* Enable ICR bit 5 on ECC error */
 end_comment
 
 begin_comment
@@ -6527,6 +6640,13 @@ begin_comment
 comment|/* Interrupt Cause Active */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_EITR_ITR_INT_MASK
+value|0x0000FFFF
+end_define
+
 begin_comment
 comment|/* Transmit Descriptor Control */
 end_comment
@@ -6696,6 +6816,34 @@ begin_comment
 comment|/* Receive descriptor valid */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_RAL_MAC_ADDR_LEN
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_RAH_MAC_ADDR_LEN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_RAH_POOL_MASK
+value|0x03FC0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_RAH_POOL_1
+value|0x00040000
+end_define
+
 begin_comment
 comment|/* Error Codes */
 end_comment
@@ -6789,6 +6937,13 @@ define|#
 directive|define
 name|E1000_NOT_IMPLEMENTED
 value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_ERR_MBX
+value|15
 end_define
 
 begin_comment
@@ -8424,6 +8579,13 @@ define|#
 directive|define
 name|E1000_EECD_SECVAL_SHIFT
 value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_EECD_SEC1VAL_VALID_MASK
+value|(E1000_EECD_AUTO_RD | E1000_EECD_PRES)
 end_define
 
 begin_define

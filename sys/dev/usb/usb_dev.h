@@ -333,6 +333,9 @@ name|int
 name|ep_addr
 decl_stmt|;
 comment|/* endpoint address */
+name|int
+name|fflags
+decl_stmt|;
 name|uint8_t
 name|fifo_index
 decl_stmt|;
@@ -353,9 +356,6 @@ name|uint8_t
 name|is_usbfs
 decl_stmt|;
 comment|/* USB-FS is active */
-name|int
-name|fflags
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -472,10 +472,12 @@ modifier|*
 name|priv_mtx
 decl_stmt|;
 comment|/* client data */
-name|int
-name|opened
+comment|/* set if FIFO is opened by a FILE: */
+name|struct
+name|usb2_cdev_privdata
+modifier|*
+name|curr_cpd
 decl_stmt|;
-comment|/* set if FIFO is opened by a FILE */
 name|void
 modifier|*
 name|priv_sc0
@@ -490,15 +492,15 @@ name|void
 modifier|*
 name|queue_data
 decl_stmt|;
-name|uint32_t
+name|usb2_timeout_t
 name|timeout
 decl_stmt|;
 comment|/* timeout in milliseconds */
-name|uint32_t
+name|usb2_frlength_t
 name|bufsize
 decl_stmt|;
 comment|/* BULK and INTERRUPT buffer size */
-name|uint16_t
+name|usb2_frcount_t
 name|nframes
 decl_stmt|;
 comment|/* for isochronous mode */
@@ -730,10 +732,10 @@ name|usb2_page_cache
 modifier|*
 name|pc
 parameter_list|,
-name|uint32_t
+name|usb2_frlength_t
 name|offset
 parameter_list|,
-name|uint32_t
+name|usb2_frlength_t
 name|len
 parameter_list|,
 name|uint8_t
@@ -755,7 +757,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|len
 parameter_list|,
 name|uint8_t
@@ -777,7 +779,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|len
 parameter_list|)
 function_decl|;
@@ -809,13 +811,13 @@ name|usb2_page_cache
 modifier|*
 name|pc
 parameter_list|,
-name|uint32_t
+name|usb2_frlength_t
 name|offset
 parameter_list|,
-name|uint32_t
+name|usb2_frlength_t
 name|len
 parameter_list|,
-name|uint32_t
+name|usb2_frlength_t
 modifier|*
 name|actlen
 parameter_list|,
@@ -838,10 +840,10 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|len
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 modifier|*
 name|actlen
 parameter_list|,
@@ -865,7 +867,7 @@ modifier|*
 modifier|*
 name|pptr
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 modifier|*
 name|plen
 parameter_list|)
@@ -971,6 +973,19 @@ name|startentry
 parameter_list|,
 name|uint32_t
 name|user_len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usb2_fifo_set_close_zlp
+parameter_list|(
+name|struct
+name|usb2_fifo
+modifier|*
+parameter_list|,
+name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -827,17 +827,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_WDS
-value|M_PROTO2
-end_define
-
-begin_comment
-comment|/* WDS frame */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|M_EAPOL
 value|M_PROTO3
 end_define
@@ -906,7 +895,7 @@ define|#
 directive|define
 name|M_80211_TX
 define|\
-value|(M_FRAG|M_FIRSTFRAG|M_LASTFRAG|M_ENCAP|M_WDS|M_EAPOL|M_PWR_SAV|\ 	 M_MORE_DATA|M_FF|M_TXCB|M_AMPDU_MPDU)
+value|(M_FRAG|M_FIRSTFRAG|M_LASTFRAG|M_ENCAP|M_EAPOL|M_PWR_SAV|\ 	 M_MORE_DATA|M_FF|M_TXCB|M_AMPDU_MPDU)
 end_define
 
 begin_comment
@@ -1340,6 +1329,88 @@ define|\
 value|_IEEE80211_POLICY_MODULE(rate, alg, version);				\ static void								\ alg##_modevent(int type)						\ {									\
 comment|/* XXX nothing to do until the rate control framework arrives */
 value|\ }									\ TEXT_SET(rate##_set, alg##_modevent)
+end_define
+
+begin_struct_decl
+struct_decl|struct
+name|ieee80211req
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|int
+name|ieee80211_ioctl_getfunc
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211req
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_expr_stmt
+name|SET_DECLARE
+argument_list|(
+name|ieee80211_ioctl_getset
+argument_list|,
+name|ieee80211_ioctl_getfunc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOCTL_GET
+parameter_list|(
+name|_name
+parameter_list|,
+name|_get
+parameter_list|)
+value|TEXT_SET(ieee80211_ioctl_getset, _get)
+end_define
+
+begin_typedef
+typedef|typedef
+name|int
+name|ieee80211_ioctl_setfunc
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211req
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_expr_stmt
+name|SET_DECLARE
+argument_list|(
+name|ieee80211_ioctl_setset
+argument_list|,
+name|ieee80211_ioctl_setfunc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOCTL_SET
+parameter_list|(
+name|_name
+parameter_list|,
+name|_set
+parameter_list|)
+value|TEXT_SET(ieee80211_ioctl_setset, _set)
 end_define
 
 begin_endif

@@ -15359,6 +15359,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
+name|ip
+operator|->
+name|i_flags
+operator|&
+name|SF_SNAPSHOT
+operator|)
+operator|&&
 name|num_dirrem
 operator|>
 name|max_softdeps

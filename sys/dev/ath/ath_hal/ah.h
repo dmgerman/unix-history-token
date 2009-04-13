@@ -1769,15 +1769,6 @@ name|uint32_t
 name|ah_magic
 decl_stmt|;
 comment|/* consistency check magic number */
-name|uint32_t
-name|ah_abi
-decl_stmt|;
-comment|/* HAL ABI version */
-define|#
-directive|define
-name|HAL_ABI_VERSION
-value|0x08112800
-comment|/* YYMMDDnn */
 name|uint16_t
 name|ah_devid
 decl_stmt|;

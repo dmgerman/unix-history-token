@@ -31,7 +31,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* structure prototypes */
+comment|/* structure prototypes  */
 end_comment
 
 begin_struct_decl
@@ -114,10 +114,10 @@ name|usb2_page
 modifier|*
 name|pg
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|size
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|align
 parameter_list|)
 function_decl|;
@@ -360,69 +360,26 @@ struct|struct
 name|usb2_pipe_methods
 block|{
 comment|/* Mandatory USB Device and Host mode callbacks: */
-name|void
-function_decl|(
+name|usb2_callback_t
 modifier|*
 name|open
-function_decl|)
-parameter_list|(
-name|struct
-name|usb2_xfer
-modifier|*
-name|xfer
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
+decl_stmt|;
+name|usb2_callback_t
 modifier|*
 name|close
-function_decl|)
-parameter_list|(
-name|struct
-name|usb2_xfer
-modifier|*
-name|xfer
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
+decl_stmt|;
+name|usb2_callback_t
 modifier|*
 name|enter
-function_decl|)
-parameter_list|(
-name|struct
-name|usb2_xfer
-modifier|*
-name|xfer
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
+decl_stmt|;
+name|usb2_callback_t
 modifier|*
 name|start
-function_decl|)
-parameter_list|(
-name|struct
-name|usb2_xfer
-modifier|*
-name|xfer
-parameter_list|)
-function_decl|;
+decl_stmt|;
 comment|/* Optional */
 name|void
 modifier|*
 name|info
-decl_stmt|;
-comment|/* Flags */
-name|uint8_t
-name|enter_is_cancelable
-range|:
-literal|1
-decl_stmt|;
-name|uint8_t
-name|start_is_cancelable
-range|:
-literal|1
 decl_stmt|;
 block|}
 struct|;
@@ -605,7 +562,7 @@ name|void
 modifier|*
 name|buf
 decl_stmt|;
-name|uint32_t
+name|usb2_size_t
 name|size
 decl_stmt|;
 name|uint8_t
@@ -684,18 +641,6 @@ parameter_list|,
 name|usb2_bus_mem_cb_t
 modifier|*
 name|cb
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|usb2_bus_roothub_exec
-parameter_list|(
-name|struct
-name|usb2_bus
-modifier|*
-name|bus
 parameter_list|)
 function_decl|;
 end_function_decl

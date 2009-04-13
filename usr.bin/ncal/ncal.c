@@ -95,6 +95,18 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<wchar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<wctype.h>
+end_include
+
 begin_comment
 comment|/* Width of one month with backward compatibility */
 end_comment
@@ -146,7 +158,7 @@ begin_struct
 struct|struct
 name|monthlines
 block|{
-name|char
+name|wchar_t
 name|name
 index|[
 name|MAX_WIDTH
@@ -181,7 +193,7 @@ begin_struct
 struct|struct
 name|weekdays
 block|{
-name|char
+name|wchar_t
 name|names
 index|[
 literal|7
@@ -849,6 +861,25 @@ modifier|*
 name|s
 parameter_list|,
 name|char
+modifier|*
+name|t
+parameter_list|,
+name|int
+name|w
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|wchar_t
+modifier|*
+name|wcenter
+parameter_list|(
+name|wchar_t
+modifier|*
+name|s
+parameter_list|,
+name|wchar_t
 modifier|*
 name|t
 parameter_list|,
@@ -2246,7 +2277,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    %s %d\n"
+literal|"    %ls %d\n"
 argument_list|,
 name|month
 operator|.
@@ -2270,7 +2301,7 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"%.2s%s\n"
+literal|"%.2ls%s\n"
 argument_list|,
 name|wds
 operator|.
@@ -2325,7 +2356,7 @@ name|struct
 name|weekdays
 name|wds
 decl_stmt|;
-name|char
+name|wchar_t
 name|s
 index|[
 name|MAX_WIDTH
@@ -2370,11 +2401,13 @@ name|MONTH_WIDTH_B_J
 else|:
 name|MONTH_WIDTH_B
 expr_stmt|;
-name|sprintf
+name|swprintf
 argument_list|(
 name|s
 argument_list|,
-literal|"%s %d"
+name|MAX_WIDTH
+argument_list|,
+literal|L"%ls %d"
 argument_list|,
 name|month
 operator|.
@@ -2383,11 +2416,11 @@ argument_list|,
 name|y
 argument_list|)
 expr_stmt|;
-name|printf
+name|wprintf
 argument_list|(
-literal|"%s\n"
+literal|L"%ls\n"
 argument_list|,
-name|center
+name|wcenter
 argument_list|(
 name|t
 argument_list|,
@@ -2401,9 +2434,9 @@ if|if
 condition|(
 name|jd_flag
 condition|)
-name|printf
+name|wprintf
 argument_list|(
-literal|" %s %s %s %s %s %s %.2s\n"
+literal|L" %ls %ls %ls %ls %ls %ls %.2ls\n"
 argument_list|,
 name|wds
 operator|.
@@ -2456,9 +2489,9 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|wprintf
 argument_list|(
-literal|"%s%s%s%s%s%s%.2s\n"
+literal|L"%ls%ls%ls%ls%ls%ls%.2ls\n"
 argument_list|,
 name|wds
 operator|.
@@ -2674,7 +2707,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"    %-*s%-*s"
+literal|"    %-*ls%-*ls"
 argument_list|,
 name|mw
 argument_list|,
@@ -2705,7 +2738,7 @@ literal|3
 condition|)
 name|printf
 argument_list|(
-literal|"%s\n"
+literal|"%ls\n"
 argument_list|,
 name|year
 index|[
@@ -2720,7 +2753,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%-*s%s\n"
+literal|"%-*ls%ls\n"
 argument_list|,
 name|mw
 argument_list|,
@@ -2759,7 +2792,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"%.2s%-*s%-*s"
+literal|"%.2ls%-*s%-*s"
 argument_list|,
 name|wds
 operator|.
@@ -2980,6 +3013,17 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+name|wchar_t
+name|ws
+index|[
+literal|80
+index|]
+decl_stmt|,
+name|wt
+index|[
+literal|80
+index|]
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -3083,13 +3127,13 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"%-*s  "
+literal|"%-*ls  "
 argument_list|,
 name|mw
 argument_list|,
-name|center
+name|wcenter
 argument_list|(
-name|s
+name|ws
 argument_list|,
 name|year
 index|[
@@ -3110,11 +3154,11 @@ literal|2
 condition|)
 name|printf
 argument_list|(
-literal|"%s\n"
+literal|"%ls\n"
 argument_list|,
-name|center
+name|wcenter
 argument_list|(
-name|s
+name|ws
 argument_list|,
 name|year
 index|[
@@ -3132,13 +3176,13 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%-*s  %s\n"
+literal|"%-*ls  %ls\n"
 argument_list|,
 name|mw
 argument_list|,
-name|center
+name|wcenter
 argument_list|(
-name|s
+name|ws
 argument_list|,
 name|year
 index|[
@@ -3152,9 +3196,9 @@ argument_list|,
 name|mw
 argument_list|)
 argument_list|,
-name|center
+name|wcenter
 argument_list|(
-name|t
+name|wt
 argument_list|,
 name|year
 index|[
@@ -3175,10 +3219,10 @@ name|mpl
 operator|==
 literal|2
 condition|)
-name|printf
+name|wprintf
 argument_list|(
-literal|" %s %s %s %s %s %s %s "
-literal|" %s %s %s %s %s %s %.2s\n"
+literal|L" %ls %ls %ls %ls %ls %ls %ls "
+literal|" %ls %ls %ls %ls %ls %ls %.2ls\n"
 argument_list|,
 name|wds
 operator|.
@@ -3280,11 +3324,11 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|wprintf
 argument_list|(
-literal|"%s%s%s%s%s%s%s "
-literal|"%s%s%s%s%s%s%s "
-literal|"%s%s%s%s%s%s%.2s\n"
+literal|L"%ls%ls%ls%ls%ls%ls%ls "
+literal|"%ls%ls%ls%ls%ls%ls%ls "
+literal|"%ls%ls%ls%ls%ls%ls%.2ls\n"
 argument_list|,
 name|wds
 operator|.
@@ -3625,7 +3669,7 @@ name|tm_mon
 operator|=
 name|m
 expr_stmt|;
-name|strftime
+name|wcsftime
 argument_list|(
 name|mlines
 operator|->
@@ -3637,8 +3681,18 @@ name|mlines
 operator|->
 name|name
 argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|mlines
+operator|->
+name|name
+index|[
+literal|0
+index|]
+argument_list|)
 argument_list|,
-literal|"%OB"
+literal|L"%OB"
 argument_list|,
 operator|&
 name|tm
@@ -3651,12 +3705,8 @@ index|[
 literal|0
 index|]
 operator|=
-name|toupper
+name|towupper
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|mlines
 operator|->
 name|name
@@ -4070,7 +4120,7 @@ name|tm_mon
 operator|=
 name|m
 expr_stmt|;
-name|strftime
+name|wcsftime
 argument_list|(
 name|mlines
 operator|->
@@ -4082,8 +4132,18 @@ name|mlines
 operator|->
 name|name
 argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|mlines
+operator|->
+name|name
+index|[
+literal|0
+index|]
+argument_list|)
 argument_list|,
-literal|"%OB"
+literal|L"%OB"
 argument_list|,
 operator|&
 name|tm
@@ -4096,12 +4156,8 @@ index|[
 literal|0
 index|]
 operator|=
-name|toupper
+name|towupper
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|mlines
 operator|->
 name|name
@@ -4420,7 +4476,7 @@ name|struct
 name|tm
 name|tm
 decl_stmt|;
-name|char
+name|wchar_t
 name|buf
 index|[
 literal|20
@@ -4465,7 +4521,7 @@ operator|)
 operator|%
 literal|7
 expr_stmt|;
-name|strftime
+name|wcsftime
 argument_list|(
 name|buf
 argument_list|,
@@ -4474,7 +4530,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%a"
+literal|L"%a"
 argument_list|,
 operator|&
 name|tm
@@ -4482,7 +4538,7 @@ argument_list|)
 expr_stmt|;
 name|len
 operator|=
-name|strlen
+name|wcslen
 argument_list|(
 name|buf
 argument_list|)
@@ -4497,7 +4553,7 @@ name|len
 operator|=
 literal|2
 expr_stmt|;
-name|strcpy
+name|wcscpy
 argument_list|(
 name|wds
 operator|->
@@ -4506,10 +4562,10 @@ index|[
 name|i
 index|]
 argument_list|,
-literal|"   "
+literal|L"   "
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|wcsncpy
 argument_list|(
 name|wds
 operator|->
@@ -4877,6 +4933,80 @@ argument_list|(
 name|w
 operator|-
 name|strlen
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+operator|/
+literal|2
+argument_list|,
+name|blanks
+argument_list|,
+name|t
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|s
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Center string t in string s of length w by putting enough leading blanks */
+end_comment
+
+begin_function
+name|wchar_t
+modifier|*
+name|wcenter
+parameter_list|(
+name|wchar_t
+modifier|*
+name|s
+parameter_list|,
+name|wchar_t
+modifier|*
+name|t
+parameter_list|,
+name|int
+name|w
+parameter_list|)
+block|{
+name|char
+name|blanks
+index|[
+literal|80
+index|]
+decl_stmt|;
+name|memset
+argument_list|(
+name|blanks
+argument_list|,
+literal|' '
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|blanks
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|swprintf
+argument_list|(
+name|s
+argument_list|,
+name|MAX_WIDTH
+argument_list|,
+literal|L"%.*s%ls"
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|w
+operator|-
+name|wcslen
 argument_list|(
 name|t
 argument_list|)

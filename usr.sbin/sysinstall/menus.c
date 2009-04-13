@@ -448,13 +448,33 @@ name|MenuConfigure
 block|}
 block|,
 block|{
-literal|" Defaults, Load"
+literal|" Defaults, Load (FDD)"
 block|,
-literal|"Load default settings."
+literal|"Load default settings from floppy."
 block|,
 name|NULL
 block|,
 name|dispatch_load_floppy
+block|}
+block|,
+block|{
+literal|" Defaults, Load (CD)"
+block|,
+literal|"Load default settings from CDROM."
+block|,
+name|NULL
+block|,
+name|dispatch_load_cdrom
+block|}
+block|,
+block|{
+literal|" Defaults, Load"
+block|,
+literal|"Load default settings (all devices)."
+block|,
+name|NULL
+block|,
+name|dispatch_load_menu
 block|}
 block|,
 ifdef|#
@@ -1440,13 +1460,13 @@ name|installUpgrade
 block|}
 block|,
 block|{
-literal|"Load Config"
+literal|"Load Config.."
 block|,
 literal|"Load default install configuration"
 block|,
 name|NULL
 block|,
-name|dispatch_load_floppy
+name|dispatch_load_menu
 block|}
 block|,
 block|{
@@ -4507,6 +4527,29 @@ block|,
 literal|"KLD Menu"
 block|,
 literal|"Load a KLD from a floppy\n"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+block|{
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+block|;
+comment|/* Prototype config file load menu */
+name|DMenu
+name|MenuConfig
+operator|=
+block|{
+name|DMENU_NORMAL_TYPE
+block|,
+literal|"Config Menu"
+block|,
+literal|"Please select the device to load your configuration file from.\n"
+literal|"Note that a USB key will show up as daNs1."
 block|,
 name|NULL
 block|,

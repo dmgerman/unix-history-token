@@ -15,12 +15,6 @@ directive|define
 name|_LINUX_EMUL_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<compat/linux/linux_futex.h>
-end_include
-
 begin_struct
 struct|struct
 name|linux_emuldata_shared

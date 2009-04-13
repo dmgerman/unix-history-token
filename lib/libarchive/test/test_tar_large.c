@@ -78,7 +78,7 @@ name|void
 modifier|*
 name|buff
 decl_stmt|;
-name|off_t
+name|int64_t
 name|filebytes
 decl_stmt|;
 block|}
@@ -93,7 +93,7 @@ begin_struct
 struct|struct
 name|memdata
 block|{
-name|off_t
+name|int64_t
 name|filebytes
 decl_stmt|;
 name|void
@@ -122,28 +122,28 @@ begin_define
 define|#
 directive|define
 name|KB
-value|((off_t)1024)
+value|((int64_t)1024)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MB
-value|((off_t)1024 * KB)
+value|((int64_t)1024 * KB)
 end_define
 
 begin_define
 define|#
 directive|define
 name|GB
-value|((off_t)1024 * MB)
+value|((int64_t)1024 * MB)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TB
-value|((off_t)1024 * GB)
+value|((int64_t)1024 * GB)
 end_define
 
 begin_if
@@ -324,7 +324,7 @@ operator|->
 name|filebytes
 operator|+=
 operator|(
-name|off_t
+name|int64_t
 operator|)
 name|size
 expr_stmt|;
@@ -535,7 +535,7 @@ operator|->
 name|filebytes
 operator|>
 operator|(
-name|off_t
+name|int64_t
 operator|)
 name|filedatasize
 condition|)
@@ -824,7 +824,7 @@ begin_block
 block|{
 comment|/* The sizes of the entries we're going to generate. */
 specifier|static
-name|off_t
+name|int64_t
 name|tests
 index|[]
 init|=
@@ -926,9 +926,10 @@ name|archive
 modifier|*
 name|a
 decl_stmt|;
-name|off_t
+name|int64_t
 name|filesize
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|writesize
 decl_stmt|;
 name|filedatasize
@@ -1066,25 +1067,6 @@ index|[
 name|i
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|filesize
-operator|<
-literal|0
-condition|)
-block|{
-name|archive_entry_free
-argument_list|(
-name|ae
-argument_list|)
-expr_stmt|;
-name|skipping
-argument_list|(
-literal|"32-bit off_t doesn't permit testing of very large files."
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|archive_entry_set_size
 argument_list|(
 name|ae
@@ -1119,23 +1101,29 @@ condition|)
 block|{
 name|writesize
 operator|=
-operator|(
-name|off_t
-operator|)
 name|filedatasize
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|int64_t
+operator|)
 name|writesize
 operator|>
 name|filesize
 condition|)
 name|writesize
 operator|=
+operator|(
+name|size_t
+operator|)
 name|filesize
 expr_stmt|;
 name|assertA
 argument_list|(
+operator|(
+name|int
+operator|)
 name|writesize
 operator|==
 name|archive_write_data

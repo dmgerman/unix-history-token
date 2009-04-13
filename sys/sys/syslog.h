@@ -1006,6 +1006,12 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_function_decl
 name|void
 name|vsyslog
@@ -1029,6 +1035,11 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|__END_DECLS

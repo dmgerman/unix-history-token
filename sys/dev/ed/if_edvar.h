@@ -1056,6 +1056,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|ed_gen_ifmedia_init
+parameter_list|(
+name|struct
+name|ed_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|driver_intr_t
 name|edintr
@@ -1184,6 +1195,17 @@ value|0x0010
 end_define
 
 begin_comment
+comment|/*  * This forces a PC Card, and disables ISA memory range checks  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_FLAGS_PCCARD
+value|0x0020
+end_define
+
+begin_comment
 comment|/*  * These are flags describing the chip type.  */
 end_comment
 
@@ -1199,20 +1221,6 @@ define|#
 directive|define
 name|ED_FLAGS_GWETHER
 value|0x20000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ED_FLAGS_AX88190
-value|0x30000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ED_FLAGS_LINKSYS
-value|0x80000
 end_define
 
 begin_define

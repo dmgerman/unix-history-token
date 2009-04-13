@@ -137,6 +137,39 @@ directive|include
 file|<fs/pseudofs/pseudofs_internal.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|KASSERT_PN_IS_DIR
+parameter_list|(
+name|pn
+parameter_list|)
+define|\
+value|KASSERT((pn)->pn_type == pfstype_root ||			\ 	    (pn)->pn_type == pfstype_dir ||				\ 	    (pn)->pn_type == pfstype_procdir,				\ 	    ("%s(): VDIR vnode refers to non-directory pfs_node", __func__))
+end_define
+
+begin_define
+define|#
+directive|define
+name|KASSERT_PN_IS_FILE
+parameter_list|(
+name|pn
+parameter_list|)
+define|\
+value|KASSERT((pn)->pn_type == pfstype_file,				\ 	    ("%s(): VREG vnode refers to non-file pfs_node", __func__))
+end_define
+
+begin_define
+define|#
+directive|define
+name|KASSERT_PN_IS_LINK
+parameter_list|(
+name|pn
+parameter_list|)
+define|\
+value|KASSERT((pn)->pn_type == pfstype_symlink,			\ 	    ("%s(): VLNK vnode refers to non-link pfs_node", __func__))
+end_define
+
 begin_comment
 comment|/*  * Returns the fileno, adjusted for target pid  */
 end_comment
@@ -1126,6 +1159,11 @@ argument_list|(
 name|EINVAL
 argument_list|)
 expr_stmt|;
+name|KASSERT_PN_IS_FILE
+argument_list|(
+name|pn
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pn
@@ -1882,6 +1920,11 @@ argument_list|(
 name|ENOTDIR
 argument_list|)
 expr_stmt|;
+name|KASSERT_PN_IS_DIR
+argument_list|(
+name|pd
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|VOP_ACCESS
@@ -2624,6 +2667,11 @@ condition|)
 name|PFS_RETURN
 argument_list|(
 name|EINVAL
+argument_list|)
+expr_stmt|;
+name|KASSERT_PN_IS_FILE
+argument_list|(
+name|pn
 argument_list|)
 expr_stmt|;
 if|if
@@ -3383,6 +3431,11 @@ argument_list|(
 name|ENOTDIR
 argument_list|)
 expr_stmt|;
+name|KASSERT_PN_IS_DIR
+argument_list|(
+name|pd
+argument_list|)
+expr_stmt|;
 name|uio
 operator|=
 name|va
@@ -3995,6 +4048,11 @@ argument_list|(
 name|EINVAL
 argument_list|)
 expr_stmt|;
+name|KASSERT_PN_IS_LINK
+argument_list|(
+name|pn
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pn
@@ -4394,19 +4452,9 @@ argument_list|(
 name|EINVAL
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|KASSERT_PN_IS_FILE
 argument_list|(
 name|pn
-operator|->
-name|pn_type
-operator|!=
-name|pfstype_file
-argument_list|,
-operator|(
-literal|"%s(): VREG vnode refers to non-file pfs_node"
-operator|,
-name|__func__
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4488,11 +4536,6 @@ operator|&
 name|PFS_RAWWR
 condition|)
 block|{
-name|pfs_lock
-argument_list|(
-name|pn
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|pn_fill
@@ -4506,11 +4549,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|uio
-argument_list|)
-expr_stmt|;
-name|pfs_unlock
-argument_list|(
-name|pn
 argument_list|)
 expr_stmt|;
 if|if

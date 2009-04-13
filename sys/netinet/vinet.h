@@ -221,6 +221,18 @@ name|struct
 name|callout
 name|_tcp_hc_callout
 decl_stmt|;
+name|uma_zone_t
+name|_tcp_reass_zone
+decl_stmt|;
+name|uma_zone_t
+name|_tcpcb_zone
+decl_stmt|;
+name|uma_zone_t
+name|_tcptw_zone
+decl_stmt|;
+name|uma_zone_t
+name|_sack_hole_zone
+decl_stmt|;
 name|struct
 name|tcp_syncache
 name|_tcp_syncache
@@ -1268,6 +1280,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|V_sack_hole_zone
+value|VNET_INET(sack_hole_zone)
+end_define
+
+begin_define
+define|#
+directive|define
 name|V_sameprefixcarponly
 value|VNET_INET(sameprefixcarponly)
 end_define
@@ -1305,6 +1324,20 @@ define|#
 directive|define
 name|V_tcbinfo
 value|VNET_INET(tcbinfo)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_tcpcb_zone
+value|VNET_INET(tcpcb_zone)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_tcptw_zone
+value|VNET_INET(tcptw_zone)
 end_define
 
 begin_define
@@ -1529,6 +1562,13 @@ define|#
 directive|define
 name|V_tcp_reass_qsize
 value|VNET_INET(tcp_reass_qsize)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_tcp_reass_zone
+value|VNET_INET(tcp_reass_zone)
 end_define
 
 begin_define

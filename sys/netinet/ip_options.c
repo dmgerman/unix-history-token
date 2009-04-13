@@ -861,10 +861,10 @@ name|dropit
 label|:
 endif|#
 directive|endif
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_cantforward
-operator|++
+argument_list|)
 expr_stmt|;
 name|m_freem
 argument_list|(
@@ -1749,10 +1749,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_badoptions
-operator|++
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

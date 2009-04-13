@@ -227,6 +227,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|list_for_each_prev
+parameter_list|(
+name|entry
+parameter_list|,
+name|head
+parameter_list|)
+define|\
+value|for (entry = (head)->prev; entry != (head); \                 entry = entry->prev)
+end_define
+
+begin_define
+define|#
+directive|define
 name|list_for_each_safe
 parameter_list|(
 name|entry

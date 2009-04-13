@@ -18,12 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -217,6 +211,12 @@ directive|ifndef
 name|_KERNEL
 end_ifndef
 
+begin_struct_decl
+struct_decl|struct
+name|timespec
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|__BEGIN_DECLS
 comment|/*  * Asynchronously read from a file  */
@@ -343,6 +343,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__BSD_VISIBLE
+end_ifdef
+
 begin_function_decl
 name|int
 name|aio_waitcomplete
@@ -358,6 +364,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int

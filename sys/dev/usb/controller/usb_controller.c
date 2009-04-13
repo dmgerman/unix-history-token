@@ -16,12 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_defs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb/usb_error.h>
 end_include
 
@@ -93,7 +87,7 @@ file|<dev/usb/usb_bus.h>
 end_include
 
 begin_comment
-comment|/* function prototypes */
+comment|/* function prototypes  */
 end_comment
 
 begin_decl_stmt
@@ -138,91 +132,6 @@ name|usb2_post_init
 parameter_list|(
 name|void
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|usb2_bus_mem_flush_all_cb
-parameter_list|(
-name|struct
-name|usb2_bus
-modifier|*
-parameter_list|,
-name|struct
-name|usb2_page_cache
-modifier|*
-parameter_list|,
-name|struct
-name|usb2_page
-modifier|*
-parameter_list|,
-name|uint32_t
-parameter_list|,
-name|uint32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|usb2_bus_mem_alloc_all_cb
-parameter_list|(
-name|struct
-name|usb2_bus
-modifier|*
-parameter_list|,
-name|struct
-name|usb2_page_cache
-modifier|*
-parameter_list|,
-name|struct
-name|usb2_page
-modifier|*
-parameter_list|,
-name|uint32_t
-parameter_list|,
-name|uint32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|usb2_bus_mem_free_all_cb
-parameter_list|(
-name|struct
-name|usb2_bus
-modifier|*
-parameter_list|,
-name|struct
-name|usb2_page_cache
-modifier|*
-parameter_list|,
-name|struct
-name|usb2_page
-modifier|*
-parameter_list|,
-name|uint32_t
-parameter_list|,
-name|uint32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|usb2_bus_roothub
-parameter_list|(
-name|struct
-name|usb2_proc_msg
-modifier|*
-name|pm
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -762,15 +671,6 @@ operator|->
 name|non_giant_callback_proc
 argument_list|)
 expr_stmt|;
-comment|/* Get rid of USB roothub process */
-name|usb2_proc_free
-argument_list|(
-operator|&
-name|bus
-operator|->
-name|roothub_proc
-argument_list|)
-expr_stmt|;
 comment|/* Get rid of USB explore process */
 name|usb2_proc_free
 argument_list|(
@@ -1029,18 +929,11 @@ name|dev
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Free USB Root device, but not any sub-devices, hence they 	 * are freed by the caller of this function: 	 */
-name|usb2_detach_device
-argument_list|(
-name|udev
-argument_list|,
-name|USB_IFACE_INDEX_ANY
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|usb2_free_device
 argument_list|(
 name|udev
+argument_list|,
+name|USB_UNCFG_FLAG_FREE_EP0
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -1114,7 +1007,11 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
-return|return;
+name|USB_BUS_LOCK
+argument_list|(
+name|bus
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1275,6 +1172,45 @@ name|Giant
 argument_list|)
 expr_stmt|;
 comment|/* XXX not required by USB */
+comment|/* default power_mask value */
+name|bus
+operator|->
+name|hw_power_state
+operator|=
+name|USB_HW_POWER_CONTROL
+operator||
+name|USB_HW_POWER_BULK
+operator||
+name|USB_HW_POWER_INTERRUPT
+operator||
+name|USB_HW_POWER_ISOC
+operator||
+name|USB_HW_POWER_NON_ROOT_HUB
+expr_stmt|;
+comment|/* make sure power is set at least once */
+if|if
+condition|(
+name|bus
+operator|->
+name|methods
+operator|->
+name|set_hw_power
+operator|!=
+name|NULL
+condition|)
+block|{
+call|(
+name|bus
+operator|->
+name|methods
+operator|->
+name|set_hw_power
+call|)
+argument_list|(
+name|bus
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Allocate the Root USB device */
 name|child
 operator|=
@@ -1399,14 +1335,8 @@ argument_list|,
 name|bus
 argument_list|)
 expr_stmt|;
-comment|/* start watchdog - this function will unlock the BUS lock ! */
+comment|/* start watchdog */
 name|usb2_power_wdog
-argument_list|(
-name|bus
-argument_list|)
-expr_stmt|;
-comment|/* need to return locked */
-name|USB_BUS_LOCK
 argument_list|(
 name|bus
 argument_list|)
@@ -1593,57 +1523,7 @@ name|bus
 operator|=
 name|bus
 expr_stmt|;
-name|bus
-operator|->
-name|roothub_msg
-index|[
-literal|0
-index|]
-operator|.
-name|hdr
-operator|.
-name|pm_callback
-operator|=
-operator|&
-name|usb2_bus_roothub
-expr_stmt|;
-name|bus
-operator|->
-name|roothub_msg
-index|[
-literal|0
-index|]
-operator|.
-name|bus
-operator|=
-name|bus
-expr_stmt|;
-name|bus
-operator|->
-name|roothub_msg
-index|[
-literal|1
-index|]
-operator|.
-name|hdr
-operator|.
-name|pm_callback
-operator|=
-operator|&
-name|usb2_bus_roothub
-expr_stmt|;
-name|bus
-operator|->
-name|roothub_msg
-index|[
-literal|1
-index|]
-operator|.
-name|bus
-operator|=
-name|bus
-expr_stmt|;
-comment|/* Create USB explore, roothub and callback processes */
+comment|/* Create USB explore and callback processes */
 if|if
 condition|(
 name|usb2_proc_create
@@ -1696,34 +1576,6 @@ name|printf
 argument_list|(
 literal|"WARNING: Creation of USB non-Giant "
 literal|"callback process failed.\n"
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|usb2_proc_create
-argument_list|(
-operator|&
-name|bus
-operator|->
-name|roothub_proc
-argument_list|,
-operator|&
-name|bus
-operator|->
-name|bus_mtx
-argument_list|,
-name|pname
-argument_list|,
-name|USB_PRI_HIGH
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"WARNING: Creation of USB roothub "
-literal|"process failed.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1994,6 +1846,12 @@ begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_bus_mem_flush_all_cb  *------------------------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+end_if
+
 begin_function
 specifier|static
 name|void
@@ -2029,9 +1887,20 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_bus_mem_flush_all - factored out code  *------------------------------------------------------------------------*/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+end_if
 
 begin_function
 name|void
@@ -2064,9 +1933,20 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_bus_mem_alloc_all_cb  *------------------------------------------------------------------------*/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+end_if
 
 begin_function
 specifier|static
@@ -2128,6 +2008,11 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_bus_mem_alloc_all - factored out code  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
@@ -2188,7 +2073,7 @@ name|bus
 operator|->
 name|bus_mtx
 argument_list|,
-name|CALLOUT_RETURNUNLOCKED
+literal|0
 argument_list|)
 expr_stmt|;
 name|TAILQ_INIT
@@ -2201,6 +2086,9 @@ operator|.
 name|head
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 name|usb2_dma_tag_setup
 argument_list|(
 name|bus
@@ -2220,13 +2108,13 @@ name|bus_mtx
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
-argument_list|,
 literal|32
 argument_list|,
 name|USB_BUS_DMA_TAG_MAX
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -2270,6 +2158,9 @@ literal|1
 expr_stmt|;
 comment|/* failure */
 block|}
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 if|if
 condition|(
 name|cb
@@ -2284,6 +2175,8 @@ name|usb2_bus_mem_alloc_all_cb
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|bus
@@ -2312,6 +2205,12 @@ end_function
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_bus_mem_free_all_cb  *------------------------------------------------------------------------*/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+end_if
 
 begin_function
 specifier|static
@@ -2348,6 +2247,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_bus_mem_free_all - factored out code  *------------------------------------------------------------------------*/
 end_comment
@@ -2366,6 +2270,9 @@ modifier|*
 name|cb
 parameter_list|)
 block|{
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 if|if
 condition|(
 name|cb
@@ -2387,6 +2294,8 @@ operator|->
 name|dma_parent_tag
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|mtx_destroy
 argument_list|(
 operator|&
@@ -2395,113 +2304,6 @@ operator|->
 name|bus_mtx
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_bus_roothub  *  * This function is used to execute roothub control requests on the  * roothub and is called from the roothub process.  *------------------------------------------------------------------------*/
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|usb2_bus_roothub
-parameter_list|(
-name|struct
-name|usb2_proc_msg
-modifier|*
-name|pm
-parameter_list|)
-block|{
-name|struct
-name|usb2_bus
-modifier|*
-name|bus
-decl_stmt|;
-name|bus
-operator|=
-operator|(
-operator|(
-expr|struct
-name|usb2_bus_msg
-operator|*
-operator|)
-name|pm
-operator|)
-operator|->
-name|bus
-expr_stmt|;
-name|USB_BUS_LOCK_ASSERT
-argument_list|(
-name|bus
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
-call|(
-name|bus
-operator|->
-name|methods
-operator|->
-name|roothub_exec
-call|)
-argument_list|(
-name|bus
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_bus_roothub_exec  *  * This function is used to schedule the "roothub_done" bus callback  * method. The bus lock must be locked when calling this function.  *------------------------------------------------------------------------*/
-end_comment
-
-begin_function
-name|void
-name|usb2_bus_roothub_exec
-parameter_list|(
-name|struct
-name|usb2_bus
-modifier|*
-name|bus
-parameter_list|)
-block|{
-name|USB_BUS_LOCK_ASSERT
-argument_list|(
-name|bus
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|usb2_proc_msignal
-argument_list|(
-operator|&
-name|bus
-operator|->
-name|roothub_proc
-argument_list|,
-operator|&
-name|bus
-operator|->
-name|roothub_msg
-index|[
-literal|0
-index|]
-argument_list|,
-operator|&
-name|bus
-operator|->
-name|roothub_msg
-index|[
-literal|1
-index|]
-argument_list|)
-condition|)
-block|{
-comment|/* ignore */
-block|}
 block|}
 end_function
 

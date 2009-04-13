@@ -291,12 +291,6 @@ name|struct
 name|usb2_process
 name|sc_tq
 decl_stmt|;
-specifier|const
-name|struct
-name|ieee80211_rate_table
-modifier|*
-name|sc_rates
-decl_stmt|;
 name|struct
 name|usb2_xfer
 modifier|*

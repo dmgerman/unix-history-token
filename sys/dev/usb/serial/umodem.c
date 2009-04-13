@@ -69,12 +69,6 @@ directive|include
 file|<dev/usb/usb_ioctl.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/usb/usb_defs.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -656,14 +650,10 @@ operator|=
 literal|0
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 name|UMODEM_BUF_SIZE
 block|,
-operator|.
-name|mh
 operator|.
 name|flags
 operator|=
@@ -679,8 +669,6 @@ operator|=
 literal|1
 block|,}
 block|,
-operator|.
-name|mh
 operator|.
 name|callback
 operator|=
@@ -714,14 +702,10 @@ operator|=
 literal|0
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 name|UMODEM_BUF_SIZE
 block|,
-operator|.
-name|mh
 operator|.
 name|flags
 operator|=
@@ -737,8 +721,6 @@ operator|=
 literal|1
 block|,}
 block|,
-operator|.
-name|mh
 operator|.
 name|callback
 operator|=
@@ -772,8 +754,6 @@ operator|=
 literal|1
 block|,
 operator|.
-name|mh
-operator|.
 name|flags
 operator|=
 block|{
@@ -794,15 +774,11 @@ literal|1
 block|,}
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 literal|0
 block|,
 comment|/* use wMaxPacketSize */
-operator|.
-name|mh
 operator|.
 name|callback
 operator|=
@@ -3455,8 +3431,7 @@ name|usb2_do_request
 argument_list|(
 name|udev
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|req

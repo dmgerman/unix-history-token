@@ -526,6 +526,12 @@ name|struct
 name|cv
 name|sc_cv
 decl_stmt|;
+comment|/* Used to set "UCOM_FLAG_GP_DATA" flag: */
+name|struct
+name|usb2_proc_msg
+modifier|*
+name|sc_last_start_xfer
+decl_stmt|;
 specifier|const
 name|struct
 name|usb2_com_callback

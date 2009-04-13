@@ -1621,6 +1621,22 @@ argument_list|,
 name|t1
 argument_list|)
 expr_stmt|;
+comment|/* 	 * In case of multiple configure requests, 	 * keep track of the last one! 	 */
+if|if
+condition|(
+name|fn
+operator|==
+name|usb2_com_cfg_start_transfers
+condition|)
+name|sc
+operator|->
+name|sc_last_start_xfer
+operator|=
+operator|&
+name|task
+operator|->
+name|hdr
+expr_stmt|;
 block|}
 end_function
 
@@ -1781,6 +1797,14 @@ block|{
 comment|/* TTY device closed */
 return|return;
 block|}
+if|if
+condition|(
+name|_task
+operator|==
+name|sc
+operator|->
+name|sc_last_start_xfer
+condition|)
 name|sc
 operator|->
 name|sc_flag

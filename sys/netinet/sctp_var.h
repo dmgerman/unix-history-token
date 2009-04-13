@@ -254,7 +254,7 @@ name|_stcb
 parameter_list|,
 name|_strmoq
 parameter_list|)
-value|{ \ 	(_strmoq) = SCTP_ZONE_GET(SCTP_BASE_INFO(ipi_zone_strmoq), struct sctp_stream_queue_pending); \ 	if ((_strmoq)) { \ 		SCTP_INCR_STRMOQ_COUNT(); \ 		(_strmoq)->holds_key_ref = 0; \  	} \ }
+value|{ \ 	(_strmoq) = SCTP_ZONE_GET(SCTP_BASE_INFO(ipi_zone_strmoq), struct sctp_stream_queue_pending); \          if ((_strmoq)) {			  \ 		memset(_strmoq, 0, sizeof(struct sctp_stream_queue_pending)); \ 		SCTP_INCR_STRMOQ_COUNT(); \ 		(_strmoq)->holds_key_ref = 0; \  	} \ }
 end_define
 
 begin_define
@@ -415,7 +415,7 @@ name|stcb
 parameter_list|,
 name|tp1
 parameter_list|)
-value|do { \ 	if (stcb->asoc.total_flight>= tp1->book_size) { \ 		stcb->asoc.total_flight -= tp1->book_size; \ 		if (stcb->asoc.total_flight_count> 0) \ 			stcb->asoc.total_flight_count--; \ 	} else { \ 		stcb->asoc.total_flight = 0; \ 		stcb->asoc.total_flight_count = 0; \ 	} \ } while (0)
+value|do { \         tp1->window_probe = 0; \ 	if (stcb->asoc.total_flight>= tp1->book_size) { \ 		stcb->asoc.total_flight -= tp1->book_size; \ 		if (stcb->asoc.total_flight_count> 0) \ 			stcb->asoc.total_flight_count--; \ 	} else { \ 		stcb->asoc.total_flight = 0; \ 		stcb->asoc.total_flight_count = 0; \ 	} \ } while (0)
 end_define
 
 begin_define

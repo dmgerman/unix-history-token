@@ -103,45 +103,6 @@ name|__GNUCLIKE_BUILTIN_CONSTANT_P
 argument_list|)
 define|#
 directive|define
-name|__word_swap_int_var
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|__extension__ ({ register __uint32_t __X = (x); \    __asm ("rorl $16, %0" : "+r" (__X)); \    __X; })
-ifdef|#
-directive|ifdef
-name|__OPTIMIZE__
-define|#
-directive|define
-name|__word_swap_int_const
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|((((x)& 0xffff0000)>> 16) | \ 	 (((x)& 0x0000ffff)<< 16))
-define|#
-directive|define
-name|__word_swap_int
-parameter_list|(
-name|x
-parameter_list|)
-value|(__builtin_constant_p(x) ? \ 	__word_swap_int_const(x) : __word_swap_int_var(x))
-else|#
-directive|else
-comment|/* __OPTIMIZE__ */
-define|#
-directive|define
-name|__word_swap_int
-parameter_list|(
-name|x
-parameter_list|)
-value|__word_swap_int_var(x)
-endif|#
-directive|endif
-comment|/* __OPTIMIZE__ */
-define|#
-directive|define
 name|__byte_swap_int_var
 parameter_list|(
 name|x
@@ -176,45 +137,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|__byte_swap_int_var(x)
-endif|#
-directive|endif
-comment|/* __OPTIMIZE__ */
-define|#
-directive|define
-name|__byte_swap_word_var
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|__extension__ ({ register __uint16_t __X = (x); \    __asm ("xchgb %h0, %b0" : "+q" (__X)); \    __X; })
-ifdef|#
-directive|ifdef
-name|__OPTIMIZE__
-define|#
-directive|define
-name|__byte_swap_word_const
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|((((x)& 0xff00)>> 8) | \ 	 (((x)& 0x00ff)<< 8))
-define|#
-directive|define
-name|__byte_swap_word
-parameter_list|(
-name|x
-parameter_list|)
-value|(__builtin_constant_p(x) ? \ 	__byte_swap_word_const(x) : __byte_swap_word_var(x))
-else|#
-directive|else
-comment|/* __OPTIMIZE__ */
-define|#
-directive|define
-name|__byte_swap_word
-parameter_list|(
-name|x
-parameter_list|)
-value|__byte_swap_word_var(x)
 endif|#
 directive|endif
 comment|/* __OPTIMIZE__ */
@@ -355,10 +277,13 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|__byte_swap_word
-argument_list|(
 name|_x
-argument_list|)
+operator|<<
+literal|8
+operator||
+name|_x
+operator|>>
+literal|8
 operator|)
 return|;
 block|}

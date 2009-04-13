@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 2008 Hans Petter Selasky. All rights reserved.  *  
 end_comment
 
 begin_comment
-comment|/*  * Including this file is mandatory for all USB related c-files in the  * kernel.  */
+comment|/*  * Including this file is mandatory for all USB related c-files in the kernel.  */
 end_comment
 
 begin_ifndef
@@ -23,20 +23,51 @@ directive|define
 name|_USB2_CORE_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|USB_STACK_VERSION
+value|2000
+end_define
+
+begin_comment
+comment|/* 2.0 */
+end_comment
+
+begin_comment
+comment|/* Allow defines in "opt_usb.h" to override configuration */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"opt_usb.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_bus.h"
+end_include
+
 begin_comment
 comment|/* Default USB configuration */
+end_comment
+
+begin_comment
+comment|/*  * The following macro defines if the code shall use cv_xxx() instead  * of msleep() and wakeup().  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|USB_USE_CONDVAR
+name|USB_HAVE_CONDVAR
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|USB_USE_CONDVAR
+name|USB_HAVE_CONDVAR
 value|0
 end_define
 
@@ -45,6 +76,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * The following macro defines if the code shall support  * /dev/usb/x.y.z.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -55,6 +90,226 @@ begin_define
 define|#
 directive|define
 name|USB_HAVE_UGEN
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The following macro defines if the code shall support any forms of  * ASCII strings.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HAVE_STRINGS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_HAVE_STRINGS
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The following macro defines if the code shall support BUS-DMA.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HAVE_BUSDMA
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_HAVE_BUSDMA
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The following macro defines if the code shall support the Linux  * compatibility layer.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HAVE_COMPAT_LINUX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_HAVE_COMPAT_LINUX
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The following macro defines if the code shall support  * userland data transfer via copyin() and copyout()  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HAVE_USER_IO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_HAVE_USER_IO
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The following macro defines if the code shall support copy in via  * bsd-mbufs to USB.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HAVE_MBUF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_HAVE_MBUF
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The following macro defines if the code shall compile a table  * describing USB vendor and product IDs.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_VERBOSE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_VERBOSE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The following macro defines if USB debugging support shall be  * compiled for the USB core and all drivers.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_DEBUG
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_DEBUG
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The following macro defines if USB transaction translator support  * shall be supported for the USB HUB and USB controller drivers.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HAVE_TT_SUPPORT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_HAVE_TT_SUPPORT
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The following macro defines if the USB power daemon shall  * be supported in the USB core.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HAVE_POWERD
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_HAVE_POWERD
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The following macro defines if the USB autoinstall detection shall  * be supported in the USB core.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HAVE_MSCTEST
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_HAVE_MSCTEST
 value|1
 end_define
 
@@ -226,7 +481,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_mfunc.h>
+file|<dev/usb/usb_defs.h>
 end_include
 
 begin_include
@@ -241,28 +496,11 @@ directive|include
 file|"usb_if.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_usb.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_bus.h"
-end_include
-
-begin_define
-define|#
-directive|define
-name|USB_STACK_VERSION
-value|2000
-end_define
-
-begin_comment
-comment|/* 2.0 */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HOST_ALIGN
+end_ifndef
 
 begin_define
 define|#
@@ -275,16 +513,16 @@ begin_comment
 comment|/* bytes, must be power of two */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|USB_ISOC_TIME_MAX
-value|128
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_comment
-comment|/* ms */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_FS_ISOC_UFRAME_MAX
+end_ifndef
 
 begin_define
 define|#
@@ -296,6 +534,11 @@ end_define
 begin_comment
 comment|/* exclusive unit */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -311,6 +554,136 @@ begin_error
 error|#
 directive|error
 literal|"USB_FS_ISOC_UFRAME_MAX cannot be set higher than 6"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_BUS_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_BUS_MAX
+value|256
+end_define
+
+begin_comment
+comment|/* units */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_MAX_DEVICES
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_MAX_DEVICES
+value|128
+end_define
+
+begin_comment
+comment|/* units */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|(
+name|USB_MAX_DEVICES
+operator|<
+name|USB_MIN_DEVICES
+operator|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"Minimum number of devices is greater than maximum number of devices."
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_IFACE_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_IFACE_MAX
+value|32
+end_define
+
+begin_comment
+comment|/* units */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_FIFO_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_FIFO_MAX
+value|128
+end_define
+
+begin_comment
+comment|/* units */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|(
+name|USB_FIFO_MAX
+operator|&
+literal|1
+operator|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"Number of FIFOs must be odd."
 end_error
 
 begin_endif
@@ -340,34 +713,11 @@ begin_comment
 comment|/* units */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|USB_MAX_IPACKET
-value|8
-end_define
-
-begin_comment
-comment|/* maximum size of the initial USB 					 * data packet */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|USB_VERBOSE
+name|USB_HUB_MAX_DEPTH
 end_ifndef
-
-begin_define
-define|#
-directive|define
-name|USB_VERBOSE
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -375,6 +725,33 @@ directive|define
 name|USB_HUB_MAX_DEPTH
 value|5
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_EP0_BUFSIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_EP0_BUFSIZE
+value|1024
+end_define
+
+begin_comment
+comment|/* bytes */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* USB transfer states */
@@ -631,13 +1008,6 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|uint8_t
-name|usb2_error_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
 name|void
 function_decl|(
 name|usb2_callback_t
@@ -649,6 +1019,160 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HAVE_USB_ERROR_T
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|uint8_t
+name|usb2_error_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* see "USB_ERR_XXX" */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HAVE_TIMEOUT_T
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|usb2_timeout_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* milliseconds */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HAVE_FRLENGTH_T
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|usb2_frlength_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* bytes */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HAVE_FRCOUNT_T
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|usb2_frcount_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* units */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HAVE_SIZE_T
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|usb2_size_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* bytes */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HAVE_TICKS_T
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|usb2_ticks_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* system defined */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_HAVE_POWER_MASK_T
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|uint16_t
+name|usb2_power_mask_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* see "USB_HW_POWER_XXX" */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* structures */
@@ -866,6 +1390,9 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* filtered version */
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 name|uint8_t
 name|bdma_enable
 range|:
@@ -884,6 +1411,8 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* set if BUS-DMA has been setup */
+endif|#
+directive|endif
 name|uint8_t
 name|isochronous_xfr
 range|:
@@ -913,27 +1442,27 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The following structure defines the symmetric part of an USB config  * structure.  */
+comment|/*  * The following structure define an USB configuration, that basically  * is used when setting up an USB transfer.  */
 end_comment
 
 begin_struct
 struct|struct
-name|usb2_config_sub
+name|usb2_config
 block|{
 name|usb2_callback_t
 modifier|*
 name|callback
 decl_stmt|;
 comment|/* USB transfer callback */
-name|uint32_t
+name|usb2_frlength_t
 name|bufsize
 decl_stmt|;
 comment|/* total pipe buffer size in bytes */
-name|uint32_t
+name|usb2_frcount_t
 name|frames
 decl_stmt|;
 comment|/* maximum number of USB frames */
-name|uint16_t
+name|usb2_timeout_t
 name|interval
 decl_stmt|;
 comment|/* interval in milliseconds */
@@ -941,7 +1470,7 @@ define|#
 directive|define
 name|USB_DEFAULT_INTERVAL
 value|0
-name|uint16_t
+name|usb2_timeout_t
 name|timeout
 decl_stmt|;
 comment|/* transfer timeout in milliseconds */
@@ -950,28 +1479,6 @@ name|usb2_xfer_flags
 name|flags
 decl_stmt|;
 comment|/* transfer flags */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * The following structure define an USB configuration, that basically  * is used when setting up an USB transfer.  */
-end_comment
-
-begin_struct
-struct|struct
-name|usb2_config
-block|{
-name|struct
-name|usb2_config_sub
-name|mh
-decl_stmt|;
-comment|/* parameters for USB_MODE_HOST */
-name|struct
-name|usb2_config_sub
-name|md
-decl_stmt|;
-comment|/* parameters for USB_MODE_DEVICE */
 name|uint8_t
 name|type
 decl_stmt|;
@@ -992,6 +1499,10 @@ name|uint8_t
 name|if_index
 decl_stmt|;
 comment|/* "ifaces" index to use */
+name|uint8_t
+name|usb_mode
+decl_stmt|;
+comment|/* see "USB_MODE_XXX",  					 * "USB_MODE_MAX" means any mode! */
 block|}
 struct|;
 end_struct
@@ -1089,7 +1600,7 @@ name|void
 modifier|*
 name|local_buffer
 decl_stmt|;
-name|uint32_t
+name|usb2_frlength_t
 modifier|*
 name|frlengths
 decl_stmt|;
@@ -1102,21 +1613,21 @@ name|usb2_callback_t
 modifier|*
 name|callback
 decl_stmt|;
-name|uint32_t
-name|max_usb2_frame_size
+name|usb2_frlength_t
+name|max_hc_frame_size
 decl_stmt|;
-name|uint32_t
+name|usb2_frlength_t
 name|max_data_length
 decl_stmt|;
-name|uint32_t
+name|usb2_frlength_t
 name|sumlen
 decl_stmt|;
 comment|/* sum of all lengths in bytes */
-name|uint32_t
+name|usb2_frlength_t
 name|actlen
 decl_stmt|;
 comment|/* actual length in bytes */
-name|uint32_t
+name|usb2_timeout_t
 name|timeout
 decl_stmt|;
 comment|/* milliseconds */
@@ -1129,15 +1640,15 @@ directive|define
 name|USB_DEFAULT_TIMEOUT
 value|5000
 comment|/* 5000 ms = 5 seconds */
-name|uint32_t
+name|usb2_frcount_t
 name|max_frame_count
 decl_stmt|;
 comment|/* initial value of "nframes" after 					 * setup */
-name|uint32_t
+name|usb2_frcount_t
 name|nframes
 decl_stmt|;
 comment|/* number of USB frames to transfer */
-name|uint32_t
+name|usb2_frcount_t
 name|aframes
 decl_stmt|;
 comment|/* actual number of USB frames 					 * transferred */
@@ -1154,7 +1665,7 @@ name|uint16_t
 name|isoc_time_complete
 decl_stmt|;
 comment|/* in ms */
-name|uint16_t
+name|usb2_timeout_t
 name|interval
 decl_stmt|;
 comment|/* milliseconds */
@@ -1557,7 +2068,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|uint32_t
+name|usb2_frcount_t
 name|frindex
 parameter_list|)
 function_decl|;
@@ -1572,10 +2083,10 @@ name|usb2_xfer
 modifier|*
 name|xfer
 parameter_list|,
-name|uint32_t
+name|usb2_frlength_t
 name|offset
 parameter_list|,
-name|uint32_t
+name|usb2_frcount_t
 name|frindex
 parameter_list|)
 function_decl|;

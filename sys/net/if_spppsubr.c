@@ -1330,7 +1330,7 @@ name|SPPP_LOCK_OWNED
 parameter_list|(
 name|sp
 parameter_list|)
-value|mtx_owned (&sp->mtx)
+value|mtx_owned (&(sp)->mtx)
 end_define
 
 begin_ifdef

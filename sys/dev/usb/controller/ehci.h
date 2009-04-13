@@ -23,11 +23,11 @@ begin_define
 define|#
 directive|define
 name|EHCI_MAX_DEVICES
-value|USB_MAX_DEVICES
+value|MIN(USB_MAX_DEVICES, 128)
 end_define
 
 begin_comment
-comment|/* PCI config registers */
+comment|/* PCI config registers  */
 end_comment
 
 begin_define
@@ -2590,14 +2590,6 @@ decl_stmt|;
 name|union
 name|ehci_hub_desc
 name|sc_hub_desc
-decl_stmt|;
-name|struct
-name|usb2_sw_transfer
-name|sc_root_ctrl
-decl_stmt|;
-name|struct
-name|usb2_sw_transfer
-name|sc_root_intr
 decl_stmt|;
 name|struct
 name|usb2_device

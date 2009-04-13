@@ -206,24 +206,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|abort2
-argument_list|(
-specifier|const
-name|char
-operator|*
-argument_list|,
-name|int
-argument_list|,
-name|void
-operator|*
-operator|*
-argument_list|)
-name|__dead2
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|abs
 argument_list|(
@@ -1124,9 +1106,13 @@ argument_list|(
 name|_MKTEMP_DECLARED
 argument_list|)
 operator|&&
+operator|(
+name|__BSD_VISIBLE
+operator|||
 name|__XSI_VISIBLE
 operator|<=
 literal|600
+operator|)
 end_if
 
 begin_function_decl
@@ -1421,6 +1407,24 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|void
+name|abort2
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|int
+argument_list|,
+name|void
+operator|*
+operator|*
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|__uint32_t

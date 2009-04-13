@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1999 Kungliga Tekniska Högskolan  * (Royal Institut
 end_comment
 
 begin_comment
-comment|/* $Id: inet_ntop.c,v 1.8 2005/02/09 02:25:46 guy Exp $ */
+comment|/* $Id: inet_ntop.c,v 1.8 2005-02-09 02:25:46 guy Exp $ */
 end_comment
 
 begin_ifndef
@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/missing/inet_ntop.c,v 1.8 2005/02/09 02:25:46 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/missing/inet_ntop.c,v 1.8 2005-02-09 02:25:46 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 

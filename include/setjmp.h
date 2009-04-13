@@ -37,11 +37,9 @@ if|#
 directive|if
 name|__BSD_VISIBLE
 operator|||
-name|__POSIX_VISIBLE
-operator|>=
-literal|200112
-operator|||
 name|__XSI_VISIBLE
+operator|>=
+literal|600
 name|void
 name|_longjmp
 argument_list|(

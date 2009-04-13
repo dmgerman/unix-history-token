@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/gmpls.c,v 1.5.2.1 2005/05/19 06:44:02 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/gmpls.c,v 1.7 2006-04-14 07:11:59 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"interface.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gmpls.h"
 end_include
 
 begin_comment
@@ -135,51 +141,83 @@ index|[]
 init|=
 block|{
 block|{
-literal|1
+name|GMPLS_PSC1
 block|,
 literal|"Packet-Switch Capable-1"
 block|}
 block|,
 block|{
-literal|2
+name|GMPLS_PSC2
 block|,
 literal|"Packet-Switch Capable-2"
 block|}
 block|,
 block|{
-literal|3
+name|GMPLS_PSC3
 block|,
 literal|"Packet-Switch Capable-3"
 block|}
 block|,
 block|{
-literal|4
+name|GMPLS_PSC4
 block|,
 literal|"Packet-Switch Capable-4"
 block|}
 block|,
 block|{
-literal|51
+name|GMPLS_L2SC
 block|,
 literal|"Layer-2 Switch Capable"
 block|}
 block|,
 block|{
-literal|100
+name|GMPLS_TSC
 block|,
 literal|"Time-Division-Multiplex"
 block|}
 block|,
 block|{
-literal|150
+name|GMPLS_LSC
 block|,
 literal|"Lambda-Switch Capable"
 block|}
 block|,
 block|{
-literal|200
+name|GMPLS_FSC
 block|,
 literal|"Fiber-Switch Capable"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* rfc4205 */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|tok
+name|gmpls_switch_cap_tsc_indication_values
+index|[]
+init|=
+block|{
+block|{
+literal|0
+block|,
+literal|"Standard SONET/SDH"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"Arbitrary SONET/SDH"
 block|}
 block|,
 block|{

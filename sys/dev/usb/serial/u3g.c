@@ -31,12 +31,6 @@ directive|include
 file|<dev/usb/usb_error.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/usb/usb_defs.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -502,15 +496,11 @@ operator|=
 name|UE_DIR_OUT
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 name|U3G_BSIZE
 block|,
 comment|/* bytes */
-operator|.
-name|mh
 operator|.
 name|flags
 operator|=
@@ -526,8 +516,6 @@ operator|=
 literal|1
 block|,}
 block|,
-operator|.
-name|mh
 operator|.
 name|callback
 operator|=
@@ -556,15 +544,11 @@ operator|=
 name|UE_DIR_IN
 block|,
 operator|.
-name|mh
-operator|.
 name|bufsize
 operator|=
 name|U3G_BSIZE
 block|,
 comment|/* bytes */
-operator|.
-name|mh
 operator|.
 name|flags
 operator|=
@@ -580,8 +564,6 @@ operator|=
 literal|1
 block|,}
 block|,
-operator|.
-name|mh
 operator|.
 name|callback
 operator|=

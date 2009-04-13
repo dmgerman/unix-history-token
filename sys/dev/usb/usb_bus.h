@@ -20,7 +20,7 @@ name|_USB2_BUS_H_
 end_define
 
 begin_comment
-comment|/*  * The following structure defines the USB explore message sent to the  * USB explore process.  */
+comment|/*  * The following structure defines the USB explore message sent to the USB  * explore process.  */
 end_comment
 
 begin_struct
@@ -59,6 +59,32 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * The following structure is used to keep the state of a standard  * root transfer.  */
+end_comment
+
+begin_struct
+struct|struct
+name|usb2_sw_transfer
+block|{
+name|struct
+name|usb2_device_request
+name|req
+decl_stmt|;
+name|uint8_t
+modifier|*
+name|ptr
+decl_stmt|;
+name|uint16_t
+name|len
+decl_stmt|;
+name|usb2_error_t
+name|err
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * The following structure defines an USB BUS. There is one USB BUS  * for every Host or Device controller.  */
 end_comment
 
@@ -79,8 +105,8 @@ name|usb2_process
 name|explore_proc
 decl_stmt|;
 name|struct
-name|usb2_process
-name|roothub_proc
+name|usb2_sw_transfer
+name|roothub_req
 decl_stmt|;
 name|struct
 name|root_hold_token
@@ -117,13 +143,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|struct
-name|usb2_bus_msg
-name|roothub_msg
-index|[
-literal|2
-index|]
-decl_stmt|;
 comment|/* 	 * This mutex protects the USB hardware: 	 */
 name|struct
 name|mtx
@@ -145,6 +164,9 @@ name|device_t
 name|bdev
 decl_stmt|;
 comment|/* filled by HC driver */
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 name|struct
 name|usb2_dma_parent_tag
 name|dma_parent_tag
@@ -159,6 +181,8 @@ index|[
 name|USB_BUS_DMA_TAG_MAX
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|usb2_bus_methods
 modifier|*
@@ -171,20 +195,14 @@ modifier|*
 modifier|*
 name|devices
 decl_stmt|;
-name|uint32_t
+name|usb2_power_mask_t
 name|hw_power_state
 decl_stmt|;
 comment|/* see USB_HW_POWER_XXX */
-name|uint32_t
+name|usb2_size_t
 name|uframe_usage
 index|[
 name|USB_HS_MICRO_FRAMES_MAX
-index|]
-decl_stmt|;
-name|uint32_t
-name|transfer_count
-index|[
-literal|4
 index|]
 decl_stmt|;
 name|uint16_t

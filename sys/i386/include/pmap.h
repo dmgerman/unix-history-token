@@ -641,7 +641,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Address of current and alternate address space page table maps  * and directories.  */
+comment|/*  * Address of current address space page table maps and directories.  */
 end_comment
 
 begin_ifdef

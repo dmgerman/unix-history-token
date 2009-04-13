@@ -20,40 +20,18 @@ name|_USB2_DEFS_H_
 end_define
 
 begin_comment
-comment|/* Definition of some USB constants */
+comment|/* Definition of some hardcoded USB constants. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|USB_BUS_MAX
-value|256
+name|USB_MAX_IPACKET
+value|8
 end_define
 
 begin_comment
-comment|/* units */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_DEV_MAX
-value|128
-end_define
-
-begin_comment
-comment|/* units */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_IFACE_MAX
-value|32
-end_define
-
-begin_comment
-comment|/* units */
+comment|/* initial USB packet size */
 end_comment
 
 begin_define
@@ -66,13 +44,6 @@ end_define
 begin_comment
 comment|/* hardcoded */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_FIFO_MAX
-value|(4 * USB_EP_MAX)
-end_define
 
 begin_define
 define|#
@@ -94,28 +65,6 @@ end_define
 
 begin_comment
 comment|/* unused + root HUB */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_MAX_DEVICES
-value|USB_DEV_MAX
-end_define
-
-begin_comment
-comment|/* including virtual root HUB and 					 * address zero */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_MAX_ENDPOINTS
-value|USB_EP_MAX
-end_define
-
-begin_comment
-comment|/* 2 directions on 16 endpoints */
 end_comment
 
 begin_define
@@ -206,97 +155,20 @@ begin_comment
 comment|/* units */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|USB_ISOC_TIME_MAX
+value|128
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
+
 begin_comment
 comment|/* sanity checks */
 end_comment
-
-begin_if
-if|#
-directive|if
-operator|(
-name|USB_FIFO_MAX
-operator|<
-name|USB_EP_MAX
-operator|)
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"There cannot be less FIFOs than USB endpoints."
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|(
-name|USB_FIFO_MAX
-operator|&
-literal|1
-operator|)
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"Number of FIFOs must be odd."
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|(
-name|USB_EP_MAX
-operator|<
-operator|(
-literal|2
-operator|*
-literal|16
-operator|)
-operator|)
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"Number of hardware USB endpoints cannot be less than 32."
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|(
-name|USB_MAX_DEVICES
-operator|<
-name|USB_MIN_DEVICES
-operator|)
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"Minimum number of devices is greater than maximum number of devices."
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#

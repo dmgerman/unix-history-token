@@ -1485,7 +1485,7 @@ name|g_provider
 modifier|*
 name|pp
 decl_stmt|;
-name|uint64_t
+name|uint32_t
 name|msize
 decl_stmt|;
 name|int
@@ -1584,6 +1584,8 @@ operator|)
 return|;
 name|msize
 operator|=
+name|MIN
+argument_list|(
 name|pp
 operator|->
 name|mediasize
@@ -1591,13 +1593,14 @@ operator|/
 name|pp
 operator|->
 name|sectorsize
+argument_list|,
+literal|0xffffffff
+argument_list|)
 expr_stmt|;
-name|basetable
-operator|->
-name|gpt_entries
-operator|=
 name|msize
-operator|/
+operator|-=
+name|msize
+operator|%
 name|basetable
 operator|->
 name|gpt_sectors
@@ -1614,15 +1617,17 @@ name|gpt_last
 operator|=
 name|msize
 operator|-
-operator|(
+literal|1
+expr_stmt|;
+name|basetable
+operator|->
+name|gpt_entries
+operator|=
 name|msize
-operator|%
+operator|/
 name|basetable
 operator|->
 name|gpt_sectors
-operator|)
-operator|-
-literal|1
 expr_stmt|;
 return|return
 operator|(
@@ -2045,7 +2050,7 @@ name|buf
 argument_list|,
 name|bufsz
 argument_list|,
-literal|".%08u"
+literal|"+%08u"
 argument_list|,
 name|entry
 operator|->
@@ -2298,7 +2303,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* The sector is all zeroes, except for the partition entries. */
+comment|/* 	 * The sector is all zeroes, except for the partition entries 	 * and some signatures or disk serial number. Those can be 	 * found in the 9 bytes immediately in front of the partition 	 * table. 	 */
 name|sum
 operator|=
 literal|0
@@ -2312,6 +2317,8 @@ init|;
 name|index
 operator|<
 name|DOSPARTOFF
+operator|-
+literal|9
 condition|;
 name|index
 operator|++
@@ -2409,7 +2416,7 @@ goto|;
 block|}
 name|res
 operator|=
-name|G_PART_PROBE_PRI_HIGH
+name|G_PART_PROBE_PRI_NORM
 expr_stmt|;
 name|out
 label|:

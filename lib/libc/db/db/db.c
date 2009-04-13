@@ -130,7 +130,7 @@ define|#
 directive|define
 name|USE_OPEN_FLAGS
 define|\
-value|(O_CREAT | O_EXCL | O_EXLOCK | O_NONBLOCK | O_RDONLY |		\ 	 O_RDWR | O_SHLOCK | O_TRUNC)
+value|(O_CREAT | O_EXCL | O_EXLOCK | O_NOFOLLOW | O_NONBLOCK | 	\ 	 O_RDONLY | O_RDWR | O_SHLOCK | O_SYNC | O_TRUNC)
 if|if
 condition|(
 operator|(

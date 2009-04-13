@@ -330,7 +330,7 @@ name|error
 init|=
 name|ENXIO
 decl_stmt|;
-comment|/* 	 * If this card claims to be a RTL8029, probe it as such. 	 * However, allow that probe to fail.  Some versions of qemu 	 * claim to be a 8029 in the PCI register, but it doesn't 	 * implement the 8029 specific registers.  In that case, fall 	 * back to a normal NE2000. 	 */
+comment|/* 	 * Probe RTL8029 cards, but allow failure and try as a generic 	 * ne-2000.  QEMU 0.9 and earlier use the RTL8029 PCI ID, but 	 * are areally just generic ne-2000 cards. 	 */
 if|if
 condition|(
 name|pci_get_devid
@@ -462,6 +462,19 @@ name|error
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_media_ioctl
+operator|==
+name|NULL
+condition|)
+name|ed_gen_ifmedia_init
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|ed_attach

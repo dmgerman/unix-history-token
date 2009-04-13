@@ -130,33 +130,40 @@ value|char	pc_monitorbuf[128] __aligned(128);
 comment|/* cache line */
 value|\ 	struct	pcpu *pc_prvspace;
 comment|/* Self-reference */
-value|\ 	struct	pmap *pc_curpmap;					\ 	struct	amd64tss *pc_tssp;					\ 	register_t pc_rsp0;						\ 	register_t pc_scratch_rsp;
+value|\ 	struct	pmap *pc_curpmap;					\ 	struct	amd64tss *pc_tssp;
+comment|/* TSS segment active on CPU */
+value|\ 	struct	amd64tss *pc_commontssp;
+comment|/* Common TSS for the CPU */
+value|\ 	register_t pc_rsp0;						\ 	register_t pc_scratch_rsp;
 comment|/* User %rsp in syscall */
 value|\ 	u_int	pc_apic_id;						\ 	u_int   pc_acpi_id;
 comment|/* ACPI CPU id */
-value|\ 	struct user_segment_descriptor	*pc_gs32p			\ 	PCPU_XEN_FIELDS
+value|\
+comment|/* Pointer to the CPU %fs descriptor */
+value|\ 	struct user_segment_descriptor	*pc_fs32p;			\
+comment|/* Pointer to the CPU %gs descriptor */
+value|\ 	struct user_segment_descriptor	*pc_gs32p;			\
+comment|/* Pointer to the CPU LDT descriptor */
+value|\ 	struct system_segment_descriptor *pc_ldt;			\
+comment|/* Pointer to the CPU TSS descriptor */
+value|\ 	struct system_segment_descriptor *pc_tss
 end_define
 
-begin_ifdef
+begin_expr_stmt
+name|PCPU_XEN_FIELDS
 ifdef|#
 directive|ifdef
 name|_KERNEL
-end_ifdef
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|lint
-end_ifdef
-
-begin_decl_stmt
 specifier|extern
-name|struct
+expr|struct
 name|pcpu
-modifier|*
+operator|*
 name|pcpup
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#

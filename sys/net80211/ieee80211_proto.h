@@ -360,8 +360,35 @@ begin_function_decl
 name|struct
 name|mbuf
 modifier|*
+name|ieee80211_mbuf_adjust
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|ieee80211_key
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|mbuf
+modifier|*
 name|ieee80211_encap
 parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
 name|struct
 name|ieee80211_node
 modifier|*
@@ -1727,6 +1754,11 @@ decl_stmt|;
 comment|/* start of HT info element */
 name|uint8_t
 modifier|*
+name|bo_ath
+decl_stmt|;
+comment|/* start of ATH parameters */
+name|uint8_t
+modifier|*
 name|bo_appie
 decl_stmt|;
 comment|/* start of AppIE element */
@@ -1815,6 +1847,11 @@ init|=
 literal|9
 block|,
 comment|/* TDMA Info */
+name|IEEE80211_BEACON_ATH
+init|=
+literal|10
+block|,
+comment|/* ATH parameters */
 block|}
 enum|;
 end_enum

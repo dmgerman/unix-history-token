@@ -664,6 +664,12 @@ operator|!=
 name|NEOF
 condition|)
 block|{
+if|if
+condition|(
+name|n
+operator|!=
+name|NULL
+condition|)
 name|evaltree
 argument_list|(
 name|n

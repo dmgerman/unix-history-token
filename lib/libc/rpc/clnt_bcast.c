@@ -2093,7 +2093,7 @@ endif|#
 directive|endif
 name|warnx
 argument_list|(
-literal|"clnt_bcast: cannot send"
+literal|"clnt_bcast: cannot send "
 literal|"broadcast packet"
 argument_list|)
 expr_stmt|;

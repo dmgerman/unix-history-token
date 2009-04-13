@@ -743,7 +743,6 @@ name|long
 name|nchains
 decl_stmt|;
 comment|/* Number of chains */
-specifier|const
 name|char
 modifier|*
 name|rpath
@@ -839,6 +838,24 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* Phdr is allocated and needs to be freed. */
+name|bool
+name|z_origin
+range|:
+literal|1
+decl_stmt|;
+comment|/* Process rpath and soname tokens */
+name|bool
+name|z_nodelete
+range|:
+literal|1
+decl_stmt|;
+comment|/* Do not unload the object and dependencies */
+name|bool
+name|ref_nodel
+range|:
+literal|1
+decl_stmt|;
+comment|/* refcount increased to prevent dlclose */
 name|struct
 name|link_map
 name|linkmap

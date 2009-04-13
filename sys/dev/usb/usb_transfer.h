@@ -40,6 +40,17 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|USB_DMATAG_TO_XROOT
+parameter_list|(
+name|dpt
+parameter_list|)
+define|\
+value|((struct usb2_xfer_root *)(					\    ((uint8_t *)(dpt)) -						\    ((uint8_t *)&((struct usb2_xfer_root *)0)->dma_parent_tag)))
+end_define
+
 begin_comment
 comment|/*  * The following structure is used to keep information about memory  * that should be automatically freed at the moment all USB transfers  * have been freed.  */
 end_comment
@@ -49,9 +60,18 @@ struct|struct
 name|usb2_xfer_root
 block|{
 name|struct
+name|usb2_dma_parent_tag
+name|dma_parent_tag
+decl_stmt|;
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+name|struct
 name|usb2_xfer_queue
 name|dma_q
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|usb2_xfer_queue
 name|done_q
@@ -66,10 +86,6 @@ decl_stmt|;
 name|struct
 name|cv
 name|cv_drain
-decl_stmt|;
-name|struct
-name|usb2_dma_parent_tag
-name|dma_parent_tag
 decl_stmt|;
 name|struct
 name|usb2_process
@@ -87,6 +103,9 @@ modifier|*
 name|xfer_mtx
 decl_stmt|;
 comment|/* cannot be changed during operation */
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 name|struct
 name|usb2_page_cache
 modifier|*
@@ -97,6 +116,8 @@ name|usb2_page_cache
 modifier|*
 name|dma_page_cache_end
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|usb2_page_cache
 modifier|*
@@ -119,24 +140,24 @@ modifier|*
 name|udev
 decl_stmt|;
 comment|/* pointer to USB device */
-name|uint32_t
+name|usb2_size_t
 name|memory_size
 decl_stmt|;
-name|uint32_t
+name|usb2_size_t
 name|setup_refcount
 decl_stmt|;
-name|uint32_t
-name|page_size
-decl_stmt|;
-name|uint32_t
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+name|usb2_frcount_t
 name|dma_nframes
 decl_stmt|;
 comment|/* number of page caches to load */
-name|uint32_t
+name|usb2_frcount_t
 name|dma_currframe
 decl_stmt|;
 comment|/* currect page cache number */
-name|uint32_t
+name|usb2_frlength_t
 name|dma_frlength_0
 decl_stmt|;
 comment|/* length of page cache zero */
@@ -144,6 +165,8 @@ name|uint8_t
 name|dma_error
 decl_stmt|;
 comment|/* set if virtual memory could not be 					 * loaded */
+endif|#
+directive|endif
 name|uint8_t
 name|done_sleep
 decl_stmt|;
@@ -200,12 +223,6 @@ name|curr_setup
 decl_stmt|;
 specifier|const
 name|struct
-name|usb2_config_sub
-modifier|*
-name|curr_setup_sub
-decl_stmt|;
-specifier|const
-name|struct
 name|usb2_pipe_methods
 modifier|*
 name|methods
@@ -214,23 +231,23 @@ name|void
 modifier|*
 name|buf
 decl_stmt|;
-name|uint32_t
+name|usb2_frlength_t
 modifier|*
 name|xfer_length_ptr
 decl_stmt|;
-name|uint32_t
+name|usb2_size_t
 name|size
 index|[
 literal|7
 index|]
 decl_stmt|;
-name|uint32_t
+name|usb2_frlength_t
 name|bufsize
 decl_stmt|;
-name|uint32_t
+name|usb2_frlength_t
 name|bufsize_max
 decl_stmt|;
-name|uint32_t
+name|uint16_t
 name|hc_max_frame_size
 decl_stmt|;
 name|uint16_t
@@ -271,13 +288,13 @@ modifier|*
 modifier|*
 name|ppc
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|size
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|align
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|count
 parameter_list|)
 function_decl|;
@@ -463,14 +480,14 @@ modifier|*
 name|arg
 parameter_list|)
 parameter_list|,
-name|uint32_t
+name|usb2_timeout_t
 name|ms
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|uint32_t
+name|usb2_timeout_t
 name|usb2_get_dma_delay
 parameter_list|(
 name|struct

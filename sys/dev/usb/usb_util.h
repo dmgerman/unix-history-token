@@ -30,16 +30,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|uint32_t
-name|usb2_get_devid
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|uint8_t
 name|usb2_make_str_desc
 parameter_list|(
@@ -115,7 +105,7 @@ begin_if
 if|#
 directive|if
 operator|(
-name|USB_USE_CONDVAR
+name|USB_HAVE_CONDVAR
 operator|==
 literal|0
 operator|)

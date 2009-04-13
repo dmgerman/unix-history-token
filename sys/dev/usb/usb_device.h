@@ -25,12 +25,84 @@ name|usb2_symlink
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/* UGEN */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|usb_device
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/* linux compat */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|USB_DEFAULT_XFER_MAX
 value|2
 end_define
+
+begin_comment
+comment|/* "usb2_parse_config()" commands */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_CFG_ALLOC
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_CFG_FREE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_CFG_INIT
+value|2
+end_define
+
+begin_comment
+comment|/* "usb2_unconfigure()" flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_UNCFG_FLAG_NONE
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_UNCFG_FLAG_FREE_SUBDEV
+value|0x01
+end_define
+
+begin_comment
+comment|/* subdevices are freed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_UNCFG_FLAG_FREE_EP0
+value|0x02
+end_define
+
+begin_comment
+comment|/* endpoint zero is freed */
+end_comment
 
 begin_struct
 struct|struct
@@ -62,12 +134,6 @@ name|usb2_xfer_queue
 name|pipe_q
 decl_stmt|;
 comment|/* queue of USB transfers */
-name|struct
-name|usb2_xfer
-modifier|*
-name|xfer_block
-decl_stmt|;
-comment|/* blocking USB transfer */
 name|struct
 name|usb2_endpoint_descriptor
 modifier|*
@@ -186,12 +252,6 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* set if BUS powered quirk is present */
-name|uint8_t
-name|uq_power_claim
-range|:
-literal|1
-decl_stmt|;
-comment|/* set if power claim quirk is present */
 block|}
 struct|;
 end_struct
@@ -204,22 +264,22 @@ begin_struct
 struct|struct
 name|usb2_power_save
 block|{
-name|int
+name|usb2_ticks_t
 name|last_xfer_time
 decl_stmt|;
 comment|/* copy of "ticks" */
-name|uint32_t
+name|usb2_size_t
 name|type_refs
 index|[
 literal|4
 index|]
 decl_stmt|;
 comment|/* transfer reference count */
-name|uint32_t
+name|usb2_size_t
 name|read_refs
 decl_stmt|;
 comment|/* data read references */
-name|uint32_t
+name|usb2_size_t
 name|write_refs
 decl_stmt|;
 comment|/* data write references */
@@ -270,10 +330,8 @@ index|]
 decl_stmt|;
 name|struct
 name|usb2_interface
+modifier|*
 name|ifaces
-index|[
-name|USB_IFACE_MAX
-index|]
 decl_stmt|;
 name|struct
 name|usb2_pipe
@@ -281,17 +339,9 @@ name|default_pipe
 decl_stmt|;
 comment|/* Control Endpoint 0 */
 name|struct
-name|cdev
-modifier|*
-name|default_dev
-decl_stmt|;
-comment|/* Control Endpoint 0 device node */
-name|struct
 name|usb2_pipe
+modifier|*
 name|pipes
-index|[
-name|USB_EP_MAX
-index|]
 decl_stmt|;
 name|struct
 name|usb2_power_save
@@ -325,11 +375,16 @@ modifier|*
 name|hub
 decl_stmt|;
 comment|/* only if this is a hub */
+if|#
+directive|if
+name|USB_HAVE_COMPAT_LINUX
 name|struct
 name|usb_device
 modifier|*
 name|linux_dev
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|usb2_xfer
 modifier|*
@@ -349,6 +404,9 @@ modifier|*
 name|pipe_curr
 decl_stmt|;
 comment|/* current clear stall pipe */
+if|#
+directive|if
+name|USB_HAVE_UGEN
 name|struct
 name|usb2_fifo
 modifier|*
@@ -357,19 +415,18 @@ index|[
 name|USB_FIFO_MAX
 index|]
 decl_stmt|;
-name|char
-name|ugen_name
-index|[
-literal|20
-index|]
-decl_stmt|;
-comment|/* name of ugenX.X device */
 name|struct
 name|usb2_symlink
 modifier|*
 name|ugen_symlink
 decl_stmt|;
 comment|/* our generic symlink */
+name|struct
+name|cdev
+modifier|*
+name|default_dev
+decl_stmt|;
+comment|/* Control Endpoint 0 device node */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -377,18 +434,19 @@ argument|usb2_fs_privdata
 argument_list|)
 name|pd_list
 expr_stmt|;
-name|uint32_t
+name|char
+name|ugen_name
+index|[
+literal|20
+index|]
+decl_stmt|;
+comment|/* name of ugenX.X device */
+endif|#
+directive|endif
+name|usb2_ticks_t
 name|plugtime
 decl_stmt|;
 comment|/* copy of "ticks" */
-name|uint16_t
-name|ep_rd_opened
-decl_stmt|;
-comment|/* bitmask of endpoints opened */
-name|uint16_t
-name|ep_wr_opened
-decl_stmt|;
-comment|/*  from the device nodes. */
 name|uint16_t
 name|refcount
 decl_stmt|;
@@ -452,6 +510,14 @@ name|uint8_t
 name|power_mode
 decl_stmt|;
 comment|/* see USB_POWER_XXX */
+name|uint8_t
+name|ifaces_max
+decl_stmt|;
+comment|/* number of interfaces present */
+name|uint8_t
+name|pipes_max
+decl_stmt|;
+comment|/* number of pipes present */
 comment|/* the "flags" field is write-protected by "bus->mtx" */
 name|struct
 name|usb2_device_flags
@@ -467,6 +533,9 @@ name|usb2_device_descriptor
 name|ddesc
 decl_stmt|;
 comment|/* device descriptor */
+if|#
+directive|if
+name|USB_HAVE_STRINGS
 name|char
 name|serial
 index|[
@@ -488,6 +557,8 @@ literal|64
 index|]
 decl_stmt|;
 comment|/* product string */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -682,24 +753,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_detach_device
-parameter_list|(
-name|struct
-name|usb2_device
-modifier|*
-name|udev
-parameter_list|,
-name|uint8_t
-name|iface_index
-parameter_list|,
-name|uint8_t
-name|free_subdev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|usb2_devinfo
 parameter_list|(
 name|struct
@@ -724,7 +777,8 @@ parameter_list|(
 name|struct
 name|usb2_device
 modifier|*
-name|udev
+parameter_list|,
+name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl

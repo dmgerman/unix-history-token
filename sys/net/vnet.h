@@ -68,6 +68,9 @@ decl_stmt|;
 name|int
 name|_rttrash
 decl_stmt|;
+name|uma_zone_t
+name|_rtzone
+decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -256,6 +259,13 @@ define|#
 directive|define
 name|V_rttrash
 value|VNET_NET(rttrash)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_rtzone
+value|VNET_NET(rtzone)
 end_define
 
 begin_endif

@@ -505,11 +505,6 @@ operator|=
 name|fifo_kqfilter
 block|,
 operator|.
-name|vop_lease
-operator|=
-name|VOP_NULL
-block|,
-operator|.
 name|vop_link
 operator|=
 name|VOP_PANIC

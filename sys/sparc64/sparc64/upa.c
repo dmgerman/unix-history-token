@@ -612,6 +612,13 @@ argument_list|,
 name|upa_get_resource_list
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_child_pnpinfo_str
+argument_list|,
+name|ofw_bus_gen_child_pnpinfo_str
+argument_list|)
+block|,
 comment|/* ofw_bus interface */
 name|DEVMETHOD
 argument_list|(
@@ -655,11 +662,7 @@ argument_list|,
 name|ofw_bus_gen_get_type
 argument_list|)
 block|,
-block|{
-name|NULL
-block|,
-name|NULL
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1392,7 +1395,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* 	 * Hunt through all the interrupt mapping regs and register our 	 * interrupt controller for the corresponding interrupt vectors. 	 */
+comment|/* 	 * Hunt through all the interrupt mapping regs and register our 	 * interrupt controller for the corresponding interrupt vectors. 	 * We do this early in order to be able to catch stray interrupts. 	 */
 for|for
 control|(
 name|i
@@ -1532,8 +1535,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
+name|j
+operator|=
 name|intr_controller_register
 argument_list|(
 name|INTMAP_VEC
@@ -1550,17 +1553,23 @@ name|upa_ic
 argument_list|,
 name|uica
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|j
 operator|!=
 literal|0
 condition|)
-name|panic
+name|device_printf
 argument_list|(
-literal|"%s: could not register interrupt controller "
-literal|"for INO %d"
+name|dev
 argument_list|,
-name|__func__
+literal|"could not register interrupt "
+literal|"controller for INO %d (%d)\n"
 argument_list|,
 name|i
+argument_list|,
+name|j
 argument_list|)
 expr_stmt|;
 block|}
@@ -2631,7 +2640,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Make sure the vector is fully specified and we registered 	 * our interrupt controller for it.  	 */
+comment|/* 	 * Make sure the vector is fully specified and we registered 	 * our interrupt controller for it. 	 */
 name|vec
 operator|=
 name|rman_get_start

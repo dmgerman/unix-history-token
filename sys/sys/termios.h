@@ -1701,11 +1701,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_function_decl
 name|void
@@ -1735,10 +1735,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* !_POSIX_SOURCE */
-end_comment
 
 begin_macro
 name|__END_DECLS

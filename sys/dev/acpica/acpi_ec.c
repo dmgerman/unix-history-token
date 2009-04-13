@@ -3246,6 +3246,10 @@ condition|(
 name|cold
 operator|||
 name|rebooting
+operator|||
+name|sc
+operator|->
+name|ec_suspending
 condition|)
 block|{
 if|if

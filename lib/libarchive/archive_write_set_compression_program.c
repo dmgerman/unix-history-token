@@ -52,11 +52,18 @@ argument_list|)
 operator|)
 operator|)
 operator|&&
+operator|(
 operator|!
 name|defined
 argument_list|(
 name|_WIN32
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+operator|)
 end_if
 
 begin_include

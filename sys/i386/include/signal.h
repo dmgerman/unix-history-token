@@ -258,9 +258,15 @@ literal|16
 argument_list|)
 decl_stmt|;
 name|int
+name|sc_fsbase
+decl_stmt|;
+name|int
+name|sc_gsbase
+decl_stmt|;
+name|int
 name|sc_spare2
 index|[
-literal|8
+literal|6
 index|]
 decl_stmt|;
 block|}

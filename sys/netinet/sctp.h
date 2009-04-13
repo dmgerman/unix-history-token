@@ -2155,6 +2155,13 @@ name|SCTP_LOG_AT_SEND_2_OUTQ
 value|0x08000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_LOG_TRY_ADVANCE
+value|0x10000000
+end_define
+
 begin_undef
 undef|#
 directive|undef

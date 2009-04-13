@@ -36,7 +36,7 @@ name|usb2_device_id
 modifier|*
 name|id
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|sizeof_id
 parameter_list|,
 specifier|const
@@ -378,7 +378,7 @@ name|usb2_device_id
 modifier|*
 name|id
 parameter_list|,
-name|uint32_t
+name|usb2_size_t
 name|sizeof_id
 parameter_list|,
 name|struct

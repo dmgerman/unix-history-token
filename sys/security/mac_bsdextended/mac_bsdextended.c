@@ -2450,7 +2450,7 @@ if|if
 condition|(
 name|accmode
 operator|&
-name|VADMIN
+name|VADMIN_PERMS
 condition|)
 name|mbi
 operator||=
@@ -2460,7 +2460,7 @@ if|if
 condition|(
 name|accmode
 operator|&
-name|VSTAT
+name|VSTAT_PERMS
 condition|)
 name|mbi
 operator||=

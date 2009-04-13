@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20090226_0129"
+value|"20090401_0132"
 end_define
 
 begin_expr_stmt
@@ -935,6 +935,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACER_T5320_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(ACER, 0x011f)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACER_ALL_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(ACER, 0xffff)
 end_define
@@ -1011,6 +1018,13 @@ define|#
 directive|define
 name|ASUS_M5200_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(ASUS, 0x1993)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASUS_P5PL2_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(ASUS, 0x817f)
 end_define
 
 begin_define
@@ -12207,6 +12221,12 @@ operator|->
 name|pci_subvendor
 operator|==
 name|ASUS_A8NVMCSM_SUBVENDOR
+operator|||
+name|sc
+operator|->
+name|pci_subvendor
+operator|==
+name|ASUS_P5PL2_SUBVENDOR
 operator|)
 condition|)
 block|{
@@ -12216,9 +12236,18 @@ name|nid
 condition|)
 block|{
 case|case
+literal|26
+case|:
+comment|/* Headphones with redirection */
+name|patch
+operator|=
+literal|"as=1 seq=15"
+expr_stmt|;
+break|break;
+case|case
 literal|28
 case|:
-comment|/* 5.1 out => 2.0 out + 2 inputs */
+comment|/* 5.1 out => 2.0 out + 1 input */
 name|patch
 operator|=
 literal|"device=Line-in as=8 seq=1"
@@ -12227,9 +12256,10 @@ break|break;
 case|case
 literal|29
 case|:
+comment|/* Can't use this as input, as the only available mic 			  * preamplifier is busy by front panel mic (nid 31). 			  * If you want to use this rear connector as mic input, 			  * you have to disable the front panel one. */
 name|patch
 operator|=
-literal|"device=Mic as=8 seq=2"
+literal|"as=0"
 expr_stmt|;
 break|break;
 case|case
@@ -12305,15 +12335,15 @@ condition|(
 name|id
 operator|==
 name|HDA_CODEC_ALC268
-operator|&&
-name|HDA_DEV_MATCH
-argument_list|(
-name|ACER_ALL_SUBVENDOR
-argument_list|,
+condition|)
+block|{
+if|if
+condition|(
 name|sc
 operator|->
 name|pci_subvendor
-argument_list|)
+operator|==
+name|ACER_T5320_SUBVENDOR
 condition|)
 block|{
 switch|switch
@@ -12322,13 +12352,15 @@ name|nid
 condition|)
 block|{
 case|case
-literal|28
+literal|20
 case|:
+comment|/* Headphones Jack */
 name|patch
 operator|=
-literal|"device=CD conn=fixed"
+literal|"as=1 seq=15"
 expr_stmt|;
 break|break;
+block|}
 block|}
 block|}
 if|if
@@ -24394,6 +24426,179 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+comment|/* There is only one mic preamplifier, use it effectively. */
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|31
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|w
+operator|->
+name|wclass
+operator|.
+name|pin
+operator|.
+name|config
+operator|&
+name|HDA_CONFIG_DEFAULTCONF_DEVICE_MASK
+operator|)
+operator|==
+name|HDA_CONFIG_DEFAULTCONF_DEVICE_MIC_IN
+condition|)
+block|{
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+name|w
+operator|->
+name|connsenable
+index|[
+literal|2
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|15
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+name|w
+operator|->
+name|connsenable
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|32
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|w
+operator|->
+name|wclass
+operator|.
+name|pin
+operator|.
+name|config
+operator|&
+name|HDA_CONFIG_DEFAULTCONF_DEVICE_MASK
+operator|)
+operator|==
+name|HDA_CONFIG_DEFAULTCONF_DEVICE_MIC_IN
+condition|)
+block|{
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+name|w
+operator|->
+name|connsenable
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|15
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+name|w
+operator|->
+name|connsenable
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|subvendor
@@ -26813,10 +27018,6 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|devinfo
-operator|->
-name|codec
-operator|->
 name|sc
 operator|->
 name|dev
@@ -26882,10 +27083,6 @@ literal|0
 expr_stmt|;
 name|device_printf
 argument_list|(
-name|devinfo
-operator|->
-name|codec
-operator|->
 name|sc
 operator|->
 name|dev
@@ -26895,6 +27092,42 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* Fixup relative pointers after realloc */
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|sc
+operator|->
+name|num_chans
+condition|;
+name|j
+operator|++
+control|)
+name|sc
+operator|->
+name|chans
+index|[
+name|j
+index|]
+operator|.
+name|caps
+operator|.
+name|fmtlist
+operator|=
+name|sc
+operator|->
+name|chans
+index|[
+name|j
+index|]
+operator|.
+name|fmtlist
+expr_stmt|;
 block|}
 name|free
 operator|=
@@ -26924,10 +27157,6 @@ name|j
 operator|++
 control|)
 block|{
-name|devinfo
-operator|->
-name|codec
-operator|->
 name|sc
 operator|->
 name|chans
@@ -26939,10 +27168,6 @@ name|devinfo
 operator|=
 name|devinfo
 expr_stmt|;
-name|devinfo
-operator|->
-name|codec
-operator|->
 name|sc
 operator|->
 name|chans
@@ -26998,10 +27223,6 @@ name|chan
 operator|=
 name|free
 expr_stmt|;
-name|devinfo
-operator|->
-name|codec
-operator|->
 name|sc
 operator|->
 name|chans
@@ -27013,10 +27234,6 @@ name|as
 operator|=
 name|j
 expr_stmt|;
-name|devinfo
-operator|->
-name|codec
-operator|->
 name|sc
 operator|->
 name|chans
@@ -27044,10 +27261,6 @@ expr_stmt|;
 name|hdac_pcmchannel_setup
 argument_list|(
 operator|&
-name|devinfo
-operator|->
-name|codec
-operator|->
 name|sc
 operator|->
 name|chans
@@ -41202,11 +41415,11 @@ literal|"+--------------------------------------+\n"
 argument|); 		hdac_dump_pcmchannels(pdevinfo); 		device_printf(dev,
 literal|"\n"
 argument|); 		device_printf(dev,
-literal|"+--------------------------------+\n"
+literal|"+-------------------------------+\n"
 argument|); 		device_printf(dev,
-literal|"| DUMPING Playback/Record Pathes |\n"
+literal|"| DUMPING Playback/Record Paths |\n"
 argument|); 		device_printf(dev,
-literal|"+--------------------------------+\n"
+literal|"+-------------------------------+\n"
 argument|); 		hdac_dump_dac(pdevinfo); 		hdac_dump_adc(pdevinfo); 		hdac_dump_mix(pdevinfo); 		device_printf(dev,
 literal|"\n"
 argument|); 		device_printf(dev,

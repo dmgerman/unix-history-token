@@ -310,10 +310,18 @@ operator|=
 name|NULL
 block|,
 operator|.
+name|brand_note
+operator|=
+operator|&
+name|elf64_freebsd_brandnote
+block|,
+operator|.
 name|flags
 operator|=
 name|BI_CAN_EXEC_DYN
-block|, }
+operator||
+name|BI_BRAND_NOTE
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -380,10 +388,18 @@ operator|=
 name|NULL
 block|,
 operator|.
+name|brand_note
+operator|=
+operator|&
+name|elf64_freebsd_brandnote
+block|,
+operator|.
 name|flags
 operator|=
 name|BI_CAN_EXEC_DYN
-block|, }
+operator||
+name|BI_BRAND_NOTE
+block|}
 decl_stmt|;
 end_decl_stmt
 

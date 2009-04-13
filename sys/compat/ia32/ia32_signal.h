@@ -99,9 +99,15 @@ literal|16
 argument_list|)
 decl_stmt|;
 name|u_int32_t
+name|mc_fsbase
+decl_stmt|;
+name|u_int32_t
+name|mc_gsbase
+decl_stmt|;
+name|u_int32_t
 name|mc_spare2
 index|[
-literal|8
+literal|6
 index|]
 decl_stmt|;
 block|}

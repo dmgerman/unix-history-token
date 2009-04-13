@@ -1955,11 +1955,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|IFF_LOCKGIANT
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 call|(
@@ -1977,11 +1972,6 @@ operator|(
 name|caddr_t
 operator|)
 name|ia
-argument_list|)
-expr_stmt|;
-name|IFF_UNLOCKGIANT
-argument_list|(
-name|ifp
 argument_list|)
 expr_stmt|;
 if|if
@@ -2618,13 +2608,8 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
-name|IFF_LOCKGIANT
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 call|(
 modifier|*
 name|ifp
@@ -2638,15 +2623,6 @@ name|cmd
 argument_list|,
 name|data
 argument_list|)
-expr_stmt|;
-name|IFF_UNLOCKGIANT
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}
@@ -2734,11 +2710,6 @@ name|AF_INET
 index|]
 operator|)
 expr_stmt|;
-name|IFF_LOCKGIANT
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|IN_MULTI_LOCK
 argument_list|()
 expr_stmt|;
@@ -2770,11 +2741,6 @@ expr_stmt|;
 block|}
 name|IN_MULTI_UNLOCK
 argument_list|()
-expr_stmt|;
-name|IFF_UNLOCKGIANT
-argument_list|(
-name|ifp
-argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -3814,11 +3780,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|IFF_LOCKGIANT
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 call|(
@@ -3836,11 +3797,6 @@ operator|(
 name|caddr_t
 operator|)
 name|ia
-argument_list|)
-expr_stmt|;
-name|IFF_UNLOCKGIANT
-argument_list|(
-name|ifp
 argument_list|)
 expr_stmt|;
 if|if
@@ -5013,7 +4969,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Delete all IPv4 multicast address records, and associated link-layer  * multicast address records, associated with ifp.  * XXX It looks like domifdetach runs AFTER the link layer cleanup.  */
+comment|/*  * Delete all IPv4 multicast address records, and associated link-layer  * multicast address records, associated with ifp.  * XXX It looks like domifdetach runs AFTER the link layer cleanup.  * XXX This should not race with ifma_protospec being set during  * a new allocation, if it does, we have bigger problems.  */
 end_comment
 
 begin_function
@@ -5087,8 +5043,20 @@ operator|->
 name|sa_family
 operator|!=
 name|AF_INET
+operator|||
+name|ifma
+operator|->
+name|ifma_protospec
+operator|==
+name|NULL
 condition|)
 continue|continue;
+if|#
+directive|if
+literal|0
+block|KASSERT(ifma->ifma_protospec != NULL, 		    ("%s: ifma_protospec is NULL", __func__));
+endif|#
+directive|endif
 name|inm
 operator|=
 operator|(

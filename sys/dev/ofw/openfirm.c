@@ -446,6 +446,18 @@ argument_list|,
 name|slots
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|status
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+name|status
+operator|)
+return|;
 name|va_start
 argument_list|(
 name|ap
@@ -457,8 +469,6 @@ while|while
 condition|(
 name|i
 operator|<
-literal|1
-operator|+
 name|nreturns
 condition|)
 operator|*

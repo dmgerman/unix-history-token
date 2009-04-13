@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2009, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -243,7 +243,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IGB_MAX_INTR
+name|IGB_MAX_LOOP
 value|10
 end_define
 
@@ -310,20 +310,6 @@ name|IGB_EEPROM_APME
 value|0x400;
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAX_INTS_PER_SEC
-value|8000
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_ITR
-value|1000000000/(MAX_INTS_PER_SEC * 256)
-end_define
-
 begin_comment
 comment|/* Code compatilbility between 6 and 7 */
 end_comment
@@ -339,6 +325,45 @@ define|#
 directive|define
 name|ETHER_BPF_MTAP
 value|BPF_MTAP
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|700000
+end_if
+
+begin_define
+define|#
+directive|define
+name|CSUM_TSO
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFCAP_TSO4
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILTER_STRAY
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILTER_HANDLED
 end_define
 
 begin_endif
@@ -555,6 +580,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IGB_HDR_BUF
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
 name|ETH_ZLEN
 value|60
 end_define
@@ -566,16 +598,66 @@ name|ETH_ADDR_LEN
 value|6
 end_define
 
+begin_comment
+comment|/* Offload bits in mbuf flag */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800000
+end_if
+
 begin_define
 define|#
 directive|define
 name|CSUM_OFFLOAD
-value|7
+value|(CSUM_IP|CSUM_TCP|CSUM_UDP|CSUM_SCTP)
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CSUM_OFFLOAD
+value|(CSUM_IP|CSUM_TCP|CSUM_UDP)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* Offload bits in mbuf flag */
+comment|/* Header split codes for get_buf */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IGB_CLEAN_HEADER
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_CLEAN_PAYLOAD
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_CLEAN_BOTH
+value|3
+end_define
 
 begin_comment
 comment|/*  * Interrupt Moderation parameters  */
@@ -841,7 +923,7 @@ name|u16
 name|tx_avail
 decl_stmt|;
 name|struct
-name|igb_buffer
+name|igb_tx_buffer
 modifier|*
 name|tx_buffers
 decl_stmt|;
@@ -925,7 +1007,7 @@ name|u32
 name|next_to_check
 decl_stmt|;
 name|struct
-name|igb_buffer
+name|igb_rx_buffer
 modifier|*
 name|rx_buffers
 decl_stmt|;
@@ -956,6 +1038,9 @@ decl_stmt|;
 comment|/* Soft stats */
 name|u64
 name|rx_irq
+decl_stmt|;
+name|u64
+name|rx_split_packets
 decl_stmt|;
 name|u64
 name|rx_packets
@@ -1122,6 +1207,9 @@ name|rx_ring
 modifier|*
 name|rx_rings
 decl_stmt|;
+name|bool
+name|rx_hdr_split
+decl_stmt|;
 name|u16
 name|num_rx_desc
 decl_stmt|;
@@ -1132,7 +1220,10 @@ name|int
 name|rx_process_limit
 decl_stmt|;
 name|u32
-name|rx_buffer_len
+name|rx_mbuf_sz
+decl_stmt|;
+name|u32
+name|rx_mask
 decl_stmt|;
 comment|/* Misc stats maintained by the driver */
 name|unsigned
@@ -1141,11 +1232,15 @@ name|dropped_pkts
 decl_stmt|;
 name|unsigned
 name|long
-name|mbuf_alloc_failed
+name|mbuf_defrag_failed
 decl_stmt|;
 name|unsigned
 name|long
-name|mbuf_cluster_failed
+name|mbuf_header_failed
+decl_stmt|;
+name|unsigned
+name|long
+name|mbuf_packet_failed
 decl_stmt|;
 name|unsigned
 name|long
@@ -1224,7 +1319,7 @@ end_typedef
 
 begin_struct
 struct|struct
-name|igb_buffer
+name|igb_tx_buffer
 block|{
 name|int
 name|next_eop
@@ -1234,6 +1329,28 @@ name|struct
 name|mbuf
 modifier|*
 name|m_head
+decl_stmt|;
+name|bus_dmamap_t
+name|map
+decl_stmt|;
+comment|/* bus_dma map for packet */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|igb_rx_buffer
+block|{
+name|struct
+name|mbuf
+modifier|*
+name|m_head
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|m_pack
 decl_stmt|;
 name|bus_dmamap_t
 name|map

@@ -204,7 +204,19 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_include
@@ -465,6 +477,15 @@ name|void
 name|usage
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sockfamilyname
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

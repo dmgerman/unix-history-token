@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2009, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1046,7 +1046,7 @@ condition|)
 block|{
 name|DEBUGOUT
 argument_list|(
-literal|"Cannot determine PHY address. Erroring out\n"
+literal|"Cannot determine PHY addr. Erroring out\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1495,6 +1495,23 @@ name|hw
 operator|->
 name|mac
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|NAHUM4
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_PCH_A_SUPPORT
+argument_list|)
+name|u16
+name|pci_cfg
+decl_stmt|;
+endif|#
+directive|endif
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_init_mac_params_ich8lan"
@@ -1650,6 +1667,41 @@ name|mta_set
 operator|=
 name|e1000_mta_set_generic
 expr_stmt|;
+comment|/* clear hardware counters */
+name|mac
+operator|->
+name|ops
+operator|.
+name|clear_hw_cntrs
+operator|=
+name|e1000_clear_hw_cntrs_ich8lan
+expr_stmt|;
+comment|/* LED operations */
+switch|switch
+condition|(
+name|mac
+operator|->
+name|type
+condition|)
+block|{
+case|case
+name|e1000_ich8lan
+case|:
+case|case
+name|e1000_ich9lan
+case|:
+case|case
+name|e1000_ich10lan
+case|:
+comment|/* ID LED init */
+name|mac
+operator|->
+name|ops
+operator|.
+name|id_led_init
+operator|=
+name|e1000_id_led_init_generic
+expr_stmt|;
 comment|/* blink LED */
 name|mac
 operator|->
@@ -1694,15 +1746,10 @@ name|led_off
 operator|=
 name|e1000_led_off_ich8lan
 expr_stmt|;
-comment|/* clear hardware counters */
-name|mac
-operator|->
-name|ops
-operator|.
-name|clear_hw_cntrs
-operator|=
-name|e1000_clear_hw_cntrs_ich8lan
-expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
 comment|/* Enable PCS Lock-loss workaround for ICH8 */
 if|if
 condition|(
@@ -3731,7 +3778,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_valid_nvm_bank_detect_ich8lan - finds out the valid bank 0 or 1  *  @hw: pointer to the HW structure  *  @bank:  pointer to the variable that returns the active bank  *  *  Reads signature byte from the NVM using the flash access registers.  **/
+comment|/**  *  e1000_valid_nvm_bank_detect_ich8lan - finds out the valid bank 0 or 1  *  @hw: pointer to the HW structure  *  @bank:  pointer to the variable that returns the active bank  *  *  Reads signature byte from the NVM using the flash access registers.  *  Word 0x13 bits 15:14 = 10b indicate a valid signature for that bank.  **/
 end_comment
 
 begin_function
@@ -3749,10 +3796,8 @@ modifier|*
 name|bank
 parameter_list|)
 block|{
-name|s32
-name|ret_val
-init|=
-name|E1000_SUCCESS
+name|u32
+name|eecd
 decl_stmt|;
 name|struct
 name|e1000_nvm_info
@@ -3764,7 +3809,6 @@ name|hw
 operator|->
 name|nvm
 decl_stmt|;
-comment|/* flash bank size is in words */
 name|u32
 name|bank1_offset
 init|=
@@ -3787,29 +3831,53 @@ operator|+
 literal|1
 decl_stmt|;
 name|u8
-name|bank_high_byte
+name|sig_byte
 init|=
 literal|0
 decl_stmt|;
-if|if
+name|s32
+name|ret_val
+init|=
+name|E1000_SUCCESS
+decl_stmt|;
+switch|switch
 condition|(
 name|hw
 operator|->
 name|mac
 operator|.
 name|type
-operator|!=
-name|e1000_ich10lan
 condition|)
 block|{
-if|if
-condition|(
+case|case
+name|e1000_ich8lan
+case|:
+case|case
+name|e1000_ich9lan
+case|:
+name|eecd
+operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
 argument_list|,
 name|E1000_EECD
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|eecd
+operator|&
+name|E1000_EECD_SEC1VAL_VALID_MASK
+operator|)
+operator|==
+name|E1000_EECD_SEC1VAL_VALID_MASK
+condition|)
+block|{
+if|if
+condition|(
+name|eecd
 operator|&
 name|E1000_EECD_SEC1VAL
 condition|)
@@ -3824,10 +3892,27 @@ name|bank
 operator|=
 literal|0
 expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
-else|else
-block|{
-comment|/* 		 * Make sure the signature for bank 0 is valid, 		 * if not check for bank1 		 */
+name|DEBUGOUT
+argument_list|(
+literal|"Unable to determine valid NVM bank via EEC - "
+literal|"reading flash signature\n"
+argument_list|)
+expr_stmt|;
+comment|/* fall-thru */
+default|default:
+comment|/* set bank to 0 in case flash read fails */
+operator|*
+name|bank
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Check bank 0 */
+name|ret_val
+operator|=
 name|e1000_read_flash_byte_ich8lan
 argument_list|(
 name|hw
@@ -3835,18 +3920,25 @@ argument_list|,
 name|act_offset
 argument_list|,
 operator|&
-name|bank_high_byte
+name|sig_byte
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ret_val
+condition|)
+goto|goto
+name|out
+goto|;
+if|if
+condition|(
 operator|(
-name|bank_high_byte
+name|sig_byte
 operator|&
-literal|0xC0
+name|E1000_ICH_NVM_VALID_SIG_MASK
 operator|)
 operator|==
-literal|0x80
+name|E1000_ICH_NVM_SIG_VALUE
 condition|)
 block|{
 operator|*
@@ -3854,10 +3946,13 @@ name|bank
 operator|=
 literal|0
 expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
-else|else
-block|{
-comment|/* 			 * find if segment 1 is valid by verifying 			 * bit 15:14 = 10b in word 0x13 			 */
+comment|/* Check bank 1 */
+name|ret_val
+operator|=
 name|e1000_read_flash_byte_ich8lan
 argument_list|(
 name|hw
@@ -3867,19 +3962,25 @@ operator|+
 name|bank1_offset
 argument_list|,
 operator|&
-name|bank_high_byte
+name|sig_byte
 argument_list|)
 expr_stmt|;
-comment|/* bank1 has a valid signature equivalent to SEC1V */
+if|if
+condition|(
+name|ret_val
+condition|)
+goto|goto
+name|out
+goto|;
 if|if
 condition|(
 operator|(
-name|bank_high_byte
+name|sig_byte
 operator|&
-literal|0xC0
+name|E1000_ICH_NVM_VALID_SIG_MASK
 operator|)
 operator|==
-literal|0x80
+name|E1000_ICH_NVM_SIG_VALUE
 condition|)
 block|{
 operator|*
@@ -3887,12 +3988,13 @@ name|bank
 operator|=
 literal|1
 expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
-else|else
-block|{
 name|DEBUGOUT
 argument_list|(
-literal|"ERROR: EEPROM not present\n"
+literal|"ERROR: No valid NVM bank present\n"
 argument_list|)
 expr_stmt|;
 name|ret_val
@@ -3900,9 +4002,10 @@ operator|=
 operator|-
 name|E1000_ERR_NVM
 expr_stmt|;
+break|break;
 block|}
-block|}
-block|}
+name|out
+label|:
 return|return
 name|ret_val
 return|;
@@ -4055,7 +4158,7 @@ operator|!=
 name|E1000_SUCCESS
 condition|)
 goto|goto
-name|out
+name|release
 goto|;
 name|act_offset
 operator|=
@@ -4156,6 +4259,8 @@ name|word
 expr_stmt|;
 block|}
 block|}
+name|release
+label|:
 name|nvm
 operator|->
 name|ops
@@ -4167,6 +4272,17 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
+if|if
+condition|(
+name|ret_val
+condition|)
+name|DEBUGOUT1
+argument_list|(
+literal|"NVM read error: %d\n"
+argument_list|,
+name|ret_val
+argument_list|)
+expr_stmt|;
 return|return
 name|ret_val
 return|;
@@ -5272,9 +5388,20 @@ name|ret_val
 operator|!=
 name|E1000_SUCCESS
 condition|)
+block|{
+name|nvm
+operator|->
+name|ops
+operator|.
+name|release
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 if|if
 condition|(
 name|bank
@@ -5292,6 +5419,8 @@ name|old_bank_offset
 operator|=
 literal|0
 expr_stmt|;
+name|ret_val
+operator|=
 name|e1000_erase_flash_bank_ich8lan
 argument_list|(
 name|hw
@@ -5299,6 +5428,24 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+block|{
+name|nvm
+operator|->
+name|ops
+operator|.
+name|release
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 block|}
 else|else
 block|{
@@ -5312,6 +5459,8 @@ name|new_bank_offset
 operator|=
 literal|0
 expr_stmt|;
+name|ret_val
+operator|=
 name|e1000_erase_flash_bank_ich8lan
 argument_list|(
 name|hw
@@ -5319,6 +5468,24 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+block|{
+name|nvm
+operator|->
+name|ops
+operator|.
+name|release
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 block|}
 for|for
 control|(
@@ -5361,6 +5528,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|ret_val
+operator|=
 name|e1000_read_flash_word_ich8lan
 argument_list|(
 name|hw
@@ -5373,6 +5542,11 @@ operator|&
 name|data
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+break|break;
 block|}
 comment|/* 		 * If the word is 0x13, then make sure the signature bits 		 * (15:14) are 11b until the commit has completed. 		 * This will allow us to write 10b which indicates the 		 * signature is valid.  We want to do this after the write 		 * has completed so that we don't mark the segment valid 		 * while the write is still in progress 		 */
 if|if
@@ -5483,6 +5657,8 @@ name|new_bank_offset
 operator|+
 name|E1000_ICH_NVM_SIG_WORD
 expr_stmt|;
+name|ret_val
+operator|=
 name|e1000_read_flash_word_ich8lan
 argument_list|(
 name|hw
@@ -5493,6 +5669,24 @@ operator|&
 name|data
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+block|{
+name|nvm
+operator|->
+name|ops
+operator|.
+name|release
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 name|data
 operator|&=
 literal|0xBFFF
@@ -5643,6 +5837,17 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
+if|if
+condition|(
+name|ret_val
+condition|)
+name|DEBUGOUT1
+argument_list|(
+literal|"NVM update error: %d\n"
+argument_list|,
+name|ret_val
+argument_list|)
+expr_stmt|;
 return|return
 name|ret_val
 return|;
@@ -7041,7 +7246,11 @@ expr_stmt|;
 comment|/* Initialize identification LED */
 name|ret_val
 operator|=
-name|e1000_id_led_init_generic
+name|mac
+operator|->
+name|ops
+operator|.
+name|id_led_init
 argument_list|(
 name|hw
 argument_list|)
@@ -7050,14 +7259,12 @@ if|if
 condition|(
 name|ret_val
 condition|)
-block|{
+comment|/* This is not fatal and we should not stop init due to this */
 name|DEBUGOUT
 argument_list|(
 literal|"Error initializing identification LED\n"
 argument_list|)
 expr_stmt|;
-comment|/* This is not fatal and we should not stop init due to this */
-block|}
 comment|/* Setup the receive address. */
 name|e1000_init_rx_addrs_generic
 argument_list|(
@@ -7847,17 +8054,18 @@ condition|)
 goto|goto
 name|out
 goto|;
-if|if
+switch|switch
 condition|(
 name|hw
 operator|->
 name|phy
 operator|.
 name|type
-operator|==
-name|e1000_phy_igp_3
 condition|)
 block|{
+case|case
+name|e1000_phy_igp_3
+case|:
 name|ret_val
 operator|=
 name|e1000_copper_link_setup_igp
@@ -7872,19 +8080,10 @@ condition|)
 goto|goto
 name|out
 goto|;
-block|}
-elseif|else
-if|if
-condition|(
-name|hw
-operator|->
-name|phy
-operator|.
-name|type
-operator|==
+break|break;
+case|case
 name|e1000_phy_bm
-condition|)
-block|{
+case|:
 name|ret_val
 operator|=
 name|e1000_copper_link_setup_m88
@@ -7899,18 +8098,10 @@ condition|)
 goto|goto
 name|out
 goto|;
-block|}
-if|if
-condition|(
-name|hw
-operator|->
-name|phy
-operator|.
-name|type
-operator|==
+break|break;
+case|case
 name|e1000_phy_ife
-condition|)
-block|{
+case|:
 name|ret_val
 operator|=
 name|hw
@@ -8001,6 +8192,9 @@ condition|)
 goto|goto
 name|out
 goto|;
+break|break;
+default|default:
+break|break;
 block|}
 name|ret_val
 operator|=
@@ -8725,7 +8919,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_disable_gig_wol_ich8lan - disable gig during WoL  *  @hw: pointer to the HW structure  *  *  During S0 to Sx transition, it is possible the link remains at gig  *  instead of negotiating to a lower speed.  Before going to Sx, set  *  'LPLU Enabled' and 'Gig Disable' to force link speed negotiation  *  to a lower speed.  *  *  Should only be called for ICH9 and ICH10 devices.  **/
+comment|/**  *  e1000_disable_gig_wol_ich8lan - disable gig during WoL  *  @hw: pointer to the HW structure  *  *  During S0 to Sx transition, it is possible the link remains at gig  *  instead of negotiating to a lower speed.  Before going to Sx, set  *  'LPLU Enabled' and 'Gig Disable' to force link speed negotiation  *  to a lower speed.  *  *  Should only be called for applicable parts.  **/
 end_comment
 
 begin_function
@@ -8741,29 +8935,21 @@ block|{
 name|u32
 name|phy_ctrl
 decl_stmt|;
-if|if
+switch|switch
 condition|(
-operator|(
 name|hw
 operator|->
 name|mac
 operator|.
 name|type
-operator|==
-name|e1000_ich10lan
-operator|)
-operator|||
-operator|(
-name|hw
-operator|->
-name|mac
-operator|.
-name|type
-operator|==
-name|e1000_ich9lan
-operator|)
 condition|)
 block|{
+case|case
+name|e1000_ich9lan
+case|:
+case|case
+name|e1000_ich10lan
+case|:
 name|phy_ctrl
 operator|=
 name|E1000_READ_REG
@@ -8788,6 +8974,8 @@ argument_list|,
 name|phy_ctrl
 argument_list|)
 expr_stmt|;
+default|default:
+break|break;
 block|}
 return|return;
 block|}

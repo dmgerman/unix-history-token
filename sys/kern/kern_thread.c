@@ -1129,6 +1129,11 @@ modifier|*
 name|td
 parameter_list|)
 block|{
+name|lock_profile_thread_exit
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|td
@@ -1645,6 +1650,11 @@ condition|)
 name|sched_relinquish
 argument_list|(
 name|curthread
+argument_list|)
+expr_stmt|;
+name|lock_profile_thread_exit
+argument_list|(
+name|td
 argument_list|)
 expr_stmt|;
 name|cpuset_rel

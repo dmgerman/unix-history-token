@@ -1827,11 +1827,20 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_WIN32
-end_ifndef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
 
 begin_function
 specifier|static
@@ -1896,6 +1905,10 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* _WIN32&& !__CYGWIN__ */
+end_comment
 
 begin_comment
 comment|/*  * Note: We should use wide-character for findng '\' character,  * a directory separator on Windows, because some character-set have  * been using the '\' character for a part of its multibyte character  * code.  */
@@ -2116,7 +2129,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _WIN32 */
+comment|/* _WIN32&& !__CYGWIN__ */
 end_comment
 
 begin_function

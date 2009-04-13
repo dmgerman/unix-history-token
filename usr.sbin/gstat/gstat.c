@@ -333,6 +333,22 @@ name|loop
 operator|=
 literal|1
 expr_stmt|;
+comment|/* Turn on batch mode if output is not tty. */
+if|if
+condition|(
+operator|!
+name|isatty
+argument_list|(
+name|fileno
+argument_list|(
+name|stdout
+argument_list|)
+argument_list|)
+condition|)
+name|flag_b
+operator|=
+literal|1
+expr_stmt|;
 name|f_s
 index|[
 literal|0
@@ -1734,6 +1750,7 @@ condition|(
 operator|!
 name|flag_b
 condition|)
+block|{
 name|attroff
 argument_list|(
 name|COLOR_PAIR
@@ -1745,6 +1762,13 @@ expr_stmt|;
 name|PRINTMSG
 argument_list|(
 literal|"|"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|PRINTMSG
+argument_list|(
+literal|" "
 argument_list|)
 expr_stmt|;
 if|if

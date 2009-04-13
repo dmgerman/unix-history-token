@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-nfs.c,v 1.106.2.4 2007/06/15 23:17:40 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-nfs.c,v 1.110.2.1 2007-12-22 03:08:45 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -149,7 +149,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|xid_map_enter
 parameter_list|(
 specifier|const
@@ -1482,6 +1482,13 @@ operator|*
 operator|)
 name|bp
 expr_stmt|;
+name|TCHECK
+argument_list|(
+name|rp
+operator|->
+name|rm_xid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1567,6 +1574,15 @@ argument_list|,
 name|dstid
 argument_list|)
 expr_stmt|;
+name|TCHECK
+argument_list|(
+name|rp
+operator|->
+name|rm_reply
+operator|.
+name|rp_stat
+argument_list|)
+expr_stmt|;
 name|reply_stat
 operator|=
 name|EXTRACT_32BITS
@@ -1639,6 +1655,17 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
+name|TCHECK
+argument_list|(
+name|rp
+operator|->
+name|rm_reply
+operator|.
+name|rp_reject
+operator|.
+name|rj_stat
+argument_list|)
+expr_stmt|;
 name|rstat
 operator|=
 name|EXTRACT_32BITS
@@ -1661,6 +1688,19 @@ block|{
 case|case
 name|SUNRPC_RPC_MISMATCH
 case|:
+name|TCHECK
+argument_list|(
+name|rp
+operator|->
+name|rm_reply
+operator|.
+name|rp_reject
+operator|.
+name|rj_vers
+operator|.
+name|high
+argument_list|)
+expr_stmt|;
 name|rlow
 operator|=
 name|EXTRACT_32BITS
@@ -1709,6 +1749,17 @@ break|break;
 case|case
 name|SUNRPC_AUTH_ERROR
 case|:
+name|TCHECK
+argument_list|(
+name|rp
+operator|->
+name|rm_reply
+operator|.
+name|rp_reject
+operator|.
+name|rj_why
+argument_list|)
+expr_stmt|;
 name|rwhy
 operator|=
 name|EXTRACT_32BITS
@@ -1883,6 +1934,21 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+return|return;
+name|trunc
+label|:
+if|if
+condition|(
+operator|!
+name|nfserr
+condition|)
+name|fputs
+argument_list|(
+literal|" [|nfs]"
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2425,6 +2491,13 @@ operator|*
 operator|)
 name|bp
 expr_stmt|;
+name|TCHECK
+argument_list|(
+name|rp
+operator|->
+name|rm_xid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2520,14 +2593,20 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|xid_map_enter
 argument_list|(
 name|rp
 argument_list|,
 name|bp2
 argument_list|)
-expr_stmt|;
+condition|)
 comment|/* record proc number for later on */
+goto|goto
+name|trunc
+goto|;
 name|v3
 operator|=
 operator|(
@@ -4374,7 +4453,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|void
+name|int
 name|xid_map_enter
 parameter_list|(
 specifier|const
@@ -4413,6 +4492,23 @@ name|xid_map_entry
 modifier|*
 name|xmep
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|TTEST
+argument_list|(
+name|rp
+operator|->
+name|rm_call
+operator|.
+name|cb_vers
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 switch|switch
 condition|(
 name|IP_V
@@ -4458,7 +4554,11 @@ break|break;
 endif|#
 directive|endif
 default|default:
-return|return;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 name|xmep
 operator|=
@@ -4625,6 +4725,11 @@ operator|.
 name|cb_vers
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 

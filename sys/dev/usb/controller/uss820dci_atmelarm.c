@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_defs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb/usb.h>
 end_include
 
@@ -51,12 +45,6 @@ begin_include
 include|#
 directive|include
 file|<dev/usb/usb_process.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/usb_sw_transfer.h>
 end_include
 
 begin_include
@@ -701,7 +689,7 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|(
-name|void
+name|driver_intr_t
 operator|*
 operator|)
 name|uss820dci_interrupt
@@ -731,7 +719,7 @@ operator||
 name|INTR_MPSAFE
 argument_list|,
 operator|(
-name|void
+name|driver_intr_t
 operator|*
 operator|)
 name|uss820dci_interrupt

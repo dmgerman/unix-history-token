@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-egp.c,v 1.37 2005/01/12 11:19:09 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-egp.c,v 1.38 2006-02-11 22:13:24 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -906,12 +906,51 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-operator|(
-name|void
-operator|)
+if|if
+condition|(
+operator|!
+name|vflag
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|"egp: "
+literal|"EGPv%u, AS %u, seq %u, length %u"
+argument_list|,
+name|egp
+operator|->
+name|egp_version
+argument_list|,
+name|EXTRACT_16BITS
+argument_list|(
+operator|&
+name|egp
+operator|->
+name|egp_as
+argument_list|)
+argument_list|,
+name|EXTRACT_16BITS
+argument_list|(
+operator|&
+name|egp
+operator|->
+name|egp_sequence
+argument_list|)
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"EGPv%u, length %u"
+argument_list|,
+name|egp
+operator|->
+name|egp_version
+argument_list|,
+name|length
 argument_list|)
 expr_stmt|;
 if|if
@@ -934,27 +973,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
-argument_list|(
-literal|"as:%d seq:%d"
-argument_list|,
-name|EXTRACT_16BITS
-argument_list|(
-operator|&
-name|egp
-operator|->
-name|egp_as
-argument_list|)
-argument_list|,
-name|EXTRACT_16BITS
-argument_list|(
-operator|&
-name|egp
-operator|->
-name|egp_sequence
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|type
 operator|=
 name|egp

@@ -15523,6 +15523,15 @@ name|TSN_seq
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|tp1
+operator|->
+name|sent
+operator|<
+name|SCTP_DATAGRAM_RESEND
+condition|)
+block|{
 name|sctp_flight_size_decrease
 argument_list|(
 name|tp1
@@ -15535,6 +15544,7 @@ argument_list|,
 name|tp1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|{
 comment|/* audit code */
@@ -27578,6 +27588,14 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|send_sack
+operator|=
+literal|1
+expr_stmt|;
 name|sctp_sack_check
 argument_list|(
 name|stcb
@@ -27600,6 +27618,21 @@ goto|goto
 name|out_now
 goto|;
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|fwd_tsn_seen
+condition|)
+block|{
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|send_sack
+operator|=
+literal|1
+expr_stmt|;
 block|}
 comment|/* trigger send of any chunks in queue... */
 name|trigger_send

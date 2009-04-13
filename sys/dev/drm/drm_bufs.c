@@ -789,11 +789,7 @@ block|}
 name|map
 operator|->
 name|offset
-operator|=
-name|map
-operator|->
-name|offset
-operator|+
+operator|+=
 name|dev
 operator|->
 name|sg
@@ -5370,7 +5366,7 @@ literal|0
 return|;
 name|order
 operator|=
-name|ffsl
+name|flsl
 argument_list|(
 name|size
 argument_list|)

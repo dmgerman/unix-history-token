@@ -1641,6 +1641,17 @@ begin_comment
 comment|/* Don't create a buf if not found. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|GB_NOWAIT_BD
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Do not wait for bufdaemon */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2143,6 +2154,8 @@ name|buf
 modifier|*
 name|geteblk
 parameter_list|(
+name|int
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;

@@ -1253,7 +1253,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|*(volatile u_int8_t *) (((unsigned long)(map)->handle) + (offset))
+value|*(volatile u_int8_t *)(((vm_offset_t)(map)->handle) +		\ 	    (vm_offset_t)(offset))
 end_define
 
 begin_define
@@ -1266,7 +1266,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|*(volatile u_int16_t *) (((unsigned long)(map)->handle) + (offset))
+value|*(volatile u_int16_t *)(((vm_offset_t)(map)->handle) +		\ 	    (vm_offset_t)(offset))
 end_define
 
 begin_define
@@ -1279,7 +1279,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|*(volatile u_int32_t *)(((unsigned long)(map)->handle) + (offset))
+value|*(volatile u_int32_t *)(((vm_offset_t)(map)->handle) +		\ 	    (vm_offset_t)(offset))
 end_define
 
 begin_define
@@ -1294,7 +1294,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|*(volatile u_int8_t *) (((unsigned long)(map)->handle) + (offset)) = val
+value|*(volatile u_int8_t *)(((vm_offset_t)(map)->handle) +		\ 	    (vm_offset_t)(offset)) = val
 end_define
 
 begin_define
@@ -1309,7 +1309,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|*(volatile u_int16_t *) (((unsigned long)(map)->handle) + (offset)) = val
+value|*(volatile u_int16_t *)(((vm_offset_t)(map)->handle) +		\ 	    (vm_offset_t)(offset)) = val
 end_define
 
 begin_define
@@ -1324,7 +1324,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|*(volatile u_int32_t *)(((unsigned long)(map)->handle) + (offset)) = val
+value|*(volatile u_int32_t *)(((vm_offset_t)(map)->handle) +		\ 	    (vm_offset_t)(offset)) = val
 end_define
 
 begin_define
@@ -2143,16 +2143,9 @@ decl_stmt|;
 name|struct
 name|drm_dma_handle
 modifier|*
-name|sg_dmah
-decl_stmt|;
-comment|/* Handle for sg_pages   */
-name|struct
-name|drm_dma_handle
-modifier|*
 name|dmah
 decl_stmt|;
 comment|/* Handle to PCI memory  */
-comment|/* for ATI PCIGART table */
 block|}
 name|drm_sg_mem_t
 typedef|;
@@ -2385,6 +2378,12 @@ decl_stmt|;
 name|int
 name|table_size
 decl_stmt|;
+name|struct
+name|drm_dma_handle
+modifier|*
+name|dmah
+decl_stmt|;
+comment|/* handle for ATI PCIGART table */
 block|}
 struct|;
 end_struct
@@ -2833,7 +2832,7 @@ begin_define
 define|#
 directive|define
 name|DRM_MAX_PCI_RESOURCE
-value|3
+value|6
 end_define
 
 begin_comment

@@ -175,9 +175,18 @@ operator|&=
 operator|~
 name|S_ISGID
 expr_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 name|assertEqualInt
 argument_list|(
 name|st
@@ -382,9 +391,18 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 name|assertEqualInt
 argument_list|(
 name|st
@@ -683,9 +701,18 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 name|assertEqualInt
 argument_list|(
 name|st
@@ -938,9 +965,18 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 name|assertEqualInt
 argument_list|(
 name|st
@@ -1119,9 +1155,18 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 name|assertEqualInt
 argument_list|(
 name|st
@@ -1161,11 +1206,20 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_WIN32
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
 
 begin_function
 specifier|static
@@ -1468,7 +1522,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _WIN32 */
+comment|/* _WIN32&& !__CYGWIN__ */
 end_comment
 
 begin_endif
@@ -1836,9 +1890,18 @@ argument_list|(
 name|ae
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 comment|/* A file with unusable characters in its file name. */
 name|assert
 argument_list|(
@@ -1925,7 +1988,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* _WIN32 */
+comment|/* _WIN32&& !__CYGWIN__ */
 endif|#
 directive|endif
 block|}

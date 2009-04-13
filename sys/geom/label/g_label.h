@@ -123,7 +123,16 @@ specifier|extern
 specifier|const
 name|struct
 name|g_label_desc
-name|g_label_ufs
+name|g_label_ufs_id
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|g_label_desc
+name|g_label_ufs_volume
 decl_stmt|;
 end_decl_stmt
 

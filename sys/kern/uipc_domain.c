@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/uma.h>
 end_include
 
@@ -146,6 +152,13 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|vnet_attach_fn
+name|net_init_domain
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -334,6 +347,40 @@ name|pru_sopoll_notsupp
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VIMAGE_GLOBALS
+end_ifndef
+
+begin_decl_stmt
+name|vnet_modinfo_t
+name|vnet_domain_modinfo
+init|=
+block|{
+operator|.
+name|vmi_id
+operator|=
+name|VNET_MOD_DOMAIN
+block|,
+operator|.
+name|vmi_name
+operator|=
+literal|"domain"
+block|,
+operator|.
+name|vmi_iattach
+operator|=
+name|net_init_domain
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -573,15 +620,23 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|net_init_domain
 parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+specifier|const
 name|struct
 name|domain
 modifier|*
 name|dp
-parameter_list|)
-block|{
+init|=
+name|arg
+decl_stmt|;
 name|struct
 name|protosw
 modifier|*
@@ -649,6 +704,11 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -775,11 +835,30 @@ operator|&
 name|dom_mtx
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|VIMAGE_GLOBALS
+name|vnet_mod_register_multi
+argument_list|(
+operator|&
+name|vnet_domain_modinfo
+argument_list|,
+name|dp
+argument_list|,
+name|dp
+operator|->
+name|dom_name
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|net_init_domain
 argument_list|(
 name|dp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

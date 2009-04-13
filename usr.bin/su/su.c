@@ -706,9 +706,9 @@ name|AUE_su
 argument_list|,
 name|auid
 argument_list|,
-literal|1
-argument_list|,
 name|EPERM
+argument_list|,
+literal|1
 argument_list|,
 literal|"username too long: '%s'"
 argument_list|,
@@ -914,9 +914,9 @@ name|AUE_su
 argument_list|,
 name|auid
 argument_list|,
-literal|1
-argument_list|,
 name|EPERM
+argument_list|,
+literal|1
 argument_list|,
 literal|"unable to determine invoking subject: '%s'"
 argument_list|,
@@ -1134,9 +1134,9 @@ name|AUE_su
 argument_list|,
 name|auid
 argument_list|,
-literal|1
-argument_list|,
 name|EPERM
+argument_list|,
+literal|1
 argument_list|,
 literal|"bad su %s to %s on %s"
 argument_list|,
@@ -1268,9 +1268,9 @@ name|AUE_su
 argument_list|,
 name|auid
 argument_list|,
-literal|1
-argument_list|,
 name|EPERM
+argument_list|,
+literal|1
 argument_list|,
 literal|"unknown subject: %s"
 argument_list|,
@@ -1358,9 +1358,9 @@ name|AUE_su
 argument_list|,
 name|auid
 argument_list|,
-literal|1
-argument_list|,
 name|EPERM
+argument_list|,
+literal|1
 argument_list|,
 literal|"pam_chauthtok: %s"
 argument_list|,
@@ -1417,9 +1417,9 @@ name|AUE_su
 argument_list|,
 name|auid
 argument_list|,
-literal|1
-argument_list|,
 name|EPERM
+argument_list|,
+literal|1
 argument_list|,
 literal|"pam_acct_mgmt: %s"
 argument_list|,
@@ -1496,9 +1496,9 @@ name|AUE_su
 argument_list|,
 name|auid
 argument_list|,
-literal|1
-argument_list|,
 name|EPERM
+argument_list|,
+literal|1
 argument_list|,
 literal|"only root may use -c"
 argument_list|)

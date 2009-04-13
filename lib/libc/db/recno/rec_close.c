@@ -541,6 +541,9 @@ operator|.
 name|size
 argument_list|)
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|data
 operator|.
 name|size
@@ -655,11 +658,16 @@ argument_list|,
 literal|2
 argument_list|)
 operator|!=
+call|(
+name|ssize_t
+call|)
+argument_list|(
 name|data
 operator|.
 name|size
 operator|+
 literal|1
+argument_list|)
 condition|)
 return|return
 operator|(

@@ -20,7 +20,7 @@ name|_USB2_HUB_H_
 end_define
 
 begin_comment
-comment|/*  * The following structure defines an USB port.  */
+comment|/*  * The following structure defines an USB port.   */
 end_comment
 
 begin_struct
@@ -82,6 +82,9 @@ begin_struct
 struct|struct
 name|usb2_hub
 block|{
+if|#
+directive|if
+name|USB_HAVE_TT_SUPPORT
 name|struct
 name|usb2_fs_isoc_schedule
 name|fs_isoc_schedule
@@ -89,6 +92,8 @@ index|[
 name|USB_ISOC_TIME_MAX
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|usb2_device
 modifier|*
@@ -111,7 +116,7 @@ name|void
 modifier|*
 name|hubsoftc
 decl_stmt|;
-name|uint32_t
+name|usb2_size_t
 name|uframe_usage
 index|[
 name|USB_HS_MICRO_FRAMES_MAX
@@ -260,6 +265,23 @@ name|struct
 name|usb2_bus
 modifier|*
 name|bus
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|uhub_root_intr
+parameter_list|(
+name|struct
+name|usb2_bus
+modifier|*
+parameter_list|,
+specifier|const
+name|uint8_t
+modifier|*
+parameter_list|,
+name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl

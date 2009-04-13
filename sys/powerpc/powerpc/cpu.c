@@ -215,6 +215,38 @@ name|REVFMT_MAJMIN
 block|}
 block|,
 block|{
+literal|"IBM PowerPC 970"
+block|,
+name|IBM970
+block|,
+name|REVFMT_MAJMIN
+block|}
+block|,
+block|{
+literal|"IBM PowerPC 970FX"
+block|,
+name|IBM970FX
+block|,
+name|REVFMT_MAJMIN
+block|}
+block|,
+block|{
+literal|"IBM PowerPC 970GX"
+block|,
+name|IBM970GX
+block|,
+name|REVFMT_MAJMIN
+block|}
+block|,
+block|{
+literal|"IBM PowerPC 970MP"
+block|,
+name|IBM970MP
+block|,
+name|REVFMT_MAJMIN
+block|}
+block|,
+block|{
 literal|"Motorola PowerPC 7400"
 block|,
 name|MPC7400

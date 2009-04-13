@@ -155,6 +155,10 @@ name|int
 name|i_ea_error
 decl_stmt|;
 comment|/* First errno in transaction */
+name|int
+name|i_ea_refs
+decl_stmt|;
+comment|/* Number of users of EA area */
 comment|/* 	 * Copies from the on-disk dinode itself. 	 */
 name|u_int16_t
 name|i_mode
@@ -297,6 +301,20 @@ end_define
 begin_comment
 comment|/* Process IN_ACCESS after the 					   suspension finished */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IN_EA_LOCKED
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_EA_LOCKWAIT
+value|0x0400
+end_define
 
 begin_define
 define|#

@@ -183,6 +183,26 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|nfs_accesscache
+block|{
+name|u_int32_t
+name|mode
+decl_stmt|;
+comment|/* ACCESS mode cache */
+name|uid_t
+name|uid
+decl_stmt|;
+comment|/* credentials having mode */
+name|time_t
+name|stamp
+decl_stmt|;
+comment|/* mode cache timestamp */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * The nfsnode is the nfs equivalent to ufs's inode. Any similarity  * is purely coincidental.  * There is a unique nfsnode allocated for each active file,  * each current directory, each mounted-on file, text file, and the root.  * An nfsnode is 'named' by its file handle. (nget/nfs_node.c)  * If this structure exceeds 256 bytes (it is currently 256 using 4.4BSD-Lite  * type definitions), file handles of> 32 bytes should probably be split out  * into a separate MALLOC()'d data structure. (Reduce the size of nfsfh_t by  * changing the definition in nfsproto.h of NFS_SMALLFH.)  * NB: Hopefully the current order of the fields is such that everything will  *     be well aligned and, therefore, tightly packed.  */
 end_comment
@@ -217,18 +237,13 @@ name|time_t
 name|n_attrstamp
 decl_stmt|;
 comment|/* Attr. cache timestamp */
-name|u_int32_t
-name|n_mode
+name|struct
+name|nfs_accesscache
+name|n_accesscache
+index|[
+name|NFS_ACCESSCACHESIZE
+index|]
 decl_stmt|;
-comment|/* ACCESS mode cache */
-name|uid_t
-name|n_modeuid
-decl_stmt|;
-comment|/* credentials having mode */
-name|time_t
-name|n_modestamp
-decl_stmt|;
-comment|/* mode cache timestamp */
 name|struct
 name|timespec
 name|n_mtime

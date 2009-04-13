@@ -2392,6 +2392,20 @@ decl_stmt|;
 name|size_t
 name|tblsz
 decl_stmt|;
+comment|/* We don't nest, which means that our depth should be 0. */
+if|if
+condition|(
+name|basetable
+operator|->
+name|gpt_depth
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|table
 operator|=
 operator|(

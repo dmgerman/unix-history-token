@@ -771,6 +771,10 @@ block|}
 comment|/* Split the parent page if necessary or shift the indices. */
 if|if
 condition|(
+call|(
+name|u_int32_t
+call|)
+argument_list|(
 name|h
 operator|->
 name|upper
@@ -778,6 +782,7 @@ operator|-
 name|h
 operator|->
 name|lower
+argument_list|)
 operator|<
 name|nbytes
 operator|+
@@ -1729,8 +1734,10 @@ operator|(
 name|PAGE
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 name|t
 operator|->
 name|bt_psize
@@ -1757,22 +1764,6 @@ name|NULL
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|PURIFY
-name|memset
-argument_list|(
-name|l
-argument_list|,
-literal|0xff
-argument_list|,
-name|t
-operator|->
-name|bt_psize
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|l
 operator|->
 name|pgno

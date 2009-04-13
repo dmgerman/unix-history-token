@@ -354,21 +354,6 @@ name|main
 end_undef
 
 begin_decl_stmt
-specifier|extern
-name|off_t
-name|restart_point
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|cbuf
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|union
 name|sockunion
 name|ctrl_addr
