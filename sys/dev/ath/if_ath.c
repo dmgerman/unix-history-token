@@ -34386,6 +34386,17 @@ argument_list|,
 name|ts
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|changed
+operator|&
+name|TDMA_UPDATE_SLOTLEN
+condition|)
+name|ath_wme_update
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
@@ -34412,11 +34423,6 @@ argument_list|,
 name|sc
 operator|->
 name|sc_tdmabintval
-argument_list|)
-expr_stmt|;
-name|ath_beaconq_config
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 comment|/* XXX right? */
