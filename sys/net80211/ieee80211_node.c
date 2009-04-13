@@ -1056,7 +1056,6 @@ block|}
 else|else
 block|{
 comment|/* legacy rate handling */
-comment|/* NB: 108A/108G should be handled as 11a/11g respectively */
 if|if
 condition|(
 name|IEEE80211_IS_CHAN_ST
@@ -1098,6 +1097,7 @@ name|mode
 operator|=
 name|IEEE80211_MODE_QUARTER
 expr_stmt|;
+comment|/* NB: 108A should be handled as 11a */
 elseif|else
 if|if
 condition|(
@@ -1115,11 +1115,20 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|IEEE80211_IS_CHAN_108G
+argument_list|(
+name|ni
+operator|->
+name|ni_chan
+argument_list|)
+operator|||
+operator|(
 name|ni
 operator|->
 name|ni_flags
 operator|&
 name|IEEE80211_NODE_ERP
+operator|)
 condition|)
 name|mode
 operator|=
