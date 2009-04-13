@@ -2198,8 +2198,6 @@ name|ts
 operator|->
 name|tdma_slotcnt
 argument_list|,
-literal|100
-operator|*
 name|ts
 operator|->
 name|tdma_slotlen
