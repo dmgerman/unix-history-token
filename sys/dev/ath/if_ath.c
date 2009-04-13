@@ -22146,7 +22146,9 @@ name|mtod
 argument_list|(
 name|m0
 argument_list|,
-name|caddr_t
+specifier|const
+name|uint8_t
+operator|*
 argument_list|)
 argument_list|,
 name|m0
@@ -23897,7 +23899,9 @@ name|bf
 operator|->
 name|bf_m
 argument_list|,
-name|caddr_t
+specifier|const
+name|uint8_t
+operator|*
 argument_list|)
 argument_list|,
 name|bf
@@ -24337,7 +24341,9 @@ name|bf
 operator|->
 name|bf_m
 argument_list|,
-name|caddr_t
+specifier|const
+name|uint8_t
+operator|*
 argument_list|)
 argument_list|,
 name|bf
