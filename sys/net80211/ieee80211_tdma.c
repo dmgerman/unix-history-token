@@ -1666,7 +1666,7 @@ name|IEEE80211_ADDR_EQ
 argument_list|(
 name|wh
 operator|->
-name|i_addr2
+name|i_addr3
 argument_list|,
 name|ni
 operator|->
