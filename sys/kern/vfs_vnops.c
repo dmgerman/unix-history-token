@@ -1675,18 +1675,15 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
-comment|/* 			 * XXX This should be LK_SHARED but I don't trust VFS 			 * enough to leave it like that until it has been 			 * reviewed further. 			 */
 name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|ASSERT_VOP_LOCKED
 argument_list|(
