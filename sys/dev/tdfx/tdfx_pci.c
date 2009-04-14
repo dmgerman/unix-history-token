@@ -906,6 +906,14 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|tdfx_info
+operator|->
+name|devt
+operator|->
+name|si_drv1
+operator|=
+name|tdfx_info
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1406,18 +1414,9 @@ name|tdfx_softc
 modifier|*
 name|tdfx_info
 init|=
-name|devclass_get_softc
-argument_list|(
-name|tdfx_devclass
-argument_list|,
-name|UNIT
-argument_list|(
-name|dev2unit
-argument_list|(
 name|dev
-argument_list|)
-argument_list|)
-argument_list|)
+operator|->
+name|si_drv1
 decl_stmt|;
 if|if
 condition|(
@@ -1486,18 +1485,9 @@ name|tdfx_softc
 modifier|*
 name|tdfx_info
 init|=
-name|devclass_get_softc
-argument_list|(
-name|tdfx_devclass
-argument_list|,
-name|UNIT
-argument_list|(
-name|dev2unit
-argument_list|(
 name|dev
-argument_list|)
-argument_list|)
-argument_list|)
+operator|->
+name|si_drv1
 decl_stmt|;
 if|if
 condition|(
@@ -1563,7 +1553,7 @@ comment|/*  	 * mmap(2) is called by a user process to request that an area of m
 comment|/**** OLD GET CONFIG ****/
 comment|/* struct tdfx_softc* tdfx_info; */
 comment|/* Get the configuration for our card XXX*/
-comment|/*tdfx_info = (struct tdfx_softc*)devclass_get_softc(tdfx_devclass, 			UNIT(dev2unit(dev)));*/
+comment|/*tdfx_info = dev->si_drv1; */
 comment|/************************/
 name|struct
 name|tdfx_softc
