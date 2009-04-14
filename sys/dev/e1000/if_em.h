@@ -19,6 +19,12 @@ directive|define
 name|_EM_H_DEFINED_
 end_define
 
+begin_define
+define|#
+directive|define
+name|IFNET_BUF_RING
+end_define
+
 begin_comment
 comment|/* Tunables */
 end_comment
@@ -841,6 +847,16 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IFNET_BUF_RING
+name|struct
+name|buf_ring
+modifier|*
+name|br
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|e1000_hw
 name|hw
@@ -1381,6 +1397,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|EM_TX_TRYLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_trylock(&(_sc)->tx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
 name|EM_RX_LOCK
 parameter_list|(
 name|_sc
@@ -1437,6 +1463,42 @@ name|_sc
 parameter_list|)
 value|mtx_assert(&(_sc)->tx_mtx, MA_OWNED)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IFNET_BUF_RING
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ADAPTER_RING_EMPTY
+parameter_list|(
+name|adapter
+parameter_list|)
+value|drbr_empty((adapter)->ifp, (adapter)->br)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ADAPTER_RING_EMPTY
+parameter_list|(
+name|adapter
+parameter_list|)
+value|IFQ_DRV_IS_EMPTY(&((adapter)->ifp->if_snd))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
