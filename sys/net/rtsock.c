@@ -3220,12 +3220,6 @@ name|rt
 operator|->
 name|rt_flags
 expr_stmt|;
-name|rtm
-operator|->
-name|rtm_use
-operator|=
-literal|0
-expr_stmt|;
 name|rt_getmetrics
 argument_list|(
 operator|&
@@ -3526,14 +3520,6 @@ name|rti_ifp
 expr_stmt|;
 block|}
 comment|/* Allow some flags to be toggled on change. */
-if|if
-condition|(
-name|rtm
-operator|->
-name|rtm_fmask
-operator|&
-name|RTF_FMASK
-condition|)
 name|rt
 operator|->
 name|rt_flags
@@ -3544,9 +3530,7 @@ operator|->
 name|rt_flags
 operator|&
 operator|~
-name|rtm
-operator|->
-name|rtm_fmask
+name|RTF_FMASK
 operator|)
 operator||
 operator|(
@@ -3554,9 +3538,7 @@ name|rtm
 operator|->
 name|rtm_flags
 operator|&
-name|rtm
-operator|->
-name|rtm_fmask
+name|RTF_FMASK
 operator|)
 expr_stmt|;
 name|rt_setmetrics
@@ -3918,6 +3900,13 @@ argument_list|,
 name|rmx_mtu
 argument_list|)
 expr_stmt|;
+name|metric
+argument_list|(
+name|RTV_WEIGHT
+argument_list|,
+name|rmx_weight
+argument_list|)
+expr_stmt|;
 comment|/* Userland -> kernel timebase conversion. */
 if|if
 condition|(
@@ -3987,6 +3976,11 @@ expr_stmt|;
 name|metric
 argument_list|(
 name|rmx_mtu
+argument_list|)
+expr_stmt|;
+name|metric
+argument_list|(
+name|rmx_weight
 argument_list|)
 expr_stmt|;
 comment|/* Kernel -> userland timebase conversion. */
@@ -6418,9 +6412,10 @@ name|rt
 operator|->
 name|rt_flags
 expr_stmt|;
+comment|/* 		 * let's be honest about this being a retarded hack 		 */
 name|rtm
 operator|->
-name|rtm_use
+name|rtm_fmask
 operator|=
 name|rt
 operator|->

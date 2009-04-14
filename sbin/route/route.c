@@ -764,6 +764,9 @@ block|{
 case|case
 name|K_GET
 case|:
+case|case
+name|K_SHOW
+case|:
 name|uid
 operator|=
 literal|0
@@ -3008,6 +3011,15 @@ argument_list|,
 name|rmx_rttvar
 argument_list|)
 expr_stmt|;
+name|caseof
+argument_list|(
+name|K_WEIGHT
+argument_list|,
+name|RTV_WEIGHT
+argument_list|,
+name|rmx_weight
+argument_list|)
+expr_stmt|;
 block|}
 name|rtm_inits
 operator||=
@@ -3133,6 +3145,11 @@ operator|*
 name|cmd
 operator|!=
 literal|'g'
+operator|&&
+operator|*
+name|cmd
+operator|!=
+literal|'s'
 condition|)
 name|shutdown
 argument_list|(
@@ -3356,6 +3373,23 @@ case|:
 name|flags
 operator||=
 name|RTF_STATIC
+expr_stmt|;
+break|break;
+case|case
+name|K_STICKY
+case|:
+name|flags
+operator||=
+name|RTF_STICKY
+expr_stmt|;
+break|break;
+case|case
+name|K_NOSTICK
+case|:
+name|flags
+operator|&=
+operator|~
+name|RTF_STICKY
 expr_stmt|;
 break|break;
 case|case
@@ -3643,6 +3677,9 @@ name|K_RTT
 case|:
 case|case
 name|K_RTTVAR
+case|:
+case|case
+name|K_WEIGHT
 case|:
 if|if
 condition|(
@@ -3969,6 +4006,11 @@ operator|*
 name|cmd
 operator|==
 literal|'g'
+operator|||
+operator|*
+name|cmd
+operator|==
+literal|'s'
 condition|)
 name|exit
 argument_list|(
@@ -6265,6 +6307,10 @@ condition|(
 name|cmd
 operator|==
 literal|'g'
+operator|||
+name|cmd
+operator|==
+literal|'s'
 condition|)
 block|{
 name|cmd
@@ -6831,7 +6877,7 @@ name|char
 name|metricnames
 index|[]
 init|=
-literal|"\011pksent\010rttvar\7rtt\6ssthresh\5sendpipe\4recvpipe\3expire\2hopcount"
+literal|"\011weight\010rttvar\7rtt\6ssthresh\5sendpipe\4recvpipe\3expire"
 literal|"\1mtu"
 decl_stmt|;
 end_decl_stmt
@@ -6841,10 +6887,10 @@ name|char
 name|routeflags
 index|[]
 init|=
-literal|"\1UP\2GATEWAY\3HOST\4REJECT\5DYNAMIC\6MODIFIED\7DONE\010MASK_PRESENT"
-literal|"\011CLONING\012XRESOLVE\013LLINFO\014STATIC\015BLACKHOLE\016b016"
-literal|"\017PROTO2\020PROTO1\021PRCLONING\022WASCLONED\023PROTO3\024CHAINDELETE"
-literal|"\025PINNED\026LOCAL\027BROADCAST\030MULTICAST"
+literal|"\1UP\2GATEWAY\3HOST\4REJECT\5DYNAMIC\6MODIFIED\7DONE"
+literal|"\012XRESOLVE\013LLINFO\014STATIC\015BLACKHOLE"
+literal|"\017PROTO2\020PROTO1\021PRCLONING\022WASCLONED\023PROTO3"
+literal|"\025PINNED\026LOCAL\027BROADCAST\030MULTICAST\035STICKY"
 decl_stmt|;
 end_decl_stmt
 
@@ -7700,7 +7746,7 @@ name|printf
 argument_list|(
 literal|"\n%s\n"
 argument_list|,
-literal|"\  recvpipe  sendpipe  ssthresh  rtt,msec    rttvar  hopcount      mtu     expire"
+literal|"\  recvpipe  sendpipe  ssthresh  rtt,msec    mtu        weight    expire"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -7774,41 +7820,6 @@ name|printf
 argument_list|(
 literal|"%8ld%c "
 argument_list|,
-name|msec
-argument_list|(
-name|rtm
-operator|->
-name|rtm_rmx
-operator|.
-name|rmx_rttvar
-argument_list|)
-argument_list|,
-name|lock
-argument_list|(
-name|RTTVAR
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%8ld%c "
-argument_list|,
-name|rtm
-operator|->
-name|rtm_rmx
-operator|.
-name|rmx_hopcount
-argument_list|,
-name|lock
-argument_list|(
-name|HOPCOUNT
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%8ld%c "
-argument_list|,
 name|rtm
 operator|->
 name|rtm_rmx
@@ -7818,6 +7829,22 @@ argument_list|,
 name|lock
 argument_list|(
 name|MTU
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%8ld%c "
+argument_list|,
+name|rtm
+operator|->
+name|rtm_rmx
+operator|.
+name|rmx_weight
+argument_list|,
+name|lock
+argument_list|(
+name|WEIGHT
 argument_list|)
 argument_list|)
 expr_stmt|;
