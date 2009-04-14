@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2009, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -166,6 +166,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/tcp_lro.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/udp.h>
 end_include
 
@@ -259,16 +265,33 @@ directive|include
 file|<sys/pcpu.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IXGBE_TIMESYNC
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|"ixgbe_api.h"
+file|<sys/ioccom.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tcp_lro.h"
+file|<sys/time.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|"ixgbe_api.h"
 end_include
 
 begin_comment
@@ -283,7 +306,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_TXD
-value|256
+value|1024
 end_define
 
 begin_define
@@ -315,7 +338,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_RXD
-value|256
+value|1024
 end_define
 
 begin_define
@@ -569,8 +592,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_MAX_SCATTER
+name|IXGBE_82598_SCATTER
 value|100
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_82599_SCATTER
+value|32
 end_define
 
 begin_define
@@ -637,9 +667,11 @@ end_comment
 begin_if
 if|#
 directive|if
-name|__FreeBSD_version
-operator|<
-literal|700000
+operator|!
+name|defined
+argument_list|(
+name|ETHER_BPF_MTAP
+argument_list|)
 end_if
 
 begin_define
@@ -648,6 +680,19 @@ directive|define
 name|ETHER_BPF_MTAP
 value|BPF_MTAP
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|700000
+end_if
 
 begin_define
 define|#
@@ -661,18 +706,6 @@ define|#
 directive|define
 name|IFCAP_TSO4
 value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILTER_STRAY
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILTER_HANDLED
 end_define
 
 begin_endif
@@ -786,6 +819,9 @@ begin_struct
 struct|struct
 name|ixgbe_tx_buf
 block|{
+name|u32
+name|eop_index
+decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -1040,9 +1076,6 @@ comment|/* Used for AIM calc */
 name|u32
 name|eitr_setting
 decl_stmt|;
-name|bool
-name|enable_lro
-decl_stmt|;
 comment|/* Soft stats */
 name|u64
 name|rx_irq
@@ -1096,7 +1129,7 @@ name|resource
 modifier|*
 name|msix_mem
 decl_stmt|;
-comment|/* 	 * Interrupt resources: 	 *  Oplin has 20 MSIX messages 	 *  so allocate that for now. 	 */
+comment|/* 	 * Interrupt resources: 	 */
 name|void
 modifier|*
 name|tag
@@ -1152,6 +1185,9 @@ decl_stmt|;
 name|u32
 name|link_speed
 decl_stmt|;
+name|bool
+name|link_up
+decl_stmt|;
 name|u32
 name|linkvec
 decl_stmt|;
@@ -1182,9 +1218,29 @@ comment|/* Mbuf cluster size */
 name|u32
 name|rx_mbuf_sz
 decl_stmt|;
-comment|/* Check for missing optics */
+comment|/* Support for pluggable optics */
 name|bool
 name|sfp_probe
+decl_stmt|;
+name|struct
+name|task
+name|link_task
+decl_stmt|;
+comment|/* Link tasklet */
+name|struct
+name|task
+name|mod_task
+decl_stmt|;
+comment|/* SFP tasklet */
+name|struct
+name|task
+name|msf_task
+decl_stmt|;
+comment|/* Multispeed Fiber tasklet */
+name|struct
+name|taskqueue
+modifier|*
+name|tq
 decl_stmt|;
 comment|/* 	 * Transmit rings: 	 *	Allocated at run time, an array of rings. 	 */
 name|struct
@@ -1216,6 +1272,20 @@ decl_stmt|;
 name|u32
 name|rx_process_limit
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IXGBE_TIMESYNC
+name|u64
+name|last_stamp
+decl_stmt|;
+name|u64
+name|last_sec
+decl_stmt|;
+name|u32
+name|last_ns
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* Misc stats maintained by the driver */
 name|unsigned
 name|long
@@ -1260,6 +1330,123 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IXGBE_TIMESYNC
+end_ifdef
+
+begin_comment
+comment|/* Precision Time Sync (IEEE 1588) defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_IEEE1588
+value|0x88F7
+end_define
+
+begin_define
+define|#
+directive|define
+name|PICOSECS_PER_TICK
+value|20833
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSYNC_UDP_PORT
+value|319
+end_define
+
+begin_comment
+comment|/* UDP port for the protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ADVTXD_TSTAMP
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* TIMESYNC IOCTL defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_TIMESYNC_READTS
+value|_IOWR('i', 127, struct ixgbe_tsync_read)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_TIMESTAMP
+value|5
+end_define
+
+begin_comment
+comment|/* A unique return value */
+end_comment
+
+begin_comment
+comment|/* Used in the READTS IOCTL */
+end_comment
+
+begin_struct
+struct|struct
+name|ixgbe_tsync_read
+block|{
+name|int
+name|read_current_time
+decl_stmt|;
+name|struct
+name|timespec
+name|system_time
+decl_stmt|;
+name|u64
+name|network_time
+decl_stmt|;
+name|u64
+name|rx_stamp
+decl_stmt|;
+name|u64
+name|tx_stamp
+decl_stmt|;
+name|u16
+name|seqid
+decl_stmt|;
+name|unsigned
+name|char
+name|srcid
+index|[
+literal|6
+index|]
+decl_stmt|;
+name|int
+name|rx_valid
+decl_stmt|;
+name|int
+name|tx_valid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* IXGBE_TIMESYNC */
+end_comment
 
 begin_define
 define|#
@@ -1327,6 +1514,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_TX_TRYLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_trylock(&(_sc)->tx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_RX_LOCK
 parameter_list|(
 name|_sc
@@ -1383,6 +1580,56 @@ name|_sc
 parameter_list|)
 value|mtx_assert(&(_sc)->tx_mtx, MA_OWNED)
 end_define
+
+begin_function
+specifier|static
+specifier|inline
+name|bool
+name|ixgbe_is_sfp
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|hw
+operator|->
+name|phy
+operator|.
+name|type
+condition|)
+block|{
+case|case
+name|ixgbe_phy_sfp_avago
+case|:
+case|case
+name|ixgbe_phy_sfp_ftl
+case|:
+case|case
+name|ixgbe_phy_sfp_intel
+case|:
+case|case
+name|ixgbe_phy_sfp_unknown
+case|:
+case|case
+name|ixgbe_phy_tw_tyco
+case|:
+case|case
+name|ixgbe_phy_tw_unknown
+case|:
+return|return
+name|TRUE
+return|;
+default|default:
+return|return
+name|FALSE
+return|;
+block|}
+block|}
+end_function
 
 begin_endif
 endif|#
