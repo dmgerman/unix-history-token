@@ -1794,7 +1794,7 @@ specifier|static
 name|int
 name|igb_rx_queues
 init|=
-literal|4
+literal|1
 decl_stmt|;
 end_decl_stmt
 
