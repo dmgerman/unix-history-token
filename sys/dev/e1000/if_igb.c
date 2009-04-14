@@ -308,7 +308,7 @@ name|char
 name|igb_driver_version
 index|[]
 init|=
-literal|"version - 1.5.2"
+literal|"version - 1.5.3"
 decl_stmt|;
 end_decl_stmt
 
@@ -17970,9 +17970,10 @@ name|NULL
 expr_stmt|;
 name|ptype
 operator|=
-operator|(
+call|(
 name|u16
-operator|)
+call|)
+argument_list|(
 name|cur
 operator|->
 name|wb
@@ -17982,6 +17983,9 @@ operator|.
 name|lo_dword
 operator|.
 name|data
+operator|>>
+literal|4
+argument_list|)
 expr_stmt|;
 comment|/* Sync the buffers */
 name|bus_dmamap_sync
@@ -18405,6 +18409,31 @@ block|}
 block|}
 else|else
 block|{
+comment|/* Adjust for CRC frag */
+if|if
+condition|(
+name|len_adj
+condition|)
+block|{
+name|rxr
+operator|->
+name|lmp
+operator|->
+name|m_len
+operator|-=
+name|len_adj
+expr_stmt|;
+name|rxr
+operator|->
+name|fmp
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|-=
+name|len_adj
+expr_stmt|;
+block|}
 comment|/* Chain mbuf's together */
 name|mh
 operator|->
@@ -18443,31 +18472,6 @@ name|mh
 operator|->
 name|m_len
 expr_stmt|;
-comment|/* Adjust for CRC frag */
-if|if
-condition|(
-name|len_adj
-condition|)
-block|{
-name|rxr
-operator|->
-name|lmp
-operator|->
-name|m_len
-operator|-=
-name|len_adj
-expr_stmt|;
-name|rxr
-operator|->
-name|fmp
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-operator|-=
-name|len_adj
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -19125,7 +19129,7 @@ operator|->
 name|m_pkthdr
 operator|.
 name|csum_flags
-operator|=
+operator||=
 name|type
 expr_stmt|;
 if|if
