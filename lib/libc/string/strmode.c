@@ -483,7 +483,6 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
-comment|/* will be a '+' if ACL's implemented */
 operator|*
 name|p
 operator|=
