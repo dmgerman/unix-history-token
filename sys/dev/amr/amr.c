@@ -1055,48 +1055,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-name|AMR_ENABLE_CAM
-operator|!=
-literal|0
-end_if
-
-begin_comment
-comment|/*      * Attach our 'real' SCSI channels to CAM.      */
-end_comment
-
-begin_if
-if|if
-condition|(
-name|amr_cam_attach
-argument_list|(
-name|sc
-argument_list|)
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-end_if
-
-begin_expr_stmt
-name|debug
-argument_list|(
-literal|2
-argument_list|,
-literal|"CAM attach done"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*      * Create the control device.      */
 end_comment
@@ -1561,6 +1519,37 @@ name|AMR_STATE_INTEN
 expr_stmt|;
 comment|/*      * Start the timeout routine.      */
 comment|/*    sc->amr_timeout = timeout(amr_periodic, sc, hz);*/
+if|#
+directive|if
+name|AMR_ENABLE_CAM
+operator|!=
+literal|0
+comment|/*      * Attach our 'real' SCSI channels to CAM.      */
+if|if
+condition|(
+name|amr_cam_attach
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|amr_dev
+argument_list|,
+literal|"CAM passthrough attachment failed\n"
+argument_list|)
+expr_stmt|;
+name|debug
+argument_list|(
+literal|2
+argument_list|,
+literal|"CAM attach done"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 end_function
