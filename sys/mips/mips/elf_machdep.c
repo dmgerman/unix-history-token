@@ -314,15 +314,9 @@ operator|=
 name|NULL
 block|,
 operator|.
-name|brand_note
-operator|=
-operator|&
-name|elf32_freebsd_brandnote
-block|,
-operator|.
 name|flags
 operator|=
-name|BI_BRAND_NOTE
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
