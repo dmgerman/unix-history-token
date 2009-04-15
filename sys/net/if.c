@@ -1996,13 +1996,15 @@ operator|&
 name|vnet_net_modinfo
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+else|#
+directive|else
 name|vnet_net_iattach
 argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|IFNET_LOCK_INIT
 argument_list|()
 expr_stmt|;
