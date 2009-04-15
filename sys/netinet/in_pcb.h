@@ -370,6 +370,10 @@ name|int
 name|inp_flags
 decl_stmt|;
 comment|/* (i) generic IP/datagram flags */
+name|int
+name|inp_flags2
+decl_stmt|;
+comment|/* (i) generic IP/datagram flags #2*/
 name|u_char
 name|inp_vflag
 decl_stmt|;
@@ -1335,7 +1339,7 @@ value|(ntohs((lport))& (mask))
 end_define
 
 begin_comment
-comment|/*  * Flags for inp_vflags -- historically version flags only, but now quite a  * bit more due to an overflow of inp_flag, leading to some locking ambiguity  * as some bits are stable from initial allocation, and others may change.  */
+comment|/*  * Flags for inp_vflags -- historically version flags only  */
 end_comment
 
 begin_define
@@ -1364,7 +1368,7 @@ comment|/* opened under IPv6 protocol */
 end_comment
 
 begin_comment
-comment|/*  * Flags for inp_flag.  */
+comment|/*  * Flags for inp_flags.  */
 end_comment
 
 begin_define
@@ -1718,6 +1722,10 @@ directive|define
 name|INP_CONTROLOPTS
 value|(INP_RECVOPTS|INP_RECVRETOPTS|INP_RECVDSTADDR|\ 				 INP_RECVIF|INP_RECVTTL|\ 				 IN6P_PKTINFO|IN6P_HOPLIMIT|IN6P_HOPOPTS|\ 				 IN6P_DSTOPTS|IN6P_RTHDR|IN6P_RTHDRDSTOPTS|\ 				 IN6P_TCLASS|IN6P_AUTOFLOWLABEL|IN6P_RFC2292|\ 				 IN6P_MTU)
 end_define
+
+begin_comment
+comment|/*  * Flags for inp_flags2.  */
+end_comment
 
 begin_define
 define|#
