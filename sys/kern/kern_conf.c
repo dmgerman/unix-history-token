@@ -2357,9 +2357,10 @@ argument_list|)
 block|{
 if|if
 condition|(
+name|dev2unit
+argument_list|(
 name|si2
-operator|->
-name|si_drv0
+argument_list|)
 operator|==
 name|udev
 condition|)
@@ -4968,11 +4969,17 @@ operator|&
 name|SI_NAMED
 argument_list|,
 operator|(
-literal|"Driver has goofed in cloning underways udev %x"
+literal|"Driver has goofed in cloning underways udev %x unit %x"
 operator|,
+name|dev2udev
+argument_list|(
 name|dev
-operator|->
-name|si_drv0
+argument_list|)
+operator|,
+name|dev2unit
+argument_list|(
+name|dev
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
