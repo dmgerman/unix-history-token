@@ -1858,6 +1858,25 @@ name|v_cache_dd
 operator|->
 name|nc_dvp
 expr_stmt|;
+comment|/* Return failure if negative entry was found. */
+if|if
+condition|(
+operator|*
+name|vpp
+operator|==
+name|NULL
+condition|)
+block|{
+name|ncp
+operator|=
+name|dvp
+operator|->
+name|v_cache_dd
+expr_stmt|;
+goto|goto
+name|negative_success
+goto|;
+block|}
 name|CTR3
 argument_list|(
 name|KTR_VFS
@@ -2081,6 +2100,8 @@ goto|goto
 name|success
 goto|;
 block|}
+name|negative_success
+label|:
 comment|/* We found a negative match, and want to create it, so purge */
 if|if
 condition|(
