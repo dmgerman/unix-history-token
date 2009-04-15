@@ -179,7 +179,8 @@ name|bas
 operator|.
 name|bst
 operator|=
-literal|0
+operator|&
+name|mips_bus_space_generic
 expr_stmt|;
 name|di
 operator|->
@@ -227,10 +228,8 @@ literal|0
 expr_stmt|;
 name|uart_bus_space_mem
 operator|=
-name|MIPS_PHYS_TO_KSEG1
-argument_list|(
-name|ADM5120_BASE_UART0
-argument_list|)
+operator|&
+name|mips_bus_space_generic
 expr_stmt|;
 name|di
 operator|->

@@ -247,12 +247,6 @@ decl_stmt|;
 name|bus_space_tag_t
 name|sc_st
 decl_stmt|;
-name|bus_space_tag_t
-name|sc_pciio
-decl_stmt|;
-name|bus_space_tag_t
-name|sc_pcimem
-decl_stmt|;
 name|bus_space_handle_t
 name|sc_ioh_icu1
 decl_stmt|;
@@ -363,7 +357,7 @@ name|bus_space_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 argument_list|,
 name|sc
 operator|->
@@ -382,7 +376,7 @@ name|bus_space_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 argument_list|,
 name|sc
 operator|->
@@ -405,7 +399,7 @@ name|bus_space_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 argument_list|,
 name|sc
 operator|->
@@ -424,7 +418,7 @@ name|bus_space_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 argument_list|,
 name|sc
 operator|->
@@ -481,7 +475,7 @@ name|bus_space_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 argument_list|,
 name|sc
 operator|->
@@ -500,7 +494,7 @@ name|bus_space_read_1
 argument_list|(
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 argument_list|,
 name|sc
 operator|->
@@ -542,7 +536,7 @@ name|bus_space_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 argument_list|,
 name|sc
 operator|->
@@ -561,7 +555,7 @@ name|bus_space_read_1
 argument_list|(
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 argument_list|,
 name|sc
 operator|->
@@ -635,7 +629,7 @@ name|bus_space_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 argument_list|,
 name|sc
 operator|->
@@ -666,7 +660,7 @@ name|bus_space_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 argument_list|,
 name|sc
 operator|->
@@ -760,15 +754,10 @@ name|busno
 expr_stmt|;
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 operator|=
-name|MIPS_BUS_SPACE_IO
-expr_stmt|;
-name|sc
-operator|->
-name|sc_pcimem
-operator|=
-name|MIPS_BUS_SPACE_MEM
+operator|&
+name|mips_bus_space_generic
 expr_stmt|;
 comment|/* Use KSEG1 to access IO ports for it is uncached */
 name|sc
@@ -945,7 +934,7 @@ comment|/* 	 * Map the PIC/ELCR registers. 	 */
 if|#
 directive|if
 literal|0
-block|if (bus_space_map(sc->sc_pciio, 0x4d0, 2, 0,&sc->sc_ioh_elcr) != 0) 		device_printf(dev, "unable to map ELCR registers\n"); 	if (bus_space_map(sc->sc_pciio, IO_ICU1, 2, 0,&sc->sc_ioh_icu1) != 0) 		device_printf(dev, "unable to map ICU1 registers\n"); 	if (bus_space_map(sc->sc_pciio, IO_ICU2, 2, 0,&sc->sc_ioh_icu2) != 0) 		device_printf(dev, "unable to map ICU2 registers\n");
+block|if (bus_space_map(sc->sc_st, 0x4d0, 2, 0,&sc->sc_ioh_elcr) != 0) 		device_printf(dev, "unable to map ELCR registers\n"); 	if (bus_space_map(sc->sc_st, IO_ICU1, 2, 0,&sc->sc_ioh_icu1) != 0) 		device_printf(dev, "unable to map ICU1 registers\n"); 	if (bus_space_map(sc->sc_st, IO_ICU2, 2, 0,&sc->sc_ioh_icu2) != 0) 		device_printf(dev, "unable to map ICU2 registers\n");
 else|#
 directive|else
 name|sc
@@ -1000,7 +989,7 @@ name|bus_space_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 argument_list|,
 name|sc
 operator|->
@@ -1018,7 +1007,7 @@ name|bus_space_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 argument_list|,
 name|sc
 operator|->
@@ -1034,7 +1023,7 @@ name|bus_space_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 argument_list|,
 name|sc
 operator|->
@@ -1051,7 +1040,7 @@ name|bus_space_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 argument_list|,
 name|sc
 operator|->
@@ -1067,7 +1056,7 @@ name|bus_space_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 argument_list|,
 name|sc
 operator|->
@@ -1087,7 +1076,7 @@ name|bus_space_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 argument_list|,
 name|sc
 operator|->
@@ -1107,7 +1096,7 @@ name|bus_space_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 argument_list|,
 name|sc
 operator|->
@@ -1125,7 +1114,7 @@ name|bus_space_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 argument_list|,
 name|sc
 operator|->
@@ -1142,7 +1131,7 @@ name|bus_space_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 argument_list|,
 name|sc
 operator|->
@@ -1158,7 +1147,7 @@ name|bus_space_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 argument_list|,
 name|sc
 operator|->
@@ -1175,7 +1164,7 @@ name|bus_space_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 argument_list|,
 name|sc
 operator|->
@@ -1191,7 +1180,7 @@ name|bus_space_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 argument_list|,
 name|sc
 operator|->
@@ -1211,7 +1200,7 @@ name|bus_space_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 argument_list|,
 name|sc
 operator|->
@@ -1231,7 +1220,7 @@ name|bus_space_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 argument_list|,
 name|sc
 operator|->
@@ -1249,7 +1238,7 @@ name|bus_space_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 argument_list|,
 name|sc
 operator|->
@@ -1268,7 +1257,7 @@ name|bus_space_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 argument_list|,
 name|sc
 operator|->
@@ -2351,7 +2340,7 @@ name|bt
 operator|=
 name|sc
 operator|->
-name|sc_pcimem
+name|sc_st
 expr_stmt|;
 name|bh
 operator|=
@@ -2374,7 +2363,7 @@ name|bt
 operator|=
 name|sc
 operator|->
-name|sc_pciio
+name|sc_st
 expr_stmt|;
 name|bh
 operator|=

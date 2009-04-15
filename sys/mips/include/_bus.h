@@ -56,7 +56,9 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|long
+name|struct
+name|bus_space
+modifier|*
 name|bus_space_tag_t
 typedef|;
 end_typedef

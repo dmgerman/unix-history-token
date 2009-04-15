@@ -1215,7 +1215,8 @@ name|rman_set_bustag
 argument_list|(
 name|r
 argument_list|,
-name|MIPS_BUS_SPACE_MEM
+operator|&
+name|mips_bus_space_generic
 argument_list|)
 expr_stmt|;
 name|rman_set_bushandle
