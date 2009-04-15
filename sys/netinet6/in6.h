@@ -1186,6 +1186,11 @@ modifier|*
 name|ro_rt
 decl_stmt|;
 name|struct
+name|llentry
+modifier|*
+name|ro_lle
+decl_stmt|;
+name|struct
 name|sockaddr_in6
 name|ro_dst
 decl_stmt|;
