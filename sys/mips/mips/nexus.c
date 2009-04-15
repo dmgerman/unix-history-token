@@ -111,6 +111,12 @@ directive|include
 file|<machine/vmparam.h>
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|NEXUS_DEBUG
+end_undef
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -214,43 +220,6 @@ name|rman
 name|mem_rman
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
-
-begin_comment
-comment|/*  * XXX: TODO: Implement bus space barrier functions.  * Currently tag and handle are set when memory resources  * are activated.  */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|bus_space_tag
-name|nexus_bustag
-init|=
-block|{
-name|NULL
-block|,
-comment|/* cookie */
-name|NULL
-block|,
-comment|/* parent bus tag */
-name|NEXUS_BUS_SPACE
-block|,
-comment|/* type */
-name|nexus_bus_barrier
-block|,
-comment|/* bus_space_barrier */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
