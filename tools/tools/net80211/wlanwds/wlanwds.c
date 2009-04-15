@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2006-2007 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    similar to the "NO WARRANTY" disclaimer below ("Disclaimer") and any  *    redistribution must be conditioned upon including a substantially  *    similar Disclaimer requirement for further binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT, MERCHANTIBILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL  * THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGES.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2006-2009 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    similar to the "NO WARRANTY" disclaimer below ("Disclaimer") and any  *    redistribution must be conditioned upon including a substantially  *    similar Disclaimer requirement for further binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT, MERCHANTIBILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL  * THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGES.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/*  * Test app to demonstrate how to handle dynamic WDS links:  * o monitor 802.11 events for wds discovery events  * o create wds vap's in response to wds discovery events  *   and launch a script to handle adding the vap to the  *   bridge, etc.  * o destroy wds vap's when station leaves  *  * Note we query only internal state which means if we don't see  * a vap created we won't handle leave/delete properly.  Also there  * are several fixed pathnames/strings.  Some require fixing  * kernel support (e.g. sysctl to find parent device of a vap).  *  * Code liberaly swiped from wlanwatch; probably should nuke printfs.  */
+comment|/*  * Test app to demonstrate how to handle dynamic WDS links:  * o monitor 802.11 events for wds discovery events  * o create wds vap's in response to wds discovery events  *   and launch a script to handle adding the vap to the  *   bridge, etc.  * o destroy wds vap's when station leaves  *  * Note we query only internal state which means if we don't see  * a vap created we won't handle leave/delete properly.  Also there  * are several fixed pathnames/strings.  *  * Code liberaly swiped from wlanwatch; probably should nuke printfs.  */
 end_comment
 
 begin_include
@@ -234,32 +234,6 @@ specifier|static
 specifier|const
 name|char
 modifier|*
-name|bridge
-init|=
-literal|"bridge0"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|parent
-init|=
-literal|"mv0"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX no sysctl to find this */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
 name|script
 init|=
 literal|"/usr/local/bin/wdsup"
@@ -270,6 +244,15 @@ begin_decl_stmt
 specifier|static
 name|int
 name|verbose
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|discover_on_join
 init|=
 literal|0
 decl_stmt|;
@@ -406,7 +389,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:p:s:vn"
+literal|"js:vn"
 argument_list|)
 operator|)
 operator|!=
@@ -419,19 +402,11 @@ name|c
 condition|)
 block|{
 case|case
-literal|'b'
+literal|'j'
 case|:
-name|bridge
+name|discover_on_join
 operator|=
-name|optarg
-expr_stmt|;
-break|break;
-case|case
-literal|'p'
-case|:
-name|parent
-operator|=
-name|optarg
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -457,8 +432,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"usage: %s [-b<bridgename>] [-p<parentname>] [-s<set_scriptname>]\n"
+literal|"usage: %s [-s<set_scriptname>]\n"
 literal|" [-v (for verbose)]\n"
+literal|" [-j (act on join/rejoin events)]\n"
 argument_list|,
 name|argv
 index|[
@@ -815,6 +791,19 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|RTM_IEEE80211_JOIN
+case|:
+case|case
+name|RTM_IEEE80211_REJOIN
+case|:
+if|if
+condition|(
+operator|!
+name|discover_on_join
+condition|)
+break|break;
+comment|/* fall thru... */
+case|case
 name|RTM_IEEE80211_WDS
 case|:
 if|if
@@ -838,10 +827,11 @@ name|iev_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX wlan0 */
 name|wds_discovery
 argument_list|(
-literal|"wlan0"
+name|ifan
+operator|->
+name|ifan_name
 argument_list|,
 name|V
 argument_list|(
@@ -869,12 +859,6 @@ name|RTM_IEEE80211_REASSOC
 case|:
 case|case
 name|RTM_IEEE80211_DISASSOC
-case|:
-case|case
-name|RTM_IEEE80211_JOIN
-case|:
-case|case
-name|RTM_IEEE80211_REJOIN
 case|:
 case|case
 name|RTM_IEEE80211_SCAN
@@ -939,6 +923,20 @@ name|wds
 modifier|*
 name|p
 decl_stmt|;
+name|char
+name|oid
+index|[
+literal|256
+index|]
+decl_stmt|,
+name|parent
+index|[
+literal|256
+index|]
+decl_stmt|;
+name|int
+name|parentlen
+decl_stmt|;
 for|for
 control|(
 name|p
@@ -978,6 +976,65 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* fetch parent interface name */
+name|snprintf
+argument_list|(
+name|oid
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|oid
+argument_list|)
+argument_list|,
+literal|"net.wlan.%s.%%parent"
+argument_list|,
+name|ifname
+operator|+
+literal|4
+argument_list|)
+expr_stmt|;
+name|parentlen
+operator|=
+sizeof|sizeof
+argument_list|(
+name|parent
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sysctlbyname
+argument_list|(
+name|oid
+argument_list|,
+name|parent
+argument_list|,
+operator|&
+name|parentlen
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"%s: no pointer to parent interface"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|parent
+index|[
+name|parentlen
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|p
 operator|=
 name|malloc
@@ -1014,7 +1071,6 @@ argument_list|,
 name|bssid
 argument_list|)
 expr_stmt|;
-comment|/* XXX mv0: no sysctl to find parent device */
 if|if
 condition|(
 name|wds_vap_create
@@ -1070,15 +1126,13 @@ argument_list|(
 name|cmd
 argument_list|)
 argument_list|,
-literal|"%s %s %s"
+literal|"%s %s"
 argument_list|,
 name|script
 argument_list|,
 name|p
 operator|->
 name|ifname
-argument_list|,
-name|bridge
 argument_list|)
 expr_stmt|;
 name|status
