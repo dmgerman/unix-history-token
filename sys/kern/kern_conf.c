@@ -2308,7 +2308,7 @@ modifier|*
 name|csw
 parameter_list|,
 name|int
-name|y
+name|unit
 parameter_list|,
 name|struct
 name|cdev
@@ -2321,9 +2321,6 @@ name|cdev
 modifier|*
 name|si2
 decl_stmt|;
-name|dev_t
-name|udev
-decl_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -2331,10 +2328,6 @@ name|devmtx
 argument_list|,
 name|MA_OWNED
 argument_list|)
-expr_stmt|;
-name|udev
-operator|=
-name|y
 expr_stmt|;
 if|if
 condition|(
@@ -2362,7 +2355,7 @@ argument_list|(
 name|si2
 argument_list|)
 operator|==
-name|udev
+name|unit
 condition|)
 block|{
 name|dev_free_devlocked
@@ -2382,7 +2375,7 @@ name|si
 operator|->
 name|si_drv0
 operator|=
-name|udev
+name|unit
 expr_stmt|;
 name|si
 operator|->
