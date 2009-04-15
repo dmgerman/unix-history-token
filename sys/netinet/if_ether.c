@@ -244,17 +244,6 @@ parameter_list|)
 value|((struct sockaddr_dl *)s)
 end_define
 
-begin_define
-define|#
-directive|define
-name|LLTABLE
-parameter_list|(
-name|ifp
-parameter_list|)
-define|\
-value|((struct in_ifinfo *)(ifp)->if_afdata[AF_INET])->ii_llt
-end_define
-
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
