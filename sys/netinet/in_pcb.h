@@ -398,14 +398,18 @@ name|u_int
 name|inp_refcount
 decl_stmt|;
 comment|/* (i) refcount */
-name|void
+name|struct
+name|llentry
 modifier|*
-name|inp_pspare
-index|[
-literal|2
-index|]
+name|inp_lle
 decl_stmt|;
-comment|/* (x) rtentry / general use */
+comment|/* cached L2 information */
+name|struct
+name|rtentry
+modifier|*
+name|inp_rt
+decl_stmt|;
+comment|/* cached L3 information */
 comment|/* Local and foreign ports, local and foreign addr. */
 name|struct
 name|in_conninfo
@@ -1725,6 +1729,28 @@ end_define
 
 begin_comment
 comment|/*  * Flags for inp_flags2.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_LLE_VALID
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* cached lle is valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_RT_VALID
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* cached rtentry is valid */
 end_comment
 
 begin_define
