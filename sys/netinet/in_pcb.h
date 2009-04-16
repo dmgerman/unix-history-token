@@ -399,6 +399,7 @@ name|inp_refcount
 decl_stmt|;
 comment|/* (i) refcount */
 name|void
+modifier|*
 name|inp_pspare
 index|[
 literal|2
