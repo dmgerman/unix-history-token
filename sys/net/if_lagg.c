@@ -534,7 +534,7 @@ name|sockaddr
 modifier|*
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3572,9 +3572,9 @@ modifier|*
 name|dst
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
-name|rt0
+name|ro
 parameter_list|)
 block|{
 name|struct
@@ -3656,7 +3656,7 @@ name|m
 argument_list|,
 name|dst
 argument_list|,
-name|rt0
+name|ro
 argument_list|)
 operator|)
 return|;

@@ -1174,12 +1174,7 @@ argument_list|,
 operator|&
 name|sa
 argument_list|,
-operator|(
-expr|struct
-name|rtentry
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -3827,12 +3822,7 @@ argument_list|,
 operator|&
 name|sa
 argument_list|,
-operator|(
-expr|struct
-name|rtentry
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return;

@@ -1855,7 +1855,7 @@ name|m
 parameter_list|,
 name|dst
 parameter_list|,
-name|rt
+name|ro
 parameter_list|)
 name|struct
 name|ifnet
@@ -1873,11 +1873,10 @@ modifier|*
 name|dst
 decl_stmt|;
 name|struct
-name|rtentry
+name|route
 modifier|*
-name|rt
+name|ro
 decl_stmt|;
-comment|/* added in net2 */
 block|{
 name|INIT_VNET_GIF
 argument_list|(

@@ -7289,9 +7289,9 @@ modifier|*
 name|dst
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
-name|rt
+name|ro
 parameter_list|)
 block|{
 name|struct
@@ -7372,7 +7372,7 @@ operator|*
 operator|)
 name|dst
 argument_list|,
-name|rt
+name|ro
 argument_list|)
 expr_stmt|;
 block|}

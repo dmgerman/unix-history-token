@@ -1258,9 +1258,9 @@ modifier|*
 name|dst
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
-name|rt0
+name|ro
 parameter_list|)
 block|{
 name|if_printf

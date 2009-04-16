@@ -528,11 +528,16 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
 name|ro
-operator|.
-name|ro_rt
-operator|=
-name|NULL
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ro
+argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Step 1: check for packet drop conditions (and sanity checks) 	 */
 comment|/* 	 * Is entire packet big enough? 	 */
@@ -1930,9 +1935,8 @@ operator|*
 operator|)
 name|dst
 argument_list|,
+operator|&
 name|ro
-operator|.
-name|ro_rt
 argument_list|)
 expr_stmt|;
 block|}
@@ -2062,9 +2066,8 @@ operator|*
 operator|)
 name|dst
 argument_list|,
+operator|&
 name|ro
-operator|.
-name|ro_rt
 argument_list|)
 expr_stmt|;
 if|if

@@ -1865,7 +1865,7 @@ name|sockaddr_in6
 operator|*
 operator|,
 expr|struct
-name|rtentry
+name|route
 operator|*
 operator|)
 argument_list|)

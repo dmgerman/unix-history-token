@@ -472,7 +472,7 @@ value|do { error = (e); goto bad; } while (0)
 end_define
 
 begin_comment
-comment|/*  * atm_output: ATM output routine  *   inputs:  *     "ifp" = ATM interface to output to  *     "m0" = the packet to output  *     "dst" = the sockaddr to send to (either IP addr, or raw VPI/VCI)  *     "rt0" = the route to use  *   returns: error code   [0 == ok]  *  *   note: special semantic: if (dst == NULL) then we assume "m" already  *		has an atm_pseudohdr on it and just send it directly.  *		[for native mode ATM output]   if dst is null, then  *		rt0 must also be NULL.  */
+comment|/*  * atm_output: ATM output routine  *   inputs:  *     "ifp" = ATM interface to output to  *     "m0" = the packet to output  *     "dst" = the sockaddr to send to (either IP addr, or raw VPI/VCI)  *     "ro" = the route to use  *   returns: error code   [0 == ok]  *  *   note: special semantic: if (dst == NULL) then we assume "m" already  *		has an atm_pseudohdr on it and just send it directly.  *		[for native mode ATM output]   if dst is null, then  *		ro->ro_rt must also be NULL.  */
 end_comment
 
 begin_function
@@ -495,9 +495,9 @@ modifier|*
 name|dst
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
-name|rt0
+name|ro
 parameter_list|)
 block|{
 name|u_int16_t
@@ -644,7 +644,9 @@ condition|(
 operator|!
 name|atmresolve
 argument_list|(
-name|rt0
+name|ro
+operator|->
+name|ro_rt
 argument_list|,
 name|m
 argument_list|,

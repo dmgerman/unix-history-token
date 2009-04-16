@@ -569,7 +569,7 @@ name|sockaddr
 modifier|*
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1728,7 +1728,7 @@ name|m
 parameter_list|,
 name|dst
 parameter_list|,
-name|rt
+name|ro
 parameter_list|)
 name|struct
 name|ifnet
@@ -1746,9 +1746,9 @@ modifier|*
 name|dst
 decl_stmt|;
 name|struct
-name|rtentry
+name|route
 modifier|*
-name|rt
+name|ro
 decl_stmt|;
 block|{
 name|struct

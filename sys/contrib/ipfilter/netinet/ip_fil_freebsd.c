@@ -5500,8 +5500,6 @@ operator|)
 name|dst
 argument_list|,
 name|ro
-operator|->
-name|ro_rt
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5999,8 +5997,6 @@ operator|)
 name|dst
 argument_list|,
 name|ro
-operator|->
-name|ro_rt
 argument_list|)
 expr_stmt|;
 else|else

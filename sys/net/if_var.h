@@ -77,6 +77,12 @@ name|ifvlantrunk
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|route
+struct_decl|;
+end_struct_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -415,7 +421,7 @@ name|sockaddr
 modifier|*
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
 parameter_list|)
 function_decl|;
