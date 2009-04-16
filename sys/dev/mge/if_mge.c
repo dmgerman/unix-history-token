@@ -1512,6 +1512,10 @@ operator|||
 name|d
 operator|==
 name|MV_DEV_MV78100
+operator|||
+name|d
+operator|==
+name|MV_DEV_MV78100_Z0
 condition|)
 block|{
 name|sc

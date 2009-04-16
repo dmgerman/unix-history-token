@@ -356,6 +356,10 @@ operator|||
 name|dev_id
 operator|==
 name|MV_DEV_MV78100
+operator|||
+name|dev_id
+operator|==
+name|MV_DEV_MV78100_Z0
 condition|)
 name|sc
 operator|->
@@ -368,6 +372,10 @@ condition|(
 name|dev_id
 operator|==
 name|MV_DEV_MV78100
+operator|||
+name|dev_id
+operator|==
+name|MV_DEV_MV78100_Z0
 condition|)
 name|sc
 operator|->
