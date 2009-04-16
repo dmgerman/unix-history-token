@@ -2867,6 +2867,17 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+name|void
+name|if_qflush
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|if_setlladdr
 parameter_list|(
