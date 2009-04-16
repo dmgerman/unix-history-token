@@ -9617,6 +9617,12 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* XXX force handling */
+if|if
+condition|(
+name|sc
+operator|->
+name|ndis_80211
+condition|)
 name|ieee80211_start_all
 argument_list|(
 name|ic
