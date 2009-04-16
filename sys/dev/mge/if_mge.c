@@ -3649,6 +3649,12 @@ name|tx_desc_used_idx
 operator|=
 literal|0
 expr_stmt|;
+name|sc
+operator|->
+name|tx_desc_used_count
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Configure defaults for interrupts coalescing */
 name|sc
 operator|->
@@ -4782,6 +4788,12 @@ name|tx_desc_used_idx
 operator|=
 literal|0
 expr_stmt|;
+name|sc
+operator|->
+name|tx_desc_used_count
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Enable RX descriptors */
 for|for
 control|(
@@ -5345,19 +5357,6 @@ operator|!=
 literal|0
 condition|)
 break|break;
-name|sc
-operator|->
-name|rx_desc_curr
-operator|=
-operator|(
-operator|++
-name|sc
-operator|->
-name|rx_desc_curr
-operator|%
-name|MGE_RX_DESC_NUM
-operator|)
-expr_stmt|;
 if|if
 condition|(
 name|dw
@@ -5412,6 +5411,14 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mb
+operator|==
+name|NULL
+condition|)
+comment|/* Give up if no mbufs */
+break|break;
 name|mb
 operator|->
 name|m_len
@@ -5483,6 +5490,19 @@ operator|=
 name|MGE_RX_ENABLE_INT
 operator||
 name|MGE_DMA_OWNED
+expr_stmt|;
+name|sc
+operator|->
+name|rx_desc_curr
+operator|=
+operator|(
+operator|++
+name|sc
+operator|->
+name|rx_desc_curr
+operator|%
+name|MGE_RX_DESC_NUM
+operator|)
 expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
@@ -7410,10 +7430,14 @@ condition|(
 name|sc
 operator|->
 name|tx_desc_used_idx
-operator|<
+operator|!=
 name|sc
 operator|->
 name|tx_desc_curr
+operator|&&
+name|sc
+operator|->
+name|tx_desc_used_count
 condition|)
 block|{
 comment|/* Get the descriptor */
@@ -7474,6 +7498,11 @@ name|tx_desc_used_idx
 operator|)
 operator|%
 name|MGE_TX_DESC_NUM
+expr_stmt|;
+name|sc
+operator|->
+name|tx_desc_used_count
+operator|--
 expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
