@@ -5711,6 +5711,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|if_qflush
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|EM_TX_UNLOCK
 argument_list|(
 name|adapter
