@@ -344,6 +344,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Update an llentry for address dst (equivalent to rtalloc for new-arp)  * Caller must pass in a valid struct llentry *  */
+end_comment
+
 begin_function
 name|int
 name|llentry_update
