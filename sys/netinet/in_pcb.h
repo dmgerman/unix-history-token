@@ -398,18 +398,13 @@ name|u_int
 name|inp_refcount
 decl_stmt|;
 comment|/* (i) refcount */
-name|struct
-name|llentry
-modifier|*
-name|inp_lle
+name|void
+name|inp_pspare
+index|[
+literal|2
+index|]
 decl_stmt|;
-comment|/* cached L2 information */
-name|struct
-name|rtentry
-modifier|*
-name|inp_rt
-decl_stmt|;
-comment|/* cached L3 information */
+comment|/* (x) rtentry / general use */
 comment|/* Local and foreign ports, local and foreign addr. */
 name|struct
 name|in_conninfo
@@ -508,6 +503,18 @@ name|inp_gen_t
 name|inp_gencnt
 decl_stmt|;
 comment|/* (c) generation count */
+name|struct
+name|llentry
+modifier|*
+name|inp_lle
+decl_stmt|;
+comment|/* cached L2 information */
+name|struct
+name|rtentry
+modifier|*
+name|inp_rt
+decl_stmt|;
+comment|/* cached L3 information */
 name|struct
 name|rwlock
 name|inp_lock
