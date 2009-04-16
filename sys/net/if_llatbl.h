@@ -693,6 +693,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|llentry_update
+parameter_list|(
+name|struct
+name|llentry
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
+name|lltable
+modifier|*
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Generic link layer address lookup function.  */
 end_comment
