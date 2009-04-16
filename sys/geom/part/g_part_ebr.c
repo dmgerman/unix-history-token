@@ -1933,6 +1933,9 @@ name|sb
 argument_list|,
 literal|"%.*s%u"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|pfx
