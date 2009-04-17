@@ -22,7 +22,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Driver for ATI Mach64 graphics chips. Some code is derived from the  * ATI Rage Pro and Derivatives Programmer's Guide.  */
+comment|/*  * Driver for ATI Mach64 graphics chips.  Some code is derived from the  * ATI Rage Pro and Derivatives Programmer's Guide.  */
 end_comment
 
 begin_include
@@ -3400,7 +3400,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|mach64_adjust_frame(0, 0);
+block|machfb_adjust_frame(0, 0);
 endif|#
 directive|endif
 name|machfb_set_mode
@@ -3410,7 +3410,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Install our 16-color color map. This is done only once and with 	 * an offset of 16 on sparc64 as there the OBP driver expects white 	 * to be at index 0 and black at 255 (some versions also use 1 - 8 	 * for color text support or the full palette for the boot banner 	 * logo but no versions seems to use the ISO 6429-1983 color map). 	 * Otherwise the colors are inverted when back in the OFW. 	 */
+comment|/* 	 * Install our 16-color color map.  This is done only once and with 	 * an offset of 16 on sparc64 as there the OBP driver expects white 	 * to be at index 0 and black at 255 (some versions also use 1 - 8 	 * for color text support or the full palette for the boot banner 	 * logo but no versions seems to use the ISO 6429-1983 color map). 	 * Otherwise the colors are inverted when back in the OFW. 	 */
 name|dac_rindex
 operator|=
 name|regrb
@@ -5820,7 +5820,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 		 * Accelerate continuous blanks by drawing a respective 		 * rectangle instead. Drawing a rectangle of any size 		 * takes about the same number of operations as drawing 		 * a single character. 		 */
+comment|/* 		 * Accelerate continuous blanks by drawing a respective 		 * rectangle instead.  Drawing a rectangle of any size 		 * takes about the same number of operations as drawing 		 * a single character. 		 */
 name|c
 operator|=
 name|s
@@ -6633,7 +6633,7 @@ operator|->
 name|sc_memres
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Depending on the firmware version the VGA I/O and/or memory 	 * resources of the Mach64 chips come up disabled. We generally 	 * enable them above (pci(4) actually already did this unless 	 * pci_enable_io_modes is not set) but this doesn't necessarily 	 * mean that we get valid ones. Invalid resources seem to have 	 * in common that they start at address 0. We don't allocate 	 * them in this case in order to avoid warnings in apb(4) and 	 * crashes when using these invalid resources. Xorg is aware 	 * of this and doesn't use the VGA resources in this case (but 	 * demands them if they are valid). 	 */
+comment|/* 	 * Depending on the firmware version the VGA I/O and/or memory 	 * resources of the Mach64 chips come up disabled.  We generally 	 * enable them above (pci(4) actually already did this unless 	 * pci_enable_io_modes is not set) but this doesn't necessarily 	 * mean that we get valid ones.  Invalid resources seem to have 	 * in common that they start at address 0.  We don't allocate 	 * them in this case in order to avoid warnings in apb(4) and 	 * crashes when using these invalid resources.  Xorg is aware 	 * of this and doesn't use the VGA resources in this case (but 	 * demands them if they are valid). 	 */
 name|sc
 operator|->
 name|sc_viorid
@@ -6935,7 +6935,7 @@ goto|goto
 name|fail_vmemres
 goto|;
 block|}
-comment|/* 		 * During device configuration we don't necessarily probe 		 * the adapter which is the console first so we can't use 		 * the device unit number for the video adapter unit. The 		 * worst case would be that we use the video adapter unit 		 * 0 twice. As it doesn't really matter which unit number 		 * the corresponding video adapter has just use the next 		 * unused one. 		 */
+comment|/* 		 * During device configuration we don't necessarily probe 		 * the adapter which is the console first so we can't use 		 * the device unit number for the video adapter unit.  The 		 * worst case would be that we use the video adapter unit 		 * 0 twice.  As it doesn't really matter which unit number 		 * the corresponding video adapter has just use the next 		 * unused one. 		 */
 for|for
 control|(
 name|i
@@ -7184,7 +7184,7 @@ name|adp
 operator|->
 name|va_window_size
 expr_stmt|;
-comment|/* 	 * Allocate one page for the mouse pointer image at the end of 	 * the little endian aperture, right before the memory mapped 	 * registers that might also reside there. Must be done after 	 * sc_memsize was set and possibly adjusted to account for the 	 * memory mapped registers. 	 */
+comment|/* 	 * Allocate one page for the mouse pointer image at the end of 	 * the little endian aperture, right before the memory mapped 	 * registers that might also reside there.  Must be done after 	 * sc_memsize was set and possibly adjusted to account for the 	 * memory mapped registers. 	 */
 name|sc
 operator|->
 name|sc_curoff
@@ -7236,7 +7236,7 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Register a handler that performs some cosmetic surgery like 	 * turning off the mouse pointer on halt in preparation for 	 * handing the screen over to the OFW. Register another handler 	 * that turns off the CRTC when resetting, otherwise the OFW 	 * boot command issued by cpu_reset() just doesn't work. 	 */
+comment|/* 	 * Register a handler that performs some cosmetic surgery like 	 * turning off the mouse pointer on halt in preparation for 	 * handing the screen over to the OFW.  Register another handler 	 * that turns off the CRTC when resetting, otherwise the OFW 	 * boot command issued by cpu_reset() just doesn't work. 	 */
 name|EVENTHANDLER_REGISTER
 argument_list|(
 name|shutdown_final
@@ -8269,7 +8269,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void machfb_adjust_frame(struct machfb_softc *sc, int x, int y) { 	int offset;  	offset = ((x + y * sc->sc_width) * (sc->sc_depth>> 3))>> 3;  	regw(sc, CRTC_OFF_PITCH, (regr(sc, CRTC_OFF_PITCH)& 0xfff00000) | 	     offset); }
+unit|static void machfb_adjust_frame(struct machfb_softc *sc, int x, int y) { 	int offset;  	offset = ((x + y * sc->sc_width) * (sc->sc_depth>> 3))>> 3;  	regw(sc, CRTC_OFF_PITCH, (regr(sc, CRTC_OFF_PITCH)& 0xfff00000) | 	    offset); }
 endif|#
 directive|endif
 end_endif
