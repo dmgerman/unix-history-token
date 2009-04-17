@@ -5645,6 +5645,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|mtree
 operator|->
 name|dironly
@@ -5659,6 +5660,12 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_OK
+operator|)
+return|;
+block|}
 break|break;
 case|case
 literal|'f'
@@ -5728,6 +5735,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|mtree
 operator|->
 name|indent
@@ -5742,6 +5750,12 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_OK
+operator|)
+return|;
+block|}
 break|break;
 case|case
 literal|'l'
@@ -6087,6 +6101,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|mtree
 operator|->
 name|set
@@ -6103,6 +6118,12 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_OK
+operator|)
+return|;
+block|}
 break|break;
 block|}
 if|if
