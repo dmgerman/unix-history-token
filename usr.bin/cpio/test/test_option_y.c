@@ -104,11 +104,47 @@ literal|0
 argument_list|)
 condition|)
 block|{
-name|assertFileContents
+name|p
+operator|=
+name|slurpfile
+argument_list|(
+operator|&
+name|s
+argument_list|,
+literal|"archive.err"
+argument_list|)
+expr_stmt|;
+name|p
+index|[
+name|s
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|p
+argument_list|,
+literal|"bzip2 compression not supported"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|skipping
+argument_list|(
+literal|"This version of bsdcpio was compiled "
+literal|"without bzip2 support"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|assertTextFileContents
 argument_list|(
 literal|"1 block\n"
-argument_list|,
-literal|8
 argument_list|,
 literal|"archive.err"
 argument_list|)
@@ -140,6 +176,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_block

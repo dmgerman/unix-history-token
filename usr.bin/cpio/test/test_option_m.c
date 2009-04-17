@@ -93,11 +93,9 @@ argument_list|(
 literal|"out"
 argument_list|)
 expr_stmt|;
-name|assertFileContents
+name|assertTextFileContents
 argument_list|(
 literal|"1 block\n"
-argument_list|,
-literal|8
 argument_list|,
 literal|"err"
 argument_list|)
@@ -202,11 +200,9 @@ argument_list|(
 literal|"out"
 argument_list|)
 expr_stmt|;
-name|assertFileContents
+name|assertTextFileContents
 argument_list|(
 literal|"1 block\n"
-argument_list|,
-literal|8
 argument_list|,
 literal|"err"
 argument_list|)

@@ -188,11 +188,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Verify stderr and stdout. */
-name|assertFileContents
+name|assertTextFileContents
 argument_list|(
 literal|"../.\n../file\n1 block\n"
-argument_list|,
-literal|21
 argument_list|,
 literal|"stderr"
 argument_list|)
@@ -244,6 +242,31 @@ name|st_mode
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+name|assertEqualInt
+argument_list|(
+literal|0600
+argument_list|,
+name|st
+operator|.
+name|st_mode
+operator|&
+literal|0700
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|assertEqualInt
 argument_list|(
 literal|0642
@@ -255,6 +278,8 @@ operator|&
 literal|0777
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|assertEqualInt
 argument_list|(
 literal|10

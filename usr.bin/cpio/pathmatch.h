@@ -15,6 +15,10 @@ directive|define
 name|PATHMATCH_H
 end_define
 
+begin_comment
+comment|/* Don't anchor at beginning unless the pattern starts with "^" */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -22,12 +26,20 @@ name|PATHMATCH_NO_ANCHOR_START
 value|1
 end_define
 
+begin_comment
+comment|/* Don't anchor at end unless the pattern ends with "$" */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|PATHMATCH_NO_ANCHOR_END
 value|2
 end_define
+
+begin_comment
+comment|/* Note that "^" and "$" are not special unless you set the corresponding  * flag above. */
+end_comment
 
 begin_function_decl
 name|int

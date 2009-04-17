@@ -38,6 +38,23 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|HAVE_SYS_MKDEV_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/mkdev.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_SYS_STAT_H
 end_ifdef
 
@@ -45,6 +62,23 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_TIME_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_endif
@@ -187,6 +221,40 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_TIME_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_TIME_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_endif
@@ -481,7 +549,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|restore_time
 parameter_list|(
 name|struct
@@ -593,6 +661,28 @@ argument_list|(
 name|buff
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+comment|/* Make sure open() function will be used with a binary mode. */
+comment|/* on cygwin, we need something similar, but instead link against */
+comment|/* a special startup object, binmode.o */
+name|_set_fmode
+argument_list|(
+name|_O_BINARY
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Need cpio_progname before calling cpio_warnc. */
 if|if
 condition|(
@@ -607,6 +697,30 @@ literal|"bsdcpio"
 expr_stmt|;
 else|else
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+name|cpio_progname
+operator|=
+name|strrchr
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|'\\'
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|cpio_progname
 operator|=
 name|strrchr
@@ -617,6 +731,8 @@ argument_list|,
 literal|'/'
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|cpio_progname
@@ -683,14 +799,6 @@ name|compress
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* TODO: Implement old binary format in libarchive, use that here. */
-name|cpio
-operator|->
-name|format
-operator|=
-literal|"odc"
-expr_stmt|;
-comment|/* Default format */
 name|cpio
 operator|->
 name|extract_flags
@@ -733,6 +841,24 @@ name|extract_flags
 operator||=
 name|ARCHIVE_EXTRACT_ACL
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+if|if
+condition|(
+name|bsdcpio_is_privileged
+argument_list|()
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|geteuid
@@ -740,6 +866,8 @@ argument_list|()
 operator|==
 literal|0
 condition|)
+endif|#
+directive|endif
 name|cpio
 operator|->
 name|extract_flags
@@ -960,6 +1088,27 @@ case|case
 literal|'i'
 case|:
 comment|/* POSIX 1997 */
+if|if
+condition|(
+name|cpio
+operator|->
+name|mode
+operator|!=
+literal|'\0'
+condition|)
+name|cpio_errc
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Cannot use both -i and -%c"
+argument_list|,
+name|cpio
+operator|->
+name|mode
+argument_list|)
+expr_stmt|;
 name|cpio
 operator|->
 name|mode
@@ -1019,6 +1168,17 @@ name|ARCHIVE_EXTRACT_TIME
 expr_stmt|;
 break|break;
 case|case
+literal|'n'
+case|:
+comment|/* GNU cpio */
+name|cpio
+operator|->
+name|option_numeric_uid_gid
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 name|OPTION_NO_PRESERVE_OWNER
 case|:
 comment|/* GNU cpio */
@@ -1047,6 +1207,27 @@ case|case
 literal|'o'
 case|:
 comment|/* POSIX 1997 */
+if|if
+condition|(
+name|cpio
+operator|->
+name|mode
+operator|!=
+literal|'\0'
+condition|)
+name|cpio_errc
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Cannot use both -o and -%c"
+argument_list|,
+name|cpio
+operator|->
+name|mode
+argument_list|)
+expr_stmt|;
 name|cpio
 operator|->
 name|mode
@@ -1058,6 +1239,27 @@ case|case
 literal|'p'
 case|:
 comment|/* POSIX 1997 */
+if|if
+condition|(
+name|cpio
+operator|->
+name|mode
+operator|!=
+literal|'\0'
+condition|)
+name|cpio_errc
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Cannot use both -p and -%c"
+argument_list|,
+name|cpio
+operator|->
+name|mode
+argument_list|)
+expr_stmt|;
 name|cpio
 operator|->
 name|mode
@@ -1197,12 +1399,27 @@ case|case
 literal|'y'
 case|:
 comment|/* tar convention */
+if|#
+directive|if
+name|HAVE_LIBBZ2
 name|cpio
 operator|->
 name|compress
 operator|=
 name|opt
 expr_stmt|;
+else|#
+directive|else
+name|cpio_warnc
+argument_list|(
+literal|0
+argument_list|,
+literal|"bzip2 compression not supported by "
+literal|"this version of bsdcpio"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 literal|'Z'
@@ -1219,12 +1436,27 @@ case|case
 literal|'z'
 case|:
 comment|/* tar convention */
+if|#
+directive|if
+name|HAVE_LIBZ
 name|cpio
 operator|->
 name|compress
 operator|=
 name|opt
 expr_stmt|;
+else|#
+directive|else
+name|cpio_warnc
+argument_list|(
+literal|0
+argument_list|,
+literal|"gzip compression not supported by "
+literal|"this version of bsdcpio"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 default|default:
 name|usage
@@ -1232,7 +1464,120 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-comment|/* TODO: Sanity-check args, error out on nonsensical combinations. */
+comment|/* 	 * Sanity-check args, error out on nonsensical combinations. 	 */
+comment|/* -t implies -i if no mode was specified. */
+if|if
+condition|(
+name|cpio
+operator|->
+name|option_list
+operator|&&
+name|cpio
+operator|->
+name|mode
+operator|==
+literal|'\0'
+condition|)
+name|cpio
+operator|->
+name|mode
+operator|=
+literal|'i'
+expr_stmt|;
+comment|/* -t requires -i */
+if|if
+condition|(
+name|cpio
+operator|->
+name|option_list
+operator|&&
+name|cpio
+operator|->
+name|mode
+operator|!=
+literal|'i'
+condition|)
+name|cpio_errc
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Option -t requires -i"
+argument_list|,
+name|cpio
+operator|->
+name|mode
+argument_list|)
+expr_stmt|;
+comment|/* -n requires -it */
+if|if
+condition|(
+name|cpio
+operator|->
+name|option_numeric_uid_gid
+operator|&&
+operator|!
+name|cpio
+operator|->
+name|option_list
+condition|)
+name|cpio_errc
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Option -n requires -it"
+argument_list|)
+expr_stmt|;
+comment|/* Can only specify format when writing */
+if|if
+condition|(
+name|cpio
+operator|->
+name|format
+operator|!=
+name|NULL
+operator|&&
+name|cpio
+operator|->
+name|mode
+operator|!=
+literal|'o'
+condition|)
+name|cpio_errc
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Option --format requires -o"
+argument_list|)
+expr_stmt|;
+comment|/* -l requires -p */
+if|if
+condition|(
+name|cpio
+operator|->
+name|option_link
+operator|&&
+name|cpio
+operator|->
+name|mode
+operator|!=
+literal|'p'
+condition|)
+name|cpio_errc
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Option -l requires -p"
+argument_list|)
+expr_stmt|;
+comment|/* TODO: Flag other nonsensical combinations. */
 switch|switch
 condition|(
 name|cpio
@@ -1243,6 +1588,22 @@ block|{
 case|case
 literal|'o'
 case|:
+comment|/* TODO: Implement old binary format in libarchive, 		   use that here. */
+if|if
+condition|(
+name|cpio
+operator|->
+name|format
+operator|==
+name|NULL
+condition|)
+name|cpio
+operator|->
+name|format
+operator|=
+literal|"odc"
+expr_stmt|;
+comment|/* Default format */
 name|mode_out
 argument_list|(
 name|cpio
@@ -1453,7 +1814,18 @@ literal|"  -i Input  -o Output  -p Pass\n"
 literal|"Common Options:\n"
 literal|"  -v    Verbose\n"
 literal|"Create: %p -o [options]< [list of files]> [archive]\n"
-literal|"  -z, -y  Compress archive with gzip/bzip2\n"
+ifdef|#
+directive|ifdef
+name|HAVE_BZLIB_H
+literal|"  -y  Compress archive with bzip2\n"
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|HAVE_ZLIB_H
+literal|"  -z  Compress archive with gzip\n"
+endif|#
+directive|endif
 literal|"  --format {odc|newc|ustar}  Select archive format\n"
 literal|"List: %p -it< [archive]\n"
 literal|"Extract: %p -i [options]< [archive]\n"
@@ -1692,6 +2064,9 @@ operator|->
 name|compress
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_BZLIB_H
 case|case
 literal|'j'
 case|:
@@ -1706,6 +2081,11 @@ name|archive
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|HAVE_ZLIB_H
 case|case
 literal|'z'
 case|:
@@ -1717,6 +2097,8 @@ name|archive
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 literal|'Z'
 case|:
@@ -2052,13 +2434,27 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 name|int
 name|lnklen
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|r
 decl_stmt|;
-comment|/* 	 * Create an archive_entry describing the source file. 	 */
+comment|/* 	 * Create an archive_entry describing the source file. 	 * 	 * XXX TODO: rework to use archive_read_disk_entry_from_file() 	 */
 name|entry
 operator|=
 name|archive_entry_new
@@ -2181,6 +2577,18 @@ operator|&
 name|st
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 comment|/* If its a symlink, pull the target. */
 if|if
 condition|(
@@ -2253,6 +2661,8 @@ name|buff
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* 	 * Generate a destination path for this entry. 	 * "destination path" is the name to which it will be copied in 	 * pass mode or the name that will go into the archive in 	 * output mode. 	 */
 name|destpath
 operator|=
@@ -2816,7 +3226,7 @@ argument_list|)
 argument_list|,
 literal|"%s: %s"
 argument_list|,
-name|destpath
+name|srcpath
 argument_list|,
 name|archive_error_string
 argument_list|(
@@ -2942,6 +3352,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|fd
+operator|=
 name|restore_time
 argument_list|(
 name|cpio
@@ -2989,7 +3401,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|restore_time
 parameter_list|(
 name|struct
@@ -3038,12 +3450,6 @@ operator|)
 name|name
 expr_stmt|;
 comment|/* UNUSED */
-operator|(
-name|void
-operator|)
-name|fd
-expr_stmt|;
-comment|/* UNUSED */
 if|if
 condition|(
 operator|!
@@ -3060,7 +3466,32 @@ name|warned
 operator|=
 literal|1
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|fd
+operator|)
+return|;
+else|#
+directive|else
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+name|struct
+name|__timeval
+name|times
+index|[
+literal|2
+index|]
+decl_stmt|;
 else|#
 directive|else
 name|struct
@@ -3070,6 +3501,8 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -3077,7 +3510,11 @@ name|cpio
 operator|->
 name|option_atime_restore
 condition|)
-return|return;
+return|return
+operator|(
+name|fd
+operator|)
+return|;
 name|times
 index|[
 literal|1
@@ -3148,9 +3585,32 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+operator|(
+name|fd
+operator|)
+return|;
 endif|#
 directive|endif
+comment|/* 	 * Some platform cannot restore access times if the file descriptor 	 * is still opened. 	 */
+if|if
+condition|(
+name|fd
+operator|>=
+literal|0
+condition|)
+block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|HAVE_LUTIMES
@@ -3200,6 +3660,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+operator|(
+name|fd
+operator|)
+return|;
 block|}
 end_function
 
@@ -4078,6 +4543,17 @@ index|[
 literal|32
 index|]
 decl_stmt|;
+name|char
+name|uids
+index|[
+literal|16
+index|]
+decl_stmt|,
+name|gids
+index|[
+literal|16
+index|]
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -4128,7 +4604,66 @@ operator|&
 name|now
 argument_list|)
 expr_stmt|;
-comment|/* Use uname if it's present, else uid. */
+if|if
+condition|(
+name|cpio
+operator|->
+name|option_numeric_uid_gid
+condition|)
+block|{
+comment|/* Format numeric uid/gid for display. */
+name|snprintf
+argument_list|(
+name|uids
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|uids
+argument_list|)
+argument_list|,
+literal|"%jd"
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|archive_entry_uid
+argument_list|(
+name|entry
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|uname
+operator|=
+name|uids
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|gids
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|gids
+argument_list|)
+argument_list|,
+literal|"%jd"
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|archive_entry_gid
+argument_list|(
+name|entry
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|gname
+operator|=
+name|gids
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Use uname if it's present, else lookup name from uid. */
 name|uname
 operator|=
 name|archive_entry_uname
@@ -4154,7 +4689,7 @@ name|entry
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Use gname if it's present, else gid. */
+comment|/* Use gname if it's present, else lookup name from gid. */
 name|gname
 operator|=
 name|archive_entry_gname
@@ -4180,6 +4715,7 @@ name|entry
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Print device number or file size. */
 if|if
 condition|(
@@ -4266,6 +4802,59 @@ name|st
 operator|->
 name|st_mtime
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+comment|/* Windows' strftime function does not support %e format. */
+if|if
+condition|(
+name|abs
+argument_list|(
+name|tim
+operator|-
+name|now
+argument_list|)
+operator|>
+operator|(
+literal|365
+operator|/
+literal|2
+operator|)
+operator|*
+literal|86400
+condition|)
+name|fmt
+operator|=
+name|cpio
+operator|->
+name|day_first
+condition|?
+literal|"%d %b  %Y"
+else|:
+literal|"%b %d  %Y"
+expr_stmt|;
+else|else
+name|fmt
+operator|=
+name|cpio
+operator|->
+name|day_first
+condition|?
+literal|"%d %b %H:%M"
+else|:
+literal|"%b %d %H:%M"
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|abs
@@ -4304,6 +4893,8 @@ literal|"%e %b %H:%M"
 else|:
 literal|"%b %e %H:%M"
 expr_stmt|;
+endif|#
+directive|endif
 name|strftime
 argument_list|(
 name|date

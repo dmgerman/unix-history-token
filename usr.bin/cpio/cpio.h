@@ -118,6 +118,10 @@ name|option_list
 decl_stmt|;
 comment|/* -t */
 name|int
+name|option_numeric_uid_gid
+decl_stmt|;
+comment|/* -n */
+name|int
 name|option_rename
 decl_stmt|;
 comment|/* -r */
