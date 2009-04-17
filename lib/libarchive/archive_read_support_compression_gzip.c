@@ -303,11 +303,33 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* No data, so no cleanup necessary. */
+comment|/* Signal the extent of gzip support with the return value here. */
+if|#
+directive|if
+name|HAVE_ZLIB_H
 return|return
 operator|(
 name|ARCHIVE_OK
 operator|)
 return|;
+else|#
+directive|else
+name|archive_set_error
+argument_list|(
+name|_a
+argument_list|,
+name|ARCHIVE_ERRNO_MISC
+argument_list|,
+literal|"Using external gunzip program"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_WARN
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -766,7 +788,7 @@ name|HAVE_ZLIB_H
 end_ifndef
 
 begin_comment
-comment|/*  * If we don't have the library on this system, we can't actually do the  * decompression.  We can, however, still detect compressed archives  * and emit a useful message.  */
+comment|/*  * If we don't have the library on this system, we can't do the  * decompression directly.  We can, however, try to run gunzip  * in case that's available.  */
 end_comment
 
 begin_function
@@ -792,6 +814,7 @@ argument_list|,
 literal|"gunzip"
 argument_list|)
 expr_stmt|;
+comment|/* Note: We set the format here even if __archive_read_program() 	 * above fails.  We do, after all, know what the format is 	 * even if we weren't able to read it. */
 name|self
 operator|->
 name|code
