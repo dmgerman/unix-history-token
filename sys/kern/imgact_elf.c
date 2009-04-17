@@ -964,11 +964,15 @@ name|bi
 operator|->
 name|machine
 operator|&&
+operator|(
 name|bi
 operator|->
-name|brand_note
+name|flags
+operator|&
+name|BI_BRAND_NOTE
+operator|)
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 name|ret
