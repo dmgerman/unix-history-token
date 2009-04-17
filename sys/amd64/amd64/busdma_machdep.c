@@ -5444,21 +5444,7 @@ operator|&
 name|BUS_DMA_KEEP_PG_OFFSET
 condition|)
 block|{
-comment|/* page offset needs to be preserved */
-name|bpage
-operator|->
-name|vaddr
-operator|&=
-operator|~
-name|PAGE_MASK
-expr_stmt|;
-name|bpage
-operator|->
-name|busaddr
-operator|&=
-operator|~
-name|PAGE_MASK
-expr_stmt|;
+comment|/* Page offset needs to be preserved. */
 name|bpage
 operator|->
 name|vaddr
@@ -5554,6 +5540,31 @@ name|datacount
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|dmat
+operator|->
+name|flags
+operator|&
+name|BUS_DMA_KEEP_PG_OFFSET
+condition|)
+block|{
+comment|/* 		 * Reset the bounce page to start at offset 0.  Other uses 		 * of this bounce page may need to store a full page of 		 * data and/or assume it starts on a page boundary. 		 */
+name|bpage
+operator|->
+name|vaddr
+operator|&=
+operator|~
+name|PAGE_MASK
+expr_stmt|;
+name|bpage
+operator|->
+name|busaddr
+operator|&=
+operator|~
+name|PAGE_MASK
+expr_stmt|;
+block|}
 name|mtx_lock
 argument_list|(
 operator|&
