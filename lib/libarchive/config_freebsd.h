@@ -342,6 +342,12 @@ name|HAVE_MALLOC
 value|1
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -355,6 +361,11 @@ directive|define
 name|HAVE_MD5_H
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -391,6 +402,12 @@ name|HAVE_MKNOD
 value|1
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -411,6 +428,11 @@ directive|define
 name|HAVE_OPENSSL_SHA_H
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -447,12 +469,23 @@ name|HAVE_READLINK
 value|1
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
 name|HAVE_RMD160
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -467,6 +500,12 @@ directive|define
 name|HAVE_SETENV
 value|1
 end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_define
 define|#
@@ -509,6 +548,11 @@ directive|define
 name|HAVE_SHA512
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
