@@ -355,7 +355,7 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we have "gunzip", try using that. 	 */
+comment|/* 	 * If we have "gzip -d", try using that. 	 */
 if|if
 condition|(
 operator|(

@@ -471,6 +471,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|assert
+argument_list|(
+name|p
+operator|!=
+name|NULL
+argument_list|)
+condition|)
+block|{
 name|i
 operator|=
 literal|0
@@ -530,7 +540,7 @@ index|]
 argument_list|)
 condition|)
 block|{
-comment|/* If you get a failure here, either 			 * archive_read_disk_gname() isn't working or 			 * your system uses a different name for group 			 * number zero.  If the latter, please add a 			 * new entry to the zero_groups[] array above. 			 */
+comment|/* If you get a failure here, either 				 * archive_read_disk_gname() isn't working or 				 * your system uses a different name for group 				 * number zero.  If the latter, please add a 				 * new entry to the zero_groups[] array above. 				 */
 name|failure
 argument_list|(
 literal|"group 0 didn't have any of the expected names"
@@ -546,6 +556,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif

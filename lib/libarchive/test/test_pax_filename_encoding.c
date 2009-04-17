@@ -90,7 +90,7 @@ name|assertEqualInt
 argument_list|(
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_support_compression_gzip
+name|archive_read_support_compression_all
 argument_list|(
 name|a
 argument_list|)
