@@ -2535,7 +2535,7 @@ argument_list|)
 expr_stmt|;
 name|taskqueue_drain
 argument_list|(
-name|taskqueue_fast
+name|taskqueue_swi
 argument_list|,
 operator|&
 name|sc
@@ -2545,7 +2545,7 @@ argument_list|)
 expr_stmt|;
 name|taskqueue_drain
 argument_list|(
-name|taskqueue_fast
+name|taskqueue_swi
 argument_list|,
 operator|&
 name|sc
@@ -2555,7 +2555,7 @@ argument_list|)
 expr_stmt|;
 name|taskqueue_drain
 argument_list|(
-name|taskqueue_fast
+name|taskqueue_swi
 argument_list|,
 operator|&
 name|sc
