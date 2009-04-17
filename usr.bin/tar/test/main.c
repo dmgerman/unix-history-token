@@ -112,33 +112,11 @@ parameter_list|)
 value|void name(void);
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LIST_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-include|LIST_H
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
 file|"list.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Interix doesn't define these in a standard header. */
@@ -3886,19 +3864,9 @@ name|tests
 index|[]
 init|=
 block|{
-ifdef|#
-directive|ifdef
-name|LIST_H
-include|#
-directive|include
-include|LIST_H
-else|#
-directive|else
 include|#
 directive|include
 file|"list.h"
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -4092,9 +4060,18 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 name|systemf
 argument_list|(
 literal|"rmdir /S /Q %s"
@@ -4649,9 +4626,18 @@ name|refdir_alloc
 init|=
 name|NULL
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 name|char
 modifier|*
 name|testprg
@@ -4687,10 +4673,21 @@ operator|)
 name|argc
 expr_stmt|;
 comment|/* UNUSED */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 comment|/* Make sure open() function will be used with a binary mode. */
+comment|/* on cygwin, we need something similar, but instead link against */
+comment|/* a special startup object, binmode.o */
 name|_set_fmode
 argument_list|(
 name|_O_BINARY
@@ -4980,9 +4977,18 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 comment|/* 	 * command.com cannot accept the command used '/' with drive 	 * name such as c:/xxx/command.exe when use '|' pipe handling. 	 */
 name|testprg
 operator|=
