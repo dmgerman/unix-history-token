@@ -218,16 +218,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PTH_PTHREAD_H_
-end_ifndef
-
-begin_comment
-comment|/* XXX kludge to work around GNU Pth brokenness */
-end_comment
-
 begin_function_decl
 name|int
 name|pthread_kill
@@ -254,11 +244,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|int
