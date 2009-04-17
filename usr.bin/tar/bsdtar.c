@@ -255,11 +255,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_WIN32
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -450,10 +459,21 @@ name|option_o
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 comment|/* Make sure open() function will be used with a binary mode. */
+comment|/* on cygwin, we need something similar, but instead link against */
+comment|/* a special startup object, binmode.o */
 name|_set_fmode
 argument_list|(
 name|_O_BINARY
@@ -479,7 +499,16 @@ else|else
 block|{
 if|#
 directive|if
+name|defined
+argument_list|(
 name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 name|bsdtar
 operator|->
 name|progname
@@ -675,19 +704,6 @@ operator||=
 name|ARCHIVE_EXTRACT_FFLAGS
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|_WIN32
-comment|/* Windows cannot set UNIX like uid/gid. */
-name|bsdtar
-operator|->
-name|extract_flags
-operator|&=
-operator|~
-name|ARCHIVE_EXTRACT_OWNER
-expr_stmt|;
-endif|#
-directive|endif
 name|bsdtar
 operator|->
 name|argv
@@ -863,11 +879,11 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
-name|OPTION_FORMAT_OPTIONS
+name|OPTION_OPTIONS
 case|:
 name|bsdtar
 operator|->
-name|option_format_options
+name|option_options
 operator|=
 name|bsdtar
 operator|->
@@ -1051,6 +1067,63 @@ endif|#
 directive|endif
 break|break;
 case|case
+literal|'J'
+case|:
+comment|/* GNU tar 1.21 and later */
+if|#
+directive|if
+name|HAVE_LIBLZMA
+if|if
+condition|(
+name|bsdtar
+operator|->
+name|create_compression
+operator|!=
+literal|'\0'
+condition|)
+name|bsdtar_errc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Can't specify both -%c and -%c"
+argument_list|,
+name|opt
+argument_list|,
+name|bsdtar
+operator|->
+name|create_compression
+argument_list|)
+expr_stmt|;
+name|bsdtar
+operator|->
+name|create_compression
+operator|=
+name|opt
+expr_stmt|;
+else|#
+directive|else
+name|bsdtar_warnc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|0
+argument_list|,
+literal|"xz compression not supported by this version of bsdtar"
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|(
+name|bsdtar
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+break|break;
+case|case
 literal|'k'
 case|:
 comment|/* GNU tar */
@@ -1094,6 +1167,62 @@ name|option_warn_links
 operator|=
 literal|1
 expr_stmt|;
+break|break;
+case|case
+name|OPTION_LZMA
+case|:
+if|#
+directive|if
+name|HAVE_LIBLZMA
+if|if
+condition|(
+name|bsdtar
+operator|->
+name|create_compression
+operator|!=
+literal|'\0'
+condition|)
+name|bsdtar_errc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Can't specify both -%c and -%c"
+argument_list|,
+name|opt
+argument_list|,
+name|bsdtar
+operator|->
+name|create_compression
+argument_list|)
+expr_stmt|;
+name|bsdtar
+operator|->
+name|create_compression
+operator|=
+name|opt
+expr_stmt|;
+else|#
+directive|else
+name|bsdtar_warnc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|0
+argument_list|,
+literal|"lzma compression not supported by this version of bsdtar"
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|(
+name|bsdtar
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 literal|'m'
@@ -1513,6 +1642,17 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+break|break;
+case|case
+name|OPTION_SAME_OWNER
+case|:
+comment|/* GNU tar */
+name|bsdtar
+operator|->
+name|extract_flags
+operator||=
+name|ARCHIVE_EXTRACT_OWNER
+expr_stmt|;
 break|break;
 case|case
 name|OPTION_STRIP_COMPONENTS
@@ -2487,7 +2627,7 @@ literal|"  -v    Verbose\n"
 literal|"  -w    Interactive\n"
 literal|"Create: %p -c [options] [<file> |<dir> | @<archive> | -C<dir> ]\n"
 literal|"<file>,<dir>  add these items to archive\n"
-literal|"  -z, -j  Compress archive with gzip/bzip2\n"
+literal|"  -z, -j, -J, --lzma  Compress archive with gzip/bzip2/xz/lzma\n"
 literal|"  --format {ustar|pax|cpio|shar}  Select archive format\n"
 literal|"  --exclude<pattern>  Skip files that match pattern\n"
 literal|"  -C<dir>  Change to<dir> before processing remaining files\n"
