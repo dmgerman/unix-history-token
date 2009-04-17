@@ -246,7 +246,7 @@ decl_stmt|;
 name|int
 name|od_sec
 decl_stmt|;
-name|int
+name|daddr_t
 name|od_boff
 decl_stmt|;
 comment|/* block offset from beginning of BIOS disk */
