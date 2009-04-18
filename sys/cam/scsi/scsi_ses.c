@@ -759,16 +759,6 @@ name|SES_FLAG_INITIALIZED
 value|0x04
 end_define
 
-begin_define
-define|#
-directive|define
-name|SESUNIT
-parameter_list|(
-name|x
-parameter_list|)
-value|(dev2unit((x)))
-end_define
-
 begin_decl_stmt
 specifier|static
 name|d_open_t
