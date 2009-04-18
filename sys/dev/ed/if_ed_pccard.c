@@ -3098,11 +3098,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
-argument_list|(
-literal|"Generic ifmedia\n"
-argument_list|)
-expr_stmt|;
 name|ed_gen_ifmedia_init
 argument_list|(
 name|sc
