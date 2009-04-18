@@ -4641,6 +4641,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|g_topology_lock
+argument_list|()
+expr_stmt|;
 name|g_wither_provider
 argument_list|(
 name|v
@@ -4649,6 +4652,9 @@ name|provider
 argument_list|,
 name|ENOENT
 argument_list|)
+expr_stmt|;
+name|g_topology_unlock
+argument_list|()
 expr_stmt|;
 name|v
 operator|->
