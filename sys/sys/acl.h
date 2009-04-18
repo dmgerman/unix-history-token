@@ -344,13 +344,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_decl_stmt
-specifier|extern
-name|uma_zone_t
-name|acl_zone
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * POSIX.1e ACLs are capable of expressing the read, write, and execute bits  * of the POSIX mode field.  We provide two masks: one that defines the bits  * the ACL will replace in the mode, and the other that defines the bits that  * must be preseved when an ACL is updating a mode.  */
 end_comment
@@ -451,6 +444,30 @@ name|struct
 name|acl
 modifier|*
 name|dacl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|acl
+modifier|*
+name|acl_alloc
+parameter_list|(
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|acl_free
+parameter_list|(
+name|struct
+name|acl
+modifier|*
+name|aclp
 parameter_list|)
 function_decl|;
 end_function_decl
