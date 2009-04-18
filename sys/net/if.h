@@ -490,17 +490,6 @@ begin_comment
 comment|/* (n) static ARP */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IFF_NEEDSGIANT
-value|0x100000
-end_define
-
-begin_comment
-comment|/* (i) hold Giant over if_start calls */
-end_comment
-
 begin_comment
 comment|/*  * Old names for driver flags so that user space tools can continue to use  * the old (portable) names.  */
 end_comment
@@ -539,7 +528,7 @@ define|#
 directive|define
 name|IFF_CANTCHANGE
 define|\
-value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_DRV_RUNNING|IFF_DRV_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_SMART|IFF_PROMISC|\ 	    IFF_NEEDSGIANT)
+value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_DRV_RUNNING|IFF_DRV_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_SMART|IFF_PROMISC)
 end_define
 
 begin_comment
