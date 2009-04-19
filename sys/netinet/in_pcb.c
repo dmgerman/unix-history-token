@@ -2852,6 +2852,11 @@ name|ia
 operator|=
 name|NULL
 expr_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -2931,10 +2936,20 @@ name|sin_addr
 operator|.
 name|s_addr
 expr_stmt|;
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 goto|goto
 name|done
 goto|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* 3. As a last resort return the 'default' jail address. */
 name|error
 operator|=
@@ -2967,6 +2982,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
 comment|/* If not jailed, use the default returned. */
 if|if
 condition|(
@@ -3072,11 +3092,24 @@ name|done
 goto|;
 block|}
 comment|/* 		 * 2. Check if we have any address on the outgoing interface 		 *    belonging to this jail. 		 */
+name|ifp
+operator|=
+name|sro
+operator|.
+name|ro_rt
+operator|->
+name|rt_ifp
+expr_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
 argument_list|,
-argument|&sro.ro_rt->rt_ifp->if_addrhead
+argument|&ifp->if_addrhead
 argument_list|,
 argument|ifa_link
 argument_list|)
@@ -3151,10 +3184,20 @@ name|sin_addr
 operator|.
 name|s_addr
 expr_stmt|;
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 goto|goto
 name|done
 goto|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* 3. As a last resort return the 'default' jail address. */
 name|error
 operator|=
@@ -3356,6 +3399,11 @@ name|ia
 operator|=
 name|NULL
 expr_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -3435,10 +3483,20 @@ name|sin_addr
 operator|.
 name|s_addr
 expr_stmt|;
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 goto|goto
 name|done
 goto|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 3. As a last resort return the 'default' jail address. */
 name|error
