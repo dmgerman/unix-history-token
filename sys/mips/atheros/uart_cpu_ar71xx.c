@@ -65,6 +65,12 @@ directive|include
 file|<mips/atheros/ar71xxreg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<mips/atheros/ar71xx_bus_space_reversed.h>
+end_include
+
 begin_decl_stmt
 name|bus_space_tag_t
 name|uart_bus_space_io
@@ -157,7 +163,8 @@ name|bas
 operator|.
 name|bst
 operator|=
-name|MIPS_BUS_SPACE_MEM
+operator|&
+name|ar71xx_bus_space_reversed
 expr_stmt|;
 name|di
 operator|->
@@ -203,11 +210,12 @@ expr_stmt|;
 comment|/* TODO: check if uart_bus_space_io mandatory to set */
 name|uart_bus_space_io
 operator|=
-name|MIPS_BUS_SPACE_IO
+name|NULL
 expr_stmt|;
 name|uart_bus_space_mem
 operator|=
-name|MIPS_BUS_SPACE_MEM
+operator|&
+name|ar71xx_bus_space_reversed
 expr_stmt|;
 comment|/*  	 * FIXME: 	 * 3 is to compensate big endian, uart operates  	 * with bus_space_read_1/bus_space_write_1 and hence gets  	 * highest byte instead of lowest one. Actual fix will involve 	 * MIPS bus_space fixing. 	 */
 name|di
@@ -220,8 +228,6 @@ name|MIPS_PHYS_TO_KSEG1
 argument_list|(
 name|AR71XX_UART_ADDR
 argument_list|)
-operator|+
-literal|3
 expr_stmt|;
 return|return
 operator|(
