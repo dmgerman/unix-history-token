@@ -206,6 +206,31 @@ parameter_list|)
 value|_ALIGNED_POINTER(p,t)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CACHE_LINE_SHIFT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CACHE_LINE_SHIFT
+value|6
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|CACHE_LINE_SIZE
+value|(1<< CACHE_LINE_SHIFT)
+end_define
+
 begin_comment
 comment|/* Size of the level 1 page table units */
 end_comment
