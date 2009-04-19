@@ -821,7 +821,7 @@ comment|/* VIMAGE */
 end_comment
 
 begin_comment
-comment|/*  * System-wide globals.  *  * Unlocked access to these is OK, except for the global IGMP output  * queue. The IGMP subsystem lock ends up being system-wide for the moment,  * because all VIMAGEs have to share a global output queue, as netisrs  * themselves are not virtualized.  *  * Locking:  *  * The permitted lock order is: IN_MULTI_LOCK, IGMP_LOCK, IF_ADDR_LOCK.  *    Any may be taken independently; if any are held at the same  *    time, the above lock order must be followed.  *  * All output is delegated to the netisr to handle IFF_NEEDSGIANT.  *    Most of the time, direct dispatch will be fine.  *  * IN_MULTI_LOCK covers in_multi.  *  * IGMP_LOCK covers igmp_ifinfo and any global variables in this file,  *    including the output queue.  *  * IF_ADDR_LOCK covers if_multiaddrs, which is used for a variety of  *    per-link state iterators.  *  * igmp_ifinfo is valid as long as PF_INET is attached to the interface,  *    therefore it is not refcounted.  *    We allow unlocked reads of igmp_ifinfo when accessed via in_multi.  *  * Reference counting  *  * IGMP acquires its own reference every time an in_multi is passed to  *    it and the group is being joined for the first time.  *  * IGMP releases its reference(s) on in_multi in a deferred way,  *    because the operations which process the release run as part of  *    a loop whose control variables are directly affected by the release  *    (that, and not recursing on the IF_ADDR_LOCK).  *  * VIMAGE: Each in_multi corresponds to an ifp, and each ifp corresponds  * to a vnet in ifp->if_vnet.  *  * SMPng: XXX We may potentially race operations on ifma_protospec.  * The problem is that we currently lack a clean way of taking the  * IF_ADDR_LOCK() between the ifnet and in layers w/o recursing,  * as anything which modifies ifma needs to be covered by that lock.  * So check for ifma_protospec being NULL before proceeding.  */
+comment|/*  * System-wide globals.  *  * Unlocked access to these is OK, except for the global IGMP output  * queue. The IGMP subsystem lock ends up being system-wide for the moment,  * because all VIMAGEs have to share a global output queue, as netisrs  * themselves are not virtualized.  *  * Locking:  *  * The permitted lock order is: IN_MULTI_LOCK, IGMP_LOCK, IF_ADDR_LOCK.  *    Any may be taken independently; if any are held at the same  *    time, the above lock order must be followed.  *  * All output is delegated to the netisr.  *    Now that Giant has been eliminated, the netisr may be inlined.  *  * IN_MULTI_LOCK covers in_multi.  *  * IGMP_LOCK covers igmp_ifinfo and any global variables in this file,  *    including the output queue.  *  * IF_ADDR_LOCK covers if_multiaddrs, which is used for a variety of  *    per-link state iterators.  *  * igmp_ifinfo is valid as long as PF_INET is attached to the interface,  *    therefore it is not refcounted.  *    We allow unlocked reads of igmp_ifinfo when accessed via in_multi.  *  * Reference counting  *  * IGMP acquires its own reference every time an in_multi is passed to  *    it and the group is being joined for the first time.  *  * IGMP releases its reference(s) on in_multi in a deferred way,  *    because the operations which process the release run as part of  *    a loop whose control variables are directly affected by the release  *    (that, and not recursing on the IF_ADDR_LOCK).  *  * VIMAGE: Each in_multi corresponds to an ifp, and each ifp corresponds  * to a vnet in ifp->if_vnet.  *  * SMPng: XXX We may potentially race operations on ifma_protospec.  * The problem is that we currently lack a clean way of taking the  * IF_ADDR_LOCK() between the ifnet and in layers w/o recursing,  * as anything which modifies ifma needs to be covered by that lock.  * So check for ifma_protospec being NULL before proceeding.  */
 end_comment
 
 begin_decl_stmt
@@ -830,35 +830,6 @@ name|mtx
 name|igmp_mtx
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|mpsafe_igmp
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_debug
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|mpsafe_igmp
-argument_list|,
-name|CTLFLAG_RDTUN
-argument_list|,
-operator|&
-name|mpsafe_igmp
-argument_list|,
-literal|0
-argument_list|,
-literal|"Enable SMP-safe IGMPv3"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_decl_stmt
 name|struct
@@ -885,7 +856,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Global netisr output queue.  * This is only used as a last resort if we cannot directly dispatch.  * As IN_MULTI_LOCK is no longer in the bottom half of IP, we can do  * this, providing mpsafe_igmp is set. If it is not, we take Giant,  * and queueing is forced.  */
+comment|/*  * Global netisr output queue.  */
 end_comment
 
 begin_decl_stmt
@@ -2596,64 +2567,6 @@ block|}
 name|IGMP_UNLOCK
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VIMAGE
-comment|/* 	 * Plug the potential race which may occur when a VIMAGE 	 * is detached and we are forced to queue pending IGMP output for 	 * output netisr processing due to !mpsafe_igmp. In this case it 	 * is possible that igmp_intr() is about to see mbuf chains with 	 * invalid cached curvnet pointers. 	 * This is a rare condition, so just blow them all away. 	 * FUTURE: This may in fact not be needed, because IFF_NEEDSGIANT 	 * is being removed in 8.x and the netisr may then be eliminated; 	 * it is needed only if VIMAGE and IFF_NEEDSGIANT need to co-exist 	 */
-if|if
-condition|(
-operator|!
-name|mpsafe_igmp
-condition|)
-block|{
-name|int
-name|drops
-decl_stmt|;
-name|IF_LOCK
-argument_list|(
-operator|&
-name|igmpoq
-argument_list|)
-expr_stmt|;
-name|drops
-operator|=
-name|igmpoq
-operator|.
-name|ifq_len
-expr_stmt|;
-name|_IF_DRAIN
-argument_list|(
-operator|&
-name|igmpoq
-argument_list|)
-expr_stmt|;
-name|IF_UNLOCK
-argument_list|(
-operator|&
-name|igmpoq
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-operator|&&
-name|drops
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: dropped %d pending IGMP output packets\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|drops
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-endif|#
-directive|endif
-comment|/* VIMAGE */
 name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
@@ -5985,17 +5898,6 @@ operator|!
 name|V_state_change_timers_running
 condition|)
 return|return;
-if|if
-condition|(
-operator|!
-name|mpsafe_igmp
-condition|)
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|IN_MULTI_LOCK
 argument_list|()
 expr_stmt|;
@@ -6354,17 +6256,6 @@ argument_list|()
 expr_stmt|;
 name|IN_MULTI_UNLOCK
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|mpsafe_igmp
-condition|)
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -13503,14 +13394,6 @@ expr_stmt|;
 name|IGMP_LOCK_INIT
 argument_list|()
 expr_stmt|;
-name|TUNABLE_INT_FETCH
-argument_list|(
-literal|"debug.mpsafeigmp"
-argument_list|,
-operator|&
-name|mpsafe_igmp
-argument_list|)
-expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -13538,11 +13421,6 @@ operator|=
 name|igmp_ra_alloc
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|800000
 name|netisr_register
 argument_list|(
 name|NETISR_IGMP
@@ -13552,33 +13430,9 @@ argument_list|,
 operator|&
 name|igmpoq
 argument_list|,
-name|mpsafe_igmp
-condition|?
-name|NETISR_MPSAFE
-else|:
 literal|0
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|netisr_register
-argument_list|(
-name|NETISR_IGMP
-argument_list|,
-name|igmp_intr
-argument_list|,
-operator|&
-name|igmpoq
-argument_list|,
-name|mpsafe_igmp
-condition|?
-literal|0
-else|:
-name|NETISR_FORCEQUEUE
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
