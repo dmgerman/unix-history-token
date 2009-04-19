@@ -900,6 +900,11 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
 comment|/* Sanity check */
 name|M_ASSERTPKTHDR
 argument_list|(
@@ -907,11 +912,24 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* Find IP address for receive interface */
+name|ifp
+operator|=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+expr_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
 argument_list|,
-argument|&m->m_pkthdr.rcvif->if_addrhead
+argument|&ifp->if_addrhead
 argument_list|,
 argument|ifa_link
 argument_list|)
@@ -946,6 +964,11 @@ name|sin_addr
 expr_stmt|;
 break|break;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * Record the incoming interface name whenever we have one. 	 */
 if|if
