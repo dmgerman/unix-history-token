@@ -2704,6 +2704,11 @@ modifier|*
 name|ifa
 decl_stmt|;
 comment|/* Return the first configured IP address */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -2803,6 +2808,11 @@ name|sin_addr
 expr_stmt|;
 break|break;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* No IP addresses on this interface? */
 if|if
 condition|(
