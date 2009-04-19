@@ -840,7 +840,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * TODO:  * - Add per flowtable sysctls for statistics and configuring timeouts  * - add IPv6 support to flow lookup  * - add saturation counter to rtentry to support per-packet load-balancing  *   add flag to indicate round-robin flow, add list lookup from head      for flows  * - add sysctl / device node / syscall to support exporting and importing  *   of flows with flag to indicate that a flow was imported so should  *   not be considered for auto-cleaning  * - support explicit connection state (currently only ad-hoc for DSR)  */
+comment|/*  * TODO:  * - Make flowtable stats per-cpu, aggregated at sysctl call time,  *   to avoid extra cache evictions caused by incrementing a shared  *   counter  * - add IPv6 support to flow lookup  * - Add per flowtable sysctls for statistics and configuring timeouts  * - add saturation counter to rtentry to support per-packet load-balancing  *   add flag to indicate round-robin flow, add list lookup from head      for flows  * - add sysctl / device node / syscall to support exporting and importing  *   of flows with flag to indicate that a flow was imported so should  *   not be considered for auto-cleaning  * - support explicit connection state (currently only ad-hoc for DSR)  */
 end_comment
 
 begin_expr_stmt
