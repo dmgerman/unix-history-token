@@ -206,6 +206,10 @@ parameter_list|)
 value|_ALIGNED_POINTER(p,t)
 end_define
 
+begin_comment
+comment|/*  * CACHE_LINE_SIZE is the compile-time maximum cache line size for an  * architecture.  It should be used with appropriate caution.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
