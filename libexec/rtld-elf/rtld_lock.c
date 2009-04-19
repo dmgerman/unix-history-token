@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<machine/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
