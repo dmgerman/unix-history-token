@@ -339,11 +339,6 @@ argument_list|,
 name|EHCI_HC_DEVSTR
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"EHCI probed\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|BUS_PROBE_DEFAULT
@@ -386,11 +381,6 @@ decl_stmt|;
 name|int
 name|rid
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"EHCI attach\n"
-argument_list|)
-expr_stmt|;
 comment|/* initialise some bus fields */
 name|sc
 operator|->
@@ -497,7 +487,6 @@ name|sc
 operator|->
 name|sc_io_tag
 operator|=
-operator|&
 name|ar71xx_bus_space_reversed
 expr_stmt|;
 name|sc

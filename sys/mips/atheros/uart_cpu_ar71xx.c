@@ -163,7 +163,6 @@ name|bas
 operator|.
 name|bst
 operator|=
-operator|&
 name|ar71xx_bus_space_reversed
 expr_stmt|;
 name|di
@@ -214,7 +213,6 @@ name|NULL
 expr_stmt|;
 name|uart_bus_space_mem
 operator|=
-operator|&
 name|ar71xx_bus_space_reversed
 expr_stmt|;
 comment|/*  	 * FIXME: 	 * 3 is to compensate big endian, uart operates  	 * with bus_space_read_1/bus_space_write_1 and hence gets  	 * highest byte instead of lowest one. Actual fix will involve 	 * MIPS bus_space fixing. 	 */
