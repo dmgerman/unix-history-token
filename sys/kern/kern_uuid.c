@@ -279,6 +279,11 @@ argument|if_link
 argument_list|)
 block|{
 comment|/* Walk the address list */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -331,12 +336,22 @@ argument_list|,
 name|UUID_NODE_LEN
 argument_list|)
 expr_stmt|;
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|IFNET_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return;
 block|}
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 block|}
 name|IFNET_RUNLOCK
 argument_list|()
