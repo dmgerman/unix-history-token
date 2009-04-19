@@ -67,6 +67,10 @@ name|int
 name|pdeath_signal
 decl_stmt|;
 comment|/* parent death signal */
+name|int
+name|used_requeue
+decl_stmt|;
+comment|/* uses deprecated futex op */
 name|struct
 name|linux_robust_list_head
 modifier|*
