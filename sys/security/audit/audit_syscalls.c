@@ -675,6 +675,9 @@ block|{
 case|case
 name|A_OLDGETPOLICY
 case|:
+case|case
+name|A_GETPOLICY
+case|:
 if|if
 condition|(
 name|uap
@@ -732,10 +735,6 @@ name|AUDIT_ARGE
 expr_stmt|;
 break|break;
 block|}
-comment|/* FALLTHROUGH */
-case|case
-name|A_GETPOLICY
-case|:
 if|if
 condition|(
 name|uap
@@ -798,6 +797,9 @@ expr_stmt|;
 break|break;
 case|case
 name|A_OLDSETPOLICY
+case|:
+case|case
+name|A_SETPOLICY
 case|:
 if|if
 condition|(
@@ -881,10 +883,6 @@ operator|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* FALLTHROUGH */
-case|case
-name|A_SETPOLICY
-case|:
 if|if
 condition|(
 name|uap
@@ -1030,6 +1028,9 @@ break|break;
 case|case
 name|A_OLDGETQCTRL
 case|:
+case|case
+name|A_GETQCTRL
+case|:
 if|if
 condition|(
 name|uap
@@ -1098,10 +1099,6 @@ name|aq_minfree
 expr_stmt|;
 break|break;
 block|}
-comment|/* FALLTHROUGH */
-case|case
-name|A_GETQCTRL
-case|:
 if|if
 condition|(
 name|uap
@@ -1129,6 +1126,9 @@ expr_stmt|;
 break|break;
 case|case
 name|A_OLDSETQCTRL
+case|:
+case|case
+name|A_SETQCTRL
 case|:
 if|if
 condition|(
@@ -1267,10 +1267,6 @@ expr_stmt|;
 comment|/* Not used. */
 break|break;
 block|}
-comment|/* FALLTHROUGH */
-case|case
-name|A_SETQCTRL
-case|:
 if|if
 condition|(
 name|uap
@@ -1422,6 +1418,9 @@ break|break;
 case|case
 name|A_OLDGETCOND
 case|:
+case|case
+name|A_GETCOND
+case|:
 if|if
 condition|(
 name|uap
@@ -1458,10 +1457,6 @@ name|AUC_NOAUDIT
 expr_stmt|;
 break|break;
 block|}
-comment|/* FALLTHROUGH */
-case|case
-name|A_GETCOND
-case|:
 if|if
 condition|(
 name|uap
@@ -1503,6 +1498,9 @@ expr_stmt|;
 break|break;
 case|case
 name|A_OLDSETCOND
+case|:
+case|case
+name|A_SETCOND
 case|:
 if|if
 condition|(
@@ -1565,10 +1563,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-comment|/* FALLTHROUGH */
-case|case
-name|A_SETCOND
-case|:
 if|if
 condition|(
 name|uap
