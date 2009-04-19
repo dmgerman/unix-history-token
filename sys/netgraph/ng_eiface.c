@@ -1596,6 +1596,11 @@ name|buflen
 operator|=
 literal|0
 expr_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -1631,6 +1636,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|ENOMEM
@@ -1704,6 +1714,11 @@ operator|-=
 name|len
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 default|default:
