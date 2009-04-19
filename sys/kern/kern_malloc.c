@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1987, 1991, 1993  *	The Regents of the University of California.  * Copyright (c) 2005-2006 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_malloc.c	8.3 (Berkeley) 1/4/94  */
+comment|/*-  * Copyright (c) 1987, 1991, 1993  *	The Regents of the University of California.  * Copyright (c) 2005-2009 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_malloc.c	8.3 (Berkeley) 1/4/94  */
 end_comment
 
 begin_comment
@@ -1311,6 +1311,19 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|INVARIANTS
+name|KASSERT
+argument_list|(
+name|mtp
+operator|->
+name|ks_magic
+operator|==
+name|M_MAGIC
+argument_list|,
+operator|(
+literal|"malloc: bad malloc type magic"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Check that exactly one of M_WAITOK or M_NOWAIT is specified. 	 */
 name|indx
 operator|=
@@ -1735,6 +1748,19 @@ decl_stmt|;
 name|u_long
 name|size
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|mtp
+operator|->
+name|ks_magic
+operator|==
+name|M_MAGIC
+argument_list|,
+operator|(
+literal|"free: bad malloc type magic"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* free(NULL, ...) does nothing */
 if|if
 condition|(
@@ -1986,6 +2012,19 @@ name|void
 modifier|*
 name|newaddr
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|mtp
+operator|->
+name|ks_magic
+operator|==
+name|M_MAGIC
+argument_list|,
+operator|(
+literal|"realloc: bad malloc type magic"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* realloc(NULL, ...) is equivalent to malloc(...) */
 if|if
 condition|(
@@ -2757,6 +2796,19 @@ name|mtp
 operator|=
 name|data
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|mtp
+operator|->
+name|ks_magic
+operator|==
+name|M_MAGIC
+argument_list|,
+operator|(
+literal|"malloc_init: bad malloc type magic"
+operator|)
+argument_list|)
+expr_stmt|;
 name|mtip
 operator|=
 name|uma_zalloc
@@ -2843,6 +2895,19 @@ decl_stmt|;
 name|mtp
 operator|=
 name|data
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|mtp
+operator|->
+name|ks_magic
+operator|==
+name|M_MAGIC
+argument_list|,
+operator|(
+literal|"malloc_uninit: bad malloc type magic"
+operator|)
+argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
