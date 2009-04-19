@@ -406,13 +406,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|size_t
+name|int
 name|audit_q_len
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|size_t
+name|int
 name|audit_pre_q_len
 decl_stmt|;
 end_decl_stmt
