@@ -792,6 +792,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|drm_msi
 init|=
@@ -1278,6 +1279,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|drm_core_check_feature
+argument_list|(
+name|dev
+argument_list|,
+name|DRIVER_HAVE_IRQ
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
 name|drm_msi
 operator|&&
 operator|!
@@ -1401,6 +1412,7 @@ operator|->
 name|irqr
 argument_list|)
 expr_stmt|;
+block|}
 name|mtx_init
 argument_list|(
 operator|&
