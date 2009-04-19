@@ -44,13 +44,6 @@ name|errno
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|CACHE_LINE_SIZE
-value|64
-end_define
-
 begin_function_decl
 specifier|static
 name|int
