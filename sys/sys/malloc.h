@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  * Copyright (c) 2005 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)malloc.h	8.5 (Berkeley) 5/3/95  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  * Copyright (c) 2005, 2009 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)malloc.h	8.5 (Berkeley) 5/3/95  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -208,7 +208,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * ABI-compatible version of the old 'struct malloc_type', only all stats are  * now malloc-managed in malloc-owned memory rather than in caller memory, so  * as to avoid ABI issues.  The ks_next pointer is reused as a pointer to the  * internal data handle.  */
+comment|/*  * Public data structure describing a malloc type.  Private data is hung off  * of ks_handle to avoid encoding internal malloc(9) data structures in  * modules, which will statically allocate struct malloc_type.  */
 end_comment
 
 begin_struct
@@ -222,26 +222,6 @@ name|ks_next
 decl_stmt|;
 comment|/* Next in global chain. */
 name|u_long
-name|_ks_memuse
-decl_stmt|;
-comment|/* No longer used. */
-name|u_long
-name|_ks_size
-decl_stmt|;
-comment|/* No longer used. */
-name|u_long
-name|_ks_inuse
-decl_stmt|;
-comment|/* No longer used. */
-name|uint64_t
-name|_ks_calls
-decl_stmt|;
-comment|/* No longer used. */
-name|u_long
-name|_ks_maxused
-decl_stmt|;
-comment|/* No longer used. */
-name|u_long
 name|ks_magic
 decl_stmt|;
 comment|/* Detect programmer error. */
@@ -251,40 +231,11 @@ modifier|*
 name|ks_shortdesc
 decl_stmt|;
 comment|/* Printable type name. */
-comment|/* 	 * struct malloc_type was terminated with a struct mtx, which is no 	 * longer required.  For ABI reasons, continue to flesh out the full 	 * size of the old structure, but reuse the _lo_class field for our 	 * internal data handle. 	 */
 name|void
 modifier|*
 name|ks_handle
 decl_stmt|;
 comment|/* Priv. data, was lo_class. */
-specifier|const
-name|char
-modifier|*
-name|_lo_name
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|_lo_type
-decl_stmt|;
-name|u_int
-name|_lo_flags
-decl_stmt|;
-name|void
-modifier|*
-name|_lo_list_next
-decl_stmt|;
-name|struct
-name|witness
-modifier|*
-name|_lo_witness
-decl_stmt|;
-name|uintptr_t
-name|_mtx_lock
-decl_stmt|;
-name|u_int
-name|_mtx_recurse
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -363,7 +314,7 @@ parameter_list|,
 name|longdesc
 parameter_list|)
 define|\
-value|struct malloc_type type[1] = {					\ 		{ NULL, 0, 0, 0, 0, 0, M_MAGIC, shortdesc, NULL, NULL,	\ 		    NULL, 0, NULL, NULL, 0, 0 }				\ 	};								\ 	SYSINIT(type##_init, SI_SUB_KMEM, SI_ORDER_SECOND, malloc_init,	\ 	    type);							\ 	SYSUNINIT(type##_uninit, SI_SUB_KMEM, SI_ORDER_ANY,		\ 	    malloc_uninit, type)
+value|struct malloc_type type[1] = {					\ 		{ NULL, M_MAGIC, shortdesc, NULL }			\ 	};								\ 	SYSINIT(type##_init, SI_SUB_KMEM, SI_ORDER_SECOND, malloc_init,	\ 	    type);							\ 	SYSUNINIT(type##_uninit, SI_SUB_KMEM, SI_ORDER_ANY,		\ 	    malloc_uninit, type)
 end_define
 
 begin_define
