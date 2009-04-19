@@ -6399,14 +6399,6 @@ name|VM_PAGE_BITS_ALL
 operator|)
 operator|==
 name|VM_PAGE_BITS_ALL
-operator|&&
-operator|(
-name|p
-operator|->
-name|busy
-operator|==
-literal|0
-operator|)
 condition|)
 block|{
 if|if

@@ -3547,14 +3547,6 @@ operator|&&
 operator|(
 name|m
 operator|->
-name|busy
-operator|==
-literal|0
-operator|)
-operator|&&
-operator|(
-name|m
-operator|->
 name|flags
 operator|&
 name|PG_FICTITIOUS
