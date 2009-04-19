@@ -187,7 +187,6 @@ name|bas
 operator|.
 name|bst
 operator|=
-operator|&
 name|mips_bus_space_generic
 expr_stmt|;
 name|di
@@ -247,7 +246,6 @@ name|NULL
 expr_stmt|;
 name|uart_bus_space_mem
 operator|=
-operator|&
 name|mips_bus_space_generic
 expr_stmt|;
 return|return

@@ -169,7 +169,6 @@ name|sc
 operator|->
 name|oba_st
 operator|=
-operator|&
 name|mips_bus_space_generic
 expr_stmt|;
 name|sc

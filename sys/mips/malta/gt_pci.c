@@ -756,7 +756,6 @@ name|sc
 operator|->
 name|sc_st
 operator|=
-operator|&
 name|mips_bus_space_generic
 expr_stmt|;
 comment|/* Use KSEG1 to access IO ports for it is uncached */

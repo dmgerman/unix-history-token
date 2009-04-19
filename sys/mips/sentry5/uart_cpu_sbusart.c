@@ -238,10 +238,7 @@ argument_list|)
 expr_stmt|;
 name|uart_bus_space_mem
 operator|=
-name|MIPS_PHYS_TO_KSEG1
-argument_list|(
-name|SENTRY5_UART1ADR
-argument_list|)
+name|mips_bus_space_generic
 expr_stmt|;
 name|di
 operator|->

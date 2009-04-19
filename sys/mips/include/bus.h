@@ -3336,8 +3336,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|bus_space
+name|bus_space_tag_t
 name|mips_bus_space_generic
 decl_stmt|;
 end_decl_stmt

@@ -98,9 +98,10 @@ file|<machine/cache.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|bus_space
-name|mips_bus_space_generic
+name|generic_space
 init|=
 block|{
 comment|/* cookie */
@@ -260,6 +261,19 @@ name|generic_bs_wr_4
 block|,
 name|NULL
 block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* generic bus_space tag */
+end_comment
+
+begin_decl_stmt
+name|bus_space_tag_t
+name|mips_bus_space_generic
+init|=
+operator|&
+name|generic_space
 decl_stmt|;
 end_decl_stmt
 
