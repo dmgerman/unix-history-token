@@ -200,6 +200,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/flowtable.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -1038,6 +1044,50 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|static
+name|int
+name|ip_output_flowtable_size
+init|=
+literal|2048
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.inet.ip.output_flowtable_size"
+argument_list|,
+operator|&
+name|ip_output_flowtable_size
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_V_INT
+argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
+name|_net_inet_ip
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|output_flowtable_size
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+name|ip_output_flowtable_size
+argument_list|,
+literal|2048
+argument_list|,
+literal|"number of entries in the per-cpu output flow caches"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * ipfw_ether and ipfw_bridge hooks.  * XXX: Temporary until those are converted to pfil_hooks as well.  */
 end_comment
@@ -1076,6 +1126,14 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|struct
+name|flowtable
+modifier|*
+name|ip_ft
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -1623,6 +1681,15 @@ operator|&
 name|ipintrq
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|ip_ft
+operator|=
+name|flowtable_alloc
+argument_list|(
+name|ip_output_flowtable_size
+argument_list|,
+name|FL_PCPU
 argument_list|)
 expr_stmt|;
 block|}

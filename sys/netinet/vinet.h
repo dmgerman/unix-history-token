@@ -171,6 +171,9 @@ decl_stmt|;
 name|int
 name|_ip_checkinterface
 decl_stmt|;
+name|int
+name|_ip_output_flowtable_size
+decl_stmt|;
 name|u_short
 name|_ip_id
 decl_stmt|;
