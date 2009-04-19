@@ -1739,11 +1739,6 @@ case|case
 name|VM_PAGER_BAD
 case|:
 comment|/* 			 * Page outside of range of object. Right now we 			 * essentially lose the changes by pretending it 			 * worked. 			 */
-name|pmap_clear_modify
-argument_list|(
-name|mt
-argument_list|)
-expr_stmt|;
 name|vm_page_undirty
 argument_list|(
 name|mt
