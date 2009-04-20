@@ -5730,6 +5730,11 @@ name|sa_len
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|gw
+condition|)
+block|{
 name|rtmes
 operator|.
 name|m_rtm
@@ -5751,6 +5756,7 @@ operator|->
 name|sa_len
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|mask
