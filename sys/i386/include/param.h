@@ -186,23 +186,12 @@ begin_comment
 comment|/*  * CACHE_LINE_SIZE is the compile-time maximum cache line size for an  * architecture.  It should be used with appropriate caution.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CACHE_LINE_SHIFT
-end_ifndef
-
 begin_define
 define|#
 directive|define
 name|CACHE_LINE_SHIFT
 value|6
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
