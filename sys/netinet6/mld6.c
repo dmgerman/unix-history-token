@@ -1276,6 +1276,11 @@ operator|->
 name|mld_maxdelay
 argument_list|)
 expr_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|IFP_TO_IA6
 argument_list|(
 name|ifp
@@ -1289,7 +1294,14 @@ name|ia
 operator|==
 name|NULL
 condition|)
+block|{
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 comment|/* 		 * XXX: System timer resolution is too low to handle Max 		 * Response Delay, so set 1 to the internal timer even if 		 * the calculated value equals to zero when Max Response 		 * Delay is positive. 		 */
 name|timer
 operator|=
@@ -1317,11 +1329,6 @@ condition|)
 name|timer
 operator|=
 literal|1
-expr_stmt|;
-name|IF_ADDR_LOCK
-argument_list|(
-name|ifp
-argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
