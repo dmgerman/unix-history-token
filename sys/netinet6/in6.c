@@ -7070,6 +7070,11 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -7104,6 +7109,11 @@ argument_list|)
 condition|)
 break|break;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|(
