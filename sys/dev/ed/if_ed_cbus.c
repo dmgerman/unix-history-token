@@ -782,9 +782,7 @@ name|ed_alloc_port
 argument_list|(
 name|dev
 argument_list|,
-name|sc
-operator|->
-name|port_rid
+literal|0
 argument_list|,
 name|sc
 operator|->
@@ -796,9 +794,7 @@ name|ed98_alloc_port
 argument_list|(
 name|dev
 argument_list|,
-name|sc
-operator|->
-name|port_rid
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -812,9 +808,7 @@ name|ed_alloc_memory
 argument_list|(
 name|dev
 argument_list|,
-name|sc
-operator|->
-name|mem_rid
+literal|0
 argument_list|,
 name|sc
 operator|->
@@ -825,9 +819,7 @@ name|ed_alloc_irq
 argument_list|(
 name|dev
 argument_list|,
-name|sc
-operator|->
-name|irq_rid
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -2362,12 +2354,6 @@ operator|(
 name|ENOENT
 operator|)
 return|;
-name|sc
-operator|->
-name|port_rid
-operator|=
-name|rid
-expr_stmt|;
 name|sc
 operator|->
 name|port_res

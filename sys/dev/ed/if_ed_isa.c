@@ -621,9 +621,7 @@ name|ed_alloc_port
 argument_list|(
 name|dev
 argument_list|,
-name|sc
-operator|->
-name|port_rid
+literal|0
 argument_list|,
 name|sc
 operator|->
@@ -640,9 +638,7 @@ name|ed_alloc_memory
 argument_list|(
 name|dev
 argument_list|,
-name|sc
-operator|->
-name|mem_rid
+literal|0
 argument_list|,
 name|sc
 operator|->
@@ -653,9 +649,7 @@ name|ed_alloc_irq
 argument_list|(
 name|dev
 argument_list|,
-name|sc
-operator|->
-name|irq_rid
+literal|0
 argument_list|,
 literal|0
 argument_list|)
