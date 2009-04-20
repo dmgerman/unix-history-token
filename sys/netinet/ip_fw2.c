@@ -2644,7 +2644,7 @@ argument|mdc2
 argument_list|,
 argument|&mdc->if_addrhead
 argument_list|,
-argument|ifa_list
+argument|ifa_link
 argument_list|)
 block|{
 if|if
