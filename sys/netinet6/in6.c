@@ -3325,7 +3325,7 @@ name|ia
 operator|->
 name|ia_ifa
 argument_list|,
-name|ifa_list
+name|ifa_link
 argument_list|)
 expr_stmt|;
 name|IF_ADDR_UNLOCK
@@ -4925,7 +4925,7 @@ name|ia
 operator|->
 name|ia_ifa
 argument_list|,
-name|ifa_list
+name|ifa_link
 argument_list|)
 expr_stmt|;
 name|IF_ADDR_UNLOCK
@@ -5095,7 +5095,7 @@ argument|ifa
 argument_list|,
 argument|&ifp->if_addrhead
 argument_list|,
-argument|ifa_list
+argument|ifa_link
 argument_list|,
 argument|nifa
 argument_list|)
@@ -5966,7 +5966,7 @@ argument|ifa
 argument_list|,
 argument|&ifp->if_addrhead
 argument_list|,
-argument|ifa_list
+argument|ifa_link
 argument_list|)
 block|{
 if|if
@@ -6481,7 +6481,7 @@ argument|ifa
 argument_list|,
 argument|&ifp->if_addrhead
 argument_list|,
-argument|ifa_list
+argument|ifa_link
 argument_list|)
 block|{
 if|if
@@ -6978,7 +6978,7 @@ argument|ifa
 argument_list|,
 argument|&ifp->if_addrhead
 argument_list|,
-argument|ifa_list
+argument|ifa_link
 argument_list|)
 block|{
 if|if
@@ -7081,7 +7081,7 @@ argument|ifa
 argument_list|,
 argument|&ifp->if_addrhead
 argument_list|,
-argument|ifa_list
+argument|ifa_link
 argument_list|)
 block|{
 if|if
@@ -8079,7 +8079,7 @@ argument|ifa
 argument_list|,
 argument|&ifp->if_addrhead
 argument_list|,
-argument|ifa_list
+argument|ifa_link
 argument_list|)
 block|{
 if|if
@@ -8285,7 +8285,7 @@ argument|ifa
 argument_list|,
 argument|&ifp->if_addrhead
 argument_list|,
-argument|ifa_list
+argument|ifa_link
 argument_list|)
 block|{
 if|if
@@ -8470,7 +8470,7 @@ argument|ifa
 argument_list|,
 argument|&ifp->if_addrhead
 argument_list|,
-argument|ifa_list
+argument|ifa_link
 argument_list|)
 block|{
 if|if

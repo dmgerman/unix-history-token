@@ -1625,7 +1625,7 @@ comment|/* struct ifnet *ifp; */
 define|\
 comment|/* struct in6_ifaddr *ia; */
 define|\
-value|do {									\ 	struct ifaddr *ifa;						\ 	TAILQ_FOREACH(ifa,&(ifp)->if_addrhead, ifa_list) {		\ 		if (ifa->ifa_addr->sa_family == AF_INET6)		\ 			break;						\ 	}								\ 	(ia) = (struct in6_ifaddr *)ifa;				\ } while (
+value|do {									\ 	struct ifaddr *ifa;						\ 	TAILQ_FOREACH(ifa,&(ifp)->if_addrhead, ifa_link) {		\ 		if (ifa->ifa_addr->sa_family == AF_INET6)		\ 			break;						\ 	}								\ 	(ia) = (struct in6_ifaddr *)ifa;				\ } while (
 comment|/*CONSTCOND*/
 value|0)
 end_define
