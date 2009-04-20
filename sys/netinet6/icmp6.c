@@ -7233,6 +7233,11 @@ name|addrsofif
 operator|=
 literal|0
 expr_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -7402,6 +7407,11 @@ operator|++
 expr_stmt|;
 comment|/* count the address */
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|iffound
@@ -7575,6 +7585,11 @@ name|if_list
 argument_list|)
 control|)
 block|{
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|ifa
@@ -7790,6 +7805,11 @@ name|u_int32_t
 argument_list|)
 condition|)
 block|{
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* 				 * We give up much more copy. 				 * Set the truncate flag and return. 				 */
 name|nni6
 operator|->
@@ -7941,6 +7961,11 @@ argument_list|)
 operator|)
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ifp0
