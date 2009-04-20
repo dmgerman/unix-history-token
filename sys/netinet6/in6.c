@@ -3308,6 +3308,11 @@ name|ifa_refcnt
 operator|=
 literal|1
 expr_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -3321,6 +3326,11 @@ operator|->
 name|ia_ifa
 argument_list|,
 name|ifa_list
+argument_list|)
+expr_stmt|;
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 block|}
@@ -4898,6 +4908,11 @@ init|=
 name|splnet
 argument_list|()
 decl_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -4911,6 +4926,11 @@ operator|->
 name|ia_ifa
 argument_list|,
 name|ifa_list
+argument_list|)
+expr_stmt|;
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 name|oia
@@ -5954,6 +5974,11 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -6072,6 +6097,11 @@ argument_list|)
 condition|)
 break|break;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -6459,6 +6489,11 @@ modifier|*
 name|ifa
 decl_stmt|;
 comment|/* 	 * Give the interface a chance to initialize 	 * if this is its first address, 	 * and to validate the address if necessary. 	 */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -6483,6 +6518,11 @@ name|ifacount
 operator|++
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|ia
 operator|->
 name|ia_addr
@@ -6946,6 +6986,11 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -7000,6 +7045,11 @@ continue|continue;
 break|break;
 block|}
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|(
@@ -8027,6 +8077,11 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	 * We first look for addresses in the same scope. 	 * If there is one, return it. 	 * If two or more, return one which matches the dst longest. 	 * If none, return one of global addresses assigned other ifs. 	 */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -8221,11 +8276,18 @@ if|if
 condition|(
 name|besta
 condition|)
+block|{
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|besta
 operator|)
 return|;
+block|}
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -8330,6 +8392,11 @@ name|ifa
 expr_stmt|;
 continue|continue;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 expr|struct
@@ -8339,6 +8406,11 @@ operator|)
 name|ifa
 return|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* use the last-resort values, that are, deprecated addresses */
 if|if
 condition|(
@@ -8396,6 +8468,11 @@ name|in6_ifaddr
 modifier|*
 name|ia
 decl_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -8451,6 +8528,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * special cases, like 6to4, are handled in in6_ifattach 	 */
 name|in6_ifattach
 argument_list|(
