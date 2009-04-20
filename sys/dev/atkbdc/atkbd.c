@@ -2186,6 +2186,14 @@ block|{
 name|atkbd_state_t
 modifier|*
 name|state
+init|=
+operator|(
+name|atkbd_state_t
+operator|*
+operator|)
+name|kbd
+operator|->
+name|kb_data
 decl_stmt|;
 name|int
 name|delay
@@ -2206,16 +2214,6 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * The keyboard was not detected before; 		 * it must have been reconnected! 		 */
-name|state
-operator|=
-operator|(
-name|atkbd_state_t
-operator|*
-operator|)
-name|kbd
-operator|->
-name|kb_data
-expr_stmt|;
 name|init_keyboard
 argument_list|(
 name|state
@@ -2288,6 +2286,15 @@ name|delay
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|state
+operator|->
+name|ks_polling
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|KBD_IS_ACTIVE
