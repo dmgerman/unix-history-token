@@ -2114,7 +2114,7 @@ name|rt
 operator|->
 name|rt_ifp
 operator|->
-name|if_addrlist
+name|if_addrhead
 argument_list|)
 operator|->
 name|ifa_addr
@@ -4794,7 +4794,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
 argument_list|,
-argument|&ifp->if_addrlist
+argument|&ifp->if_addrhead
 argument_list|,
 argument|ifa_list
 argument_list|)
@@ -6436,7 +6436,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
 argument_list|,
-argument|&ifp->if_addrlist
+argument|&ifp->if_addrhead
 argument_list|,
 argument|ifa_list
 argument_list|)
