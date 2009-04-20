@@ -1626,6 +1626,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 		 * Try to find an address on the given outgoing interface 		 * that belongs to the jail. 		 */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -1688,6 +1693,11 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1804,6 +1814,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 		 * Try to find an address on the given outgoing interface 		 * that belongs to the jail. 		 */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -1877,6 +1892,11 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
