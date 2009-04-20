@@ -5056,6 +5056,9 @@ literal|0
 decl_stmt|,
 name|ioflag
 decl_stmt|;
+name|ino_t
+name|fvp_ino
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INVARIANTS
@@ -5538,6 +5541,12 @@ operator|->
 name|cn_thread
 argument_list|)
 expr_stmt|;
+name|fvp_ino
+operator|=
+name|ip
+operator|->
+name|i_number
+expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|fvp
@@ -5589,7 +5598,7 @@ name|error
 operator|=
 name|ufs_checkpath
 argument_list|(
-name|ip
+name|fvp_ino
 argument_list|,
 name|dp
 argument_list|,
