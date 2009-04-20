@@ -1748,7 +1748,7 @@ operator|->
 name|p_pptr
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Notify parent, so in case he was wait(2)ing or 		 * executiing waitpid(2) with our pid, he will 		 * continue. 		 */
+comment|/* 		 * Notify parent, so in case he was wait(2)ing or 		 * executing waitpid(2) with our pid, he will 		 * continue. 		 */
 name|wakeup
 argument_list|(
 name|pp
