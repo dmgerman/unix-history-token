@@ -756,7 +756,7 @@ name|driver_t
 name|ds1672_driver
 init|=
 block|{
-literal|"rtc"
+literal|"ds1672_rtc"
 block|,
 name|ds1672_methods
 block|,
