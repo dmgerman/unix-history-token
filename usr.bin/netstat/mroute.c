@@ -93,11 +93,24 @@ directive|include
 file|<net/route.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_KERNEL
+value|1
+end_define
+
 begin_include
 include|#
 directive|include
 file|<netinet/ip_mroute.h>
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|_KERNEL
+end_undef
 
 begin_include
 include|#

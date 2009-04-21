@@ -272,6 +272,12 @@ parameter_list|)
 value|((m1) == (m2))
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|mfc
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Argument structure for MRT_ADD_VIF.  * (MRT_DEL_VIF takes a single vifi_t argument.)  */
 end_comment
@@ -808,6 +814,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/*  * The kernel's multicast forwarding cache entry structure  */
 end_comment
@@ -898,6 +910,15 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
 begin_comment
 comment|/*  * Struct used to communicate from kernel to multicast router  * note the convenient similarity to an IP packet  */
 end_comment
@@ -957,6 +978,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/*  * Argument structure used for pkt info. while upcall is made  */
 end_comment
@@ -1000,6 +1027,15 @@ end_define
 
 begin_comment
 comment|/* max. no of pkts in upcall Q */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
 end_comment
 
 begin_comment
