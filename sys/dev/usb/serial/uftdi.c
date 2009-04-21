@@ -923,6 +923,17 @@ name|USB_VPI
 argument_list|(
 argument|USB_VENDOR_FTDI
 argument_list|,
+argument|USB_PRODUCT_FTDI_SERIAL_8U232AM4
+argument_list|,
+argument|UFTDI_TYPE_8U232AM
+argument_list|)
+block|}
+block|,
+block|{
+name|USB_VPI
+argument_list|(
+argument|USB_VENDOR_FTDI
+argument_list|,
 argument|USB_PRODUCT_FTDI_SEMC_DSS20
 argument_list|,
 argument|UFTDI_TYPE_8U232AM
