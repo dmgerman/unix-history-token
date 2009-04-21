@@ -325,6 +325,10 @@ name|int
 name|if_dunit
 decl_stmt|;
 comment|/* unit or IF_DUNIT_NONE */
+name|u_int
+name|if_refcount
+decl_stmt|;
+comment|/* reference count */
 name|struct
 name|ifaddrhead
 name|if_addrhead
@@ -633,7 +637,17 @@ modifier|*
 name|if_lagg
 decl_stmt|;
 comment|/* lagg glue */
+name|u_char
+name|if_alloctype
+decl_stmt|;
+comment|/* if_type at time of allocation */
 comment|/* 	 * Spare fields are added so that we can modify sensitive data 	 * structures without changing the kernel binary interface, and must 	 * be used with care where binary compatibility is required. 	 */
+name|char
+name|if_cspare
+index|[
+literal|3
+index|]
+decl_stmt|;
 name|void
 modifier|*
 name|if_pspare
@@ -2528,11 +2542,27 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Look up an ifnet given its index; the _ref variant also acquires a  * reference that must be freed using if_rele().  It is almost always a bug  * to call ifnet_byindex() instead if ifnet_byindex_ref().  */
+end_comment
+
 begin_function_decl
 name|struct
 name|ifnet
 modifier|*
 name|ifnet_byindex
+parameter_list|(
+name|u_short
+name|idx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|ifnet
+modifier|*
+name|ifnet_byindex_ref
 parameter_list|(
 name|u_short
 name|idx
@@ -2869,6 +2899,28 @@ end_empty_stmt
 begin_function_decl
 name|void
 name|if_qflush
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|if_ref
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|if_rele
 parameter_list|(
 name|struct
 name|ifnet
