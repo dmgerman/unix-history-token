@@ -331,7 +331,7 @@ begin_define
 define|#
 directive|define
 name|VM_MAX_KERNEL_ADDRESS
-value|CCSRBAR_VA
+value|0xf8000000
 end_define
 
 begin_endif
