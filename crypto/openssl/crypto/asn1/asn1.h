@@ -4151,6 +4151,10 @@ name|ASN1_R_BAD_TAG
 value|104
 define|#
 directive|define
+name|ASN1_R_BMPSTRING_IS_WRONG_LENGTH
+value|210
+define|#
+directive|define
 name|ASN1_R_BN_LIB
 value|105
 define|#
@@ -4381,6 +4385,10 @@ define|#
 directive|define
 name|ASN1_R_UNEXPECTED_EOC
 value|159
+define|#
+directive|define
+name|ASN1_R_UNIVERSALSTRING_IS_WRONG_LENGTH
+value|211
 define|#
 directive|define
 name|ASN1_R_UNKNOWN_FORMAT
