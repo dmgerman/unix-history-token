@@ -1151,13 +1151,6 @@ name|union
 name|atmegadci_hub_temp
 name|sc_hub_temp
 decl_stmt|;
-name|LIST_HEAD
-argument_list|(
-argument_list|,
-argument|usb2_xfer
-argument_list|)
-name|sc_interrupt_list_head
-expr_stmt|;
 comment|/* must be set by by the bus interface layer */
 name|atmegadci_clocks_t
 modifier|*

@@ -2081,13 +2081,6 @@ name|union
 name|uss820_hub_temp
 name|sc_hub_temp
 decl_stmt|;
-name|LIST_HEAD
-argument_list|(
-argument_list|,
-argument|usb2_xfer
-argument_list|)
-name|sc_interrupt_list_head
-expr_stmt|;
 name|struct
 name|usb2_device
 modifier|*
