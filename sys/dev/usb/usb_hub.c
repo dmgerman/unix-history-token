@@ -6508,11 +6508,6 @@ block|{
 name|struct
 name|usb2_device
 modifier|*
-name|hub
-decl_stmt|;
-name|struct
-name|usb2_device
-modifier|*
 name|child
 decl_stmt|;
 name|int
@@ -6523,9 +6518,6 @@ name|x
 decl_stmt|;
 name|uint8_t
 name|nports
-decl_stmt|;
-name|uint8_t
-name|suspend_parent
 decl_stmt|;
 name|repeat
 label|:
@@ -6564,15 +6556,11 @@ argument_list|,
 name|udev
 argument_list|)
 expr_stmt|;
-comment|/* check if all devices on the parent hub are suspended */
-name|hub
-operator|=
-name|udev
-operator|->
-name|parent_hub
-expr_stmt|;
+comment|/* check if the current device is a HUB */
 if|if
 condition|(
+name|udev
+operator|->
 name|hub
 operator|!=
 name|NULL
@@ -6580,16 +6568,13 @@ condition|)
 block|{
 name|nports
 operator|=
-name|hub
+name|udev
 operator|->
 name|hub
 operator|->
 name|nports
 expr_stmt|;
-name|suspend_parent
-operator|=
-literal|1
-expr_stmt|;
+comment|/* check if all devices on the HUB are suspended */
 for|for
 control|(
 name|x
@@ -6608,11 +6593,11 @@ name|child
 operator|=
 name|usb2_bus_port_get_device
 argument_list|(
-name|hub
+name|udev
 operator|->
 name|bus
 argument_list|,
-name|hub
+name|udev
 operator|->
 name|hub
 operator|->
@@ -6637,27 +6622,19 @@ operator|.
 name|suspended
 condition|)
 continue|continue;
-if|if
-condition|(
-name|child
-operator|==
-name|udev
-condition|)
-continue|continue;
-comment|/* another device on the HUB is not suspended */
-name|suspend_parent
-operator|=
-literal|0
+name|DPRINTFN
+argument_list|(
+literal|1
+argument_list|,
+literal|"Port %u is busy on the HUB!\n"
+argument_list|,
+name|x
+operator|+
+literal|1
+argument_list|)
 expr_stmt|;
-break|break;
+return|return;
 block|}
-block|}
-else|else
-block|{
-name|suspend_parent
-operator|=
-literal|0
-expr_stmt|;
 block|}
 name|sx_xlock
 argument_list|(
@@ -6828,11 +6805,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|suspend_parent
-condition|)
-block|{
 name|udev
 operator|=
 name|udev
@@ -6842,8 +6814,6 @@ expr_stmt|;
 goto|goto
 name|repeat
 goto|;
-block|}
-return|return;
 block|}
 end_function
 
