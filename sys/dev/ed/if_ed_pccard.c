@@ -367,6 +367,17 @@ name|PCMCIA_CARD
 argument_list|(
 name|BILLIONTON
 argument_list|,
+name|LNT10TB
+argument_list|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|PCMCIA_CARD
+argument_list|(
+name|BILLIONTON
+argument_list|,
 name|LNT10TN
 argument_list|)
 block|,
