@@ -27,7 +27,7 @@ value|0x80000000
 end_define
 
 begin_comment
-comment|/* Enable MCP */
+comment|/* Enable machine check pin */
 end_comment
 
 begin_define
@@ -451,7 +451,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HID0_BOOKE_TBEN
+name|HID0_E500_TBEN
 value|0x00004000
 end_define
 
@@ -462,7 +462,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HID0_BOOKE_SEL_TBCLK
+name|HID0_E500_SEL_TBCLK
 value|0x00002000
 end_define
 
@@ -473,7 +473,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HID0_BOOKE_MAS7UPDEN
+name|HID0_E500_MAS7UPDEN
 value|0x00000080
 end_define
 
@@ -508,6 +508,53 @@ end_define
 begin_comment
 comment|/*  *  HID0 bit definitions per cpu model  *  * bit	603	604	750	7400	7410	7450	7457	e500  *   0	EMCP	EMCP	EMCP	EMCP	EMCP	-	-	EMCP  *   1	-	ECP	DBP	-	-	-	-	-  *   2	EBA	EBA	EBA	EBA	EDA	-	-	-  *   3	EBD	EBD	EBD	EBD	EBD	-	-	-  *   4	SBCLK	-	BCLK	BCKL	BCLK	-	-	-  *   5	EICE	-	-	-	-	TBEN	TBEN	-  *   6	ECLK	-	ECLK	ECLK	ECLK	-	-	-  *   7	PAR	PAR	PAR	PAR	PAR	STEN	STEN	-  *   8	DOZE	-	DOZE	DOZE	DOZE	-	HBATEN	DOZE  *   9	NAP	-	NAP	NAP	NAP	NAP	NAP	NAP  *  10	SLEEP	-	SLEEP	SLEEP	SLEEP	SLEEP	SLEEP	SLEEP  *  11	DPM	-	DPM	DPM	DPM	DPM	DPM	-  *  12	RISEG	-	-	RISEG	-	-	-	-  *  13	-	-	-	EIEC	EIEC	BHTCLR	BHTCLR	-  *  14	-	-	-	-	-	XAEN	XAEN	-  *  15	-	NHR	NHR	NHR	NHR	NHR	NHR	-  *  16	ICE	ICE	ICE	ICE	ICE	ICE	ICE	-  *  17	DCE	DCE	DCE	DCE	DCE	DCE	DCE	TBEN  *  18	ILOCK	ILOCK	ILOCK	ILOCK	ILOCK	ILOCK	ILOCK	SEL_TBCLK  *  19	DLOCK	DLOCK	DLOCK	DLOCK	DLOCK	DLOCK	DLOCK	-  *  20	ICFI	ICFI	ICFI	ICFI	ICFI	ICFI	ICFI	-  *  21	DCFI	DCFI	DCFI	DCFI	DCFI	DCFI	DCFI	-  *  22	-	-	SPD	SPD	SPG	SPD	SPD	-  *  23	-	-	IFEM	IFTT	IFTT	-	XBSEN	-  *  24	-	SIE	SGE	SGE	SGE	SGE	SGE	EN_MAS7_UPDATE  *  25	-	-	DCFA	DCFA	DCFA	-	-	DCFA  *  26	-	-	BTIC	BTIC	BTIC	BTIC	BTIC	-  *  27	FBIOB	-	-	-	-	LRSTK	LRSTK	-  *  28	-	-	ABE	-	-	FOLD	FOLD	-  *  29	-	BHT	BHT	BHT	BHT	BHT	BHT	-  *  30	-	-	-	NOPDST	NOPDST	NOPDST	NOPDST	-  *  31	NOOPTI	-	NOOPTI	NOPTI	NOPTI	NOPTI	NOPTI	NOPTI  *  *  604: ECP = Enable cache parity checking  *  604: SIE = Serial instruction execution disable  * 7450: TBEN = Time Base Enable  * 7450: STEN = Software table lookup enable  * 7450: BHTCLR = Branch history clear  * 7450: XAEN = Extended Addressing Enabled  * 7450: LRSTK = Link Register Stack Enable  * 7450: FOLD = Branch folding enable  * 7457: HBATEN = High BAT Enable  * 7457: XBSEN = Extended BAT Block Size Enable  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HID1_E500_ABE
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* Address broadcast enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HID1_E500_ASTME
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* Address bus streaming mode enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HID1_E500_RFXE
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Read fault exception enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HID0_E500_DEFAULT_SET
+value|(HID0_EMCP | HID0_E500_TBEN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HID1_E500_DEFAULT_SET
+value|(HID1_E500_ABE | HID1_E500_ASTME)
+end_define
 
 begin_define
 define|#
