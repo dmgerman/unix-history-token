@@ -10231,6 +10231,20 @@ literal|"keymap=fr.iso"
 block|}
 block|,
 block|{
+literal|" French ISO/Macbook"
+block|,
+literal|"French ISO keymap on macbook"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=fr.macbook.acc"
+block|}
+block|,
+block|{
 literal|"German CP850"
 block|,
 literal|"German Code Page 850 keymap"
