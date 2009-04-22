@@ -370,11 +370,6 @@ operator|=
 literal|1
 block|,
 operator|.
-name|support_multi_buffer
-operator|=
-literal|1
-block|,
-operator|.
 name|support_bulk
 operator|=
 literal|1
@@ -1679,21 +1674,23 @@ operator|)
 return|;
 comment|/* complete */
 block|}
+name|temp
+operator|=
+name|ATMEGA_READ_1
+argument_list|(
+name|sc
+argument_list|,
+name|ATMEGA_UESTA0X
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
 name|temp
 operator|&
-operator|(
-name|ATMEGA_UEINTX_FIFOCON
-operator||
-name|ATMEGA_UEINTX_TXINI
-operator|)
-operator|)
+literal|3
 condition|)
 block|{
-comment|/* cannot write any data */
+comment|/* cannot write any data - a bank is busy */
 goto|goto
 name|not_complete
 goto|;
@@ -1971,21 +1968,23 @@ return|;
 comment|/* complete */
 block|}
 comment|/* 	 * The control endpoint has only got one bank, so if that bank 	 * is free the packet has been transferred! 	 */
+name|temp
+operator|=
+name|ATMEGA_READ_1
+argument_list|(
+name|sc
+argument_list|,
+name|ATMEGA_UESTA0X
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
 name|temp
 operator|&
-operator|(
-name|ATMEGA_UEINTX_FIFOCON
-operator||
-name|ATMEGA_UEINTX_TXINI
-operator|)
-operator|)
+literal|3
 condition|)
 block|{
-comment|/* cannot write any data */
+comment|/* cannot write any data - a bank is busy */
 goto|goto
 name|not_complete
 goto|;
@@ -4335,8 +4334,9 @@ name|ATMEGA_UECFG1X
 argument_list|,
 name|ATMEGA_UECFG1X_ALLOC
 operator||
-name|ATMEGA_UECFG1X_EPBK1
+name|ATMEGA_UECFG1X_EPBK0
 operator||
+comment|/* one bank */
 name|ATMEGA_UECFG1X_EPSIZE
 argument_list|(
 literal|3
