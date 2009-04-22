@@ -185,13 +185,6 @@ directive|include
 file|"pccarddevs.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|bootverbose
-value|1
-end_define
-
 begin_comment
 comment|/*  * NE-2000 based PC Cards have a number of ways to get the MAC address.  * Some cards encode this as a FUNCE.  Others have this in the ROMs the  * same way that ISA cards do.  Some have it encoded in the attribute  * memory somewhere that isn't in the CIS.  Some new chipsets have it  * in special registers in the ASIC part of the chip.  *  * For those cards that have the MAC adress stored in attribute memory  * outside of a FUNCE entry in the CIS, nearly all of them have it at  * a fixed offset (0xff0).  We use that offset as a source of last  * resource if other offsets have failed.  This is the address of the  * National Semiconductor DP83903A, which is the only chip's datasheet  * I've found.  */
 end_comment
