@@ -1087,6 +1087,12 @@ literal|"bad tag"
 block|}
 block|,
 block|{
+name|ASN1_R_BMPSTRING_IS_WRONG_LENGTH
+block|,
+literal|"bmpstring is wrong length"
+block|}
+block|,
+block|{
 name|ASN1_R_BN_LIB
 block|,
 literal|"bn lib"
@@ -1432,6 +1438,12 @@ block|{
 name|ASN1_R_UNEXPECTED_EOC
 block|,
 literal|"unexpected eoc"
+block|}
+block|,
+block|{
+name|ASN1_R_UNIVERSALSTRING_IS_WRONG_LENGTH
+block|,
+literal|"universalstring is wrong length"
 block|}
 block|,
 block|{
