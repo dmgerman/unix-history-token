@@ -2175,6 +2175,27 @@ name|AT91RM92_OHCI_SIZE
 value|0x00100000
 end_define
 
+begin_define
+define|#
+directive|define
+name|AT91RM92_CF_BASE
+value|0xdfd00000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91RM92_CF_PA_BASE
+value|0x51400000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91RM92_CF_SIZE
+value|0x00100000
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
