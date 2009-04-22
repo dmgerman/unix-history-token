@@ -151,6 +151,10 @@ struct|struct
 name|usb2_bus_methods
 block|{
 comment|/* USB Device and Host mode - Mandatory */
+name|usb2_handle_request_t
+modifier|*
+name|roothub_exec
+decl_stmt|;
 name|void
 function_decl|(
 modifier|*
@@ -160,17 +164,14 @@ parameter_list|(
 name|struct
 name|usb2_device
 modifier|*
-name|udev
 parameter_list|,
 name|struct
 name|usb2_endpoint_descriptor
 modifier|*
-name|edesc
 parameter_list|,
 name|struct
 name|usb2_pipe
 modifier|*
-name|pipe
 parameter_list|)
 function_decl|;
 name|void
@@ -182,7 +183,6 @@ parameter_list|(
 name|struct
 name|usb2_setup_params
 modifier|*
-name|parm
 parameter_list|)
 function_decl|;
 name|void
@@ -194,7 +194,6 @@ parameter_list|(
 name|struct
 name|usb2_xfer
 modifier|*
-name|xfer
 parameter_list|)
 function_decl|;
 name|void
@@ -209,7 +208,6 @@ modifier|*
 parameter_list|,
 name|uint32_t
 modifier|*
-name|pdelay
 parameter_list|)
 function_decl|;
 name|void
@@ -221,7 +219,6 @@ parameter_list|(
 name|struct
 name|usb2_device
 modifier|*
-name|udev
 parameter_list|)
 function_decl|;
 name|void
@@ -233,7 +230,6 @@ parameter_list|(
 name|struct
 name|usb2_device
 modifier|*
-name|udev
 parameter_list|)
 function_decl|;
 name|void
@@ -245,7 +241,6 @@ parameter_list|(
 name|struct
 name|usb2_bus
 modifier|*
-name|bus
 parameter_list|)
 function_decl|;
 comment|/* 	 * The following flag is set if one or more control transfers are 	 * active: 	 */
@@ -333,18 +328,6 @@ name|struct
 name|usb2_pipe
 modifier|*
 name|pipe
-parameter_list|)
-function_decl|;
-comment|/* USB Device and Host mode - Optional */
-name|void
-function_decl|(
-modifier|*
-name|roothub_exec
-function_decl|)
-parameter_list|(
-name|struct
-name|usb2_bus
-modifier|*
 parameter_list|)
 function_decl|;
 block|}

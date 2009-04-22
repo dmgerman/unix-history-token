@@ -1708,13 +1708,19 @@ block|{
 comment|/* save some memory */
 name|err
 operator|=
-name|usb2_req_get_config_desc_ptr
+name|usb2_req_get_descriptor_ptr
 argument_list|(
 name|udev
 argument_list|,
 operator|&
 name|cdp
 argument_list|,
+operator|(
+name|UDESC_CONFIG
+operator|<<
+literal|8
+operator|)
+operator||
 name|index
 argument_list|)
 expr_stmt|;

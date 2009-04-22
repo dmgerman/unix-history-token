@@ -980,6 +980,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|usb2_device_request
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|usb2_page
 struct_decl|;
 end_struct_decl
@@ -1173,6 +1179,32 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_typedef
+typedef|typedef
+name|usb2_error_t
+function_decl|(
+name|usb2_handle_request_t
+function_decl|)
+parameter_list|(
+name|struct
+name|usb2_device
+modifier|*
+parameter_list|,
+name|struct
+name|usb2_device_request
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+modifier|*
+parameter_list|,
+name|uint16_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
 
 begin_comment
 comment|/* structures */

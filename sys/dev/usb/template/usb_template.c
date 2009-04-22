@@ -395,7 +395,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|usb2_error_t
 name|usb2_temp_get_desc
 parameter_list|(
 name|struct
@@ -4303,7 +4303,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|usb2_error_t
 name|usb2_temp_get_desc
 parameter_list|(
 name|struct
@@ -4634,7 +4634,12 @@ name|pLength
 operator|=
 name|len
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* success */
 name|tr_stalled
 label|:
 operator|*
@@ -4647,6 +4652,12 @@ name|pLength
 operator|=
 literal|0
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* we ignore failures */
 block|}
 end_function
 

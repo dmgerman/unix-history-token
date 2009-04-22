@@ -187,7 +187,7 @@ end_function_decl
 
 begin_function_decl
 name|usb2_error_t
-name|usb2_req_get_config_desc_ptr
+name|usb2_req_get_descriptor_ptr
 parameter_list|(
 name|struct
 name|usb2_device
@@ -200,8 +200,8 @@ modifier|*
 modifier|*
 name|ppcd
 parameter_list|,
-name|uint8_t
-name|config_index
+name|uint16_t
+name|wValue
 parameter_list|)
 function_decl|;
 end_function_decl
