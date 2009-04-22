@@ -3928,6 +3928,10 @@ operator|->
 name|subdev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
 name|device_printf
 argument_list|(
 name|iface
