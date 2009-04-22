@@ -734,42 +734,6 @@ block|{  }
 end_function
 
 begin_comment
-comment|/* Temporary helper */
-end_comment
-
-begin_function
-name|void
-name|cpu_throw
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|old
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|new
-parameter_list|)
-block|{
-name|cpu_switch
-argument_list|(
-name|old
-argument_list|,
-name|new
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"cpu_throw() didn't"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Allocate a pool of sf_bufs (sendfile(2) or "super-fast" if you prefer. :-))  */
 end_comment
 
