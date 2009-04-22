@@ -1772,8 +1772,10 @@ operator|(
 name|PAGE
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 name|t
 operator|->
 name|bt_psize
