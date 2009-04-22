@@ -3164,6 +3164,25 @@ name|xroot
 operator|=
 name|info
 expr_stmt|;
+comment|/*  			 * In device side mode control endpoint 			 * requests need to run from a separate 			 * context, else there is a chance of 			 * deadlock! 			 */
+if|if
+condition|(
+name|setup_start
+operator|==
+name|usb2_control_ep_cfg
+condition|)
+name|info
+operator|->
+name|done_p
+operator|=
+operator|&
+name|udev
+operator|->
+name|bus
+operator|->
+name|control_xfer_proc
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|xfer_mtx

@@ -101,10 +101,6 @@ name|usb2_bus_stat
 name|stats_ok
 decl_stmt|;
 name|struct
-name|usb2_process
-name|explore_proc
-decl_stmt|;
-name|struct
 name|usb2_sw_transfer
 name|roothub_req
 decl_stmt|;
@@ -121,6 +117,16 @@ decl_stmt|;
 name|struct
 name|usb2_process
 name|non_giant_callback_proc
+decl_stmt|;
+comment|/* Explore process */
+name|struct
+name|usb2_process
+name|explore_proc
+decl_stmt|;
+comment|/* Control request process */
+name|struct
+name|usb2_process
+name|control_xfer_proc
 decl_stmt|;
 name|struct
 name|usb2_bus_msg
