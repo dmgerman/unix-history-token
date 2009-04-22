@@ -5399,6 +5399,12 @@ name|address
 expr_stmt|;
 name|udev
 operator|->
+name|parent_hs_hub
+operator|=
+name|hub
+expr_stmt|;
+name|udev
+operator|->
 name|hs_port_no
 operator|=
 name|adev

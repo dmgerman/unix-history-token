@@ -364,6 +364,12 @@ modifier|*
 name|parent_hub
 decl_stmt|;
 name|struct
+name|usb2_device
+modifier|*
+name|parent_hs_hub
+decl_stmt|;
+comment|/* high-speed parent HUB */
+name|struct
 name|usb2_config_descriptor
 modifier|*
 name|cdesc

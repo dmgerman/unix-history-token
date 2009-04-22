@@ -4063,14 +4063,9 @@ block|}
 comment|/* 	         * The Host Controller Driver should have 	         * performed checks so that the lookup 	         * below does not result in a NULL pointer 	         * access. 	         */
 name|hub
 operator|=
-name|bus
-operator|->
-name|devices
-index|[
 name|udev
 operator|->
-name|hs_hub_addr
-index|]
+name|parent_hs_hub
 operator|->
 name|hub
 expr_stmt|;
@@ -4421,14 +4416,7 @@ name|hs_hub
 operator|=
 name|udev
 operator|->
-name|bus
-operator|->
-name|devices
-index|[
-name|udev
-operator|->
-name|hs_hub_addr
-index|]
+name|parent_hs_hub
 operator|->
 name|hub
 expr_stmt|;
