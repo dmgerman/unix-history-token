@@ -4863,7 +4863,7 @@ name|struct
 name|ieee80211_scanparams
 name|scan
 decl_stmt|;
-comment|/* 		 * We process beacon/probe response frames: 		 *    o when scanning, or 		 *    o station mode when associated (to collect state 		 *      updates such as 802.11g slot time), or 		 * Frames otherwise received are discarded. 		 */
+comment|/* 		 * We process beacon/probe response frames: 		 *    o when scanning, or 		 *    o station mode when associated (to collect state 		 *      updates such as 802.11g slot time) 		 * Frames otherwise received are discarded. 		 */
 if|if
 condition|(
 operator|!
