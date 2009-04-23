@@ -13671,6 +13671,10 @@ argument|TASK_INIT(&adapter->rx_task,
 literal|0
 argument|, em_handle_rx, adapter); 	TASK_INIT(&adapter->tx_task,
 literal|0
+argument|, em_handle_tx, adapter);
+comment|/* 	 * Handle compatibility for msi case for deferral due to 	 * trylock failure 	 */
+argument|TASK_INIT(&adapter->rxtx_task,
+literal|0
 argument|, em_handle_tx, adapter); 	TASK_INIT(&adapter->link_task,
 literal|0
 argument|, em_handle_link, adapter); 	adapter->tq = taskqueue_create_fast(
