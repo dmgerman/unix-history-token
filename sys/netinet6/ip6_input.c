@@ -968,7 +968,7 @@ if|if
 condition|(
 name|pr
 operator|==
-literal|0
+name|NULL
 condition|)
 name|panic
 argument_list|(
