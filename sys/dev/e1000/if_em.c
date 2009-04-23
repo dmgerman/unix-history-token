@@ -5799,6 +5799,8 @@ name|m_head
 operator|=
 name|drbr_dequeue
 argument_list|(
+name|ifp
+argument_list|,
 name|adapter
 operator|->
 name|br
