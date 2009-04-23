@@ -2826,12 +2826,6 @@ name|nve_ioctl
 expr_stmt|;
 name|ifp
 operator|->
-name|if_output
-operator|=
-name|ether_output
-expr_stmt|;
-name|ifp
-operator|->
 name|if_start
 operator|=
 name|nve_ifstart
@@ -3056,6 +3050,11 @@ name|dev
 argument_list|)
 condition|)
 block|{
+name|ether_ifdetach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|NVE_LOCK
 argument_list|(
 name|sc
@@ -3077,11 +3076,6 @@ operator|&
 name|sc
 operator|->
 name|stat_callout
-argument_list|)
-expr_stmt|;
-name|ether_ifdetach
-argument_list|(
-name|ifp
 argument_list|)
 expr_stmt|;
 block|}
