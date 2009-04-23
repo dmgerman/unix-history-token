@@ -490,6 +490,17 @@ begin_comment
 comment|/* (n) static ARP */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFF_DYING
+value|0x200000
+end_define
+
+begin_comment
+comment|/* (n) interface is winding down */
+end_comment
+
 begin_comment
 comment|/*  * Old names for driver flags so that user space tools can continue to use  * the old (portable) names.  */
 end_comment
@@ -528,7 +539,7 @@ define|#
 directive|define
 name|IFF_CANTCHANGE
 define|\
-value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_DRV_RUNNING|IFF_DRV_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_SMART|IFF_PROMISC)
+value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_DRV_RUNNING|IFF_DRV_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_SMART|IFF_PROMISC|\ 	    IFF_DYING)
 end_define
 
 begin_comment
