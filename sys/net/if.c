@@ -8067,6 +8067,15 @@ name|IFNAMSIZ
 argument_list|)
 operator|==
 literal|0
+operator|&&
+operator|!
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_DYING
+operator|)
 condition|)
 break|break;
 block|}
