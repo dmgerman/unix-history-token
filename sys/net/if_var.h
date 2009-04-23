@@ -3022,6 +3022,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|ifnet
+modifier|*
+name|ifunit_ref
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ifq_attach
 parameter_list|(
