@@ -4207,6 +4207,12 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Prevent further calls into the device driver via ifnet. 	 */
+name|if_dead
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Remove link ifaddr pointer and maybe decrement if_index. 	 * Clean up all addresses. 	 */
 name|ifp
 operator|->
