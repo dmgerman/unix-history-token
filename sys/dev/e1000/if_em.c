@@ -5797,7 +5797,7 @@ condition|)
 block|{
 name|m_head
 operator|=
-name|buf_ring_dequeue_sc
+name|drbr_dequeue
 argument_list|(
 name|adapter
 operator|->
