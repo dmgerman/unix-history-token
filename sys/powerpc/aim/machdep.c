@@ -2263,6 +2263,26 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|bzero
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|thread0
+operator|.
+name|td_pcb
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pcb
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|pc
 operator|->
 name|pc_curpcb
