@@ -573,6 +573,15 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|uint32_t
+name|cfg0
+decl_stmt|,
+name|cfg1
+decl_stmt|,
+name|cfg2
+decl_stmt|,
+name|cfg3
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"cpu%d: "
@@ -912,6 +921,88 @@ name|dc_linesize
 argument_list|)
 expr_stmt|;
 block|}
+name|cfg0
+operator|=
+name|mips_rd_config
+argument_list|()
+expr_stmt|;
+comment|/* If config register selection 1 does not exist, exit. */
+if|if
+condition|(
+operator|!
+operator|(
+name|cfg0
+operator|&
+name|MIPS3_CONFIG_CM
+operator|)
+condition|)
+return|return;
+name|cfg1
+operator|=
+name|mips_rd_config_sel1
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  Config1=0x%b\n"
+argument_list|,
+name|cfg1
+argument_list|,
+literal|"\20\7COP2\6MDMX\5PerfCount\4WatchRegs\3MIPS16\2EJTAG\1FPU"
+argument_list|)
+expr_stmt|;
+comment|/* If config register selection 2 does not exist, exit. */
+if|if
+condition|(
+operator|!
+operator|(
+name|cfg1
+operator|&
+name|MIPS3_CONFIG_CM
+operator|)
+condition|)
+return|return;
+name|cfg2
+operator|=
+name|mips_rd_config_sel2
+argument_list|()
+expr_stmt|;
+comment|/*  	 * Config2 contains no useful information other then Config3  	 * existence flag 	 */
+comment|/* If config register selection 3 does not exist, exit. */
+if|if
+condition|(
+operator|!
+operator|(
+name|cfg2
+operator|&
+name|MIPS3_CONFIG_CM
+operator|)
+condition|)
+return|return;
+name|cfg3
+operator|=
+name|mips_rd_config_sel2
+argument_list|()
+expr_stmt|;
+comment|/* Print Config3 if it contains any useful info */
+if|if
+condition|(
+name|cfg3
+operator|&
+operator|~
+operator|(
+literal|0x80000000
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"  Config3=0x%b\n"
+argument_list|,
+name|cfg3
+argument_list|,
+literal|"\20\2SmartMIPS\1TraceLogic"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
