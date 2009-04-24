@@ -1060,6 +1060,17 @@ name|PCMCIA_CARD
 argument_list|(
 name|OEM2
 argument_list|,
+literal|100BASE
+argument_list|)
+block|,
+name|NE2000DVF_AX88X90
+block|}
+block|,
+block|{
+name|PCMCIA_CARD
+argument_list|(
+name|OEM2
+argument_list|,
 name|ETHERNET
 argument_list|)
 block|,
