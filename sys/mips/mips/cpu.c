@@ -981,7 +981,7 @@ condition|)
 return|return;
 name|cfg3
 operator|=
-name|mips_rd_config_sel2
+name|mips_rd_config_sel3
 argument_list|()
 expr_stmt|;
 comment|/* Print Config3 if it contains any useful info */
