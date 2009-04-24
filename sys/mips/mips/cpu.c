@@ -455,7 +455,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TARGET_OCTEON
-comment|/*          * Octeon does 128 byte line-size. But Config-Sel1 doesn't show          * 128 line-size, 1 Set, 64 ways.          */
+comment|/* 		 * Octeon does 128 byte line-size. But Config-Sel1 doesn't show 		 * 128 line-size, 1 Set, 64 ways. 		 */
 name|cpuinfo
 operator|->
 name|l1
