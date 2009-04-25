@@ -4426,9 +4426,9 @@ name|xroot
 operator|->
 name|udev
 operator|->
-name|pwr_save
-operator|.
-name|suspended
+name|state
+operator|==
+name|USB_STATE_SUSPENDED
 condition|)
 block|{
 comment|/* nothing to do */
@@ -6577,11 +6577,9 @@ name|xroot
 operator|->
 name|udev
 operator|->
-name|pwr_save
-operator|.
-name|suspended
-operator|==
-literal|0
+name|state
+operator|!=
+name|USB_STATE_SUSPENDED
 condition|)
 block|{
 comment|/* the append function will flush the endpoint descriptor */

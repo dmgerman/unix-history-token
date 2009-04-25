@@ -835,6 +835,27 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* Check if the device is still alive */
+if|if
+condition|(
+name|udev
+operator|->
+name|state
+operator|<
+name|USB_STATE_POWERED
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+literal|"usb device has gone\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|USB_ERR_NOT_CONFIGURED
+operator|)
+return|;
+block|}
 comment|/* 	 * Set "actlen" to a known value in case the caller does not 	 * check the return value: 	 */
 if|if
 condition|(

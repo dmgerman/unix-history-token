@@ -83,6 +83,31 @@ block|}
 enum|;
 end_enum
 
+begin_comment
+comment|/*  * The "USB_MODE" macro defines all the supported device states.  */
+end_comment
+
+begin_enum
+enum|enum
+name|usb_dev_state
+block|{
+name|USB_STATE_DETACHED
+block|,
+name|USB_STATE_ATTACHED
+block|,
+name|USB_STATE_POWERED
+block|,
+name|USB_STATE_ADDRESSED
+block|,
+name|USB_STATE_CONFIGURED
+block|,
+name|USB_STATE_SUSPENDED
+block|,
+name|USB_STATE_MAX
+block|, }
+enum|;
+end_enum
+
 begin_endif
 endif|#
 directive|endif

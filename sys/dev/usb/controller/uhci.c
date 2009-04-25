@@ -7480,11 +7480,9 @@ name|xroot
 operator|->
 name|udev
 operator|->
-name|pwr_save
-operator|.
-name|suspended
-operator|==
-literal|0
+name|state
+operator|!=
+name|USB_STATE_SUSPENDED
 condition|)
 block|{
 name|UHCI_APPEND_QH
@@ -7690,11 +7688,9 @@ name|xroot
 operator|->
 name|udev
 operator|->
-name|pwr_save
-operator|.
-name|suspended
-operator|==
-literal|0
+name|state
+operator|!=
+name|USB_STATE_SUSPENDED
 condition|)
 block|{
 if|if
@@ -8055,11 +8051,9 @@ name|xroot
 operator|->
 name|udev
 operator|->
-name|pwr_save
-operator|.
-name|suspended
-operator|==
-literal|0
+name|state
+operator|!=
+name|USB_STATE_SUSPENDED
 condition|)
 block|{
 comment|/* enter QHs into the controller data structures */

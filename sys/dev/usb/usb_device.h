@@ -229,12 +229,6 @@ literal|1
 decl_stmt|;
 comment|/* set if USB device is self powered */
 name|uint8_t
-name|suspended
-range|:
-literal|1
-decl_stmt|;
-comment|/* set if USB device is suspended */
-name|uint8_t
 name|no_strings
 range|:
 literal|1
@@ -283,10 +277,6 @@ name|usb2_size_t
 name|write_refs
 decl_stmt|;
 comment|/* data write references */
-name|uint8_t
-name|suspended
-decl_stmt|;
-comment|/* set if USB device is suspended */
 block|}
 struct|;
 end_struct
@@ -453,6 +443,10 @@ name|usb2_ticks_t
 name|plugtime
 decl_stmt|;
 comment|/* copy of "ticks" */
+name|enum
+name|usb_dev_state
+name|state
+decl_stmt|;
 name|uint16_t
 name|refcount
 decl_stmt|;
@@ -860,6 +854,22 @@ name|struct
 name|usb2_pipe
 modifier|*
 name|pipe
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usb2_set_device_state
+parameter_list|(
+name|struct
+name|usb2_device
+modifier|*
+name|udev
+parameter_list|,
+name|enum
+name|usb_dev_state
+name|state
 parameter_list|)
 function_decl|;
 end_function_decl

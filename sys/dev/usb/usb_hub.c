@@ -1961,9 +1961,9 @@ if|if
 condition|(
 name|udev
 operator|->
-name|pwr_save
-operator|.
-name|suspended
+name|state
+operator|==
+name|USB_STATE_SUSPENDED
 condition|)
 block|{
 comment|/* need to wait until the child signals resume */
@@ -5371,9 +5371,9 @@ if|if
 condition|(
 name|udev
 operator|->
-name|pwr_save
-operator|.
-name|suspended
+name|state
+operator|==
+name|USB_STATE_SUSPENDED
 condition|)
 name|needs_explore
 operator|=
@@ -5735,11 +5735,9 @@ if|if
 condition|(
 name|udev
 operator|->
-name|pwr_save
-operator|.
-name|suspended
-operator|!=
-literal|0
+name|state
+operator|==
+name|USB_STATE_SUSPENDED
 condition|)
 block|{
 name|USB_BUS_UNLOCK
@@ -5772,11 +5770,9 @@ if|if
 condition|(
 name|udev
 operator|->
-name|pwr_save
-operator|.
-name|suspended
-operator|==
-literal|0
+name|state
+operator|!=
+name|USB_STATE_SUSPENDED
 condition|)
 block|{
 name|USB_BUS_UNLOCK
@@ -5908,11 +5904,9 @@ if|if
 condition|(
 name|udev
 operator|->
-name|pwr_save
-operator|.
-name|suspended
-operator|==
-literal|0
+name|state
+operator|!=
+name|USB_STATE_SUSPENDED
 condition|)
 block|{
 name|type_refs
@@ -6146,11 +6140,9 @@ if|if
 condition|(
 name|udev
 operator|->
-name|pwr_save
-operator|.
-name|suspended
-operator|==
-literal|0
+name|state
+operator|!=
+name|USB_STATE_SUSPENDED
 condition|)
 return|return;
 comment|/* we need a parent HUB to do resume */
@@ -6289,13 +6281,12 @@ name|bus
 argument_list|)
 expr_stmt|;
 comment|/* set that this device is now resumed */
+name|usb2_set_device_state
+argument_list|(
 name|udev
-operator|->
-name|pwr_save
-operator|.
-name|suspended
-operator|=
-literal|0
+argument_list|,
+name|USB_STATE_CONFIGURED
+argument_list|)
 expr_stmt|;
 if|#
 directive|if
@@ -6534,9 +6525,9 @@ if|if
 condition|(
 name|udev
 operator|->
-name|pwr_save
-operator|.
-name|suspended
+name|state
+operator|==
+name|USB_STATE_SUSPENDED
 condition|)
 return|return;
 comment|/* we need a parent HUB to do suspend */
@@ -6617,9 +6608,9 @@ if|if
 condition|(
 name|child
 operator|->
-name|pwr_save
-operator|.
-name|suspended
+name|state
+operator|==
+name|USB_STATE_SUSPENDED
 condition|)
 continue|continue;
 name|DPRINTFN
@@ -6707,13 +6698,12 @@ name|bus
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set that this device is suspended. This variable must be set 	 * before calling USB controller suspend callbacks. 	 */
+name|usb2_set_device_state
+argument_list|(
 name|udev
-operator|->
-name|pwr_save
-operator|.
-name|suspended
-operator|=
-literal|1
+argument_list|,
+name|USB_STATE_SUSPENDED
+argument_list|)
 expr_stmt|;
 name|USB_BUS_UNLOCK
 argument_list|(

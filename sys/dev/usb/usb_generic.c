@@ -4057,9 +4057,9 @@ if|if
 condition|(
 name|udev
 operator|->
-name|flags
-operator|.
-name|suspended
+name|state
+operator|==
+name|USB_STATE_SUSPENDED
 condition|)
 block|{
 name|di
