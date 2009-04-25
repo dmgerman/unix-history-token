@@ -125,6 +125,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -173,6 +179,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysent.h>
 end_include
 
@@ -206,6 +218,10 @@ directive|include
 file|<machine/stdarg.h>
 end_include
 
+begin_comment
+comment|/*  * Our utmp(5) format is limited to 8-byte TTY line names.  This means  * we can at most allocate 1000 pseudo-terminals ("pts/999").  Allow  * users to increase this number, assuming they have manually increased  * UT_LINESIZE.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -215,12 +231,36 @@ name|pts_pool
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|MAXPTSDEVS
-value|999
-end_define
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|int
+name|pts_maxdev
+init|=
+literal|999
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|pts_maxdev
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|pts_maxdev
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum amount of pts(4) pseudo-terminals"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 specifier|static
@@ -2913,6 +2953,36 @@ name|EAGAIN
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|unit
+operator|>
+name|pts_maxdev
+condition|)
+block|{
+name|free_unr
+argument_list|(
+name|pts_pool
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|chgptscnt
+argument_list|(
+name|uid
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EAGAIN
+operator|)
+return|;
+block|}
 comment|/* Allocate TTY and softc. */
 name|psc
 operator|=
@@ -3568,7 +3638,7 @@ name|new_unrhdr
 argument_list|(
 literal|0
 argument_list|,
-name|MAXPTSDEVS
+name|INT_MAX
 argument_list|,
 name|NULL
 argument_list|)
