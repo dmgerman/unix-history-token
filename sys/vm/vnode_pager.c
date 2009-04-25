@@ -4020,15 +4020,34 @@ name|valid
 operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
-name|vm_page_undirty
+name|KASSERT
+argument_list|(
+name|mt
+operator|->
+name|dirty
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"vnode_pager_generic_getpages: page %p is dirty"
+operator|,
+name|mt
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|!
+name|pmap_page_is_mapped
 argument_list|(
 name|mt
 argument_list|)
-expr_stmt|;
-comment|/* should be an assert? XXX */
-name|pmap_clear_modify
-argument_list|(
+argument_list|,
+operator|(
+literal|"vnode_pager_generic_getpages: page %p is mapped"
+operator|,
 name|mt
+operator|)
 argument_list|)
 expr_stmt|;
 block|}

@@ -4325,10 +4325,20 @@ operator|==
 name|BIO_READ
 condition|)
 block|{
-comment|/* 			 * For read success, clear dirty bits.  Nobody should 			 * have this page mapped but don't take any chances, 			 * make sure the pmap modify bits are also cleared. 			 * 			 * NOTE: for reads, m->dirty will probably be  			 * overridden by the original caller of getpages so 			 * we cannot set them in order to free the underlying 			 * swap in a low-swap situation.  I don't think we'd 			 * want to do that anyway, but it was an optimization 			 * that existed in the old swapper for a time before 			 * it got ripped out due to precisely this problem. 			 * 			 * If not the requested page then deactivate it. 			 * 			 * Note that the requested page, reqpage, is left 			 * busied, but we still have to wake it up.  The 			 * other pages are released (unbusied) by  			 * vm_page_wakeup().  We do not set reqpage's 			 * valid bits here, it is up to the caller. 			 */
-name|pmap_clear_modify
+comment|/* 			 * NOTE: for reads, m->dirty will probably be  			 * overridden by the original caller of getpages so 			 * we cannot set them in order to free the underlying 			 * swap in a low-swap situation.  I don't think we'd 			 * want to do that anyway, but it was an optimization 			 * that existed in the old swapper for a time before 			 * it got ripped out due to precisely this problem. 			 * 			 * If not the requested page then deactivate it. 			 * 			 * Note that the requested page, reqpage, is left 			 * busied, but we still have to wake it up.  The 			 * other pages are released (unbusied) by  			 * vm_page_wakeup().  We do not set reqpage's 			 * valid bits here, it is up to the caller. 			 */
+name|KASSERT
+argument_list|(
+operator|!
+name|pmap_page_is_mapped
 argument_list|(
 name|m
+argument_list|)
+argument_list|,
+operator|(
+literal|"swp_pager_async_iodone: page %p is mapped"
+operator|,
+name|m
+operator|)
 argument_list|)
 expr_stmt|;
 name|m
@@ -4337,9 +4347,19 @@ name|valid
 operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
-name|vm_page_undirty
+name|KASSERT
 argument_list|(
 name|m
+operator|->
+name|dirty
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"swp_pager_async_iodone: page %p is dirty"
+operator|,
+name|m
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 			 * We have to wake specifically requested pages 			 * up too because we cleared VPO_SWAPINPROG and 			 * could be waiting for it in getpages.  However, 			 * be sure to not unbusy getpages specifically 			 * requested page - getpages expects it to be  			 * left busy. 			 */
@@ -4376,10 +4396,25 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 			 * For write success, clear the modify and dirty  			 * status, then finish the I/O ( which decrements the  			 * busy count and possibly wakes waiter's up ). 			 */
-name|pmap_clear_modify
+comment|/* 			 * For write success, clear the dirty 			 * status, then finish the I/O ( which decrements the  			 * busy count and possibly wakes waiter's up ). 			 */
+name|KASSERT
 argument_list|(
+operator|(
 name|m
+operator|->
+name|flags
+operator|&
+name|PG_WRITEABLE
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"swp_pager_async_iodone: page %p is not write"
+literal|" protected"
+operator|,
+name|m
+operator|)
 argument_list|)
 expr_stmt|;
 name|vm_page_undirty
