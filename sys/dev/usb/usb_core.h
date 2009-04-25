@@ -1905,6 +1905,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|usb2_statestr
+parameter_list|(
+name|enum
+name|usb_dev_state
+name|state
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|usb2_config_descriptor
 modifier|*
