@@ -746,11 +746,6 @@ modifier|*
 name|data
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|type

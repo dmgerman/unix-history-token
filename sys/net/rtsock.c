@@ -6069,11 +6069,6 @@ modifier|*
 name|sa
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|m_tag
 modifier|*

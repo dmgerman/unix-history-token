@@ -597,7 +597,7 @@ name|unused
 name|__unused
 parameter_list|)
 block|{
-name|INIT_VNET_INET
+name|INIT_VNET_NET
 argument_list|(
 name|curvnet
 argument_list|)

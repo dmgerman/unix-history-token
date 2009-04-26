@@ -8454,11 +8454,6 @@ name|uint32_t
 name|value
 parameter_list|)
 block|{
-name|INIT_VNET_IPFW
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|radix_node_head
 modifier|*
@@ -19681,6 +19676,11 @@ name|__unused
 name|unused
 parameter_list|)
 block|{
+name|INIT_VNET_IPFW
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -20510,6 +20510,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|INIT_VNET_IPFW
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ip_fw
 modifier|*

@@ -1411,6 +1411,11 @@ name|int
 name|ipfattach
 parameter_list|()
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USE_SPL
@@ -1614,6 +1619,11 @@ name|int
 name|ipfdetach
 parameter_list|()
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USE_SPL
@@ -3386,6 +3396,11 @@ end_function
 
 begin_block
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|fr_info_t
 name|fnew
 decl_stmt|;

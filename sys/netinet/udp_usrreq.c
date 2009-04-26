@@ -637,6 +637,11 @@ modifier|*
 name|tag
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|uma_zone_set_max
 argument_list|(
 name|V_udbinfo

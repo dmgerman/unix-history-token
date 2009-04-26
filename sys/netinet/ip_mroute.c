@@ -7366,6 +7366,11 @@ name|off
 name|__unused
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!

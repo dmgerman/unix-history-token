@@ -2323,11 +2323,16 @@ block|{
 ifdef|#
 directive|ifdef
 name|INET6
+ifndef|#
+directive|ifndef
+name|KLD_MODULE
 name|INIT_VNET_INET6
 argument_list|(
 name|curvnet
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|struct
