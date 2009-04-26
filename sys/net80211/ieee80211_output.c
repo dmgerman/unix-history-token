@@ -858,6 +858,19 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 		 * Stash the node pointer.  Note that we do this after 		 * any call to ieee80211_dwds_mcast because that code 		 * uses any existing value for rcvif to identify the 		 * interface it (might have been) received on. 		 */
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|ni
+expr_stmt|;
 name|BPF_MTAP
 argument_list|(
 name|ifp
@@ -948,19 +961,6 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-comment|/* 		 * Stash the node pointer and hand the frame off to 		 * the underlying device.  Note that we do this after 		 * any call to ieee80211_dwds_mcast because that code 		 * uses any existing value for rcvif. 		 */
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-name|ni
-expr_stmt|;
 comment|/* XXX fragmented frames not handled */
 if|if
 condition|(

@@ -3363,19 +3363,6 @@ comment|/* NB: mark for encap work */
 block|}
 else|else
 block|{
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-name|ni
-expr_stmt|;
-comment|/* NB: hold node reference */
 name|KASSERT
 argument_list|(
 name|tap
