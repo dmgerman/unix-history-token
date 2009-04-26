@@ -2045,13 +2045,20 @@ name|ni_macaddr
 argument_list|,
 name|NULL
 argument_list|,
-literal|"wrong version %x"
+literal|"wrong version, fc %02x:%02x"
 argument_list|,
 name|wh
 operator|->
 name|i_fc
 index|[
 literal|0
+index|]
+argument_list|,
+name|wh
+operator|->
+name|i_fc
+index|[
+literal|1
 index|]
 argument_list|)
 expr_stmt|;
