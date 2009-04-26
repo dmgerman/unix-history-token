@@ -4821,25 +4821,6 @@ argument_list|,
 name|datalen
 argument_list|)
 expr_stmt|;
-comment|/* XXX fragmented frames not handled */
-if|if
-condition|(
-name|bpf_peers_present
-argument_list|(
-name|vap
-operator|->
-name|iv_rawbpf
-argument_list|)
-condition|)
-name|bpf_mtap
-argument_list|(
-name|vap
-operator|->
-name|iv_rawbpf
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
 return|return
 name|m
 return|;
