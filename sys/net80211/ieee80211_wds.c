@@ -1104,6 +1104,14 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|BPF_MTAP
+argument_list|(
+name|ifp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+comment|/* 802.3 tx */
 comment|/* 		 * Encapsulate the packet in prep for transmission. 		 */
 name|mcopy
 operator|=
@@ -1148,6 +1156,24 @@ name|void
 operator|*
 operator|)
 name|ni
+expr_stmt|;
+if|if
+condition|(
+name|bpf_peers_present
+argument_list|(
+name|vap
+operator|->
+name|iv_rawbpf
+argument_list|)
+condition|)
+name|bpf_mtap
+argument_list|(
+name|vap
+operator|->
+name|iv_rawbpf
+argument_list|,
+name|m
+argument_list|)
 expr_stmt|;
 name|err
 operator|=
