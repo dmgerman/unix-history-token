@@ -4654,13 +4654,16 @@ name|m
 operator|->
 name|m_flags
 operator|&
+operator|(
 name|M_FF
+operator||
+name|M_AMPDU_MPDU
+operator|)
 operator|)
 operator|==
 literal|0
 operator|)
 expr_stmt|;
-comment|/* NB: don't fragment ff's */
 if|if
 condition|(
 name|key
