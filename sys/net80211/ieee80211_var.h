@@ -413,6 +413,18 @@ name|ieee80211_rate_table
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|ieee80211_tx_ampdu
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ieee80211_rx_ampdu
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|ieee80211_stageq
