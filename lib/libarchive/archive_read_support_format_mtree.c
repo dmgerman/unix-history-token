@@ -5112,12 +5112,12 @@ argument_list|,
 literal|"Can't allocate memory"
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|ARCHIVE_FATAL
 operator|)
 return|;
+block|}
 block|}
 operator|*
 name|buff
