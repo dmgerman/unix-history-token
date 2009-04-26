@@ -143,7 +143,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*   * To support usage of rmlock in CVs and msleep  * yet another list for the priority tracker  * would be needed.  * Using this lock for cv and msleep also does  * not seem very useful  */
+comment|/*  * To support usage of rmlock in CVs and msleep yet another list for the  * priority tracker would be needed.  Using this lock for cv and msleep also  * does not seem very useful  */
 end_comment
 
 begin_function
@@ -338,7 +338,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Add or remove tracker from per cpu list.  * The per cpu list can be traversed at any time in forward  * direction from an interrupt on the *local* cpu.  */
+comment|/*  * Add or remove tracker from per cpu list.  *  * The per cpu list can be traversed at any time in forward direction from an  * interrupt on the *local* cpu.  */
 end_comment
 
 begin_function
@@ -391,7 +391,7 @@ name|rmq_next
 operator|=
 name|next
 expr_stmt|;
-comment|/* rmq_prev is not used during froward traversal */
+comment|/* rmq_prev is not used during froward traversal. */
 name|next
 operator|->
 name|rmq_prev
@@ -401,7 +401,7 @@ name|tracker
 operator|->
 name|rmp_cpuQueue
 expr_stmt|;
-comment|/* Update pointer to first element */
+comment|/* Update pointer to first element. */
 name|pc
 operator|->
 name|pc_rm_queue
@@ -457,14 +457,14 @@ name|rmp_cpuQueue
 operator|.
 name|rmq_prev
 expr_stmt|;
-comment|/* Not used during forward traversal */
+comment|/* Not used during forward traversal. */
 name|next
 operator|->
 name|rmq_prev
 operator|=
 name|prev
 expr_stmt|;
-comment|/* Remove from list */
+comment|/* Remove from list. */
 name|prev
 operator|->
 name|rmq_next
@@ -593,7 +593,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -797,7 +796,7 @@ argument_list|(
 name|curcpu
 argument_list|)
 expr_stmt|;
-comment|/* Check if we just need to do a proper critical_exit */
+comment|/* Check if we just need to do a proper critical_exit. */
 if|if
 condition|(
 literal|0
@@ -812,7 +811,7 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-comment|/* Remove our tracker from the per cpu list */
+comment|/* Remove our tracker from the per cpu list. */
 name|rm_tracker_remove
 argument_list|(
 name|pc
@@ -820,7 +819,7 @@ argument_list|,
 name|tracker
 argument_list|)
 expr_stmt|;
-comment|/* Check to see if the IPI granted us the lock after all */
+comment|/* Check to see if the IPI granted us the lock after all. */
 if|if
 condition|(
 name|tracker
@@ -828,7 +827,7 @@ operator|->
 name|rmp_flags
 condition|)
 block|{
-comment|/* Just add back tracker - we hold the lock */
+comment|/* Just add back tracker - we hold the lock. */
 name|rm_tracker_add
 argument_list|(
 name|pc
@@ -841,7 +840,7 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * We allow readers to aquire a lock even if a writer 	 * is blocked if the lock is recursive and the reader 	 * already holds the lock 	 */
+comment|/* 	 * We allow readers to aquire a lock even if a writer is blocked if 	 * the lock is recursive and the reader already holds the lock. 	 */
 if|if
 condition|(
 operator|(
@@ -857,7 +856,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * Just grand the lock if this thread already have a tracker 		 * for this lock on the per cpu queue 		 */
+comment|/* 		 * Just grand the lock if this thread already have a tracker 		 * for this lock on the per cpu queue. 		 */
 for|for
 control|(
 name|queue
@@ -1007,7 +1006,6 @@ operator|->
 name|rm_lock
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1096,7 +1094,7 @@ operator|->
 name|td_critnest
 operator|--
 expr_stmt|;
-comment|/*  	 * Fast path to combine two common conditions 	 * into a single conditional jump 	 */
+comment|/* 	 * Fast path to combine two common conditions into a single 	 * conditional jump. 	 */
 if|if
 condition|(
 literal|0
@@ -1111,10 +1109,8 @@ operator|->
 name|rm_noreadtoken
 operator|)
 condition|)
-block|{
 return|return;
-block|}
-comment|/* We do not have a read token and need to acquire one */
+comment|/* We do not have a read token and need to acquire one. */
 name|_rm_rlock_hard
 argument_list|(
 name|rm
@@ -1164,9 +1160,7 @@ name|tracker
 operator|->
 name|rmp_flags
 condition|)
-block|{
 return|return;
-block|}
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1394,7 +1388,7 @@ name|rm_noreadtoken
 operator|=
 literal|1
 expr_stmt|;
-comment|/*  		 * Assumes rm->rm_noreadtoken update is visible  		 * on other CPUs before rm_cleanIPI is called 		 */
+comment|/* 		 * Assumes rm->rm_noreadtoken update is visible on other CPUs 		 * before rm_cleanIPI is called. 		 */
 ifdef|#
 directive|ifdef
 name|SMP
@@ -1826,7 +1820,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/*   * Just strip out file and line arguments if no lock debugging is enabled  * in the kernel - we are called from a kernel module. */
+comment|/*  * Just strip out file and line arguments if no lock debugging is enabled in  * the kernel - we are called from a kernel module.  */
 end_comment
 
 begin_function
