@@ -3915,7 +3915,7 @@ expr|struct
 name|ieee80211_frame
 argument_list|)
 expr_stmt|;
-comment|/* 	 * 4-address frames need to be generated for: 	 * o packets sent through a WDS vap (IEEE80211_M_WDS) 	 * o packets relayed by a station operating with dynamic WDS 	 *   (IEEE80211_M_STA+IEEE80211_F_DWDS and src address) 	 */
+comment|/* 	 * 4-address frames need to be generated for: 	 * o packets sent through a WDS vap (IEEE80211_M_WDS) 	 * o packets sent through a vap marked for relaying 	 *   (e.g. a station operating with dynamic WDS) 	 */
 name|is4addr
 operator|=
 name|vap
@@ -3925,18 +3925,12 @@ operator|==
 name|IEEE80211_M_WDS
 operator|||
 operator|(
-name|vap
-operator|->
-name|iv_opmode
-operator|==
-name|IEEE80211_M_STA
-operator|&&
 operator|(
 name|vap
 operator|->
-name|iv_flags
+name|iv_flags_ext
 operator|&
-name|IEEE80211_F_DWDS
+name|IEEE80211_FEXT_4ADDR
 operator|)
 operator|&&
 operator|!
