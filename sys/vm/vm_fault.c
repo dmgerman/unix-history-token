@@ -3063,37 +3063,26 @@ name|m
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Sanity check: page must be completely valid or it is not fit to 	 * map into user space.  vm_pager_get_pages() ensures this. 	 */
-if|if
-condition|(
+comment|/* 	 * Page must be completely valid or it is not fit to 	 * map into user space.  vm_pager_get_pages() ensures this. 	 */
+name|KASSERT
+argument_list|(
 name|fs
 operator|.
 name|m
 operator|->
 name|valid
-operator|!=
+operator|==
 name|VM_PAGE_BITS_ALL
-condition|)
-block|{
-name|vm_page_zero_invalid
-argument_list|(
+argument_list|,
+operator|(
+literal|"vm_fault: page %p partially invalid"
+operator|,
 name|fs
 operator|.
 name|m
-argument_list|,
-name|TRUE
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Warning: page %p partially invalid on fault\n"
-argument_list|,
-name|fs
-operator|.
-name|m
-argument_list|)
-expr_stmt|;
-block|}
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|fs
