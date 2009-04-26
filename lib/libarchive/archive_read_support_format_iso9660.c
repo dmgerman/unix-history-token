@@ -3387,6 +3387,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|*
 name|buff
 operator|==
 name|NULL
