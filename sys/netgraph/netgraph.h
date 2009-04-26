@@ -5772,6 +5772,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|node_p
+name|ng_name2noderef
+parameter_list|(
+name|node_p
+name|node
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ng_newtype
 parameter_list|(
