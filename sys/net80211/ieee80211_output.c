@@ -961,6 +961,25 @@ operator|*
 operator|)
 name|ni
 expr_stmt|;
+comment|/* XXX fragmented frames not handled */
+if|if
+condition|(
+name|bpf_peers_present
+argument_list|(
+name|vap
+operator|->
+name|iv_rawbpf
+argument_list|)
+condition|)
+name|bpf_mtap
+argument_list|(
+name|vap
+operator|->
+name|iv_rawbpf
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|parent
