@@ -1027,7 +1027,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * 802.11 output routine. This is (currently) used only to  * connect bpf write calls to the 802.11 layer for injecting  * raw 802.11 frames.  Note we locate the ieee80211com from  * the ifnet using a spare field setup at attach time.  This  * will go away when the virtual ap support comes in.  */
+comment|/*  * 802.11 output routine. This is (currently) used only to  * connect bpf write calls to the 802.11 layer for injecting  * raw 802.11 frames.  */
 end_comment
 
 begin_function
