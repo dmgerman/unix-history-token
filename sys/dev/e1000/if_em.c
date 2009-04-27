@@ -5529,7 +5529,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|addapter
+name|adapter
 operator|->
 name|watchdog_timer
 operator|=
