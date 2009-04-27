@@ -1510,9 +1510,6 @@ name|uint32_t
 name|hash
 parameter_list|)
 block|{
-name|mb
-argument_list|()
-expr_stmt|;
 name|critical_exit
 argument_list|()
 expr_stmt|;
