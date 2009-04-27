@@ -256,7 +256,7 @@ return|return;
 comment|/* Learn TLB size and L1 cache geometry. */
 name|cfg1
 operator|=
-name|mips_rd_config_sel1
+name|mips_rd_config1
 argument_list|()
 expr_stmt|;
 name|cpuinfo
@@ -939,7 +939,7 @@ condition|)
 return|return;
 name|cfg1
 operator|=
-name|mips_rd_config_sel1
+name|mips_rd_config1
 argument_list|()
 expr_stmt|;
 name|printf
@@ -964,7 +964,7 @@ condition|)
 return|return;
 name|cfg2
 operator|=
-name|mips_rd_config_sel2
+name|mips_rd_config2
 argument_list|()
 expr_stmt|;
 comment|/*  	 * Config2 contains no useful information other then Config3  	 * existence flag 	 */
@@ -981,7 +981,7 @@ condition|)
 return|return;
 name|cfg3
 operator|=
-name|mips_rd_config_sel3
+name|mips_rd_config3
 argument_list|()
 expr_stmt|;
 comment|/* Print Config3 if it contains any useful info */
