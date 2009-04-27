@@ -1343,6 +1343,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* XXX TODO: If the full mode is 0160200, then this is a Solaris 	 * ACL description for the following entry.  Read this body 	 * and parse it as a Solaris-style ACL, then read the next 	 * header.  XXX */
 comment|/* Compare name to "TRAILER!!!" to test for end-of-archive. */
 if|if
 condition|(
@@ -3946,24 +3947,19 @@ parameter_list|)
 block|{
 return|return
 operator|(
+operator|(
 name|p
 index|[
 literal|0
 index|]
-operator|+
-operator|(
-name|p
-index|[
-literal|1
-index|]
 operator|<<
-literal|8
+literal|24
 operator|)
 operator|+
 operator|(
 name|p
 index|[
-literal|2
+literal|1
 index|]
 operator|<<
 literal|16
@@ -3972,10 +3968,17 @@ operator|+
 operator|(
 name|p
 index|[
-literal|3
+literal|2
 index|]
 operator|<<
-literal|24
+literal|8
+operator|)
+operator|+
+operator|(
+name|p
+index|[
+literal|3
+index|]
 operator|)
 operator|)
 return|;
