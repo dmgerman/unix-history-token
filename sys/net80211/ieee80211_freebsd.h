@@ -1018,6 +1018,33 @@ parameter_list|)
 value|(m->m_pkthdr.csum_data -= adj)
 end_define
 
+begin_comment
+comment|/*  * Store the sequence number.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_SEQNO_SET
+parameter_list|(
+name|m
+parameter_list|,
+name|seqno
+parameter_list|)
+define|\
+value|((m)->m_pkthdr.tso_segsz = (seqno))
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_SEQNO_GET
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)->m_pkthdr.tso_segsz)
+end_define
+
 begin_define
 define|#
 directive|define
