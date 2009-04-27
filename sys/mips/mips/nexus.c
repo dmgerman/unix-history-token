@@ -1278,7 +1278,7 @@ name|child
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
-name|MIPS_MEM_RID
+literal|0
 argument_list|,
 name|maddr
 argument_list|,
@@ -1729,9 +1729,14 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: could not reserve resource\n"
+literal|"%s: could not reserve resource for %s\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|child
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1908,7 +1913,7 @@ name|rman_set_bustag
 argument_list|(
 name|r
 argument_list|,
-name|MIPS_BUS_SPACE_MEM
+name|mips_bus_space_generic
 argument_list|)
 expr_stmt|;
 ifdef|#
