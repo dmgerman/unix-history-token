@@ -452,7 +452,9 @@ operator|!=
 name|PCIP_STORAGE_SATA_AHCI_1_0
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 if|if
 condition|(
@@ -502,7 +504,9 @@ operator|=
 name|ata_ahci_chipinit
 expr_stmt|;
 return|return
-literal|0
+operator|(
+name|BUS_PROBE_GENERIC
+operator|)
 return|;
 block|}
 end_function

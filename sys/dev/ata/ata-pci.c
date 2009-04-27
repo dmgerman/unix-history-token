@@ -239,7 +239,9 @@ operator|!=
 name|PCIC_STORAGE
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 comment|/* is this an IDE/ATA type device ? */
 if|if
@@ -252,7 +254,9 @@ operator|!=
 name|PCIS_STORAGE_IDE
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 name|sprintf
 argument_list|(
@@ -281,8 +285,9 @@ name|ata_generic_chipinit
 expr_stmt|;
 comment|/* we are a low priority handler */
 return|return
-operator|-
-literal|100
+operator|(
+name|BUS_PROBE_GENERIC
+operator|)
 return|;
 block|}
 end_function
