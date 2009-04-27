@@ -14847,6 +14847,11 @@ name|done
 decl_stmt|,
 name|num_avail
 decl_stmt|;
+name|u32
+name|cleaned
+init|=
+literal|0
+decl_stmt|;
 name|struct
 name|igb_tx_buffer
 modifier|*
@@ -15013,8 +15018,11 @@ name|buffer_addr
 operator|=
 literal|0
 expr_stmt|;
-name|num_avail
 operator|++
+name|num_avail
+expr_stmt|;
+operator|++
+name|cleaned
 expr_stmt|;
 if|if
 condition|(
@@ -15179,7 +15187,7 @@ name|next_to_clean
 operator|=
 name|first
 expr_stmt|;
-comment|/*          * If we have enough room, clear IFF_DRV_OACTIVE to tell the stack          * that it is OK to send packets.          * If there are no pending descriptors, clear the timeout. Otherwise,          * if some descriptors have been freed, restart the timeout.          */
+comment|/*          * If we have enough room, clear IFF_DRV_OACTIVE to          * tell the stack that it is OK to send packets.          * If there are no pending descriptors, clear the timeout.          */
 if|if
 condition|(
 name|num_avail
@@ -15194,7 +15202,6 @@ operator|&=
 operator|~
 name|IFF_DRV_OACTIVE
 expr_stmt|;
-comment|/* All clean, turn off the timer */
 if|if
 condition|(
 name|num_avail
@@ -15220,15 +15227,11 @@ return|return
 name|FALSE
 return|;
 block|}
-comment|/* Some cleaned, reset the timer */
-elseif|else
+block|}
+comment|/* Some descriptors cleaned, reset the watchdog */
 if|if
 condition|(
-name|num_avail
-operator|!=
-name|txr
-operator|->
-name|tx_avail
+name|cleaned
 condition|)
 name|txr
 operator|->
@@ -15236,7 +15239,6 @@ name|watchdog_timer
 operator|=
 name|IGB_TX_TIMEOUT
 expr_stmt|;
-block|}
 name|txr
 operator|->
 name|tx_avail
