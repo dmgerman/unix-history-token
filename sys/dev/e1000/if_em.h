@@ -855,6 +855,12 @@ name|buf_ring
 modifier|*
 name|br
 decl_stmt|;
+else|#
+directive|else
+name|void
+modifier|*
+name|br
+decl_stmt|;
 endif|#
 directive|endif
 name|struct
@@ -1480,6 +1486,13 @@ parameter_list|)
 value|drbr_empty((adapter)->ifp, (adapter)->br)
 end_define
 
+begin_define
+define|#
+directive|define
+name|em_dequeue
+value|drbr_dequeue
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1494,6 +1507,70 @@ name|adapter
 parameter_list|)
 value|IFQ_DRV_IS_EMPTY(&((adapter)->ifp->if_snd))
 end_define
+
+begin_define
+define|#
+directive|define
+name|drbr_free
+parameter_list|(
+name|br
+parameter_list|,
+name|type
+parameter_list|)
+end_define
+
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|mbuf
+operator|*
+name|em_dequeue
+argument_list|(
+argument|struct ifnet *ifp
+argument_list|,
+argument|struct buf_ring *br
+argument_list|)
+block|{     struct
+name|mbuf
+operator|*
+name|m
+block|;
+name|IFQ_DRV_DEQUEUE
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_snd
+argument_list|,
+name|m
+argument_list|)
+block|;
+return|return
+operator|(
+name|m
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BUF_RING_UNDEFINED
+end_ifdef
+
+begin_struct
+struct|struct
+name|buf_ring
+block|{ }
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
