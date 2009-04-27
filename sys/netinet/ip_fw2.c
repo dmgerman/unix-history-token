@@ -11514,23 +11514,7 @@ operator|->
 name|rule
 condition|)
 block|{
-comment|/* 		 * Packet has already been tagged. Look for the next rule 		 * to restart processing. 		 * 		 * If fw_one_pass != 0 then just accept it. 		 * XXX should not happen here, but optimized out in 		 * the caller. 		 */
-if|if
-condition|(
-name|V_fw_one_pass
-condition|)
-block|{
-name|IPFW_RUNLOCK
-argument_list|(
-name|chain
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|IP_FW_PASS
-operator|)
-return|;
-block|}
+comment|/* 		 * Packet has already been tagged. Look for the next rule 		 * to restart processing. 		 */
 name|f
 operator|=
 name|args
