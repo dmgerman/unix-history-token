@@ -1040,6 +1040,16 @@ comment|/* run in damaged mode */
 end_comment
 
 begin_decl_stmt
+name|char
+name|ckclean
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* only do work if not cleanly unmounted */
+end_comment
+
+begin_decl_stmt
 name|int
 name|cvtlevel
 decl_stmt|;
