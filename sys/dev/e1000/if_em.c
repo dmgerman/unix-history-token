@@ -5513,23 +5513,27 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
 block|}
-block|}
 else|else
 block|{
-comment|/* Send a copy of the frame to the BPF listener */
+comment|/* 			** Send a copy of the frame to the BPF 			** listener and set the watchdog on. 			*/
 name|ETHER_BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,
 name|m
 argument_list|)
+expr_stmt|;
+name|addapter
+operator|->
+name|watchdog_timer
+operator|=
+name|EM_TX_TIMEOUT
 expr_stmt|;
 block|}
 block|}
@@ -5832,6 +5836,22 @@ operator|==
 name|NULL
 condition|)
 break|break;
+name|ifp
+operator|->
+name|if_drv_flags
+operator||=
+name|IFF_DRV_OACTIVE
+expr_stmt|;
+name|IFQ_DRV_PREPEND
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_snd
+argument_list|,
+name|m_head
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 comment|/* Send a copy of the frame to the BPF listener */
@@ -14307,7 +14327,9 @@ endif|#
 directive|endif
 comment|/* __FreeBSD_version>= 700000 */
 comment|/**********************************************************************  *  *  Examine each tx_buffer in the used queue. If the hardware is done  *  processing the packet then free associated resources. The  *  tx_buffer is put back on the free queue.  *  **********************************************************************/
-argument|static void em_txeof(struct adapter *adapter) {         int first, last, done, num_avail;         struct em_buffer *tx_buffer;         struct e1000_tx_desc   *tx_desc, *eop_desc; 	struct ifnet   *ifp = adapter->ifp;  	EM_TX_LOCK_ASSERT(adapter);          if (adapter->num_tx_desc_avail == adapter->num_tx_desc)                 return;          num_avail = adapter->num_tx_desc_avail;         first = adapter->next_tx_to_clean;         tx_desc =&adapter->tx_desc_base[first];         tx_buffer =&adapter->tx_buffer_area[first]; 	last = tx_buffer->next_eop;         eop_desc =&adapter->tx_desc_base[last];
+argument|static void em_txeof(struct adapter *adapter) {         int first, last, done, num_avail; 	u32 cleaned =
+literal|0
+argument|;         struct em_buffer *tx_buffer;         struct e1000_tx_desc   *tx_desc, *eop_desc; 	struct ifnet   *ifp = adapter->ifp;  	EM_TX_LOCK_ASSERT(adapter);          if (adapter->num_tx_desc_avail == adapter->num_tx_desc)                 return;          num_avail = adapter->num_tx_desc_avail;         first = adapter->next_tx_to_clean;         tx_desc =&adapter->tx_desc_base[first];         tx_buffer =&adapter->tx_buffer_area[first]; 	last = tx_buffer->next_eop;         eop_desc =&adapter->tx_desc_base[last];
 comment|/* 	 * What this does is get the index of the 	 * first descriptor AFTER the EOP of the  	 * first packet, that way we can do the 	 * simple comparison on the inner while loop. 	 */
 argument|if (++last == adapter->num_tx_desc)  		last =
 literal|0
@@ -14319,7 +14341,7 @@ argument|;                 	tx_desc->lower.data =
 literal|0
 argument|;                 	tx_desc->buffer_addr =
 literal|0
-argument|;                 	num_avail++;  			if (tx_buffer->m_head) { 				ifp->if_opackets++; 				bus_dmamap_sync(adapter->txtag, 				    tx_buffer->map, 				    BUS_DMASYNC_POSTWRITE); 				bus_dmamap_unload(adapter->txtag, 				    tx_buffer->map);                          	m_freem(tx_buffer->m_head);                         	tx_buffer->m_head = NULL;                 	} 			tx_buffer->next_eop = -
+argument|;                 	++num_avail; ++cleaned;  			if (tx_buffer->m_head) { 				ifp->if_opackets++; 				bus_dmamap_sync(adapter->txtag, 				    tx_buffer->map, 				    BUS_DMASYNC_POSTWRITE); 				bus_dmamap_unload(adapter->txtag, 				    tx_buffer->map);                          	m_freem(tx_buffer->m_head);                         	tx_buffer->m_head = NULL;                 	} 			tx_buffer->next_eop = -
 literal|1
 argument|;  	                if (++first == adapter->num_tx_desc) 				first =
 literal|0
@@ -14332,14 +14354,12 @@ comment|/* Get new done point */
 argument|if (++last == adapter->num_tx_desc) last =
 literal|0
 argument|; 			done = last; 		} else 			break;         }         bus_dmamap_sync(adapter->txdma.dma_tag, adapter->txdma.dma_map,             BUS_DMASYNC_PREREAD | BUS_DMASYNC_PREWRITE);          adapter->next_tx_to_clean = first;
-comment|/*          * If we have enough room, clear IFF_DRV_OACTIVE to tell the stack          * that it is OK to send packets.          * If there are no pending descriptors, clear the timeout. Otherwise,          * if some descriptors have been freed, restart the timeout.          */
-argument|if (num_avail> EM_TX_CLEANUP_THRESHOLD) {                                 ifp->if_drv_flags&= ~IFF_DRV_OACTIVE;
-comment|/* All clean, turn off the timer */
-argument|if (num_avail == adapter->num_tx_desc) { 			adapter->watchdog_timer =
+comment|/*          * If we have enough room, clear IFF_DRV_OACTIVE to          * tell the stack that it is OK to send packets.          * If there are no pending descriptors, clear the timeout.          */
+argument|if (num_avail> EM_TX_CLEANUP_THRESHOLD) {                                 ifp->if_drv_flags&= ~IFF_DRV_OACTIVE;                 if (num_avail == adapter->num_tx_desc) { 			adapter->watchdog_timer =
 literal|0
-argument|; 		} else
-comment|/* Some cleaned, reset the timer */
-argument|if (num_avail != adapter->num_tx_desc_avail) 			adapter->watchdog_timer = EM_TX_TIMEOUT;         }         adapter->num_tx_desc_avail = num_avail; 	return; }
+argument|;         		adapter->num_tx_desc_avail = num_avail; 			return; 		}          }
+comment|/* If any descriptors cleaned, reset the watchdog */
+argument|if (cleaned) 		adapter->watchdog_timer = EM_TX_TIMEOUT;         adapter->num_tx_desc_avail = num_avail; 	return; }
 comment|/*********************************************************************  *  *  When Link is lost sometimes there is work still in the TX ring  *  which will result in a watchdog, rather than allow that do an  *  attempted cleanup and then reinit here. Note that this has been  *  seens mostly with fiber adapters.  *  **********************************************************************/
 argument|static void em_tx_purge(struct adapter *adapter) { 	if ((!adapter->link_active)&& (adapter->watchdog_timer)) { 		EM_TX_LOCK(adapter); 		em_txeof(adapter); 		EM_TX_UNLOCK(adapter); 		if (adapter->watchdog_timer) {
 comment|/* Still not clean? */
