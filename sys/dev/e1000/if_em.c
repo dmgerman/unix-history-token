@@ -5835,7 +5835,7 @@ condition|)
 break|break;
 ifndef|#
 directive|ifndef
-name|IFNET_BUFRING
+name|IFNET_BUF_RING
 name|ifp
 operator|->
 name|if_drv_flags
