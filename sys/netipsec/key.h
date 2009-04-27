@@ -181,41 +181,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|struct
-name|secpolicy
-modifier|*
-name|key_gettunnel
-parameter_list|(
-specifier|const
-name|struct
-name|sockaddr
-modifier|*
-parameter_list|,
-specifier|const
-name|struct
-name|sockaddr
-modifier|*
-parameter_list|,
-specifier|const
-name|struct
-name|sockaddr
-modifier|*
-parameter_list|,
-specifier|const
-name|struct
-name|sockaddr
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|extern struct secpolicy *key_gettunnel(const struct sockaddr *, 	const struct sockaddr *, const struct sockaddr *, 	const struct sockaddr *, const char*, int);
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* NB: prepend with _ for KAME IPv6 compatbility */
@@ -279,6 +255,12 @@ define|\
 value|key_newsp(__FILE__, __LINE__)
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -295,6 +277,11 @@ parameter_list|)
 define|\
 value|key_gettunnel(osrc, odst, isrc, idst, __FILE__, __LINE__)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
