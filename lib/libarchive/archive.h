@@ -760,6 +760,10 @@ define|#
 directive|define
 name|ARCHIVE_FORMAT_MTREE
 value|0x80000
+define|#
+directive|define
+name|ARCHIVE_FORMAT_RAW
+value|0x90000
 comment|/*-  * Basic outline for reading an archive:  *   1) Ask archive_read_new for an archive reader object.  *   2) Update any global properties as appropriate.  *      In particular, you'll certainly want to call appropriate  *      archive_read_support_XXX functions.  *   3) Call archive_read_open_XXX to open the archive  *   4) Repeatedly call archive_read_next_header to get information about  *      successive archive entries.  Call archive_read_data to extract  *      data for entries of interest.  *   5) Call archive_read_finish to end processing.  */
 name|__LA_DECL
 name|struct
@@ -925,6 +929,15 @@ function_decl|;
 name|__LA_DECL
 name|int
 name|archive_read_support_format_mtree
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
+name|archive_read_support_format_raw
 parameter_list|(
 name|struct
 name|archive
