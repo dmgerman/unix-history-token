@@ -248,6 +248,11 @@ name|void
 modifier|*
 name|b
 decl_stmt|;
+name|archive_clear_error
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fstat
