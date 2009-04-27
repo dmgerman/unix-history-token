@@ -162,17 +162,6 @@ end_comment
 begin_function_decl
 specifier|static
 name|int
-name|ata_ahci_ctlr_reset
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
 name|ata_ahci_suspend
 parameter_list|(
 name|device_t
@@ -851,7 +840,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|ata_ahci_ctlr_reset
 parameter_list|(
