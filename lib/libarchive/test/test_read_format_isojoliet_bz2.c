@@ -861,18 +861,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
-end_block
-
-begin_macro
-name|DEFINE_TEST
-argument_list|(
-argument|test_read_format_isojolietrr_bz2
-argument_list|)
-end_macro
-
-begin_block
-block|{
 comment|/* XXXX This doesn't work today; can it be made to work? */
 if|#
 directive|if
