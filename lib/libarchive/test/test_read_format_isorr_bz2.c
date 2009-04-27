@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Execute the following to rebuild the data for this program:    tail -n +32 test_read_format_isorr_bz2.c | /bin/sh  rm -rf /tmp/iso mkdir /tmp/iso mkdir /tmp/iso/dir echo "hello">/tmp/iso/file ln /tmp/iso/file /tmp/iso/hardlink (cd /tmp/iso; ln -s file symlink) TZ=utc touch -afhm -t 197001020000.01 /tmp/iso /tmp/iso/file /tmp/iso/dir TZ=utc touch -afhm -t 197001030000.02 /tmp/iso/symlink mkhybrid -R -uid 1 -gid 2 /tmp/iso | bzip2> test_read_format_isorr_bz2.iso.bz2 F=test_read_format_isorr_bz2.iso.bz2 uuencode $F $F> $F.uu exit 1  */
+comment|/* Execute the following command to rebuild the data for this program:    tail -n +32 test_read_format_isorr_bz2.c | /bin/sh  rm -rf /tmp/iso mkdir /tmp/iso mkdir /tmp/iso/dir echo "hello">/tmp/iso/file dd if=/dev/zero bs=1 count=12345678>>/tmp/iso/file ln /tmp/iso/file /tmp/iso/hardlink (cd /tmp/iso; ln -s file symlink) TZ=utc touch -afhm -t 197001020000.01 /tmp/iso /tmp/iso/file /tmp/iso/dir TZ=utc touch -afhm -t 197001030000.02 /tmp/iso/symlink mkhybrid -R -uid 1 -gid 2 /tmp/iso | bzip2> test_read_format_isorr_bz2.iso.bz2 F=test_read_format_isorr_bz2.iso.bz2 uuencode $F $F> $F.uu exit 1  */
 end_comment
 
 begin_macro
@@ -408,7 +408,7 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
-literal|6
+literal|12345684
 argument_list|,
 name|archive_entry_size
 argument_list|(
@@ -437,33 +437,18 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
-literal|6
-argument_list|,
-operator|(
-name|int
-operator|)
-name|size
-argument_list|)
-expr_stmt|;
-name|assertEqualInt
-argument_list|(
 literal|0
 argument_list|,
 name|offset
 argument_list|)
 expr_stmt|;
-name|assertEqualInt
-argument_list|(
-literal|0
-argument_list|,
-name|memcmp
+name|assertEqualMem
 argument_list|(
 name|p
 argument_list|,
 literal|"hello\n"
 argument_list|,
 literal|6
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|assertEqualInt
@@ -567,7 +552,7 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
-literal|6
+literal|12345684
 argument_list|,
 name|archive_entry_size
 argument_list|(
