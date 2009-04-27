@@ -395,7 +395,7 @@ name|mtx
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|IFNET_MULTIQUEUE
+name|IFNET_BUF_RING
 name|struct
 name|buf_ring
 modifier|*
