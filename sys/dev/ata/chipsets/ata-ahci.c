@@ -440,13 +440,9 @@ return|;
 comment|/* is this PCI device flagged as an AHCI compliant chip ? */
 if|if
 condition|(
-name|pci_read_config
+name|pci_get_progif
 argument_list|(
 name|dev
-argument_list|,
-name|PCIR_PROGIF
-argument_list|,
-literal|1
 argument_list|)
 operator|!=
 name|PCIP_STORAGE_SATA_AHCI_1_0
