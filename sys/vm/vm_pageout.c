@@ -4348,9 +4348,7 @@ name|size
 operator|=
 name|vmspace_swap_count
 argument_list|(
-name|p
-operator|->
-name|p_vmspace
+name|vm
 argument_list|)
 expr_stmt|;
 name|vm_map_unlock_read
