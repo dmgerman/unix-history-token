@@ -590,6 +590,16 @@ name|NULL
 decl_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|IPSEC
+name|int
+name|no_route_but_check_spd
+init|=
+literal|0
+decl_stmt|;
+endif|#
+directive|endif
 name|M_ASSERTPKTHDR
 argument_list|(
 name|m
@@ -1256,6 +1266,24 @@ operator|==
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|IPSEC
+comment|/* 			 * There is no route for this packet, but it is 			 * possible that a matching SPD entry exists. 			 */
+name|no_route_but_check_spd
+operator|=
+literal|1
+expr_stmt|;
+name|mtu
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Silence GCC warning. */
+goto|goto
+name|sendit
+goto|;
+endif|#
+directive|endif
 name|IPSTAT_INC
 argument_list|(
 name|ips_noroute
@@ -1975,6 +2003,25 @@ case|:
 default|default:
 break|break;
 comment|/* Continue with packet processing. */
+block|}
+comment|/* 	 * Check if there was a route for this packet; return error if not. 	 */
+if|if
+condition|(
+name|no_route_but_check_spd
+condition|)
+block|{
+name|IPSTAT_INC
+argument_list|(
+name|ips_noroute
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EHOSTUNREACH
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
 block|}
 comment|/* Update variables that are affected by ipsec4_output(). */
 name|ip
