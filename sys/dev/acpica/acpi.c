@@ -11050,6 +11050,40 @@ argument_list|,
 name|state
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|state
+operator|<
+name|ACPI_STATE_S1
+operator|||
+name|state
+operator|>
+name|ACPI_STATE_S5
+condition|)
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_BAD_PARAMETER
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|state
+operator|==
+name|ACPI_STATE_S5
+condition|)
+block|{
+comment|/* 	 * Shut down cleanly and power off.  This will call us back through the 	 * shutdown handlers. 	 */
+name|shutdown_nice
+argument_list|(
+name|RB_POWEROFF
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Re-entry once we're suspending is not allowed. */
 name|status
 operator|=
@@ -11110,23 +11144,6 @@ name|slp_state
 operator|=
 name|ACPI_SS_NONE
 expr_stmt|;
-switch|switch
-condition|(
-name|state
-condition|)
-block|{
-case|case
-name|ACPI_STATE_S1
-case|:
-case|case
-name|ACPI_STATE_S2
-case|:
-case|case
-name|ACPI_STATE_S3
-case|:
-case|case
-name|ACPI_STATE_S4
-case|:
 name|status
 operator|=
 name|AcpiGetSleepTypeData
@@ -11158,7 +11175,9 @@ argument_list|,
 name|state
 argument_list|)
 expr_stmt|;
-break|break;
+goto|goto
+name|backout
+goto|;
 block|}
 elseif|else
 if|if
@@ -11183,7 +11202,9 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-break|break;
+goto|goto
+name|backout
+goto|;
 block|}
 name|sc
 operator|->
@@ -11201,7 +11222,7 @@ name|slp_state
 operator|=
 name|ACPI_SS_GPE_SET
 expr_stmt|;
-comment|/* 	 * Inform all devices that we are going to sleep.  If at least one 	 * device fails, DEVICE_SUSPEND() automatically resumes the tree. 	 * 	 * XXX Note that a better two-pass approach with a 'veto' pass 	 * followed by a "real thing" pass would be better, but the current 	 * bus interface does not provide for this. 	 */
+comment|/*      * Inform all devices that we are going to sleep.  If at least one      * device fails, DEVICE_SUSPEND() automatically resumes the tree.      *      * XXX Note that a better two-pass approach with a 'veto' pass      * followed by a "real thing" pass would be better, but the current      * bus interface does not provide for this.      */
 if|if
 condition|(
 name|DEVICE_SUSPEND
@@ -11221,7 +11242,9 @@ argument_list|,
 literal|"device_suspend failed\n"
 argument_list|)
 expr_stmt|;
-break|break;
+goto|goto
+name|backout
+goto|;
 block|}
 name|slp_state
 operator|=
@@ -11232,7 +11255,9 @@ if|if
 condition|(
 name|acpi_susp_bounce
 condition|)
-break|break;
+goto|goto
+name|backout
+goto|;
 name|status
 operator|=
 name|AcpiEnterSleepStatePrep
@@ -11262,7 +11287,9 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-break|break;
+goto|goto
+name|backout
+goto|;
 block|}
 name|slp_state
 operator|=
@@ -11344,39 +11371,18 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-break|break;
+goto|goto
+name|backout
+goto|;
 block|}
 block|}
 name|slp_state
 operator|=
 name|ACPI_SS_SLEPT
 expr_stmt|;
-break|break;
-case|case
-name|ACPI_STATE_S5
-case|:
-comment|/* 	 * Shut down cleanly and power off.  This will call us back through the 	 * shutdown handlers. 	 */
-name|shutdown_nice
-argument_list|(
-name|RB_POWEROFF
-argument_list|)
-expr_stmt|;
-name|status
-operator|=
-name|AE_OK
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_STATE_S0
-case|:
-default|default:
-name|status
-operator|=
-name|AE_BAD_PARAMETER
-expr_stmt|;
-break|break;
-block|}
 comment|/*      * Back out state according to how far along we got in the suspend      * process.  This handles both the error and success cases.      */
+name|backout
+label|:
 name|sc
 operator|->
 name|acpi_next_sstate
@@ -11462,12 +11468,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Allow another sleep request after a while. */
-if|if
-condition|(
-name|state
-operator|!=
-name|ACPI_STATE_S5
-condition|)
 name|timeout
 argument_list|(
 name|acpi_sleep_enable
