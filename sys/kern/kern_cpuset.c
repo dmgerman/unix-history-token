@@ -1279,6 +1279,27 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* 	 * In case we are called from within the jail 	 * we do not allow modifying the dedicated root 	 * cpuset of the jail but may still allow to 	 * change child sets. 	 */
+if|if
+condition|(
+name|jailed
+argument_list|(
+name|curthread
+operator|->
+name|td_ucred
+argument_list|)
+operator|&&
+name|set
+operator|->
+name|cs_flags
+operator|&
+name|CPU_SET_ROOT
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
 comment|/* 	 * Verify that we have access to this set of 	 * cpus. 	 */
 name|root
 operator|=
