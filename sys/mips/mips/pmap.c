@@ -2927,6 +2927,14 @@ name|pt_entry_t
 modifier|*
 name|pte
 decl_stmt|;
+comment|/* 	 * Write back all caches from the page being destroyed 	 */
+name|mips_dcache_wbinv_range
+argument_list|(
+name|va
+argument_list|,
+name|NBPG
+argument_list|)
+expr_stmt|;
 name|pte
 operator|=
 name|pmap_pte
@@ -5995,6 +6003,14 @@ condition|)
 block|{
 return|return;
 block|}
+comment|/* 	 * Write back all caches from the page being destroyed 	 */
+name|mips_dcache_wbinv_range
+argument_list|(
+name|va
+argument_list|,
+name|NBPG
+argument_list|)
+expr_stmt|;
 comment|/* 	 * get a local va for mappings for this pmap. 	 */
 operator|(
 name|void
@@ -6259,6 +6275,26 @@ argument_list|(
 name|pv
 operator|->
 name|pv_pmap
+argument_list|)
+expr_stmt|;
+comment|/* 		 * If it's last mapping writeback all caches from  		 * the page being destroyed 	 	 */
+if|if
+condition|(
+name|m
+operator|->
+name|md
+operator|.
+name|pv_list_count
+operator|==
+literal|1
+condition|)
+name|mips_dcache_wbinv_range
+argument_list|(
+name|pv
+operator|->
+name|pv_va
+argument_list|,
+name|NBPG
 argument_list|)
 expr_stmt|;
 name|pv
