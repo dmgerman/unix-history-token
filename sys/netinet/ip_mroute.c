@@ -288,7 +288,7 @@ begin_define
 define|#
 directive|define
 name|KTR_IPMF
-value|KTR_SUBSYS
+value|KTR_INET
 end_define
 
 begin_endif
