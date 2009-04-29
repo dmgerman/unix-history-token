@@ -17542,11 +17542,12 @@ name|in6_ifaddr
 modifier|*
 name|ia
 decl_stmt|;
-name|struct
-name|in6_multi
-modifier|*
-name|in6m
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|struct in6_multi *in6m;
+endif|#
+directive|endif
 for|for
 control|(
 name|ia
@@ -17592,31 +17593,13 @@ condition|)
 return|return
 literal|1
 return|;
+if|#
+directive|if
+literal|0
 comment|/* 		 * XXX Multicast 		 * XXX why do we care about multlicast here while we don't care 		 * about IPv4 multicast?? 		 * XXX scope 		 */
-name|in6m
-operator|=
-name|NULL
-expr_stmt|;
-name|IN6_LOOKUP_MULTI
-argument_list|(
-name|sin6
-operator|->
-name|sin6_addr
-argument_list|,
-name|ia
-operator|->
-name|ia_ifp
-argument_list|,
-name|in6m
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|in6m
-condition|)
-return|return
-literal|1
-return|;
+block|in6m = NULL; 		IN6_LOOKUP_MULTI(sin6->sin6_addr, ia->ia_ifp, in6m); 		if (in6m) 			return 1;
+endif|#
+directive|endif
 block|}
 comment|/* loopback, just for safety */
 if|if
