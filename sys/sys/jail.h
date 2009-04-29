@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 Poul-Henning Kamp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1999 Poul-Henning Kamp.  * Copyright (c) 2009 James Gritton.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -248,11 +248,79 @@ block|, }
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Flags for jail_set and jail_get.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JAIL_CREATE
+value|0x01
+end_define
+
+begin_comment
+comment|/* Create jail if it doesn't exist */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JAIL_UPDATE
+value|0x02
+end_define
+
+begin_comment
+comment|/* Update parameters of existing jail */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JAIL_ATTACH
+value|0x04
+end_define
+
+begin_comment
+comment|/* Attach to jail upon creation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JAIL_DYING
+value|0x08
+end_define
+
+begin_comment
+comment|/* Allow getting a dying jail */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JAIL_SET_MASK
+value|0x0f
+end_define
+
+begin_define
+define|#
+directive|define
+name|JAIL_GET_MASK
+value|0x08
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|_KERNEL
 end_ifndef
+
+begin_struct_decl
+struct_decl|struct
+name|iovec
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 name|int
@@ -267,7 +335,48 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|jail_set
+parameter_list|(
+name|struct
+name|iovec
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|jail_get
+parameter_list|(
+name|struct
+name|iovec
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|jail_attach
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|jail_remove
 parameter_list|(
 name|int
 parameter_list|)
@@ -287,6 +396,12 @@ begin_include
 include|#
 directive|include
 file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -376,7 +491,7 @@ begin_struct
 struct|struct
 name|prison
 block|{
-name|LIST_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|prison
 argument_list|)
@@ -392,13 +507,13 @@ name|pr_ref
 decl_stmt|;
 comment|/* (p) refcount */
 name|int
-name|pr_state
+name|pr_uref
 decl_stmt|;
-comment|/* (p) prison state */
-name|int
-name|pr_nprocs
+comment|/* (p) user (alive) refcount */
+name|unsigned
+name|pr_flags
 decl_stmt|;
-comment|/* (p) process count */
+comment|/* (p) PR_* flags */
 name|char
 name|pr_path
 index|[
@@ -431,7 +546,7 @@ index|[
 name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
-comment|/* (c) admin jail name */
+comment|/* (p) admin jail name */
 name|void
 modifier|*
 name|pr_linux
@@ -458,23 +573,23 @@ comment|/* (p) additional data */
 name|int
 name|pr_ip4s
 decl_stmt|;
-comment|/* (c) number of v4 IPs */
+comment|/* (p) number of v4 IPs */
 name|struct
 name|in_addr
 modifier|*
 name|pr_ip4
 decl_stmt|;
-comment|/* (c) v4 IPs of jail */
+comment|/* (p) v4 IPs of jail */
 name|int
 name|pr_ip6s
 decl_stmt|;
-comment|/* (c) number of v6 IPs */
+comment|/* (p) number of v6 IPs */
 name|struct
 name|in6_addr
 modifier|*
 name|pr_ip6
 decl_stmt|;
-comment|/* (c) v6 IPs of jail */
+comment|/* (p) v6 IPs of jail */
 block|}
 struct|;
 end_struct
@@ -493,6 +608,71 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_comment
+comment|/*  * Flag bits set via options or internally  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PR_PERSIST
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Can exist without processes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PR_REMOVE
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* In process of being removed */
+end_comment
+
+begin_comment
+comment|/*  * OSD methods  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PR_METHOD_CREATE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_METHOD_GET
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_METHOD_SET
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_METHOD_CHECK
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_METHOD_ATTACH
+value|4
+end_define
 
 begin_comment
 comment|/*  * Sysctl-set variables that determine global jail policy  *  * XXX MIB entries will need to be protected by a mutex.  */
@@ -541,7 +721,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|LIST_HEAD
+name|TAILQ_HEAD
 argument_list|(
 name|prisonlist
 argument_list|,
@@ -565,6 +745,90 @@ name|sx
 name|allprison_lock
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Sysctls to describe jail parameters.  */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_security_jail_param
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_JAIL_PARAM
+parameter_list|(
+name|module
+parameter_list|,
+name|param
+parameter_list|,
+name|type
+parameter_list|,
+name|fmt
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_PROC(_security_jail_param ## module, OID_AUTO, param,	\ 	(type) | CTLFLAG_MPSAFE, NULL, 0, sysctl_jail_param, fmt, descr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_JAIL_PARAM_STRING
+parameter_list|(
+name|module
+parameter_list|,
+name|param
+parameter_list|,
+name|access
+parameter_list|,
+name|len
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_PROC(_security_jail_param ## module, OID_AUTO, param,	\ 	CTLTYPE_STRING | CTLFLAG_MPSAFE | (access), NULL, len,		\ 	sysctl_jail_param, "A", descr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_JAIL_PARAM_STRUCT
+parameter_list|(
+name|module
+parameter_list|,
+name|param
+parameter_list|,
+name|access
+parameter_list|,
+name|len
+parameter_list|,
+name|fmt
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_PROC(_security_jail_param ## module, OID_AUTO, param,	\ 	CTLTYPE_STRUCT | CTLFLAG_MPSAFE | (access), NULL, len,		\ 	sysctl_jail_param, fmt, descr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_JAIL_PARAM_NODE
+parameter_list|(
+name|module
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_NODE(_security_jail_param, OID_AUTO, module, CTLFLAG_RW, 0, descr)
+end_define
 
 begin_comment
 comment|/*  * Kernel support functions for jail().  */
@@ -593,27 +857,6 @@ struct_decl|struct
 name|statfs
 struct_decl|;
 end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|thread
-struct_decl|;
-end_struct_decl
-
-begin_function_decl
-name|int
-name|kern_jail
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-parameter_list|,
-name|struct
-name|jail
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|int
@@ -708,6 +951,20 @@ name|prison_find
 parameter_list|(
 name|int
 name|prid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|prison
+modifier|*
+name|prison_find_name
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -966,6 +1223,26 @@ name|cred
 parameter_list|,
 name|int
 name|priv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sysctl_jail_param
+parameter_list|(
+name|struct
+name|sysctl_oid
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|sysctl_req
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

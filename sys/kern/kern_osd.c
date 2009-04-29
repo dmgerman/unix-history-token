@@ -269,6 +269,14 @@ name|OSD_LAST
 operator|+
 literal|1
 index|]
+init|=
+block|{
+index|[
+name|OSD_JAIL
+index|]
+operator|=
+literal|5
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1898,10 +1906,10 @@ for|for
 control|(
 name|i
 operator|=
-literal|1
+literal|0
 init|;
 name|i
-operator|<=
+operator|<
 name|osd_nslots
 index|[
 name|type
@@ -1918,11 +1926,7 @@ index|[
 name|type
 index|]
 index|[
-operator|(
 name|i
-operator|-
-literal|1
-operator|)
 operator|*
 name|osd_nmethods
 index|[

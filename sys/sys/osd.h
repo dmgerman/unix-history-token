@@ -337,9 +337,11 @@ directive|define
 name|osd_jail_register
 parameter_list|(
 name|destructor
+parameter_list|,
+name|methods
 parameter_list|)
 define|\
-value|osd_register(OSD_JAIL, (destructor), NULL)
+value|osd_register(OSD_JAIL, (destructor), (methods))
 end_define
 
 begin_define
