@@ -300,6 +300,13 @@ name|VNET_MOD_IGMP
 value|12
 end_define
 
+begin_define
+define|#
+directive|define
+name|VNET_MOD_MLD
+value|13
+end_define
+
 begin_comment
 comment|/* stateless modules */
 end_comment
