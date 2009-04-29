@@ -6907,7 +6907,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|arge_intr_status
-operator|=
+operator||=
 name|status
 expr_stmt|;
 return|return
