@@ -181,7 +181,7 @@ begin_define
 define|#
 directive|define
 name|KTR_IGMPV3
-value|KTR_SUBSYS
+value|KTR_INET
 end_define
 
 begin_endif
@@ -7392,7 +7392,6 @@ operator|!=
 name|NULL
 operator|&&
 name|nsrcs
-operator|--
 operator|>
 literal|0
 condition|)
@@ -7405,7 +7404,6 @@ name|sockaddr_in
 operator|*
 operator|)
 name|ptss
-operator|++
 expr_stmt|;
 name|psin
 operator|->
@@ -7435,6 +7433,18 @@ name|lims
 operator|->
 name|ims_haddr
 argument_list|)
+expr_stmt|;
+name|psin
+operator|->
+name|sin_port
+operator|=
+literal|0
+expr_stmt|;
+operator|++
+name|ptss
+expr_stmt|;
+operator|--
+name|nsrcs
 expr_stmt|;
 block|}
 block|}
