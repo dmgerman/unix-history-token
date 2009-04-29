@@ -888,8 +888,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATA_AHCI_NPMASK
-value|0x1f
+name|ATA_AHCI_CAP_NPMASK
+value|0x0000001f
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_AHCI_CAP_PSC
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_AHCI_CAP_SSC
+value|0x00004000
 end_define
 
 begin_define
@@ -904,6 +918,13 @@ define|#
 directive|define
 name|ATA_AHCI_CAP_CLO
 value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_AHCI_CAP_SALP
+value|0x04000000
 end_define
 
 begin_define
@@ -2766,6 +2787,10 @@ define|#
 directive|define
 name|ATA_ALWAYS_DMASTAT
 value|0x10
+name|int
+name|pm_level
+decl_stmt|;
+comment|/* power management level */
 name|int
 name|devices
 decl_stmt|;
