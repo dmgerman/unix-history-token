@@ -4261,6 +4261,14 @@ operator|->
 name|in6p_outputopts
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|inp
+operator|->
+name|in6p_moptions
+operator|!=
+name|NULL
+condition|)
 name|ip6_freemoptions
 argument_list|(
 name|inp
