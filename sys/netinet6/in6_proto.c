@@ -846,6 +846,11 @@ operator|=
 name|icmp6_fasttimo
 block|,
 operator|.
+name|pr_slowtimo
+operator|=
+name|icmp6_slowtimo
+block|,
+operator|.
 name|pr_usrreqs
 operator|=
 operator|&

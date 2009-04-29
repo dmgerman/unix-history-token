@@ -140,6 +140,10 @@ parameter_list|)
 value|(*(struct mbuf **)&((ip6af)->ip6af_m))
 end_define
 
+begin_comment
+comment|/*  * Structure attached to inpcb.in6p_moptions and  * passed to ip6_output when IPv6 multicast options are in use.  * This structure is lazy-allocated.  */
+end_comment
+
 begin_struct
 struct|struct
 name|ip6_moptions
@@ -158,13 +162,27 @@ name|u_char
 name|im6o_multicast_loop
 decl_stmt|;
 comment|/* 1>= hear sends if a member */
-name|LIST_HEAD
-argument_list|(
-argument_list|,
-argument|in6_multi_mship
-argument_list|)
-name|im6o_memberships
-expr_stmt|;
+name|u_short
+name|im6o_num_memberships
+decl_stmt|;
+comment|/* no. memberships this socket */
+name|u_short
+name|im6o_max_memberships
+decl_stmt|;
+comment|/* max memberships this socket */
+name|struct
+name|in6_multi
+modifier|*
+modifier|*
+name|im6o_membership
+decl_stmt|;
+comment|/* group memberships */
+name|struct
+name|in6_mfilter
+modifier|*
+name|im6o_mfilters
+decl_stmt|;
+comment|/* source filters */
 block|}
 struct|;
 end_struct
@@ -564,6 +582,61 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|IP6STAT_ADD
+parameter_list|(
+name|name
+parameter_list|,
+name|val
+parameter_list|)
+value|V_ip6stat.name += (val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP6STAT_SUB
+parameter_list|(
+name|name
+parameter_list|,
+name|val
+parameter_list|)
+value|V_ip6stat.name -= (val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP6STAT_INC
+parameter_list|(
+name|name
+parameter_list|)
+value|IP6STAT_ADD(name, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP6STAT_DEC
+parameter_list|(
+name|name
+parameter_list|)
+value|IP6STAT_SUB(name, 1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/*  * IPv6 onion peeling state.  * it will be initialized when we come into ip6_input().  * XXX do not make it a kitchen sink!  */
 end_comment
@@ -813,15 +886,6 @@ name|ip6_v6only
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* VIMAGE_GLOBALS */
-end_comment
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -834,12 +898,6 @@ end_decl_stmt
 begin_comment
 comment|/* multicast routing daemon */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -1113,20 +1171,6 @@ argument_list|(
 operator|(
 expr|struct
 name|ip6_pktopts
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|ip6_freemoptions
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|ip6_moptions
 operator|*
 operator|)
 argument_list|)

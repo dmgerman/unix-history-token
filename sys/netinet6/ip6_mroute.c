@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/domain.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/protosw.h>
 end_include
 
@@ -398,6 +404,13 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|in6_mcast_loop
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -1397,7 +1410,7 @@ if|if
 condition|(
 name|so
 operator|!=
-name|ip6_mrouter
+name|V_ip6_mrouter
 operator|&&
 name|sopt
 operator|->
@@ -1709,7 +1722,7 @@ if|if
 condition|(
 name|so
 operator|!=
-name|ip6_mrouter
+name|V_ip6_mrouter
 condition|)
 return|return
 operator|(
@@ -2160,7 +2173,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|ip6_mrouter
+name|V_ip6_mrouter
 operator|!=
 name|NULL
 condition|)
@@ -2174,7 +2187,7 @@ name|EADDRINUSE
 operator|)
 return|;
 block|}
-name|ip6_mrouter
+name|V_ip6_mrouter
 operator|=
 name|so
 expr_stmt|;
@@ -2297,7 +2310,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|ip6_mrouter
+name|V_ip6_mrouter
 operator|==
 name|NULL
 condition|)
@@ -2541,7 +2554,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|ip6_mrouter
+name|V_ip6_mrouter
 operator|=
 name|NULL
 expr_stmt|;
@@ -5183,7 +5196,7 @@ if|if
 condition|(
 name|socket_send
 argument_list|(
-name|ip6_mrouter
+name|V_ip6_mrouter
 argument_list|,
 name|mm
 argument_list|,
@@ -6199,7 +6212,7 @@ if|if
 condition|(
 name|socket_send
 argument_list|(
-name|ip6_mrouter
+name|V_ip6_mrouter
 argument_list|,
 name|mm
 argument_list|,
@@ -6561,11 +6574,6 @@ init|=
 literal|0
 decl_stmt|;
 name|struct
-name|in6_multi
-modifier|*
-name|in6m
-decl_stmt|;
-name|struct
 name|sockaddr_in6
 modifier|*
 name|dst6
@@ -6573,6 +6581,15 @@ decl_stmt|;
 name|u_long
 name|linkmtu
 decl_stmt|;
+name|dst6
+operator|=
+operator|&
+name|mifp
+operator|->
+name|m6_route
+operator|.
+name|ro_dst
+expr_stmt|;
 comment|/* 	 * Make a new reference to the packet; make sure that 	 * the IPv6 header is actually copied, not just referenced, 	 * so that ip6_output() only scribbles on the copy. 	 */
 name|mb_copy
 operator|=
@@ -6721,32 +6738,10 @@ endif|#
 directive|endif
 return|return;
 block|}
-comment|/* 	 * If we belong to the destination multicast group 	 * on the outgoing interface, loop back a copy. 	 */
-name|dst6
-operator|=
-operator|&
-name|mifp
-operator|->
-name|m6_route
-operator|.
-name|ro_dst
-expr_stmt|;
-name|IN6_LOOKUP_MULTI
-argument_list|(
-name|ip6
-operator|->
-name|ip6_dst
-argument_list|,
-name|ifp
-argument_list|,
-name|in6m
-argument_list|)
-expr_stmt|;
+comment|/* 	 * If configured to loop back multicasts by default, 	 * loop back a copy now. 	 */
 if|if
 condition|(
-name|in6m
-operator|!=
-name|NULL
+name|in6_mcast_loop
 condition|)
 block|{
 name|dst6
@@ -7275,7 +7270,7 @@ if|if
 condition|(
 name|socket_send
 argument_list|(
-name|ip6_mrouter
+name|V_ip6_mrouter
 argument_list|,
 name|mm
 argument_list|,
@@ -8339,7 +8334,7 @@ name|MOD_UNLOAD
 case|:
 if|if
 condition|(
-name|ip6_mrouter
+name|V_ip6_mrouter
 operator|!=
 name|NULL
 condition|)
