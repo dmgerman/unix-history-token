@@ -152,7 +152,7 @@ value|0x00000800
 end_define
 
 begin_comment
-comment|/* Unused */
+comment|/* XXX Used by cxgb */
 end_comment
 
 begin_define
@@ -196,7 +196,7 @@ value|0x00008000
 end_define
 
 begin_comment
-comment|/* Unused */
+comment|/* XXX Used by cxgb */
 end_comment
 
 begin_define
@@ -207,7 +207,7 @@ value|0x00010000
 end_define
 
 begin_comment
-comment|/* Unused */
+comment|/* XXX Used by cxgb */
 end_comment
 
 begin_define
@@ -257,12 +257,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KTR_SPARE1
+name|KTR_INET
 value|0x00200000
 end_define
 
 begin_comment
-comment|/* Unused */
+comment|/* IPv4 stack */
 end_comment
 
 begin_define
@@ -334,12 +334,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KTR_SPARE5
+name|KTR_INET6
 value|0x10000000
 end_define
 
 begin_comment
-comment|/* Unused */
+comment|/* IPv6 stack */
 end_comment
 
 begin_define
