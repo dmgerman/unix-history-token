@@ -476,6 +476,17 @@ begin_comment
 comment|/* node information reply */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MLDV2_LISTENER_REPORT
+value|143
+end_define
+
+begin_comment
+comment|/* RFC3810 listener report */
+end_comment
+
 begin_comment
 comment|/* The definitions below are experimental. TBA */
 end_comment
@@ -913,6 +924,20 @@ begin_define
 define|#
 directive|define
 name|mld_reserved
+value|mld_icmp6_hdr.icmp6_data16[1]
+end_define
+
+begin_define
+define|#
+directive|define
+name|mld_v2_reserved
+value|mld_icmp6_hdr.icmp6_data16[0]
+end_define
+
+begin_define
+define|#
+directive|define
+name|mld_v2_numrecs
 value|mld_icmp6_hdr.icmp6_data16[1]
 end_define
 
@@ -3020,6 +3045,15 @@ end_function_decl
 begin_function_decl
 name|void
 name|icmp6_fasttimo
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|icmp6_slowtimo
 parameter_list|(
 name|void
 parameter_list|)
