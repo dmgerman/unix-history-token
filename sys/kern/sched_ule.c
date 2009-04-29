@@ -10568,6 +10568,43 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TDQ_IDLESPIN
+parameter_list|(
+name|tdq
+parameter_list|)
+define|\
+value|((tdq)->tdq_cg != NULL&& ((tdq)->tdq_cg->cg_flags& CG_FLAG_THREAD) == 0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TDQ_IDLESPIN
+parameter_list|(
+name|tdq
+parameter_list|)
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * The actual idle process.  */
 end_comment
@@ -10648,17 +10685,10 @@ expr_stmt|;
 comment|/* 		 * If we're switching very frequently, spin while checking 		 * for load rather than entering a low power state that  		 * may require an IPI.  However, don't do any busy 		 * loops while on SMT machines as this simply steals 		 * cycles from cores doing useful work. 		 */
 if|if
 condition|(
-operator|(
+name|TDQ_IDLESPIN
+argument_list|(
 name|tdq
-operator|->
-name|tdq_cg
-operator|->
-name|cg_flags
-operator|&
-name|CG_FLAG_THREAD
-operator|)
-operator|==
-literal|0
+argument_list|)
 operator|&&
 name|switchcnt
 operator|>
