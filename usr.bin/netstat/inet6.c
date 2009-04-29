@@ -2196,9 +2196,9 @@ literal|"echo reply"
 block|,
 literal|"multicast listener query"
 block|,
-literal|"multicast listener report"
+literal|"MLDv1 listener report"
 block|,
-literal|"multicast listener done"
+literal|"MLDv1 listener done"
 block|,
 literal|"router solicitation"
 block|,
@@ -2220,7 +2220,7 @@ literal|"inverse neighbor solicitation"
 block|,
 literal|"inverse neighbor advertisement"
 block|,
-literal|"#143"
+literal|"MLDv2 listener report"
 block|,
 literal|"#144"
 block|,
