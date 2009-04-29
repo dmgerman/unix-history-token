@@ -568,16 +568,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|int
-name|sysctl_jail_list
-parameter_list|(
-name|SYSCTL_HANDLER_ARGS
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -635,6 +625,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+specifier|static
+name|int
+name|sysctl_jail_list
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -3575,7 +3575,7 @@ operator|>
 literal|0
 argument_list|,
 operator|(
-literal|"Trying to hold dead prison (id=%d)."
+literal|"Trying to hold dead prison (jid=%d)."
 operator|,
 name|pr
 operator|->
@@ -3652,7 +3652,7 @@ operator|==
 name|PRISON_STATE_ALIVE
 argument_list|,
 operator|(
-literal|"Cannot add a process to a non-alive prison (id=%d)."
+literal|"Cannot add a process to a non-alive prison (jid=%d)."
 operator|,
 name|pr
 operator|->
@@ -3709,7 +3709,7 @@ operator|>
 literal|0
 argument_list|,
 operator|(
-literal|"Trying to kill a process in a dead prison (id=%d)."
+literal|"Trying to kill a process in a dead prison (jid=%d)."
 operator|,
 name|pr
 operator|->
@@ -3806,7 +3806,6 @@ argument_list|(
 name|cred
 argument_list|)
 condition|)
-comment|/* Do not change address passed in. */
 return|return
 operator|(
 literal|0
