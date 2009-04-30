@@ -14672,7 +14672,7 @@ if|if
 condition|(
 name|new_state
 operator|<
-name|ACPI_S_STATES_MAX
+name|ACPI_S_STATE_COUNT
 operator|&&
 operator|!
 name|acpi_sleep_states
