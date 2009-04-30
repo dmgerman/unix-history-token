@@ -459,6 +459,11 @@ struct|struct
 name|syncache_head
 block|{
 name|struct
+name|vnet
+modifier|*
+name|sch_vnet
+decl_stmt|;
+name|struct
 name|mtx
 name|sch_mtx
 decl_stmt|;

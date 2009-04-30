@@ -1183,7 +1183,16 @@ operator|.
 name|vmi_name
 operator|=
 literal|"inet"
-block|, }
+block|,
+operator|.
+name|vmi_size
+operator|=
+expr|sizeof
+operator|(
+expr|struct
+name|vnet_inet
+operator|)
+block|}
 decl_stmt|;
 end_decl_stmt
 

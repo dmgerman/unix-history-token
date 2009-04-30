@@ -594,6 +594,15 @@ operator|=
 literal|"inet6"
 block|,
 operator|.
+name|vmi_size
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|vnet_inet6
+argument_list|)
+block|,
+operator|.
 name|vmi_dependson
 operator|=
 name|VNET_MOD_INET
@@ -1176,7 +1185,7 @@ name|hz
 argument_list|,
 name|nd6_timer
 argument_list|,
-name|NULL
+name|curvnet
 argument_list|)
 expr_stmt|;
 comment|/* timer for regeneranation of temporary addresses randomize ID */
@@ -1205,7 +1214,7 @@ name|hz
 argument_list|,
 name|in6_tmpaddrtimer
 argument_list|,
-name|NULL
+name|curvnet
 argument_list|)
 expr_stmt|;
 return|return

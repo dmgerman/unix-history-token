@@ -600,6 +600,15 @@ operator|=
 literal|"gif"
 block|,
 operator|.
+name|vmi_size
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|vnet_gif
+argument_list|)
+block|,
+operator|.
 name|vmi_dependson
 operator|=
 name|VNET_MOD_NET
@@ -1435,11 +1444,16 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
+ifndef|#
+directive|ifndef
+name|VIMAGE
 name|V_ip6_gif_hlim
 operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX -> vnet_gif_idetach() */
+endif|#
+directive|endif
 endif|#
 directive|endif
 break|break;

@@ -2852,6 +2852,13 @@ modifier|*
 name|so
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|INIT_VNET_INET6
 argument_list|(
 name|so

@@ -1105,11 +1105,9 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VIMAGE
-end_ifndef
+begin_comment
+comment|/* should become #ifndef VIMAGE */
+end_comment
 
 begin_decl_stmt
 name|char
@@ -1119,11 +1117,6 @@ name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * This mutex is used to protect the hostname and domainname variables, and  * perhaps in the future should also protect hostid, hostuid, and others.  */
@@ -1784,11 +1777,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VIMAGE
-end_ifndef
+begin_comment
+comment|/* should become #ifndef VIMAGE */
+end_comment
 
 begin_decl_stmt
 name|char
@@ -1802,11 +1793,6 @@ end_decl_stmt
 begin_comment
 comment|/* Protected by hostname_mtx. */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static

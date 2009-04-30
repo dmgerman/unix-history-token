@@ -220,6 +220,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
@@ -1042,6 +1048,17 @@ expr_stmt|;
 operator|++
 name|numopensockets
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VIMAGE
+name|so
+operator|->
+name|so_vnet
+operator|=
+name|curvnet
+expr_stmt|;
+endif|#
+directive|endif
 name|mtx_unlock
 argument_list|(
 operator|&

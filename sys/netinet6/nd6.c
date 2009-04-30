@@ -802,7 +802,7 @@ name|hz
 argument_list|,
 name|nd6_slowtimo
 argument_list|,
-name|NULL
+name|curvnet
 argument_list|)
 expr_stmt|;
 name|nd6_init_done
@@ -2466,12 +2466,7 @@ argument_list|)
 expr_stmt|;
 name|INIT_VNET_INET6
 argument_list|(
-operator|(
-expr|struct
-name|vnet
-operator|*
-operator|)
-name|arg
+name|curvnet
 argument_list|)
 expr_stmt|;
 name|int
@@ -2511,7 +2506,7 @@ name|hz
 argument_list|,
 name|nd6_timer
 argument_list|,
-name|NULL
+name|curvnet
 argument_list|)
 expr_stmt|;
 comment|/* expire default router list */
@@ -3282,11 +3277,6 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|sockaddr_in6
 name|sin6
@@ -6204,7 +6194,7 @@ name|hz
 argument_list|,
 name|nd6_slowtimo
 argument_list|,
-name|NULL
+name|curvnet
 argument_list|)
 expr_stmt|;
 name|IFNET_RLOCK

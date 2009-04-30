@@ -301,6 +301,12 @@ modifier|*
 name|if_l2com
 decl_stmt|;
 comment|/* pointer to protocol bits */
+name|struct
+name|vnet
+modifier|*
+name|if_vnet
+decl_stmt|;
+comment|/* pointer to network stack instance */
 name|TAILQ_ENTRY
 argument_list|(
 argument|ifnet

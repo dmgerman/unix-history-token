@@ -132,11 +132,6 @@ name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 comment|/* XXX bad syntax! */
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 modifier|*
 name|name

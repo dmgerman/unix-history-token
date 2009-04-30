@@ -3784,9 +3784,19 @@ name|in6_tmpaddrtimer
 parameter_list|(
 name|void
 modifier|*
-name|ignored_arg
+name|arg
 parameter_list|)
 block|{
+name|CURVNET_SET
+argument_list|(
+operator|(
+expr|struct
+name|vnet
+operator|*
+operator|)
+name|arg
+argument_list|)
+expr_stmt|;
 name|INIT_VNET_NET
 argument_list|(
 name|curvnet
@@ -3830,7 +3840,7 @@ name|hz
 argument_list|,
 name|in6_tmpaddrtimer
 argument_list|,
-name|NULL
+name|curvnet
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -3912,6 +3922,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -3926,13 +3939,6 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
 name|LIST_HEAD
 argument_list|(
 argument_list|,

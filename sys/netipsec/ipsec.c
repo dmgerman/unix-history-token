@@ -1393,6 +1393,15 @@ operator|=
 literal|"ipsec"
 block|,
 operator|.
+name|vmi_size
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|vnet_ipsec
+argument_list|)
+block|,
+operator|.
 name|vmi_dependson
 operator|=
 name|VNET_MOD_INET

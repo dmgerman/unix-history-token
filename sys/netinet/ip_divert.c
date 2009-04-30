@@ -514,6 +514,17 @@ operator|=
 operator|&
 name|V_divcb
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VIMAGE
+name|V_divcbinfo
+operator|.
+name|ipi_vnet
+operator|=
+name|curvnet
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * XXX We don't use the hash list for divert IP, but it's easier 	 * to allocate a one entry hash list than it is to check all 	 * over the place for hashbase == NULL. 	 */
 name|V_divcbinfo
 operator|.

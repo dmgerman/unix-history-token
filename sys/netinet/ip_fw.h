@@ -2007,10 +2007,6 @@ name|int
 name|_verbose_limit
 decl_stmt|;
 name|int
-name|_fw_debug
-decl_stmt|;
-comment|/* actually unused */
-name|int
 name|_autoinc_step
 decl_stmt|;
 name|ipfw_dyn_rule
@@ -2181,13 +2177,6 @@ define|#
 directive|define
 name|V_verbose_limit
 value|VNET_IPFW(verbose_limit)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_fw_debug
-value|VNET_IPFW(fw_debug)
 end_define
 
 begin_define

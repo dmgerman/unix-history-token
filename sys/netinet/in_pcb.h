@@ -640,6 +640,13 @@ name|in6p_cksum
 value|inp_depend6.inp6_cksum
 end_define
 
+begin_define
+define|#
+directive|define
+name|inp_vnet
+value|inp_pcbinfo->ipi_vnet
+end_define
+
 begin_comment
 comment|/*  * The range of the generation count, as used in this implementation, is 9e19.  * We would have to create 300 billion connections per second for this number  * to roll over in a year.  This seems sufficiently unlikely that we simply  * don't concern ourselves with that possibility.  */
 end_comment
@@ -790,7 +797,13 @@ name|struct
 name|rwlock
 name|ipi_lock
 decl_stmt|;
-comment|/* 	 * vimage 1 	 * general use 1 	 */
+comment|/* 	 * Pointer to network stack instance 	 */
+name|struct
+name|vnet
+modifier|*
+name|ipi_vnet
+decl_stmt|;
+comment|/* 	 * general use 2 	 */
 name|void
 modifier|*
 name|ipi_pspare

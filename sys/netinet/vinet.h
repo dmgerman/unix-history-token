@@ -121,11 +121,6 @@ decl_stmt|;
 name|u_long
 name|_in_ifaddrhmask
 decl_stmt|;
-name|struct
-name|in_multihead
-name|_in_multihead
-decl_stmt|;
-comment|/* XXX unused */
 name|int
 name|_arpt_keep
 decl_stmt|;
@@ -914,13 +909,6 @@ define|#
 directive|define
 name|V_in_ifaddrhmask
 value|VNET_INET(in_ifaddrhmask)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_in_multihead
-value|VNET_INET(in_multihead)
 end_define
 
 begin_define

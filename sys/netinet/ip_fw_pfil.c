@@ -386,6 +386,11 @@ modifier|*
 name|inp
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ip_fw_args
 name|args
@@ -1005,6 +1010,11 @@ modifier|*
 name|inp
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ip_fw_args
 name|args

@@ -95,11 +95,6 @@ name|ip6q
 name|_ip6q
 decl_stmt|;
 name|struct
-name|route_in6
-name|_ip6_forward_rt
-decl_stmt|;
-comment|/* XXX remove */
-name|struct
 name|in6_addrpolicy
 name|_defaultaddrpolicy
 decl_stmt|;
@@ -296,22 +291,6 @@ decl_stmt|;
 name|int
 name|_ip6_prefer_tempaddr
 decl_stmt|;
-name|int
-name|_ip6_forward_srcrt
-decl_stmt|;
-comment|/* XXX remove */
-name|int
-name|_ip6_sourcecheck
-decl_stmt|;
-comment|/* XXX remove */
-name|int
-name|_ip6_sourcecheck_interval
-decl_stmt|;
-comment|/* XXX remove */
-name|int
-name|_ip6_ours_check_algorithm
-decl_stmt|;
-comment|/* XXX remove */
 name|int
 name|_nd6_prune
 decl_stmt|;

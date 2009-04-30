@@ -596,6 +596,12 @@ name|char
 modifier|*
 name|oid_descr
 decl_stmt|;
+name|short
+name|oid_v_subs
+decl_stmt|;
+name|short
+name|oid_v_mod
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1351,7 +1357,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_V_OID(subs, mod, parent, nbr, name, CTLTYPE_INT|(access), \ 		sym, val, sysctl_handle_v_int, "I", descr)
+value|SYSCTL_V_OID(subs, mod, parent, nbr, name,			    \ 		CTLTYPE_INT|CTLFLAG_MPSAFE|(access),			    \ 		sym, val, sysctl_handle_v_int, "I", descr)
 end_define
 
 begin_else
@@ -1516,7 +1522,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_V_OID(subs, mod, parent, nbr, name, CTLTYPE_UINT|(access), \ 		sym, val, sysctl_handle_v_int, "IU", descr)
+value|SYSCTL_V_OID(subs, mod, parent, nbr, name, 			     \ 		CTLTYPE_UINT|CTLFLAG_MPSAFE|(access),			     \ 		sym, val, sysctl_handle_v_int, "IU", descr)
 end_define
 
 begin_else
@@ -2196,6 +2202,43 @@ parameter_list|)
 define|\
 value|SYSCTL_INT(_kern_features, OID_AUTO, name, CTLFLAG_RD, 0, 1, desc)
 end_define
+
+begin_comment
+comment|/*  * Resolve void *arg1 in a proper virtualization container.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_RESOLVE_V_ARG1
+parameter_list|()
+value|do {					\ 	char *cp;							\ 	switch (oidp->oid_v_subs) {					\ 	case V_GLOBAL:							\
+comment|/* do nothing - this is NOT a virtualized variable! */
+value|\ 		break;							\ 	case V_NET:							\ 		cp = (char *)						\ 		    TD_TO_VNET(curthread)->mod_data[oidp->oid_v_mod];	\ 		arg1 = cp + (size_t) arg1;				\ 		break;							\ 	default:							\ 		panic("unsupported module id %d", oidp->oid_v_subs);	\ 	}								\ } while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_RESOLVE_V_ARG1
+parameter_list|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -726,6 +726,17 @@ operator|&
 name|V_udb
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VIMAGE
+name|V_udbinfo
+operator|.
+name|ipi_vnet
+operator|=
+name|curvnet
+expr_stmt|;
+endif|#
+directive|endif
 name|V_udbinfo
 operator|.
 name|ipi_listhead
