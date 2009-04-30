@@ -4576,8 +4576,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|child
+argument_list|,
 literal|"device has no ivars\n"
 argument_list|)
 expr_stmt|;
@@ -4742,8 +4744,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|child
+argument_list|,
 literal|"device has no ivars\n"
 argument_list|)
 expr_stmt|;
@@ -8362,15 +8366,18 @@ name|struct
 name|acpi_softc
 modifier|*
 name|sc
+init|=
+operator|(
+expr|struct
+name|acpi_softc
+operator|*
+operator|)
+name|arg
 decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
 comment|/*      * XXX Shutdown code should only run on the BSP (cpuid 0).      * Some chipsets do not power off the system correctly if called from      * an AP.      */
-name|sc
-operator|=
-name|arg
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -8397,8 +8404,12 @@ name|status
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|sc
+operator|->
+name|acpi_dev
+argument_list|,
 literal|"AcpiEnterSleepStatePrep failed - %s\n"
 argument_list|,
 name|AcpiFormatException
@@ -8409,9 +8420,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|device_printf
 argument_list|(
-literal|"Powering system off using ACPI\n"
+name|sc
+operator|->
+name|acpi_dev
+argument_list|,
+literal|"Powering system off\n"
 argument_list|)
 expr_stmt|;
 name|ACPI_DISABLE_IRQS
@@ -8431,10 +8446,13 @@ argument_list|(
 name|status
 argument_list|)
 condition|)
-block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ACPI power-off failed - %s\n"
+name|sc
+operator|->
+name|acpi_dev
+argument_list|,
+literal|"power-off failed - %s\n"
 argument_list|,
 name|AcpiFormatException
 argument_list|(
@@ -8442,7 +8460,6 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 name|DELAY
@@ -8450,9 +8467,13 @@ argument_list|(
 literal|1000000
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ACPI power-off failed - timeout\n"
+name|sc
+operator|->
+name|acpi_dev
+argument_list|,
+literal|"power-off failed - timeout\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -8509,10 +8530,13 @@ argument_list|(
 name|status
 argument_list|)
 condition|)
-block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ACPI reset failed - %s\n"
+name|sc
+operator|->
+name|acpi_dev
+argument_list|,
+literal|"reset failed - %s\n"
 argument_list|,
 name|AcpiFormatException
 argument_list|(
@@ -8520,7 +8544,6 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 name|DELAY
@@ -8528,9 +8551,13 @@ argument_list|(
 literal|1000000
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ACPI reset failed - timeout\n"
+name|sc
+operator|->
+name|acpi_dev
+argument_list|,
+literal|"reset failed - timeout\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -8548,9 +8575,13 @@ name|NULL
 condition|)
 block|{
 comment|/* 	 * Only disable ACPI if the user requested.  On some systems, writing 	 * the disable value to SMI_CMD hangs the system. 	 */
-name|printf
+name|device_printf
 argument_list|(
-literal|"Shutting down ACPI\n"
+name|sc
+operator|->
+name|acpi_dev
+argument_list|,
+literal|"Shutting down\n"
 argument_list|)
 expr_stmt|;
 name|AcpiTerminate
@@ -10405,8 +10436,12 @@ operator|!
 name|once
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|sc
+operator|->
+name|acpi_dev
+argument_list|,
 literal|"warning: acpi_SetSleepState() deprecated, need to update your software\n"
 argument_list|)
 expr_stmt|;
@@ -10456,15 +10491,22 @@ name|struct
 name|acpi_softc
 modifier|*
 name|sc
-decl_stmt|;
-name|printf
-argument_list|(
-literal|"acpi: suspend request timed out, forcing sleep now\n"
-argument_list|)
-expr_stmt|;
-name|sc
-operator|=
+init|=
+operator|(
+expr|struct
+name|acpi_softc
+operator|*
+operator|)
 name|arg
+decl_stmt|;
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|acpi_dev
+argument_list|,
+literal|"suspend request timed out, forcing sleep now\n"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -10480,9 +10522,13 @@ name|acpi_next_sstate
 argument_list|)
 argument_list|)
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"acpi: force sleep state S%d failed\n"
+name|sc
+operator|->
+name|acpi_dev
+argument_list|,
+literal|"force sleep state S%d failed\n"
 argument_list|,
 name|sc
 operator|->
@@ -10874,9 +10920,13 @@ operator|->
 name|susp_force_to
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"acpi: listener on %s cancelled the pending suspend\n"
+name|sc
+operator|->
+name|acpi_dev
+argument_list|,
+literal|"listener on %s cancelled the pending suspend\n"
 argument_list|,
 name|devtoname
 argument_list|(
@@ -12995,6 +13045,18 @@ name|int
 name|state
 parameter_list|)
 block|{
+name|struct
+name|acpi_softc
+modifier|*
+name|sc
+init|=
+operator|(
+expr|struct
+name|acpi_softc
+operator|*
+operator|)
+name|arg
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -13025,12 +13087,7 @@ name|ret
 operator|=
 name|acpi_ReqSleepState
 argument_list|(
-operator|(
-expr|struct
-name|acpi_softc
-operator|*
-operator|)
-name|arg
+name|sc
 argument_list|,
 name|state
 argument_list|)
@@ -13041,9 +13098,13 @@ name|ret
 operator|!=
 literal|0
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"acpi: request to enter state S%d failed (err %d)\n"
+name|sc
+operator|->
+name|acpi_dev
+argument_list|,
+literal|"request to enter state S%d failed (err %d)\n"
 argument_list|,
 name|state
 argument_list|,
