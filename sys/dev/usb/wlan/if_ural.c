@@ -4526,6 +4526,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|ieee80211_ref_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ural_tx_bcn
