@@ -2478,9 +2478,9 @@ condition|;
 name|i
 operator|++
 control|)
-name|printf
+name|wprintf
 argument_list|(
-literal|"%.2ls%s\n"
+literal|L"%.2ls%s\n"
 argument_list|,
 name|wds
 operator|.
@@ -2884,9 +2884,9 @@ operator|+=
 name|mpl
 control|)
 block|{
-name|printf
+name|wprintf
 argument_list|(
-literal|"    %-*ls%-*ls"
+literal|L"    %-*ls%-*ls"
 argument_list|,
 name|mw
 argument_list|,
@@ -2930,9 +2930,9 @@ name|name
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|wprintf
 argument_list|(
-literal|"%-*ls%ls\n"
+literal|L"%-*ls%ls\n"
 argument_list|,
 name|mw
 argument_list|,
@@ -2969,9 +2969,9 @@ name|i
 operator|++
 control|)
 block|{
-name|printf
+name|wprintf
 argument_list|(
-literal|"%.2ls%-*s%-*s"
+literal|L"%.2ls%-*s%-*s"
 argument_list|,
 name|wds
 operator|.
@@ -3304,9 +3304,9 @@ operator|+=
 name|mpl
 control|)
 block|{
-name|printf
+name|wprintf
 argument_list|(
-literal|"%-*ls  "
+literal|L"%-*ls  "
 argument_list|,
 name|mw
 argument_list|,
@@ -3353,9 +3353,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|wprintf
 argument_list|(
-literal|"%-*ls  %ls\n"
+literal|L"%-*ls  %ls\n"
 argument_list|,
 name|mw
 argument_list|,
