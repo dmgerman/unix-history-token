@@ -1513,6 +1513,17 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|static
+name|int
+name|cpu_topo_probed
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|cpu_topo_probed
+condition|)
+return|return;
 name|logical_cpus
 operator|=
 name|logical_cpus_mask
@@ -1545,6 +1556,12 @@ condition|)
 name|cpu_cores
 operator|=
 name|mp_ncpus
+operator|>
+literal|0
+condition|?
+name|mp_ncpus
+else|:
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -1553,6 +1570,10 @@ operator|==
 literal|0
 condition|)
 name|cpu_logical
+operator|=
+literal|1
+expr_stmt|;
+name|cpu_topo_probed
 operator|=
 literal|1
 expr_stmt|;
@@ -1572,6 +1593,9 @@ name|int
 name|cg_flags
 decl_stmt|;
 comment|/* 	 * Determine whether any threading flags are 	 * necessry. 	 */
+name|topo_probe
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|cpu_logical
