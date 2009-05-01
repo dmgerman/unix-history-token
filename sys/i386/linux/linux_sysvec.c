@@ -509,8 +509,8 @@ end_expr_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|sx
-name|futex_sx
+name|mtx
+name|futex_mtx
 decl_stmt|;
 end_decl_stmt
 
@@ -5552,12 +5552,16 @@ operator|&
 name|futex_list
 argument_list|)
 expr_stmt|;
-name|sx_init
+name|mtx_init
 argument_list|(
 operator|&
-name|futex_sx
+name|futex_mtx
 argument_list|,
-literal|"futex protection lock"
+literal|"ftllk"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|linux_exit_tag
@@ -5756,10 +5760,10 @@ operator|&
 name|emul_shared_lock
 argument_list|)
 expr_stmt|;
-name|sx_destroy
+name|mtx_destroy
 argument_list|(
 operator|&
-name|futex_sx
+name|futex_mtx
 argument_list|)
 expr_stmt|;
 name|EVENTHANDLER_DEREGISTER
