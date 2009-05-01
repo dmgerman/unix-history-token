@@ -1028,11 +1028,6 @@ name|uh_sport
 condition|)
 continue|continue;
 block|}
-name|INP_RLOCK
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Handle socket delivery policy for any-source 			 * and source-specific multicast. [RFC3678] 			 */
 name|imo
 operator|=
@@ -1060,6 +1055,11 @@ decl_stmt|;
 name|int
 name|blocked
 decl_stmt|;
+name|INP_RLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -1159,8 +1159,14 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 continue|continue;
 block|}
+name|INP_RUNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1627,15 +1633,6 @@ operator|)
 return|;
 name|badheadlocked
 label|:
-if|if
-condition|(
-name|inp
-condition|)
-name|INP_RUNLOCK
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
 name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
