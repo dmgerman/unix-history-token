@@ -644,6 +644,26 @@ end_function
 begin_function
 specifier|static
 name|int
+name|atrtc_resume
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|atrtc_restore
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|atrtc_settime
 parameter_list|(
 name|device_t
@@ -1052,10 +1072,9 @@ name|DEVMETHOD
 argument_list|(
 name|device_resume
 argument_list|,
-name|bus_generic_resume
+name|atrtc_resume
 argument_list|)
 block|,
-comment|/* XXX restart statclock? */
 comment|/* clock interface */
 name|DEVMETHOD
 argument_list|(
