@@ -1623,14 +1623,6 @@ name|int
 name|showprocs
 parameter_list|)
 block|{
-specifier|const
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 name|db_printf
 argument_list|(
 literal|"%stdma %p:\n"
@@ -1642,15 +1634,9 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"%s  features %b version %u slot %u txrate %u bintval %u peer %p\n"
+literal|"%s  version %u slot %u bintval %u peer %p\n"
 argument_list|,
 name|sep
-argument_list|,
-name|ts
-operator|->
-name|tdma_features
-argument_list|,
-name|TDMA_F_BITS
 argument_list|,
 name|ts
 operator|->
@@ -1659,10 +1645,6 @@ argument_list|,
 name|ts
 operator|->
 name|tdma_slot
-argument_list|,
-name|ts
-operator|->
-name|tdma_txrate
 argument_list|,
 name|ts
 operator|->
@@ -1675,7 +1657,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"%s  slotlen %u slotcnt %u bw["
+literal|"%s  slotlen %u slotcnt %u"
 argument_list|,
 name|sep
 argument_list|,
@@ -1688,46 +1670,9 @@ operator|->
 name|tdma_slotcnt
 argument_list|)
 expr_stmt|;
-name|cp
-operator|=
-literal|""
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|TDMA_MAXSLOTS
-condition|;
-name|i
-operator|++
-control|)
-block|{
 name|db_printf
 argument_list|(
-literal|"%s%u"
-argument_list|,
-name|cp
-argument_list|,
-name|ts
-operator|->
-name|tdma_bw
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-name|cp
-operator|=
-literal|":"
-expr_stmt|;
-block|}
-name|db_printf
-argument_list|(
-literal|"] inuse 0x%x active 0x%x count %d\n"
+literal|" inuse 0x%x active 0x%x count %d\n"
 argument_list|,
 name|ts
 operator|->
