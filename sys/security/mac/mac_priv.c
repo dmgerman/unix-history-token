@@ -117,7 +117,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|priv_check
 argument_list|,
@@ -177,7 +177,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_GRANT_NOSLEEP
+name|MAC_POLICY_GRANT_NOSLEEP
 argument_list|(
 name|priv_grant
 argument_list|,

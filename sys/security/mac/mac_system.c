@@ -134,7 +134,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|kenv_check_dump
 argument_list|,
@@ -187,7 +187,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|kenv_check_get
 argument_list|,
@@ -250,7 +250,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|kenv_check_set
 argument_list|,
@@ -311,7 +311,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|kenv_check_unset
 argument_list|,
@@ -376,7 +376,7 @@ argument_list|,
 literal|"mac_kld_check_load"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|kld_check_load
 argument_list|,
@@ -431,7 +431,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|kld_check_stat
 argument_list|,
@@ -500,7 +500,7 @@ literal|"mac_system_check_acct"
 argument_list|)
 expr_stmt|;
 block|}
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|system_check_acct
 argument_list|,
@@ -566,7 +566,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|system_check_reboot
 argument_list|,
@@ -631,7 +631,7 @@ argument_list|,
 literal|"mac_system_check_swapon"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|system_check_swapon
 argument_list|,
@@ -700,7 +700,7 @@ argument_list|,
 literal|"mac_system_check_swapoff"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|system_check_swapoff
 argument_list|,
@@ -777,7 +777,7 @@ name|int
 name|error
 decl_stmt|;
 comment|/* 	 * XXXMAC: We would very much like to assert the SYSCTL_LOCK here, 	 * but since it's not exported from kern_sysctl.c, we can't. 	 */
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|system_check_sysctl
 argument_list|,

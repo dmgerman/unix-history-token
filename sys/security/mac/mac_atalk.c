@@ -169,7 +169,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|netatalk_aarp_send
 argument_list|,

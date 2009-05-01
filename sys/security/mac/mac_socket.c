@@ -225,7 +225,7 @@ name|flag
 operator|&
 name|M_WAITOK
 condition|)
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|socket_init_label
 argument_list|,
@@ -235,7 +235,7 @@ name|flag
 argument_list|)
 expr_stmt|;
 else|else
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_init_label
 argument_list|,
@@ -249,7 +249,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|socket_destroy_label
 argument_list|,
@@ -318,7 +318,7 @@ name|flag
 operator|&
 name|M_WAITOK
 condition|)
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|socketpeer_init_label
 argument_list|,
@@ -328,7 +328,7 @@ name|flag
 argument_list|)
 expr_stmt|;
 else|else
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socketpeer_init_label
 argument_list|,
@@ -342,7 +342,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|socketpeer_destroy_label
 argument_list|,
@@ -481,7 +481,7 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|socket_destroy_label
 argument_list|,
@@ -507,7 +507,7 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|socketpeer_destroy_label
 argument_list|,
@@ -586,7 +586,7 @@ modifier|*
 name|dest
 parameter_list|)
 block|{
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|socket_copy_label
 argument_list|,
@@ -622,7 +622,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_EXTERNALIZE
+name|MAC_POLICY_EXTERNALIZE
 argument_list|(
 name|socket
 argument_list|,
@@ -668,7 +668,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_EXTERNALIZE
+name|MAC_POLICY_EXTERNALIZE
 argument_list|(
 name|socketpeer
 argument_list|,
@@ -706,7 +706,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_INTERNALIZE
+name|MAC_POLICY_INTERNALIZE
 argument_list|(
 name|socket
 argument_list|,
@@ -738,7 +738,7 @@ modifier|*
 name|so
 parameter_list|)
 block|{
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|socket_create
 argument_list|,
@@ -774,7 +774,7 @@ argument_list|(
 name|oldso
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|socket_newconn
 argument_list|,
@@ -820,7 +820,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|socket_relabel
 argument_list|,
@@ -870,7 +870,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|socketpeer_set_from_mbuf
 argument_list|,
@@ -904,7 +904,7 @@ name|newso
 parameter_list|)
 block|{
 comment|/* 	 * XXXRW: only hold the socket lock on one at a time, as one socket 	 * is the original, and one is the new.  However, it's called in both 	 * directions, so we can't assert the lock here currently. 	 */
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|socketpeer_set_from_socket
 argument_list|,
@@ -956,7 +956,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|socket_create_mbuf
 argument_list|,
@@ -1009,7 +1009,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_accept
 argument_list|,
@@ -1083,7 +1083,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_bind
 argument_list|,
@@ -1161,7 +1161,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_connect
 argument_list|,
@@ -1235,7 +1235,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_create
 argument_list|,
@@ -1318,7 +1318,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_deliver
 argument_list|,
@@ -1387,7 +1387,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_listen
 argument_list|,
@@ -1454,7 +1454,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_poll
 argument_list|,
@@ -1521,7 +1521,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_receive
 argument_list|,
@@ -1596,7 +1596,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_relabel
 argument_list|,
@@ -1667,7 +1667,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_send
 argument_list|,
@@ -1734,7 +1734,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_stat
 argument_list|,
@@ -1801,7 +1801,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_visible
 argument_list|,

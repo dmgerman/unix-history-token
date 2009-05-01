@@ -210,7 +210,7 @@ name|flag
 operator|&
 name|M_WAITOK
 condition|)
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|inpcb_init_label
 argument_list|,
@@ -220,7 +220,7 @@ name|flag
 argument_list|)
 expr_stmt|;
 else|else
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|inpcb_init_label
 argument_list|,
@@ -234,7 +234,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|inpcb_destroy_label
 argument_list|,
@@ -361,7 +361,7 @@ name|flag
 operator|&
 name|M_WAITOK
 condition|)
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|ipq_init_label
 argument_list|,
@@ -371,7 +371,7 @@ name|flag
 argument_list|)
 expr_stmt|;
 else|else
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|ipq_init_label
 argument_list|,
@@ -385,7 +385,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|ipq_destroy_label
 argument_list|,
@@ -480,7 +480,7 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|inpcb_destroy_label
 argument_list|,
@@ -542,7 +542,7 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|ipq_destroy_label
 argument_list|,
@@ -608,7 +608,7 @@ modifier|*
 name|inp
 parameter_list|)
 block|{
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|inpcb_create
 argument_list|,
@@ -655,7 +655,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|ipq_reassemble
 argument_list|,
@@ -710,7 +710,7 @@ argument_list|(
 name|frag
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|netinet_fragment
 argument_list|,
@@ -753,7 +753,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|ipq_create
 argument_list|,
@@ -803,7 +803,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|inpcb_create_mbuf
 argument_list|,
@@ -855,7 +855,7 @@ name|result
 operator|=
 literal|1
 expr_stmt|;
-name|MAC_BOOLEAN_NOSLEEP
+name|MAC_POLICY_BOOLEAN_NOSLEEP
 argument_list|(
 name|ipq_match
 argument_list|,
@@ -912,7 +912,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|netinet_arp_send
 argument_list|,
@@ -972,7 +972,7 @@ argument_list|(
 name|msend
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|netinet_icmp_reply
 argument_list|,
@@ -1010,7 +1010,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|netinet_icmp_replyinplace
 argument_list|,
@@ -1054,7 +1054,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|netinet_igmp_send
 argument_list|,
@@ -1099,7 +1099,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|netinet_tcp_reply
 argument_list|,
@@ -1138,7 +1138,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|ipq_update
 argument_list|,
@@ -1203,7 +1203,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|inpcb_check_deliver
 argument_list|,
@@ -1272,7 +1272,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|inpcb_check_visible
 argument_list|,
@@ -1329,7 +1329,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|inpcb_sosetlabel
 argument_list|,
@@ -1396,7 +1396,7 @@ argument_list|(
 name|msend
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|netinet_firewall_reply
 argument_list|,
@@ -1439,7 +1439,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|netinet_firewall_send
 argument_list|,
@@ -1474,7 +1474,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|syncache_destroy_label
 argument_list|,
@@ -1539,7 +1539,7 @@ name|ENOMEM
 operator|)
 return|;
 comment|/* 		 * Since we are holding the inpcb locks the policy can not 		 * allocate policy specific label storage using M_WAITOK.  So 		 * we need to do a MAC_CHECK instead of the typical 		 * MAC_PERFORM so we can propagate allocation failures back 		 * to the syncache code. 		 */
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|syncache_init_label
 argument_list|,
@@ -1554,7 +1554,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|syncache_destroy_label
 argument_list|,
@@ -1609,7 +1609,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|syncache_create
 argument_list|,
@@ -1653,7 +1653,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|syncache_create_mbuf
 argument_list|,
