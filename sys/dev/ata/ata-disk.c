@@ -1758,10 +1758,23 @@ name|dp
 init|=
 name|arg
 decl_stmt|;
+name|device_t
+name|dev
+init|=
+name|dp
+operator|->
+name|d_drv1
+decl_stmt|;
 name|struct
 name|bio
 name|bp
 decl_stmt|;
+comment|/* XXX: Drop pre-dump request queue. Long request queue processing      * causes stack overflow in ATA working in dumping (interruptless) mode.      * Conter-XXX: To make dump coherent we should avoid doing anything      * else while dumping.      */
+name|ata_drop_requests
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 comment|/* length zero is special and really means flush buffers to media */
 if|if
 condition|(
@@ -1776,9 +1789,7 @@ name|atadev
 init|=
 name|device_get_softc
 argument_list|(
-name|dp
-operator|->
-name|d_drv1
+name|dev
 argument_list|)
 decl_stmt|;
 name|int
@@ -1802,9 +1813,7 @@ name|error
 operator|=
 name|ata_controlcmd
 argument_list|(
-name|dp
-operator|->
-name|d_drv1
+name|dev
 argument_list|,
 name|ATA_FLUSHCACHE
 argument_list|,

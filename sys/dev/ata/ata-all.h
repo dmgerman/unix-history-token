@@ -3323,6 +3323,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ata_drop_requests
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 modifier|*
 name|ata_cmd2str
