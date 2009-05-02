@@ -615,6 +615,20 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|cpu_logical
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cpu_cores
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
