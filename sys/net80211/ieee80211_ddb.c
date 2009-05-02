@@ -859,7 +859,7 @@ parameter_list|)
 block|{
 name|db_printf
 argument_list|(
-literal|"%stxampdu[%d]: %p flags %b ac %s\n"
+literal|"%stxampdu[%d]: %p flags %b %s\n"
 argument_list|,
 name|sep
 argument_list|,
