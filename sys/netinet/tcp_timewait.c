@@ -734,17 +734,6 @@ modifier|*
 name|tp
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|INVARIANTS
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|INVARIANT_SUPPORT
-argument_list|)
 name|INIT_VNET_INET
 argument_list|(
 name|tp
@@ -752,8 +741,6 @@ operator|->
 name|t_vnet
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|struct
 name|tcptw
 modifier|*

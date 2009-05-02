@@ -13681,11 +13681,16 @@ name|unused
 name|__unused
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|INIT_VNET_INET
 argument_list|(
 name|curvnet
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|CTR1
 argument_list|(
 name|KTR_IGMPV3

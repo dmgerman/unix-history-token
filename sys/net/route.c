@@ -4523,11 +4523,6 @@ modifier|*
 name|gate
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 comment|/* XXX dst may be overwritten, can we move this to below */
 name|int
 name|dlen
@@ -4547,6 +4542,11 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INVARIANTS
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|radix_node_head
 modifier|*
