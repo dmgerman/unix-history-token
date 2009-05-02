@@ -425,29 +425,11 @@ name|ieee80211_rx_ampdu
 struct_decl|;
 end_struct_decl
 
-begin_struct
-struct|struct
-name|ieee80211_stageq
-block|{
-name|struct
-name|mbuf
-modifier|*
-name|head
-decl_stmt|;
-comment|/* frames linked w/ m_nextpkt */
-name|struct
-name|mbuf
-modifier|*
-name|tail
-decl_stmt|;
-comment|/* last frame in queue */
-name|int
-name|depth
-decl_stmt|;
-comment|/* # items on head */
-block|}
-struct|;
-end_struct
+begin_struct_decl
+struct_decl|struct
+name|ieee80211_superg
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct
@@ -756,18 +738,12 @@ name|int
 name|ic_lastnonht
 decl_stmt|;
 comment|/* last time non-HT sta noted */
-comment|/* fast-frames staging q */
+comment|/* optional state for Atheros SuperG protocol extensions */
 name|struct
-name|ieee80211_stageq
-name|ic_ff_stageq
-index|[
-name|WME_NUM_AC
-index|]
+name|ieee80211_superg
+modifier|*
+name|ic_superg
 decl_stmt|;
-name|int
-name|ic_stageqdepth
-decl_stmt|;
-comment|/* cumulative depth */
 comment|/* virtual ap create/delete */
 name|struct
 name|ieee80211vap
