@@ -248,19 +248,12 @@ block|}
 struct|;
 end_struct
 
-begin_macro
-name|LIST_HEAD
-argument_list|(
-argument|futex_list
-argument_list|,
-argument|futex
-argument_list|)
-end_macro
-
-begin_expr_stmt
+begin_decl_stmt
+name|struct
 name|futex_list
-expr_stmt|;
-end_expr_stmt
+name|futex_list
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
