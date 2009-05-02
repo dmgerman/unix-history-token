@@ -405,16 +405,9 @@ value|((x) == kernel_pmap)
 end_define
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|pmap
 name|kernel_pmap_store
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|pmap_t
-name|kernel_pmap
 decl_stmt|;
 end_decl_stmt
 
@@ -424,26 +417,6 @@ modifier|*
 name|kernel_segmap
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|vm_offset_t
-name|avail_start
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* PA of first available physical page */
-end_comment
-
-begin_decl_stmt
-name|vm_offset_t
-name|avail_end
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* PA of last available physical page */
-end_comment
 
 begin_decl_stmt
 name|vm_offset_t
@@ -537,14 +510,6 @@ init|=
 literal|0
 decl_stmt|,
 name|pv_entry_high_water
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|pmap_pagedaemon_waken
 init|=
 literal|0
 decl_stmt|;
@@ -1796,13 +1761,6 @@ name|NPTEPG
 operator|)
 argument_list|)
 expr_stmt|;
-name|avail_start
-operator|=
-name|phys_avail
-index|[
-literal|0
-index|]
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -1821,21 +1779,24 @@ operator|+=
 literal|2
 control|)
 continue|continue;
-name|avail_end
-operator|=
+name|printf
+argument_list|(
+literal|"avail_start:0x%x avail_end:0x%x\n"
+argument_list|,
+name|phys_avail
+index|[
+literal|0
+index|]
+argument_list|,
 name|phys_avail
 index|[
 name|i
 operator|+
 literal|1
 index|]
+argument_list|)
 expr_stmt|;
 comment|/* 	 * The kernel's pmap is statically allocated so we don't have to use 	 * pmap_create, which is unlikely to work correctly at this part of 	 * the boot sequence (XXX and which no longer exists). 	 */
-name|kernel_pmap
-operator|=
-operator|&
-name|kernel_pmap_store
-expr_stmt|;
 name|PMAP_LOCK_INIT
 argument_list|(
 name|kernel_pmap
@@ -1860,15 +1821,6 @@ operator|&
 name|kernel_pmap
 operator|->
 name|pm_pvlist
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"avail_start:0x%x avail_end:0x%x\n"
-argument_list|,
-name|avail_start
-argument_list|,
-name|avail_end
 argument_list|)
 expr_stmt|;
 name|kernel_pmap
@@ -4002,6 +3954,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * allocate the page directory page 	 */
+while|while
+condition|(
+operator|(
 name|ptdpg
 operator|=
 name|vm_page_alloc
@@ -4012,27 +3967,18 @@ name|NUSERPGTBLS
 argument_list|,
 name|req
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|VM_WAIT
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* I think we can just delete these, now that PG_BUSY is gone */
-block|vm_page_lock_queues(); 	vm_page_flag_clear(ptdpg, PTE_BUSY);
-comment|/* not usually mapped */
-endif|#
-directive|endif
 name|ptdpg
 operator|->
 name|valid
 operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|vm_page_unlock_queues();
-endif|#
-directive|endif
 name|pmap
 operator|->
 name|pm_segtab
@@ -4614,9 +4560,6 @@ name|pm_segtab
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|ptdpg
 operator|->
 name|wire_count
@@ -4636,9 +4579,6 @@ name|vm_page_free_zero
 argument_list|(
 name|ptdpg
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -6359,35 +6299,25 @@ name|pte
 decl_stmt|,
 name|tpte
 decl_stmt|;
-if|#
-directive|if
-name|defined
+name|KASSERT
 argument_list|(
-name|PMAP_DEBUG
-argument_list|)
-comment|/* 	 * XXX This makes pmap_remove_all() illegal for non-managed pages! 	 */
-if|if
-condition|(
+operator|(
 name|m
 operator|->
 name|flags
 operator|&
 name|PG_FICTITIOUS
-condition|)
-block|{
-name|panic
-argument_list|(
-literal|"pmap_page_protect: illegal for unmanaged page, va: 0x%x"
+operator|)
+operator|==
+literal|0
 argument_list|,
-name|VM_PAGE_TO_PHYS
-argument_list|(
+operator|(
+literal|"pmap_remove_all: page %p is fictitious"
+operator|,
 name|m
-argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|mtx_assert
 argument_list|(
 operator|&
@@ -9964,15 +9894,14 @@ condition|)
 return|return
 name|FALSE
 return|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-name|PMAP_LOCK
+name|mtx_assert
 argument_list|(
-name|pmap
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Not found, check current mappings returning immediately if found. 	 */
 name|TAILQ_FOREACH
 argument_list|(
 argument|pv
@@ -9991,14 +9920,6 @@ operator|==
 name|pmap
 condition|)
 block|{
-name|PMAP_UNLOCK
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 return|return
 name|TRUE
 return|;
@@ -10014,14 +9935,6 @@ literal|16
 condition|)
 break|break;
 block|}
-name|PMAP_UNLOCK
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|FALSE
@@ -10029,12 +9942,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|PMAP_REMOVE_PAGES_CURPROC_ONLY
-end_define
 
 begin_comment
 comment|/*  * Remove all pages from specified address space  * this aids process exit speeds.  Also, this code  * is special cased for current process only, but  * can have the more generic (and slightly slower)  * mode enabled.  This is much faster than pmap_remove  * in the case of running down an entire address space.  */
@@ -10062,9 +9969,6 @@ decl_stmt|;
 name|vm_page_t
 name|m
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|PMAP_REMOVE_PAGES_CURPROC_ONLY
 if|if
 condition|(
 name|pmap
@@ -10086,8 +9990,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -13274,9 +13176,12 @@ name|pt_entry_t
 modifier|*
 name|ptep
 decl_stmt|;
+comment|/* Is the kernel pmap initialized? */
 if|if
 condition|(
 name|kernel_pmap
+operator|->
+name|pm_active
 condition|)
 block|{
 if|if
