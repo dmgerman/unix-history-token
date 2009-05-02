@@ -871,10 +871,10 @@ begin_decl_stmt
 specifier|const
 name|char
 modifier|*
-name|term_r
+name|term_so
 decl_stmt|,
 modifier|*
-name|term_e
+name|term_se
 decl_stmt|;
 end_decl_stmt
 
@@ -1306,9 +1306,9 @@ name|tm
 modifier|*
 name|tm1
 decl_stmt|;
-name|term_e
+name|term_se
 operator|=
-name|term_r
+name|term_so
 operator|=
 name|NULL
 expr_stmt|;
@@ -1341,7 +1341,7 @@ name|b
 operator|=
 name|cbuf
 expr_stmt|;
-name|term_r
+name|term_so
 operator|=
 name|tgetstr
 argument_list|(
@@ -1351,7 +1351,7 @@ operator|&
 name|b
 argument_list|)
 expr_stmt|;
-name|term_e
+name|term_se
 operator|=
 name|tgetstr
 argument_list|(
@@ -1682,9 +1682,9 @@ break|break;
 case|case
 literal|'h'
 case|:
-name|term_r
+name|term_so
 operator|=
-name|term_e
+name|term_se
 operator|=
 name|NULL
 expr_stmt|;
@@ -2098,10 +2098,10 @@ parameter_list|)
 block|{
 name|fputs
 argument_list|(
-literal|"usage: cal [-jy] [[month] year]\n"
-literal|"       cal [-j] [-m month] [year]\n"
-literal|"       ncal [-Jjpwy] [-s country_code] [[month] year]\n"
-literal|"       ncal [-Jeo] [year]\n"
+literal|"usage: cal [-hjy] [[month] year]\n"
+literal|"       cal [-hj] [-m month] [year]\n"
+literal|"       ncal [-hJjpwy] [-s country_code] [[month] year]\n"
+literal|"       ncal [-hJeo] [year]\n"
 argument_list|,
 name|stderr
 argument_list|)
@@ -4037,11 +4037,11 @@ operator|==
 name|today
 operator|&&
 operator|(
-name|term_r
+name|term_so
 operator|!=
 name|NULL
 operator|&&
-name|term_e
+name|term_se
 operator|!=
 name|NULL
 operator|)
@@ -4051,7 +4051,7 @@ name|l
 operator|=
 name|strlen
 argument_list|(
-name|term_r
+name|term_so
 argument_list|)
 expr_stmt|;
 if|if
@@ -4129,7 +4129,7 @@ name|k
 operator|+
 literal|1
 argument_list|,
-name|term_r
+name|term_so
 argument_list|,
 name|l
 argument_list|)
@@ -4150,11 +4150,11 @@ name|l
 operator|+
 name|dw
 argument_list|,
-name|term_e
+name|term_se
 argument_list|,
 name|strlen
 argument_list|(
-name|term_e
+name|term_se
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4162,12 +4162,12 @@ name|l
 operator|=
 name|strlen
 argument_list|(
-name|term_e
+name|term_se
 argument_list|)
 operator|+
 name|strlen
 argument_list|(
-name|term_r
+name|term_so
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -4697,11 +4697,11 @@ operator|==
 name|today
 operator|&&
 operator|(
-name|term_r
+name|term_so
 operator|!=
 name|NULL
 operator|&&
-name|term_e
+name|term_se
 operator|!=
 name|NULL
 operator|)
@@ -4711,7 +4711,7 @@ name|l
 operator|=
 name|strlen
 argument_list|(
-name|term_r
+name|term_so
 argument_list|)
 expr_stmt|;
 if|if
@@ -4789,7 +4789,7 @@ name|k
 operator|+
 literal|1
 argument_list|,
-name|term_r
+name|term_so
 argument_list|,
 name|l
 argument_list|)
@@ -4810,11 +4810,11 @@ name|l
 operator|+
 name|dw
 argument_list|,
-name|term_e
+name|term_se
 argument_list|,
 name|strlen
 argument_list|(
-name|term_e
+name|term_se
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4822,12 +4822,12 @@ name|l
 operator|=
 name|strlen
 argument_list|(
-name|term_e
+name|term_se
 argument_list|)
 operator|+
 name|strlen
 argument_list|(
-name|term_r
+name|term_so
 argument_list|)
 expr_stmt|;
 continue|continue;
