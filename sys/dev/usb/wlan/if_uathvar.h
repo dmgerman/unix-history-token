@@ -601,10 +601,6 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-name|enum
-name|ieee80211_state
-name|sc_state
-decl_stmt|;
 name|struct
 name|usb2_xfer
 modifier|*

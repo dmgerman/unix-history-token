@@ -79,6 +79,11 @@ name|ieee80211vap
 modifier|*
 name|ss_vap
 decl_stmt|;
+name|struct
+name|ieee80211com
+modifier|*
+name|ss_ic
+decl_stmt|;
 specifier|const
 name|struct
 name|ieee80211_scanner

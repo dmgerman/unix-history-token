@@ -3019,9 +3019,19 @@ operator|->
 name|ic_curchan
 argument_list|)
 expr_stmt|;
+name|IEEE80211_UNLOCK
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 name|ic
 operator|->
 name|ic_set_channel
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
+name|IEEE80211_LOCK
 argument_list|(
 name|ic
 argument_list|)
@@ -3031,12 +3041,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Change the current channel.  The request channel may be  * promoted if other vap's are operating with HT20/HT40.  */
+comment|/*  * Setup the current channel.  The request channel may be  * promoted if other vap's are operating with HT20/HT40.  */
 end_comment
 
 begin_function
 name|void
-name|ieee80211_setcurchan
+name|ieee80211_setupcurchan
 parameter_list|(
 name|struct
 name|ieee80211com
@@ -3121,11 +3131,43 @@ operator|->
 name|ic_curchan
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Change the current channel.  The channel change is guaranteed to have  * happened before the next state change.  */
+end_comment
+
+begin_function
+name|void
+name|ieee80211_setcurchan
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
 name|ic
-operator|->
-name|ic_set_channel
+parameter_list|,
+name|struct
+name|ieee80211_channel
+modifier|*
+name|c
+parameter_list|)
+block|{
+name|ieee80211_setupcurchan
 argument_list|(
 name|ic
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+name|ieee80211_runtask
+argument_list|(
+name|ic
+argument_list|,
+operator|&
+name|ic
+operator|->
+name|ic_chan_task
 argument_list|)
 expr_stmt|;
 block|}

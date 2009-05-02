@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/taskqueue.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -16332,13 +16326,14 @@ name|if_ioctl
 operator|=
 name|ioctl
 expr_stmt|;
-name|ic
-operator|->
-name|ic_update_mcast
+name|ieee80211_runtask
 argument_list|(
 name|ic
+argument_list|,
+operator|&
+name|ic
 operator|->
-name|ic_ifp
+name|ic_mcast_task
 argument_list|)
 expr_stmt|;
 name|IEEE80211_UNLOCK

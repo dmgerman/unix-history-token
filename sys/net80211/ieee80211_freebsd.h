@@ -45,6 +45,12 @@ directive|include
 file|<sys/rwlock.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/taskqueue.h>
+end_include
+
 begin_comment
 comment|/*  * Common state locking definitions.  */
 end_comment
