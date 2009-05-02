@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) Christos Zoulas 2003.  * All Rights Reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *    * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) Christos Zoulas 2003.  * All Rights Reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -84,7 +84,7 @@ value|0x000010
 end_define
 
 begin_comment
-comment|/* Return only the MIME type */
+comment|/* Return the MIME type */
 end_comment
 
 begin_define
@@ -128,7 +128,7 @@ value|0x000100
 end_define
 
 begin_comment
-comment|/* Don't translate unprint chars */
+comment|/* Don't translate unprintable chars */
 end_comment
 
 begin_define
@@ -150,7 +150,7 @@ value|0x000400
 end_define
 
 begin_comment
-comment|/* Return only the MIME encoding */
+comment|/* Return the MIME encoding */
 end_comment
 
 begin_define
@@ -159,6 +159,17 @@ directive|define
 name|MAGIC_MIME
 value|(MAGIC_MIME_TYPE|MAGIC_MIME_ENCODING)
 end_define
+
+begin_define
+define|#
+directive|define
+name|MAGIC_APPLE
+value|0x000800
+end_define
+
+begin_comment
+comment|/* Return the Apple creator and type */
+end_comment
 
 begin_define
 define|#
@@ -218,12 +229,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAGIC_NO_CHECK_ASCII
+name|MAGIC_NO_CHECK_TEXT
 value|0x020000
 end_define
 
 begin_comment
-comment|/* Don't check for ascii files */
+comment|/* Don't check for text files */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAGIC_NO_CHECK_CDF
+value|0x040000
+end_define
+
+begin_comment
+comment|/* Don't check for cdf files */
 end_comment
 
 begin_define
@@ -234,8 +256,30 @@ value|0x100000
 end_define
 
 begin_comment
-comment|/* Don't check ascii/tokens */
+comment|/* Don't check tokens */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MAGIC_NO_CHECK_ENCODING
+value|0x200000
+end_define
+
+begin_comment
+comment|/* Don't check text encodings */
+end_comment
+
+begin_comment
+comment|/* Defined for backwards compatibility (renamed) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAGIC_NO_CHECK_ASCII
+value|MAGIC_NO_CHECK_TEXT
+end_define
 
 begin_comment
 comment|/* Defined for backwards compatibility; do nothing */

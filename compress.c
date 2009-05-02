@@ -13,16 +13,28 @@ directive|include
 file|"file.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"magic.h"
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_macro
+name|FILE_RCSID
+argument_list|(
+literal|"@(#)$File: compress.c,v 1.61 2009/02/03 20:27:51 christos Exp $"
+argument_list|)
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"magic.h"
 end_include
 
 begin_include
@@ -58,12 +70,6 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -134,24 +140,6 @@ include|#
 directive|include
 file|<zlib.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_macro
-name|FILE_RCSID
-argument_list|(
-literal|"@(#)$File: compress.c,v 1.57 2008/07/16 18:00:57 christos Exp $"
-argument_list|)
-end_macro
 
 begin_endif
 endif|#
@@ -327,7 +315,22 @@ literal|1
 block|}
 block|,
 comment|/* bzip2-ed */
+block|{
+literal|"LZIP"
+block|,
+literal|4
+block|,
+block|{
+literal|"lzip"
+block|,
+literal|"-cdq"
+block|,
+name|NULL
 block|}
+block|,
+literal|1
+block|}
+block|, }
 expr_stmt|;
 end_expr_stmt
 
@@ -1154,11 +1157,14 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
 literal|"/tmp/file.XXXXXX"
+argument_list|,
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 ifndef|#
