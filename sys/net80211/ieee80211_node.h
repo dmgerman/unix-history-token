@@ -438,14 +438,14 @@ name|ni_ies
 decl_stmt|;
 comment|/* captured ie's */
 comment|/* tx seq per-tid */
-name|uint16_t
+name|ieee80211_seq
 name|ni_txseqs
 index|[
 name|IEEE80211_TID_SIZE
 index|]
 decl_stmt|;
 comment|/* rx seq previous per-tid*/
-name|uint16_t
+name|ieee80211_seq
 name|ni_rxseqs
 index|[
 name|IEEE80211_TID_SIZE

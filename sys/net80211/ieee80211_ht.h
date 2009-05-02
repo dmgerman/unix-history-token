@@ -41,13 +41,6 @@ name|IEEE80211_NONHT_PRESENT_AGE
 value|msecs_to_ticks(60*1000)
 end_define
 
-begin_typedef
-typedef|typedef
-name|uint16_t
-name|ieee80211_seq
-typedef|;
-end_typedef
-
 begin_struct
 struct|struct
 name|ieee80211_tx_ampdu

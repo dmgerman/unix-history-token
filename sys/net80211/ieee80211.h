@@ -44,6 +44,13 @@ parameter_list|)
 value|(*(_a)& 0x01)
 end_define
 
+begin_typedef
+typedef|typedef
+name|uint16_t
+name|ieee80211_seq
+typedef|;
+end_typedef
+
 begin_comment
 comment|/* IEEE 802.11 PLCP header */
 end_comment
