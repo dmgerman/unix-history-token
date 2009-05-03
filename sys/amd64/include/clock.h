@@ -34,13 +34,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|statclock_disable
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|u_int
 name|i8254_freq
 decl_stmt|;

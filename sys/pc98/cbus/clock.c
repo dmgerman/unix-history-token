@@ -254,12 +254,6 @@ name|clkintr_pending
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|statclock_disable
-decl_stmt|;
-end_decl_stmt
-
 begin_ifndef
 ifndef|#
 directive|ifndef

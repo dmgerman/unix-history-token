@@ -661,6 +661,22 @@ name|clock_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|atrtcclock_disable
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|int
+name|atrtc_setup_clock
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|int
 name|rtcin
