@@ -235,10 +235,6 @@ name|int
 name|cpu_non_c3
 decl_stmt|;
 comment|/* Index of lowest non-C3 state. */
-name|int
-name|cpu_short_slp
-decl_stmt|;
-comment|/* Count of< 1us sleeps. */
 name|u_int
 name|cpu_cx_stats
 index|[
@@ -4082,7 +4078,7 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-comment|/* Find the lowest state that has small enougth latency. */
+comment|/* Find the lowest state that has small enough latency. */
 name|cx_next_idx
 operator|=
 literal|0
