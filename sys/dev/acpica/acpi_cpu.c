@@ -4934,10 +4934,22 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|"0%% "
+literal|"0.00%% "
 argument_list|)
 expr_stmt|;
 block|}
+name|sbuf_printf
+argument_list|(
+operator|&
+name|sb
+argument_list|,
+literal|"last %dus"
+argument_list|,
+name|sc
+operator|->
+name|cpu_prev_sleep
+argument_list|)
+expr_stmt|;
 name|sbuf_trim
 argument_list|(
 operator|&
