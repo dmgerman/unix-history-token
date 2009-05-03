@@ -8462,11 +8462,23 @@ operator|-
 literal|1
 return|;
 block|}
+elseif|else
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_state
+operator|!=
+name|vap
+operator|->
+name|iv_nstate
+condition|)
+block|{
 if|#
 directive|if
 literal|0
 comment|/* Warn if the previous state hasn't completed. */
-block|IEEE80211_DPRINTF(vap, IEEE80211_MSG_STATE, 		    "%s: pending %s -> %s transition lost\n", __func__, 		    ieee80211_state_name[vap->iv_state], 		    ieee80211_state_name[vap->iv_nstate]);
+block|IEEE80211_DPRINTF(vap, IEEE80211_MSG_STATE, 			    "%s: pending %s -> %s transition lost\n", __func__, 			    ieee80211_state_name[vap->iv_state], 			    ieee80211_state_name[vap->iv_nstate]);
 else|#
 directive|else
 comment|/* XXX temporarily enable to identify issues */
@@ -8497,6 +8509,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 block|}
 name|nrunning
 operator|=
