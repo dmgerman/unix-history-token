@@ -278,6 +278,8 @@ operator||
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_PRISON
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,
@@ -400,6 +402,8 @@ operator||
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_PRISON
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,
@@ -508,6 +512,8 @@ operator||
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_PRISON
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,
