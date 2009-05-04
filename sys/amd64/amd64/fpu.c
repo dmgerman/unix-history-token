@@ -437,7 +437,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|savefpu
-name|fpu_cleanstate
+name|fpu_initialstate
 decl_stmt|;
 end_decl_stmt
 
@@ -504,12 +504,12 @@ block|{
 name|fxsave
 argument_list|(
 operator|&
-name|fpu_cleanstate
+name|fpu_initialstate
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fpu_cleanstate
+name|fpu_initialstate
 operator|.
 name|sv_env
 operator|.
@@ -517,7 +517,7 @@ name|en_mxcsr_mask
 condition|)
 name|cpu_mxcsr_mask
 operator|=
-name|fpu_cleanstate
+name|fpu_initialstate
 operator|.
 name|sv_env
 operator|.
@@ -530,13 +530,13 @@ literal|0xFFBF
 expr_stmt|;
 name|bzero
 argument_list|(
-name|fpu_cleanstate
+name|fpu_initialstate
 operator|.
 name|sv_fp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|fpu_cleanstate
+name|fpu_initialstate
 operator|.
 name|sv_fp
 argument_list|)
@@ -544,13 +544,13 @@ argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
-name|fpu_cleanstate
+name|fpu_initialstate
 operator|.
 name|sv_xmm
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|fpu_cleanstate
+name|fpu_initialstate
 operator|.
 name|sv_xmm
 argument_list|)
@@ -1281,11 +1281,11 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * This is the first time this thread has used the FPU, 		 * explicitly load sanitized registers. 		 */
+comment|/* 		 * This is the first time this thread has used the FPU or 		 * the PCB doesn't contain a clean FPU state.  Explicitly 		 * load an initial state. 		 */
 name|fxrstor
 argument_list|(
 operator|&
-name|fpu_cleanstate
+name|fpu_initialstate
 argument_list|)
 expr_stmt|;
 if|if
@@ -1411,13 +1411,13 @@ block|{
 name|bcopy
 argument_list|(
 operator|&
-name|fpu_cleanstate
+name|fpu_initialstate
 argument_list|,
 name|addr
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|fpu_cleanstate
+name|fpu_initialstate
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1541,9 +1541,6 @@ name|fpcurthread
 argument_list|)
 condition|)
 block|{
-name|fpu_clean_state
-argument_list|()
-expr_stmt|;
 name|fxrstor
 argument_list|(
 name|addr
@@ -1596,15 +1593,6 @@ begin_comment
 comment|/*  * On AuthenticAMD processors, the fxrstor instruction does not restore  * the x87's stored last instruction pointer, last data pointer, and last  * opcode values, except in the rare case in which the exception summary  * (ES) bit in the x87 status word is set to 1.  *  * In order to avoid leaking this information across processes, we clean  * these values by performing a dummy load before executing fxrstor().  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|double
-name|dummy_variable
-init|=
-literal|0.0
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
@@ -1613,6 +1601,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|static
+name|float
+name|dummy_variable
+init|=
+literal|0.0
+decl_stmt|;
 name|u_short
 name|status
 decl_stmt|;
