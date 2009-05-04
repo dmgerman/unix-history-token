@@ -5620,8 +5620,8 @@ argument_list|,
 literal|"cbb cv"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+ifndef|#
+directive|ifndef
 name|PC98
 if|if
 condition|(
