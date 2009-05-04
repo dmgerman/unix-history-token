@@ -6637,12 +6637,6 @@ return|;
 block|}
 if|if
 condition|(
-operator|!
-name|SESS_LEADER
-argument_list|(
-name|p
-argument_list|)
-operator|||
 name|p
 operator|->
 name|p_session
