@@ -161,6 +161,11 @@ directive|define
 name|KB_BUSY
 value|(1<< 21)
 comment|/* device used by a client */
+define|#
+directive|define
+name|KB_POLLED
+value|(1<< 22)
+comment|/* device is polled */
 name|int
 name|kb_active
 decl_stmt|;
@@ -410,6 +415,36 @@ parameter_list|(
 name|k
 parameter_list|)
 value|((k)->kb_flags&= ~KB_BUSY)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KBD_IS_POLLED
+parameter_list|(
+name|k
+parameter_list|)
+value|((k)->kb_flags& KB_POLLED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KBD_POLL
+parameter_list|(
+name|k
+parameter_list|)
+value|((k)->kb_flags |= KB_POLLED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KBD_UNPOLL
+parameter_list|(
+name|k
+parameter_list|)
+value|((k)->kb_flags&= ~KB_POLLED)
 end_define
 
 begin_define
