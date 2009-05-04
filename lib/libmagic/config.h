@@ -3,12 +3,6 @@ begin_comment
 comment|/* $FreeBSD$ */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<osreldate.h>
-end_include
-
 begin_comment
 comment|/* config.h.  Generated from config.h.in by configure.  */
 end_comment
@@ -40,6 +34,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `asprintf' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ASPRINTF
+value|1
+end_define
+
+begin_comment
 comment|/* */
 end_comment
 
@@ -59,6 +64,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<err.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ERR_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<fcntl.h> header file. */
 end_comment
 
@@ -66,6 +82,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_FCNTL_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if fseeko (and presumably ftello) exists and is declared. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FSEEKO
 value|1
 end_define
 
@@ -88,6 +115,28 @@ begin_define
 define|#
 directive|define
 name|HAVE_GETOPT_LONG
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `int32_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_INT32_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `int64_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_INT64_T
 value|1
 end_define
 
@@ -216,25 +265,12 @@ begin_comment
 comment|/* Define to 1 if you have the<stdint.h> header file. */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500019
-end_if
-
 begin_define
 define|#
 directive|define
 name|HAVE_STDINT_H
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the<stdlib.h> header file. */
@@ -277,6 +313,28 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRING_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `strlcat' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRLCAT
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `strlcpy' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRLCPY
 value|1
 end_define
 
@@ -332,6 +390,28 @@ begin_define
 define|#
 directive|define
 name|HAVE_ST_RDEV
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if `tm_gmtoff' is member of `struct tm'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_TM_TM_GMTOFF
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if `tm_zone' is member of `struct tm'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_TM_TM_ZONE
 value|1
 end_define
 
@@ -432,6 +512,50 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if the system has the type `uint16_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_UINT16_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `uint32_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_UINT32_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `uint64_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_UINT64_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `uint8_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_UINT8_T
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<unistd.h> header file. */
 end_comment
 
@@ -472,6 +596,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_UTIME_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `vasprintf' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_VASPRINTF
 value|1
 end_define
 
@@ -547,6 +682,14 @@ comment|/* #undef MAJOR_IN_SYSMACROS */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if your C compiler doesn't accept -c and -o together. */
+end_comment
+
+begin_comment
+comment|/* #undef NO_MINUS_C_MINUS_O */
+end_comment
+
+begin_comment
 comment|/* Name of package */
 end_comment
 
@@ -609,7 +752,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|""
+value|VERSION
 end_define
 
 begin_comment
@@ -694,7 +837,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"4.23"
+value|"5.00"
 end_define
 
 begin_comment
@@ -752,78 +895,6 @@ end_comment
 
 begin_comment
 comment|/* #undef const */
-end_comment
-
-begin_comment
-comment|/* */
-end_comment
-
-begin_comment
-comment|/* #undef int32_t */
-end_comment
-
-begin_comment
-comment|/* */
-end_comment
-
-begin_comment
-comment|/* #undef int64_t */
-end_comment
-
-begin_comment
-comment|/* Define to a type if<wchar.h> does not define. */
-end_comment
-
-begin_comment
-comment|/* #undef mbstate_t */
-end_comment
-
-begin_comment
-comment|/* Define to `long int' if<sys/types.h> does not define. */
-end_comment
-
-begin_comment
-comment|/* #undef off_t */
-end_comment
-
-begin_comment
-comment|/* Define to `unsigned int' if<sys/types.h> does not define. */
-end_comment
-
-begin_comment
-comment|/* #undef size_t */
-end_comment
-
-begin_comment
-comment|/* */
-end_comment
-
-begin_comment
-comment|/* #undef uint16_t */
-end_comment
-
-begin_comment
-comment|/* */
-end_comment
-
-begin_comment
-comment|/* #undef uint32_t */
-end_comment
-
-begin_comment
-comment|/* */
-end_comment
-
-begin_comment
-comment|/* #undef uint64_t */
-end_comment
-
-begin_comment
-comment|/* */
-end_comment
-
-begin_comment
-comment|/* #undef uint8_t */
 end_comment
 
 end_unit

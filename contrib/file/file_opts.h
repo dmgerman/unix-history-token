@@ -140,6 +140,17 @@ end_macro
 begin_macro
 name|OPT_LONGONLY
 argument_list|(
+literal|"apple"
+argument_list|,
+literal|0
+argument_list|,
+literal|"                output the Apple CREATOR/TYPE\n"
+argument_list|)
+end_macro
+
+begin_macro
+name|OPT_LONGONLY
+argument_list|(
 literal|"mime-type"
 argument_list|,
 literal|0

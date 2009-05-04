@@ -9,16 +9,32 @@ directive|include
 file|"file.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"magic.h"
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_macro
+name|FILE_RCSID
+argument_list|(
+literal|"@(#)$File: magic.c,v 1.59 2009/02/03 20:27:51 christos Exp $"
+argument_list|)
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* lint */
+end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"magic.h"
 end_include
 
 begin_include
@@ -37,28 +53,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_comment
-comment|/* for MAXPATHLEN */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
 end_include
 
 begin_ifdef
@@ -216,28 +210,6 @@ include|#
 directive|include
 file|"patchlevel.h"
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_macro
-name|FILE_RCSID
-argument_list|(
-literal|"@(#)$File: magic.c,v 1.54 2008/07/25 23:30:32 rrt Exp $"
-argument_list|)
-end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* lint */
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -574,7 +546,7 @@ name|free
 goto|;
 name|ms
 operator|->
-name|haderr
+name|event_flags
 operator|=
 literal|0
 expr_stmt|;
@@ -1165,6 +1137,7 @@ name|void
 operator|)
 name|memset
 argument_list|(
+operator|&
 name|utbuf
 argument_list|,
 literal|0
@@ -1495,33 +1468,42 @@ ifdef|#
 directive|ifdef
 name|__CYGWIN__
 comment|/* FIXME: Do this with EXEEXT from autotools */
-name|char
-modifier|*
-name|tmp
+name|size_t
+name|len
 init|=
-name|alloca
-argument_list|(
 name|strlen
 argument_list|(
 name|inname
 argument_list|)
 operator|+
 literal|5
+decl_stmt|;
+name|char
+modifier|*
+name|tmp
+init|=
+name|alloca
+argument_list|(
+name|len
 argument_list|)
 decl_stmt|;
 operator|(
 name|void
 operator|)
-name|strcat
+name|strlcat
 argument_list|(
-name|strcpy
+name|strlcpy
 argument_list|(
 name|tmp
 argument_list|,
 name|inname
+argument_list|,
+name|len
 argument_list|)
 argument_list|,
 literal|".exe"
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 if|if
@@ -1921,9 +1903,13 @@ name|ms
 parameter_list|)
 block|{
 return|return
+operator|(
 name|ms
 operator|->
-name|haderr
+name|event_flags
+operator|&
+name|EVENT_HAD_ERR
+operator|)
 condition|?
 name|ms
 operator|->
@@ -1948,9 +1934,13 @@ name|ms
 parameter_list|)
 block|{
 return|return
+operator|(
 name|ms
 operator|->
-name|haderr
+name|event_flags
+operator|&
+name|EVENT_HAD_ERR
+operator|)
 condition|?
 name|ms
 operator|->
