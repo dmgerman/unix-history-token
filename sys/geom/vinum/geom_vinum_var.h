@@ -909,11 +909,6 @@ block|}
 struct|;
 end_struct
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* This struct contains the main vinum config. */
 end_comment
@@ -973,23 +968,12 @@ name|mtx
 name|config_mtx
 decl_stmt|;
 comment|/* Configuration lock. */
-ifdef|#
-directive|ifdef
-name|_KERNEL
 name|struct
 name|bio_queue_head
 modifier|*
 name|bqueue
 decl_stmt|;
 comment|/* BIO queue. */
-else|#
-directive|else
-name|char
-modifier|*
-name|padding
-decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|g_geom
 modifier|*
@@ -999,6 +983,11 @@ comment|/* Pointer to our VINUM geom. */
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* softc for a drive. */
