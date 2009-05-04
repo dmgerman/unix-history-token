@@ -2267,7 +2267,7 @@ block|{
 comment|/* forced unmount */
 name|error
 operator|=
-name|EBADF
+name|ENOENT
 expr_stmt|;
 goto|goto
 name|bad
@@ -3077,10 +3077,10 @@ operator|&
 name|VI_DOOMED
 condition|)
 block|{
-comment|/* We can't know whether the directory was mounted with 			 * NOSYMFOLLOW, so we can't follow safely. */
+comment|/* 			 * We can't know whether the directory was mounted with 			 * NOSYMFOLLOW, so we can't follow safely. 			 */
 name|error
 operator|=
-name|EBADF
+name|ENOENT
 expr_stmt|;
 goto|goto
 name|bad2
