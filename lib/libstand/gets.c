@@ -191,6 +191,8 @@ name|buf
 operator|)
 operator|<
 name|n
+operator|-
+literal|1
 operator|)
 condition|)
 block|{
