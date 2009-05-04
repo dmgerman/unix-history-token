@@ -5746,6 +5746,7 @@ argument|&pp->consumers
 argument_list|,
 argument|consumers
 argument_list|)
+block|{
 name|db_show_geom_consumer
 argument_list|(
 name|indent
@@ -5755,6 +5756,12 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+break|break;
+block|}
 block|}
 block|}
 end_function
@@ -5957,6 +5964,7 @@ argument|&gp->provider
 argument_list|,
 argument|provider
 argument_list|)
+block|{
 name|db_show_geom_provider
 argument_list|(
 name|indent
@@ -5966,6 +5974,12 @@ argument_list|,
 name|pp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+break|break;
+block|}
 block|}
 if|if
 condition|(
@@ -5987,6 +6001,7 @@ argument|&gp->consumer
 argument_list|,
 argument|consumer
 argument_list|)
+block|{
 name|db_show_geom_consumer
 argument_list|(
 name|indent
@@ -5996,6 +6011,12 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+break|break;
+block|}
 block|}
 block|}
 end_function
@@ -6035,6 +6056,7 @@ argument|&mp->geom
 argument_list|,
 argument|geom
 argument_list|)
+block|{
 name|db_show_geom_geom
 argument_list|(
 literal|2
@@ -6042,6 +6064,12 @@ argument_list|,
 name|gp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+break|break;
+block|}
 block|}
 end_function
 
@@ -6091,6 +6119,11 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+break|break;
 block|}
 block|}
 else|else
