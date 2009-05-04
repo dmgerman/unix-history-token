@@ -61,6 +61,22 @@ end_define
 
 begin_function_decl
 name|int
+name|pcie_cfgregopen
+parameter_list|(
+name|uint64_t
+name|base
+parameter_list|,
+name|uint8_t
+name|minbus
+parameter_list|,
+name|uint8_t
+name|maxbus
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|pci_cfgregopen
 parameter_list|(
 name|void
