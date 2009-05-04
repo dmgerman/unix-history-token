@@ -2080,16 +2080,6 @@ index|]
 expr_stmt|;
 name|probe_procnum
 operator|=
-operator|(
-name|nmp
-operator|->
-name|nm_flag
-operator|&
-name|NFSMNT_NFSV3
-operator|)
-condition|?
-name|procnum
-else|:
 name|nfsv2_procid
 index|[
 name|procnum
