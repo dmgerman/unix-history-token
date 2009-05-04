@@ -661,7 +661,7 @@ begin_define
 define|#
 directive|define
 name|PCIM_BAR_MEM_BASE
-value|0xfffffff0
+value|0xfffffffffffffff0ULL
 end_define
 
 begin_define
