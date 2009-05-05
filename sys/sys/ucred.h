@@ -100,14 +100,20 @@ modifier|*
 name|cr_prison
 decl_stmt|;
 comment|/* jail(2) */
+name|struct
+name|vnet
+modifier|*
+name|cr_vnet
+decl_stmt|;
+comment|/* vimage / vnet */
 name|void
 modifier|*
 name|cr_pspare
 index|[
-literal|3
+literal|2
 index|]
 decl_stmt|;
-comment|/* vimage 2; general use 1 */
+comment|/* general use 2 */
 define|#
 directive|define
 name|cr_endcopy

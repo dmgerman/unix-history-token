@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -2530,6 +2536,13 @@ name|struct
 name|ieee80211_join_event
 name|iev
 decl_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -2567,6 +2580,9 @@ name|iev
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -2601,6 +2617,13 @@ name|vap
 operator|->
 name|iv_ifp
 decl_stmt|;
+name|CURVNET_SET_QUIET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|IEEE80211_NOTE
 argument_list|(
 name|vap
@@ -2674,6 +2697,9 @@ name|ni_macaddr
 argument_list|)
 expr_stmt|;
 block|}
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -2705,6 +2731,13 @@ name|vap
 operator|->
 name|iv_ifp
 decl_stmt|;
+name|CURVNET_SET_QUIET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|IEEE80211_NOTE
 argument_list|(
 name|vap
@@ -2771,6 +2804,9 @@ name|ni_macaddr
 argument_list|)
 expr_stmt|;
 block|}
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -2805,6 +2841,13 @@ literal|"notify scan done"
 argument_list|)
 expr_stmt|;
 comment|/* dispatch wireless event indicating scan completed */
+name|CURVNET_SET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|rt_ieee80211msg
 argument_list|(
 name|ifp
@@ -2815,6 +2858,9 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -2982,6 +3028,13 @@ name|iev_rsc
 operator|=
 name|rsc
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|rt_ieee80211msg
 argument_list|(
 name|ifp
@@ -2996,6 +3049,9 @@ argument_list|(
 name|iev
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -3097,6 +3153,13 @@ name|iev_keyix
 operator|=
 name|keyix
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|rt_ieee80211msg
 argument_list|(
 name|ifp
@@ -3111,6 +3174,9 @@ argument_list|(
 name|iev
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 block|}

@@ -983,6 +983,11 @@ operator|)
 name|rock
 argument_list|)
 expr_stmt|;
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|INIT_VNET_INET6
 argument_list|(
 name|curvnet
@@ -993,7 +998,13 @@ name|radix_node_head
 modifier|*
 name|rnh
 init|=
-name|rock
+name|V_rt_tables
+index|[
+literal|0
+index|]
+index|[
+name|AF_INET6
+index|]
 decl_stmt|;
 name|struct
 name|rtqk_arg
@@ -1382,6 +1393,11 @@ operator|)
 name|rock
 argument_list|)
 expr_stmt|;
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|INIT_VNET_INET6
 argument_list|(
 name|curvnet
@@ -1392,7 +1408,13 @@ name|radix_node_head
 modifier|*
 name|rnh
 init|=
-name|rock
+name|V_rt_tables
+index|[
+literal|0
+index|]
+index|[
+name|AF_INET6
+index|]
 decl_stmt|;
 name|struct
 name|mtuex_arg
@@ -1513,7 +1535,7 @@ literal|0
 end_if
 
 begin_endif
-unit|void in6_rtqdrain(void) { 	INIT_VNET_NET(curvnet); 	struct radix_node_head *rnh = V_rt_tables[AF_INET6]; 	struct rtqk_arg arg;  	arg.found = arg.killed = 0; 	arg.rnh = rnh; 	arg.nextstop = 0; 	arg.draining = 1; 	arg.updating = 0; 	RADIX_NODE_HEAD_LOCK(rnh); 	rnh->rnh_walktree(rnh, in6_rtqkill,&arg); 	RADIX_NODE_HEAD_UNLOCK(rnh); }
+unit|void in6_rtqdrain(void) { 	INIT_VNET_NET(curvnet); 	struct radix_node_head *rnh = V_rt_tables[0][AF_INET6]; 	struct rtqk_arg arg;  	arg.found = arg.killed = 0; 	arg.rnh = rnh; 	arg.nextstop = 0; 	arg.draining = 1; 	arg.updating = 0; 	RADIX_NODE_HEAD_LOCK(rnh); 	rnh->rnh_walktree(rnh, in6_rtqkill,&arg); 	RADIX_NODE_HEAD_UNLOCK(rnh); }
 endif|#
 directive|endif
 end_endif
@@ -1535,6 +1557,16 @@ name|int
 name|off
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|INIT_VNET_INET6
 argument_list|(
 name|curvnet
@@ -1604,6 +1636,23 @@ operator|=
 operator|*
 name|head
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|rnh
+operator|==
+name|V_rt_tables
+index|[
+literal|0
+index|]
+index|[
+name|AF_INET6
+index|]
+argument_list|,
+operator|(
+literal|"rnh?"
+operator|)
+argument_list|)
+expr_stmt|;
 name|rnh
 operator|->
 name|rnh_addaddr
@@ -1624,12 +1673,6 @@ argument_list|,
 name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
-name|in6_rtqtimo
-argument_list|(
-name|rnh
-argument_list|)
-expr_stmt|;
-comment|/* kick off timeout first time */
 name|callout_init
 argument_list|(
 operator|&
@@ -1638,9 +1681,15 @@ argument_list|,
 name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
+name|in6_rtqtimo
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+comment|/* kick off timeout first time */
 name|in6_mtutimo
 argument_list|(
-name|rnh
+name|curvnet
 argument_list|)
 expr_stmt|;
 comment|/* kick off timeout first time */

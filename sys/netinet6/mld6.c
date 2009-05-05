@@ -10943,15 +10943,6 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set VNET image pointer from enqueued mbuf chain 	 * before doing anything else. Whilst we use interface 	 * indexes to guard against interface detach, they are 	 * unique to each VIMAGE and must be retrieved. 	 */
-name|CURVNET_SET
-argument_list|(
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|header
-argument_list|)
-expr_stmt|;
 name|INIT_VNET_NET
 argument_list|(
 name|curvnet
@@ -11288,10 +11279,7 @@ block|}
 block|}
 name|out
 label|:
-comment|/* 	 * We must restore the existing vnet pointer before continuing. 	 */
-name|CURVNET_RESTORE
-argument_list|()
-expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -11895,11 +11883,16 @@ name|unused
 name|__unused
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|INIT_VNET_INET6
 argument_list|(
 name|curvnet
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|CTR1
 argument_list|(
 name|KTR_MLD

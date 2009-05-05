@@ -2016,6 +2016,12 @@ name|int
 name|nd_refs
 decl_stmt|;
 comment|/* # of references to this node */
+name|struct
+name|vnet
+modifier|*
+name|nd_vnet
+decl_stmt|;
+comment|/* network stack instance */
 ifdef|#
 directive|ifdef
 name|NETGRAPH_DEBUG

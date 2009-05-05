@@ -856,8 +856,6 @@ begin_decl_stmt
 specifier|static
 name|u_int
 name|mrt6debug
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -2110,9 +2108,17 @@ argument_list|(
 name|curvnet
 argument_list|)
 expr_stmt|;
+name|V_ip6_mrouter_ver
+operator|=
+literal|0
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MRT6DEBUG
+name|V_mrt6debug
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|V_mrt6debug

@@ -180,6 +180,11 @@ modifier|*
 name|xsp
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|keylen
 decl_stmt|;

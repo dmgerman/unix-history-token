@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -108,6 +114,12 @@ begin_include
 include|#
 directive|include
 file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
 end_include
 
 begin_function_decl
@@ -703,15 +715,11 @@ name|ifc_destroy
 operator|==
 name|NULL
 condition|)
-block|{
-name|err
-operator|=
+return|return
+operator|(
 name|EOPNOTSUPP
-expr_stmt|;
-goto|goto
-name|done
-goto|;
-block|}
+operator|)
+return|;
 name|IF_CLONE_LOCK
 argument_list|(
 name|ifc
@@ -727,6 +735,13 @@ expr_stmt|;
 name|IF_CLONE_UNLOCK
 argument_list|(
 name|ifc
+argument_list|)
+expr_stmt|;
+name|CURVNET_SET_QUIET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
 argument_list|)
 expr_stmt|;
 name|if_delgroup
@@ -786,8 +801,9 @@ name|ifc
 argument_list|)
 expr_stmt|;
 block|}
-name|done
-label|:
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|err

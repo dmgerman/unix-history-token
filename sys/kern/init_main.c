@@ -194,6 +194,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -1916,6 +1922,23 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Don't jail it. */
+ifdef|#
+directive|ifdef
+name|VIMAGE
+name|p
+operator|->
+name|p_ucred
+operator|->
+name|cr_vnet
+operator|=
+name|LIST_FIRST
+argument_list|(
+operator|&
+name|vnet_head
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|AUDIT

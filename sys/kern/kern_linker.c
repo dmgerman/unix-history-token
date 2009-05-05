@@ -4211,6 +4211,15 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* 	 * It's possible that kldloaded module will attach a new ifnet, 	 * so vnet context must be set when this ocurs. 	 */
+name|CURVNET_SET
+argument_list|(
+name|TD_TO_VNET
+argument_list|(
+name|td
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If file does not contain a qualified name or any dot in it 	 * (kldname.ko, or kldname.ver.ko) treat it as an interface 	 * name. 	 */
 if|if
 condition|(
@@ -4334,6 +4343,9 @@ expr_stmt|;
 name|unlock
 label|:
 name|KLD_UNLOCK
+argument_list|()
+expr_stmt|;
+name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 return|return
@@ -4531,6 +4543,14 @@ operator|(
 name|error
 operator|)
 return|;
+name|CURVNET_SET
+argument_list|(
+name|TD_TO_VNET
+argument_list|(
+name|td
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|KLD_LOCK
 argument_list|()
 expr_stmt|;
@@ -4685,6 +4705,9 @@ expr_stmt|;
 endif|#
 directive|endif
 name|KLD_UNLOCK
+argument_list|()
+expr_stmt|;
+name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 return|return

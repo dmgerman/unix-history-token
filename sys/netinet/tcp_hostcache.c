@@ -879,7 +879,7 @@ name|hz
 argument_list|,
 name|tcp_hc_purge
 argument_list|,
-literal|0
+name|curvnet
 argument_list|)
 expr_stmt|;
 block|}
@@ -2507,6 +2507,16 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+name|CURVNET_SET
+argument_list|(
+operator|(
+expr|struct
+name|vnet
+operator|*
+operator|)
+name|arg
+argument_list|)
+expr_stmt|;
 name|INIT_VNET_INET
 argument_list|(
 name|curvnet
@@ -2523,11 +2533,9 @@ decl_stmt|;
 name|int
 name|all
 init|=
-operator|(
-name|intptr_t
-operator|)
-name|arg
+literal|0
 decl_stmt|;
+comment|/* XXX was: (intptr_t)arg - makes no sense? */
 name|int
 name|i
 decl_stmt|;
@@ -2681,6 +2689,9 @@ name|tcp_hc_purge
 argument_list|,
 name|arg
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function

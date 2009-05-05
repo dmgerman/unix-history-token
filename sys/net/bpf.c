@@ -3507,6 +3507,13 @@ operator|+=
 name|hlen
 expr_stmt|;
 comment|/* XXX */
+name|CURVNET_SET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
@@ -3515,22 +3522,12 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-name|CURVNET_SET
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
 name|mac_bpfdesc_create_mbuf
 argument_list|(
 name|d
 argument_list|,
 name|m
 argument_list|)
-expr_stmt|;
-name|CURVNET_RESTORE
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -3612,6 +3609,9 @@ name|mc
 argument_list|)
 expr_stmt|;
 block|}
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|error

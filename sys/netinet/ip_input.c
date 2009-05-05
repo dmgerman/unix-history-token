@@ -1629,8 +1629,15 @@ argument_list|,
 name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
-name|ipport_tick
+name|callout_reset
 argument_list|(
+operator|&
+name|ipport_tick_callout
+argument_list|,
+literal|1
+argument_list|,
+name|ipport_tick
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;

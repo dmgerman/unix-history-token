@@ -1953,6 +1953,16 @@ argument_list|(
 literal|"ln ifp == NULL"
 argument_list|)
 expr_stmt|;
+comment|/*  * XXX XXX XXX XXX XXX  *  * Why the ^%(@)*&%^) is this #define MIN() needed for CURVNET_SET()?!?  * And #define MIN() is in sys/param.h already, which is #included first  * here?!?  */
+define|#
+directive|define
+name|MIN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a)<(b))?(a):(b))
 name|CURVNET_SET
 argument_list|(
 name|ifp
@@ -2454,7 +2464,7 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|CURVNET_SET_QUIET
+name|CURVNET_SET
 argument_list|(
 operator|(
 expr|struct

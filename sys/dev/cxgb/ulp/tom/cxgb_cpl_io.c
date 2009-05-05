@@ -5932,6 +5932,11 @@ name|select_rcv_wscale
 parameter_list|(
 name|int
 name|space
+parameter_list|,
+name|struct
+name|vnet
+modifier|*
+name|vnet
 parameter_list|)
 block|{
 name|INIT_VNET_INET
@@ -6395,6 +6400,10 @@ argument_list|(
 name|tp
 operator|->
 name|rcv_wnd
+argument_list|,
+name|so
+operator|->
+name|so_vnet
 argument_list|)
 decl_stmt|;
 return|return

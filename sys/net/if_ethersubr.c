@@ -3007,6 +3007,13 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|CURVNET_SET_QUIET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ETHER_IS_MULTICAST
@@ -3116,6 +3123,9 @@ name|m_freem
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -3357,7 +3367,12 @@ name|m
 operator|==
 name|NULL
 condition|)
+block|{
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return;
+block|}
 block|}
 comment|/* 	 * Allow if_bridge(4) to claim this frame. 	 * The BRIDGE_INPUT() macro will update ifp if the bridge changed it 	 * and the frame should be delivered locally. 	 */
 if|if
@@ -3389,7 +3404,12 @@ name|m
 operator|==
 name|NULL
 condition|)
+block|{
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return;
+block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -3485,6 +3505,9 @@ name|ifp
 argument_list|,
 name|m
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function

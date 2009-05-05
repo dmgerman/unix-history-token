@@ -4166,6 +4166,19 @@ operator|->
 name|igmp_numsrc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|IS_DEFAULT_VNET
+argument_list|(
+name|curvnet
+argument_list|)
+condition|)
+return|return
+operator|(
+name|retval
+operator|)
+return|;
 comment|/* 	 * Deal with group-specific queries upfront. 	 * If any group query is already pending, purge any recorded 	 * source-list state if it exists, and schedule a query response 	 * for this group-specific query. 	 */
 if|if
 condition|(
@@ -12729,11 +12742,18 @@ expr_stmt|;
 comment|/* 	 * Set VNET image pointer from enqueued mbuf chain 	 * before doing anything else. Whilst we use interface 	 * indexes to guard against interface detach, they are 	 * unique to each VIMAGE and must be retrieved. 	 */
 name|CURVNET_SET
 argument_list|(
+operator|(
+expr|struct
+name|vnet
+operator|*
+operator|)
+operator|(
 name|m
 operator|->
 name|m_pkthdr
 operator|.
 name|header
+operator|)
 argument_list|)
 expr_stmt|;
 name|INIT_VNET_NET
@@ -13821,17 +13841,12 @@ case|:
 ifndef|#
 directive|ifndef
 name|VIMAGE_GLOBALS
-ifdef|#
-directive|ifdef
-name|NOTYET
 name|vnet_mod_deregister
 argument_list|(
 operator|&
 name|vnet_igmp_modinfo
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 else|#
 directive|else
 name|vnet_igmp_idetach

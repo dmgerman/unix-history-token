@@ -639,6 +639,13 @@ name|s_addr
 operator|=
 name|addr
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|IF_AFDATA_LOCK
 argument_list|(
 name|ifp
@@ -670,6 +677,9 @@ name|IF_AFDATA_UNLOCK
 argument_list|(
 name|ifp
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function

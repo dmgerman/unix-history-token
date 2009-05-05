@@ -138,6 +138,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/rwlock.h>
 end_include
 
@@ -580,16 +586,6 @@ parameter_list|(
 name|struct
 name|ifmultiaddr
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|if_grow
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1180,7 +1176,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
-specifier|static
 name|struct
 name|ifnet
 modifier|*
@@ -1321,7 +1316,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|ifnet_setbyindex
 parameter_list|(
@@ -2173,7 +2167,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|if_grow
 parameter_list|(
@@ -3184,6 +3177,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|IS_DEFAULT_VNET
+argument_list|(
+name|curvnet
+argument_list|)
+condition|)
+block|{
 name|ifdev_setbyindex
 argument_list|(
 name|ifp
@@ -3237,6 +3238,7 @@ operator|->
 name|if_index
 argument_list|)
 expr_stmt|;
+block|}
 name|ifq_attach
 argument_list|(
 operator|&
@@ -3517,6 +3519,16 @@ argument_list|,
 name|if_link
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VIMAGE
+name|curvnet
+operator|->
+name|ifccnt
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
 name|IFNET_WUNLOCK
 argument_list|()
 expr_stmt|;
@@ -3538,6 +3550,13 @@ argument_list|,
 name|ifp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|IS_DEFAULT_VNET
+argument_list|(
+name|curvnet
+argument_list|)
+condition|)
 name|devctl_notify
 argument_list|(
 literal|"IFNET"
@@ -4125,6 +4144,20 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|VIMAGE
+if|if
+condition|(
+name|found
+condition|)
+name|curvnet
+operator|->
+name|ifccnt
+operator|--
+expr_stmt|;
+endif|#
+directive|endif
 name|IFNET_WUNLOCK
 argument_list|()
 expr_stmt|;
@@ -4241,6 +4274,13 @@ name|if_addr
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|IS_DEFAULT_VNET
+argument_list|(
+name|curvnet
+argument_list|)
+condition|)
 name|destroy_dev
 argument_list|(
 name|ifdev_byindex
@@ -4388,6 +4428,13 @@ argument_list|,
 name|ifp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|IS_DEFAULT_VNET
+argument_list|(
+name|curvnet
+argument_list|)
+condition|)
 name|devctl_notify
 argument_list|(
 literal|"IFNET"
@@ -7693,6 +7740,13 @@ name|link_state
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|IS_DEFAULT_VNET
+argument_list|(
+name|curvnet
+argument_list|)
+condition|)
 name|devctl_notify
 argument_list|(
 literal|"IFNET"
