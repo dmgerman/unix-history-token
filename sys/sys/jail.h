@@ -674,6 +674,13 @@ name|PR_METHOD_ATTACH
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|PR_MAXMETHOD
+value|5
+end_define
+
 begin_comment
 comment|/*  * Sysctl-set variables that determine global jail policy  *  * XXX MIB entries will need to be protected by a mutex.  */
 end_comment

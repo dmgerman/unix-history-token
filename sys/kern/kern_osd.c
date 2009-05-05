@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -275,7 +281,7 @@ index|[
 name|OSD_JAIL
 index|]
 operator|=
-literal|5
+name|PR_MAXMETHOD
 block|, }
 decl_stmt|;
 end_decl_stmt
