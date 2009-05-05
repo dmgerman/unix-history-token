@@ -545,13 +545,6 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|device_shutdown
-argument_list|,
-name|bus_generic_shutdown
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
 name|bus_child_location_str
 argument_list|,
 name|uhub_child_location_string

@@ -516,17 +516,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|usb2_ether_ifshutdown
-parameter_list|(
-name|struct
-name|usb2_ether
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|uint8_t
 name|usb2_ether_is_gone
 parameter_list|(
