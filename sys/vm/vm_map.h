@@ -317,6 +317,13 @@ begin_comment
 comment|/* Bottom-up stacks */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAP_ENTRY_WIRE_SKIPPED
+value|0x4000
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
