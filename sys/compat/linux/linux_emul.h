@@ -15,6 +15,12 @@ directive|define
 name|_LINUX_EMUL_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<compat/linux/linux_futex.h>
+end_include
+
 begin_struct
 struct|struct
 name|linux_emuldata_shared
@@ -67,6 +73,11 @@ name|int
 name|pdeath_signal
 decl_stmt|;
 comment|/* parent death signal */
+name|struct
+name|linux_robust_list_head
+modifier|*
+name|robust_futexes
+decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
 argument|linux_emuldata
