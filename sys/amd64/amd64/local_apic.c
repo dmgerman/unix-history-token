@@ -1483,6 +1483,10 @@ argument_list|)
 operator|==
 literal|0
 operator|)
+operator|&&
+name|lapic_timer_hz
+operator|!=
+literal|0
 condition|)
 block|{
 name|KASSERT
