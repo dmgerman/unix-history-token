@@ -1835,17 +1835,7 @@ operator|->
 name|p_pptr
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If this was the last child of our parent, notify 		 * parent, so in case he was wait(2)ing, he will 		 * continue. 		 */
-if|if
-condition|(
-name|LIST_EMPTY
-argument_list|(
-operator|&
-name|pp
-operator|->
-name|p_children
-argument_list|)
-condition|)
+comment|/* 		 * Notify parent, so in case he was wait(2)ing or 		 * executing waitpid(2) with our pid, he will 		 * continue. 		 */
 name|wakeup
 argument_list|(
 name|pp
