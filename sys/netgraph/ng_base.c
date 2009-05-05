@@ -441,6 +441,9 @@ block|,
 literal|1
 block|,
 comment|/* refs */
+name|NULL
+block|,
+comment|/* vnet */
 ifdef|#
 directive|ifdef
 name|NETGRAPH_DEBUG
