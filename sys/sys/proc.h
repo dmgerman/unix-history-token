@@ -1498,6 +1498,17 @@ begin_comment
 comment|/* Audit record pending on thread */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TDP_BUFNEED
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* Do not recurse into the buf flush */
+end_comment
+
 begin_comment
 comment|/*  * Reasons that the current thread can not be run yet.  * More than one may apply.  */
 end_comment
