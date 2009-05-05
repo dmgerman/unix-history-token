@@ -1240,6 +1240,34 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|long
+name|notbufdflashes
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_LONG
+argument_list|(
+name|_vfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|notbufdflashes
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|notbufdflashes
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of dirty buffer flushes done by the bufdaemon helpers"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Wakeup point for bufdaemon, as well as indicator of whether it is already  * active.  Set to 1 when the bufdaemon is already "on" the queue, 0 when it  * is idling.  */
 end_comment
@@ -8876,6 +8904,9 @@ name|bwrite
 argument_list|(
 name|bp
 argument_list|)
+expr_stmt|;
+name|notbufdflashes
+operator|++
 expr_stmt|;
 block|}
 name|vn_finished_write
