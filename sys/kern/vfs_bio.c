@@ -8467,6 +8467,7 @@ name|curthread
 decl_stmt|;
 name|struct
 name|buf
+modifier|*
 name|sentinel
 decl_stmt|;
 name|struct
@@ -8533,7 +8534,24 @@ operator|=
 name|NULL
 expr_stmt|;
 name|sentinel
-operator|.
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|buf
+argument_list|)
+argument_list|,
+name|M_TEMP
+argument_list|,
+name|M_WAITOK
+operator||
+name|M_ZERO
+argument_list|)
+expr_stmt|;
+name|sentinel
+operator|->
 name|b_qindex
 operator|=
 name|QUEUE_SENTINEL
@@ -8552,7 +8570,6 @@ index|[
 name|queue
 index|]
 argument_list|,
-operator|&
 name|sentinel
 argument_list|,
 name|b_freelist
@@ -8569,7 +8586,6 @@ name|bp
 operator|=
 name|TAILQ_NEXT
 argument_list|(
-operator|&
 name|sentinel
 argument_list|,
 name|b_freelist
@@ -8590,7 +8606,6 @@ index|[
 name|queue
 index|]
 argument_list|,
-operator|&
 name|sentinel
 argument_list|,
 name|b_freelist
@@ -8606,7 +8621,6 @@ index|]
 argument_list|,
 name|bp
 argument_list|,
-operator|&
 name|sentinel
 argument_list|,
 name|b_freelist
@@ -8978,7 +8992,6 @@ index|[
 name|queue
 index|]
 argument_list|,
-operator|&
 name|sentinel
 argument_list|,
 name|b_freelist
@@ -8988,6 +9001,13 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|bqlock
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|sentinel
+argument_list|,
+name|M_TEMP
 argument_list|)
 expr_stmt|;
 return|return
