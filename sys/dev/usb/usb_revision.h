@@ -20,11 +20,12 @@ name|_USB2_REVISION_H_
 end_define
 
 begin_comment
-comment|/*  * The "USB_SPEED" macro defines all the supported USB speeds.  */
+comment|/*  * The "USB_SPEED" macros defines all the supported USB speeds.  */
 end_comment
 
 begin_enum
 enum|enum
+name|usb2_speed
 block|{
 name|USB_SPEED_VARIABLE
 block|,
@@ -42,11 +43,12 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * The "USB_REV" macro defines all the supported USB revisions.  */
+comment|/*  * The "USB_REV" macros defines all the supported USB revisions.  */
 end_comment
 
 begin_enum
 enum|enum
+name|usb2_revision
 block|{
 name|USB_REV_UNKNOWN
 block|,
@@ -68,11 +70,12 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * The "USB_MODE" macro defines all the supported USB modes.  */
+comment|/*  * The "USB_MODE" macros defines all the supported USB modes.  */
 end_comment
 
 begin_enum
 enum|enum
+name|usb2_mode
 block|{
 name|USB_MODE_HOST
 block|,
@@ -84,12 +87,12 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * The "USB_MODE" macro defines all the supported device states.  */
+comment|/*  * The "USB_MODE" macros defines all the supported device states.  */
 end_comment
 
 begin_enum
 enum|enum
-name|usb_dev_state
+name|usb2_dev_state
 block|{
 name|USB_STATE_DETACHED
 block|,
@@ -100,8 +103,6 @@ block|,
 name|USB_STATE_ADDRESSED
 block|,
 name|USB_STATE_CONFIGURED
-block|,
-name|USB_STATE_SUSPENDED
 block|,
 name|USB_STATE_MAX
 block|, }

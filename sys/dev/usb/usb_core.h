@@ -1911,7 +1911,7 @@ modifier|*
 name|usb2_statestr
 parameter_list|(
 name|enum
-name|usb_dev_state
+name|usb2_dev_state
 name|state
 parameter_list|)
 function_decl|;
@@ -2295,7 +2295,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|uint8_t
 name|usb2_device_attached
 parameter_list|(
 name|struct

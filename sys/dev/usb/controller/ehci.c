@@ -9164,9 +9164,11 @@ name|xroot
 operator|->
 name|udev
 operator|->
-name|state
-operator|!=
-name|USB_STATE_SUSPENDED
+name|flags
+operator|.
+name|self_suspended
+operator|==
+literal|0
 condition|)
 block|{
 name|EHCI_APPEND_QH

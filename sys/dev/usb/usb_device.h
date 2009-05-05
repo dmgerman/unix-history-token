@@ -246,6 +246,19 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* set if BUS powered quirk is present */
+comment|/* 	 * NOTE: Although the flags below will reach the same value 	 * over time, but the instant values may differ, and 	 * consequently the flags cannot be merged into one! 	 */
+name|uint8_t
+name|peer_suspended
+range|:
+literal|1
+decl_stmt|;
+comment|/* set if peer is suspended */
+name|uint8_t
+name|self_suspended
+range|:
+literal|1
+decl_stmt|;
+comment|/* set if self is suspended */
 block|}
 struct|;
 end_struct
@@ -444,7 +457,7 @@ name|plugtime
 decl_stmt|;
 comment|/* copy of "ticks" */
 name|enum
-name|usb_dev_state
+name|usb2_dev_state
 name|state
 decl_stmt|;
 name|uint16_t
@@ -868,7 +881,7 @@ modifier|*
 name|udev
 parameter_list|,
 name|enum
-name|usb_dev_state
+name|usb2_dev_state
 name|state
 parameter_list|)
 function_decl|;
