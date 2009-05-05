@@ -11741,7 +11741,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|KTR_COMPILE
+name|ktr_mask
 operator|&
 name|KTR_MLD
 operator|)
