@@ -211,6 +211,12 @@ directive|include
 file|<sys/vnode.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/vimage.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -7586,6 +7592,20 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|VIMAGE
+if|if
+condition|(
+operator|!
+name|IS_DEFAULT_VNET
+argument_list|(
+name|curvnet
+argument_list|)
+condition|)
+return|return;
+endif|#
+directive|endif
 name|unp_zone
 operator|=
 name|uma_zcreate

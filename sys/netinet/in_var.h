@@ -243,6 +243,17 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|LLTABLE
+parameter_list|(
+name|ifp
+parameter_list|)
+define|\
+value|((struct in_ifinfo *)(ifp)->if_afdata[AF_INET])->ii_llt
+end_define
+
 begin_comment
 comment|/*  * Hash table for IP addresses.  */
 end_comment

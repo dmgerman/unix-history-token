@@ -317,6 +317,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -23229,9 +23235,9 @@ modifier|*
 name|dst
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
-name|rt
+name|ro
 parameter_list|)
 block|{
 name|softc_t

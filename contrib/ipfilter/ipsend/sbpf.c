@@ -145,24 +145,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/udp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/udp_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 

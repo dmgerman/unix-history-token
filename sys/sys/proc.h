@@ -853,6 +853,18 @@ name|int
 name|td_errno
 decl_stmt|;
 comment|/* Error returned by last syscall. */
+name|struct
+name|vnet
+modifier|*
+name|td_vnet
+decl_stmt|;
+comment|/* (*) Effective vnet */
+specifier|const
+name|char
+modifier|*
+name|td_vnet_lpush
+decl_stmt|;
+comment|/* (*) Debugging vnet push / pop */
 block|}
 struct|;
 end_struct

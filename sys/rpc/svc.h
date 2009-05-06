@@ -523,6 +523,10 @@ name|time_t
 name|xp_lastactive
 decl_stmt|;
 comment|/* time of last RPC */
+name|u_int64_t
+name|xp_sockref
+decl_stmt|;
+comment|/* set by nfsv4 to identify socket */
 else|#
 directive|else
 name|int

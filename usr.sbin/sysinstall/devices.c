@@ -449,6 +449,13 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"bm"
+argument_list|,
+literal|"Apple BMAC Built-in Ethernet"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"cue"
 argument_list|,
 literal|"CATC USB Ethernet adapter"

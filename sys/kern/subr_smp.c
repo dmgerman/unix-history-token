@@ -1799,7 +1799,7 @@ name|CG_SHARE_L2
 argument_list|,
 literal|8
 argument_list|,
-name|CG_FLAG_THREAD
+name|CG_FLAG_SMT
 argument_list|)
 expr_stmt|;
 break|break;

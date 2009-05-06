@@ -380,13 +380,17 @@ name|NIADDR
 index|]
 decl_stmt|;
 comment|/* 208: Indirect disk blocks. */
+name|u_int64_t
+name|di_modrev
+decl_stmt|;
+comment|/* 232: i_modrev for NFSv4 */
 name|int64_t
 name|di_spare
 index|[
-literal|3
+literal|2
 index|]
 decl_stmt|;
-comment|/* 232: Reserved; currently unused */
+comment|/* 240: Reserved; currently unused */
 block|}
 struct|;
 end_struct
@@ -492,13 +496,10 @@ name|u_int32_t
 name|di_gid
 decl_stmt|;
 comment|/* 116: File group. */
-name|int32_t
-name|di_spare
-index|[
-literal|2
-index|]
+name|u_int64_t
+name|di_modrev
 decl_stmt|;
-comment|/* 120: Reserved; currently unused */
+comment|/* 120: i_modrev for NFSv4 */
 block|}
 struct|;
 end_struct

@@ -194,9 +194,7 @@ begin_function_decl
 name|int
 name|ufs_checkpath
 parameter_list|(
-name|struct
-name|inode
-modifier|*
+name|ino_t
 parameter_list|,
 name|struct
 name|inode

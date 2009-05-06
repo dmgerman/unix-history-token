@@ -493,12 +493,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IFF_NEEDSGIANT
-value|0x100000
+name|IFF_DYING
+value|0x200000
 end_define
 
 begin_comment
-comment|/* (i) hold Giant over if_start calls */
+comment|/* (n) interface is winding down */
 end_comment
 
 begin_comment
@@ -539,7 +539,7 @@ define|#
 directive|define
 name|IFF_CANTCHANGE
 define|\
-value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_DRV_RUNNING|IFF_DRV_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_SMART|IFF_PROMISC|\ 	    IFF_NEEDSGIANT)
+value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_DRV_RUNNING|IFF_DRV_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_SMART|IFF_PROMISC|\ 	    IFF_DYING)
 end_define
 
 begin_comment

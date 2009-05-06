@@ -535,6 +535,28 @@ begin_comment
 comment|/* Attach to a jail. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PRIV_JAIL_SET
+value|111
+end_define
+
+begin_comment
+comment|/* Set jail parameters. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_JAIL_REMOVE
+value|112
+end_define
+
+begin_comment
+comment|/* Remove a jail. */
+end_comment
+
 begin_comment
 comment|/*  * Kernel environment priveleges.  */
 end_comment

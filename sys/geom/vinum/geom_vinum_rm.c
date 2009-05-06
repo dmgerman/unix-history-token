@@ -642,6 +642,36 @@ operator|)
 return|;
 block|}
 block|}
+comment|/* Make sure nothing is going on internally. */
+name|LIST_FOREACH_SAFE
+argument_list|(
+argument|p
+argument_list|,
+argument|&sc->plexes
+argument_list|,
+argument|plex
+argument_list|,
+argument|p2
+argument_list|)
+block|{
+if|if
+condition|(
+name|p
+operator|->
+name|flags
+operator|&
+operator|(
+name|GV_PLEX_REBUILDING
+operator||
+name|GV_PLEX_GROWING
+operator|)
+condition|)
+return|return
+operator|(
+name|GV_ERR_ISBUSY
+operator|)
+return|;
+block|}
 comment|/* Then if not, we remove everything. */
 name|LIST_FOREACH_SAFE
 argument_list|(

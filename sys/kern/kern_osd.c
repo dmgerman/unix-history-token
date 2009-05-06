@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -269,6 +275,14 @@ name|OSD_LAST
 operator|+
 literal|1
 index|]
+init|=
+block|{
+index|[
+name|OSD_JAIL
+index|]
+operator|=
+name|PR_MAXMETHOD
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1599,6 +1613,20 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|osd
+operator|->
+name|osd_slots
+index|[
+name|slot
+operator|-
+literal|1
+index|]
+operator|!=
+name|NULL
+condition|)
+block|{
 name|osd_destructors
 index|[
 name|type
@@ -1630,6 +1658,7 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -1898,10 +1927,10 @@ for|for
 control|(
 name|i
 operator|=
-literal|1
+literal|0
 init|;
 name|i
-operator|<=
+operator|<
 name|osd_nslots
 index|[
 name|type
@@ -1918,11 +1947,7 @@ index|[
 name|type
 index|]
 index|[
-operator|(
 name|i
-operator|-
-literal|1
-operator|)
 operator|*
 name|osd_nmethods
 index|[

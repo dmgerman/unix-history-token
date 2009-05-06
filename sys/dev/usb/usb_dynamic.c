@@ -55,7 +55,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|usb2_temp_get_desc_t
+name|usb2_handle_request_t
 name|usb2_temp_get_desc_w
 decl_stmt|;
 end_decl_stmt
@@ -100,7 +100,7 @@ comment|/* global variables */
 end_comment
 
 begin_decl_stmt
-name|usb2_temp_get_desc_t
+name|usb2_handle_request_t
 modifier|*
 name|usb2_temp_get_desc_p
 init|=
@@ -244,7 +244,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|usb2_error_t
 name|usb2_temp_get_desc_w
 parameter_list|(
 name|struct
@@ -269,16 +269,11 @@ name|pLength
 parameter_list|)
 block|{
 comment|/* stall */
-operator|*
-name|pPtr
-operator|=
-name|NULL
-expr_stmt|;
-operator|*
-name|pLength
-operator|=
-literal|0
-expr_stmt|;
+return|return
+operator|(
+name|USB_ERR_STALLED
+operator|)
+return|;
 block|}
 end_function
 

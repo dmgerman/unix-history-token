@@ -287,13 +287,13 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|TDMA_TXRATE_STURBO_A_DEFAULT
+name|TDMA_TXRATE_TURBO_DEFAULT
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|TDMA_TXRATE_STURBO_A_DEFAULT
+name|TDMA_TXRATE_TURBO_DEFAULT
 value|2*24
 end_define
 
@@ -806,9 +806,27 @@ name|settxparms
 argument_list|(
 name|vap
 argument_list|,
+name|IEEE80211_MODE_TURBO_A
+argument_list|,
+name|TDMA_TXRATE_TURBO_DEFAULT
+argument_list|)
+expr_stmt|;
+name|settxparms
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MODE_TURBO_G
+argument_list|,
+name|TDMA_TXRATE_TURBO_DEFAULT
+argument_list|)
+expr_stmt|;
+name|settxparms
+argument_list|(
+name|vap
+argument_list|,
 name|IEEE80211_MODE_STURBO_A
 argument_list|,
-name|TDMA_TXRATE_STURBO_A_DEFAULT
+name|TDMA_TXRATE_TURBO_DEFAULT
 argument_list|)
 expr_stmt|;
 name|settxparms
@@ -1666,7 +1684,7 @@ name|IEEE80211_ADDR_EQ
 argument_list|(
 name|wh
 operator|->
-name|i_addr2
+name|i_addr3
 argument_list|,
 name|ni
 operator|->
@@ -2198,8 +2216,6 @@ name|ts
 operator|->
 name|tdma_slotcnt
 argument_list|,
-literal|100
-operator|*
 name|ts
 operator|->
 name|tdma_slotlen

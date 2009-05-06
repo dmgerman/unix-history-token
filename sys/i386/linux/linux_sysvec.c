@@ -212,6 +212,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<compat/linux/linux_futex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<compat/linux/linux_emul.h>
 end_include
 
@@ -491,26 +497,6 @@ specifier|const
 name|char
 modifier|*
 name|linux_platform
-decl_stmt|;
-end_decl_stmt
-
-begin_extern
-extern|extern LIST_HEAD(futex_list
-operator|,
-extern|futex
-end_extern
-
-begin_expr_stmt
-unit|)
-name|futex_list
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|sx
-name|futex_sx
 decl_stmt|;
 end_decl_stmt
 
@@ -5552,12 +5538,16 @@ operator|&
 name|futex_list
 argument_list|)
 expr_stmt|;
-name|sx_init
+name|mtx_init
 argument_list|(
 operator|&
-name|futex_sx
+name|futex_mtx
 argument_list|,
-literal|"futex protection lock"
+literal|"ftllk"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|linux_exit_tag
@@ -5756,10 +5746,10 @@ operator|&
 name|emul_shared_lock
 argument_list|)
 expr_stmt|;
-name|sx_destroy
+name|mtx_destroy
 argument_list|(
 operator|&
-name|futex_sx
+name|futex_mtx
 argument_list|)
 expr_stmt|;
 name|EVENTHANDLER_DEREGISTER

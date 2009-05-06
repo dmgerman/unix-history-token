@@ -21,6 +21,45 @@ begin_comment
 comment|/*  * This first test does basic sanity checks on the environment.  For  * most of these, we just exit on failure.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|DEV_NULL
+value|"/dev/null"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DEV_NULL
+value|"NUL"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|DEFINE_TEST
 argument_list|(
@@ -97,7 +136,8 @@ literal|0
 operator|==
 name|systemf
 argument_list|(
-literal|"%s --version>/dev/null"
+literal|"%s --version>"
+name|DEV_NULL
 argument_list|,
 name|testprog
 argument_list|)
@@ -112,7 +152,8 @@ literal|0
 operator|==
 name|systemf
 argument_list|(
-literal|"%s -W version>/dev/null"
+literal|"%s -W version>"
+name|DEV_NULL
 argument_list|,
 name|testprog
 argument_list|)

@@ -761,12 +761,7 @@ argument_list|(
 operator|&
 name|ast_cdevsw
 argument_list|,
-literal|2
-operator|*
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
+literal|0
 argument_list|,
 name|UID_ROOT
 argument_list|,
@@ -819,13 +814,6 @@ argument_list|(
 operator|&
 name|ast_cdevsw
 argument_list|,
-literal|2
-operator|*
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-operator|+
 literal|1
 argument_list|,
 name|UID_ROOT
@@ -1289,18 +1277,15 @@ argument_list|,
 name|ATAPI_WF_WRITE
 argument_list|)
 expr_stmt|;
-comment|/* if minor is even rewind on close */
+comment|/* if unit is zero rewind on close */
 if|if
 condition|(
-operator|!
-operator|(
 name|dev2unit
 argument_list|(
 name|cdev
 argument_list|)
-operator|&
-literal|0x01
-operator|)
+operator|==
+literal|0
 condition|)
 name|ast_rewind
 argument_list|(

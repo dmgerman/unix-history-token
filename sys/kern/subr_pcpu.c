@@ -460,6 +460,22 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
+name|VIMAGE
+name|db_printf
+argument_list|(
+literal|"curvnet      = %p\n"
+argument_list|,
+name|pc
+operator|->
+name|pc_curthread
+operator|->
+name|td_vnet
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|WITNESS
 name|db_printf
 argument_list|(

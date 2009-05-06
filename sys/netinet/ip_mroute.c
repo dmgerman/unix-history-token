@@ -288,7 +288,7 @@ begin_define
 define|#
 directive|define
 name|KTR_IPMF
-value|KTR_SUBSYS
+value|KTR_INET
 end_define
 
 begin_endif
@@ -7366,6 +7366,11 @@ name|off
 name|__unused
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!

@@ -458,6 +458,38 @@ parameter_list|)
 value|(dsisr& 0x1f)
 end_define
 
+begin_comment
+comment|/*  * SRR1 bits for program exception traps. These identify what caused  * the program exception. See section 6.5.9 of the Power ISA Version  * 2.05.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXC_PGM_FPENABLED
+value|(1UL<< 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXC_PGM_ILLEGAL
+value|(1UL<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXC_PGM_PRIV
+value|(1UL<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXC_PGM_TRAP
+value|(1UL<< 17)
+end_define
+
 begin_endif
 endif|#
 directive|endif

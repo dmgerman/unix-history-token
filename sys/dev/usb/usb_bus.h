@@ -59,32 +59,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The following structure is used to keep the state of a standard  * root transfer.  */
-end_comment
-
-begin_struct
-struct|struct
-name|usb2_sw_transfer
-block|{
-name|struct
-name|usb2_device_request
-name|req
-decl_stmt|;
-name|uint8_t
-modifier|*
-name|ptr
-decl_stmt|;
-name|uint16_t
-name|len
-decl_stmt|;
-name|usb2_error_t
-name|err
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * The following structure defines an USB BUS. There is one USB BUS  * for every Host or Device controller.  */
 end_comment
 
@@ -101,14 +75,6 @@ name|usb2_bus_stat
 name|stats_ok
 decl_stmt|;
 name|struct
-name|usb2_process
-name|explore_proc
-decl_stmt|;
-name|struct
-name|usb2_sw_transfer
-name|roothub_req
-decl_stmt|;
-name|struct
 name|root_hold_token
 modifier|*
 name|bus_roothold
@@ -121,6 +87,16 @@ decl_stmt|;
 name|struct
 name|usb2_process
 name|non_giant_callback_proc
+decl_stmt|;
+comment|/* Explore process */
+name|struct
+name|usb2_process
+name|explore_proc
+decl_stmt|;
+comment|/* Control request process */
+name|struct
+name|usb2_process
+name|control_xfer_proc
 decl_stmt|;
 name|struct
 name|usb2_bus_msg

@@ -1056,7 +1056,6 @@ block|}
 else|else
 block|{
 comment|/* legacy rate handling */
-comment|/* NB: 108A/108G should be handled as 11a/11g respectively */
 if|if
 condition|(
 name|IEEE80211_IS_CHAN_ST
@@ -1098,6 +1097,7 @@ name|mode
 operator|=
 name|IEEE80211_MODE_QUARTER
 expr_stmt|;
+comment|/* NB: 108A should be handled as 11a */
 elseif|else
 if|if
 condition|(
@@ -1115,11 +1115,20 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|IEEE80211_IS_CHAN_108G
+argument_list|(
+name|ni
+operator|->
+name|ni_chan
+argument_list|)
+operator|||
+operator|(
 name|ni
 operator|->
 name|ni_flags
 operator|&
 name|IEEE80211_NODE_ERP
+operator|)
 condition|)
 name|mode
 operator|=
@@ -3010,9 +3019,19 @@ operator|->
 name|ic_curchan
 argument_list|)
 expr_stmt|;
+name|IEEE80211_UNLOCK
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 name|ic
 operator|->
 name|ic_set_channel
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
+name|IEEE80211_LOCK
 argument_list|(
 name|ic
 argument_list|)
@@ -3022,12 +3041,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Change the current channel.  The request channel may be  * promoted if other vap's are operating with HT20/HT40.  */
+comment|/*  * Setup the current channel.  The request channel may be  * promoted if other vap's are operating with HT20/HT40.  */
 end_comment
 
 begin_function
 name|void
-name|ieee80211_setcurchan
+name|ieee80211_setupcurchan
 parameter_list|(
 name|struct
 name|ieee80211com
@@ -3112,11 +3131,43 @@ operator|->
 name|ic_curchan
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Change the current channel.  The channel change is guaranteed to have  * happened before the next state change.  */
+end_comment
+
+begin_function
+name|void
+name|ieee80211_setcurchan
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
 name|ic
-operator|->
-name|ic_set_channel
+parameter_list|,
+name|struct
+name|ieee80211_channel
+modifier|*
+name|c
+parameter_list|)
+block|{
+name|ieee80211_setupcurchan
 argument_list|(
 name|ic
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+name|ieee80211_runtask
+argument_list|(
+name|ic
+argument_list|,
+operator|&
+name|ic
+operator|->
+name|ic_chan_task
 argument_list|)
 expr_stmt|;
 block|}

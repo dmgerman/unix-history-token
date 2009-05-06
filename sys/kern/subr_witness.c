@@ -2383,7 +2383,7 @@ block|,
 name|NULL
 block|}
 block|,
-comment|/* 	 * Multicast - protocol locks before interface locks, after UDP locks. 	 */
+comment|/* 	 * IPv4 multicast: 	 * protocol locks before interface locks, after UDP locks. 	 */
 block|{
 literal|"udpinp"
 block|,
@@ -2400,6 +2400,41 @@ block|}
 block|,
 block|{
 literal|"igmp_mtx"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"if_addr_mtx"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
+comment|/* 	 * IPv6 multicast: 	 * protocol locks before interface locks, after UDP locks. 	 */
+block|{
+literal|"udpinp"
+block|,
+operator|&
+name|lock_class_rw
+block|}
+block|,
+block|{
+literal|"in6_multi_mtx"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"mld_mtx"
 block|,
 operator|&
 name|lock_class_mtx_sleep

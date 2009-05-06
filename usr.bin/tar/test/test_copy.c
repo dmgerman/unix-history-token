@@ -278,9 +278,18 @@ name|buff2
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 comment|/* Create a symlink named "s/abcdef..." to the above. */
 name|strcpy
 argument_list|(
@@ -763,9 +772,18 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 comment|/* 		 * Symlink text doesn't include the 'original/' prefix, 		 * so the limit here is 100 characters. 		 */
 comment|/* Verify symlink "s/abcdef..." */
 name|strcpy

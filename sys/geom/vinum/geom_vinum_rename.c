@@ -524,9 +524,6 @@ name|gv_sd
 modifier|*
 name|s
 decl_stmt|;
-name|g_topology_assert
-argument_list|()
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|d
@@ -687,9 +684,6 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-name|g_topology_assert
-argument_list|()
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|p
@@ -921,9 +915,6 @@ decl_stmt|,
 modifier|*
 name|dot2
 decl_stmt|;
-name|g_topology_assert
-argument_list|()
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|s
@@ -1077,9 +1068,6 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-name|g_topology_assert
-argument_list|()
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|v

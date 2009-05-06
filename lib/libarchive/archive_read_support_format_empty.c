@@ -175,22 +175,20 @@ operator|&
 name|avail
 argument_list|)
 expr_stmt|;
-comment|/* Bid 1 if we successfully read exactly zero bytes. */
 if|if
 condition|(
 name|avail
-operator|==
+operator|!=
 literal|0
 condition|)
 return|return
 operator|(
+operator|-
 literal|1
 operator|)
 return|;
-comment|/* Otherwise, we don't bid on this. */
 return|return
 operator|(
-operator|-
 literal|1
 operator|)
 return|;

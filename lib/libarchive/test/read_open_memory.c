@@ -439,7 +439,7 @@ name|memory_read
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+name|memory_read_close
 argument_list|)
 operator|)
 return|;

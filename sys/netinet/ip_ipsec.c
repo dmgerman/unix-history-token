@@ -1428,6 +1428,10 @@ name|mtag
 operator|!=
 name|NULL
 operator|&&
+name|ifp
+operator|!=
+name|NULL
+operator|&&
 operator|(
 operator|(
 operator|*

@@ -72,8 +72,6 @@ name|a
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|r
 decl_stmt|;
 name|assert
 argument_list|(
@@ -147,37 +145,6 @@ operator|++
 name|i
 control|)
 block|{
-name|r
-operator|=
-name|archive_read_next_header
-argument_list|(
-name|a
-argument_list|,
-operator|&
-name|ae
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|UnsupportedCompress
-argument_list|(
-name|r
-argument_list|,
-name|a
-argument_list|)
-condition|)
-block|{
-name|skipping
-argument_list|(
-literal|"Skipping BZIP2 compression check: "
-literal|"This version of libarchive was compiled "
-literal|"without bzip2 support"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|finish
-goto|;
-block|}
 name|failure
 argument_list|(
 literal|"Could not read file %d (%s) from %s"
@@ -198,23 +165,15 @@ name|a
 argument_list|,
 name|ARCHIVE_OK
 argument_list|,
-name|r
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|r
-operator|!=
-name|ARCHIVE_OK
-condition|)
-block|{
-name|archive_read_finish
+name|archive_read_next_header
 argument_list|(
 name|a
+argument_list|,
+operator|&
+name|ae
+argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 name|assertEqualString
 argument_list|(
 name|n
@@ -286,20 +245,6 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|finish
-label|:
-if|#
-directive|if
-name|ARCHIVE_VERSION_NUMBER
-operator|<
-literal|2000000
-name|archive_read_finish
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|assertEqualInt
 argument_list|(
 name|ARCHIVE_OK
@@ -310,8 +255,6 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

@@ -3820,6 +3820,15 @@ operator|~
 name|CPU_ID_XSCALE_COREREV_MASK
 operator|)
 operator|==
+name|CPU_ID_PXA27X
+operator|||
+operator|(
+name|cputype
+operator|&
+operator|~
+name|CPU_ID_XSCALE_COREREV_MASK
+operator|)
+operator|==
 name|CPU_ID_PXA210
 condition|)
 block|{

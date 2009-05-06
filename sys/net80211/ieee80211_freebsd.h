@@ -45,6 +45,12 @@ directive|include
 file|<sys/rwlock.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/taskqueue.h>
+end_include
+
 begin_comment
 comment|/*  * Common state locking definitions.  */
 end_comment
@@ -1016,6 +1022,33 @@ parameter_list|,
 name|adj
 parameter_list|)
 value|(m->m_pkthdr.csum_data -= adj)
+end_define
+
+begin_comment
+comment|/*  * Store the sequence number.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_SEQNO_SET
+parameter_list|(
+name|m
+parameter_list|,
+name|seqno
+parameter_list|)
+define|\
+value|((m)->m_pkthdr.tso_segsz = (seqno))
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_SEQNO_GET
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)->m_pkthdr.tso_segsz)
 end_define
 
 begin_define

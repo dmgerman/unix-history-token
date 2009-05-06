@@ -121,11 +121,6 @@ decl_stmt|;
 name|u_long
 name|_in_ifaddrhmask
 decl_stmt|;
-name|struct
-name|in_multihead
-name|_in_multihead
-decl_stmt|;
-comment|/* XXX unused */
 name|int
 name|_arpt_keep
 decl_stmt|;
@@ -170,6 +165,9 @@ name|_ip_do_randomid
 decl_stmt|;
 name|int
 name|_ip_checkinterface
+decl_stmt|;
+name|int
+name|_ip_output_flowtable_size
 decl_stmt|;
 name|u_short
 name|_ip_id
@@ -911,13 +909,6 @@ define|#
 directive|define
 name|V_in_ifaddrhmask
 value|VNET_INET(in_ifaddrhmask)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_in_multihead
-value|VNET_INET(in_multihead)
 end_define
 
 begin_define

@@ -4352,6 +4352,10 @@ expr_stmt|;
 else|else
 name|tmp
 operator|=
+operator|(
+name|unsigned
+name|int
+operator|)
 name|fuword32
 argument_list|(
 name|addr

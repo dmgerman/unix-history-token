@@ -1279,6 +1279,27 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* 	 * In case we are called from within the jail 	 * we do not allow modifying the dedicated root 	 * cpuset of the jail but may still allow to 	 * change child sets. 	 */
+if|if
+condition|(
+name|jailed
+argument_list|(
+name|curthread
+operator|->
+name|td_ucred
+argument_list|)
+operator|&&
+name|set
+operator|->
+name|cs_flags
+operator|&
+name|CPU_SET_ROOT
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
 comment|/* 	 * Verify that we have access to this set of 	 * cpus. 	 */
 name|root
 operator|=
@@ -2727,7 +2748,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create a cpuset, which would be cpuset_create() but  * mark the new 'set' as root.  *  * We are not going to reparent the td to it. Use cpuset_reparentproc() for that.  *  * In case of no error, returns the set in *setp locked with a reference.  */
+comment|/*  * Create a cpuset, which would be cpuset_create() but  * mark the new 'set' as root.  *  * We are not going to reparent the td to it.  Use cpuset_setproc_update_set()  * for that.  *  * In case of no error, returns the set in *setp locked with a reference.  */
 end_comment
 
 begin_function

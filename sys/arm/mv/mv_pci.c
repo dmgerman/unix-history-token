@@ -2263,7 +2263,24 @@ literal|0x6381
 case|:
 name|id
 operator|=
+literal|"MV78100 Z0"
+expr_stmt|;
+break|break;
+case|case
+literal|0x7810
+case|:
+name|id
+operator|=
 literal|"MV78100"
+expr_stmt|;
+break|break;
+case|case
+literal|0x7820
+case|:
+comment|/* 		 * According to documentation ID 0x7820 is assigned to MV78200. 		 * However some MV78100 chips also use it. 		 */
+name|id
+operator|=
+literal|"MV78100/MV78200"
 expr_stmt|;
 break|break;
 default|default:

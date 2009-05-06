@@ -124,6 +124,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -143,6 +149,18 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -236,6 +254,15 @@ name|int
 name|optind
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|print_load_stats
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|void
@@ -1008,7 +1035,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|print_routing
 parameter_list|(
 name|char
@@ -2279,15 +2306,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"    %u"
-argument_list|,
-name|rtm
-operator|->
-name|rtm_use
-argument_list|)
-expr_stmt|;
+comment|/* printf("    %u", rtm->rtm_use); */
 name|printf
 argument_list|(
 literal|"\n"
@@ -2314,16 +2333,15 @@ argument_list|(
 name|ifm_table
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|print_ip_stats
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|mib
@@ -2415,12 +2433,7 @@ argument_list|(
 literal|"sysctl"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 name|printf
 argument_list|(
@@ -2702,14 +2715,14 @@ directive|endif
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|print_tcp_stats
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|mib
@@ -2753,10 +2766,7 @@ argument_list|(
 literal|"sorry, tcp stats not available\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
+return|return;
 else|#
 directive|else
 name|mib
@@ -2801,12 +2811,7 @@ argument_list|(
 literal|"sysctl"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 name|printf
 argument_list|(
@@ -3376,14 +3381,14 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|print_udp_stats
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|mib
@@ -3461,12 +3466,7 @@ argument_list|(
 literal|"sysctl"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 name|printf
 argument_list|(
@@ -3595,7 +3595,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|char
@@ -4333,7 +4333,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|print_load_stats
 parameter_list|(
 name|void
@@ -4370,9 +4370,7 @@ operator|||
 operator|!
 name|wflag
 condition|)
-return|return
-literal|0
-return|;
+return|return;
 name|l
 operator|=
 sizeof|sizeof
@@ -4411,9 +4409,7 @@ argument_list|(
 literal|"sysctl: retrieving cp_time length"
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -4469,9 +4465,7 @@ argument_list|(
 literal|"sysctl: retrieving clockinfo length"
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
+return|return;
 block|}
 name|stathz
 operator|=

@@ -1067,60 +1067,60 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * MAC Framework composition macros invoke all registered MAC policies for a  * specific entry point.  They come in two forms: one which permits policies  * to sleep/block, and another that does not.  *  * MAC_CHECK performs the designated check by walking the policy module list  * and checking with each as to how it feels about the request.  Note that it  * returns its value via 'error' in the scope of the caller.  */
+comment|/*  * MAC Framework composition macros invoke all registered MAC policies for a  * specific entry point.  They come in two forms: one which permits policies  * to sleep/block, and another that does not.  *  * MAC_POLICY_CHECK performs the designated check by walking the policy  * module list and checking with each as to how it feels about the request.  * Note that it returns its value via 'error' in the scope of the caller.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 parameter_list|(
 name|check
 parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {					\ 	struct mac_policy_conf *mpc;					\ 									\ 	error = 0;							\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## check != NULL)		\ 			error = mac_error_select(			\ 			    mpc->mpc_ops->mpo_ ## check (args),		\ 			    error);					\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		mac_policy_slock_sleep();				\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## check != NULL)	\ 				error = mac_error_select(		\ 				    mpc->mpc_ops->mpo_ ## check (args),	\ 				    error);				\ 		}							\ 		mac_policy_sunlock_sleep();				\ 	}								\ } while (0)
+value|do {				\ 	struct mac_policy_conf *mpc;					\ 									\ 	error = 0;							\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## check != NULL)		\ 			error = mac_error_select(			\ 			    mpc->mpc_ops->mpo_ ## check (args),		\ 			    error);					\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		mac_policy_slock_sleep();				\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## check != NULL)	\ 				error = mac_error_select(		\ 				    mpc->mpc_ops->mpo_ ## check (args),	\ 				    error);				\ 		}							\ 		mac_policy_sunlock_sleep();				\ 	}								\ } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 parameter_list|(
 name|check
 parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {				\ 	struct mac_policy_conf *mpc;					\ 									\ 	error = 0;							\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## check != NULL)		\ 			error = mac_error_select(			\ 			    mpc->mpc_ops->mpo_ ## check (args),		\ 			    error);					\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		mac_policy_slock_nosleep();				\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## check != NULL)	\ 				error = mac_error_select(		\ 				    mpc->mpc_ops->mpo_ ## check (args),	\ 				    error);				\ 		}							\ 		mac_policy_sunlock_nosleep();				\ 	}								\ } while (0)
-end_define
-
-begin_comment
-comment|/*  * MAC_GRANT performs the designated check by walking the policy module list  * and checking with each as to how it feels about the request.  Unlike  * MAC_CHECK, it grants if any policies return '0', and otherwise returns  * EPERM.  Note that it returns its value via 'error' in the scope of the  * caller.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAC_GRANT_NOSLEEP
-parameter_list|(
-name|check
-parameter_list|,
-name|args
-modifier|...
-parameter_list|)
-value|do {				\ 	struct mac_policy_conf *mpc;					\ 									\ 	error = EPERM;							\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## check != NULL) {		\ 			if (mpc->mpc_ops->mpo_ ## check(args) == 0)	\ 				error = 0;				\ 		}							\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		mac_policy_slock_nosleep();				\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## check != NULL) {	\ 				if (mpc->mpc_ops->mpo_ ## check (args)	\ 				    == 0)				\ 					error = 0;			\ 			}						\ 		}							\ 		mac_policy_sunlock_nosleep();				\ 	}								\ } while (0)
+value|do {			\ 	struct mac_policy_conf *mpc;					\ 									\ 	error = 0;							\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## check != NULL)		\ 			error = mac_error_select(			\ 			    mpc->mpc_ops->mpo_ ## check (args),		\ 			    error);					\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		mac_policy_slock_nosleep();				\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## check != NULL)	\ 				error = mac_error_select(		\ 				    mpc->mpc_ops->mpo_ ## check (args),	\ 				    error);				\ 		}							\ 		mac_policy_sunlock_nosleep();				\ 	}								\ } while (0)
 end_define
 
 begin_comment
-comment|/*  * MAC_BOOLEAN performs the designated boolean composition by walking the  * module list, invoking each instance of the operation, and combining the  * results using the passed C operator.  Note that it returns its value via  * 'result' in the scope of the caller, which should be initialized by the  * caller in a meaningful way to get a meaningful result.  */
+comment|/*  * MAC_POLICY_GRANT performs the designated check by walking the policy  * module list and checking with each as to how it feels about the request.  * Unlike MAC_POLICY_CHECK, it grants if any policies return '0', and  * otherwise returns EPERM.  Note that it returns its value via 'error' in  * the scope of the caller.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MAC_BOOLEAN
+name|MAC_POLICY_GRANT_NOSLEEP
+parameter_list|(
+name|check
+parameter_list|,
+name|args
+modifier|...
+parameter_list|)
+value|do {			\ 	struct mac_policy_conf *mpc;					\ 									\ 	error = EPERM;							\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## check != NULL) {		\ 			if (mpc->mpc_ops->mpo_ ## check(args) == 0)	\ 				error = 0;				\ 		}							\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		mac_policy_slock_nosleep();				\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## check != NULL) {	\ 				if (mpc->mpc_ops->mpo_ ## check (args)	\ 				    == 0)				\ 					error = 0;			\ 			}						\ 		}							\ 		mac_policy_sunlock_nosleep();				\ 	}								\ } while (0)
+end_define
+
+begin_comment
+comment|/*  * MAC_POLICY_BOOLEAN performs the designated boolean composition by walking  * the module list, invoking each instance of the operation, and combining  * the results using the passed C operator.  Note that it returns its value  * via 'result' in the scope of the caller, which should be initialized by  * the caller in a meaningful way to get a meaningful result.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAC_POLICY_BOOLEAN
 parameter_list|(
 name|operation
 parameter_list|,
@@ -1129,13 +1129,13 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {		\ 	struct mac_policy_conf *mpc;					\ 									\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## operation != NULL)		\ 			result = result composition			\ 			    mpc->mpc_ops->mpo_ ## operation (args);	\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		mac_policy_slock_sleep();				\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## operation != NULL)	\ 				result = result composition		\ 				    mpc->mpc_ops->mpo_ ## operation	\ 				    (args);				\ 		}							\ 		mac_policy_sunlock_sleep();				\ 	}								\ } while (0)
+value|do {	\ 	struct mac_policy_conf *mpc;					\ 									\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## operation != NULL)		\ 			result = result composition			\ 			    mpc->mpc_ops->mpo_ ## operation (args);	\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		mac_policy_slock_sleep();				\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## operation != NULL)	\ 				result = result composition		\ 				    mpc->mpc_ops->mpo_ ## operation	\ 				    (args);				\ 		}							\ 		mac_policy_sunlock_sleep();				\ 	}								\ } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAC_BOOLEAN_NOSLEEP
+name|MAC_POLICY_BOOLEAN_NOSLEEP
 parameter_list|(
 name|operation
 parameter_list|,
@@ -1144,17 +1144,17 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {	\ 	struct mac_policy_conf *mpc;					\ 									\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## operation != NULL)		\ 			result = result composition			\ 			    mpc->mpc_ops->mpo_ ## operation (args);	\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		mac_policy_slock_nosleep();				\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## operation != NULL)	\ 				result = result composition		\ 				    mpc->mpc_ops->mpo_ ## operation	\ 				    (args);				\ 		}							\ 		mac_policy_sunlock_nosleep();				\ 	}								\ } while (0)
+value|do {\ 	struct mac_policy_conf *mpc;					\ 									\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## operation != NULL)		\ 			result = result composition			\ 			    mpc->mpc_ops->mpo_ ## operation (args);	\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		mac_policy_slock_nosleep();				\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## operation != NULL)	\ 				result = result composition		\ 				    mpc->mpc_ops->mpo_ ## operation	\ 				    (args);				\ 		}							\ 		mac_policy_sunlock_nosleep();				\ 	}								\ } while (0)
 end_define
 
 begin_comment
-comment|/*  * MAC_EXTERNALIZE queries each policy to see if it can generate an  * externalized version of a label element by name.  Policies declare whether  * they have matched a particular element name, parsed from the string by  * MAC_EXTERNALIZE, and an error is returned if any element is matched by no  * policy.  */
+comment|/*  * MAC_POLICY_EXTERNALIZE queries each policy to see if it can generate an  * externalized version of a label element by name.  Policies declare whether  * they have matched a particular element name, parsed from the string by  * MAC_POLICY_EXTERNALIZE, and an error is returned if any element is matched  * by no policy.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MAC_EXTERNALIZE
+name|MAC_POLICY_EXTERNALIZE
 parameter_list|(
 name|type
 parameter_list|,
@@ -1163,12 +1163,12 @@ parameter_list|,
 name|elementlist
 parameter_list|,
 name|outbuf
-parameter_list|, 		\
+parameter_list|, 	\
 name|outbuflen
 parameter_list|)
 value|do {							\ 	int claimed, first, ignorenotfound, savedlen;			\ 	char *element_name, *element_temp;				\ 	struct sbuf sb;							\ 									\ 	error = 0;							\ 	first = 1;							\ 	sbuf_new(&sb, outbuf, outbuflen, SBUF_FIXEDLEN);		\ 	element_temp = elementlist;					\ 	while ((element_name = strsep(&element_temp, ",")) != NULL) {	\ 		if (element_name[0] == '?') {				\ 			element_name++;					\ 			ignorenotfound = 1;				\ 		 } else							\ 			ignorenotfound = 0;				\ 		savedlen = sbuf_len(&sb);				\ 		if (first)						\ 			error = sbuf_printf(&sb, "%s/", element_name);	\ 		else							\ 			error = sbuf_printf(&sb, ",%s/", element_name);	\ 		if (error == -1) {					\ 			error = EINVAL;
 comment|/* XXX: E2BIG? */
-value|\ 			break;						\ 		}							\ 		claimed = 0;						\ 		MAC_CHECK(type ## _externalize_label, label,		\ 		    element_name,&sb,&claimed);			\ 		if (error)						\ 			break;						\ 		if (claimed == 0&& ignorenotfound) {			\
+value|\ 			break;						\ 		}							\ 		claimed = 0;						\ 		MAC_POLICY_CHECK(type ## _externalize_label, label,	\ 		    element_name,&sb,&claimed);			\ 		if (error)						\ 			break;						\ 		if (claimed == 0&& ignorenotfound) {			\
 comment|/* Revert last label name. */
 value|\ 			sbuf_setpos(&sb, savedlen);			\ 		} else if (claimed != 1) {				\ 			error = EINVAL;
 comment|/* XXX: ENOLABEL? */
@@ -1176,13 +1176,13 @@ value|\ 			break;						\ 		} else {						\ 			first = 0;					\ 		}							\ 	}			
 end_define
 
 begin_comment
-comment|/*  * MAC_INTERNALIZE presents parsed element names and data to each policy to  * see if any is willing to claim it and internalize the label data.  If no  * policies match, an error is returned.  */
+comment|/*  * MAC_POLICY_INTERNALIZE presents parsed element names and data to each  * policy to see if any is willing to claim it and internalize the label  * data.  If no policies match, an error is returned.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MAC_INTERNALIZE
+name|MAC_POLICY_INTERNALIZE
 parameter_list|(
 name|type
 parameter_list|,
@@ -1190,39 +1190,39 @@ name|label
 parameter_list|,
 name|instring
 parameter_list|)
-value|do {			\ 	char *element, *element_name, *element_data;			\ 	int claimed;							\ 									\ 	error = 0;							\ 	element = instring;						\ 	while ((element_name = strsep(&element, ",")) != NULL) {	\ 		element_data = element_name;				\ 		element_name = strsep(&element_data, "/");		\ 		if (element_data == NULL) {				\ 			error = EINVAL;					\ 			break;						\ 		}							\ 		claimed = 0;						\ 		MAC_CHECK(type ## _internalize_label, label,		\ 		    element_name, element_data,&claimed);		\ 		if (error)						\ 			break;						\ 		if (claimed != 1) {					\
+value|do {		\ 	char *element, *element_name, *element_data;			\ 	int claimed;							\ 									\ 	error = 0;							\ 	element = instring;						\ 	while ((element_name = strsep(&element, ",")) != NULL) {	\ 		element_data = element_name;				\ 		element_name = strsep(&element_data, "/");		\ 		if (element_data == NULL) {				\ 			error = EINVAL;					\ 			break;						\ 		}							\ 		claimed = 0;						\ 		MAC_POLICY_CHECK(type ## _internalize_label, label,	\ 		    element_name, element_data,&claimed);		\ 		if (error)						\ 			break;						\ 		if (claimed != 1) {					\
 comment|/* XXXMAC: Another error here? */
 value|\ 			error = EINVAL;					\ 			break;						\ 		}							\ 	}								\ } while (0)
 end_define
 
 begin_comment
-comment|/*  * MAC_PERFORM performs the designated operation by walking the policy module  * list and invoking that operation for each policy.  */
+comment|/*  * MAC_POLICY_PERFORM performs the designated operation by walking the policy  * module list and invoking that operation for each policy.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM
 parameter_list|(
 name|operation
 parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {				\ 	struct mac_policy_conf *mpc;					\ 									\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## operation != NULL)		\ 			mpc->mpc_ops->mpo_ ## operation (args);		\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		mac_policy_slock_sleep();				\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## operation != NULL)	\ 				mpc->mpc_ops->mpo_ ## operation (args);	\ 		}							\ 		mac_policy_sunlock_sleep();				\ 	}								\ } while (0)
+value|do {			\ 	struct mac_policy_conf *mpc;					\ 									\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## operation != NULL)		\ 			mpc->mpc_ops->mpo_ ## operation (args);		\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		mac_policy_slock_sleep();				\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## operation != NULL)	\ 				mpc->mpc_ops->mpo_ ## operation (args);	\ 		}							\ 		mac_policy_sunlock_sleep();				\ 	}								\ } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 parameter_list|(
 name|operation
 parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {			\ 	struct mac_policy_conf *mpc;					\ 									\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## operation != NULL)		\ 			mpc->mpc_ops->mpo_ ## operation (args);		\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		mac_policy_slock_nosleep();				\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## operation != NULL)	\ 				mpc->mpc_ops->mpo_ ## operation (args);	\ 		}							\ 		mac_policy_sunlock_nosleep();				\ 	}								\ } while (0)
+value|do {		\ 	struct mac_policy_conf *mpc;					\ 									\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## operation != NULL)		\ 			mpc->mpc_ops->mpo_ ## operation (args);		\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		mac_policy_slock_nosleep();				\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## operation != NULL)	\ 				mpc->mpc_ops->mpo_ ## operation (args);	\ 		}							\ 		mac_policy_sunlock_nosleep();				\ 	}								\ } while (0)
 end_define
 
 begin_endif

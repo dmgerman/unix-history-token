@@ -680,6 +680,15 @@ operator|->
 name|explore_proc
 argument_list|)
 expr_stmt|;
+comment|/* Get rid of control transfer process */
+name|usb2_proc_free
+argument_list|(
+operator|&
+name|bus
+operator|->
+name|control_xfer_proc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1603,6 +1612,34 @@ block|{
 name|printf
 argument_list|(
 literal|"WARNING: Creation of USB explore "
+literal|"process failed.\n"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|usb2_proc_create
+argument_list|(
+operator|&
+name|bus
+operator|->
+name|control_xfer_proc
+argument_list|,
+operator|&
+name|bus
+operator|->
+name|bus_mtx
+argument_list|,
+name|pname
+argument_list|,
+name|USB_PRI_MED
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"WARNING: Creation of USB control transfer "
 literal|"process failed.\n"
 argument_list|)
 expr_stmt|;

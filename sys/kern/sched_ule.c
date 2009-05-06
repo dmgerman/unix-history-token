@@ -721,11 +721,6 @@ name|int
 name|tdq_transferable
 decl_stmt|;
 comment|/* Transferable thread count. */
-specifier|volatile
-name|int
-name|tdq_idlestate
-decl_stmt|;
-comment|/* State of the idle thread. */
 name|short
 name|tdq_switchcnt
 decl_stmt|;
@@ -1810,15 +1805,6 @@ argument_list|,
 name|tdq
 operator|->
 name|tdq_oldswitchcnt
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\tidle state:     %d\n"
-argument_list|,
-name|tdq
-operator|->
-name|tdq_idlestate
 argument_list|)
 expr_stmt|;
 name|printf
@@ -4270,11 +4256,7 @@ name|cg
 operator|->
 name|cg_flags
 operator|&
-operator|(
-name|CG_FLAG_HTT
-operator||
 name|CG_FLAG_THREAD
-operator|)
 operator|)
 operator|==
 literal|0
@@ -4513,16 +4495,6 @@ name|ctd
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * If the idle thread is still 'running' it's probably 		 * waiting on us to release the tdq spinlock already.  No 		 * need to ipi. 		 */
-if|if
-condition|(
-name|tdq
-operator|->
-name|tdq_idlestate
-operator|==
-name|TDQ_RUNNING
-condition|)
-return|return;
 comment|/* 		 * If the MD code has an idle wakeup routine try that before 		 * falling back to IPI. 		 */
 if|if
 condition|(
@@ -10596,6 +10568,43 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TDQ_IDLESPIN
+parameter_list|(
+name|tdq
+parameter_list|)
+define|\
+value|((tdq)->tdq_cg != NULL&& ((tdq)->tdq_cg->cg_flags& CG_FLAG_THREAD) == 0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TDQ_IDLESPIN
+parameter_list|(
+name|tdq
+parameter_list|)
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * The actual idle process.  */
 end_comment
@@ -10625,6 +10634,14 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
 name|td
 operator|=
 name|curthread
@@ -10634,27 +10651,12 @@ operator|=
 name|TDQ_SELF
 argument_list|()
 expr_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|Giant
-argument_list|,
-name|MA_NOTOWNED
-argument_list|)
-expr_stmt|;
-comment|/* ULE relies on preemption for idle interruption. */
 for|for
 control|(
 init|;
 condition|;
 control|)
 block|{
-name|tdq
-operator|->
-name|tdq_idlestate
-operator|=
-name|TDQ_RUNNING
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
@@ -10680,9 +10682,14 @@ name|tdq
 operator|->
 name|tdq_oldswitchcnt
 expr_stmt|;
-comment|/* 		 * If we're switching very frequently, spin while checking 		 * for load rather than entering a low power state that  		 * requires an IPI. 		 */
+comment|/* 		 * If we're switching very frequently, spin while checking 		 * for load rather than entering a low power state that  		 * may require an IPI.  However, don't do any busy 		 * loops while on SMT machines as this simply steals 		 * cycles from cores doing useful work. 		 */
 if|if
 condition|(
+name|TDQ_IDLESPIN
+argument_list|(
+name|tdq
+argument_list|)
+operator|&&
 name|switchcnt
 operator|>
 name|sched_idlespinthresh
@@ -10714,16 +10721,6 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * We must set our state to IDLE before checking 		 * tdq_load for the last time to avoid a race with 		 * tdq_notify(). 		 */
-if|if
-condition|(
-name|tdq
-operator|->
-name|tdq_load
-operator|==
-literal|0
-condition|)
-block|{
 name|switchcnt
 operator|=
 name|tdq
@@ -10733,12 +10730,6 @@ operator|+
 name|tdq
 operator|->
 name|tdq_oldswitchcnt
-expr_stmt|;
-name|tdq
-operator|->
-name|tdq_idlestate
-operator|=
-name|TDQ_IDLE
 expr_stmt|;
 if|if
 condition|(
@@ -10755,7 +10746,6 @@ operator|>
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|tdq
@@ -11308,7 +11298,7 @@ name|cg
 operator|->
 name|cg_flags
 operator|&
-name|CG_FLAG_THREAD
+name|CG_FLAG_SMT
 operator|)
 operator|!=
 literal|0

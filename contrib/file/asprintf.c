@@ -6,8 +6,26 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdarg.h>
+file|"file.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_macro
+name|FILE_RCSID
+argument_list|(
+literal|"@(#)$File: asprintf.c,v 1.3 2009/02/03 20:27:51 christos Exp $"
+argument_list|)
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int

@@ -3787,17 +3787,6 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Get vm_page_t for mapped pte. */
-name|m
-operator|=
-name|PHYS_TO_VM_PAGE
-argument_list|(
-name|PTE_PA
-argument_list|(
-name|pte
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|PTE_ISWIRED
@@ -3812,15 +3801,6 @@ operator|.
 name|wired_count
 operator|--
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|PTE_ISFAKE
-argument_list|(
-name|pte
-argument_list|)
-condition|)
-block|{
 comment|/* Handle managed entry. */
 if|if
 condition|(
@@ -3830,7 +3810,17 @@ name|pte
 argument_list|)
 condition|)
 block|{
-comment|/* Handle modified pages. */
+comment|/* Get vm_page_t for mapped pte. */
+name|m
+operator|=
+name|PHYS_TO_VM_PAGE
+argument_list|(
+name|PTE_PA
+argument_list|(
+name|pte
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|PTE_ISMODIFIED
@@ -3843,7 +3833,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* Referenced pages. */
 if|if
 condition|(
 name|PTE_ISREFERENCED
@@ -3858,7 +3847,6 @@ argument_list|,
 name|PG_REFERENCED
 argument_list|)
 expr_stmt|;
-comment|/* Remove pv_entry from pv_list. */
 name|pv_remove
 argument_list|(
 name|pmap
@@ -3868,7 +3856,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|mtx_lock_spin
 argument_list|(
@@ -4131,13 +4118,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-else|else
-block|{
-name|flags
-operator||=
-name|PTE_FAKE
-expr_stmt|;
 block|}
 name|pmap
 operator|->
@@ -6140,21 +6120,10 @@ literal|"mmu_booke_kenter: invalid va"
 operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* assume IO mapping, set I, G bits */
-block|flags = (PTE_G | PTE_I | PTE_FAKE);
-comment|/* if mapping is within system memory, do not set I, G bits */
-block|for (i = 0; i< totalmem_regions_sz; i++) { 		if ((pa>= totalmem_regions[i].mr_start)&& 				(pa< (totalmem_regions[i].mr_start + 				       totalmem_regions[i].mr_size))) { 			flags&= ~(PTE_I | PTE_G | PTE_FAKE); 			break; 		} 	}
-else|#
-directive|else
 name|flags
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 name|flags
 operator||=
 operator|(
@@ -6613,22 +6582,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* Not needed, kernel page tables are statically allocated. */
-end_comment
-
-begin_endif
-unit|void mmu_booke_growkernel(vm_offset_t maxkvaddr) { }
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Insert the given physical page at the specified virtual address in the  * target physical map with the protection requested. If specified the page  * will be wired down.  */
@@ -8930,22 +8883,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  * Remove all pages from specified address space, this aids process exit  * speeds. This is much faster than mmu_booke_remove in the case of running  * down an entire address space. Only works for the current pmap.  */
-end_comment
-
-begin_endif
-unit|void mmu_booke_remove_pages(pmap_t pmap) { }
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * mmu_booke_zero_page_idle zeros the specified hardware page by mapping it  * into virtual memory and using bzero to clear its contents. This is intended  * to be called from the vm_pagezero process only and outside of Giant. No  * lock is required.  */

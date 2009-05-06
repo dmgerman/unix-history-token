@@ -293,6 +293,12 @@ literal|0
 expr_stmt|;
 name|em
 operator|->
+name|used_requeue
+operator|=
+literal|0
+expr_stmt|;
+name|em
+operator|->
 name|robust_futexes
 operator|=
 name|NULL

@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -40,6 +46,23 @@ error|#
 directive|error
 literal|"You cannot have both option VIMAGE and option VIMAGE_GLOBALS!"
 end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|VNET_DEBUG
+end_define
 
 begin_endif
 endif|#
@@ -90,9 +113,8 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|void
-modifier|*
-name|base
+name|size_t
+name|offset
 decl_stmt|;
 name|size_t
 name|size
@@ -132,7 +154,7 @@ modifier|*
 name|vmi_idetach
 decl_stmt|;
 name|size_t
-name|vmi_struct_size
+name|vmi_size
 decl_stmt|;
 name|struct
 name|vnet_symmap
@@ -181,28 +203,8 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|VNET_SYMMAP
-parameter_list|(
-name|mod
-parameter_list|,
-name|name
-parameter_list|)
-define|\
-value|{ #name,&(vnet_ ## mod ## _0._ ## name),			\ 	sizeof(vnet_ ## mod ## _0._ ## name) }
-end_define
-
-begin_define
-define|#
-directive|define
-name|VNET_SYMMAP_END
-value|{ NULL, 0 }
-end_define
-
 begin_comment
-comment|/* stateful modules */
+comment|/* Stateful modules. */
 end_comment
 
 begin_define
@@ -300,8 +302,15 @@ name|VNET_MOD_IGMP
 value|12
 end_define
 
+begin_define
+define|#
+directive|define
+name|VNET_MOD_MLD
+value|13
+end_define
+
 begin_comment
-comment|/* stateless modules */
+comment|/* Stateless modules. */
 end_comment
 
 begin_define
@@ -403,7 +412,29 @@ value|64
 end_define
 
 begin_comment
-comment|/* Sysctl virtualization macros need these name mappings bellow */
+comment|/* Major module IDs for vimage sysctl virtualization. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|V_GLOBAL
+value|0
+end_define
+
+begin_comment
+comment|/* global variable - no indirection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|V_NET
+value|1
+end_define
+
+begin_comment
+comment|/* Name mappings for minor module IDs in vimage sysctl virtualization. */
 end_comment
 
 begin_define
@@ -506,6 +537,36 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|vnet_mod_deregister
+parameter_list|(
+specifier|const
+name|struct
+name|vnet_modinfo
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vnet_mod_deregister_multi
+parameter_list|(
+specifier|const
+name|struct
+name|vnet_modinfo
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -544,11 +605,17 @@ directive|ifdef
 name|VIMAGE
 end_ifdef
 
-begin_error
-error|#
-directive|error
-literal|"No option VIMAGE yet!"
-end_error
+begin_define
+define|#
+directive|define
+name|VSYM
+parameter_list|(
+name|base
+parameter_list|,
+name|sym
+parameter_list|)
+value|((base)->_ ## sym)
+end_define
 
 begin_else
 else|#
@@ -577,18 +644,300 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VIMAGE_GLOBALS
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
 begin_comment
-comment|/* Non-VIMAGE null-macros */
+comment|/*  * Casted NULL hack is needed for harvesting sizeofs() of fields inside  * struct vnet_* containers at compile time.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IS_DEFAULT_VNET
+name|VNET_SYMMAP
+parameter_list|(
+name|mod
+parameter_list|,
+name|name
+parameter_list|)
+define|\
+value|{ #name, offsetof(struct vnet_ ## mod, _ ## name),		\ 	sizeof(((struct vnet_ ## mod *) NULL)->_ ## name) }
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|VNET_SYMMAP
+parameter_list|(
+name|mod
+parameter_list|,
+name|name
+parameter_list|)
+define|\
+value|{ #name, (size_t)&(vnet_ ## mod ## _0._ ## name),		\ 	sizeof(vnet_ ## mod ## _0._ ## name) }
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|VNET_SYMMAP_END
+value|{ NULL, 0 }
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !VIMAGE_GLOBALS */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_struct
+struct|struct
+name|vnet
+block|{
+name|void
+modifier|*
+name|mod_data
+index|[
+name|VNET_MOD_MAX
+index|]
+decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|vnet
+argument_list|)
+name|vnet_le
+expr_stmt|;
+comment|/* all vnets list */
+name|u_int
+name|vnet_magic_n
+decl_stmt|;
+name|u_int
+name|ifccnt
+decl_stmt|;
+name|u_int
+name|sockcnt
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|curvnet
+value|curthread->td_vnet
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|curvnet
+value|NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|VNET_MAGIC_N
+value|0x3e0d8f29
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VNET_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|VNET_ASSERT
+parameter_list|(
+name|condition
+parameter_list|)
+define|\
+value|if (!(condition)) {						\ 		printf("VNET_ASSERT @ %s:%d %s():\n",			\ 			__FILE__, __LINE__, __FUNCTION__);		\ 		panic(#condition);					\ 	}
+end_define
+
+begin_define
+define|#
+directive|define
+name|CURVNET_SET_QUIET
 parameter_list|(
 name|arg
 parameter_list|)
-value|1
+define|\
+value|VNET_ASSERT((arg)->vnet_magic_n == VNET_MAGIC_N);		\ 	struct vnet *saved_vnet = curvnet;				\ 	const char *saved_vnet_lpush = curthread->td_vnet_lpush;	\ 	curvnet = arg;							\ 	curthread->td_vnet_lpush = __FUNCTION__;
+end_define
+
+begin_define
+define|#
+directive|define
+name|CURVNET_SET_VERBOSE
+parameter_list|(
+name|arg
+parameter_list|)
+define|\
+value|CURVNET_SET_QUIET(arg)						\ 	if (saved_vnet)							\ 		printf("curvnet_set(%p) in %s() on cpu %d, prev %p in %s()\n", curvnet,			\ 		       curthread->td_vnet_lpush, curcpu,		\ 		       saved_vnet, saved_vnet_lpush);
+end_define
+
+begin_define
+define|#
+directive|define
+name|CURVNET_SET
+parameter_list|(
+name|arg
+parameter_list|)
+value|CURVNET_SET_VERBOSE(arg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CURVNET_RESTORE
+parameter_list|()
+define|\
+value|VNET_ASSERT(saved_vnet == NULL ||				\ 		    saved_vnet->vnet_magic_n == VNET_MAGIC_N);		\ 	curvnet = saved_vnet;						\ 	curthread->td_vnet_lpush = saved_vnet_lpush;
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !VNET_DEBUG */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VNET_ASSERT
+parameter_list|(
+name|condition
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CURVNET_SET
+parameter_list|(
+name|arg
+parameter_list|)
+define|\
+value|struct vnet *saved_vnet = curvnet;				\ 	curvnet = arg;
+end_define
+
+begin_define
+define|#
+directive|define
+name|CURVNET_SET_VERBOSE
+parameter_list|(
+name|arg
+parameter_list|)
+value|CURVNET_SET(arg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CURVNET_SET_QUIET
+parameter_list|(
+name|arg
+parameter_list|)
+value|CURVNET_SET(arg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CURVNET_RESTORE
+parameter_list|()
+define|\
+value|curvnet = saved_vnet;
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !VNET_DEBUG */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !VIMAGE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VNET_ASSERT
+parameter_list|(
+name|condition
+parameter_list|)
 end_define
 
 begin_define
@@ -616,14 +965,87 @@ name|CURVNET_RESTORE
 parameter_list|()
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !VIMAGE */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VNET_DEBUG
+end_ifdef
+
 begin_define
 define|#
 directive|define
-name|VNET_ASSERT
+name|INIT_FROM_VNET
 parameter_list|(
-name|condition
+name|vnet
+parameter_list|,
+name|modindex
+parameter_list|,
+name|modtype
+parameter_list|,
+name|sym
 parameter_list|)
+define|\
+value|if (vnet == NULL || vnet != curvnet)				\ 		panic("in %s:%d %s()\n vnet=%p curvnet=%p",		\ 		    __FILE__, __LINE__, __FUNCTION__,			\ 		    vnet, curvnet);					\ 	modtype *sym = (vnet)->mod_data[modindex];
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !VNET_DEBUG */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INIT_FROM_VNET
+parameter_list|(
+name|vnet
+parameter_list|,
+name|modindex
+parameter_list|,
+name|modtype
+parameter_list|,
+name|sym
+parameter_list|)
+define|\
+value|modtype *sym = (vnet)->mod_data[modindex];
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !VNET_DEBUG */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !VIMAGE */
+end_comment
 
 begin_define
 define|#
@@ -639,6 +1061,60 @@ parameter_list|,
 name|sym
 parameter_list|)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|vnet_list_head
+argument_list|,
+name|vnet
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vnet_list_head
+name|vnet_head
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|VNET_ITERATOR_DECL
+parameter_list|(
+name|arg
+parameter_list|)
+value|struct vnet *arg;
+end_define
+
+begin_define
+define|#
+directive|define
+name|VNET_FOREACH
+parameter_list|(
+name|arg
+parameter_list|)
+value|LIST_FOREACH(arg,&vnet_head, vnet_le)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -656,6 +1132,35 @@ name|VNET_FOREACH
 parameter_list|(
 name|arg
 parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|TD_TO_VNET
+parameter_list|(
+name|td
+parameter_list|)
+value|(td)->td_ucred->cr_vnet
+end_define
+
+begin_comment
+comment|/* Non-VIMAGE null-macros */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IS_DEFAULT_VNET
+parameter_list|(
+name|arg
+parameter_list|)
+value|1
 end_define
 
 begin_define
@@ -694,15 +1199,6 @@ begin_define
 define|#
 directive|define
 name|TD_TO_VIMAGE
-parameter_list|(
-name|td
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TD_TO_VNET
 parameter_list|(
 name|td
 parameter_list|)

@@ -900,6 +900,31 @@ value|0xff000000
 end_define
 
 begin_comment
+comment|/*   * CPUID instruction 0xb ebx info.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUID_TYPE_INVAL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_TYPE_SMT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_TYPE_CORE
+value|2
+end_define
+
+begin_comment
 comment|/*  * AMD extended function 8000_0007h edx info  */
 end_comment
 

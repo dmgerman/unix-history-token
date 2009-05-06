@@ -108,6 +108,44 @@ operator|==
 literal|0
 condition|)
 block|{
+name|p
+operator|=
+name|slurpfile
+argument_list|(
+operator|&
+name|s
+argument_list|,
+literal|"archive.err"
+argument_list|)
+expr_stmt|;
+name|p
+index|[
+name|s
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|p
+argument_list|,
+literal|"gzip compression not supported"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|skipping
+argument_list|(
+literal|"This version of bsdcpio was compiled "
+literal|"without gzip support"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* Check that the archive file has a gzip signature. */
 name|p
 operator|=
@@ -135,6 +173,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_block

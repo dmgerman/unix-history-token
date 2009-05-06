@@ -438,14 +438,14 @@ name|ni_ies
 decl_stmt|;
 comment|/* captured ie's */
 comment|/* tx seq per-tid */
-name|uint16_t
+name|ieee80211_seq
 name|ni_txseqs
 index|[
 name|IEEE80211_TID_SIZE
 index|]
 decl_stmt|;
 comment|/* rx seq previous per-tid*/
-name|uint16_t
+name|ieee80211_seq
 name|ni_rxseqs
 index|[
 name|IEEE80211_TID_SIZE
@@ -1052,6 +1052,21 @@ name|ieee80211_sync_curchan
 parameter_list|(
 name|struct
 name|ieee80211com
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_setupcurchan
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|)
 function_decl|;

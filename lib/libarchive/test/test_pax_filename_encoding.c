@@ -31,14 +31,13 @@ begin_comment
 comment|/*  * Read a manually-created archive that has filenames that are  * stored in binary instead of UTF-8 and verify that we get  * the right filename returned and that we get a warning only  * if the header isn't marked as binary.  */
 end_comment
 
-begin_macro
-name|DEFINE_TEST
-argument_list|(
-argument|test_pax_filename_encoding_1
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|void
+name|test_pax_filename_encoding_1
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 specifier|const
@@ -90,7 +89,7 @@ name|assertEqualInt
 argument_list|(
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_support_compression_gzip
+name|archive_read_support_compression_all
 argument_list|(
 name|a
 argument_list|)
@@ -175,20 +174,19 @@ name|a
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Set the locale and write a pathname containing invalid characters.  * This should work; the underlying implementation should automatically  * fall back to storing the pathname in binary.  */
 end_comment
 
-begin_macro
-name|DEFINE_TEST
-argument_list|(
-argument|test_pax_filename_encoding_2
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|void
+name|test_pax_filename_encoding_2
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 name|filename
@@ -745,20 +743,19 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Create an entry starting from a wide-character Unicode pathname,  * read it back into "C" locale, which doesn't support the name.  * TODO: Figure out the "right" behavior here.  */
 end_comment
 
-begin_macro
-name|DEFINE_TEST
-argument_list|(
-argument|test_pax_filename_encoding_3
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|void
+name|test_pax_filename_encoding_3
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|wchar_t
 name|badname
@@ -1530,6 +1527,27 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
+end_function
+
+begin_macro
+name|DEFINE_TEST
+argument_list|(
+argument|test_pax_filename_encoding
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|test_pax_filename_encoding_1
+argument_list|()
+expr_stmt|;
+name|test_pax_filename_encoding_2
+argument_list|()
+expr_stmt|;
+name|test_pax_filename_encoding_3
+argument_list|()
+expr_stmt|;
 block|}
 end_block
 

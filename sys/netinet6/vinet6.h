@@ -95,11 +95,6 @@ name|ip6q
 name|_ip6q
 decl_stmt|;
 name|struct
-name|route_in6
-name|_ip6_forward_rt
-decl_stmt|;
-comment|/* XXX remove */
-name|struct
 name|in6_addrpolicy
 name|_defaultaddrpolicy
 decl_stmt|;
@@ -297,22 +292,6 @@ name|int
 name|_ip6_prefer_tempaddr
 decl_stmt|;
 name|int
-name|_ip6_forward_srcrt
-decl_stmt|;
-comment|/* XXX remove */
-name|int
-name|_ip6_sourcecheck
-decl_stmt|;
-comment|/* XXX remove */
-name|int
-name|_ip6_sourcecheck_interval
-decl_stmt|;
-comment|/* XXX remove */
-name|int
-name|_ip6_ours_check_algorithm
-decl_stmt|;
-comment|/* XXX remove */
-name|int
 name|_nd6_prune
 decl_stmt|;
 name|int
@@ -363,6 +342,11 @@ decl_stmt|;
 name|u_int32_t
 name|_ip6_temp_valid_lifetime
 decl_stmt|;
+name|struct
+name|socket
+modifier|*
+name|_ip6_mrouter
+decl_stmt|;
 name|int
 name|_ip6_mrouter_ver
 decl_stmt|;
@@ -381,6 +365,26 @@ decl_stmt|;
 name|struct
 name|ip6_pktopts
 name|_ip6_opts
+decl_stmt|;
+name|struct
+name|timeval
+name|_mld_gsrdelay
+decl_stmt|;
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|mld_ifinfo
+argument_list|)
+name|_mli_head
+expr_stmt|;
+name|int
+name|_interface_timers_running6
+decl_stmt|;
+name|int
+name|_state_change_timers_running6
+decl_stmt|;
+name|int
+name|_current_state_timers_running6
 decl_stmt|;
 block|}
 struct|;
@@ -464,6 +468,14 @@ define|#
 directive|define
 name|V_addrsel_policytab
 value|VNET_INET6(addrsel_policytab)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_current_state_timers_running6
+define|\
+value|VNET_INET6(current_state_timers_running6)
 end_define
 
 begin_define
@@ -588,6 +600,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|V_interface_timers_running6
+define|\
+value|VNET_INET6(interface_timers_running6)
+end_define
+
+begin_define
+define|#
+directive|define
 name|V_ip6_accept_rtadv
 value|VNET_INET6(ip6_accept_rtadv)
 end_define
@@ -688,6 +708,13 @@ define|#
 directive|define
 name|V_ip6_mcast_pmtu
 value|VNET_INET6(ip6_mcast_pmtu)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_mrouter
+value|VNET_INET6(ip6_mrouter)
 end_define
 
 begin_define
@@ -814,6 +841,20 @@ define|#
 directive|define
 name|V_mrt6debug
 value|VNET_INET6(mrt6debug)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_mld_gsrdelay
+value|VNET_INET6(mld_gsrdelay)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_mli_head
+value|VNET_INET6(mli_head)
 end_define
 
 begin_define
@@ -1045,6 +1086,14 @@ define|#
 directive|define
 name|V_sid_default
 value|VNET_INET6(sid_default)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_state_change_timers_running6
+define|\
+value|VNET_INET6(state_change_timers_running6)
 end_define
 
 begin_define

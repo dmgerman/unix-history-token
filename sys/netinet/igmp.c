@@ -205,7 +205,7 @@ begin_define
 define|#
 directive|define
 name|KTR_IGMPV3
-value|KTR_SUBSYS
+value|KTR_INET
 end_define
 
 begin_endif
@@ -762,12 +762,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|vnet_attach_fn
@@ -782,46 +776,8 @@ name|vnet_igmp_idetach
 decl_stmt|;
 end_decl_stmt
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|static
-name|int
-name|vnet_igmp_iattach
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|vnet_igmp_idetach
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* VIMAGE */
-end_comment
-
-begin_comment
-comment|/*  * System-wide globals.  *  * Unlocked access to these is OK, except for the global IGMP output  * queue. The IGMP subsystem lock ends up being system-wide for the moment,  * because all VIMAGEs have to share a global output queue, as netisrs  * themselves are not virtualized.  *  * Locking:  *  * The permitted lock order is: IN_MULTI_LOCK, IGMP_LOCK, IF_ADDR_LOCK.  *    Any may be taken independently; if any are held at the same  *    time, the above lock order must be followed.  *  * All output is delegated to the netisr to handle IFF_NEEDSGIANT.  *    Most of the time, direct dispatch will be fine.  *  * IN_MULTI_LOCK covers in_multi.  *  * IGMP_LOCK covers igmp_ifinfo and any global variables in this file,  *    including the output queue.  *  * IF_ADDR_LOCK covers if_multiaddrs, which is used for a variety of  *    per-link state iterators.  *  * igmp_ifinfo is valid as long as PF_INET is attached to the interface,  *    therefore it is not refcounted.  *    We allow unlocked reads of igmp_ifinfo when accessed via in_multi.  *  * Reference counting  *  * IGMP acquires its own reference every time an in_multi is passed to  *    it and the group is being joined for the first time.  *  * IGMP releases its reference(s) on in_multi in a deferred way,  *    because the operations which process the release run as part of  *    a loop whose control variables are directly affected by the release  *    (that, and not recursing on the IF_ADDR_LOCK).  *  * VIMAGE: Each in_multi corresponds to an ifp, and each ifp corresponds  * to a vnet in ifp->if_vnet.  *  * SMPng: XXX We may potentially race operations on ifma_protospec.  * The problem is that we currently lack a clean way of taking the  * IF_ADDR_LOCK() between the ifnet and in layers w/o recursing,  * as anything which modifies ifma needs to be covered by that lock.  * So check for ifma_protospec being NULL before proceeding.  */
+comment|/*  * System-wide globals.  *  * Unlocked access to these is OK, except for the global IGMP output  * queue. The IGMP subsystem lock ends up being system-wide for the moment,  * because all VIMAGEs have to share a global output queue, as netisrs  * themselves are not virtualized.  *  * Locking:  *  * The permitted lock order is: IN_MULTI_LOCK, IGMP_LOCK, IF_ADDR_LOCK.  *    Any may be taken independently; if any are held at the same  *    time, the above lock order must be followed.  *  * All output is delegated to the netisr.  *    Now that Giant has been eliminated, the netisr may be inlined.  *  * IN_MULTI_LOCK covers in_multi.  *  * IGMP_LOCK covers igmp_ifinfo and any global variables in this file,  *    including the output queue.  *  * IF_ADDR_LOCK covers if_multiaddrs, which is used for a variety of  *    per-link state iterators.  *  * igmp_ifinfo is valid as long as PF_INET is attached to the interface,  *    therefore it is not refcounted.  *    We allow unlocked reads of igmp_ifinfo when accessed via in_multi.  *  * Reference counting  *  * IGMP acquires its own reference every time an in_multi is passed to  *    it and the group is being joined for the first time.  *  * IGMP releases its reference(s) on in_multi in a deferred way,  *    because the operations which process the release run as part of  *    a loop whose control variables are directly affected by the release  *    (that, and not recursing on the IF_ADDR_LOCK).  *  * VIMAGE: Each in_multi corresponds to an ifp, and each ifp corresponds  * to a vnet in ifp->if_vnet.  *  * SMPng: XXX We may potentially race operations on ifma_protospec.  * The problem is that we currently lack a clean way of taking the  * IF_ADDR_LOCK() between the ifnet and in layers w/o recursing,  * as anything which modifies ifma needs to be covered by that lock.  * So check for ifma_protospec being NULL before proceeding.  */
 end_comment
 
 begin_decl_stmt
@@ -830,35 +786,6 @@ name|mtx
 name|igmp_mtx
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|mpsafe_igmp
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_debug
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|mpsafe_igmp
-argument_list|,
-name|CTLFLAG_RDTUN
-argument_list|,
-operator|&
-name|mpsafe_igmp
-argument_list|,
-literal|0
-argument_list|,
-literal|"Enable SMP-safe IGMPv3"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_decl_stmt
 name|struct
@@ -885,7 +812,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Global netisr output queue.  * This is only used as a last resort if we cannot directly dispatch.  * As IN_MULTI_LOCK is no longer in the bottom half of IP, we can do  * this, providing mpsafe_igmp is set. If it is not, we take Giant,  * and queueing is forced.  */
+comment|/*  * Global netisr output queue.  */
 end_comment
 
 begin_decl_stmt
@@ -1475,6 +1402,11 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1594,6 +1526,11 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1721,6 +1658,11 @@ name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
 name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+name|INIT_VNET_INET
 argument_list|(
 name|curvnet
 argument_list|)
@@ -2014,6 +1956,11 @@ name|in_addr
 name|addr
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|in_allhosts
@@ -2170,7 +2117,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Attach IGMP when PF_INET is attached to an interface.  *  * VIMAGE: Currently we set the vnet pointer, although it is  * likely that it was already set by our caller.  */
+comment|/*  * Attach IGMP when PF_INET is attached to an interface.  */
 end_comment
 
 begin_function
@@ -2205,13 +2152,6 @@ operator|->
 name|if_xname
 argument_list|)
 expr_stmt|;
-name|CURVNET_SET
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
 name|IGMP_LOCK
 argument_list|()
 expr_stmt|;
@@ -2242,9 +2182,6 @@ expr_stmt|;
 name|IGMP_UNLOCK
 argument_list|()
 expr_stmt|;
-name|CURVNET_RESTORE
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|igi
@@ -2271,6 +2208,13 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|igmp_ifinfo
 modifier|*
@@ -2400,7 +2344,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Hook for ifdetach.  *  * NOTE: Some finalization tasks need to run before the protocol domain  * is detached, but also before the link layer does its cleanup.  *  * SMPNG: igmp_ifdetach() needs to take IF_ADDR_LOCK().  * XXX This is also bitten by unlocked ifma_protospec access.  *  * VIMAGE: curvnet should have been set by caller, but let's not assume  * that for now.  */
+comment|/*  * Hook for ifdetach.  *  * NOTE: Some finalization tasks need to run before the protocol domain  * is detached, but also before the link layer does its cleanup.  *  * SMPNG: igmp_ifdetach() needs to take IF_ADDR_LOCK().  * XXX This is also bitten by unlocked ifma_protospec access.  */
 end_comment
 
 begin_function
@@ -2444,13 +2388,6 @@ argument_list|,
 name|ifp
 operator|->
 name|if_xname
-argument_list|)
-expr_stmt|;
-name|CURVNET_SET
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
 argument_list|)
 expr_stmt|;
 name|IGMP_LOCK
@@ -2596,72 +2533,11 @@ block|}
 name|IGMP_UNLOCK
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VIMAGE
-comment|/* 	 * Plug the potential race which may occur when a VIMAGE 	 * is detached and we are forced to queue pending IGMP output for 	 * output netisr processing due to !mpsafe_igmp. In this case it 	 * is possible that igmp_intr() is about to see mbuf chains with 	 * invalid cached curvnet pointers. 	 * This is a rare condition, so just blow them all away. 	 * FUTURE: This may in fact not be needed, because IFF_NEEDSGIANT 	 * is being removed in 8.x and the netisr may then be eliminated; 	 * it is needed only if VIMAGE and IFF_NEEDSGIANT need to co-exist 	 */
-if|if
-condition|(
-operator|!
-name|mpsafe_igmp
-condition|)
-block|{
-name|int
-name|drops
-decl_stmt|;
-name|IF_LOCK
-argument_list|(
-operator|&
-name|igmpoq
-argument_list|)
-expr_stmt|;
-name|drops
-operator|=
-name|igmpoq
-operator|.
-name|ifq_len
-expr_stmt|;
-name|_IF_DRAIN
-argument_list|(
-operator|&
-name|igmpoq
-argument_list|)
-expr_stmt|;
-name|IF_UNLOCK
-argument_list|(
-operator|&
-name|igmpoq
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-operator|&&
-name|drops
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: dropped %d pending IGMP output packets\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|drops
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-endif|#
-directive|endif
-comment|/* VIMAGE */
-name|CURVNET_RESTORE
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Hook for domifdetach.  *  * VIMAGE: curvnet should have been set by caller, but let's not assume  * that for now.  */
+comment|/*  * Hook for domifdetach.  */
 end_comment
 
 begin_function
@@ -2694,13 +2570,6 @@ operator|->
 name|if_xname
 argument_list|)
 expr_stmt|;
-name|CURVNET_SET
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
 name|IGMP_LOCK
 argument_list|()
 expr_stmt|;
@@ -2730,9 +2599,6 @@ expr_stmt|;
 name|IGMP_UNLOCK
 argument_list|()
 expr_stmt|;
-name|CURVNET_RESTORE
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -2748,6 +2614,13 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|igmp_ifinfo
 modifier|*
@@ -3174,6 +3047,13 @@ modifier|*
 name|igmp
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ifmultiaddr
 modifier|*
@@ -3473,6 +3353,11 @@ name|int
 name|timer
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|CTR4
 argument_list|(
 name|KTR_IGMPV3
@@ -3643,6 +3528,13 @@ modifier|*
 name|igmpv3
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|igmp_ifinfo
 modifier|*
@@ -4169,6 +4061,11 @@ modifier|*
 name|igmpv3
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|retval
 decl_stmt|;
@@ -4239,6 +4136,19 @@ operator|->
 name|igmp_numsrc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|IS_DEFAULT_VNET
+argument_list|(
+name|curvnet
+argument_list|)
+condition|)
+return|return
+operator|(
+name|retval
+operator|)
+return|;
 comment|/* 	 * Deal with group-specific queries upfront. 	 * If any group query is already pending, purge any recorded 	 * source-list state if it exists, and schedule a query response 	 * for this group-specific query. 	 */
 if|if
 condition|(
@@ -4495,6 +4405,13 @@ modifier|*
 name|igmp
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|in_ifaddr
 modifier|*
@@ -4873,6 +4790,13 @@ modifier|*
 name|igmp
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|in_ifaddr
 modifier|*
@@ -5866,9 +5790,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|VIMAGE
 name|VNET_ITERATOR_DECL
 argument_list|(
 name|vnet_iter
@@ -5887,11 +5808,6 @@ argument_list|(
 name|vnet_iter
 argument_list|)
 expr_stmt|;
-name|INIT_VNET_INET
-argument_list|(
-name|vnet_iter
-argument_list|)
-expr_stmt|;
 name|igmp_fasttimo_vnet
 argument_list|()
 expr_stmt|;
@@ -5902,15 +5818,6 @@ block|}
 name|VNET_LIST_RUNLOCK
 argument_list|()
 expr_stmt|;
-else|#
-directive|else
-comment|/* !VIMAGE */
-name|igmp_fasttimo_vnet
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* VIMAGE */
 block|}
 end_function
 
@@ -5926,6 +5833,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ifqueue
 name|scq
@@ -5985,17 +5897,6 @@ operator|!
 name|V_state_change_timers_running
 condition|)
 return|return;
-if|if
-condition|(
-operator|!
-name|mpsafe_igmp
-condition|)
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|IN_MULTI_LOCK
 argument_list|()
 expr_stmt|;
@@ -6355,17 +6256,6 @@ expr_stmt|;
 name|IN_MULTI_UNLOCK
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|mpsafe_igmp
-condition|)
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -6388,6 +6278,11 @@ name|int
 name|version
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|report_timer_expired
 decl_stmt|;
@@ -6543,6 +6438,11 @@ name|int
 name|uri_fasthz
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|query_response_timer_expired
 decl_stmt|;
@@ -7130,6 +7030,11 @@ modifier|*
 name|igi
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ifmultiaddr
 modifier|*
@@ -7345,6 +7250,11 @@ modifier|*
 name|igi
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|IGMP_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -7630,9 +7540,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|VIMAGE
 name|VNET_ITERATOR_DECL
 argument_list|(
 name|vnet_iter
@@ -7651,11 +7558,6 @@ argument_list|(
 name|vnet_iter
 argument_list|)
 expr_stmt|;
-name|INIT_VNET_INET
-argument_list|(
-name|vnet_iter
-argument_list|)
-expr_stmt|;
 name|igmp_slowtimo_vnet
 argument_list|()
 expr_stmt|;
@@ -7666,15 +7568,6 @@ block|}
 name|VNET_LIST_RUNLOCK
 argument_list|()
 expr_stmt|;
-else|#
-directive|else
-comment|/* !VIMAGE */
-name|igmp_slowtimo_vnet
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* VIMAGE */
 block|}
 end_function
 
@@ -7690,6 +7583,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|igmp_ifinfo
 modifier|*
@@ -7769,21 +7667,6 @@ operator|=
 name|inm
 operator|->
 name|inm_ifp
-expr_stmt|;
-comment|/* XXX are these needed ? */
-name|INIT_VNET_NET
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
-name|INIT_VNET_INET
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
-argument_list|)
 expr_stmt|;
 name|MGETHDR
 argument_list|(
@@ -8359,6 +8242,11 @@ modifier|*
 name|igi
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -8768,6 +8656,11 @@ modifier|*
 name|igi
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -9037,6 +8930,11 @@ modifier|*
 name|igi
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|syncstates
 decl_stmt|;
@@ -11107,6 +11005,8 @@ name|m0srcs
 decl_stmt|,
 name|nbytes
 decl_stmt|,
+name|npbytes
+decl_stmt|,
 name|off
 decl_stmt|,
 name|rsrcs
@@ -11216,6 +11116,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* # of bytes appended to group's state-change queue */
+name|npbytes
+operator|=
+literal|0
+expr_stmt|;
+comment|/* # of bytes appended this packet */
 name|rsrcs
 operator|=
 literal|0
@@ -11447,6 +11352,10 @@ argument_list|(
 name|in_addr_t
 argument_list|)
 expr_stmt|;
+name|npbytes
+operator|=
+literal|0
+expr_stmt|;
 name|CTR1
 argument_list|(
 name|KTR_IGMPV3
@@ -11527,7 +11436,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-name|nbytes
+name|npbytes
 operator|+=
 sizeof|sizeof
 argument_list|(
@@ -11538,10 +11447,52 @@ expr_stmt|;
 if|if
 condition|(
 name|m
-operator|==
+operator|!=
 name|m0
 condition|)
 block|{
+comment|/* new packet; offset in c hain */
+name|md
+operator|=
+name|m_getptr
+argument_list|(
+name|m
+argument_list|,
+name|npbytes
+operator|-
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|igmp_grouprec
+argument_list|)
+argument_list|,
+operator|&
+name|off
+argument_list|)
+expr_stmt|;
+name|pig
+operator|=
+operator|(
+expr|struct
+name|igmp_grouprec
+operator|*
+operator|)
+operator|(
+name|mtod
+argument_list|(
+name|md
+argument_list|,
+name|uint8_t
+operator|*
+argument_list|)
+operator|+
+name|off
+operator|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* current packet; offset from last append */
 name|md
 operator|=
 name|m_last
@@ -11569,41 +11520,11 @@ name|md
 operator|->
 name|m_len
 operator|-
-name|nbytes
-operator|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|md
-operator|=
-name|m_getptr
+sizeof|sizeof
 argument_list|(
-name|m
-argument_list|,
-literal|0
-argument_list|,
-operator|&
-name|off
-argument_list|)
-expr_stmt|;
-name|pig
-operator|=
-operator|(
 expr|struct
 name|igmp_grouprec
-operator|*
-operator|)
-operator|(
-name|mtod
-argument_list|(
-name|md
-argument_list|,
-name|uint8_t
-operator|*
 argument_list|)
-operator|+
-name|off
 operator|)
 expr_stmt|;
 block|}
@@ -11870,7 +11791,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|nbytes
+name|npbytes
 operator|-=
 sizeof|sizeof
 argument_list|(
@@ -11931,7 +11852,7 @@ expr_stmt|;
 block|}
 continue|continue;
 block|}
-name|nbytes
+name|npbytes
 operator|+=
 operator|(
 name|rsrcs
@@ -11998,6 +11919,10 @@ name|ifq
 argument_list|,
 name|m
 argument_list|)
+expr_stmt|;
+name|nbytes
+operator|+=
+name|npbytes
 expr_stmt|;
 block|}
 do|while
@@ -12478,6 +12403,11 @@ modifier|*
 name|igi
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ifmultiaddr
 modifier|*
@@ -12779,14 +12709,31 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Restore VNET image pointer from enqueued mbuf chain 	 * before doing anything else. Whilst we use interface 	 * indexes to guard against interface detach, they are 	 * unique to each VIMAGE and must be retrieved. 	 */
+comment|/* 	 * Set VNET image pointer from enqueued mbuf chain 	 * before doing anything else. Whilst we use interface 	 * indexes to guard against interface detach, they are 	 * unique to each VIMAGE and must be retrieved. 	 */
 name|CURVNET_SET
 argument_list|(
+operator|(
+expr|struct
+name|vnet
+operator|*
+operator|)
+operator|(
 name|m
 operator|->
 name|m_pkthdr
 operator|.
 name|header
+operator|)
+argument_list|)
+expr_stmt|;
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
 argument_list|)
 expr_stmt|;
 name|ifindex
@@ -13059,11 +13006,6 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|INIT_VNET_INET
 argument_list|(
 name|curvnet
@@ -13503,14 +13445,6 @@ expr_stmt|;
 name|IGMP_LOCK_INIT
 argument_list|()
 expr_stmt|;
-name|TUNABLE_INT_FETCH
-argument_list|(
-literal|"debug.mpsafeigmp"
-argument_list|,
-operator|&
-name|mpsafe_igmp
-argument_list|)
-expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -13538,11 +13472,6 @@ operator|=
 name|igmp_ra_alloc
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|800000
 name|netisr_register
 argument_list|(
 name|NETISR_IGMP
@@ -13552,33 +13481,9 @@ argument_list|,
 operator|&
 name|igmpoq
 argument_list|,
-name|mpsafe_igmp
-condition|?
-name|NETISR_MPSAFE
-else|:
 literal|0
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|netisr_register
-argument_list|(
-name|NETISR_IGMP
-argument_list|,
-name|igmp_intr
-argument_list|,
-operator|&
-name|igmpoq
-argument_list|,
-name|mpsafe_igmp
-condition|?
-literal|0
-else|:
-name|NETISR_FORCEQUEUE
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -13766,11 +13671,16 @@ name|unused
 name|__unused
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|INIT_VNET_INET
 argument_list|(
 name|curvnet
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|CTR1
 argument_list|(
 name|KTR_IGMPV3
@@ -13803,63 +13713,50 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VIMAGE_GLOBALS
+end_ifndef
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|vnet_symmap
-name|vnet_igmp_symmap
-index|[]
+name|vnet_modinfo_t
+name|vnet_igmp_modinfo
 init|=
 block|{
-name|VNET_SYMMAP
-argument_list|(
-name|igmp
-argument_list|,
-name|igi_head
-argument_list|)
+operator|.
+name|vmi_id
+operator|=
+name|VNET_MOD_IGMP
 block|,
-name|VNET_SYMMAP
-argument_list|(
-name|igmp
-argument_list|,
-name|igmpstat
-argument_list|)
+operator|.
+name|vmi_name
+operator|=
+literal|"igmp"
 block|,
-name|VNET_SYMMAP_END
+operator|.
+name|vmi_dependson
+operator|=
+name|VNET_MOD_INET
+block|,
+operator|.
+name|vmi_iattach
+operator|=
+name|vnet_igmp_iattach
+block|,
+operator|.
+name|vmi_idetach
+operator|=
+name|vnet_igmp_idetach
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|VNET_MOD_DECLARE
-argument_list|(
-name|IGMP
-argument_list|,
-name|igmp
-argument_list|,
-name|vnet_igmp_iattach
-argument_list|,
-name|vnet_igmp_idetach
-argument_list|,
-name|vnet_igmp_symmap
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* VIMAGE */
-end_comment
 
 begin_function
 specifier|static
@@ -13889,9 +13786,9 @@ case|:
 name|igmp_sysinit
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VIMAGE
+ifndef|#
+directive|ifndef
+name|VIMAGE_GLOBALS
 name|vnet_mod_register
 argument_list|(
 operator|&
@@ -13900,9 +13797,6 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-operator|(
-name|void
-operator|)
 name|vnet_igmp_iattach
 argument_list|(
 name|NULL
@@ -13910,25 +13804,21 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* VIMAGE */
 break|break;
 case|case
 name|MOD_UNLOAD
 case|:
-ifdef|#
-directive|ifdef
-name|VIMAGE
-comment|/* 	 * TODO: Allow module unload if any VIMAGE instances 	 * are using this module. 	 */
-return|return
-operator|(
-name|EBUSY
-operator|)
-return|;
+ifndef|#
+directive|ifndef
+name|VIMAGE_GLOBALS
+name|vnet_mod_deregister
+argument_list|(
+operator|&
+name|vnet_igmp_modinfo
+argument_list|)
+expr_stmt|;
 else|#
 directive|else
-operator|(
-name|void
-operator|)
 name|vnet_igmp_idetach
 argument_list|(
 name|NULL
@@ -13936,7 +13826,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* VIMAGE */
 name|igmp_sysuninit
 argument_list|()
 expr_stmt|;

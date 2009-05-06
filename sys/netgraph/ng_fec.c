@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_inet.h"
 end_include
 
@@ -337,7 +343,7 @@ name|sockaddr
 modifier|*
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
 parameter_list|)
 function_decl|;
@@ -593,9 +599,9 @@ modifier|*
 name|dst
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
-name|rt0
+name|ro
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3661,9 +3667,9 @@ modifier|*
 name|dst
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
-name|rt0
+name|ro
 parameter_list|)
 block|{
 specifier|const
@@ -3855,7 +3861,7 @@ name|m
 argument_list|,
 name|dst
 argument_list|,
-name|rt0
+name|ro
 argument_list|)
 expr_stmt|;
 if|if

@@ -82,6 +82,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_struct_decl
+struct_decl|struct
+name|vnet
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Kernel structure per socket.  * Contains send and receive buffer queues,  * handle on protocol and pointer to protocol  * private data and error information.  */
 end_comment
@@ -130,6 +136,12 @@ modifier|*
 name|so_pcb
 decl_stmt|;
 comment|/* protocol control block */
+name|struct
+name|vnet
+modifier|*
+name|so_vnet
+decl_stmt|;
+comment|/* network stack instance */
 name|struct
 name|protosw
 modifier|*

@@ -20,7 +20,7 @@ comment|/*  * Kernel resident routing tables.  *  * The routing tables are initi
 end_comment
 
 begin_comment
-comment|/*  * A route consists of a destination address and a reference  * to a routing entry.  These are often held by protocols  * in their control blocks, e.g. inpcb.  */
+comment|/*  * A route consists of a destination address, a reference  * to a routing entry, and a reference to an llentry.    * These are often held by protocols in their control  * blocks, e.g. inpcb.  */
 end_comment
 
 begin_struct
@@ -31,6 +31,11 @@ name|struct
 name|rtentry
 modifier|*
 name|ro_rt
+decl_stmt|;
+name|struct
+name|llentry
+modifier|*
+name|ro_lle
 decl_stmt|;
 name|struct
 name|sockaddr
@@ -60,6 +65,10 @@ name|u_long
 name|rmx_pksent
 decl_stmt|;
 comment|/* packets sent using this route */
+name|u_long
+name|rmx_weight
+decl_stmt|;
+comment|/* absolute weight */
 block|}
 struct|;
 end_struct
@@ -109,9 +118,13 @@ name|rmx_pksent
 decl_stmt|;
 comment|/* packets sent using this route */
 name|u_long
+name|rmx_weight
+decl_stmt|;
+comment|/* route weight */
+name|u_long
 name|rmx_filler
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
 comment|/* will be used for T/TCP later */
@@ -724,7 +737,18 @@ comment|/* route represents a mcast address */
 end_comment
 
 begin_comment
-comment|/* 0x1000000 and up unassigned */
+comment|/* 0x8000000 and up unassigned */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTF_STICKY
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* always route dst->src */
 end_comment
 
 begin_define
@@ -735,7 +759,7 @@ value|0x40000000
 end_define
 
 begin_comment
-comment|/* radix node head locked by caller */
+comment|/* radix node head is locked */
 end_comment
 
 begin_comment
@@ -747,7 +771,7 @@ define|#
 directive|define
 name|RTF_FMASK
 define|\
-value|(RTF_PROTO1 | RTF_PROTO2 | RTF_PROTO3 | RTF_BLACKHOLE | \ 	 RTF_REJECT | RTF_STATIC)
+value|(RTF_PROTO1 | RTF_PROTO2 | RTF_PROTO3 | RTF_BLACKHOLE | \ 	 RTF_REJECT | RTF_STATIC | RTF_STICKY)
 end_define
 
 begin_comment
@@ -830,11 +854,6 @@ name|int
 name|rtm_fmask
 decl_stmt|;
 comment|/* bitmask used in RTM_CHANGE message */
-define|#
-directive|define
-name|rtm_use
-value|rtm_fmask
-comment|/* deprecated, use rtm_rmx->rmx_pksent */
 name|u_long
 name|rtm_inits
 decl_stmt|;
@@ -1151,6 +1170,17 @@ end_define
 
 begin_comment
 comment|/* init or lock _rttvar */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTV_WEIGHT
+value|0x100
+end_define
+
+begin_comment
+comment|/* init or lock _weight */
 end_comment
 
 begin_comment

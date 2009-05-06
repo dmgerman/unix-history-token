@@ -996,10 +996,6 @@ name|struct
 name|usb2_port_status
 name|ps
 decl_stmt|;
-name|struct
-name|usb2_device_descriptor
-name|devd
-decl_stmt|;
 name|uint8_t
 name|temp
 index|[

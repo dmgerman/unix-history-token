@@ -409,6 +409,10 @@ name|sctp_rtentry_t
 modifier|*
 name|ro_rt
 decl_stmt|;
+name|void
+modifier|*
+name|ro_lle
+decl_stmt|;
 name|union
 name|sctp_sockstore
 name|_l_addr

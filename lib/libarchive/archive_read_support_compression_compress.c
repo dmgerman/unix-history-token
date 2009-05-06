@@ -951,7 +951,8 @@ if|if
 condition|(
 name|ret
 operator|==
-name|ARCHIVE_EOF
+operator|-
+literal|1
 condition|)
 name|state
 operator|->
@@ -1633,7 +1634,8 @@ literal|0
 condition|)
 return|return
 operator|(
-name|ARCHIVE_EOF
+operator|-
+literal|1
 operator|)
 return|;
 if|if

@@ -846,6 +846,11 @@ operator|=
 name|icmp6_fasttimo
 block|,
 operator|.
+name|pr_slowtimo
+operator|=
+name|icmp6_slowtimo
+block|,
+operator|.
 name|pr_usrreqs
 operator|=
 operator|&
@@ -1867,6 +1872,9 @@ decl_stmt|;
 name|int
 name|old
 decl_stmt|;
+name|SYSCTL_RESOLVE_V_ARG1
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|SYSCTL_OUT
@@ -1961,6 +1969,9 @@ decl_stmt|;
 name|int
 name|old
 decl_stmt|;
+name|SYSCTL_RESOLVE_V_ARG1
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|SYSCTL_OUT

@@ -198,7 +198,7 @@ name|flag
 operator|&
 name|M_WAITOK
 condition|)
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|ip6q_init_label
 argument_list|,
@@ -208,7 +208,7 @@ name|flag
 argument_list|)
 expr_stmt|;
 else|else
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|ip6q_init_label
 argument_list|,
@@ -222,7 +222,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|ip6q_destroy_label
 argument_list|,
@@ -317,7 +317,7 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|ip6q_destroy_label
 argument_list|,
@@ -395,7 +395,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|ip6q_reassemble
 argument_list|,
@@ -440,7 +440,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|ip6q_create
 argument_list|,
@@ -492,7 +492,7 @@ name|result
 operator|=
 literal|1
 expr_stmt|;
-name|MAC_BOOLEAN_NOSLEEP
+name|MAC_POLICY_BOOLEAN_NOSLEEP
 argument_list|(
 name|ip6q_match
 argument_list|,
@@ -544,7 +544,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|ip6q_update
 argument_list|,
@@ -589,7 +589,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|netinet6_nd6_send
 argument_list|,

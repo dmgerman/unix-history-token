@@ -295,7 +295,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GV_BIO_DONE
+name|GV_BIO_GROW
 value|0x01
 end_define
 
@@ -351,16 +351,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|GV_BIO_RETRY
-value|0x100
-end_define
-
-begin_define
-define|#
-directive|define
 name|GV_BIO_INTERNAL
 define|\
-value|(GV_BIO_SYNCREQ | GV_BIO_INIT | GV_BIO_REBUILD |GV_BIO_CHECK)
+value|(GV_BIO_SYNCREQ | GV_BIO_INIT | GV_BIO_REBUILD | GV_BIO_CHECK | GV_BIO_GROW)
 end_define
 
 begin_comment
@@ -909,11 +902,6 @@ block|}
 struct|;
 end_struct
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* This struct contains the main vinum config. */
 end_comment
@@ -965,31 +953,31 @@ expr_stmt|;
 comment|/* Event queue. */
 name|struct
 name|mtx
-name|queue_mtx
+name|equeue_mtx
 decl_stmt|;
-comment|/* Queue lock. */
+comment|/* Event queue lock. */
+name|struct
+name|mtx
+name|bqueue_mtx
+decl_stmt|;
+comment|/* BIO queue lock. */
 name|struct
 name|mtx
 name|config_mtx
 decl_stmt|;
 comment|/* Configuration lock. */
-ifdef|#
-directive|ifdef
-name|_KERNEL
 name|struct
 name|bio_queue_head
 modifier|*
-name|bqueue
+name|bqueue_down
 decl_stmt|;
-comment|/* BIO queue. */
-else|#
-directive|else
-name|char
+comment|/* BIO queue incoming 						   requests. */
+name|struct
+name|bio_queue_head
 modifier|*
-name|padding
+name|bqueue_up
 decl_stmt|;
-endif|#
-directive|endif
+comment|/* BIO queue for completed 						   requests. */
 name|struct
 name|g_geom
 modifier|*
@@ -999,6 +987,11 @@ comment|/* Pointer to our VINUM geom. */
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* softc for a drive. */

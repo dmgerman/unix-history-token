@@ -355,7 +355,7 @@ comment|/*  * The version number is expressed as a single integer that makes it 
 define|#
 directive|define
 name|ARCHIVE_VERSION_NUMBER
-value|2006901
+value|2007000
 name|__LA_DECL
 name|int
 name|archive_version_number
@@ -367,7 +367,7 @@ comment|/*  * Textual name/version of the library, useful for version displays. 
 define|#
 directive|define
 name|ARCHIVE_VERSION_STRING
-value|"libarchive 2.6.901a"
+value|"libarchive 2.7.0"
 name|__LA_DECL
 specifier|const
 name|char
@@ -760,6 +760,10 @@ define|#
 directive|define
 name|ARCHIVE_FORMAT_MTREE
 value|0x80000
+define|#
+directive|define
+name|ARCHIVE_FORMAT_RAW
+value|0x90000
 comment|/*-  * Basic outline for reading an archive:  *   1) Ask archive_read_new for an archive reader object.  *   2) Update any global properties as appropriate.  *      In particular, you'll certainly want to call appropriate  *      archive_read_support_XXX functions.  *   3) Call archive_read_open_XXX to open the archive  *   4) Repeatedly call archive_read_next_header to get information about  *      successive archive entries.  Call archive_read_data to extract  *      data for entries of interest.  *   5) Call archive_read_finish to end processing.  */
 name|__LA_DECL
 name|struct
@@ -809,6 +813,15 @@ parameter_list|)
 function_decl|;
 name|__LA_DECL
 name|int
+name|archive_read_support_compression_lzma
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
 name|archive_read_support_compression_none
 parameter_list|(
 name|struct
@@ -848,6 +861,15 @@ modifier|*
 comment|/* match */
 parameter_list|,
 name|size_t
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
+name|archive_read_support_compression_xz
+parameter_list|(
+name|struct
+name|archive
+modifier|*
 parameter_list|)
 function_decl|;
 name|__LA_DECL
@@ -907,6 +929,15 @@ function_decl|;
 name|__LA_DECL
 name|int
 name|archive_read_support_format_mtree
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
+name|archive_read_support_format_raw
 parameter_list|(
 name|struct
 name|archive
@@ -1097,6 +1128,20 @@ parameter_list|,
 name|struct
 name|archive_entry
 modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Parses and returns next entry header using the archive_entry passed in */
+name|__LA_DECL
+name|int
+name|archive_read_next_header2
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+name|struct
+name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1545,6 +1590,15 @@ parameter_list|)
 function_decl|;
 name|__LA_DECL
 name|int
+name|archive_write_set_compression_lzma
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
 name|archive_write_set_compression_none
 parameter_list|(
 name|struct
@@ -1564,6 +1618,15 @@ specifier|const
 name|char
 modifier|*
 name|cmd
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
+name|archive_write_set_compression_xz
+parameter_list|(
+name|struct
+name|archive
+modifier|*
 parameter_list|)
 function_decl|;
 comment|/* A convenience function to set the format based on the code or name. */
@@ -1977,7 +2040,7 @@ modifier|*
 name|s
 parameter_list|)
 function_decl|;
-comment|/*-  * To create objects on disk:  *   1) Ask archive_write_disk_new for a new archive_write_disk object.  *   2) Set any global properties.  In particular, you should set  *      the compression and format to use.  *   3) For each entry:  *      - construct an appropriate struct archive_entry structure  *      - archive_write_header to create the file/dir/etc on disk  *      - archive_write_data to write the entry data  *   4) archive_write_finish to cleanup the writer and release resources  *  * In particular, you can use this in conjunction with archive_read()  * to pull entries out of an archive and create them on disk.  */
+comment|/*-  * ARCHIVE_WRITE_DISK API  *  * To create objects on disk:  *   1) Ask archive_write_disk_new for a new archive_write_disk object.  *   2) Set any global properties.  In particular, you probably  *      want to set the options.  *   3) For each entry:  *      - construct an appropriate struct archive_entry structure  *      - archive_write_header to create the file/dir/etc on disk  *      - archive_write_data to write the entry data  *   4) archive_write_finish to cleanup the writer and release resources  *  * In particular, you can use this in conjunction with archive_read()  * to pull entries out of an archive and create them on disk.  */
 name|__LA_DECL
 name|struct
 name|archive
@@ -2001,7 +2064,7 @@ parameter_list|,
 name|ino_t
 parameter_list|)
 function_decl|;
-comment|/* Set flags to control how the next item gets created. */
+comment|/* Set flags to control how the next item gets created.  * This accepts a bitmask of ARCHIVE_EXTRACT_XXX flags defined above. */
 name|__LA_DECL
 name|int
 name|archive_write_disk_set_options

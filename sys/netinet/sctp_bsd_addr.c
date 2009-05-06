@@ -763,6 +763,11 @@ argument_list|,
 argument|if_list
 argument_list|)
 block|{
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifn
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -969,6 +974,11 @@ name|SCTP_ADDR_DEFER_USE
 expr_stmt|;
 block|}
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifn
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function

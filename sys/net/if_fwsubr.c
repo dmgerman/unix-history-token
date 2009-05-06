@@ -237,9 +237,9 @@ modifier|*
 name|dst
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
-name|rt0
+name|ro
 parameter_list|)
 block|{
 name|struct
@@ -479,7 +479,13 @@ name|arpresolve
 argument_list|(
 name|ifp
 argument_list|,
-name|rt0
+name|ro
+condition|?
+name|ro
+operator|->
+name|ro_rt
+else|:
+name|NULL
 argument_list|,
 name|m
 argument_list|,

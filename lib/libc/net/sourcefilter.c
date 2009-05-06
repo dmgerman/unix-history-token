@@ -1443,6 +1443,8 @@ name|err
 decl_stmt|,
 name|level
 decl_stmt|,
+name|nsrcs
+decl_stmt|,
 name|optlen
 decl_stmt|,
 name|optname
@@ -1477,6 +1479,11 @@ literal|1
 operator|)
 return|;
 block|}
+name|nsrcs
+operator|=
+operator|*
+name|numsrc
+expr_stmt|;
 operator|*
 name|numsrc
 operator|=
@@ -1657,8 +1664,7 @@ name|msfr
 operator|.
 name|msfr_nsrcs
 operator|=
-operator|*
-name|numsrc
+name|nsrcs
 expr_stmt|;
 name|memcpy
 argument_list|(

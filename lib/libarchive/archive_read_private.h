@@ -683,6 +683,19 @@ end_function_decl
 
 begin_function_decl
 name|int64_t
+name|__archive_read_skip_lenient
+parameter_list|(
+name|struct
+name|archive_read
+modifier|*
+parameter_list|,
+name|int64_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int64_t
 name|__archive_read_filter_skip
 parameter_list|(
 name|struct

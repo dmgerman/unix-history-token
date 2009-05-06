@@ -625,9 +625,9 @@ name|sockaddr
 modifier|*
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
-name|rt
+name|ro
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2659,6 +2659,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -2754,6 +2759,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 return|return
@@ -2996,9 +3006,9 @@ modifier|*
 name|dst
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
-name|rt
+name|ro
 parameter_list|)
 block|{
 name|struct

@@ -244,17 +244,6 @@ parameter_list|)
 value|((struct sockaddr_dl *)s)
 end_define
 
-begin_define
-define|#
-directive|define
-name|LLTABLE
-parameter_list|(
-name|ifp
-parameter_list|)
-define|\
-value|((struct in_ifinfo *)(ifp)->if_afdata[AF_INET])->ii_llt
-end_define
-
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -650,6 +639,13 @@ name|s_addr
 operator|=
 name|addr
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|IF_AFDATA_LOCK
 argument_list|(
 name|ifp
@@ -681,6 +677,9 @@ name|IF_AFDATA_UNLOCK
 argument_list|(
 name|ifp
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1185,12 +1184,7 @@ argument_list|,
 operator|&
 name|sa
 argument_list|,
-operator|(
-expr|struct
-name|rtentry
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -3838,12 +3832,7 @@ argument_list|,
 operator|&
 name|sa
 argument_list|,
-operator|(
-expr|struct
-name|rtentry
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return;

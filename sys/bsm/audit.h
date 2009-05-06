@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2005 Apple Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * P4: //depot/projects/trustedbsd/openbsm/sys/bsm/audit.h#5  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2005-2009 Apple Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * P4: //depot/projects/trustedbsd/openbsm/sys/bsm/audit.h#9  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -15,22 +15,6 @@ directive|define
 name|_BSM_AUDIT_H
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__APPLE__
-end_ifdef
-
-begin_comment
-comment|/* Temporary until rdar://problem/6133383 is resolved. */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
 begin_include
 include|#
 directive|include
@@ -40,29 +24,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
+file|<sys/types.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __APPLE__ */
-end_comment
 
 begin_define
 define|#
@@ -335,14 +298,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|A_GETPOLICY
+name|A_OLDGETPOLICY
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|A_SETPOLICY
+name|A_OLDSETPOLICY
 value|3
 end_define
 
@@ -363,14 +326,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|A_GETQCTRL
+name|A_OLDGETQCTRL
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|A_SETQCTRL
+name|A_OLDSETQCTRL
 value|7
 end_define
 
@@ -419,14 +382,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|A_GETCOND
+name|A_OLDGETCOND
 value|20
 end_define
 
 begin_define
 define|#
 directive|define
-name|A_SETCOND
+name|A_OLDSETCOND
 value|21
 end_define
 
@@ -505,6 +468,48 @@ define|#
 directive|define
 name|A_GETSINFO_ADDR
 value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_GETPOLICY
+value|33
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_SETPOLICY
+value|34
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_GETQCTRL
+value|35
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_SETQCTRL
+value|36
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_GETCOND
+value|37
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_SETCOND
+value|38
 end_define
 
 begin_comment
@@ -884,10 +889,6 @@ name|au_asid_t
 name|ap_asid
 decl_stmt|;
 comment|/* Audit session ID. */
-name|u_int64_t
-name|ap_flags
-decl_stmt|;
-comment|/* Audit session flags. */
 block|}
 struct|;
 end_struct
@@ -924,6 +925,10 @@ name|au_asid_t
 name|ap_asid
 decl_stmt|;
 comment|/* Audit session ID. */
+name|u_int64_t
+name|ap_flags
+decl_stmt|;
+comment|/* Audit session flags. */
 block|}
 struct|;
 end_struct
@@ -945,18 +950,6 @@ modifier|*
 name|as_aia_p
 decl_stmt|;
 comment|/* Ptr to full audit info. */
-define|#
-directive|define
-name|as_asid
-value|as_aia_p->ai_asid
-define|#
-directive|define
-name|as_auid
-value|as_aia_p->ai_auid
-define|#
-directive|define
-name|as_termid
-value|as_aia_p->ai_termid
 name|au_mask_t
 name|as_mask
 decl_stmt|;
@@ -986,25 +979,31 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Kernel audit queue control parameters.  */
+comment|/*  * Kernel audit queue control parameters:  * 			Default:		Maximum:  * 	aq_hiwater:	AQ_HIWATER (100)	AQ_MAXHIGH (10000)   * 	aq_lowater:	AQ_LOWATER (10)<aq_hiwater  * 	aq_bufsz:	AQ_BUFSZ (32767)	AQ_MAXBUFSZ (1048576)  * 	aq_delay:	20			20000 (not used)   */
 end_comment
 
 begin_struct
 struct|struct
 name|au_qctrl
 block|{
-name|size_t
+name|int
 name|aq_hiwater
 decl_stmt|;
-name|size_t
+comment|/* Max # of audit recs in queue when */
+comment|/* threads with new ARs get blocked. */
+name|int
 name|aq_lowater
 decl_stmt|;
-name|size_t
+comment|/* # of audit recs in queue when */
+comment|/* blocked threads get unblocked. */
+name|int
 name|aq_bufsz
 decl_stmt|;
-name|clock_t
+comment|/* Max size of audit record for audit(2). */
+name|int
 name|aq_delay
 decl_stmt|;
+comment|/* Queue delay (not used). */
 name|int
 name|aq_minfree
 decl_stmt|;
@@ -1266,6 +1265,46 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__APPLE_API_PRIVATE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<mach/port.h>
+end_include
+
+begin_function_decl
+name|mach_port_name_t
+name|audit_session_self
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|au_asid_t
+name|audit_session_join
+parameter_list|(
+name|mach_port_name_t
+name|port
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __APPLE_API_PRIVATE */
+end_comment
 
 begin_endif
 endif|#

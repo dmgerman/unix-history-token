@@ -2016,6 +2016,12 @@ name|int
 name|nd_refs
 decl_stmt|;
 comment|/* # of references to this node */
+name|struct
+name|vnet
+modifier|*
+name|nd_vnet
+decl_stmt|;
+comment|/* network stack instance */
 ifdef|#
 directive|ifdef
 name|NETGRAPH_DEBUG
@@ -5759,6 +5765,21 @@ end_function_decl
 begin_function_decl
 name|int
 name|ng_name_node
+parameter_list|(
+name|node_p
+name|node
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|node_p
+name|ng_name2noderef
 parameter_list|(
 name|node_p
 name|node

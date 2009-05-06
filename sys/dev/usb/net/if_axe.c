@@ -498,13 +498,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|device_shutdown_t
-name|axe_shutdown
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|usb2_callback_t
 name|axe_intr_callback
 decl_stmt|;
@@ -887,13 +880,6 @@ argument_list|(
 name|device_detach
 argument_list|,
 name|axe_detach
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|device_shutdown
-argument_list|,
-name|axe_shutdown
 argument_list|)
 block|,
 comment|/* bus interface */
@@ -4968,45 +4954,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Stop all chip I/O so that the kernel's probe routines don't  * get confused by errant DMAs when rebooting.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|axe_shutdown
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-block|{
-name|struct
-name|axe_softc
-modifier|*
-name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
-name|usb2_ether_ifshutdown
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_ue
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 

@@ -312,8 +312,9 @@ name|sockaddr
 modifier|*
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
+name|ro
 parameter_list|)
 function_decl|;
 end_function_decl

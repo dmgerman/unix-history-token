@@ -237,7 +237,7 @@ argument_list|(
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM
 argument_list|(
 name|devfs_init_label
 argument_list|,
@@ -307,7 +307,7 @@ argument_list|(
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM
 argument_list|(
 name|mount_init_label
 argument_list|,
@@ -376,7 +376,7 @@ argument_list|(
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM
 argument_list|(
 name|vnode_init_label
 argument_list|,
@@ -435,7 +435,7 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|devfs_destroy_label
 argument_list|,
@@ -497,7 +497,7 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|mount_destroy_label
 argument_list|,
@@ -558,7 +558,7 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|vnode_destroy_label
 argument_list|,
@@ -624,7 +624,7 @@ modifier|*
 name|dest
 parameter_list|)
 block|{
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|vnode_copy_label
 argument_list|,
@@ -660,7 +660,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_EXTERNALIZE
+name|MAC_POLICY_EXTERNALIZE
 argument_list|(
 name|vnode
 argument_list|,
@@ -698,7 +698,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_INTERNALIZE
+name|MAC_POLICY_INTERNALIZE
 argument_list|(
 name|vnode
 argument_list|,
@@ -735,7 +735,7 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|devfs_update
 argument_list|,
@@ -777,7 +777,7 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|devfs_vnode_associate
 argument_list|,
@@ -828,7 +828,7 @@ argument_list|,
 literal|"mac_vnode_associate_extattr"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_associate_extattr
 argument_list|,
@@ -868,7 +868,7 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|vnode_associate_singlelabel
 argument_list|,
@@ -986,7 +986,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_create_extattr
 argument_list|,
@@ -1144,7 +1144,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_setlabel_extattr
 argument_list|,
@@ -1249,7 +1249,7 @@ argument_list|,
 literal|"mac_vnode_execve_transition"
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM
 argument_list|(
 name|vnode_execve_transition
 argument_list|,
@@ -1315,7 +1315,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* No sleeping since the process lock will be held by the caller. */
-name|MAC_BOOLEAN_NOSLEEP
+name|MAC_POLICY_BOOLEAN_NOSLEEP
 argument_list|(
 name|vnode_execve_will_transition
 argument_list|,
@@ -1388,7 +1388,7 @@ argument_list|,
 literal|"mac_vnode_check_access"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_access
 argument_list|,
@@ -1461,7 +1461,7 @@ argument_list|,
 literal|"mac_vnode_check_chdir"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_chdir
 argument_list|,
@@ -1530,7 +1530,7 @@ argument_list|,
 literal|"mac_vnode_check_chroot"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_chroot
 argument_list|,
@@ -1613,7 +1613,7 @@ argument_list|,
 literal|"mac_vnode_check_create"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_create
 argument_list|,
@@ -1695,7 +1695,7 @@ argument_list|,
 literal|"mac_vnode_check_deleteacl"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_deleteacl
 argument_list|,
@@ -1780,7 +1780,7 @@ argument_list|,
 literal|"mac_vnode_check_deleteextattr"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_deleteextattr
 argument_list|,
@@ -1864,7 +1864,7 @@ argument_list|,
 literal|"mac_vnode_check_exec"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_exec
 argument_list|,
@@ -1946,7 +1946,7 @@ argument_list|,
 literal|"mac_vnode_check_getacl"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_getacl
 argument_list|,
@@ -2031,7 +2031,7 @@ argument_list|,
 literal|"mac_vnode_check_getextattr"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_getextattr
 argument_list|,
@@ -2129,7 +2129,7 @@ argument_list|,
 literal|"mac_vnode_check_link"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_link
 argument_list|,
@@ -2215,7 +2215,7 @@ argument_list|,
 literal|"mac_vnode_check_listextattr"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_listextattr
 argument_list|,
@@ -2295,7 +2295,7 @@ argument_list|,
 literal|"mac_vnode_check_lookup"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_lookup
 argument_list|,
@@ -2378,7 +2378,7 @@ argument_list|,
 literal|"mac_vnode_check_mmap"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_mmap
 argument_list|,
@@ -2450,7 +2450,7 @@ argument_list|,
 literal|"mac_vnode_check_mmap_downgrade"
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM
 argument_list|(
 name|vnode_check_mmap_downgrade
 argument_list|,
@@ -2516,7 +2516,7 @@ argument_list|,
 literal|"mac_vnode_check_mprotect"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_mprotect
 argument_list|,
@@ -2594,7 +2594,7 @@ argument_list|,
 literal|"mac_vnode_check_open"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_open
 argument_list|,
@@ -2661,7 +2661,7 @@ argument_list|,
 literal|"mac_vnode_check_poll"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_poll
 argument_list|,
@@ -2741,7 +2741,7 @@ argument_list|,
 literal|"mac_vnode_check_read"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_read
 argument_list|,
@@ -2814,7 +2814,7 @@ argument_list|,
 literal|"mac_vnode_check_readdir"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_readdir
 argument_list|,
@@ -2883,7 +2883,7 @@ argument_list|,
 literal|"mac_vnode_check_readlink"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_readlink
 argument_list|,
@@ -2960,7 +2960,7 @@ argument_list|,
 literal|"mac_vnode_check_relabel"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_relabel
 argument_list|,
@@ -3054,7 +3054,7 @@ argument_list|,
 literal|"mac_vnode_check_rename_from"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_rename_from
 argument_list|,
@@ -3159,7 +3159,7 @@ argument_list|,
 literal|"mac_vnode_check_rename_to"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_rename_to
 argument_list|,
@@ -3248,7 +3248,7 @@ argument_list|,
 literal|"mac_vnode_check_revoke"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_revoke
 argument_list|,
@@ -3329,7 +3329,7 @@ argument_list|,
 literal|"mac_vnode_check_setacl"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_setacl
 argument_list|,
@@ -3418,7 +3418,7 @@ argument_list|,
 literal|"mac_vnode_check_setextattr"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_setextattr
 argument_list|,
@@ -3500,7 +3500,7 @@ argument_list|,
 literal|"mac_vnode_check_setflags"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_setflags
 argument_list|,
@@ -3578,7 +3578,7 @@ argument_list|,
 literal|"mac_vnode_check_setmode"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_setmode
 argument_list|,
@@ -3661,7 +3661,7 @@ argument_list|,
 literal|"mac_vnode_check_setowner"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_setowner
 argument_list|,
@@ -3750,7 +3750,7 @@ argument_list|,
 literal|"mac_vnode_check_setutimes"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_setutimes
 argument_list|,
@@ -3836,7 +3836,7 @@ argument_list|,
 literal|"mac_vnode_check_stat"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_stat
 argument_list|,
@@ -3930,7 +3930,7 @@ argument_list|,
 literal|"mac_vnode_check_unlink"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_unlink
 argument_list|,
@@ -4018,7 +4018,7 @@ argument_list|,
 literal|"mac_vnode_check_write"
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 argument_list|(
 name|vnode_check_write
 argument_list|,
@@ -4074,7 +4074,7 @@ modifier|*
 name|newlabel
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM
 argument_list|(
 name|vnode_relabel
 argument_list|,
@@ -4107,7 +4107,7 @@ modifier|*
 name|mp
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM
 argument_list|(
 name|mount_create
 argument_list|,
@@ -4153,7 +4153,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK_NOSLEEP
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|mount_check_stat
 argument_list|,
@@ -4210,7 +4210,7 @@ modifier|*
 name|de
 parameter_list|)
 block|{
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|devfs_create_device
 argument_list|,
@@ -4255,7 +4255,7 @@ modifier|*
 name|de
 parameter_list|)
 block|{
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|devfs_create_symlink
 argument_list|,
@@ -4301,7 +4301,7 @@ modifier|*
 name|de
 parameter_list|)
 block|{
-name|MAC_PERFORM_NOSLEEP
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|devfs_create_directory
 argument_list|,

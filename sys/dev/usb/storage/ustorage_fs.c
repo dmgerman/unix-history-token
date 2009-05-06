@@ -670,13 +670,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|device_shutdown_t
-name|ustorage_fs_shutdown
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|usb_handle_request_t
 name|ustorage_fs_handle_request
 decl_stmt|;
@@ -992,13 +985,6 @@ argument_list|(
 name|device_resume
 argument_list|,
 name|ustorage_fs_resume
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|device_shutdown
-argument_list|,
-name|ustorage_fs_shutdown
 argument_list|)
 block|,
 block|{
@@ -1875,24 +1861,6 @@ argument_list|,
 literal|"resuming\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* success */
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|ustorage_fs_shutdown
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-block|{
 return|return
 operator|(
 literal|0

@@ -76,10 +76,6 @@ literal|6
 index|]
 decl_stmt|;
 name|int
-name|port_rid
-decl_stmt|;
-comment|/* resource id for port range */
-name|int
 name|port_used
 decl_stmt|;
 comment|/* nonzero if ports used */
@@ -89,16 +85,18 @@ modifier|*
 name|port_res
 decl_stmt|;
 comment|/* resource for port range */
+name|struct
+name|resource
+modifier|*
+name|port_res2
+decl_stmt|;
+comment|/* resource for port range */
 name|bus_space_tag_t
 name|port_bst
 decl_stmt|;
 name|bus_space_handle_t
 name|port_bsh
 decl_stmt|;
-name|int
-name|mem_rid
-decl_stmt|;
-comment|/* resource id for memory range */
 name|int
 name|mem_used
 decl_stmt|;
@@ -115,10 +113,6 @@ decl_stmt|;
 name|bus_space_handle_t
 name|mem_bsh
 decl_stmt|;
-name|int
-name|irq_rid
-decl_stmt|;
-comment|/* resource id for irq */
 name|struct
 name|resource
 modifier|*
@@ -130,10 +124,6 @@ modifier|*
 name|irq_handle
 decl_stmt|;
 comment|/* handle for irq handler */
-name|int
-name|modem_rid
-decl_stmt|;
-comment|/* resource ID for modem part of device */
 name|int
 function_decl|(
 modifier|*

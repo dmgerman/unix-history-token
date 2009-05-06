@@ -55,27 +55,6 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_OPENSSL_MD5_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<openssl/md5.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* HAVE_OPENSSL_MD5_H */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|HAVE_MD5_H
 end_ifdef
 
@@ -85,10 +64,22 @@ directive|include
 file|<md5.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_OPENSSL_MD5_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<openssl/md5.h>
+end_include
 
 begin_endif
 endif|#
@@ -97,6 +88,15 @@ end_endif
 
 begin_comment
 comment|/* HAVE_OPENSSL_MD5_H */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_MD5_H */
 end_comment
 
 begin_ifdef
@@ -3634,7 +3634,7 @@ name|compute_sum
 operator||=
 name|F_MD5
 expr_stmt|;
-name|MD5_Init
+name|MD5Init
 argument_list|(
 operator|&
 name|mtree
@@ -4755,7 +4755,7 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-name|MD5_Final
+name|MD5Final
 argument_list|(
 name|buf
 argument_list|,
@@ -5303,7 +5303,7 @@ name|compute_sum
 operator|&
 name|F_MD5
 condition|)
-name|MD5_Update
+name|MD5Update
 argument_list|(
 operator|&
 name|mtree
@@ -5645,6 +5645,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|mtree
 operator|->
 name|dironly
@@ -5659,6 +5660,12 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_OK
+operator|)
+return|;
+block|}
 break|break;
 case|case
 literal|'f'
@@ -5728,6 +5735,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|mtree
 operator|->
 name|indent
@@ -5742,6 +5750,12 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_OK
+operator|)
+return|;
+block|}
 break|break;
 case|case
 literal|'l'
@@ -6087,6 +6101,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|mtree
 operator|->
 name|set
@@ -6103,6 +6118,12 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_OK
+operator|)
+return|;
+block|}
 break|break;
 block|}
 if|if

@@ -1346,6 +1346,34 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|long
+name|notbufdflashes
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_LONG
+argument_list|(
+name|_vfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|notbufdflashes
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|notbufdflashes
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of dirty buffer flushes done by the bufdaemon helpers"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Wakeup point for bufdaemon, as well as indicator of whether it is already  * active.  Set to 1 when the bufdaemon is already "on" the queue, 0 when it  * is idling.  */
 end_comment
@@ -8594,6 +8622,7 @@ parameter_list|)
 block|{
 name|struct
 name|buf
+modifier|*
 name|sentinel
 decl_stmt|;
 name|struct
@@ -8660,7 +8689,24 @@ operator|=
 name|NULL
 expr_stmt|;
 name|sentinel
-operator|.
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|buf
+argument_list|)
+argument_list|,
+name|M_TEMP
+argument_list|,
+name|M_WAITOK
+operator||
+name|M_ZERO
+argument_list|)
+expr_stmt|;
+name|sentinel
+operator|->
 name|b_qindex
 operator|=
 name|QUEUE_SENTINEL
@@ -8679,7 +8725,6 @@ index|[
 name|queue
 index|]
 argument_list|,
-operator|&
 name|sentinel
 argument_list|,
 name|b_freelist
@@ -8696,7 +8741,6 @@ name|bp
 operator|=
 name|TAILQ_NEXT
 argument_list|(
-operator|&
 name|sentinel
 argument_list|,
 name|b_freelist
@@ -8717,7 +8761,6 @@ index|[
 name|queue
 index|]
 argument_list|,
-operator|&
 name|sentinel
 argument_list|,
 name|b_freelist
@@ -8733,7 +8776,6 @@ index|]
 argument_list|,
 name|bp
 argument_list|,
-operator|&
 name|sentinel
 argument_list|,
 name|b_freelist
@@ -9030,6 +9072,9 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+name|notbufdflashes
+operator|++
+expr_stmt|;
 block|}
 name|vn_finished_write
 argument_list|(
@@ -9098,7 +9143,6 @@ index|[
 name|queue
 index|]
 argument_list|,
-operator|&
 name|sentinel
 argument_list|,
 name|b_freelist
@@ -9108,6 +9152,13 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|bqlock
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|sentinel
+argument_list|,
+name|M_TEMP
 argument_list|)
 expr_stmt|;
 return|return

@@ -1131,20 +1131,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-elseif|else
-if|if
-condition|(
-name|isport
-condition|)
-name|printf
-argument_list|(
-literal|"\tlagg: laggdev %s\n"
-argument_list|,
-name|rp
-operator|.
-name|rp_ifname
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

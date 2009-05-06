@@ -413,29 +413,23 @@ name|ieee80211_rate_table
 struct_decl|;
 end_struct_decl
 
-begin_struct
-struct|struct
-name|ieee80211_stageq
-block|{
-name|struct
-name|mbuf
-modifier|*
-name|head
-decl_stmt|;
-comment|/* frames linked w/ m_nextpkt */
-name|struct
-name|mbuf
-modifier|*
-name|tail
-decl_stmt|;
-comment|/* last frame in queue */
-name|int
-name|depth
-decl_stmt|;
-comment|/* # items on head */
-block|}
-struct|;
-end_struct
+begin_struct_decl
+struct_decl|struct
+name|ieee80211_tx_ampdu
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ieee80211_rx_ampdu
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ieee80211_superg
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct
@@ -484,10 +478,36 @@ name|ic_inact
 decl_stmt|;
 comment|/* inactivity processing */
 name|struct
+name|taskqueue
+modifier|*
+name|ic_tq
+decl_stmt|;
+comment|/* deferred state thread */
+name|struct
 name|task
 name|ic_parent_task
 decl_stmt|;
 comment|/* deferred parent processing */
+name|struct
+name|task
+name|ic_promisc_task
+decl_stmt|;
+comment|/* deferred promisc update */
+name|struct
+name|task
+name|ic_mcast_task
+decl_stmt|;
+comment|/* deferred mcast update */
+name|struct
+name|task
+name|ic_chan_task
+decl_stmt|;
+comment|/* deferred channel change */
+name|struct
+name|task
+name|ic_bmiss_task
+decl_stmt|;
+comment|/* deferred beacon miss hndlr */
 name|uint32_t
 name|ic_flags
 decl_stmt|;
@@ -718,18 +738,12 @@ name|int
 name|ic_lastnonht
 decl_stmt|;
 comment|/* last time non-HT sta noted */
-comment|/* fast-frames staging q */
+comment|/* optional state for Atheros SuperG protocol extensions */
 name|struct
-name|ieee80211_stageq
-name|ic_ff_stageq
-index|[
-name|WME_NUM_AC
-index|]
+name|ieee80211_superg
+modifier|*
+name|ic_superg
 decl_stmt|;
-name|int
-name|ic_stageqdepth
-decl_stmt|;
-comment|/* cumulative depth */
 comment|/* virtual ap create/delete */
 name|struct
 name|ieee80211vap
@@ -1254,6 +1268,46 @@ name|int
 name|status
 parameter_list|)
 function_decl|;
+comment|/* start/stop doing A-MPDU rx processing for a station */
+name|int
+function_decl|(
+modifier|*
+name|ic_ampdu_rx_start
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_rx_ampdu
+modifier|*
+parameter_list|,
+name|int
+name|baparamset
+parameter_list|,
+name|int
+name|batimeout
+parameter_list|,
+name|int
+name|baseqctl
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|ic_ampdu_rx_stop
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_rx_ampdu
+modifier|*
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -1361,22 +1415,25 @@ name|ieee80211_state
 name|iv_state
 decl_stmt|;
 comment|/* state machine state */
-name|void
-function_decl|(
-modifier|*
-name|iv_newstate_cb
-function_decl|)
-parameter_list|(
-name|struct
-name|ieee80211vap
-modifier|*
-parameter_list|,
 name|enum
 name|ieee80211_state
-parameter_list|,
+name|iv_nstate
+decl_stmt|;
+comment|/* pending state */
 name|int
-parameter_list|)
-function_decl|;
+name|iv_nstate_arg
+decl_stmt|;
+comment|/* pending state arg */
+name|struct
+name|task
+name|iv_nstate_task
+decl_stmt|;
+comment|/* deferred state processing */
+name|struct
+name|task
+name|iv_swbmiss_task
+decl_stmt|;
+comment|/* deferred iv_bmiss call */
 name|struct
 name|callout
 name|iv_mgtsend
@@ -1829,6 +1886,23 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
+name|iv_recv_ctl
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
 name|iv_deliver_data
 function_decl|)
 parameter_list|(
@@ -1956,7 +2030,7 @@ name|sockaddr
 modifier|*
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2498,6 +2572,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_FEXT_4ADDR
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* CONF: apply 4-addr encap */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_FEXT_NONERP_PR
 value|0x00000200
 end_define
@@ -2537,6 +2622,28 @@ end_define
 
 begin_comment
 comment|/* CONF: 11d enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FEXT_STATEWAIT
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* STATUS: awaiting state chg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FEXT_REINIT
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* STATUS: INIT state first */
 end_comment
 
 begin_comment
@@ -2691,7 +2798,7 @@ define|#
 directive|define
 name|IEEE80211_FEXT_BITS
 define|\
-value|"\20\1NONHT_PR\2INACT\3SCANWAIT\4BGSCAN\5WPS\6TSN\7SCANREQ\10RESUME" \ 	"\12NONEPR_PR\13SWBMISS\14DFS\15DOTD\22WDSLEGACY\23PROBECHAN\24HT" \ 	"\25AMDPU_TX\26AMPDU_TX\27AMSDU_TX\30AMSDU_RX\31USEHT40\32PUREN" \ 	"\33SHORTGI20\34SHORTGI40\35HTCOMPAT\36RIFS"
+value|"\20\1NONHT_PR\2INACT\3SCANWAIT\4BGSCAN\5WPS\6TSN\7SCANREQ\10RESUME" \ 	"\0114ADDR\12NONEPR_PR\13SWBMISS\14DFS\15DOTD\16STATEWAIT\17REINIT" \ 	"\22WDSLEGACY\23PROBECHAN\24HT\25AMDPU_TX\26AMPDU_TX\27AMSDU_TX" \ 	"\30AMSDU_RX\31USEHT40\32PUREN\33SHORTGI20\34SHORTGI40\35HTCOMPAT" \ 	"\36RIFS"
 end_define
 
 begin_define
@@ -3409,6 +3516,72 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * Enqueue a task on the state thread.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ieee80211_runtask
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+parameter_list|,
+name|struct
+name|task
+modifier|*
+name|task
+parameter_list|)
+block|{
+name|taskqueue_enqueue
+argument_list|(
+name|ic
+operator|->
+name|ic_tq
+argument_list|,
+name|task
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Wait for a queued task to complete.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ieee80211_draintask
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+parameter_list|,
+name|struct
+name|task
+modifier|*
+name|task
+parameter_list|)
+block|{
+name|taskqueue_drain
+argument_list|(
+name|ic
+operator|->
+name|ic_tq
+argument_list|,
+name|task
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*   * Key update synchronization methods.  XXX should not be visible.  */

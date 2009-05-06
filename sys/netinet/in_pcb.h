@@ -370,6 +370,10 @@ name|int
 name|inp_flags
 decl_stmt|;
 comment|/* (i) generic IP/datagram flags */
+name|int
+name|inp_flags2
+decl_stmt|;
+comment|/* (i) generic IP/datagram flags #2*/
 name|u_char
 name|inp_vflag
 decl_stmt|;
@@ -501,6 +505,18 @@ name|inp_gencnt
 decl_stmt|;
 comment|/* (c) generation count */
 name|struct
+name|llentry
+modifier|*
+name|inp_lle
+decl_stmt|;
+comment|/* cached L2 information */
+name|struct
+name|rtentry
+modifier|*
+name|inp_rt
+decl_stmt|;
+comment|/* cached L3 information */
+name|struct
 name|rwlock
 name|inp_lock
 decl_stmt|;
@@ -622,6 +638,13 @@ define|#
 directive|define
 name|in6p_cksum
 value|inp_depend6.inp6_cksum
+end_define
+
+begin_define
+define|#
+directive|define
+name|inp_vnet
+value|inp_pcbinfo->ipi_vnet
 end_define
 
 begin_comment
@@ -774,7 +797,13 @@ name|struct
 name|rwlock
 name|ipi_lock
 decl_stmt|;
-comment|/* 	 * vimage 1 	 * general use 1 	 */
+comment|/* 	 * Pointer to network stack instance 	 */
+name|struct
+name|vnet
+modifier|*
+name|ipi_vnet
+decl_stmt|;
+comment|/* 	 * general use 2 	 */
 name|void
 modifier|*
 name|ipi_pspare
@@ -869,6 +898,36 @@ parameter_list|(
 name|inp
 parameter_list|)
 value|rw_wunlock(&(inp)->inp_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_TRY_UPGRADE
+parameter_list|(
+name|inp
+parameter_list|)
+value|rw_try_upgrade(&(inp)->inp_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_DOWNGRADE
+parameter_list|(
+name|inp
+parameter_list|)
+value|rw_downgrade(&(inp)->inp_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_WLOCKED
+parameter_list|(
+name|inp
+parameter_list|)
+value|rw_wowned(&(inp)->inp_lock)
 end_define
 
 begin_define
@@ -1305,7 +1364,7 @@ value|(ntohs((lport))& (mask))
 end_define
 
 begin_comment
-comment|/*  * Flags for inp_vflags -- historically version flags only, but now quite a  * bit more due to an overflow of inp_flag, leading to some locking ambiguity  * as some bits are stable from initial allocation, and others may change.  */
+comment|/*  * Flags for inp_vflags -- historically version flags only  */
 end_comment
 
 begin_define
@@ -1334,7 +1393,7 @@ comment|/* opened under IPv6 protocol */
 end_comment
 
 begin_comment
-comment|/*  * Flags for inp_flag.  */
+comment|/*  * Flags for inp_flags.  */
 end_comment
 
 begin_define
@@ -1688,6 +1747,32 @@ directive|define
 name|INP_CONTROLOPTS
 value|(INP_RECVOPTS|INP_RECVRETOPTS|INP_RECVDSTADDR|\ 				 INP_RECVIF|INP_RECVTTL|\ 				 IN6P_PKTINFO|IN6P_HOPLIMIT|IN6P_HOPOPTS|\ 				 IN6P_DSTOPTS|IN6P_RTHDR|IN6P_RTHDRDSTOPTS|\ 				 IN6P_TCLASS|IN6P_AUTOFLOWLABEL|IN6P_RFC2292|\ 				 IN6P_MTU)
 end_define
+
+begin_comment
+comment|/*  * Flags for inp_flags2.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_LLE_VALID
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* cached lle is valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_RT_VALID
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* cached rtentry is valid */
+end_comment
 
 begin_define
 define|#

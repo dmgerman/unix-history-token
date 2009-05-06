@@ -227,7 +227,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Descrition of NFSv3 and (optional) NFSv2 probes for a procedure.  */
+comment|/*  * Description of NFSv3 and (optional) NFSv2 probes for a procedure.  */
 end_comment
 
 begin_struct

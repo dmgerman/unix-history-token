@@ -2442,6 +2442,26 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+case|case
+name|AE_IFSOCK
+case|:
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+name|ARCHIVE_ERRNO_FILE_FORMAT
+argument_list|,
+literal|"tar format cannot archive socket"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_WARN
+operator|)
+return|;
 default|default:
 name|archive_set_error
 argument_list|(

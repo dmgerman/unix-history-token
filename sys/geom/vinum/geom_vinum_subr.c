@@ -426,13 +426,6 @@ operator|&=
 operator|~
 name|GV_PLEX_ADDED
 expr_stmt|;
-name|p
-operator|->
-name|flags
-operator|&=
-operator|~
-name|GV_PLEX_NEWBORN
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1577,8 +1570,8 @@ operator|&&
 name|p
 operator|->
 name|state
-operator|>=
-name|GV_PLEX_DEGRADED
+operator|==
+name|GV_PLEX_UP
 condition|)
 block|{
 name|s

@@ -200,6 +200,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<security/audit/audit.h>
 end_include
 
@@ -2210,6 +2216,23 @@ name|td_flags
 operator|=
 name|TDF_INMEM
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VIMAGE
+name|td2
+operator|->
+name|td_vnet
+operator|=
+name|NULL
+expr_stmt|;
+name|td2
+operator|->
+name|td_vnet_lpush
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Duplicate sub-structures as needed. 	 * Increase reference counts on shared objects. 	 */
 name|p2
 operator|->

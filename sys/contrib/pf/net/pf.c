@@ -17926,7 +17926,7 @@ argument|if (ip->ip_v == IPVERSION&& 			    (ip->ip_hl<<
 literal|2
 argument|) == sizeof(*ip)) { 				ip->ip_sum = in_cksum_hdr(ip); 			} else { 				ip->ip_sum = in_cksum(m0, ip->ip_hl<<
 literal|2
-argument|); 			} 		} 		PF_UNLOCK(); 		error = (*ifp->if_output)(ifp, m0, sintosa(dst), ro->ro_rt); 		PF_LOCK(); 		goto done; 	}
+argument|); 			} 		} 		PF_UNLOCK(); 		error = (*ifp->if_output)(ifp, m0, sintosa(dst), ro); 		PF_LOCK(); 		goto done; 	}
 else|#
 directive|else
 comment|/* Copied from ip_output. */

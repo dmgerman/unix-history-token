@@ -104,10 +104,6 @@ name|MAXQUOTAS
 index|]
 decl_stmt|;
 comment|/* Dquot structures. */
-name|u_quad_t
-name|i_modrev
-decl_stmt|;
-comment|/* Revision level for NFS lease. */
 comment|/* 	 * Side effects; used during directory lookup. 	 */
 name|int32_t
 name|i_count

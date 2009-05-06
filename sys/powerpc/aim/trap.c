@@ -897,15 +897,14 @@ break|break;
 case|case
 name|EXC_PGM
 case|:
-comment|/* XXX temporarily */
-comment|/* XXX: Magic Number? */
+comment|/* Identify the trap reason */
 if|if
 condition|(
 name|frame
 operator|->
 name|srr1
 operator|&
-literal|0x0002000
+name|EXC_PGM_TRAP
 condition|)
 name|sig
 operator|=

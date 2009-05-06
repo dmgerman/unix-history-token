@@ -555,6 +555,10 @@ name|ndis_type
 decl_stmt|;
 name|struct
 name|callout
+name|ndis_scan_callout
+decl_stmt|;
+name|struct
+name|callout
 name|ndis_stat_callout
 decl_stmt|;
 name|int
@@ -681,24 +685,6 @@ name|ndis_rxqueue
 decl_stmt|;
 name|kspin_lock
 name|ndis_rxlock
-decl_stmt|;
-name|struct
-name|taskqueue
-modifier|*
-name|ndis_tq
-decl_stmt|;
-comment|/* private task queue */
-name|struct
-name|task
-name|ndis_scantask
-decl_stmt|;
-name|struct
-name|task
-name|ndis_authtask
-decl_stmt|;
-name|struct
-name|task
-name|ndis_assoctask
 decl_stmt|;
 name|int
 function_decl|(

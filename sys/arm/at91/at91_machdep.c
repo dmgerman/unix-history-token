@@ -571,6 +571,21 @@ name|PTE_NOCACHE
 block|, 	}
 block|,
 block|{
+comment|/* CompactFlash controller. */
+name|AT91RM92_CF_BASE
+block|,
+name|AT91RM92_CF_PA_BASE
+block|,
+name|AT91RM92_CF_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, 	}
+block|,
+block|{
 literal|0
 block|,
 literal|0

@@ -393,12 +393,34 @@ name|struct
 name|mtx
 name|mtx
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IFNET_BUF_RING
+name|struct
+name|buf_ring
+modifier|*
+name|br
+decl_stmt|;
+endif|#
+directive|endif
 specifier|volatile
 name|mcp_kreq_ether_send_t
 modifier|*
 name|lanai
 decl_stmt|;
 comment|/* lanai ptr for sendq	*/
+specifier|volatile
+name|uint32_t
+modifier|*
+name|send_go
+decl_stmt|;
+comment|/* doorbell for sendq */
+specifier|volatile
+name|uint32_t
+modifier|*
+name|send_stop
+decl_stmt|;
+comment|/* doorbell for sendq */
 name|mcp_kreq_ether_send_t
 modifier|*
 name|req_list
@@ -440,6 +462,16 @@ name|int
 name|max_desc
 decl_stmt|;
 comment|/* max descriptors per xmit */
+name|int
+name|queue_active
+decl_stmt|;
+comment|/* fw currently polling this queue*/
+name|int
+name|activate
+decl_stmt|;
+name|int
+name|deactivate
+decl_stmt|;
 name|int
 name|stall
 decl_stmt|;
@@ -607,6 +639,21 @@ name|irq_claim
 decl_stmt|;
 name|u_long
 name|ipackets
+decl_stmt|;
+name|u_long
+name|opackets
+decl_stmt|;
+name|u_long
+name|obytes
+decl_stmt|;
+name|u_long
+name|omcasts
+decl_stmt|;
+name|u_long
+name|oerrors
+decl_stmt|;
+name|int
+name|if_drv_flags
 decl_stmt|;
 name|struct
 name|lro_head

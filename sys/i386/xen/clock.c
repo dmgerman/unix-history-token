@@ -419,12 +419,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|statclock_disable
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|wall_cmos_clock
 decl_stmt|;
 end_decl_stmt

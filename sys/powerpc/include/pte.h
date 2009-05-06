@@ -1065,17 +1065,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PTE_FAKE
-value|0x08000000
-end_define
-
-begin_comment
-comment|/* Ficticious */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PTE_REFERENCED
 value|0x04000000
 end_define
@@ -1126,16 +1115,6 @@ parameter_list|(
 name|pte
 parameter_list|)
 value|((pte)->flags& PTE_MANAGED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_ISFAKE
-parameter_list|(
-name|pte
-parameter_list|)
-value|((pte)->flags& PTE_FAKE)
 end_define
 
 begin_define

@@ -434,7 +434,7 @@ name|sockaddr
 modifier|*
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1290,9 +1290,9 @@ modifier|*
 name|dst
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
-name|rt
+name|ro
 parameter_list|)
 block|{
 name|m_freem

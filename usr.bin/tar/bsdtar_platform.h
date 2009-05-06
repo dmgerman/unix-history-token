@@ -701,11 +701,33 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"bsdtar_cygwin.h"
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|_WIN32
-end_ifdef
+argument_list|)
+end_elif
+
+begin_comment
+comment|/*&& !__CYGWIN__ */
+end_comment
 
 begin_include
 include|#

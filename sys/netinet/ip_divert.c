@@ -396,6 +396,11 @@ modifier|*
 name|tag
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|uma_zone_set_max
 argument_list|(
 name|V_divcbinfo
@@ -509,6 +514,17 @@ operator|=
 operator|&
 name|V_divcb
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VIMAGE
+name|V_divcbinfo
+operator|.
+name|ipi_vnet
+operator|=
+name|curvnet
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * XXX We don't use the hash list for divert IP, but it's easier 	 * to allocate a one entry hash list than it is to check all 	 * over the place for hashbase == NULL. 	 */
 name|V_divcbinfo
 operator|.
@@ -900,6 +916,11 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
 comment|/* Sanity check */
 name|M_ASSERTPKTHDR
 argument_list|(
@@ -907,11 +928,24 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* Find IP address for receive interface */
+name|ifp
+operator|=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+expr_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
 argument_list|,
-argument|&m->m_pkthdr.rcvif->if_addrhead
+argument|&ifp->if_addrhead
 argument_list|,
 argument|ifa_link
 argument_list|)
@@ -946,6 +980,11 @@ name|sin_addr
 expr_stmt|;
 break|break;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * Record the incoming interface name whenever we have one. 	 */
 if|if
@@ -3060,6 +3099,12 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+comment|/* XXX move to iattach - revisit!!! */
 name|int
 name|err
 init|=

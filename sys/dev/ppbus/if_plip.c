@@ -124,6 +124,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -549,7 +555,7 @@ name|sockaddr
 modifier|*
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3035,9 +3041,9 @@ modifier|*
 name|dst
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
-name|rt
+name|ro
 parameter_list|)
 block|{
 name|struct

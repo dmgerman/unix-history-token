@@ -3168,8 +3168,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|MV_DEV_MV78100
+name|MV_DEV_MV78100_Z0
 value|0x6381
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_DEV_MV78100
+value|0x7810
 end_define
 
 begin_comment

@@ -876,10 +876,6 @@ case|:
 case|case
 name|FSL_E500v2
 case|:
-name|hid0
-operator||=
-name|HID0_EMCP
-expr_stmt|;
 break|break;
 block|}
 name|mtspr

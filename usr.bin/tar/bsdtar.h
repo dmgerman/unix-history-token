@@ -122,9 +122,9 @@ comment|/* --fast-read */
 specifier|const
 name|char
 modifier|*
-name|option_format_options
+name|option_options
 decl_stmt|;
-comment|/* --format-options */
+comment|/* --options */
 name|char
 name|option_honor_nodump
 decl_stmt|;
@@ -302,13 +302,15 @@ name|OPTION_EXCLUDE
 block|,
 name|OPTION_FORMAT
 block|,
-name|OPTION_FORMAT_OPTIONS
+name|OPTION_OPTIONS
 block|,
 name|OPTION_HELP
 block|,
 name|OPTION_INCLUDE
 block|,
 name|OPTION_KEEP_NEWER_FILES
+block|,
+name|OPTION_LZMA
 block|,
 name|OPTION_NEWER_CTIME
 block|,
@@ -331,6 +333,8 @@ block|,
 name|OPTION_ONE_FILE_SYSTEM
 block|,
 name|OPTION_POSIX
+block|,
+name|OPTION_SAME_OWNER
 block|,
 name|OPTION_STRIP_COMPONENTS
 block|,

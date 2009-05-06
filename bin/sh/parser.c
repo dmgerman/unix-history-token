@@ -1133,6 +1133,10 @@ name|negate
 operator|=
 literal|0
 expr_stmt|;
+name|checkkwd
+operator|=
+literal|2
+expr_stmt|;
 name|TRACE
 argument_list|(
 operator|(

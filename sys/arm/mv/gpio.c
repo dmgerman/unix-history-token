@@ -549,7 +549,7 @@ name|mv_gpio_softc
 operator|=
 name|sc
 expr_stmt|;
-comment|/* Get board id and revision */
+comment|/* Get chip id and revision */
 name|soc_id
 argument_list|(
 operator|&
@@ -572,6 +572,10 @@ operator|||
 name|dev_id
 operator|==
 name|MV_DEV_MV78100
+operator|||
+name|dev_id
+operator|==
+name|MV_DEV_MV78100_Z0
 condition|)
 block|{
 name|sc
@@ -626,7 +630,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"unknown board id=0x%x\n"
+literal|"unknown chip id=0x%x\n"
 argument_list|,
 name|dev_id
 argument_list|)

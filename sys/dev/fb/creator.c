@@ -186,16 +186,19 @@ index|[
 name|FFB_NREG
 index|]
 decl_stmt|;
-name|int
+name|u_long
+name|sc_reg_size
+decl_stmt|;
+name|u_int
 name|sc_height
 decl_stmt|;
-name|int
+name|u_int
 name|sc_width
 decl_stmt|;
-name|int
+name|u_int
 name|sc_xmargin
 decl_stmt|;
-name|int
+name|u_int
 name|sc_ymargin
 decl_stmt|;
 specifier|const
@@ -221,7 +224,7 @@ decl_stmt|;
 name|int
 name|sc_pmask_cache
 decl_stmt|;
-name|int
+name|u_int
 name|sc_flags
 decl_stmt|;
 define|#
@@ -298,6 +301,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|uint32_t
+specifier|const
 name|creator_cmap
 index|[]
 init|=
@@ -487,6 +491,7 @@ name|vm_size_t
 name|size
 decl_stmt|;
 block|}
+decl|const
 name|creator_fb_map
 index|[]
 init|=
@@ -1314,12 +1319,6 @@ name|bitblt
 operator|=
 name|creator_bitblt
 block|,
-name|NULL
-block|,
-comment|/* XXX brain damage */
-name|NULL
-block|,
-comment|/* XXX brain damage */
 operator|.
 name|diag
 operator|=
@@ -1410,6 +1409,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|u_char
+specifier|const
 name|creator_mouse_pointer
 index|[
 literal|64
@@ -2904,7 +2904,7 @@ argument_list|(
 name|adp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Setting V_ADP_MODECHANGE serves as hack so creator_set_mode() 	 * (which will invalidate our caches and restore our settings) is 	 * called when the X server shuts down. Otherwise screen corruption 	 * happens most of the time. 	 */
+comment|/* 	 * Setting V_ADP_MODECHANGE serves as hack so creator_set_mode() 	 * (which will invalidate our caches and restore our settings) is 	 * called when the X server shuts down.  Otherwise screen corruption 	 * happens most of the time. 	 */
 name|adp
 operator|->
 name|va_flags
@@ -4982,7 +4982,7 @@ name|sc
 operator|->
 name|sc_va
 expr_stmt|;
-comment|/* 	 * Allocate resources regardless of whether we are the console 	 * and already obtained the bus tags and handles for the FFB_DAC 	 * and FFB_FBC register banks in creator_configure() or not so 	 * the resources are marked as taken in the respective RMAN. 	 * The supported cards use either 15 (Creator, Elite3D?) or 24 	 * (Creator3D?) register banks. We make sure that we can also 	 * allocate the resources for at least the FFB_DAC and FFB_FBC 	 * banks here. We try but don't actually care whether we can 	 * allocate more than these two resources and just limit the 	 * range accessible via creator_fb_mmap() accordingly. 	 */
+comment|/* 	 * Allocate resources regardless of whether we are the console 	 * and already obtained the bus tags and handles for the FFB_DAC 	 * and FFB_FBC register banks in creator_configure() or not so 	 * the resources are marked as taken in the respective RMAN. 	 * The supported cards use either 15 (Creator, Elite3D?) or 24 	 * (Creator3D?) register banks.  We make sure that we can also 	 * allocate the resources for at least the FFB_DAC and FFB_FBC 	 * banks here.  We try but don't actually care whether we can 	 * allocate more than these two resources and just limit the 	 * range accessible via creator_fb_mmap() accordingly. 	 */
 for|for
 control|(
 name|i
@@ -5091,21 +5091,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * The XFree86/Xorg sunffb(4) expects to be able to access the 	 * memory spanned by the first and the last resource as one chunk 	 * via creator_fb_mmap(), using offsets from the first resource, 	 * even though the backing resources are actually non-continuous. 	 * So make sure that the memory we provide is at least backed by 	 * increasing resources. 	 */
-name|adp
-operator|->
-name|va_mem_base
-operator|=
-name|rman_get_start
-argument_list|(
-name|sc
-operator|->
-name|sc_reg
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
+comment|/* 	 * The XFree86/X.Org sunffb(4) expects to be able to access the 	 * memory spanned by the first and the last resource as one chunk 	 * via creator_fb_mmap(), using offsets from the first resource, 	 * even though the backing resources are actually non-continuous. 	 * So make sure that the memory we provide is at least backed by 	 * increasing resources. 	 */
 for|for
 control|(
 name|i
@@ -5151,9 +5137,9 @@ name|i
 operator|++
 control|)
 empty_stmt|;
-name|adp
+name|sc
 operator|->
-name|va_mem_size
+name|sc_reg_size
 operator|=
 name|rman_get_end
 argument_list|(
@@ -5167,9 +5153,15 @@ literal|1
 index|]
 argument_list|)
 operator|-
-name|adp
+name|rman_get_start
+argument_list|(
+name|sc
 operator|->
-name|va_mem_base
+name|sc_reg
+index|[
+literal|0
+index|]
+argument_list|)
 operator|+
 literal|1
 expr_stmt|;
@@ -5214,7 +5206,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* 		 * During device configuration we don't necessarily probe 		 * the adapter which is the console first so we can't use 		 * the device unit number for the video adapter unit. The 		 * worst case would be that we use the video adapter unit 		 * 0 twice. As it doesn't really matter which unit number 		 * the corresponding video adapter has just use the next 		 * unused one. 		 */
+comment|/* 		 * During device configuration we don't necessarily probe 		 * the adapter which is the console first so we can't use 		 * the device unit number for the video adapter unit.  The 		 * worst case would be that we use the video adapter unit 		 * 0 twice.  As it doesn't really matter which unit number 		 * the corresponding video adapter has just use the next 		 * unused one. 		 */
 for|for
 control|(
 name|i
@@ -5605,7 +5597,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * NB: This is a special implementation based on the /dev/fb 	 * requirements of the XFree86/Xorg sunffb(4). 	 */
+comment|/* 	 * NB: This is a special implementation based on the /dev/fb 	 * requirements of the XFree86/X.Org sunffb(4). 	 */
 name|sc
 operator|=
 name|dev
@@ -5676,9 +5668,7 @@ name|offset
 operator|>=
 name|sc
 operator|->
-name|sc_va
-operator|.
-name|va_mem_size
+name|sc_reg_size
 condition|)
 return|return
 operator|(

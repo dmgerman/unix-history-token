@@ -655,6 +655,10 @@ if|if
 condition|(
 name|isprint
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 operator|&&
@@ -1112,10 +1116,9 @@ if|if
 condition|(
 name|isspace
 argument_list|(
-literal|0xff
-operator|&
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|p

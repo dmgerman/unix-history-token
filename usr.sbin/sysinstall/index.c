@@ -245,6 +245,10 @@ literal|"dns"
 block|,
 literal|"Domain Name Service tools."
 block|,
+literal|"docs"
+block|,
+literal|"Meta-ports for FreeBSD documentation."
+block|,
 literal|"editors"
 block|,
 literal|"Editors."

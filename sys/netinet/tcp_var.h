@@ -21,6 +21,12 @@ directive|include
 file|<netinet/tcp.h>
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|vnet
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Kernel variables for tcp.  */
 end_comment
@@ -283,6 +289,12 @@ comment|/* state of this connection */
 name|u_int
 name|t_flags
 decl_stmt|;
+name|struct
+name|vnet
+modifier|*
+name|t_vnet
+decl_stmt|;
+comment|/* back pointer to parent vnet */
 name|tcp_seq
 name|snd_una
 decl_stmt|;
@@ -539,7 +551,7 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-comment|/* toe usrreqs / toepcb * / congestion algo / vimage / 1 general use */
+comment|/* toe usrreqs / toepcb * / congestion algo / 1 general use */
 name|struct
 name|toe_usrreqs
 modifier|*

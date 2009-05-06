@@ -308,7 +308,7 @@ name|char
 name|igb_driver_version
 index|[]
 init|=
-literal|"version - 1.5.2"
+literal|"version - 1.5.3"
 decl_stmt|;
 end_decl_stmt
 
@@ -14847,6 +14847,11 @@ name|done
 decl_stmt|,
 name|num_avail
 decl_stmt|;
+name|u32
+name|cleaned
+init|=
+literal|0
+decl_stmt|;
 name|struct
 name|igb_tx_buffer
 modifier|*
@@ -15013,8 +15018,11 @@ name|buffer_addr
 operator|=
 literal|0
 expr_stmt|;
-name|num_avail
 operator|++
+name|num_avail
+expr_stmt|;
+operator|++
+name|cleaned
 expr_stmt|;
 if|if
 condition|(
@@ -15179,7 +15187,7 @@ name|next_to_clean
 operator|=
 name|first
 expr_stmt|;
-comment|/*          * If we have enough room, clear IFF_DRV_OACTIVE to tell the stack          * that it is OK to send packets.          * If there are no pending descriptors, clear the timeout. Otherwise,          * if some descriptors have been freed, restart the timeout.          */
+comment|/*          * If we have enough room, clear IFF_DRV_OACTIVE to          * tell the stack that it is OK to send packets.          * If there are no pending descriptors, clear the timeout.          */
 if|if
 condition|(
 name|num_avail
@@ -15194,7 +15202,6 @@ operator|&=
 operator|~
 name|IFF_DRV_OACTIVE
 expr_stmt|;
-comment|/* All clean, turn off the timer */
 if|if
 condition|(
 name|num_avail
@@ -15220,15 +15227,11 @@ return|return
 name|FALSE
 return|;
 block|}
-comment|/* Some cleaned, reset the timer */
-elseif|else
+block|}
+comment|/* Some descriptors cleaned, reset the watchdog */
 if|if
 condition|(
-name|num_avail
-operator|!=
-name|txr
-operator|->
-name|tx_avail
+name|cleaned
 condition|)
 name|txr
 operator|->
@@ -15236,7 +15239,6 @@ name|watchdog_timer
 operator|=
 name|IGB_TX_TIMEOUT
 expr_stmt|;
-block|}
 name|txr
 operator|->
 name|tx_avail
@@ -17970,9 +17972,10 @@ name|NULL
 expr_stmt|;
 name|ptype
 operator|=
-operator|(
+call|(
 name|u16
-operator|)
+call|)
+argument_list|(
 name|cur
 operator|->
 name|wb
@@ -17982,6 +17985,9 @@ operator|.
 name|lo_dword
 operator|.
 name|data
+operator|>>
+literal|4
+argument_list|)
 expr_stmt|;
 comment|/* Sync the buffers */
 name|bus_dmamap_sync
@@ -18405,6 +18411,31 @@ block|}
 block|}
 else|else
 block|{
+comment|/* Adjust for CRC frag */
+if|if
+condition|(
+name|len_adj
+condition|)
+block|{
+name|rxr
+operator|->
+name|lmp
+operator|->
+name|m_len
+operator|-=
+name|len_adj
+expr_stmt|;
+name|rxr
+operator|->
+name|fmp
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|-=
+name|len_adj
+expr_stmt|;
+block|}
 comment|/* Chain mbuf's together */
 name|mh
 operator|->
@@ -18443,31 +18474,6 @@ name|mh
 operator|->
 name|m_len
 expr_stmt|;
-comment|/* Adjust for CRC frag */
-if|if
-condition|(
-name|len_adj
-condition|)
-block|{
-name|rxr
-operator|->
-name|lmp
-operator|->
-name|m_len
-operator|-=
-name|len_adj
-expr_stmt|;
-name|rxr
-operator|->
-name|fmp
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-operator|-=
-name|len_adj
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -19125,7 +19131,7 @@ operator|->
 name|m_pkthdr
 operator|.
 name|csum_flags
-operator|=
+operator||=
 name|type
 expr_stmt|;
 if|if

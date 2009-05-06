@@ -7769,11 +7769,14 @@ name|if_flags
 operator||=
 name|IFF_PROMISC
 expr_stmt|;
+name|ieee80211_runtask
+argument_list|(
+name|ic
+argument_list|,
+operator|&
 name|ic
 operator|->
-name|ic_update_promisc
-argument_list|(
-name|ifp
+name|ic_promisc_task
 argument_list|)
 expr_stmt|;
 name|IEEE80211_UNLOCK

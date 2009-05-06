@@ -580,6 +580,14 @@ define|\
 value|{{{ 0xff, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \ 	    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02 }}}
 end_define
 
+begin_define
+define|#
+directive|define
+name|IN6ADDR_LINKLOCAL_ALLV2ROUTERS_INIT
+define|\
+value|{{{ 0xff, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \ 	    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x16 }}}
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -633,6 +641,15 @@ specifier|const
 name|struct
 name|in6_addr
 name|in6addr_linklocal_allrouters
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|in6_addr
+name|in6addr_linklocal_allv2routers
 decl_stmt|;
 end_decl_stmt
 
@@ -1184,6 +1201,11 @@ name|struct
 name|rtentry
 modifier|*
 name|ro_rt
+decl_stmt|;
+name|struct
+name|llentry
+modifier|*
+name|ro_lle
 decl_stmt|;
 name|struct
 name|sockaddr_in6
@@ -1999,6 +2021,50 @@ comment|/* normally hear sends if a member */
 end_comment
 
 begin_comment
+comment|/*  * The im6o_membership vector for each socket is now dynamically allocated at  * run-time, bounded by USHRT_MAX, and is reallocated when needed, sized  * according to a power-of-two increment.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_MIN_MEMBERSHIPS
+value|31
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPV6_MAX_MEMBERSHIPS
+value|4095
+end_define
+
+begin_comment
+comment|/*  * Default resource limits for IPv6 multicast source filtering.  * These may be modified by sysctl.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_MAX_GROUP_SRC_FILTER
+value|512
+end_define
+
+begin_comment
+comment|/* sources per group */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_MAX_SOCK_SRC_FILTER
+value|128
+end_define
+
+begin_comment
+comment|/* sources per socket/group */
+end_comment
+
+begin_comment
 comment|/*  * Argument structure for IPV6_JOIN_GROUP and IPV6_LEAVE_GROUP.  */
 end_comment
 
@@ -2017,40 +2083,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
-
-begin_comment
-comment|/*  * Argument structure for IPV6_ADD_SOURCE_MEMBERSHIP,  * IPV6_DROP_SOURCE_MEMBERSHIP, IPV6_BLOCK_SOURCE, and IPV6_UNBLOCK_SOURCE.  */
-end_comment
-
-begin_struct
-struct|struct
-name|ipv6_mreq_source
-block|{
-name|struct
-name|in6_addr
-name|ipv6mr_multiaddr
-decl_stmt|;
-name|struct
-name|in6_addr
-name|ipv6mr_sourceaddr
-decl_stmt|;
-name|uint32_t
-name|ipv6mr_interface
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * IPV6_PKTINFO: Packet information(RFC2292 sec 5)  */

@@ -1626,6 +1626,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 		 * Try to find an address on the given outgoing interface 		 * that belongs to the jail. 		 */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -1688,6 +1693,11 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1804,6 +1814,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 		 * Try to find an address on the given outgoing interface 		 * that belongs to the jail. 		 */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -1877,6 +1892,11 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3220,12 +3240,6 @@ name|rt
 operator|->
 name|rt_flags
 expr_stmt|;
-name|rtm
-operator|->
-name|rtm_use
-operator|=
-literal|0
-expr_stmt|;
 name|rt_getmetrics
 argument_list|(
 operator|&
@@ -3526,14 +3540,6 @@ name|rti_ifp
 expr_stmt|;
 block|}
 comment|/* Allow some flags to be toggled on change. */
-if|if
-condition|(
-name|rtm
-operator|->
-name|rtm_fmask
-operator|&
-name|RTF_FMASK
-condition|)
 name|rt
 operator|->
 name|rt_flags
@@ -3544,9 +3550,7 @@ operator|->
 name|rt_flags
 operator|&
 operator|~
-name|rtm
-operator|->
-name|rtm_fmask
+name|RTF_FMASK
 operator|)
 operator||
 operator|(
@@ -3554,9 +3558,7 @@ name|rtm
 operator|->
 name|rtm_flags
 operator|&
-name|rtm
-operator|->
-name|rtm_fmask
+name|RTF_FMASK
 operator|)
 expr_stmt|;
 name|rt_setmetrics
@@ -3918,6 +3920,13 @@ argument_list|,
 name|rmx_mtu
 argument_list|)
 expr_stmt|;
+name|metric
+argument_list|(
+name|RTV_WEIGHT
+argument_list|,
+name|rmx_weight
+argument_list|)
+expr_stmt|;
 comment|/* Userland -> kernel timebase conversion. */
 if|if
 condition|(
@@ -3987,6 +3996,11 @@ expr_stmt|;
 name|metric
 argument_list|(
 name|rmx_mtu
+argument_list|)
+expr_stmt|;
+name|metric
+argument_list|(
+name|rmx_weight
 argument_list|)
 expr_stmt|;
 comment|/* Kernel -> userland timebase conversion. */
@@ -6126,6 +6140,32 @@ name|tag
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|VIMAGE
+if|if
+condition|(
+name|V_loif
+condition|)
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|=
+name|V_loif
+expr_stmt|;
+else|else
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
 name|netisr_queue
 argument_list|(
 name|NETISR_ROUTE
@@ -6418,9 +6458,10 @@ name|rt
 operator|->
 name|rt_flags
 expr_stmt|;
+comment|/* 		 * let's be honest about this being a retarded hack 		 */
 name|rtm
 operator|->
-name|rtm_use
+name|rtm_fmask
 operator|=
 name|rt
 operator|->

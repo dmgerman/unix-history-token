@@ -2548,14 +2548,6 @@ name|usb2_port_status
 name|ps
 decl_stmt|;
 name|struct
-name|usb2_device_descriptor
-name|devd
-decl_stmt|;
-name|struct
-name|usb2_device_qualifier
-name|odevd
-decl_stmt|;
-name|struct
 name|usb2_hub_descriptor
 name|hubd
 decl_stmt|;

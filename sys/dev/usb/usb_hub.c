@@ -545,13 +545,6 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|device_shutdown
-argument_list|,
-name|bus_generic_shutdown
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
 name|bus_child_location_str
 argument_list|,
 name|uhub_child_location_string
@@ -1961,9 +1954,9 @@ if|if
 condition|(
 name|udev
 operator|->
-name|pwr_save
+name|flags
 operator|.
-name|suspended
+name|self_suspended
 condition|)
 block|{
 comment|/* need to wait until the child signals resume */
@@ -4063,14 +4056,9 @@ block|}
 comment|/* 	         * The Host Controller Driver should have 	         * performed checks so that the lookup 	         * below does not result in a NULL pointer 	         * access. 	         */
 name|hub
 operator|=
-name|bus
-operator|->
-name|devices
-index|[
 name|udev
 operator|->
-name|hs_hub_addr
-index|]
+name|parent_hs_hub
 operator|->
 name|hub
 expr_stmt|;
@@ -4421,14 +4409,7 @@ name|hs_hub
 operator|=
 name|udev
 operator|->
-name|bus
-operator|->
-name|devices
-index|[
-name|udev
-operator|->
-name|hs_hub_addr
-index|]
+name|parent_hs_hub
 operator|->
 name|hub
 expr_stmt|;
@@ -5383,9 +5364,9 @@ if|if
 condition|(
 name|udev
 operator|->
-name|pwr_save
+name|flags
 operator|.
-name|suspended
+name|self_suspended
 condition|)
 name|needs_explore
 operator|=
@@ -5747,9 +5728,9 @@ if|if
 condition|(
 name|udev
 operator|->
-name|pwr_save
+name|flags
 operator|.
-name|suspended
+name|self_suspended
 operator|!=
 literal|0
 condition|)
@@ -5784,9 +5765,9 @@ if|if
 condition|(
 name|udev
 operator|->
-name|pwr_save
+name|flags
 operator|.
-name|suspended
+name|self_suspended
 operator|==
 literal|0
 condition|)
@@ -5920,9 +5901,9 @@ if|if
 condition|(
 name|udev
 operator|->
-name|pwr_save
+name|flags
 operator|.
-name|suspended
+name|self_suspended
 operator|==
 literal|0
 condition|)
@@ -6158,9 +6139,9 @@ if|if
 condition|(
 name|udev
 operator|->
-name|pwr_save
+name|flags
 operator|.
-name|suspended
+name|self_suspended
 operator|==
 literal|0
 condition|)
@@ -6303,9 +6284,9 @@ expr_stmt|;
 comment|/* set that this device is now resumed */
 name|udev
 operator|->
-name|pwr_save
+name|flags
 operator|.
-name|suspended
+name|self_suspended
 operator|=
 literal|0
 expr_stmt|;
@@ -6520,11 +6501,6 @@ block|{
 name|struct
 name|usb2_device
 modifier|*
-name|hub
-decl_stmt|;
-name|struct
-name|usb2_device
-modifier|*
 name|child
 decl_stmt|;
 name|int
@@ -6535,9 +6511,6 @@ name|x
 decl_stmt|;
 name|uint8_t
 name|nports
-decl_stmt|;
-name|uint8_t
-name|suspend_parent
 decl_stmt|;
 name|repeat
 label|:
@@ -6554,9 +6527,9 @@ if|if
 condition|(
 name|udev
 operator|->
-name|pwr_save
+name|flags
 operator|.
-name|suspended
+name|self_suspended
 condition|)
 return|return;
 comment|/* we need a parent HUB to do suspend */
@@ -6576,15 +6549,11 @@ argument_list|,
 name|udev
 argument_list|)
 expr_stmt|;
-comment|/* check if all devices on the parent hub are suspended */
-name|hub
-operator|=
-name|udev
-operator|->
-name|parent_hub
-expr_stmt|;
+comment|/* check if the current device is a HUB */
 if|if
 condition|(
+name|udev
+operator|->
 name|hub
 operator|!=
 name|NULL
@@ -6592,16 +6561,13 @@ condition|)
 block|{
 name|nports
 operator|=
-name|hub
+name|udev
 operator|->
 name|hub
 operator|->
 name|nports
 expr_stmt|;
-name|suspend_parent
-operator|=
-literal|1
-expr_stmt|;
+comment|/* check if all devices on the HUB are suspended */
 for|for
 control|(
 name|x
@@ -6620,11 +6586,11 @@ name|child
 operator|=
 name|usb2_bus_port_get_device
 argument_list|(
-name|hub
+name|udev
 operator|->
 name|bus
 argument_list|,
-name|hub
+name|udev
 operator|->
 name|hub
 operator|->
@@ -6644,32 +6610,24 @@ if|if
 condition|(
 name|child
 operator|->
-name|pwr_save
+name|flags
 operator|.
-name|suspended
+name|self_suspended
 condition|)
 continue|continue;
-if|if
-condition|(
-name|child
-operator|==
-name|udev
-condition|)
-continue|continue;
-comment|/* another device on the HUB is not suspended */
-name|suspend_parent
-operator|=
-literal|0
+name|DPRINTFN
+argument_list|(
+literal|1
+argument_list|,
+literal|"Port %u is busy on the HUB!\n"
+argument_list|,
+name|x
+operator|+
+literal|1
+argument_list|)
 expr_stmt|;
-break|break;
+return|return;
 block|}
-block|}
-else|else
-block|{
-name|suspend_parent
-operator|=
-literal|0
-expr_stmt|;
 block|}
 name|sx_xlock
 argument_list|(
@@ -6744,9 +6702,9 @@ expr_stmt|;
 comment|/* 	 * Set that this device is suspended. This variable must be set 	 * before calling USB controller suspend callbacks. 	 */
 name|udev
 operator|->
-name|pwr_save
+name|flags
 operator|.
-name|suspended
+name|self_suspended
 operator|=
 literal|1
 expr_stmt|;
@@ -6840,11 +6798,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|suspend_parent
-condition|)
-block|{
 name|udev
 operator|=
 name|udev
@@ -6854,8 +6807,6 @@ expr_stmt|;
 goto|goto
 name|repeat
 goto|;
-block|}
-return|return;
 block|}
 end_function
 
