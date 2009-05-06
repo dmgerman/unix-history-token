@@ -189,6 +189,24 @@ comment|/* APB region */
 end_comment
 
 begin_comment
+comment|/*  * Size is not really true actual APB window size is   * 0x01000000 but it should handle OHCI memory as well  * because this controller's interrupt is routed through   * APB.   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR71XX_APB_BASE
+value|0x18000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR71XX_APB_SIZE
+value|0x06000000
+end_define
+
+begin_comment
 comment|/* DDR registers */
 end_comment
 
