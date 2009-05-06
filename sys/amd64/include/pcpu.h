@@ -146,24 +146,29 @@ value|\ 	struct user_segment_descriptor	*pc_gs32p;			\
 comment|/* Pointer to the CPU LDT descriptor */
 value|\ 	struct system_segment_descriptor *pc_ldt;			\
 comment|/* Pointer to the CPU TSS descriptor */
-value|\ 	struct system_segment_descriptor *pc_tss
+value|\ 	struct system_segment_descriptor *pc_tss			\ 	PCPU_XEN_FIELDS
 end_define
 
-begin_expr_stmt
-name|PCPU_XEN_FIELDS
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
+end_ifdef
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|lint
+end_ifdef
+
+begin_decl_stmt
 specifier|extern
-expr|struct
+name|struct
 name|pcpu
-operator|*
+modifier|*
 name|pcpup
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
