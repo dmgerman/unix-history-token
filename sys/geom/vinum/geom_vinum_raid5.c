@@ -648,7 +648,7 @@ name|GV_BIO_MALLOC
 condition|)
 name|g_free
 argument_list|(
-name|cbp
+name|bp
 operator|->
 name|bio_data
 argument_list|)
