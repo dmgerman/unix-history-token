@@ -467,6 +467,57 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
+name|apb_mem_rman
+operator|.
+name|rm_type
+operator|=
+name|RMAN_ARRAY
+expr_stmt|;
+name|sc
+operator|->
+name|apb_mem_rman
+operator|.
+name|rm_descr
+operator|=
+literal|"APB memory window"
+expr_stmt|;
+if|if
+condition|(
+name|rman_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|apb_mem_rman
+argument_list|)
+operator|!=
+literal|0
+operator|||
+name|rman_manage_region
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|apb_mem_rman
+argument_list|,
+name|AR71XX_APB_BASE
+argument_list|,
+name|AR71XX_APB_BASE
+operator|+
+name|AR71XX_APB_SIZE
+operator|-
+literal|1
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"apb_attach: failed to set up memory rman"
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
 name|apb_irq_rman
 operator|.
 name|rm_type
@@ -718,12 +769,6 @@ argument_list|)
 operator|!=
 name|bus
 operator|)
-operator|||
-operator|(
-name|type
-operator|==
-name|SYS_RES_MEMORY
-operator|)
 expr_stmt|;
 name|rle
 operator|=
@@ -731,7 +776,7 @@ name|NULL
 expr_stmt|;
 name|dprintf
 argument_list|(
-literal|"%s: entry (%p, %p, %d, %p, %p, %p, %ld, %d)\n"
+literal|"%s: entry (%p, %p, %d, %d, %p, %p, %ld, %d)\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -741,6 +786,7 @@ name|child
 argument_list|,
 name|type
 argument_list|,
+operator|*
 name|rid
 argument_list|,
 operator|(
@@ -795,6 +841,11 @@ name|flags
 argument_list|)
 operator|)
 return|;
+name|printf
+argument_list|(
+literal|"not pass through\n"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If this is an allocation of the "default" range for a given RID, 	 * and we know what the resources for this device are (ie. they aren't 	 * maintained by a child bus), then work out the start/end values. 	 */
 if|if
 condition|(
@@ -906,6 +957,17 @@ operator|&
 name|sc
 operator|->
 name|apb_irq_rman
+expr_stmt|;
+break|break;
+case|case
+name|SYS_RES_MEMORY
+case|:
+name|rm
+operator|=
+operator|&
+name|sc
+operator|->
+name|apb_mem_rman
 expr_stmt|;
 break|break;
 default|default:
@@ -1368,6 +1430,11 @@ argument_list|,
 name|cookiep
 argument_list|)
 expr_stmt|;
+name|apb_unmask_irq
+argument_list|(
+name|irq
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1566,6 +1633,13 @@ name|ie_handlers
 argument_list|)
 condition|)
 block|{
+comment|/* Ignore timer interrupts */
+if|if
+condition|(
+name|irq
+operator|!=
+literal|0
+condition|)
 name|printf
 argument_list|(
 literal|"Stray IRQ %d\n"

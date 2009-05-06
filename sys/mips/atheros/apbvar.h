@@ -44,6 +44,10 @@ name|struct
 name|rman
 name|apb_irq_rman
 decl_stmt|;
+name|struct
+name|rman
+name|apb_mem_rman
+decl_stmt|;
 comment|/* IRQ events structs for child devices */
 name|struct
 name|intr_event
