@@ -351,13 +351,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|GV_BIO_RETRY
-value|0x100
-end_define
-
-begin_define
-define|#
-directive|define
 name|GV_BIO_INTERNAL
 define|\
 value|(GV_BIO_SYNCREQ | GV_BIO_INIT | GV_BIO_REBUILD |GV_BIO_CHECK)
