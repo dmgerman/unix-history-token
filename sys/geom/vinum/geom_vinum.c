@@ -377,6 +377,17 @@ literal|"NULL sc"
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|bp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"NULL bp"
+operator|)
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
