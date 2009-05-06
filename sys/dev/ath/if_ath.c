@@ -4636,6 +4636,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|ic_opmode
+operator|=
+name|opmode
+expr_stmt|;
+comment|/* default to opmode of new vap */
 switch|switch
 condition|(
 name|opmode
@@ -4653,7 +4658,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* XXX only 1 sta for now */
+comment|/* XXX only 1 for now */
 name|device_printf
 argument_list|(
 name|sc
@@ -4674,7 +4679,7 @@ operator|->
 name|sc_nvaps
 condition|)
 block|{
-comment|/* 			 * When there are multiple vaps we must fall 			 * back to s/w beacon miss handling. 			 */
+comment|/* 			 * With multiple vaps we must fall back 			 * to s/w beacon miss handling. 			 */
 name|flags
 operator||=
 name|IEEE80211_CLONE_NOBEACONS
@@ -4686,15 +4691,13 @@ name|flags
 operator|&
 name|IEEE80211_CLONE_NOBEACONS
 condition|)
+block|{
+comment|/* 			 * Station mode w/o beacons are implemented w/ AP mode. 			 */
 name|ic_opmode
 operator|=
 name|IEEE80211_M_HOSTAP
 expr_stmt|;
-else|else
-name|ic_opmode
-operator|=
-name|opmode
-expr_stmt|;
+block|}
 break|break;
 case|case
 name|IEEE80211_M_IBSS
@@ -4722,10 +4725,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|ic_opmode
-operator|=
-name|opmode
-expr_stmt|;
 name|needbeacon
 operator|=
 literal|1
@@ -4744,6 +4743,28 @@ operator|&
 name|IEEE80211_CLONE_TDMA
 condition|)
 block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_nvaps
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"only 1 tdma vap supported\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 name|needbeacon
 operator|=
 literal|1
@@ -4774,6 +4795,7 @@ operator|!=
 name|opmode
 condition|)
 block|{
+comment|/* 			 * Adopt existing mode.  Adding a monitor or ahdemo 			 * vap to an existing configuration is of dubious 			 * value but should be ok. 			 */
 comment|/* XXX not right for monitor mode */
 name|ic_opmode
 operator|=
@@ -4782,11 +4804,6 @@ operator|->
 name|ic_opmode
 expr_stmt|;
 block|}
-else|else
-name|ic_opmode
-operator|=
-name|opmode
-expr_stmt|;
 break|break;
 case|case
 name|IEEE80211_M_HOSTAP
@@ -4795,7 +4812,7 @@ name|needbeacon
 operator|=
 literal|1
 expr_stmt|;
-comment|/* fall thru... */
+break|break;
 case|case
 name|IEEE80211_M_WDS
 case|:
@@ -4804,6 +4821,8 @@ condition|(
 name|sc
 operator|->
 name|sc_nvaps
+operator|!=
+literal|0
 operator|&&
 name|ic
 operator|->
@@ -4825,23 +4844,30 @@ goto|goto
 name|bad
 goto|;
 block|}
-if|if
-condition|(
-name|opmode
-operator|==
-name|IEEE80211_M_WDS
-condition|)
-block|{
-comment|/* 			 * Silently remove any request for a unique 			 * bssid; WDS vap's always share the local 			 * mac address. 			 */
+comment|/* 		 * Silently remove any request for a unique 		 * bssid; WDS vap's always share the local 		 * mac address. 		 */
 name|flags
 operator|&=
 operator|~
 name|IEEE80211_CLONE_BSSID
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_nvaps
+operator|==
+literal|0
+condition|)
 name|ic_opmode
 operator|=
 name|IEEE80211_M_HOSTAP
+expr_stmt|;
+else|else
+name|ic_opmode
+operator|=
+name|ic
+operator|->
+name|ic_opmode
 expr_stmt|;
 break|break;
 default|default:
