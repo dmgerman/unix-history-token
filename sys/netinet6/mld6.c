@@ -1139,9 +1139,6 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|notyet
 if|#
 directive|if
 name|defined
@@ -1157,13 +1154,11 @@ name|KASSERT
 argument_list|(
 name|curvnet
 operator|==
-operator|(
 name|m
 operator|->
 name|m_pkthdr
 operator|.
 name|header
-operator|)
 argument_list|,
 operator|(
 literal|"%s: called when curvnet was not restored"
@@ -1172,8 +1167,6 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 return|return
@@ -1692,7 +1685,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Attach MLD when PF_INET6 is attached to an interface.  *  * SMPng: Normally called with IF_AFDATA_LOCK held.  * VIMAGE: Currently we set the vnet pointer, although it is  * likely that it was already set by our caller.  */
+comment|/*  * Attach MLD when PF_INET6 is attached to an interface.  *  * SMPng: Normally called with IF_AFDATA_LOCK held.  */
 end_comment
 
 begin_function
@@ -1727,13 +1720,6 @@ operator|->
 name|if_xname
 argument_list|)
 expr_stmt|;
-name|CURVNET_SET
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
 name|MLD_LOCK
 argument_list|()
 expr_stmt|;
@@ -1762,9 +1748,6 @@ operator||=
 name|MLIF_SILENT
 expr_stmt|;
 name|MLD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 return|return
@@ -1929,7 +1912,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Hook for ifdetach.  *  * NOTE: Some finalization tasks need to run before the protocol domain  * is detached, but also before the link layer does its cleanup.  * Run before link-layer cleanup; cleanup groups, but do not free MLD state.  *  * SMPng: Caller must hold IN6_MULTI_LOCK().  * Must take IF_ADDR_LOCK() to cover if_multiaddrs iterator.  * XXX This routine is also bitten by unlocked ifma_protospec access.  *  * VIMAGE: curvnet should have been set by caller, but let's not assume  * that for now.  */
+comment|/*  * Hook for ifdetach.  *  * NOTE: Some finalization tasks need to run before the protocol domain  * is detached, but also before the link layer does its cleanup.  * Run before link-layer cleanup; cleanup groups, but do not free MLD state.  *  * SMPng: Caller must hold IN6_MULTI_LOCK().  * Must take IF_ADDR_LOCK() to cover if_multiaddrs iterator.  * XXX This routine is also bitten by unlocked ifma_protospec access.  */
 end_comment
 
 begin_function
@@ -1973,13 +1956,6 @@ argument_list|,
 name|ifp
 operator|->
 name|if_xname
-argument_list|)
-expr_stmt|;
-name|CURVNET_SET
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
 argument_list|)
 expr_stmt|;
 name|IN6_MULTI_LOCK_ASSERT
@@ -2110,14 +2086,11 @@ block|}
 name|MLD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|CURVNET_RESTORE
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Hook for domifdetach.  * Runs after link-layer cleanup; free MLD state.  *  * SMPng: Normally called with IF_AFDATA_LOCK held.  * VIMAGE: curvnet should have been set by caller, but let's not assume  * that for now.  */
+comment|/*  * Hook for domifdetach.  * Runs after link-layer cleanup; free MLD state.  *  * SMPng: Normally called with IF_AFDATA_LOCK held.  */
 end_comment
 
 begin_function
@@ -2145,13 +2118,6 @@ operator|->
 name|if_xname
 argument_list|)
 expr_stmt|;
-name|CURVNET_SET
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
 name|MLD_LOCK
 argument_list|()
 expr_stmt|;
@@ -2161,9 +2127,6 @@ name|ifp
 argument_list|)
 expr_stmt|;
 name|MLD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 block|}

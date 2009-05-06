@@ -2117,7 +2117,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Attach IGMP when PF_INET is attached to an interface.  *  * VIMAGE: Currently we set the vnet pointer, although it is  * likely that it was already set by our caller.  */
+comment|/*  * Attach IGMP when PF_INET is attached to an interface.  */
 end_comment
 
 begin_function
@@ -2152,13 +2152,6 @@ operator|->
 name|if_xname
 argument_list|)
 expr_stmt|;
-name|CURVNET_SET
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
 name|IGMP_LOCK
 argument_list|()
 expr_stmt|;
@@ -2187,9 +2180,6 @@ operator||=
 name|IGIF_SILENT
 expr_stmt|;
 name|IGMP_UNLOCK
-argument_list|()
-expr_stmt|;
-name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 return|return
@@ -2354,7 +2344,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Hook for ifdetach.  *  * NOTE: Some finalization tasks need to run before the protocol domain  * is detached, but also before the link layer does its cleanup.  *  * SMPNG: igmp_ifdetach() needs to take IF_ADDR_LOCK().  * XXX This is also bitten by unlocked ifma_protospec access.  *  * VIMAGE: curvnet should have been set by caller, but let's not assume  * that for now.  */
+comment|/*  * Hook for ifdetach.  *  * NOTE: Some finalization tasks need to run before the protocol domain  * is detached, but also before the link layer does its cleanup.  *  * SMPNG: igmp_ifdetach() needs to take IF_ADDR_LOCK().  * XXX This is also bitten by unlocked ifma_protospec access.  */
 end_comment
 
 begin_function
@@ -2398,13 +2388,6 @@ argument_list|,
 name|ifp
 operator|->
 name|if_xname
-argument_list|)
-expr_stmt|;
-name|CURVNET_SET
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
 argument_list|)
 expr_stmt|;
 name|IGMP_LOCK
@@ -2550,14 +2533,11 @@ block|}
 name|IGMP_UNLOCK
 argument_list|()
 expr_stmt|;
-name|CURVNET_RESTORE
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Hook for domifdetach.  *  * VIMAGE: curvnet should have been set by caller, but let's not assume  * that for now.  */
+comment|/*  * Hook for domifdetach.  */
 end_comment
 
 begin_function
@@ -2590,13 +2570,6 @@ operator|->
 name|if_xname
 argument_list|)
 expr_stmt|;
-name|CURVNET_SET
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
 name|IGMP_LOCK
 argument_list|()
 expr_stmt|;
@@ -2624,9 +2597,6 @@ name|ifp
 argument_list|)
 expr_stmt|;
 name|IGMP_UNLOCK
-argument_list|()
-expr_stmt|;
-name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 block|}
