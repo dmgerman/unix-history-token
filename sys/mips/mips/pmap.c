@@ -800,6 +800,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|pmap_flush_pvcache
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2928,7 +2939,7 @@ modifier|*
 name|pte
 decl_stmt|;
 comment|/* 	 * Write back all caches from the page being destroyed 	 */
-name|mips_dcache_wbinv_range
+name|mips_dcache_wbinv_range_index
 argument_list|(
 name|va
 argument_list|,
@@ -6004,7 +6015,7 @@ block|{
 return|return;
 block|}
 comment|/* 	 * Write back all caches from the page being destroyed 	 */
-name|mips_dcache_wbinv_range
+name|mips_dcache_wbinv_range_index
 argument_list|(
 name|va
 argument_list|,
@@ -6288,7 +6299,7 @@ name|pv_list_count
 operator|==
 literal|1
 condition|)
-name|mips_dcache_wbinv_range
+name|mips_dcache_wbinv_range_index
 argument_list|(
 name|pv
 operator|->
@@ -9366,17 +9377,23 @@ name|MIPS_KSEG0_LARGEST_PHYS
 operator|)
 condition|)
 block|{
-comment|/* easy case, all can be accessed via KSEG0 */
+comment|/* easy case, all can be accessed via KSEG1 */
+comment|/* 			 * Flush all caches for VA that are mapped to this page 			 * to make sure that data in SDRAM is up to date 			 */
+name|pmap_flush_pvcache
+argument_list|(
+name|src
+argument_list|)
+expr_stmt|;
 name|va_src
 operator|=
-name|MIPS_PHYS_TO_CACHED
+name|MIPS_PHYS_TO_UNCACHED
 argument_list|(
 name|phy_src
 argument_list|)
 expr_stmt|;
 name|va_dst
 operator|=
-name|MIPS_PHYS_TO_CACHED
+name|MIPS_PHYS_TO_UNCACHED
 argument_list|(
 name|phy_dst
 argument_list|)
@@ -13242,6 +13259,65 @@ block|}
 return|return
 name|pa
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|pmap_flush_pvcache
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+block|{
+name|pv_entry_t
+name|pv
+decl_stmt|;
+if|if
+condition|(
+name|m
+operator|!=
+name|NULL
+condition|)
+block|{
+for|for
+control|(
+name|pv
+operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|m
+operator|->
+name|md
+operator|.
+name|pv_list
+argument_list|)
+init|;
+name|pv
+condition|;
+name|pv
+operator|=
+name|TAILQ_NEXT
+argument_list|(
+name|pv
+argument_list|,
+name|pv_list
+argument_list|)
+control|)
+block|{
+name|mips_dcache_wbinv_range_index
+argument_list|(
+name|pv
+operator|->
+name|pv_va
+argument_list|,
+name|NBPG
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 
