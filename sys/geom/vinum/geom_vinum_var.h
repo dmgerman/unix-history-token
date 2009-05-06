@@ -960,9 +960,14 @@ expr_stmt|;
 comment|/* Event queue. */
 name|struct
 name|mtx
-name|queue_mtx
+name|equeue_mtx
 decl_stmt|;
-comment|/* Queue lock. */
+comment|/* Event queue lock. */
+name|struct
+name|mtx
+name|bqueue_mtx
+decl_stmt|;
+comment|/* BIO queue lock. */
 name|struct
 name|mtx
 name|config_mtx
