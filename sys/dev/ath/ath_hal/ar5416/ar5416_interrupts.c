@@ -453,6 +453,17 @@ name|AR_ISR_S1_QCU_TXEOL
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|isr
+operator|&
+name|AR_ISR_BNR
+condition|)
+operator|*
+name|masked
+operator||=
+name|HAL_INT_BNR
+expr_stmt|;
 comment|/* Interrupt Mitigation on AR5416 */
 ifdef|#
 directive|ifdef
@@ -963,6 +974,16 @@ operator||=
 name|AR_IMR_S2_TSFOOR
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ints
+operator|&
+name|HAL_INT_BNR
+condition|)
+name|mask
+operator||=
+name|AR_IMR_BNR
+expr_stmt|;
 comment|/* Write the new IMR and store off our SW copy. */
 name|HALDEBUG
 argument_list|(
