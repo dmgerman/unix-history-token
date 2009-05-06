@@ -172,6 +172,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|gv_post_bio
+parameter_list|(
+name|struct
+name|gv_softc
+modifier|*
+parameter_list|,
+name|struct
+name|bio
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|gv_plex_start
@@ -394,7 +410,7 @@ block|{
 comment|/* Park the bio on the waiting queue. */
 name|cbp
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator||=
 name|GV_BIO_ONHOLD
 expr_stmt|;
@@ -899,7 +915,7 @@ name|bp
 operator|->
 name|bio_pflags
 operator|&
-name|GV_BIO_SYNCREQ
+name|GV_BIO_GROW
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1006,7 +1022,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator|&
 name|GV_BIO_INTERNAL
 condition|)
@@ -1030,7 +1046,7 @@ operator|!
 operator|(
 name|bp
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator|&
 name|GV_BIO_SYNCREQ
 operator|)
@@ -1147,22 +1163,6 @@ name|bio_caller1
 operator|=
 name|s
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|bp
-operator|->
-name|bio_cflags
-operator|&
-name|GV_BIO_SYNCREQ
-operator|)
-condition|)
-name|cbp
-operator|->
-name|bio_cflags
-operator||=
-name|GV_BIO_SYNCREQ
-expr_stmt|;
 comment|/* Store the sub-requests now and let others issue them. */
 name|bioq_insert_tail
 argument_list|(
@@ -1194,7 +1194,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator|&
 name|GV_BIO_INTERNAL
 condition|)
@@ -1203,7 +1203,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator|&
 name|GV_BIO_MALLOC
 condition|)
@@ -1335,7 +1335,7 @@ if|if
 condition|(
 name|pbp
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator|&
 name|GV_BIO_SYNCREQ
 condition|)
@@ -1353,7 +1353,7 @@ name|pbp
 operator|->
 name|bio_pflags
 operator|&
-name|GV_BIO_SYNCREQ
+name|GV_BIO_GROW
 condition|)
 name|gv_grow_complete
 argument_list|(
@@ -1739,7 +1739,7 @@ name|bp
 operator|->
 name|bio_parent
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator|&
 name|GV_BIO_CHECK
 condition|)
@@ -1890,7 +1890,7 @@ operator|&&
 operator|(
 name|pbp
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator|&
 name|GV_BIO_CHECK
 operator|)
@@ -1916,7 +1916,7 @@ operator|&&
 operator|(
 name|pbp
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator|&
 name|GV_BIO_REBUILD
 operator|)
@@ -1935,7 +1935,7 @@ if|if
 condition|(
 name|pbp
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator|&
 name|GV_BIO_INIT
 condition|)
@@ -1953,7 +1953,7 @@ if|if
 condition|(
 name|pbp
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator|&
 name|GV_BIO_SYNCREQ
 condition|)
@@ -1973,7 +1973,7 @@ name|pbp
 operator|->
 name|bio_pflags
 operator|&
-name|GV_BIO_SYNCREQ
+name|GV_BIO_GROW
 condition|)
 block|{
 name|gv_grow_complete
@@ -2194,7 +2194,7 @@ name|bp
 operator|->
 name|bio_parent
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator|&
 name|GV_BIO_PARITY
 condition|)
@@ -2491,6 +2491,77 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|gv_post_bio
+parameter_list|(
+name|struct
+name|gv_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|bio
+modifier|*
+name|bp
+parameter_list|)
+block|{
+name|KASSERT
+argument_list|(
+name|sc
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"NULL sc"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|bp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"NULL bp"
+operator|)
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|bqueue_mtx
+argument_list|)
+expr_stmt|;
+name|bioq_disksort
+argument_list|(
+name|sc
+operator|->
+name|bqueue_down
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+name|wakeup
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|bqueue_mtx
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|int
 name|gv_sync_request
 parameter_list|(
@@ -2612,7 +2683,7 @@ name|gv_done
 expr_stmt|;
 name|bp
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator||=
 name|GV_BIO_SYNCREQ
 expr_stmt|;
@@ -2657,7 +2728,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator||=
 name|GV_BIO_MALLOC
 expr_stmt|;
@@ -2862,7 +2933,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator|&
 name|GV_BIO_MALLOC
 condition|)
@@ -3240,9 +3311,8 @@ name|bp
 operator|->
 name|bio_pflags
 operator||=
-name|GV_BIO_SYNCREQ
+name|GV_BIO_GROW
 expr_stmt|;
-comment|/* XXX: misuse of pflags AND syncreq.*/
 if|if
 condition|(
 name|data
@@ -3260,7 +3330,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator||=
 name|GV_BIO_MALLOC
 expr_stmt|;
@@ -3423,7 +3493,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator|&
 name|GV_BIO_MALLOC
 condition|)
@@ -3838,7 +3908,7 @@ name|length
 expr_stmt|;
 name|bp
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator||=
 name|GV_BIO_INIT
 expr_stmt|;
@@ -4370,13 +4440,13 @@ return|return;
 block|}
 name|bp
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator|=
 name|flags
 expr_stmt|;
 name|bp
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator||=
 name|GV_BIO_MALLOC
 expr_stmt|;
@@ -4437,7 +4507,7 @@ name|flags
 operator|=
 name|bp
 operator|->
-name|bio_cflags
+name|bio_pflags
 expr_stmt|;
 name|flags
 operator|&=
@@ -4466,7 +4536,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator|&
 name|GV_BIO_MALLOC
 condition|)
@@ -4719,7 +4789,7 @@ name|flags
 operator|=
 name|bp
 operator|->
-name|bio_cflags
+name|bio_pflags
 expr_stmt|;
 name|offset
 operator|=
@@ -4754,7 +4824,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator|&
 name|GV_BIO_MALLOC
 condition|)

@@ -295,7 +295,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GV_BIO_DONE
+name|GV_BIO_GROW
 value|0x01
 end_define
 
@@ -353,7 +353,7 @@ define|#
 directive|define
 name|GV_BIO_INTERNAL
 define|\
-value|(GV_BIO_SYNCREQ | GV_BIO_INIT | GV_BIO_REBUILD |GV_BIO_CHECK)
+value|(GV_BIO_SYNCREQ | GV_BIO_INIT | GV_BIO_REBUILD | GV_BIO_CHECK | GV_BIO_GROW)
 end_define
 
 begin_comment
@@ -969,9 +969,15 @@ comment|/* Configuration lock. */
 name|struct
 name|bio_queue_head
 modifier|*
-name|bqueue
+name|bqueue_down
 decl_stmt|;
-comment|/* BIO queue. */
+comment|/* BIO queue incoming 						   requests. */
+name|struct
+name|bio_queue_head
+modifier|*
+name|bqueue_up
+decl_stmt|;
+comment|/* BIO queue for completed 						   requests. */
 name|struct
 name|g_geom
 modifier|*

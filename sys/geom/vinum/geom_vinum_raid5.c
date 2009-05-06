@@ -309,7 +309,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator|&
 name|GV_BIO_REBUILD
 condition|)
@@ -335,7 +335,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator|&
 name|GV_BIO_CHECK
 condition|)
@@ -633,7 +633,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator|&
 name|GV_BIO_INTERNAL
 condition|)
@@ -642,7 +642,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator|&
 name|GV_BIO_MALLOC
 condition|)
@@ -1362,7 +1362,7 @@ operator|!
 operator|(
 name|bp
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator|&
 name|GV_BIO_REBUILD
 operator|)
@@ -1573,12 +1573,6 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|cbp
-operator|->
-name|bio_cflags
-operator||=
-name|GV_BIO_REBUILD
-expr_stmt|;
 name|wp
 operator|->
 name|parity
@@ -1914,7 +1908,7 @@ name|GV_SD_STALE
 operator|&&
 name|bp
 operator|->
-name|bio_cflags
+name|bio_pflags
 operator|&
 name|GV_BIO_SYNCREQ
 operator|&&
