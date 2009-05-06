@@ -309,6 +309,12 @@ directive|include
 file|<netipsec/key.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netipsec/vipsec.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
