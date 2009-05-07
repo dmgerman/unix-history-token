@@ -6147,6 +6147,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|vn_rele_async_fini
+argument_list|()
+expr_stmt|;
 name|arc_fini
 argument_list|()
 expr_stmt|;
