@@ -671,15 +671,6 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-define|#
-directive|define
-name|VN_RELE_ASYNC
-parameter_list|(
-name|vp
-parameter_list|,
-name|taskq
-parameter_list|)
-value|{ \ 	vn_rele_async(vp, taskq); \ }
 comment|/*  * Flags to VOP_SETATTR/VOP_GETATTR.  */
 define|#
 directive|define
