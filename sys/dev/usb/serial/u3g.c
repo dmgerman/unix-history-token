@@ -2548,10 +2548,11 @@ name|usb2_interface_descriptor
 modifier|*
 name|id
 decl_stmt|;
+name|uint32_t
+name|iface_valid
+decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|iface_valid
 decl_stmt|,
 name|flags
 decl_stmt|,
