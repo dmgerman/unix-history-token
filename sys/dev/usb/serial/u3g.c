@@ -167,7 +167,7 @@ begin_define
 define|#
 directive|define
 name|U3G_MAXPORTS
-value|4
+value|8
 end_define
 
 begin_define
@@ -1084,6 +1084,15 @@ argument_list|(
 name|SIERRA
 argument_list|,
 name|AC881U
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
+name|SIERRA
+argument_list|,
+name|AC885U
 argument_list|,
 literal|0
 argument_list|)
