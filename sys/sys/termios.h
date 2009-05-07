@@ -1708,6 +1708,17 @@ name|__BSD_VISIBLE
 end_if
 
 begin_function_decl
+name|int
+name|tcsetsid
+parameter_list|(
+name|int
+parameter_list|,
+name|pid_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|cfmakeraw
 parameter_list|(
