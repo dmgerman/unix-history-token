@@ -3015,22 +3015,11 @@ end_struct
 begin_define
 define|#
 directive|define
-name|CLK_TCK
-value|100
-end_define
-
-begin_comment
-comment|/* Linux uses 100 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CONVTCK
 parameter_list|(
 name|r
 parameter_list|)
-value|(r.tv_sec * CLK_TCK + r.tv_usec / (1000000 / CLK_TCK))
+value|(r.tv_sec * hz + r.tv_usec / (1000000 / hz))
 end_define
 
 begin_function
