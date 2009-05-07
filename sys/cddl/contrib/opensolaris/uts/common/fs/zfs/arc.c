@@ -92,6 +92,12 @@ directive|include
 file|<sys/sdt.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm_pageout.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|kmutex_t
@@ -8527,6 +8533,24 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|_KERNEL
+comment|/* 	 * If pages are needed or we're within 2048 pages  	 * of needing to page need to reclaim 	 */
+if|if
+condition|(
+name|vm_pages_needed
+operator|||
+operator|(
+name|vm_paging_target
+argument_list|()
+operator|>
+operator|-
+literal|2048
+operator|)
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 if|if
 condition|(
 name|needfree
