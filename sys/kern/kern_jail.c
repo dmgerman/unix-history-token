@@ -8532,15 +8532,6 @@ operator|->
 name|pr_mtx
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|pr
-operator|->
-name|pr_linux
-argument_list|,
-name|M_PRISON
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET

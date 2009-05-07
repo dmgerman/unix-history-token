@@ -5613,6 +5613,9 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|linux_osd_jail_register
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|bootverbose
@@ -5772,6 +5775,9 @@ name|process_exec
 argument_list|,
 name|linux_exec_tag
 argument_list|)
+expr_stmt|;
+name|linux_osd_jail_deregister
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

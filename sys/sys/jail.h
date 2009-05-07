@@ -549,9 +549,9 @@ decl_stmt|;
 comment|/* (p) admin jail name */
 name|void
 modifier|*
-name|pr_linux
+name|pr_spare
 decl_stmt|;
-comment|/* (p) linux abi */
+comment|/*     was pr_linux */
 name|int
 name|pr_securelevel
 decl_stmt|;
