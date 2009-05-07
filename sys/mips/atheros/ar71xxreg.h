@@ -75,6 +75,13 @@ name|AR71XX_PCI_IRQ_END
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|AR71XX_PCI_NIRQS
+value|3
+end_define
+
 begin_comment
 comment|/* PCI config registers */
 end_comment
