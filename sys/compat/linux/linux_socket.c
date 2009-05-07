@@ -2381,7 +2381,7 @@ literal|1
 condition|)
 return|return
 operator|(
-name|EINVAL
+name|EAFNOSUPPORT
 operator|)
 return|;
 name|retval_socket
