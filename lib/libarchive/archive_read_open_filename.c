@@ -351,18 +351,20 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-return|return
-operator|(
-name|archive_read_open_fd
-argument_list|(
-name|a
-argument_list|,
+block|{
+comment|/* We used to invoke archive_read_open_fd(a,0,block_size) 		 * here, but that doesn't (and shouldn't) handle the 		 * end-of-file flush when reading stdout from a pipe. 		 * Basically, read_open_fd() is intended for folks who 		 * are willing to handle such details themselves.  This 		 * API is intended to be a little smarter for folks who 		 * want easy handling of the common case. 		 */
+name|filename
+operator|=
+literal|""
+expr_stmt|;
+comment|/* Normalize NULL to "" */
+name|fd
+operator|=
 literal|0
-argument_list|,
-name|block_size
-argument_list|)
-operator|)
-return|;
+expr_stmt|;
+block|}
+else|else
+block|{
 name|fd
 operator|=
 name|open
@@ -397,6 +399,7 @@ operator|(
 name|ARCHIVE_FATAL
 operator|)
 return|;
+block|}
 block|}
 if|if
 condition|(
@@ -435,8 +438,10 @@ expr|struct
 name|read_file_data
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -552,7 +557,7 @@ operator|.
 name|st_ino
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Skip is a performance optimization for anything 		 * that supports lseek().  Generally, that only 		 * includes regular files and possibly raw disk 		 * devices, but there's no good portable way to detect 		 * raw disks. 		 */
+comment|/* 		 * Enabling skip here is a performance optimization 		 * for anything that supports lseek().  On FreeBSD 		 * (and probably many other systems), only regular 		 * files and raw disk devices support lseek() (on 		 * other input types, lseek() returns success but 		 * doesn't actually change the file pointer, which 		 * just completely screws up the position-tracking 		 * logic).  In addition, I've yet to find a portable 		 * way to determine if a device is a raw disk device. 		 * So I don't see a way to do much better than to only 		 * enable this optimization for regular files. 		 */
 name|mine
 operator|->
 name|can_skip
@@ -560,13 +565,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-else|else
-name|mine
-operator|->
-name|can_skip
-operator|=
-literal|0
-expr_stmt|;
 return|return
 operator|(
 name|archive_read_open2
@@ -655,6 +653,27 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|mine
+operator|->
+name|filename
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+name|archive_set_error
+argument_list|(
+name|a
+argument_list|,
+name|errno
+argument_list|,
+literal|"Error reading stdin"
+argument_list|)
+expr_stmt|;
+else|else
 name|archive_set_error
 argument_list|(
 name|a
@@ -844,6 +863,28 @@ operator|)
 return|;
 block|}
 comment|/* 		 * There's been an error other than ESPIPE. This is most 		 * likely caused by a programmer error (too large request) 		 * or a corrupted archive file. 		 */
+if|if
+condition|(
+name|mine
+operator|->
+name|filename
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+comment|/* 			 * Should never get here, since lseek() on stdin ought 			 * to return an ESPIPE error. 			 */
+name|archive_set_error
+argument_list|(
+name|a
+argument_list|,
+name|errno
+argument_list|,
+literal|"Error seeking in stdin"
+argument_list|)
+expr_stmt|;
+else|else
 name|archive_set_error
 argument_list|(
 name|a
@@ -976,6 +1017,18 @@ literal|0
 condition|)
 do|;
 block|}
+comment|/* If a named file was opened, then it needs to be closed. */
+if|if
+condition|(
+name|mine
+operator|->
+name|filename
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
 name|close
 argument_list|(
 name|mine
