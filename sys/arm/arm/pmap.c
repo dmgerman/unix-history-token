@@ -537,12 +537,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|pmap_t
-name|kernel_pmap
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|pt_entry_t
 modifier|*
@@ -8268,11 +8262,6 @@ expr_stmt|;
 name|virtual_avail
 operator|=
 name|firstaddr
-expr_stmt|;
-name|kernel_pmap
-operator|=
-operator|&
-name|kernel_pmap_store
 expr_stmt|;
 name|kernel_pmap
 operator|->
