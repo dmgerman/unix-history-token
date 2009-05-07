@@ -19564,65 +19564,47 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return h/w rate index for an IEEE rate (w/o basic rate bit).  */
+comment|/*  * Return h/w rate index for an IEEE rate (w/o basic rate bit)  * using the current rates in sc_rixmap.  */
 end_comment
 
 begin_function
 specifier|static
+name|__inline
 name|int
 name|ath_tx_findrix
 parameter_list|(
 specifier|const
-name|HAL_RATE_TABLE
+name|struct
+name|ath_softc
 modifier|*
-name|rt
+name|sc
 parameter_list|,
-name|int
+name|uint8_t
 name|rate
 parameter_list|)
 block|{
 name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|rt
+name|rix
+init|=
+name|sc
 operator|->
-name|rateCount
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-operator|(
-name|rt
-operator|->
-name|info
+name|sc_rixmap
 index|[
-name|i
-index|]
-operator|.
-name|dot11Rate
-operator|&
-name|IEEE80211_RATE_VAL
-operator|)
-operator|==
 name|rate
-condition|)
+index|]
+decl_stmt|;
+comment|/* NB: return lowest rix for invalid rate */
 return|return
-name|i
-return|;
-return|return
+operator|(
+name|rix
+operator|==
+literal|0xff
+condition|?
 literal|0
+else|:
+name|rix
+operator|)
 return|;
-comment|/* NB: lowest rate */
 block|}
 end_function
 
@@ -26743,8 +26725,6 @@ operator|=
 name|ath_tx_findrix
 argument_list|(
 name|sc
-operator|->
-name|sc_currates
 argument_list|,
 name|tp
 operator|->
@@ -26758,8 +26738,6 @@ operator|=
 name|ath_tx_findrix
 argument_list|(
 name|sc
-operator|->
-name|sc_currates
 argument_list|,
 name|tp
 operator|->
@@ -28244,7 +28222,7 @@ name|sc_protrix
 operator|=
 name|ath_tx_findrix
 argument_list|(
-name|rt
+name|sc
 argument_list|,
 literal|2
 operator|*
@@ -28258,7 +28236,7 @@ name|sc_protrix
 operator|=
 name|ath_tx_findrix
 argument_list|(
-name|rt
+name|sc
 argument_list|,
 literal|2
 operator|*
@@ -32534,7 +32512,7 @@ name|rix
 operator|=
 name|ath_tx_findrix
 argument_list|(
-name|rt
+name|sc
 argument_list|,
 name|params
 operator|->
@@ -32633,7 +32611,7 @@ name|cix
 operator|=
 name|ath_tx_findrix
 argument_list|(
-name|rt
+name|sc
 argument_list|,
 name|params
 operator|->
@@ -33027,7 +33005,7 @@ name|rix
 operator|=
 name|ath_tx_findrix
 argument_list|(
-name|rt
+name|sc
 argument_list|,
 name|params
 operator|->
@@ -33075,7 +33053,7 @@ name|rix
 operator|=
 name|ath_tx_findrix
 argument_list|(
-name|rt
+name|sc
 argument_list|,
 name|params
 operator|->
@@ -33129,7 +33107,7 @@ name|rix
 operator|=
 name|ath_tx_findrix
 argument_list|(
-name|rt
+name|sc
 argument_list|,
 name|params
 operator|->
@@ -34067,8 +34045,6 @@ operator|=
 name|ath_tx_findrix
 argument_list|(
 name|sc
-operator|->
-name|sc_currates
 argument_list|,
 name|tp
 operator|->
@@ -34081,8 +34057,6 @@ operator|=
 name|ath_tx_findrix
 argument_list|(
 name|sc
-operator|->
-name|sc_currates
 argument_list|,
 name|tp
 operator|->
