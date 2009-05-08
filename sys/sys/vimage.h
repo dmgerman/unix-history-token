@@ -979,7 +979,7 @@ parameter_list|(
 name|arg
 parameter_list|)
 define|\
-value|CURVNET_SET_QUIET(arg)						\ 	if (saved_vnet)							\ 		printf("curvnet_set(%p) in %s() on cpu %d, prev %p in %s()\n", curvnet,			\ 		       curthread->td_vnet_lpush, curcpu,		\ 		       saved_vnet, saved_vnet_lpush);
+value|CURVNET_SET_QUIET(arg)						\ 	if (saved_vnet)							\ 		printf("CURVNET_SET(%p) in %s() on cpu %d, prev %p in %s()\n", \ 		       curvnet,	curthread->td_vnet_lpush, curcpu,	\ 		       saved_vnet, saved_vnet_lpush);
 end_define
 
 begin_define

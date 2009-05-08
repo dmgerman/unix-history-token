@@ -182,13 +182,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vnode.h>
+file|<sys/vimage.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
+file|<sys/vnode.h>
 end_include
 
 begin_ifdef

@@ -1059,7 +1059,7 @@ name|vnet
 operator|->
 name|sockcnt
 expr_stmt|;
-comment|/* locked with so_global_mtx */
+comment|/* Locked with so_global_mtx. */
 name|so
 operator|->
 name|so_vnet

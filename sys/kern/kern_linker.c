@@ -4233,7 +4233,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* 	 * It's possible that kldloaded module will attach a new ifnet, 	 * so vnet context must be set when this ocurs. 	 */
+comment|/* 	 * It is possible that kldloaded module will attach a new ifnet, 	 * so vnet context must be set when this ocurs. 	 */
 name|CURVNET_SET
 argument_list|(
 name|TD_TO_VNET
