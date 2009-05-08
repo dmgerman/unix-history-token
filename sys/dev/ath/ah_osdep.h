@@ -225,28 +225,6 @@ name|ath_hal
 struct_decl|;
 end_struct_decl
 
-begin_function_decl
-specifier|extern
-name|u_int32_t
-name|ath_hal_getuptime
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|OS_GETUPTIME
-parameter_list|(
-name|_ah
-parameter_list|)
-value|ath_hal_getuptime(_ah)
-end_define
-
 begin_comment
 comment|/*  * Register read/write operations are either handled through  * platform-dependent routines (or when debugging is enabled  * with AH_DEBUG); or they are inline expanded using the macros  * defined below.  For public builds we inline expand only for  * platforms where it is certain what the requirements are to  * read/write registers--typically they are memory-mapped and  * no explicit synchronization or memory invalidation operations  * are required (e.g. i386).  */
 end_comment
