@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -5727,7 +5733,7 @@ literal|"%d@%s"
 argument_list|,
 name|svid
 argument_list|,
-name|hostname
+name|G_hostname
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -5760,7 +5766,7 @@ name|lock
 operator|->
 name|caller_name
 operator|=
-name|hostname
+name|G_hostname
 expr_stmt|;
 name|lock
 operator|->

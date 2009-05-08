@@ -213,6 +213,12 @@ directive|include
 file|<sys/sem.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/vimage.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2755,6 +2761,14 @@ operator|==
 name|PRS_ZOMBIE
 condition|)
 block|{
+name|INIT_VPROCG
+argument_list|(
+name|P_TO_VPROCG
+argument_list|(
+name|p
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rusage
@@ -3145,6 +3159,16 @@ expr_stmt|;
 name|nprocs
 operator|--
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VIMAGE
+name|vprocg
+operator|->
+name|nprocs
+operator|--
+expr_stmt|;
+endif|#
+directive|endif
 name|sx_xunlock
 argument_list|(
 operator|&

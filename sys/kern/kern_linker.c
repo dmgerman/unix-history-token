@@ -4211,6 +4211,28 @@ operator|(
 name|error
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|VIMAGE
+comment|/* Only the default vimage is permitted to kldload modules. */
+if|if
+condition|(
+operator|!
+name|IS_DEFAULT_VIMAGE
+argument_list|(
+name|TD_TO_VIMAGE
+argument_list|(
+name|td
+argument_list|)
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
+endif|#
+directive|endif
 comment|/* 	 * It's possible that kldloaded module will attach a new ifnet, 	 * so vnet context must be set when this ocurs. 	 */
 name|CURVNET_SET
 argument_list|(
@@ -4543,6 +4565,28 @@ operator|(
 name|error
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|VIMAGE
+comment|/* Only the default vimage is permitted to kldunload modules. */
+if|if
+condition|(
+operator|!
+name|IS_DEFAULT_VIMAGE
+argument_list|(
+name|TD_TO_VIMAGE
+argument_list|(
+name|td
+argument_list|)
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
+endif|#
+directive|endif
 name|CURVNET_SET
 argument_list|(
 name|TD_TO_VNET

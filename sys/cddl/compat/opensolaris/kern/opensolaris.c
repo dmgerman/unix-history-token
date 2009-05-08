@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/misc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/module.h>
 end_include
 
@@ -49,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vimage.h>
 end_include
 
 begin_decl_stmt
@@ -236,6 +248,12 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
+name|utsname
+operator|.
+name|nodename
+operator|=
+name|G_hostname
+expr_stmt|;
 break|break;
 case|case
 name|MOD_UNLOAD
