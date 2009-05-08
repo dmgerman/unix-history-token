@@ -3371,7 +3371,7 @@ name|AR_EEPROM_VER14_1
 argument_list|)
 expr_stmt|;
 comment|/* Setup info for the actual eeprom */
-name|ath_hal_memzero
+name|OS_MEMZERO
 argument_list|(
 name|ratesArray
 argument_list|,
@@ -8646,7 +8646,7 @@ name|regOffset
 decl_stmt|,
 name|regChainOffset
 decl_stmt|;
-name|ath_hal_memzero
+name|OS_MEMZERO
 argument_list|(
 name|xpdGainValues
 argument_list|,

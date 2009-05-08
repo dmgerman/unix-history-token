@@ -125,16 +125,6 @@ begin_comment
 comment|/*  * Delay n microseconds.  */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|void
-name|ath_hal_delay
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -142,7 +132,7 @@ name|OS_DELAY
 parameter_list|(
 name|_n
 parameter_list|)
-value|ath_hal_delay(_n)
+value|DELAY(_n)
 end_define
 
 begin_define
@@ -161,21 +151,8 @@ name|_a
 parameter_list|,
 name|_n
 parameter_list|)
-value|ath_hal_memzero((_a), (_n))
+value|bzero((_a), (_n))
 end_define
-
-begin_function_decl
-specifier|extern
-name|void
-name|ath_hal_memzero
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_define
 define|#
@@ -188,26 +165,8 @@ name|_s
 parameter_list|,
 name|_n
 parameter_list|)
-value|ath_hal_memcpy(_d,_s,_n)
+value|memcpy(_d,_s,_n)
 end_define
-
-begin_function_decl
-specifier|extern
-name|void
-modifier|*
-name|ath_hal_memcpy
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_define
 define|#
