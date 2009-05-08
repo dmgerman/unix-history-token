@@ -225,20 +225,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|char
-modifier|*
+name|size_t
 name|pgets
 parameter_list|(
-name|char
-modifier|*
-name|_bf
-parameter_list|,
-name|int
-name|_sz
-parameter_list|,
-name|FILE
-modifier|*
-name|_fp
+name|bool
+name|_do_indent
 parameter_list|)
 function_decl|;
 end_function_decl

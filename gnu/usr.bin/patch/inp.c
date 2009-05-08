@@ -368,7 +368,7 @@ decl_stmt|;
 name|char
 name|lbuf
 index|[
-name|MAXLINELEN
+name|INITLINELEN
 index|]
 decl_stmt|;
 name|int
@@ -1326,8 +1326,7 @@ name|fgets
 argument_list|(
 name|buf
 argument_list|,
-sizeof|sizeof
-name|buf
+name|buf_size
 argument_list|,
 name|ifp
 argument_list|)
