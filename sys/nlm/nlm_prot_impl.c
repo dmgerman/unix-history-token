@@ -7243,10 +7243,11 @@ argument_list|)
 expr_stmt|;
 name|cred
 operator|=
-name|crhold
-argument_list|(
 name|credanon
-argument_list|)
+expr_stmt|;
+name|credanon
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 comment|/* 	 * Check cred. 	 */
@@ -7316,6 +7317,15 @@ condition|)
 name|crfree
 argument_list|(
 name|cred
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|credanon
+condition|)
+name|crfree
+argument_list|(
+name|credanon
 argument_list|)
 expr_stmt|;
 return|return

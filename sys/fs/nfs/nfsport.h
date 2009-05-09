@@ -1831,32 +1831,6 @@ value|"nfsv4root"
 end_define
 
 begin_comment
-comment|/*  * XXX - not in any system .h file, just vfs_export.c  * Network address lookup element  */
-end_comment
-
-begin_struct
-struct|struct
-name|netcred
-block|{
-name|struct
-name|radix_node
-name|netc_rnodes
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|int
-name|netc_exflags
-decl_stmt|;
-name|struct
-name|ucred
-name|netc_anon
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Define whatever it takes to do a vn_rdwr().  */
 end_comment
 

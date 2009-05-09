@@ -4626,6 +4626,17 @@ name|out
 label|:
 if|if
 condition|(
+name|credanon
+operator|!=
+name|NULL
+condition|)
+name|crfree
+argument_list|(
+name|credanon
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|error
 condition|)
 block|{

@@ -12914,6 +12914,17 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|credanon
+operator|!=
+name|NULL
+condition|)
+name|crfree
+argument_list|(
+name|credanon
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|nd
 operator|->
 name|nd_repstat
@@ -13059,41 +13070,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * Network export information  */
-end_comment
-
-begin_struct
-struct|struct
-name|netexport
-block|{
-name|struct
-name|netcred
-name|ne_defexported
-decl_stmt|;
-comment|/* Default export */
-name|struct
-name|radix_node_head
-modifier|*
-name|ne_rtable
-index|[
-name|AF_MAX
-operator|+
-literal|1
-index|]
-decl_stmt|;
-comment|/* Individual exports */
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-name|struct
-name|netexport
-name|nfsv4root_export
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Called from newnfssvc() to update the exports list. Just call  * vfs_export(). This has to be done, since the v4 root fake fs isn't  * in the mount list.  */
@@ -14245,6 +14221,17 @@ operator|->
 name|nd_flag
 operator||=
 name|ND_EXGSSONLY
+expr_stmt|;
+if|if
+condition|(
+name|credanon
+operator|!=
+name|NULL
+condition|)
+name|crfree
+argument_list|(
+name|credanon
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
