@@ -528,6 +528,11 @@ name|struct
 name|task
 name|sc_disassoctask
 decl_stmt|;
+name|struct
+name|task
+name|sc_wmetask
+decl_stmt|;
+comment|/* set wme parameters */
 name|unsigned
 name|int
 name|sc_softled
@@ -632,7 +637,7 @@ name|_sc
 parameter_list|,
 name|_state
 parameter_list|)
-value|do {			\ 	KASSERT(_sc->fw_state == IWI_FW_IDLE,			\ 	    ("iwi firmware not idle"));				\ 	_sc->fw_state = _state;					\ 	_sc->sc_state_timer = 5;				\ 	DPRINTF(("enter %s state\n", iwi_fw_states[_state]));	\ } while (0)
+value|do {			\ 	KASSERT(_sc->fw_state == IWI_FW_IDLE,			\ 	    ("iwi firmware not idle, state %s", iwi_fw_states[_sc->fw_state]));\ 	_sc->fw_state = _state;					\ 	_sc->sc_state_timer = 5;				\ 	DPRINTF(("enter %s state\n", iwi_fw_states[_state]));	\ } while (0)
 end_define
 
 begin_define
