@@ -21,39 +21,11 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_SYS_CDEFS_H_
-end_ifndef
-
 begin_error
 error|#
 directive|error
-error|this file needs sys/cdefs.h as a prerequisite
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__CC_SUPPORTS_WARNING
-end_ifdef
-
-begin_warning
-warning|#
-directive|warning
 literal|"Don't #include ioctl.h in the kernel.  Include xxxio.h instead."
-end_warning
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+end_error
 
 begin_endif
 endif|#
@@ -63,54 +35,6 @@ end_endif
 begin_comment
 comment|/* _KERNEL */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/ttycom.h>
-end_include
-
-begin_comment
-comment|/*  * Pun for SunOS prior to 3.2.  SunOS 3.2 and later support TIOCGWINSZ  * and TIOCSWINSZ (yes, even 3.2-3.5, the fact that it wasn't documented  * notwithstanding).  */
-end_comment
-
-begin_struct
-struct|struct
-name|ttysize
-block|{
-name|unsigned
-name|short
-name|ts_lines
-decl_stmt|;
-name|unsigned
-name|short
-name|ts_cols
-decl_stmt|;
-name|unsigned
-name|short
-name|ts_xxx
-decl_stmt|;
-name|unsigned
-name|short
-name|ts_yyy
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|TIOCGSIZE
-value|TIOCGWINSZ
-end_define
-
-begin_define
-define|#
-directive|define
-name|TIOCSSIZE
-value|TIOCSWINSZ
-end_define
 
 begin_include
 include|#
@@ -128,6 +52,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sockio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ttycom.h>
 end_include
 
 begin_endif
