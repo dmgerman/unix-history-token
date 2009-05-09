@@ -15,12 +15,6 @@ directive|define
 name|_SYS_IOCTL_COMPAT_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -875,15 +869,6 @@ end_define
 
 begin_comment
 comment|/* for hp300 -- sans int arg */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
 end_comment
 
 begin_endif
