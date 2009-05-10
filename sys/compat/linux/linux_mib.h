@@ -139,6 +139,13 @@ end_function_decl
 begin_define
 define|#
 directive|define
+name|LINUX_KERNVER_2004000
+value|2004000
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_KERNVER_2006000
 value|2006000
 end_define

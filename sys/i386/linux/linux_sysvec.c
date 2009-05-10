@@ -1372,6 +1372,16 @@ argument_list|,
 name|cpu_feature
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Do not export AT_CLKTCK when emulating Linux kernel prior to 2.4.0, 	 * as it has appeared in the 2.4.0-rc7 first time. 	 * Being exported, AT_CLKTCK is returned by sysconf(_SC_CLK_TCK), 	 * glibc falls back to the hard-coded CLK_TCK value when aux entry 	 * is not present. 	 * Also see linux_times() implementation. 	 */
+if|if
+condition|(
+name|linux_kernver
+argument_list|(
+name|curthread
+argument_list|)
+operator|>=
+name|LINUX_KERNVER_2004000
+condition|)
 name|AUXARGS_ENTRY
 argument_list|(
 name|pos
