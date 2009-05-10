@@ -8931,6 +8931,19 @@ name|ifp
 operator|->
 name|if_l2com
 decl_stmt|;
+name|struct
+name|ieee80211vap
+modifier|*
+name|vap
+init|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|ic
+operator|->
+name|ic_vaps
+argument_list|)
+decl_stmt|;
 name|device_printf
 argument_list|(
 name|sc
@@ -8938,6 +8951,17 @@ operator|->
 name|sc_dev
 argument_list|,
 literal|"firmware error\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vap
+operator|!=
+name|NULL
+condition|)
+name|ieee80211_cancel_scan
+argument_list|(
+name|vap
 argument_list|)
 expr_stmt|;
 name|ieee80211_runtask
