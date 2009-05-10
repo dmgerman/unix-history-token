@@ -2368,8 +2368,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* handled by vm_fault now	  */
-comment|/* vm_page_zero_invalid(m, TRUE); */
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -2735,8 +2733,6 @@ operator|-
 name|toff
 argument_list|)
 expr_stmt|;
-comment|/* handled by vm_fault now	  */
-comment|/* vm_page_zero_invalid(m, TRUE); */
 block|}
 else|else
 block|{

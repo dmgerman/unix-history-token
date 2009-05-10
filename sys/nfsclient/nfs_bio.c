@@ -534,9 +534,6 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|m
@@ -546,8 +543,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* handled by vm_fault now	  */
-comment|/* vm_page_zero_invalid(m, TRUE); */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -593,9 +591,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|object
@@ -916,8 +911,6 @@ operator|-
 name|toff
 argument_list|)
 expr_stmt|;
-comment|/* handled by vm_fault now	  */
-comment|/* vm_page_zero_invalid(m, TRUE); */
 block|}
 else|else
 block|{
