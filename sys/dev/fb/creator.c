@@ -2904,7 +2904,7 @@ argument_list|(
 name|adp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Setting V_ADP_MODECHANGE serves as hack so creator_set_mode() 	 * (which will invalidate our caches and restore our settings) is 	 * called when the X server shuts down. Otherwise screen corruption 	 * happens most of the time. 	 */
+comment|/* 	 * Setting V_ADP_MODECHANGE serves as hack so creator_set_mode() 	 * (which will invalidate our caches and restore our settings) is 	 * called when the X server shuts down.  Otherwise screen corruption 	 * happens most of the time. 	 */
 name|adp
 operator|->
 name|va_flags
@@ -4992,7 +4992,7 @@ name|sc
 operator|->
 name|sc_va
 expr_stmt|;
-comment|/* 	 * Allocate resources regardless of whether we are the console 	 * and already obtained the bus tags and handles for the FFB_DAC 	 * and FFB_FBC register banks in creator_configure() or not so 	 * the resources are marked as taken in the respective RMAN. 	 * The supported cards use either 15 (Creator, Elite3D?) or 24 	 * (Creator3D?) register banks. We make sure that we can also 	 * allocate the resources for at least the FFB_DAC and FFB_FBC 	 * banks here. We try but don't actually care whether we can 	 * allocate more than these two resources and just limit the 	 * range accessible via creator_fb_mmap() accordingly. 	 */
+comment|/* 	 * Allocate resources regardless of whether we are the console 	 * and already obtained the bus tags and handles for the FFB_DAC 	 * and FFB_FBC register banks in creator_configure() or not so 	 * the resources are marked as taken in the respective RMAN. 	 * The supported cards use either 15 (Creator, Elite3D?) or 24 	 * (Creator3D?) register banks.  We make sure that we can also 	 * allocate the resources for at least the FFB_DAC and FFB_FBC 	 * banks here.  We try but don't actually care whether we can 	 * allocate more than these two resources and just limit the 	 * range accessible via creator_fb_mmap() accordingly. 	 */
 for|for
 control|(
 name|i
@@ -5224,7 +5224,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* 		 * During device configuration we don't necessarily probe 		 * the adapter which is the console first so we can't use 		 * the device unit number for the video adapter unit. The 		 * worst case would be that we use the video adapter unit 		 * 0 twice. As it doesn't really matter which unit number 		 * the corresponding video adapter has just use the next 		 * unused one. 		 */
+comment|/* 		 * During device configuration we don't necessarily probe 		 * the adapter which is the console first so we can't use 		 * the device unit number for the video adapter unit.  The 		 * worst case would be that we use the video adapter unit 		 * 0 twice.  As it doesn't really matter which unit number 		 * the corresponding video adapter has just use the next 		 * unused one. 		 */
 for|for
 control|(
 name|i
