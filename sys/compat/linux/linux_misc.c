@@ -353,6 +353,16 @@ directive|include
 file|<compat/linux/linux_misc.h>
 end_include
 
+begin_decl_stmt
+name|int
+name|stclohz
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Statistics clock frequency */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3019,7 +3029,7 @@ name|CONVTCK
 parameter_list|(
 name|r
 parameter_list|)
-value|(r.tv_sec * hz + r.tv_usec / (1000000 / hz))
+value|(r.tv_sec * stclohz + r.tv_usec / (1000000 / stclohz))
 end_define
 
 begin_function

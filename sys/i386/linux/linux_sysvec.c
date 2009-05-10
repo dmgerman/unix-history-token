@@ -1378,7 +1378,7 @@ name|pos
 argument_list|,
 name|LINUX_AT_CLKTCK
 argument_list|,
-name|hz
+name|stclohz
 argument_list|)
 expr_stmt|;
 name|AUXARGS_ENTRY
@@ -5615,6 +5615,16 @@ argument_list|)
 expr_stmt|;
 name|linux_osd_jail_register
 argument_list|()
+expr_stmt|;
+name|stclohz
+operator|=
+operator|(
+name|stathz
+condition|?
+name|stathz
+else|:
+name|hz
+operator|)
 expr_stmt|;
 if|if
 condition|(
