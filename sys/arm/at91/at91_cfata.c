@@ -500,7 +500,6 @@ name|type
 operator|==
 name|SYS_RES_IRQ
 operator|&&
-operator|*
 name|rid
 operator|==
 name|ATA_IRQ_RID
@@ -512,7 +511,6 @@ name|__LINE__
 operator|,
 name|type
 operator|,
-operator|*
 name|rid
 operator|)
 argument_list|)
