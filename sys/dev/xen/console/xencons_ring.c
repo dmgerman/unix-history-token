@@ -426,6 +426,11 @@ name|intf
 operator|->
 name|in_prod
 expr_stmt|;
+name|CN_UNLOCK
+argument_list|(
+name|cn_mtx
+argument_list|)
+expr_stmt|;
 comment|/* XXX needs locking */
 while|while
 condition|(
@@ -464,6 +469,11 @@ operator|->
 name|in_cons
 operator|=
 name|cons
+expr_stmt|;
+name|CN_LOCK
+argument_list|(
+name|cn_mtx
+argument_list|)
 expr_stmt|;
 name|notify_remote_via_evtchn
 argument_list|(

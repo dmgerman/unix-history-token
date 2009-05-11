@@ -1323,6 +1323,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|CN_LOCK
+argument_list|(
+name|cn_mtx
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1349,6 +1354,11 @@ name|buf
 index|[
 name|i
 index|]
+expr_stmt|;
+name|CN_UNLOCK
+argument_list|(
+name|cn_mtx
+argument_list|)
 expr_stmt|;
 block|}
 block|}
