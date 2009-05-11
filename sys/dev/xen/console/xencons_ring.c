@@ -404,9 +404,8 @@ name|cons
 decl_stmt|,
 name|prod
 decl_stmt|;
-name|mtx_lock
+name|CN_LOCK
 argument_list|(
-operator|&
 name|cn_mtx
 argument_list|)
 expr_stmt|;
@@ -476,9 +475,8 @@ expr_stmt|;
 name|xencons_tx
 argument_list|()
 expr_stmt|;
-name|mtx_unlock
+name|CN_UNLOCK
 argument_list|(
-operator|&
 name|cn_mtx
 argument_list|)
 expr_stmt|;
