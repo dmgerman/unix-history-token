@@ -1984,6 +1984,18 @@ decl_stmt|;
 name|int
 name|lkflags_save
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|AUDIT
+name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|curthread
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Setup: break out flag bits into variables. 	 */
 name|dvfslocked
 operator|=
