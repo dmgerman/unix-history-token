@@ -250,7 +250,7 @@ name|int
 name|errsave
 decl_stmt|;
 name|int
-name|unlock_malloc
+name|was_threaded
 decl_stmt|;
 name|int
 name|rtld_locks
@@ -309,7 +309,7 @@ name|prepare
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* 	 * Try our best to protect memory from being corrupted in 	 * child process because another thread in malloc code will 	 * simply be kill by fork(). 	 */
+comment|/* 	 * All bets are off as to what should happen soon if the parent 	 * process was not so kindly as to set up pthread fork hooks to 	 * relinquish all running threads. 	 */
 if|if
 condition|(
 name|_thr_isthreaded
@@ -318,7 +318,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|unlock_malloc
+name|was_threaded
 operator|=
 literal|1
 expr_stmt|;
@@ -333,7 +333,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|unlock_malloc
+name|was_threaded
 operator|=
 literal|0
 expr_stmt|;
@@ -413,7 +413,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|unlock_malloc
+name|was_threaded
 condition|)
 name|_rtld_atfork_post
 argument_list|(
@@ -448,7 +448,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|unlock_malloc
+name|was_threaded
 condition|)
 block|{
 name|__isthreaded
@@ -503,7 +503,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|unlock_malloc
+name|was_threaded
 condition|)
 block|{
 name|_rtld_atfork_post
