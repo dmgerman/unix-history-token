@@ -1350,7 +1350,7 @@ condition|)
 return|return
 name|error
 return|;
-comment|/* XXX work around for hardware bugs? */
+comment|/* do timeout fixup */
 if|if
 condition|(
 name|sc
@@ -1528,7 +1528,7 @@ argument_list|(
 name|mac
 argument_list|)
 expr_stmt|;
-comment|/* XXX what's these */
+comment|/* set up Beacon interval */
 if|if
 condition|(
 name|mac
@@ -1652,7 +1652,7 @@ name|intrs
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* XXX what's this */
+comment|/* allow the MAC to control the PHY clock (dynamic on/off) */
 name|CSR_SETBITS_4
 argument_list|(
 name|sc
@@ -1813,7 +1813,7 @@ name|error
 return|;
 block|}
 block|}
-comment|/* XXX what's these */
+comment|/* update PRETBTT */
 name|CSR_WRITE_2
 argument_list|(
 name|sc
