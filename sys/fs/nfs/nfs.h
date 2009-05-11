@@ -855,7 +855,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|nfsd_args
+name|nfsd_addsock_args
 block|{
 name|int
 name|sock

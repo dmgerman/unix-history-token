@@ -14257,7 +14257,7 @@ modifier|*
 name|fp
 decl_stmt|;
 name|struct
-name|nfsd_args
+name|nfsd_addsock_args
 name|nfsdarg
 decl_stmt|;
 name|int
