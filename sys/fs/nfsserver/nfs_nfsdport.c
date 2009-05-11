@@ -12341,6 +12341,11 @@ decl_stmt|,
 modifier|*
 name|secflavors
 decl_stmt|;
+operator|*
+name|credp
+operator|=
+name|NULL
+expr_stmt|;
 name|error
 operator|=
 name|VFS_FHTOVP
