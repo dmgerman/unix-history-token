@@ -5905,13 +5905,6 @@ parameter_list|,
 name|struct
 name|statfs
 modifier|*
-parameter_list|,
-name|struct
-name|ucred
-modifier|*
-parameter_list|,
-name|NFSPROC_T
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

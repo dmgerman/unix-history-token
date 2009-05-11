@@ -524,10 +524,6 @@ parameter_list|(
 name|vfs_t
 modifier|*
 name|vfsp
-parameter_list|,
-name|kthread_t
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -543,10 +539,6 @@ name|vfsp
 parameter_list|,
 name|int
 name|fflag
-parameter_list|,
-name|kthread_t
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -567,10 +559,6 @@ name|vnode_t
 modifier|*
 modifier|*
 name|vpp
-parameter_list|,
-name|kthread_t
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -588,10 +576,6 @@ name|struct
 name|statfs
 modifier|*
 name|statp
-parameter_list|,
-name|kthread_t
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -630,10 +614,6 @@ name|vfsp
 parameter_list|,
 name|int
 name|waitfor
-parameter_list|,
-name|kthread_t
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -770,10 +750,6 @@ name|vfsp
 parameter_list|,
 name|int
 name|waitfor
-parameter_list|,
-name|kthread_t
-modifier|*
-name|td
 parameter_list|)
 block|{
 comment|/* 	 * Data integrity is job one.  We don't want a compromised kernel 	 * writing to the storage pool, so we never sync during panic. 	 */
@@ -812,8 +788,6 @@ argument_list|(
 name|vfsp
 argument_list|,
 name|waitfor
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3455,12 +3429,14 @@ parameter_list|(
 name|vfs_t
 modifier|*
 name|vfsp
-parameter_list|,
+parameter_list|)
+block|{
 name|kthread_t
 modifier|*
 name|td
-parameter_list|)
-block|{
+init|=
+name|curthread
+decl_stmt|;
 name|vnode_t
 modifier|*
 name|mvp
@@ -3767,10 +3743,6 @@ name|struct
 name|statfs
 modifier|*
 name|statp
-parameter_list|,
-name|kthread_t
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|zfsvfs_t
@@ -3994,10 +3966,6 @@ name|vnode_t
 modifier|*
 modifier|*
 name|vpp
-parameter_list|,
-name|kthread_t
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|zfsvfs_t
@@ -4390,10 +4358,6 @@ name|vfsp
 parameter_list|,
 name|int
 name|fflag
-parameter_list|,
-name|kthread_t
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|zfsvfs_t
@@ -4412,7 +4376,7 @@ name|cred_t
 modifier|*
 name|cr
 init|=
-name|td
+name|curthread
 operator|->
 name|td_ucred
 decl_stmt|;
@@ -4541,7 +4505,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 expr_stmt|;
 name|ASSERT
@@ -4622,7 +4586,7 @@ name|FORCECLOSE
 else|:
 literal|0
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 expr_stmt|;
 if|if

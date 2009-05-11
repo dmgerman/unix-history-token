@@ -146,11 +146,6 @@ name|data
 parameter_list|,
 name|int
 name|flags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 return|return
@@ -177,11 +172,6 @@ name|struct
 name|mount
 modifier|*
 name|mp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|int
@@ -264,8 +254,6 @@ name|mp
 argument_list|,
 operator|&
 name|rvp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -363,8 +351,6 @@ parameter_list|(
 name|mp
 parameter_list|,
 name|mntflags
-parameter_list|,
-name|td
 parameter_list|)
 name|struct
 name|mount
@@ -373,11 +359,6 @@ name|mp
 decl_stmt|;
 name|int
 name|mntflags
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
 decl_stmt|;
 block|{
 name|struct
@@ -452,7 +433,7 @@ literal|1
 argument_list|,
 name|flags
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 operator|)
 operator|!=
@@ -514,8 +495,6 @@ parameter_list|,
 name|flags
 parameter_list|,
 name|vpp
-parameter_list|,
-name|td
 parameter_list|)
 name|struct
 name|mount
@@ -530,11 +509,6 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
 decl_stmt|;
 block|{
 name|struct
@@ -560,7 +534,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 expr_stmt|;
 operator|*
@@ -584,8 +558,6 @@ parameter_list|(
 name|mp
 parameter_list|,
 name|sbp
-parameter_list|,
-name|td
 parameter_list|)
 name|struct
 name|mount
@@ -597,12 +569,12 @@ name|statfs
 modifier|*
 name|sbp
 decl_stmt|;
+block|{
 name|struct
 name|thread
 modifier|*
 name|td
 decl_stmt|;
-block|{
 name|struct
 name|filedesc
 modifier|*
@@ -620,6 +592,10 @@ decl_stmt|;
 name|int
 name|freefd
 decl_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
 comment|/* 	 * Compute number of free file descriptors. 	 * [ Strange results will ensue if the open file 	 * limit is ever reduced below the current number 	 * of open files... ] 	 */
 name|PROC_LOCK
 argument_list|(

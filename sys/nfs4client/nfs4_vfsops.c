@@ -628,17 +628,17 @@ name|struct
 name|statfs
 modifier|*
 name|sbp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
 name|vnode
 modifier|*
 name|vp
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
 decl_stmt|;
 name|struct
 name|nfs_statfs
@@ -704,6 +704,10 @@ name|ga
 operator|.
 name|fa
 decl_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|nolint
@@ -1811,11 +1815,6 @@ name|data
 parameter_list|,
 name|int
 name|flags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -1891,11 +1890,6 @@ name|struct
 name|mount
 modifier|*
 name|mp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|int
@@ -2146,7 +2140,7 @@ argument_list|,
 operator|&
 name|vp
 argument_list|,
-name|td
+name|curthread
 operator|->
 name|td_ucred
 argument_list|)
@@ -3267,11 +3261,6 @@ name|mp
 parameter_list|,
 name|int
 name|mntflags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -3303,7 +3292,7 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Goes something like this.. 	 * - Call vflush(, td) to clear out vnodes for this filesystem 	 * - Close the socket 	 * - Free up the data structures 	 */
+comment|/* 	 * Goes something like this.. 	 * - Call vflush to clear out vnodes for this filesystem 	 * - Close the socket 	 * - Free up the data structures 	 */
 comment|/* In the forced case, cancel any outstanding requests. */
 if|if
 condition|(
@@ -3342,7 +3331,7 @@ literal|0
 argument_list|,
 name|flags
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 expr_stmt|;
 if|if
@@ -3421,11 +3410,6 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -3542,11 +3526,6 @@ name|mp
 parameter_list|,
 name|int
 name|waitfor
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -3557,6 +3536,11 @@ decl_stmt|,
 modifier|*
 name|mvp
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -3564,6 +3548,10 @@ name|allerror
 init|=
 literal|0
 decl_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
 comment|/* 	 * Force stale buffer cache information to be flushed. 	 */
 name|MNT_ILOCK
 argument_list|(

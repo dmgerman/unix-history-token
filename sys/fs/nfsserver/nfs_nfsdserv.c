@@ -12020,12 +12020,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|sf
-argument_list|,
-name|nd
-operator|->
-name|nd_cred
-argument_list|,
-name|p
 argument_list|)
 expr_stmt|;
 name|getret
@@ -20705,12 +20699,6 @@ name|vp
 argument_list|,
 operator|&
 name|sf
-argument_list|,
-name|nd
-operator|->
-name|nd_cred
-argument_list|,
-name|p
 argument_list|)
 expr_stmt|;
 if|if

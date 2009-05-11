@@ -1970,15 +1970,6 @@ name|ndp
 operator|->
 name|ni_cnd
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|cnp
-operator|->
-name|cn_thread
-decl_stmt|;
 name|int
 name|vfslocked
 decl_stmt|;
@@ -2794,7 +2785,9 @@ name|error
 operator|=
 name|mac_vnode_check_lookup
 argument_list|(
-name|td
+name|cnp
+operator|->
+name|cn_thread
 operator|->
 name|td_ucred
 argument_list|,
@@ -3395,8 +3388,6 @@ argument_list|)
 argument_list|,
 operator|&
 name|tdp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vfs_unbusy

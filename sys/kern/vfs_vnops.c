@@ -4889,13 +4889,6 @@ modifier|*
 name|mp
 decl_stmt|;
 block|{
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|curthread
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -5017,8 +5010,6 @@ argument_list|(
 name|mp
 argument_list|,
 name|MNT_SUSPEND
-argument_list|,
-name|td
 argument_list|)
 operator|)
 operator|!=

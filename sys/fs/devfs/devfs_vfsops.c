@@ -131,11 +131,6 @@ name|struct
 name|mount
 modifier|*
 name|mp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|int
@@ -310,8 +305,6 @@ name|LK_EXCLUSIVE
 argument_list|,
 operator|&
 name|rvp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -411,11 +404,6 @@ name|mp
 parameter_list|,
 name|int
 name|mntflags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|int
@@ -468,7 +456,7 @@ literal|1
 argument_list|,
 name|flags
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 expr_stmt|;
 if|if
@@ -577,11 +565,6 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|int
@@ -624,8 +607,6 @@ name|mp
 argument_list|,
 operator|&
 name|vp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -670,11 +651,6 @@ name|struct
 name|statfs
 modifier|*
 name|sbp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|sbp

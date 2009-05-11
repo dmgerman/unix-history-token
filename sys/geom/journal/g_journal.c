@@ -14456,8 +14456,6 @@ argument_list|(
 name|mp
 argument_list|,
 name|MNT_NOWAIT
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 if|if

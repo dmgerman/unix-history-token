@@ -409,8 +409,6 @@ operator|->
 name|v_mount
 argument_list|,
 name|mnt_stat
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 if|if

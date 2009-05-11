@@ -162,11 +162,6 @@ name|struct
 name|mount
 modifier|*
 name|mp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|int
@@ -367,7 +362,7 @@ name|UIO_SYSSPACE
 argument_list|,
 name|target
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 expr_stmt|;
 name|error
@@ -663,8 +658,6 @@ parameter_list|(
 name|mp
 parameter_list|,
 name|mntflags
-parameter_list|,
-name|td
 parameter_list|)
 name|struct
 name|mount
@@ -673,11 +666,6 @@ name|mp
 decl_stmt|;
 name|int
 name|mntflags
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
 decl_stmt|;
 block|{
 name|void
@@ -724,7 +712,7 @@ literal|1
 argument_list|,
 name|flags
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 expr_stmt|;
 if|if
@@ -772,8 +760,6 @@ parameter_list|,
 name|flags
 parameter_list|,
 name|vpp
-parameter_list|,
-name|td
 parameter_list|)
 name|struct
 name|mount
@@ -788,11 +774,6 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
 decl_stmt|;
 block|{
 name|struct
@@ -900,8 +881,6 @@ parameter_list|,
 name|uid
 parameter_list|,
 name|arg
-parameter_list|,
-name|td
 parameter_list|)
 name|struct
 name|mount
@@ -917,11 +896,6 @@ decl_stmt|;
 name|void
 modifier|*
 name|arg
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
 decl_stmt|;
 block|{
 return|return
@@ -939,8 +913,6 @@ argument_list|,
 name|uid
 argument_list|,
 name|arg
-argument_list|,
-name|td
 argument_list|)
 return|;
 block|}
@@ -954,8 +926,6 @@ parameter_list|(
 name|mp
 parameter_list|,
 name|sbp
-parameter_list|,
-name|td
 parameter_list|)
 name|struct
 name|mount
@@ -966,11 +936,6 @@ name|struct
 name|statfs
 modifier|*
 name|sbp
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
 decl_stmt|;
 block|{
 name|int
@@ -1040,8 +1005,6 @@ name|nullm_vfs
 argument_list|,
 operator|&
 name|mstat
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1142,8 +1105,6 @@ parameter_list|(
 name|mp
 parameter_list|,
 name|waitfor
-parameter_list|,
-name|td
 parameter_list|)
 name|struct
 name|mount
@@ -1152,11 +1113,6 @@ name|mp
 decl_stmt|;
 name|int
 name|waitfor
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
 decl_stmt|;
 block|{
 comment|/* 	 * XXX - Assumes no data cached at null layer. 	 */
@@ -1331,8 +1287,6 @@ parameter_list|,
 name|namespace
 parameter_list|,
 name|attrname
-parameter_list|,
-name|td
 parameter_list|)
 name|struct
 name|mount
@@ -1355,11 +1309,6 @@ name|char
 modifier|*
 name|attrname
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
 block|{
 return|return
 name|VFS_EXTATTRCTL
@@ -1378,8 +1327,6 @@ argument_list|,
 name|namespace
 argument_list|,
 name|attrname
-argument_list|,
-name|td
 argument_list|)
 return|;
 block|}

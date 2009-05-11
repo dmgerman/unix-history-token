@@ -2354,11 +2354,6 @@ name|data
 parameter_list|,
 name|int
 name|flags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_typedef
@@ -2375,11 +2370,6 @@ name|mp
 parameter_list|,
 name|int
 name|mntflags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_typedef
@@ -2402,11 +2392,6 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_typedef
@@ -2430,11 +2415,6 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_typedef
@@ -2453,11 +2433,6 @@ name|struct
 name|statfs
 modifier|*
 name|sbp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_typedef
@@ -2474,11 +2449,6 @@ name|mp
 parameter_list|,
 name|int
 name|waitfor
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_typedef
@@ -2618,11 +2588,6 @@ specifier|const
 name|char
 modifier|*
 name|attrname
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_typedef
@@ -2636,11 +2601,6 @@ name|struct
 name|mount
 modifier|*
 name|mp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_typedef
@@ -2759,10 +2719,8 @@ directive|define
 name|VFS_MOUNT
 parameter_list|(
 name|MP
-parameter_list|,
-name|P
 parameter_list|)
-value|(*(MP)->mnt_op->vfs_mount)(MP, P)
+value|(*(MP)->mnt_op->vfs_mount)(MP)
 end_define
 
 begin_define
@@ -2773,10 +2731,8 @@ parameter_list|(
 name|MP
 parameter_list|,
 name|FORCE
-parameter_list|,
-name|P
 parameter_list|)
-value|(*(MP)->mnt_op->vfs_unmount)(MP, FORCE, P)
+value|(*(MP)->mnt_op->vfs_unmount)(MP, FORCE)
 end_define
 
 begin_define
@@ -2789,11 +2745,9 @@ parameter_list|,
 name|FLAGS
 parameter_list|,
 name|VPP
-parameter_list|,
-name|P
 parameter_list|)
 define|\
-value|(*(MP)->mnt_op->vfs_root)(MP, FLAGS, VPP, P)
+value|(*(MP)->mnt_op->vfs_root)(MP, FLAGS, VPP)
 end_define
 
 begin_define
@@ -2808,10 +2762,9 @@ parameter_list|,
 name|U
 parameter_list|,
 name|A
-parameter_list|,
-name|P
 parameter_list|)
-value|(*(MP)->mnt_op->vfs_quotactl)(MP, C, U, A, P)
+define|\
+value|(*(MP)->mnt_op->vfs_quotactl)(MP, C, U, A)
 end_define
 
 begin_define
@@ -2822,10 +2775,8 @@ parameter_list|(
 name|MP
 parameter_list|,
 name|SBP
-parameter_list|,
-name|P
 parameter_list|)
-value|__vfs_statfs((MP), (SBP), (P))
+value|__vfs_statfs((MP), (SBP))
 end_define
 
 begin_define
@@ -2836,10 +2787,8 @@ parameter_list|(
 name|MP
 parameter_list|,
 name|WAIT
-parameter_list|,
-name|P
 parameter_list|)
-value|(*(MP)->mnt_op->vfs_sync)(MP, WAIT, P)
+value|(*(MP)->mnt_op->vfs_sync)(MP, WAIT)
 end_define
 
 begin_define
@@ -2909,11 +2858,9 @@ parameter_list|,
 name|NS
 parameter_list|,
 name|N
-parameter_list|,
-name|P
 parameter_list|)
 define|\
-value|(*(MP)->mnt_op->vfs_extattrctl)(MP, C, FN, NS, N, P)
+value|(*(MP)->mnt_op->vfs_extattrctl)(MP, C, FN, NS, N)
 end_define
 
 begin_define

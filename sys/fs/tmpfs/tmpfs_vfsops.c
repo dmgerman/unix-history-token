@@ -144,10 +144,6 @@ parameter_list|(
 name|struct
 name|mount
 modifier|*
-parameter_list|,
-name|struct
-name|thread
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -162,10 +158,6 @@ name|mount
 modifier|*
 parameter_list|,
 name|int
-parameter_list|,
-name|struct
-name|thread
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -185,10 +177,6 @@ parameter_list|,
 name|struct
 name|vnode
 modifier|*
-modifier|*
-parameter_list|,
-name|struct
-name|thread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -226,10 +214,6 @@ modifier|*
 parameter_list|,
 name|struct
 name|statfs
-modifier|*
-parameter_list|,
-name|struct
-name|thread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -786,11 +770,6 @@ name|struct
 name|mount
 modifier|*
 name|mp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -1333,8 +1312,6 @@ name|NULL
 argument_list|,
 name|VNOVAL
 argument_list|,
-name|td
-argument_list|,
 operator|&
 name|root
 argument_list|)
@@ -1479,11 +1456,6 @@ name|mp
 parameter_list|,
 name|int
 name|mntflags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|l
 parameter_list|)
 block|{
 name|int
@@ -1526,7 +1498,7 @@ literal|0
 argument_list|,
 name|flags
 argument_list|,
-name|l
+name|curthread
 argument_list|)
 expr_stmt|;
 if|if
@@ -1769,11 +1741,6 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|int
@@ -1795,8 +1762,6 @@ argument_list|,
 name|flags
 argument_list|,
 name|vpp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1971,8 +1936,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
 name|vpp
-argument_list|,
-name|curthread
 argument_list|)
 operator|)
 return|;
@@ -2006,11 +1969,6 @@ name|struct
 name|statfs
 modifier|*
 name|sbp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|l
 parameter_list|)
 block|{
 name|fsfilcnt_t

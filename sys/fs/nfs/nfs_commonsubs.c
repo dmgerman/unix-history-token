@@ -7801,8 +7801,6 @@ name|caddr_t
 operator|)
 operator|&
 name|dqb
-argument_list|,
-name|p
 argument_list|)
 condition|)
 name|freenum
@@ -7967,8 +7965,6 @@ name|caddr_t
 operator|)
 operator|&
 name|dqb
-argument_list|,
-name|p
 argument_list|)
 condition|)
 name|freenum
@@ -8113,8 +8109,6 @@ name|caddr_t
 operator|)
 operator|&
 name|dqb
-argument_list|,
-name|p
 argument_list|)
 condition|)
 name|freenum
@@ -10163,8 +10157,6 @@ argument_list|)
 argument_list|,
 operator|&
 name|fs
-argument_list|,
-name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -11151,8 +11143,6 @@ name|caddr_t
 operator|)
 operator|&
 name|dqb
-argument_list|,
-name|p
 argument_list|)
 condition|)
 name|freenum
@@ -11745,8 +11735,6 @@ name|caddr_t
 operator|)
 operator|&
 name|dqb
-argument_list|,
-name|p
 argument_list|)
 condition|)
 name|freenum
@@ -11884,8 +11872,6 @@ name|caddr_t
 operator|)
 operator|&
 name|dqb
-argument_list|,
-name|p
 argument_list|)
 condition|)
 name|freenum
@@ -12003,8 +11989,6 @@ name|caddr_t
 operator|)
 operator|&
 name|dqb
-argument_list|,
-name|p
 argument_list|)
 condition|)
 name|freenum

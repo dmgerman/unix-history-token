@@ -495,8 +495,6 @@ condition|?
 name|attrname
 else|:
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vn_finished_write

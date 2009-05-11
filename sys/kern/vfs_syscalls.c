@@ -733,8 +733,6 @@ argument_list|(
 name|mp
 argument_list|,
 name|MNT_NOWAIT
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|MNT_ILOCK
@@ -1078,8 +1076,6 @@ argument_list|,
 name|uap
 operator|->
 name|arg
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vfs_unbusy
@@ -1559,8 +1555,6 @@ argument_list|(
 name|mp
 argument_list|,
 name|sp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2011,8 +2005,6 @@ argument_list|(
 name|mp
 argument_list|,
 name|sp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2532,8 +2524,6 @@ argument_list|(
 name|mp
 argument_list|,
 name|sp
-argument_list|,
-name|td
 argument_list|)
 operator|)
 condition|)
@@ -3839,8 +3829,6 @@ name|LK_SHARED
 argument_list|,
 operator|&
 name|tdp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vfs_unbusy
@@ -23347,8 +23335,6 @@ argument_list|(
 name|mp
 argument_list|,
 name|sp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
