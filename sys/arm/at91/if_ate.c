@@ -3888,9 +3888,17 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
 argument_list|(
-literal|"ignoring bogus 0 len packet\n"
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"ignoring bogus zero-length packet\n"
 argument_list|)
 expr_stmt|;
 name|bus_dmamap_sync
@@ -4322,6 +4330,19 @@ name|ETH_ISR_RBNA
 condition|)
 block|{
 comment|/* Workaround Errata #11 */
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"RBNA workaround\n"
+argument_list|)
+expr_stmt|;
 name|reg
 operator|=
 name|RD4
