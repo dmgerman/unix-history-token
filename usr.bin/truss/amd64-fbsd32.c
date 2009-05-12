@@ -1534,6 +1534,10 @@ argument_list|,
 name|errorp
 argument_list|,
 name|retval
+argument_list|,
+name|fsc
+operator|.
+name|sc
 argument_list|)
 expr_stmt|;
 name|clear_fsc

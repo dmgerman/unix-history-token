@@ -129,6 +129,12 @@ directive|include
 file|"extern.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"syscall.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -150,9 +156,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: truss [-faedDS] [-o file] [-s strsize] -p pid"
+literal|"usage: truss [-cfaedDS] [-o file] [-s strsize] -p pid"
 argument_list|,
-literal|"       truss [-faedDS] [-o file] [-s strsize] command [args]"
+literal|"       truss [-cfaedDS] [-o file] [-s strsize] command [args]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -766,7 +772,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"p:o:faedDs:S"
+literal|"p:o:facedDs:S"
 argument_list|)
 operator|)
 operator|!=
@@ -837,6 +843,17 @@ operator|->
 name|flags
 operator||=
 name|EXECVEARGS
+expr_stmt|;
+break|break;
+case|case
+literal|'c'
+case|:
+comment|/* Count number of system calls and time. */
+name|trussinfo
+operator|->
+name|flags
+operator||=
+name|COUNTONLY
 expr_stmt|;
 break|break;
 case|case
@@ -1388,6 +1405,15 @@ name|trussinfo
 operator|->
 name|flags
 operator|&
+name|COUNTONLY
+condition|)
+break|break;
+if|if
+condition|(
+name|trussinfo
+operator|->
+name|flags
+operator|&
 name|FOLLOWFORKS
 condition|)
 name|fprintf
@@ -1522,13 +1548,6 @@ operator|!=
 name|S_EXIT
 condition|)
 do|;
-name|fflush
-argument_list|(
-name|trussinfo
-operator|->
-name|outfile
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|trussinfo
@@ -1556,6 +1575,26 @@ operator|-
 literal|1
 condition|)
 do|;
+if|if
+condition|(
+name|trussinfo
+operator|->
+name|flags
+operator|&
+name|COUNTONLY
+condition|)
+name|print_summary
+argument_list|(
+name|trussinfo
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|trussinfo
+operator|->
+name|outfile
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
