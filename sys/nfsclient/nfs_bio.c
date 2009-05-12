@@ -879,9 +879,19 @@ name|valid
 operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
-name|vm_page_undirty
+name|KASSERT
 argument_list|(
 name|m
+operator|->
+name|dirty
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"nfs_getpages: page %p is dirty"
+operator|,
+name|m
+operator|)
 argument_list|)
 expr_stmt|;
 block|}

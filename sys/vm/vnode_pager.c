@@ -3139,12 +3139,22 @@ name|reqpage
 index|]
 argument_list|)
 expr_stmt|;
-name|vm_page_undirty
+name|KASSERT
 argument_list|(
 name|m
 index|[
 name|reqpage
 index|]
+operator|->
+name|dirty
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"vnode_pager_generic_getpages: page %p is dirty"
+operator|,
+name|m
+operator|)
 argument_list|)
 expr_stmt|;
 name|m
