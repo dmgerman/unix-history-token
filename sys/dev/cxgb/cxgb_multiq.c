@@ -1491,6 +1491,7 @@ name|flush
 operator|=
 operator|(
 operator|(
+operator|!
 name|drbr_empty
 argument_list|(
 name|pi
