@@ -3976,6 +3976,24 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|name
+operator|==
+name|NULL
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"No 'arg%d' argument."
+argument_list|,
+name|no
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 name|strncmp
 argument_list|(
 name|name
