@@ -684,11 +684,6 @@ name|pstate
 parameter_list|)
 block|{
 name|struct
-name|hwpstate_softc
-modifier|*
-name|sc
-decl_stmt|;
-name|struct
 name|pcpu
 modifier|*
 name|pc
@@ -713,13 +708,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|sc
-operator|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 comment|/* get the current pstate limit */
 name|msr
 operator|=
@@ -1362,9 +1350,6 @@ name|device_t
 name|parent
 parameter_list|)
 block|{
-name|device_t
-name|child
-decl_stmt|;
 if|if
 condition|(
 name|device_find_child
@@ -1427,9 +1412,6 @@ condition|)
 return|return;
 if|if
 condition|(
-operator|(
-name|child
-operator|=
 name|BUS_ADD_CHILD
 argument_list|(
 name|parent
@@ -1441,7 +1423,6 @@ argument_list|,
 operator|-
 literal|1
 argument_list|)
-operator|)
 operator|==
 name|NULL
 condition|)
