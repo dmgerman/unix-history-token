@@ -121,17 +121,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NETISR_USB
-value|25
-end_define
-
-begin_comment
-comment|/* USB soft interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NETISR_PPP
 value|26
 end_define
