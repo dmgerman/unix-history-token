@@ -3623,6 +3623,11 @@ name|val
 operator|+=
 literal|0x202
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
