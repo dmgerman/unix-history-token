@@ -803,7 +803,7 @@ name|USB_GET_DATA_ISREAD
 parameter_list|(
 name|xfer
 parameter_list|)
-value|(((xfer)->flags_int.usb2_mode == \ 	USB_MODE_DEVICE) ? ((xfer->endpoint& UE_DIR_IN) ? 0 : 1) : \ 	((xfer->endpoint& UE_DIR_IN) ? 1 : 0))
+value|((xfer)->flags_int.usb2_mode == \ 	USB_MODE_DEVICE ? (((xfer)->endpoint& UE_DIR_IN) ? 0 : 1) : \ 	(((xfer)->endpoint& UE_DIR_IN) ? 1 : 0))
 end_define
 
 begin_comment
