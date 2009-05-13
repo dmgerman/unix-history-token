@@ -1134,13 +1134,6 @@ operator|&
 literal|0xff
 expr_stmt|;
 block|}
-name|ate_set_mac
-argument_list|(
-name|sc
-argument_list|,
-name|eaddr
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|ifp
@@ -4429,6 +4422,12 @@ name|mii_data
 modifier|*
 name|mii
 decl_stmt|;
+name|uint8_t
+name|eaddr
+index|[
+name|ETHER_ADDR_LEN
+index|]
+decl_stmt|;
 name|uint32_t
 name|reg
 decl_stmt|;
@@ -4478,6 +4477,26 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Set the chip MAC address. 	 */
+name|bcopy
+argument_list|(
+name|IF_LLADDR
+argument_list|(
+name|ifp
+argument_list|)
+argument_list|,
+name|eaddr
+argument_list|,
+name|ETHER_ADDR_LEN
+argument_list|)
+expr_stmt|;
+name|ate_set_mac
+argument_list|(
+name|sc
+argument_list|,
+name|eaddr
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Turn on MACs and interrupt processing. 	 */
 name|WR4
 argument_list|(
@@ -4510,7 +4529,6 @@ operator||
 name|ETH_ISR_RBNA
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Boot loader fills in MAC address.  If that's not the case, then 	 * we should set SA1L and SA1H here to the appropriate value.  Note: 	 * the byte order is big endian, not little endian, so we have some 	 * swapping to do.  Again, if we need it (which I don't think we do). 	 */
 comment|/* Enable big packets. */
 name|WR4
 argument_list|(
