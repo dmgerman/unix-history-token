@@ -3623,6 +3623,7 @@ name|val
 operator|+=
 literal|0x202
 expr_stmt|;
+comment|/* XXX: delay 10 us to avoid PCI parity errors with BCM4318 */
 name|DELAY
 argument_list|(
 literal|10
