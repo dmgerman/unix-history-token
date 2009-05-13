@@ -363,6 +363,11 @@ name|r
 decl_stmt|,
 name|r1
 decl_stmt|;
+name|archive_clear_error
+argument_list|(
+name|_a
+argument_list|)
+expr_stmt|;
 name|path
 operator|=
 name|archive_entry_sourcepath
