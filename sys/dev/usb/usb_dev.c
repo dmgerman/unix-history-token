@@ -5224,7 +5224,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fflags
+name|ioflag
 operator|&
 name|IO_NDELAY
 condition|)
@@ -5649,7 +5649,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|fflags
+name|ioflag
 operator|&
 name|IO_NDELAY
 condition|)
