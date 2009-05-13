@@ -15667,7 +15667,9 @@ name|dstmpte
 operator|==
 name|NULL
 condition|)
-break|break;
+goto|goto
+name|out
+goto|;
 name|dst_pte
 operator|=
 name|pmap_pte_quick
@@ -15754,6 +15756,9 @@ name|free
 argument_list|)
 expr_stmt|;
 block|}
+goto|goto
+name|out
+goto|;
 block|}
 if|if
 condition|(
@@ -15776,6 +15781,8 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+name|out
+label|:
 name|sched_unpin
 argument_list|()
 expr_stmt|;
