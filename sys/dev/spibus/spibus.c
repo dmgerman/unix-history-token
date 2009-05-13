@@ -919,7 +919,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|spibus
 argument_list|,
-name|at91_spi
+name|spi
 argument_list|,
 name|spibus_driver
 argument_list|,
