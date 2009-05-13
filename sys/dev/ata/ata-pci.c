@@ -319,29 +319,6 @@ condition|)
 return|return
 name|ENXIO
 return|;
-comment|/* if this is an AHCI chipset grab it */
-if|if
-condition|(
-name|pci_get_subclass
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-name|PCIS_STORAGE_SATA
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|ata_ahci_ident
-argument_list|(
-name|dev
-argument_list|)
-condition|)
-return|return
-name|ATA_PROBE_OK
-return|;
-block|}
 comment|/* run through the vendor specific drivers */
 switch|switch
 condition|(
@@ -703,6 +680,29 @@ name|ATA_PROBE_OK
 return|;
 block|}
 break|break;
+block|}
+comment|/* if this is an AHCI chipset grab it */
+if|if
+condition|(
+name|pci_get_subclass
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCIS_STORAGE_SATA
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|ata_ahci_ident
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+name|ATA_PROBE_OK
+return|;
 block|}
 comment|/* unknown chipset, try generic DMA if it seems possible */
 if|if
