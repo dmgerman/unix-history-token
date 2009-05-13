@@ -270,10 +270,6 @@ argument_list|(
 name|flags
 operator|==
 literal|0
-operator|||
-name|flags
-operator|==
-name|NETISR_FORCEQUEUE
 argument_list|,
 operator|(
 literal|"netisr_register: bad flags 0x%x\n"
@@ -797,19 +793,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Unless NETISR_FORCEQUEUE is set on the netisr (generally 	 * indicating that the handler still requires Giant, which cannot be 	 * acquired in arbitrary order with respect to a caller), directly 	 * dispatch handling of this packet.  Source ordering is maintained 	 * by virtue of callers consistently calling one of queued or direct 	 * dispatch, and the forcequeue flag being immutable after 	 * registration. 	 */
+comment|/* 	 * Directly dispatch handling of this packet, if permitted by global 	 * policy.  Source ordering is maintained by virtue of callers 	 * consistently calling one of queued or direct dispatch. 	 */
 if|if
 condition|(
 name|netisr_direct
-operator|&&
-operator|!
-operator|(
-name|ni
-operator|->
-name|ni_flags
-operator|&
-name|NETISR_FORCEQUEUE
-operator|)
 condition|)
 block|{
 name|isrstat

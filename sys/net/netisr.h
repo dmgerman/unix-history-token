@@ -276,17 +276,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|NETISR_FORCEQUEUE
-value|0x0002
-end_define
-
-begin_comment
-comment|/* Force queued dispatch. */
-end_comment
-
 begin_function_decl
 name|void
 name|netisr_register
