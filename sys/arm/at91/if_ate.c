@@ -256,7 +256,7 @@ name|struct
 name|mtx
 name|sc_mtx
 decl_stmt|;
-comment|/* basically a perimeter lock */
+comment|/* Basically a perimeter lock */
 name|device_t
 name|dev
 decl_stmt|;
@@ -265,11 +265,6 @@ name|device_t
 name|miibus
 decl_stmt|;
 comment|/* My child miibus */
-name|void
-modifier|*
-name|intrhand
-decl_stmt|;
-comment|/* Interrupt handle */
 name|struct
 name|resource
 modifier|*
@@ -287,16 +282,11 @@ name|callout
 name|tick_ch
 decl_stmt|;
 comment|/* Tick callout */
-name|bus_dma_tag_t
-name|mtag
+name|struct
+name|ifmib_iso_8802_3
+name|mibdata
 decl_stmt|;
-comment|/* bus dma tag for mbufs */
-name|bus_dmamap_t
-name|tx_map
-index|[
-name|ATE_MAX_TX_BUFFERS
-index|]
-decl_stmt|;
+comment|/* Stuff for network mgmt */
 name|struct
 name|mbuf
 modifier|*
@@ -307,13 +297,36 @@ index|]
 decl_stmt|;
 comment|/* Sent mbufs */
 name|bus_dma_tag_t
+name|mtag
+decl_stmt|;
+comment|/* bus dma tag for mbufs */
+name|bus_dma_tag_t
 name|rxtag
+decl_stmt|;
+name|bus_dma_tag_t
+name|rx_desc_tag
+decl_stmt|;
+name|bus_dmamap_t
+name|rx_desc_map
 decl_stmt|;
 name|bus_dmamap_t
 name|rx_map
 index|[
 name|ATE_MAX_RX_BUFFERS
 index|]
+decl_stmt|;
+name|bus_dmamap_t
+name|tx_map
+index|[
+name|ATE_MAX_TX_BUFFERS
+index|]
+decl_stmt|;
+name|bus_addr_t
+name|rx_desc_phys
+decl_stmt|;
+name|eth_rx_desc_t
+modifier|*
+name|rx_descs
 decl_stmt|;
 name|void
 modifier|*
@@ -323,39 +336,26 @@ name|ATE_MAX_RX_BUFFERS
 index|]
 decl_stmt|;
 comment|/* RX buffer space */
-name|int
-name|rx_buf_ptr
-decl_stmt|;
-name|bus_dma_tag_t
-name|rx_desc_tag
-decl_stmt|;
-name|bus_dmamap_t
-name|rx_desc_map
-decl_stmt|;
-name|int
-name|txcur
-decl_stmt|;
-comment|/* current tx map pointer */
-name|bus_addr_t
-name|rx_desc_phys
-decl_stmt|;
-name|eth_rx_desc_t
+name|void
 modifier|*
-name|rx_descs
+name|intrhand
 decl_stmt|;
-name|int
-name|use_rmii
-decl_stmt|;
-name|struct
-name|ifmib_iso_8802_3
-name|mibdata
-decl_stmt|;
-comment|/* stuff for network mgmt */
+comment|/* Interrupt handle */
 name|int
 name|flags
 decl_stmt|;
 name|int
 name|if_flags
+decl_stmt|;
+name|int
+name|rx_buf_ptr
+decl_stmt|;
+name|int
+name|txcur
+decl_stmt|;
+comment|/* Current TX map pointer */
+name|int
+name|use_rmii
 decl_stmt|;
 block|}
 struct|;
@@ -377,6 +377,7 @@ name|off
 parameter_list|)
 block|{
 return|return
+operator|(
 name|bus_read_4
 argument_list|(
 name|sc
@@ -385,6 +386,7 @@ name|mem_res
 argument_list|,
 name|off
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -486,7 +488,7 @@ parameter_list|(
 name|_sc
 parameter_list|)
 define|\
-value|mtx_init(&_sc->sc_mtx, device_get_nameunit(_sc->dev), \ 	    MTX_NETWORK_LOCK, MTX_DEF)
+value|mtx_init(&_sc->sc_mtx, device_get_nameunit(_sc->dev),	\ 	    MTX_NETWORK_LOCK, MTX_DEF)
 end_define
 
 begin_define
@@ -527,7 +529,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* ifnet entry points */
+comment|/*  * ifnet entry points.  */
 end_comment
 
 begin_function_decl
@@ -606,7 +608,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* bus entry points */
+comment|/*  * Bus entry points.  */
 end_comment
 
 begin_function_decl
@@ -654,7 +656,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* helper routines */
+comment|/*  * Helper routines.  */
 end_comment
 
 begin_function_decl
@@ -800,11 +802,6 @@ name|struct
 name|ate_softc
 modifier|*
 name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
 decl_stmt|;
 name|struct
 name|ifnet
@@ -837,6 +834,13 @@ name|rid
 decl_stmt|,
 name|err
 decl_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|dev
@@ -1008,7 +1012,7 @@ argument_list|,
 literal|"rmii in use"
 argument_list|)
 expr_stmt|;
-comment|/* calling atestop before ifp is set is OK */
+comment|/* Calling atestop before ifp is set is OK. */
 name|ATE_LOCK
 argument_list|(
 name|sc
@@ -1223,7 +1227,7 @@ name|if_capenable
 operator||=
 name|IFCAP_VLAN_MTU
 expr_stmt|;
-comment|/* the hw bits already set */
+comment|/* The hw bits already set. */
 name|ifp
 operator|->
 name|if_start
@@ -2103,7 +2107,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Allocate DMA tags and maps 	 */
+comment|/* 	 * Allocate DMA tags and maps. 	 */
 name|err
 operator|=
 name|bus_dma_tag_create
@@ -2198,7 +2202,6 @@ goto|goto
 name|errout
 goto|;
 block|}
-comment|/* 	  * Allocate our Rx buffers.  This chip has a rx structure that's filled 	  * in 	  */
 comment|/* 	 * Allocate DMA tags and maps for RX. 	 */
 name|err
 operator|=
@@ -2251,7 +2254,7 @@ condition|)
 goto|goto
 name|errout
 goto|;
-comment|/* Dma TAG and MAP for the rx descriptors. */
+comment|/* 	 * DMA tag and map for the RX descriptors. 	 */
 name|err
 operator|=
 name|bus_dma_tag_create
@@ -2384,6 +2387,7 @@ condition|)
 goto|goto
 name|errout
 goto|;
+comment|/* 	 * Allocate our RX buffers.  This chip has a RX structure that's filled 	 * in. 	 */
 for|for
 control|(
 name|i
@@ -2484,7 +2488,7 @@ name|rx_buf_ptr
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Flush the memory for the EMAC rx descriptor */
+comment|/* Flush the memory for the EMAC rx descriptor. */
 name|bus_dmamap_sync
 argument_list|(
 name|sc
@@ -3413,7 +3417,7 @@ argument_list|,
 name|ETH_DRFC
 argument_list|)
 expr_stmt|;
-comment|/* 	 * not sure where to lump these, so count them against the errors 	 * for the interface. 	 */
+comment|/* 	 * Not sure where to lump these, so count them against the errors 	 * for the interface. 	 */
 name|sc
 operator|->
 name|ifp
@@ -4391,7 +4395,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reset and initialize the chip  */
+comment|/*  * Reset and initialize the chip.  */
 end_comment
 
 begin_function
@@ -4507,7 +4511,7 @@ name|ETH_ISR_RBNA
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Boot loader fills in MAC address.  If that's not the case, then 	 * we should set SA1L and SA1H here to the appropriate value.  Note: 	 * the byte order is big endian, not little endian, so we have some 	 * swapping to do.  Again, if we need it (which I don't think we do). 	 */
-comment|/* enable big packets */
+comment|/* Enable big packets. */
 name|WR4
 argument_list|(
 name|sc
@@ -4524,7 +4528,7 @@ operator||
 name|ETH_CFG_BIG
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set 'running' flag, and clear output active flag 	 * and attempt to start the output 	 */
+comment|/* 	 * Set 'running' flag, and clear output active flag 	 * and attempt to start the output. 	 */
 name|ifp
 operator|->
 name|if_drv_flags
@@ -4584,7 +4588,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * dequeu packets and transmit  */
+comment|/*  * Dequeue packets and transmit.  */
 end_comment
 
 begin_function
@@ -4649,7 +4653,7 @@ operator|<
 name|ATE_MAX_TX_BUFFERS
 condition|)
 block|{
-comment|/* 		 * check to see if there's room to put another packet into the 		 * xmit queue.  The EMAC chip has a ping-pong buffer for xmit 		 * packets.  We use OACTIVE to indicate "we can stuff more into 		 * our buffers (clear) or not (set)." 		 */
+comment|/* 		 * Check to see if there's room to put another packet into the 		 * xmit queue.  The EMAC chip has a ping-pong buffer for xmit 		 * packets.  We use OACTIVE to indicate "we can stuff more into 		 * our buffers (clear) or not (set)." 		 */
 if|if
 condition|(
 operator|!
@@ -4825,7 +4829,7 @@ argument_list|,
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
-comment|/* 		 * tell the hardware to xmit the packet. 		 */
+comment|/* 		 * Tell the hardware to xmit the packet. 		 */
 name|WR4
 argument_list|(
 name|sc
@@ -4967,7 +4971,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Turn off interrupts, and stop the nic.  Can be called with sc->ifp NULL  * so be careful.  */
+comment|/*  * Turn off interrupts, and stop the NIC.  Can be called with sc->ifp NULL,  * so be careful.  */
 end_comment
 
 begin_function
