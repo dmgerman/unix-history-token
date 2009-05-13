@@ -9516,6 +9516,17 @@ argument_list|(
 name|status
 argument_list|)
 expr_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+literal|"status=0x%08x, rem=%u\n"
+argument_list|,
+name|status
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -9754,6 +9765,17 @@ operator|=
 name|EHCI_ITD_GET_LEN
 argument_list|(
 name|status
+argument_list|)
+expr_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+literal|"status=0x%08x, len=%u\n"
+argument_list|,
+name|status
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 if|if
