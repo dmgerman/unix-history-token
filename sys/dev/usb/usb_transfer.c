@@ -5326,11 +5326,12 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Must return cancelled error code else 		 * device drivers can hang. 		 */
 name|usb2_transfer_done
 argument_list|(
 name|xfer
 argument_list|,
-name|USB_ERR_NOT_CONFIGURED
+name|USB_ERR_CANCELLED
 argument_list|)
 expr_stmt|;
 name|USB_BUS_UNLOCK
