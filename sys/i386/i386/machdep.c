@@ -420,6 +420,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/mca.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -1497,6 +1503,9 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|mca_init
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
