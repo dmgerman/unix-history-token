@@ -841,11 +841,6 @@ name|flags
 argument_list|)
 operator|)
 return|;
-name|printf
-argument_list|(
-literal|"not pass through\n"
-argument_list|)
-expr_stmt|;
 comment|/* 	 * If this is an allocation of the "default" range for a given RID, 	 * and we know what the resources for this device are (ie. they aren't 	 * maintained by a child bus), then work out the start/end values. 	 */
 if|if
 condition|(
