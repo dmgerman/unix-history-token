@@ -1841,6 +1841,90 @@ name|DMA_INTR_TX_PKT_SENT
 value|(1<< 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|AR71XX_SPI_BASE
+value|0x1f000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR71XX_SPI_FS
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR71XX_SPI_CTRL
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPI_CTRL_REMAP_DISABLE
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPI_CTRL_CLOCK_DIVIDER_MASK
+value|((1<< 6) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR71XX_SPI_IO_CTRL
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPI_IO_CTRL_CS2
+value|(1<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPI_IO_CTRL_CS1
+value|(1<< 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPI_IO_CTRL_CS0
+value|(1<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPI_IO_CTRL_CLK
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPI_IO_CTRL_DO
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR71XX_SPI_RDS
+value|0x0C
+end_define
+
 begin_endif
 endif|#
 directive|endif
