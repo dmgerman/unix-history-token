@@ -26,7 +26,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<thread_db.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ucontext.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libpthread_db.h"
 end_include
 
 begin_function
@@ -38,10 +50,12 @@ name|struct
 name|reg
 modifier|*
 name|r
+name|__unused
 parameter_list|,
 name|ucontext_t
 modifier|*
 name|uc
+name|__unused
 parameter_list|)
 block|{ }
 end_function
@@ -54,11 +68,13 @@ specifier|const
 name|ucontext_t
 modifier|*
 name|uc
+name|__unused
 parameter_list|,
 name|struct
 name|reg
 modifier|*
 name|r
+name|__unused
 parameter_list|)
 block|{ }
 end_function
@@ -72,10 +88,12 @@ name|struct
 name|fpreg
 modifier|*
 name|r
+name|__unused
 parameter_list|,
 name|ucontext_t
 modifier|*
 name|uc
+name|__unused
 parameter_list|)
 block|{ }
 end_function
@@ -88,11 +106,13 @@ specifier|const
 name|ucontext_t
 modifier|*
 name|uc
+name|__unused
 parameter_list|,
 name|struct
 name|fpreg
 modifier|*
 name|r
+name|__unused
 parameter_list|)
 block|{ }
 end_function
@@ -114,9 +134,11 @@ name|struct
 name|reg
 modifier|*
 name|reg
+name|__unused
 parameter_list|,
 name|int
 name|step
+name|__unused
 parameter_list|)
 block|{
 return|return

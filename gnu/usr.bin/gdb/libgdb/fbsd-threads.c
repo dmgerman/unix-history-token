@@ -2983,6 +2983,13 @@ name|err
 operator|=
 name|td_thr_get_info_p
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|msg
 operator|.
 name|th_p
@@ -3036,6 +3043,13 @@ name|attach_thread
 argument_list|(
 name|ptid
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|msg
 operator|.
 name|th_p
@@ -5048,8 +5062,13 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"Thread %p (LWP %d)"
+literal|"Thread %llx (LWP %d)"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|th
 operator|.
 name|th_thread
@@ -5071,8 +5090,13 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"Thread %p (%s)"
+literal|"Thread %llx (%s)"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|th
 operator|.
 name|th_thread

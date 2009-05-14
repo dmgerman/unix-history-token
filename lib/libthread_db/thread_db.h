@@ -228,9 +228,7 @@ block|{
 name|td_thr_events_e
 name|event
 decl_stmt|;
-specifier|const
-name|td_thrhandle_t
-modifier|*
+name|psaddr_t
 name|th_p
 decl_stmt|;
 name|uintptr_t
@@ -518,7 +516,7 @@ decl_stmt|;
 name|char
 name|ti_db_suspended
 decl_stmt|;
-name|char
+name|int
 name|ti_traceme
 decl_stmt|;
 name|sigset_t
@@ -996,13 +994,11 @@ specifier|const
 name|td_thrhandle_t
 modifier|*
 parameter_list|,
-name|void
-modifier|*
+name|psaddr_t
 parameter_list|,
 name|size_t
 parameter_list|,
-name|void
-modifier|*
+name|psaddr_t
 modifier|*
 parameter_list|)
 function_decl|;

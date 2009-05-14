@@ -20,13 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/procfs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/setjmp.h>
+file|"libc_r_db.h"
 end_include
 
 begin_function
@@ -35,10 +29,11 @@ name|libc_r_md_getgregs
 parameter_list|(
 name|jmp_buf
 name|jb
+name|__unused
 parameter_list|,
 name|prgregset_t
-modifier|*
 name|r
+name|__unused
 parameter_list|)
 block|{ }
 end_function
@@ -49,10 +44,12 @@ name|libc_r_md_getfpregs
 parameter_list|(
 name|jmp_buf
 name|jb
+name|__unused
 parameter_list|,
 name|prfpregset_t
 modifier|*
 name|r
+name|__unused
 parameter_list|)
 block|{ }
 end_function
