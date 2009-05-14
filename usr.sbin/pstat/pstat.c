@@ -876,7 +876,7 @@ name|char
 name|hdr
 index|[]
 init|=
-literal|"  LINE RAW CAN OUT IHIWT ILOWT OHWT LWT     COL STATE  SESS      PGID DISC\n"
+literal|"     LINE RAW CAN OUT IHIWT ILOWT OHWT LWT     COL STATE  SESS      PGID DISC\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -1594,7 +1594,7 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|"   %2d,%-2d"
+literal|"%5d,%4d "
 argument_list|,
 name|major
 argument_list|(
@@ -1617,7 +1617,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%7s "
+literal|"%10s "
 argument_list|,
 name|name
 argument_list|)
