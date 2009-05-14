@@ -3285,7 +3285,7 @@ name|pos
 operator|+=
 name|xprintf
 argument_list|(
-literal|"%lu"
+literal|"%lu "
 argument_list|,
 operator|(
 name|u_long
@@ -3300,7 +3300,7 @@ name|pos
 operator|+=
 name|xprintf
 argument_list|(
-literal|"%s"
+literal|"%s "
 argument_list|,
 name|pwd
 operator|->
@@ -3351,7 +3351,7 @@ name|pos
 operator|+=
 name|xprintf
 argument_list|(
-literal|"%lu"
+literal|"%lu "
 argument_list|,
 operator|(
 name|u_long
@@ -3378,7 +3378,7 @@ name|pos
 operator|+=
 name|xprintf
 argument_list|(
-literal|"%d"
+literal|"%d "
 argument_list|,
 name|xf
 operator|->
@@ -3421,7 +3421,7 @@ name|pos
 operator|+=
 name|xprintf
 argument_list|(
-literal|"4"
+literal|"4 "
 argument_list|)
 expr_stmt|;
 if|if
@@ -3436,7 +3436,7 @@ name|pos
 operator|+=
 name|xprintf
 argument_list|(
-literal|"6"
+literal|"6 "
 argument_list|)
 expr_stmt|;
 while|while
