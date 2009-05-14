@@ -474,6 +474,7 @@ name|STOP_NMI
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 specifier|volatile
 name|cpumask_t
 name|ipi_nmi_pending
@@ -485,7 +486,7 @@ specifier|static
 name|void
 name|ipi_nmi_selected
 parameter_list|(
-name|u_int32_t
+name|cpumask_t
 name|cpus
 parameter_list|)
 function_decl|;
@@ -4223,7 +4224,7 @@ specifier|static
 name|void
 name|smp_targeted_tlb_shootdown
 parameter_list|(
-name|u_int
+name|cpumask_t
 name|mask
 parameter_list|,
 name|u_int
@@ -4510,7 +4511,7 @@ begin_function
 name|void
 name|smp_masked_invltlb
 parameter_list|(
-name|u_int
+name|cpumask_t
 name|mask
 parameter_list|)
 block|{
@@ -4538,7 +4539,7 @@ begin_function
 name|void
 name|smp_masked_invlpg
 parameter_list|(
-name|u_int
+name|cpumask_t
 name|mask
 parameter_list|,
 name|vm_offset_t
@@ -4569,7 +4570,7 @@ begin_function
 name|void
 name|smp_masked_invlpg_range
 parameter_list|(
-name|u_int
+name|cpumask_t
 name|mask
 parameter_list|,
 name|vm_offset_t
@@ -4705,7 +4706,7 @@ begin_function
 name|void
 name|ipi_selected
 parameter_list|(
-name|u_int32_t
+name|cpumask_t
 name|cpus
 parameter_list|,
 name|u_int
@@ -4959,10 +4960,11 @@ value|1000000
 end_define
 
 begin_function
+specifier|static
 name|void
 name|ipi_nmi_selected
 parameter_list|(
-name|u_int32_t
+name|cpumask_t
 name|cpus
 parameter_list|)
 block|{
@@ -5433,7 +5435,7 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-name|u_int
+name|cpumask_t
 name|mask
 decl_stmt|;
 name|int
