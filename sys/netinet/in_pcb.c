@@ -408,6 +408,19 @@ define|\
 value|if ((var)< (min)) { (var) = (min); } \ 	else if ((var)> (max)) { (var) = (max); }
 end_define
 
+begin_function_decl
+specifier|static
+name|void
+name|in_pcbremlists
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+name|inp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|int
@@ -6548,6 +6561,7 @@ comment|/*  * Remove PCB from various lists.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|in_pcbremlists
 parameter_list|(
@@ -8155,6 +8169,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|db_print_inpcb
 parameter_list|(
