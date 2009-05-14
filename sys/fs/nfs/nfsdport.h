@@ -189,6 +189,18 @@ comment|/* required for all ports */
 name|int
 name|nes_exflag
 decl_stmt|;
+comment|/* export flags */
+name|int
+name|nes_numsecflavor
+decl_stmt|;
+comment|/* # of security flavors */
+name|int
+name|nes_secflavors
+index|[
+name|MAXSECFLAVORS
+index|]
+decl_stmt|;
+comment|/* and the flavors */
 block|}
 struct|;
 end_struct
@@ -246,16 +258,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NFSVNO_EXGSSONLY
-parameter_list|(
-name|e
-parameter_list|)
-value|((e)->nes_exflag& MNT_EXGSSONLY)
-end_define
-
-begin_define
-define|#
-directive|define
 name|NFSVNO_EXV4ONLY
 parameter_list|(
 name|e
@@ -271,16 +273,6 @@ parameter_list|(
 name|e
 parameter_list|)
 value|((e)->nes_exflag = (MNT_EXPORTED|MNT_EXRDONLY))
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFSVNO_SETEXGSSONLY
-parameter_list|(
-name|e
-parameter_list|)
-value|((e)->nes_exflag |= MNT_EXGSSONLY)
 end_define
 
 begin_define

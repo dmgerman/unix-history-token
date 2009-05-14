@@ -130,6 +130,8 @@ name|nd
 decl_stmt|;
 name|int
 name|cacherep
+decl_stmt|,
+name|credflavor
 decl_stmt|;
 name|memset
 argument_list|(
@@ -284,9 +286,7 @@ operator|.
 name|nd_cred
 argument_list|,
 operator|&
-name|nd
-operator|.
-name|nd_credflavor
+name|credflavor
 argument_list|)
 condition|)
 block|{
@@ -309,6 +309,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* For now, I don't care what credential flavor was used. */
 ifdef|#
 directive|ifdef
 name|notyet

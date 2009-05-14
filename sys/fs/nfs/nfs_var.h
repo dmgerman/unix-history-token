@@ -2779,6 +2779,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|nfsd_checkrootexp
+parameter_list|(
+name|struct
+name|nfsrv_descript
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* nfs_clvfsops.c */
 end_comment
@@ -6128,6 +6139,21 @@ name|ucred
 modifier|*
 parameter_list|,
 name|NFSPROC_T
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|nfsvno_testexp
+parameter_list|(
+name|struct
+name|nfsrv_descript
+modifier|*
+parameter_list|,
+name|struct
+name|nfsexstuff
 modifier|*
 parameter_list|)
 function_decl|;

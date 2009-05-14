@@ -2461,10 +2461,6 @@ name|nd_clientid
 decl_stmt|;
 comment|/* Implied clientid */
 name|int
-name|nd_credflavor
-decl_stmt|;
-comment|/* credential flavor */
-name|int
 name|nd_gssnamelen
 decl_stmt|;
 comment|/* principal name length */
@@ -2631,15 +2627,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|ND_EXGSSONLY
+name|ND_EXAUTHSYS
 value|0x00080000
 end_define
 
 begin_define
 define|#
 directive|define
-name|ND_INCRSEQID
+name|ND_EXGSS
 value|0x00100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_EXGSSINTEGRITY
+value|0x00200000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_EXGSSPRIVACY
+value|0x00400000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_INCRSEQID
+value|0x00800000
 end_define
 
 begin_comment
@@ -2696,17 +2713,6 @@ define|#
 directive|define
 name|NFSRVSEQID_OPEN
 value|0x04
-end_define
-
-begin_comment
-comment|/*  * MNT_EXGSSONLY is the Or of all the EXGSS bits.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MNT_EXGSSONLY
-value|MNT_EXGSSKRB5
 end_define
 
 begin_comment

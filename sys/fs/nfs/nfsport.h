@@ -2784,17 +2784,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Define these here, so they don't have to be in mount.h, for now.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MNT_EXGSSKRB5
-value|MNT_EXKERB
-end_define
-
-begin_comment
 comment|/*  * These export flags should be defined, but there are no bits left.  * Maybe a separate mnt_exflag field could be added or the mnt_flag  * field increased to 64 bits?  */
 end_comment
 
