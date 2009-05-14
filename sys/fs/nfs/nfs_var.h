@@ -289,7 +289,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* nfsd_srvstate.c */
+comment|/* nfs_nfsdstate.c */
 end_comment
 
 begin_function_decl
@@ -768,7 +768,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* nfsd_serv.c */
+comment|/* nfs_nfsdserv.c */
 end_comment
 
 begin_function_decl
@@ -1634,134 +1634,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* newnfs_socket.c */
-end_comment
-
-begin_function_decl
-name|int
-name|newnfs_request
-parameter_list|(
-name|struct
-name|nfsrv_descript
-modifier|*
-parameter_list|,
-name|struct
-name|nfsmount
-modifier|*
-parameter_list|,
-name|struct
-name|nfsclient
-modifier|*
-parameter_list|,
-name|struct
-name|nfssockreq
-modifier|*
-parameter_list|,
-name|vnode_t
-parameter_list|,
-name|NFSPROC_T
-modifier|*
-parameter_list|,
-name|struct
-name|ucred
-modifier|*
-parameter_list|,
-name|u_int32_t
-parameter_list|,
-name|u_int32_t
-parameter_list|,
-name|u_char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|u_int64_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|newnfs_connect
-parameter_list|(
-name|struct
-name|nfsmount
-modifier|*
-parameter_list|,
-name|struct
-name|nfssockreq
-modifier|*
-parameter_list|,
-name|struct
-name|ucred
-modifier|*
-parameter_list|,
-name|NFSPROC_T
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|newnfs_disconnect
-parameter_list|(
-name|struct
-name|nfssockreq
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|newnfs_timer
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|newnfs_sigintr
-parameter_list|(
-name|struct
-name|nfsmount
-modifier|*
-parameter_list|,
-name|NFSPROC_T
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|newnfs_sndlock
-parameter_list|(
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|newnfs_sndunlock
-parameter_list|(
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* nfsd_srvsocket.c */
+comment|/* nfs_nfsdsocket.c */
 end_comment
 
 begin_function_decl
@@ -1792,7 +1665,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* nfs_srvcache.c */
+comment|/* nfs_nfsdcache.c */
 end_comment
 
 begin_function_decl
@@ -1896,7 +1769,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* newnfs_subs.c */
+comment|/* nfs_commonsubs.c */
 end_comment
 
 begin_function_decl
@@ -2266,8 +2139,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|newnfs_sndlock
+parameter_list|(
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|newnfs_sndunlock
+parameter_list|(
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/* nfscl_subs.c */
+comment|/* nfs_clcomsubs.c */
 end_comment
 
 begin_function_decl
@@ -2507,7 +2400,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* nfsd_srvsubs.c */
+comment|/* nfs_nfsdsubs.c */
 end_comment
 
 begin_function_decl
@@ -2877,10 +2770,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* nfs_srvsyscalls.c */
-end_comment
-
 begin_function_decl
 name|void
 name|nfsd_init
@@ -2891,11 +2780,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* nfs_vfsops.c */
+comment|/* nfs_clvfsops.c */
 end_comment
 
 begin_comment
-comment|/* newnfs_port.c */
+comment|/* nfs_commonport.c */
 end_comment
 
 begin_function_decl
@@ -3062,8 +2951,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|newnfs_timer
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/* newnfs_acl.c */
+comment|/* nfs_commonacl.c */
 end_comment
 
 begin_function_decl
@@ -3174,7 +3073,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* nfscl_rpcops.c */
+comment|/* nfs_clrpcops.c */
 end_comment
 
 begin_function_decl
@@ -4449,7 +4348,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* nfscl_state.c */
+comment|/* nfs_clstate.c */
 end_comment
 
 begin_function_decl
@@ -5169,7 +5068,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* nfscl_port.c */
+comment|/* nfs_clport.c */
 end_comment
 
 begin_function_decl
@@ -5354,7 +5253,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* nfsclient/ncl_subs.c */
+comment|/* nfs_clsubs.c */
 end_comment
 
 begin_function_decl
@@ -5367,7 +5266,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* nfsclient/ncl_bio.c */
+comment|/* nfs_clbio.c */
 end_comment
 
 begin_function_decl
@@ -5391,7 +5290,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* nfsclient/ncl_node.c */
+comment|/* nfs_clnode.c */
 end_comment
 
 begin_function_decl
@@ -5404,7 +5303,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* nfsd/nfsd_port.c */
+comment|/* nfs_nfsdport.c */
 end_comment
 
 begin_function_decl
@@ -6235,7 +6134,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* newnfs_krpc.c */
+comment|/* nfs_commonkrpc.c */
 end_comment
 
 begin_function_decl
@@ -6302,8 +6201,101 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|newnfs_request
+parameter_list|(
+name|struct
+name|nfsrv_descript
+modifier|*
+parameter_list|,
+name|struct
+name|nfsmount
+modifier|*
+parameter_list|,
+name|struct
+name|nfsclient
+modifier|*
+parameter_list|,
+name|struct
+name|nfssockreq
+modifier|*
+parameter_list|,
+name|vnode_t
+parameter_list|,
+name|NFSPROC_T
+modifier|*
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+parameter_list|,
+name|u_int32_t
+parameter_list|,
+name|u_int32_t
+parameter_list|,
+name|u_char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|u_int64_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|newnfs_connect
+parameter_list|(
+name|struct
+name|nfsmount
+modifier|*
+parameter_list|,
+name|struct
+name|nfssockreq
+modifier|*
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+parameter_list|,
+name|NFSPROC_T
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|newnfs_disconnect
+parameter_list|(
+name|struct
+name|nfssockreq
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|newnfs_sigintr
+parameter_list|(
+name|struct
+name|nfsmount
+modifier|*
+parameter_list|,
+name|NFSPROC_T
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/* nfsd_srvkrpc.c */
+comment|/* nfs_nfsdkrpc.c */
 end_comment
 
 begin_function_decl
@@ -6341,7 +6333,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* nfscl_srvkrpc.c */
+comment|/* nfs_clkrpc.c */
 end_comment
 
 begin_function_decl
