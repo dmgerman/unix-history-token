@@ -605,6 +605,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Return a referenced file from an unlocked descriptor. */
+end_comment
+
+begin_function_decl
+name|struct
+name|file
+modifier|*
+name|fget_unlocked
+parameter_list|(
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+parameter_list|,
+name|int
+name|fd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Requires a FILEDESC_{S,X}LOCK held and returns without a ref. */
+end_comment
+
 begin_expr_stmt
 specifier|static
 name|__inline
