@@ -11232,9 +11232,13 @@ decl_stmt|;
 comment|/*  	 * KSEG1 maps only first 512M of phys address space. For  	 * pa> 0x20000000 we should make proper mapping * using pmap_kenter. 	 */
 if|if
 condition|(
+operator|(
 name|pa
 operator|+
 name|size
+operator|-
+literal|1
+operator|)
 operator|<
 name|MIPS_KSEG0_LARGEST_PHYS
 condition|)
