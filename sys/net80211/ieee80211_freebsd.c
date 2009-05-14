@@ -816,6 +816,8 @@ name|OID_AUTO
 argument_list|,
 name|ampdu_age
 argument_list|,
+name|CTLTYPE_INT
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -853,6 +855,8 @@ name|OID_AUTO
 argument_list|,
 name|addba_timeout
 argument_list|,
+name|CTLTYPE_INT
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -885,6 +889,8 @@ name|OID_AUTO
 argument_list|,
 name|addba_backoff
 argument_list|,
+name|CTLTYPE_INT
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -917,6 +923,8 @@ name|OID_AUTO
 argument_list|,
 name|addba_maxtries
 argument_list|,
+name|CTLTYPE_INT
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -951,6 +959,8 @@ name|OID_AUTO
 argument_list|,
 name|ffppsmin
 argument_list|,
+name|CTLTYPE_INT
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -979,6 +989,8 @@ name|OID_AUTO
 argument_list|,
 name|ffagemax
 argument_list|,
+name|CTLTYPE_INT
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
