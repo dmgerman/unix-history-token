@@ -6652,39 +6652,6 @@ end_function
 begin_define
 define|#
 directive|define
-name|IS_CTL
-parameter_list|(
-name|wh
-parameter_list|)
-define|\
-value|((wh->i_fc[0]& IEEE80211_FC0_TYPE_MASK) == IEEE80211_FC0_TYPE_CTL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_PSPOLL
-parameter_list|(
-name|wh
-parameter_list|)
-define|\
-value|((wh->i_fc[0]& IEEE80211_FC0_SUBTYPE_MASK) == IEEE80211_FC0_SUBTYPE_PS_POLL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_BAR
-parameter_list|(
-name|wh
-parameter_list|)
-define|\
-value|((wh->i_fc[0]& IEEE80211_FC0_SUBTYPE_MASK) == IEEE80211_FC0_SUBTYPE_BAR)
-end_define
-
-begin_define
-define|#
-directive|define
 name|IS_PROBEREQ
 parameter_list|(
 name|wh
@@ -6717,40 +6684,6 @@ argument_list|,
 argument|const struct ieee80211_frame_min *wh
 argument_list|)
 block|{
-comment|/* XXX 4-address frames? */
-if|if
-condition|(
-name|IS_CTL
-argument_list|(
-name|wh
-argument_list|)
-operator|&&
-operator|!
-name|IS_PSPOLL
-argument_list|(
-name|wh
-argument_list|)
-operator|&&
-operator|!
-name|IS_BAR
-argument_list|(
-name|wh
-argument_list|)
-comment|/*&& !IS_RTS(ah)*/
-condition|)
-return|return
-name|ieee80211_find_node_locked
-argument_list|(
-name|nt
-argument_list|,
-name|wh
-operator|->
-name|i_addr1
-argument_list|)
-return|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|IS_BCAST_PROBEREQ
@@ -6761,7 +6694,7 @@ condition|)
 return|return
 name|NULL
 return|;
-end_if
+end_expr_stmt
 
 begin_comment
 comment|/* spam bcast probe req to all vap's */
@@ -7122,24 +7055,6 @@ begin_undef
 undef|#
 directive|undef
 name|IS_PROBEREQ
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|IS_BAR
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|IS_PSPOLL
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|IS_CTL
 end_undef
 
 begin_comment
