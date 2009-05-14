@@ -11942,6 +11942,17 @@ decl_stmt|;
 name|int
 name|vfslocked
 decl_stmt|;
+if|if
+condition|(
+name|count
+operator|>
+name|INT_MAX
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|NDINIT
 argument_list|(
 operator|&
