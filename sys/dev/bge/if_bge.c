@@ -12132,7 +12132,7 @@ operator||=
 name|BGE_FLAG_5714_FAMILY
 comment|/* | BGE_FLAG_JUMBO */
 expr_stmt|;
-comment|/* FALLTHRU */
+comment|/* FALLTHROUGH */
 case|case
 name|BGE_ASICREV_BCM5750
 case|:
@@ -12154,7 +12154,7 @@ name|bge_flags
 operator||=
 name|BGE_FLAG_575X_PLUS
 expr_stmt|;
-comment|/* FALLTHRU */
+comment|/* FALLTHROUGH */
 case|case
 name|BGE_ASICREV_BCM5705
 case|:
