@@ -136,12 +136,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/powerpc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/ofw/openfirm.h>
 end_include
 

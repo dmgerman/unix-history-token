@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/platform.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/smp.h>
 end_include
 
@@ -257,7 +263,7 @@ literal|0
 expr_stmt|;
 name|error
 operator|=
-name|powerpc_smp_first_cpu
+name|platform_smp_first_cpu
 argument_list|(
 operator|&
 name|cpuref
@@ -274,7 +280,7 @@ operator|++
 expr_stmt|;
 name|error
 operator|=
-name|powerpc_smp_next_cpu
+name|platform_smp_next_cpu
 argument_list|(
 operator|&
 name|cpuref
@@ -348,7 +354,7 @@ name|error
 decl_stmt|;
 name|error
 operator|=
-name|powerpc_smp_get_bsp
+name|platform_smp_get_bsp
 argument_list|(
 operator|&
 name|bsp
@@ -382,7 +388,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|powerpc_smp_first_cpu
+name|platform_smp_first_cpu
 argument_list|(
 operator|&
 name|cpu
@@ -528,7 +534,7 @@ name|next
 label|:
 name|error
 operator|=
-name|powerpc_smp_next_cpu
+name|platform_smp_next_cpu
 argument_list|(
 operator|&
 name|cpu
@@ -689,7 +695,7 @@ operator|->
 name|pc_hwref
 argument_list|)
 expr_stmt|;
-name|powerpc_smp_start_cpu
+name|platform_smp_start_cpu
 argument_list|(
 name|pc
 argument_list|)

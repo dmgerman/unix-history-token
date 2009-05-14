@@ -122,7 +122,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/powerpc.h>
+file|<machine/platform.h>
 end_include
 
 begin_include
@@ -463,7 +463,7 @@ end_comment
 
 begin_function
 name|void
-name|mem_regions
+name|ofw_mem_regions
 parameter_list|(
 name|struct
 name|mem_region

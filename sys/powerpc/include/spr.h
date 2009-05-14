@@ -3497,6 +3497,17 @@ end_elif
 begin_define
 define|#
 directive|define
+name|SPR_PIR
+value|0x11e
+end_define
+
+begin_comment
+comment|/* ..8 Processor Identification Register */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SPR_DBSR
 value|0x130
 end_define

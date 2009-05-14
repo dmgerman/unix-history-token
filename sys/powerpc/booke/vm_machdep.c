@@ -160,7 +160,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/powerpc.h>
+file|<machine/platform.h>
 end_include
 
 begin_include

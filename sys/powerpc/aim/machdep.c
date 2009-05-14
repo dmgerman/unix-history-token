@@ -342,12 +342,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/powerpc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/reg.h>
 end_include
 
@@ -2111,7 +2105,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* 	 * Initialise virtual memory. 	 */
+comment|/* 	 * Choose a platform module so we can get the physical memory map. 	 */
+end_comment
+
+begin_expr_stmt
+name|platform_probe_and_attach
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* 	 * Initialise virtual memory. Use BUS_PROBE_GENERIC priority 	 * in case the platform module had a better idea of what we 	 * should do. 	 */
 end_comment
 
 begin_if
@@ -2123,7 +2127,7 @@ name|pmap_mmu_install
 argument_list|(
 name|MMU_TYPE_G5
 argument_list|,
-literal|0
+name|BUS_PROBE_GENERIC
 argument_list|)
 expr_stmt|;
 else|else
@@ -2131,7 +2135,7 @@ name|pmap_mmu_install
 argument_list|(
 name|MMU_TYPE_OEA
 argument_list|,
-literal|0
+name|BUS_PROBE_GENERIC
 argument_list|)
 expr_stmt|;
 end_if

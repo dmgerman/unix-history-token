@@ -180,7 +180,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/powerpc.h>
+file|<machine/platform.h>
 end_include
 
 begin_include
@@ -388,19 +388,39 @@ name|data_end
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Phys/avail memory regions. */
+end_comment
+
 begin_decl_stmt
+specifier|static
 name|struct
 name|mem_region
+modifier|*
 name|availmem_regions
-index|[
-name|MEM_REGIONS
-index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|availmem_regions_sz
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mem_region
+modifier|*
+name|physmem_regions
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|physmem_regions_sz
 decl_stmt|;
 end_decl_stmt
 
@@ -4886,6 +4906,22 @@ literal|"mmu_booke_bootstrap: phys_avail too small"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Remove kernel physical address range from avail regions list. Page 	 * align all regions.  Non-page aligned memory isn't very interesting 	 * to us.  Also, sort the entries for ascending addresses. 	 */
+comment|/* Retrieve phys/avail mem regions */
+name|mem_regions
+argument_list|(
+operator|&
+name|physmem_regions
+argument_list|,
+operator|&
+name|physmem_regions_sz
+argument_list|,
+operator|&
+name|availmem_regions
+argument_list|,
+operator|&
+name|availmem_regions_sz
+argument_list|)
+expr_stmt|;
 name|sz
 operator|=
 literal|0
