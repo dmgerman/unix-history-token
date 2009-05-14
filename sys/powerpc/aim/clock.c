@@ -342,6 +342,26 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_function
+name|void
+name|decr_ap_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{  }
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|void
 name|decr_tc_init
@@ -366,42 +386,6 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
-name|u_quad_t
-name|mftb
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|u_long
-name|scratch
-decl_stmt|;
-name|u_quad_t
-name|tb
-decl_stmt|;
-asm|__asm ("1: mftbu %0; mftb %0+1; mftbu %1; cmpw 0,%0,%1; bne 1b"
-block|:
-literal|"=r"
-operator|(
-name|tb
-operator|)
-operator|,
-literal|"=r"
-operator|(
-name|scratch
-operator|)
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-name|tb
-return|;
-end_return
-
-begin_function
-unit|}  static
 name|unsigned
 name|decr_get_timecount
 parameter_list|(

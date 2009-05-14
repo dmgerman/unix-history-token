@@ -513,28 +513,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPR_TBL
-value|0x11c
-end_define
-
-begin_comment
-comment|/* 468 Time Base Lower */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPR_TBU
-value|0x11d
-end_define
-
-begin_comment
-comment|/* 468 Time Base Upper */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SPR_PVR
 value|0x11f
 end_define

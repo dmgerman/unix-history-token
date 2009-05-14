@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bus.h>
 end_include
 
@@ -92,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/smp.h>
 end_include
 
@@ -124,7 +136,7 @@ begin_decl_stmt
 specifier|volatile
 specifier|static
 name|u_int
-name|ap_state
+name|ap_letgo
 decl_stmt|;
 end_decl_stmt
 
@@ -139,8 +151,18 @@ end_decl_stmt
 begin_decl_stmt
 specifier|volatile
 specifier|static
-name|uint32_t
-name|ap_tbl
+name|u_quad_t
+name|ap_timebase
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_int
+name|ipi_msg_cnt
+index|[
+literal|32
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -151,45 +173,62 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|pcpup
-operator|->
-name|pc_awake
-operator|=
-literal|1
+name|PCPU_SET
+argument_list|(
+name|pir
+argument_list|,
+name|mfspr
+argument_list|(
+name|SPR_PIR
+argument_list|)
+argument_list|)
 expr_stmt|;
+name|PCPU_SET
+argument_list|(
+name|awake
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile("msync; isync");
 while|while
 condition|(
-name|ap_state
+name|ap_letgo
 operator|==
 literal|0
 condition|)
 empty_stmt|;
-name|mtspr
-argument_list|(
-name|SPR_TBL
-argument_list|,
-literal|0
-argument_list|)
+comment|/* Initialize DEC and TB, sync with the BSP values */
+name|decr_ap_init
+argument_list|()
 expr_stmt|;
-name|mtspr
+name|mttb
 argument_list|(
-name|SPR_TBU
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|mtspr
-argument_list|(
-name|SPR_TBL
-argument_list|,
-name|ap_tbl
+name|ap_timebase
 argument_list|)
 expr_stmt|;
 asm|__asm __volatile("mtdec %0" :: "r"(ap_decr));
+name|atomic_add_int
+argument_list|(
+operator|&
 name|ap_awake
-operator|++
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
-comment|/* Initialize curthread. */
+name|CTR1
+argument_list|(
+name|KTR_SMP
+argument_list|,
+literal|"SMP: AP CPU%d launched"
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Initialize curthread */
 name|PCPU_SET
 argument_list|(
 name|curthread
@@ -209,6 +248,7 @@ operator|->
 name|td_pcb
 argument_list|)
 expr_stmt|;
+comment|/* Let the DEC and external interrupts go */
 name|mtmsr
 argument_list|(
 name|mfmsr
@@ -635,6 +675,8 @@ name|pc
 decl_stmt|;
 name|int
 name|cpus
+decl_stmt|,
+name|timeout
 decl_stmt|;
 if|if
 condition|(
@@ -682,6 +724,10 @@ operator|->
 name|pc_bsp
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"Waking up CPU %d (dev=%x)\n"
@@ -700,10 +746,41 @@ argument_list|(
 name|pc
 argument_list|)
 expr_stmt|;
+name|timeout
+operator|=
+literal|2000
+expr_stmt|;
+comment|/* wait 2sec for the AP */
+while|while
+condition|(
+operator|!
+name|pc
+operator|->
+name|pc_awake
+operator|&&
+operator|--
+name|timeout
+operator|>
+literal|0
+condition|)
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
-asm|__asm __volatile("mfspr %0,1023" : "=r"(pc->pc_pir));
+name|PCPU_SET
+argument_list|(
+name|pir
+argument_list|,
+name|mfspr
+argument_list|(
+name|SPR_PIR
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|pc
 operator|->
 name|pc_awake
@@ -717,45 +794,70 @@ name|pc
 operator|->
 name|pc_awake
 condition|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"Adding CPU %d, pir=%x, awake=%x\n"
+argument_list|,
+name|pc
+operator|->
+name|pc_cpuid
+argument_list|,
+name|pc
+operator|->
+name|pc_pir
+argument_list|,
+name|pc
+operator|->
+name|pc_awake
+argument_list|)
+expr_stmt|;
 name|smp_cpus
 operator|++
+expr_stmt|;
+block|}
+else|else
+name|stopped_cpus
+operator||=
+operator|(
+literal|1
+operator|<<
+name|pc
+operator|->
+name|pc_cpuid
+operator|)
 expr_stmt|;
 block|}
 name|ap_awake
 operator|=
 literal|1
 expr_stmt|;
-asm|__asm __volatile("mftb %0" : "=r"(ap_tbl));
-name|ap_tbl
-operator|+=
+comment|/* Provide our current DEC and TB values for APs */
+asm|__asm __volatile("mfdec %0" : "=r"(ap_decr));
+name|ap_timebase
+operator|=
+name|mftb
+argument_list|()
+operator|+
 literal|10
 expr_stmt|;
-asm|__asm __volatile("mfdec %0" : "=r"(ap_decr));
-name|ap_state
-operator|++
-expr_stmt|;
-name|powerpc_sync
-argument_list|()
-expr_stmt|;
-name|mtspr
+asm|__asm __volatile("msync; isync");
+comment|/* Let APs continue */
+name|atomic_store_rel_int
 argument_list|(
-name|SPR_TBL
+operator|&
+name|ap_letgo
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
-name|mtspr
+name|mttb
 argument_list|(
-name|SPR_TBU
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|mtspr
-argument_list|(
-name|SPR_TBL
-argument_list|,
-name|ap_tbl
+name|ap_timebase
 argument_list|)
 expr_stmt|;
 while|while
@@ -814,16 +916,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|u_int
-name|ipi_msg_cnt
-index|[
-literal|32
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|int
