@@ -9498,7 +9498,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Extract the file pointer associated with the specified descriptor for the  * current user process.  *  * If the descriptor doesn't exist, EBADF is returned.  *  * If the descriptor exists but doesn't match 'flags' then return EBADF for  * read attempts and EINVAL for write attempts.  *  * If 'hold' is set (non-zero) the file's refcount will be bumped on return.  * It should be dropped with fdrop().  If it is not set, then the refcount  * will not be bumped however the thread's filedesc struct will be returned  * locked (for fgetsock).  *  * If an error occured the non-zero error is returned and *fpp is set to  * NULL.  Otherwise *fpp is set and zero is returned.  */
+comment|/*  * Extract the file pointer associated with the specified descriptor for the  * current user process.  *  * If the descriptor doesn't exist or doesn't match 'flags', EBADF is  * returned.  *  * If 'hold' is set (non-zero) the file's refcount will be bumped on return.  * It should be dropped with fdrop().  If it is not set, then the refcount  * will not be bumped however the thread's filedesc struct will be returned  * locked (for fgetsock).  *  * If an error occured the non-zero error is returned and *fpp is set to  * NULL.  Otherwise *fpp is set and zero is returned.  */
 end_comment
 
 begin_function
