@@ -397,6 +397,21 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
+comment|/*  * KTR_SYSCTL - name of a sysctl MIB  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KTR_SYSCTL
+value|9
+end_define
+
+begin_comment
+comment|/* record contains null-terminated MIB name */
+end_comment
+
+begin_comment
 comment|/*  * KTR_DROP - If this bit is set in ktr_type, then at least one event  * between the previous record and this record was dropped.  */
 end_comment
 
@@ -472,6 +487,13 @@ define|#
 directive|define
 name|KTRFAC_STRUCT
 value|(1<<KTR_STRUCT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KTRFAC_SYSCTL
+value|(1<<KTR_SYSCTL)
 end_define
 
 begin_comment
@@ -592,6 +614,20 @@ parameter_list|,
 name|register_t
 name|args
 index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ktrsysctl
+parameter_list|(
+name|int
+modifier|*
+name|name
+parameter_list|,
+name|u_int
+name|namelen
 parameter_list|)
 function_decl|;
 end_function_decl

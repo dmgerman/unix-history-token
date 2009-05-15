@@ -1108,6 +1108,9 @@ break|break;
 case|case
 name|KTR_NAMEI
 case|:
+case|case
+name|KTR_SYSCTL
+case|:
 name|ktrnamei
 argument_list|(
 name|m
@@ -1369,6 +1372,14 @@ case|:
 name|type
 operator|=
 literal|"STRU"
+expr_stmt|;
+break|break;
+case|case
+name|KTR_SYSCTL
+case|:
+name|type
+operator|=
+literal|"SCTL"
 expr_stmt|;
 break|break;
 default|default:
