@@ -696,8 +696,10 @@ expr|struct
 name|trussinfo
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -715,18 +717,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"malloc() failed"
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|trussinfo
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|trussinfo
-argument_list|)
+literal|"calloc() failed"
 argument_list|)
 expr_stmt|;
 name|trussinfo
