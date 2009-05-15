@@ -4250,6 +4250,7 @@ operator||
 name|IFM_NONE
 expr_stmt|;
 block|}
+break|break;
 default|default:
 name|ifmr
 operator|->
