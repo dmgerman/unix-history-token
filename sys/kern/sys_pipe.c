@@ -435,7 +435,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|int
+name|long
 name|amountpipekva
 decl_stmt|;
 end_decl_stmt
@@ -471,7 +471,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_LONG
 argument_list|(
 name|_kern_ipc
 argument_list|,
@@ -492,7 +492,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_LONG
 argument_list|(
 name|_kern_ipc
 argument_list|,
@@ -2031,7 +2031,7 @@ name|cnt
 operator|=
 name|cnt
 expr_stmt|;
-name|atomic_add_int
+name|atomic_add_long
 argument_list|(
 operator|&
 name|amountpipekva
@@ -6275,7 +6275,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|atomic_subtract_int
+name|atomic_subtract_long
 argument_list|(
 operator|&
 name|amountpipekva

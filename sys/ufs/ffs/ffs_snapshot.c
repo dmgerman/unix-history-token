@@ -13068,7 +13068,7 @@ name|b_runningbufspace
 operator|=
 name|saved_runningbufspace
 expr_stmt|;
-name|atomic_add_int
+name|atomic_add_long
 argument_list|(
 operator|&
 name|runningbufspace
@@ -13625,7 +13625,7 @@ name|b_runningbufspace
 operator|=
 name|saved_runningbufspace
 expr_stmt|;
-name|atomic_add_int
+name|atomic_add_long
 argument_list|(
 operator|&
 name|runningbufspace

@@ -486,6 +486,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|sysctl_bufspace
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|int
 name|vmiodirenable
@@ -516,13 +526,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|int
+name|long
 name|runningbufspace
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_LONG
 argument_list|(
 name|_vfs
 argument_list|,
@@ -544,13 +554,13 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|long
 name|bufspace
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_PROC
 argument_list|(
 name|_vfs
 argument_list|,
@@ -558,12 +568,20 @@ name|OID_AUTO
 argument_list|,
 name|bufspace
 argument_list|,
+name|CTLTYPE_LONG
+operator||
+name|CTLFLAG_MPSAFE
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|bufspace
 argument_list|,
 literal|0
+argument_list|,
+name|sysctl_bufspace
+argument_list|,
+literal|"L"
 argument_list|,
 literal|"Virtual memory used for buffers"
 argument_list|)
@@ -572,13 +590,13 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|long
 name|maxbufspace
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_LONG
 argument_list|(
 name|_vfs
 argument_list|,
@@ -600,13 +618,13 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|long
 name|bufmallocspace
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_LONG
 argument_list|(
 name|_vfs
 argument_list|,
@@ -628,13 +646,13 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|long
 name|maxbufmallocspace
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_LONG
 argument_list|(
 name|_vfs
 argument_list|,
@@ -656,13 +674,13 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|long
 name|lobufspace
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_LONG
 argument_list|(
 name|_vfs
 argument_list|,
@@ -683,13 +701,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|int
+name|long
 name|hibufspace
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_LONG
 argument_list|(
 name|_vfs
 argument_list|,
@@ -795,13 +813,13 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|long
 name|lorunningspace
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_LONG
 argument_list|(
 name|_vfs
 argument_list|,
@@ -823,13 +841,13 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|long
 name|hirunningspace
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_LONG
 argument_list|(
 name|_vfs
 argument_list|,
@@ -1558,6 +1576,108 @@ begin_comment
 comment|/* wait for buf space, lo hysteresis */
 end_comment
 
+begin_function
+specifier|static
+name|int
+name|sysctl_bufspace
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+name|long
+name|lvalue
+decl_stmt|;
+name|int
+name|ivalue
+decl_stmt|;
+if|if
+condition|(
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+operator|==
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+operator|||
+name|req
+operator|->
+name|oldlen
+operator|==
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+condition|)
+return|return
+operator|(
+name|sysctl_handle_long
+argument_list|(
+name|oidp
+argument_list|,
+name|arg1
+argument_list|,
+name|arg2
+argument_list|,
+name|req
+argument_list|)
+operator|)
+return|;
+name|lvalue
+operator|=
+operator|*
+operator|(
+name|long
+operator|*
+operator|)
+name|arg1
+expr_stmt|;
+if|if
+condition|(
+name|lvalue
+operator|>
+name|INT_MAX
+condition|)
+comment|/* On overflow, still write out a long to trigger ENOMEM. */
+return|return
+operator|(
+name|sysctl_handle_long
+argument_list|(
+name|oidp
+argument_list|,
+operator|&
+name|lvalue
+argument_list|,
+literal|0
+argument_list|,
+name|req
+argument_list|)
+operator|)
+return|;
+name|ivalue
+operator|=
+name|lvalue
+expr_stmt|;
+return|return
+operator|(
+name|sysctl_handle_int
+argument_list|(
+name|oidp
+argument_list|,
+operator|&
+name|ivalue
+argument_list|,
+literal|0
+argument_list|,
+name|req
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1708,7 +1828,7 @@ operator|->
 name|b_runningbufspace
 condition|)
 block|{
-name|atomic_subtract_int
+name|atomic_subtract_long
 argument_list|(
 operator|&
 name|runningbufspace
@@ -2045,6 +2165,9 @@ name|physmem_est
 parameter_list|)
 block|{
 name|int
+name|tuned_nbuf
+decl_stmt|;
+name|long
 name|maxbuf
 decl_stmt|;
 comment|/* 	 * physmem_est is in pages.  Convert it to kilobytes (assumes 	 * PAGE_SIZE is>= 1K) 	 */
@@ -2140,11 +2263,21 @@ name|maxbcache
 operator|/
 name|BKVASIZE
 expr_stmt|;
-comment|/* XXX Avoid integer overflows later on with maxbufspace. */
+name|tuned_nbuf
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+name|tuned_nbuf
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX Avoid unsigned long overflows later on with maxbufspace. */
 name|maxbuf
 operator|=
 operator|(
-name|INT_MAX
+name|LONG_MAX
 operator|/
 literal|3
 operator|)
@@ -2157,6 +2290,21 @@ name|nbuf
 operator|>
 name|maxbuf
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|tuned_nbuf
+condition|)
+name|printf
+argument_list|(
+literal|"Warning: nbufs lowered from %d to %ld\n"
+argument_list|,
+name|nbuf
+argument_list|,
+name|maxbuf
+argument_list|)
+expr_stmt|;
 name|nbuf
 operator|=
 name|maxbuf
@@ -2469,13 +2617,16 @@ block|}
 comment|/* 	 * maxbufspace is the absolute maximum amount of buffer space we are  	 * allowed to reserve in KVM and in real terms.  The absolute maximum 	 * is nominally used by buf_daemon.  hibufspace is the nominal maximum 	 * used by most other processes.  The differential is required to  	 * ensure that buf_daemon is able to run when other processes might  	 * be blocked waiting for buffer space. 	 * 	 * maxbufspace is based on BKVASIZE.  Allocating buffers larger then 	 * this may result in KVM fragmentation which is not handled optimally 	 * by the system. 	 */
 name|maxbufspace
 operator|=
+operator|(
+name|long
+operator|)
 name|nbuf
 operator|*
 name|BKVASIZE
 expr_stmt|;
 name|hibufspace
 operator|=
-name|imax
+name|lmax
 argument_list|(
 literal|3
 operator|*
@@ -2539,6 +2690,9 @@ expr_stmt|;
 comment|/*  * To support extreme low-memory systems, make sure hidirtybuffers cannot  * eat up all available buffer space.  This occurs when our minimum cannot  * be met.  We try to size hidirtybuffers to 3/4 our buffer space assuming  * BKVASIZE'd (8K) buffers.  */
 while|while
 condition|(
+operator|(
+name|long
+operator|)
 name|hidirtybuffers
 operator|*
 name|BKVASIZE
@@ -2629,7 +2783,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|atomic_subtract_int
+name|atomic_subtract_long
 argument_list|(
 operator|&
 name|bufspace
@@ -3636,7 +3790,7 @@ name|bp
 operator|->
 name|b_bufsize
 expr_stmt|;
-name|atomic_add_int
+name|atomic_add_long
 argument_list|(
 operator|&
 name|runningbufspace
@@ -8059,7 +8213,7 @@ name|b_kvasize
 operator|=
 name|maxsize
 expr_stmt|;
-name|atomic_add_int
+name|atomic_add_long
 argument_list|(
 operator|&
 name|bufspace
@@ -10723,7 +10877,7 @@ operator|->
 name|b_bufsize
 condition|)
 block|{
-name|atomic_subtract_int
+name|atomic_subtract_long
 argument_list|(
 operator|&
 name|bufmallocspace
@@ -10871,7 +11025,7 @@ name|b_flags
 operator||=
 name|B_MALLOC
 expr_stmt|;
-name|atomic_add_int
+name|atomic_add_long
 argument_list|(
 operator|&
 name|bufmallocspace
@@ -10928,7 +11082,7 @@ operator|->
 name|b_bufsize
 condition|)
 block|{
-name|atomic_subtract_int
+name|atomic_subtract_long
 argument_list|(
 operator|&
 name|bufmallocspace

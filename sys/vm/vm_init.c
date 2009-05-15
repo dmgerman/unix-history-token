@@ -431,10 +431,16 @@ name|kmi
 operator|->
 name|clean_eva
 argument_list|,
+operator|(
+name|long
+operator|)
 name|nbuf
 operator|*
 name|BKVASIZE
 operator|+
+operator|(
+name|long
+operator|)
 name|nswbuf
 operator|*
 name|MAXPHYS
@@ -458,6 +464,9 @@ name|kmi
 operator|->
 name|buffer_eva
 argument_list|,
+operator|(
+name|long
+operator|)
 name|nbuf
 operator|*
 name|BKVASIZE
@@ -487,6 +496,9 @@ name|kmi
 operator|->
 name|pager_eva
 argument_list|,
+operator|(
+name|long
+operator|)
 name|nswbuf
 operator|*
 name|MAXPHYS
