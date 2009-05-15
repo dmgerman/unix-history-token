@@ -4028,8 +4028,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Read did not fill up entire page.  Since this 			 * is getpages, the page may be mapped, so we have 			 * to zero the invalid portions of the page even 			 * though we aren't setting them valid. 			 * 			 * Currently we do not set the entire page valid, 			 * we just try to clear the piece that we couldn't 			 * read. 			 */
-name|vm_page_set_validclean
+comment|/* 			 * Read did not fill up entire page. 			 * 			 * Currently we do not set the entire page valid, 			 * we just try to clear the piece that we couldn't 			 * read. 			 */
+name|vm_page_set_valid
 argument_list|(
 name|mt
 argument_list|,
@@ -4044,6 +4044,38 @@ operator|.
 name|vnp_size
 operator|-
 name|tfoff
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|mt
+operator|->
+name|dirty
+operator|&
+name|vm_page_bits
+argument_list|(
+literal|0
+argument_list|,
+name|object
+operator|->
+name|un_pager
+operator|.
+name|vnp
+operator|.
+name|vnp_size
+operator|-
+name|tfoff
+argument_list|)
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"vnode_pager_generic_getpages: page %p is dirty"
+operator|,
+name|mt
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
