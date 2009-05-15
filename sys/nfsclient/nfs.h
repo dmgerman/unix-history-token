@@ -202,7 +202,7 @@ begin_define
 define|#
 directive|define
 name|NFS_MINDIRATTRTIMO
-value|30
+value|3
 end_define
 
 begin_comment
