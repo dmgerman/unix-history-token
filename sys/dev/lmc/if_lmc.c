@@ -28626,7 +28626,7 @@ name|devclass
 decl_stmt|;
 name|DRIVER_MODULE
 argument_list|(
-name|if_lmc
+name|lmc
 argument_list|,
 name|pci
 argument_list|,
@@ -28641,14 +28641,14 @@ argument_list|)
 expr_stmt|;
 name|MODULE_VERSION
 argument_list|(
-name|if_lmc
+name|lmc
 argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
 name|MODULE_DEPEND
 argument_list|(
-name|if_lmc
+name|lmc
 argument_list|,
 name|pci
 argument_list|,
@@ -28664,7 +28664,7 @@ directive|if
 name|NETGRAPH
 name|MODULE_DEPEND
 argument_list|(
-name|if_lmc
+name|lmc
 argument_list|,
 name|netgraph
 argument_list|,
@@ -28682,7 +28682,7 @@ directive|if
 name|NSPPP
 name|MODULE_DEPEND
 argument_list|(
-name|if_lmc
+name|lmc
 argument_list|,
 name|sppp
 argument_list|,

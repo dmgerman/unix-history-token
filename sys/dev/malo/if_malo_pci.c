@@ -1574,7 +1574,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|if_malo
+name|malo
 argument_list|,
 name|pci
 argument_list|,
@@ -1592,7 +1592,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
-name|if_malo
+name|malo
 argument_list|,
 literal|1
 argument_list|)
@@ -1602,7 +1602,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|if_malo
+name|malo
 argument_list|,
 name|wlan
 argument_list|,
@@ -1622,7 +1622,7 @@ end_comment
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|if_malo
+name|malo
 argument_list|,
 name|malofw_fw
 argument_list|,
