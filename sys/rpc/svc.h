@@ -53,6 +53,12 @@ directive|include
 file|<sys/_mutex.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_sx.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -324,7 +330,7 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 name|struct
-name|mtx
+name|sx
 name|xp_lock
 decl_stmt|;
 name|struct
@@ -1014,6 +1020,17 @@ begin_function_decl
 specifier|extern
 name|void
 name|xprt_inactive
+parameter_list|(
+name|SVCXPRT
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|xprt_inactive_locked
 parameter_list|(
 name|SVCXPRT
 modifier|*
