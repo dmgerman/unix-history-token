@@ -641,7 +641,7 @@ name|newnfs_diskless_valid
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Has the diskless struct been filled correctly"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -663,7 +663,7 @@ name|root_hostnam
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Path to nfs root"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -691,7 +691,7 @@ name|root_saddr
 argument_list|,
 literal|"%Ssockaddr_in"
 argument_list|,
-literal|""
+literal|"Diskless root nfs address"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1989,7 +1989,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Mount a remote root fs via. nfs. This depends on the info in the  * newnfs_diskless structure that has been filled in properly by some primary  * bootstrap.  * It goes something like this:  * - do enough of "ifconfig" by calling ifioctl() so that the system  *   can talk to the server  * - If newnfs_diskless.mygateway is filled in, use that address as  *   a default gateway.  * - build the rootfs mount point and call mountnfs() to do the rest.  *  * It is assumed to be safe to read, modify, and write the nfsv3_diskless  * structure, as well as other global NFS client variables here, as  * ncl_mountroot() will be called once in the boot before any other NFS  * client activity occurs.  */
+comment|/*  * Mount a remote root fs via. nfs. This depends on the info in the  * newnfs_diskless structure that has been filled in properly by some primary  * bootstrap.  * It goes something like this:  * - do enough of "ifconfig" by calling ifioctl() so that the system  *   can talk to the server  * - If newnfs_diskless.mygateway is filled in, use that address as  *   a default gateway.  * - build the rootfs mount point and call mountnfs() to do the rest.  *  * It is assumed to be safe to read, modify, and write the nfsv3_diskless  * structure, as well as other global NFS client variables here, as  * nfs_mountroot() will be called once in the boot before any other NFS  * client activity occurs.  */
 end_comment
 
 begin_function
@@ -2000,13 +2000,23 @@ name|struct
 name|mount
 modifier|*
 name|mp
-parameter_list|,
+parameter_list|)
+block|{
 name|struct
 name|thread
 modifier|*
 name|td
-parameter_list|)
-block|{
+init|=
+name|curthread
+decl_stmt|;
+name|INIT_VPROCG
+argument_list|(
+name|TD_TO_VPROCG
+argument_list|(
+name|td
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|struct
 name|nfsv3_diskless
 modifier|*
@@ -2061,7 +2071,7 @@ argument_list|)
 name|bootpc_init
 argument_list|()
 expr_stmt|;
-comment|/* use bootp to get newnfs_diskless filled in */
+comment|/* use bootp to get nfs_diskless filled in */
 elif|#
 directive|elif
 name|defined
@@ -2073,9 +2083,6 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-name|nfscl_init
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|newnfs_diskless_valid
@@ -2138,7 +2145,7 @@ name|error
 condition|)
 name|panic
 argument_list|(
-literal|"ncl_mountroot: socreate(%04x): %d"
+literal|"nfs_mountroot: socreate(%04x): %d"
 argument_list|,
 name|nd
 operator|->
@@ -2184,7 +2191,7 @@ name|error
 condition|)
 name|panic
 argument_list|(
-literal|"ncl_mountroot: SIOCAIFADDR: %d"
+literal|"nfs_mountroot: SIOCAIFADDR: %d"
 argument_list|,
 name|error
 argument_list|)
@@ -2259,7 +2266,7 @@ name|error
 condition|)
 name|printf
 argument_list|(
-literal|"ncl_mountroot: SIOCSIFMTU: %d"
+literal|"nfs_mountroot: SIOCSIFMTU: %d"
 argument_list|,
 name|error
 argument_list|)
@@ -2331,6 +2338,7 @@ argument_list|(
 name|sin
 argument_list|)
 expr_stmt|;
+comment|/* XXX MRT use table 0 for this sort of thing */
 name|error
 operator|=
 name|rtrequest
@@ -2376,7 +2384,7 @@ name|error
 condition|)
 name|panic
 argument_list|(
-literal|"ncl_mountroot: RTM_ADD: %d"
+literal|"nfs_mountroot: RTM_ADD: %d"
 argument_list|,
 name|error
 argument_list|)
@@ -2471,6 +2479,14 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+name|nd
+operator|->
+name|root_args
+operator|.
+name|hostname
+operator|=
+name|buf
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2509,18 +2525,24 @@ operator|)
 return|;
 block|}
 comment|/* 	 * This is not really an nfs issue, but it is much easier to 	 * set hostname here and then let the "/etc/rc.xxx" files 	 * mount the right /var based upon its preset value. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|hostname_mtx
+argument_list|)
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|nd
 operator|->
 name|my_hostnam
 argument_list|,
-name|hostname
+name|V_hostname
 argument_list|,
 name|MAXHOSTNAMELEN
 argument_list|)
 expr_stmt|;
-name|hostname
+name|V_hostname
 index|[
 name|MAXHOSTNAMELEN
 operator|-
@@ -2544,7 +2566,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|hostname
+name|V_hostname
 index|[
 name|i
 index|]
@@ -2552,6 +2574,12 @@ operator|==
 literal|'\0'
 condition|)
 break|break;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|hostname_mtx
+argument_list|)
+expr_stmt|;
 name|inittodr
 argument_list|(
 name|ntohl
@@ -2668,7 +2696,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ncl_mountroot: mount %s on /: %d\n"
+literal|"nfs_mountroot: mount %s on /: %d\n"
 argument_list|,
 name|path
 argument_list|,
@@ -3858,8 +3886,6 @@ operator|=
 name|ncl_mountroot
 argument_list|(
 name|mp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 goto|goto
