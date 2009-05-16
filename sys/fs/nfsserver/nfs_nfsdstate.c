@@ -16642,6 +16642,25 @@ operator|->
 name|lc_cbref
 operator|++
 expr_stmt|;
+comment|/* 	 * Fill the callback program# and version into the request 	 * structure for newnfs_connect() to use. 	 */
+name|clp
+operator|->
+name|lc_req
+operator|.
+name|nr_prog
+operator|=
+name|clp
+operator|->
+name|lc_program
+expr_stmt|;
+name|clp
+operator|->
+name|lc_req
+operator|.
+name|nr_vers
+operator|=
+name|NFSV4_CBVERS
+expr_stmt|;
 comment|/* 	 * First, fill in some of the fields of nd and cr. 	 */
 name|nd
 operator|->
