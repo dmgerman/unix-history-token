@@ -270,6 +270,23 @@ name|LINUX_AF_INET6
 value|10
 end_define
 
+begin_struct
+struct|struct
+name|l_ucred
+block|{
+name|uint32_t
+name|pid
+decl_stmt|;
+name|uint32_t
+name|uid
+decl_stmt|;
+name|uint32_t
+name|gid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif
