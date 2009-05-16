@@ -159,6 +159,20 @@ directive|include
 file|<vm/vm_extern.h>
 end_include
 
+begin_comment
+comment|/*  * Only available as a band-aid to ZFS  */
+end_comment
+
+begin_function_decl
+name|int
+name|vm_contig_launder
+parameter_list|(
+name|int
+name|queue
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|int
@@ -495,7 +509,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|vm_contig_launder
 parameter_list|(

@@ -248,6 +248,14 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|arc_large_memory_enabled
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|TUNABLE_QUAD
 argument_list|(
@@ -15610,6 +15618,39 @@ operator|*
 name|hz
 expr_stmt|;
 comment|/* Start out with 1/8 of all memory */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+operator|(
+name|__amd64__
+operator|)
+name|arc_c
+operator|=
+name|physmem
+operator|*
+name|PAGE_SIZE
+operator|/
+literal|8
+expr_stmt|;
+if|if
+condition|(
+name|physmem
+operator|*
+name|PAGE_SIZE
+operator|>
+name|kmem_size
+argument_list|()
+condition|)
+name|arc_large_memory_enabled
+operator|=
+literal|1
+expr_stmt|;
+else|#
+directive|else
 name|arc_c
 operator|=
 name|kmem_size
@@ -15617,16 +15658,6 @@ argument_list|()
 operator|/
 literal|8
 expr_stmt|;
-if|#
-directive|if
-literal|0
-ifdef|#
-directive|ifdef
-name|_KERNEL
-comment|/* 	 * On architectures where the physical memory can be larger 	 * than the addressable space (intel in 32-bit mode), we may 	 * need to limit the cache to 1/8 of VM size. 	 */
-block|arc_c = MIN(arc_c, vmem_size(heap_arena, VMEM_ALLOC | VMEM_FREE) / 8);
-endif|#
-directive|endif
 endif|#
 directive|endif
 comment|/* set min cache to 1/32 of all memory, or 16MB, whichever is more */
@@ -15688,6 +15719,31 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 comment|/* 	 * Allow the tunables to override our calculations if they are 	 * reasonable (ie. over 16MB) 	 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+if|if
+condition|(
+name|zfs_arc_max
+operator|>=
+literal|64
+operator|<<
+literal|18
+condition|)
+name|arc_c_max
+operator|=
+name|zfs_arc_max
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|zfs_arc_max
@@ -15705,6 +15761,8 @@ name|arc_c_max
 operator|=
 name|zfs_arc_max
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|zfs_arc_min
