@@ -2261,6 +2261,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LINUX_O_CLOEXEC
+value|02000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_F_DUPFD
 value|0
 end_define
