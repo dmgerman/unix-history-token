@@ -15644,6 +15644,16 @@ name|PAGE_SIZE
 operator|>
 name|kmem_size
 argument_list|()
+operator|&&
+operator|(
+name|physmem
+operator|>
+operator|(
+literal|1UL
+operator|<<
+literal|31
+operator|)
+operator|)
 condition|)
 name|arc_large_memory_enabled
 operator|=
