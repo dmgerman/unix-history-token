@@ -436,6 +436,11 @@ name|CACHE_DEBUG
 ifdef|#
 directive|ifdef
 name|CACHE_DEBUG
+name|printf
+argument_list|(
+literal|"Cache info:\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cpuinfo
