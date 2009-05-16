@@ -4395,13 +4395,8 @@ name|ZFS_LOG
 argument_list|(
 literal|0
 argument_list|,
-literal|"Force unmount is not supported, removing FORCE flag."
+literal|"Force unmount is experimental - report any problems."
 argument_list|)
-expr_stmt|;
-name|fflag
-operator|&=
-operator|~
-name|MS_FORCE
 expr_stmt|;
 block|}
 name|ret
@@ -4800,8 +4795,22 @@ operator|->
 name|v_count
 operator|==
 literal|2
+operator|||
+name|svp
+operator|->
+name|v_count
+operator|==
+literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|svp
+operator|->
+name|v_count
+operator|==
+literal|2
+condition|)
 name|VN_RELE
 argument_list|(
 name|svp
