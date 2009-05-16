@@ -183,6 +183,38 @@ parameter_list|)
 value|((unsigned)(x)& MIPS_PHYS_MASK)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MIPS_IS_KSEG0_ADDR
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((vm_offset_t)(x)>= MIPS_KSEG0_START)&&		\ 	    ((vm_offset_t)(x)<= MIPS_KSEG0_END))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_IS_KSEG1_ADDR
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((vm_offset_t)(x)>= MIPS_KSEG1_START)&&		\ 	    ((vm_offset_t)(x)<= MIPS_KSEG1_END))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_IS_VALID_PTR
+parameter_list|(
+name|x
+parameter_list|)
+value|(MIPS_IS_KSEG0_ADDR(x) || \ 						MIPS_IS_KSEG1_ADDR(x))
+end_define
+
 begin_comment
 comment|/*  *  Status register.  */
 end_comment
