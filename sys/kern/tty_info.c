@@ -720,7 +720,17 @@ name|ttyprintf
 argument_list|(
 name|tp
 argument_list|,
-literal|"load: %d.%02d "
+literal|"%sload: %d.%02d "
+argument_list|,
+name|tp
+operator|->
+name|t_column
+operator|==
+literal|0
+condition|?
+literal|""
+else|:
+literal|"\n"
 argument_list|,
 name|load
 operator|/
