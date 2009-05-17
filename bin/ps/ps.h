@@ -80,6 +80,20 @@ name|segsz_t
 name|ki_memsize
 decl_stmt|;
 comment|/* calculated in main() */
+union|union
+block|{
+name|int
+name|level
+decl_stmt|;
+comment|/* used in decendant_sort() */
+name|char
+modifier|*
+name|prefix
+decl_stmt|;
+comment|/* calculated in decendant_sort() */
+block|}
+name|ki_d
+union|;
 block|}
 name|KINFO
 typedef|;
