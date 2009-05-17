@@ -7551,7 +7551,7 @@ expr_stmt|;
 comment|/* NB: 11g =>'s 11b so don't specify both OFDM and CCK */
 if|if
 condition|(
-name|IEEE80211_IS_CHAN_G
+name|IEEE80211_IS_CHAN_OFDM
 argument_list|(
 name|c
 argument_list|)
@@ -7568,7 +7568,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|IEEE80211_IS_CHAN_B
+name|IEEE80211_IS_CHAN_CCK
 argument_list|(
 name|c
 argument_list|)
