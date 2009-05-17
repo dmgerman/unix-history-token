@@ -35,13 +35,6 @@ end_include
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|nfsrv_dolocallocks
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|u_int32_t
 name|newnfs_true
 decl_stmt|,
@@ -200,6 +193,13 @@ name|nfsrv_issuedelegs
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|nfsrv_dolocallocks
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -224,7 +224,7 @@ name|enable_crossmntpt
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Enable nfsd to cross mount points"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -287,7 +287,28 @@ name|nfsrv_issuedelegs
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Enable nfsd to issue delegations"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_newnfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|enable_locallocks
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|nfsrv_dolocallocks
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable nfsd to acquire local locks on files"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
