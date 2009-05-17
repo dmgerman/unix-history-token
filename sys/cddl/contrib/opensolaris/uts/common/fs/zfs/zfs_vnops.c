@@ -17964,7 +17964,11 @@ name|a_fcnp
 operator|->
 name|cn_flags
 operator|&
+operator|(
 name|SAVENAME
+operator||
+name|SAVESTART
+operator|)
 argument_list|)
 expr_stmt|;
 name|ASSERT
@@ -17975,7 +17979,11 @@ name|a_tcnp
 operator|->
 name|cn_flags
 operator|&
+operator|(
 name|SAVENAME
+operator||
+name|SAVESTART
+operator|)
 argument_list|)
 expr_stmt|;
 name|error
