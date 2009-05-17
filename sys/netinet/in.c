@@ -3812,6 +3812,13 @@ name|int
 name|scrub
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|INIT_VNET_INET
 argument_list|(
 name|ifp
@@ -4822,6 +4829,11 @@ modifier|*
 name|target
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|INIT_VNET_INET
 argument_list|(
 name|curvnet
