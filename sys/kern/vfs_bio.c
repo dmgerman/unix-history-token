@@ -14414,7 +14414,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vfs_bio_clrbuf:  *  *	clear a buffer.  This routine essentially fakes an I/O, so we need  *	to clear BIO_ERROR and B_INVAL.  *  *	Note that while we only theoretically need to clear through b_bcount,  *	we go ahead and clear through b_bufsize.  */
+comment|/*  *	vfs_bio_clrbuf:  *  *	If the specified buffer is a non-VMIO buffer, clear the entire  *	buffer.  If the specified buffer is a VMIO buffer, clear and  *	validate only the previously invalid portions of the buffer.  *	This routine essentially fakes an I/O, so we need to clear  *	BIO_ERROR and B_INVAL.  *  *	Note that while we only theoretically need to clear through b_bcount,  *	we go ahead and clear through b_bufsize.  */
 end_comment
 
 begin_function
@@ -14433,8 +14433,6 @@ decl_stmt|,
 name|j
 decl_stmt|,
 name|mask
-init|=
-literal|0
 decl_stmt|;
 name|caddr_t
 name|sa
@@ -14584,24 +14582,6 @@ goto|;
 if|if
 condition|(
 operator|(
-operator|(
-name|bp
-operator|->
-name|b_pages
-index|[
-literal|0
-index|]
-operator|->
-name|flags
-operator|&
-name|PG_ZERO
-operator|)
-operator|==
-literal|0
-operator|)
-operator|&&
-operator|(
-operator|(
 name|bp
 operator|->
 name|b_pages
@@ -14615,7 +14595,6 @@ name|mask
 operator|)
 operator|==
 literal|0
-operator|)
 condition|)
 block|{
 name|bzero
@@ -14817,24 +14796,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|bp
-operator|->
-name|b_pages
-index|[
-name|i
-index|]
-operator|->
-name|flags
-operator|&
-name|PG_ZERO
-operator|)
-operator|==
-literal|0
-condition|)
 name|bzero
 argument_list|(
 name|sa
@@ -14844,7 +14805,6 @@ operator|-
 name|sa
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 for|for
@@ -14864,23 +14824,6 @@ control|)
 block|{
 if|if
 condition|(
-operator|(
-operator|(
-name|bp
-operator|->
-name|b_pages
-index|[
-name|i
-index|]
-operator|->
-name|flags
-operator|&
-name|PG_ZERO
-operator|)
-operator|==
-literal|0
-operator|)
-operator|&&
 operator|(
 name|bp
 operator|->
