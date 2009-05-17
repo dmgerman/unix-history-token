@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/pmclog.h>
 end_include
 
@@ -375,6 +381,7 @@ value|(-1)
 end_define
 
 begin_function_decl
+name|__BEGIN_DECLS
 name|void
 modifier|*
 name|pmclog_open
@@ -429,6 +436,10 @@ name|_cookie
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
