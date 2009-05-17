@@ -2949,9 +2949,19 @@ argument_list|,
 name|PG_REFERENCED
 argument_list|)
 expr_stmt|;
-name|pmap_clear_reference
+name|KASSERT
+argument_list|(
+operator|!
+name|pmap_page_is_mapped
 argument_list|(
 name|m
+argument_list|)
+argument_list|,
+operator|(
+literal|"vm_pageout_scan: page %p is mapped"
+operator|,
+name|m
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Otherwise, if the page has been referenced while in the  		 * inactive queue, we bump the "activation count" upwards,  		 * making it less likely that the page will be added back to  		 * the inactive queue prematurely again.  Here we check the  		 * page tables (or emulated bits, if any), given the upper  		 * level VM system not knowing anything about existing  		 * references. 		 */
