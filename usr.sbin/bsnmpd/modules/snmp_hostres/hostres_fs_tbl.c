@@ -467,6 +467,13 @@ name|OIDX_hrFSBerkeleyFFS_c
 block|}
 block|,
 block|{
+literal|"zfs"
+block|,
+operator|&
+name|OIDX_hrFSOther_c
+block|}
+block|,
+block|{
 literal|"cd9660"
 block|,
 operator|&
