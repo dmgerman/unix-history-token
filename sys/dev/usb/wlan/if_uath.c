@@ -749,6 +749,13 @@ argument_list|)
 block|,
 name|UATH_DEV
 argument_list|(
+name|UMEDIA
+argument_list|,
+name|AR5523_3
+argument_list|)
+block|,
+name|UATH_DEV
+argument_list|(
 name|WISTRONNEWEB
 argument_list|,
 name|AR5523_1
