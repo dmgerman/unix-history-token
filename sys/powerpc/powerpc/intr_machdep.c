@@ -236,12 +236,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INTR_FILTER
-end_ifdef
-
 begin_function
 specifier|static
 name|void
@@ -297,11 +291,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -566,17 +555,12 @@ name|irq
 argument_list|,
 literal|0
 argument_list|,
-name|powerpc_intr_unmask
-argument_list|,
-ifdef|#
-directive|ifdef
-name|INTR_FILTER
-name|powerpc_intr_eoi
-argument_list|,
 name|powerpc_intr_mask
 argument_list|,
-endif|#
-directive|endif
+name|powerpc_intr_unmask
+argument_list|,
+name|powerpc_intr_eoi
+argument_list|,
 name|NULL
 argument_list|,
 literal|"irq%u:"
