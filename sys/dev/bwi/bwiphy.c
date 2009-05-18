@@ -1885,7 +1885,7 @@ literal|0xfff0
 argument_list|,
 name|tpctl
 operator|->
-name|tp_ctrl1
+name|tp_ctrl2
 argument_list|)
 expr_stmt|;
 block|}
