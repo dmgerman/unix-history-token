@@ -802,7 +802,7 @@ name|autoinc_step
 argument_list|,
 literal|0
 argument_list|,
-literal|"Rule number autincrement step"
+literal|"Rule number auto-increment step"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -812,7 +812,7 @@ name|SYSCTL_V_INT
 argument_list|(
 name|V_NET
 argument_list|,
-name|vnet_inet
+name|vnet_ipfw
 argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
