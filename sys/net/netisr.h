@@ -121,17 +121,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NETISR_PPP
-value|26
-end_define
-
-begin_comment
-comment|/* PPP soft interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NETISR_IPV6
 value|27
 end_define
@@ -141,20 +130,6 @@ define|#
 directive|define
 name|NETISR_NATM
 value|28
-end_define
-
-begin_define
-define|#
-directive|define
-name|NETISR_ATM
-value|29
-end_define
-
-begin_define
-define|#
-directive|define
-name|NETISR_NETGRAPH
-value|30
 end_define
 
 begin_define
