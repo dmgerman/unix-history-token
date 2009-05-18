@@ -377,7 +377,7 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -639,7 +639,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -686,7 +686,7 @@ name|struct
 name|nge_softc
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
 name|int
 parameter_list|)
@@ -1307,7 +1307,7 @@ parameter_list|,
 name|int
 name|addr
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|dest
 parameter_list|)
@@ -1315,7 +1315,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|word
 init|=
 literal|0
@@ -1459,7 +1459,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|word
 init|=
 literal|0
@@ -1496,7 +1496,7 @@ expr_stmt|;
 name|ptr
 operator|=
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|(
@@ -1608,7 +1608,7 @@ name|nge_softc
 modifier|*
 name|sc
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|bits
 parameter_list|,
 name|int
@@ -2653,7 +2653,7 @@ name|ifmultiaddr
 modifier|*
 name|ifma
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|h
 init|=
 literal|0
@@ -4537,7 +4537,7 @@ name|m
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|u_int64_t
+name|uint64_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4711,7 +4711,7 @@ name|total_len
 init|=
 literal|0
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|rxstat
 decl_stmt|;
 name|NGE_LOCK_ASSERT
@@ -4749,7 +4749,7 @@ index|]
 argument_list|)
 condition|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|extsts
 decl_stmt|;
 ifdef|#
@@ -5287,7 +5287,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|idx
 decl_stmt|;
 name|NGE_LOCK_ASSERT
@@ -5824,7 +5824,7 @@ operator|==
 name|POLL_AND_CHECK_STATUS
 condition|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|status
 decl_stmt|;
 comment|/* Reading the ISR register clears all interrupts. */
@@ -5925,7 +5925,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|status
 decl_stmt|;
 name|sc
@@ -6249,7 +6249,7 @@ name|mbuf
 modifier|*
 name|m_head
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|txidx
 parameter_list|)
@@ -6670,7 +6670,7 @@ name|m_head
 init|=
 name|NULL
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|idx
 decl_stmt|;
 name|sc
@@ -6927,7 +6927,7 @@ name|NGE_RXFILT_DATA
 argument_list|,
 operator|(
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 name|IF_LLADDR
@@ -6959,7 +6959,7 @@ name|NGE_RXFILT_DATA
 argument_list|,
 operator|(
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 name|IF_LLADDR
@@ -6991,7 +6991,7 @@ name|NGE_RXFILT_DATA
 argument_list|,
 operator|(
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 name|IF_LLADDR
