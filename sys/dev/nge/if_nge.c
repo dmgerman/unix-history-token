@@ -6180,7 +6180,7 @@ block|}
 if|#
 directive|if
 literal|0
-comment|/*  		 * XXX: nge_tick() is not ready to be called this way 		 * it screws up the aneg timeout because mii_tick() is 		 * only to be called once per second. 		 */
+comment|/* 		 * XXX: nge_tick() is not ready to be called this way 		 * it screws up the aneg timeout because mii_tick() is 		 * only to be called once per second. 		 */
 block|if (status& NGE_IMR_PHY_INTR) { 			sc->nge_link = 0; 			nge_tick(sc); 		}
 endif|#
 directive|endif
