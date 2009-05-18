@@ -1093,7 +1093,6 @@ argument_list|,
 name|NGE_CSR
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1195,7 +1194,6 @@ argument_list|,
 literal|0x00000000
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1289,7 +1287,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1429,7 +1426,6 @@ name|dest
 operator|=
 name|word
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1532,7 +1528,6 @@ operator|=
 name|word
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1596,7 +1591,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2635,7 +2629,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -2895,7 +2888,6 @@ argument_list|,
 name|filtsave
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2992,7 +2984,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5268,7 +5259,6 @@ name|nge_rx_prod
 operator|=
 name|i
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5508,7 +5498,6 @@ name|if_timer
 operator|=
 literal|0
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5723,7 +5712,6 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6239,7 +6227,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6815,7 +6802,6 @@ name|if_timer
 operator|=
 literal|5
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7507,7 +7493,6 @@ operator|&=
 operator|~
 name|IFF_DRV_OACTIVE
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8095,7 +8080,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8710,7 +8694,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9038,7 +9021,6 @@ operator||
 name|IFF_DRV_OACTIVE
 operator|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
