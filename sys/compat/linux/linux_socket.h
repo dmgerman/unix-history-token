@@ -124,6 +124,13 @@ name|LINUX_MSG_NOSIGNAL
 value|0x4000
 end_define
 
+begin_define
+define|#
+directive|define
+name|LINUX_MSG_CMSG_CLOEXEC
+value|0x40000000
+end_define
+
 begin_comment
 comment|/* Socket-level control message types */
 end_comment
