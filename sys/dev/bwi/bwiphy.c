@@ -602,7 +602,6 @@ name|mac
 operator|->
 name|mac_sc
 decl_stmt|;
-comment|/* TODO: 11A */
 name|CSR_WRITE_2
 argument_list|(
 name|sc
@@ -646,7 +645,6 @@ name|mac
 operator|->
 name|mac_sc
 decl_stmt|;
-comment|/* TODO: 11A */
 name|CSR_WRITE_2
 argument_list|(
 name|sc
