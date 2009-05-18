@@ -4676,6 +4676,31 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * Allow interrupt event binding for software interrupt handlers -- a no-op,  * since interrupts are generated in software rather than being directed by  * a PIC.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|swi_assign_cpu
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|u_char
+name|cpu
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Add a software interrupt handler to a specified event.  If a given event  * is not specified, then a new event is created.  */
 end_comment
 
@@ -4791,7 +4816,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+name|swi_assign_cpu
 argument_list|,
 literal|"swi%d:"
 argument_list|,
