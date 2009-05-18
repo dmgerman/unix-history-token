@@ -2830,7 +2830,7 @@ name|NGE_LASTDESC
 parameter_list|(
 name|x
 parameter_list|)
-value|(!((x)->nge_ctl& NGE_CMDSTS_MORE)))
+value|(!((x)->nge_ctl& NGE_CMDSTS_MORE))
 end_define
 
 begin_define
@@ -2840,7 +2840,7 @@ name|NGE_MORE
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)->nge_ctl& NGE_CMDSTS_MORE))
+value|((x)->nge_ctl& NGE_CMDSTS_MORE)
 end_define
 
 begin_define
