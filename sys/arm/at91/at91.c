@@ -1239,7 +1239,7 @@ name|AT91RM92_IRQ_SSC2
 block|}
 block|,
 block|{
-literal|"at91_spi"
+literal|"spi"
 block|,
 literal|0
 block|,

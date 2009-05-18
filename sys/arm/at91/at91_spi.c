@@ -1727,7 +1727,7 @@ name|driver_t
 name|at91_spi_driver
 init|=
 block|{
-literal|"at91_spi"
+literal|"spi"
 block|,
 name|at91_spi_methods
 block|,
