@@ -775,19 +775,7 @@ name|rc
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|kdb_active
-condition|)
-name|printf
-argument_list|(
-literal|"%s:%d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
+comment|/* if (kdb_active) printf("%s:%d\n", __func__, __LINE__); */
 comment|/* we need to return only one char */
 name|ret
 operator|=
