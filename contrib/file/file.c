@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: file.c,v 1.130 2009/02/03 20:27:51 christos Exp $"
+literal|"@(#)$File: file.c,v 1.131 2009/02/13 18:48:05 christos Exp $"
 argument_list|)
 end_macro
 
@@ -179,11 +179,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE_GETOPT_H
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_STRUCT_OPTION
+argument_list|)
+end_if
 
 begin_include
 include|#

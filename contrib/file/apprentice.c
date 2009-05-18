@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: apprentice.c,v 1.147 2009/02/03 20:27:51 christos Exp $"
+literal|"@(#)$File: apprentice.c,v 1.151 2009/03/18 15:19:23 christos Exp $"
 argument_list|)
 end_macro
 
@@ -330,16 +330,12 @@ name|struct
 name|magic_set
 modifier|*
 parameter_list|,
+name|struct
+name|magic
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
 modifier|*
 parameter_list|,
 name|int
@@ -2034,12 +2030,12 @@ condition|(
 name|type
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|QUICK
 case|case
 literal|2
 case|:
+ifdef|#
+directive|ifdef
+name|QUICK
 name|p
 operator|--
 expr_stmt|;
@@ -2068,6 +2064,18 @@ operator|)
 argument_list|)
 expr_stmt|;
 break|break;
+else|#
+directive|else
+operator|(
+name|void
+operator|)
+operator|&
+name|entries
+expr_stmt|;
+name|abort
+argument_list|()
+expr_stmt|;
+comment|/*NOTREACHED*/
 endif|#
 directive|endif
 case|case
@@ -8541,8 +8549,6 @@ argument_list|,
 literal|"Printf format `%c' is not valid for type "
 literal|"`%s' in description `%s'"
 argument_list|,
-name|ptr
-operator|&&
 operator|*
 name|ptr
 condition|?
@@ -8646,9 +8652,6 @@ name|int
 name|action
 parameter_list|)
 block|{
-name|int
-name|slen
-decl_stmt|;
 switch|switch
 condition|(
 name|m
@@ -8681,28 +8684,14 @@ name|getstr
 argument_list|(
 name|ms
 argument_list|,
+name|m
+argument_list|,
 operator|*
 name|p
 argument_list|,
-name|m
-operator|->
-name|value
-operator|.
-name|s
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|m
-operator|->
-name|value
-operator|.
-name|s
-argument_list|)
-argument_list|,
-operator|&
-name|slen
-argument_list|,
 name|action
+operator|==
+name|FILE_COMPILE
 argument_list|)
 expr_stmt|;
 if|if
@@ -8739,25 +8728,6 @@ operator|-
 literal|1
 return|;
 block|}
-name|m
-operator|->
-name|vallen
-operator|=
-name|slen
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|->
-name|type
-operator|==
-name|FILE_PSTRING
-condition|)
-name|m
-operator|->
-name|vallen
-operator|++
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -8938,7 +8908,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert a string containing C character escapes.  Stop at an unescaped  * space or tab.  * Copy the converted version to "p", returning its length in *slen.  * Return updated scan pointer as function result.  */
+comment|/*  * Convert a string containing C character escapes.  Stop at an unescaped  * space or tab.  * Copy the converted version to "m->value.s", and the length in m->vallen.  * Return updated scan pointer as function result. Warn if set.  */
 end_comment
 
 begin_function
@@ -8953,24 +8923,18 @@ name|magic_set
 modifier|*
 name|ms
 parameter_list|,
+name|struct
+name|magic
+modifier|*
+name|m
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|s
 parameter_list|,
-name|char
-modifier|*
-name|p
-parameter_list|,
 name|int
-name|plen
-parameter_list|,
-name|int
-modifier|*
-name|slen
-parameter_list|,
-name|int
-name|action
+name|warn
 parameter_list|)
 block|{
 specifier|const
@@ -8979,6 +8943,28 @@ modifier|*
 name|origs
 init|=
 name|s
+decl_stmt|;
+name|char
+modifier|*
+name|p
+init|=
+name|m
+operator|->
+name|value
+operator|.
+name|s
+decl_stmt|;
+name|size_t
+name|plen
+init|=
+sizeof|sizeof
+argument_list|(
+name|m
+operator|->
+name|value
+operator|.
+name|s
+argument_list|)
 decl_stmt|;
 name|char
 modifier|*
@@ -9070,9 +9056,7 @@ literal|'\0'
 case|:
 if|if
 condition|(
-name|action
-operator|==
-name|FILE_COMPILE
+name|warn
 condition|)
 name|file_magwarn
 argument_list|(
@@ -9089,9 +9073,7 @@ literal|'\t'
 case|:
 if|if
 condition|(
-name|action
-operator|==
-name|FILE_COMPILE
+name|warn
 condition|)
 block|{
 name|file_magwarn
@@ -9101,17 +9083,17 @@ argument_list|,
 literal|"escaped tab found, use \\t instead"
 argument_list|)
 expr_stmt|;
-name|action
-operator|++
+name|warn
+operator|=
+literal|0
 expr_stmt|;
+comment|/* already did */
 block|}
 comment|/*FALLTHROUGH*/
 default|default:
 if|if
 condition|(
-name|action
-operator|==
-name|FILE_COMPILE
+name|warn
 condition|)
 block|{
 if|if
@@ -9125,25 +9107,46 @@ operator|)
 name|c
 argument_list|)
 condition|)
+block|{
+comment|/* Allow escaping of  						 * ``relations'' */
+if|if
+condition|(
+name|strchr
+argument_list|(
+literal|"<>&^=!"
+argument_list|,
+name|c
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
 name|file_magwarn
 argument_list|(
 name|ms
 argument_list|,
-literal|"no need to escape `%c'"
+literal|"no "
+literal|"need to escape "
+literal|"`%c'"
 argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 else|else
+block|{
 name|file_magwarn
 argument_list|(
 name|ms
 argument_list|,
-literal|"unknown escape sequence: \\%03o"
+literal|"unknown escape sequence: "
+literal|"\\%03o"
 argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/*FALLTHROUGH*/
 comment|/* space, perhaps force people to use \040? */
@@ -9467,12 +9470,26 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
-operator|*
-name|slen
+name|m
+operator|->
+name|vallen
 operator|=
 name|p
 operator|-
 name|origp
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|type
+operator|==
+name|FILE_PSTRING
+condition|)
+name|m
+operator|->
+name|vallen
+operator|++
 expr_stmt|;
 return|return
 name|s
@@ -10148,7 +10165,7 @@ name|st_size
 argument_list|)
 operator|!=
 operator|(
-name|size_t
+name|ssize_t
 operator|)
 name|st
 operator|.
@@ -10287,7 +10304,7 @@ name|ms
 argument_list|,
 literal|0
 argument_list|,
-literal|"File %d.%d supports only %d version magic "
+literal|"File %d.%d supports only version %d magic "
 literal|"files. `%s' is version %d"
 argument_list|,
 name|FILE_VERSION_MAJOR
