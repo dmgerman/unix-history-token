@@ -516,7 +516,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|ia64_inval_icache_needed
+name|ia64_sync_icache_needed
 decl_stmt|;
 end_decl_stmt
 
@@ -982,7 +982,7 @@ break|break;
 case|case
 literal|0x20
 case|:
-name|ia64_inval_icache_needed
+name|ia64_sync_icache_needed
 operator|=
 literal|1
 expr_stmt|;
@@ -6861,7 +6861,7 @@ end_function
 
 begin_function
 name|void
-name|ia64_invalidate_icache
+name|ia64_sync_icache
 parameter_list|(
 name|vm_offset_t
 name|va
@@ -6876,7 +6876,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|ia64_inval_icache_needed
+name|ia64_sync_icache_needed
 condition|)
 return|return;
 name|lim

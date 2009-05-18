@@ -402,20 +402,20 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ia64_invalidate_icache
+name|ia64_probe_sapics
 parameter_list|(
-name|vm_offset_t
-parameter_list|,
-name|vm_size_t
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|ia64_probe_sapics
+name|ia64_sync_icache
 parameter_list|(
-name|void
+name|vm_offset_t
+parameter_list|,
+name|vm_size_t
 parameter_list|)
 function_decl|;
 end_function_decl

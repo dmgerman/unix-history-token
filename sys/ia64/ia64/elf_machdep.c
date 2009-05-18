@@ -1378,7 +1378,7 @@ operator|++
 name|ph
 expr_stmt|;
 block|}
-comment|/* Invalidate the I-cache, but not for the kernel itself. */
+comment|/* 	 * Make the I-cache coherent, but don't worry obout the kernel 	 * itself because the loader needs to do that. 	 */
 if|if
 condition|(
 name|lf
@@ -1387,7 +1387,7 @@ name|id
 operator|!=
 literal|1
 condition|)
-name|ia64_invalidate_icache
+name|ia64_sync_icache
 argument_list|(
 operator|(
 name|uintptr_t
