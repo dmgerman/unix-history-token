@@ -2499,9 +2499,7 @@ name|nfsrpc_close
 argument_list|(
 name|vp
 argument_list|,
-name|ap
-operator|->
-name|a_cred
+literal|0
 argument_list|,
 name|ap
 operator|->
@@ -2567,9 +2565,7 @@ name|nfsrpc_close
 argument_list|(
 name|vp
 argument_list|,
-name|ap
-operator|->
-name|a_cred
+literal|0
 argument_list|,
 name|ap
 operator|->
@@ -2714,9 +2710,7 @@ name|nfsrpc_close
 argument_list|(
 name|vp
 argument_list|,
-name|ap
-operator|->
-name|a_cred
+literal|0
 argument_list|,
 name|ap
 operator|->
@@ -2830,9 +2824,7 @@ name|nfsrpc_close
 argument_list|(
 name|vp
 argument_list|,
-name|ap
-operator|->
-name|a_cred
+literal|0
 argument_list|,
 name|ap
 operator|->
@@ -2950,9 +2942,7 @@ name|nfsrpc_close
 argument_list|(
 name|vp
 argument_list|,
-name|ap
-operator|->
-name|a_cred
+literal|0
 argument_list|,
 name|ap
 operator|->
@@ -3442,7 +3432,7 @@ name|nfsrpc_close
 argument_list|(
 name|vp
 argument_list|,
-name|cred
+literal|0
 argument_list|,
 name|ap
 operator|->

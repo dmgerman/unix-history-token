@@ -3259,9 +3259,7 @@ name|nfsrpc_close
 parameter_list|(
 name|vnode_t
 parameter_list|,
-name|struct
-name|ucred
-modifier|*
+name|int
 parameter_list|,
 name|NFSPROC_T
 modifier|*
@@ -4772,13 +4770,6 @@ name|int
 name|nfscl_getclose
 parameter_list|(
 name|vnode_t
-parameter_list|,
-name|struct
-name|ucred
-modifier|*
-parameter_list|,
-name|NFSPROC_T
-modifier|*
 parameter_list|,
 name|struct
 name|nfsclclient
