@@ -1446,6 +1446,13 @@ begin_define
 define|#
 directive|define
 name|BWI_PHYINFO_TYPE_11N
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|BWI_PHYINFO_TYPE_11LP
 value|5
 end_define
 
