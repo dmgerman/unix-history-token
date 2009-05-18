@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: compress.c,v 1.61 2009/02/03 20:27:51 christos Exp $"
+literal|"@(#)$File: compress.c,v 1.63 2009/03/23 14:21:51 christos Exp $"
 argument_list|)
 end_macro
 
@@ -330,7 +330,25 @@ block|}
 block|,
 literal|1
 block|}
-block|, }
+block|,
+block|{
+literal|"\3757zXZ\0"
+block|,
+literal|6
+block|,
+block|{
+literal|"xz"
+block|,
+literal|"-cd"
+block|,
+name|NULL
+block|}
+block|,
+literal|1
+block|}
+block|,
+comment|/* XZ Utils */
+block|}
 expr_stmt|;
 end_expr_stmt
 
@@ -2546,6 +2564,17 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fdin
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 return|return
 name|n
 return|;

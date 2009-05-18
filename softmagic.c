@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: softmagic.c,v 1.133 2008/11/07 22:50:37 christos Exp $"
+literal|"@(#)$File: softmagic.c,v 1.135 2009/03/27 22:42:49 christos Exp $"
 argument_list|)
 end_macro
 
@@ -1150,10 +1150,6 @@ operator|->
 name|desc
 condition|)
 block|{
-name|printed_something
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1174,6 +1170,16 @@ name|e
 return|;
 if|if
 condition|(
+operator|!
+name|printed_something
+condition|)
+block|{
+name|printed_something
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
 name|print_sep
 argument_list|(
 name|ms
@@ -1188,6 +1194,7 @@ return|return
 operator|-
 literal|1
 return|;
+block|}
 block|}
 comment|/* 				 * This continuation matched.  Print 				 * its message, with a blank before it 				 * if the previous item printed and 				 * this item isn't empty. 				 */
 comment|/* space if previous printed */
@@ -1522,26 +1529,27 @@ name|char
 modifier|*
 name|copy
 decl_stmt|;
+for|for
+control|(
 name|len
 operator|=
-name|strlen
-argument_list|(
+literal|0
+init|;
+name|len
+operator|<
+name|n
+operator|&&
 name|str
-argument_list|)
-expr_stmt|;
+index|[
+name|len
+index|]
+condition|;
+name|len
+operator|++
+control|)
+continue|continue;
 if|if
 condition|(
-name|len
-operator|>
-name|n
-condition|)
-name|len
-operator|=
-name|n
-expr_stmt|;
-if|if
-condition|(
-operator|!
 operator|(
 name|copy
 operator|=
@@ -1552,11 +1560,11 @@ operator|+
 literal|1
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 operator|(
 name|void
@@ -1568,8 +1576,6 @@ argument_list|,
 name|str
 argument_list|,
 name|len
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 name|copy
@@ -1580,9 +1586,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 return|return
-operator|(
 name|copy
-operator|)
 return|;
 block|}
 end_function
