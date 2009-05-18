@@ -812,7 +812,7 @@ name|SYSCTL_V_INT
 argument_list|(
 name|V_NET
 argument_list|,
-name|vnet_ipfw
+name|vnet_inet
 argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
