@@ -1108,7 +1108,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1218,7 +1217,6 @@ name|int
 name|addr
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|d
 decl_stmt|,
@@ -1317,7 +1315,6 @@ modifier|*
 name|dest
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1554,7 +1551,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -2914,7 +2910,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -8734,7 +8729,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
