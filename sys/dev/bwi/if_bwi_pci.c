@@ -216,7 +216,7 @@ name|PCI_VENDOR_BROADCOM
 block|,
 literal|0x4301
 block|,
-literal|"Broadcom BCM4301 802.11 Wireless Lan"
+literal|"Broadcom BCM4301 802.11b Wireless Lan"
 block|}
 block|,
 block|{
@@ -224,7 +224,7 @@ name|PCI_VENDOR_BROADCOM
 block|,
 literal|0x4307
 block|,
-literal|"Broadcom BCM4307 802.11 Wireless Lan"
+literal|"Broadcom BCM4307 802.11b Wireless Lan"
 block|}
 block|,
 block|{
@@ -232,7 +232,7 @@ name|PCI_VENDOR_BROADCOM
 block|,
 literal|0x4311
 block|,
-literal|"Broadcom BCM4311 802.11 Wireless Lan"
+literal|"Broadcom BCM4311 802.11b/g Wireless Lan"
 block|}
 block|,
 block|{
@@ -240,7 +240,15 @@ name|PCI_VENDOR_BROADCOM
 block|,
 literal|0x4312
 block|,
-literal|"Broadcom BCM4312 802.11 Wireless Lan"
+literal|"Broadcom BCM4312 802.11a/b/g Wireless Lan"
+block|}
+block|,
+block|{
+name|PCI_VENDOR_BROADCOM
+block|,
+literal|0x4313
+block|,
+literal|"Broadcom BCM4312 802.11a Wireless Lan"
 block|}
 block|,
 block|{
@@ -248,7 +256,7 @@ name|PCI_VENDOR_BROADCOM
 block|,
 literal|0x4320
 block|,
-literal|"Broadcom BCM4306v1 802.11 Wireless Lan"
+literal|"Broadcom BCM4306 802.11b/g Wireless Lan"
 block|}
 block|,
 block|{
@@ -256,7 +264,7 @@ name|PCI_VENDOR_BROADCOM
 block|,
 literal|0x4321
 block|,
-literal|"Broadcom BCM4306v2 802.11 Wireless Lan"
+literal|"Broadcom BCM4306 802.11a Wireless Lan"
 block|}
 block|,
 block|{
@@ -264,7 +272,7 @@ name|PCI_VENDOR_BROADCOM
 block|,
 literal|0x4325
 block|,
-literal|"Broadcom BCM4306v3 802.11 Wireless Lan"
+literal|"Broadcom BCM4306 802.11b/g Wireless Lan"
 block|}
 block|,
 block|{
@@ -272,7 +280,7 @@ name|PCI_VENDOR_BROADCOM
 block|,
 literal|0x4324
 block|,
-literal|"Broadcom BCM4309 802.11 Wireless Lan"
+literal|"Broadcom BCM4309 802.11a/b/g Wireless Lan"
 block|}
 block|,
 block|{
@@ -280,7 +288,7 @@ name|PCI_VENDOR_BROADCOM
 block|,
 literal|0x4318
 block|,
-literal|"Broadcom BCM4318 802.11 Wireless Lan"
+literal|"Broadcom BCM4318 802.11b/g Wireless Lan"
 block|}
 block|,
 block|{
@@ -288,7 +296,15 @@ name|PCI_VENDOR_BROADCOM
 block|,
 literal|0x4319
 block|,
-literal|"Broadcom BCM4319 802.11 Wireless Lan"
+literal|"Broadcom BCM4318 802.11a/b/g Wireless Lan"
+block|}
+block|,
+block|{
+name|PCI_VENDOR_BROADCOM
+block|,
+literal|0x431a
+block|,
+literal|"Broadcom BCM4318 802.11a Wireless Lan"
 block|}
 block|}
 struct|;
