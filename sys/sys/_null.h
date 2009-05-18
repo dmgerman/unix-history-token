@@ -12,11 +12,6 @@ end_ifndef
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-operator|||
 operator|!
 name|defined
 argument_list|(
@@ -29,6 +24,36 @@ define|#
 directive|define
 name|NULL
 value|((void *)0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUG__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+name|__GNUC__
+operator|>=
+literal|4
+end_if
+
+begin_define
+define|#
+directive|define
+name|NULL
+value|__null
 end_define
 
 begin_else
@@ -79,7 +104,16 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _KERNEL || !__cplusplus */
+comment|/* __GNUG__ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !__cplusplus */
 end_comment
 
 begin_endif
