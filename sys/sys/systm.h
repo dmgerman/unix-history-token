@@ -729,6 +729,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|cpu_flush_dcache
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|cpu_rootconf
 parameter_list|(
 name|void
