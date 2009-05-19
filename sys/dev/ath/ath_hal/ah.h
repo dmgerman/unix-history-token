@@ -868,7 +868,6 @@ name|HAL_INT_BNR
 init|=
 literal|0x00100000
 block|,
-comment|/* Non-common mapping */
 name|HAL_INT_TIM
 init|=
 literal|0x00200000
