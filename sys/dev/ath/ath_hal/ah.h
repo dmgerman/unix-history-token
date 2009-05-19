@@ -898,6 +898,11 @@ init|=
 literal|0x04000000
 block|,
 comment|/* Non-common mapping */
+name|HAL_INT_TBTT
+init|=
+literal|0x08000000
+block|,
+comment|/* Non-common mapping */
 name|HAL_INT_CST
 init|=
 literal|0x10000000
@@ -927,6 +932,8 @@ operator||
 name|HAL_INT_DTIMSYNC
 operator||
 name|HAL_INT_CABEND
+operator||
+name|HAL_INT_TBTT
 block|,
 comment|/* Interrupt bits that map directly to ISR/IMR bits */
 name|HAL_INT_COMMON

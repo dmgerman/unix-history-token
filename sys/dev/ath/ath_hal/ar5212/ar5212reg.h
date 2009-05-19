@@ -4091,12 +4091,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AR_ISR_S2_RESV0
-value|0xE0F8FC00
+name|AR_ISR_S2_TSFOOR
+value|0x40000000
 end_define
 
 begin_comment
-comment|/* Reserved */
+comment|/* TSF OOR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_ISR_S2_TBTT
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* TBTT timer */
 end_comment
 
 begin_define
@@ -4659,7 +4670,7 @@ begin_define
 define|#
 directive|define
 name|AR_IMR_S2_TSFOOR
-value|0x80000000
+value|0x40000000
 end_define
 
 begin_comment
@@ -4669,12 +4680,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AR_IMR_S2_RESV0
-value|0xE0F8FC00
+name|AR_IMR_S2_TBTT
+value|0x80000000
 end_define
 
 begin_comment
-comment|/* Reserved */
+comment|/* TBTT timer */
 end_comment
 
 begin_comment
@@ -4686,7 +4697,7 @@ define|#
 directive|define
 name|AR_IMR_SR2_BCNMISC
 define|\
-value|(AR_IMR_S2_TIM | AR_IMR_S2_DTIM | AR_IMR_S2_DTIMSYNC | \ 	 AR_IMR_S2_CABEND | AR_IMR_S2_CABTO  | AR_IMR_S2_TSFOOR)
+value|(AR_IMR_S2_TIM | AR_IMR_S2_DTIM | AR_IMR_S2_DTIMSYNC | \ 	 AR_IMR_S2_CABEND | AR_IMR_S2_CABTO  | AR_IMR_S2_TSFOOR | \ 	 AR_IMR_S2_TBTT)
 end_define
 
 begin_define
