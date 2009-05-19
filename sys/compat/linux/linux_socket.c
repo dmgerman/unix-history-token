@@ -6380,6 +6380,147 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Argument list sizes for linux_socketcall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_AL
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) * sizeof(l_ulong))
+end_define
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|unsigned
+name|char
+name|lxs_args
+index|[]
+init|=
+block|{
+name|LINUX_AL
+argument_list|(
+literal|0
+argument_list|)
+comment|/* unused*/
+block|,
+name|LINUX_AL
+argument_list|(
+literal|3
+argument_list|)
+comment|/* socket */
+block|,
+name|LINUX_AL
+argument_list|(
+literal|3
+argument_list|)
+comment|/* bind */
+block|,
+name|LINUX_AL
+argument_list|(
+literal|3
+argument_list|)
+comment|/* connect */
+block|,
+name|LINUX_AL
+argument_list|(
+literal|2
+argument_list|)
+comment|/* listen */
+block|,
+name|LINUX_AL
+argument_list|(
+literal|3
+argument_list|)
+comment|/* accept */
+block|,
+name|LINUX_AL
+argument_list|(
+literal|3
+argument_list|)
+comment|/* getsockname */
+block|,
+name|LINUX_AL
+argument_list|(
+literal|3
+argument_list|)
+comment|/* getpeername */
+block|,
+name|LINUX_AL
+argument_list|(
+literal|4
+argument_list|)
+comment|/* socketpair */
+block|,
+name|LINUX_AL
+argument_list|(
+literal|4
+argument_list|)
+comment|/* send */
+block|,
+name|LINUX_AL
+argument_list|(
+literal|4
+argument_list|)
+comment|/* recv */
+block|,
+name|LINUX_AL
+argument_list|(
+literal|6
+argument_list|)
+comment|/* sendto */
+block|,
+name|LINUX_AL
+argument_list|(
+literal|6
+argument_list|)
+comment|/* recvfrom */
+block|,
+name|LINUX_AL
+argument_list|(
+literal|2
+argument_list|)
+comment|/* shutdown */
+block|,
+name|LINUX_AL
+argument_list|(
+literal|5
+argument_list|)
+comment|/* setsockopt */
+block|,
+name|LINUX_AL
+argument_list|(
+literal|5
+argument_list|)
+comment|/* getsockopt */
+block|,
+name|LINUX_AL
+argument_list|(
+literal|3
+argument_list|)
+comment|/* sendmsg */
+block|,
+name|LINUX_AL
+argument_list|(
+literal|3
+argument_list|)
+comment|/* recvmsg */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|LINUX_AL_SIZE
+value|sizeof(lxs_args) / sizeof(lxs_args[0]) - 1
+end_define
+
 begin_function
 name|int
 name|linux_socketcall
@@ -6395,21 +6536,72 @@ modifier|*
 name|args
 parameter_list|)
 block|{
+name|l_ulong
+name|a
+index|[
+literal|6
+index|]
+decl_stmt|;
 name|void
 modifier|*
 name|arg
-init|=
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+if|if
+condition|(
+name|args
+operator|->
+name|what
+operator|<
+name|LINUX_SOCKET
+operator|||
+name|args
+operator|->
+name|what
+operator|>
+name|LINUX_AL_SIZE
+condition|)
+return|return
 operator|(
-name|void
-operator|*
+name|EINVAL
 operator|)
-operator|(
-name|intptr_t
-operator|)
+return|;
+name|error
+operator|=
+name|copyin
+argument_list|(
+name|PTRIN
+argument_list|(
 name|args
 operator|->
 name|args
-decl_stmt|;
+argument_list|)
+argument_list|,
+name|a
+argument_list|,
+name|lxs_args
+index|[
+name|args
+operator|->
+name|what
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+name|arg
+operator|=
+name|a
+expr_stmt|;
 switch|switch
 condition|(
 name|args
