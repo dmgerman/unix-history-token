@@ -322,17 +322,6 @@ name|AR_ISR_S1_QCU_TXEOL
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|isr
-operator|&
-name|AR_ISR_BNR
-condition|)
-operator|*
-name|masked
-operator||=
-name|HAL_INT_BNR
-expr_stmt|;
 comment|/* 	 * Receive overrun is usually non-fatal on Oahu/Spirit. 	 * BUT on some parts rx could fail and the chip must be reset. 	 * So we force a hardware reset in all cases. 	 */
 if|if
 condition|(
@@ -750,16 +739,6 @@ name|AR_IMR_S2_CABEND
 operator|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|ints
-operator|&
-name|HAL_INT_BNR
-condition|)
-name|mask
-operator||=
-name|AR_IMR_BNR
-expr_stmt|;
 if|if
 condition|(
 name|ints

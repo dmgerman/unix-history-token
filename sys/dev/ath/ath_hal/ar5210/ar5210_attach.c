@@ -1644,7 +1644,11 @@ name|pCap
 operator|->
 name|halIntrMask
 operator|=
+operator|(
 name|HAL_INT_COMMON
+operator|-
+name|HAL_INT_BNR
+operator|)
 operator||
 name|HAL_INT_RX
 operator||

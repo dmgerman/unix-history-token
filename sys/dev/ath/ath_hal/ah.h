@@ -953,6 +953,8 @@ name|HAL_INT_SWBA
 operator||
 name|HAL_INT_BMISS
 operator||
+name|HAL_INT_BNR
+operator||
 name|HAL_INT_GPIO
 block|, }
 name|HAL_INT
