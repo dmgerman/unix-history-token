@@ -1760,7 +1760,7 @@ literal|0x3237
 block|,
 name|CISS_BOARD_SA5
 block|,
-literal|"HP Smart Array"
+literal|"HP Smart Array E500"
 block|}
 block|,
 block|{
@@ -1816,6 +1816,16 @@ block|,
 block|{
 literal|0x103C
 block|,
+literal|0x323D
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P700m"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
 literal|0x3241
 block|,
 name|CISS_BOARD_SA5
@@ -1861,6 +1871,26 @@ block|,
 name|CISS_BOARD_SA5
 block|,
 literal|"HP Smart Array P812"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x324A
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P712m"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x324B
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array"
 block|}
 block|,
 block|{
