@@ -165,6 +165,10 @@ literal|8
 index|]
 struct|;
 comment|/* XXX SOS max ch# for now */
+name|void
+modifier|*
+name|chipset_data
+decl_stmt|;
 block|}
 struct|;
 end_struct
