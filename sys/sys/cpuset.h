@@ -337,8 +337,15 @@ begin_comment
 comment|/* Specifies a set id. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CPU_WHICH_IRQ
+value|4
+end_define
+
 begin_comment
-comment|/* CPU_WHICH_IRQ */
+comment|/* Specifies an irq #. */
 end_comment
 
 begin_define

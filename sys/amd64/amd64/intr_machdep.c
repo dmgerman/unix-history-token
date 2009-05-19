@@ -540,6 +540,8 @@ name|isrc
 argument_list|,
 literal|0
 argument_list|,
+name|vector
+argument_list|,
 name|intr_disable_src
 argument_list|,
 operator|(

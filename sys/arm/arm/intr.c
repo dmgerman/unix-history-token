@@ -241,6 +241,8 @@ name|irq
 argument_list|,
 literal|0
 argument_list|,
+name|irq
+argument_list|,
 operator|(
 name|mask_fn
 operator|)

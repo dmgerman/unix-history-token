@@ -263,6 +263,10 @@ name|struct
 name|timeval
 name|ie_warntm
 decl_stmt|;
+name|int
+name|ie_irq
+decl_stmt|;
+comment|/* Physical irq number if !SOFT. */
 name|u_char
 name|ie_cpu
 decl_stmt|;
@@ -573,6 +577,9 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+name|int
+name|irq
+parameter_list|,
 name|void
 function_decl|(
 modifier|*
@@ -624,9 +631,9 @@ modifier|...
 parameter_list|)
 function_decl|__printflike
 parameter_list|(
-function_decl|8
-operator|,
 function_decl|9
+operator|,
+function_decl|10
 end_function_decl
 
 begin_empty_stmt
@@ -675,6 +682,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|intr_getaffinity
+parameter_list|(
+name|int
+name|irq
+parameter_list|,
+name|void
+modifier|*
+name|mask
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 modifier|*
 name|intr_handler_source
@@ -682,6 +703,20 @@ parameter_list|(
 name|void
 modifier|*
 name|cookie
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|intr_setaffinity
+parameter_list|(
+name|int
+name|irq
+parameter_list|,
+name|void
+modifier|*
+name|mask
 parameter_list|)
 function_decl|;
 end_function_decl
