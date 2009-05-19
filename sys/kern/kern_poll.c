@@ -178,19 +178,6 @@ begin_comment
 comment|/* hook from hardclock		*/
 end_comment
 
-begin_function_decl
-name|void
-name|ether_poll
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* polling in idle loop		*/
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1393,6 +1380,7 @@ comment|/*  * ether_poll is called from the idle loop.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ether_poll
 parameter_list|(
