@@ -49,17 +49,22 @@ value|256
 end_define
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"usage: perror number\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"number must be between 1 and %d\n"
 argument_list|,
 name|ELAST
@@ -147,8 +152,10 @@ literal|'\0'
 operator|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Argument %s not a number.\n"
 argument_list|,
 name|argv
@@ -176,8 +183,10 @@ name|ELAST
 operator|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Number %d out of range.\n"
 argument_list|,
 name|errnum
@@ -204,8 +213,10 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Could not find error number %d.\n"
 argument_list|,
 name|errnum
