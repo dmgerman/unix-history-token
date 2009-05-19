@@ -725,6 +725,9 @@ decl_stmt|;
 name|uint8_t
 name|halNumAntCfg5GHz
 decl_stmt|;
+name|uint32_t
+name|halIntrMask
+decl_stmt|;
 block|}
 name|HAL_CAPABILITIES
 typedef|;

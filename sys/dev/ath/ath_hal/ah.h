@@ -338,6 +338,11 @@ init|=
 literal|36
 block|,
 comment|/* can MAC hang */
+name|HAL_CAP_INTRMASK
+init|=
+literal|37
+block|,
+comment|/* bitmask of supported interrupts */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;
@@ -934,9 +939,9 @@ name|HAL_INT_RXEOL
 operator||
 name|HAL_INT_RXORN
 operator||
-name|HAL_INT_TXURN
-operator||
 name|HAL_INT_TXDESC
+operator||
+name|HAL_INT_TXURN
 operator||
 name|HAL_INT_MIB
 operator||

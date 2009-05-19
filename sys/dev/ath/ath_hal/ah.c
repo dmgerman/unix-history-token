@@ -2133,6 +2133,20 @@ expr_stmt|;
 return|return
 name|HAL_OK
 return|;
+case|case
+name|HAL_CAP_INTRMASK
+case|:
+comment|/* mask of supported interrupts */
+operator|*
+name|result
+operator|=
+name|pCap
+operator|->
+name|halIntrMask
+expr_stmt|;
+return|return
+name|HAL_OK
+return|;
 default|default:
 return|return
 name|HAL_EINVAL
