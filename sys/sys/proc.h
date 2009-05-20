@@ -73,6 +73,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/osd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/priority.h>
 end_include
 
@@ -836,6 +842,11 @@ name|int
 name|td_errno
 decl_stmt|;
 comment|/* Error returned by last syscall. */
+name|struct
+name|osd
+name|td_osd
+decl_stmt|;
+comment|/* (k) Object specific data. */
 block|}
 struct|;
 end_struct

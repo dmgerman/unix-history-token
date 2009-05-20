@@ -21,6 +21,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/osd.h>
+end_include
+
 begin_struct
 struct|struct
 name|jail_v0
@@ -470,6 +476,10 @@ modifier|*
 name|pr_ip6
 decl_stmt|;
 comment|/* (c) v6 IPs of jail */
+name|struct
+name|osd
+name|pr_osd
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -488,6 +498,78 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_comment
+comment|/*  * Flag bits set via options or internally  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PR_PERSIST
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Can exist without processes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PR_REMOVE
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* In process of being removed */
+end_comment
+
+begin_comment
+comment|/*  * OSD methods  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PR_METHOD_CREATE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_METHOD_GET
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_METHOD_SET
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_METHOD_CHECK
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_METHOD_ATTACH
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_MAXMETHOD
+value|5
+end_define
 
 begin_comment
 comment|/*  * Sysctl-set variables that determine global jail policy  *  * XXX MIB entries will need to be protected by a mutex.  */

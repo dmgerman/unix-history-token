@@ -536,6 +536,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Free all OSD associated to this thread. */
+name|osd_thread_exit
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 name|umtx_thread_alloc
 argument_list|(
 name|td
