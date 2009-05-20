@@ -1774,13 +1774,6 @@ argument_list|()
 expr_stmt|;
 continue|continue;
 block|}
-name|MPASS
-argument_list|(
-name|v
-operator|!=
-name|MTX_CONTESTED
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ADAPTIVE_MUTEXES
