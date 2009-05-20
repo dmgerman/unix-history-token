@@ -2466,7 +2466,7 @@ if|if
 condition|(
 name|status
 operator|&
-name|ATMEGA_UDINT_EORSMI
+name|ATMEGA_UDINT_WAKEUPI
 condition|)
 block|{
 name|DPRINTFN
@@ -2571,7 +2571,7 @@ name|sc
 argument_list|,
 name|ATMEGA_UDIEN
 argument_list|,
-name|ATMEGA_UDINT_EORSMI
+name|ATMEGA_UDINT_WAKEUPE
 operator||
 name|ATMEGA_UDINT_EORSTE
 argument_list|)
@@ -4268,10 +4268,6 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
-name|temp
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|ep_type
@@ -4280,7 +4276,7 @@ name|UE_BULK
 condition|)
 block|{
 name|temp
-operator||=
+operator|=
 name|ATMEGA_UECFG0X_EPTYPE2
 expr_stmt|;
 block|}
@@ -4293,14 +4289,14 @@ name|UE_INTERRUPT
 condition|)
 block|{
 name|temp
-operator||=
+operator|=
 name|ATMEGA_UECFG0X_EPTYPE3
 expr_stmt|;
 block|}
 else|else
 block|{
 name|temp
-operator||=
+operator|=
 name|ATMEGA_UECFG0X_EPTYPE1
 expr_stmt|;
 block|}
@@ -4536,14 +4532,86 @@ operator|->
 name|sc_bus
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* XXX TODO - currently done by boot strap */
+comment|/* make sure USB is enabled */
+name|ATMEGA_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|ATMEGA_USBCON
+argument_list|,
+name|ATMEGA_USBCON_USBE
+operator||
+name|ATMEGA_USBCON_FRZCLK
+argument_list|)
+expr_stmt|;
 comment|/* enable USB PAD regulator */
-block|ATMEGA_WRITE_1(sc, ATMEGA_UHWCON, 	    ATMEGA_UHWCON_UVREGE | ATMEGA_UHWCON_UIMOD);
-endif|#
-directive|endif
+name|ATMEGA_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|ATMEGA_UHWCON
+argument_list|,
+name|ATMEGA_UHWCON_UVREGE
+operator||
+name|ATMEGA_UHWCON_UIMOD
+argument_list|)
+expr_stmt|;
+comment|/* the following register sets up the USB PLL, assuming 16MHz X-tal */
+name|ATMEGA_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+literal|0x49
+comment|/* PLLCSR */
+argument_list|,
+literal|0x14
+operator||
+literal|0x02
+argument_list|)
+expr_stmt|;
+comment|/* wait for PLL to lock */
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
+name|n
+operator|!=
+literal|20
+condition|;
+name|n
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|ATMEGA_READ_1
+argument_list|(
+name|sc
+argument_list|,
+literal|0x49
+argument_list|)
+operator|&
+literal|0x01
+condition|)
+break|break;
+comment|/* wait a little bit for PLL to start */
+name|usb2_pause_mtx
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bus_mtx
+argument_list|,
+name|hz
+operator|/
+literal|100
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* make sure USB is enabled */
 name|ATMEGA_WRITE_1
 argument_list|(
@@ -6705,6 +6773,19 @@ name|change_connect
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|sc
+operator|->
+name|sc_flags
+operator|.
+name|status_bus_reset
+condition|)
+block|{
+comment|/* we are not connected */
+break|break;
+block|}
 comment|/* configure the control endpoint */
 comment|/* select endpoint number */
 name|ATMEGA_WRITE_1
