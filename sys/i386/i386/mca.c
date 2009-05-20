@@ -2072,22 +2072,6 @@ argument_list|,
 literal|0xffffffffffffffffUL
 argument_list|)
 expr_stmt|;
-comment|/* XXX: Better CPU test needed here. */
-if|if
-condition|(
-operator|(
-name|cpu_id
-operator|&
-literal|0xf00
-operator|)
-operator|==
-literal|0xf00
-condition|)
-name|mca_record_entry
-argument_list|(
-name|i
-argument_list|)
-expr_stmt|;
 comment|/* Clear all errors. */
 name|wrmsr
 argument_list|(
