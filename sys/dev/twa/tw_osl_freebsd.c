@@ -161,7 +161,8 @@ parameter_list|,
 name|TW_INT32
 name|fmt
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|proc
 parameter_list|)
@@ -225,7 +226,8 @@ parameter_list|,
 name|TW_INT32
 name|fmt
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|proc
 parameter_list|)
@@ -293,7 +295,8 @@ parameter_list|,
 name|TW_INT32
 name|flags
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|proc
 parameter_list|)

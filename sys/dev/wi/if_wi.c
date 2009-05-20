@@ -673,26 +673,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|wi_cmd
-parameter_list|(
-name|struct
-name|wi_softc
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
 name|wi_seek_bap
 parameter_list|(
 name|struct
@@ -9965,7 +9945,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|wi_cmd
 parameter_list|(
@@ -11848,6 +11827,16 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|wi
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

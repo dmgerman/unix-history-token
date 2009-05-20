@@ -244,7 +244,8 @@ specifier|static
 name|int
 name|amr_linux_ioctl
 parameter_list|(
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|p
 parameter_list|,
