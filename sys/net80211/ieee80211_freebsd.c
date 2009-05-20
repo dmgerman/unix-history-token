@@ -719,7 +719,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|ieee80211_sysctl_msecs_ticks
 parameter_list|(
