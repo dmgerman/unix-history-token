@@ -9533,6 +9533,16 @@ argument_list|(
 name|src
 argument_list|)
 expr_stmt|;
+name|mips_dcache_wbinv_range_index
+argument_list|(
+name|MIPS_PHYS_TO_CACHED
+argument_list|(
+name|phy_dst
+argument_list|)
+argument_list|,
+name|NBPG
+argument_list|)
+expr_stmt|;
 name|va_src
 operator|=
 name|MIPS_PHYS_TO_UNCACHED
