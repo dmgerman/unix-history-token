@@ -4083,6 +4083,11 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
+name|ieee80211_radiotap_chan_change
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Scan curchan.  Drivers for "intelligent hardware" 		 * override ic_scan_curchan to tell the device to do 		 * the work.  Otherwise we manage the work outselves; 		 * sending a probe request (as needed), and arming the 		 * timeout to switch channels after maxdwell ticks. 		 * 		 * scan_curchan should only pause for the time required to 		 * prepare/initiate the hardware for the scan (if at all), the 		 * below condvar is used to sleep for the channels dwell time 		 * and allows it to be signalled for abort. 		 */
 name|ic
 operator|->
@@ -4236,6 +4241,11 @@ expr_stmt|;
 name|ic
 operator|->
 name|ic_set_channel
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
+name|ieee80211_radiotap_chan_change
 argument_list|(
 name|ic
 argument_list|)
@@ -4893,9 +4903,6 @@ name|rssi
 parameter_list|,
 name|int
 name|noise
-parameter_list|,
-name|int
-name|rstamp
 parameter_list|)
 block|{
 name|struct
@@ -4990,8 +4997,6 @@ argument_list|,
 name|rssi
 argument_list|,
 name|noise
-argument_list|,
-name|rstamp
 argument_list|)
 condition|)
 block|{

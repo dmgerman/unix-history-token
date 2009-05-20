@@ -154,10 +154,7 @@ name|int
 name|rssi
 parameter_list|,
 name|int
-name|noise
-parameter_list|,
-name|u_int32_t
-name|rstamp
+name|nf
 parameter_list|)
 block|{
 name|struct
@@ -264,9 +261,7 @@ name|mcopy
 argument_list|,
 name|rssi
 argument_list|,
-name|noise
-argument_list|,
-name|rstamp
+name|nf
 argument_list|)
 expr_stmt|;
 name|ieee80211_free_node

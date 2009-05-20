@@ -471,10 +471,6 @@ decl_stmt|;
 comment|/* unicast key */
 comment|/* hardware */
 name|uint32_t
-name|ni_rstamp
-decl_stmt|;
-comment|/* recv timestamp */
-name|uint32_t
 name|ni_avgrssi
 decl_stmt|;
 comment|/* recv ssi state */

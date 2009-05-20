@@ -1799,7 +1799,7 @@ operator||=
 name|M_AMPDU_MPDU
 expr_stmt|;
 comment|/* bypass normal processing */
-comment|/* NB: rssi, noise, and rstamp are ignored w/ M_AMPDU_MPDU set */
+comment|/* NB: rssi and noise are ignored w/ M_AMPDU_MPDU set */
 operator|(
 name|void
 operator|)
@@ -1808,8 +1808,6 @@ argument_list|(
 name|ni
 argument_list|,
 name|m
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|,

@@ -2790,7 +2790,7 @@ define|#
 directive|define
 name|WI_RX_RADIOTAP_PRESENT
 define|\
-value|((1<< IEEE80211_RADIOTAP_FLAGS) | \ 	 (1<< IEEE80211_RADIOTAP_RATE) | \ 	 (1<< IEEE80211_RADIOTAP_CHANNEL) | \ 	 (1<< IEEE80211_RADIOTAP_DB_ANTSIGNAL) | \ 	 (1<< IEEE80211_RADIOTAP_DB_ANTNOISE))
+value|((1<< IEEE80211_RADIOTAP_TSFT) | \ 	 (1<< IEEE80211_RADIOTAP_FLAGS) | \ 	 (1<< IEEE80211_RADIOTAP_RATE) | \ 	 (1<< IEEE80211_RADIOTAP_CHANNEL) | \ 	 (1<< IEEE80211_RADIOTAP_DB_ANTSIGNAL) | \ 	 (1<< IEEE80211_RADIOTAP_DB_ANTNOISE))
 end_define
 
 begin_struct
@@ -2800,6 +2800,9 @@ block|{
 name|struct
 name|ieee80211_radiotap_header
 name|wr_ihdr
+decl_stmt|;
+name|u_int64_t
+name|wr_tsf
 decl_stmt|;
 name|u_int8_t
 name|wr_flags

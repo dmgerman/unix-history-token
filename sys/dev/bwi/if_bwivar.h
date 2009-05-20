@@ -2261,15 +2261,9 @@ name|struct
 name|bwi_tx_radiotap_hdr
 name|sc_tx_th
 decl_stmt|;
-name|int
-name|sc_tx_th_len
-decl_stmt|;
 name|struct
 name|bwi_rx_radiotap_hdr
 name|sc_rx_th
-decl_stmt|;
-name|int
-name|sc_rx_th_len
 decl_stmt|;
 name|struct
 name|taskqueue

@@ -6463,6 +6463,11 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
+name|ieee80211_radiotap_chan_change
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -984,9 +984,6 @@ name|rssi
 parameter_list|,
 name|int
 name|noise
-parameter_list|,
-name|int
-name|rstamp
 parameter_list|)
 block|{
 define|#
@@ -1403,12 +1400,6 @@ operator|=
 name|noise
 expr_stmt|;
 block|}
-name|ise
-operator|->
-name|se_rstamp
-operator|=
-name|rstamp
-expr_stmt|;
 name|memcpy
 argument_list|(
 name|ise

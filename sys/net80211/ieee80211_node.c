@@ -3031,6 +3031,11 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
+name|ieee80211_radiotap_chan_change
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 name|IEEE80211_LOCK
 argument_list|(
 name|ic
@@ -3483,14 +3488,6 @@ name|ni
 operator|->
 name|ni_esslen
 argument_list|)
-expr_stmt|;
-name|ni
-operator|->
-name|ni_rstamp
-operator|=
-name|se
-operator|->
-name|se_rstamp
 expr_stmt|;
 name|ni
 operator|->
@@ -9282,11 +9279,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\trstamp %u rssi %d noise %d intval %u capinfo 0x%x\n"
-argument_list|,
-name|ni
-operator|->
-name|ni_rstamp
+literal|"\trssi %d noise %d intval %u capinfo 0x%x\n"
 argument_list|,
 name|node_getrssi
 argument_list|(

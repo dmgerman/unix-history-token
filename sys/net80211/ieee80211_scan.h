@@ -469,9 +469,6 @@ name|rssi
 parameter_list|,
 name|int
 name|noise
-parameter_list|,
-name|int
-name|rstamp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -788,10 +785,6 @@ operator|+
 name|IEEE80211_RATE_MAXSIZE
 index|]
 decl_stmt|;
-name|uint32_t
-name|se_rstamp
-decl_stmt|;
-comment|/* recv timestamp */
 union|union
 block|{
 name|uint8_t
@@ -1028,9 +1021,6 @@ name|rssi
 parameter_list|,
 name|int
 name|noise
-parameter_list|,
-name|int
-name|rstamp
 parameter_list|)
 function_decl|;
 comment|/* age and/or purge entries in the cache */
