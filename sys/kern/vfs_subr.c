@@ -455,18 +455,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|vdestroy
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|vgonel
 parameter_list|(
 name|struct
@@ -3353,7 +3341,6 @@ comment|/*  * Routines having to do with the management of the vnode table.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|vdestroy
 parameter_list|(
