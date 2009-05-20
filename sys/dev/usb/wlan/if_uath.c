@@ -2734,11 +2734,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|ieee80211_ifdetach
-argument_list|(
-name|ic
-argument_list|)
-expr_stmt|;
 name|callout_drain
 argument_list|(
 operator|&
@@ -2762,6 +2757,11 @@ operator|->
 name|sc_xfer
 argument_list|,
 name|UATH_N_XFERS
+argument_list|)
+expr_stmt|;
+name|ieee80211_ifdetach
+argument_list|(
+name|ic
 argument_list|)
 expr_stmt|;
 comment|/* free buffers */

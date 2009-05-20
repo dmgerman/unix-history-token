@@ -10468,11 +10468,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|ieee80211_ifdetach
-argument_list|(
-name|ic
-argument_list|)
-expr_stmt|;
 name|callout_drain
 argument_list|(
 operator|&
@@ -10496,6 +10491,11 @@ operator|->
 name|sc_xfer
 argument_list|,
 name|UPGT_N_XFERS
+argument_list|)
+expr_stmt|;
+name|ieee80211_ifdetach
+argument_list|(
+name|ic
 argument_list|)
 expr_stmt|;
 name|upgt_free_rx
