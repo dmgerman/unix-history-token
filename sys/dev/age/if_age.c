@@ -7332,7 +7332,7 @@ argument_list|,
 operator|&
 name|pmc
 argument_list|)
-operator|==
+operator|!=
 literal|0
 condition|)
 block|{
