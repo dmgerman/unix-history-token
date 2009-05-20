@@ -17357,9 +17357,9 @@ name|client_index
 operator|)
 return|;
 comment|/* 	 * In practice, we'll never get here, but the reboot is here, 	 * just for fun. (client_index will not wrap around on any real server) 	 */
-name|printf
+name|panic
 argument_list|(
-literal|"you must reboot now\n"
+literal|"nfsv4 server out of clientids"
 argument_list|)
 expr_stmt|;
 return|return
