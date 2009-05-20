@@ -18544,13 +18544,12 @@ name|BCE_CHIP_NUM_5716
 operator|)
 condition|)
 block|{
-comment|/* DRC: Replace this constant value with a #define. */
 name|int
 name|i
 decl_stmt|,
 name|retry_cnt
 init|=
-literal|10
+name|CTX_INIT_RETRY_COUNT
 decl_stmt|;
 name|u32
 name|val
@@ -25522,6 +25521,21 @@ operator|=
 name|pkt_len
 expr_stmt|;
 block|}
+else|#
+directive|else
+comment|/* Set the total packet length. */
+name|m0
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|=
+name|m0
+operator|->
+name|m_len
+operator|=
+name|pkt_len
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* Remove the trailing Ethernet FCS. */
