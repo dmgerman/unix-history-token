@@ -350,6 +350,17 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * Magic value that specify the use of the current working directory  * to determine the target of relative file paths in the openat() and  * similar syscalls.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_FDCWD
+value|-100
+end_define
+
+begin_comment
 comment|/* Defined by POSIX 1003.1; BSD default, but must be distinct from O_RDONLY. */
 end_comment
 
