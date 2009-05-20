@@ -3641,8 +3641,6 @@ expr_stmt|;
 if|if
 condition|(
 name|bootverbose
-operator|||
-literal|1
 condition|)
 name|printf
 argument_list|(
