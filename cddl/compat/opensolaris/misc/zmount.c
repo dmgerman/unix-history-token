@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -60,7 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<assert.h>
+file|<string.h>
 end_include
 
 begin_function
@@ -381,7 +387,7 @@ argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
-name|optptr
+name|optstr
 operator|!=
 name|NULL
 argument_list|)

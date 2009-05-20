@@ -65,7 +65,7 @@ operator|>=
 literal|199901L
 specifier|extern
 name|void
-name|__assert_c99
+name|__assert
 parameter_list|(
 specifier|const
 name|char
@@ -76,10 +76,6 @@ name|char
 modifier|*
 parameter_list|,
 name|int
-parameter_list|,
-specifier|const
-name|char
-modifier|*
 parameter_list|)
 function_decl|;
 else|#
@@ -188,7 +184,7 @@ name|assert
 parameter_list|(
 name|EX
 parameter_list|)
-value|(void)((EX) || \ 	(__assert_c99(#EX, __FILE__, __LINE__, __func__), 0))
+value|(void)((EX) || (__assert(#EX, __FILE__, __LINE__), 0))
 end_define
 
 begin_else

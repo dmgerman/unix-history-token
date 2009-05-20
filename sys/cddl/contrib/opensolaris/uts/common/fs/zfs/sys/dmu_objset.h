@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -185,11 +185,13 @@ name|os_copies
 decl_stmt|;
 comment|/* can change, under dsl_dir's locks */
 name|uint8_t
-name|os_md_checksum
+name|os_primary_cache
 decl_stmt|;
+comment|/* can change, under dsl_dir's locks */
 name|uint8_t
-name|os_md_compress
+name|os_secondary_cache
 decl_stmt|;
+comment|/* can change, under dsl_dir's locks */
 comment|/* no lock needed: */
 name|struct
 name|dmu_tx
@@ -200,6 +202,9 @@ comment|/* XXX sketchy */
 name|blkptr_t
 modifier|*
 name|os_rootbp
+decl_stmt|;
+name|zil_header_t
+name|os_zil_header
 decl_stmt|;
 comment|/* Protected by os_obj_lock */
 name|kmutex_t
@@ -230,6 +235,14 @@ decl_stmt|;
 name|list_t
 name|os_downgraded_dbufs
 decl_stmt|;
+comment|/* stuff we store for the user */
+name|kmutex_t
+name|os_user_ptr_lock
+decl_stmt|;
+name|void
+modifier|*
+name|os_user_ptr
+decl_stmt|;
 block|}
 name|objset_impl_t
 typedef|;
@@ -237,6 +250,14 @@ define|#
 directive|define
 name|DMU_META_DNODE_OBJECT
 value|0
+define|#
+directive|define
+name|DMU_OS_IS_L2CACHEABLE
+parameter_list|(
+name|os
+parameter_list|)
+define|\
+value|((os)->os_secondary_cache == ZFS_CACHE_ALL ||		\ 	(os)->os_secondary_cache == ZFS_CACHE_METADATA)
 comment|/* called from zpl */
 name|int
 name|dmu_objset_open
@@ -281,6 +302,9 @@ name|objset_t
 modifier|*
 name|clone_parent
 parameter_list|,
+name|uint64_t
+name|flags
+parameter_list|,
 name|void
 function_decl|(
 modifier|*
@@ -294,6 +318,10 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|cred_t
+modifier|*
+name|cr
 parameter_list|,
 name|dmu_tx_t
 modifier|*
@@ -317,10 +345,9 @@ function_decl|;
 name|int
 name|dmu_objset_rollback
 parameter_list|(
-specifier|const
-name|char
+name|objset_t
 modifier|*
-name|name
+name|os
 parameter_list|)
 function_decl|;
 name|int
@@ -419,6 +446,42 @@ name|int
 name|flags
 parameter_list|)
 function_decl|;
+name|int
+name|dmu_objset_find_spa
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|func
+parameter_list|(
+name|spa_t
+modifier|*
+parameter_list|,
+name|uint64_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
 name|void
 name|dmu_objset_byteswap
 parameter_list|(
@@ -436,9 +499,6 @@ parameter_list|(
 name|objset_t
 modifier|*
 name|os
-parameter_list|,
-name|int
-name|try
 parameter_list|)
 function_decl|;
 comment|/* called from dsl */

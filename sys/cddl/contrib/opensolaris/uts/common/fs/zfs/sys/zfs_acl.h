@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -55,6 +55,12 @@ directive|include
 file|<sys/dmu.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/zfs_fuid.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -72,15 +78,107 @@ name|znode_phys
 struct_decl|;
 define|#
 directive|define
-name|ACCESS_UNDETERMINED
-value|-1
-define|#
-directive|define
 name|ACE_SLOT_CNT
 value|6
+define|#
+directive|define
+name|ZFS_ACL_VERSION_INITIAL
+value|0ULL
+define|#
+directive|define
+name|ZFS_ACL_VERSION_FUID
+value|1ULL
+define|#
+directive|define
+name|ZFS_ACL_VERSION
+value|ZFS_ACL_VERSION_FUID
+comment|/*  * ZFS ACLs are store in various forms.  * Files created with ACL version ZFS_ACL_VERSION_INITIAL  * will all be created with fixed length ACEs of type  * zfs_oldace_t.  *  * Files with ACL version ZFS_ACL_VERSION_FUID will be created  * with various sized ACEs.  The abstraction entries will utilize  * zfs_ace_hdr_t, normal user/group entries will use zfs_ace_t  * and some specialized CIFS ACEs will use zfs_object_ace_t.  */
+comment|/*  * All ACEs have a common hdr.  For  * owner@, group@, and everyone@ this is all  * thats needed.  */
 typedef|typedef
 struct|struct
-name|zfs_znode_acl
+name|zfs_ace_hdr
+block|{
+name|uint16_t
+name|z_type
+decl_stmt|;
+name|uint16_t
+name|z_flags
+decl_stmt|;
+name|uint32_t
+name|z_access_mask
+decl_stmt|;
+block|}
+name|zfs_ace_hdr_t
+typedef|;
+typedef|typedef
+name|zfs_ace_hdr_t
+name|zfs_ace_abstract_t
+typedef|;
+comment|/*  * Standard ACE  */
+typedef|typedef
+struct|struct
+name|zfs_ace
+block|{
+name|zfs_ace_hdr_t
+name|z_hdr
+decl_stmt|;
+name|uint64_t
+name|z_fuid
+decl_stmt|;
+block|}
+name|zfs_ace_t
+typedef|;
+comment|/*  * The following type only applies to ACE_ACCESS_ALLOWED|DENIED_OBJECT_ACE_TYPE  * and will only be set/retrieved in a CIFS context.  */
+typedef|typedef
+struct|struct
+name|zfs_object_ace
+block|{
+name|zfs_ace_t
+name|z_ace
+decl_stmt|;
+name|uint8_t
+name|z_object_type
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* object type */
+name|uint8_t
+name|z_inherit_type
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* inherited object type */
+block|}
+name|zfs_object_ace_t
+typedef|;
+typedef|typedef
+struct|struct
+name|zfs_oldace
+block|{
+name|uint32_t
+name|z_fuid
+decl_stmt|;
+comment|/* "who" */
+name|uint32_t
+name|z_access_mask
+decl_stmt|;
+comment|/* access mask */
+name|uint16_t
+name|z_flags
+decl_stmt|;
+comment|/* flags, i.e inheritance */
+name|uint16_t
+name|z_type
+decl_stmt|;
+comment|/* type of entry allow/deny */
+block|}
+name|zfs_oldace_t
+typedef|;
+typedef|typedef
+struct|struct
+name|zfs_acl_phys_v0
 block|{
 name|uint64_t
 name|z_acl_extern_obj
@@ -98,7 +196,7 @@ name|uint16_t
 name|z_acl_pad
 decl_stmt|;
 comment|/* pad */
-name|ace_t
+name|zfs_oldace_t
 name|z_ace_data
 index|[
 name|ACE_SLOT_CNT
@@ -106,38 +204,293 @@ index|]
 decl_stmt|;
 comment|/* 6 standard ACEs */
 block|}
-name|zfs_znode_acl_t
+name|zfs_acl_phys_v0_t
 typedef|;
 define|#
 directive|define
-name|ACL_DATA_ALLOCED
-value|0x1
-comment|/*  * Max ACL size is prepended deny for all entries + the  * canonical six tacked on * the end.  */
-define|#
-directive|define
-name|MAX_ACL_SIZE
-value|(MAX_ACL_ENTRIES * 2 + 6)
+name|ZFS_ACE_SPACE
+value|(sizeof (zfs_oldace_t) * ACE_SLOT_CNT)
+typedef|typedef
+struct|struct
+name|zfs_acl_phys
+block|{
+name|uint64_t
+name|z_acl_extern_obj
+decl_stmt|;
+comment|/* ext acl pieces */
+name|uint32_t
+name|z_acl_size
+decl_stmt|;
+comment|/* Number of bytes in ACL */
+name|uint16_t
+name|z_acl_version
+decl_stmt|;
+comment|/* acl version */
+name|uint16_t
+name|z_acl_count
+decl_stmt|;
+comment|/* ace count */
+name|uint8_t
+name|z_ace_data
+index|[
+name|ZFS_ACE_SPACE
+index|]
+decl_stmt|;
+comment|/* space for embedded ACEs */
+block|}
+name|zfs_acl_phys_t
+typedef|;
+typedef|typedef
+struct|struct
+name|acl_ops
+block|{
+name|uint32_t
+function_decl|(
+modifier|*
+name|ace_mask_get
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|acep
+parameter_list|)
+function_decl|;
+comment|/* get  access mask */
+name|void
+function_decl|(
+modifier|*
+name|ace_mask_set
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|acep
+parameter_list|,
+name|uint32_t
+name|mask
+parameter_list|)
+function_decl|;
+comment|/* set access mask */
+name|uint16_t
+function_decl|(
+modifier|*
+name|ace_flags_get
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|acep
+parameter_list|)
+function_decl|;
+comment|/* get flags */
+name|void
+function_decl|(
+modifier|*
+name|ace_flags_set
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|acep
+parameter_list|,
+name|uint16_t
+name|flags
+parameter_list|)
+function_decl|;
+comment|/* set flags */
+name|uint16_t
+function_decl|(
+modifier|*
+name|ace_type_get
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|acep
+parameter_list|)
+function_decl|;
+comment|/* get type */
+name|void
+function_decl|(
+modifier|*
+name|ace_type_set
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|acep
+parameter_list|,
+name|uint16_t
+name|type
+parameter_list|)
+function_decl|;
+comment|/* set type */
+name|uint64_t
+function_decl|(
+modifier|*
+name|ace_who_get
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|acep
+parameter_list|)
+function_decl|;
+comment|/* get who/fuid */
+name|void
+function_decl|(
+modifier|*
+name|ace_who_set
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|acep
+parameter_list|,
+name|uint64_t
+name|who
+parameter_list|)
+function_decl|;
+comment|/* set who/fuid */
+name|size_t
+function_decl|(
+modifier|*
+name|ace_size
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|acep
+parameter_list|)
+function_decl|;
+comment|/* how big is this ace */
+name|size_t
+function_decl|(
+modifier|*
+name|ace_abstract_size
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* sizeof abstract entry */
+name|int
+function_decl|(
+modifier|*
+name|ace_mask_off
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* off of access mask in ace */
+name|int
+function_decl|(
+modifier|*
+name|ace_data
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|acep
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|datap
+parameter_list|)
+function_decl|;
+comment|/* ptr to data if any */
+block|}
+name|acl_ops_t
+typedef|;
+comment|/*  * A zfs_acl_t structure is composed of a list of zfs_acl_node_t's.  * Each node will have one or more ACEs associated with it.  You will  * only have multiple nodes during a chmod operation.   Normally only  * one node is required.  */
+typedef|typedef
+struct|struct
+name|zfs_acl_node
+block|{
+name|list_node_t
+name|z_next
+decl_stmt|;
+comment|/* Next chunk of ACEs */
+name|void
+modifier|*
+name|z_acldata
+decl_stmt|;
+comment|/* pointer into actual ACE(s) */
+name|void
+modifier|*
+name|z_allocdata
+decl_stmt|;
+comment|/* pointer to kmem allocated memory */
+name|size_t
+name|z_allocsize
+decl_stmt|;
+comment|/* Size of blob in bytes */
+name|size_t
+name|z_size
+decl_stmt|;
+comment|/* length of ACL data */
+name|int
+name|z_ace_count
+decl_stmt|;
+comment|/* number of ACEs in this acl node */
+name|int
+name|z_ace_idx
+decl_stmt|;
+comment|/* ace iterator positioned on */
+block|}
+name|zfs_acl_node_t
+typedef|;
 typedef|typedef
 struct|struct
 name|zfs_acl
 block|{
 name|int
-name|z_slots
-decl_stmt|;
-comment|/* number of allocated slots for ACEs */
-name|int
 name|z_acl_count
 decl_stmt|;
-name|uint_t
-name|z_state
+comment|/* Number of ACEs */
+name|size_t
+name|z_acl_bytes
 decl_stmt|;
-name|ace_t
+comment|/* Number of bytes in ACL */
+name|uint_t
+name|z_version
+decl_stmt|;
+comment|/* version of ACL */
+name|void
 modifier|*
+name|z_next_ace
+decl_stmt|;
+comment|/* pointer to next ACE */
+name|int
+name|z_hints
+decl_stmt|;
+comment|/* ACL hints (ZFS_INHERIT_ACE ...) */
+name|zfs_acl_node_t
+modifier|*
+name|z_curr_node
+decl_stmt|;
+comment|/* current node iterator is handling */
+name|list_t
 name|z_acl
 decl_stmt|;
+comment|/* chunks of ACE data */
+name|acl_ops_t
+name|z_ops
+decl_stmt|;
+comment|/* ACL operations */
+name|boolean_t
+name|z_has_fuids
+decl_stmt|;
+comment|/* FUIDs present in ACL? */
 block|}
 name|zfs_acl_t
 typedef|;
+define|#
+directive|define
+name|ACL_DATA_ALLOCED
+value|0x1
 define|#
 directive|define
 name|ZFS_ACL_SIZE
@@ -164,10 +517,16 @@ name|ZFS_ACL_PASSTHROUGH
 value|3
 define|#
 directive|define
-name|ZFS_ACL_SECURE
+name|ZFS_ACL_RESTRICTED
 value|4
 struct_decl|struct
 name|znode
+struct_decl|;
+struct_decl|struct
+name|zfsvfs
+struct_decl|;
+struct_decl|struct
+name|zfs_fuid_info
 struct_decl|;
 ifdef|#
 directive|ifdef
@@ -193,6 +552,13 @@ modifier|*
 parameter_list|,
 name|cred_t
 modifier|*
+parameter_list|,
+name|zfs_acl_t
+modifier|*
+parameter_list|,
+name|zfs_fuid_info_t
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 ifdef|#
@@ -208,28 +574,12 @@ parameter_list|,
 name|vsecattr_t
 modifier|*
 parameter_list|,
+name|boolean_t
+parameter_list|,
 name|cred_t
 modifier|*
 parameter_list|)
 function_decl|;
-endif|#
-directive|endif
-name|int
-name|zfs_mode_update
-parameter_list|(
-name|struct
-name|znode
-modifier|*
-parameter_list|,
-name|uint64_t
-parameter_list|,
-name|dmu_tx_t
-modifier|*
-parameter_list|)
-function_decl|;
-ifdef|#
-directive|ifdef
-name|TODO
 name|int
 name|zfs_setacl
 parameter_list|(
@@ -239,6 +589,8 @@ modifier|*
 parameter_list|,
 name|vsecattr_t
 modifier|*
+parameter_list|,
+name|boolean_t
 parameter_list|,
 name|cred_t
 modifier|*
@@ -254,12 +606,23 @@ modifier|*
 parameter_list|)
 function_decl|;
 name|void
-name|zfs_ace_byteswap
+name|zfs_oldace_byteswap
 parameter_list|(
 name|ace_t
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+name|void
+name|zfs_ace_byteswap
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|boolean_t
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -272,6 +635,10 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+name|int
+parameter_list|,
+name|boolean_t
+parameter_list|,
 name|cred_t
 modifier|*
 parameter_list|)
@@ -279,6 +646,22 @@ function_decl|;
 specifier|extern
 name|int
 name|zfs_zaccess_rwx
+parameter_list|(
+name|struct
+name|znode
+modifier|*
+parameter_list|,
+name|mode_t
+parameter_list|,
+name|int
+parameter_list|,
+name|cred_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|zfs_zaccess_unix
 parameter_list|(
 name|struct
 name|znode
@@ -311,10 +694,11 @@ name|struct
 name|znode
 modifier|*
 parameter_list|,
-name|uint64_t
-parameter_list|,
-name|dmu_tx_t
+name|zfs_acl_t
 modifier|*
+modifier|*
+parameter_list|,
+name|uint64_t
 parameter_list|)
 function_decl|;
 name|int
@@ -356,23 +740,49 @@ modifier|*
 name|cr
 parameter_list|)
 function_decl|;
+name|void
+name|zfs_acl_free
+parameter_list|(
+name|zfs_acl_t
+modifier|*
+parameter_list|)
+function_decl|;
 name|int
-name|zfs_zaccess_v4_perm
+name|zfs_vsec_2_aclp
+parameter_list|(
+name|struct
+name|zfsvfs
+modifier|*
+parameter_list|,
+name|vtype_t
+parameter_list|,
+name|vsecattr_t
+modifier|*
+parameter_list|,
+name|zfs_acl_t
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+name|zfs_aclset_common
 parameter_list|(
 name|struct
 name|znode
 modifier|*
 parameter_list|,
-name|int
+name|zfs_acl_t
+modifier|*
 parameter_list|,
 name|cred_t
 modifier|*
-parameter_list|)
-function_decl|;
-name|void
-name|zfs_acl_free
-parameter_list|(
-name|zfs_acl_t
+parameter_list|,
+name|struct
+name|zfs_fuid_info
+modifier|*
+modifier|*
+parameter_list|,
+name|dmu_tx_t
 modifier|*
 parameter_list|)
 function_decl|;

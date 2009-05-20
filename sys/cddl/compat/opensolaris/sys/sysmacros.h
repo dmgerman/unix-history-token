@@ -45,6 +45,18 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|ABS
+define|#
+directive|define
+name|ABS
+parameter_list|(
+name|a
+parameter_list|)
+value|((a)< 0 ? -(a) : (a))
+endif|#
+directive|endif
 comment|/*  * Macro for checking power of 2 address alignment.  */
 define|#
 directive|define
@@ -242,22 +254,6 @@ name|type
 parameter_list|)
 define|\
 value|(((type)(x) ^ (type)(y))< ((type)(x)& (type)(y)))
-ifdef|#
-directive|ifdef
-name|_KERNEL
-define|#
-directive|define
-name|memmove
-parameter_list|(
-name|dst
-parameter_list|,
-name|src
-parameter_list|,
-name|size
-parameter_list|)
-value|bcopy((src), (dst), (size))
-endif|#
-directive|endif
 comment|/*  * Find highest one bit set.  *      Returns bit number + 1 of highest bit that is set, otherwise returns 0.  * High order bit is 31 (or 63 in _LP64 kernel).  */
 specifier|static
 name|__inline

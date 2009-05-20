@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -88,8 +88,24 @@ name|FM_EREPORT_ZFS_DEVICE_BAD_LABEL
 value|"vdev.bad_label"
 define|#
 directive|define
+name|FM_EREPORT_ZFS_IO_FAILURE
+value|"io_failure"
+define|#
+directive|define
+name|FM_EREPORT_ZFS_PROBE_FAILURE
+value|"probe_failure"
+define|#
+directive|define
+name|FM_EREPORT_ZFS_LOG_REPLAY
+value|"log_replay"
+define|#
+directive|define
 name|FM_EREPORT_PAYLOAD_ZFS_POOL
 value|"pool"
+define|#
+directive|define
+name|FM_EREPORT_PAYLOAD_ZFS_POOL_FAILMODE
+value|"pool_failmode"
 define|#
 directive|define
 name|FM_EREPORT_PAYLOAD_ZFS_POOL_GUID
@@ -164,8 +180,24 @@ name|FM_EREPORT_PAYLOAD_ZFS_PREV_STATE
 value|"prev_state"
 define|#
 directive|define
-name|FM_RESOURCE_OK
-value|"ok"
+name|FM_EREPORT_FAILMODE_WAIT
+value|"wait"
+define|#
+directive|define
+name|FM_EREPORT_FAILMODE_CONTINUE
+value|"continue"
+define|#
+directive|define
+name|FM_EREPORT_FAILMODE_PANIC
+value|"panic"
+define|#
+directive|define
+name|FM_RESOURCE_REMOVED
+value|"removed"
+define|#
+directive|define
+name|FM_RESOURCE_AUTOREPLACE
+value|"autoreplace"
 ifdef|#
 directive|ifdef
 name|__cplusplus

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -292,6 +292,24 @@ name|ds
 parameter_list|,
 name|uint64_t
 name|txg_start
+parameter_list|,
+name|int
+name|advance
+parameter_list|,
+name|blkptr_cb_t
+name|func
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+name|int
+name|traverse_zvol
+parameter_list|(
+name|objset_t
+modifier|*
+name|os
 parameter_list|,
 name|int
 name|advance

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_DNODE_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -80,7 +73,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-comment|/*  * Flags.  */
+comment|/*  * dnode_hold() flags.  */
 define|#
 directive|define
 name|DNODE_MUST_BE_ALLOCATED
@@ -89,6 +82,19 @@ define|#
 directive|define
 name|DNODE_MUST_BE_FREE
 value|2
+comment|/*  * dnode_next_offset() flags.  */
+define|#
+directive|define
+name|DNODE_FIND_HOLE
+value|1
+define|#
+directive|define
+name|DNODE_FIND_BACKWARDS
+value|2
+define|#
+directive|define
+name|DNODE_FIND_HAVELOCK
+value|4
 comment|/*  * Fixed constants.  */
 define|#
 directive|define
@@ -142,6 +148,10 @@ define|#
 directive|define
 name|DN_MAX_OBJECT
 value|(1ULL<< DN_MAX_OBJECT_SHIFT)
+define|#
+directive|define
+name|DN_ZERO_BONUSLEN
+value|(DN_MAX_BONUSLEN + 1)
 define|#
 directive|define
 name|DNODES_PER_BLOCK_SHIFT
@@ -375,6 +385,12 @@ index|[
 name|TXG_SIZE
 index|]
 decl_stmt|;
+name|uint16_t
+name|dn_next_bonuslen
+index|[
+name|TXG_SIZE
+index|]
+decl_stmt|;
 name|uint32_t
 name|dn_next_blksz
 index|[
@@ -501,6 +517,21 @@ modifier|*
 name|dn
 parameter_list|)
 function_decl|;
+name|void
+name|dnode_setbonuslen
+parameter_list|(
+name|dnode_t
+modifier|*
+name|dn
+parameter_list|,
+name|int
+name|newsize
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
 name|int
 name|dnode_hold
 parameter_list|(
@@ -546,7 +577,7 @@ modifier|*
 name|dnp
 parameter_list|)
 function_decl|;
-name|void
+name|boolean_t
 name|dnode_add_ref
 parameter_list|(
 name|dnode_t
@@ -785,6 +816,8 @@ parameter_list|,
 name|dmu_tx_t
 modifier|*
 name|tx
+parameter_list|,
+name|boolean_t
 parameter_list|)
 function_decl|;
 name|uint64_t
@@ -817,8 +850,8 @@ name|dnode_t
 modifier|*
 name|dn
 parameter_list|,
-name|boolean_t
-name|hole
+name|int
+name|flags
 parameter_list|,
 name|uint64_t
 modifier|*
@@ -834,15 +867,12 @@ name|uint64_t
 name|txg
 parameter_list|)
 function_decl|;
-name|int
+name|void
 name|dnode_evict_dbufs
 parameter_list|(
 name|dnode_t
 modifier|*
 name|dn
-parameter_list|,
-name|int
-name|try
 parameter_list|)
 function_decl|;
 ifdef|#

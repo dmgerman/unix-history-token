@@ -21,15 +21,23 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_empty
-empty|#include_next<sys/ucred.h>
-end_empty
+begin_define
+define|#
+directive|define
+name|_WANT_UCRED
+end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
+begin_include
+include|#
+directive|include
+file|<sys/ucred.h>
+end_include
+
+begin_undef
+undef|#
+directive|undef
+name|_WANT_UCRED
+end_undef
 
 begin_typedef
 typedef|typedef
@@ -38,6 +46,20 @@ name|ucred
 name|cred_t
 typedef|;
 end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|ucred
+name|ucred_t
+typedef|;
+end_typedef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_define
 define|#
@@ -78,13 +100,69 @@ parameter_list|)
 value|((cred)->cr_gid)
 end_define
 
+begin_define
+define|#
+directive|define
+name|crgetgroups
+parameter_list|(
+name|cred
+parameter_list|)
+value|((cred)->cr_groups)
+end_define
+
+begin_define
+define|#
+directive|define
+name|crgetngroups
+parameter_list|(
+name|cred
+parameter_list|)
+value|((cred)->cr_ngroups)
+end_define
+
+begin_define
+define|#
+directive|define
+name|crgetsid
+parameter_list|(
+name|cred
+parameter_list|,
+name|i
+parameter_list|)
+value|(NULL)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|kcred
+value|NULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|CRED
+parameter_list|()
+value|NULL
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* _KERNEL */
+comment|/* !_KERNEL */
 end_comment
 
 begin_endif

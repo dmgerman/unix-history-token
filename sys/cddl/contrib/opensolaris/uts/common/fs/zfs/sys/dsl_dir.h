@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_DSL_DIR_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -72,6 +65,28 @@ struct_decl|struct
 name|dsl_dataset
 struct_decl|;
 typedef|typedef
+enum|enum
+name|dd_used
+block|{
+name|DD_USED_HEAD
+block|,
+name|DD_USED_SNAP
+block|,
+name|DD_USED_CHILD
+block|,
+name|DD_USED_CHILD_RSRV
+block|,
+name|DD_USED_REFRSRV
+block|,
+name|DD_USED_NUM
+block|}
+name|dd_used_t
+typedef|;
+define|#
+directive|define
+name|DD_FLAG_USED_BREAKDOWN
+value|(1<<0)
+typedef|typedef
 struct|struct
 name|dsl_dir_phys
 block|{
@@ -86,7 +101,7 @@ name|uint64_t
 name|dd_parent_obj
 decl_stmt|;
 name|uint64_t
-name|dd_clone_parent_obj
+name|dd_origin_obj
 decl_stmt|;
 name|uint64_t
 name|dd_child_dir_zapobj
@@ -113,9 +128,22 @@ name|uint64_t
 name|dd_props_zapobj
 decl_stmt|;
 name|uint64_t
+name|dd_deleg_zapobj
+decl_stmt|;
+comment|/* dataset delegation permissions */
+name|uint64_t
+name|dd_flags
+decl_stmt|;
+name|uint64_t
+name|dd_used_breakdown
+index|[
+name|DD_USED_NUM
+index|]
+decl_stmt|;
+name|uint64_t
 name|dd_pad
 index|[
-literal|21
+literal|14
 index|]
 decl_stmt|;
 comment|/* pad out to 256 bytes for good measure */
@@ -158,11 +186,6 @@ name|list_t
 name|dd_prop_cbs
 decl_stmt|;
 comment|/* list of dsl_prop_cb_record_t's */
-comment|/* Accounting */
-comment|/* reflects any changes to dd_phys->dd_used_bytes made this syncing */
-name|int64_t
-name|dd_used_bytes
-decl_stmt|;
 comment|/* gross estimate of space used by in-flight tx's */
 name|uint64_t
 name|dd_tempreserved
@@ -303,6 +326,10 @@ function_decl|;
 name|uint64_t
 name|dsl_dir_create_sync
 parameter_list|(
+name|dsl_pool_t
+modifier|*
+name|dp
+parameter_list|,
 name|dsl_dir_t
 modifier|*
 name|pds
@@ -311,22 +338,6 @@ specifier|const
 name|char
 modifier|*
 name|name
-parameter_list|,
-name|dmu_tx_t
-modifier|*
-name|tx
-parameter_list|)
-function_decl|;
-name|void
-name|dsl_dir_create_root
-parameter_list|(
-name|objset_t
-modifier|*
-name|mos
-parameter_list|,
-name|uint64_t
-modifier|*
-name|ddobjp
 parameter_list|,
 name|dmu_tx_t
 modifier|*
@@ -409,6 +420,9 @@ parameter_list|,
 name|uint64_t
 name|fsize
 parameter_list|,
+name|uint64_t
+name|usize
+parameter_list|,
 name|void
 modifier|*
 modifier|*
@@ -453,6 +467,9 @@ name|dsl_dir_t
 modifier|*
 name|dd
 parameter_list|,
+name|dd_used_t
+name|type
+parameter_list|,
 name|int64_t
 name|used
 parameter_list|,
@@ -461,6 +478,27 @@ name|compressed
 parameter_list|,
 name|int64_t
 name|uncompressed
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
+name|void
+name|dsl_dir_transfer_space
+parameter_list|(
+name|dsl_dir_t
+modifier|*
+name|dd
+parameter_list|,
+name|int64_t
+name|delta
+parameter_list|,
+name|dd_used_t
+name|oldtype
+parameter_list|,
+name|dd_used_t
+name|newtype
 parameter_list|,
 name|dmu_tx_t
 modifier|*
@@ -519,11 +557,63 @@ name|uint64_t
 name|space
 parameter_list|)
 function_decl|;
+name|int
+name|dsl_dir_set_reservation_check
+parameter_list|(
+name|void
+modifier|*
+name|arg1
+parameter_list|,
+name|void
+modifier|*
+name|arg2
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
+name|boolean_t
+name|dsl_dir_is_clone
+parameter_list|(
+name|dsl_dir_t
+modifier|*
+name|dd
+parameter_list|)
+function_decl|;
+name|void
+name|dsl_dir_new_refreservation
+parameter_list|(
+name|dsl_dir_t
+modifier|*
+name|dd
+parameter_list|,
+name|struct
+name|dsl_dataset
+modifier|*
+name|ds
+parameter_list|,
+name|uint64_t
+name|reservation
+parameter_list|,
+name|cred_t
+modifier|*
+name|cr
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
 comment|/* internal reserved dir name */
 define|#
 directive|define
 name|MOS_DIR_NAME
 value|"$MOS"
+define|#
+directive|define
+name|ORIGIN_DIR_NAME
+value|"$ORIGIN"
 ifdef|#
 directive|ifdef
 name|ZFS_DEBUG

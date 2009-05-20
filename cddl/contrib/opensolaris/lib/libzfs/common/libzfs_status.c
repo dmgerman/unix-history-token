@@ -4,18 +4,11 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
-
 begin_comment
-comment|/*  * This file contains the functions which analyze the status of a pool.  This  * include both the status of an active pool, as well as the status exported  * pools.  Returns one of the ZPOOL_STATUS_* defines describing the status of  * the pool.  This status is independent (to a certain degree) from the state of  * the pool.  A pool's state descsribes only whether or not it is capable of  * providing the necessary fault tolerance for data.  The status describes the  * overall status of devices.  A pool that is online can still have a device  * that is experiencing errors.  *  * Only a subset of the possible faults can be detected using 'zpool status',  * and not all possible errors correspond to a FMA message ID.  The explanation  * is left up to the caller, depending on whether it is a live pool or an  * import.  */
+comment|/*  * This file contains the functions which analyze the status of a pool.  This  * include both the status of an active pool, as well as the status exported  * pools.  Returns one of the ZPOOL_STATUS_* defines describing the status of  * the pool.  This status is independent (to a certain degree) from the state of  * the pool.  A pool's state describes only whether or not it is capable of  * providing the necessary fault tolerance for data.  The status describes the  * overall status of devices.  A pool that is online can still have a device  * that is experiencing errors.  *  * Only a subset of the possible faults can be detected using 'zpool status',  * and not all possible errors correspond to a FMA message ID.  The explanation  * is left up to the caller, depending on whether it is a live pool or an  * import.  */
 end_comment
 
 begin_include
@@ -43,7 +36,7 @@ file|"libzfs_impl.h"
 end_include
 
 begin_comment
-comment|/*  * Message ID table.  This must be kep in sync with the ZPOOL_STATUS_* defines  * in libzfs.h.  Note that there are some status results which go past the end  * of this table, and hence have no associated message ID.  */
+comment|/*  * Message ID table.  This must be kept in sync with the ZPOOL_STATUS_* defines  * in libzfs.h.  Note that there are some status results which go past the end  * of this table, and hence have no associated message ID.  */
 end_comment
 
 begin_decl_stmt
@@ -75,47 +68,13 @@ block|,
 literal|"ZFS-8000-A5"
 block|,
 literal|"ZFS-8000-EY"
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * If the pool is active, a certain class of static errors is overridden by the  * faults as analayzed by FMA.  These faults have separate knowledge articles,  * and the article referred to by 'zpool status' must match that indicated by  * the syslog error message.  We override missing data as well as corrupt pool.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|zfs_msgid_table_active
-index|[]
-init|=
-block|{
-literal|"ZFS-8000-14"
 block|,
-literal|"ZFS-8000-D3"
+literal|"ZFS-8000-HC"
 block|,
-comment|/* overridden */
-literal|"ZFS-8000-D3"
+literal|"ZFS-8000-JQ"
 block|,
-comment|/* overridden */
-literal|"ZFS-8000-4J"
-block|,
-literal|"ZFS-8000-5E"
-block|,
-literal|"ZFS-8000-6X"
-block|,
-literal|"ZFS-8000-CS"
-block|,
-comment|/* overridden */
-literal|"ZFS-8000-8A"
-block|,
-literal|"ZFS-8000-9P"
-block|,
-literal|"ZFS-8000-CS"
-block|,
-comment|/* overridden */
-block|}
+literal|"ZFS-8000-K4"
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -166,6 +125,35 @@ end_comment
 begin_function
 specifier|static
 name|int
+name|vdev_faulted
+parameter_list|(
+name|uint64_t
+name|state
+parameter_list|,
+name|uint64_t
+name|aux
+parameter_list|,
+name|uint64_t
+name|errs
+parameter_list|)
+block|{
+return|return
+operator|(
+name|state
+operator|==
+name|VDEV_STATE_FAULTED
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_function
+specifier|static
+name|int
 name|vdev_errors
 parameter_list|(
 name|uint64_t
@@ -180,6 +168,10 @@ parameter_list|)
 block|{
 return|return
 operator|(
+name|state
+operator|==
+name|VDEV_STATE_DEGRADED
+operator|||
 name|errs
 operator|!=
 literal|0
@@ -437,7 +429,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Active pool health status.  *  * To determine the status for a pool, we make several passes over the config,  * picking the most egregious error we find.  In order of importance, we do the  * following:  *  *	- Check for a complete and valid configuration  *	- Look for any missing devices in a non-replicated config  *	- Check for any data errors  *	- Check for any missing devices in a replicated config  *	- Look for any devices showing errors  *	- Check for any resilvering devices  *  * There can obviously be multiple errors within a single pool, so this routine  * only picks the most damaging of all the current errors to report.  */
+comment|/*  * Active pool health status.  *  * To determine the status for a pool, we make several passes over the config,  * picking the most egregious error we find.  In order of importance, we do the  * following:  *  *	- Check for a complete and valid configuration  *	- Look for any faulted or missing devices in a non-replicated config  *	- Check for any data errors  *	- Check for any faulted or missing devices in a replicated config  *	- Look for any devices showing errors  *	- Check for any resilvering devices  *  * There can obviously be multiple errors within a single pool, so this routine  * only picks the most damaging of all the current errors to report.  */
 end_comment
 
 begin_function
@@ -472,6 +464,9 @@ name|version
 decl_stmt|;
 name|uint64_t
 name|stateval
+decl_stmt|;
+name|uint64_t
+name|suspended
 decl_stmt|;
 name|uint64_t
 name|hostid
@@ -624,7 +619,82 @@ operator|(
 name|ZPOOL_STATUS_BAD_GUID_SUM
 operator|)
 return|;
-comment|/* 	 * Missing devices in non-replicated config. 	 */
+comment|/* 	 * Check whether the pool has suspended due to failed I/O. 	 */
+if|if
+condition|(
+name|nvlist_lookup_uint64
+argument_list|(
+name|config
+argument_list|,
+name|ZPOOL_CONFIG_SUSPENDED
+argument_list|,
+operator|&
+name|suspended
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|suspended
+operator|==
+name|ZIO_FAILURE_MODE_CONTINUE
+condition|)
+return|return
+operator|(
+name|ZPOOL_STATUS_IO_FAILURE_CONTINUE
+operator|)
+return|;
+return|return
+operator|(
+name|ZPOOL_STATUS_IO_FAILURE_WAIT
+operator|)
+return|;
+block|}
+comment|/* 	 * Could not read a log. 	 */
+if|if
+condition|(
+name|vs
+operator|->
+name|vs_state
+operator|==
+name|VDEV_STATE_CANT_OPEN
+operator|&&
+name|vs
+operator|->
+name|vs_aux
+operator|==
+name|VDEV_AUX_BAD_LOG
+condition|)
+block|{
+return|return
+operator|(
+name|ZPOOL_STATUS_BAD_LOG
+operator|)
+return|;
+block|}
+comment|/* 	 * Bad devices in non-replicated config. 	 */
+if|if
+condition|(
+name|vs
+operator|->
+name|vs_state
+operator|==
+name|VDEV_STATE_CANT_OPEN
+operator|&&
+name|find_vdev_problem
+argument_list|(
+name|nvroot
+argument_list|,
+name|vdev_faulted
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ZPOOL_STATUS_FAULTED_DEV_NR
+operator|)
+return|;
 if|if
 condition|(
 name|vs
@@ -723,6 +793,20 @@ name|find_vdev_problem
 argument_list|(
 name|nvroot
 argument_list|,
+name|vdev_faulted
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ZPOOL_STATUS_FAULTED_DEV_R
+operator|)
+return|;
+if|if
+condition|(
+name|find_vdev_problem
+argument_list|(
+name|nvroot
+argument_list|,
 name|vdev_missing
 argument_list|)
 condition|)
@@ -802,7 +886,7 @@ if|if
 condition|(
 name|version
 operator|<
-name|ZFS_VERSION
+name|SPA_VERSION
 condition|)
 return|return
 operator|(
@@ -858,7 +942,7 @@ else|else
 operator|*
 name|msgid
 operator|=
-name|zfs_msgid_table_active
+name|zfs_msgid_table
 index|[
 name|ret
 index|]

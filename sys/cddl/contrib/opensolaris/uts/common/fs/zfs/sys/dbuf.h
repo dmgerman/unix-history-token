@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -405,8 +405,7 @@ modifier|*
 name|data
 parameter_list|)
 function_decl|;
-name|dmu_buf_impl_t
-modifier|*
+name|void
 name|dbuf_create_bonus
 parameter_list|(
 name|struct
@@ -684,10 +683,10 @@ modifier|*
 name|dn
 parameter_list|,
 name|uint64_t
-name|blkid
+name|start
 parameter_list|,
 name|uint64_t
-name|nblks
+name|end
 parameter_list|,
 name|struct
 name|dmu_tx
@@ -723,12 +722,36 @@ parameter_list|)
 function_decl|;
 define|#
 directive|define
+name|DBUF_IS_METADATA
+parameter_list|(
+name|db
+parameter_list|)
+define|\
+value|((db)->db_level> 0 || dmu_ot[(db)->db_dnode->dn_type].ot_metadata)
+define|#
+directive|define
 name|DBUF_GET_BUFC_TYPE
 parameter_list|(
 name|db
 parameter_list|)
 define|\
-value|((((db)->db_level> 0) ||				\ 	    (dmu_ot[(db)->db_dnode->dn_type].ot_metadata)) ?	\ 	    ARC_BUFC_METADATA : ARC_BUFC_DATA);
+value|(DBUF_IS_METADATA(db) ? ARC_BUFC_METADATA : ARC_BUFC_DATA)
+define|#
+directive|define
+name|DBUF_IS_CACHEABLE
+parameter_list|(
+name|db
+parameter_list|)
+define|\
+value|((db)->db_objset->os_primary_cache == ZFS_CACHE_ALL ||		\ 	(DBUF_IS_METADATA(db)&&					\ 	((db)->db_objset->os_primary_cache == ZFS_CACHE_METADATA)))
+define|#
+directive|define
+name|DBUF_IS_L2CACHEABLE
+parameter_list|(
+name|db
+parameter_list|)
+define|\
+value|((db)->db_objset->os_secondary_cache == ZFS_CACHE_ALL ||	\ 	(DBUF_IS_METADATA(db)&&					\ 	((db)->db_objset->os_secondary_cache == ZFS_CACHE_METADATA)))
 ifdef|#
 directive|ifdef
 name|ZFS_DEBUG

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License, Version 1.0 only  * (the "License").  You may not use this file except in compliance  * with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
+comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License (the "License").  * You may not use this file except in compliance with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2003 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -210,7 +210,7 @@ block|{
 name|int32_t
 name|readers
 decl_stmt|;
-comment|/* -1 == writer else # of readers */
+comment|/* rwstate word */
 name|uint16_t
 name|type
 decl_stmt|;
@@ -220,15 +220,15 @@ decl_stmt|;
 name|lwp_mutex_t
 name|mutex
 decl_stmt|;
-comment|/* used to indicate ownership */
+comment|/* used with process-shared rwlocks */
 name|lwp_cond_t
 name|readercv
 decl_stmt|;
-comment|/* unused */
+comment|/* used only to indicate ownership */
 name|lwp_cond_t
 name|writercv
 decl_stmt|;
-comment|/* unused */
+comment|/* used only to indicate ownership */
 block|}
 name|lwp_rwlock_t
 typedef|;
@@ -246,12 +246,17 @@ directive|define
 name|USYNC_PROCESS
 value|0x01
 comment|/* shared by processes */
-comment|/* Keep the following 3 fields in sync with pthread.h */
+comment|/* Keep the following values in sync with pthread.h */
 define|#
 directive|define
 name|LOCK_NORMAL
 value|0x00
 comment|/* same as USYNC_THREAD */
+define|#
+directive|define
+name|LOCK_SHARED
+value|0x01
+comment|/* same as USYNC_PROCESS */
 define|#
 directive|define
 name|LOCK_ERRORCHECK
@@ -264,30 +269,24 @@ value|0x04
 comment|/* recursive lock */
 define|#
 directive|define
-name|USYNC_PROCESS_ROBUST
-value|0x08
-comment|/* shared by processes robustly */
-comment|/* Keep the following 5 fields in sync with pthread.h */
-define|#
-directive|define
-name|LOCK_PRIO_NONE
-value|0x00
-define|#
-directive|define
 name|LOCK_PRIO_INHERIT
 value|0x10
+comment|/* priority inheritance lock */
 define|#
 directive|define
 name|LOCK_PRIO_PROTECT
 value|0x20
+comment|/* priority ceiling lock */
 define|#
 directive|define
-name|LOCK_STALL_NP
-value|0x00
-define|#
-directive|define
-name|LOCK_ROBUST_NP
+name|LOCK_ROBUST
 value|0x40
+comment|/* robust lock */
+comment|/*  * USYNC_PROCESS_ROBUST is a deprecated historical type.  It is mapped  * into (USYNC_PROCESS | LOCK_ROBUST) by mutex_init().  Application code  * should be revised to use (USYNC_PROCESS | LOCK_ROBUST) rather than this.  */
+define|#
+directive|define
+name|USYNC_PROCESS_ROBUST
+value|0x08
 comment|/*  * lwp_mutex_t flags  */
 define|#
 directive|define

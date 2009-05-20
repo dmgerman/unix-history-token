@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -81,6 +81,9 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|,
+name|cred_t
+modifier|*
+parameter_list|,
 name|dmu_tx_t
 modifier|*
 parameter_list|)
@@ -129,6 +132,10 @@ name|dsl_pool
 modifier|*
 name|dstg_pool
 decl_stmt|;
+name|cred_t
+modifier|*
+name|dstg_cr
+decl_stmt|;
 name|uint64_t
 name|dstg_txg
 decl_stmt|;
@@ -137,6 +144,9 @@ name|dstg_err
 decl_stmt|;
 name|int
 name|dstg_space
+decl_stmt|;
+name|boolean_t
+name|dstg_nowaiter
 decl_stmt|;
 block|}
 name|dsl_sync_task_group_t
@@ -185,6 +195,18 @@ name|dstg
 parameter_list|)
 function_decl|;
 name|void
+name|dsl_sync_task_group_nowait
+parameter_list|(
+name|dsl_sync_task_group_t
+modifier|*
+name|dstg
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
+name|void
 name|dsl_sync_task_group_destroy
 parameter_list|(
 name|dsl_sync_task_group_t
@@ -230,6 +252,38 @@ name|arg2
 parameter_list|,
 name|int
 name|blocks_modified
+parameter_list|)
+function_decl|;
+name|void
+name|dsl_sync_task_do_nowait
+parameter_list|(
+name|struct
+name|dsl_pool
+modifier|*
+name|dp
+parameter_list|,
+name|dsl_checkfunc_t
+modifier|*
+name|checkfunc
+parameter_list|,
+name|dsl_syncfunc_t
+modifier|*
+name|syncfunc
+parameter_list|,
+name|void
+modifier|*
+name|arg1
+parameter_list|,
+name|void
+modifier|*
+name|arg2
+parameter_list|,
+name|int
+name|blocks_modified
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
 parameter_list|)
 function_decl|;
 ifdef|#

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_VDEV_IMPL_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -143,7 +136,7 @@ name|psize
 parameter_list|)
 function_decl|;
 typedef|typedef
-name|void
+name|int
 name|vdev_io_start_func_t
 parameter_list|(
 name|zio_t
@@ -395,18 +388,30 @@ name|txg_node_t
 name|vdev_txg_node
 decl_stmt|;
 comment|/* per-txg dirty vdev linkage	*/
-name|uint8_t
-name|vdev_reopen_wanted
+name|boolean_t
+name|vdev_remove_wanted
 decl_stmt|;
-comment|/* async reopen wanted?	*/
+comment|/* async remove wanted?	*/
+name|boolean_t
+name|vdev_probe_wanted
+decl_stmt|;
+comment|/* async probe wanted?	*/
 name|list_node_t
-name|vdev_dirty_node
+name|vdev_config_dirty_node
 decl_stmt|;
-comment|/* config dirty list		*/
+comment|/* config dirty list	*/
+name|list_node_t
+name|vdev_state_dirty_node
+decl_stmt|;
+comment|/* state dirty list	*/
 name|uint64_t
 name|vdev_deflate_ratio
 decl_stmt|;
 comment|/* deflation ratio (x512)	*/
+name|uint64_t
+name|vdev_islog
+decl_stmt|;
+comment|/* is an intent log device	*/
 comment|/* 	 * Leaf vdev state. 	 */
 name|uint64_t
 name|vdev_psize
@@ -427,7 +432,19 @@ comment|/* true if this is a whole disk */
 name|uint64_t
 name|vdev_offline
 decl_stmt|;
-comment|/* device taken offline?	*/
+comment|/* persistent offline state	*/
+name|uint64_t
+name|vdev_faulted
+decl_stmt|;
+comment|/* persistent faulted state	*/
+name|uint64_t
+name|vdev_degraded
+decl_stmt|;
+comment|/* persistent degraded state	*/
+name|uint64_t
+name|vdev_removed
+decl_stmt|;
+comment|/* persistent removed state	*/
 name|uint64_t
 name|vdev_nparity
 decl_stmt|;
@@ -442,46 +459,19 @@ modifier|*
 name|vdev_devid
 decl_stmt|;
 comment|/* vdev devid (if any)		*/
-name|uint64_t
-name|vdev_fault_arg
+name|char
+modifier|*
+name|vdev_physpath
 decl_stmt|;
-comment|/* fault injection paramater	*/
-name|int
-name|vdev_fault_mask
-decl_stmt|;
-comment|/* zio types to fault		*/
-name|uint8_t
-name|vdev_fault_mode
-decl_stmt|;
-comment|/* fault injection mode	*/
-name|uint8_t
-name|vdev_cache_active
-decl_stmt|;
-comment|/* vdev_cache and vdev_queue	*/
-name|uint8_t
-name|vdev_tmpoffline
-decl_stmt|;
-comment|/* device taken offline temporarily? */
-name|uint8_t
-name|vdev_detached
-decl_stmt|;
-comment|/* device detached?		*/
-name|uint64_t
-name|vdev_isspare
-decl_stmt|;
-comment|/* was a hot spare */
-name|vdev_queue_t
-name|vdev_queue
-decl_stmt|;
-comment|/* I/O deadline schedule queue	*/
-name|vdev_cache_t
-name|vdev_cache
-decl_stmt|;
-comment|/* physical block cache		*/
+comment|/* vdev device path (if any)	*/
 name|uint64_t
 name|vdev_not_present
 decl_stmt|;
 comment|/* not present during import	*/
+name|uint64_t
+name|vdev_unspare
+decl_stmt|;
+comment|/* unspare when resilvering done */
 name|hrtime_t
 name|vdev_last_try
 decl_stmt|;
@@ -490,6 +480,56 @@ name|boolean_t
 name|vdev_nowritecache
 decl_stmt|;
 comment|/* true if flushwritecache failed */
+name|boolean_t
+name|vdev_checkremove
+decl_stmt|;
+comment|/* temporary online test	*/
+name|boolean_t
+name|vdev_forcefault
+decl_stmt|;
+comment|/* force online fault		*/
+name|uint8_t
+name|vdev_tmpoffline
+decl_stmt|;
+comment|/* device taken offline temporarily? */
+name|uint8_t
+name|vdev_detached
+decl_stmt|;
+comment|/* device detached?		*/
+name|uint8_t
+name|vdev_cant_read
+decl_stmt|;
+comment|/* vdev is failing all reads	*/
+name|uint8_t
+name|vdev_cant_write
+decl_stmt|;
+comment|/* vdev is failing all writes	*/
+name|uint64_t
+name|vdev_isspare
+decl_stmt|;
+comment|/* was a hot spare		*/
+name|uint64_t
+name|vdev_isl2cache
+decl_stmt|;
+comment|/* was a l2cache device		*/
+name|vdev_queue_t
+name|vdev_queue
+decl_stmt|;
+comment|/* I/O deadline schedule queue	*/
+name|vdev_cache_t
+name|vdev_cache
+decl_stmt|;
+comment|/* physical block cache		*/
+name|spa_aux_vdev_t
+modifier|*
+name|vdev_aux
+decl_stmt|;
+comment|/* for l2cache vdevs		*/
+name|zio_t
+modifier|*
+name|vdev_probe_zio
+decl_stmt|;
+comment|/* root of current probe	*/
 comment|/* 	 * For DTrace to work in userland (libzpool) context, these fields must 	 * remain at the end of the structure.  DTrace will use the kernel's 	 * CTF definition for 'struct vdev', and since the size of a kmutex_t is 	 * larger in userland, the offsets for the rest fields would be 	 * incorrect. 	 */
 name|kmutex_t
 name|vdev_dtl_lock
@@ -499,6 +539,10 @@ name|kmutex_t
 name|vdev_stat_lock
 decl_stmt|;
 comment|/* vdev_stat			*/
+name|kmutex_t
+name|vdev_probe_lock
+decl_stmt|;
+comment|/* protects vdev_probe_zio	*/
 block|}
 struct|;
 define|#
@@ -691,6 +735,10 @@ define|#
 directive|define
 name|VDEV_ALLOC_SPARE
 value|2
+define|#
+directive|define
+name|VDEV_ALLOC_L2CACHE
+value|3
 comment|/*  * Allocate or free a vdev  */
 specifier|extern
 name|int
@@ -871,12 +919,12 @@ specifier|extern
 name|vdev_ops_t
 name|vdev_disk_ops
 decl_stmt|;
+endif|#
+directive|endif
 specifier|extern
 name|vdev_ops_t
 name|vdev_file_ops
 decl_stmt|;
-endif|#
-directive|endif
 specifier|extern
 name|vdev_ops_t
 name|vdev_missing_ops

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,17 +18,6 @@ define|#
 directive|define
 name|_SYS_DKIO_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
-
-begin_comment
-comment|/* SunOS-4.0 5.19 */
-end_comment
 
 begin_include
 include|#
@@ -208,6 +197,11 @@ directive|define
 name|DKC_PCMCIA_ATA
 value|22
 comment|/* PCMCIA AT Attached type */
+define|#
+directive|define
+name|DKC_VBD
+value|23
+comment|/* virtual block device */
 comment|/*  * Sun reserves up through 1023  */
 define|#
 directive|define
@@ -414,6 +408,16 @@ directive|define
 name|DKIOCSVTOC
 value|(DKIOC|12)
 comment|/* Set VTOC& Write to Disk */
+define|#
+directive|define
+name|DKIOCGEXTVTOC
+value|(DKIOC|23)
+comment|/* Get extended VTOC */
+define|#
+directive|define
+name|DKIOCSEXTVTOC
+value|(DKIOC|24)
+comment|/* Set extended VTOC, Write to Disk */
 comment|/*  * Disk Cache Controls.  These ioctls should be supported by  * all disk drivers.  *  * DKIOCFLUSHWRITECACHE when used from user-mode ignores the ioctl  * argument, but it should be passed as NULL to allow for future  * reinterpretation.  From user-mode, this ioctl request is synchronous.  *  * When invoked from within the kernel, the arg can be NULL to indicate  * a synchronous request or can be the address of a struct dk_callback  * to request an asynchronous callback when the flush request is complete.  * In this case, the flag to the ioctl must include FKIOCTL and the  * dkc_callback field of the pointed to struct must be non-null or the  * request is made synchronously.  *  * In the callback case: if the ioctl returns 0, a callback WILL be performed.  * If the ioctl returns non-zero, a callback will NOT be performed.  * NOTE: In some cases, the callback may be done BEFORE the ioctl call  * returns.  The caller's locking strategy should be prepared for this case.  */
 define|#
 directive|define
@@ -441,8 +445,19 @@ name|void
 modifier|*
 name|dkc_cookie
 decl_stmt|;
+name|int
+name|dkc_flag
+decl_stmt|;
 block|}
 struct|;
+comment|/* bit flag definitions for dkc_flag */
+define|#
+directive|define
+name|FLUSH_VOLATILE
+value|0x1
+comment|/* Bit 0: if set, only flush */
+comment|/* volatile cache; otherwise, flush */
+comment|/* volatile and non-volatile cache */
 define|#
 directive|define
 name|DKIOCGETWCE
@@ -552,6 +567,12 @@ directive|define
 name|DKIOCPARTINFO
 value|(DKIOC|22)
 comment|/* Get partition or slice parameters */
+define|#
+directive|define
+name|DKIOCEXTPARTINFO
+value|(DKIOC|19)
+comment|/* Get extended partition or slice */
+comment|/* parameters */
 comment|/*  * Used by applications to get partition or slice information  */
 ifdef|#
 directive|ifdef
@@ -577,6 +598,17 @@ name|daddr_t
 name|p_start
 decl_stmt|;
 name|int
+name|p_length
+decl_stmt|;
+block|}
+struct|;
+struct|struct
+name|extpart_info
+block|{
+name|diskaddr_t
+name|p_start
+decl_stmt|;
+name|diskaddr_t
 name|p_length
 decl_stmt|;
 block|}
@@ -780,6 +812,16 @@ directive|define
 name|DKIOCDMR
 value|(DKIOC | 27)
 comment|/* Issue a directed read */
+define|#
+directive|define
+name|DKIOCDUMPINIT
+value|(DKIOC | 28)
+comment|/* Dumpify a zvol */
+define|#
+directive|define
+name|DKIOCDUMPFINI
+value|(DKIOC | 29)
+comment|/* Un-Dumpify a zvol */
 typedef|typedef
 name|uint_t
 name|volcapinfo_t

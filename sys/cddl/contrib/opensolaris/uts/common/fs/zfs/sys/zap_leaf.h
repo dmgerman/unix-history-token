@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -134,6 +134,10 @@ literal|250
 block|}
 name|zap_chunk_type_t
 typedef|;
+define|#
+directive|define
+name|ZLF_ENTRIES_CDSORTED
+value|(1<<0)
 comment|/*  * TAKE NOTE:  * If zap_leaf_phys_t is modified, zap_leaf_byteswap() must be modified.  */
 typedef|typedef
 struct|struct
@@ -175,9 +179,13 @@ name|lh_freelist
 decl_stmt|;
 comment|/* chunk head of free list */
 name|uint8_t
+name|lh_flags
+decl_stmt|;
+comment|/* ZLF_* flags */
+name|uint8_t
 name|lh_pad2
 index|[
-literal|12
+literal|11
 index|]
 decl_stmt|;
 block|}
@@ -290,7 +298,6 @@ block|{
 name|krwlock_t
 name|l_rwlock
 decl_stmt|;
-comment|/* only used on head of chain */
 name|uint64_t
 name|l_blkid
 decl_stmt|;
@@ -351,13 +358,9 @@ name|zap_leaf_t
 modifier|*
 name|l
 parameter_list|,
-specifier|const
-name|char
+name|zap_name_t
 modifier|*
-name|name
-parameter_list|,
-name|uint64_t
-name|h
+name|zn
 parameter_list|,
 name|zap_entry_handle_t
 modifier|*
@@ -489,6 +492,29 @@ modifier|*
 name|zeh
 parameter_list|)
 function_decl|;
+comment|/*  * Return true if there are additional entries with the same normalized  * form.  */
+specifier|extern
+name|boolean_t
+name|zap_entry_normalization_conflict
+parameter_list|(
+name|zap_entry_handle_t
+modifier|*
+name|zeh
+parameter_list|,
+name|zap_name_t
+modifier|*
+name|zn
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|zap_t
+modifier|*
+name|zap
+parameter_list|)
+function_decl|;
 comment|/*  * Other stuff.  */
 specifier|extern
 name|void
@@ -497,6 +523,9 @@ parameter_list|(
 name|zap_leaf_t
 modifier|*
 name|l
+parameter_list|,
+name|boolean_t
+name|sort
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -522,6 +551,9 @@ parameter_list|,
 name|zap_leaf_t
 modifier|*
 name|nl
+parameter_list|,
+name|boolean_t
+name|sort
 parameter_list|)
 function_decl|;
 specifier|extern

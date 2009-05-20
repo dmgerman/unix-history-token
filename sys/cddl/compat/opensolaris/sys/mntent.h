@@ -212,6 +212,28 @@ begin_comment
 comment|/* restricted autofs mount */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MNTOPT_NBMAND
+value|"nbmand"
+end_define
+
+begin_comment
+comment|/* allow non-blocking mandatory locks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNTOPT_NONBMAND
+value|"nonbmand"
+end_define
+
+begin_comment
+comment|/* deny non-blocking mandatory locks */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

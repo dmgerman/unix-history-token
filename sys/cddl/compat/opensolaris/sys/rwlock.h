@@ -93,7 +93,7 @@ begin_define
 define|#
 directive|define
 name|RW_FLAGS
-value|(SX_DUPOK | SX_NOWITNESS)
+value|(SX_DUPOK | SX_NOWITNESS | SX_ADAPTIVESPIN)
 end_define
 
 begin_else
@@ -105,7 +105,7 @@ begin_define
 define|#
 directive|define
 name|RW_FLAGS
-value|(SX_DUPOK)
+value|(SX_DUPOK | SX_ADAPTIVESPIN)
 end_define
 
 begin_endif

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_SPA_IMPL_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -100,26 +93,6 @@ endif|#
 directive|endif
 typedef|typedef
 struct|struct
-name|spa_config_lock
-block|{
-name|kmutex_t
-name|scl_lock
-decl_stmt|;
-name|refcount_t
-name|scl_count
-decl_stmt|;
-name|kthread_t
-modifier|*
-name|scl_writer
-decl_stmt|;
-name|kcondvar_t
-name|scl_cv
-decl_stmt|;
-block|}
-name|spa_config_lock_t
-typedef|;
-typedef|typedef
-struct|struct
 name|spa_error_entry
 block|{
 name|zbookmark_t
@@ -162,27 +135,123 @@ comment|/* num of records overwritten */
 block|}
 name|spa_history_phys_t
 typedef|;
-typedef|typedef
 struct|struct
-name|spa_props
+name|spa_aux_vdev
 block|{
+name|uint64_t
+name|sav_object
+decl_stmt|;
+comment|/* MOS object for device list */
 name|nvlist_t
 modifier|*
-name|spa_props_nvp
+name|sav_config
 decl_stmt|;
-name|list_node_t
-name|spa_list_node
+comment|/* cached device config */
+name|vdev_t
+modifier|*
+modifier|*
+name|sav_vdevs
+decl_stmt|;
+comment|/* devices */
+name|int
+name|sav_count
+decl_stmt|;
+comment|/* number devices */
+name|boolean_t
+name|sav_sync
+decl_stmt|;
+comment|/* sync the device list */
+name|nvlist_t
+modifier|*
+modifier|*
+name|sav_pending
+decl_stmt|;
+comment|/* pending device additions */
+name|uint_t
+name|sav_npending
+decl_stmt|;
+comment|/* # pending devices */
+block|}
+struct|;
+typedef|typedef
+struct|struct
+name|spa_config_lock
+block|{
+name|kmutex_t
+name|scl_lock
+decl_stmt|;
+name|kthread_t
+modifier|*
+name|scl_writer
+decl_stmt|;
+name|int
+name|scl_write_wanted
+decl_stmt|;
+name|kcondvar_t
+name|scl_cv
+decl_stmt|;
+name|refcount_t
+name|scl_count
 decl_stmt|;
 block|}
-name|spa_props_t
+name|spa_config_lock_t
 typedef|;
+typedef|typedef
+struct|struct
+name|spa_config_dirent
+block|{
+name|list_node_t
+name|scd_link
+decl_stmt|;
+name|char
+modifier|*
+name|scd_path
+decl_stmt|;
+block|}
+name|spa_config_dirent_t
+typedef|;
+typedef|typedef
+enum|enum
+name|spa_log_state
+block|{
+name|SPA_LOG_UNKNOWN
+init|=
+literal|0
+block|,
+comment|/* unknown log state */
+name|SPA_LOG_MISSING
+block|,
+comment|/* missing log(s) */
+name|SPA_LOG_CLEAR
+block|,
+comment|/* clear the log(s) */
+name|SPA_LOG_GOOD
+block|,
+comment|/* log(s) are good */
+block|}
+name|spa_log_state_t
+typedef|;
+enum|enum
+name|zio_taskq_type
+block|{
+name|ZIO_TASKQ_ISSUE
+init|=
+literal|0
+block|,
+name|ZIO_TASKQ_INTERRUPT
+block|,
+name|ZIO_TASKQ_TYPES
+block|}
+enum|;
 struct|struct
 name|spa
 block|{
 comment|/* 	 * Fields protected by spa_namespace_lock. 	 */
 name|char
-modifier|*
 name|spa_name
+index|[
+name|MAXNAMELEN
+index|]
 decl_stmt|;
 comment|/* pool name */
 name|avl_node_t
@@ -203,10 +272,6 @@ name|uint64_t
 name|spa_config_txg
 decl_stmt|;
 comment|/* txg of last config change */
-name|kmutex_t
-name|spa_config_cache_lock
-decl_stmt|;
-comment|/* for spa_config RW_READER */
 name|int
 name|spa_sync_pass
 decl_stmt|;
@@ -233,16 +298,12 @@ decl_stmt|;
 comment|/* current load operation */
 name|taskq_t
 modifier|*
-name|spa_zio_issue_taskq
+name|spa_zio_taskq
 index|[
 name|ZIO_TYPES
 index|]
-decl_stmt|;
-name|taskq_t
-modifier|*
-name|spa_zio_intr_taskq
 index|[
-name|ZIO_TYPES
+name|ZIO_TASKQ_TYPES
 index|]
 decl_stmt|;
 name|dsl_pool_t
@@ -254,6 +315,11 @@ modifier|*
 name|spa_normal_class
 decl_stmt|;
 comment|/* normal data class */
+name|metaslab_class_t
+modifier|*
+name|spa_log_class
+decl_stmt|;
+comment|/* intent log data class */
 name|uint64_t
 name|spa_first_txg
 decl_stmt|;
@@ -285,32 +351,21 @@ name|spa_load_guid
 decl_stmt|;
 comment|/* initial guid for spa_load */
 name|list_t
-name|spa_dirty_list
+name|spa_config_dirty_list
 decl_stmt|;
-comment|/* vdevs with dirty labels */
-name|uint64_t
-name|spa_spares_object
+comment|/* vdevs with dirty config */
+name|list_t
+name|spa_state_dirty_list
 decl_stmt|;
-comment|/* MOS object for spare list */
-name|nvlist_t
-modifier|*
-name|spa_sparelist
-decl_stmt|;
-comment|/* cached spare config */
-name|vdev_t
-modifier|*
-modifier|*
+comment|/* vdevs with dirty state */
+name|spa_aux_vdev_t
 name|spa_spares
 decl_stmt|;
-comment|/* available hot spares */
-name|int
-name|spa_nspares
+comment|/* hot spares */
+name|spa_aux_vdev_t
+name|spa_l2cache
 decl_stmt|;
-comment|/* number of hot spares */
-name|boolean_t
-name|spa_sync_spares
-decl_stmt|;
-comment|/* sync the spares list */
+comment|/* L2ARC cache devices */
 name|uint64_t
 name|spa_config_object
 decl_stmt|;
@@ -343,28 +398,6 @@ name|kmutex_t
 name|spa_scrub_lock
 decl_stmt|;
 comment|/* resilver/scrub lock */
-name|kthread_t
-modifier|*
-name|spa_scrub_thread
-decl_stmt|;
-comment|/* scrub/resilver thread */
-name|traverse_handle_t
-modifier|*
-name|spa_scrub_th
-decl_stmt|;
-comment|/* scrub traverse handle */
-name|uint64_t
-name|spa_scrub_restart_txg
-decl_stmt|;
-comment|/* need to restart */
-name|uint64_t
-name|spa_scrub_mintxg
-decl_stmt|;
-comment|/* min txg we'll scrub */
-name|uint64_t
-name|spa_scrub_maxtxg
-decl_stmt|;
-comment|/* max txg we'll scrub */
 name|uint64_t
 name|spa_scrub_inflight
 decl_stmt|;
@@ -377,22 +410,10 @@ name|uint64_t
 name|spa_scrub_errors
 decl_stmt|;
 comment|/* scrub I/O error count */
-name|int
-name|spa_scrub_suspended
-decl_stmt|;
-comment|/* tell scrubber to suspend */
-name|kcondvar_t
-name|spa_scrub_cv
-decl_stmt|;
-comment|/* scrub thread state change */
 name|kcondvar_t
 name|spa_scrub_io_cv
 decl_stmt|;
 comment|/* scrub I/O completion */
-name|uint8_t
-name|spa_scrub_stop
-decl_stmt|;
-comment|/* tell scrubber to stop */
 name|uint8_t
 name|spa_scrub_active
 decl_stmt|;
@@ -405,6 +426,14 @@ name|uint8_t
 name|spa_scrub_finished
 decl_stmt|;
 comment|/* indicator to rotate logs */
+name|uint8_t
+name|spa_scrub_started
+decl_stmt|;
+comment|/* started since last boot */
+name|uint8_t
+name|spa_scrub_reopen
+decl_stmt|;
+comment|/* scrub doing vdev_reopen */
 name|kmutex_t
 name|spa_async_lock
 decl_stmt|;
@@ -426,15 +455,23 @@ name|uint16_t
 name|spa_async_tasks
 decl_stmt|;
 comment|/* async task mask */
+name|kmutex_t
+name|spa_async_root_lock
+decl_stmt|;
+comment|/* protects async root count */
+name|uint64_t
+name|spa_async_root_count
+decl_stmt|;
+comment|/* number of async root zios */
+name|kcondvar_t
+name|spa_async_root_cv
+decl_stmt|;
+comment|/* notify when count == 0 */
 name|char
 modifier|*
 name|spa_root
 decl_stmt|;
 comment|/* alternate root directory */
-name|kmutex_t
-name|spa_uberblock_lock
-decl_stmt|;
-comment|/* vdev_uberblock_load_done() */
 name|uint64_t
 name|spa_ena
 decl_stmt|;
@@ -484,16 +521,6 @@ modifier|*
 name|spa_pending_vdev
 decl_stmt|;
 comment|/* pending vdev additions */
-name|nvlist_t
-modifier|*
-modifier|*
-name|spa_pending_spares
-decl_stmt|;
-comment|/* pending spare additions */
-name|uint_t
-name|spa_pending_nspares
-decl_stmt|;
-comment|/* # pending spares */
 name|kmutex_t
 name|spa_props_lock
 decl_stmt|;
@@ -506,11 +533,59 @@ name|uint64_t
 name|spa_bootfs
 decl_stmt|;
 comment|/* default boot filesystem */
-comment|/* 	 * spa_refcnt must be the last element because it changes size based on 	 * compilation options.  In order for the MDB module to function 	 * correctly, the other fields must remain in the same location. 	 */
+name|uint64_t
+name|spa_failmode
+decl_stmt|;
+comment|/* failure mode for the pool */
+name|uint64_t
+name|spa_delegation
+decl_stmt|;
+comment|/* delegation on/off */
+name|list_t
+name|spa_config_list
+decl_stmt|;
+comment|/* previous cache file(s) */
+name|zio_t
+modifier|*
+name|spa_suspend_zio_root
+decl_stmt|;
+comment|/* root of all suspended I/O */
+name|kmutex_t
+name|spa_suspend_lock
+decl_stmt|;
+comment|/* protects suspend_zio_root */
+name|kcondvar_t
+name|spa_suspend_cv
+decl_stmt|;
+comment|/* notification of resume */
+name|uint8_t
+name|spa_suspended
+decl_stmt|;
+comment|/* pool is suspended */
+name|boolean_t
+name|spa_import_faulted
+decl_stmt|;
+comment|/* allow faulted vdevs */
+name|boolean_t
+name|spa_is_root
+decl_stmt|;
+comment|/* pool is root */
+name|int
+name|spa_minref
+decl_stmt|;
+comment|/* num refs when first opened */
+name|spa_log_state_t
+name|spa_log_state
+decl_stmt|;
+comment|/* log state */
+comment|/* 	 * spa_refcnt& spa_config_lock must be the last elements 	 * because refcount_t changes size based on compilation options. 	 * In order for the MDB module to function correctly, the other 	 * fields must remain in the same location. 	 */
 name|spa_config_lock_t
 name|spa_config_lock
+index|[
+name|SCL_LOCKS
+index|]
 decl_stmt|;
-comment|/* configuration changes */
+comment|/* config changes */
 name|refcount_t
 name|spa_refcount
 decl_stmt|;
@@ -521,12 +596,16 @@ specifier|extern
 specifier|const
 name|char
 modifier|*
-name|spa_config_dir
+name|spa_config_path
 decl_stmt|;
-specifier|extern
-name|kmutex_t
-name|spa_namespace_lock
-decl_stmt|;
+define|#
+directive|define
+name|BOOTFS_COMPRESS_VALID
+parameter_list|(
+name|compress
+parameter_list|)
+define|\
+value|((compress) == ZIO_COMPRESS_LZJB || \ 	((compress) == ZIO_COMPRESS_ON&& \ 	ZIO_COMPRESS_ON_VALUE == ZIO_COMPRESS_LZJB) || \ 	(compress) == ZIO_COMPRESS_OFF)
 ifdef|#
 directive|ifdef
 name|__cplusplus

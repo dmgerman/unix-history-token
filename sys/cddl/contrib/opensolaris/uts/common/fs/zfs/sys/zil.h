@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_ZIL_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -148,6 +141,35 @@ define|#
 directive|define
 name|ZIL_ZC_SEQ
 value|3
+typedef|typedef
+enum|enum
+name|zil_create
+block|{
+name|Z_FILE
+block|,
+name|Z_DIR
+block|,
+name|Z_XATTRDIR
+block|, }
+name|zil_create_t
+typedef|;
+comment|/*  * size of xvattr log section.  * its composed of lr_attr_t + xvattr bitmap + 2 64 bit timestamps  * for create time and a single 64 bit integer for all of the attributes,  * and 4 64 bit integers (32 bytes) for the scanstamp.  *  */
+define|#
+directive|define
+name|ZIL_XVAT_SIZE
+parameter_list|(
+name|mapsize
+parameter_list|)
+define|\
+value|sizeof (lr_attr_t) + (sizeof (uint32_t) * (mapsize - 1)) + \ 	(sizeof (uint64_t) * 7)
+comment|/*  * Size of ACL in log.  The ACE data is padded out to properly align  * on 8 byte boundary.  */
+define|#
+directive|define
+name|ZIL_ACE_LENGTH
+parameter_list|(
+name|x
+parameter_list|)
+value|(roundup(x, sizeof (uint64_t)))
 comment|/*  * Intent log transaction types and record structures  */
 define|#
 directive|define
@@ -206,14 +228,55 @@ value|11
 comment|/* Set file attributes */
 define|#
 directive|define
-name|TX_ACL
+name|TX_ACL_V0
 value|12
-comment|/* Set acl */
+comment|/* Set old formatted ACL */
+define|#
+directive|define
+name|TX_ACL
+value|13
+comment|/* Set ACL */
+define|#
+directive|define
+name|TX_CREATE_ACL
+value|14
+comment|/* create with ACL */
+define|#
+directive|define
+name|TX_CREATE_ATTR
+value|15
+comment|/* create + attrs */
+define|#
+directive|define
+name|TX_CREATE_ACL_ATTR
+value|16
+comment|/* create with ACL + attrs */
+define|#
+directive|define
+name|TX_MKDIR_ACL
+value|17
+comment|/* mkdir with ACL */
+define|#
+directive|define
+name|TX_MKDIR_ATTR
+value|18
+comment|/* mkdir with attr */
+define|#
+directive|define
+name|TX_MKDIR_ACL_ATTR
+value|19
+comment|/* mkdir with ACL + attrs */
 define|#
 directive|define
 name|TX_MAX_TYPE
-value|13
+value|20
 comment|/* Max transaction type */
+comment|/*  * The transactions for mkdir, symlink, remove, rmdir, link, and rename  * may have the following bit set, indicating the original request  * specified case-insensitive handling of names.  */
+define|#
+directive|define
+name|TX_CI
+value|((uint64_t)0x1<< 63)
+comment|/* case-insensitive behavior requested */
 comment|/*  * Format of log records.  * The fields are carefully defined to allow them to be aligned  * and sized the same on sparc& intel architectures.  * Each log record has a common structure at the beginning.  *  * Note, lrc_seq holds two different sequence numbers. Whilst in memory  * it contains the transaction sequence number.  The log record on  * disk holds the sequence number of all log records which is used to  * ensure we don't replay the same record.  The two sequence numbers are  * different because the transactions can now be pushed out of order.  */
 typedef|typedef
 struct|struct
@@ -238,6 +301,23 @@ comment|/* see comment above */
 block|}
 name|lr_t
 typedef|;
+comment|/*  * Handle option extended vattr attributes.  *  * Whenever new attributes are added the version number  * will need to be updated as will code in  * zfs_log.c and zfs_replay.c  */
+typedef|typedef
+struct|struct
+block|{
+name|uint32_t
+name|lr_attr_masksize
+decl_stmt|;
+comment|/* number of elements in array */
+name|uint32_t
+name|lr_attr_bitmap
+decl_stmt|;
+comment|/* First entry of array */
+comment|/* remainder of array and any additional fields */
+block|}
+name|lr_attr_t
+typedef|;
+comment|/*  * log record for creates without optional ACL.  * This log record does support optional xvattr_t attributes.  */
 typedef|typedef
 struct|struct
 block|{
@@ -282,8 +362,48 @@ decl_stmt|;
 comment|/* rdev of object to create */
 comment|/* name of object to create follows this */
 comment|/* for symlinks, link content follows name */
+comment|/* for creates with xvattr data, the name follows the xvattr info */
 block|}
 name|lr_create_t
+typedef|;
+comment|/*  * FUID ACL record will be an array of ACEs from the original ACL.  * If this array includes ephemeral IDs, the record will also include  * an array of log-specific FUIDs to replace the ephemeral IDs.  * Only one copy of each unique domain will be present, so the log-specific  * FUIDs will use an index into a compressed domain table.  On replay this  * information will be used to construct real FUIDs (and bypass idmap,  * since it may not be available).  */
+comment|/*  * Log record for creates with optional ACL  * This log record is also used for recording any FUID  * information needed for replaying the create.  If the  * file doesn't have any actual ACEs then the lr_aclcnt  * would be zero.  */
+typedef|typedef
+struct|struct
+block|{
+name|lr_create_t
+name|lr_create
+decl_stmt|;
+comment|/* common create portion */
+name|uint64_t
+name|lr_aclcnt
+decl_stmt|;
+comment|/* number of ACEs in ACL */
+name|uint64_t
+name|lr_domcnt
+decl_stmt|;
+comment|/* number of unique domains */
+name|uint64_t
+name|lr_fuidcnt
+decl_stmt|;
+comment|/* number of real fuids */
+name|uint64_t
+name|lr_acl_bytes
+decl_stmt|;
+comment|/* number of bytes in ACL */
+name|uint64_t
+name|lr_acl_flags
+decl_stmt|;
+comment|/* ACL flags */
+comment|/* lr_acl_bytes number of variable sized ace's follows */
+comment|/* if create is also setting xvattr's, then acl data follows xvattr */
+comment|/* if ACE FUIDs are needed then they will follow the xvattr_t */
+comment|/* Following the FUIDs will be the domain table information. */
+comment|/* The FUIDs for the owner and group will be in the lr_create */
+comment|/* portion of the record. */
+comment|/* name follows ACL data */
+block|}
+name|lr_acl_create_t
 typedef|;
 typedef|typedef
 struct|struct
@@ -436,6 +556,7 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* modification time */
+comment|/* optional attribute lr_attr_t may be here */
 block|}
 name|lr_setattr_t
 typedef|;
@@ -455,6 +576,41 @@ name|lr_aclcnt
 decl_stmt|;
 comment|/* number of acl entries */
 comment|/* lr_aclcnt number of ace_t entries follow this */
+block|}
+name|lr_acl_v0_t
+typedef|;
+typedef|typedef
+struct|struct
+block|{
+name|lr_t
+name|lr_common
+decl_stmt|;
+comment|/* common portion of log record */
+name|uint64_t
+name|lr_foid
+decl_stmt|;
+comment|/* obj id of file */
+name|uint64_t
+name|lr_aclcnt
+decl_stmt|;
+comment|/* number of ACEs in ACL */
+name|uint64_t
+name|lr_domcnt
+decl_stmt|;
+comment|/* number of unique domains */
+name|uint64_t
+name|lr_fuidcnt
+decl_stmt|;
+comment|/* number of real fuids */
+name|uint64_t
+name|lr_acl_bytes
+decl_stmt|;
+comment|/* number of bytes in ACL */
+name|uint64_t
+name|lr_acl_flags
+decl_stmt|;
+comment|/* ACL flags */
+comment|/* lr_acl_bytes number of variable sized ace's follows */
 block|}
 name|lr_acl_t
 typedef|;
@@ -497,6 +653,10 @@ name|uint8_t
 name|itx_sync
 decl_stmt|;
 comment|/* synchronous transaction */
+name|uint64_t
+name|itx_sod
+decl_stmt|;
+comment|/* record size on disk */
 name|lr_t
 name|itx_lr
 decl_stmt|;
@@ -571,6 +731,11 @@ function_decl|;
 typedef|typedef
 name|int
 name|zil_replay_func_t
+parameter_list|()
+function_decl|;
+typedef|typedef
+name|void
+name|zil_replay_cleaner_t
 parameter_list|()
 function_decl|;
 typedef|typedef
@@ -700,6 +865,10 @@ name|replay_func
 index|[
 name|TX_MAX_TYPE
 index|]
+parameter_list|,
+name|zil_replay_cleaner_t
+modifier|*
+name|replay_cleaner
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -715,11 +884,24 @@ name|keep_first
 parameter_list|)
 function_decl|;
 specifier|extern
+name|void
+name|zil_rollback_destroy
+parameter_list|(
+name|zilog_t
+modifier|*
+name|zilog
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
+specifier|extern
 name|itx_t
 modifier|*
 name|zil_itx_create
 parameter_list|(
-name|int
+name|uint64_t
 name|txtype
 parameter_list|,
 name|size_t
@@ -761,6 +943,32 @@ function_decl|;
 specifier|extern
 name|int
 name|zil_claim
+parameter_list|(
+name|char
+modifier|*
+name|osname
+parameter_list|,
+name|void
+modifier|*
+name|txarg
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|zil_check_log_chain
+parameter_list|(
+name|char
+modifier|*
+name|osname
+parameter_list|,
+name|void
+modifier|*
+name|txarg
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|zil_clear_log_chain
 parameter_list|(
 name|char
 modifier|*
@@ -822,14 +1030,15 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|zil_add_vdev
+name|zil_add_block
 parameter_list|(
 name|zilog_t
 modifier|*
 name|zilog
 parameter_list|,
-name|uint64_t
-name|vdev
+name|blkptr_t
+modifier|*
+name|bp
 parameter_list|)
 function_decl|;
 specifier|extern

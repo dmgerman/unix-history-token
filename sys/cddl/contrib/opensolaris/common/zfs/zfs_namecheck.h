@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -68,9 +68,16 @@ comment|/* reserved disk name (c[0-9].*) */
 name|NAME_ERR_TOOLONG
 block|,
 comment|/* name is too long */
+name|NAME_ERR_NO_AT
+block|,
+comment|/* permission set is missing '@' */
 block|}
 name|namecheck_err_t
 typedef|;
+define|#
+directive|define
+name|ZFS_PERMSET_MAXLEN
+value|64
 name|int
 name|pool_namecheck
 parameter_list|(
@@ -100,6 +107,17 @@ modifier|*
 parameter_list|)
 function_decl|;
 name|int
+name|mountpoint_namecheck
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|namecheck_err_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
 name|dataset_name_hidden
 parameter_list|(
 specifier|const
@@ -109,6 +127,20 @@ parameter_list|)
 function_decl|;
 name|int
 name|snapshot_namecheck
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|namecheck_err_t
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+name|permset_namecheck
 parameter_list|(
 specifier|const
 name|char

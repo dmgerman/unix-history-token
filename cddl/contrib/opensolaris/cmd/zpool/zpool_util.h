@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|ZPOOL_UTIL_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -73,14 +66,22 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+name|uint_t
+name|num_logs
+parameter_list|(
+name|nvlist_t
+modifier|*
+name|nv
+parameter_list|)
+function_decl|;
 comment|/*  * Virtual device functions  */
 name|nvlist_t
 modifier|*
 name|make_root_vdev
 parameter_list|(
-name|nvlist_t
+name|zpool_handle_t
 modifier|*
-name|poolconfig
+name|zhp
 parameter_list|,
 name|int
 name|force
@@ -90,6 +91,9 @@ name|check_rep
 parameter_list|,
 name|boolean_t
 name|isreplace
+parameter_list|,
+name|boolean_t
+name|dryrun
 parameter_list|,
 name|int
 name|argc
@@ -113,7 +117,7 @@ parameter_list|,
 name|boolean_t
 name|unavail
 parameter_list|,
-name|zpool_proplist_t
+name|zprop_list_t
 modifier|*
 modifier|*
 parameter_list|,
@@ -138,7 +142,7 @@ name|char
 modifier|*
 modifier|*
 parameter_list|,
-name|zpool_proplist_t
+name|zprop_list_t
 modifier|*
 modifier|*
 parameter_list|,

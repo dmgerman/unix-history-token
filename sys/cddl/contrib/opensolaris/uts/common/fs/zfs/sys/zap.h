@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -27,7 +27,7 @@ literal|"%Z%%M%	%I%	%E% SMI"
 end_pragma
 
 begin_comment
-comment|/*  * ZAP - ZFS Attribute Processor  *  * The ZAP is a module which sits on top of the DMU (Data Managemnt  * Unit) and implements a higher-level storage primitive using DMU  * objects.  Its primary consumer is the ZPL (ZFS Posix Layer).  *  * A "zapobj" is a DMU object which the ZAP uses to stores attributes.  * Users should use only zap routines to access a zapobj - they should  * not access the DMU object directly using DMU routines.  *  * The attributes stored in a zapobj are name-value pairs.  The name is  * a zero-terminated string of up to ZAP_MAXNAMELEN bytes (including  * terminating NULL).  The value is an array of integers, which may be  * 1, 2, 4, or 8 bytes long.  The total space used by the array (number  * of integers * integer length) can be up to ZAP_MAXVALUELEN bytes.  * Note that an 8-byte integer value can be used to store the location  * (object number) of another dmu object (which may be itself a zapobj).  * Note that you can use a zero-length attribute to store a single bit  * of information - the attribute is present or not.  *  * The ZAP routines are thread-safe.  However, you must observe the  * DMU's restriction that a transaction may not be operated on  * concurrently.  *  * Any of the routines that return an int may return an I/O error (EIO  * or ECHECKSUM).  *  *  * Implementation / Performance Notes:  *  * The ZAP is intended to operate most efficiently on attributes with  * short (49 bytes or less) names and single 8-byte values, for which  * the microzap will be used.  The ZAP should be efficient enough so  * that the user does not need to cache these attributes.  *  * The ZAP's locking scheme makes its routines thread-safe.  Operations  * on different zapobjs will be processed concurrently.  Operations on  * the same zapobj which only read data will be processed concurrently.  * Operations on the same zapobj which modify data will be processed  * concurrently when there are many attributes in the zapobj (because  * the ZAP uses per-block locking - more than 128 * (number of cpus)  * small attributes will suffice).  */
+comment|/*  * ZAP - ZFS Attribute Processor  *  * The ZAP is a module which sits on top of the DMU (Data Management  * Unit) and implements a higher-level storage primitive using DMU  * objects.  Its primary consumer is the ZPL (ZFS Posix Layer).  *  * A "zapobj" is a DMU object which the ZAP uses to stores attributes.  * Users should use only zap routines to access a zapobj - they should  * not access the DMU object directly using DMU routines.  *  * The attributes stored in a zapobj are name-value pairs.  The name is  * a zero-terminated string of up to ZAP_MAXNAMELEN bytes (including  * terminating NULL).  The value is an array of integers, which may be  * 1, 2, 4, or 8 bytes long.  The total space used by the array (number  * of integers * integer length) can be up to ZAP_MAXVALUELEN bytes.  * Note that an 8-byte integer value can be used to store the location  * (object number) of another dmu object (which may be itself a zapobj).  * Note that you can use a zero-length attribute to store a single bit  * of information - the attribute is present or not.  *  * The ZAP routines are thread-safe.  However, you must observe the  * DMU's restriction that a transaction may not be operated on  * concurrently.  *  * Any of the routines that return an int may return an I/O error (EIO  * or ECHECKSUM).  *  *  * Implementation / Performance Notes:  *  * The ZAP is intended to operate most efficiently on attributes with  * short (49 bytes or less) names and single 8-byte values, for which  * the microzap will be used.  The ZAP should be efficient enough so  * that the user does not need to cache these attributes.  *  * The ZAP's locking scheme makes its routines thread-safe.  Operations  * on different zapobjs will be processed concurrently.  Operations on  * the same zapobj which only read data will be processed concurrently.  * Operations on the same zapobj which modify data will be processed  * concurrently when there are many attributes in the zapobj (because  * the ZAP uses per-block locking - more than 128 * (number of cpus)  * small attributes will suffice).  */
 end_comment
 
 begin_comment
@@ -60,13 +60,50 @@ define|#
 directive|define
 name|ZAP_MAXVALUELEN
 value|1024
-comment|/*  * Create a new zapobj with no attributes and return its object number.  */
+comment|/*  * The matchtype specifies which entry will be accessed.  * MT_EXACT: only find an exact match (non-normalized)  * MT_FIRST: find the "first" normalized (case and Unicode  *     form) match; the designated "first" match will not change as long  *     as the set of entries with this normalization doesn't change  * MT_BEST: if there is an exact match, find that, otherwise find the  *     first normalized match  */
+typedef|typedef
+enum|enum
+name|matchtype
+block|{
+name|MT_EXACT
+block|,
+name|MT_BEST
+block|,
+name|MT_FIRST
+block|}
+name|matchtype_t
+typedef|;
+comment|/*  * Create a new zapobj with no attributes and return its object number.  * MT_EXACT will cause the zap object to only support MT_EXACT lookups,  * otherwise any matchtype can be used for lookups.  *  * normflags specifies what normalization will be done.  values are:  * 0: no normalization (legacy on-disk format, supports MT_EXACT matching  *     only)  * U8_TEXTPREP_TOLOWER: case normalization will be performed.  *     MT_FIRST/MT_BEST matching will find entries that match without  *     regard to case (eg. looking for "foo" can find an entry "Foo").  * Eventually, other flags will permit unicode normalization as well.  */
 name|uint64_t
 name|zap_create
 parameter_list|(
 name|objset_t
 modifier|*
 name|ds
+parameter_list|,
+name|dmu_object_type_t
+name|ot
+parameter_list|,
+name|dmu_object_type_t
+name|bonustype
+parameter_list|,
+name|int
+name|bonuslen
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
+name|uint64_t
+name|zap_create_norm
+parameter_list|(
+name|objset_t
+modifier|*
+name|ds
+parameter_list|,
+name|int
+name|normflags
 parameter_list|,
 name|dmu_object_type_t
 name|ot
@@ -107,6 +144,33 @@ modifier|*
 name|tx
 parameter_list|)
 function_decl|;
+name|int
+name|zap_create_claim_norm
+parameter_list|(
+name|objset_t
+modifier|*
+name|ds
+parameter_list|,
+name|uint64_t
+name|obj
+parameter_list|,
+name|int
+name|normflags
+parameter_list|,
+name|dmu_object_type_t
+name|ot
+parameter_list|,
+name|dmu_object_type_t
+name|bonustype
+parameter_list|,
+name|int
+name|bonuslen
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
 comment|/*  * The zapobj passed in must be a valid ZAP object for all of the  * following routines.  */
 comment|/*  * Destroy this zapobj and all its attributes.  *  * Frees the object number using dmu_object_free.  */
 name|int
@@ -125,7 +189,7 @@ name|tx
 parameter_list|)
 function_decl|;
 comment|/*  * Manipulate attributes.  *  * 'integer_size' is in bytes, and must be 1, 2, 4, or 8.  */
-comment|/*  * Retrieve the contents of the attribute with the given name.  *  * If the requested attribute does not exist, the call will fail and  * return ENOENT.  *  * If 'integer_size' is smaller than the attribute's integer size, the  * call will fail and return EINVAL.  *  * If 'integer_size' is equal to or larger than the attribute's integer  * size, the call will succeed and return 0.  * When converting to a  * larger integer size, the integers will be treated as unsigned (ie. no  * sign-extension will be performed).  *  * 'num_integers' is the length (in integers) of 'buf'.  *  * If the attribute is longer than the buffer, as many integers as will  * fit will be transferred to 'buf'.  If the entire attribute was not  * transferred, the call will return EOVERFLOW.  */
+comment|/*  * Retrieve the contents of the attribute with the given name.  *  * If the requested attribute does not exist, the call will fail and  * return ENOENT.  *  * If 'integer_size' is smaller than the attribute's integer size, the  * call will fail and return EINVAL.  *  * If 'integer_size' is equal to or larger than the attribute's integer  * size, the call will succeed and return 0.  * When converting to a  * larger integer size, the integers will be treated as unsigned (ie. no  * sign-extension will be performed).  *  * 'num_integers' is the length (in integers) of 'buf'.  *  * If the attribute is longer than the buffer, as many integers as will  * fit will be transferred to 'buf'.  If the entire attribute was not  * transferred, the call will return EOVERFLOW.  *  * If rn_len is nonzero, realname will be set to the name of the found  * entry (which may be different from the requested name if matchtype is  * not MT_EXACT).  *  * If normalization_conflictp is not NULL, it will be set if there is  * another name with the same case/unicode normalized form.  */
 name|int
 name|zap_lookup
 parameter_list|(
@@ -150,6 +214,46 @@ parameter_list|,
 name|void
 modifier|*
 name|buf
+parameter_list|)
+function_decl|;
+name|int
+name|zap_lookup_norm
+parameter_list|(
+name|objset_t
+modifier|*
+name|ds
+parameter_list|,
+name|uint64_t
+name|zapobj
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|uint64_t
+name|integer_size
+parameter_list|,
+name|uint64_t
+name|num_integers
+parameter_list|,
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|matchtype_t
+name|mt
+parameter_list|,
+name|char
+modifier|*
+name|realname
+parameter_list|,
+name|int
+name|rn_len
+parameter_list|,
+name|boolean_t
+modifier|*
+name|normalization_conflictp
 parameter_list|)
 function_decl|;
 comment|/*  * Create an attribute with the given name and value.  *  * If an attribute with the given name already exists, the call will  * fail and return EEXIST.  */
@@ -262,6 +366,29 @@ modifier|*
 name|tx
 parameter_list|)
 function_decl|;
+name|int
+name|zap_remove_norm
+parameter_list|(
+name|objset_t
+modifier|*
+name|ds
+parameter_list|,
+name|uint64_t
+name|zapobj
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|matchtype_t
+name|mt
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
 comment|/*  * Returns (in *count) the number of attributes in the specified zap  * object.  */
 name|int
 name|zap_count
@@ -278,7 +405,7 @@ modifier|*
 name|count
 parameter_list|)
 function_decl|;
-comment|/*  * Returns (in name) the name of the entry whose value  * (za_first_integer) is value, or ENOENT if not found.  The string  * pointed to by name must be at least 256 bytes long.  */
+comment|/*  * Returns (in name) the name of the entry whose (value& mask)  * (za_first_integer) is value, or ENOENT if not found.  The string  * pointed to by name must be at least 256 bytes long.  If mask==0, the  * match must be exact (ie, same as mask=-1ULL).  */
 name|int
 name|zap_value_search
 parameter_list|(
@@ -292,9 +419,82 @@ parameter_list|,
 name|uint64_t
 name|value
 parameter_list|,
+name|uint64_t
+name|mask
+parameter_list|,
 name|char
 modifier|*
 name|name
+parameter_list|)
+function_decl|;
+comment|/*  * Transfer all the entries from fromobj into intoobj.  Only works on  * int_size=8 num_integers=1 values.  Fails if there are any duplicated  * entries.  */
+name|int
+name|zap_join
+parameter_list|(
+name|objset_t
+modifier|*
+name|os
+parameter_list|,
+name|uint64_t
+name|fromobj
+parameter_list|,
+name|uint64_t
+name|intoobj
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
+comment|/*  * Manipulate entries where the name + value are the "same" (the name is  * a stringified version of the value).  */
+name|int
+name|zap_add_int
+parameter_list|(
+name|objset_t
+modifier|*
+name|os
+parameter_list|,
+name|uint64_t
+name|obj
+parameter_list|,
+name|uint64_t
+name|value
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
+name|int
+name|zap_remove_int
+parameter_list|(
+name|objset_t
+modifier|*
+name|os
+parameter_list|,
+name|uint64_t
+name|obj
+parameter_list|,
+name|uint64_t
+name|value
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
+name|int
+name|zap_lookup_int
+parameter_list|(
+name|objset_t
+modifier|*
+name|os
+parameter_list|,
+name|uint64_t
+name|obj
+parameter_list|,
+name|uint64_t
+name|value
 parameter_list|)
 function_decl|;
 struct_decl|struct
@@ -339,6 +539,10 @@ struct|struct
 block|{
 name|int
 name|za_integer_length
+decl_stmt|;
+comment|/* 	 * za_normalization_conflict will be set if there are additional 	 * entries with this normalized form (eg, "foo" and "Foo"). 	 */
+name|boolean_t
+name|za_normalization_conflict
 decl_stmt|;
 name|uint64_t
 name|za_num_integers

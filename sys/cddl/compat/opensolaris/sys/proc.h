@@ -238,13 +238,6 @@ argument_list|)
 expr_stmt|;
 name|ASSERT
 argument_list|(
-name|stksize
-operator|==
-literal|0
-argument_list|)
-expr_stmt|;
-name|ASSERT
-argument_list|(
 name|len
 operator|==
 literal|0

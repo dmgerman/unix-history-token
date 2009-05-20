@@ -41,6 +41,18 @@ name|MNT_LINE_MAX
 value|1024
 end_define
 
+begin_define
+define|#
+directive|define
+name|umount2
+parameter_list|(
+name|p
+parameter_list|,
+name|f
+parameter_list|)
+value|unmount(p, f)
+end_define
+
 begin_struct
 struct|struct
 name|mnttab

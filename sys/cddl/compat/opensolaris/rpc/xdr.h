@@ -70,39 +70,6 @@ value|xdrmem_control(a,b,c)
 end_define
 
 begin_comment
-comment|/*  * These are XDR control operators  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|XDR_GET_BYTES_AVAIL
-value|1
-end_define
-
-begin_struct
-struct|struct
-name|xdr_bytesrec
-block|{
-name|bool_t
-name|xc_is_last_record
-decl_stmt|;
-name|size_t
-name|xc_num_avail
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|xdr_bytesrec
-name|xdr_bytesrec
-typedef|;
-end_typedef
-
-begin_comment
 comment|/*  * These are the request arguments to XDR_CONTROL.  *  * XDR_PEEK - returns the contents of the next XDR unit on the XDR stream.  * XDR_SKIPBYTES - skips the next N bytes in the XDR stream.  * XDR_RDMAGET - for xdr implementation over RDMA, gets private flags from  *		 the XDR stream being moved over RDMA  * XDR_RDMANOCHUNK - for xdr implementaion over RDMA, sets private flags in  *                   the XDR stream moving over RDMA.  */
 end_comment
 

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -44,6 +44,14 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+define|#
+directive|define
+name|ZVOL_OBJ
+value|1ULL
+define|#
+directive|define
+name|ZVOL_ZAP_OBJ
+value|2ULL
 ifdef|#
 directive|ifdef
 name|_KERNEL
@@ -91,6 +99,10 @@ name|void
 modifier|*
 name|arg
 parameter_list|,
+name|cred_t
+modifier|*
+name|cr
+parameter_list|,
 name|dmu_tx_t
 modifier|*
 name|tx
@@ -104,7 +116,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|dev_t
+name|major_t
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -124,7 +136,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|dev_t
+name|major_t
 parameter_list|,
 name|uint64_t
 parameter_list|)
@@ -157,6 +169,23 @@ parameter_list|,
 name|cred_t
 modifier|*
 name|cr
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|zvol_dump
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|,
+name|caddr_t
+name|addr
+parameter_list|,
+name|daddr_t
+name|offset
+parameter_list|,
+name|int
+name|nblocks
 parameter_list|)
 function_decl|;
 specifier|extern

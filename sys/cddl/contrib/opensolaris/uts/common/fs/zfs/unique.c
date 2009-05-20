@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_pragma
@@ -45,23 +45,6 @@ name|kmutex_t
 name|unique_mtx
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Lock never initialized. */
-end_comment
-
-begin_expr_stmt
-name|SX_SYSINIT
-argument_list|(
-name|unique
-argument_list|,
-operator|&
-name|unique_mtx
-argument_list|,
-literal|"unique lock"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_typedef
 typedef|typedef
@@ -183,6 +166,40 @@ name|un_link
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|mutex_init
+argument_list|(
+operator|&
+name|unique_mtx
+argument_list|,
+name|NULL
+argument_list|,
+name|MUTEX_DEFAULT
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|unique_fini
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|avl_destroy
+argument_list|(
+operator|&
+name|unique_avl
+argument_list|)
+expr_stmt|;
+name|mutex_destroy
+argument_list|(
+operator|&
+name|unique_mtx
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -193,12 +210,22 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-return|return
-operator|(
+name|uint64_t
+name|value
+init|=
 name|unique_insert
 argument_list|(
 literal|0
 argument_list|)
+decl_stmt|;
+name|unique_remove
+argument_list|(
+name|value
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|value
 operator|)
 return|;
 block|}

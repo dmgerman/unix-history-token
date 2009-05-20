@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_ZIO_CHECKSUM_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -129,14 +122,15 @@ name|zio_checksum_SHA256
 decl_stmt|;
 specifier|extern
 name|void
-name|zio_checksum
+name|zio_checksum_compute
 parameter_list|(
-name|uint_t
-name|checksum
-parameter_list|,
-name|zio_cksum_t
+name|zio_t
 modifier|*
-name|zcp
+name|zio
+parameter_list|,
+name|enum
+name|zio_checksum
+name|checksum
 parameter_list|,
 name|void
 modifier|*

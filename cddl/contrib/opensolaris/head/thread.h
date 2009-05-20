@@ -35,6 +35,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pthread_np.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<assert.h>
 end_include
 
@@ -173,6 +179,16 @@ parameter_list|(
 name|l
 parameter_list|)
 value|pthread_mutex_unlock(l)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mutex_owned
+parameter_list|(
+name|l
+parameter_list|)
+value|pthread_mutex_isowned_np(l)
 end_define
 
 begin_define

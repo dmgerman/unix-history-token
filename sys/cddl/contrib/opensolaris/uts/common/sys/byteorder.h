@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2005 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_comment
@@ -30,13 +30,6 @@ define|#
 directive|define
 name|_SYS_BYTEORDER_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -147,6 +140,35 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(x)
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_XPG4_2
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__EXTENSIONS__
+argument_list|)
+define|#
+directive|define
+name|ntohll
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+define|#
+directive|define
+name|htonll
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+endif|#
+directive|endif
+comment|/* !_XPG4_2 || __EXTENSIONS__ */
 elif|#
 directive|elif
 operator|!
@@ -256,7 +278,50 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|/* !defined(_XPG4_2) || defined(__EXTENSIONS__) || defined(_XPG5) */
+comment|/* !_XPG4_2 || __EXTENSIONS__ || _XPG5 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_LP64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_LONGLONG_TYPE
+argument_list|)
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_XPG4_2
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__EXTENSIONS__
+argument_list|)
+specifier|extern
+name|uint64_t
+name|htonll
+parameter_list|(
+name|uint64_t
+parameter_list|)
+function_decl|;
+specifier|extern
+name|uint64_t
+name|ntohll
+parameter_list|(
+name|uint64_t
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
+comment|/* !_XPG4_2 || __EXTENSIONS__ */
+endif|#
+directive|endif
+comment|/* _LP64 || _LONGLONG_TYPE  */
 endif|#
 directive|endif
 if|#
@@ -279,6 +344,19 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x)& 0xff)
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__i386
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__amd64
+argument_list|)
 define|#
 directive|define
 name|BSWAP_16
@@ -292,7 +370,76 @@ name|BSWAP_32
 parameter_list|(
 name|x
 parameter_list|)
-value|((BSWAP_16(x)<< 16) | BSWAP_16((x)>> 16))
+value|(((uint32_t)(x)<< 24) | \ 			(((uint32_t)(x)<< 8)& 0xff0000) | \ 			(((uint32_t)(x)>> 8)& 0xff00) | \ 			((uint32_t)(x)>> 24))
+else|#
+directive|else
+comment|/* x86 */
+define|#
+directive|define
+name|BSWAP_16
+parameter_list|(
+name|x
+parameter_list|)
+value|htons(x)
+define|#
+directive|define
+name|BSWAP_32
+parameter_list|(
+name|x
+parameter_list|)
+value|htonl(x)
+endif|#
+directive|endif
+comment|/* !__i386&& !__amd64 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_LP64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_LONGLONG_TYPE
+argument_list|)
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|__i386
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__amd64
+argument_list|)
+operator|)
+define|#
+directive|define
+name|BSWAP_64
+parameter_list|(
+name|x
+parameter_list|)
+value|(((uint64_t)(x)<< 56) | \ 			(((uint64_t)(x)<< 40)& 0xff000000000000ULL) | \ 			(((uint64_t)(x)<< 24)& 0xff0000000000ULL) | \ 			(((uint64_t)(x)<< 8)& 0xff00000000ULL) | \ 			(((uint64_t)(x)>> 8)& 0xff000000ULL) | \ 			(((uint64_t)(x)>> 24)& 0xff0000ULL) | \ 			(((uint64_t)(x)>> 40)& 0xff00ULL) | \ 			((uint64_t)(x)>> 56))
+else|#
+directive|else
+comment|/* x86 */
+define|#
+directive|define
+name|BSWAP_64
+parameter_list|(
+name|x
+parameter_list|)
+value|htonll(x)
+endif|#
+directive|endif
+comment|/* !__i386&& !__amd64 */
+else|#
+directive|else
+comment|/* no uint64_t */
 define|#
 directive|define
 name|BSWAP_64
@@ -300,6 +447,9 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((BSWAP_32(x)<< 32) | BSWAP_32((x)>> 32))
+endif|#
+directive|endif
+comment|/* _LP64 || _LONGLONG_TYPE  */
 define|#
 directive|define
 name|BMASK_8
@@ -452,7 +602,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* !defined(_XPG4_2) || defined(__EXTENSIONS__) */
+comment|/* !_XPG4_2 || __EXTENSIONS__ */
 ifdef|#
 directive|ifdef
 name|__cplusplus
