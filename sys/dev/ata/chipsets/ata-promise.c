@@ -6770,12 +6770,6 @@ name|struct
 name|ata_dma_prdentry
 modifier|*
 name|prd
-init|=
-name|request
-operator|->
-name|dma
-operator|->
-name|sg
 decl_stmt|;
 name|caddr_t
 name|window
@@ -7040,6 +7034,14 @@ case|:
 case|case
 name|ATA_WRITE_DMA48
 case|:
+name|prd
+operator|=
+name|request
+operator|->
+name|dma
+operator|->
+name|sg
+expr_stmt|;
 name|wordp
 operator|=
 operator|(
