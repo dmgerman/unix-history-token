@@ -279,6 +279,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_enum
+enum|enum
+block|{
+name|LF_NO
+init|=
+literal|0
+block|,
+name|LF_MAYBE
+block|,
+name|LF_YES
+block|}
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|port_info
@@ -360,10 +374,6 @@ decl_stmt|;
 name|struct
 name|task
 name|timer_reclaim_task
-decl_stmt|;
-name|struct
-name|task
-name|link_fault_task
 decl_stmt|;
 name|struct
 name|cdev
@@ -1329,6 +1339,14 @@ index|[
 literal|64
 index|]
 decl_stmt|;
+name|char
+name|port_types
+index|[
+name|MAX_NPORTS
+operator|+
+literal|1
+index|]
+decl_stmt|;
 name|uint32_t
 name|open_device_map
 decl_stmt|;
@@ -1555,6 +1573,16 @@ parameter_list|)
 value|sx_assert(&(adap)->lock, SA_UNLOCKED)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ADAPTER_LOCK_ASSERT_OWNED
+parameter_list|(
+name|adap
+parameter_list|)
+value|sx_assert(&(adap)->lock, SA_LOCKED)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1661,7 +1689,17 @@ name|ADAPTER_LOCK_ASSERT_NOTOWNED
 parameter_list|(
 name|adap
 parameter_list|)
-value|mtx_assert(&(adap)->lock, MO_NOTOWNED)
+value|mtx_assert(&(adap)->lock, MA_NOTOWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADAPTER_LOCK_ASSERT_OWNED
+parameter_list|(
+name|adap
+parameter_list|)
+value|mtx_assert(&(adap)->lock, MA_OWNED)
 end_define
 
 begin_endif
@@ -2114,37 +2152,6 @@ name|struct
 name|adapter
 modifier|*
 name|adap
-parameter_list|,
-name|int
-name|port_id
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|t3_os_link_fault
-parameter_list|(
-name|adapter_t
-modifier|*
-name|adapter
-parameter_list|,
-name|int
-name|port_id
-parameter_list|,
-name|int
-name|state
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|t3_os_link_fault_handler
-parameter_list|(
-name|adapter_t
-modifier|*
-name|adapter
 parameter_list|,
 name|int
 name|port_id
