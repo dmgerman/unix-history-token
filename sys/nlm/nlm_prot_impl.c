@@ -3326,6 +3326,45 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Acquire the next sysid for remote locks not handled by the NLM.  */
+end_comment
+
+begin_function
+name|uint32_t
+name|nlm_acquire_next_sysid
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|uint32_t
+name|next_sysid
+decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|nlm_global_lock
+argument_list|)
+expr_stmt|;
+name|next_sysid
+operator|=
+name|nlm_next_sysid
+operator|++
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|nlm_global_lock
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|next_sysid
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Return non-zero if the address parts of the two sockaddrs are the  * same.  */
 end_comment
 
