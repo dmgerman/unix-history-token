@@ -781,6 +781,15 @@ name|U3G_DEV
 argument_list|(
 name|OPTION
 argument_list|,
+name|GTHSDPA
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
+name|OPTION
+argument_list|,
 name|GTMAXHSUPA
 argument_list|,
 literal|0

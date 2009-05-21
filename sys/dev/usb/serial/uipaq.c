@@ -5606,6 +5606,18 @@ literal|0
 argument_list|)
 block|}
 block|,
+comment|/**/
+block|{
+name|USB_VPI
+argument_list|(
+argument|USB_VENDOR_SHARP
+argument_list|,
+argument|USB_PRODUCT_SHARP_WILLCOM03
+argument_list|,
+literal|0
+argument_list|)
+block|}
+block|,
 comment|/* Symbol USB Sync */
 block|{
 name|USB_VPI
