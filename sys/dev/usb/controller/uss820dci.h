@@ -1870,6 +1870,11 @@ name|did_stall
 range|:
 literal|1
 decl_stmt|;
+name|uint8_t
+name|did_enable
+range|:
+literal|1
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1912,6 +1917,9 @@ decl_stmt|;
 comment|/*          * short_pkt = 0: transfer should be short terminated          * short_pkt = 1: transfer should not be short terminated          */
 name|uint8_t
 name|setup_alt_next
+decl_stmt|;
+name|uint8_t
+name|did_stall
 decl_stmt|;
 block|}
 struct|;

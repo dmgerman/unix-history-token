@@ -4637,14 +4637,40 @@ operator|->
 name|flags
 operator|.
 name|stall_pipe
-condition|)
-block|{
-comment|/* no longer active */
+operator|&&
 name|xfer
 operator|->
 name|flags_int
 operator|.
 name|control_act
+condition|)
+block|{
+comment|/* the control transfer is no longer active */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|control_stall
+operator|=
+literal|1
+expr_stmt|;
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|control_act
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* don't stall control transfer by default */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|control_stall
 operator|=
 literal|0
 expr_stmt|;

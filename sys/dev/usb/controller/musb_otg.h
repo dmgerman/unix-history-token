@@ -1848,6 +1848,9 @@ comment|/*          * short_pkt = 0: transfer should be short terminated        
 name|uint8_t
 name|setup_alt_next
 decl_stmt|;
+name|uint8_t
+name|did_stall
+decl_stmt|;
 block|}
 struct|;
 end_struct
