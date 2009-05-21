@@ -33,6 +33,18 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<nlm/nlm_prot.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nlm/nlm.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|u_int32_t
@@ -138,6 +150,15 @@ init|=
 literal|0
 decl_stmt|,
 name|nfs_rootfhset
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|uint32_t
+name|nfsv4_sysid
 init|=
 literal|0
 decl_stmt|;
@@ -13845,6 +13866,17 @@ name|first
 argument_list|)
 expr_stmt|;
 comment|/* 	 * For FreeBSD8, the l_pid and l_sysid must be set to the same 	 * values for all calls, so that all locks will be held by the 	 * nfsd server. (The nfsd server handles conflicts between the 	 * various clients.) 	 * Since an NFSv4 lockowner is a ClientID plus an array of up to 1024 	 * bytes, so it can't be put in l_sysid. 	 */
+if|if
+condition|(
+name|nfsv4_sysid
+operator|==
+literal|0
+condition|)
+name|nfsv4_sysid
+operator|=
+name|nlm_acquire_next_sysid
+argument_list|()
+expr_stmt|;
 name|fl
 operator|.
 name|l_pid
@@ -13858,7 +13890,10 @@ name|fl
 operator|.
 name|l_sysid
 operator|=
-literal|0
+operator|(
+name|int
+operator|)
+name|nfsv4_sysid
 expr_stmt|;
 name|NFSVOPUNLOCK
 argument_list|(
@@ -14158,6 +14193,17 @@ name|tlen
 expr_stmt|;
 block|}
 comment|/* 	 * For FreeBSD8, the l_pid and l_sysid must be set to the same 	 * values for all calls, so that all locks will be held by the 	 * nfsd server. (The nfsd server handles conflicts between the 	 * various clients.) 	 * Since an NFSv4 lockowner is a ClientID plus an array of up to 1024 	 * bytes, so it can't be put in l_sysid. 	 */
+if|if
+condition|(
+name|nfsv4_sysid
+operator|==
+literal|0
+condition|)
+name|nfsv4_sysid
+operator|=
+name|nlm_acquire_next_sysid
+argument_list|()
+expr_stmt|;
 name|fl
 operator|.
 name|l_pid
@@ -14171,7 +14217,10 @@ name|fl
 operator|.
 name|l_sysid
 operator|=
-literal|0
+operator|(
+name|int
+operator|)
+name|nfsv4_sysid
 expr_stmt|;
 name|NFSVOPUNLOCK
 argument_list|(
