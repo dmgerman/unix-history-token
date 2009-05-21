@@ -1940,6 +1940,11 @@ name|uath_debug
 expr_stmt|;
 endif|#
 directive|endif
+name|device_set_usb2_desc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Only post-firmware devices here. 	 */
 name|mtx_init
 argument_list|(
