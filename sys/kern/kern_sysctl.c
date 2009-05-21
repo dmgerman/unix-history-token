@@ -182,7 +182,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * The sysctllock protects the MIB tree.  It also protects sysctl  * contexts used with dynamic sysctls.  The sysctl_register_oid() and  * sysctl_unregister_oid() routines require the sysctllock to already  * be held, so the sysctl_lock() and sysctl_unlock() routines are  * provided for the few places in the kernel which need to use that  * API rather than using the dynamic API.  Use of the dynamic API is  * strongly encouraged for most code.  *  * This lock is also used to serialize userland sysctl requests.  Some  * sysctls wire user memory, and serializing the requests limits the  * amount of wired user memory in use.  */
+comment|/*  * The sysctllock protects the MIB tree.  It also protects sysctl  * contexts used with dynamic sysctls.  The sysctl_register_oid() and  * sysctl_unregister_oid() routines require the sysctllock to already  * be held, so the sysctl_lock() and sysctl_unlock() routines are  * provided for the few places in the kernel which need to use that  * API rather than using the dynamic API.  Use of the dynamic API is  * strongly encouraged for most code.  *  * The sysctlmemlock is used to limit the amount of user memory wired for  * sysctl requests.  This is implemented by serializing any userland  * sysctl requests larger than a single page via an exclusive lock.  */
 end_comment
 
 begin_decl_stmt
@@ -190,6 +190,14 @@ specifier|static
 name|struct
 name|sx
 name|sysctllock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|sx
+name|sysctlmemlock
 decl_stmt|;
 end_decl_stmt
 
@@ -2122,6 +2130,14 @@ modifier|*
 modifier|*
 name|oidp
 decl_stmt|;
+name|sx_init
+argument_list|(
+operator|&
+name|sysctlmemlock
+argument_list|,
+literal|"sysctl mem"
+argument_list|)
+expr_stmt|;
 name|SYSCTL_INIT
 argument_list|()
 expr_stmt|;
@@ -6550,6 +6566,8 @@ name|int
 name|error
 init|=
 literal|0
+decl_stmt|,
+name|memlocked
 decl_stmt|;
 name|struct
 name|sysctl_req
@@ -6740,8 +6758,30 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|SYSCTL_XLOCK
-argument_list|()
+if|if
+condition|(
+name|req
+operator|.
+name|oldlen
+operator|>
+name|PAGE_SIZE
+condition|)
+block|{
+name|memlocked
+operator|=
+literal|1
+expr_stmt|;
+name|sx_xlock
+argument_list|(
+operator|&
+name|sysctlmemlock
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|memlocked
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -6761,6 +6801,9 @@ name|newidx
 operator|=
 literal|0
 expr_stmt|;
+name|SYSCTL_SLOCK
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|sysctl_root
@@ -6774,6 +6817,9 @@ argument_list|,
 operator|&
 name|req
 argument_list|)
+expr_stmt|;
+name|SYSCTL_SUNLOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -6811,8 +6857,15 @@ operator|.
 name|validlen
 argument_list|)
 expr_stmt|;
-name|SYSCTL_XUNLOCK
-argument_list|()
+if|if
+condition|(
+name|memlocked
+condition|)
+name|sx_xunlock
+argument_list|(
+operator|&
+name|sysctlmemlock
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
