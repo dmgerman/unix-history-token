@@ -1713,7 +1713,7 @@ operator|||
 name|req
 operator|->
 name|oldlen
-operator|==
+operator|>=
 sizeof|sizeof
 argument_list|(
 name|long
