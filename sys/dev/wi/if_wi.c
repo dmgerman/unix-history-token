@@ -7396,6 +7396,9 @@ name|wr_tsf
 operator|=
 name|htole64
 argument_list|(
+operator|(
+name|uint64_t
+operator|)
 name|rstamp
 argument_list|)
 expr_stmt|;
