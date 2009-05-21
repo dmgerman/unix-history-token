@@ -7210,7 +7210,7 @@ name|rssi
 operator|=
 name|frame
 operator|->
-name|signal
+name|rssi_dbm
 expr_stmt|;
 name|nf
 operator|=
@@ -10520,13 +10520,6 @@ name|IFF_DRV_OACTIVE
 expr_stmt|;
 break|break;
 block|}
-name|BPF_MTAP
-argument_list|(
-name|ifp
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
 name|ni
 operator|=
 operator|(
