@@ -3146,7 +3146,7 @@ if|if
 condition|(
 name|mli
 operator|->
-name|mli_v1_timer
+name|mli_v2_timer
 operator|==
 literal|0
 operator|||
@@ -3159,7 +3159,7 @@ condition|)
 block|{
 name|mli
 operator|->
-name|mli_v1_timer
+name|mli_v2_timer
 operator|=
 name|MLD_RANDOM_DELAY
 argument_list|(
@@ -3250,7 +3250,7 @@ if|if
 condition|(
 name|mli
 operator|->
-name|mli_v1_timer
+name|mli_v2_timer
 operator|==
 literal|0
 operator|||
@@ -5355,6 +5355,9 @@ name|int
 name|version
 parameter_list|)
 block|{
+name|int
+name|old_version_timer
+decl_stmt|;
 name|MLD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -5386,9 +5389,6 @@ operator|==
 name|MLD_VERSION_1
 condition|)
 block|{
-name|int
-name|old_version_timer
-decl_stmt|;
 comment|/* 		 * Compute the "Older Version Querier Present" timer as per 		 * Section 9.12. 		 */
 name|old_version_timer
 operator|=
@@ -5408,20 +5408,12 @@ name|old_version_timer
 operator|*=
 name|PR_SLOWHZ
 expr_stmt|;
-if|if
-condition|(
-name|version
-operator|==
-name|MLD_VERSION_1
-condition|)
-block|{
 name|mli
 operator|->
 name|mli_v1_timer
 operator|=
 name|old_version_timer
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -5430,10 +5422,7 @@ operator|->
 name|mli_v1_timer
 operator|>
 literal|0
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|mli
 operator|->
 name|mli_version
@@ -5452,7 +5441,6 @@ argument_list|(
 name|mli
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
@@ -5790,11 +5778,7 @@ operator|->
 name|mli_v1_timer
 operator|==
 literal|0
-condition|)
-block|{
-comment|/* 		 * MLDv1 Querier Present timers expired; revert to MLDv2. 		 */
-if|if
-condition|(
+operator|&&
 name|mli
 operator|->
 name|mli_version
@@ -5802,6 +5786,7 @@ operator|!=
 name|MLD_VERSION_2
 condition|)
 block|{
+comment|/* 		 * MLDv1 Querier Present timer expired; revert to MLDv2. 		 */
 name|CTR5
 argument_list|(
 name|KTR_MLD
@@ -5833,7 +5818,6 @@ name|mli_version
 operator|=
 name|MLD_VERSION_2
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
