@@ -291,7 +291,7 @@ end_include
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
-name|_hw_usb2
+name|_hw_usb
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -322,7 +322,7 @@ end_comment
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_hw_usb2_uath
+name|_hw_usb_uath
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -343,7 +343,7 @@ end_expr_stmt
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
-literal|"hw.usb2.uath.countrycode"
+literal|"hw.usb.uath.countrycode"
 argument_list|,
 operator|&
 name|uath_countrycode
@@ -367,7 +367,7 @@ end_comment
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_hw_usb2_uath
+name|_hw_usb_uath
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -402,7 +402,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_hw_usb2_uath
+name|_hw_usb_uath
 argument_list|,
 name|OID_AUTO
 argument_list|,
