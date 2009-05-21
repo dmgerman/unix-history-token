@@ -5728,6 +5728,28 @@ begin_comment
 comment|/* Instruction Cache Enable */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SPR_BUCSR
+value|0x3F5
+end_define
+
+begin_comment
+comment|/* ..8 Branch Unit Control and Status Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUCSR_BPEN
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Branch Prediction Enable */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

@@ -15,6 +15,12 @@ directive|define
 name|_MACHINE_MUTEX_H_
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -40,123 +46,57 @@ begin_comment
 comment|/* disable interrupts */
 end_comment
 
-begin_decl_stmt
-name|rlwinm
-name|r0
-decl_stmt|,
-name|r10
-decl_stmt|, 0, 17, 15;
-end_decl_stmt
-
-begin_decl_stmt
-unit|\
-name|mtmsr
-name|r0
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-unit|\
-literal|1
-operator|:
-name|li
-name|r11
-operator|,
-name|MTX_LOCK
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-operator|\
+begin_comment
+unit|rlwinm	r0, r10, 0, 17, 15;		\ 	mtmsr	r0;				\ 1:	li	r11, MTX_LOCK;			\
 comment|/* MTX_LOCK offset */
-name|lwarx
-name|r0
-operator|,
-name|r11
-operator|,
-name|lck
-expr_stmt|;
-end_expr_stmt
+end_comment
 
-begin_expr_stmt
-operator|\
+begin_comment
+unit|lwarx	r0, r11, lck;			\
 comment|/* load current lock value */
-name|cmplwi
-name|r0
-operator|,
-name|r1
-operator|,
-name|MTX_UNOWNED
-expr_stmt|;
-end_expr_stmt
+end_comment
 
-begin_expr_stmt
-operator|\
+begin_comment
+unit|cmplwi	r0, r1, MTX_UNOWNED;		\
 comment|/* compare with unowned */
-name|beq
-literal|1
-expr_stmt|;
-end_expr_stmt
+end_comment
 
-begin_expr_stmt
-operator|\
+begin_comment
+unit|beq	1;				\
 comment|/* if owned, loop */
-name|lwz
-name|r0
-operator|,
-name|PC_CURPROC
-argument_list|(
-name|pcpup
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_comment
 
-begin_expr_stmt
-operator|\
+begin_comment
+unit|lwz	r0, PC_CURPROC(pcpup);		\
 comment|/* load curproc */
-name|stwcx
-operator|.
-name|r0
-operator|,
-name|r11
-operator|,
-name|lck
-expr_stmt|;
-end_expr_stmt
+end_comment
 
-begin_expr_stmt
-operator|\
+begin_comment
+unit|stwcx.	r0, r11, lck;			\
 comment|/* attempt to store */
-name|beq
-literal|1
-expr_stmt|;
-end_expr_stmt
+end_comment
 
-begin_expr_stmt
-operator|\
+begin_comment
+unit|beq	1;				\
 comment|/* loop if failed */
-name|sync
-expr_stmt|;
-end_expr_stmt
+end_comment
 
-begin_expr_stmt
-operator|\
+begin_comment
+unit|sync;					\
 comment|/* sync */
-name|eieio
-expr_stmt|;
-end_expr_stmt
+end_comment
 
-begin_expr_stmt
-operator|\
+begin_comment
+unit|eieio;					\
 comment|/* sync */
-name|stw
-name|r10
-operator|,
-name|MTX_SAVEINTR
-argument_list|(
-argument|lck
-argument_list|)
+end_comment
+
+begin_comment
+unit|stw	r10, MTX_SAVEINTR(lck)
 comment|/* save flags */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|MTX_EXIT
@@ -165,55 +105,34 @@ name|lck
 parameter_list|)
 define|\
 value|sync;					\
-comment|/* sync */
-name|eieio
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-operator|\
-comment|/* sync */
-name|li
-name|r0
-operator|,
-name|MTX_UNOWNED
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-operator|\
-comment|/* load in unowned */
-name|stw
-name|r0
-operator|,
-name|MTX_LOCK
-argument_list|(
-name|lck
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-operator|\
-comment|/* store to lock */
-name|lwz
-name|r0
-operator|,
-name|MTX_SAVEINTR
-argument_list|(
-name|lck
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-operator|\
-comment|/* load saved flags */
-name|mtmsr
-name|r0
-end_expr_stmt
+end_define
 
 begin_comment
+comment|/* sync */
+end_comment
+
+begin_comment
+unit|eieio;					\
+comment|/* sync */
+end_comment
+
+begin_comment
+unit|li	r0, MTX_UNOWNED;		\
+comment|/* load in unowned */
+end_comment
+
+begin_comment
+unit|stw	r0, MTX_LOCK(lck);		\
+comment|/* store to lock */
+end_comment
+
+begin_comment
+unit|lwz	r0, MTX_SAVEINTR(lck);		\
+comment|/* load saved flags */
+end_comment
+
+begin_comment
+unit|mtmsr	r0
 comment|/* enable interrupts */
 end_comment
 
@@ -225,6 +144,11 @@ end_endif
 begin_comment
 comment|/* !LOCORE */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

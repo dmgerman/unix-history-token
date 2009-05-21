@@ -935,6 +935,18 @@ decl_stmt|;
 name|int
 name|msg
 decl_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_SMP
+argument_list|,
+literal|"%s: MSR 0x%08x"
+argument_list|,
+name|__func__
+argument_list|,
+name|mfmsr
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|ipimask
 operator|=
 name|atomic_readandclear_32
@@ -998,10 +1010,28 @@ block|{
 case|case
 name|IPI_AST
 case|:
+name|CTR1
+argument_list|(
+name|KTR_SMP
+argument_list|,
+literal|"%s: IPI_AST"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|IPI_PREEMPT
 case|:
+name|CTR1
+argument_list|(
+name|KTR_SMP
+argument_list|,
+literal|"%s: IPI_PREEMPT"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|sched_preempt
 argument_list|(
 name|curthread
@@ -1011,6 +1041,15 @@ break|break;
 case|case
 name|IPI_RENDEZVOUS
 case|:
+name|CTR1
+argument_list|(
+name|KTR_SMP
+argument_list|,
+literal|"%s: IPI_RENDEZVOUS"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|smp_rendezvous_action
 argument_list|()
 expr_stmt|;
@@ -1018,6 +1057,15 @@ break|break;
 case|case
 name|IPI_STOP
 case|:
+name|CTR1
+argument_list|(
+name|KTR_SMP
+argument_list|,
+literal|"%s: IPI_STOP (stop)"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|self
 operator|=
 name|PCPU_GET
@@ -1070,6 +1118,15 @@ argument_list|,
 name|self
 argument_list|)
 expr_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_SMP
+argument_list|,
+literal|"%s: IPI_STOP (restart)"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 block|}
@@ -1095,6 +1152,23 @@ name|int
 name|ipi
 parameter_list|)
 block|{
+name|CTR4
+argument_list|(
+name|KTR_SMP
+argument_list|,
+literal|"%s: pc=%p, targetcpu=%d, IPI=%d"
+argument_list|,
+name|__func__
+argument_list|,
+name|pc
+argument_list|,
+name|pc
+operator|->
+name|pc_cpuid
+argument_list|,
+name|ipi
+argument_list|)
+expr_stmt|;
 name|atomic_set_32
 argument_list|(
 operator|&
@@ -1116,6 +1190,15 @@ argument_list|,
 name|pc
 operator|->
 name|pc_cpuid
+argument_list|)
+expr_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_SMP
+argument_list|,
+literal|"%s: sent"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}

@@ -441,7 +441,7 @@ argument_list|)
 operator|)
 operator|&
 operator|~
-literal|0x2fU
+literal|0x3fU
 operator|)
 expr_stmt|;
 name|td2
@@ -1330,7 +1330,7 @@ argument_list|)
 operator|)
 operator|&
 operator|~
-literal|0x2fU
+literal|0x3fU
 operator|)
 expr_stmt|;
 name|td
@@ -1648,7 +1648,7 @@ argument_list|)
 operator|)
 operator|&
 operator|~
-literal|0x1f
+literal|0x3f
 expr_stmt|;
 name|bzero
 argument_list|(

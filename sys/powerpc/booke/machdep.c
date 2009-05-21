@@ -1515,6 +1515,12 @@ operator|->
 name|bi_bar_base
 argument_list|)
 expr_stmt|;
+comment|/* Reset Time Base */
+name|mttb
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Init params/tunables that can be overridden by the loader. */
 name|init_param1
 argument_list|()
@@ -1654,6 +1660,31 @@ name|mfspr
 argument_list|(
 name|SPR_HID1
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|debugf
+argument_list|(
+literal|" BUCSR = 0x%08x\n"
+argument_list|,
+name|mfspr
+argument_list|(
+name|SPR_BUCSR
+argument_list|)
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile("msync; isync");
+name|csr
+operator|=
+name|ccsr_read4
+argument_list|(
+name|OCP85XX_L2CTL
+argument_list|)
+expr_stmt|;
+name|debugf
+argument_list|(
+literal|" L2CTL = 0x%08x\n"
+argument_list|,
+name|csr
 argument_list|)
 expr_stmt|;
 name|print_bootinfo
@@ -1977,6 +2008,21 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|RES_GRANULE
+value|32
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|tlb0_miss_locks
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Initialise a struct pcpu. */
 end_comment
@@ -2003,6 +2049,56 @@ name|pc_tid_next
 operator|=
 name|TID_MIN
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+name|uint32_t
+modifier|*
+name|ptr
+decl_stmt|;
+name|int
+name|words_per_gran
+init|=
+name|RES_GRANULE
+operator|/
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
+decl_stmt|;
+name|ptr
+operator|=
+operator|&
+name|tlb0_miss_locks
+index|[
+name|cpuid
+operator|*
+name|words_per_gran
+index|]
+expr_stmt|;
+name|pcpu
+operator|->
+name|pc_booke_tlb_lock
+operator|=
+name|ptr
+expr_stmt|;
+operator|*
+name|ptr
+operator|=
+name|MTX_UNOWNED
+expr_stmt|;
+operator|*
+operator|(
+name|ptr
+operator|+
+literal|1
+operator|)
+operator|=
+literal|0
+expr_stmt|;
+comment|/* recurse counter */
+endif|#
+directive|endif
 block|}
 end_function
 

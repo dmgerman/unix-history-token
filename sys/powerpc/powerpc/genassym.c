@@ -283,6 +283,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|ASSYM
+argument_list|(
+name|PC_BOOKE_TLB_LOCK
+argument_list|,
+name|offsetof
+argument_list|(
+expr|struct
+name|pcpu
+argument_list|,
+name|pc_booke_tlb_lock
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
