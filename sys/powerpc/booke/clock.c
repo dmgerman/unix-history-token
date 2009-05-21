@@ -515,7 +515,9 @@ name|mftb
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 name|tb
+operator|)
 return|;
 block|}
 end_function
