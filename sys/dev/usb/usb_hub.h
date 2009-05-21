@@ -38,17 +38,11 @@ name|uint8_t
 name|device_index
 decl_stmt|;
 comment|/* zero means not valid */
-name|uint8_t
-name|usb2_mode
-range|:
-literal|1
+name|enum
+name|usb_hc_mode
+name|usb_mode
 decl_stmt|;
-comment|/* current USB mode */
-name|uint8_t
-name|unused
-range|:
-literal|7
-decl_stmt|;
+comment|/* host or device mode */
 block|}
 struct|;
 end_struct

@@ -178,7 +178,7 @@ block|,
 operator|.
 name|usb_mode
 operator|=
-name|USB_MODE_MAX
+name|USB_MODE_DUAL
 block|,
 comment|/* both modes */
 block|}
@@ -405,7 +405,7 @@ name|xfer
 operator|->
 name|flags_int
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_DEVICE
 condition|)
@@ -1268,7 +1268,7 @@ name|xfer
 operator|->
 name|flags_int
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|=
 name|parm
 operator|->
@@ -1276,7 +1276,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 expr_stmt|;
 name|parm
 operator|->
@@ -3328,7 +3328,7 @@ name|setup
 operator|->
 name|usb_mode
 operator|!=
-name|USB_MODE_MAX
+name|USB_MODE_DUAL
 operator|)
 operator|&&
 operator|(
@@ -3340,7 +3340,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|)
 condition|)
 continue|continue;
@@ -4713,7 +4713,7 @@ name|xfer
 operator|->
 name|flags_int
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_DEVICE
 condition|)
@@ -4783,7 +4783,7 @@ name|xfer
 operator|->
 name|flags_int
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_DEVICE
 condition|)
@@ -7712,7 +7712,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_DEVICE
 condition|)
@@ -8949,7 +8949,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_DEVICE
 condition|)

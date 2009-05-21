@@ -5704,7 +5704,7 @@ name|xfer
 operator|->
 name|flags_int
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_DEVICE
 condition|)
@@ -6535,7 +6535,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|!=
 name|USB_MODE_DEVICE
 condition|)
@@ -10298,7 +10298,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 argument_list|,
 name|sc
 operator|->
@@ -10322,7 +10322,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|!=
 name|USB_MODE_DEVICE
 condition|)

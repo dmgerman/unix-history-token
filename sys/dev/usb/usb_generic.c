@@ -1235,7 +1235,7 @@ index|]
 operator|.
 name|usb_mode
 operator|=
-name|USB_MODE_MAX
+name|USB_MODE_DUAL
 expr_stmt|;
 comment|/* both modes */
 switch|switch
@@ -1658,7 +1658,7 @@ index|]
 operator|.
 name|usb_mode
 operator|=
-name|USB_MODE_MAX
+name|USB_MODE_DUAL
 expr_stmt|;
 comment|/* both modes */
 switch|switch
@@ -2902,7 +2902,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|!=
 name|USB_MODE_HOST
 condition|)
@@ -3033,7 +3033,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|!=
 name|USB_MODE_HOST
 condition|)
@@ -4043,7 +4043,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 expr_stmt|;
 name|di
 operator|->
@@ -6985,7 +6985,7 @@ index|]
 operator|.
 name|usb_mode
 operator|=
-name|USB_MODE_MAX
+name|USB_MODE_DUAL
 expr_stmt|;
 comment|/* both modes */
 if|if
@@ -7008,7 +7008,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|!=
 name|USB_MODE_HOST
 condition|)
@@ -7051,7 +7051,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|!=
 name|USB_MODE_HOST
 condition|)
@@ -7331,7 +7331,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|!=
 name|USB_MODE_HOST
 condition|)

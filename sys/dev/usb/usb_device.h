@@ -216,12 +216,11 @@ begin_struct
 struct|struct
 name|usb2_device_flags
 block|{
-name|uint8_t
-name|usb2_mode
-range|:
-literal|1
+name|enum
+name|usb_hc_mode
+name|usb_mode
 decl_stmt|;
-comment|/* USB mode (see USB_MODE_XXX) */
+comment|/* host or device mode */
 name|uint8_t
 name|self_powered
 range|:
@@ -622,8 +621,9 @@ parameter_list|,
 name|uint8_t
 name|speed
 parameter_list|,
-name|uint8_t
-name|usb2_mode
+name|enum
+name|usb_hc_mode
+name|mode
 parameter_list|)
 function_decl|;
 end_function_decl

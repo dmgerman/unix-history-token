@@ -868,7 +868,7 @@ name|child
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_DEVICE
 condition|)
@@ -1052,8 +1052,9 @@ decl_stmt|;
 name|uint8_t
 name|speed
 decl_stmt|;
-name|uint8_t
-name|usb2_mode
+name|enum
+name|usb_hc_mode
+name|mode
 decl_stmt|;
 name|DPRINTF
 argument_list|(
@@ -1487,12 +1488,12 @@ name|port_status
 operator|&
 name|UPS_PORT_MODE_DEVICE
 condition|)
-name|usb2_mode
+name|mode
 operator|=
 name|USB_MODE_DEVICE
 expr_stmt|;
 else|else
-name|usb2_mode
+name|mode
 operator|=
 name|USB_MODE_HOST
 expr_stmt|;
@@ -1525,7 +1526,7 @@ name|portno
 argument_list|,
 name|speed
 argument_list|,
-name|usb2_mode
+name|mode
 argument_list|)
 expr_stmt|;
 if|if
@@ -1811,7 +1812,7 @@ name|child
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_DEVICE
 condition|)
@@ -2311,7 +2312,7 @@ if|if
 condition|(
 name|uaa
 operator|->
-name|usb2_mode
+name|usb_mode
 operator|!=
 name|USB_MODE_HOST
 condition|)
@@ -5315,7 +5316,7 @@ name|xfer
 operator|->
 name|flags_int
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_HOST
 condition|)
@@ -6170,7 +6171,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_DEVICE
 operator|)

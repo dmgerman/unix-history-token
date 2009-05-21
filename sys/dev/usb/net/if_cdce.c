@@ -404,7 +404,7 @@ comment|/* no timeout */
 operator|.
 name|usb_mode
 operator|=
-name|USB_MODE_MAX
+name|USB_MODE_DUAL
 block|,
 comment|/* both modes */
 block|}
@@ -482,7 +482,7 @@ comment|/* 10 seconds */
 operator|.
 name|usb_mode
 operator|=
-name|USB_MODE_MAX
+name|USB_MODE_DUAL
 block|,
 comment|/* both modes */
 block|}
@@ -1735,7 +1735,7 @@ if|if
 condition|(
 name|uaa
 operator|->
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_DEVICE
 condition|)
