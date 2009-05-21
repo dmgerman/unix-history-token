@@ -228,7 +228,7 @@ begin_define
 define|#
 directive|define
 name|UMCT_CONFIG_INDEX
-value|1
+value|0
 end_define
 
 begin_enum
