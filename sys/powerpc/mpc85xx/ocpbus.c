@@ -1179,6 +1179,10 @@ operator|||
 name|tgt
 operator|==
 name|OCP85XX_TGTIF_RAM2
+operator|||
+name|tgt
+operator|==
+name|OCP85XX_TGTIF_RAM_INTL
 condition|)
 continue|continue;
 name|ccsr_write4
