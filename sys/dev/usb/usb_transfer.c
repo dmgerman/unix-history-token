@@ -378,8 +378,9 @@ parameter_list|,
 name|uint8_t
 name|type
 parameter_list|,
-name|uint8_t
-name|usb_speed
+name|enum
+name|usb_dev_speed
+name|speed
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -9385,8 +9386,9 @@ parameter_list|,
 name|uint8_t
 name|type
 parameter_list|,
-name|uint8_t
-name|usb_speed
+name|enum
+name|usb_dev_speed
+name|speed
 parameter_list|)
 block|{
 specifier|static
@@ -9583,7 +9585,7 @@ name|max
 operator|=
 name|intr_range_max
 index|[
-name|usb_speed
+name|speed
 index|]
 expr_stmt|;
 break|break;
@@ -9598,7 +9600,7 @@ name|max
 operator|=
 name|isoc_range_max
 index|[
-name|usb_speed
+name|speed
 index|]
 expr_stmt|;
 break|break;
@@ -9613,7 +9615,7 @@ name|temp
 operator|=
 name|bulk_min
 index|[
-name|usb_speed
+name|speed
 index|]
 expr_stmt|;
 else|else
@@ -9622,7 +9624,7 @@ name|temp
 operator|=
 name|control_min
 index|[
-name|usb_speed
+name|speed
 index|]
 expr_stmt|;
 comment|/* default is fixed */
@@ -9664,7 +9666,7 @@ name|temp
 expr_stmt|;
 if|if
 condition|(
-name|usb_speed
+name|speed
 operator|==
 name|USB_SPEED_FULL
 condition|)
@@ -9701,7 +9703,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|usb_speed
+name|speed
 operator|==
 name|USB_SPEED_VARIABLE
 operator|)

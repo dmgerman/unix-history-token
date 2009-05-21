@@ -456,8 +456,12 @@ name|plugtime
 decl_stmt|;
 comment|/* copy of "ticks" */
 name|enum
-name|usb2_dev_state
+name|usb_dev_state
 name|state
+decl_stmt|;
+name|enum
+name|usb_dev_speed
+name|speed
 decl_stmt|;
 name|uint16_t
 name|refcount
@@ -494,10 +498,6 @@ name|uint8_t
 name|depth
 decl_stmt|;
 comment|/* distance from root HUB */
-name|uint8_t
-name|speed
-decl_stmt|;
-comment|/* low/full/high speed */
 name|uint8_t
 name|port_index
 decl_stmt|;
@@ -618,7 +618,8 @@ parameter_list|,
 name|uint8_t
 name|port_no
 parameter_list|,
-name|uint8_t
+name|enum
+name|usb_dev_speed
 name|speed
 parameter_list|,
 name|enum
@@ -881,7 +882,7 @@ modifier|*
 name|udev
 parameter_list|,
 name|enum
-name|usb2_dev_state
+name|usb_dev_state
 name|state
 parameter_list|)
 function_decl|;

@@ -1270,7 +1270,8 @@ comment|/* iSerialNumber string, if present */
 name|uint16_t
 name|devnum
 decl_stmt|;
-name|uint8_t
+name|enum
+name|usb_dev_speed
 name|speed
 decl_stmt|;
 comment|/* USB_SPEED_XXX */

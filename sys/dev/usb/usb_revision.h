@@ -25,7 +25,7 @@ end_comment
 
 begin_enum
 enum|enum
-name|usb2_speed
+name|usb_dev_speed
 block|{
 name|USB_SPEED_VARIABLE
 block|,
@@ -53,7 +53,7 @@ end_comment
 
 begin_enum
 enum|enum
-name|usb2_revision
+name|usb_revision
 block|{
 name|USB_REV_UNKNOWN
 block|,
@@ -112,7 +112,7 @@ end_comment
 
 begin_enum
 enum|enum
-name|usb2_dev_state
+name|usb_dev_state
 block|{
 name|USB_STATE_DETACHED
 block|,

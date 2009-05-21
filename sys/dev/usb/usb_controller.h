@@ -548,8 +548,9 @@ decl_stmt|;
 name|usb2_size_t
 name|size
 decl_stmt|;
-name|uint8_t
-name|usb2_speed
+name|enum
+name|usb_dev_speed
+name|usb_speed
 decl_stmt|;
 name|uint8_t
 name|self_powered

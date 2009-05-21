@@ -516,7 +516,7 @@ modifier|*
 name|usb2_statestr
 parameter_list|(
 name|enum
-name|usb2_dev_state
+name|usb_dev_state
 name|state
 parameter_list|)
 block|{
@@ -5063,7 +5063,8 @@ parameter_list|,
 name|uint8_t
 name|port_no
 parameter_list|,
-name|uint8_t
+name|enum
+name|usb_dev_speed
 name|speed
 parameter_list|,
 name|enum
@@ -8566,7 +8567,8 @@ comment|/*  * Returns:  * See: USB_SPEED_XXX  */
 end_comment
 
 begin_function
-name|uint8_t
+name|enum
+name|usb_dev_speed
 name|usb2_get_speed
 parameter_list|(
 name|struct
@@ -9277,7 +9279,7 @@ modifier|*
 name|udev
 parameter_list|,
 name|enum
-name|usb2_dev_state
+name|usb_dev_state
 name|state
 parameter_list|)
 block|{

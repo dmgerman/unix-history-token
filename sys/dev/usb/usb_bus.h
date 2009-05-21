@@ -193,7 +193,8 @@ name|uint8_t
 name|driver_added_refcount
 decl_stmt|;
 comment|/* Current driver generation count */
-name|uint8_t
+name|enum
+name|usb_revision
 name|usbrev
 decl_stmt|;
 comment|/* USB revision. See "USB_REV_XXX". */
