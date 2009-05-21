@@ -5947,20 +5947,6 @@ operator|->
 name|td_transfer_last
 condition|)
 block|{
-if|if
-condition|(
-name|len
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* 			         * Halt is ok if descriptor is last, 			         * and complete: 			         */
-name|status
-operator|&=
-operator|~
-name|EHCI_QTD_HALTED
-expr_stmt|;
-block|}
 name|td
 operator|=
 name|NULL
