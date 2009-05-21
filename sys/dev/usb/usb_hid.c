@@ -1194,14 +1194,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* set default usage */
-comment|/* use the undefined HID PAGE */
-name|s
-operator|->
-name|usage_last
-operator|=
-literal|0
-expr_stmt|;
 goto|goto
 name|top
 goto|;
