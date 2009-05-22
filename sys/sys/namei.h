@@ -582,7 +582,7 @@ parameter_list|,
 name|td
 parameter_list|)
 define|\
-value|NDINIT_ALL(ndp, op, flags, segflg, namep, AT_FDCWD, NULL, td)
+value|NDINIT_ALL(ndp, op, flags, segflg, namep, AT_FDCWD_notyet, NULL, td)
 end_define
 
 begin_define
@@ -628,7 +628,7 @@ parameter_list|,
 name|td
 parameter_list|)
 define|\
-value|NDINIT_ALL(ndp, op, flags, segflg, namep, AT_FDCWD, vp, td)
+value|NDINIT_ALL(ndp, op, flags, segflg, namep, AT_FDCWD_notyet, vp, td)
 end_define
 
 begin_function

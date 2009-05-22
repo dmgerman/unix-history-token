@@ -356,7 +356,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AT_FDCWD
+name|AT_FDCWD_notyet
 value|-100
 end_define
 
