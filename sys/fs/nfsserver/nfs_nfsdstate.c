@@ -17358,7 +17358,9 @@ operator|)
 return|;
 name|printf
 argument_list|(
-literal|"out of clientids\n"
+literal|"%s: out of clientids\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
