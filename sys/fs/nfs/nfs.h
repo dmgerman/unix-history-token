@@ -2120,7 +2120,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* First 8 R_xxx flags defined in rpc/rpcclnt.h, the rest are here */
+comment|/* This is the only nfsreq R_xxx flag still used. */
 end_comment
 
 begin_define
