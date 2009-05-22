@@ -125,6 +125,7 @@ name|acl
 operator|!=
 name|NULL
 condition|)
+block|{
 name|bzero
 argument_list|(
 name|acl
@@ -136,6 +137,15 @@ name|acl_t_struct
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|acl
+operator|->
+name|ats_acl
+operator|.
+name|acl_maxcnt
+operator|=
+name|ACL_MAX_ENTRIES
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|acl

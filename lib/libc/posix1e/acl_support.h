@@ -32,6 +32,16 @@ end_comment
 
 begin_function_decl
 name|int
+name|_acl_type_unold
+parameter_list|(
+name|acl_type_t
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|_posix1e_acl_check
 parameter_list|(
 name|acl_t

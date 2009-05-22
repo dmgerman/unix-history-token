@@ -51,6 +51,12 @@ directive|include
 file|<sys/errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"acl_support.h"
+end_include
+
 begin_function
 name|int
 name|acl_delete_def_file
@@ -110,6 +116,13 @@ name|acl_type_t
 name|type
 parameter_list|)
 block|{
+name|type
+operator|=
+name|_acl_type_unold
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|__acl_delete_file
@@ -136,6 +149,13 @@ name|acl_type_t
 name|type
 parameter_list|)
 block|{
+name|type
+operator|=
+name|_acl_type_unold
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|__acl_delete_link
@@ -160,6 +180,13 @@ name|acl_type_t
 name|type
 parameter_list|)
 block|{
+name|type
+operator|=
+name|_acl_type_unold
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|___acl_delete_fd

@@ -41,6 +41,82 @@ begin_comment
 comment|/*  * POSIX.1e ACL types and related constants.  */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|acl_tag_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|acl_perm_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|uint16_t
+name|acl_entry_type_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|uint16_t
+name|acl_flag_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|acl_type_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+modifier|*
+name|acl_permset_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|uint16_t
+modifier|*
+name|acl_flagset_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * With 254 entries, "struct acl_t_struct" is exactly one 4kB page big.  * Note that with NFS4 ACLs, the maximum number of ACL entries one  * may set on file or directory is about half of ACL_MAX_ENTRIES.  *  * If you increase this, you might also need to increase  * _ACL_T_ALIGNMENT_BITS in lib/libc/posix1e/acl_support.h.  *  * The maximum number of POSIX.1e ACLs is controlled  * by OLDACL_MAX_ENTRIES.  Changing that one will break binary  * compatibility with pre-8.0 userland and change on-disk ACL layout.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACL_MAX_ENTRIES
+value|254
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_ACL_PRIVATE
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -72,42 +148,89 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACL_MAX_ENTRIES
+name|NFS4_ACL_EXTATTR_NAMESPACE
+value|EXTATTR_NAMESPACE_SYSTEM
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFS4_ACL_EXTATTR_NAME
+value|"nfs4.acl"
+end_define
+
+begin_define
+define|#
+directive|define
+name|OLDACL_MAX_ENTRIES
 value|32
 end_define
 
 begin_comment
-comment|/* maximum entries in an ACL */
+comment|/*  * "struct oldacl" is used in compatibility ACL syscalls and for on-disk  * storage of POSIX.1e ACLs.  */
 end_comment
 
 begin_typedef
 typedef|typedef
 name|int
-name|acl_type_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-name|acl_tag_t
+name|oldacl_tag_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
 name|mode_t
-name|acl_perm_t
+name|oldacl_perm_t
 typedef|;
 end_typedef
 
+begin_struct
+struct|struct
+name|oldacl_entry
+block|{
+name|oldacl_tag_t
+name|ae_tag
+decl_stmt|;
+name|uid_t
+name|ae_id
+decl_stmt|;
+name|oldacl_perm_t
+name|ae_perm
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_typedef
 typedef|typedef
-name|mode_t
+name|struct
+name|oldacl_entry
 modifier|*
-name|acl_permset_t
+name|oldacl_entry_t
 typedef|;
 end_typedef
+
+begin_struct
+struct|struct
+name|oldacl
+block|{
+name|int
+name|acl_cnt
+decl_stmt|;
+name|struct
+name|oldacl_entry
+name|acl_entry
+index|[
+name|OLDACL_MAX_ENTRIES
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Current "struct acl".  */
+end_comment
 
 begin_struct
 struct|struct
@@ -121,6 +244,14 @@ name|ae_id
 decl_stmt|;
 name|acl_perm_t
 name|ae_perm
+decl_stmt|;
+comment|/* "allow" or "deny".  Unused in POSIX ACLs. */
+name|acl_entry_type_t
+name|ae_entry_type
+decl_stmt|;
+comment|/* Flags control inheritance.  Unused in POSIX ACLs. */
+name|acl_flag_t
+name|ae_flags
 decl_stmt|;
 block|}
 struct|;
@@ -136,15 +267,27 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* internal ACL structure */
+comment|/*  * Internal ACL structure, used in libc, kernel APIs and for on-disk  * storage of NFS4 ACLs.  POSIX.1e ACLs use "struct oldacl" for on-disk  * storage.  */
 end_comment
 
 begin_struct
 struct|struct
 name|acl
 block|{
+name|unsigned
+name|int
+name|acl_maxcnt
+decl_stmt|;
+name|unsigned
 name|int
 name|acl_cnt
+decl_stmt|;
+comment|/* Will be required e.g. to implement NFSv4.1 ACL inheritance. */
+name|int
+name|acl_spare
+index|[
+literal|4
+index|]
 decl_stmt|;
 name|struct
 name|acl_entry
@@ -158,7 +301,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* external ACL structure */
+comment|/*  * ACL structure internal to libc.  */
 end_comment
 
 begin_struct
@@ -171,6 +314,10 @@ name|ats_acl
 decl_stmt|;
 name|int
 name|ats_cur_entry
+decl_stmt|;
+comment|/* Will be used for ACL branding. */
+name|int
+name|ats_spare
 decl_stmt|;
 block|}
 struct|;
@@ -185,8 +332,42 @@ name|acl_t
 typedef|;
 end_typedef
 
+begin_else
+else|#
+directive|else
+end_else
+
 begin_comment
-comment|/*  * Possible valid values for ae_tag field.  */
+comment|/* _KERNEL || _ACL_PRIVATE */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+modifier|*
+name|acl_entry_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+modifier|*
+name|acl_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_KERNEL&& !_ACL_PRIVATE */
+end_comment
+
+begin_comment
+comment|/*  * Possible valid values for ae_tag field.  For explanation, see acl(9).  */
 end_comment
 
 begin_define
@@ -246,25 +427,39 @@ value|ACL_OTHER
 end_define
 
 begin_comment
-comment|/*  * Possible valid values for acl_type_t arguments.  */
+comment|/*  * Possible valid values for acl_type_t arguments.  First two  * are provided only for backwards binary compatibility.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ACL_TYPE_ACCESS
+name|ACL_TYPE_ACCESS_OLD
 value|0x00000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACL_TYPE_DEFAULT
+name|ACL_TYPE_DEFAULT_OLD
 value|0x00000001
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACL_TYPE_ACCESS
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_TYPE_DEFAULT
+value|0x00000003
+end_define
+
 begin_comment
-comment|/*  * Possible flags in ae_perm field.  */
+comment|/*  * Possible flags in ae_perm field for POSIX.1e ACLs.  Note  * that ACL_EXECUTE may be used in both NFSv4 and POSIX.1e ACLs.  */
 end_comment
 
 begin_define
@@ -310,7 +505,7 @@ value|(ACL_EXECUTE | ACL_WRITE | ACL_READ)
 end_define
 
 begin_comment
-comment|/*  * Possible entry_id values for acl_get_entry()  */
+comment|/*  * Possible entry_id values for acl_get_entry(3).  */
 end_comment
 
 begin_define
@@ -328,7 +523,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * Undefined value in ae_id field  */
+comment|/*  * Undefined value in ae_id field.  ae_id should be set to this value  * iff ae_tag is ACL_USER_OBJ, ACL_GROUP_OBJ, ACL_OTHER or ACL_EVERYONE.  */
 end_comment
 
 begin_define
@@ -363,7 +558,7 @@ value|(~ACL_OVERRIDE_MASK)
 end_define
 
 begin_comment
-comment|/*  * File system independent code to move back and forth between POSIX mode and  * POSIX.1e ACL representations.  */
+comment|/*  * Filesystem-independent code to move back and forth between POSIX mode and  * POSIX.1e ACL representations.  */
 end_comment
 
 begin_function_decl
@@ -472,8 +667,56 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|acl_copy_oldacl_into_acl
+parameter_list|(
+specifier|const
+name|struct
+name|oldacl
+modifier|*
+name|source
+parameter_list|,
+name|struct
+name|acl
+modifier|*
+name|dest
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|acl_copy_acl_into_oldacl
+parameter_list|(
+specifier|const
+name|struct
+name|acl
+modifier|*
+name|source
+parameter_list|,
+name|struct
+name|oldacl
+modifier|*
+name|dest
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*  * File system independent syntax check for a POSIX.1e ACL.  */
+comment|/*  * To allocate 'struct acl', use acl_alloc()/acl_free() instead of this.  */
+end_comment
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_ACL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * Filesystem-independent syntax check for a POSIX.1e ACL.  */
 end_comment
 
 begin_function_decl
@@ -497,8 +740,17 @@ begin_comment
 comment|/* !_KERNEL */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_ACL_PRIVATE
+argument_list|)
+end_if
+
 begin_comment
-comment|/*  * Syscall interface -- use the library calls instead as the syscalls have  * strict acl entry ordering requirements.  */
+comment|/*  * Syscall interface -- use the library calls instead as the syscalls have  * strict ACL entry ordering requirements.  */
 end_comment
 
 begin_function_decl
@@ -721,6 +973,9 @@ end_function_decl
 
 begin_function_decl
 name|__END_DECLS
+endif|#
+directive|endif
+comment|/* _ACL_PRIVATE */
 comment|/*  * Supported POSIX.1e ACL manipulation and assignment/retrieval API _np calls  * are local extensions that reflect an environment capable of opening file  * descriptors of directories, and allowing additional ACL type for different  * filesystems (i.e., AFS).  */
 name|__BEGIN_DECLS
 name|int
