@@ -17325,7 +17325,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return the next index# for a clientid. Mostly just increment and return  * the next one, but... if the 32bit unsigned does actually wrap around,  * reboot. This is here more for fun than practical purposes. At an  * average rate of one new client per second, it will wrap around in  * approximately 136 years. (I think the server will have been shut  * down or rebooted before then.)  */
+comment|/*  * Return the next index# for a clientid. Mostly just increment and return  * the next one, but... if the 32bit unsigned does actually wrap around,  * it should be rebooted.  * At an average rate of one new client per second, it will wrap around in  * approximately 136 years. (I think the server will have been shut  * down or rebooted before then.)  */
 end_comment
 
 begin_function
