@@ -17358,7 +17358,7 @@ operator|)
 return|;
 name|printf
 argument_list|(
-literal|"out of clientids, possible DOS attack\n"
+literal|"out of clientids\n"
 argument_list|)
 expr_stmt|;
 return|return
