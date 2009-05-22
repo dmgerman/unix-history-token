@@ -2949,10 +2949,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|unsigned
-name|int
-name|i
-decl_stmt|;
 name|ARGE_WRITE
 argument_list|(
 name|sc
