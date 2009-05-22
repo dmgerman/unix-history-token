@@ -1988,7 +1988,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The cxgb_controller_attach function is responsible for the initial  * bringup of the device.  Its responsibilities include:  *  *  1. Determine if the device supports MSI or MSI-X.  *  2. Allocate bus resources so that we can access the Base Address Register  *  3. Create and initialize mutexes for the controller and its control  *     logic such as SGE and MDIO.  *  4. Call hardware specific setup routine for the adapter as a whole.  *  5. Allocate the BAR for doing MSI-X.  *  6. Setup the line interrupt iff MSI-X is not supported.  *  7. Create the driver's taskq.  *  8. Start the task queue threads.  *  9. Update the firmware if required.  * 10. Create a child device for each MAC (port)  * 11. Initialize T3 private state.  * 12. Trigger the LED  * 13. Setup offload iff supported.  * 14. Reset/restart the tick callout.  * 15. Attach sysctls  *  * NOTE: Any modification or deviation from this list MUST be reflected in  * the above comment.  Failure to do so will result in problems on various  * error conditions including link flapping.  */
+comment|/*  * The cxgb_controller_attach function is responsible for the initial  * bringup of the device.  Its responsibilities include:  *  *  1. Determine if the device supports MSI or MSI-X.  *  2. Allocate bus resources so that we can access the Base Address Register  *  3. Create and initialize mutexes for the controller and its control  *     logic such as SGE and MDIO.  *  4. Call hardware specific setup routine for the adapter as a whole.  *  5. Allocate the BAR for doing MSI-X.  *  6. Setup the line interrupt iff MSI-X is not supported.  *  7. Create the driver's taskq.  *  8. Start one task queue service thread.  *  9. Check if the firmware and SRAM are up-to-date.  They will be  *     auto-updated later (before FULL_INIT_DONE), if required.  * 10. Create a child device for each MAC (port)  * 11. Initialize T3 private state.  * 12. Trigger the LED  * 13. Setup offload iff supported.  * 14. Reset/restart the tick callout.  * 15. Attach sysctls  *  * NOTE: Any modification or deviation from this list MUST be reflected in  * the above comment.  Failure to do so will result in problems on various  * error conditions including link flapping.  */
 end_comment
 
 begin_function
@@ -3443,7 +3443,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The cxgb_controlller_detach routine is called with the device is  * unloaded from the system.  */
+comment|/*  * The cxgb_controller_detach routine is called with the device is  * unloaded from the system.  */
 end_comment
 
 begin_function
@@ -3481,7 +3481,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The cxgb_free() is called by the cxgb_controller_detach() routine  * to tear down the structures that were built up in  * cxgb_controller_attach(), and should be the final piece of work  * done when fullly unloading the driver.  *   *  *  1. Shutting down the threads started by the cxgb_controller_attach()  *     routine.  *  2. Stopping the lower level device and all callouts (cxgb_down_locked()).  *  3. Detaching all of the port devices created during the  *     cxgb_controller_attach() routine.  *  4. Removing the device children created via cxgb_controller_attach().  *  5. Releaseing PCI resources associated with the device.  *  6. Turning off the offload support, iff it was turned on.  *  7. Destroying the mutexes created in cxgb_controller_attach().  *  */
+comment|/*  * The cxgb_free() is called by the cxgb_controller_detach() routine  * to tear down the structures that were built up in  * cxgb_controller_attach(), and should be the final piece of work  * done when fully unloading the driver.  *   *  *  1. Shutting down the threads started by the cxgb_controller_attach()  *     routine.  *  2. Stopping the lower level device and all callouts (cxgb_down_locked()).  *  3. Detaching all of the port devices created during the  *     cxgb_controller_attach() routine.  *  4. Removing the device children created via cxgb_controller_attach().  *  5. Releaseing PCI resources associated with the device.  *  6. Turning off the offload support, iff it was turned on.  *  7. Destroying the mutexes created in cxgb_controller_attach().  *  */
 end_comment
 
 begin_function
@@ -3576,6 +3576,13 @@ control|)
 block|{
 if|if
 condition|(
+name|sc
+operator|->
+name|portdev
+index|[
+name|i
+index|]
+operator|&&
 name|device_delete_child
 argument_list|(
 name|sc
@@ -8977,7 +8984,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Release resources when all the ports and offloading have been stopped.  */
+comment|/*  * Bring down the interface but do not free any resources.  */
 end_comment
 
 begin_function
@@ -9640,6 +9647,13 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|flags
+operator|&=
+operator|~
+name|CXGB_SHUTDOWN
+expr_stmt|;
 name|ifp
 operator|->
 name|if_drv_flags
@@ -9736,6 +9750,14 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+name|adapter_t
+modifier|*
+name|sc
+init|=
+name|pi
+operator|->
+name|adapter
+decl_stmt|;
 name|PORT_LOCK_ASSERT_OWNED
 argument_list|(
 name|pi
@@ -9747,6 +9769,12 @@ name|pi
 operator|->
 name|adapter
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|flags
+operator||=
+name|CXGB_SHUTDOWN
 expr_stmt|;
 name|ifp
 operator|=
