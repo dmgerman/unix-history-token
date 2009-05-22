@@ -176,12 +176,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<rpc/rpcclnt.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<rpc/rpc.h>
 end_include
 

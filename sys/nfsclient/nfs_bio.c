@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mount.h>
 end_include
 
@@ -128,12 +134,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<rpc/rpcclnt.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<nfs/rpcv2.h>
 end_include
 
@@ -165,12 +165,6 @@ begin_include
 include|#
 directive|include
 file|<nfsclient/nfs_kdtrace.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<nfs4client/nfs4.h>
 end_include
 
 begin_function_decl
@@ -7496,31 +7490,6 @@ name|nmp
 operator|->
 name|nm_flag
 operator|&
-name|NFSMNT_NFSV4
-operator|)
-operator|!=
-literal|0
-condition|)
-name|error
-operator|=
-name|nfs4_readdirrpc
-argument_list|(
-name|vp
-argument_list|,
-name|uiop
-argument_list|,
-name|cr
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-if|if
-condition|(
-operator|(
-name|nmp
-operator|->
-name|nm_flag
-operator|&
 name|NFSMNT_RDIRPLUS
 operator|)
 operator|!=
@@ -7575,7 +7544,6 @@ argument_list|,
 name|cr
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 		 * end-of-directory sets B_INVAL but does not generate an 		 * error. 		 */
 if|if
 condition|(

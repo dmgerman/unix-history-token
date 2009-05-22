@@ -376,12 +376,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<rpc/rpcclnt.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<rpc/rpcsec_gss.h>
 end_include
 
