@@ -17356,18 +17356,16 @@ operator|(
 name|client_index
 operator|)
 return|;
-comment|/* 	 * In practice we'll never get here, but the panic is here 	 * just for fun. (client_index will not wrap around on any real server) 	 */
-name|panic
+name|printf
 argument_list|(
-literal|"nfsv4 server out of clientids"
+literal|"out of clientids, possible DOS attack\n"
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|client_index
 operator|)
 return|;
-comment|/* Just to shut the compiler up */
 block|}
 end_function
 
