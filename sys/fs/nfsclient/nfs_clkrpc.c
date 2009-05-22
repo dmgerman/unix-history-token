@@ -940,10 +940,7 @@ name|svcpool_create
 argument_list|(
 literal|"nfscbd"
 argument_list|,
-name|SYSCTL_STATIC_CHILDREN
-argument_list|(
-name|_vfs_newnfs
-argument_list|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|nfscbd_pool
