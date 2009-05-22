@@ -172,6 +172,44 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__APPLE__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<AvailabilityMacros.h>
+end_include
+
+begin_if
+if|#
+directive|if
+operator|(
+name|MAC_OS_X_VERSION_MAX_ALLOWED
+operator|>=
+name|MAC_OS_X_VERSION_10_5
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__APPLE_PRIVPTY__
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Allocates and opens a pty.  Returns 0 if no pty could be allocated, or  * nonzero if a pty was successfully allocated.  On success, open file  * descriptors for the pty and tty sides and the name of the tty side are  * returned (the buffer must be able to hold at least 64 characters).  */
 end_comment
@@ -288,6 +326,9 @@ modifier|*
 name|tty
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|__APPLE_PRIVPTY__
 if|if
 condition|(
 name|chown
@@ -345,6 +386,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* __APPLE_PRIVPTY__ */
 block|}
 end_function
 

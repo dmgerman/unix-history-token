@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: pathnames.h,v 1.16 2006/03/25 22:22:43 djm Exp $ */
+comment|/* $OpenBSD: pathnames.h,v 1.17 2008/12/29 02:23:26 stevesk Exp $ */
 end_comment
 
 begin_comment
@@ -159,7 +159,7 @@ value|_PATH_SSH_PIDDIR "/sshd.pid"
 end_define
 
 begin_comment
-comment|/*  * The directory in user\'s home directory in which the files reside. The  * directory should be world-readable (though not all files are).  */
+comment|/*  * The directory in user's home directory in which the files reside. The  * directory should be world-readable (though not all files are).  */
 end_comment
 
 begin_define
@@ -217,7 +217,7 @@ value|".ssh/id_rsa"
 end_define
 
 begin_comment
-comment|/*  * Configuration file in user\'s home directory.  This file need not be  * readable by anyone but the user him/herself, but does not contain anything  * particularly secret.  If the user\'s home directory resides on an NFS  * volume where root is mapped to nobody, this may need to be world-readable.  */
+comment|/*  * Configuration file in user's home directory.  This file need not be  * readable by anyone but the user him/herself, but does not contain anything  * particularly secret.  If the user's home directory resides on an NFS  * volume where root is mapped to nobody, this may need to be world-readable.  */
 end_comment
 
 begin_define
@@ -228,7 +228,7 @@ value|".ssh/config"
 end_define
 
 begin_comment
-comment|/*  * File containing a list of those rsa keys that permit logging in as this  * user.  This file need not be readable by anyone but the user him/herself,  * but does not contain anything particularly secret.  If the user\'s home  * directory resides on an NFS volume where root is mapped to nobody, this  * may need to be world-readable.  (This file is read by the daemon which is  * running as root.)  */
+comment|/*  * File containing a list of those rsa keys that permit logging in as this  * user.  This file need not be readable by anyone but the user him/herself,  * but does not contain anything particularly secret.  If the user's home  * directory resides on an NFS volume where root is mapped to nobody, this  * may need to be world-readable.  (This file is read by the daemon which is  * running as root.)  */
 end_comment
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth.h,v 1.61 2008/07/02 12:03:51 dtucker Exp $ */
+comment|/* $OpenBSD: auth.h,v 1.62 2008/11/04 08:22:12 djm Exp $ */
 end_comment
 
 begin_comment
@@ -156,6 +156,10 @@ decl_stmt|;
 name|void
 modifier|*
 name|kbdintctxt
+decl_stmt|;
+name|void
+modifier|*
+name|jpake_ctx
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -877,6 +881,38 @@ name|u_int
 parameter_list|,
 name|char
 modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|auth2_jpake_get_pwdata
+parameter_list|(
+name|Authctxt
+modifier|*
+parameter_list|,
+name|BIGNUM
+modifier|*
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|auth2_jpake_stop
+parameter_list|(
+name|Authctxt
 modifier|*
 parameter_list|)
 function_decl|;

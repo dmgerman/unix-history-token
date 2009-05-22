@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp.c,v 1.103 2008/07/13 22:16:03 djm Exp $ */
+comment|/* $OpenBSD: sftp.c,v 1.107 2009/02/02 11:15:14 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -1043,151 +1043,36 @@ block|{
 name|printf
 argument_list|(
 literal|"Available commands:\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"cd path                       Change remote directory to 'path'\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"lcd path                      Change local directory to 'path'\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"chgrp grp path                Change group of file 'path' to 'grp'\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"chmod mode path               Change permissions of file 'path' to 'mode'\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"chown own path                Change owner of file 'path' to 'own'\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"df [path]                     Display statistics for current directory or\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"                              filesystem containing 'path'\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"help                          Display this help text\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"get remote-path [local-path]  Download file\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"lls [ls-options [path]]       Display local directory listing\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ln oldpath newpath            Symlink remote file\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"lmkdir path                   Create local directory\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"lpwd                          Print local working directory\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ls [path]                     Display remote directory listing\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"lumask umask                  Set local umask to 'umask'\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"mkdir path                    Create remote directory\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"progress                      Toggle display of progress meter\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"put local-path [remote-path]  Upload file\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"pwd                           Display remote working directory\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"exit                          Quit sftp\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"quit                          Quit sftp\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"rename oldpath newpath        Rename remote file\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"rmdir path                    Remove remote directory\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"rm path                       Delete remote file\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"symlink oldpath newpath       Symlink remote file\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"version                       Show SFTP version\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"!command                      Execute 'command' in local shell\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"!                             Escape to local shell\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"?                             Synonym for help\n"
+literal|"bye                                Quit sftp\n"
+literal|"cd path                            Change remote directory to 'path'\n"
+literal|"chgrp grp path                     Change group of file 'path' to 'grp'\n"
+literal|"chmod mode path                    Change permissions of file 'path' to 'mode'\n"
+literal|"chown own path                     Change owner of file 'path' to 'own'\n"
+literal|"df [-hi] [path]                    Display statistics for current directory or\n"
+literal|"                                   filesystem containing 'path'\n"
+literal|"exit                               Quit sftp\n"
+literal|"get [-P] remote-path [local-path]  Download file\n"
+literal|"help                               Display this help text\n"
+literal|"lcd path                           Change local directory to 'path'\n"
+literal|"lls [ls-options [path]]            Display local directory listing\n"
+literal|"lmkdir path                        Create local directory\n"
+literal|"ln oldpath newpath                 Symlink remote file\n"
+literal|"lpwd                               Print local working directory\n"
+literal|"ls [-1aflnrSt] [path]              Display remote directory listing\n"
+literal|"lumask umask                       Set local umask to 'umask'\n"
+literal|"mkdir path                         Create remote directory\n"
+literal|"progress                           Toggle display of progress meter\n"
+literal|"put [-P] local-path [remote-path]  Upload file\n"
+literal|"pwd                                Display remote working directory\n"
+literal|"quit                               Quit sftp\n"
+literal|"rename oldpath newpath             Rename remote file\n"
+literal|"rm path                            Delete remote file\n"
+literal|"rmdir path                         Remove remote directory\n"
+literal|"symlink oldpath newpath            Symlink remote file\n"
+literal|"version                            Show SFTP version\n"
+literal|"!command                           Execute 'command' in local shell\n"
+literal|"!                                  Escape to local shell\n"
+literal|"?                                  Synonym for help\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6622,12 +6507,20 @@ name|tmp
 decl_stmt|;
 name|int
 name|pflag
+init|=
+literal|0
 decl_stmt|,
 name|lflag
+init|=
+literal|0
 decl_stmt|,
 name|iflag
+init|=
+literal|0
 decl_stmt|,
 name|hflag
+init|=
+literal|0
 decl_stmt|,
 name|cmdnum
 decl_stmt|,
@@ -6636,6 +6529,8 @@ decl_stmt|;
 name|unsigned
 name|long
 name|n_arg
+init|=
+literal|0
 decl_stmt|;
 name|Attrib
 name|a
@@ -7510,13 +7405,16 @@ condition|)
 block|{
 if|if
 condition|(
-name|err
-operator|!=
-literal|0
-operator|&&
 name|err_abort
 condition|)
+block|{
+name|err
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 break|break;
+block|}
 else|else
 continue|continue;
 block|}
@@ -7547,13 +7445,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|err
-operator|!=
-literal|0
-operator|&&
 name|err_abort
 condition|)
+block|{
+name|err
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 break|break;
+block|}
 else|else
 continue|continue;
 block|}
@@ -8946,8 +8847,8 @@ argument_list|,
 literal|"usage: %s [-1Cv] [-B buffer_size] [-b batchfile] [-F ssh_config]\n"
 literal|"            [-o ssh_option] [-P sftp_server_path] [-R num_requests]\n"
 literal|"            [-S program] [-s subsystem | sftp_server] host\n"
-literal|"       %s [[user@]host[:file [file]]]\n"
-literal|"       %s [[user@]host[:dir[/]]]\n"
+literal|"       %s [user@]host[:file ...]\n"
+literal|"       %s [user@]host[:dir[/]]\n"
 literal|"       %s -b batchfile [user@]host\n"
 argument_list|,
 name|__progname

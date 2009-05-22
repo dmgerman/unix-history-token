@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: cipher.h,v 1.36 2006/03/25 22:22:42 djm Exp $ */
+comment|/* $OpenBSD: cipher.h,v 1.37 2009/01/26 09:58:15 markus Exp $ */
 end_comment
 
 begin_comment
@@ -351,6 +351,17 @@ end_function_decl
 begin_function_decl
 name|u_int
 name|cipher_keylen
+parameter_list|(
+specifier|const
+name|Cipher
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
+name|cipher_is_cbc
 parameter_list|(
 specifier|const
 name|Cipher

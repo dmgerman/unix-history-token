@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keygen.c,v 1.171 2008/07/13 21:22:52 sthen Exp $ */
+comment|/* $OpenBSD: ssh-keygen.c,v 1.173 2009/02/21 19:32:04 tobias Exp $ */
 end_comment
 
 begin_comment
@@ -578,7 +578,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"bad key type"
+literal|"bad key type\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2298,7 +2298,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"key write failed"
+literal|"key write failed\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -5614,7 +5614,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fdopen %s failed"
+literal|"fdopen %s failed\n"
 argument_list|,
 name|identity_file
 argument_list|)
@@ -5639,7 +5639,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"write key failed"
+literal|"write key failed\n"
 argument_list|)
 expr_stmt|;
 name|key_free
@@ -7201,7 +7201,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"key_generate failed"
+literal|"key_generate failed\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -7522,7 +7522,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Create default commend field for the passphrase. */
+comment|/* Create default comment field for the passphrase. */
 name|snprintf
 argument_list|(
 name|comment
@@ -7691,7 +7691,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fdopen %s failed"
+literal|"fdopen %s failed\n"
 argument_list|,
 name|identity_file
 argument_list|)
@@ -7716,7 +7716,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"write key failed"
+literal|"write key failed\n"
 argument_list|)
 expr_stmt|;
 name|fprintf

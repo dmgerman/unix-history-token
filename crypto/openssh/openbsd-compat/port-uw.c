@@ -9,11 +9,20 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE_LIBIAF
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_SECUREWARE
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -540,7 +549,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_LIBIAF */
+comment|/* HAVE_LIBIAF and not HAVE_SECUREWARE */
 end_comment
 
 end_unit
