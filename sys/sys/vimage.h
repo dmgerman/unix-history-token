@@ -819,7 +819,7 @@ name|vnet_id
 decl_stmt|;
 comment|/* ID num */
 name|u_int
-name|ifccnt
+name|ifcnt
 decl_stmt|;
 name|u_int
 name|sockcnt

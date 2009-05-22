@@ -1707,7 +1707,7 @@ name|vnet_iter
 argument_list|,
 name|vnet_iter
 operator|->
-name|ifccnt
+name|ifcnt
 argument_list|,
 name|vnet_iter
 operator|->
