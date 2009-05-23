@@ -636,6 +636,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* !VIMAGE_GLOBALS */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -659,6 +663,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* !VIMAGE */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -676,10 +684,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* VIMAGE */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* VIMAGE_GLOBALS */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -715,6 +731,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* !VIMAGE */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -732,6 +752,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* VIMAGE */
+end_comment
 
 begin_define
 define|#
@@ -897,6 +921,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* !VIMAGE */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -910,10 +938,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* VIMAGE */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !VIMAGE_GLOBALS */
+end_comment
 
 begin_define
 define|#
@@ -1057,7 +1093,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !VNET_DEBUG */
+comment|/* VNET_DEBUG */
 end_comment
 
 begin_else
@@ -1204,6 +1240,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* VIMAGE */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -1466,6 +1506,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* !VIMAGE */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1537,6 +1581,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* !VIMAGE_GLOBALS */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1562,10 +1610,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* VIMAGE_GLOBALS */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* VIMAGE */
+end_comment
 
 begin_comment
 comment|/* Non-VIMAGE null-macros */
