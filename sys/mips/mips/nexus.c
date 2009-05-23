@@ -841,10 +841,10 @@ block|{
 name|int
 name|irq
 decl_stmt|;
-name|register_t
-name|sr
+name|intrmask_t
+name|s
 init|=
-name|intr_disable
+name|disableintr
 argument_list|()
 decl_stmt|;
 name|irq
@@ -885,9 +885,9 @@ argument_list|,
 name|cookiep
 argument_list|)
 expr_stmt|;
-name|intr_restore
+name|restoreintr
 argument_list|(
-name|sr
+name|s
 argument_list|)
 expr_stmt|;
 return|return
