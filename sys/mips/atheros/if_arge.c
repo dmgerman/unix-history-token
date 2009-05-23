@@ -6976,7 +6976,7 @@ comment|/* RX overrun disables the receiver. Clear indication and 	   re-enable 
 if|if
 condition|(
 name|status
-operator||
+operator|&
 name|DMA_INTR_RX_OVERFLOW
 condition|)
 block|{
