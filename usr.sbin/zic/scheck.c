@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* ** This file is in the public domain, so clarified as of ** 2006-07-17 by Arthur David Olson. */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -18,7 +22,7 @@ name|char
 name|elsieid
 index|[]
 init|=
-literal|"@(#)scheck.c	8.15"
+literal|"@(#)scheck.c	8.19"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,6 +81,7 @@ file|"private.h"
 end_include
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|scheck
@@ -119,6 +124,7 @@ name|int
 name|c
 decl_stmt|;
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|result
@@ -126,14 +132,9 @@ decl_stmt|;
 name|char
 name|dummy
 decl_stmt|;
-specifier|static
-name|char
-name|nada
-decl_stmt|;
 name|result
 operator|=
-operator|&
-name|nada
+literal|""
 expr_stmt|;
 if|if
 condition|(

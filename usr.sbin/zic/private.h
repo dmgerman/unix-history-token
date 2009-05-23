@@ -12,7 +12,7 @@ name|PRIVATE_H
 end_define
 
 begin_comment
-comment|/* ** This file is in the public domain, so clarified as of ** 1996-06-05 by Arthur David Olson (arthur_david_olson@nih.gov). */
+comment|/* ** This file is in the public domain, so clarified as of ** 1996-06-05 by Arthur David Olson. */
 end_comment
 
 begin_comment
@@ -46,7 +46,7 @@ name|char
 name|privatehid
 index|[]
 init|=
-literal|"@(#)private.h	7.53"
+literal|"@(#)private.h	8.6"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,6 +67,13 @@ end_endif
 begin_comment
 comment|/* !defined lint */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|GRANDPARENTED
+value|"Local time zone must be set--see zic manual page"
+end_define
 
 begin_comment
 comment|/* ** Defaults for preprocessor symbols. ** You can override these in your C compiler options, e.g. `-DHAVE_ADJTIME=0'. */
@@ -92,28 +99,6 @@ end_endif
 
 begin_comment
 comment|/* !defined HAVE_GETTEXT */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_STRERROR
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRERROR
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined HAVE_STRERROR */
 end_comment
 
 begin_ifndef
@@ -243,7 +228,7 @@ file|"limits.h"
 end_include
 
 begin_comment
-comment|/* for CHAR_BIT */
+comment|/* for CHAR_BIT et al. */
 end_comment
 
 begin_include
@@ -262,8 +247,6 @@ begin_if
 if|#
 directive|if
 name|HAVE_GETTEXT
-operator|-
-literal|0
 end_if
 
 begin_include
@@ -278,15 +261,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_GETTEXT - 0 */
+comment|/* HAVE_GETTEXT */
 end_comment
 
 begin_if
 if|#
 directive|if
 name|HAVE_SYS_WAIT_H
-operator|-
-literal|0
 end_if
 
 begin_include
@@ -305,15 +286,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_SYS_WAIT_H - 0 */
+comment|/* HAVE_SYS_WAIT_H */
 end_comment
 
 begin_if
 if|#
 directive|if
 name|HAVE_UNISTD_H
-operator|-
-literal|0
 end_if
 
 begin_include
@@ -323,7 +302,7 @@ file|"unistd.h"
 end_include
 
 begin_comment
-comment|/* for F_OK and R_OK */
+comment|/* for F_OK and R_OK, and other POSIX goodness */
 end_comment
 
 begin_endif
@@ -332,19 +311,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_UNISTD_H - 0 */
+comment|/* HAVE_UNISTD_H */
 end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-operator|(
-name|HAVE_UNISTD_H
-operator|-
-literal|0
-operator|)
-end_if
 
 begin_ifndef
 ifndef|#
@@ -390,17 +358,8 @@ begin_comment
 comment|/* !defined R_OK */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* !(HAVE_UNISTD_H - 0) */
-end_comment
-
-begin_comment
-comment|/* Unlike<ctype.h>'s isdigit, this also works if c< 0 | c> UCHAR_MAX.  */
+comment|/* Unlike<ctype.h>'s isdigit, this also works if c< 0 | c> UCHAR_MAX. */
 end_comment
 
 begin_define
@@ -413,153 +372,362 @@ parameter_list|)
 value|((unsigned)(c) - '0'<= 9)
 end_define
 
+begin_comment
+comment|/* ** Define HAVE_STDINT_H's default value here, rather than at the ** start, since __GLIBC__'s value depends on previously-included ** files. ** (glibc 2.1 and later have stdint.h, even with pre-C99 compilers.) */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_STDINT_H
+end_ifndef
+
 begin_define
 define|#
 directive|define
-name|P
-parameter_list|(
-name|x
-parameter_list|)
-value|x
+name|HAVE_STDINT_H
+define|\
+value|(199901<= __STDC_VERSION__ || \        2< (__GLIBC__ + (0< __GLIBC_MINOR__)))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined HAVE_STDINT_H */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|HAVE_STDINT_H
+end_if
+
+begin_include
+include|#
+directive|include
+file|"stdint.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !HAVE_STDINT_H */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INT_FAST64_MAX
+end_ifndef
+
+begin_comment
+comment|/* Pre-C99 GCC compilers define __LONG_LONG_MAX__ instead of LLONG_MAX.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+name|LLONG_MAX
+operator|||
+name|defined
+name|__LONG_LONG_MAX__
+end_if
+
+begin_typedef
+typedef|typedef
+name|long
+name|long
+name|int_fast64_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ! (defined LLONG_MAX || defined __LONG_LONG_MAX__) */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|LONG_MAX
+operator|>
+name|>
+literal|31
+operator|)
+operator|<
+literal|0xffffffff
+end_if
+
+begin_expr_stmt
+name|Please
+name|use
+name|a
+name|compiler
+name|that
+name|supports
+name|a
+literal|64
+operator|-
+name|bit
+name|integer
+name|type
+argument_list|(
+argument|or wider
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|you
+name|may
+name|need
+name|to
+name|compile
+name|with
+literal|"-DHAVE_STDINT_H"
+operator|.
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* (LONG_MAX>> 31)< 0xffffffff */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|long
+name|int_fast64_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! (defined LLONG_MAX || defined __LONG_LONG_MAX__) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined INT_FAST64_MAX */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INT32_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|INT32_MAX
+value|0x7fffffff
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined INT32_MAX */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INT32_MIN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|INT32_MIN
+value|(-1 - INT32_MAX)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined INT32_MIN */
+end_comment
+
+begin_comment
+comment|/* ** Workarounds for compilers/systems.  */
+end_comment
+
+begin_comment
+comment|/*  ** Some time.h implementations don't declare asctime_r. ** Others might define it as a macro. ** Fix the former without affecting the latter.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|asctime_r
+end_ifndef
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|asctime_r
+parameter_list|(
+name|struct
+name|tm
+specifier|const
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ** Private function declarations. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|char
 modifier|*
 name|icalloc
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|nelem
-operator|,
+parameter_list|,
 name|int
 name|elsize
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|char
 modifier|*
 name|icatalloc
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|old
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
+modifier|*
 name|new
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|char
 modifier|*
 name|icpyalloc
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
+modifier|*
 name|string
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|char
 modifier|*
 name|imalloc
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|n
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 modifier|*
 name|irealloc
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
+modifier|*
 name|pointer
-operator|,
+parameter_list|,
 name|int
 name|size
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|icfree
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|pointer
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|ifree
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|pointer
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|scheck
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
+modifier|*
 name|string
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
+modifier|*
 name|format
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* ** Finally, some convenience items. */
@@ -659,6 +827,35 @@ begin_comment
 comment|/* !defined TYPE_SIGNED */
 end_comment
 
+begin_comment
+comment|/* ** Since the definition of TYPE_INTEGRAL contains floating point numbers, ** it cannot be used in preprocessor directives. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_INTEGRAL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_INTEGRAL
+parameter_list|(
+name|type
+parameter_list|)
+value|(((type) 0.5) != 0.5)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined TYPE_INTEGRAL */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -677,7 +874,7 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|((TYPE_BIT(type) - TYPE_SIGNED(type)) * 302 / 1000 + 1 + TYPE_SIGNED(type))
+value|((TYPE_BIT(type) - TYPE_SIGNED(type)) * 302 / 1000 + \ 	1 + TYPE_SIGNED(type))
 end_define
 
 begin_endif
@@ -843,8 +1040,6 @@ begin_if
 if|#
 directive|if
 name|HAVE_GETTEXT
-operator|-
-literal|0
 end_if
 
 begin_define
@@ -863,7 +1058,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !(HAVE_GETTEXT - 0) */
+comment|/* !HAVE_GETTEXT */
 end_comment
 
 begin_define
@@ -882,7 +1077,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !(HAVE_GETTEXT - 0) */
+comment|/* !HAVE_GETTEXT */
 end_comment
 
 begin_endif
@@ -918,6 +1113,110 @@ end_comment
 
 begin_comment
 comment|/* ** UNIX was a registered trademark of The Open Group in 2003. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|YEARSPERREPEAT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|YEARSPERREPEAT
+value|400
+end_define
+
+begin_comment
+comment|/* years before a Gregorian repeat */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined YEARSPERREPEAT */
+end_comment
+
+begin_comment
+comment|/* ** The Gregorian year averages 365.2425 days, which is 31556952 seconds. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AVGSECSPERYEAR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|AVGSECSPERYEAR
+value|31556952L
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined AVGSECSPERYEAR */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SECSPERREPEAT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SECSPERREPEAT
+value|((int_fast64_t) YEARSPERREPEAT * (int_fast64_t) AVGSECSPERYEAR)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined SECSPERREPEAT */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SECSPERREPEAT_BITS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SECSPERREPEAT_BITS
+value|34
+end_define
+
+begin_comment
+comment|/* ceil(log2(SECSPERREPEAT)) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined SECSPERREPEAT_BITS */
+end_comment
+
+begin_comment
+comment|/*   ** UNIX was a registered trademark of The Open Group in 2003.   */
 end_comment
 
 begin_endif
