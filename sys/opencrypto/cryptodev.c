@@ -1853,6 +1853,7 @@ name|cse
 operator|->
 name|thash
 condition|)
+block|{
 name|cse
 operator|->
 name|uio
@@ -1870,6 +1871,19 @@ name|thash
 operator|->
 name|hashsize
 expr_stmt|;
+name|cse
+operator|->
+name|uio
+operator|.
+name|uio_resid
+operator|+=
+name|cse
+operator|->
+name|thash
+operator|->
+name|hashsize
+expr_stmt|;
+block|}
 name|cse
 operator|->
 name|uio
