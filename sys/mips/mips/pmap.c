@@ -12695,6 +12695,13 @@ name|rw
 operator|=
 name|PTE_CWPAGE
 expr_stmt|;
+name|vm_page_flag_set
+argument_list|(
+name|m
+argument_list|,
+name|PG_WRITEABLE
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 name|rw
