@@ -695,6 +695,9 @@ case|:
 case|case
 name|DEVT_NET
 case|:
+case|case
+name|DEVT_ZFS
+case|:
 name|unit
 operator|=
 literal|0
@@ -1075,6 +1078,9 @@ expr_stmt|;
 break|break;
 case|case
 name|DEVT_NET
+case|:
+case|case
+name|DEVT_ZFS
 case|:
 name|sprintf
 argument_list|(

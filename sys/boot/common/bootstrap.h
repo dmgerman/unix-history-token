@@ -53,6 +53,10 @@ define|#
 directive|define
 name|DEVT_CD
 value|3
+define|#
+directive|define
+name|DEVT_ZFS
+value|4
 name|int
 name|d_unit
 decl_stmt|;
