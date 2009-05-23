@@ -6867,7 +6867,7 @@ name|vm_offset_t
 name|va
 parameter_list|,
 name|vm_prot_t
-name|fault_type
+name|access
 parameter_list|,
 name|vm_page_t
 name|m
