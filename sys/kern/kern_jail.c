@@ -5950,30 +5950,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-if|if
-condition|(
-name|jailed
-argument_list|(
-name|td
-operator|->
-name|td_ucred
-argument_list|)
-condition|)
-block|{
-comment|/* 		 * Don't allow a jailed process to see any jails, 		 * not even its own. 		 */
-name|vfs_opterror
-argument_list|(
-name|opts
-argument_list|,
-literal|"jail not found"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENOENT
-operator|)
-return|;
-block|}
 comment|/* Get the parameter list. */
 name|error
 operator|=
@@ -6003,6 +5979,30 @@ argument_list|,
 literal|"errmsg"
 argument_list|)
 expr_stmt|;
+comment|/* Don't allow a jailed process to see any jails, not even its own. */
+if|if
+condition|(
+name|jailed
+argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|)
+condition|)
+block|{
+name|vfs_opterror
+argument_list|(
+name|opts
+argument_list|,
+literal|"jail not found"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
+block|}
 comment|/* 	 * Find the prison specified by one of: lastjid, jid, name. 	 */
 name|sx_slock
 argument_list|(
