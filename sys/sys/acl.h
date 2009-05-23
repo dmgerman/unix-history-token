@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999-2001 Robert N. M. Watson  * All rights reserved.  *  * This software was developed by Robert Watson for the TrustedBSD Project.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1999-2001 Robert N. M. Watson  * Copyright (c) 2008 Edward Tomasz NapieraÅa<trasz@FreeBSD.org>  * All rights reserved.  *  * This software was developed by Robert Watson for the TrustedBSD Project.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/*   * Developed by the TrustedBSD Project.  * Support for POSIX.1e access control lists.  */
+comment|/*   * Developed by the TrustedBSD Project.  * Support for POSIX.1e and NFSv4 access control lists.  */
 end_comment
 
 begin_ifndef
@@ -38,7 +38,7 @@ file|<vm/uma.h>
 end_include
 
 begin_comment
-comment|/*  * POSIX.1e ACL types and related constants.  */
+comment|/*  * POSIX.1e and NFSv4 ACL types and related constants.  */
 end_comment
 
 begin_typedef
@@ -93,7 +93,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * With 254 entries, "struct acl_t_struct" is exactly one 4kB page big.  * Note that with NFS4 ACLs, the maximum number of ACL entries one  * may set on file or directory is about half of ACL_MAX_ENTRIES.  *  * If you increase this, you might also need to increase  * _ACL_T_ALIGNMENT_BITS in lib/libc/posix1e/acl_support.h.  *  * The maximum number of POSIX.1e ACLs is controlled  * by OLDACL_MAX_ENTRIES.  Changing that one will break binary  * compatibility with pre-8.0 userland and change on-disk ACL layout.  */
+comment|/*  * With 254 entries, "struct acl_t_struct" is exactly one 4kB page big.  * Note that with NFSv4 ACLs, the maximum number of ACL entries one  * may set on file or directory is about half of ACL_MAX_ENTRIES.  *  * If you increase this, you might also need to increase  * _ACL_T_ALIGNMENT_BITS in lib/libc/posix1e/acl_support.h.  *  * The maximum number of POSIX.1e ACLs is controlled  * by OLDACL_MAX_ENTRIES.  Changing that one will break binary  * compatibility with pre-8.0 userland and change on-disk ACL layout.  */
 end_comment
 
 begin_define
@@ -267,7 +267,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Internal ACL structure, used in libc, kernel APIs and for on-disk  * storage of NFS4 ACLs.  POSIX.1e ACLs use "struct oldacl" for on-disk  * storage.  */
+comment|/*  * Internal ACL structure, used in libc, kernel APIs and for on-disk  * storage of NFSv4 ACLs.  POSIX.1e ACLs use "struct oldacl" for on-disk  * storage.  */
 end_comment
 
 begin_struct
@@ -426,6 +426,45 @@ name|ACL_OTHER_OBJ
 value|ACL_OTHER
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACL_EVERYONE
+value|0x00000040
+end_define
+
+begin_comment
+comment|/*  * Possible valid values for ae_entry_type field, valid only for NFSv4 ACLs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACL_ENTRY_TYPE_ALLOW
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_ENTRY_TYPE_DENY
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_ENTRY_TYPE_AUDIT
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_ENTRY_TYPE_ALARM
+value|0x0800
+end_define
+
 begin_comment
 comment|/*  * Possible valid values for acl_type_t arguments.  First two  * are provided only for backwards binary compatibility.  */
 end_comment
@@ -458,8 +497,15 @@ name|ACL_TYPE_DEFAULT
 value|0x00000003
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACL_TYPE_NFS4
+value|0x00000004
+end_define
+
 begin_comment
-comment|/*  * Possible flags in ae_perm field for POSIX.1e ACLs.  Note  * that ACL_EXECUTE may be used in both NFSv4 and POSIX.1e ACLs.  */
+comment|/*  * Possible bits in ae_perm field for POSIX.1e ACLs.  Note  * that ACL_EXECUTE may be used in both NFSv4 and POSIX.1e ACLs.  */
 end_comment
 
 begin_define
@@ -505,6 +551,133 @@ value|(ACL_EXECUTE | ACL_WRITE | ACL_READ)
 end_define
 
 begin_comment
+comment|/*  * Possible bits in ae_perm field for NFSv4 ACLs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACL_READ_DATA
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_LIST_DIRECTORY
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_WRITE_DATA
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_ADD_FILE
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_APPEND_DATA
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_ADD_SUBDIRECTORY
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_READ_NAMED_ATTRS
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_WRITE_NAMED_ATTRS
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* ACL_EXECUTE is defined above. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACL_DELETE_CHILD
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_READ_ATTRIBUTES
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_WRITE_ATTRIBUTES
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_DELETE
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_READ_ACL
+value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_WRITE_ACL
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_WRITE_OWNER
+value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_SYNCHRONIZE
+value|0x00008000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_NFS4_PERM_BITS
+value|(ACL_READ_DATA | ACL_WRITE_DATA | \     ACL_APPEND_DATA | ACL_READ_NAMED_ATTRS | ACL_WRITE_NAMED_ATTRS | \     ACL_EXECUTE | ACL_DELETE_CHILD | ACL_READ_ATTRIBUTES | \     ACL_WRITE_ATTRIBUTES | ACL_DELETE | ACL_READ_ACL | ACL_WRITE_ACL | \     ACL_WRITE_OWNER | ACL_SYNCHRONIZE)
+end_define
+
+begin_comment
 comment|/*  * Possible entry_id values for acl_get_entry(3).  */
 end_comment
 
@@ -520,6 +693,59 @@ define|#
 directive|define
 name|ACL_NEXT_ENTRY
 value|1
+end_define
+
+begin_comment
+comment|/*  * Possible values in ae_flags field; valid only for NFSv4 ACLs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACL_ENTRY_FILE_INHERIT
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_ENTRY_DIRECTORY_INHERIT
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_ENTRY_NO_PROPAGATE_INHERIT
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_ENTRY_INHERIT_ONLY
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_ENTRY_SUCCESSFUL_ACCESS
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_ENTRY_FAILED_ACCESS
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_FLAGS_BITS
+value|(ACL_ENTRY_FILE_INHERIT | \     ACL_ENTRY_DIRECTORY_INHERIT | ACL_ENTRY_NO_PROPAGATE_INHERIT | \     ACL_ENTRY_INHERIT_ONLY | ACL_ENTRY_SUCCESSFUL_ACCESS | \     ACL_ENTRY_FAILED_ACCESS)
 end_define
 
 begin_comment
