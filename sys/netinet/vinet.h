@@ -405,6 +405,9 @@ name|struct
 name|inpcbinfo
 name|_udbinfo
 decl_stmt|;
+name|uma_zone_t
+name|_udpcb_zone
+decl_stmt|;
 name|struct
 name|udpstat
 name|_udpstat
@@ -1644,6 +1647,13 @@ define|#
 directive|define
 name|V_udbinfo
 value|VNET_INET(udbinfo)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_udpcb_zone
+value|VNET_INET(udpcb_zone)
 end_define
 
 begin_define
