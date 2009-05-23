@@ -239,6 +239,25 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_decl_stmt
+name|struct
+name|vnet
+modifier|*
+name|vnet0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|void
 name|vnet_mod_register
@@ -1454,6 +1473,10 @@ expr_stmt|;
 name|vip
 operator|->
 name|v_net
+operator|=
+name|vnet
+expr_stmt|;
+name|vnet0
 operator|=
 name|vnet
 expr_stmt|;

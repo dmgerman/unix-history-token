@@ -328,6 +328,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VNET_MOD_IF_CLONE
+value|19
+end_define
+
+begin_define
+define|#
+directive|define
 name|VNET_MOD_NG_ETHER
 value|20
 end_define
@@ -1219,6 +1226,15 @@ specifier|extern
 name|struct
 name|vnet_list_head
 name|vnet_head
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vnet
+modifier|*
+name|vnet0
 decl_stmt|;
 end_decl_stmt
 
