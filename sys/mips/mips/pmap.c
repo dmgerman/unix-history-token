@@ -12683,6 +12683,8 @@ operator|||
 name|m
 operator|->
 name|dirty
+operator|==
+name|VM_PAGE_BITS_ALL
 condition|)
 name|rw
 operator|=
