@@ -1181,6 +1181,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|ip4_ipsec_filtertunnel
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|ip4_esp_randpad
 decl_stmt|;
 end_decl_stmt

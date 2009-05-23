@@ -226,6 +226,23 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|ip4_ipsec_filtertunnel
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Check if we have to jump over firewall processing for this packet.  * Called from ip_input().  * 1 = jump over firewall, 0 = packet goes through firewall.  */
 end_comment
@@ -246,15 +263,17 @@ name|defined
 argument_list|(
 name|IPSEC
 argument_list|)
-operator|&&
-operator|!
-name|defined
+name|INIT_VNET_IPSEC
 argument_list|(
-name|IPSEC_FILTERTUNNEL
+name|curvnet
 argument_list|)
+expr_stmt|;
 comment|/* 	 * Bypass packet filtering for packets from a tunnel. 	 */
 if|if
 condition|(
+operator|!
+name|V_ip4_ipsec_filtertunnel
+operator|&&
 name|m_tag_find
 argument_list|(
 name|m
