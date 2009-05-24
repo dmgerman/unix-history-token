@@ -3525,11 +3525,28 @@ name|vp
 argument_list|)
 expr_stmt|;
 comment|/* 		 * We can just free all the active locks since they 		 * will have no dependancies (we removed them all 		 * above). We don't need to bother locking since we 		 * are the last thread using this state structure. 		 */
+name|KASSERT
+argument_list|(
+name|LIST_EMPTY
+argument_list|(
+operator|&
+name|state
+operator|->
+name|ls_pending
+argument_list|)
+argument_list|,
+operator|(
+literal|"lock pending for %p"
+operator|,
+name|state
+operator|)
+argument_list|)
+expr_stmt|;
 name|LIST_FOREACH_SAFE
 argument_list|(
 argument|lock
 argument_list|,
-argument|&state->ls_pending
+argument|&state->ls_active
 argument_list|,
 argument|lf_link
 argument_list|,
