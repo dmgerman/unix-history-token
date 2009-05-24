@@ -6205,14 +6205,19 @@ name|srvkrbnamelen
 expr_stmt|;
 if|if
 condition|(
-name|nmp
+name|td
 operator|->
-name|nm_dirpathlen
-operator|>
+name|td_ucred
+operator|->
+name|cr_uid
+operator|!=
+operator|(
+name|uid_t
+operator|)
 literal|0
 condition|)
 block|{
-comment|/* 			 * Since we will be doing dirpath as root, 			 * set nm_uid to the real uid doing the mount, 			 * since that is normally the user with a valid TGT. 			 */
+comment|/* 			 * nm_uid is used to get KerberosV credentials for 			 * the nfsv4 state handling operations if there is 			 * no host based principal set. Use the uid of 			 * this user if not root, since they are doing the 			 * mount. I don't think setting this for root will 			 * work, since root normally does not have user 			 * credentials in a credentials cache. 			 */
 name|nmp
 operator|->
 name|nm_uid
@@ -6221,12 +6226,12 @@ name|td
 operator|->
 name|td_ucred
 operator|->
-name|cr_ruid
+name|cr_uid
 expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Just set to -1, so the first Op 			 * will set it later, to the uid of 			 * the process doing that (usually 			 * from a first open in the mount 			 * point). 			 */
+comment|/* 			 * Just set to -1, so it won't be used. 			 */
 name|nmp
 operator|->
 name|nm_uid
