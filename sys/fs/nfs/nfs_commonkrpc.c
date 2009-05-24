@@ -2670,6 +2670,15 @@ literal|"mrep shouldn't be NULL if no error\n"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Search for any mbufs that are not a multiple of 4 bytes long 	 * or with m_data not longword aligned. 	 * These could cause pointer alignment problems, so copy them to 	 * well aligned mbufs. 	 */
+name|newnfs_realign
+argument_list|(
+operator|&
+name|nd
+operator|->
+name|nd_mrep
+argument_list|)
+expr_stmt|;
 name|nd
 operator|->
 name|nd_md
