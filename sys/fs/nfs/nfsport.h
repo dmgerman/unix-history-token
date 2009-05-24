@@ -211,6 +211,16 @@ directive|include
 file|<sys/acl.h>
 end_include
 
+begin_comment
+comment|/* until the nfsv4 acl stuff is all committed, undef NFS4_ACL_EXTATTR_NAME */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NFS4_ACL_EXTATTR_NAME
+end_undef
+
 begin_include
 include|#
 directive|include
