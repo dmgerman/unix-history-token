@@ -2195,11 +2195,6 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-name|int
-name|in_reset
-init|=
-literal|0
-decl_stmt|;
 name|void
 name|ndis_free_packet
 parameter_list|(
