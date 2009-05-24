@@ -2015,6 +2015,14 @@ name|st_size
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|hdr
+operator|->
+name|size
+condition|)
+return|return;
+if|if
+condition|(
 operator|(
 name|p
 operator|=
