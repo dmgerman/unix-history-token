@@ -614,7 +614,7 @@ operator|->
 name|t_inpcb
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX: tcp_reass() is rather inefficient with its data structures 	 * and should be rewritten (see NetBSD for optimizations).  While 	 * doing that it should move to its own file tcp_reass.c. 	 */
+comment|/* 	 * XXX: tcp_reass() is rather inefficient with its data structures 	 * and should be rewritten (see NetBSD for optimizations). 	 */
 comment|/* 	 * Call with th==NULL after become established to 	 * force pre-ESTABLISHED data up to user socket. 	 */
 if|if
 condition|(
