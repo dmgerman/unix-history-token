@@ -3518,9 +3518,12 @@ name|bsd_args
 operator|.
 name|flags
 operator|=
+name|linux_to_bsd_msg_flags
+argument_list|(
 name|args
 operator|->
 name|flags
+argument_list|)
 expr_stmt|;
 name|bsd_args
 operator|.
