@@ -3126,7 +3126,7 @@ label|:
 comment|/* 	 * Find requested packet. 	 */
 name|si
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -3220,7 +3220,7 @@ operator|++
 operator|,
 name|si
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 block|}
