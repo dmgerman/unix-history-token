@@ -12,11 +12,16 @@ enum|enum
 name|e_atype
 block|{
 name|AT_RE
+init|=
+literal|1
 block|,
 comment|/* Line that match RE */
 name|AT_LINE
 block|,
 comment|/* Specific line */
+name|AT_RELLINE
+block|,
+comment|/* Relative line */
 name|AT_LAST
 block|,
 comment|/* Last line */
@@ -177,6 +182,10 @@ modifier|*
 name|a2
 decl_stmt|;
 comment|/* Start and end address */
+name|u_long
+name|startline
+decl_stmt|;
+comment|/* Start line number or zero */
 name|char
 modifier|*
 name|t
@@ -219,12 +228,6 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* True if ! */
-name|u_int
-name|inrange
-range|:
-literal|1
-decl_stmt|;
-comment|/* True if in range */
 block|}
 struct|;
 end_struct

@@ -1312,7 +1312,7 @@ value|((a)->type == AT_RE ? regexec_e((a)->u.r, ps, 0, 1, psl) :	\ 	    (a)->typ
 end_define
 
 begin_comment
-comment|/*  * Return TRUE if the command applies to the current line.  Sets the inrange  * flag to process ranges.  Interprets the non-select (``!'') flag.  */
+comment|/*  * Return TRUE if the command applies to the current line.  Sets the start  * line for process ranges.  Interprets the non-select (``!'') flag.  */
 end_comment
 
 begin_function
@@ -1363,7 +1363,9 @@ if|if
 condition|(
 name|cp
 operator|->
-name|inrange
+name|startline
+operator|>
+literal|0
 condition|)
 block|{
 if|if
@@ -1378,7 +1380,7 @@ condition|)
 block|{
 name|cp
 operator|->
-name|inrange
+name|startline
 operator|=
 literal|0
 expr_stmt|;
@@ -1394,6 +1396,28 @@ block|}
 elseif|else
 if|if
 condition|(
+name|linenum
+operator|-
+name|cp
+operator|->
+name|startline
+operator|<=
+name|cp
+operator|->
+name|a2
+operator|->
+name|u
+operator|.
+name|l
+condition|)
+name|r
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
 name|cp
 operator|->
 name|a2
@@ -1411,12 +1435,37 @@ operator|->
 name|u
 operator|.
 name|l
+operator|)
+operator|||
+operator|(
+name|cp
+operator|->
+name|a2
+operator|->
+name|type
+operator|==
+name|AT_RELLINE
+operator|&&
+name|linenum
+operator|-
+name|cp
+operator|->
+name|startline
+operator|>
+name|cp
+operator|->
+name|a2
+operator|->
+name|u
+operator|.
+name|l
+operator|)
 condition|)
 block|{
 comment|/* 				 * We missed the 2nd address due to a branch, 				 * so just close the range and return false. 				 */
 name|cp
 operator|->
-name|inrange
+name|startline
 operator|=
 literal|0
 expr_stmt|;
@@ -1442,9 +1491,10 @@ name|a1
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * If the second address is a number less than or 			 * equal to the line number first selected, only 			 * one line shall be selected. 			 *	-- POSIX 1003.2 			 */
+comment|/* 			 * If the second address is a number less than or 			 * equal to the line number first selected, only 			 * one line shall be selected. 			 *	-- POSIX 1003.2 			 * Likewise if the relative second line address is zero. 			 */
 if|if
 condition|(
+operator|(
 name|cp
 operator|->
 name|a2
@@ -1462,18 +1512,41 @@ operator|->
 name|u
 operator|.
 name|l
+operator|)
+operator|||
+operator|(
+name|cp
+operator|->
+name|a2
+operator|->
+name|type
+operator|==
+name|AT_RELLINE
+operator|&&
+name|cp
+operator|->
+name|a2
+operator|->
+name|u
+operator|.
+name|l
+operator|==
+literal|0
+operator|)
 condition|)
 name|lastaddr
 operator|=
 literal|1
 expr_stmt|;
 else|else
+block|{
 name|cp
 operator|->
-name|inrange
+name|startline
 operator|=
-literal|1
+name|linenum
 expr_stmt|;
+block|}
 name|r
 operator|=
 literal|1
@@ -1525,7 +1598,7 @@ name|s_command
 modifier|*
 name|cp
 decl_stmt|;
-comment|/* 	 * Reset all inrange markers. 	 */
+comment|/* 	 * Reset all in-range markers. 	 */
 for|for
 control|(
 name|cp
@@ -1560,7 +1633,7 @@ name|a2
 condition|)
 name|cp
 operator|->
-name|inrange
+name|startline
 operator|=
 literal|0
 expr_stmt|;
