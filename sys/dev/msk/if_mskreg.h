@@ -15140,6 +15140,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|OP_MSS
+value|0x28000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|OP_MSSVLAN
+value|(OP_MSS | OP_VLAN)
+end_define
+
+begin_define
+define|#
+directive|define
 name|OP_BUFFER
 value|0x40000000
 end_define
@@ -16268,6 +16282,10 @@ define|#
 directive|define
 name|MSK_FLAG_RAMBUF
 value|0x0020
+define|#
+directive|define
+name|MSK_FLAG_DESCV2
+value|0x0040
 define|#
 directive|define
 name|MSK_FLAG_SUSPEND
