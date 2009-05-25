@@ -16354,6 +16354,14 @@ name|MSK_FLAG_DESCV2
 value|0x0040
 define|#
 directive|define
+name|MSK_FLAG_NOHWVLAN
+value|0x0080
+define|#
+directive|define
+name|MSK_FLAG_NORXCHK
+value|0x0100
+define|#
+directive|define
 name|MSK_FLAG_SUSPEND
 value|0x2000
 define|#
