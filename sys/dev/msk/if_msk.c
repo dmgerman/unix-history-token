@@ -518,6 +518,38 @@ block|,
 block|{
 name|VENDORID_MARVELL
 block|,
+name|DEVICEID_MRVL_8040
+block|,
+literal|"Marvell Yukon 88E8040 Fast Ethernet"
+block|}
+block|,
+block|{
+name|VENDORID_MARVELL
+block|,
+name|DEVICEID_MRVL_8040T
+block|,
+literal|"Marvell Yukon 88E8040T Fast Ethernet"
+block|}
+block|,
+block|{
+name|VENDORID_MARVELL
+block|,
+name|DEVICEID_MRVL_8048
+block|,
+literal|"Marvell Yukon 88E8048 Fast Ethernet"
+block|}
+block|,
+block|{
+name|VENDORID_MARVELL
+block|,
+name|DEVICEID_MRVL_8070
+block|,
+literal|"Marvell Yukon 88E8070 Fast Ethernet"
+block|}
+block|,
+block|{
+name|VENDORID_MARVELL
+block|,
 name|DEVICEID_MRVL_4361
 block|,
 literal|"Marvell Yukon 88E8050 Gigabit Ethernet"
