@@ -363,7 +363,6 @@ name|l_suseconds_t
 name|tv_usec
 decl_stmt|;
 block|}
-name|__packed
 name|l_timeval
 typedef|;
 end_typedef
