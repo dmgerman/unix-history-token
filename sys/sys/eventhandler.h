@@ -607,6 +607,9 @@ name|ifnet
 modifier|*
 parameter_list|,
 name|int
+comment|/* dlt */
+parameter_list|,
+name|int
 comment|/* 1 =>'s attach */
 parameter_list|)
 function_decl|;

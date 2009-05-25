@@ -2132,6 +2132,10 @@ name|bp
 operator|->
 name|bif_ifp
 argument_list|,
+name|bp
+operator|->
+name|bif_dlt
+argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -2222,6 +2226,10 @@ argument_list|(
 name|bpf_track
 argument_list|,
 name|ifp
+argument_list|,
+name|bp
+operator|->
+name|bif_dlt
 argument_list|,
 literal|0
 argument_list|)
