@@ -3858,12 +3858,19 @@ modifier|*
 name|ifp
 parameter_list|,
 name|int
+name|dlt
+parameter_list|,
+name|int
 name|attach
 parameter_list|)
 block|{
 comment|/* NB: identify vap's by if_start */
 if|if
 condition|(
+name|dlt
+operator|==
+name|DLT_IEEE802_11_RADIO
+operator|&&
 name|ifp
 operator|->
 name|if_start
