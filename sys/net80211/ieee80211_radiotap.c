@@ -427,17 +427,19 @@ name|ic
 operator|->
 name|ic_th
 decl_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|th
 operator|!=
 name|NULL
-argument_list|,
-operator|(
-literal|"no radiotap setup"
-operator|)
-argument_list|)
-expr_stmt|;
+operator|&&
+name|ic
+operator|->
+name|ic_rh
+operator|!=
+name|NULL
+condition|)
+block|{
 comment|/* radiotap DLT for raw 802.11 frames */
 name|bpfattach2
 argument_list|(
@@ -466,6 +468,7 @@ operator|->
 name|iv_rawbpf
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -899,6 +902,21 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|vap0
+operator|->
+name|iv_ic
+operator|->
+name|ic_th
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"no tx radiotap header"
+operator|)
+argument_list|)
+expr_stmt|;
 name|dispatch_radiotap
 argument_list|(
 name|vap0
@@ -934,6 +952,21 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|vap0
+operator|->
+name|iv_ic
+operator|->
+name|ic_rh
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"no rx radiotap header"
+operator|)
+argument_list|)
+expr_stmt|;
 name|dispatch_radiotap
 argument_list|(
 name|vap0

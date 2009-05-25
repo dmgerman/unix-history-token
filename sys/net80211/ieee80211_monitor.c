@@ -438,6 +438,13 @@ name|ni
 operator|->
 name|ni_vap
 decl_stmt|;
+if|if
+condition|(
+name|ieee80211_radiotap_active_vap
+argument_list|(
+name|vap
+argument_list|)
+condition|)
 name|ieee80211_radiotap_rx
 argument_list|(
 name|vap

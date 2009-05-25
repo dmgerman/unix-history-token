@@ -2741,6 +2741,11 @@ block|{
 if|if
 condition|(
 name|need_tap
+operator|&&
+name|ieee80211_radiotap_active_vap
+argument_list|(
+name|vap
+argument_list|)
 condition|)
 name|ieee80211_radiotap_rx
 argument_list|(
