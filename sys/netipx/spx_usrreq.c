@@ -5792,6 +5792,11 @@ argument_list|(
 name|ipxp
 argument_list|)
 expr_stmt|;
+name|ipx_pcbdetach
+argument_list|(
+name|ipxp
+argument_list|)
+expr_stmt|;
 name|ipx_pcbfree
 argument_list|(
 name|ipxp
