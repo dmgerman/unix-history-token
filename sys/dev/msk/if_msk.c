@@ -4988,10 +4988,7 @@ name|IFF_DRV_RUNNING
 operator|)
 operator|!=
 literal|0
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 operator|(
 operator|(
 name|ifp
@@ -5017,9 +5014,7 @@ argument_list|(
 name|sc_if
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 operator|(
@@ -5038,9 +5033,7 @@ name|sc_if
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 operator|(
@@ -5058,7 +5051,6 @@ argument_list|(
 name|sc_if
 argument_list|)
 expr_stmt|;
-block|}
 name|sc_if
 operator|->
 name|msk_if_flags
