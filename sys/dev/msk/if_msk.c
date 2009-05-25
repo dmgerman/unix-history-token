@@ -2301,7 +2301,7 @@ name|sc_if
 operator|->
 name|msk_softc
 expr_stmt|;
-name|MSK_IF_LOCK
+name|MSK_IF_LOCK_ASSERT
 argument_list|(
 name|sc_if
 argument_list|)
