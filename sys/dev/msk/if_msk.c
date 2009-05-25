@@ -4862,9 +4862,13 @@ else|else
 block|{
 if|if
 condition|(
+operator|(
 name|sc_if
 operator|->
-name|msk_detach
+name|msk_flags
+operator|&
+name|MSK_FLAG_DETACH
+operator|)
 operator|==
 literal|0
 condition|)
@@ -8492,9 +8496,9 @@ condition|)
 block|{
 name|sc
 operator|->
-name|msk_msi
-operator|=
-literal|1
+name|msk_pflags
+operator||=
+name|MSK_FLAG_MSI
 expr_stmt|;
 name|sc
 operator|->
@@ -9108,9 +9112,9 @@ block|{
 comment|/* XXX */
 name|sc_if
 operator|->
-name|msk_detach
-operator|=
-literal|1
+name|msk_flags
+operator||=
+name|MSK_FLAG_DETACH
 expr_stmt|;
 name|msk_stop
 argument_list|(
@@ -9527,9 +9531,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|sc
 operator|->
-name|msk_msi
+name|msk_pflags
+operator|&
+name|MSK_FLAG_MSI
+operator|)
+operator|!=
+literal|0
 condition|)
 name|pci_release_msi
 argument_list|(

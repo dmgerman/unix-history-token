@@ -16059,9 +16059,6 @@ decl_stmt|;
 name|int
 name|msk_clock
 decl_stmt|;
-name|int
-name|msk_msi
-decl_stmt|;
 name|struct
 name|msk_if_softc
 modifier|*
@@ -16253,6 +16250,10 @@ name|msk_flags
 decl_stmt|;
 define|#
 directive|define
+name|MSK_FLAG_MSI
+value|0x0001
+define|#
+directive|define
 name|MSK_FLAG_RAMBUF
 value|0x0010
 define|#
@@ -16263,6 +16264,10 @@ define|#
 directive|define
 name|MSK_FLAG_SUSPEND
 value|0x2000
+define|#
+directive|define
+name|MSK_FLAG_DETACH
+value|0x4000
 define|#
 directive|define
 name|MSK_FLAG_LINK
@@ -16310,9 +16315,6 @@ name|msk_tx_task
 decl_stmt|;
 name|int
 name|msk_if_flags
-decl_stmt|;
-name|int
-name|msk_detach
 decl_stmt|;
 name|uint16_t
 name|msk_vtag
