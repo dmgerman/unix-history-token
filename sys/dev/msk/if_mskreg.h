@@ -16057,9 +16057,6 @@ name|uint32_t
 name|msk_pflags
 decl_stmt|;
 name|int
-name|msk_suspended
-decl_stmt|;
-name|int
 name|msk_clock
 decl_stmt|;
 name|int
@@ -16251,9 +16248,6 @@ decl_stmt|;
 name|int
 name|msk_phyaddr
 decl_stmt|;
-name|int
-name|msk_link
-decl_stmt|;
 name|uint32_t
 name|msk_flags
 decl_stmt|;
@@ -16265,6 +16259,14 @@ define|#
 directive|define
 name|MSK_FLAG_NOJUMBO
 value|0x0020
+define|#
+directive|define
+name|MSK_FLAG_SUSPEND
+value|0x2000
+define|#
+directive|define
+name|MSK_FLAG_LINK
+value|0x8000
 name|struct
 name|callout
 name|msk_tick_ch
