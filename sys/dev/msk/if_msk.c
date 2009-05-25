@@ -14317,6 +14317,7 @@ name|sc
 operator|->
 name|msk_pflags
 operator|&=
+operator|~
 name|MSK_FLAG_SUSPEND
 expr_stmt|;
 name|MSK_UNLOCK
