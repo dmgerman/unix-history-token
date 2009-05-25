@@ -16304,10 +16304,6 @@ name|msk_stats
 decl_stmt|;
 name|struct
 name|task
-name|msk_link_task
-decl_stmt|;
-name|struct
-name|task
 name|msk_tx_task
 decl_stmt|;
 name|int
