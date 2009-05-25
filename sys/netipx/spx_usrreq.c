@@ -1950,6 +1950,27 @@ block|}
 end_function
 
 begin_function
+name|void
+name|spx_ctlinput
+parameter_list|(
+name|int
+name|cmd
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|arg_as_sa
+parameter_list|,
+name|void
+modifier|*
+name|dummy
+parameter_list|)
+block|{
+comment|/* Currently, nothing. */
+block|}
+end_function
+
+begin_function
 name|int
 name|spx_output
 parameter_list|(
@@ -2462,7 +2483,6 @@ name|si
 operator|->
 name|si_i
 operator|=
-operator|*
 name|cb
 operator|->
 name|s_ipx
@@ -3433,7 +3453,6 @@ name|si
 operator|->
 name|si_i
 operator|=
-operator|*
 name|cb
 operator|->
 name|s_ipx
@@ -5063,19 +5082,6 @@ name|IPXP_SPX
 expr_stmt|;
 name|cb
 operator|->
-name|s_ipx
-operator|=
-name|mtod
-argument_list|(
-name|mm
-argument_list|,
-expr|struct
-name|ipx
-operator|*
-argument_list|)
-expr_stmt|;
-name|cb
-operator|->
 name|s_state
 operator|=
 name|TCPS_LISTEN
@@ -5272,16 +5278,6 @@ expr_stmt|;
 name|spx_reass_flush
 argument_list|(
 name|cb
-argument_list|)
-expr_stmt|;
-name|m_free
-argument_list|(
-name|dtom
-argument_list|(
-name|cb
-operator|->
-name|s_ipx
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -6956,15 +6952,6 @@ operator|->
 name|s_ipxpcb
 decl_stmt|;
 name|struct
-name|ipx
-modifier|*
-name|ipx
-init|=
-name|cb
-operator|->
-name|s_ipx
-decl_stmt|;
-name|struct
 name|sockbuf
 modifier|*
 name|sb
@@ -6983,22 +6970,28 @@ argument_list|(
 name|ipxp
 argument_list|)
 expr_stmt|;
-name|ipx
+name|cb
 operator|->
+name|s_ipx
+operator|.
 name|ipx_pt
 operator|=
 name|IPXPROTO_SPX
 expr_stmt|;
-name|ipx
+name|cb
 operator|->
+name|s_ipx
+operator|.
 name|ipx_sna
 operator|=
 name|ipxp
 operator|->
 name|ipxp_laddr
 expr_stmt|;
-name|ipx
+name|cb
 operator|->
+name|s_ipx
+operator|.
 name|ipx_dna
 operator|=
 name|ipxp
@@ -7101,7 +7094,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Close a SPIP control block.  Wake up any sleepers.  We used to free any  * queued packets and cb->s_ipx here, but now we defer that until the pcb is  * discarded.  */
+comment|/*  * Close a SPIP control block.  Wake up any sleepers.  We used to free any  * queued packets, but now we defer that until the pcb is discarded.  */
 end_comment
 
 begin_function

@@ -295,7 +295,6 @@ comment|/* Max packet size for this stream */
 comment|/* use sequence fields in headers to store sequence numbers for this    connection */
 name|struct
 name|ipx
-modifier|*
 name|s_ipx
 decl_stmt|;
 name|struct
@@ -341,7 +340,7 @@ comment|/* allocation number */
 define|#
 directive|define
 name|s_dport
-value|s_ipx->ipx_dna.x_port
+value|s_ipx.ipx_dna.x_port
 comment|/* where we are sending */
 name|struct
 name|spxhdr
