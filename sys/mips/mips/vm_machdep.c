@@ -522,6 +522,9 @@ name|PCB_REG_SR
 index|]
 operator|=
 name|SR_INT_MASK
+operator|&
+name|mips_rd_status
+argument_list|()
 expr_stmt|;
 comment|/* 	 * FREEBSD_DEVELOPERS_FIXME: 	 * Setup any other CPU-Specific registers (Not MIPS Standard) 	 * and/or bits in other standard MIPS registers (if CPU-Specific) 	 *  that are needed. 	 */
 name|td2
@@ -1140,7 +1143,6 @@ operator|->
 name|td_frame
 expr_stmt|;
 comment|/* Dont set IE bit in SR. sched lock release will take care of it */
-comment|/* idle_mask is jmips pcb2->pcb_context.val[11] = (ALL_INT_MASK& idle_mask); */
 name|pcb2
 operator|->
 name|pcb_context
@@ -1151,6 +1153,9 @@ name|PCB_REG_SR
 index|]
 operator|=
 name|SR_INT_MASK
+operator|&
+name|mips_rd_status
+argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef

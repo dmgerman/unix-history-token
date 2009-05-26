@@ -2435,8 +2435,16 @@ operator|=
 name|SR_KSU_USER
 operator||
 name|SR_EXL
+operator||
+name|SR_INT_ENAB
+operator||
+operator|(
+name|mips_rd_status
+argument_list|()
+operator|&
+name|ALL_INT_MASK
+operator|)
 expr_stmt|;
-comment|// mips2 also did COP_0_BIT
 endif|#
 directive|endif
 ifdef|#
