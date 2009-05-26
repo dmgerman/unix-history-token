@@ -591,11 +591,6 @@ value|0x08
 comment|/* set if get and put data is possible */
 define|#
 directive|define
-name|UCOM_FLAG_WR_START
-value|0x10
-comment|/* set if write start was issued */
-define|#
-directive|define
 name|UCOM_FLAG_LL_READY
 value|0x20
 comment|/* set if low layer is ready */
