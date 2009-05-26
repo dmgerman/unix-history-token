@@ -1571,11 +1571,146 @@ name|AR71XX_MAC_FIFO_RX_FILTMATCH
 value|0x58
 end_define
 
+begin_comment
+comment|/*   * These flags applicable both to AR71XX_MAC_FIFO_RX_FILTMASK and  * to AR71XX_MAC_FIFO_RX_FILTMATCH  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|FIFO_RX_FILTMATCH_ALL
-value|((1<< 18) - 1)
+name|FIFO_RX_MATCH_UNICAST
+value|(1<< 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_RX_MATCH_TRUNC_FRAME
+value|(1<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_RX_MATCH_VLAN_TAG
+value|(1<< 15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_RX_MATCH_UNSUP_OPCODE
+value|(1<< 14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_RX_MATCH_PAUSE_FRAME
+value|(1<< 13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_RX_MATCH_CTRL_FRAME
+value|(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_RX_MATCH_LONG_EVENT
+value|(1<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_RX_MATCH_DRIBBLE_NIBBLE
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_RX_MATCH_BCAST
+value|(1<<  9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_RX_MATCH_MCAST
+value|(1<<  8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_RX_MATCH_OK
+value|(1<<  7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_RX_MATCH_OORANGE
+value|(1<<  6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_RX_MATCH_LEN_MSMTCH
+value|(1<<  5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_RX_MATCH_CRC_ERROR
+value|(1<<  4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_RX_MATCH_CODE_ERROR
+value|(1<<  3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_RX_MATCH_FALSE_CARRIER
+value|(1<<  2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_RX_MATCH_RX_DV_EVENT
+value|(1<<  1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_RX_MATCH_DROP_EVENT
+value|(1<<  0)
+end_define
+
+begin_comment
+comment|/*  * Exclude unicast and truncated frames from matching  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FIFO_RX_FILTMATCH_DEFAULT
+define|\
+value|(FIFO_RX_MATCH_VLAN_TAG		| \ 				FIFO_RX_MATCH_UNSUP_OPCODE	| \ 				FIFO_RX_MATCH_PAUSE_FRAME	| \ 				FIFO_RX_MATCH_CTRL_FRAME	| \ 				FIFO_RX_MATCH_LONG_EVENT	| \ 				FIFO_RX_MATCH_DRIBBLE_NIBBLE	| \ 				FIFO_RX_MATCH_BCAST		| \ 				FIFO_RX_MATCH_MCAST		| \ 				FIFO_RX_MATCH_OK		| \ 				FIFO_RX_MATCH_OORANGE		| \ 				FIFO_RX_MATCH_LEN_MSMTCH	| \ 				FIFO_RX_MATCH_CRC_ERROR		| \ 				FIFO_RX_MATCH_CODE_ERROR	| \ 				FIFO_RX_MATCH_FALSE_CARRIER	| \ 				FIFO_RX_MATCH_RX_DV_EVENT	| \ 				FIFO_RX_MATCH_DROP_EVENT)
 end_define
 
 begin_define
@@ -1588,152 +1723,153 @@ end_define
 begin_define
 define|#
 directive|define
-name|FIFO_RX_FILTMASK_BYTE_MODE
+name|FIFO_RX_MASK_BYTE_MODE
 value|(1<< 19)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIFO_RX_FILTMASK_NO_SHORT_FRAME
+name|FIFO_RX_MASK_NO_SHORT_FRAME
 value|(1<< 18)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIFO_RX_FILTMASK_ALL
-value|((1<< 20) - 1)
-end_define
-
-begin_comment
-comment|/*   * These flags applicable both to AR71XX_MAC_FIFO_RX_FILTMASK and  * to AR71XX_MAC_FIFO_RX_FILTMATCH  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FIFO_RX_FILT_UNICAST
+name|FIFO_RX_MASK_BIT17
 value|(1<< 17)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIFO_RX_FILT_TRUNC_FRAME
+name|FIFO_RX_MASK_BIT16
 value|(1<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIFO_RX_FILT_VLAN_TAG
+name|FIFO_RX_MASK_TRUNC_FRAME
 value|(1<< 15)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIFO_RX_FILT_UNSUP_OPCODE
+name|FIFO_RX_MASK_LONG_EVENT
 value|(1<< 14)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIFO_RX_FILT_PAUSE_FRAME
+name|FIFO_RX_MASK_VLAN_TAG
 value|(1<< 13)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIFO_RX_FILT_CTRL_FRAME
+name|FIFO_RX_MASK_UNSUP_OPCODE
 value|(1<< 12)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIFO_RX_FILT_LONG_EVENT
+name|FIFO_RX_MASK_PAUSE_FRAME
 value|(1<< 11)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIFO_RX_FILT_DRIBBLE_NIBBLE
+name|FIFO_RX_MASK_CTRL_FRAME
 value|(1<< 10)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIFO_RX_FILT_BCAST
+name|FIFO_RX_MASK_DRIBBLE_NIBBLE
 value|(1<<  9)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIFO_RX_FILT_MCAST
+name|FIFO_RX_MASK_BCAST
 value|(1<<  8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIFO_RX_FILT_OK
+name|FIFO_RX_MASK_MCAST
 value|(1<<  7)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIFO_RX_FILT_OORANGE
+name|FIFO_RX_MASK_OK
 value|(1<<  6)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIFO_RX_FILT_LEN_MSMTCH
+name|FIFO_RX_MASK_OORANGE
 value|(1<<  5)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIFO_RX_FILT_CRC_ERROR
+name|FIFO_RX_MASK_LEN_MSMTCH
 value|(1<<  4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIFO_RX_FILT_CODE_ERROR
+name|FIFO_RX_MASK_CODE_ERROR
 value|(1<<  3)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIFO_RX_FILT_FALSE_CARRIER
+name|FIFO_RX_MASK_FALSE_CARRIER
 value|(1<<  2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIFO_RX_FILT_RX_DV_EVENT
+name|FIFO_RX_MASK_RX_DV_EVENT
 value|(1<<  1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIFO_RX_FILT_DROP_EVENT
+name|FIFO_RX_MASK_DROP_EVENT
 value|(1<<  0)
+end_define
+
+begin_comment
+comment|/*  *  Len. mismatch, unsup. opcode and short frmae bits excluded  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FIFO_RX_FILTMASK_DEFAULT
+define|\
+value|(FIFO_RX_MASK_NO_SHORT_FRAME	| \ 				FIFO_RX_MASK_BIT17		| \ 				FIFO_RX_MASK_BIT16		| \ 				FIFO_RX_MASK_TRUNC_FRAME	| \ 				FIFO_RX_MASK_LONG_EVENT		| \ 				FIFO_RX_MASK_VLAN_TAG		| \ 				FIFO_RX_MASK_PAUSE_FRAME	| \ 				FIFO_RX_MASK_CTRL_FRAME		| \ 				FIFO_RX_MASK_DRIBBLE_NIBBLE	| \ 				FIFO_RX_MASK_BCAST		| \ 				FIFO_RX_MASK_MCAST		| \ 				FIFO_RX_MASK_OK			| \ 				FIFO_RX_MASK_OORANGE		| \ 				FIFO_RX_MASK_CODE_ERROR		| \ 				FIFO_RX_MASK_FALSE_CARRIER	| \ 				FIFO_RX_MASK_RX_DV_EVENT	| \ 				FIFO_RX_MASK_DROP_EVENT)
 end_define
 
 begin_define
