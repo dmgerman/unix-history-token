@@ -3849,9 +3849,10 @@ name|T_USER
 case|:
 if|#
 directive|if
+operator|!
 name|defined
 argument_list|(
-name|SOFTFLOAT
+name|CPU_HAVEFPU
 argument_list|)
 comment|/* FP (COP1) instruction */
 if|if
