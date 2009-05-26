@@ -52,12 +52,6 @@ begin_comment
 comment|/* use system PAGE_SIZE */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
 begin_if
 if|#
 directive|if
@@ -96,11 +90,6 @@ end_define
 begin_comment
 comment|/* XXX */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -211,42 +200,12 @@ block|{
 if|#
 directive|if
 name|USB_HAVE_BUSDMA
-operator|&&
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
 name|bus_dma_tag_t
 name|tag
 decl_stmt|;
 name|bus_dmamap_t
 name|map
 decl_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|USB_HAVE_BUSDMA
-operator|&&
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-name|bus_dma_tag_t
-name|tag
-decl_stmt|;
-name|bus_dmamap_t
-name|map
-decl_stmt|;
-name|bus_dma_segment_t
-modifier|*
-name|p_seg
-decl_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|USB_HAVE_BUSDMA
 name|struct
 name|usb2_page
 modifier|*
@@ -265,19 +224,6 @@ modifier|*
 name|buffer
 decl_stmt|;
 comment|/* virtual buffer pointer */
-if|#
-directive|if
-name|USB_HAVE_BUSDMA
-operator|&&
-name|defined
-argument_list|(
-name|_NetBSD__
-argument_list|)
-name|int
-name|n_seg
-decl_stmt|;
-endif|#
-directive|endif
 if|#
 directive|if
 name|USB_HAVE_BUSDMA
@@ -319,12 +265,6 @@ begin_struct
 struct|struct
 name|usb2_dma_parent_tag
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
 name|struct
 name|cv
 name|cv
@@ -333,8 +273,6 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* internal condition variable */
-endif|#
-directive|endif
 name|bus_dma_tag_t
 name|tag
 decl_stmt|;
@@ -407,18 +345,6 @@ begin_struct
 struct|struct
 name|usb2_dma_tag
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-name|bus_dma_segment_t
-modifier|*
-name|p_seg
-decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|usb2_dma_parent_tag
 modifier|*
@@ -433,17 +359,6 @@ decl_stmt|;
 name|usb2_size_t
 name|size
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-name|usb2_size_t
-name|n_seg
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
