@@ -517,6 +517,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -533,6 +539,11 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -4874,7 +4885,7 @@ comment|/* filter, filterarg */
 name|MCLBYTES
 argument_list|,
 comment|/* maxsize */
-name|BUS_SPACE_UNRESTRICTED
+name|ARGE_MAXFRAGS
 argument_list|,
 comment|/* nsegments */
 name|MCLBYTES
