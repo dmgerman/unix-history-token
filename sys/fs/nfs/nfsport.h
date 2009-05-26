@@ -933,6 +933,17 @@ value|40
 end_define
 
 begin_comment
+comment|/* Quirky case if the illegal op code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSV4OP_OPILLEGAL
+value|10044
+end_define
+
+begin_comment
 comment|/*  * Fake NFSV4OP_xxx used for nfsstat. Start at NFSV4OP_NOPS.  */
 end_comment
 
