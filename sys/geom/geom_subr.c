@@ -5097,7 +5097,7 @@ name|gprintf
 parameter_list|(
 modifier|...
 parameter_list|)
-value|do {						\ 	printf("%*s", indent, "");					\ 	printf(__VA_ARGS__);						\ } while (0)
+value|do {						\ 	db_printf("%*s", indent, "");					\ 	db_printf(__VA_ARGS__);						\ } while (0)
 end_define
 
 begin_define
@@ -5107,7 +5107,7 @@ name|gprintln
 parameter_list|(
 modifier|...
 parameter_list|)
-value|do {						\ 	gprintf(__VA_ARGS__);						\ 	printf("\n");							\ } while (0)
+value|do {						\ 	gprintf(__VA_ARGS__);						\ 	db_printf("\n");						\ } while (0)
 end_define
 
 begin_define
@@ -5465,7 +5465,7 @@ name|cp
 operator|->
 name|spoiled
 condition|)
-name|printf
+name|db_printf
 argument_list|(
 literal|", spoiled=%d"
 argument_list|,
@@ -5474,7 +5474,7 @@ operator|->
 name|spoiled
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -5714,7 +5714,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|db_printf
 argument_list|(
 literal|", flags=%s (0x%04x)"
 argument_list|,
@@ -5736,7 +5736,7 @@ name|flags
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|db_printf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -5932,7 +5932,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|db_printf
 argument_list|(
 literal|", flags=%s (0x%04x)"
 argument_list|,
@@ -5954,7 +5954,7 @@ name|flags
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|db_printf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -6053,7 +6053,7 @@ name|g_geom
 modifier|*
 name|gp
 decl_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"class: %s (%p)\n"
 argument_list|,
@@ -6130,7 +6130,7 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -6219,7 +6219,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|db_printf
 argument_list|(
 literal|"Not a GEOM object.\n"
 argument_list|)
@@ -6241,7 +6241,7 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-name|printf
+name|db_printf
 argument_list|(
 literal|"  cmd: "
 argument_list|)
@@ -6256,7 +6256,7 @@ block|{
 case|case
 name|BIO_READ
 case|:
-name|printf
+name|db_printf
 argument_list|(
 literal|"BIO_READ"
 argument_list|)
@@ -6265,7 +6265,7 @@ break|break;
 case|case
 name|BIO_WRITE
 case|:
-name|printf
+name|db_printf
 argument_list|(
 literal|"BIO_WRITE"
 argument_list|)
@@ -6274,7 +6274,7 @@ break|break;
 case|case
 name|BIO_DELETE
 case|:
-name|printf
+name|db_printf
 argument_list|(
 literal|"BIO_DELETE"
 argument_list|)
@@ -6283,7 +6283,7 @@ break|break;
 case|case
 name|BIO_GETATTR
 case|:
-name|printf
+name|db_printf
 argument_list|(
 literal|"BIO_GETATTR"
 argument_list|)
@@ -6292,7 +6292,7 @@ break|break;
 case|case
 name|BIO_FLUSH
 case|:
-name|printf
+name|db_printf
 argument_list|(
 literal|"BIO_FLUSH"
 argument_list|)
@@ -6301,7 +6301,7 @@ break|break;
 case|case
 name|BIO_CMD0
 case|:
-name|printf
+name|db_printf
 argument_list|(
 literal|"BIO_CMD0"
 argument_list|)
@@ -6310,7 +6310,7 @@ break|break;
 case|case
 name|BIO_CMD1
 case|:
-name|printf
+name|db_printf
 argument_list|(
 literal|"BIO_CMD1"
 argument_list|)
@@ -6319,21 +6319,21 @@ break|break;
 case|case
 name|BIO_CMD2
 case|:
-name|printf
+name|db_printf
 argument_list|(
 literal|"BIO_CMD2"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|db_printf
 argument_list|(
 literal|"UNKNOWN"
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|printf
+name|db_printf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -6359,7 +6359,7 @@ name|comma
 operator|=
 literal|0
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"  flags: "
 argument_list|)
@@ -6373,7 +6373,7 @@ operator|&
 name|BIO_ERROR
 condition|)
 block|{
-name|printf
+name|db_printf
 argument_list|(
 literal|"BIO_ERROR"
 argument_list|)
@@ -6392,9 +6392,9 @@ operator|&
 name|BIO_DONE
 condition|)
 block|{
-name|printf
+name|db_printf
 argument_list|(
-literal|"%sBIO_ERROR"
+literal|"%sBIO_DONE"
 argument_list|,
 operator|(
 name|comma
@@ -6418,7 +6418,7 @@ name|bio_flags
 operator|&
 name|BIO_ONQUEUE
 condition|)
-name|printf
+name|db_printf
 argument_list|(
 literal|"%sBIO_ONQUEUE"
 argument_list|,
@@ -6431,7 +6431,7 @@ literal|""
 operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -6473,7 +6473,7 @@ operator|*
 operator|)
 name|addr
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"BIO %p\n"
 argument_list|,
@@ -6490,7 +6490,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"  cflags: 0x%hhx\n"
 argument_list|,
@@ -6499,7 +6499,7 @@ operator|->
 name|bio_cflags
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"  pflags: 0x%hhx\n"
 argument_list|,
@@ -6508,7 +6508,7 @@ operator|->
 name|bio_pflags
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"  offset: %lld\n"
 argument_list|,
@@ -6517,7 +6517,7 @@ operator|->
 name|bio_offset
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"  length: %lld\n"
 argument_list|,
@@ -6526,7 +6526,7 @@ operator|->
 name|bio_length
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"  bcount: %ld\n"
 argument_list|,
@@ -6535,7 +6535,7 @@ operator|->
 name|bio_bcount
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"  resid: %ld\n"
 argument_list|,
@@ -6544,7 +6544,7 @@ operator|->
 name|bio_resid
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"  completed: %lld\n"
 argument_list|,
@@ -6553,7 +6553,7 @@ operator|->
 name|bio_completed
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"  children: %u\n"
 argument_list|,
@@ -6562,7 +6562,7 @@ operator|->
 name|bio_children
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"  inbed: %u\n"
 argument_list|,
@@ -6571,7 +6571,7 @@ operator|->
 name|bio_inbed
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"  error: %d\n"
 argument_list|,
@@ -6580,7 +6580,7 @@ operator|->
 name|bio_error
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"  parent: %p\n"
 argument_list|,
@@ -6589,7 +6589,7 @@ operator|->
 name|bio_parent
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"  driver1: %p\n"
 argument_list|,
@@ -6598,7 +6598,7 @@ operator|->
 name|bio_driver1
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"  driver2: %p\n"
 argument_list|,
@@ -6607,7 +6607,7 @@ operator|->
 name|bio_driver2
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"  caller1: %p\n"
 argument_list|,
@@ -6616,7 +6616,7 @@ operator|->
 name|bio_caller1
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"  caller2: %p\n"
 argument_list|,
@@ -6625,7 +6625,7 @@ operator|->
 name|bio_caller2
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"  bio_from: %p\n"
 argument_list|,
@@ -6634,7 +6634,7 @@ operator|->
 name|bio_from
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"  bio_to: %p\n"
 argument_list|,
