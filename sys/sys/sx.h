@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lockstat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/atomic.h>
 end_include
 
@@ -663,12 +669,11 @@ name|line
 argument_list|)
 expr_stmt|;
 else|else
-name|lock_profile_obtain_lock_success
+name|LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS
 argument_list|(
-operator|&
+name|LS_SX_XLOCK_ACQUIRE
+argument_list|,
 name|sx
-operator|->
-name|lock_object
 argument_list|,
 literal|0
 argument_list|,
@@ -830,12 +835,11 @@ name|line
 argument_list|)
 expr_stmt|;
 else|else
-name|lock_profile_obtain_lock_success
+name|LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS
 argument_list|(
-operator|&
+name|LS_SX_SLOCK_ACQUIRE
+argument_list|,
 name|sx
-operator|->
-name|lock_object
 argument_list|,
 literal|0
 argument_list|,

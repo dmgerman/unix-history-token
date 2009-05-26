@@ -33,6 +33,12 @@ directive|include
 file|<sys/lock_profile.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/lockstat.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -233,7 +239,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {				\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 						                        \ 	if (!_rw_write_lock((rw), _tid))				\ 		_rw_wlock_hard((rw), _tid, (file), (line));		\ 	else								\ 		lock_profile_obtain_lock_success(&(rw)->lock_object, 0,	\ 		    0, (file), (line));					\ } while (0)
+value|do {				\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 						                        \ 	if (!_rw_write_lock((rw), _tid))				\ 		_rw_wlock_hard((rw), _tid, (file), (line));		\ 	else 								\ 		LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS(LS_RW_WLOCK_ACQUIRE, \ 		    rw, 0, 0, (file), (line));				\ } while (0)
 end_define
 
 begin_comment
