@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pci/pcivar.h>
 end_include
 
@@ -218,6 +224,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_hw_pci
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -272,6 +286,27 @@ literal|"hw.pci.mcfg"
 argument_list|,
 operator|&
 name|mcfg_enable
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_pci
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|mcfg
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|mcfg_enable
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable support for PCI-e memory mapped config access"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
