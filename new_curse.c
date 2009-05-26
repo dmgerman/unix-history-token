@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  |	new_curse.c  |  |	A subset of curses developed for use with ae.  |  |	written by Hugh Mahon  |  |	THIS MATERIAL IS PROVIDED "AS IS".  THERE ARE  |	NO WARRANTIES OF ANY KIND WITH REGARD TO THIS  |	MATERIAL, INCLUDING, BUT NOT LIMITED TO, THE  |	IMPLIED WARRANTIES OF MERCHANTABILITY AND  |	FITNESS FOR A PARTICULAR PURPOSE.  Neither  |	Hewlett-Packard nor Hugh Mahon shall be liable  |	for errors contained herein, nor for  |	incidental or consequential damages in  |	connection with the furnishing, performance or  |	use of this material.  Neither Hewlett-Packard  |	nor Hugh Mahon assumes any responsibility for  |	the use or reliability of this software or  |	documentation.  This software and  |	documentation is totally UNSUPPORTED.  There  |	is no support contract available.  Hewlett-  |	Packard has done NO Quality Assurance on ANY  |	of the program or documentation.  You may find  |	the quality of the materials inferior to  |	supported materials.  |  |	This software is not a product of Hewlett-Packard, Co., or any   |	other company.  No support is implied or offered with this software.  |	You've got the source, and you're on your own.  |  |	This software may be distributed under the terms of Larry Wall's   |	Artistic license, a copy of which is included in this distribution.   |  |	This notice must be included with this software and any derivatives.  |  |	Copyright (c) 1986, 1987, 1988, 1991, 1992, 1993, 1994, 1995 Hugh Mahon  |	All are rights reserved.  |  |	$Header: /home/hugh/sources/old_ae/RCS/new_curse.c,v 1.50 2001/01/19 02:53:40 hugh Exp hugh $  |  */
+comment|/*  |	new_curse.c  |  |	A subset of curses developed for use with ae.  |  |	written by Hugh Mahon  |  |	THIS MATERIAL IS PROVIDED "AS IS".  THERE ARE  |	NO WARRANTIES OF ANY KIND WITH REGARD TO THIS  |	MATERIAL, INCLUDING, BUT NOT LIMITED TO, THE  |	IMPLIED WARRANTIES OF MERCHANTABILITY AND  |	FITNESS FOR A PARTICULAR PURPOSE.  Neither  |	Hewlett-Packard nor Hugh Mahon shall be liable  |	for errors contained herein, nor for  |	incidental or consequential damages in  |	connection with the furnishing, performance or  |	use of this material.  Neither Hewlett-Packard  |	nor Hugh Mahon assumes any responsibility for  |	the use or reliability of this software or  |	documentation.  This software and  |	documentation is totally UNSUPPORTED.  There  |	is no support contract available.  Hewlett-  |	Packard has done NO Quality Assurance on ANY  |	of the program or documentation.  You may find  |	the quality of the materials inferior to  |	supported materials.  |  |	This software is not a product of Hewlett-Packard, Co., or any   |	other company.  No support is implied or offered with this software.  |	You've got the source, and you're on your own.  |  |	This software may be distributed under the terms of Larry Wall's   |	Artistic license, a copy of which is included in this distribution.   |  |	This notice must be included with this software and any derivatives.  |  |	Copyright (c) 1986, 1987, 1988, 1991, 1992, 1993, 1994, 1995 Hugh Mahon  |	All are rights reserved.  |  |	$Header: /home/hugh/sources/old_ae/RCS/new_curse.c,v 1.52 2001/06/28 05:39:42 hugh Exp $  |  */
 end_comment
 
 begin_decl_stmt
@@ -22,7 +22,7 @@ name|char
 modifier|*
 name|new_curse_name
 init|=
-literal|"@(#) new_curse.c $Revision: 1.50 $"
+literal|"@(#) new_curse.c $Revision: 1.52 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3701,6 +3701,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|TERMCAP
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|TERMCAP
+value|"/etc/termcap"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|KEYS
@@ -6374,14 +6396,14 @@ literal|'/'
 condition|)
 name|Term_File_name
 operator|=
-literal|"/etc/termcap"
+name|TERMCAP
 expr_stmt|;
 block|}
 else|else
 block|{
 name|Term_File_name
 operator|=
-literal|"/etc/termcap"
+name|TERMCAP
 expr_stmt|;
 block|}
 if|if
@@ -6402,7 +6424,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"unable to open /etc/termcap file \n"
+literal|"unable to open %s file \n"
+argument_list|,
+name|TERMCAP
 argument_list|)
 expr_stmt|;
 name|exit
