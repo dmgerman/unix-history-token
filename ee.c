@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  |	ee (easy editor)  |  |	An easy to use, simple screen oriented editor.  |  |	written by Hugh Mahon  |  |	THIS MATERIAL IS PROVIDED "AS IS".  THERE ARE  |	NO WARRANTIES OF ANY KIND WITH REGARD TO THIS  |	MATERIAL, INCLUDING, BUT NOT LIMITED TO, THE  |	IMPLIED WARRANTIES OF MERCHANTABILITY AND  |	FITNESS FOR A PARTICULAR PURPOSE.  Neither  |	Hewlett-Packard nor Hugh Mahon shall be liable  |	for errors contained herein, nor for  |	incidental or consequential damages in  |	connection with the furnishing, performance or  |	use of this material.  Neither Hewlett-Packard  |	nor Hugh Mahon assumes any responsibility for  |	the use or reliability of this software or  |	documentation.  This software and  |	documentation is totally UNSUPPORTED.  There  |	is no support contract available.  Hewlett-  |	Packard has done NO Quality Assurance on ANY  |	of the program or documentation.  You may find  |	the quality of the materials inferior to  |	supported materials.  |  |	This software is not a product of Hewlett-Packard, Co., or any   |	other company.  No support is implied or offered with this software.  |	You've got the source, and you're on your own.  |  |	This software may be distributed under the terms of Larry Wall's   |	Artistic license, a copy of which is included in this distribution.   |  |	This notice must be included with this software and any derivatives.  |  |	This editor was purposely developed to be simple, both in   |	interface and implementation.  This editor was developed to   |	address a specific audience: the user who is new to computers   |	(especially UNIX).  |	  |	ee is not aimed at technical users; for that reason more   |	complex features were intentionally left out.  In addition,   |	ee is intended to be compiled by people with little computer   |	experience, which means that it needs to be small, relatively   |	simple in implementation, and portable.  |  |	This software and documentation contains  |	proprietary information which is protected by  |	copyright.  All rights are reserved.  |  |	$Header: /home/hugh/sources/old_ae/RCS/ee.c,v 1.96 1998/07/14 05:02:30 hugh Exp $  |  */
+comment|/*  |	ee (easy editor)  |  |	An easy to use, simple screen oriented editor.  |  |	written by Hugh Mahon  |  |	THIS MATERIAL IS PROVIDED "AS IS".  THERE ARE  |	NO WARRANTIES OF ANY KIND WITH REGARD TO THIS  |	MATERIAL, INCLUDING, BUT NOT LIMITED TO, THE  |	IMPLIED WARRANTIES OF MERCHANTABILITY AND  |	FITNESS FOR A PARTICULAR PURPOSE.  Neither  |	Hewlett-Packard nor Hugh Mahon shall be liable  |	for errors contained herein, nor for  |	incidental or consequential damages in  |	connection with the furnishing, performance or  |	use of this material.  Neither Hewlett-Packard  |	nor Hugh Mahon assumes any responsibility for  |	the use or reliability of this software or  |	documentation.  This software and  |	documentation is totally UNSUPPORTED.  There  |	is no support contract available.  Hewlett-  |	Packard has done NO Quality Assurance on ANY  |	of the program or documentation.  You may find  |	the quality of the materials inferior to  |	supported materials.  |  |	This software is not a product of Hewlett-Packard, Co., or any   |	other company.  No support is implied or offered with this software.  |	You've got the source, and you're on your own.  |  |	This software may be distributed under the terms of Larry Wall's   |	Artistic license, a copy of which is included in this distribution.   |  |	This notice must be included with this software and any derivatives.  |  |	This editor was purposely developed to be simple, both in   |	interface and implementation.  This editor was developed to   |	address a specific audience: the user who is new to computers   |	(especially UNIX).  |	  |	ee is not aimed at technical users; for that reason more   |	complex features were intentionally left out.  In addition,   |	ee is intended to be compiled by people with little computer   |	experience, which means that it needs to be small, relatively   |	simple in implementation, and portable.  |  |	This software and documentation contains  |	proprietary information which is protected by  |	copyright.  All rights are reserved.  |  |	$Header: /home/hugh/sources/old_ae/RCS/ee.c,v 1.97 2001/08/17 23:14:05 hugh Exp $  |  */
 end_comment
 
 begin_decl_stmt
@@ -33,7 +33,7 @@ name|char
 modifier|*
 name|version
 init|=
-literal|"@(#) ee, version 1.4.1  $Revision: 1.96 $"
+literal|"@(#) ee, version 1.4.1  $Revision: 1.97 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4161,6 +4161,9 @@ block|{
 name|int
 name|counter
 decl_stmt|;
+name|pid_t
+name|parent_pid
+decl_stmt|;
 for|for
 control|(
 name|counter
@@ -4441,6 +4444,10 @@ name|clear_com_win
 operator|=
 name|TRUE
 expr_stmt|;
+name|counter
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|edit
@@ -4469,6 +4476,40 @@ name|exit
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+comment|/* 		 |	The above check used to work to detect if the parent  		 |	process died, but now it seems we need a more  		 |	sophisticated check. 		 */
+if|if
+condition|(
+name|counter
+operator|>
+literal|50
+condition|)
+block|{
+name|parent_pid
+operator|=
+name|getppid
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|parent_pid
+operator|==
+literal|1
+condition|)
+name|edit_abort
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
+name|counter
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+name|counter
+operator|++
 expr_stmt|;
 name|resize_check
 argument_list|()
