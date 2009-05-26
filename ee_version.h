@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|EE_VERSION
-value|"1.4.6"
+value|"1.4.7"
 end_define
 
 begin_define
