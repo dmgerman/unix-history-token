@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1996 - 2001 Brian Somers<brian@Awfulhak.org>  *          based on work by Toshiharu OHNO<tony-o@iij.ad.jp>  *                           Internet Initiative Japan, Inc (IIJ)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1996 - 2001, 2009 Brian Somers<brian@Awfulhak.org>  *          based on work by Toshiharu OHNO<tony-o@iij.ad.jp>  *                           Internet Initiative Japan, Inc (IIJ)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -328,7 +328,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Adjust our first delta so that it reflects what's really happening */
+comment|/*    * We just need to insert tp in the correct relative place.  We don't    * need to adjust TimerList->rest (yet).    */
 if|if
 condition|(
 name|TimerList
@@ -343,14 +343,16 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|TimerList
-operator|->
-name|rest
+name|ticks
 operator|=
 name|RESTVAL
 argument_list|(
 name|itimer
 argument_list|)
+operator|-
+name|TimerList
+operator|->
+name|rest
 expr_stmt|;
 name|pt
 operator|=
@@ -524,6 +526,10 @@ name|tp
 parameter_list|)
 block|{
 name|struct
+name|itimerval
+name|itimer
+decl_stmt|;
+name|struct
 name|pppTimer
 modifier|*
 name|t
@@ -617,15 +623,7 @@ if|if
 condition|(
 operator|!
 name|pt
-condition|)
-block|{
-comment|/* t (tp) was the first in the list */
-name|struct
-name|itimerval
-name|itimer
-decl_stmt|;
-if|if
-condition|(
+operator|&&
 name|getitimer
 argument_list|(
 name|ITIMER_REAL
@@ -638,14 +636,17 @@ literal|0
 condition|)
 name|t
 operator|->
+name|next
+operator|->
 name|rest
-operator|=
+operator|+=
 name|RESTVAL
 argument_list|(
 name|itimer
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* t (tp) was the first in the list */
+else|else
 name|t
 operator|->
 name|next
@@ -660,6 +661,14 @@ if|if
 condition|(
 operator|!
 name|pt
+operator|&&
+name|t
+operator|->
+name|next
+operator|->
+name|rest
+operator|>
+literal|0
 condition|)
 comment|/* t->next is now the first in the list */
 name|timer_InitService
@@ -972,12 +981,10 @@ name|pppTimer
 modifier|*
 name|pt
 decl_stmt|;
-name|u_long
+name|long
 name|rest
-init|=
-literal|0
 decl_stmt|;
-comment|/* Adjust our first delta so that it reflects what's really happening */
+comment|/*    * Adjust the base time so that the deltas reflect what's really    * happening.  Changing TimerList->rest might cause it to become zero    * (if getitimer() returns a value close to zero), and the    * timer_InitService() call will call setitimer() with zero it_value,    * stopping the itimer... so be careful!    */
 if|if
 condition|(
 name|TimerList
@@ -992,14 +999,21 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|TimerList
-operator|->
 name|rest
 operator|=
 name|RESTVAL
 argument_list|(
 name|itimer
 argument_list|)
+operator|-
+name|TimerList
+operator|->
+name|rest
+expr_stmt|;
+else|else
+name|rest
+operator|=
+literal|0
 expr_stmt|;
 define|#
 directive|define
