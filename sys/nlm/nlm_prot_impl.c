@@ -129,6 +129,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysproto.h>
 end_include
 
@@ -396,6 +402,32 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|NLM_DEBUG
+parameter_list|(
+name|_level
+parameter_list|,
+name|args
+modifier|...
+parameter_list|)
+define|\
+value|do {						\ 		if (nlm_debug_level>= (_level))	\ 			log(LOG_DEBUG, args);		\ 	} while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NLM_ERR
+parameter_list|(
+name|args
+modifier|...
+parameter_list|)
+define|\
+value|do {					\ 		log(LOG_ERR, args);		\ 	} while(0)
+end_define
 
 begin_comment
 comment|/*  * Grace period handling. The value of nlm_grace_threshold is the  * value of time_uptime after which we are serving requests normally.  */
@@ -882,7 +914,7 @@ if|if
 condition|(
 name|error
 condition|)
-name|printf
+name|NLM_ERR
 argument_list|(
 literal|"Can't register NLM syscall\n"
 argument_list|)
@@ -1088,6 +1120,11 @@ name|RPCBVERS4
 decl_stmt|;
 name|bool_t
 name|do_tcp
+init|=
+name|FALSE
+decl_stmt|;
+name|bool_t
+name|tryagain
 init|=
 name|FALSE
 decl_stmt|;
@@ -1332,49 +1369,6 @@ if|if
 condition|(
 name|stat
 operator|==
-name|RPC_PROGVERSMISMATCH
-condition|)
-block|{
-if|if
-condition|(
-name|rpcvers
-operator|==
-name|RPCBVERS4
-condition|)
-name|rpcvers
-operator|=
-name|RPCBVERS
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|rpcvers
-operator|==
-name|RPCBVERS
-condition|)
-name|rpcvers
-operator|=
-name|PMAPVERS
-expr_stmt|;
-name|CLNT_CONTROL
-argument_list|(
-name|rpcb
-argument_list|,
-name|CLSET_VERS
-argument_list|,
-operator|&
-name|rpcvers
-argument_list|)
-expr_stmt|;
-goto|goto
-name|again
-goto|;
-block|}
-elseif|else
-if|if
-condition|(
-name|stat
-operator|==
 name|RPC_SUCCESS
 condition|)
 block|{
@@ -1401,17 +1395,17 @@ operator|!
 name|a
 condition|)
 block|{
-name|CLNT_DESTROY
-argument_list|(
-name|rpcb
-argument_list|)
+name|tryagain
+operator|=
+name|TRUE
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
 block|}
+else|else
+block|{
+name|tryagain
+operator|=
+name|FALSE
+expr_stmt|;
 name|memcpy
 argument_list|(
 operator|&
@@ -1453,6 +1447,51 @@ operator|&
 name|uaddr
 argument_list|)
 expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|tryagain
+operator|||
+name|stat
+operator|==
+name|RPC_PROGVERSMISMATCH
+condition|)
+block|{
+if|if
+condition|(
+name|rpcvers
+operator|==
+name|RPCBVERS4
+condition|)
+name|rpcvers
+operator|=
+name|RPCBVERS
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|rpcvers
+operator|==
+name|RPCBVERS
+condition|)
+name|rpcvers
+operator|=
+name|PMAPVERS
+expr_stmt|;
+name|CLNT_CONTROL
+argument_list|(
+name|rpcb
+argument_list|,
+name|CLSET_VERS
+argument_list|,
+operator|&
+name|rpcvers
+argument_list|)
+expr_stmt|;
+goto|goto
+name|again
+goto|;
 block|}
 break|break;
 case|case
@@ -1674,7 +1713,7 @@ name|try_tcp
 goto|;
 block|}
 comment|/* Otherwise, bad news. */
-name|printf
+name|NLM_ERR
 argument_list|(
 literal|"NLM: failed to contact remote rpcbind, "
 literal|"stat = %d, port = %d\n"
@@ -1880,14 +1919,10 @@ name|struct
 name|rpc_callextra
 name|ext
 decl_stmt|;
-if|if
-condition|(
-name|nlm_debug_level
-operator|>=
-literal|2
-condition|)
-name|printf
+name|NLM_DEBUG
 argument_list|(
+literal|2
+argument_list|,
 literal|"NLM: async lock %p for %s (sysid %d) granted\n"
 argument_list|,
 name|af
@@ -2304,14 +2339,10 @@ operator|!
 name|error
 condition|)
 block|{
-if|if
-condition|(
-name|nlm_debug_level
-operator|>=
-literal|2
-condition|)
-name|printf
+name|NLM_DEBUG
 argument_list|(
+literal|2
+argument_list|,
 literal|"NLM: async lock %p for %s (sysid %d) "
 literal|"cancelled\n"
 argument_list|,
@@ -2584,14 +2615,10 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
-if|if
-condition|(
-name|nlm_debug_level
-operator|>=
-literal|1
-condition|)
-name|printf
+name|NLM_DEBUG
 argument_list|(
+literal|1
+argument_list|,
 literal|"NLM: client lock recovery for %s started\n"
 argument_list|,
 name|host
@@ -2604,14 +2631,10 @@ argument_list|(
 name|host
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|nlm_debug_level
-operator|>=
-literal|1
-condition|)
-name|printf
+name|NLM_DEBUG
 argument_list|(
+literal|1
+argument_list|,
 literal|"NLM: client lock recovery for %s completed\n"
 argument_list|,
 name|host
@@ -2669,14 +2692,10 @@ condition|(
 name|newstate
 condition|)
 block|{
-if|if
-condition|(
-name|nlm_debug_level
-operator|>=
-literal|1
-condition|)
-name|printf
+name|NLM_DEBUG
 argument_list|(
+literal|1
+argument_list|,
 literal|"NLM: host %s (sysid %d) rebooted, new "
 literal|"state is %d\n"
 argument_list|,
@@ -2966,14 +2985,10 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|nlm_debug_level
-operator|>=
-literal|1
-condition|)
-name|printf
+name|NLM_DEBUG
 argument_list|(
+literal|1
+argument_list|,
 literal|"NLM: new host %s (sysid %d)\n"
 argument_list|,
 name|caller_name
@@ -3305,6 +3320,45 @@ expr_stmt|;
 return|return
 operator|(
 name|host
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Acquire the next sysid for remote locks not handled by the NLM.  */
+end_comment
+
+begin_function
+name|uint32_t
+name|nlm_acquire_next_sysid
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|uint32_t
+name|next_sysid
+decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|nlm_global_lock
+argument_list|)
+expr_stmt|;
+name|next_sysid
+operator|=
+name|nlm_next_sysid
+operator|++
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|nlm_global_lock
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|next_sysid
 operator|)
 return|;
 block|}
@@ -4210,14 +4264,10 @@ name|enum
 name|clnt_stat
 name|stat
 decl_stmt|;
-if|if
-condition|(
-name|nlm_debug_level
-operator|>=
-literal|1
-condition|)
-name|printf
+name|NLM_DEBUG
 argument_list|(
+literal|1
+argument_list|,
 literal|"NLM: unmonitoring %s (sysid %d)\n"
 argument_list|,
 name|host
@@ -4316,7 +4366,7 @@ operator|!=
 name|RPC_SUCCESS
 condition|)
 block|{
-name|printf
+name|NLM_ERR
 argument_list|(
 literal|"Failed to contact local NSM - rpc error %d\n"
 argument_list|,
@@ -4334,7 +4384,7 @@ operator|==
 name|stat_fail
 condition|)
 block|{
-name|printf
+name|NLM_ERR
 argument_list|(
 literal|"Local NSM refuses to unmonitor %s\n"
 argument_list|,
@@ -4402,14 +4452,10 @@ name|nh_state
 operator|=
 name|state
 expr_stmt|;
-if|if
-condition|(
-name|nlm_debug_level
-operator|>=
-literal|1
-condition|)
-name|printf
+name|NLM_DEBUG
 argument_list|(
+literal|1
+argument_list|,
 literal|"NLM: host %s (sysid %d) has NSM state %d\n"
 argument_list|,
 name|host
@@ -4465,14 +4511,10 @@ operator|->
 name|nh_lock
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|nlm_debug_level
-operator|>=
-literal|1
-condition|)
-name|printf
+name|NLM_DEBUG
 argument_list|(
+literal|1
+argument_list|,
 literal|"NLM: monitoring %s (sysid %d)\n"
 argument_list|,
 name|host
@@ -4600,7 +4642,7 @@ operator|!=
 name|RPC_SUCCESS
 condition|)
 block|{
-name|printf
+name|NLM_ERR
 argument_list|(
 literal|"Failed to contact local NSM - rpc error %d\n"
 argument_list|,
@@ -4618,7 +4660,7 @@ operator|==
 name|stat_fail
 condition|)
 block|{
-name|printf
+name|NLM_ERR
 argument_list|(
 literal|"Local NSM refuses to monitor %s\n"
 argument_list|,
@@ -5489,7 +5531,7 @@ operator|!
 name|addr_count
 condition|)
 block|{
-name|printf
+name|NLM_ERR
 argument_list|(
 literal|"NLM: no service addresses given - can't start server"
 argument_list|)
@@ -5682,7 +5724,7 @@ operator|!
 name|nconf
 condition|)
 block|{
-name|printf
+name|NLM_ERR
 argument_list|(
 literal|"Can't lookup netid %s\n"
 argument_list|,
@@ -5732,7 +5774,7 @@ name|j
 index|]
 condition|)
 block|{
-name|printf
+name|NLM_ERR
 argument_list|(
 literal|"NLM: unable to create "
 literal|"(NLM_PROG, %d).\n"
@@ -5809,7 +5851,7 @@ name|nconf
 argument_list|)
 condition|)
 block|{
-name|printf
+name|NLM_ERR
 argument_list|(
 literal|"NLM: can't register "
 literal|"(NLM_PROG, %d)\n"
@@ -5974,9 +6016,10 @@ condition|(
 name|nlm_socket
 condition|)
 block|{
-name|printf
+name|NLM_ERR
 argument_list|(
-literal|"NLM: can't start server - it appears to be running already\n"
+literal|"NLM: can't start server - "
+literal|"it appears to be running already\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6027,7 +6070,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|NLM_ERR
 argument_list|(
 literal|"NLM: can't create IPv4 socket - error %d\n"
 argument_list|,
@@ -6118,7 +6161,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|NLM_ERR
 argument_list|(
 literal|"NLM: can't create IPv6 socket - error %d\n"
 argument_list|,
@@ -6321,7 +6364,7 @@ operator|!
 name|nlm_nsm
 condition|)
 block|{
-name|printf
+name|NLM_ERR
 argument_list|(
 literal|"Can't start NLM - unable to contact NSM\n"
 argument_list|)
@@ -6438,9 +6481,10 @@ operator|&
 name|err
 argument_list|)
 expr_stmt|;
-name|printf
+name|NLM_ERR
 argument_list|(
-literal|"NLM: unexpected error contacting NSM, stat=%d, errno=%d\n"
+literal|"NLM: unexpected error contacting NSM, "
+literal|"stat=%d, errno=%d\n"
 argument_list|,
 name|stat
 argument_list|,
@@ -6457,14 +6501,10 @@ goto|goto
 name|out
 goto|;
 block|}
-if|if
-condition|(
-name|nlm_debug_level
-operator|>=
-literal|1
-condition|)
-name|printf
+name|NLM_DEBUG
 argument_list|(
+literal|1
+argument_list|,
 literal|"NLM: local NSM state is %d\n"
 argument_list|,
 name|smstat
@@ -6902,14 +6942,10 @@ name|nlm_host
 modifier|*
 name|host
 decl_stmt|;
-if|if
-condition|(
-name|nlm_debug_level
-operator|>=
-literal|3
-condition|)
-name|printf
+name|NLM_DEBUG
 argument_list|(
+literal|3
+argument_list|,
 literal|"nlm_sm_notify(): mon_name = %s\n"
 argument_list|,
 name|argp
@@ -7246,10 +7282,11 @@ argument_list|)
 expr_stmt|;
 name|cred
 operator|=
-name|crhold
-argument_list|(
 name|credanon
-argument_list|)
+expr_stmt|;
+name|credanon
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 comment|/* 	 * Check cred. 	 */
@@ -7319,6 +7356,15 @@ condition|)
 name|crfree
 argument_list|(
 name|cred
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|credanon
+condition|)
+name|crfree
+argument_list|(
+name|credanon
 argument_list|)
 expr_stmt|;
 return|return
@@ -7540,14 +7586,10 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|nlm_debug_level
-operator|>=
-literal|3
-condition|)
-name|printf
+name|NLM_DEBUG
 argument_list|(
+literal|3
+argument_list|,
 literal|"nlm_do_test(): caller_name = %s (sysid = %d)\n"
 argument_list|,
 name|host
@@ -8006,14 +8048,10 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|nlm_debug_level
-operator|>=
-literal|3
-condition|)
-name|printf
+name|NLM_DEBUG
 argument_list|(
+literal|3
+argument_list|,
 literal|"nlm_do_lock(): caller_name = %s (sysid = %d)\n"
 argument_list|,
 name|host
@@ -8648,14 +8686,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|nlm_debug_level
-operator|>=
-literal|2
-condition|)
-name|printf
+name|NLM_DEBUG
 argument_list|(
+literal|2
+argument_list|,
 literal|"NLM: pending async lock %p for %s "
 literal|"(sysid %d)\n"
 argument_list|,
@@ -8939,14 +8973,10 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|nlm_debug_level
-operator|>=
-literal|3
-condition|)
-name|printf
+name|NLM_DEBUG
 argument_list|(
+literal|3
+argument_list|,
 literal|"nlm_do_cancel(): caller_name = %s (sysid = %d)\n"
 argument_list|,
 name|host
@@ -9387,14 +9417,10 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|nlm_debug_level
-operator|>=
-literal|3
-condition|)
-name|printf
+name|NLM_DEBUG
 argument_list|(
+literal|3
+argument_list|,
 literal|"nlm_do_unlock(): caller_name = %s (sysid = %d)\n"
 argument_list|,
 name|host

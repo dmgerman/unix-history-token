@@ -57,17 +57,17 @@ name|driver_filter_t
 modifier|*
 name|ih_filter
 decl_stmt|;
-comment|/* Filter function. */
+comment|/* Filter handler function. */
 name|driver_intr_t
 modifier|*
 name|ih_handler
 decl_stmt|;
-comment|/* Handler function. */
+comment|/* Threaded handler function. */
 name|void
 modifier|*
 name|ih_argument
 decl_stmt|;
-comment|/* Argument to pass to handler. */
+comment|/* Argument to pass to handlers. */
 name|int
 name|ih_flags
 decl_stmt|;

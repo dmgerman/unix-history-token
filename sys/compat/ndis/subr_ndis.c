@@ -9855,11 +9855,6 @@ name|ndis_miniport_block
 modifier|*
 name|block
 decl_stmt|;
-name|struct
-name|ndis_softc
-modifier|*
-name|sc
-decl_stmt|;
 name|uint8_t
 name|irql
 decl_stmt|;
@@ -9868,17 +9863,6 @@ operator|=
 name|intr
 operator|->
 name|ni_block
-expr_stmt|;
-name|sc
-operator|=
-name|device_get_softc
-argument_list|(
-name|block
-operator|->
-name|nmb_physdeviceobj
-operator|->
-name|do_devext
-argument_list|)
 expr_stmt|;
 comment|/* Should really be KeSynchronizeExecution() */
 name|KeAcquireSpinLock

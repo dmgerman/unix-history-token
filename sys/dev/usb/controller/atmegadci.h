@@ -33,6 +33,33 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATMEGA_OTGTCON
+value|0xF9
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMEGA_OTGTCON_VALUE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMEGA_OTGTCON_PAGE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATMEGA_UEINT
 value|0xF4
 end_define
@@ -719,6 +746,62 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATMEGA_OTGINT
+value|0xDF
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMEGA_OTGCON
+value|0xDD
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMEGA_OTGCON_VBUSRQC
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMEGA_OTGCON_VBUSREQ
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMEGA_OTGCON_VBUSHWC
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMEGA_OTGCON_SRPSEL
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMEGA_OTGCON_SRPREQ
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMEGA_OTGCON_HNPREQ
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATMEGA_USBINT
 value|0xDA
 end_define
@@ -732,6 +815,17 @@ end_define
 
 begin_comment
 comment|/* USB VBUS interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATMEGA_USBINT_IDI
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* USB ID interrupt */
 end_comment
 
 begin_define
@@ -767,6 +861,13 @@ define|#
 directive|define
 name|ATMEGA_USBCON_VBUSTE
 value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMEGA_USBCON_IDE
+value|(1<< 1)
 end_define
 
 begin_define
@@ -1032,6 +1133,9 @@ decl_stmt|;
 comment|/*          * short_pkt = 0: transfer should be short terminated          * short_pkt = 1: transfer should not be short terminated          */
 name|uint8_t
 name|setup_alt_next
+decl_stmt|;
+name|uint8_t
+name|did_stall
 decl_stmt|;
 block|}
 struct|;

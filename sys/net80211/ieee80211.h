@@ -526,6 +526,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IEEE80211_FC0_SUBTYPE_BA
+value|0x90
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_FC0_SUBTYPE_PS_POLL
 value|0xa0
 end_define

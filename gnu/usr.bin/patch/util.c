@@ -217,8 +217,7 @@ name|fromfd
 argument_list|,
 name|buf
 argument_list|,
-sizeof|sizeof
-name|buf
+name|buf_size
 argument_list|)
 operator|)
 operator|>
@@ -652,8 +651,7 @@ name|fromfd
 argument_list|,
 name|buf
 argument_list|,
-sizeof|sizeof
-name|buf
+name|buf_size
 argument_list|)
 operator|)
 operator|>
@@ -783,8 +781,7 @@ name|fromfd
 argument_list|,
 name|buf
 argument_list|,
-sizeof|sizeof
-name|buf
+name|buf_size
 argument_list|)
 operator|)
 operator|>
@@ -1310,8 +1307,7 @@ literal|2
 argument_list|,
 name|buf
 argument_list|,
-sizeof|sizeof
-name|buf
+name|buf_size
 argument_list|)
 expr_stmt|;
 block|}
@@ -1350,8 +1346,7 @@ literal|1
 argument_list|,
 name|buf
 argument_list|,
-sizeof|sizeof
-name|buf
+name|buf_size
 argument_list|)
 expr_stmt|;
 block|}
@@ -1398,8 +1393,7 @@ name|ttyfd
 argument_list|,
 name|buf
 argument_list|,
-sizeof|sizeof
-name|buf
+name|buf_size
 argument_list|)
 expr_stmt|;
 name|Close
@@ -1443,8 +1437,7 @@ literal|0
 argument_list|,
 name|buf
 argument_list|,
-sizeof|sizeof
-name|buf
+name|buf_size
 argument_list|)
 expr_stmt|;
 block|}

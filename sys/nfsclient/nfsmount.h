@@ -176,11 +176,6 @@ name|int
 name|nm_fhsize
 decl_stmt|;
 comment|/* Size of root file handle */
-name|struct
-name|rpcclnt
-name|nm_rpcclnt
-decl_stmt|;
-comment|/* rpc state */
 ifdef|#
 directive|ifdef
 name|NFS_LEGACYRPC

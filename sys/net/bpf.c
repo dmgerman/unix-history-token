@@ -2124,6 +2124,21 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|bpf_track
+argument_list|,
+name|bp
+operator|->
+name|bif_ifp
+argument_list|,
+name|bp
+operator|->
+name|bif_dlt
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2204,6 +2219,19 @@ expr_stmt|;
 name|BPFIF_UNLOCK
 argument_list|(
 name|bp
+argument_list|)
+expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|bpf_track
+argument_list|,
+name|ifp
+argument_list|,
+name|bp
+operator|->
+name|bif_dlt
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check if this descriptor had requested promiscuous mode. 	 * If so, turn it off. 	 */

@@ -158,7 +158,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
-name|_hw_usb2
+name|_hw_usb
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -176,7 +176,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_hw_usb2_dev
+name|_hw_usb_dev
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -2734,7 +2734,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_HOST
 condition|)
@@ -2760,7 +2760,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_HOST
 condition|)
@@ -5224,7 +5224,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fflags
+name|ioflag
 operator|&
 name|IO_NDELAY
 condition|)
@@ -5649,7 +5649,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|fflags
+name|ioflag
 operator|&
 name|IO_NDELAY
 condition|)

@@ -945,11 +945,11 @@ name|next
 expr_stmt|;
 name|cmd
 operator|->
-name|nonsel
+name|startline
 operator|=
 name|cmd
 operator|->
-name|inrange
+name|nonsel
 operator|=
 literal|0
 expr_stmt|;
@@ -4318,6 +4318,12 @@ name|icase
 operator|=
 literal|0
 expr_stmt|;
+name|a
+operator|->
+name|type
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 operator|*
@@ -4436,6 +4442,20 @@ operator|+
 literal|1
 operator|)
 return|;
+case|case
+literal|'+'
+case|:
+comment|/* Relative line number */
+name|a
+operator|->
+name|type
+operator|=
+name|AT_RELLINE
+expr_stmt|;
+name|p
+operator|++
+expr_stmt|;
+comment|/* FALLTHROUGH */
 comment|/* Line number */
 case|case
 literal|'0'
@@ -4467,6 +4487,14 @@ case|:
 case|case
 literal|'9'
 case|:
+if|if
+condition|(
+name|a
+operator|->
+name|type
+operator|==
+literal|0
+condition|)
 name|a
 operator|->
 name|type

@@ -1079,10 +1079,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* BURN_BRIDGES */
-end_comment
-
-begin_comment
 comment|/*  * Lock macros for IPv4 layer multicast address lists.  IPv4 lock goes  * before link layer multicast locks in the lock order.  In most cases,  * consumers of IN_*_MULTI() macros should acquire the locks before  * calling them; users of the in_{add,del}multi() functions should not.  */
 end_comment
 

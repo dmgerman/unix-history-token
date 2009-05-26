@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: apptype.c,v 1.10 2009/02/03 20:27:51 christos Exp $"
+literal|"@(#)$File: apptype.c,v 1.11 2009/02/04 18:24:32 christos Exp $"
 argument_list|)
 end_macro
 
@@ -329,6 +329,11 @@ name|rc
 operator|=
 name|DosQueryAppType
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|path
 argument_list|,
 operator|&

@@ -419,6 +419,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UFS_EXTATTR_AUTOSTART
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -436,6 +442,11 @@ name|td
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -2027,8 +2038,6 @@ name|LK_EXCLUSIVE
 argument_list|,
 operator|&
 name|rvp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3034,11 +3043,6 @@ specifier|const
 name|char
 modifier|*
 name|attrname
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -3050,6 +3054,13 @@ name|VFSTOUFS
 argument_list|(
 name|mp
 argument_list|)
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|curthread
 decl_stmt|;
 name|int
 name|error

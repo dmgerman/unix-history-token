@@ -256,7 +256,7 @@ name|_vfs_newnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|realign_test
+name|newnfs_realign_test
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -277,7 +277,7 @@ name|_vfs_newnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|realign_count
+name|newnfs_realign_count
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -659,7 +659,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/*  *	nfs_realign:  *  *	Check for badly aligned mbuf data and realign by copying the unaligned  *	portion of the data into a new mbuf chain and freeing the portions  *	of the old chain that were replaced.  *  *	We cannot simply realign the data within the existing mbuf chain  *	because the underlying buffers may contain other rpc commands and  *	we cannot afford to overwrite them.  *  *	We would prefer to avoid this situation entirely.  The situation does  *	not occur with NFS/UDP and is supposed to only occassionally occur  *	with TCP.  Use vfs.nfs.realign_count and realign_test to check this.  */
+comment|/*  *	newnfs_realign:  *  *	Check for badly aligned mbuf data and realign by copying the unaligned  *	portion of the data into a new mbuf chain and freeing the portions  *	of the old chain that were replaced.  *  *	We cannot simply realign the data within the existing mbuf chain  *	because the underlying buffers may contain other rpc commands and  *	we cannot afford to overwrite them.  *  *	We would prefer to avoid this situation entirely.  The situation does  *	not occur with NFS/UDP and is supposed to only occassionally occur  *	with TCP.  Use vfs.nfs.realign_count and realign_test to check this.  *  */
 end_comment
 
 begin_function
@@ -677,18 +677,14 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
-name|struct
-name|mbuf
+decl_stmt|,
 modifier|*
 name|n
-init|=
-name|NULL
 decl_stmt|;
 name|int
 name|off
-init|=
-literal|0
+decl_stmt|,
+name|space
 decl_stmt|;
 operator|++
 name|nfs_realign_test
@@ -727,62 +723,69 @@ literal|0x3
 operator|)
 condition|)
 block|{
-name|MGET
+comment|/* 			 * NB: we can't depend on m_pkthdr.len to help us 			 * decide what to do here.  May not be worth doing 			 * the m_length calculation as m_copyback will 			 * expand the mbuf chain below as needed. 			 */
+name|space
+operator|=
+name|m_length
 argument_list|(
-name|n
+name|m
 argument_list|,
-name|M_WAIT
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|space
+operator|>=
+name|MINCLSIZE
+condition|)
+block|{
+comment|/* NB: m_copyback handles space> MCLBYTES */
+name|n
+operator|=
+name|m_getcl
+argument_list|(
+name|M_WAITOK
+argument_list|,
+name|MT_DATA
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|n
+operator|=
+name|m_get
+argument_list|(
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|m
-operator|->
-name|m_len
-operator|>=
-name|MINCLSIZE
-condition|)
-block|{
-name|MCLGET
-argument_list|(
 name|n
-argument_list|,
-name|M_WAIT
-argument_list|)
-expr_stmt|;
-block|}
+operator|==
+name|NULL
+condition|)
+return|return;
+comment|/* 			 * Align the remainder of the mbuf chain. 			 */
 name|n
 operator|->
 name|m_len
 operator|=
 literal|0
 expr_stmt|;
-break|break;
-block|}
-name|pm
+name|off
 operator|=
-operator|&
-name|m
-operator|->
-name|m_next
-expr_stmt|;
-block|}
-comment|/* 	 * If n is non-NULL, loop on m copying data, then replace the 	 * portion of the chain that had to be realigned. 	 */
-if|if
-condition|(
-name|n
-operator|!=
-name|NULL
-condition|)
-block|{
-operator|++
-name|nfs_realign_count
+literal|0
 expr_stmt|;
 while|while
 condition|(
 name|m
+operator|!=
+name|NULL
 condition|)
 block|{
 name|m_copyback
@@ -827,6 +830,18 @@ name|pm
 operator|=
 name|n
 expr_stmt|;
+operator|++
+name|nfs_realign_count
+expr_stmt|;
+break|break;
+block|}
+name|pm
+operator|=
+operator|&
+name|m
+operator|->
+name|m_next
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -837,7 +852,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* newnfs_realign */
+comment|/* !__i386__ */
 end_comment
 
 begin_ifdef

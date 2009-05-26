@@ -1385,6 +1385,11 @@ modifier|*
 name|sopt
 parameter_list|)
 block|{
+name|INIT_VNET_INET6
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|error
 init|=
@@ -7007,6 +7012,11 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+name|INIT_VNET_INET6
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -8248,6 +8258,11 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
+name|INIT_VNET_INET6
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|type

@@ -51,6 +51,13 @@ name|EXECVEENVS
 value|0x00000020
 end_define
 
+begin_define
+define|#
+directive|define
+name|COUNTONLY
+value|0x00000040
+end_define
+
 begin_struct
 struct|struct
 name|threadinfo
@@ -138,6 +145,21 @@ name|vvp
 parameter_list|)
 define|\
 value|do {								\ 		(vvp)->tv_sec = (tvp)->tv_sec - (uvp)->tv_sec;		\ 		(vvp)->tv_nsec = (tvp)->tv_nsec - (uvp)->tv_nsec;	\ 		if ((vvp)->tv_nsec< 0) {				\ 			(vvp)->tv_sec--;				\ 			(vvp)->tv_nsec += 1000000000;			\ 		}							\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|timespecadd
+parameter_list|(
+name|tvp
+parameter_list|,
+name|uvp
+parameter_list|,
+name|vvp
+parameter_list|)
+define|\
+value|do {								\ 		(vvp)->tv_sec = (tvp)->tv_sec + (uvp)->tv_sec;		\ 		(vvp)->tv_nsec = (tvp)->tv_nsec + (uvp)->tv_nsec;	\ 		if ((vvp)->tv_nsec> 1000000000) {				\ 			(vvp)->tv_sec++;				\ 			(vvp)->tv_nsec -= 1000000000;			\ 		}							\ 	} while (0)
 end_define
 
 begin_define

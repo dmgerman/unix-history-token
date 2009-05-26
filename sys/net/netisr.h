@@ -121,28 +121,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NETISR_USB
-value|25
-end_define
-
-begin_comment
-comment|/* USB soft interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NETISR_PPP
-value|26
-end_define
-
-begin_comment
-comment|/* PPP soft interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NETISR_IPV6
 value|27
 end_define
@@ -152,20 +130,6 @@ define|#
 directive|define
 name|NETISR_NATM
 value|28
-end_define
-
-begin_define
-define|#
-directive|define
-name|NETISR_ATM
-value|29
-end_define
-
-begin_define
-define|#
-directive|define
-name|NETISR_NETGRAPH
-value|30
 end_define
 
 begin_define
@@ -286,17 +250,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|NETISR_FORCEQUEUE
-value|0x0002
-end_define
-
-begin_comment
-comment|/* Force queued dispatch. */
-end_comment
 
 begin_function_decl
 name|void

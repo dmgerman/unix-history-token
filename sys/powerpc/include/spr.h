@@ -513,28 +513,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPR_TBL
-value|0x11c
-end_define
-
-begin_comment
-comment|/* 468 Time Base Lower */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPR_TBU
-value|0x11d
-end_define
-
-begin_comment
-comment|/* 468 Time Base Upper */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SPR_PVR
 value|0x11f
 end_define
@@ -3497,6 +3475,17 @@ end_elif
 begin_define
 define|#
 directive|define
+name|SPR_PIR
+value|0x11e
+end_define
+
+begin_comment
+comment|/* ..8 Processor Identification Register */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SPR_DBSR
 value|0x130
 end_define
@@ -5737,6 +5726,28 @@ end_define
 
 begin_comment
 comment|/* Instruction Cache Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_BUCSR
+value|0x3F5
+end_define
+
+begin_comment
+comment|/* ..8 Branch Unit Control and Status Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUCSR_BPEN
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Branch Prediction Enable */
 end_comment
 
 begin_endif

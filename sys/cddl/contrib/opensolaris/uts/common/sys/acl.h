@@ -38,6 +38,44 @@ directive|include
 file|<sys/acl_impl.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
+
+begin_comment
+comment|/*  * When compiling OpenSolaris kernel code, this file is getting  * included instead of FreeBSD one.  Pull the original sys/acl.h as well.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|_SYS_ACL_H
+end_undef
+
+begin_empty
+empty|#include_next<sys/acl.h>
+end_empty
+
+begin_define
+define|#
+directive|define
+name|_SYS_ACL_H
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -57,7 +95,6 @@ value|(1024)
 comment|/* max entries of each type */
 typedef|typedef
 struct|struct
-name|acl
 block|{
 name|int
 name|a_type
@@ -97,11 +134,20 @@ comment|/* allow or deny */
 block|}
 name|ace_t
 typedef|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
 typedef|typedef
 name|struct
 name|acl_info
 name|acl_t
 typedef|;
+endif|#
+directive|endif
 comment|/*  * The following are Defined types for an aclent_t.  */
 define|#
 directive|define

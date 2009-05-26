@@ -2535,7 +2535,6 @@ name|all
 init|=
 literal|0
 decl_stmt|;
-comment|/* XXX was: (intptr_t)arg - makes no sense? */
 name|int
 name|i
 decl_stmt|;

@@ -10806,8 +10806,6 @@ name|LK_EXCLUSIVE
 argument_list|,
 operator|&
 name|rootvp
-argument_list|,
-name|td
 argument_list|)
 operator|)
 operator|!=
@@ -15953,10 +15951,6 @@ argument_list|(
 name|mp
 argument_list|,
 name|MNT_LAZY
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 name|MNT_ILOCK

@@ -720,8 +720,6 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
-parameter_list|,
-name|u_int32_t
 parameter_list|)
 function_decl|;
 name|int
@@ -1182,24 +1180,6 @@ name|sc_rfsilentpol
 decl_stmt|;
 comment|/* pin setting for rfkill on */
 name|struct
-name|ath_tx_radiotap_header
-name|sc_tx_th
-decl_stmt|;
-name|int
-name|sc_tx_th_len
-decl_stmt|;
-name|struct
-name|ath_rx_radiotap_header
-name|sc_rx_th
-decl_stmt|;
-name|int
-name|sc_rx_th_len
-decl_stmt|;
-name|u_int
-name|sc_monpass
-decl_stmt|;
-comment|/* frames to pass in mon.mode */
-name|struct
 name|ath_descdma
 name|sc_rxdma
 decl_stmt|;
@@ -1236,6 +1216,23 @@ name|u_int64_t
 name|sc_lastrx
 decl_stmt|;
 comment|/* tsf at last rx'd frame */
+name|struct
+name|ath_rx_status
+modifier|*
+name|sc_lastrs
+decl_stmt|;
+comment|/* h/w status of last rx */
+name|struct
+name|ath_rx_radiotap_header
+name|sc_rx_th
+decl_stmt|;
+name|int
+name|sc_rx_th_len
+decl_stmt|;
+name|u_int
+name|sc_monpass
+decl_stmt|;
+comment|/* frames to pass in mon.mode */
 name|struct
 name|ath_descdma
 name|sc_txdma
@@ -1295,6 +1292,13 @@ name|callout
 name|sc_wd_ch
 decl_stmt|;
 comment|/* tx watchdog timer */
+name|struct
+name|ath_tx_radiotap_header
+name|sc_tx_th
+decl_stmt|;
+name|int
+name|sc_tx_th_len
+decl_stmt|;
 name|struct
 name|ath_descdma
 name|sc_bdma
@@ -1406,12 +1410,6 @@ name|u_int
 name|sc_tdmaslotlen
 decl_stmt|;
 comment|/* TDMA slot length (usec) */
-name|struct
-name|ath_rx_status
-modifier|*
-name|sc_tdmars
-decl_stmt|;
-comment|/* TDMA status of last rx */
 name|u_int32_t
 name|sc_avgtsfdeltap
 decl_stmt|;

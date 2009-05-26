@@ -9057,12 +9057,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TODO
-end_ifdef
-
 begin_comment
 comment|/*  * Retrieve a files ACL  */
 end_comment
@@ -9504,15 +9498,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TODO */
-end_comment
-
 begin_function
 name|int
 name|zfs_vsec_2_aclp
@@ -9807,12 +9792,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TODO
-end_ifdef
 
 begin_comment
 comment|/*  * Set a files ACL  */
@@ -10395,15 +10374,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TODO */
-end_comment
 
 begin_comment
 comment|/*  * working_mode returns the permissions that were not granted  */

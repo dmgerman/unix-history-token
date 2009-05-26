@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/taskqueue.h>
 end_include
 
@@ -1209,6 +1215,23 @@ parameter_list|(
 name|struct
 name|ieee80211vap
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_wlan
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
+name|int
+name|ieee80211_sysctl_msecs_ticks
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -20923,8 +20923,6 @@ operator|->
 name|v_mount
 argument_list|,
 name|sf
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 name|getret
@@ -21518,8 +21516,6 @@ name|v_mount
 argument_list|,
 operator|&
 name|sb
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 name|maxfsize

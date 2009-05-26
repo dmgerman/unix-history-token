@@ -408,6 +408,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/mca.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -1209,6 +1215,9 @@ name|vm_pager_bufferinit
 argument_list|()
 expr_stmt|;
 name|cpu_setregs
+argument_list|()
+expr_stmt|;
+name|mca_init
 argument_list|()
 expr_stmt|;
 block|}
@@ -5531,6 +5540,26 @@ name|int
 name|howto
 parameter_list|)
 block|{ }
+end_function
+
+begin_comment
+comment|/*  * Flush the D-cache for non-DMA I/O so that the I-cache can  * be made coherent later.  */
+end_comment
+
+begin_function
+name|void
+name|cpu_flush_dcache
+parameter_list|(
+name|void
+modifier|*
+name|ptr
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+block|{
+comment|/* Not applicable */
+block|}
 end_function
 
 begin_comment

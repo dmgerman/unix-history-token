@@ -190,7 +190,7 @@ begin_define
 define|#
 directive|define
 name|CACHE_LINE_SHIFT
-value|6
+value|7
 end_define
 
 begin_define

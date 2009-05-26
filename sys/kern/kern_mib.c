@@ -1105,9 +1105,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* should become #ifndef VIMAGE */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
 
 begin_decl_stmt
 name|char
@@ -1117,6 +1119,11 @@ name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * This mutex is used to protect the hostname and domainname variables, and  * perhaps in the future should also protect hostid, hostuid, and others.  */
@@ -1777,9 +1784,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* should become #ifndef VIMAGE */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
 
 begin_decl_stmt
 name|char
@@ -1794,6 +1803,11 @@ begin_comment
 comment|/* Protected by hostname_mtx. */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|int
@@ -1802,6 +1816,16 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
+name|INIT_VPROCG
+argument_list|(
+name|TD_TO_VPROCG
+argument_list|(
+name|req
+operator|->
+name|td
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|char
 name|tmpdomainname
 index|[

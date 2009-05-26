@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: bsd-poll.c,v 1.3 2008/04/04 05:16:36 djm Exp $ */
+comment|/* $Id: bsd-poll.c,v 1.4 2008/08/29 21:32:38 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -134,6 +134,15 @@ name|i
 operator|++
 control|)
 block|{
+name|fd
+operator|=
+name|fds
+index|[
+name|i
+index|]
+operator|.
+name|fd
+expr_stmt|;
 if|if
 condition|(
 name|fd
@@ -156,11 +165,6 @@ name|MAX
 argument_list|(
 name|maxfd
 argument_list|,
-name|fds
-index|[
-name|i
-index|]
-operator|.
 name|fd
 argument_list|)
 expr_stmt|;

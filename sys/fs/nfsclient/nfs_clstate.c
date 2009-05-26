@@ -3306,7 +3306,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called to get a clientid structure. It will optionally lock the  * client data structures to do the SetClientId/SetClientId_confirm,  * but will release that lock and return the clientid with a refernce  * count on it.  */
+comment|/*  * Called to get a clientid structure. It will optionally lock the  * client data structures to do the SetClientId/SetClientId_confirm,  * but will release that lock and return the clientid with a refernce  * count on it.  * If the p argument is NULL, it will not do the SetClientId/Confirm  * and the cred argument is not used, so it can be NULL too.  * It always clpp with a reference count on it, unless returning an error.  */
 end_comment
 
 begin_function
@@ -13278,15 +13278,6 @@ name|vnode_t
 name|vp
 parameter_list|,
 name|struct
-name|ucred
-modifier|*
-name|cred
-parameter_list|,
-name|NFSPROC_T
-modifier|*
-name|p
-parameter_list|,
-name|struct
 name|nfsclclient
 modifier|*
 modifier|*
@@ -13342,9 +13333,9 @@ name|nfscl_getcl
 argument_list|(
 name|vp
 argument_list|,
-name|cred
+name|NULL
 argument_list|,
-name|p
+name|NULL
 argument_list|,
 operator|&
 name|clp
@@ -13364,6 +13355,12 @@ name|clpp
 operator|=
 name|clp
 expr_stmt|;
+if|if
+condition|(
+name|ohp
+operator|!=
+name|NULL
+condition|)
 name|LIST_INIT
 argument_list|(
 name|ohp
@@ -13561,7 +13558,7 @@ name|nfso_opencnt
 operator|--
 expr_stmt|;
 block|}
-comment|/* 		     * There are more opens, so just return after 		     * putting any opens already found back in the 		     * state list. 		     */
+comment|/* 				 * There are more opens, so just return after 				 * putting any opens already found back in the 				 * state list. 				 */
 if|if
 condition|(
 name|op
@@ -13571,7 +13568,14 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* reuse op, since we're returning */
+if|if
+condition|(
+name|ohp
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* Reattach open until later */
 name|op
 operator|=
 name|LIST_FIRST
@@ -13621,13 +13625,14 @@ operator|=
 name|nop
 expr_stmt|;
 block|}
-name|NFSUNLOCKCLSTATE
-argument_list|()
-expr_stmt|;
 name|LIST_INIT
 argument_list|(
 name|ohp
 argument_list|)
+expr_stmt|;
+block|}
+name|NFSUNLOCKCLSTATE
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -13635,7 +13640,14 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 		     * Move this entry to the list of opens to be returned. 		     * (If we find other open(s) still in use, it will be 		     *  put back in the state list in the code just above.) 		     */
+comment|/* 				 * Move this entry to the list of opens to be 				 * returned. (If we find other open(s) still in 				 * use, it will be put back in the state list 				 * in the code just above.) 				 */
+if|if
+condition|(
+name|ohp
+operator|!=
+name|NULL
+condition|)
+block|{
 name|LIST_REMOVE
 argument_list|(
 name|op
@@ -13653,6 +13665,7 @@ name|nfso_list
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 name|op
 operator|=
 name|nop
@@ -13662,6 +13675,10 @@ block|}
 if|if
 condition|(
 name|dp
+operator|!=
+name|NULL
+operator|&&
+name|ohp
 operator|!=
 name|NULL
 condition|)
@@ -13765,6 +13782,10 @@ expr_stmt|;
 if|if
 condition|(
 name|notdecr
+operator|&&
+name|ohp
+operator|==
+name|NULL
 condition|)
 name|printf
 argument_list|(

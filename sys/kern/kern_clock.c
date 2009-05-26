@@ -446,6 +446,8 @@ argument_list|,
 name|CTLTYPE_LONG
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,
@@ -715,6 +717,8 @@ argument_list|,
 name|CTLTYPE_LONG
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,
@@ -2177,6 +2181,8 @@ argument_list|,
 name|CTLTYPE_STRUCT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,

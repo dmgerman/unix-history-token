@@ -256,7 +256,8 @@ decl_stmt|;
 name|uint8_t
 name|hc_max_packet_count
 decl_stmt|;
-name|uint8_t
+name|enum
+name|usb_dev_speed
 name|speed
 decl_stmt|;
 name|uint8_t

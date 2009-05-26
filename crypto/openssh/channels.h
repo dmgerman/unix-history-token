@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.h,v 1.96 2008/06/15 20:06:26 djm Exp $ */
+comment|/* $OpenBSD: channels.h,v 1.98 2009/02/12 03:00:56 djm Exp $ */
 end_comment
 
 begin_comment
@@ -178,13 +178,6 @@ define|#
 directive|define
 name|SSH_CHANNEL_MAX_TYPE
 value|15
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSH_CHANNEL_PATH_LEN
-value|256
 end_define
 
 begin_struct_decl
@@ -443,10 +436,8 @@ name|Buffer
 name|extended
 decl_stmt|;
 name|char
+modifier|*
 name|path
-index|[
-name|SSH_CHANNEL_PATH_LEN
-index|]
 decl_stmt|;
 comment|/* path for unix domain sockets, or host name for forwards */
 name|int
@@ -1395,6 +1386,9 @@ name|char
 modifier|*
 parameter_list|,
 name|u_short
+parameter_list|,
+name|int
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)

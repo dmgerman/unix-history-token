@@ -106,6 +106,9 @@ name|int
 name|_ip4_ipsec_ecn
 decl_stmt|;
 name|int
+name|_ip4_ipsec_filtertunnel
+decl_stmt|;
+name|int
 name|_ip4_esp_randpad
 decl_stmt|;
 name|int
@@ -194,6 +197,9 @@ name|_ip6_ah_net_deflev
 decl_stmt|;
 name|int
 name|_ip6_ipsec_ecn
+decl_stmt|;
+name|int
+name|_ip6_ipsec6_filtertunnel
 decl_stmt|;
 name|int
 name|_ah_enable
@@ -469,6 +475,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|V_ip4_ipsec_filtertunnel
+value|VNET_IPSEC(ip4_ipsec_filtertunnel)
+end_define
+
+begin_define
+define|#
+directive|define
 name|V_ip6_ah_net_deflev
 value|VNET_IPSEC(ip6_ah_net_deflev)
 end_define
@@ -506,6 +519,13 @@ define|#
 directive|define
 name|V_ip6_ipsec_ecn
 value|VNET_IPSEC(ip6_ipsec_ecn)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_ipsec6_filtertunnel
+value|VNET_IPSEC(ip6_ipsec6_filtertunnel)
 end_define
 
 begin_define

@@ -27,11 +27,20 @@ directive|include
 file|<pwd.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE_CRYPT_H
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_SECUREWARE
+argument_list|)
+end_if
 
 begin_include
 include|#

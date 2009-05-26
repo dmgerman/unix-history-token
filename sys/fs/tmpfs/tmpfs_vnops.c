@@ -182,15 +182,6 @@ name|v
 operator|->
 name|a_cnp
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|cnp
-operator|->
-name|cn_thread
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -229,7 +220,9 @@ name|cnp
 operator|->
 name|cn_cred
 argument_list|,
-name|td
+name|cnp
+operator|->
+name|cn_thread
 argument_list|)
 expr_stmt|;
 if|if
@@ -324,8 +317,6 @@ operator|->
 name|cn_lkflags
 argument_list|,
 name|vpp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vn_lock
@@ -585,8 +576,6 @@ operator|->
 name|cn_lkflags
 argument_list|,
 name|vpp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -683,8 +672,6 @@ operator|->
 name|cn_lkflags
 argument_list|,
 name|vpp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}

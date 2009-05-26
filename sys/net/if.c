@@ -822,6 +822,34 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|if_attach_internal
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|if_detach_internal
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1316,6 +1344,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ifnet_setbyindex
 parameter_list|(
@@ -2478,16 +2507,16 @@ argument_list|,
 name|ifp
 argument_list|)
 expr_stmt|;
-name|IF_AFDATA_LOCK_INIT
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
 name|if_afdata_initialized
 operator|=
 literal|0
+expr_stmt|;
+name|IF_AFDATA_LOCK_INIT
+argument_list|(
+name|ifp
+argument_list|)
 expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
@@ -2598,11 +2627,10 @@ parameter_list|)
 block|{
 name|INIT_VNET_NET
 argument_list|(
-name|ifp
-operator|->
-name|if_vnet
+name|curvnet
 argument_list|)
 expr_stmt|;
+comment|/* ifp->if_vnet is already NULL here */
 name|KASSERT
 argument_list|(
 operator|(
@@ -3000,7 +3028,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Perform generic interface initalization tasks and attach the interface  * to the list of "active" interfaces.  *  * XXX:  *  - The decision to return void and thus require this function to  *    succeed is questionable.  *  - We should probably do more sanity checking.  For instance we don't  *    do anything to insure if_xname is unique or non-empty.  */
+comment|/*  * Perform generic interface initalization tasks and attach the interface  * to the list of "active" interfaces.  If vmove flag is set on entry  * to if_attach_internal(), perform only a limited subset of initialization  * tasks, given that we are moving from one vnet to another an ifnet which  * has already been fully initialized.  *  * XXX:  *  - The decision to return void and thus require this function to  *    succeed is questionable.  *  - We should probably do more sanity checking.  For instance we don't  *    do anything to insure if_xname is unique or non-empty.  */
 end_comment
 
 begin_function
@@ -3011,6 +3039,30 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
+parameter_list|)
+block|{
+name|if_attach_internal
+argument_list|(
+name|ifp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|if_attach_internal
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|int
+name|vmove
 parameter_list|)
 block|{
 name|INIT_VNET_NET
@@ -3167,6 +3219,12 @@ operator|=
 name|if_qflush
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|vmove
+condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|MAC
@@ -3249,7 +3307,7 @@ argument_list|,
 name|ifp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * create a Link Level name for this device 	 */
+comment|/* 		 * Create a Link Level name for this device. 		 */
 name|namelen
 operator|=
 name|strlen
@@ -3259,7 +3317,7 @@ operator|->
 name|if_xname
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Always save enough space for any possiable name so we can do 	 * a rename in place later. 	 */
+comment|/* 		 * Always save enough space for any possiable name so we 		 * can do a rename in place later. 		 */
 name|masklen
 operator|=
 name|offsetof
@@ -3499,13 +3557,14 @@ argument_list|,
 name|ifa_link
 argument_list|)
 expr_stmt|;
+comment|/* Reliably crash if used uninitialized. */
 name|ifp
 operator|->
 name|if_broadcastaddr
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* reliably crash if used uninitialized */
+block|}
 name|IFNET_WLOCK
 argument_list|()
 expr_stmt|;
@@ -3524,7 +3583,7 @@ directive|ifdef
 name|VIMAGE
 name|curvnet
 operator|->
-name|ifccnt
+name|ifcnt
 operator|++
 expr_stmt|;
 endif|#
@@ -3580,6 +3639,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|vmove
+operator|&&
 name|ifp
 operator|->
 name|if_watchdog
@@ -4058,7 +4120,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Detach an interface, removing it from the  * list of "active" interfaces.  *  * XXXRW: There are some significant questions about event ordering, and  * how to prevent things from starting to use the interface during detach.  */
+comment|/*  * Detach an interface, removing it from the list of "active" interfaces.  * If vmove flag is set on entry to if_detach_internal(), perform only a  * limited subset of cleanup tasks, given that we are moving an ifnet from  * one vnet to another, where it must be fully operational.  *  * XXXRW: There are some significant questions about event ordering, and  * how to prevent things from starting to use the interface during detach.  */
 end_comment
 
 begin_function
@@ -4069,6 +4131,30 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
+parameter_list|)
+block|{
+name|if_detach_internal
+argument_list|(
+name|ifp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|if_detach_internal
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|int
+name|vmove
 parameter_list|)
 block|{
 name|INIT_VNET_NET
@@ -4089,8 +4175,6 @@ modifier|*
 name|rnh
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|i
 decl_stmt|,
 name|j
@@ -4153,7 +4237,7 @@ name|found
 condition|)
 name|curvnet
 operator|->
-name|ifccnt
+name|ifcnt
 operator|--
 expr_stmt|;
 endif|#
@@ -4166,7 +4250,20 @@ condition|(
 operator|!
 name|found
 condition|)
+block|{
+if|if
+condition|(
+name|vmove
+condition|)
+name|panic
+argument_list|(
+literal|"interface not in it's own ifnet list"
+argument_list|)
+expr_stmt|;
+else|else
 return|return;
+comment|/* XXX this should panic as well? */
+block|}
 comment|/* 	 * Remove/wait for pending events. 	 */
 name|taskqueue_drain
 argument_list|(
@@ -4179,11 +4276,6 @@ name|if_linktask
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Remove routes and flush queues. 	 */
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|if_down
 argument_list|(
 name|ifp
@@ -4261,13 +4353,19 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Prevent further calls into the device driver via ifnet. 	 */
+if|if
+condition|(
+operator|!
+name|vmove
+condition|)
+block|{
+comment|/* 		 * Prevent further calls into the device driver via ifnet. 		 */
 name|if_dead
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Remove link ifaddr pointer and maybe decrement if_index. 	 * Clean up all addresses. 	 */
+comment|/* 		 * Remove link ifaddr pointer and maybe decrement if_index. 		 * Clean up all addresses. 		 */
 name|ifp
 operator|->
 name|if_addr
@@ -4340,6 +4438,7 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Delete all remaining routes using this interface 	 * Unfortuneatly the only way to do this is to slog through 	 * the entire routing table looking for routes which point 	 * to this interface...oh well... 	 */
 for|for
@@ -4508,11 +4607,22 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+name|ifp
+operator|->
+name|if_afdata_initialized
+operator|=
+literal|0
+expr_stmt|;
 name|IF_AFDATA_UNLOCK
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|vmove
+condition|)
 name|ifq_detach
 argument_list|(
 operator|&
@@ -4521,24 +4631,201 @@ operator|->
 name|if_snd
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|VIMAGE
+end_ifdef
+
+begin_comment
+comment|/*  * if_vmove() performs a limited version of if_detach() in current  * vnet and if_attach()es the ifnet to the vnet specified as 2nd arg.  * An attempt is made to shrink if_index in current vnet, find an  * unused if_index in target vnet and calls if_grow() if necessary,  * and finally find an unused if_xname for the target vnet.  */
+end_comment
+
+begin_function
+name|void
+name|if_vmove
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|struct
+name|vnet
+modifier|*
+name|new_vnet
+parameter_list|)
+block|{
+comment|/* 	 * Detach from current vnet, but preserve LLADDR info, do not 	 * mark as dead etc. so that the ifnet can be reattached later. 	 */
+name|if_detach_internal
+argument_list|(
+name|ifp
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Unlink the ifnet from ifindex_table[] in current vnet, 	 * and shrink the if_index for that vnet if possible. 	 * do / while construct below is needed to confine the scope 	 * of INIT_VNET_NET(). 	 */
+block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+name|IFNET_WLOCK
+argument_list|()
+expr_stmt|;
+name|ifnet_setbyindex
+argument_list|(
 name|ifp
 operator|->
-name|if_vnet
-operator|=
+name|if_index
+argument_list|,
 name|NULL
-expr_stmt|;
-endif|#
-directive|endif
-name|splx
-argument_list|(
-name|s
 argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|V_if_index
+operator|>
+literal|0
+operator|&&
+expr|\
+name|ifnet_byindex_locked
+argument_list|(
+name|V_if_index
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|V_if_index
+operator|--
+expr_stmt|;
+name|IFNET_WUNLOCK
+argument_list|()
+expr_stmt|;
+block|}
+empty_stmt|;
+comment|/* 	 * Switch to the context of the target vnet. 	 */
+name|CURVNET_SET_QUIET
+argument_list|(
+name|new_vnet
+argument_list|)
+expr_stmt|;
+name|INIT_VNET_NET
+argument_list|(
+name|new_vnet
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Try to find an empty slot below if_index.  If we fail, take  	 * the next slot. 	 */
+name|IFNET_WLOCK
+argument_list|()
+expr_stmt|;
+for|for
+control|(
+name|ifp
+operator|->
+name|if_index
+operator|=
+literal|1
+init|;
+name|ifp
+operator|->
+name|if_index
+operator|<=
+name|V_if_index
+condition|;
+name|ifp
+operator|->
+name|if_index
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|ifnet_byindex_locked
+argument_list|(
+name|ifp
+operator|->
+name|if_index
+argument_list|)
+operator|==
+name|NULL
+condition|)
+break|break;
+block|}
+comment|/* Catch if_index overflow. */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_index
+operator|<
+literal|1
+condition|)
+name|panic
+argument_list|(
+literal|"if_index overflow"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_index
+operator|>
+name|V_if_index
+condition|)
+name|V_if_index
+operator|=
+name|ifp
+operator|->
+name|if_index
+expr_stmt|;
+if|if
+condition|(
+name|V_if_index
+operator|>=
+name|V_if_indexlim
+condition|)
+name|if_grow
+argument_list|()
+expr_stmt|;
+name|ifnet_setbyindex
+argument_list|(
+name|ifp
+operator|->
+name|if_index
+argument_list|,
+name|ifp
+argument_list|)
+expr_stmt|;
+name|IFNET_WUNLOCK
+argument_list|()
+expr_stmt|;
+name|if_attach_internal
+argument_list|(
+name|ifp
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VIMAGE */
+end_comment
 
 begin_comment
 comment|/*  * Add a group to an interface  */

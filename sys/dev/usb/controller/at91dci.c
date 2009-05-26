@@ -160,7 +160,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
-name|_hw_usb2
+name|_hw_usb
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -178,7 +178,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_hw_usb2_at91dci
+name|_hw_usb_at91dci
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -3228,7 +3228,9 @@ name|td
 operator|->
 name|did_stall
 operator|=
-literal|0
+name|temp
+operator|->
+name|did_stall
 expr_stmt|;
 name|td
 operator|->
@@ -3376,6 +3378,17 @@ operator|->
 name|flags_int
 operator|.
 name|short_frames_ok
+expr_stmt|;
+name|temp
+operator|.
+name|did_stall
+operator|=
+operator|!
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|control_stall
 expr_stmt|;
 name|sc
 operator|=
@@ -4532,7 +4545,7 @@ name|xfer
 operator|->
 name|flags_int
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_DEVICE
 condition|)
@@ -5094,7 +5107,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|!=
 name|USB_MODE_DEVICE
 condition|)
@@ -8355,7 +8368,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 argument_list|,
 name|sc
 operator|->
@@ -8379,7 +8392,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|!=
 name|USB_MODE_DEVICE
 condition|)

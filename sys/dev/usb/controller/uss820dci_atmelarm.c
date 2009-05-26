@@ -577,13 +577,6 @@ operator|->
 name|sc_io_res
 argument_list|)
 expr_stmt|;
-comment|/* multiply all addresses by 4 */
-name|sc
-operator|->
-name|sc_reg_shift
-operator|=
-literal|2
-expr_stmt|;
 name|rid
 operator|=
 literal|0

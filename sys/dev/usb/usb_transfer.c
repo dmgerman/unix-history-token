@@ -178,7 +178,7 @@ block|,
 operator|.
 name|usb_mode
 operator|=
-name|USB_MODE_MAX
+name|USB_MODE_DUAL
 block|,
 comment|/* both modes */
 block|}
@@ -378,8 +378,9 @@ parameter_list|,
 name|uint8_t
 name|type
 parameter_list|,
-name|uint8_t
-name|usb_speed
+name|enum
+name|usb_dev_speed
+name|speed
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -405,7 +406,7 @@ name|xfer
 operator|->
 name|flags_int
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_DEVICE
 condition|)
@@ -1268,7 +1269,7 @@ name|xfer
 operator|->
 name|flags_int
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|=
 name|parm
 operator|->
@@ -1276,7 +1277,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 expr_stmt|;
 name|parm
 operator|->
@@ -3328,7 +3329,7 @@ name|setup
 operator|->
 name|usb_mode
 operator|!=
-name|USB_MODE_MAX
+name|USB_MODE_DUAL
 operator|)
 operator|&&
 operator|(
@@ -3340,7 +3341,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|)
 condition|)
 continue|continue;
@@ -4636,14 +4637,40 @@ operator|->
 name|flags
 operator|.
 name|stall_pipe
-condition|)
-block|{
-comment|/* no longer active */
+operator|&&
 name|xfer
 operator|->
 name|flags_int
 operator|.
 name|control_act
+condition|)
+block|{
+comment|/* the control transfer is no longer active */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|control_stall
+operator|=
+literal|1
+expr_stmt|;
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|control_act
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* don't stall control transfer by default */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|control_stall
 operator|=
 literal|0
 expr_stmt|;
@@ -4713,7 +4740,7 @@ name|xfer
 operator|->
 name|flags_int
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_DEVICE
 condition|)
@@ -4783,7 +4810,7 @@ name|xfer
 operator|->
 name|flags_int
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_DEVICE
 condition|)
@@ -5326,11 +5353,12 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Must return cancelled error code else 		 * device drivers can hang. 		 */
 name|usb2_transfer_done
 argument_list|(
 name|xfer
 argument_list|,
-name|USB_ERR_NOT_CONFIGURED
+name|USB_ERR_CANCELLED
 argument_list|)
 expr_stmt|;
 name|USB_BUS_UNLOCK
@@ -7711,7 +7739,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_DEVICE
 condition|)
@@ -8948,7 +8976,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_DEVICE
 condition|)
@@ -9384,8 +9412,9 @@ parameter_list|,
 name|uint8_t
 name|type
 parameter_list|,
-name|uint8_t
-name|usb_speed
+name|enum
+name|usb_dev_speed
+name|speed
 parameter_list|)
 block|{
 specifier|static
@@ -9582,7 +9611,7 @@ name|max
 operator|=
 name|intr_range_max
 index|[
-name|usb_speed
+name|speed
 index|]
 expr_stmt|;
 break|break;
@@ -9597,7 +9626,7 @@ name|max
 operator|=
 name|isoc_range_max
 index|[
-name|usb_speed
+name|speed
 index|]
 expr_stmt|;
 break|break;
@@ -9612,7 +9641,7 @@ name|temp
 operator|=
 name|bulk_min
 index|[
-name|usb_speed
+name|speed
 index|]
 expr_stmt|;
 else|else
@@ -9621,7 +9650,7 @@ name|temp
 operator|=
 name|control_min
 index|[
-name|usb_speed
+name|speed
 index|]
 expr_stmt|;
 comment|/* default is fixed */
@@ -9663,7 +9692,7 @@ name|temp
 expr_stmt|;
 if|if
 condition|(
-name|usb_speed
+name|speed
 operator|==
 name|USB_SPEED_FULL
 condition|)
@@ -9700,7 +9729,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|usb_speed
+name|speed
 operator|==
 name|USB_SPEED_VARIABLE
 operator|)

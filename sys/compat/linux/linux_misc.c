@@ -353,6 +353,16 @@ directive|include
 file|<compat/linux/linux_misc.h>
 end_include
 
+begin_decl_stmt
+name|int
+name|stclohz
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Statistics clock frequency */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2996,21 +3006,25 @@ begin_struct
 struct|struct
 name|l_times_argv
 block|{
-name|l_long
+name|l_clock_t
 name|tms_utime
 decl_stmt|;
-name|l_long
+name|l_clock_t
 name|tms_stime
 decl_stmt|;
-name|l_long
+name|l_clock_t
 name|tms_cutime
 decl_stmt|;
-name|l_long
+name|l_clock_t
 name|tms_cstime
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Glibc versions prior to 2.2.1 always use hard-coded CLK_TCK value.  * Since 2.2.1 Glibc uses value exported from kernel via AT_CLKTCK  * auxiliary vector entry.  */
+end_comment
 
 begin_define
 define|#
@@ -3019,9 +3033,25 @@ name|CLK_TCK
 value|100
 end_define
 
-begin_comment
-comment|/* Linux uses 100 */
-end_comment
+begin_define
+define|#
+directive|define
+name|CONVOTCK
+parameter_list|(
+name|r
+parameter_list|)
+value|(r.tv_sec * CLK_TCK + r.tv_usec / (1000000 / CLK_TCK))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONVNTCK
+parameter_list|(
+name|r
+parameter_list|)
+value|(r.tv_sec * stclohz + r.tv_usec / (1000000 / stclohz))
+end_define
 
 begin_define
 define|#
@@ -3030,7 +3060,7 @@ name|CONVTCK
 parameter_list|(
 name|r
 parameter_list|)
-value|(r.tv_sec * CLK_TCK + r.tv_usec / (1000000 / CLK_TCK))
+value|(linux_kernver(td)>= LINUX_KERNVER_2004000 ?		\ 			    CONVNTCK(r) : CONVOTCK(r))
 end_define
 
 begin_function

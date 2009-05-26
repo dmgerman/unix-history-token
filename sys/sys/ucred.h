@@ -101,11 +101,11 @@ name|cr_prison
 decl_stmt|;
 comment|/* jail(2) */
 name|struct
-name|vnet
+name|vimage
 modifier|*
-name|cr_vnet
+name|cr_vimage
 decl_stmt|;
-comment|/* vimage / vnet */
+comment|/* vimage */
 name|void
 modifier|*
 name|cr_pspare

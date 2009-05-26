@@ -15952,7 +15952,9 @@ operator|)
 operator|==
 name|NULL
 condition|)
-break|break;
+goto|goto
+name|out
+goto|;
 name|dst_pte
 operator|=
 operator|(
@@ -16057,6 +16059,9 @@ name|free
 argument_list|)
 expr_stmt|;
 block|}
+goto|goto
+name|out
+goto|;
 block|}
 if|if
 condition|(
@@ -16079,6 +16084,8 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+name|out
+label|:
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;

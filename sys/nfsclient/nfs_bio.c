@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mount.h>
 end_include
 
@@ -128,12 +134,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<rpc/rpcclnt.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<nfs/rpcv2.h>
 end_include
 
@@ -165,12 +165,6 @@ begin_include
 include|#
 directive|include
 file|<nfsclient/nfs_kdtrace.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<nfs4client/nfs4.h>
 end_include
 
 begin_function_decl
@@ -534,9 +528,6 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|m
@@ -546,8 +537,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* handled by vm_fault now	  */
-comment|/* vm_page_zero_invalid(m, TRUE); */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -593,9 +585,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|object
@@ -884,9 +873,19 @@ name|valid
 operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
-name|vm_page_undirty
+name|KASSERT
 argument_list|(
 name|m
+operator|->
+name|dirty
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"nfs_getpages: page %p is dirty"
+operator|,
+name|m
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -905,7 +904,7 @@ name|valid
 operator|=
 literal|0
 expr_stmt|;
-name|vm_page_set_validclean
+name|vm_page_set_valid
 argument_list|(
 name|m
 argument_list|,
@@ -916,8 +915,32 @@ operator|-
 name|toff
 argument_list|)
 expr_stmt|;
-comment|/* handled by vm_fault now	  */
-comment|/* vm_page_zero_invalid(m, TRUE); */
+name|KASSERT
+argument_list|(
+operator|(
+name|m
+operator|->
+name|dirty
+operator|&
+name|vm_page_bits
+argument_list|(
+literal|0
+argument_list|,
+name|size
+operator|-
+name|toff
+argument_list|)
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"nfs_getpages: page %p is dirty"
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -7467,31 +7490,6 @@ name|nmp
 operator|->
 name|nm_flag
 operator|&
-name|NFSMNT_NFSV4
-operator|)
-operator|!=
-literal|0
-condition|)
-name|error
-operator|=
-name|nfs4_readdirrpc
-argument_list|(
-name|vp
-argument_list|,
-name|uiop
-argument_list|,
-name|cr
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-if|if
-condition|(
-operator|(
-name|nmp
-operator|->
-name|nm_flag
-operator|&
 name|NFSMNT_RDIRPLUS
 operator|)
 operator|!=
@@ -7546,7 +7544,6 @@ argument_list|,
 name|cr
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 		 * end-of-directory sets B_INVAL but does not generate an 		 * error. 		 */
 if|if
 condition|(

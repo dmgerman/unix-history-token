@@ -1720,7 +1720,7 @@ operator|!=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|ng_netflow_settimeouts
+name|ng_netflow_setconfig
 argument_list|)
 condition|)
 name|ERROUT

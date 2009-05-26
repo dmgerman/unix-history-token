@@ -1609,6 +1609,15 @@ parameter_list|)
 value|vn_close(vp, 0, NULL, NULL)
 define|#
 directive|define
+name|VN_RELE_ASYNC
+parameter_list|(
+name|vp
+parameter_list|,
+name|taskq
+parameter_list|)
+value|vn_close(vp, 0, NULL, NULL)
+define|#
+directive|define
 name|vn_lock
 parameter_list|(
 name|vp

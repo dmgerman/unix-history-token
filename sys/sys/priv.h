@@ -2523,6 +2523,32 @@ comment|/* Update cpu microcode. */
 end_comment
 
 begin_comment
+comment|/*  * Capi4BSD privileges.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_C4B_RESET_CTLR
+value|650
+end_define
+
+begin_comment
+comment|/* Load firmware, reset controller. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_C4B_TRACE
+value|651
+end_define
+
+begin_comment
+comment|/* Unrestricted CAPI message tracing. */
+end_comment
+
+begin_comment
 comment|/*  * Track end of privilege list.  */
 end_comment
 
@@ -2530,7 +2556,7 @@ begin_define
 define|#
 directive|define
 name|_PRIV_HIGHEST
-value|642
+value|652
 end_define
 
 begin_comment

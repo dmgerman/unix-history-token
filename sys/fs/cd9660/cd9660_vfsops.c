@@ -343,11 +343,6 @@ name|data
 parameter_list|,
 name|int
 name|flags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -580,17 +575,17 @@ name|struct
 name|mount
 modifier|*
 name|mp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
 name|vnode
 modifier|*
 name|devvp
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
 decl_stmt|;
 name|char
 modifier|*
@@ -613,6 +608,10 @@ name|imp
 init|=
 literal|0
 decl_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
 comment|/* 	 * Unconditionally mount as read-only. 	 */
 name|MNT_ILOCK
 argument_list|(
@@ -2400,8 +2399,6 @@ parameter_list|(
 name|mp
 parameter_list|,
 name|mntflags
-parameter_list|,
-name|td
 parameter_list|)
 name|struct
 name|mount
@@ -2410,11 +2407,6 @@ name|mp
 decl_stmt|;
 name|int
 name|mntflags
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
 decl_stmt|;
 block|{
 name|struct
@@ -2452,7 +2444,7 @@ literal|0
 argument_list|,
 name|flags
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 operator|)
 condition|)
@@ -2598,8 +2590,6 @@ parameter_list|,
 name|flags
 parameter_list|,
 name|vpp
-parameter_list|,
-name|td
 parameter_list|)
 name|struct
 name|mount
@@ -2614,11 +2604,6 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
 decl_stmt|;
 block|{
 name|struct
@@ -2693,8 +2678,6 @@ parameter_list|(
 name|mp
 parameter_list|,
 name|sbp
-parameter_list|,
-name|td
 parameter_list|)
 name|struct
 name|mount
@@ -2705,11 +2688,6 @@ name|struct
 name|statfs
 modifier|*
 name|sbp
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
 decl_stmt|;
 block|{
 name|struct

@@ -2273,6 +2273,23 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|vfs_bio_set_valid
+parameter_list|(
+name|struct
+name|buf
+modifier|*
+parameter_list|,
+name|int
+name|base
+parameter_list|,
+name|int
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vfs_bio_set_validclean
 parameter_list|(
 name|struct

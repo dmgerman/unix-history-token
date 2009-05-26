@@ -125,16 +125,6 @@ begin_comment
 comment|/*  * Delay n microseconds.  */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|void
-name|ath_hal_delay
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -142,7 +132,7 @@ name|OS_DELAY
 parameter_list|(
 name|_n
 parameter_list|)
-value|ath_hal_delay(_n)
+value|DELAY(_n)
 end_define
 
 begin_define
@@ -161,21 +151,8 @@ name|_a
 parameter_list|,
 name|_n
 parameter_list|)
-value|ath_hal_memzero((_a), (_n))
+value|bzero((_a), (_n))
 end_define
-
-begin_function_decl
-specifier|extern
-name|void
-name|ath_hal_memzero
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_define
 define|#
@@ -188,26 +165,8 @@ name|_s
 parameter_list|,
 name|_n
 parameter_list|)
-value|ath_hal_memcpy(_d,_s,_n)
+value|memcpy(_d,_s,_n)
 end_define
-
-begin_function_decl
-specifier|extern
-name|void
-modifier|*
-name|ath_hal_memcpy
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_define
 define|#
@@ -224,28 +183,6 @@ struct_decl|struct
 name|ath_hal
 struct_decl|;
 end_struct_decl
-
-begin_function_decl
-specifier|extern
-name|u_int32_t
-name|ath_hal_getuptime
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|OS_GETUPTIME
-parameter_list|(
-name|_ah
-parameter_list|)
-value|ath_hal_getuptime(_ah)
-end_define
 
 begin_comment
 comment|/*  * Register read/write operations are either handled through  * platform-dependent routines (or when debugging is enabled  * with AH_DEBUG); or they are inline expanded using the macros  * defined below.  For public builds we inline expand only for  * platforms where it is certain what the requirements are to  * read/write registers--typically they are memory-mapped and  * no explicit synchronization or memory invalidation operations  * are required (e.g. i386).  */

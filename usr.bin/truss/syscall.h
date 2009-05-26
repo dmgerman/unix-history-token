@@ -154,6 +154,19 @@ index|[
 literal|10
 index|]
 decl_stmt|;
+name|struct
+name|timespec
+name|time
+decl_stmt|;
+comment|/* Time spent for this call */
+name|int
+name|ncalls
+decl_stmt|;
+comment|/* Number of calls */
+name|int
+name|nerror
+decl_stmt|;
+comment|/* Number of calls that returned with error */
 block|}
 struct|;
 end_struct
@@ -235,6 +248,22 @@ parameter_list|,
 name|int
 parameter_list|,
 name|long
+parameter_list|,
+name|struct
+name|syscall
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|print_summary
+parameter_list|(
+name|struct
+name|trussinfo
+modifier|*
+name|trussinfo
 parameter_list|)
 function_decl|;
 end_function_decl

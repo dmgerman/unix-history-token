@@ -319,10 +319,18 @@ end_ifdef
 
 begin_decl_stmt
 specifier|extern
-name|pmap_t
-name|kernel_pmap
+name|struct
+name|pmap
+name|kernel_pmap_store
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|kernel_pmap
+value|(&kernel_pmap_store)
+end_define
 
 begin_define
 define|#
@@ -456,13 +464,6 @@ typedef|*
 name|pv_entry_t
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|PV_ENTRY_NULL
-value|((pv_entry_t) 0)
-end_define
 
 begin_ifdef
 ifdef|#

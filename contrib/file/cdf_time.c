@@ -18,7 +18,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: cdf_time.c,v 1.5 2009/02/03 20:27:51 christos Exp $"
+literal|"@(#)$File: cdf_time.c,v 1.6 2009/03/10 11:44:29 christos Exp $"
 argument_list|)
 end_macro
 
@@ -355,6 +355,9 @@ literal|"UTC"
 decl_stmt|;
 endif|#
 directive|endif
+name|int
+name|rdays
+decl_stmt|;
 comment|/* Unit is 100's of nanoseconds */
 name|ts
 operator|->
@@ -421,16 +424,15 @@ operator|/
 literal|365
 operator|)
 expr_stmt|;
-name|int
 name|rdays
-init|=
+operator|=
 name|cdf_getdays
 argument_list|(
 name|tm
 operator|.
 name|tm_year
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|t
 operator|-=
 name|rdays

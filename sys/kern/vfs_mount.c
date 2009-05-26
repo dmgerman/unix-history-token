@@ -201,6 +201,16 @@ end_define
 
 begin_function_decl
 specifier|static
+name|void
+name|set_rootvnode
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|vfs_domount
 parameter_list|(
@@ -3950,8 +3960,6 @@ argument_list|,
 name|uap
 operator|->
 name|flags
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -4850,8 +4858,6 @@ operator|=
 name|VFS_MOUNT
 argument_list|(
 name|mp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Process the export option only if we are 	 * updating mount options. 	 */
@@ -5043,8 +5049,6 @@ operator|&
 name|mp
 operator|->
 name|mnt_stat
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -5363,8 +5367,6 @@ name|LK_EXCLUSIVE
 argument_list|,
 operator|&
 name|newdp
-argument_list|,
-name|td
 argument_list|)
 condition|)
 name|panic
@@ -6334,8 +6336,6 @@ name|LK_EXCLUSIVE
 argument_list|,
 operator|&
 name|fsrootvp
-argument_list|,
-name|td
 argument_list|)
 operator|==
 literal|0
@@ -6400,8 +6400,6 @@ argument_list|(
 name|mp
 argument_list|,
 name|MNT_WAIT
-argument_list|,
-name|td
 argument_list|)
 operator|)
 operator|==
@@ -6413,8 +6411,9 @@ name|flags
 operator|&
 name|MNT_FORCE
 operator|)
+operator|!=
+literal|0
 condition|)
-block|{
 name|error
 operator|=
 name|VFS_UNMOUNT
@@ -6422,11 +6421,8 @@ argument_list|(
 name|mp
 argument_list|,
 name|flags
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
-block|}
 name|vn_finished_write
 argument_list|(
 name|mp
@@ -6458,8 +6454,6 @@ name|LK_EXCLUSIVE
 argument_list|,
 operator|&
 name|fsrootvp
-argument_list|,
-name|td
 argument_list|)
 operator|==
 literal|0
@@ -7141,12 +7135,7 @@ begin_function
 specifier|static
 name|void
 name|set_rootvnode
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
+parameter_list|()
 block|{
 name|struct
 name|proc
@@ -7167,8 +7156,6 @@ name|LK_EXCLUSIVE
 argument_list|,
 operator|&
 name|rootvnode
-argument_list|,
-name|td
 argument_list|)
 condition|)
 name|panic
@@ -7178,7 +7165,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|=
-name|td
+name|curthread
 operator|->
 name|td_proc
 expr_stmt|;
@@ -7359,8 +7346,6 @@ operator|=
 name|VFS_MOUNT
 argument_list|(
 name|mp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -7430,9 +7415,7 @@ name|mountlist_mtx
 argument_list|)
 expr_stmt|;
 name|set_rootvnode
-argument_list|(
-name|td
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|error
 operator|=
@@ -7540,8 +7523,6 @@ name|LK_EXCLUSIVE
 argument_list|,
 operator|&
 name|dvp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VI_LOCK
@@ -7579,9 +7560,7 @@ operator|=
 name|NULL
 expr_stmt|;
 name|set_rootvnode
-argument_list|(
-name|td
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|cache_purgevfs
 argument_list|(
@@ -10470,11 +10449,6 @@ name|struct
 name|statfs
 modifier|*
 name|sbp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|int
@@ -10494,8 +10468,6 @@ operator|&
 name|mp
 operator|->
 name|mnt_stat
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if

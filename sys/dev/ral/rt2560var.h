@@ -30,11 +30,14 @@ decl_stmt|;
 name|uint16_t
 name|wr_chan_flags
 decl_stmt|;
-name|uint8_t
-name|wr_antenna
+name|int8_t
+name|wr_antsignal
+decl_stmt|;
+name|int8_t
+name|wr_antnoise
 decl_stmt|;
 name|uint8_t
-name|wr_antsignal
+name|wr_antenna
 decl_stmt|;
 block|}
 struct|;
@@ -45,7 +48,7 @@ define|#
 directive|define
 name|RT2560_RX_RADIOTAP_PRESENT
 define|\
-value|((1<< IEEE80211_RADIOTAP_TSFT) |				\ 	 (1<< IEEE80211_RADIOTAP_FLAGS) |				\ 	 (1<< IEEE80211_RADIOTAP_RATE) |				\ 	 (1<< IEEE80211_RADIOTAP_CHANNEL) |				\ 	 (1<< IEEE80211_RADIOTAP_ANTENNA) |				\ 	 (1<< IEEE80211_RADIOTAP_DB_ANTSIGNAL))
+value|((1<< IEEE80211_RADIOTAP_TSFT) |				\ 	 (1<< IEEE80211_RADIOTAP_FLAGS) |				\ 	 (1<< IEEE80211_RADIOTAP_RATE) |				\ 	 (1<< IEEE80211_RADIOTAP_CHANNEL) |				\ 	 (1<< IEEE80211_RADIOTAP_ANTENNA) |				\ 	 (1<< IEEE80211_RADIOTAP_DBM_ANTSIGNAL) |			\ 	 (1<< IEEE80211_RADIOTAP_DBM_ANTNOISE))
 end_define
 
 begin_struct

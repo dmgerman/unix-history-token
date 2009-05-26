@@ -4008,27 +4008,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * XXX really needed? 	 */
-if|if
-condition|(
-name|sc
-operator|==
-name|NULL
-condition|)
-block|{
-name|ifp
-operator|->
-name|if_drv_flags
-operator|&=
-operator|~
-name|IFF_DRV_RUNNING
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 switch|switch
 condition|(
 name|command

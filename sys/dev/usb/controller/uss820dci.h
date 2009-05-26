@@ -1763,19 +1763,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|USS820_GET_REG
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|)
-define|\
-value|((reg)<< (sc)->sc_reg_shift)
-end_define
-
-begin_define
-define|#
-directive|define
 name|USS820_READ_1
 parameter_list|(
 name|sc
@@ -1783,7 +1770,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_1((sc)->sc_io_tag, (sc)->sc_io_hdl, \     USS820_GET_REG(sc,reg))
+value|bus_space_read_1((sc)->sc_io_tag, (sc)->sc_io_hdl, reg)
 end_define
 
 begin_define
@@ -1798,7 +1785,7 @@ parameter_list|,
 name|data
 parameter_list|)
 define|\
-value|bus_space_write_1((sc)->sc_io_tag, (sc)->sc_io_hdl, \     USS820_GET_REG(sc,reg), data)
+value|bus_space_write_1((sc)->sc_io_tag, (sc)->sc_io_hdl, reg, data)
 end_define
 
 begin_struct_decl
@@ -1856,48 +1843,6 @@ name|uint16_t
 name|max_packet_size
 decl_stmt|;
 name|uint8_t
-name|rx_stat_reg
-decl_stmt|;
-name|uint8_t
-name|tx_stat_reg
-decl_stmt|;
-name|uint8_t
-name|rx_flag_reg
-decl_stmt|;
-name|uint8_t
-name|tx_flag_reg
-decl_stmt|;
-name|uint8_t
-name|rx_fifo_reg
-decl_stmt|;
-name|uint8_t
-name|tx_fifo_reg
-decl_stmt|;
-name|uint8_t
-name|rx_count_low_reg
-decl_stmt|;
-name|uint8_t
-name|rx_count_high_reg
-decl_stmt|;
-name|uint8_t
-name|tx_count_low_reg
-decl_stmt|;
-name|uint8_t
-name|tx_count_high_reg
-decl_stmt|;
-name|uint8_t
-name|rx_cntl_reg
-decl_stmt|;
-name|uint8_t
-name|tx_cntl_reg
-decl_stmt|;
-name|uint8_t
-name|ep_reg
-decl_stmt|;
-name|uint8_t
-name|pend_reg
-decl_stmt|;
-name|uint8_t
 name|ep_index
 decl_stmt|;
 name|uint8_t
@@ -1922,6 +1867,11 @@ literal|1
 decl_stmt|;
 name|uint8_t
 name|did_stall
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|did_enable
 range|:
 literal|1
 decl_stmt|;
@@ -1967,6 +1917,9 @@ decl_stmt|;
 comment|/*          * short_pkt = 0: transfer should be short terminated          * short_pkt = 1: transfer should not be short terminated          */
 name|uint8_t
 name|setup_alt_next
+decl_stmt|;
+name|uint8_t
+name|did_stall
 decl_stmt|;
 block|}
 struct|;
@@ -2124,9 +2077,6 @@ name|uint8_t
 name|sc_conf
 decl_stmt|;
 comment|/* root HUB config */
-name|uint8_t
-name|sc_reg_shift
-decl_stmt|;
 name|uint8_t
 name|sc_hub_idata
 index|[

@@ -30,7 +30,7 @@ end_comment
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
-name|_hw_usb2
+name|_hw_usb
 argument_list|)
 expr_stmt|;
 end_expr_stmt

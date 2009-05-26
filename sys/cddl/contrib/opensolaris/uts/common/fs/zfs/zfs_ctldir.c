@@ -474,8 +474,6 @@ name|LK_EXCLUSIVE
 argument_list|,
 operator|&
 name|rvp
-argument_list|,
-name|curthread
 argument_list|)
 operator|==
 literal|0
@@ -1300,8 +1298,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
 name|vpp
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 if|if

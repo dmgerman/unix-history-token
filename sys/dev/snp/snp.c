@@ -110,9 +110,50 @@ name|snp_dev
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+specifier|static
+name|MALLOC_DEFINE
+argument_list|(
+name|M_SNP
+argument_list|,
+literal|"snp"
+argument_list|,
+literal|"tty snoop device"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* XXX: should be mtx, but TTY can be locked by Giant. */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+unit|static struct mtx	snp_register_lock; MTX_SYSINIT(snp_register_lock,&snp_register_lock,     "tty snoop registration", MTX_DEF);
+define|#
+directive|define
+name|SNP_LOCK
+parameter_list|()
+value|mtx_lock(&snp_register_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNP_UNLOCK
+parameter_list|()
+value|mtx_unlock(&snp_register_lock)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_decl_stmt
 specifier|static
@@ -135,18 +176,26 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-specifier|static
-name|MALLOC_DEFINE
-argument_list|(
-name|M_SNP
-argument_list|,
-literal|"snp"
-argument_list|,
-literal|"tty snoop device"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_define
+define|#
+directive|define
+name|SNP_LOCK
+parameter_list|()
+value|sx_xlock(&snp_register_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNP_UNLOCK
+parameter_list|()
+value|sx_xunlock(&snp_register_lock)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * There is no need to have a big input buffer. In most typical setups,  * we won't inject much data into the TTY, because users can't type  * really fast.  */
@@ -943,11 +992,8 @@ case|case
 name|SNPSTTY
 case|:
 comment|/* Bind TTY to snoop instance. */
-name|sx_xlock
-argument_list|(
-operator|&
-name|snp_register_lock
-argument_list|)
+name|SNP_LOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -958,11 +1004,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|sx_xunlock
-argument_list|(
-operator|&
-name|snp_register_lock
-argument_list|)
+name|SNP_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -996,11 +1039,8 @@ argument_list|,
 name|ss
 argument_list|)
 expr_stmt|;
-name|sx_xunlock
-argument_list|(
-operator|&
-name|snp_register_lock
-argument_list|)
+name|SNP_UNLOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

@@ -771,6 +771,13 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|periph
+argument_list|,
+name|M_CAMPERIPH
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|CAM_REQ_INVALID

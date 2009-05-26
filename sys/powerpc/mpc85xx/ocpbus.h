@@ -16,7 +16,36 @@ name|_MACHINE_OCP85XX_H_
 end_define
 
 begin_comment
-comment|/*  * Local access registers.  */
+comment|/*  * Configuration control and status registers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_CCSRBAR
+value|(CCSRBAR_VA + 0x0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_BPTR
+value|(CCSRBAR_VA + 0x20)
+end_define
+
+begin_comment
+comment|/*  * E500 Coherency Module registers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_EEBPCR
+value|(CCSRBAR_VA + 0x1010)
+end_define
+
+begin_comment
+comment|/*  * Local access registers  */
 end_comment
 
 begin_define
@@ -96,7 +125,18 @@ value|22
 end_define
 
 begin_comment
-comment|/*  * Power-On Reset configuration.  */
+comment|/*  * L2 cache registers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_L2CTL
+value|(CCSRBAR_VA + 0x20000)
+end_define
+
+begin_comment
+comment|/*  * Power-On Reset configuration  */
 end_comment
 
 begin_define
@@ -146,7 +186,7 @@ begin_define
 define|#
 directive|define
 name|OCP85XX_I2C_SIZE
-value|0x15
+value|0x16
 end_define
 
 begin_define

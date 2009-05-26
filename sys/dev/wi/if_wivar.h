@@ -151,8 +151,6 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
-parameter_list|,
-name|u_int32_t
 parameter_list|)
 function_decl|;
 name|int
@@ -422,15 +420,9 @@ name|struct
 name|wi_tx_radiotap_header
 name|sc_tx_th
 decl_stmt|;
-name|int
-name|sc_tx_th_len
-decl_stmt|;
 name|struct
 name|wi_rx_radiotap_header
 name|sc_rx_th
-decl_stmt|;
-name|int
-name|sc_rx_th_len
 decl_stmt|;
 block|}
 struct|;

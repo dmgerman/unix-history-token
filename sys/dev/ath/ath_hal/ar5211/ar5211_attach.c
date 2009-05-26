@@ -2376,6 +2376,22 @@ name|halTstampPrecision
 operator|=
 literal|13
 expr_stmt|;
+name|pCap
+operator|->
+name|halIntrMask
+operator|=
+name|HAL_INT_COMMON
+operator||
+name|HAL_INT_RX
+operator||
+name|HAL_INT_TX
+operator||
+name|HAL_INT_FATAL
+operator||
+name|HAL_INT_BNR
+operator||
+name|HAL_INT_TIM
+expr_stmt|;
 comment|/* XXX might be ok w/ some chip revs */
 name|ahpriv
 operator|->

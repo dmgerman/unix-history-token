@@ -1679,7 +1679,7 @@ name|ipi_zone
 operator|=
 name|uma_zcreate
 argument_list|(
-literal|"inpcb"
+literal|"tcp_inpcb"
 argument_list|,
 sizeof|sizeof
 argument_list|(

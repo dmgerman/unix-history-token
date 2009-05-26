@@ -1525,7 +1525,7 @@ empty_stmt|;
 endif|#
 directive|endif
 comment|/* IPSEC */
-comment|/* 	 * If there is a routing header, replace the destination address field 	 * with the first hop of the routing header. 	 */
+comment|/* 	 * If there is a routing header, discard the packet. 	 */
 if|if
 condition|(
 name|exthdrs
@@ -1533,61 +1533,6 @@ operator|.
 name|ip6e_rthdr
 condition|)
 block|{
-name|struct
-name|ip6_rthdr
-modifier|*
-name|rh
-init|=
-operator|(
-expr|struct
-name|ip6_rthdr
-operator|*
-operator|)
-operator|(
-name|mtod
-argument_list|(
-name|exthdrs
-operator|.
-name|ip6e_rthdr
-argument_list|,
-expr|struct
-name|ip6_rthdr
-operator|*
-argument_list|)
-operator|)
-decl_stmt|;
-comment|/* 		 * While this switch may look gratuitous, leave it in 		 * in favour of RH2 implementations, etc. 		 */
-switch|switch
-condition|(
-name|rh
-operator|->
-name|ip6r_type
-condition|)
-block|{
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
-case|case
-name|IPV6_RTHDR_TYPE_0
-case|:
-comment|/* 			 * According to RFC 5095 we should not implement 			 * it in any way but we may want to give the user 			 * a hint for now. 			 */
-name|log
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|"[%s:%d] IPv6 Type 0 Routing Headers are "
-literal|"deprecated.\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
-comment|/* FALLTHROUGH */
-endif|#
-directive|endif
-default|default:
-comment|/* is it possible? */
 name|error
 operator|=
 name|EINVAL
@@ -1595,7 +1540,6 @@ expr_stmt|;
 goto|goto
 name|bad
 goto|;
-block|}
 block|}
 comment|/* Source address validation */
 if|if

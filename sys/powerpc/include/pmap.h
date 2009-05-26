@@ -342,13 +342,6 @@ end_struct
 begin_define
 define|#
 directive|define
-name|MEM_REGIONS
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
 name|pmap_page_is_mapped
 parameter_list|(
 name|m

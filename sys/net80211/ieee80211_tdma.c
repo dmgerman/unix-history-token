@@ -488,10 +488,7 @@ name|int
 name|rssi
 parameter_list|,
 name|int
-name|noise
-parameter_list|,
-name|uint32_t
-name|rstamp
+name|nf
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -538,8 +535,11 @@ name|u_int8_t
 modifier|*
 name|ie
 parameter_list|,
-name|u_int32_t
-name|rstamp
+name|int
+name|rssi
+parameter_list|,
+name|int
+name|nf
 parameter_list|,
 specifier|const
 name|struct
@@ -1508,10 +1508,7 @@ name|int
 name|rssi
 parameter_list|,
 name|int
-name|noise
-parameter_list|,
-name|uint32_t
-name|rstamp
+name|nf
 parameter_list|)
 block|{
 name|struct
@@ -1749,7 +1746,9 @@ name|scan
 operator|.
 name|tdma
 argument_list|,
-name|rstamp
+name|rssi
+argument_list|,
+name|nf
 argument_list|,
 name|wh
 argument_list|)
@@ -1770,9 +1769,7 @@ name|subtype
 argument_list|,
 name|rssi
 argument_list|,
-name|noise
-argument_list|,
-name|rstamp
+name|nf
 argument_list|)
 expr_stmt|;
 block|}
@@ -2313,8 +2310,11 @@ name|u_int8_t
 modifier|*
 name|ie
 parameter_list|,
-name|u_int32_t
-name|rstamp
+name|int
+name|rssi
+parameter_list|,
+name|int
+name|nf
 parameter_list|,
 specifier|const
 name|struct
@@ -2618,9 +2618,12 @@ block|{
 name|uint64_t
 name|tstamp
 decl_stmt|;
-name|int32_t
-name|rtt
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|uint32_t rstamp = (uint32_t) le64toh(rs->tsf); 			int32_t rtt;
+endif|#
+directive|endif
 comment|/* 			 * Use returned timstamp to calculate the 			 * roundtrip time. 			 */
 name|memcpy
 argument_list|(
@@ -2634,54 +2637,15 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-comment|/* XXX use only 15 bits of rstamp */
-name|rtt
-operator|=
-name|rstamp
-operator|-
-operator|(
-name|le64toh
-argument_list|(
-name|tstamp
-argument_list|)
-operator|&
-literal|0x7fff
-operator|)
-expr_stmt|;
-if|if
-condition|(
-name|rtt
-operator|<
+if|#
+directive|if
 literal|0
-condition|)
-name|rtt
-operator|+=
-literal|0x7fff
-expr_stmt|;
+comment|/* XXX use only 15 bits of rstamp */
+block|rtt = rstamp - (le64toh(tstamp)& 0x7fff); 			if (rtt< 0) 				rtt += 0x7fff;
 comment|/* XXX hack to quiet normal use */
-name|IEEE80211_DPRINTF
-argument_list|(
-name|vap
-argument_list|,
-name|IEEE80211_MSG_DOT1X
-argument_list|,
-literal|"tdma rtt %5u [rstamp %5u tstamp %llu]\n"
-argument_list|,
-name|rtt
-argument_list|,
-name|rstamp
-argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
-name|le64toh
-argument_list|(
-name|tstamp
-argument_list|)
-argument_list|)
-expr_stmt|;
+block|IEEE80211_DPRINTF(vap, IEEE80211_MSG_DOT1X, 			    "tdma rtt %5u [rstamp %5u tstamp %llu]\n", 			    rtt, rstamp, 			    (unsigned long long) le64toh(tstamp));
+endif|#
+directive|endif
 block|}
 elseif|else
 if|if

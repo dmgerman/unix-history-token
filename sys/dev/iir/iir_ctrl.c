@@ -488,7 +488,8 @@ parameter_list|,
 name|int
 name|fmt
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|p
 parameter_list|)
@@ -564,7 +565,8 @@ parameter_list|,
 name|int
 name|fmt
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|p
 parameter_list|)
@@ -795,7 +797,8 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|p
 parameter_list|)

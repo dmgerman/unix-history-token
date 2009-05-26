@@ -1006,7 +1006,7 @@ name|len
 operator|=
 name|strlen
 argument_list|(
-name|record
+name|cbuf
 argument_list|)
 expr_stmt|;
 operator|*

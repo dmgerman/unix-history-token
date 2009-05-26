@@ -145,6 +145,13 @@ name|mask
 parameter_list|)
 parameter_list|)
 function_decl|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
 specifier|extern
 name|acl_t
 modifier|*
@@ -215,6 +222,9 @@ modifier|*
 name|b
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
+comment|/* _KERNEL */
 ifdef|#
 directive|ifdef
 name|__cplusplus

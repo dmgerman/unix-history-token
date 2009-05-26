@@ -2069,6 +2069,14 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
+name|INIT_VPROCG
+argument_list|(
+name|TD_TO_VPROCG
+argument_list|(
+name|td
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|char
 modifier|*
 name|str

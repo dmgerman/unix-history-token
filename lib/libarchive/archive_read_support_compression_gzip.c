@@ -549,6 +549,10 @@ index|[
 name|len
 index|]
 expr_stmt|;
+name|len
+operator|+=
+literal|2
+expr_stmt|;
 block|}
 comment|/* Null-terminated optional filename. */
 if|if

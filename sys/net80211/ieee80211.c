@@ -2270,6 +2270,11 @@ argument_list|(
 name|vap
 argument_list|)
 expr_stmt|;
+name|ieee80211_radiotap_vattach
+argument_list|(
+name|vap
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -2456,22 +2461,6 @@ operator|=
 name|ieee80211_output
 expr_stmt|;
 comment|/* NB: if_mtu set by ether_ifattach to ETHERMTU */
-name|bpfattach2
-argument_list|(
-name|ifp
-argument_list|,
-name|DLT_IEEE802_11
-argument_list|,
-name|ifp
-operator|->
-name|if_hdrlen
-argument_list|,
-operator|&
-name|vap
-operator|->
-name|iv_rawbpf
-argument_list|)
-expr_stmt|;
 name|IEEE80211_LOCK
 argument_list|(
 name|ic
@@ -2488,6 +2477,19 @@ name|vap
 argument_list|,
 name|iv_next
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_opmode
+operator|==
+name|IEEE80211_M_MONITOR
+condition|)
+name|ic
+operator|->
+name|ic_monvaps
+operator|++
 expr_stmt|;
 name|ieee80211_syncflag_locked
 argument_list|(
@@ -2698,6 +2700,19 @@ argument_list|,
 name|iv_next
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_opmode
+operator|==
+name|IEEE80211_M_MONITOR
+condition|)
+name|ic
+operator|->
+name|ic_monvaps
+operator|--
+expr_stmt|;
 name|ieee80211_syncflag_locked
 argument_list|(
 name|ic
@@ -2745,6 +2760,14 @@ argument_list|,
 name|IEEE80211_FEXT_USEHT40
 argument_list|)
 expr_stmt|;
+comment|/* NB: this handles the bpfdetach done below */
+name|ieee80211_syncflag_ext_locked
+argument_list|(
+name|ic
+argument_list|,
+name|IEEE80211_FEXT_BPF
+argument_list|)
+expr_stmt|;
 name|ieee80211_syncifflag_locked
 argument_list|(
 name|ic
@@ -2765,7 +2788,7 @@ name|ic
 argument_list|)
 expr_stmt|;
 comment|/* XXX can't hold com lock */
-comment|/* NB: bpfattach is called by ether_ifdetach and claims all taps */
+comment|/* NB: bpfdetach is called by ether_ifdetach and claims all taps */
 name|ether_ifdetach
 argument_list|(
 name|ifp
@@ -2777,6 +2800,11 @@ operator|&
 name|vap
 operator|->
 name|iv_media
+argument_list|)
+expr_stmt|;
+name|ieee80211_radiotap_vdetach
+argument_list|(
+name|vap
 argument_list|)
 expr_stmt|;
 name|ieee80211_regdomain_vdetach

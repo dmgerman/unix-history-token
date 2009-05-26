@@ -219,12 +219,10 @@ name|m
 parameter_list|,
 name|rssi
 parameter_list|,
-name|noise
-parameter_list|,
-name|rstamp
+name|nf
 parameter_list|)
 define|\
-value|((ni)->ni_vap->iv_input(ni, m, rssi, noise, rstamp))
+value|((ni)->ni_vap->iv_input(ni, m, rssi, nf))
 end_define
 
 begin_function_decl
@@ -242,8 +240,6 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
-parameter_list|,
-name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl

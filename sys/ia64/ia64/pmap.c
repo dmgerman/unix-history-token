@@ -6325,7 +6325,7 @@ name|prot
 operator|&
 name|VM_PROT_EXECUTE
 condition|)
-name|ia64_invalidate_icache
+name|ia64_sync_icache
 argument_list|(
 name|sva
 argument_list|,
@@ -6785,7 +6785,7 @@ if|if
 condition|(
 name|icache_inval
 condition|)
-name|ia64_invalidate_icache
+name|ia64_sync_icache
 argument_list|(
 name|va
 argument_list|,

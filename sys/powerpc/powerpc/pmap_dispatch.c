@@ -2089,9 +2089,15 @@ argument_list|,
 name|name
 argument_list|)
 operator|&&
+operator|(
 name|prio
 operator|>=
 name|curr_prio
+operator|||
+name|mmu_def_impl
+operator|==
+name|NULL
+operator|)
 condition|)
 block|{
 name|curr_prio

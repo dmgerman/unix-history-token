@@ -311,16 +311,6 @@ operator|->
 name|ip6r_type
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
-case|case
-name|IPV6_RTHDR_TYPE_0
-case|:
-comment|/* 		 * According to RFC 5095, 3.  Deprecation of RH0, 		 * we must handle RH0 like the default (unknown 		 * routing header type) case. 		 */
-comment|/* FALLTHROUGH */
-endif|#
-directive|endif
 default|default:
 comment|/* Unknown routing header type. */
 if|if

@@ -1697,8 +1697,17 @@ name|ftsoptions
 operator|&
 name|FTS_NOSTAT
 operator|)
-operator|||
+condition|)
 comment|/* not stat()ing */
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-delete: insecure options got turned on"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|!
 operator|(
 name|ftsoptions
@@ -1718,7 +1727,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-delete: insecure options got turned on"
+literal|"-delete: forbidden when symlinks are followed"
 argument_list|)
 expr_stmt|;
 comment|/* Potentially unsafe - do not accept relative paths whatsoever */
@@ -1894,17 +1903,6 @@ operator|~
 name|FTS_NOSTAT
 expr_stmt|;
 comment|/* no optimise */
-name|ftsoptions
-operator||=
-name|FTS_PHYSICAL
-expr_stmt|;
-comment|/* disable -follow */
-name|ftsoptions
-operator|&=
-operator|~
-name|FTS_LOGICAL
-expr_stmt|;
-comment|/* disable -follow */
 name|isoutput
 operator|=
 literal|1

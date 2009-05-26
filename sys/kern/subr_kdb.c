@@ -115,6 +115,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 modifier|*
 name|kdb_jmpbufp
@@ -134,6 +135,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pcb
 name|kdb_pcb
@@ -286,7 +288,7 @@ name|CTLTYPE_STRING
 operator||
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
@@ -312,7 +314,7 @@ name|CTLTYPE_STRING
 operator||
 name|CTLFLAG_RW
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
@@ -338,7 +340,7 @@ name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
@@ -364,7 +366,7 @@ name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
@@ -390,7 +392,7 @@ name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
@@ -416,7 +418,7 @@ name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
@@ -1383,7 +1385,9 @@ end_comment
 begin_function
 name|void
 name|kdb_backtrace
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1551,7 +1555,9 @@ end_comment
 begin_function
 name|void
 name|kdb_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|kdb_dbbe

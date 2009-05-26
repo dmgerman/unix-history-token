@@ -338,6 +338,11 @@ init|=
 literal|36
 block|,
 comment|/* can MAC hang */
+name|HAL_CAP_INTRMASK
+init|=
+literal|37
+block|,
+comment|/* bitmask of supported interrupts */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;
@@ -863,7 +868,6 @@ name|HAL_INT_BNR
 init|=
 literal|0x00100000
 block|,
-comment|/* Non-common mapping */
 name|HAL_INT_TIM
 init|=
 literal|0x00200000
@@ -891,6 +895,11 @@ comment|/* Non-common mapping */
 name|HAL_INT_TSFOOR
 init|=
 literal|0x04000000
+block|,
+comment|/* Non-common mapping */
+name|HAL_INT_TBTT
+init|=
+literal|0x08000000
 block|,
 comment|/* Non-common mapping */
 name|HAL_INT_CST
@@ -922,6 +931,8 @@ operator||
 name|HAL_INT_DTIMSYNC
 operator||
 name|HAL_INT_CABEND
+operator||
+name|HAL_INT_TBTT
 block|,
 comment|/* Interrupt bits that map directly to ISR/IMR bits */
 name|HAL_INT_COMMON
@@ -934,9 +945,9 @@ name|HAL_INT_RXEOL
 operator||
 name|HAL_INT_RXORN
 operator||
-name|HAL_INT_TXURN
-operator||
 name|HAL_INT_TXDESC
+operator||
+name|HAL_INT_TXURN
 operator||
 name|HAL_INT_MIB
 operator||
@@ -947,6 +958,8 @@ operator||
 name|HAL_INT_SWBA
 operator||
 name|HAL_INT_BMISS
+operator||
+name|HAL_INT_BNR
 operator||
 name|HAL_INT_GPIO
 block|, }

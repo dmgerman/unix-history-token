@@ -5769,10 +5769,10 @@ label|:
 if|if
 condition|(
 name|m
-operator|!=
+operator|==
 name|NULL
 condition|)
-block|{
+break|break;
 name|m
 operator|->
 name|m_len
@@ -5799,7 +5799,6 @@ name|rx
 operator|->
 name|status
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!

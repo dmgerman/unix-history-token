@@ -1292,7 +1292,7 @@ if|if
 condition|(
 name|uaa
 operator|->
-name|usb2_mode
+name|usb_mode
 operator|!=
 name|USB_MODE_HOST
 condition|)

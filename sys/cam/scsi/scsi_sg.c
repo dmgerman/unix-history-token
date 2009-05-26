@@ -4142,6 +4142,7 @@ name|drvstat
 operator|=
 literal|0
 expr_stmt|;
+break|break;
 case|case
 name|CAM_SCSI_BUS_RESET
 case|:
@@ -4183,6 +4184,7 @@ name|drvstat
 operator|=
 literal|0
 expr_stmt|;
+break|break;
 default|default:
 operator|*
 name|hoststat

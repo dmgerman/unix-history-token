@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: key.c,v 1.78 2008/07/07 23:32:51 stevesk Exp $ */
+comment|/* $OpenBSD: key.c,v 1.80 2008/10/10 05:00:12 stevesk Exp $ */
 end_comment
 
 begin_comment
@@ -1941,6 +1941,20 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* augment the field */
+if|if
+condition|(
+name|field
+index|[
+name|x
+index|]
+index|[
+name|y
+index|]
+operator|<
+name|len
+operator|-
+literal|2
+condition|)
 name|field
 index|[
 name|x
@@ -2258,7 +2272,7 @@ break|break;
 default|default:
 name|fatal
 argument_list|(
-literal|"key_fingerprint_ex: bad digest representation %d"
+literal|"key_fingerprint: bad digest representation %d"
 argument_list|,
 name|dgst_rep
 argument_list|)

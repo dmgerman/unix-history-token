@@ -1417,11 +1417,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"\trstamp %u avgrssi 0x%x (rssi %d) noise %d\n"
-argument_list|,
-name|ni
-operator|->
-name|ni_rstamp
+literal|"\tavgrssi 0x%x (rssi %d) noise %d\n"
 argument_list|,
 name|ni
 operator|->

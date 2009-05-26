@@ -4230,7 +4230,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine checks around the requested page for other pages that  * might be able to be faulted in.  This routine brackets the viable  * pages for the pages to be paged in.  *  * Inputs:  *	m, rbehind, rahead  *  * Outputs:  *  marray (array of vm_page_t), reqpage (index of requested page)  *  * Return value:  *  number of pages in marray  *  * This routine can't block.  */
+comment|/*  * This routine checks around the requested page for other pages that  * might be able to be faulted in.  This routine brackets the viable  * pages for the pages to be paged in.  *  * Inputs:  *	m, rbehind, rahead  *  * Outputs:  *  marray (array of vm_page_t), reqpage (index of requested page)  *  * Return value:  *  number of pages in marray  */
 end_comment
 
 begin_function

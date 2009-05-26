@@ -130,6 +130,8 @@ name|nd
 decl_stmt|;
 name|int
 name|cacherep
+decl_stmt|,
+name|credflavor
 decl_stmt|;
 name|memset
 argument_list|(
@@ -284,9 +286,7 @@ operator|.
 name|nd_cred
 argument_list|,
 operator|&
-name|nd
-operator|.
-name|nd_credflavor
+name|credflavor
 argument_list|)
 condition|)
 block|{
@@ -309,6 +309,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* For now, I don't care what credential flavor was used. */
 ifdef|#
 directive|ifdef
 name|notyet
@@ -939,10 +940,7 @@ name|svcpool_create
 argument_list|(
 literal|"nfscbd"
 argument_list|,
-name|SYSCTL_STATIC_CHILDREN
-argument_list|(
-name|_vfs_newnfs
-argument_list|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|nfscbd_pool

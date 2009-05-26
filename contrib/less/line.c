@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1984-2007  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2008  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -196,17 +196,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
-name|line_matches
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Number of search matches in this line */
-end_comment
-
-begin_decl_stmt
-specifier|static
 name|char
 name|pendc
 decl_stmt|;
@@ -366,13 +355,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|utf_mode
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|oldbot
 decl_stmt|;
 end_decl_stmt
 
@@ -797,15 +779,6 @@ name|lmargin
 operator|+=
 literal|1
 expr_stmt|;
-if|#
-directive|if
-name|HILITE_SEARCH
-name|line_matches
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -2364,10 +2337,6 @@ operator||=
 name|AT_HILITE
 expr_stmt|;
 block|}
-name|line_matches
-operator|+=
-name|matches
-expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -2397,26 +2366,54 @@ argument_list|)
 condition|)
 block|{
 comment|/* Remove whole unrecognized sequence.  */
-while|while
-condition|(
-name|curr
-condition|)
-block|{
-operator|--
-name|curr
-expr_stmt|;
-if|if
-condition|(
-name|IS_CSI_START
-argument_list|(
+name|char
+modifier|*
+name|p
+init|=
+operator|&
 name|linebuf
 index|[
 name|curr
 index|]
+decl_stmt|;
+name|LWCHAR
+name|bch
+decl_stmt|;
+do|do
+block|{
+name|bch
+operator|=
+name|step_char
+argument_list|(
+operator|&
+name|p
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+name|linebuf
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|p
+operator|>
+name|linebuf
+operator|&&
+operator|!
+name|IS_CSI_START
+argument_list|(
+name|bch
 argument_list|)
 condition|)
-break|break;
-block|}
+do|;
+name|curr
+operator|=
+name|p
+operator|-
+name|linebuf
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -3852,9 +3849,14 @@ name|void
 name|pdone
 parameter_list|(
 name|endline
+parameter_list|,
+name|nextc
 parameter_list|)
 name|int
 name|endline
+decl_stmt|;
+name|int
+name|nextc
 decl_stmt|;
 block|{
 name|int
@@ -3958,12 +3960,6 @@ block|}
 comment|/* 	 * Add a newline if necessary, 	 * and append a '\0' to the end of the line. 	 * We output a newline if we're not at the right edge of the screen, 	 * or if the terminal doesn't auto wrap, 	 * or if this is really the end of the line AND the terminal ignores 	 * a newline at the right edge. 	 * (In the last case we don't want to output a newline if the terminal  	 * doesn't ignore it since that would produce an extra blank line. 	 * But we do want to output a newline if the terminal ignores it in case 	 * the next line is blank.  In that case the single newline output for 	 * that blank line would be ignored!) 	 */
 if|if
 condition|(
-operator|!
-name|oldbot
-condition|)
-name|nl
-operator|=
-operator|(
 name|column
 operator|<
 name|sc_width
@@ -3980,29 +3976,6 @@ operator|||
 name|ctldisp
 operator|==
 name|OPT_ON
-operator|)
-expr_stmt|;
-else|else
-name|nl
-operator|=
-operator|(
-name|column
-operator|<
-name|sc_width
-operator|||
-operator|!
-name|auto_wrap
-operator|||
-name|ignaw
-operator|||
-name|ctldisp
-operator|==
-name|OPT_ON
-operator|)
-expr_stmt|;
-if|if
-condition|(
-name|nl
 condition|)
 block|{
 name|linebuf
@@ -4028,21 +4001,18 @@ if|if
 condition|(
 name|ignaw
 operator|&&
-operator|!
-name|auto_wrap
-operator|&&
 name|column
 operator|>=
 name|sc_width
 condition|)
 block|{
-comment|/* 		 * Big horrible kludge. 		 * No-wrap terminals are too hard to deal with when they get in 		 * the state where a full screen width of characters have been  		 * output but the cursor is sitting on the right edge instead 		 * of at the start of the next line.   		 * So after we output a full line, we output an extra  		 * space and backspace to force the cursor to the  		 * beginning of the next line, like a sane terminal. 		 */
+comment|/* 		 * Terminals with "ignaw" don't wrap until they *really* need 		 * to, i.e. when the character *after* the last one to fit on a 		 * line is output. But they are too hard to deal with when they 		 * get in the state where a full screen width of characters 		 * have been output but the cursor is sitting on the right edge 		 * instead of at the start of the next line. 		 * So we nudge them into wrapping by outputting the next 		 * character plus a backspace. (This wouldn't be right for 		 * "!auto_wrap" terminals, but they always end up in the  		 * branch above.) 		 */
 name|linebuf
 index|[
 name|curr
 index|]
 operator|=
-literal|' '
+name|nextc
 expr_stmt|;
 name|attr
 index|[
@@ -4082,24 +4052,30 @@ index|]
 operator|=
 name|AT_NORMAL
 expr_stmt|;
-if|#
-directive|if
-name|HILITE_SEARCH
-if|if
-condition|(
-name|status_col
-operator|&&
-name|line_matches
-operator|>
-literal|0
-condition|)
+block|}
+end_function
+
+begin_comment
+comment|/*  *  */
+end_comment
+
+begin_function
+name|public
+name|void
+name|set_status_col
+parameter_list|(
+name|c
+parameter_list|)
+name|char
+name|c
+decl_stmt|;
 block|{
 name|linebuf
 index|[
 literal|0
 index|]
 operator|=
-literal|'*'
+name|c
 expr_stmt|;
 name|attr
 index|[
@@ -4110,9 +4086,6 @@ name|AT_NORMAL
 operator||
 name|AT_HILITE
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 block|}
 end_function
 

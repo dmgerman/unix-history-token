@@ -185,11 +185,6 @@ name|struct
 name|mount
 modifier|*
 name|mp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|int
@@ -209,6 +204,11 @@ name|struct
 name|unionfs_mount
 modifier|*
 name|ump
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
 decl_stmt|;
 name|char
 modifier|*
@@ -312,6 +312,10 @@ name|ndp
 operator|=
 operator|&
 name|nd
+expr_stmt|;
+name|td
+operator|=
+name|curthread
 expr_stmt|;
 if|if
 condition|(
@@ -1664,11 +1668,6 @@ name|mp
 parameter_list|,
 name|int
 name|mntflags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -1738,7 +1737,7 @@ literal|1
 argument_list|,
 name|flags
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 operator|)
 operator|!=
@@ -1812,11 +1811,6 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -1904,11 +1898,6 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -1939,8 +1928,6 @@ argument_list|,
 name|uid
 argument_list|,
 name|arg
-argument_list|,
-name|td
 argument_list|)
 operator|)
 return|;
@@ -1961,11 +1948,6 @@ name|struct
 name|statfs
 modifier|*
 name|sbp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -2040,8 +2022,6 @@ name|v_mount
 argument_list|,
 operator|&
 name|mstat
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2088,8 +2068,6 @@ name|v_mount
 argument_list|,
 operator|&
 name|mstat
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2221,11 +2199,6 @@ name|mp
 parameter_list|,
 name|int
 name|waitfor
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 comment|/* nothing to do */
@@ -2366,11 +2339,6 @@ specifier|const
 name|char
 modifier|*
 name|attrname
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -2425,8 +2393,6 @@ argument_list|,
 name|namespace
 argument_list|,
 name|attrname
-argument_list|,
-name|td
 argument_list|)
 operator|)
 return|;
@@ -2452,8 +2418,6 @@ argument_list|,
 name|namespace
 argument_list|,
 name|attrname
-argument_list|,
-name|td
 argument_list|)
 operator|)
 return|;

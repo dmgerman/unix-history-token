@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2007  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2008  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -1470,7 +1470,7 @@ argument_list|)
 expr_stmt|;
 name|putstr
 argument_list|(
-literal|"\nCopyright (C) 1984-2007 Mark Nudelman\n\n"
+literal|"\nCopyright (C) 1984-2008 Mark Nudelman\n\n"
 argument_list|)
 expr_stmt|;
 name|putstr
@@ -1581,7 +1581,7 @@ literal|'.'
 condition|)
 name|bg
 operator|=
-literal|0
+name|nm_bg_color
 expr_stmt|;
 else|else
 block|{
@@ -1608,7 +1608,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Missing fg color in -D"
+literal|"Missing bg color in -D"
 argument_list|,
 name|NULL_PARG
 argument_list|)

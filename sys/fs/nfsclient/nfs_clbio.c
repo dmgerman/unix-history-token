@@ -992,9 +992,6 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|m
@@ -1004,8 +1001,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* handled by vm_fault now	  */
-comment|/* vm_page_zero_invalid(m, TRUE); */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1051,9 +1049,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|object
@@ -1336,9 +1331,19 @@ name|valid
 operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
-name|vm_page_undirty
+name|KASSERT
 argument_list|(
 name|m
+operator|->
+name|dirty
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"nfs_getpages: page %p is dirty"
+operator|,
+name|m
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1357,7 +1362,7 @@ name|valid
 operator|=
 literal|0
 expr_stmt|;
-name|vm_page_set_validclean
+name|vm_page_set_valid
 argument_list|(
 name|m
 argument_list|,
@@ -1368,8 +1373,32 @@ operator|-
 name|toff
 argument_list|)
 expr_stmt|;
-comment|/* handled by vm_fault now	  */
-comment|/* vm_page_zero_invalid(m, TRUE); */
+name|KASSERT
+argument_list|(
+operator|(
+name|m
+operator|->
+name|dirty
+operator|&
+name|vm_page_bits
+argument_list|(
+literal|0
+argument_list|,
+name|size
+operator|-
+name|toff
+argument_list|)
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"nfs_getpages: page %p is dirty"
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{

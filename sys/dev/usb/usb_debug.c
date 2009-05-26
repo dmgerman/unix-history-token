@@ -68,7 +68,7 @@ name|_hw
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|usb2
+name|usb
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -82,7 +82,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_hw_usb2
+name|_hw_usb
 argument_list|,
 name|OID_AUTO
 argument_list|,

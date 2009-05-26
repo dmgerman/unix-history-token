@@ -1640,6 +1640,22 @@ operator|=
 literal|15
 expr_stmt|;
 comment|/* NB: s/w extended from 13 */
+name|pCap
+operator|->
+name|halIntrMask
+operator|=
+operator|(
+name|HAL_INT_COMMON
+operator|-
+name|HAL_INT_BNR
+operator|)
+operator||
+name|HAL_INT_RX
+operator||
+name|HAL_INT_TX
+operator||
+name|HAL_INT_FATAL
+expr_stmt|;
 name|ahpriv
 operator|->
 name|ah_rxornIsFatal

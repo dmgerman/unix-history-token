@@ -73,7 +73,7 @@ block|{
 operator|.
 name|nodename
 operator|=
-name|hostname
+literal|"unset"
 block|}
 decl_stmt|;
 end_decl_stmt

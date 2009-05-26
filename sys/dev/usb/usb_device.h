@@ -216,12 +216,11 @@ begin_struct
 struct|struct
 name|usb2_device_flags
 block|{
-name|uint8_t
-name|usb2_mode
-range|:
-literal|1
+name|enum
+name|usb_hc_mode
+name|usb_mode
 decl_stmt|;
-comment|/* USB mode (see USB_MODE_XXX) */
+comment|/* host or device mode */
 name|uint8_t
 name|self_powered
 range|:
@@ -457,8 +456,12 @@ name|plugtime
 decl_stmt|;
 comment|/* copy of "ticks" */
 name|enum
-name|usb2_dev_state
+name|usb_dev_state
 name|state
+decl_stmt|;
+name|enum
+name|usb_dev_speed
+name|speed
 decl_stmt|;
 name|uint16_t
 name|refcount
@@ -495,10 +498,6 @@ name|uint8_t
 name|depth
 decl_stmt|;
 comment|/* distance from root HUB */
-name|uint8_t
-name|speed
-decl_stmt|;
-comment|/* low/full/high speed */
 name|uint8_t
 name|port_index
 decl_stmt|;
@@ -619,11 +618,13 @@ parameter_list|,
 name|uint8_t
 name|port_no
 parameter_list|,
-name|uint8_t
+name|enum
+name|usb_dev_speed
 name|speed
 parameter_list|,
-name|uint8_t
-name|usb2_mode
+name|enum
+name|usb_hc_mode
+name|mode
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -881,7 +882,7 @@ modifier|*
 name|udev
 parameter_list|,
 name|enum
-name|usb2_dev_state
+name|usb_dev_state
 name|state
 parameter_list|)
 function_decl|;

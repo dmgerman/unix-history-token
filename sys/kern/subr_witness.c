@@ -2747,6 +2747,34 @@ block|,
 name|NULL
 block|}
 block|,
+comment|/* 	 * ZFS locking 	 */
+block|{
+literal|"dn->dn_mtx"
+block|,
+operator|&
+name|lock_class_sx
+block|}
+block|,
+block|{
+literal|"dr->dt.di.dr_mtx"
+block|,
+operator|&
+name|lock_class_sx
+block|}
+block|,
+block|{
+literal|"db->db_mtx"
+block|,
+operator|&
+name|lock_class_sx
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
 comment|/* 	 * spin locks 	 */
 ifdef|#
 directive|ifdef

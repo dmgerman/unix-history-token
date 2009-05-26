@@ -4136,19 +4136,6 @@ operator|->
 name|igmp_numsrc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|IS_DEFAULT_VNET
-argument_list|(
-name|curvnet
-argument_list|)
-condition|)
-return|return
-operator|(
-name|retval
-operator|)
-return|;
 comment|/* 	 * Deal with group-specific queries upfront. 	 * If any group query is already pending, purge any recorded 	 * source-list state if it exists, and schedule a query response 	 * for this group-specific query. 	 */
 if|if
 condition|(

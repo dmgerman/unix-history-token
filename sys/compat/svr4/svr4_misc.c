@@ -5444,7 +5444,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * Ok, handle the weird cases.  Either WNOWAIT is set (meaning we 	 * just want to see if there is a process to harvest, we dont' 	 * want to actually harvest it), or WEXIT and WTRAPPED are clear 	 * meaning we want to ignore zombies.  Either way, we don't have 	 * to handle harvesting zombies here.  We do have to duplicate the 	 * other portions of kern_wait() though, especially for the 	 * WCONTINUED and WSTOPPED. 	 */
+comment|/* 	 * Ok, handle the weird cases.  Either WNOWAIT is set (meaning we 	 * just want to see if there is a process to harvest, we don't 	 * want to actually harvest it), or WEXIT and WTRAPPED are clear 	 * meaning we want to ignore zombies.  Either way, we don't have 	 * to handle harvesting zombies here.  We do have to duplicate the 	 * other portions of kern_wait() though, especially for WCONTINUED 	 * and WSTOPPED. 	 */
 name|loop
 label|:
 name|nfound
@@ -7510,9 +7510,6 @@ name|unsigned
 name|int
 name|ncopy
 decl_stmt|;
-name|int
-name|vfslocked
-decl_stmt|;
 name|NDINIT
 argument_list|(
 operator|&
@@ -7550,14 +7547,25 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
-name|vfslocked
-operator|=
+name|NDFREE
+argument_list|(
+operator|&
+name|nd
+argument_list|,
+name|NDF_NO_FREE_PNBUF
+argument_list|)
+expr_stmt|;
+name|VFS_UNLOCK_GIANT
+argument_list|(
 name|NDHASGIANT
 argument_list|(
 operator|&
 name|nd
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ncopy
@@ -7619,18 +7627,6 @@ operator|&
 name|nd
 argument_list|,
 name|NDF_ONLY_PNBUF
-argument_list|)
-expr_stmt|;
-name|vput
-argument_list|(
-name|nd
-operator|.
-name|ni_vp
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 return|return

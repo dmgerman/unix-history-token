@@ -15402,10 +15402,6 @@ name|freq
 decl_stmt|,
 name|chanflag
 decl_stmt|;
-specifier|static
-name|long
-name|rstamp
-decl_stmt|;
 name|uint8_t
 name|ssid
 index|[
@@ -15593,9 +15589,6 @@ operator|->
 name|nblx_items
 operator|)
 argument_list|)
-expr_stmt|;
-name|rstamp
-operator|++
 expr_stmt|;
 name|wb
 operator|=
@@ -16116,8 +16109,6 @@ argument_list|,
 name|rssi
 argument_list|,
 name|noise
-argument_list|,
-name|rstamp
 argument_list|)
 expr_stmt|;
 name|wb

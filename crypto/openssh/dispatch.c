@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: dispatch.c,v 1.21 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: dispatch.c,v 1.22 2008/10/31 15:05:34 stevesk Exp $ */
 end_comment
 
 begin_comment
@@ -66,13 +66,6 @@ include|#
 directive|include
 file|"compat.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|DISPATCH_MIN
-value|0
-end_define
 
 begin_define
 define|#

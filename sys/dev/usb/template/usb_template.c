@@ -745,7 +745,7 @@ name|mps
 index|[
 name|temp
 operator|->
-name|usb2_speed
+name|usb_speed
 index|]
 expr_stmt|;
 if|if
@@ -877,7 +877,7 @@ name|bInterval
 index|[
 name|temp
 operator|->
-name|usb2_speed
+name|usb_speed
 index|]
 condition|)
 block|{
@@ -893,7 +893,7 @@ name|bInterval
 index|[
 name|temp
 operator|->
-name|usb2_speed
+name|usb_speed
 index|]
 expr_stmt|;
 block|}
@@ -925,7 +925,7 @@ switch|switch
 condition|(
 name|temp
 operator|->
-name|usb2_speed
+name|usb_speed
 condition|)
 block|{
 case|case
@@ -959,7 +959,7 @@ switch|switch
 condition|(
 name|temp
 operator|->
-name|usb2_speed
+name|usb_speed
 condition|)
 block|{
 case|case
@@ -1820,7 +1820,7 @@ switch|switch
 condition|(
 name|temp
 operator|->
-name|usb2_speed
+name|usb_speed
 condition|)
 block|{
 case|case
@@ -2557,14 +2557,15 @@ name|usb2_endpoint_descriptor
 modifier|*
 name|ed
 decl_stmt|;
+name|enum
+name|usb_dev_speed
+name|speed
+decl_stmt|;
 name|uint16_t
 name|wMaxPacketSize
 decl_stmt|;
 name|uint16_t
 name|temp
-decl_stmt|;
-name|uint8_t
-name|speed
 decl_stmt|;
 name|uint8_t
 name|ep_no
@@ -4734,7 +4735,7 @@ argument_list|)
 expr_stmt|;
 name|uts
 operator|->
-name|usb2_speed
+name|usb_speed
 operator|=
 name|udev
 operator|->

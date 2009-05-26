@@ -16642,6 +16642,25 @@ operator|->
 name|lc_cbref
 operator|++
 expr_stmt|;
+comment|/* 	 * Fill the callback program# and version into the request 	 * structure for newnfs_connect() to use. 	 */
+name|clp
+operator|->
+name|lc_req
+operator|.
+name|nr_prog
+operator|=
+name|clp
+operator|->
+name|lc_program
+expr_stmt|;
+name|clp
+operator|->
+name|lc_req
+operator|.
+name|nr_vers
+operator|=
+name|NFSV4_CBVERS
+expr_stmt|;
 comment|/* 	 * First, fill in some of the fields of nd and cr. 	 */
 name|nd
 operator|->
@@ -17306,7 +17325,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return the next index# for a clientid. Mostly just increment and return  * the next one, but... if the 32bit unsigned does actually wrap around,  * reboot. This is here more for fun than practical purposes. At an  * average rate of one new client per second, it will wrap around in  * approximately 136 years. (I think the server will have been shut  * down or rebooted before then.)  */
+comment|/*  * Return the next index# for a clientid. Mostly just increment and return  * the next one, but... if the 32bit unsigned does actually wrap around,  * it should be rebooted.  * At an average rate of one new client per second, it will wrap around in  * approximately 136 years. (I think the server will have been shut  * down or rebooted before then.)  */
 end_comment
 
 begin_function
@@ -17337,18 +17356,18 @@ operator|(
 name|client_index
 operator|)
 return|;
-comment|/* 	 * In practice, we'll never get here, but the reboot is here, 	 * just for fun. (client_index will not wrap around on any real server) 	 */
 name|printf
 argument_list|(
-literal|"you must reboot now\n"
+literal|"%s: out of clientids\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|client_index
 operator|)
 return|;
-comment|/* Just to shut the compiler up */
 block|}
 end_function
 

@@ -956,8 +956,6 @@ name|ccb_trans_settings
 modifier|*
 name|cts
 init|=
-name|cts
-operator|=
 operator|&
 name|ccb
 operator|->

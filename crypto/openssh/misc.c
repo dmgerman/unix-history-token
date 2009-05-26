@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: misc.c,v 1.69 2008/06/13 01:38:23 dtucker Exp $ */
+comment|/* $OpenBSD: misc.c,v 1.71 2009/02/21 19:32:04 tobias Exp $ */
 end_comment
 
 begin_comment
@@ -991,7 +991,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert ASCII string to TCP/IP port number.  * Port must be>0 and<=65535.  * Return 0 if invalid.  */
+comment|/*  * Convert ASCII string to TCP/IP port number.  * Port must be>=0 and<=65535.  * Return -1 if invalid.  */
 end_comment
 
 begin_function
@@ -1005,67 +1005,42 @@ name|s
 parameter_list|)
 block|{
 name|long
+name|long
 name|port
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
-name|endp
+name|errstr
 decl_stmt|;
-name|errno
-operator|=
-literal|0
-expr_stmt|;
 name|port
 operator|=
-name|strtol
+name|strtonum
 argument_list|(
 name|s
 argument_list|,
-operator|&
-name|endp
-argument_list|,
 literal|0
+argument_list|,
+literal|65535
+argument_list|,
+operator|&
+name|errstr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|s
-operator|==
-name|endp
-operator|||
-operator|*
-name|endp
+name|errstr
 operator|!=
-literal|'\0'
-operator|||
-operator|(
-name|errno
-operator|==
-name|ERANGE
-operator|&&
-operator|(
-name|port
-operator|==
-name|LONG_MIN
-operator|||
-name|port
-operator|==
-name|LONG_MAX
-operator|)
-operator|)
-operator|||
-name|port
-operator|<=
-literal|0
-operator|||
-name|port
-operator|>
-literal|65535
+name|NULL
 condition|)
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 return|return
+operator|(
+name|int
+operator|)
 name|port
 return|;
 block|}
@@ -3415,7 +3390,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Couldn't open /dev/null: %s"
+literal|"Couldn't open /dev/null: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -3469,7 +3444,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"dup2: %s"
+literal|"dup2: %s\n"
 argument_list|,
 name|strerror
 argument_list|(

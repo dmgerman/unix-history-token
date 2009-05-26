@@ -27,8 +27,11 @@ decl_stmt|;
 name|uint16_t
 name|wr_chan_flags
 decl_stmt|;
-name|uint8_t
+name|int8_t
 name|wr_antsignal
+decl_stmt|;
+name|int8_t
+name|wr_antnoise
 decl_stmt|;
 name|uint8_t
 name|wr_antenna
@@ -42,7 +45,7 @@ define|#
 directive|define
 name|IWI_RX_RADIOTAP_PRESENT
 define|\
-value|((1<< IEEE80211_RADIOTAP_FLAGS) |				\ 	 (1<< IEEE80211_RADIOTAP_RATE) |				\ 	 (1<< IEEE80211_RADIOTAP_CHANNEL) |				\ 	 (1<< IEEE80211_RADIOTAP_DB_ANTSIGNAL) |			\ 	 (1<< IEEE80211_RADIOTAP_ANTENNA))
+value|((1<< IEEE80211_RADIOTAP_FLAGS) |				\ 	 (1<< IEEE80211_RADIOTAP_RATE) |				\ 	 (1<< IEEE80211_RADIOTAP_CHANNEL) |				\ 	 (1<< IEEE80211_RADIOTAP_DBM_ANTSIGNAL) |			\ 	 (1<< IEEE80211_RADIOTAP_DBM_ANTNOISE) |			\ 	 (1<< IEEE80211_RADIOTAP_ANTENNA))
 end_define
 
 begin_struct
@@ -528,6 +531,11 @@ name|struct
 name|task
 name|sc_disassoctask
 decl_stmt|;
+name|struct
+name|task
+name|sc_wmetask
+decl_stmt|;
+comment|/* set wme parameters */
 name|unsigned
 name|int
 name|sc_softled
@@ -609,15 +617,9 @@ name|struct
 name|iwi_rx_radiotap_header
 name|sc_rxtap
 decl_stmt|;
-name|int
-name|sc_rxtap_len
-decl_stmt|;
 name|struct
 name|iwi_tx_radiotap_header
 name|sc_txtap
-decl_stmt|;
-name|int
-name|sc_txtap_len
 decl_stmt|;
 block|}
 struct|;
@@ -632,7 +634,7 @@ name|_sc
 parameter_list|,
 name|_state
 parameter_list|)
-value|do {			\ 	KASSERT(_sc->fw_state == IWI_FW_IDLE,			\ 	    ("iwi firmware not idle"));				\ 	_sc->fw_state = _state;					\ 	_sc->sc_state_timer = 5;				\ 	DPRINTF(("enter %s state\n", iwi_fw_states[_state]));	\ } while (0)
+value|do {			\ 	KASSERT(_sc->fw_state == IWI_FW_IDLE,			\ 	    ("iwi firmware not idle, state %s", iwi_fw_states[_sc->fw_state]));\ 	_sc->fw_state = _state;					\ 	_sc->sc_state_timer = 5;				\ 	DPRINTF(("enter %s state\n", iwi_fw_states[_state]));	\ } while (0)
 end_define
 
 begin_define

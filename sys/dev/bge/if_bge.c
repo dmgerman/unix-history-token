@@ -12132,7 +12132,7 @@ operator||=
 name|BGE_FLAG_5714_FAMILY
 comment|/* | BGE_FLAG_JUMBO */
 expr_stmt|;
-comment|/* FALLTHRU */
+comment|/* FALLTHROUGH */
 case|case
 name|BGE_ASICREV_BCM5750
 case|:
@@ -12154,7 +12154,7 @@ name|bge_flags
 operator||=
 name|BGE_FLAG_575X_PLUS
 expr_stmt|;
-comment|/* FALLTHRU */
+comment|/* FALLTHROUGH */
 case|case
 name|BGE_ASICREV_BCM5705
 case|:
@@ -15486,6 +15486,18 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+condition|)
+return|return;
 block|}
 if|if
 condition|(
@@ -16019,6 +16031,25 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+condition|)
+block|{
+name|BGE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|bge_txeof
 argument_list|(
 name|sc
@@ -16206,6 +16237,16 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+condition|)
+block|{
 comment|/* Check TX ring producer/consumer. */
 name|bge_txeof
 argument_list|(

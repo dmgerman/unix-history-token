@@ -2220,7 +2220,7 @@ name|SYSCTL_RESOLVE_V_ARG1
 parameter_list|()
 value|do {					\ 	char *cp;							\ 	switch (oidp->oid_v_subs) {					\ 	case V_GLOBAL:							\
 comment|/* do nothing - this is NOT a virtualized variable! */
-value|\ 		break;							\ 	case V_NET:							\ 		cp = (char *)						\ 		    TD_TO_VNET(curthread)->mod_data[oidp->oid_v_mod];	\ 		arg1 = cp + (size_t) arg1;				\ 		break;							\ 	default:							\ 		panic("unsupported module id %d", oidp->oid_v_subs);	\ 	}								\ } while (0)
+value|\ 		break;							\ 	case V_NET:							\ 		cp = (char *)						\ 		    TD_TO_VNET(curthread)->mod_data[oidp->oid_v_mod];	\ 		arg1 = cp + (size_t) arg1;				\ 		break;							\ 	case V_PROCG:							\ 		cp = (char *) TD_TO_VPROCG(curthread);			\ 		arg1 = cp + (size_t) arg1;				\ 		break;							\ 	default:							\ 		panic("unsupported module id %d", oidp->oid_v_subs);	\ 	}								\ } while (0)
 end_define
 
 begin_else

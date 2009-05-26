@@ -178,12 +178,6 @@ directive|include
 file|<i386/include/cputypes.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
-end_ifndef
-
 begin_if
 if|#
 directive|if
@@ -206,15 +200,6 @@ end_endif
 
 begin_comment
 comment|/* ASR_COMPAT */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !BURN_BRIDGES */
 end_comment
 
 begin_endif

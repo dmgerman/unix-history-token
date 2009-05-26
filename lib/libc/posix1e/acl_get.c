@@ -63,6 +63,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"acl_support.h"
+end_include
+
 begin_function
 name|acl_t
 name|acl_get_file
@@ -100,6 +106,13 @@ operator|(
 name|NULL
 operator|)
 return|;
+name|type
+operator|=
+name|_acl_type_unold
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|__acl_get_file
@@ -175,6 +188,13 @@ operator|(
 name|NULL
 operator|)
 return|;
+name|type
+operator|=
+name|_acl_type_unold
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|__acl_get_link
@@ -318,6 +338,13 @@ operator|(
 name|NULL
 operator|)
 return|;
+name|type
+operator|=
+name|_acl_type_unold
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|___acl_get_fd

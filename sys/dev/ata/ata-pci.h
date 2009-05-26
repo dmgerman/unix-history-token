@@ -210,6 +210,10 @@ literal|8
 index|]
 struct|;
 comment|/* XXX SOS max ch# for now */
+name|void
+modifier|*
+name|chipset_data
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2008,6 +2012,13 @@ define|#
 directive|define
 name|ATA_SII3132_1
 value|0x02421095
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_SII3132_2
+value|0x02441095
 end_define
 
 begin_define

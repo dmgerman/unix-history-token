@@ -805,7 +805,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
-name|_hw_usb2
+name|_hw_usb
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -823,7 +823,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_hw_usb2_udav
+name|_hw_usb_udav
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -991,7 +991,7 @@ if|if
 condition|(
 name|uaa
 operator|->
-name|usb2_mode
+name|usb_mode
 operator|!=
 name|USB_MODE_HOST
 condition|)

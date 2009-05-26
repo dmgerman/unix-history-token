@@ -158,7 +158,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
-name|_hw_usb2
+name|_hw_usb
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -176,7 +176,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_hw_usb2_ctrl
+name|_hw_usb_ctrl
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -1055,7 +1055,8 @@ decl_stmt|;
 name|usb2_error_t
 name|err
 decl_stmt|;
-name|uint8_t
+name|enum
+name|usb_dev_speed
 name|speed
 decl_stmt|;
 name|bus

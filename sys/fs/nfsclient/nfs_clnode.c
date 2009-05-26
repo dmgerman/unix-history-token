@@ -761,6 +761,21 @@ operator|->
 name|a_vp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Since mmap()'d files to I/O after VOP_CLOSE(), the NFSv4 Close 	 * operations are delayed until now. 	 */
+operator|(
+name|void
+operator|)
+name|nfsrpc_close
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|,
+literal|1
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ap

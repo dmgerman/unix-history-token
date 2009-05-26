@@ -803,7 +803,7 @@ name|USB_GET_DATA_ISREAD
 parameter_list|(
 name|xfer
 parameter_list|)
-value|(((xfer)->flags_int.usb2_mode == \ 	USB_MODE_DEVICE) ? ((xfer->endpoint& UE_DIR_IN) ? 0 : 1) : \ 	((xfer->endpoint& UE_DIR_IN) ? 1 : 0))
+value|((xfer)->flags_int.usb_mode == \ 	USB_MODE_DEVICE ? (((xfer)->endpoint& UE_DIR_IN) ? 0 : 1) : \ 	(((xfer)->endpoint& UE_DIR_IN) ? 1 : 0))
 end_define
 
 begin_comment
@@ -1347,6 +1347,11 @@ begin_struct
 struct|struct
 name|usb2_xfer_flags_int
 block|{
+name|enum
+name|usb_hc_mode
+name|usb_mode
+decl_stmt|;
+comment|/* shadow copy of "udev->usb_mode" */
 name|uint16_t
 name|control_rem
 decl_stmt|;
@@ -1411,6 +1416,12 @@ literal|1
 decl_stmt|;
 comment|/* set if control transfer is active */
 name|uint8_t
+name|control_stall
+range|:
+literal|1
+decl_stmt|;
+comment|/* set if control transfer should be stalled */
+name|uint8_t
 name|short_frames_ok
 range|:
 literal|1
@@ -1451,12 +1462,6 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* set if isochronous transfer */
-name|uint8_t
-name|usb2_mode
-range|:
-literal|1
-decl_stmt|;
-comment|/* shadow copy of "udev->usb2_mode" */
 name|uint8_t
 name|curr_dma_set
 range|:
@@ -1511,6 +1516,11 @@ name|usb2_xfer_flags
 name|flags
 decl_stmt|;
 comment|/* transfer flags */
+name|enum
+name|usb_hc_mode
+name|usb_mode
+decl_stmt|;
+comment|/* host or device mode */
 name|uint8_t
 name|type
 decl_stmt|;
@@ -1531,10 +1541,6 @@ name|uint8_t
 name|if_index
 decl_stmt|;
 comment|/* "ifaces" index to use */
-name|uint8_t
-name|usb_mode
-decl_stmt|;
-comment|/* see "USB_MODE_XXX",  					 * "USB_MODE_MAX" means any mode! */
 block|}
 struct|;
 end_struct
@@ -1824,10 +1830,11 @@ modifier|*
 name|iface
 decl_stmt|;
 comment|/* current interface */
-name|uint8_t
-name|usb2_mode
+name|enum
+name|usb_hc_mode
+name|usb_mode
 decl_stmt|;
-comment|/* see USB_MODE_XXX */
+comment|/* host or device mode */
 name|uint8_t
 name|port
 decl_stmt|;
@@ -1911,7 +1918,7 @@ modifier|*
 name|usb2_statestr
 parameter_list|(
 name|enum
-name|usb2_dev_state
+name|usb_dev_state
 name|state
 parameter_list|)
 function_decl|;
@@ -2024,7 +2031,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|uint8_t
+name|enum
+name|usb_hc_mode
 name|usb2_get_mode
 parameter_list|(
 name|struct
@@ -2036,7 +2044,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|uint8_t
+name|enum
+name|usb_dev_speed
 name|usb2_get_speed
 parameter_list|(
 name|struct

@@ -4926,6 +4926,10 @@ literal|0x203a161f
 case|:
 comment|/* Gateway 4028GZ */
 case|case
+literal|0x203e161f
+case|:
+comment|/* Gateway 3520GZ/M210 */
+case|case
 literal|0x204c161f
 case|:
 comment|/* Kvazar-Micro Senator 3592XT */

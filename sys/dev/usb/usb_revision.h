@@ -25,7 +25,7 @@ end_comment
 
 begin_enum
 enum|enum
-name|usb2_speed
+name|usb_dev_speed
 block|{
 name|USB_SPEED_VARIABLE
 block|,
@@ -36,11 +36,16 @@ block|,
 name|USB_SPEED_HIGH
 block|,
 name|USB_SPEED_SUPER
-block|,
-name|USB_SPEED_MAX
-block|}
+block|, }
 enum|;
 end_enum
+
+begin_define
+define|#
+directive|define
+name|USB_SPEED_MAX
+value|(USB_SPEED_SUPER+1)
+end_define
 
 begin_comment
 comment|/*  * The "USB_REV" macros defines all the supported USB revisions.  */
@@ -48,7 +53,7 @@ end_comment
 
 begin_enum
 enum|enum
-name|usb2_revision
+name|usb_revision
 block|{
 name|USB_REV_UNKNOWN
 block|,
@@ -63,28 +68,43 @@ block|,
 name|USB_REV_2_5
 block|,
 name|USB_REV_3_0
-block|,
-name|USB_REV_MAX
 block|}
 enum|;
 end_enum
 
+begin_define
+define|#
+directive|define
+name|USB_REV_MAX
+value|(USB_REV_3_0+1)
+end_define
+
 begin_comment
-comment|/*  * The "USB_MODE" macros defines all the supported USB modes.  */
+comment|/*  * Supported host contoller modes.  */
 end_comment
 
 begin_enum
 enum|enum
-name|usb2_mode
+name|usb_hc_mode
 block|{
 name|USB_MODE_HOST
 block|,
+comment|/* initiates transfers */
 name|USB_MODE_DEVICE
 block|,
-name|USB_MODE_MAX
+comment|/* bus transfer target */
+name|USB_MODE_DUAL
+comment|/* can be host or device */
 block|}
 enum|;
 end_enum
+
+begin_define
+define|#
+directive|define
+name|USB_MODE_MAX
+value|(USB_MODE_DUAL+1)
+end_define
 
 begin_comment
 comment|/*  * The "USB_MODE" macros defines all the supported device states.  */
@@ -92,7 +112,7 @@ end_comment
 
 begin_enum
 enum|enum
-name|usb2_dev_state
+name|usb_dev_state
 block|{
 name|USB_STATE_DETACHED
 block|,
@@ -103,11 +123,16 @@ block|,
 name|USB_STATE_ADDRESSED
 block|,
 name|USB_STATE_CONFIGURED
-block|,
-name|USB_STATE_MAX
 block|, }
 enum|;
 end_enum
+
+begin_define
+define|#
+directive|define
+name|USB_STATE_MAX
+value|(USB_STATE_CONFIGURED+1)
+end_define
 
 begin_endif
 endif|#

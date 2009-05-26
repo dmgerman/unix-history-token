@@ -1194,14 +1194,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* set default usage */
-comment|/* use the undefined HID PAGE */
-name|s
-operator|->
-name|usage_last
-operator|=
-literal|0
-expr_stmt|;
 goto|goto
 name|top
 goto|;
@@ -1244,6 +1236,14 @@ name|c
 operator|->
 name|collevel
 operator|++
+expr_stmt|;
+name|c
+operator|->
+name|usage
+operator|=
+name|s
+operator|->
+name|usage_last
 expr_stmt|;
 operator|*
 name|h
@@ -1687,6 +1687,13 @@ operator||
 name|c
 operator|->
 name|_usage_page
+expr_stmt|;
+comment|/* set last usage, in case of a collection */
+name|s
+operator|->
+name|usage_last
+operator|=
+name|dval
 expr_stmt|;
 if|if
 condition|(
@@ -2689,6 +2696,9 @@ operator|(
 literal|0
 operator|)
 return|;
+while|while
+condition|(
+operator|(
 name|err
 operator|=
 name|hid_get_item
@@ -2698,7 +2708,11 @@ argument_list|,
 operator|&
 name|hi
 argument_list|)
-operator|&&
+operator|)
+condition|)
+block|{
+if|if
+condition|(
 name|hi
 operator|.
 name|kind
@@ -2710,7 +2724,9 @@ operator|.
 name|usage
 operator|==
 name|usage
-expr_stmt|;
+condition|)
+break|break;
+block|}
 name|hid_end_parse
 argument_list|(
 name|hd

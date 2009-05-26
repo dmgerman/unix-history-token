@@ -602,7 +602,6 @@ name|mac
 operator|->
 name|mac_sc
 decl_stmt|;
-comment|/* TODO: 11A */
 name|CSR_WRITE_2
 argument_list|(
 name|sc
@@ -646,7 +645,6 @@ name|mac
 operator|->
 name|mac_sc
 decl_stmt|;
-comment|/* TODO: 11A */
 name|CSR_WRITE_2
 argument_list|(
 name|sc
@@ -1885,7 +1883,7 @@ literal|0xfff0
 argument_list|,
 name|tpctl
 operator|->
-name|tp_ctrl1
+name|tp_ctrl2
 argument_list|)
 expr_stmt|;
 block|}
@@ -3622,6 +3620,12 @@ expr_stmt|;
 name|val
 operator|+=
 literal|0x202
+expr_stmt|;
+comment|/* XXX: delay 10 us to avoid PCI parity errors with BCM4318 */
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
 expr_stmt|;
 block|}
 if|if

@@ -154,7 +154,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
-name|_hw_usb2
+name|_hw_usb
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -172,7 +172,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_hw_usb2_ehci
+name|_hw_usb_ehci
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -193,7 +193,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_hw_usb2_ehci
+name|_hw_usb_ehci
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -5947,20 +5947,6 @@ operator|->
 name|td_transfer_last
 condition|)
 block|{
-if|if
-condition|(
-name|len
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* 			         * Halt is ok if descriptor is last, 			         * and complete: 			         */
-name|status
-operator|&=
-operator|~
-name|EHCI_QTD_HALTED
-expr_stmt|;
-block|}
 name|td
 operator|=
 name|NULL
@@ -9516,6 +9502,17 @@ argument_list|(
 name|status
 argument_list|)
 expr_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+literal|"status=0x%08x, rem=%u\n"
+argument_list|,
+name|status
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -9754,6 +9751,17 @@ operator|=
 name|EHCI_ITD_GET_LEN
 argument_list|(
 name|status
+argument_list|)
+expr_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+literal|"status=0x%08x, len=%u\n"
+argument_list|,
+name|status
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 if|if
@@ -16408,7 +16416,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 argument_list|,
 name|sc
 operator|->
@@ -16421,7 +16429,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|!=
 name|USB_MODE_HOST
 condition|)

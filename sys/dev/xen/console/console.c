@@ -501,7 +501,7 @@ parameter_list|,
 name|_name
 parameter_list|)
 define|\
-value|mtx_init(&x, _name, NULL, MTX_DEF|MTX_RECURSE)
+value|mtx_init(&x, _name, NULL, MTX_SPIN|MTX_RECURSE)
 end_define
 
 begin_define
@@ -512,7 +512,7 @@ parameter_list|(
 name|l
 parameter_list|)
 define|\
-value|do {											\ 				if (panicstr == NULL)					\                         mtx_lock(&(l));			\ 		} while (0)
+value|do {											\ 				if (panicstr == NULL)					\                         mtx_lock_spin(&(l));			\ 		} while (0)
 end_define
 
 begin_define
@@ -523,7 +523,7 @@ parameter_list|(
 name|l
 parameter_list|)
 define|\
-value|do {											\ 				if (panicstr == NULL)					\                         mtx_unlock(&(l));			\ 		} while (0)
+value|do {											\ 				if (panicstr == NULL)					\                         mtx_unlock_spin(&(l));			\ 		} while (0)
 end_define
 
 begin_define
@@ -775,19 +775,7 @@ name|rc
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|kdb_active
-condition|)
-name|printf
-argument_list|(
-literal|"%s:%d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
+comment|/* if (kdb_active) printf("%s:%d\n", __func__, __LINE__); */
 comment|/* we need to return only one char */
 name|ret
 operator|=
@@ -1323,6 +1311,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|CN_LOCK
+argument_list|(
+name|cn_mtx
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1349,6 +1342,11 @@ name|buf
 index|[
 name|i
 index|]
+expr_stmt|;
+name|CN_UNLOCK
+argument_list|(
+name|cn_mtx
+argument_list|)
 expr_stmt|;
 block|}
 block|}

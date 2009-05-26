@@ -2662,11 +2662,6 @@ name|struct
 name|mount
 modifier|*
 name|mp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -2801,11 +2796,6 @@ name|mp
 parameter_list|,
 name|int
 name|mntflags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|int
@@ -2829,7 +2819,7 @@ name|FORCECLOSE
 else|:
 literal|0
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 expr_stmt|;
 return|return
@@ -2862,11 +2852,6 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -2923,11 +2908,6 @@ name|struct
 name|statfs
 modifier|*
 name|sbp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 comment|/* XXX update statistics */

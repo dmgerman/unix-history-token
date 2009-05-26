@@ -2596,6 +2596,11 @@ begin_struct
 struct|struct
 name|sctpstat
 block|{
+name|struct
+name|sctp_timeval
+name|sctps_discontinuitytime
+decl_stmt|;
+comment|/* sctpStats 18 							 * (TimeStamp) */
 comment|/* MIB according to RFC 3873 */
 name|uint32_t
 name|sctps_currestab
@@ -3111,11 +3116,13 @@ name|uint32_t
 name|sctps_fwdtsn_map_over
 decl_stmt|;
 comment|/* number of map array over-runs via 					 * fwd-tsn's */
-name|struct
-name|sctp_timeval
-name|sctps_discontinuitytime
+name|uint32_t
+name|sctps_reserved
+index|[
+literal|32
+index|]
 decl_stmt|;
-comment|/* sctpStats 18 							 * (TimeStamp) */
+comment|/* Future ABI compat - remove int's 					 * from here when adding new */
 block|}
 struct|;
 end_struct

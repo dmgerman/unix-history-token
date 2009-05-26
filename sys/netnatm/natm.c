@@ -209,7 +209,8 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -240,7 +241,8 @@ name|struct
 name|sockaddr
 modifier|*
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -293,7 +295,8 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -333,7 +336,8 @@ name|struct
 name|ifnet
 modifier|*
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -364,7 +368,8 @@ name|struct
 name|sockaddr
 modifier|*
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -400,7 +405,8 @@ parameter_list|,
 name|int
 name|proto
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|p
 parameter_list|)
@@ -596,7 +602,8 @@ name|sockaddr
 modifier|*
 name|nam
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|p
 parameter_list|)
@@ -1143,7 +1150,8 @@ name|mbuf
 modifier|*
 name|control
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|p
 parameter_list|)
@@ -1499,7 +1507,8 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|p
 parameter_list|)
@@ -1609,7 +1618,8 @@ name|sockaddr
 modifier|*
 name|nam
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|p
 parameter_list|)

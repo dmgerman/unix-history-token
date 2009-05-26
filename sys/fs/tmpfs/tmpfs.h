@@ -676,10 +676,6 @@ parameter_list|,
 name|dev_t
 parameter_list|,
 name|struct
-name|thread
-modifier|*
-parameter_list|,
-name|struct
 name|tmpfs_node
 modifier|*
 modifier|*
@@ -762,10 +758,6 @@ parameter_list|,
 name|struct
 name|vnode
 modifier|*
-modifier|*
-parameter_list|,
-name|struct
-name|thread
 modifier|*
 parameter_list|)
 function_decl|;

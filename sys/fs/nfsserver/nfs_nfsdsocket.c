@@ -5912,7 +5912,6 @@ argument_list|)
 expr_stmt|;
 operator|*
 name|repp
-operator|++
 operator|=
 operator|*
 name|tl
@@ -5946,6 +5945,15 @@ name|NFSERR_OPILLEGAL
 expr_stmt|;
 operator|*
 name|repp
+operator|++
+operator|=
+name|txdr_unsigned
+argument_list|(
+name|NFSV4OP_OPILLEGAL
+argument_list|)
+expr_stmt|;
+operator|*
+name|repp
 operator|=
 name|nfsd_errmap
 argument_list|(
@@ -5956,6 +5964,12 @@ name|retops
 operator|++
 expr_stmt|;
 break|break;
+block|}
+else|else
+block|{
+name|repp
+operator|++
+expr_stmt|;
 block|}
 comment|/* 		 * Check for a referral on the current FH and, if so, return 		 * NFSERR_MOVED for all ops that allow it, except Getattr. 		 */
 if|if
@@ -6074,7 +6088,7 @@ operator|==
 name|NFSV4OP_SETATTR
 condition|)
 block|{
-comment|/* 			     * Setattr replies require a bitmap. 			     * even for errors like these. 			     */
+comment|/* 				 * Setattr replies require a bitmap. 				 * even for errors like these. 				 */
 name|NFSM_BUILD
 argument_list|(
 name|tl
@@ -6696,20 +6710,13 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|NFSVNO_EXGSSONLY
+name|nfsvno_testexp
 argument_list|(
+name|nd
+argument_list|,
 operator|&
 name|vpnes
 argument_list|)
-operator|&&
-operator|!
-operator|(
-name|nd
-operator|->
-name|nd_flag
-operator|&
-name|ND_GSS
-operator|)
 operator|&&
 name|op
 operator|!=
@@ -7030,6 +7037,17 @@ argument_list|,
 operator|&
 name|nes
 argument_list|,
+name|credanon
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|credanon
+operator|!=
+name|NULL
+condition|)
+name|crfree
+argument_list|(
 name|credanon
 argument_list|)
 expr_stmt|;

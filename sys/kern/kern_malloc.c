@@ -2470,28 +2470,6 @@ operator|=
 name|vm_kmem_size_max
 expr_stmt|;
 comment|/* Allow final override from the kernel environment */
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
-if|if
-condition|(
-name|TUNABLE_ULONG_FETCH
-argument_list|(
-literal|"kern.vm.kmem.size"
-argument_list|,
-operator|&
-name|vm_kmem_size
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"kern.vm.kmem.size is now called vm.kmem_size!\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|TUNABLE_ULONG_FETCH
 argument_list|(
 literal|"vm.kmem_size"

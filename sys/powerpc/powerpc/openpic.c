@@ -864,6 +864,15 @@ name|cpuid
 decl_stmt|,
 name|vector
 decl_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_INTR
+argument_list|,
+literal|"%s: got interrupt"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|cpuid
 operator|=
 name|PCPU_GET

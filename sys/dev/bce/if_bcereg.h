@@ -34968,6 +34968,13 @@ begin_comment
 comment|/* ZERO_COPY_SOCKETS */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CTX_INIT_RETRY_COUNT
+value|10
+end_define
+
 begin_comment
 comment|/* Context size. */
 end_comment

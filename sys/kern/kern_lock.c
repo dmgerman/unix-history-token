@@ -4670,6 +4670,7 @@ argument_list|(
 literal|"shared\n"
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 name|LK_EXCLUSIVE_WAITERS
 case|:

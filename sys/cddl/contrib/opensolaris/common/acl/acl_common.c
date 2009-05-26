@@ -1800,6 +1800,16 @@ directive|endif
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
+
 begin_function
 name|acl_t
 modifier|*
@@ -7737,6 +7747,15 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 end_unit
 

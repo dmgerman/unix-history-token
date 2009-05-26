@@ -1356,6 +1356,45 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * Flush the D-cache for non-DMA I/O so that the I-cache can  * be made coherent later.  */
+end_comment
+
+begin_function
+name|void
+name|cpu_flush_dcache
+parameter_list|(
+name|void
+modifier|*
+name|ptr
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+block|{
+name|cpu_dcache_wb_range
+argument_list|(
+operator|(
+name|uintptr_t
+operator|)
+name|ptr
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+name|cpu_l2cache_wb_range
+argument_list|(
+operator|(
+name|uintptr_t
+operator|)
+name|ptr
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* Get current clock frequency for the given cpu id. */
 end_comment
 

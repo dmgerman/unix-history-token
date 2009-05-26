@@ -619,7 +619,7 @@ literal|1
 operator|)
 operator|)
 expr_stmt|;
-comment|/* Translate the signal is appropriate */
+comment|/* Translate the signal if appropriate */
 if|if
 condition|(
 name|p

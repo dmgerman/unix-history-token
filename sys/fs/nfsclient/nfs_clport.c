@@ -6614,7 +6614,7 @@ name|MODULE_DEPEND
 argument_list|(
 name|nfscl
 argument_list|,
-name|newnfsd
+name|nfscommon
 argument_list|,
 literal|1
 argument_list|,

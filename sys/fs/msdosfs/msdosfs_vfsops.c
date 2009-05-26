@@ -872,8 +872,6 @@ name|LK_EXCLUSIVE
 argument_list|,
 operator|&
 name|rootvp
-argument_list|,
-name|td
 argument_list|)
 operator|)
 operator|!=
@@ -927,11 +925,6 @@ name|data
 parameter_list|,
 name|int
 name|flags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -1206,11 +1199,6 @@ name|struct
 name|mount
 modifier|*
 name|mp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -1219,6 +1207,11 @@ modifier|*
 name|devvp
 decl_stmt|;
 comment|/* vnode for blk device to mount */
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 comment|/* msdosfs specific mount control block */
 name|struct
 name|msdosfsmount
@@ -1243,6 +1236,10 @@ name|char
 modifier|*
 name|from
 decl_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
 if|if
 condition|(
 name|vfs_filteropt
@@ -1352,8 +1349,6 @@ argument_list|(
 name|mp
 argument_list|,
 name|MNT_WAIT
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1967,8 +1962,6 @@ argument_list|(
 name|mp
 argument_list|,
 name|MNT_FORCE
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -3657,11 +3650,6 @@ name|mp
 parameter_list|,
 name|int
 name|mntflags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -3698,7 +3686,7 @@ literal|0
 argument_list|,
 name|flags
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 expr_stmt|;
 if|if
@@ -4066,11 +4054,6 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -4158,11 +4141,6 @@ name|struct
 name|statfs
 modifier|*
 name|sbp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -4255,11 +4233,6 @@ name|mp
 parameter_list|,
 name|int
 name|waitfor
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -4269,6 +4242,11 @@ name|vp
 decl_stmt|,
 modifier|*
 name|nvp
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
 decl_stmt|;
 name|struct
 name|denode
@@ -4292,6 +4270,10 @@ name|allerror
 init|=
 literal|0
 decl_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
 comment|/* 	 * If we ever switch to not updating all of the fats all the time, 	 * this would be the place to update them from the first one. 	 */
 if|if
 condition|(

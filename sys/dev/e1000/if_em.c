@@ -5460,6 +5460,7 @@ name|error
 operator|)
 return|;
 block|}
+elseif|else
 if|if
 condition|(
 name|ADAPTER_RING_EMPTY
@@ -5516,6 +5517,22 @@ return|;
 block|}
 else|else
 block|{
+comment|/* 			 * We've bypassed the buf ring so we need to update 			 * ifp directly 			 */
+name|drbr_stats_update
+argument_list|(
+name|ifp
+argument_list|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+expr_stmt|;
 comment|/* 			** Send a copy of the frame to the BPF 			** listener and set the watchdog on. 			*/
 name|ETHER_BPF_MTAP
 argument_list|(

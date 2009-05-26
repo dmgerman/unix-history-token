@@ -161,8 +161,6 @@ parameter_list|,
 name|flags
 parameter_list|,
 name|vpp
-parameter_list|,
-name|td
 parameter_list|)
 name|struct
 name|mount
@@ -177,11 +175,6 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
 decl_stmt|;
 block|{
 name|struct
@@ -246,8 +239,6 @@ parameter_list|,
 name|id
 parameter_list|,
 name|arg
-parameter_list|,
-name|td
 parameter_list|)
 name|struct
 name|mount
@@ -264,11 +255,6 @@ name|void
 modifier|*
 name|arg
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
 block|{
 ifndef|#
 directive|ifndef
@@ -280,6 +266,11 @@ operator|)
 return|;
 else|#
 directive|else
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 name|int
 name|cmd
 decl_stmt|,
@@ -287,6 +278,10 @@ name|type
 decl_stmt|,
 name|error
 decl_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
 name|cmd
 operator|=
 name|cmds

@@ -592,11 +592,6 @@ name|struct
 name|mount
 modifier|*
 name|mp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -605,6 +600,11 @@ modifier|*
 name|devvp
 decl_stmt|;
 comment|/* vnode of the mount device */
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 name|struct
 name|udf_mnt
 modifier|*
@@ -645,6 +645,10 @@ init|=
 operator|&
 name|nd
 decl_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
 name|opts
 operator|=
 name|mp
@@ -2286,11 +2290,6 @@ name|mp
 parameter_list|,
 name|int
 name|mntflags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -2335,7 +2334,7 @@ literal|0
 argument_list|,
 name|flags
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 operator|)
 condition|)
@@ -2483,11 +2482,6 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -2546,11 +2540,6 @@ name|struct
 name|statfs
 modifier|*
 name|sbp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct

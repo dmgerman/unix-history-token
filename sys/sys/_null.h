@@ -12,11 +12,6 @@ end_ifndef
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-operator|||
 operator|!
 name|defined
 argument_list|(
@@ -118,7 +113,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _KERNEL || !__cplusplus */
+comment|/* !__cplusplus */
 end_comment
 
 begin_endif

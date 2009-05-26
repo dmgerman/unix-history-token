@@ -2249,8 +2249,6 @@ name|v_mount
 argument_list|,
 operator|&
 name|sb
-argument_list|,
-name|curthread
 argument_list|)
 operator|<
 literal|0

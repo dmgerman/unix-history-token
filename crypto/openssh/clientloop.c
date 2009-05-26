@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: clientloop.c,v 1.201 2008/07/16 11:51:14 djm Exp $ */
+comment|/* $OpenBSD: clientloop.c,v 1.209 2009/02/12 03:00:56 djm Exp $ */
 end_comment
 
 begin_comment
@@ -272,12 +272,6 @@ begin_include
 include|#
 directive|include
 file|"misc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"monitor_fdpass.h"
 end_include
 
 begin_include
@@ -3005,8 +2999,16 @@ name|int
 name|local
 init|=
 literal|0
+decl_stmt|,
+name|remote
+init|=
+literal|0
+decl_stmt|,
+name|dynamic
+init|=
+literal|0
 decl_stmt|;
-name|u_short
+name|int
 name|cancel_port
 decl_stmt|;
 name|Forward
@@ -3134,6 +3136,12 @@ argument_list|)
 expr_stmt|;
 name|logit
 argument_list|(
+literal|"      -D[bind_address:]port                  "
+literal|"Request dynamic forward"
+argument_list|)
+expr_stmt|;
+name|logit
+argument_list|(
 literal|"      -KR[bind_address:]port                 "
 literal|"Cancel remote forward"
 argument_list|)
@@ -3202,14 +3210,38 @@ if|if
 condition|(
 operator|*
 name|s
-operator|!=
+operator|==
 literal|'L'
-operator|&&
+condition|)
+name|local
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 operator|*
 name|s
-operator|!=
+operator|==
 literal|'R'
 condition|)
+name|remote
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|*
+name|s
+operator|==
+literal|'D'
+condition|)
+name|dynamic
+operator|=
+literal|1
+expr_stmt|;
+else|else
 block|{
 name|logit
 argument_list|(
@@ -3222,18 +3254,11 @@ goto|;
 block|}
 if|if
 condition|(
-operator|*
-name|s
-operator|==
-literal|'L'
-condition|)
+operator|(
 name|local
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|local
+operator|||
+name|dynamic
+operator|)
 operator|&&
 name|delete
 condition|)
@@ -3249,12 +3274,9 @@ goto|;
 block|}
 if|if
 condition|(
-operator|(
-operator|!
-name|local
-operator|||
+name|remote
+operator|&&
 name|delete
-operator|)
 operator|&&
 operator|!
 name|compat20
@@ -3336,7 +3358,7 @@ block|}
 if|if
 condition|(
 name|cancel_port
-operator|==
+operator|<=
 literal|0
 condition|)
 block|{
@@ -3368,6 +3390,10 @@ operator|&
 name|fwd
 argument_list|,
 name|s
+argument_list|,
+name|dynamic
+argument_list|,
+name|remote
 argument_list|)
 condition|)
 block|{
@@ -3383,6 +3409,8 @@ block|}
 if|if
 condition|(
 name|local
+operator|||
+name|dynamic
 condition|)
 block|{
 if|if
@@ -4106,9 +4134,7 @@ argument_list|,
 sizeof|sizeof
 name|string
 argument_list|,
-literal|"%c?\r\n\ Supported escape sequences:\r\n\   %c.  - terminate session\r\n\   %cB  - send a BREAK to the remote system\r\n\   %cC  - open a command line\r\n\   %cR  - Request rekey (SSH protocol 2 only)\r\n\   %c#  - list forwarded connections\r\n\   %c?  - this message\r\n\   %c%c  - send the escape character by typing it twice\r\n\ (Note that escapes are only recognized immediately after newline.)\r\n"
-argument_list|,
-name|escape_char
+literal|"%c?\r\n\ Supported escape sequences:\r\n\   %c.  - terminate session\r\n\   %cB  - send a BREAK to the remote system\r\n\   %cR  - Request rekey (SSH protocol 2 only)\r\n\   %c#  - list forwarded connections\r\n\   %c?  - this message\r\n\   %c%c  - send the escape character by typing it twice\r\n\ (Note that escapes are only recognized immediately after newline.)\r\n"
 argument_list|,
 name|escape_char
 argument_list|,
@@ -4229,6 +4255,20 @@ continue|continue;
 case|case
 literal|'C'
 case|:
+if|if
+condition|(
+name|c
+operator|&&
+name|c
+operator|->
+name|ctl_fd
+operator|!=
+operator|-
+literal|1
+condition|)
+goto|goto
+name|noescape
+goto|;
 name|process_cmdline
 argument_list|()
 expr_stmt|;
@@ -6257,7 +6297,7 @@ decl_stmt|,
 modifier|*
 name|originator_address
 decl_stmt|;
-name|int
+name|u_short
 name|listen_port
 decl_stmt|,
 name|originator_port
@@ -6356,7 +6396,7 @@ name|char
 modifier|*
 name|originator
 decl_stmt|;
-name|int
+name|u_short
 name|originator_port
 decl_stmt|;
 name|int
@@ -6624,7 +6664,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Tunnel forwarding is not support for protocol 1"
+literal|"Tunnel forwarding is not supported for protocol 1"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7285,7 +7325,9 @@ argument_list|)
 expr_stmt|;
 name|packet_put_int
 argument_list|(
-name|id
+name|c
+operator|->
+name|remote_id
 argument_list|)
 expr_stmt|;
 name|packet_send

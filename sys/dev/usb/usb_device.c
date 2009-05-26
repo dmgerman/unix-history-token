@@ -447,7 +447,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_hw_usb2
+name|_hw_usb
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -516,7 +516,7 @@ modifier|*
 name|usb2_statestr
 parameter_list|(
 name|enum
-name|usb2_dev_state
+name|usb_dev_state
 name|state
 parameter_list|)
 block|{
@@ -793,25 +793,21 @@ expr_stmt|;
 comment|/* check USB mode */
 if|if
 condition|(
-operator|(
 name|setup
 operator|->
 name|usb_mode
 operator|!=
-name|USB_MODE_MAX
-operator|)
+name|USB_MODE_DUAL
 operator|&&
-operator|(
 name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|!=
 name|setup
 operator|->
 name|usb_mode
-operator|)
 condition|)
 block|{
 comment|/* wrong mode - no pipe */
@@ -846,7 +842,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_DEVICE
 operator|)
@@ -881,7 +877,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_DEVICE
 operator|)
@@ -1600,7 +1596,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|!=
 name|USB_MODE_DEVICE
 condition|)
@@ -1789,7 +1785,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_DEVICE
 condition|)
@@ -1879,7 +1875,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_HOST
 operator|)
@@ -2061,7 +2057,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_HOST
 condition|)
@@ -3064,7 +3060,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_DEVICE
 condition|)
@@ -4195,13 +4191,13 @@ name|udev
 expr_stmt|;
 name|uaa
 operator|->
-name|usb2_mode
+name|usb_mode
 operator|=
 name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 expr_stmt|;
 name|uaa
 operator|->
@@ -5067,11 +5063,13 @@ parameter_list|,
 name|uint8_t
 name|port_no
 parameter_list|,
-name|uint8_t
+name|enum
+name|usb_dev_speed
 name|speed
 parameter_list|,
-name|uint8_t
-name|usb2_mode
+name|enum
+name|usb_hc_mode
+name|mode
 parameter_list|)
 block|{
 name|struct
@@ -5109,7 +5107,7 @@ decl_stmt|;
 name|DPRINTF
 argument_list|(
 literal|"parent_dev=%p, bus=%p, parent_hub=%p, depth=%u, "
-literal|"port_index=%u, port_no=%u, speed=%u, usb2_mode=%u\n"
+literal|"port_index=%u, port_no=%u, speed=%u, usb_mode=%u\n"
 argument_list|,
 name|parent_dev
 argument_list|,
@@ -5125,7 +5123,7 @@ name|port_no
 argument_list|,
 name|speed
 argument_list|,
-name|usb2_mode
+name|mode
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Find an unused device index. In USB Host mode this is the 	 * same as the device address. 	 * 	 * Device index zero is not used and device index 1 should 	 * always be the root hub. 	 */
@@ -5514,9 +5512,9 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|=
-name|usb2_mode
+name|mode
 expr_stmt|;
 comment|/* search for our High Speed USB HUB, if any */
 name|adev
@@ -5677,7 +5675,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_HOST
 condition|)
@@ -6278,7 +6276,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_HOST
 condition|)
@@ -7518,7 +7516,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_DEVICE
 condition|)
@@ -8542,7 +8540,8 @@ comment|/*  * Returns:  * See: USB_MODE_XXX  */
 end_comment
 
 begin_function
-name|uint8_t
+name|enum
+name|usb_hc_mode
 name|usb2_get_mode
 parameter_list|(
 name|struct
@@ -8557,7 +8556,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|)
 return|;
 block|}
@@ -8568,7 +8567,8 @@ comment|/*  * Returns:  * See: USB_SPEED_XXX  */
 end_comment
 
 begin_function
-name|uint8_t
+name|enum
+name|usb_dev_speed
 name|usb2_get_speed
 parameter_list|(
 name|struct
@@ -9244,7 +9244,7 @@ name|udev
 operator|->
 name|flags
 operator|.
-name|usb2_mode
+name|usb_mode
 operator|==
 name|USB_MODE_HOST
 operator|)
@@ -9279,7 +9279,7 @@ modifier|*
 name|udev
 parameter_list|,
 name|enum
-name|usb2_dev_state
+name|usb_dev_state
 name|state
 parameter_list|)
 block|{

@@ -1893,23 +1893,12 @@ name|malo_txtask
 decl_stmt|;
 comment|/* tx int processing */
 name|struct
-name|bpf_if
-modifier|*
-name|malo_drvbpf
-decl_stmt|;
-name|struct
 name|malo_tx_radiotap_header
 name|malo_tx_th
-decl_stmt|;
-name|int
-name|malo_tx_th_len
 decl_stmt|;
 name|struct
 name|malo_rx_radiotap_header
 name|malo_rx_th
-decl_stmt|;
-name|int
-name|malo_rx_th_len
 decl_stmt|;
 name|struct
 name|malo_stats

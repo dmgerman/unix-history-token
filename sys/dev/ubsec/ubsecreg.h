@@ -210,6 +210,17 @@ begin_comment
 comment|/* 5823 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_BROADCOM_5825
+value|0x5825
+end_define
+
+begin_comment
+comment|/* 5825 */
+end_comment
+
 begin_comment
 comment|/* Sun Microsystems */
 end_comment

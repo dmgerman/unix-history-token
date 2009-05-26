@@ -648,6 +648,29 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/* Get ptr to xoptattr_t */
+struct_decl|struct
+name|taskq
+struct_decl|;
+name|void
+name|vn_rele_async
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|struct
+name|taskq
+modifier|*
+name|taskq
+parameter_list|)
+function_decl|;
+name|void
+name|vn_rele_async_fini
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 comment|/*  * Flags to VOP_SETATTR/VOP_GETATTR.  */
 define|#
 directive|define

@@ -686,8 +686,6 @@ operator|=
 name|VFS_MOUNT
 argument_list|(
 name|mp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|td
@@ -736,8 +734,6 @@ operator|&
 name|mp
 operator|->
 name|mnt_stat
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -842,8 +838,6 @@ name|LK_EXCLUSIVE
 argument_list|,
 operator|&
 name|mvp
-argument_list|,
-name|td
 argument_list|)
 condition|)
 name|panic
