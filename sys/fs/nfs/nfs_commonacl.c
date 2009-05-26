@@ -265,9 +265,9 @@ literal|0
 expr_stmt|;
 name|acep
 operator|->
-name|ae_extended
+name|ae_entry_type
 operator|=
-name|ACL_EXTENDED_DENY
+name|ACL_ENTRY_TYPE_DENY
 expr_stmt|;
 if|if
 condition|(
@@ -619,7 +619,7 @@ name|acep
 operator|->
 name|ae_flags
 operator||=
-name|ACL_ENTRY_LIMIT_INHERIT
+name|ACL_ENTRY_NO_PROPAGATE_INHERIT
 expr_stmt|;
 block|}
 if|if
@@ -638,7 +638,7 @@ name|acep
 operator|->
 name|ae_flags
 operator||=
-name|ACL_ENTRY_ONLY_INHERIT
+name|ACL_ENTRY_INHERIT_ONLY
 expr_stmt|;
 block|}
 if|if
@@ -679,7 +679,7 @@ operator||=
 name|ACL_ENTRY_FAILED_ACCESS
 expr_stmt|;
 block|}
-comment|/* 		 * Set ae_extended. 		 */
+comment|/* 		 * Set ae_entry_type. 		 */
 if|if
 condition|(
 name|acetype
@@ -688,9 +688,9 @@ name|NFSV4ACE_ALLOWEDTYPE
 condition|)
 name|acep
 operator|->
-name|ae_extended
+name|ae_entry_type
 operator|=
-name|ACL_EXTENDED_ALLOW
+name|ACL_ENTRY_TYPE_ALLOW
 expr_stmt|;
 elseif|else
 if|if
@@ -701,9 +701,9 @@ name|NFSV4ACE_DENIEDTYPE
 condition|)
 name|acep
 operator|->
-name|ae_extended
+name|ae_entry_type
 operator|=
-name|ACL_EXTENDED_DENY
+name|ACL_ENTRY_TYPE_DENY
 expr_stmt|;
 elseif|else
 if|if
@@ -714,9 +714,9 @@ name|NFSV4ACE_AUDITTYPE
 condition|)
 name|acep
 operator|->
-name|ae_extended
+name|ae_entry_type
 operator|=
-name|ACL_EXTENDED_AUDIT
+name|ACL_ENTRY_TYPE_AUDIT
 expr_stmt|;
 elseif|else
 if|if
@@ -727,9 +727,9 @@ name|NFSV4ACE_ALARMTYPE
 condition|)
 name|acep
 operator|->
-name|ae_extended
+name|ae_entry_type
 operator|=
-name|ACL_EXTENDED_ALARM
+name|ACL_ENTRY_TYPE_ALARM
 expr_stmt|;
 else|else
 name|aceerr
@@ -2271,9 +2271,9 @@ if|if
 condition|(
 name|ace
 operator|->
-name|ae_extended
+name|ae_entry_type
 operator|&
-name|ACL_EXTENDED_ALLOW
+name|ACL_ENTRY_TYPE_ALLOW
 condition|)
 name|acetype
 operator|=
@@ -2284,9 +2284,9 @@ if|if
 condition|(
 name|ace
 operator|->
-name|ae_extended
+name|ae_entry_type
 operator|&
-name|ACL_EXTENDED_DENY
+name|ACL_ENTRY_TYPE_DENY
 condition|)
 name|acetype
 operator|=
@@ -2297,9 +2297,9 @@ if|if
 condition|(
 name|ace
 operator|->
-name|ae_extended
+name|ae_entry_type
 operator|&
-name|ACL_EXTENDED_AUDIT
+name|ACL_ENTRY_TYPE_AUDIT
 condition|)
 name|acetype
 operator|=
@@ -2350,7 +2350,7 @@ name|ace
 operator|->
 name|ae_flags
 operator|&
-name|ACL_ENTRY_LIMIT_INHERIT
+name|ACL_ENTRY_NO_PROPAGATE_INHERIT
 condition|)
 name|aceflag
 operator||=
@@ -2362,7 +2362,7 @@ name|ace
 operator|->
 name|ae_flags
 operator|&
-name|ACL_ENTRY_ONLY_INHERIT
+name|ACL_ENTRY_INHERIT_ONLY
 condition|)
 name|aceflag
 operator||=
