@@ -246,7 +246,7 @@ condition|)
 goto|goto
 name|ready
 goto|;
-comment|/* Check and see if we have a request. */
+comment|/* Check to see if we have a request. */
 if|if
 condition|(
 name|skippacket
@@ -393,7 +393,7 @@ condition|(
 name|packlen
 operator|+
 literal|2
-operator|<
+operator|>
 name|q
 operator|.
 name|len
