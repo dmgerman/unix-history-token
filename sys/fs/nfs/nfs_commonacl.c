@@ -1014,7 +1014,7 @@ name|NFSV4ACE_SEARCH
 expr_stmt|;
 name|perm
 operator||=
-name|ACL_SEARCH
+name|ACL_EXECUTE
 expr_stmt|;
 block|}
 if|if
@@ -2482,7 +2482,7 @@ name|ace
 operator|->
 name|ae_perm
 operator|&
-name|ACL_SEARCH
+name|ACL_EXECUTE
 condition|)
 name|acemask
 operator||=

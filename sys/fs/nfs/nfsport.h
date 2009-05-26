@@ -211,16 +211,6 @@ directive|include
 file|<sys/acl.h>
 end_include
 
-begin_comment
-comment|/* until the nfsv4 acl stuff is all committed, undef NFS4_ACL_EXTATTR_NAME */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|NFS4_ACL_EXTATTR_NAME
-end_undef
-
 begin_include
 include|#
 directive|include
@@ -3432,7 +3422,7 @@ name|NFSHASNFS4ACL
 parameter_list|(
 name|m
 parameter_list|)
-value|((m)->mnt_flag& MNT_NFS4ACLS)
+value|0
 end_define
 
 begin_else

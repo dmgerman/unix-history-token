@@ -1207,7 +1207,9 @@ name|NFS4_ACL_EXTATTR_NAME
 name|aclp
 operator|=
 name|acl_alloc
-argument_list|()
+argument_list|(
+name|M_WAITOK
+argument_list|)
 expr_stmt|;
 name|aclp
 operator|->
@@ -6386,7 +6388,9 @@ name|NFS4_ACL_EXTATTR_NAME
 name|aclp
 operator|=
 name|acl_alloc
-argument_list|()
+argument_list|(
+name|M_WAITOK
+argument_list|)
 expr_stmt|;
 name|aclp
 operator|->
@@ -15291,7 +15295,9 @@ name|NFS4_ACL_EXTATTR_NAME
 name|aclp
 operator|=
 name|acl_alloc
-argument_list|()
+argument_list|(
+name|M_WAITOK
+argument_list|)
 expr_stmt|;
 name|aclp
 operator|->
