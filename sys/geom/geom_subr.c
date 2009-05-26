@@ -6510,8 +6510,11 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"  offset: %lld\n"
+literal|"  offset: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|bp
 operator|->
 name|bio_offset
@@ -6519,8 +6522,11 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"  length: %lld\n"
+literal|"  length: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|bp
 operator|->
 name|bio_length
@@ -6546,8 +6552,11 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"  completed: %lld\n"
+literal|"  completed: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|bp
 operator|->
 name|bio_completed
