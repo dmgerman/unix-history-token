@@ -7,14 +7,14 @@ begin_define
 define|#
 directive|define
 name|EE_VERSION
-value|"1.4.7"
+value|"1.5.0"
 end_define
 
 begin_define
 define|#
 directive|define
 name|DATE_STRING
-value|"$Date: 2002/09/21 00:50:54 $"
+value|"$Date: 2009/02/17 03:32:30 $"
 end_define
 
 end_unit

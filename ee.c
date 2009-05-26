@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  |	ee (easy editor)  |  |	An easy to use, simple screen oriented editor.  |  |	written by Hugh Mahon  |  |  |      Copyright (c) 2009, Hugh Mahon  |      All rights reserved.  |        |      Redistribution and use in source and binary forms, with or without  |      modification, are permitted provided that the following conditions  |      are met:  |        |          * Redistributions of source code must retain the above copyright  |            notice, this list of conditions and the following disclaimer.  |          * Redistributions in binary form must reproduce the above  |            copyright notice, this list of conditions and the following  |            disclaimer in the documentation and/or other materials provided  |            with the distribution.  |        |      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  |      "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  |      LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  |      FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE  |      COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  |      INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  |      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  |      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  |      CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  |      LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  |      ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  |      POSSIBILITY OF SUCH DAMAGE.  |  |     -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-  |  |	This editor was purposely developed to be simple, both in   |	interface and implementation.  This editor was developed to   |	address a specific audience: the user who is new to computers   |	(especially UNIX).  |	  |	ee is not aimed at technical users; for that reason more   |	complex features were intentionally left out.  In addition,   |	ee is intended to be compiled by people with little computer   |	experience, which means that it needs to be small, relatively   |	simple in implementation, and portable.  |  |	This software and documentation contains  |	proprietary information which is protected by  |	copyright.  All rights are reserved.  |  |	$Header: /home/hugh/sources/old_ae/RCS/ee.c,v 1.99 2001/12/24 05:43:32 hugh Exp $  |  */
+comment|/*  |	ee (easy editor)  |  |	An easy to use, simple screen oriented editor.  |  |	written by Hugh Mahon  |  |  |      Copyright (c) 2009, Hugh Mahon  |      All rights reserved.  |        |      Redistribution and use in source and binary forms, with or without  |      modification, are permitted provided that the following conditions  |      are met:  |        |          * Redistributions of source code must retain the above copyright  |            notice, this list of conditions and the following disclaimer.  |          * Redistributions in binary form must reproduce the above  |            copyright notice, this list of conditions and the following  |            disclaimer in the documentation and/or other materials provided  |            with the distribution.  |        |      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  |      "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  |      LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  |      FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE  |      COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  |      INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  |      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  |      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  |      CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  |      LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  |      ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  |      POSSIBILITY OF SUCH DAMAGE.  |  |     -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-  |  |	This editor was purposely developed to be simple, both in   |	interface and implementation.  This editor was developed to   |	address a specific audience: the user who is new to computers   |	(especially UNIX).  |	  |	ee is not aimed at technical users; for that reason more   |	complex features were intentionally left out.  In addition,   |	ee is intended to be compiled by people with little computer   |	experience, which means that it needs to be small, relatively   |	simple in implementation, and portable.  |  |	This software and documentation contains  |	proprietary information which is protected by  |	copyright.  All rights are reserved.  |  |	$Header: /home/hugh/sources/old_ae/RCS/ee.c,v 1.102 2009/02/17 03:22:50 hugh Exp hugh $  |  */
 end_comment
 
 begin_decl_stmt
@@ -25,7 +25,7 @@ name|version
 init|=
 literal|"@(#) ee, version "
 name|EE_VERSION
-literal|" $Revision: 1.99 $"
+literal|" $Revision: 1.102 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +41,18 @@ directive|include
 file|"new_curse.h"
 end_include
 
+begin_elif
+elif|#
+directive|elif
+name|HAS_NCURSES
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<ncurses.h>
+end_include
+
 begin_else
 else|#
 directive|else
@@ -50,6 +62,23 @@ begin_include
 include|#
 directive|include
 file|<curses.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAS_CTYPE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_endif
@@ -160,23 +189,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAS_CTYPE
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_endif
@@ -477,6 +489,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* horizontal position on screen	*/
+end_comment
+
+begin_decl_stmt
+name|int
+name|absolute_lin
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of lines from top		*/
 end_comment
 
 begin_decl_stmt
@@ -1033,7 +1055,12 @@ name|char
 modifier|*
 name|print_command
 init|=
-literal|"lp"
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+literal|"lpr"
 decl_stmt|;
 end_decl_stmt
 
@@ -4059,6 +4086,15 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
+name|separator
+init|=
+literal|"==============================================================================="
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
 name|chinese_cmd
 decl_stmt|,
 modifier|*
@@ -4155,9 +4191,6 @@ decl_stmt|;
 block|{
 name|int
 name|counter
-decl_stmt|;
-name|pid_t
-name|parent_pid
 decl_stmt|;
 for|for
 control|(
@@ -4313,6 +4346,10 @@ name|scr_horz
 operator|=
 literal|0
 expr_stmt|;
+name|absolute_lin
+operator|=
+literal|1
+expr_stmt|;
 name|bit_bucket
 operator|=
 name|fopen
@@ -4445,6 +4482,73 @@ condition|(
 name|edit
 condition|)
 block|{
+comment|/* 		 |  display line and column information 		 */
+if|if
+condition|(
+name|info_window
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|nohighlight
+condition|)
+name|wstandout
+argument_list|(
+name|info_win
+argument_list|)
+expr_stmt|;
+name|wmove
+argument_list|(
+name|info_win
+argument_list|,
+literal|5
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|wprintw
+argument_list|(
+name|info_win
+argument_list|,
+name|separator
+argument_list|)
+expr_stmt|;
+name|wmove
+argument_list|(
+name|info_win
+argument_list|,
+literal|5
+argument_list|,
+literal|5
+argument_list|)
+expr_stmt|;
+name|wprintw
+argument_list|(
+name|info_win
+argument_list|,
+literal|"line %d col %d lines from top %d "
+argument_list|,
+name|curr_line
+operator|->
+name|line_number
+argument_list|,
+name|scr_horz
+argument_list|,
+name|absolute_lin
+argument_list|)
+expr_stmt|;
+name|wstandend
+argument_list|(
+name|info_win
+argument_list|)
+expr_stmt|;
+name|wrefresh
+argument_list|(
+name|info_win
+argument_list|)
+expr_stmt|;
+block|}
 name|wrefresh
 argument_list|(
 name|text_win
@@ -4469,40 +4573,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 		 |	The above check used to work to detect if the parent  		 |	process died, but now it seems we need a more  		 |	sophisticated check. 		 */
-if|if
-condition|(
-name|counter
-operator|>
-literal|50
-condition|)
-block|{
-name|parent_pid
-operator|=
-name|getppid
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|parent_pid
-operator|==
-literal|1
-condition|)
-name|edit_abort
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-else|else
-name|counter
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-name|counter
-operator|++
-expr_stmt|;
+comment|/* without this exit ee will go into an  			             infinite loop if the network  			             session detaches */
 name|resize_check
 argument_list|()
 expr_stmt|;
@@ -5368,6 +5439,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|absolute_lin
+operator|--
+expr_stmt|;
 name|text_changes
 operator|=
 name|TRUE
@@ -5939,7 +6013,6 @@ name|i1
 decl_stmt|,
 name|i2
 decl_stmt|;
-name|unsigned
 name|char
 modifier|*
 name|string
@@ -6824,6 +6897,9 @@ operator|->
 name|line_length
 operator|=
 name|position
+expr_stmt|;
+name|absolute_lin
+operator|++
 expr_stmt|;
 name|curr_line
 operator|=
@@ -8062,12 +8138,17 @@ name|next_line
 operator|!=
 name|NULL
 condition|)
+block|{
 name|curr_line
 operator|=
 name|curr_line
 operator|->
 name|next_line
 expr_stmt|;
+name|absolute_lin
+operator|++
+expr_stmt|;
+block|}
 name|point
 operator|=
 name|curr_line
@@ -8114,12 +8195,17 @@ name|prev_line
 operator|!=
 name|NULL
 condition|)
+block|{
 name|curr_line
 operator|=
 name|curr_line
 operator|->
 name|prev_line
 expr_stmt|;
+name|absolute_lin
+operator|--
+expr_stmt|;
+block|}
 name|point
 operator|=
 name|curr_line
@@ -8163,6 +8249,9 @@ operator|=
 name|curr_line
 operator|->
 name|next_line
+expr_stmt|;
+name|absolute_lin
+operator|++
 expr_stmt|;
 name|point
 operator|=
@@ -8243,6 +8332,9 @@ operator|=
 name|curr_line
 operator|->
 name|prev_line
+expr_stmt|;
+name|absolute_lin
+operator|--
 expr_stmt|;
 name|point
 operator|=
@@ -8402,6 +8494,9 @@ operator|!
 name|disp
 condition|)
 block|{
+name|absolute_lin
+operator|--
+expr_stmt|;
 name|curr_line
 operator|=
 name|curr_line
@@ -8557,6 +8652,9 @@ operator|!
 name|disp
 condition|)
 block|{
+name|absolute_lin
+operator|++
+expr_stmt|;
 name|curr_line
 operator|=
 name|curr_line
@@ -8906,7 +9004,17 @@ name|in
 operator|==
 name|KEY_HOME
 condition|)
-name|top
+name|bol
+argument_list|()
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|in
+operator|==
+name|KEY_END
+condition|)
+name|eol
 argument_list|()
 expr_stmt|;
 elseif|else
@@ -11071,6 +11179,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|direction
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|text
@@ -11222,6 +11332,29 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|direction
+argument_list|,
+literal|"d"
+argument_list|)
+condition|)
+block|{
+name|absolute_lin
+operator|+=
+name|i
+expr_stmt|;
+block|}
+else|else
+block|{
+name|absolute_lin
+operator|-=
+name|i
+expr_stmt|;
+block|}
 name|curr_line
 operator|=
 name|t_line
@@ -11439,6 +11572,8 @@ name|struct
 name|files
 modifier|*
 name|temp_names
+init|=
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
@@ -13291,6 +13426,9 @@ name|curr_line
 operator|->
 name|prev_line
 expr_stmt|;
+name|absolute_lin
+operator|--
+expr_stmt|;
 name|free
 argument_list|(
 name|curr_line
@@ -14062,6 +14200,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|absolute_lin
+operator|+=
+name|lines_moved
+expr_stmt|;
 name|curr_line
 operator|=
 name|srch_line
@@ -15366,6 +15508,10 @@ name|curr_line
 operator|=
 name|tmp_line
 expr_stmt|;
+name|absolute_lin
+operator|+=
+name|i
+expr_stmt|;
 name|point
 operator|=
 name|tmp
@@ -15500,6 +15646,10 @@ name|down
 argument_list|()
 expr_stmt|;
 block|}
+name|absolute_lin
+operator|-=
+name|i
+expr_stmt|;
 name|scr_vert
 operator|=
 name|scr_vert
@@ -15708,6 +15858,55 @@ name|down
 argument_list|()
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|from_top
+parameter_list|()
+block|{
+name|struct
+name|text
+modifier|*
+name|tmpline
+init|=
+name|first_line
+decl_stmt|;
+name|int
+name|x
+init|=
+literal|1
+decl_stmt|;
+while|while
+condition|(
+operator|(
+name|tmpline
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|tmpline
+operator|!=
+name|curr_line
+operator|)
+condition|)
+block|{
+name|x
+operator|++
+expr_stmt|;
+name|tmpline
+operator|=
+name|tmpline
+operator|->
+name|next_line
+expr_stmt|;
+block|}
+name|absolute_lin
+operator|=
+name|x
+expr_stmt|;
 block|}
 end_function
 
@@ -15994,6 +16193,9 @@ name|curr_line
 operator|=
 name|line_holder
 expr_stmt|;
+name|from_top
+argument_list|()
+expr_stmt|;
 name|point
 operator|=
 name|curr_line
@@ -16129,8 +16331,10 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 name|exec_err_msg
 argument_list|,
 name|path
@@ -18560,7 +18764,7 @@ name|waddstr
 argument_list|(
 name|info_win
 argument_list|,
-literal|"==============================================================================="
+name|separator
 argument_list|)
 expr_stmt|;
 name|wstandend
@@ -20167,6 +20371,16 @@ name|getenv
 argument_list|(
 literal|"HOME"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|string
+operator|==
+name|NULL
+condition|)
+name|string
+operator|=
+literal|"/tmp"
 expr_stmt|;
 name|str1
 operator|=
@@ -24798,7 +25012,7 @@ name|catgetlocal
 argument_list|(
 literal|44
 argument_list|,
-literal|"^[ (escape) menu                                                           "
+literal|"^[ (escape) menu        ESC-Enter: exit ee                                 "
 argument_list|)
 expr_stmt|;
 name|help_text
@@ -25002,7 +25216,7 @@ name|catgetlocal
 argument_list|(
 literal|61
 argument_list|,
-literal|"^c command        ^k delete char    ^f undelete char                          "
+literal|"^c command        ^k delete char    ^f undelete char      ESC-Enter: exit ee  "
 argument_list|)
 expr_stmt|;
 name|command_strings
@@ -26025,7 +26239,7 @@ name|catgetlocal
 argument_list|(
 literal|154
 argument_list|,
-literal|"^[ (escape) menu  ^y search prompt  ^k delete line   ^p prev li   ^g prev page"
+literal|"^[ (escape) menu ^y search prompt ^k delete line   ^p prev li     ^g prev page"
 argument_list|)
 expr_stmt|;
 name|emacs_control_keys
@@ -26037,7 +26251,7 @@ name|catgetlocal
 argument_list|(
 literal|155
 argument_list|,
-literal|"^o ascii code     ^x search         ^l undelete line ^n next li   ^v next page"
+literal|"^o ascii code    ^x search        ^l undelete line ^n next li     ^v next page"
 argument_list|)
 expr_stmt|;
 name|emacs_control_keys
@@ -26049,7 +26263,7 @@ name|catgetlocal
 argument_list|(
 literal|156
 argument_list|,
-literal|"^u end of file    ^a begin of line  ^w delete word   ^b back 1 char           "
+literal|"^u end of file   ^a begin of line ^w delete word   ^b back 1 char ^z next word"
 argument_list|)
 expr_stmt|;
 name|emacs_control_keys
@@ -26061,7 +26275,7 @@ name|catgetlocal
 argument_list|(
 literal|157
 argument_list|,
-literal|"^t top of text    ^e end of line    ^r restore word  ^f forward 1 char        "
+literal|"^t top of text   ^e end of line   ^r restore word  ^f forward char            "
 argument_list|)
 expr_stmt|;
 name|emacs_control_keys
@@ -26073,7 +26287,7 @@ name|catgetlocal
 argument_list|(
 literal|158
 argument_list|,
-literal|"^c command        ^d delete char    ^j undelete char ^z next word              "
+literal|"^c command       ^d delete char   ^j undelete char              ESC-Enter: exit"
 argument_list|)
 expr_stmt|;
 name|EMACS_string
