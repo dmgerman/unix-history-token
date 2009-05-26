@@ -4583,7 +4583,7 @@ name|malloc
 argument_list|(
 name|lsize
 argument_list|,
-name|M_TEMP
+name|M_TTY
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -4639,7 +4639,7 @@ name|free
 argument_list|(
 name|xtlist
 argument_list|,
-name|M_TEMP
+name|M_TTY
 argument_list|)
 expr_stmt|;
 return|return
