@@ -137,15 +137,26 @@ end_include
 begin_if
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
 name|sun
 argument_list|)
 end_if
 
+begin_define
+define|#
+directive|define
+name|GETOPT_EOF
+value|EOF
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_comment
-comment|/* needed for FreeBSD */
+comment|/* FreeBSD */
 end_comment
 
 begin_include
@@ -159,13 +170,6 @@ include|#
 directive|include
 file|<sys/resource.h>
 end_include
-
-begin_typedef
-typedef|typedef
-name|uintptr_t
-name|pc_t
-typedef|;
-end_typedef
 
 begin_define
 define|#
@@ -183,10 +187,28 @@ parameter_list|)
 value|lsmergesort(a, b, c, d)
 end_define
 
+begin_define
+define|#
+directive|define
+name|GETOPT_EOF
+value|(-1)
+end_define
+
+begin_typedef
+typedef|typedef
+name|uintptr_t
+name|pc_t
+typedef|;
+end_typedef
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* defined(sun) */
+end_comment
 
 begin_define
 define|#
@@ -5548,7 +5570,7 @@ name|out
 init|=
 name|stdout
 decl_stmt|;
-name|char
+name|int
 name|c
 decl_stmt|;
 name|pid_t
@@ -5742,7 +5764,7 @@ name|LOCKSTAT_OPTSTR
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+name|GETOPT_EOF
 condition|)
 block|{
 switch|switch
@@ -6994,7 +7016,7 @@ name|LOCKSTAT_OPTSTR
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+name|GETOPT_EOF
 condition|)
 block|{
 switch|switch
