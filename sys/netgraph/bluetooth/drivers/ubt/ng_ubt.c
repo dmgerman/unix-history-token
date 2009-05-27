@@ -141,7 +141,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/bluetooth/ng_ubt_var.h>
+file|<netgraph/bluetooth/drivers/ubt/ng_ubt_var.h>
 end_include
 
 begin_function_decl
