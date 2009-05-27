@@ -2898,8 +2898,6 @@ name|rtalert
 operator|!=
 operator|~
 literal|0
-operator|&&
-name|V_ip6_forwarding
 condition|)
 block|{
 switch|switch
@@ -2910,6 +2908,10 @@ block|{
 case|case
 name|IP6OPT_RTALERT_MLD
 case|:
+if|if
+condition|(
+name|V_ip6_forwarding
+condition|)
 name|ours
 operator|=
 literal|1
@@ -3058,7 +3060,7 @@ name|ip6_dst
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * If we are acting as a multicast router, all 		 * incoming multicast packets are passed to the 		 * kernel-level multicast forwarding function. 		 * The packet is returned (relatively) intact; if 		 * ip6_mforward() returns a non-zero value, the packet 		 * must be discarded, else it may be accepted below. 		 */
+comment|/* 		 * If we are acting as a multicast router, all 		 * incoming multicast packets are passed to the 		 * kernel-level multicast forwarding function. 		 * The packet is returned (relatively) intact; if 		 * ip6_mforward() returns a non-zero value, the packet 		 * must be discarded, else it may be accepted below. 		 * 		 * XXX TODO: Check hlim and multicast scope here to avoid 		 * unnecessarily calling into ip6_mforward(). 		 */
 if|if
 condition|(
 name|ip6_mforward
@@ -3263,6 +3265,24 @@ goto|;
 endif|#
 directive|endif
 comment|/* IPSEC */
+comment|/* 		 * Use mbuf flags to propagate Router Alert option to 		 * ICMPv6 layer, as hop-by-hop options have been stripped. 		 */
+if|if
+condition|(
+name|nxt
+operator|==
+name|IPPROTO_ICMPV6
+operator|&&
+name|rtalert
+operator|!=
+operator|~
+literal|0
+condition|)
+name|m
+operator|->
+name|m_flags
+operator||=
+name|M_RTALERT_MLD
+expr_stmt|;
 name|nxt
 operator|=
 operator|(

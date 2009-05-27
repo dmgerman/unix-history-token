@@ -2684,6 +2684,13 @@ name|M_AUTHIPDGM
 value|M_PROTO5
 end_define
 
+begin_define
+define|#
+directive|define
+name|M_RTALERT_MLD
+value|M_PROTO6
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
