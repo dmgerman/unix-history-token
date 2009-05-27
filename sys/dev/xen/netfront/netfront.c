@@ -4699,19 +4699,6 @@ index|[
 name|id
 index|]
 expr_stmt|;
-comment|/* 			 * Increment packet count if this is the last 			 * mbuf of the chain. 			 */
-if|if
-condition|(
-operator|!
-name|m
-operator|->
-name|m_next
-condition|)
-name|ifp
-operator|->
-name|if_opackets
-operator|++
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|m
@@ -4727,6 +4714,19 @@ name|M_ASSERTVALID
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+comment|/* 			 * Increment packet count if this is the last 			 * mbuf of the chain. 			 */
+if|if
+condition|(
+operator|!
+name|m
+operator|->
+name|m_next
+condition|)
+name|ifp
+operator|->
+name|if_opackets
+operator|++
 expr_stmt|;
 if|if
 condition|(
