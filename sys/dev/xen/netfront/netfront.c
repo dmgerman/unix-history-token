@@ -1624,17 +1624,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -7551,7 +7540,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DPRINTK
+name|IPRINTK
 argument_list|(
 literal|"Xen requires tx checksum offload"
 literal|" be enabled to use TSO\n"
