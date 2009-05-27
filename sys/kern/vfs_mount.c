@@ -7021,6 +7021,36 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* Keep prison0's root in sync with the global rootvnode. */
+name|mtx_lock
+argument_list|(
+operator|&
+name|prison0
+operator|.
+name|pr_mtx
+argument_list|)
+expr_stmt|;
+name|prison0
+operator|.
+name|pr_root
+operator|=
+name|rootvnode
+expr_stmt|;
+name|vref
+argument_list|(
+name|prison0
+operator|.
+name|pr_root
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|prison0
+operator|.
+name|pr_mtx
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Use a mutex to prevent the wakeup being missed and waiting for 	 * an extra 1 second sleep. 	 */
 name|mtx_lock
 argument_list|(

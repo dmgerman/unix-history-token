@@ -1561,16 +1561,7 @@ name|p_xthread
 operator|=
 name|td
 expr_stmt|;
-comment|/* In case we are jailed tell the prison that we are gone. */
-if|if
-condition|(
-name|jailed
-argument_list|(
-name|p
-operator|->
-name|p_ucred
-argument_list|)
-condition|)
+comment|/* Tell the prison that we are gone. */
 name|prison_proc_free
 argument_list|(
 name|p

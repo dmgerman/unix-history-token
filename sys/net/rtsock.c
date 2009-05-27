@@ -1705,6 +1705,23 @@ name|found
 condition|)
 block|{
 comment|/* 			 * As a last resort return the 'default' jail address. 			 */
+name|ia
+operator|=
+operator|(
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+name|rt
+operator|->
+name|rt_ifa
+operator|->
+name|ifa_addr
+operator|)
+operator|->
+name|sin_addr
+expr_stmt|;
 if|if
 condition|(
 name|prison_get_ip4
@@ -1904,6 +1921,23 @@ name|found
 condition|)
 block|{
 comment|/* 			 * As a last resort return the 'default' jail address. 			 */
+name|ia6
+operator|=
+operator|(
+operator|(
+expr|struct
+name|sockaddr_in6
+operator|*
+operator|)
+name|rt
+operator|->
+name|rt_ifa
+operator|->
+name|ifa_addr
+operator|)
+operator|->
+name|sin6_addr
+expr_stmt|;
 if|if
 condition|(
 name|prison_get_ip6

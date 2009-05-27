@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/libkern.h>
 end_include
 
@@ -1604,7 +1610,9 @@ decl_stmt|;
 comment|/* Refuse to load modules if securelevel raised */
 if|if
 condition|(
-name|securelevel
+name|prison0
+operator|.
+name|pr_securelevel
 operator|>
 literal|0
 condition|)
@@ -2445,7 +2453,9 @@ decl_stmt|;
 comment|/* Refuse to unload modules if securelevel raised. */
 if|if
 condition|(
-name|securelevel
+name|prison0
+operator|.
+name|pr_securelevel
 operator|>
 literal|0
 condition|)

@@ -821,29 +821,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* XXX PRISON: could be per prison flag */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|prison_quotas
-decl_stmt|;
-end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|SYSCTL_INT(_kern_prison, OID_AUTO, quotas, CTLFLAG_RW,&prison_quotas, 0, "");
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Change filesystem quotas.  */
 end_comment
 
@@ -935,15 +912,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|jailed
+operator|!
+name|prison_allow
 argument_list|(
 name|td
 operator|->
 name|td_ucred
+argument_list|,
+name|PR_ALLOW_QUOTAS
 argument_list|)
-operator|&&
-operator|!
-name|prison_quotas
 condition|)
 return|return
 operator|(

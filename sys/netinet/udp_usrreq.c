@@ -4539,11 +4539,13 @@ expr_stmt|;
 comment|/* 				 * Remember addr if jailed, to prevent 				 * rebinding. 				 */
 if|if
 condition|(
-name|jailed
+name|prison_flag
 argument_list|(
 name|td
 operator|->
 name|td_ucred
+argument_list|,
+name|PR_IP4
 argument_list|)
 condition|)
 name|inp

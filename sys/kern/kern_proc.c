@@ -3836,16 +3836,18 @@ name|ki_flag
 operator||=
 name|P_JAILED
 expr_stmt|;
-comment|/* If inside a jail, use 0 as a jail ID. */
+comment|/* If inside the jail, use 0 as a jail ID. */
 if|if
 condition|(
-operator|!
-name|jailed
-argument_list|(
+name|cred
+operator|->
+name|cr_prison
+operator|!=
 name|curthread
 operator|->
 name|td_ucred
-argument_list|)
+operator|->
+name|cr_prison
 condition|)
 name|kp
 operator|->

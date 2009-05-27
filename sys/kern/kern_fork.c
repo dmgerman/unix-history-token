@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -111,12 +117,6 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/jail.h>
 end_include
 
 begin_include
@@ -1958,16 +1958,7 @@ operator|->
 name|td_ucred
 argument_list|)
 expr_stmt|;
-comment|/* In case we are jailed tell the prison that we exist. */
-if|if
-condition|(
-name|jailed
-argument_list|(
-name|p2
-operator|->
-name|p_ucred
-argument_list|)
-condition|)
+comment|/* Tell the prison that we exist. */
 name|prison_proc_hold
 argument_list|(
 name|p2

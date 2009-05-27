@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -3209,6 +3215,21 @@ name|nd_cr
 operator|=
 name|crget
 argument_list|()
+expr_stmt|;
+name|prison_hold
+argument_list|(
+operator|&
+name|prison0
+argument_list|)
+expr_stmt|;
+name|nd
+operator|->
+name|nd_cr
+operator|->
+name|cr_prison
+operator|=
+operator|&
+name|prison0
 expr_stmt|;
 name|NFSD_LOCK
 argument_list|()

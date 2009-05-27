@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ktr.h>
 end_include
 
@@ -1795,6 +1801,17 @@ operator|=
 name|cpuset_thread0
 argument_list|()
 expr_stmt|;
+name|prison0
+operator|.
+name|pr_cpuset
+operator|=
+name|cpuset_ref
+argument_list|(
+name|td
+operator|->
+name|td_cpuset
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_peers
@@ -1919,9 +1936,9 @@ name|p_ucred
 operator|->
 name|cr_prison
 operator|=
-name|NULL
+operator|&
+name|prison0
 expr_stmt|;
-comment|/* Don't jail it. */
 ifdef|#
 directive|ifdef
 name|VIMAGE

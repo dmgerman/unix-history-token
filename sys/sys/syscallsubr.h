@@ -65,6 +65,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|jail
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|mbuf
 struct_decl|;
 end_struct_decl
@@ -924,6 +930,23 @@ name|com
 parameter_list|,
 name|caddr_t
 name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|kern_jail
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|jail
+modifier|*
+name|j
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -407,13 +407,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/_lock.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/_mutex.h>
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -476,12 +476,6 @@ include|#
 directive|include
 file|<sys/osd.h>
 end_include
-
-begin_struct_decl
-struct_decl|struct
-name|cpuset
-struct_decl|;
-end_struct_decl
 
 begin_comment
 comment|/*  * This structure describes a prison.  It is pointed to by all struct  * ucreds's of the inmates.  pr_ref keeps track of them and is used to  * delete the struture when the last inmate is dead.  *  * Lock key:  *   (a) allprison_lock  *   (p) locked by pr_mtx  *   (c) set only during creation before the structure is shared, no mutex  *       required to read  *   (d) set only during destruction of jail, no mutex needed  */
@@ -547,11 +541,12 @@ name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 comment|/* (p) admin jail name */
-name|void
+name|struct
+name|prison
 modifier|*
-name|pr_spare
+name|pr_parent
 decl_stmt|;
-comment|/*     was pr_linux */
+comment|/* (c) containing jail */
 name|int
 name|pr_securelevel
 decl_stmt|;
@@ -590,6 +585,33 @@ modifier|*
 name|pr_ip6
 decl_stmt|;
 comment|/* (p) v6 IPs of jail */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|prison
+argument_list|)
+name|pr_children
+expr_stmt|;
+comment|/* (a) list of child jails */
+name|LIST_ENTRY
+argument_list|(
+argument|prison
+argument_list|)
+name|pr_sibling
+expr_stmt|;
+comment|/* (a) next in parent's list */
+name|int
+name|pr_prisoncount
+decl_stmt|;
+comment|/* (a) number of child jails */
+name|unsigned
+name|pr_allow
+decl_stmt|;
+comment|/* (p) PR_ALLOW_* flags */
+name|int
+name|pr_enforce_statfs
+decl_stmt|;
+comment|/* (p) statfs permission */
 block|}
 struct|;
 end_struct
@@ -610,7 +632,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Flag bits set via options or internally  */
+comment|/* Flag bits set via options */
 end_comment
 
 begin_define
@@ -627,6 +649,32 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PR_IP4_USER
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* Virtualize IPv4 addresses */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PR_IP6_USER
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* Virtualize IPv6 addresses */
+end_comment
+
+begin_comment
+comment|/* Internal flag bits */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PR_REMOVE
 value|0x01000000
 end_define
@@ -634,6 +682,103 @@ end_define
 begin_comment
 comment|/* In process of being removed */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PR_IP4
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* IPv4 virtualized by this jail or */
+end_comment
+
+begin_comment
+comment|/*  an ancestor			    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PR_IP6
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* IPv6 virtualized by this jail or */
+end_comment
+
+begin_comment
+comment|/*  an ancestor			    */
+end_comment
+
+begin_comment
+comment|/* Flags for pr_allow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PR_ALLOW_SET_HOSTNAME
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_ALLOW_SYSVIPC
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_ALLOW_RAW_SOCKETS
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_ALLOW_CHFLAGS
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_ALLOW_MOUNT
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_ALLOW_QUOTAS
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_ALLOW_JAILS
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_ALLOW_SOCKET_AF
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_ALLOW_ALL
+value|0x00ff
+end_define
 
 begin_comment
 comment|/*  * OSD methods  */
@@ -682,48 +827,119 @@ value|5
 end_define
 
 begin_comment
-comment|/*  * Sysctl-set variables that determine global jail policy  *  * XXX MIB entries will need to be protected by a mutex.  */
+comment|/*  * Lock/unlock a prison.  * XXX These exist not so much for general convenience, but to be useable in  *     the FOREACH_PRISON_DESCENDANT_LOCKED macro which can't handle them in  *     non-function form as currently defined.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|prison_lock
+parameter_list|(
+name|struct
+name|prison
+modifier|*
+name|pr
+parameter_list|)
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|pr
+operator|->
+name|pr_mtx
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|prison_unlock
+parameter_list|(
+name|struct
+name|prison
+modifier|*
+name|pr
+parameter_list|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|pr
+operator|->
+name|pr_mtx
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Traverse a prison's immediate children. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FOREACH_PRISON_CHILD
+parameter_list|(
+name|ppr
+parameter_list|,
+name|cpr
+parameter_list|)
+define|\
+value|LIST_FOREACH(cpr,&(ppr)->pr_children, pr_sibling)
+end_define
+
+begin_comment
+comment|/*  * Preorder traversal of all of a prison's descendants.  * This ugly loop allows the macro to be followed by a single block  * as expected in a looping primitive.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FOREACH_PRISON_DESCENDANT
+parameter_list|(
+name|ppr
+parameter_list|,
+name|cpr
+parameter_list|,
+name|descend
+parameter_list|)
+define|\
+value|for ((cpr) = (ppr), (descend) = 1;				\ 	    ((cpr) = (((descend)&& !LIST_EMPTY(&(cpr)->pr_children))	\ 	      ? LIST_FIRST(&(cpr)->pr_children)				\ 	      : ((cpr) == (ppr)						\ 		 ? NULL							\ 		 : (((descend) = LIST_NEXT(cpr, pr_sibling) != NULL)	\ 		    ? LIST_NEXT(cpr, pr_sibling)			\ 		    : (cpr)->pr_parent))));)				\ 		if (!(descend))						\ 			;						\ 		else
+end_define
+
+begin_comment
+comment|/*  * As above, but lock descendants on the way down and unlock on the way up.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FOREACH_PRISON_DESCENDANT_LOCKED
+parameter_list|(
+name|ppr
+parameter_list|,
+name|cpr
+parameter_list|,
+name|descend
+parameter_list|)
+define|\
+value|for ((cpr) = (ppr), (descend) = 1;				\ 	    ((cpr) = (((descend)&& !LIST_EMPTY(&(cpr)->pr_children))	\ 	      ? LIST_FIRST(&(cpr)->pr_children)				\ 	      : ((cpr) == (ppr)						\ 		 ? NULL							\ 		 : ((prison_unlock(cpr),				\ 		    (descend) = LIST_NEXT(cpr, pr_sibling) != NULL)	\ 		    ? LIST_NEXT(cpr, pr_sibling)			\ 		    : (cpr)->pr_parent))));)				\ 		if ((descend) ? (prison_lock(cpr), 0) : 1)		\ 			;						\ 		else
+end_define
+
+begin_comment
+comment|/*  * Attributes of the physical system, and the root of the jail tree.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|jail_set_hostname_allowed
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|jail_socket_unixiproute_only
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|jail_sysvipc_allowed
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|jail_getfsstat_jailrootonly
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|jail_allow_raw_sockets
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|jail_chflags_allowed
+name|struct
+name|prison
+name|prison0
 decl_stmt|;
 end_decl_stmt
 
@@ -896,6 +1112,19 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|prison_allow
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+parameter_list|,
+name|unsigned
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|prison_check
 parameter_list|(
 name|struct
@@ -966,12 +1195,43 @@ begin_function_decl
 name|struct
 name|prison
 modifier|*
+name|prison_find_child
+parameter_list|(
+name|struct
+name|prison
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|prison
+modifier|*
 name|prison_find_name
 parameter_list|(
+name|struct
+name|prison
+modifier|*
+parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|prison_flag
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+parameter_list|,
+name|unsigned
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1039,6 +1299,36 @@ begin_function_decl
 name|void
 name|prison_proc_free
 parameter_list|(
+name|struct
+name|prison
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|prison_ischild
+parameter_list|(
+name|struct
+name|prison
+modifier|*
+parameter_list|,
+name|struct
+name|prison
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|prison_equal_ip4
+parameter_list|(
+name|struct
+name|prison
+modifier|*
+parameter_list|,
 name|struct
 name|prison
 modifier|*
@@ -1119,6 +1409,21 @@ ifdef|#
 directive|ifdef
 name|INET6
 end_ifdef
+
+begin_function_decl
+name|int
+name|prison_equal_ip6
+parameter_list|(
+name|struct
+name|prison
+modifier|*
+parameter_list|,
+name|struct
+name|prison
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
@@ -1215,6 +1520,22 @@ name|struct
 name|sockaddr
 modifier|*
 name|sa
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|prison_name
+parameter_list|(
+name|struct
+name|prison
+modifier|*
+parameter_list|,
+name|struct
+name|prison
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
