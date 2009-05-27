@@ -3422,8 +3422,19 @@ name|NFSHASNFS4ACL
 parameter_list|(
 name|m
 parameter_list|)
-value|0
+value|nfs_supportsnfsv4acls(m)
 end_define
+
+begin_function_decl
+name|int
+name|nfs_supportsnfsv4acls
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_else
 else|#
