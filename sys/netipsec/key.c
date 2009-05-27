@@ -11362,6 +11362,9 @@ name|cnt
 operator|=
 literal|0
 expr_stmt|;
+name|SPTREE_LOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|dir
@@ -11396,6 +11399,10 @@ name|cnt
 operator|==
 literal|0
 condition|)
+block|{
+name|SPTREE_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 name|key_senderror
 argument_list|(
@@ -11406,6 +11413,7 @@ argument_list|,
 name|ENOENT
 argument_list|)
 return|;
+block|}
 for|for
 control|(
 name|dir
@@ -11464,6 +11472,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|SPTREE_UNLOCK
+argument_list|()
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
