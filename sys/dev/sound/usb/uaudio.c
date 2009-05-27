@@ -362,6 +362,20 @@ parameter_list|)
 value|(((bm)[(bno) / 8]>> (7 - ((bno) % 8)))& 1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|UAUDIO_MAX_CHAN
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)< 2) ? (x) : 2)
+end_define
+
+begin_comment
+comment|/* XXX fixme later */
+end_comment
+
 begin_struct
 struct|struct
 name|uaudio_mixer_node
@@ -4569,9 +4583,12 @@ argument_list|)
 expr_stmt|;
 name|bChannels
 operator|=
+name|UAUDIO_MAX_CHAN
+argument_list|(
 name|asf1d
 operator|->
 name|bNrChannels
+argument_list|)
 expr_stmt|;
 name|bBitResolution
 operator|=
@@ -4932,11 +4949,14 @@ name|sample_size
 operator|=
 operator|(
 operator|(
+name|UAUDIO_MAX_CHAN
+argument_list|(
 name|chan
 operator|->
 name|p_asf1d
 operator|->
 name|bNrChannels
+argument_list|)
 operator|*
 name|chan
 operator|->
@@ -6293,7 +6313,7 @@ operator|->
 name|p_asf1d
 operator|->
 name|bNrChannels
-operator|==
+operator|>=
 literal|2
 condition|)
 block|{
