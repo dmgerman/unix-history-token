@@ -1400,6 +1400,17 @@ name|short
 name|id
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|id
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"add_id_to_freelist: the head item (0) must always be free."
+operator|)
+argument_list|)
+expr_stmt|;
 name|list
 index|[
 name|id
@@ -1455,6 +1466,17 @@ index|[
 literal|0
 index|]
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|id
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"get_id_from_freelist: the head item (0) must always remain free."
+operator|)
+argument_list|)
+expr_stmt|;
 name|list
 index|[
 literal|0
