@@ -323,7 +323,7 @@ begin_define
 define|#
 directive|define
 name|RDONLY
-value|0x0000200
+value|0x00000200
 end_define
 
 begin_comment
@@ -334,7 +334,7 @@ begin_define
 define|#
 directive|define
 name|HASBUF
-value|0x0000400
+value|0x00000400
 end_define
 
 begin_comment
@@ -345,7 +345,7 @@ begin_define
 define|#
 directive|define
 name|SAVENAME
-value|0x0000800
+value|0x00000800
 end_define
 
 begin_comment
@@ -356,7 +356,7 @@ begin_define
 define|#
 directive|define
 name|SAVESTART
-value|0x0001000
+value|0x00001000
 end_define
 
 begin_comment
@@ -367,7 +367,7 @@ begin_define
 define|#
 directive|define
 name|ISDOTDOT
-value|0x0002000
+value|0x00002000
 end_define
 
 begin_comment
@@ -378,7 +378,7 @@ begin_define
 define|#
 directive|define
 name|MAKEENTRY
-value|0x0004000
+value|0x00004000
 end_define
 
 begin_comment
@@ -389,7 +389,7 @@ begin_define
 define|#
 directive|define
 name|ISLASTCN
-value|0x0008000
+value|0x00008000
 end_define
 
 begin_comment
@@ -400,7 +400,7 @@ begin_define
 define|#
 directive|define
 name|ISSYMLINK
-value|0x0010000
+value|0x00010000
 end_define
 
 begin_comment
@@ -411,7 +411,7 @@ begin_define
 define|#
 directive|define
 name|ISWHITEOUT
-value|0x0020000
+value|0x00020000
 end_define
 
 begin_comment
@@ -422,7 +422,7 @@ begin_define
 define|#
 directive|define
 name|DOWHITEOUT
-value|0x0040000
+value|0x00040000
 end_define
 
 begin_comment
@@ -433,7 +433,7 @@ begin_define
 define|#
 directive|define
 name|WILLBEDIR
-value|0x0080000
+value|0x00080000
 end_define
 
 begin_comment
@@ -444,7 +444,7 @@ begin_define
 define|#
 directive|define
 name|ISUNICODE
-value|0x0100000
+value|0x00100000
 end_define
 
 begin_comment
@@ -455,7 +455,7 @@ begin_define
 define|#
 directive|define
 name|ISOPEN
-value|0x0200000
+value|0x00200000
 end_define
 
 begin_comment
@@ -466,7 +466,7 @@ begin_define
 define|#
 directive|define
 name|NOCROSSMOUNT
-value|0x0400000
+value|0x00400000
 end_define
 
 begin_comment
@@ -477,7 +477,7 @@ begin_define
 define|#
 directive|define
 name|NOMACCHECK
-value|0x0800000
+value|0x00800000
 end_define
 
 begin_comment
@@ -488,7 +488,7 @@ begin_define
 define|#
 directive|define
 name|MPSAFE
-value|0x1000000
+value|0x01000000
 end_define
 
 begin_comment
@@ -499,7 +499,7 @@ begin_define
 define|#
 directive|define
 name|GIANTHELD
-value|0x2000000
+value|0x02000000
 end_define
 
 begin_comment
@@ -510,7 +510,7 @@ begin_define
 define|#
 directive|define
 name|AUDITVNODE1
-value|0x4000000
+value|0x04000000
 end_define
 
 begin_comment
@@ -521,7 +521,7 @@ begin_define
 define|#
 directive|define
 name|AUDITVNODE2
-value|0x8000000
+value|0x08000000
 end_define
 
 begin_comment
@@ -532,7 +532,7 @@ begin_define
 define|#
 directive|define
 name|PARAMASK
-value|0xffffe00
+value|0x0ffffe00
 end_define
 
 begin_comment
