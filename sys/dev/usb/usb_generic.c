@@ -3844,9 +3844,6 @@ name|udev
 operator|->
 name|device_index
 expr_stmt|;
-if|#
-directive|if
-name|USB_HAVE_STRINGS
 name|strlcpy
 argument_list|(
 name|di
@@ -3901,8 +3898,6 @@ name|udi_product
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|usb2_printBCD
 argument_list|(
 name|di

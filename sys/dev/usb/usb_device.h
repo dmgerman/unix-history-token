@@ -545,32 +545,21 @@ name|usb2_device_descriptor
 name|ddesc
 decl_stmt|;
 comment|/* device descriptor */
-if|#
-directive|if
-name|USB_HAVE_STRINGS
 name|char
+modifier|*
 name|serial
-index|[
-literal|64
-index|]
 decl_stmt|;
 comment|/* serial number */
 name|char
+modifier|*
 name|manufacturer
-index|[
-literal|64
-index|]
 decl_stmt|;
 comment|/* manufacturer string */
 name|char
+modifier|*
 name|product
-index|[
-literal|64
-index|]
 decl_stmt|;
 comment|/* product string */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct

@@ -229,9 +229,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-if|#
-directive|if
-name|USB_HAVE_STRINGS
 name|struct
 name|usb2_attach_arg
 modifier|*
@@ -431,8 +428,6 @@ name|bdev
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -578,12 +573,6 @@ begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_trim_spaces  *  * This function removes spaces at the beginning and the end of the string  * pointed to by the "p" argument.  *------------------------------------------------------------------------*/
 end_comment
 
-begin_if
-if|#
-directive|if
-name|USB_HAVE_STRINGS
-end_if
-
 begin_function
 name|void
 name|usb2_trim_spaces
@@ -658,11 +647,6 @@ expr_stmt|;
 comment|/* kill trailing spaces */
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb2_make_str_desc - convert an ASCII string into a UNICODE string  *------------------------------------------------------------------------*/
