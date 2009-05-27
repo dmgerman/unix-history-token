@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pthread_np.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -113,6 +119,12 @@ begin_include
 include|#
 directive|include
 file|"un-namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"nss_tls.h"
 end_include
 
 begin_include
@@ -305,14 +317,35 @@ begin_comment
 comment|/*  * When this is set to 1, nsdispatch won't use nsswitch.conf  * but will consult the 'defaults' source list only.  * NOTE: nested fallbacks (when nsdispatch calls fallback functions,  *     which in turn calls nsdispatch, which should call fallback  *     function) are not supported  */
 end_comment
 
-begin_decl_stmt
-specifier|static
+begin_struct
+struct|struct
+name|fb_state
+block|{
 name|int
-name|fallback_dispatch
-init|=
-literal|0
+name|fb_dispatch
 decl_stmt|;
-end_decl_stmt
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+specifier|static
+name|void
+name|fb_endstate
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
+name|NSS_TLS_HANDLING
+argument_list|(
+name|fb
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Attempt to spew relatively uniform messages to syslog.  */
@@ -2826,6 +2859,24 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|fb_endstate
+parameter_list|(
+name|void
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
@@ -2900,6 +2951,11 @@ name|result
 decl_stmt|,
 name|srclistsize
 decl_stmt|;
+name|struct
+name|fb_state
+modifier|*
+name|st
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|NS_CACHING
@@ -2962,6 +3018,29 @@ block|}
 block|}
 name|result
 operator|=
+name|fb_getstate
+argument_list|(
+operator|&
+name|st
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+literal|0
+condition|)
+block|{
+name|result
+operator|=
+name|NS_UNAVAIL
+expr_stmt|;
+goto|goto
+name|fin
+goto|;
+block|}
+name|result
+operator|=
 name|nss_configure
 argument_list|()
 expr_stmt|;
@@ -2982,7 +3061,9 @@ goto|;
 block|}
 if|if
 condition|(
-name|fallback_dispatch
+name|st
+operator|->
+name|fb_dispatch
 operator|==
 literal|0
 condition|)
@@ -3349,7 +3430,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|fallback_dispatch
+name|st
+operator|->
+name|fb_dispatch
 operator|=
 literal|1
 expr_stmt|;
@@ -3385,7 +3468,9 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-name|fallback_dispatch
+name|st
+operator|->
+name|fb_dispatch
 operator|=
 literal|0
 expr_stmt|;
