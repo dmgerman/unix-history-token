@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/rwlock.h>
+file|<sys/rmlock.h>
 end_include
 
 begin_include
@@ -381,7 +381,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * MAC policy modules are placed in one of two lists: mac_static_policy_list,  * for policies that are loaded early and cannot be unloaded, and  * mac_policy_list, which holds policies either loaded later in the boot  * cycle or that may be unloaded.  The static policy list does not require  * locks to iterate over, but the dynamic list requires synchronization.  * Support for dynamic policy loading can be compiled out using the  * MAC_STATIC kernel option.  *  * The dynamic policy list is protected by two locks: modifying the list  * requires both locks to be held exclusively.  One of the locks,  * mac_policy_rw, is acquired over policy entry points that will never sleep;  * the other, mac_policy_sx, is acquire over policy entry points that may  * sleep.  The former category will be used when kernel locks may be held  * over calls to the MAC Framework, during network processing in ithreads,  * etc.  The latter will tend to involve potentially blocking memory  * allocations, extended attribute I/O, etc.  */
+comment|/*  * MAC policy modules are placed in one of two lists: mac_static_policy_list,  * for policies that are loaded early and cannot be unloaded, and  * mac_policy_list, which holds policies either loaded later in the boot  * cycle or that may be unloaded.  The static policy list does not require  * locks to iterate over, but the dynamic list requires synchronization.  * Support for dynamic policy loading can be compiled out using the  * MAC_STATIC kernel option.  *  * The dynamic policy list is protected by two locks: modifying the list  * requires both locks to be held exclusively.  One of the locks,  * mac_policy_rm, is acquired over policy entry points that will never sleep;  * the other, mac_policy_sx, is acquire over policy entry points that may  * sleep.  The former category will be used when kernel locks may be held  * over calls to the MAC Framework, during network processing in ithreads,  * etc.  The latter will tend to involve potentially blocking memory  * allocations, extended attribute I/O, etc.  */
 end_comment
 
 begin_ifndef
@@ -393,8 +393,8 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|struct
-name|rwlock
-name|mac_policy_rw
+name|rmlock
+name|mac_policy_rm
 decl_stmt|;
 end_decl_stmt
 
@@ -467,7 +467,10 @@ begin_function
 name|void
 name|mac_policy_slock_nosleep
 parameter_list|(
-name|void
+name|struct
+name|rm_priotracker
+modifier|*
+name|tracker
 parameter_list|)
 block|{
 ifndef|#
@@ -479,10 +482,12 @@ operator|!
 name|mac_late
 condition|)
 return|return;
-name|rw_rlock
+name|rm_rlock
 argument_list|(
 operator|&
-name|mac_policy_rw
+name|mac_policy_rm
+argument_list|,
+name|tracker
 argument_list|)
 expr_stmt|;
 endif|#
@@ -532,7 +537,10 @@ begin_function
 name|void
 name|mac_policy_sunlock_nosleep
 parameter_list|(
-name|void
+name|struct
+name|rm_priotracker
+modifier|*
+name|tracker
 parameter_list|)
 block|{
 ifndef|#
@@ -544,10 +552,12 @@ operator|!
 name|mac_late
 condition|)
 return|return;
-name|rw_runlock
+name|rm_runlock
 argument_list|(
 operator|&
-name|mac_policy_rw
+name|mac_policy_rm
+argument_list|,
+name|tracker
 argument_list|)
 expr_stmt|;
 endif|#
@@ -616,10 +626,10 @@ operator|&
 name|mac_policy_sx
 argument_list|)
 expr_stmt|;
-name|rw_wlock
+name|rm_wlock
 argument_list|(
 operator|&
-name|mac_policy_rw
+name|mac_policy_rm
 argument_list|)
 expr_stmt|;
 endif|#
@@ -644,10 +654,10 @@ operator|!
 name|mac_late
 condition|)
 return|return;
-name|rw_wunlock
+name|rm_wunlock
 argument_list|(
 operator|&
-name|mac_policy_rw
+name|mac_policy_rm
 argument_list|)
 expr_stmt|;
 name|sx_xunlock
@@ -678,14 +688,7 @@ operator|!
 name|mac_late
 condition|)
 return|return;
-name|rw_assert
-argument_list|(
-operator|&
-name|mac_policy_rw
-argument_list|,
-name|RA_WLOCKED
-argument_list|)
-expr_stmt|;
+comment|/* XXXRW: rm_assert(&mac_policy_rm, RA_WLOCKED); */
 name|sx_assert
 argument_list|(
 operator|&
@@ -729,12 +732,14 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|MAC_STATIC
-name|rw_init
+name|rm_init
 argument_list|(
 operator|&
-name|mac_policy_rw
+name|mac_policy_rm
 argument_list|,
-literal|"mac_policy_rw"
+literal|"mac_policy_rm"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|sx_init
