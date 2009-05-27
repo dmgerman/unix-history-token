@@ -638,6 +638,13 @@ name|HUG_SYSTEM_MENU_DOWN
 value|0x008d
 end_define
 
+begin_define
+define|#
+directive|define
+name|HUG_APPLE_EJECT
+value|0x00b8
+end_define
+
 begin_comment
 comment|/* Usages Digitizers */
 end_comment
