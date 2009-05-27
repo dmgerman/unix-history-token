@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* ** This file is in the public domain, so clarified as of ** 2009-05-17 by Arthur David Olson. */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -22,7 +26,7 @@ name|char
 name|elsieid
 index|[]
 init|=
-literal|"@(#)zdump.c	8.8"
+literal|"@(#)zdump.c	8.9"
 decl_stmt|;
 end_decl_stmt
 
