@@ -5583,8 +5583,6 @@ name|struct
 name|in_ifaddr
 modifier|*
 name|ia
-init|=
-name|NULL
 decl_stmt|;
 name|struct
 name|mbuf
@@ -5703,6 +5701,10 @@ name|m
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|IPSEC
+comment|/* 	 * 'ia' may be NULL if there is no route for this destination. 	 * In case of IPsec, Don't discard it just yet, but pass it to 	 * ip_output in case of outgoing IPsec policy. 	 */
 if|if
 condition|(
 operator|!
@@ -5728,6 +5730,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+endif|#
+directive|endif
 comment|/* 	 * Save the IP header and at most 8 bytes of the payload, 	 * in case we need to generate an ICMP message to the src. 	 * 	 * XXX this can be optimized a lot by saving the data in a local 	 * buffer on the stack (72 bytes at most), and only allocating the 	 * mbuf if really necessary. The vast majority of the packets 	 * are forwarded without having to send an ICMP back (either 	 * because unnecessary, or because rate limited), so we are 	 * really we are wasting a lot of work here. 	 * 	 * We don't use m_copy() because it might return a reference 	 * to a shared cluster. Both this function and ip_output() 	 * assume exclusive access to the IP header in `m', so any 	 * data in a cluster may change before we reach icmp_error(). 	 */
 name|MGETHDR
 argument_list|(
@@ -5856,6 +5860,10 @@ operator|!
 name|srcrt
 operator|&&
 name|V_ipsendredirects
+operator|&&
+name|ia
+operator|!=
+name|NULL
 operator|&&
 name|ia
 operator|->
@@ -6200,7 +6208,6 @@ break|break;
 case|case
 name|ENETUNREACH
 case|:
-comment|/* shouldn't happen, checked above */
 case|case
 name|EHOSTUNREACH
 case|:
