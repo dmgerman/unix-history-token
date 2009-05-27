@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/fail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/limits.h>
 end_include
 
@@ -4752,6 +4758,32 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|__noinline
+name|int
+name|buf_vm_page_count_severe
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|KFAIL_POINT_CODE
+argument_list|(
+argument|DEBUG_FP
+argument_list|,
+argument|buf_pressure
+argument_list|,
+argument|return
+literal|1
+argument_list|)
+empty_stmt|;
+return|return
+name|vm_page_count_severe
+argument_list|()
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  *	brelse:  *  *	Release a busy buffer and, if requested, free its resources.  The  *	buffer will be stashed in the appropriate bufqueue[] allowing it  *	to be accessed later as a cache entity or reused for other purposes.  */
 end_comment
@@ -5014,7 +5046,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|vm_page_count_severe
+name|buf_vm_page_count_severe
 argument_list|()
 condition|)
 block|{
@@ -6182,7 +6214,7 @@ comment|/* 		 * The locking of the BO_LOCK for checking of the 		 * BV_BKGRDINPR
 if|if
 condition|(
 operator|!
-name|vm_page_count_severe
+name|buf_vm_page_count_severe
 argument_list|()
 operator|||
 operator|(
@@ -6481,7 +6513,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|vm_page_count_severe
+name|buf_vm_page_count_severe
 argument_list|()
 condition|)
 block|{
