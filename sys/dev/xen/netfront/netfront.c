@@ -6322,8 +6322,8 @@ control|)
 name|nfrags
 operator|++
 expr_stmt|;
-comment|/* 		 * Don't attempt to queue this packet if there aren't enough free entries in the chain. 		 * There isn't a 1:1 correspondance between the mbuf TX ring and the xenbus TX ring. 		 * xn_txeof() may need to be called to free up some slots. 		 * 		 * It is quite possible that this can be later eliminated if it turns out that partial 		 * packets can be pushed into the ringbuffer, with fragments pushed in when further slots 		 * free up. 		 * 		 * It is also quite possible that the driver will lock up - Xen may not send another 		 * interrupt to kick the tx/rx processing if the xenbus RX ring is full and xenbus TX ring 		 * is empty - no further TX work can be done until space is made in the TX mbuf ring and 		 * the RX side may be waiting for TX data to continue. It is quite possible some timer 		 * event should be created to kick TX/RX processing along in certain conditions. 		 */
-comment|/* its not +1 like the allocation because we need to keep slot [0] free for the freelist head */
+comment|/* 		 * Don't attempt to queue this packet if there aren't 		 * enough free entries in the chain. 		 * 		 * There isn't a 1:1 correspondance between the mbuf TX ring 		 * and the xenbus TX ring. 		 * xn_txeof() may need to be called to free up some slots. 		 * 		 * It is quite possible that this can be later eliminated if 		 * it turns out that partial * packets can be pushed into 		 * the ringbuffer, with fragments pushed in when further slots 		 * free up. 		 * 		 * It is also quite possible that the driver will lock up 		 * if the TX queue fills up with no RX traffic, and 		 * the mbuf ring is exhausted. The queue may need 		 * a swift kick to continue. 		 */
+comment|/* 		 * It is not +1 like the allocation because we need to keep 		 * slot [0] free for the freelist head 		 */
 if|if
 condition|(
 name|sc
@@ -6379,6 +6379,7 @@ name|IFF_DRV_OACTIVE
 expr_stmt|;
 break|break;
 block|}
+comment|/* 		 * XXX TODO - make sure there's actually space available 		 *  in the Xen TX ring for this rather than the hacky way 		 * its currently done. 		 */
 comment|/* 		 * Start packing the mbufs in this chain into 		 * the fragment pointers. Stop when we run out 		 * of fragments or hit the end of the mbuf chain. 		 */
 name|m
 operator|=
