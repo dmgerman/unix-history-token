@@ -4869,6 +4869,14 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+comment|/* Only mark the queue active if we've freed up at least one slot to try */
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&=
+operator|~
+name|IFF_DRV_OACTIVE
+expr_stmt|;
 block|}
 name|np
 operator|->
