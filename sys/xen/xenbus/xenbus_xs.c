@@ -3535,6 +3535,21 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* 			 * XXX There are messages coming in with a NULL callback. 			 * XXX This deserves further investigation; the workaround 			 * XXX here simply prevents the kernel from panic'ing 			 * XXX on startup. 			 */
+if|if
+condition|(
+name|msg
+operator|->
+name|u
+operator|.
+name|watch
+operator|.
+name|handle
+operator|->
+name|callback
+operator|!=
+name|NULL
+condition|)
 name|msg
 operator|->
 name|u
