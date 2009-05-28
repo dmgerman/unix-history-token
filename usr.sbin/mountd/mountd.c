@@ -1700,7 +1700,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"24dh:lnp:r"
+literal|"2deh:lnp:r"
 argument_list|)
 operator|)
 operator|!=
@@ -1721,7 +1721,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'4'
+literal|'e'
 case|:
 name|run_v4server
 operator|=
@@ -1955,7 +1955,7 @@ argument_list|()
 expr_stmt|;
 block|}
 empty_stmt|;
-comment|/* 	 * If the "-4" option was specified OR only the nfsd module is 	 * found in the server, run "nfsd". 	 * Otherwise, try and run "nfsserver". 	 */
+comment|/* 	 * If the "-e" option was specified OR only the nfsd module is 	 * found in the server, run "nfsd". 	 * Otherwise, try and run "nfsserver". 	 */
 if|if
 condition|(
 name|run_v4server
@@ -3758,7 +3758,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mountd [-2] [-4] [-d] [-l] [-n] [-p<port>] [-r] "
+literal|"usage: mountd [-2] [-d] [-e] [-l] [-n] [-p<port>] [-r] "
 literal|"[-h<bindip>] [export_file ...]\n"
 argument_list|)
 expr_stmt|;

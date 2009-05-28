@@ -430,7 +430,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Nfs server daemon mostly just a user context for nfssvc()  *  * 1 - do file descriptor and signal cleanup  * 2 - fork the nfsd(s)  * 3 - create server socket(s)  * 4 - register socket with rpcbind  *  * For connectionless protocols, just pass the socket into the kernel via.  * nfssvc().  * For connection based sockets, loop doing accepts. When you get a new  * socket from accept, pass the msgsock into the kernel via. nfssvc().  * The arguments are:  *	-r - reregister with rpcbind  *	-d - unregister with rpcbind  *	-t - support tcp nfs clients  *	-u - support udp nfs clients  *	-4 - forces it to run a server that supports nfsv4  * followed by "n" which is the number of nfsds' to fork off  */
+comment|/*  * Nfs server daemon mostly just a user context for nfssvc()  *  * 1 - do file descriptor and signal cleanup  * 2 - fork the nfsd(s)  * 3 - create server socket(s)  * 4 - register socket with rpcbind  *  * For connectionless protocols, just pass the socket into the kernel via.  * nfssvc().  * For connection based sockets, loop doing accepts. When you get a new  * socket from accept, pass the msgsock into the kernel via. nfssvc().  * The arguments are:  *	-r - reregister with rpcbind  *	-d - unregister with rpcbind  *	-t - support tcp nfs clients  *	-u - support udp nfs clients  *	-e - forces it to run a server that supports nfsv4  * followed by "n" which is the number of nfsds' to fork off  */
 end_comment
 
 begin_function
@@ -602,11 +602,11 @@ expr_stmt|;
 define|#
 directive|define
 name|GETOPT
-value|"ah:n:rdtu4"
+value|"ah:n:rdtue"
 define|#
 directive|define
 name|USAGE
-value|"[-ardtu4] [-n num_servers] [-h bindip]"
+value|"[-ardtue] [-n num_servers] [-h bindip]"
 while|while
 condition|(
 operator|(
@@ -772,7 +772,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'4'
+literal|'e'
 case|:
 name|run_v4server
 operator|=
@@ -861,7 +861,7 @@ name|DEFNFSDCNT
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * If the "-4" option was specified OR only the nfsd module is 	 * found in the server, run "nfsd". 	 * Otherwise, try and run "nfsserver". 	 */
+comment|/* 	 * If the "-e" option was specified OR only the nfsd module is 	 * found in the server, run "nfsd". 	 * Otherwise, try and run "nfsserver". 	 */
 if|if
 condition|(
 name|run_v4server
