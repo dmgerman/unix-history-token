@@ -1732,7 +1732,7 @@ operator|)
 name|svr4reclen
 expr_stmt|;
 block|}
-name|strcpy
+name|strlcpy
 argument_list|(
 name|svr4_dirent
 operator|.
@@ -1741,6 +1741,13 @@ argument_list|,
 name|bdp
 operator|->
 name|d_name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|svr4_dirent
+operator|.
+name|d_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2437,7 +2444,7 @@ name|u_short
 operator|)
 name|svr4_reclen
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|idb
 operator|.
@@ -2446,6 +2453,13 @@ argument_list|,
 name|bdp
 operator|->
 name|d_name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|idb
+operator|.
+name|d_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
