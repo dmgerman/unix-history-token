@@ -210,7 +210,7 @@ name|fd
 parameter_list|)
 block|{
 name|struct
-name|usb2_gen_descriptor
+name|usb_gen_descriptor
 name|ugd
 decl_stmt|;
 name|report_desc_t
