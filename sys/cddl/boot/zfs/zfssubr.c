@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__FBSDID
 argument_list|(
-literal|"$FreeBSD: stable/7/sys/cddl/boot/zfs/zfssubr.c 192202 2009-05-16 18:08:28Z kmacy $"
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
