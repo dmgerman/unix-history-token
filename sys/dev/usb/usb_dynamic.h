@@ -25,19 +25,19 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_device
+name|usb_device
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_lookup_info
+name|usb_lookup_info
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_device_request
+name|usb_device_request
 struct_decl|;
 end_struct_decl
 
@@ -53,7 +53,7 @@ name|usb2_temp_setup_by_index_t
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
@@ -71,12 +71,12 @@ name|usb2_test_huawei_autoinst_t
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 parameter_list|)
@@ -92,7 +92,7 @@ function_decl|)
 parameter_list|(
 specifier|const
 name|struct
-name|usb2_lookup_info
+name|usb_lookup_info
 modifier|*
 name|info
 parameter_list|,
@@ -135,7 +135,7 @@ name|usb2_temp_unsetup_t
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|)
@@ -251,7 +251,7 @@ name|usb2_test_quirk
 parameter_list|(
 specifier|const
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 parameter_list|,

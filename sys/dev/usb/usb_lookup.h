@@ -21,17 +21,17 @@ end_define
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * The following structure is used when looking up an USB driver for  * an USB device. It is inspired by the Linux structure called  * "usb2_device_id".  */
+comment|/*  * The following structure is used when looking up an USB driver for  * an USB device. It is inspired by the Linux structure called  * "usb_device_id".  */
 end_comment
 
 begin_struct
 struct|struct
-name|usb2_device_id
+name|usb_device_id
 block|{
 comment|/* Hook for driver specific information */
 specifier|const
@@ -307,13 +307,13 @@ end_define
 begin_function_decl
 specifier|const
 name|struct
-name|usb2_device_id
+name|usb_device_id
 modifier|*
 name|usb2_lookup_id_by_info
 parameter_list|(
 specifier|const
 name|struct
-name|usb2_device_id
+name|usb_device_id
 modifier|*
 name|id
 parameter_list|,
@@ -322,7 +322,7 @@ name|sizeof_id
 parameter_list|,
 specifier|const
 name|struct
-name|usb2_lookup_info
+name|usb_lookup_info
 modifier|*
 name|info
 parameter_list|)
@@ -335,7 +335,7 @@ name|usb2_lookup_id_by_uaa
 parameter_list|(
 specifier|const
 name|struct
-name|usb2_device_id
+name|usb_device_id
 modifier|*
 name|id
 parameter_list|,
@@ -343,7 +343,7 @@ name|usb2_size_t
 name|sizeof_id
 parameter_list|,
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 parameter_list|)

@@ -36,55 +36,55 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_bus
+name|usb_bus
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_page
+name|usb_page
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_pipe
+name|usb_pipe
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_page_cache
+name|usb_page_cache
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_setup_params
+name|usb_setup_params
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_hw_ep_profile
+name|usb_hw_ep_profile
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_fs_isoc_schedule
+name|usb_fs_isoc_schedule
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_endpoint_descriptor
+name|usb_endpoint_descriptor
 struct_decl|;
 end_struct_decl
 
@@ -100,17 +100,17 @@ name|usb2_bus_mem_sub_cb_t
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 parameter_list|,
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|,
 name|struct
-name|usb2_page
+name|usb_page
 modifier|*
 name|pg
 parameter_list|,
@@ -131,7 +131,7 @@ name|usb2_bus_mem_cb_t
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 parameter_list|,
@@ -148,7 +148,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_bus_methods
+name|usb_bus_methods
 block|{
 comment|/* USB Device and Host mode - Mandatory */
 name|usb2_handle_request_t
@@ -162,15 +162,15 @@ name|pipe_init
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 parameter_list|,
 name|struct
-name|usb2_endpoint_descriptor
+name|usb_endpoint_descriptor
 modifier|*
 parameter_list|,
 name|struct
-name|usb2_pipe
+name|usb_pipe
 modifier|*
 parameter_list|)
 function_decl|;
@@ -181,7 +181,7 @@ name|xfer_setup
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_setup_params
+name|usb_setup_params
 modifier|*
 parameter_list|)
 function_decl|;
@@ -192,7 +192,7 @@ name|xfer_unsetup
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 parameter_list|)
 function_decl|;
@@ -203,7 +203,7 @@ name|get_dma_delay
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 parameter_list|,
 name|uint32_t
@@ -217,7 +217,7 @@ name|device_suspend
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 parameter_list|)
 function_decl|;
@@ -228,7 +228,7 @@ name|device_resume
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 parameter_list|)
 function_decl|;
@@ -239,7 +239,7 @@ name|set_hw_power
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 parameter_list|)
 function_decl|;
@@ -276,13 +276,13 @@ name|get_hw_ep_profile
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
 specifier|const
 name|struct
-name|usb2_hw_ep_profile
+name|usb_hw_ep_profile
 modifier|*
 modifier|*
 name|ppf
@@ -298,17 +298,17 @@ name|set_stall
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
 name|struct
-name|usb2_pipe
+name|usb_pipe
 modifier|*
 name|pipe
 parameter_list|)
@@ -320,12 +320,12 @@ name|clear_stall
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
 name|struct
-name|usb2_pipe
+name|usb_pipe
 modifier|*
 name|pipe
 parameter_list|)
@@ -340,7 +340,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 block|{
 comment|/* Mandatory USB Device and Host mode callbacks: */
 name|usb2_callback_t
@@ -374,7 +374,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_hw_ep_profile
+name|usb_hw_ep_profile
 block|{
 name|uint16_t
 name|max_in_frame_size
@@ -436,11 +436,11 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_hw_ep_scratch_sub
+name|usb_hw_ep_scratch_sub
 block|{
 specifier|const
 name|struct
-name|usb2_hw_ep_profile
+name|usb_hw_ep_profile
 modifier|*
 name|pf
 decl_stmt|;
@@ -476,32 +476,32 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_hw_ep_scratch
+name|usb_hw_ep_scratch
 block|{
 name|struct
-name|usb2_hw_ep_scratch_sub
+name|usb_hw_ep_scratch_sub
 name|ep
 index|[
 name|USB_EP_MAX
 index|]
 decl_stmt|;
 name|struct
-name|usb2_hw_ep_scratch_sub
+name|usb_hw_ep_scratch_sub
 modifier|*
 name|ep_max
 decl_stmt|;
 name|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 modifier|*
 name|cd
 decl_stmt|;
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 decl_stmt|;
 name|struct
-name|usb2_bus_methods
+name|usb_bus_methods
 modifier|*
 name|methods
 decl_stmt|;
@@ -539,7 +539,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_temp_setup
+name|usb_temp_setup
 block|{
 name|void
 modifier|*
@@ -583,7 +583,7 @@ name|void
 name|usb2_bus_mem_flush_all
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 parameter_list|,
@@ -599,7 +599,7 @@ name|uint8_t
 name|usb2_bus_mem_alloc_all
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 parameter_list|,
@@ -618,7 +618,7 @@ name|void
 name|usb2_bus_mem_free_all
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 parameter_list|,
@@ -634,7 +634,7 @@ name|uint16_t
 name|usb2_isoc_time_expand
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 parameter_list|,
@@ -649,18 +649,18 @@ name|uint16_t
 name|usb2_fs_isoc_schedule_isoc_time_expand
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
 name|struct
-name|usb2_fs_isoc_schedule
+name|usb_fs_isoc_schedule
 modifier|*
 modifier|*
 name|pp_start
 parameter_list|,
 name|struct
-name|usb2_fs_isoc_schedule
+name|usb_fs_isoc_schedule
 modifier|*
 modifier|*
 name|pp_end
@@ -676,7 +676,7 @@ name|uint8_t
 name|usb2_fs_isoc_schedule_alloc
 parameter_list|(
 name|struct
-name|usb2_fs_isoc_schedule
+name|usb_fs_isoc_schedule
 modifier|*
 name|fss
 parameter_list|,

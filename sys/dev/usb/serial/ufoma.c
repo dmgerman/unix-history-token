@@ -379,11 +379,11 @@ struct|struct
 name|ufoma_softc
 block|{
 name|struct
-name|usb2_com_super_softc
+name|ucom_super_softc
 name|sc_super_ucom
 decl_stmt|;
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 name|sc_ucom
 decl_stmt|;
 name|struct
@@ -395,7 +395,7 @@ name|mtx
 name|sc_mtx
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|sc_ctrl_xfer
 index|[
@@ -403,7 +403,7 @@ name|UFOMA_CTRL_ENDPT_MAX
 index|]
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|sc_bulk_xfer
 index|[
@@ -418,7 +418,7 @@ name|device_t
 name|sc_dev
 decl_stmt|;
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|sc_udev
 decl_stmt|;
@@ -541,11 +541,11 @@ modifier|*
 name|ufoma_get_intconf
 parameter_list|(
 name|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 modifier|*
 parameter_list|,
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -587,7 +587,7 @@ name|void
 name|ufoma_cfg_open
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -599,7 +599,7 @@ name|void
 name|ufoma_cfg_close
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -611,7 +611,7 @@ name|void
 name|ufoma_cfg_set_break
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -625,7 +625,7 @@ name|void
 name|ufoma_cfg_get_status
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -643,7 +643,7 @@ name|void
 name|ufoma_cfg_set_dtr
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -657,7 +657,7 @@ name|void
 name|ufoma_cfg_set_rts
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -671,7 +671,7 @@ name|int
 name|ufoma_pre_param
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|struct
@@ -687,7 +687,7 @@ name|void
 name|ufoma_cfg_param
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|struct
@@ -709,7 +709,7 @@ name|ufoma_softc
 modifier|*
 parameter_list|,
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 parameter_list|)
 function_decl|;
@@ -721,7 +721,7 @@ name|void
 name|ufoma_start_read
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -733,7 +733,7 @@ name|void
 name|ufoma_stop_read
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -745,7 +745,7 @@ name|void
 name|ufoma_start_write
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -757,7 +757,7 @@ name|void
 name|ufoma_stop_write
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -801,7 +801,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 name|ufoma_ctrl_config
 index|[
 name|UFOMA_CTRL_ENDPT_MAX
@@ -849,7 +849,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_cdc_notification
+name|usb_cdc_notification
 argument_list|)
 block|,
 operator|.
@@ -887,7 +887,7 @@ operator|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 operator|+
 name|UFOMA_CMD_BUF_SIZE
@@ -945,7 +945,7 @@ operator|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 operator|+
 literal|1
@@ -972,7 +972,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 name|ufoma_bulk_config
 index|[
 name|UFOMA_BULK_ENDPT_MAX
@@ -1080,7 +1080,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_com_callback
+name|ucom_callback
 name|ufoma_callback
 init|=
 block|{
@@ -1292,7 +1292,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -1302,12 +1302,12 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 modifier|*
 name|id
 decl_stmt|;
 name|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 modifier|*
 name|cd
 decl_stmt|;
@@ -1459,7 +1459,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -1479,12 +1479,12 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 modifier|*
 name|cd
 decl_stmt|;
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 modifier|*
 name|id
 decl_stmt|;
@@ -2188,12 +2188,12 @@ modifier|*
 name|ufoma_get_intconf
 parameter_list|(
 name|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 modifier|*
 name|cd
 parameter_list|,
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 modifier|*
 name|id
 parameter_list|,
@@ -2205,7 +2205,7 @@ name|subtype
 parameter_list|)
 block|{
 name|struct
-name|usb2_descriptor
+name|usb_descriptor
 modifier|*
 name|desc
 init|=
@@ -2286,7 +2286,7 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|int32_t
@@ -2407,7 +2407,7 @@ name|state
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|int32_t
@@ -2516,7 +2516,7 @@ name|void
 name|ufoma_ctrl_read_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2531,7 +2531,7 @@ operator|->
 name|priv_sc
 decl_stmt|;
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 switch|switch
@@ -2751,7 +2751,7 @@ name|void
 name|ufoma_ctrl_write_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2766,7 +2766,7 @@ operator|->
 name|priv_sc
 decl_stmt|;
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|uint32_t
@@ -2950,7 +2950,7 @@ name|void
 name|ufoma_intr_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2965,7 +2965,7 @@ operator|->
 name|priv_sc
 decl_stmt|;
 name|struct
-name|usb2_cdc_notification
+name|usb_cdc_notification
 name|pkt
 decl_stmt|;
 name|uint16_t
@@ -3400,7 +3400,7 @@ name|void
 name|ufoma_bulk_write_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -3506,7 +3506,7 @@ name|void
 name|ufoma_bulk_read_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -3606,7 +3606,7 @@ name|void
 name|ufoma_cfg_open
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|)
@@ -3679,7 +3679,7 @@ name|void
 name|ufoma_cfg_close
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|)
@@ -3709,7 +3709,7 @@ name|void
 name|ufoma_cfg_set_break
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|,
@@ -3727,7 +3727,7 @@ operator|->
 name|sc_parent
 decl_stmt|;
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|uint16_t
@@ -3852,7 +3852,7 @@ name|void
 name|ufoma_cfg_get_status
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|,
@@ -3903,7 +3903,7 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 comment|/* Don't send line state emulation request for OBEX port */
@@ -4000,7 +4000,7 @@ name|void
 name|ufoma_cfg_set_dtr
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|,
@@ -4058,7 +4058,7 @@ name|void
 name|ufoma_cfg_set_rts
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|,
@@ -4116,7 +4116,7 @@ name|int
 name|ufoma_pre_param
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|,
@@ -4141,7 +4141,7 @@ name|void
 name|ufoma_cfg_param
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|,
@@ -4161,11 +4161,11 @@ operator|->
 name|sc_parent
 decl_stmt|;
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|struct
-name|usb2_cdc_line_state
+name|usb_cdc_line_state
 name|ls
 decl_stmt|;
 if|if
@@ -4420,33 +4420,33 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 parameter_list|)
 block|{
 name|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 modifier|*
 name|cd
 decl_stmt|;
 name|struct
-name|usb2_cdc_acm_descriptor
+name|usb_cdc_acm_descriptor
 modifier|*
 name|acm
 decl_stmt|;
 name|struct
-name|usb2_cdc_cm_descriptor
+name|usb_cdc_cm_descriptor
 modifier|*
 name|cmd
 decl_stmt|;
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 modifier|*
 name|id
 decl_stmt|;
 name|struct
-name|usb2_interface
+name|usb_interface
 modifier|*
 name|iface
 decl_stmt|;
@@ -4762,7 +4762,7 @@ name|void
 name|ufoma_start_read
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|)
@@ -4828,7 +4828,7 @@ name|void
 name|ufoma_stop_read
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|)
@@ -4894,7 +4894,7 @@ name|void
 name|ufoma_start_write
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|)
@@ -4948,7 +4948,7 @@ name|void
 name|ufoma_stop_write
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|)

@@ -2746,23 +2746,23 @@ end_comment
 
 begin_function
 name|struct
-name|usb2_hid_descriptor
+name|usb_hid_descriptor
 modifier|*
 name|hid_get_descriptor_from_usb
 parameter_list|(
 name|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 modifier|*
 name|cd
 parameter_list|,
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 modifier|*
 name|id
 parameter_list|)
 block|{
 name|struct
-name|usb2_descriptor
+name|usb_descriptor
 modifier|*
 name|desc
 init|=
@@ -2858,7 +2858,7 @@ name|usb2_error_t
 name|usb2_req_get_hid_desc
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
@@ -2884,7 +2884,7 @@ name|iface_index
 parameter_list|)
 block|{
 name|struct
-name|usb2_interface
+name|usb_interface
 modifier|*
 name|iface
 init|=
@@ -2896,7 +2896,7 @@ name|iface_index
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_hid_descriptor
+name|usb_hid_descriptor
 modifier|*
 name|hid
 decl_stmt|;

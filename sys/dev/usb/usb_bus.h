@@ -25,14 +25,14 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_bus_msg
+name|usb_bus_msg
 block|{
 name|struct
-name|usb2_proc_msg
+name|usb_proc_msg
 name|hdr
 decl_stmt|;
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 decl_stmt|;
@@ -46,7 +46,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_bus_stat
+name|usb_bus_stat
 block|{
 name|uint32_t
 name|uds_requests
@@ -64,14 +64,14 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_bus
+name|usb_bus
 block|{
 name|struct
-name|usb2_bus_stat
+name|usb_bus_stat
 name|stats_err
 decl_stmt|;
 name|struct
-name|usb2_bus_stat
+name|usb_bus_stat
 name|stats_ok
 decl_stmt|;
 name|struct
@@ -81,39 +81,39 @@ name|bus_roothold
 decl_stmt|;
 comment|/* 	 * There are two callback processes. One for Giant locked 	 * callbacks. One for non-Giant locked callbacks. This should 	 * avoid congestion and reduce response time in most cases. 	 */
 name|struct
-name|usb2_process
+name|usb_process
 name|giant_callback_proc
 decl_stmt|;
 name|struct
-name|usb2_process
+name|usb_process
 name|non_giant_callback_proc
 decl_stmt|;
 comment|/* Explore process */
 name|struct
-name|usb2_process
+name|usb_process
 name|explore_proc
 decl_stmt|;
 comment|/* Control request process */
 name|struct
-name|usb2_process
+name|usb_process
 name|control_xfer_proc
 decl_stmt|;
 name|struct
-name|usb2_bus_msg
+name|usb_bus_msg
 name|explore_msg
 index|[
 literal|2
 index|]
 decl_stmt|;
 name|struct
-name|usb2_bus_msg
+name|usb_bus_msg
 name|detach_msg
 index|[
 literal|2
 index|]
 decl_stmt|;
 name|struct
-name|usb2_bus_msg
+name|usb_bus_msg
 name|attach_msg
 index|[
 literal|2
@@ -125,11 +125,11 @@ name|mtx
 name|bus_mtx
 decl_stmt|;
 name|struct
-name|usb2_xfer_queue
+name|usb_xfer_queue
 name|intr_q
 decl_stmt|;
 name|struct
-name|usb2_callout
+name|usb_callout
 name|power_wdog
 decl_stmt|;
 comment|/* power management */
@@ -144,14 +144,14 @@ if|#
 directive|if
 name|USB_HAVE_BUSDMA
 name|struct
-name|usb2_dma_parent_tag
+name|usb_dma_parent_tag
 name|dma_parent_tag
 index|[
 literal|1
 index|]
 decl_stmt|;
 name|struct
-name|usb2_dma_tag
+name|usb_dma_tag
 name|dma_tags
 index|[
 name|USB_BUS_DMA_TAG_MAX
@@ -160,13 +160,13 @@ decl_stmt|;
 endif|#
 directive|endif
 name|struct
-name|usb2_bus_methods
+name|usb_bus_methods
 modifier|*
 name|methods
 decl_stmt|;
 comment|/* filled by HC driver */
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 modifier|*
 name|devices
@@ -209,14 +209,14 @@ comment|/* set if USB BUS should be re-probed */
 union|union
 block|{
 name|struct
-name|usb2_hw_ep_scratch
+name|usb_hw_ep_scratch
 name|hw_ep_scratch
 index|[
 literal|1
 index|]
 decl_stmt|;
 name|struct
-name|usb2_temp_setup
+name|usb_temp_setup
 name|temp_setup
 index|[
 literal|1

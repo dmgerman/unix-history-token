@@ -510,7 +510,7 @@ name|pcm_buf
 decl_stmt|;
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 modifier|*
 name|usb2_cfg
 decl_stmt|;
@@ -531,7 +531,7 @@ modifier|*
 name|pcm_ch
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 index|[
@@ -665,7 +665,7 @@ struct|struct
 name|umidi_sub_chan
 block|{
 name|struct
-name|usb2_fifo_sc
+name|usb_fifo_sc
 name|fifo
 decl_stmt|;
 name|uint8_t
@@ -751,7 +751,7 @@ name|mtx
 name|mtx
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 index|[
@@ -819,12 +819,12 @@ name|umidi_chan
 name|sc_midi_chan
 decl_stmt|;
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|sc_udev
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|sc_mixer_xfer
 index|[
@@ -957,7 +957,7 @@ union|union
 block|{
 specifier|const
 name|struct
-name|usb2_descriptor
+name|usb_descriptor
 modifier|*
 name|desc
 decl_stmt|;
@@ -1313,7 +1313,7 @@ name|uaudio_softc
 modifier|*
 parameter_list|,
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 parameter_list|,
 name|uint32_t
@@ -1337,7 +1337,7 @@ name|uaudio_softc
 modifier|*
 parameter_list|,
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1680,7 +1680,7 @@ name|uaudio_softc
 modifier|*
 parameter_list|,
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 parameter_list|,
 name|void
@@ -1695,7 +1695,7 @@ name|uint16_t
 name|uaudio_mixer_get
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -1734,7 +1734,7 @@ name|usb2_error_t
 name|uaudio_set_speed
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -1823,7 +1823,7 @@ modifier|*
 name|umidi_sub_by_fifo
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1835,7 +1835,7 @@ name|void
 name|umidi_start_read
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1847,7 +1847,7 @@ name|void
 name|umidi_stop_read
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1859,7 +1859,7 @@ name|void
 name|umidi_start_write
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1871,7 +1871,7 @@ name|void
 name|umidi_stop_write
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1883,7 +1883,7 @@ name|int
 name|umidi_open
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 parameter_list|,
 name|int
@@ -1897,7 +1897,7 @@ name|int
 name|umidi_ioctl
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 parameter_list|,
 name|u_long
@@ -1917,7 +1917,7 @@ name|void
 name|umidi_close
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 parameter_list|,
 name|int
@@ -2012,7 +2012,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 name|uaudio_cfg_record
 index|[
 name|UAUDIO_NCHANBUFS
@@ -2122,7 +2122,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 name|uaudio_cfg_play
 index|[
 name|UAUDIO_NCHANBUFS
@@ -2232,7 +2232,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 name|uaudio_mixer_config
 index|[
 literal|1
@@ -2267,7 +2267,7 @@ operator|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 operator|+
 literal|4
@@ -2420,7 +2420,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 name|umidi_config
 index|[
 name|UMIDI_N_TRANSFER
@@ -2548,7 +2548,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 block|,
 operator|.
@@ -2603,7 +2603,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 block|,
 operator|.
@@ -2744,7 +2744,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -2842,7 +2842,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -2862,7 +2862,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 modifier|*
 name|id
 decl_stmt|;
@@ -3772,7 +3772,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
@@ -3790,7 +3790,7 @@ name|bit_resolution
 parameter_list|)
 block|{
 name|struct
-name|usb2_descriptor
+name|usb_descriptor
 modifier|*
 name|desc
 init|=
@@ -3835,7 +3835,7 @@ init|=
 name|NULL
 decl_stmt|;
 name|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 modifier|*
 name|cd
 init|=
@@ -3845,7 +3845,7 @@ name|udev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 modifier|*
 name|id
 decl_stmt|;
@@ -5059,7 +5059,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|)
@@ -5308,7 +5308,7 @@ name|void
 name|uaudio_chan_play_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -5655,7 +5655,7 @@ name|void
 name|uaudio_chan_record_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -9676,7 +9676,7 @@ union|union
 block|{
 specifier|const
 name|struct
-name|usb2_descriptor
+name|usb_descriptor
 modifier|*
 name|desc
 decl_stmt|;
@@ -10379,7 +10379,7 @@ name|r
 decl_stmt|;
 specifier|const
 name|struct
-name|usb2_descriptor
+name|usb_descriptor
 modifier|*
 name|dp
 decl_stmt|;
@@ -12620,7 +12620,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
@@ -12636,7 +12636,7 @@ modifier|*
 name|acdp
 decl_stmt|;
 name|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 modifier|*
 name|cd
 init|=
@@ -12647,7 +12647,7 @@ argument_list|)
 decl_stmt|;
 specifier|const
 name|struct
-name|usb2_descriptor
+name|usb_descriptor
 modifier|*
 name|dp
 decl_stmt|;
@@ -13739,7 +13739,7 @@ name|uint16_t
 name|uaudio_mixer_get
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
@@ -13753,7 +13753,7 @@ name|mc
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|uint16_t
@@ -13950,13 +13950,13 @@ name|void
 name|uaudio_mixer_write_cfg_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|struct
@@ -14388,7 +14388,7 @@ name|usb2_error_t
 name|uaudio_set_speed
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
@@ -14400,7 +14400,7 @@ name|speed
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|uint8_t
@@ -15392,7 +15392,7 @@ name|void
 name|umidi_read_clear_stall_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -15407,7 +15407,7 @@ operator|->
 name|priv_sc
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer_other
 init|=
@@ -15455,7 +15455,7 @@ name|void
 name|umidi_bulk_read_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -15738,7 +15738,7 @@ name|void
 name|umidi_write_clear_stall_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -15753,7 +15753,7 @@ operator|->
 name|priv_sc
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer_other
 init|=
@@ -16542,7 +16542,7 @@ name|void
 name|umidi_bulk_write_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -16931,7 +16931,7 @@ modifier|*
 name|umidi_sub_by_fifo
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|)
@@ -17015,7 +17015,7 @@ block|}
 block|}
 name|panic
 argument_list|(
-literal|"%s:%d cannot find usb2_fifo!\n"
+literal|"%s:%d cannot find usb_fifo!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -17036,7 +17036,7 @@ name|void
 name|umidi_start_read
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|)
@@ -17069,7 +17069,7 @@ name|void
 name|umidi_stop_read
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|)
@@ -17132,7 +17132,7 @@ name|void
 name|umidi_start_write
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|)
@@ -17165,7 +17165,7 @@ name|void
 name|umidi_stop_write
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|)
@@ -17247,7 +17247,7 @@ name|int
 name|umidi_open
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|,
@@ -17413,7 +17413,7 @@ name|void
 name|umidi_close
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|,
@@ -17456,7 +17456,7 @@ name|int
 name|umidi_ioctl
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|,
@@ -17530,7 +17530,7 @@ end_function
 begin_decl_stmt
 specifier|static
 name|struct
-name|usb2_fifo_methods
+name|usb_fifo_methods
 name|umidi_fifo_methods
 init|=
 block|{
@@ -17607,7 +17607,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=

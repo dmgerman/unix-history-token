@@ -1003,7 +1003,7 @@ name|usb2_test_quirk_by_info
 parameter_list|(
 specifier|const
 name|struct
-name|usb2_lookup_info
+name|usb_lookup_info
 modifier|*
 name|info
 parameter_list|,
@@ -1457,7 +1457,7 @@ name|td
 parameter_list|)
 block|{
 name|struct
-name|usb2_gen_quirk
+name|usb_gen_quirk
 modifier|*
 name|pgq
 decl_stmt|;

@@ -102,19 +102,19 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_xfer_root
+name|usb_xfer_root
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_dma_parent_tag
+name|usb_dma_parent_tag
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_dma_tag
+name|usb_dma_tag
 struct_decl|;
 end_struct_decl
 
@@ -130,7 +130,7 @@ name|usb2_dma_callback_t
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_dma_parent_tag
+name|usb_dma_parent_tag
 modifier|*
 name|udpt
 parameter_list|)
@@ -143,7 +143,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_page
+name|usb_page
 block|{
 if|#
 directive|if
@@ -168,7 +168,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_page_search
+name|usb_page_search
 block|{
 name|void
 modifier|*
@@ -195,7 +195,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_page_cache
+name|usb_page_cache
 block|{
 if|#
 directive|if
@@ -207,14 +207,14 @@ name|bus_dmamap_t
 name|map
 decl_stmt|;
 name|struct
-name|usb2_page
+name|usb_page
 modifier|*
 name|page_start
 decl_stmt|;
 endif|#
 directive|endif
 name|struct
-name|usb2_dma_parent_tag
+name|usb_dma_parent_tag
 modifier|*
 name|tag_parent
 decl_stmt|;
@@ -263,7 +263,7 @@ end_if
 
 begin_struct
 struct|struct
-name|usb2_dma_parent_tag
+name|usb_dma_parent_tag
 block|{
 name|struct
 name|cv
@@ -289,7 +289,7 @@ name|func
 decl_stmt|;
 comment|/* load complete callback function */
 name|struct
-name|usb2_dma_tag
+name|usb_dma_tag
 modifier|*
 name|utag_first
 decl_stmt|;
@@ -317,7 +317,7 @@ end_else
 
 begin_struct
 struct|struct
-name|usb2_dma_parent_tag
+name|usb_dma_parent_tag
 block|{}
 struct|;
 end_struct
@@ -343,10 +343,10 @@ end_if
 
 begin_struct
 struct|struct
-name|usb2_dma_tag
+name|usb_dma_tag
 block|{
 name|struct
-name|usb2_dma_parent_tag
+name|usb_dma_parent_tag
 modifier|*
 name|tag_parent
 decl_stmt|;
@@ -370,7 +370,7 @@ end_else
 
 begin_struct
 struct|struct
-name|usb2_dma_tag
+name|usb_dma_tag
 block|{}
 struct|;
 end_struct
@@ -393,7 +393,7 @@ name|int
 name|usb2_uiomove
 parameter_list|(
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|,
@@ -413,12 +413,12 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|usb2_dma_tag
+name|usb_dma_tag
 modifier|*
 name|usb2_dma_tag_find
 parameter_list|(
 name|struct
-name|usb2_dma_parent_tag
+name|usb_dma_parent_tag
 modifier|*
 name|udpt
 parameter_list|,
@@ -436,12 +436,12 @@ name|uint8_t
 name|usb2_pc_alloc_mem
 parameter_list|(
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|,
 name|struct
-name|usb2_page
+name|usb_page
 modifier|*
 name|pg
 parameter_list|,
@@ -459,7 +459,7 @@ name|uint8_t
 name|usb2_pc_dmamap_create
 parameter_list|(
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|,
@@ -474,7 +474,7 @@ name|uint8_t
 name|usb2_pc_load_mem
 parameter_list|(
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|,
@@ -492,7 +492,7 @@ name|void
 name|usb2_bdma_done_event
 parameter_list|(
 name|struct
-name|usb2_dma_parent_tag
+name|usb_dma_parent_tag
 modifier|*
 name|udpt
 parameter_list|)
@@ -504,7 +504,7 @@ name|void
 name|usb2_bdma_post_sync
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -516,7 +516,7 @@ name|void
 name|usb2_bdma_pre_sync
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -528,7 +528,7 @@ name|void
 name|usb2_bdma_work_loop
 parameter_list|(
 name|struct
-name|usb2_xfer_queue
+name|usb_xfer_queue
 modifier|*
 name|pq
 parameter_list|)
@@ -540,7 +540,7 @@ name|void
 name|usb2_bzero
 parameter_list|(
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|cache
 parameter_list|,
@@ -558,7 +558,7 @@ name|void
 name|usb2_copy_in
 parameter_list|(
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|cache
 parameter_list|,
@@ -581,7 +581,7 @@ name|int
 name|usb2_copy_in_user
 parameter_list|(
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|cache
 parameter_list|,
@@ -604,7 +604,7 @@ name|void
 name|usb2_copy_out
 parameter_list|(
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|cache
 parameter_list|,
@@ -626,7 +626,7 @@ name|int
 name|usb2_copy_out_user
 parameter_list|(
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|cache
 parameter_list|,
@@ -648,12 +648,12 @@ name|void
 name|usb2_dma_tag_setup
 parameter_list|(
 name|struct
-name|usb2_dma_parent_tag
+name|usb_dma_parent_tag
 modifier|*
 name|udpt
 parameter_list|,
 name|struct
-name|usb2_dma_tag
+name|usb_dma_tag
 modifier|*
 name|udt
 parameter_list|,
@@ -683,7 +683,7 @@ name|void
 name|usb2_dma_tag_unsetup
 parameter_list|(
 name|struct
-name|usb2_dma_parent_tag
+name|usb_dma_parent_tag
 modifier|*
 name|udpt
 parameter_list|)
@@ -695,7 +695,7 @@ name|void
 name|usb2_get_page
 parameter_list|(
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|,
@@ -703,7 +703,7 @@ name|usb2_frlength_t
 name|offset
 parameter_list|,
 name|struct
-name|usb2_page_search
+name|usb_page_search
 modifier|*
 name|res
 parameter_list|)
@@ -715,7 +715,7 @@ name|void
 name|usb2_m_copy_in
 parameter_list|(
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|cache
 parameter_list|,
@@ -741,7 +741,7 @@ name|void
 name|usb2_pc_cpu_flush
 parameter_list|(
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|)
@@ -753,7 +753,7 @@ name|void
 name|usb2_pc_cpu_invalidate
 parameter_list|(
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|)
@@ -765,7 +765,7 @@ name|void
 name|usb2_pc_dmamap_destroy
 parameter_list|(
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|)
@@ -777,7 +777,7 @@ name|void
 name|usb2_pc_free_mem
 parameter_list|(
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|)

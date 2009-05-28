@@ -151,7 +151,7 @@ struct|struct
 name|ubtbcmfw_softc
 block|{
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|sc_udev
 decl_stmt|;
@@ -160,7 +160,7 @@ name|mtx
 name|sc_mtx
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|sc_xfer
 index|[
@@ -168,7 +168,7 @@ name|UBTBCMFW_N_TRANSFER
 index|]
 decl_stmt|;
 name|struct
-name|usb2_fifo_sc
+name|usb_fifo_sc
 name|sc_fifo
 decl_stmt|;
 block|}
@@ -266,7 +266,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|usb2_fifo_methods
+name|usb_fifo_methods
 name|ubtbcmfw_fifo_methods
 init|=
 block|{
@@ -371,7 +371,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 name|ubtbcmfw_config
 index|[
 name|UBTBCMFW_N_TRANSFER
@@ -622,7 +622,7 @@ parameter_list|)
 block|{
 specifier|const
 name|struct
-name|usb2_device_id
+name|usb_device_id
 name|devs
 index|[]
 init|=
@@ -641,7 +641,7 @@ block|}
 block|, 	}
 decl_stmt|;
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -714,7 +714,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -986,7 +986,7 @@ name|void
 name|ubtbcmfw_write_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -1001,7 +1001,7 @@ operator|->
 name|priv_sc
 decl_stmt|;
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 init|=
@@ -1115,7 +1115,7 @@ name|void
 name|ubtbcmfw_read_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -1130,7 +1130,7 @@ operator|->
 name|priv_sc
 decl_stmt|;
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 init|=
@@ -1248,7 +1248,7 @@ name|void
 name|ubtbcmfw_start_read
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|)
@@ -1289,7 +1289,7 @@ name|void
 name|ubtbcmfw_stop_read
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|)
@@ -1330,7 +1330,7 @@ name|void
 name|ubtbcmfw_start_write
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|)
@@ -1371,7 +1371,7 @@ name|void
 name|ubtbcmfw_stop_write
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|)
@@ -1412,7 +1412,7 @@ name|int
 name|ubtbcmfw_open
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|,
@@ -1430,7 +1430,7 @@ operator|->
 name|priv_sc0
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
@@ -1515,7 +1515,7 @@ name|void
 name|ubtbcmfw_close
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|,
@@ -1555,7 +1555,7 @@ name|int
 name|ubtbcmfw_ioctl
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|,
@@ -1606,7 +1606,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_descriptor
+name|usb_device_descriptor
 argument_list|)
 argument_list|)
 expr_stmt|;

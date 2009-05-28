@@ -104,7 +104,7 @@ end_define
 
 begin_struct
 struct|struct
-name|usb2_hid_descriptor
+name|usb_hid_descriptor
 block|{
 name|uByte
 name|bLength

@@ -245,7 +245,7 @@ name|sc_if_mtx
 decl_stmt|;
 comment|/* interfaces lock */
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|sc_xfer
 index|[
@@ -266,7 +266,7 @@ comment|/* HCI command queue */
 define|#
 directive|define
 name|UBT_CTRL_BUFFER_SIZE
-value|(sizeof(struct usb2_device_request) +	\ 				 sizeof(ng_hci_cmd_pkt_t) + NG_HCI_CMD_PKT_SIZE)
+value|(sizeof(struct usb_device_request) +	\ 				 sizeof(ng_hci_cmd_pkt_t) + NG_HCI_CMD_PKT_SIZE)
 define|#
 directive|define
 name|UBT_INTR_BUFFER_SIZE

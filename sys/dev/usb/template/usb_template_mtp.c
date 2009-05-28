@@ -210,7 +210,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_temp_packet_size
+name|usb_temp_packet_size
 name|bulk_mps
 init|=
 block|{
@@ -237,7 +237,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_temp_packet_size
+name|usb_temp_packet_size
 name|intr_mps
 init|=
 block|{
@@ -264,7 +264,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_temp_endpoint_desc
+name|usb_temp_endpoint_desc
 name|bulk_out_ep
 init|=
 block|{
@@ -303,7 +303,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_temp_endpoint_desc
+name|usb_temp_endpoint_desc
 name|intr_in_ep
 init|=
 block|{
@@ -330,7 +330,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_temp_endpoint_desc
+name|usb_temp_endpoint_desc
 name|bulk_in_ep
 init|=
 block|{
@@ -369,7 +369,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_temp_endpoint_desc
+name|usb_temp_endpoint_desc
 modifier|*
 name|mtp_data_endpoints
 index|[]
@@ -393,7 +393,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_temp_interface_desc
+name|usb_temp_interface_desc
 name|mtp_data_interface
 init|=
 block|{
@@ -431,7 +431,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_temp_interface_desc
+name|usb_temp_interface_desc
 modifier|*
 name|mtp_interfaces
 index|[]
@@ -449,7 +449,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_temp_config_desc
+name|usb_temp_config_desc
 name|mtp_config_desc
 init|=
 block|{
@@ -481,7 +481,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_temp_config_desc
+name|usb_temp_config_desc
 modifier|*
 name|mtp_configs
 index|[]
@@ -498,7 +498,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|const
 name|struct
-name|usb2_temp_device_desc
+name|usb_temp_device_desc
 name|usb2_template_mtp
 init|=
 block|{
@@ -580,7 +580,7 @@ name|mtp_get_vendor_desc
 parameter_list|(
 specifier|const
 name|struct
-name|usb2_device_request
+name|usb_device_request
 modifier|*
 name|req
 parameter_list|)

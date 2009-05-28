@@ -537,7 +537,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_device_id
+name|usb_device_id
 name|urtw_devs
 index|[]
 init|=
@@ -5160,7 +5160,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 name|urtw_8187b_usbconfig
 index|[
 name|URTW_8187B_N_XFERS
@@ -5505,7 +5505,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 name|urtw_8187l_usbconfig
 index|[
 name|URTW_8187L_N_XFERS
@@ -6975,7 +6975,7 @@ name|urtw_softc
 modifier|*
 parameter_list|,
 name|struct
-name|usb2_device_request
+name|usb_device_request
 modifier|*
 parameter_list|,
 name|void
@@ -7049,7 +7049,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -7130,7 +7130,7 @@ parameter_list|)
 block|{
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 modifier|*
 name|setup_start
 decl_stmt|;
@@ -7150,7 +7150,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -10302,7 +10302,7 @@ name|idx
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|req
@@ -10379,7 +10379,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|usb2_device_request
+name|usb_device_request
 modifier|*
 name|req
 parameter_list|,
@@ -10495,7 +10495,7 @@ name|idx
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|req
@@ -10582,7 +10582,7 @@ name|idx
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|req
@@ -12324,7 +12324,7 @@ modifier|*
 name|hdr
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|rtl8187b_pipes
 index|[
@@ -12362,7 +12362,7 @@ index|]
 block|}
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
@@ -13970,7 +13970,7 @@ name|data
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|usb2_error_t
@@ -14064,7 +14064,7 @@ name|data
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|usb2_error_t
@@ -14158,7 +14158,7 @@ name|data
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|usb2_error_t
@@ -14251,7 +14251,7 @@ name|data
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|URTW_ASSERT_LOCKED
@@ -14338,7 +14338,7 @@ name|data
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|URTW_ASSERT_LOCKED
@@ -14425,7 +14425,7 @@ name|data
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|URTW_ASSERT_LOCKED
@@ -17955,7 +17955,7 @@ name|uint16_t
 name|data16
 decl_stmt|;
 name|struct
-name|usb2_device_request
+name|usb_device_request
 modifier|*
 name|req
 decl_stmt|;
@@ -22120,7 +22120,7 @@ name|data
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|usb2_error_t
@@ -22208,7 +22208,7 @@ name|data
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|req
@@ -24362,7 +24362,7 @@ modifier|*
 name|urtw_rxeof
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
@@ -25014,7 +25014,7 @@ name|void
 name|urtw_bulk_rx_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -25407,7 +25407,7 @@ name|void
 name|urtw_txeof
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
@@ -25541,7 +25541,7 @@ name|void
 name|urtw_bulk_tx_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)

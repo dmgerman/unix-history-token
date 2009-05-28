@@ -401,7 +401,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_device_request
+name|usb_device_request
 block|{
 name|uByte
 name|bmRequestType
@@ -426,7 +426,7 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|usb_device_request_t
 typedef|;
 end_typedef
@@ -1194,7 +1194,7 @@ end_define
 
 begin_struct
 struct|struct
-name|usb2_descriptor
+name|usb_descriptor
 block|{
 name|uByte
 name|bLength
@@ -1213,14 +1213,14 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|usb2_descriptor
+name|usb_descriptor
 name|usb_descriptor_t
 typedef|;
 end_typedef
 
 begin_struct
 struct|struct
-name|usb2_device_descriptor
+name|usb_device_descriptor
 block|{
 name|uByte
 name|bLength
@@ -1295,7 +1295,7 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|usb2_device_descriptor
+name|usb_device_descriptor
 name|usb_device_descriptor_t
 typedef|;
 end_typedef
@@ -1306,7 +1306,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_bos_descriptor
+name|usb_bos_descriptor
 block|{
 name|uByte
 name|bLength
@@ -1328,7 +1328,7 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|usb2_bos_descriptor
+name|usb_bos_descriptor
 name|usb_bos_descriptor_t
 typedef|;
 end_typedef
@@ -1339,7 +1339,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_bos_cap_descriptor
+name|usb_bos_cap_descriptor
 block|{
 name|uByte
 name|bLength
@@ -1379,14 +1379,14 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|usb2_bos_cap_descriptor
+name|usb_bos_cap_descriptor
 name|usb_bos_cap_descriptor_t
 typedef|;
 end_typedef
 
 begin_struct
 struct|struct
-name|usb2_devcap_usb2ext_descriptor
+name|usb_devcap_usb2ext_descriptor
 block|{
 name|uByte
 name|bLength
@@ -1412,14 +1412,14 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|usb2_devcap_usb2ext_descriptor
+name|usb_devcap_usb2ext_descriptor
 name|usb_devcap_usb2ext_descriptor_t
 typedef|;
 end_typedef
 
 begin_struct
 struct|struct
-name|usb2_devcap_ss_descriptor
+name|usb_devcap_ss_descriptor
 block|{
 name|uByte
 name|bLength
@@ -1453,14 +1453,14 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|usb2_devcap_ss_descriptor
+name|usb_devcap_ss_descriptor
 name|usb_devcap_ss_descriptor_t
 typedef|;
 end_typedef
 
 begin_struct
 struct|struct
-name|usb2_devcap_container_id_descriptor
+name|usb_devcap_container_id_descriptor
 block|{
 name|uByte
 name|bLength
@@ -1485,7 +1485,7 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|usb2_devcap_container_id_descriptor
+name|usb_devcap_container_id_descriptor
 name|usb_devcap_container_id_descriptor_t
 typedef|;
 end_typedef
@@ -1580,7 +1580,7 @@ end_define
 
 begin_struct
 struct|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 block|{
 name|uByte
 name|bLength
@@ -1635,14 +1635,14 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 name|usb_config_descriptor_t
 typedef|;
 end_typedef
 
 begin_struct
 struct|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 block|{
 name|uByte
 name|bLength
@@ -1679,14 +1679,14 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 name|usb_interface_descriptor_t
 typedef|;
 end_typedef
 
 begin_struct
 struct|struct
-name|usb2_interface_assoc_descriptor
+name|usb_interface_assoc_descriptor
 block|{
 name|uByte
 name|bLength
@@ -1720,7 +1720,7 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|usb2_interface_assoc_descriptor
+name|usb_interface_assoc_descriptor
 name|usb_interface_assoc_descriptor_t
 typedef|;
 end_typedef
@@ -2350,7 +2350,7 @@ end_define
 
 begin_struct
 struct|struct
-name|usb2_endpoint_descriptor
+name|usb_endpoint_descriptor
 block|{
 name|uByte
 name|bLength
@@ -2500,14 +2500,14 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|usb2_endpoint_descriptor
+name|usb_endpoint_descriptor
 name|usb_endpoint_descriptor_t
 typedef|;
 end_typedef
 
 begin_struct
 struct|struct
-name|usb2_endpoint_ss_comp_descriptor
+name|usb_endpoint_ss_comp_descriptor
 block|{
 name|uByte
 name|bLength
@@ -2532,14 +2532,14 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|usb2_endpoint_ss_comp_descriptor
+name|usb_endpoint_ss_comp_descriptor
 name|usb_endpoint_ss_comp_descriptor_t
 typedef|;
 end_typedef
 
 begin_struct
 struct|struct
-name|usb2_string_descriptor
+name|usb_string_descriptor
 block|{
 name|uByte
 name|bLength
@@ -2564,7 +2564,7 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|usb2_string_descriptor
+name|usb_string_descriptor
 name|usb_string_descriptor_t
 typedef|;
 end_typedef
@@ -2584,7 +2584,7 @@ end_define
 
 begin_struct
 struct|struct
-name|usb2_hub_descriptor
+name|usb_hub_descriptor
 block|{
 name|uByte
 name|bDescLength
@@ -2701,14 +2701,14 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|usb2_hub_descriptor
+name|usb_hub_descriptor
 name|usb_hub_descriptor_t
 typedef|;
 end_typedef
 
 begin_struct
 struct|struct
-name|usb2_hub_ss_descriptor
+name|usb_hub_ss_descriptor
 block|{
 name|uByte
 name|bDescLength
@@ -2751,7 +2751,7 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|usb2_hub_ss_descriptor
+name|usb_hub_ss_descriptor
 name|usb_hub_ss_descriptor_t
 typedef|;
 end_typedef
@@ -2762,7 +2762,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_hub_descriptor_min
+name|usb_hub_descriptor_min
 block|{
 name|uByte
 name|bDescLength
@@ -2802,14 +2802,14 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|usb2_hub_descriptor_min
+name|usb_hub_descriptor_min
 name|usb_hub_descriptor_min_t
 typedef|;
 end_typedef
 
 begin_struct
 struct|struct
-name|usb2_device_qualifier
+name|usb_device_qualifier
 block|{
 name|uByte
 name|bLength
@@ -2846,14 +2846,14 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|usb2_device_qualifier
+name|usb_device_qualifier
 name|usb_device_qualifier_t
 typedef|;
 end_typedef
 
 begin_struct
 struct|struct
-name|usb2_otg_descriptor
+name|usb_otg_descriptor
 block|{
 name|uByte
 name|bLength
@@ -2880,7 +2880,7 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|usb2_otg_descriptor
+name|usb_otg_descriptor
 name|usb_otg_descriptor_t
 typedef|;
 end_typedef
@@ -2912,7 +2912,7 @@ end_define
 
 begin_struct
 struct|struct
-name|usb2_status
+name|usb_status
 block|{
 name|uWord
 name|wStatus
@@ -2939,14 +2939,14 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|usb2_status
+name|usb_status
 name|usb_status_t
 typedef|;
 end_typedef
 
 begin_struct
 struct|struct
-name|usb2_hub_status
+name|usb_hub_status
 block|{
 name|uWord
 name|wHubStatus
@@ -2970,14 +2970,14 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|usb2_hub_status
+name|usb_hub_status
 name|usb_hub_status_t
 typedef|;
 end_typedef
 
 begin_struct
 struct|struct
-name|usb2_port_status
+name|usb_port_status
 block|{
 name|uWord
 name|wPortStatus
@@ -3058,7 +3058,7 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|usb2_port_status
+name|usb_port_status
 name|usb_port_status_t
 typedef|;
 end_typedef

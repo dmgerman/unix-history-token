@@ -122,7 +122,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_device_id
+name|usb_device_id
 name|cue_devs
 index|[]
 init|=
@@ -418,7 +418,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 name|cue_config
 index|[
 name|CUE_N_TRANSFER
@@ -673,7 +673,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_ether_methods
+name|usb_ether_methods
 name|cue_ue_methods
 init|=
 block|{
@@ -760,7 +760,7 @@ name|reg
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|uint8_t
@@ -849,7 +849,7 @@ name|reg
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|uint16_t
@@ -942,7 +942,7 @@ name|val
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|req
@@ -1030,7 +1030,7 @@ name|len
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 if|if
@@ -1122,7 +1122,7 @@ name|buf
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|req
@@ -1240,7 +1240,7 @@ name|void
 name|cue_setpromisc
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)
@@ -1315,7 +1315,7 @@ name|void
 name|cue_setmulti
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)
@@ -1562,7 +1562,7 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|req
@@ -1646,7 +1646,7 @@ name|void
 name|cue_attach_post
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)
@@ -1683,7 +1683,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -1767,7 +1767,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -1787,7 +1787,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 init|=
@@ -1972,7 +1972,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 init|=
@@ -2017,7 +2017,7 @@ name|void
 name|cue_bulk_read_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2032,7 +2032,7 @@ operator|->
 name|priv_sc
 decl_stmt|;
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 init|=
@@ -2231,7 +2231,7 @@ name|void
 name|cue_bulk_write_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2490,7 +2490,7 @@ name|void
 name|cue_tick
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)
@@ -2578,7 +2578,7 @@ name|void
 name|cue_start
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)
@@ -2623,7 +2623,7 @@ name|void
 name|cue_init
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)
@@ -2795,7 +2795,7 @@ name|void
 name|cue_stop
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)

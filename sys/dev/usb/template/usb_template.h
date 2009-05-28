@@ -52,7 +52,7 @@ function_decl|)
 parameter_list|(
 specifier|const
 name|struct
-name|usb2_device_request
+name|usb_device_request
 modifier|*
 name|req
 parameter_list|)
@@ -61,7 +61,7 @@ end_typedef
 
 begin_struct
 struct|struct
-name|usb2_temp_packet_size
+name|usb_temp_packet_size
 block|{
 name|uint16_t
 name|mps
@@ -75,7 +75,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_temp_interval
+name|usb_temp_interval
 block|{
 name|uint8_t
 name|bInterval
@@ -89,7 +89,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_temp_endpoint_desc
+name|usb_temp_endpoint_desc
 block|{
 specifier|const
 name|void
@@ -99,13 +99,13 @@ name|ppRawDesc
 decl_stmt|;
 specifier|const
 name|struct
-name|usb2_temp_packet_size
+name|usb_temp_packet_size
 modifier|*
 name|pPacketSize
 decl_stmt|;
 specifier|const
 name|struct
-name|usb2_temp_interval
+name|usb_temp_interval
 modifier|*
 name|pIntervals
 decl_stmt|;
@@ -123,7 +123,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_temp_interface_desc
+name|usb_temp_interface_desc
 block|{
 specifier|const
 name|void
@@ -133,7 +133,7 @@ name|ppRawDesc
 decl_stmt|;
 specifier|const
 name|struct
-name|usb2_temp_endpoint_desc
+name|usb_temp_endpoint_desc
 modifier|*
 modifier|*
 name|ppEndpoints
@@ -159,11 +159,11 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_temp_config_desc
+name|usb_temp_config_desc
 block|{
 specifier|const
 name|struct
-name|usb2_temp_interface_desc
+name|usb_temp_interface_desc
 modifier|*
 modifier|*
 name|ppIfaceDesc
@@ -183,7 +183,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_temp_device_desc
+name|usb_temp_device_desc
 block|{
 name|usb2_temp_get_string_desc_t
 modifier|*
@@ -195,7 +195,7 @@ name|getVendorDesc
 decl_stmt|;
 specifier|const
 name|struct
-name|usb2_temp_config_desc
+name|usb_temp_config_desc
 modifier|*
 modifier|*
 name|ppConfigDesc
@@ -233,21 +233,21 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_temp_data
+name|usb_temp_data
 block|{
 specifier|const
 name|struct
-name|usb2_temp_device_desc
+name|usb_temp_device_desc
 modifier|*
 name|tdd
 decl_stmt|;
 name|struct
-name|usb2_device_descriptor
+name|usb_device_descriptor
 name|udd
 decl_stmt|;
 comment|/* device descriptor */
 name|struct
-name|usb2_device_qualifier
+name|usb_device_qualifier
 name|udq
 decl_stmt|;
 comment|/* device qualifier */
@@ -263,7 +263,7 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|struct
-name|usb2_temp_device_desc
+name|usb_temp_device_desc
 name|usb2_template_cdce
 decl_stmt|;
 end_decl_stmt
@@ -272,7 +272,7 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|struct
-name|usb2_temp_device_desc
+name|usb_temp_device_desc
 name|usb2_template_msc
 decl_stmt|;
 end_decl_stmt
@@ -285,7 +285,7 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|struct
-name|usb2_temp_device_desc
+name|usb_temp_device_desc
 name|usb2_template_mtp
 decl_stmt|;
 end_decl_stmt

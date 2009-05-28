@@ -192,7 +192,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_device_id
+name|usb_device_id
 name|axe_devs
 index|[]
 init|=
@@ -678,7 +678,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 name|axe_config
 index|[
 name|AXE_N_TRANSFER
@@ -1067,7 +1067,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_ether_methods
+name|usb_ether_methods
 name|axe_ue_methods
 init|=
 block|{
@@ -1144,7 +1144,7 @@ name|buf
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|usb2_error_t
@@ -2007,7 +2007,7 @@ name|void
 name|axe_setmulti
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)
@@ -2922,7 +2922,7 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 modifier|*
 name|cd
 decl_stmt|;
@@ -2991,7 +2991,7 @@ name|void
 name|axe_attach_post
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)
@@ -3215,7 +3215,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -3299,7 +3299,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -3319,7 +3319,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 init|=
@@ -3513,7 +3513,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 init|=
@@ -3558,7 +3558,7 @@ name|void
 name|axe_intr_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -3652,7 +3652,7 @@ name|void
 name|axe_bulk_read_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -3667,7 +3667,7 @@ operator|->
 name|priv_sc
 decl_stmt|;
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 init|=
@@ -4010,7 +4010,7 @@ name|void
 name|axe_bulk_write_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -4359,7 +4359,7 @@ name|void
 name|axe_tick
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)
@@ -4443,7 +4443,7 @@ name|void
 name|axe_start
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)
@@ -4498,7 +4498,7 @@ name|void
 name|axe_init
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)
@@ -4774,7 +4774,7 @@ name|void
 name|axe_setpromisc
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)
@@ -4872,7 +4872,7 @@ name|void
 name|axe_stop
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)

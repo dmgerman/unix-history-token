@@ -20,19 +20,19 @@ file|<dev/usb/usb_lookup.h>
 end_include
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_lookup_id_by_info  *  * This functions takes an array of "struct usb2_device_id" and tries  * to match the entries with the information in "struct usb2_lookup_info".  *  * NOTE: The "sizeof_id" parameter must be a multiple of the  * usb2_device_id structure size. Else the behaviour of this function  * is undefined.  *  * Return values:  * NULL: No match found.  * Else: Pointer to matching entry.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_lookup_id_by_info  *  * This functions takes an array of "struct usb_device_id" and tries  * to match the entries with the information in "struct usb_lookup_info".  *  * NOTE: The "sizeof_id" parameter must be a multiple of the  * usb_device_id structure size. Else the behaviour of this function  * is undefined.  *  * Return values:  * NULL: No match found.  * Else: Pointer to matching entry.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|const
 name|struct
-name|usb2_device_id
+name|usb_device_id
 modifier|*
 name|usb2_lookup_id_by_info
 parameter_list|(
 specifier|const
 name|struct
-name|usb2_device_id
+name|usb_device_id
 modifier|*
 name|id
 parameter_list|,
@@ -41,14 +41,14 @@ name|sizeof_id
 parameter_list|,
 specifier|const
 name|struct
-name|usb2_lookup_info
+name|usb_lookup_info
 modifier|*
 name|info
 parameter_list|)
 block|{
 specifier|const
 name|struct
-name|usb2_device_id
+name|usb_device_id
 modifier|*
 name|id_end
 decl_stmt|;
@@ -374,7 +374,7 @@ name|usb2_lookup_id_by_uaa
 parameter_list|(
 specifier|const
 name|struct
-name|usb2_device_id
+name|usb_device_id
 modifier|*
 name|id
 parameter_list|,
@@ -382,7 +382,7 @@ name|usb2_size_t
 name|sizeof_id
 parameter_list|,
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 parameter_list|)

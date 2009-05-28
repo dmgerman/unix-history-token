@@ -103,7 +103,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* The first fields are identical to struct usb2_endpoint_descriptor */
+comment|/* The first fields are identical to struct usb_endpoint_descriptor */
 end_comment
 
 begin_typedef

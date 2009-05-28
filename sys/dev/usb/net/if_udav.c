@@ -350,7 +350,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 name|udav_config
 index|[
 name|UDAV_N_TRANSFER
@@ -735,7 +735,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_ether_methods
+name|usb_ether_methods
 name|udav_ue_methods
 init|=
 block|{
@@ -880,7 +880,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_device_id
+name|usb_device_id
 name|udav_devs
 index|[]
 init|=
@@ -930,7 +930,7 @@ name|void
 name|udav_attach_post
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)
@@ -978,7 +978,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -1058,7 +1058,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -1078,7 +1078,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 init|=
@@ -1272,7 +1272,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 init|=
@@ -1318,7 +1318,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static int udav_mem_read(struct udav_softc *sc, uint16_t offset, void *buf,     int len) { 	struct usb2_device_request req;  	len&= 0xff;  	req.bmRequestType = UT_READ_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_READ; 	USETW(req.wValue, 0x0000); 	USETW(req.wIndex, offset); 	USETW(req.wLength, len);  	return (usb2_ether_do_request(&sc->sc_ue,&req, buf, 1000)); }  static int udav_mem_write(struct udav_softc *sc, uint16_t offset, void *buf,     int len) { 	struct usb2_device_request req;  	len&= 0xff;  	req.bmRequestType = UT_WRITE_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_WRITE; 	USETW(req.wValue, 0x0000); 	USETW(req.wIndex, offset); 	USETW(req.wLength, len);  	return (usb2_ether_do_request(&sc->sc_ue,&req, buf, 1000)); }  static int udav_mem_write1(struct udav_softc *sc, uint16_t offset,     uint8_t ch) { 	struct usb2_device_request req;  	req.bmRequestType = UT_WRITE_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_WRITE1; 	USETW(req.wValue, ch); 	USETW(req.wIndex, offset); 	USETW(req.wLength, 0x0000);  	return (usb2_ether_do_request(&sc->sc_ue,&req, NULL, 1000)); }
+unit|static int udav_mem_read(struct udav_softc *sc, uint16_t offset, void *buf,     int len) { 	struct usb_device_request req;  	len&= 0xff;  	req.bmRequestType = UT_READ_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_READ; 	USETW(req.wValue, 0x0000); 	USETW(req.wIndex, offset); 	USETW(req.wLength, len);  	return (usb2_ether_do_request(&sc->sc_ue,&req, buf, 1000)); }  static int udav_mem_write(struct udav_softc *sc, uint16_t offset, void *buf,     int len) { 	struct usb_device_request req;  	len&= 0xff;  	req.bmRequestType = UT_WRITE_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_WRITE; 	USETW(req.wValue, 0x0000); 	USETW(req.wIndex, offset); 	USETW(req.wLength, len);  	return (usb2_ether_do_request(&sc->sc_ue,&req, buf, 1000)); }  static int udav_mem_write1(struct udav_softc *sc, uint16_t offset,     uint8_t ch) { 	struct usb_device_request req;  	req.bmRequestType = UT_WRITE_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_WRITE1; 	USETW(req.wValue, ch); 	USETW(req.wIndex, offset); 	USETW(req.wLength, 0x0000);  	return (usb2_ether_do_request(&sc->sc_ue,&req, NULL, 1000)); }
 endif|#
 directive|endif
 end_endif
@@ -1345,7 +1345,7 @@ name|len
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|len
@@ -1434,7 +1434,7 @@ name|len
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|offset
@@ -1560,7 +1560,7 @@ name|ch
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|offset
@@ -1633,7 +1633,7 @@ name|void
 name|udav_init
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)
@@ -1913,7 +1913,7 @@ name|void
 name|udav_setmulti
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)
@@ -2146,7 +2146,7 @@ name|void
 name|udav_setpromisc
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)
@@ -2240,7 +2240,7 @@ name|void
 name|udav_start
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)
@@ -2294,7 +2294,7 @@ name|void
 name|udav_bulk_write_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2623,7 +2623,7 @@ name|void
 name|udav_bulk_read_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2638,7 +2638,7 @@ operator|->
 name|priv_sc
 decl_stmt|;
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 init|=
@@ -2871,7 +2871,7 @@ name|void
 name|udav_intr_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2944,7 +2944,7 @@ name|void
 name|udav_stop
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)
@@ -3189,7 +3189,7 @@ name|void
 name|udav_tick
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)

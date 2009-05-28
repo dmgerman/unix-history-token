@@ -254,7 +254,7 @@ end_define
 begin_decl_stmt
 specifier|extern
 name|struct
-name|usb2_bus_methods
+name|usb_bus_methods
 name|ehci_bus_methods
 decl_stmt|;
 end_decl_stmt
@@ -262,7 +262,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 name|ehci_device_bulk_methods
 decl_stmt|;
 end_decl_stmt
@@ -270,7 +270,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 name|ehci_device_ctrl_methods
 decl_stmt|;
 end_decl_stmt
@@ -278,7 +278,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 name|ehci_device_intr_methods
 decl_stmt|;
 end_decl_stmt
@@ -286,7 +286,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 name|ehci_device_isoc_fs_methods
 decl_stmt|;
 end_decl_stmt
@@ -294,7 +294,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 name|ehci_device_isoc_hs_methods
 decl_stmt|;
 end_decl_stmt
@@ -305,7 +305,7 @@ name|void
 name|ehci_do_poll
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 parameter_list|)
@@ -318,7 +318,7 @@ name|void
 name|ehci_device_done
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
@@ -334,7 +334,7 @@ name|uint8_t
 name|ehci_check_transfer
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -374,7 +374,7 @@ modifier|*
 name|sc
 decl_stmt|;
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 decl_stmt|;
@@ -419,7 +419,7 @@ name|void
 name|ehci_iterate_hw_softc
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 parameter_list|,
@@ -916,7 +916,7 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|usb2_page_search
+name|usb_page_search
 name|buf_res
 decl_stmt|;
 name|uint32_t
@@ -2459,7 +2459,7 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|usb2_page_search
+name|usb_page_search
 name|buf_res
 decl_stmt|;
 name|uint32_t
@@ -5031,7 +5031,7 @@ name|void
 name|ehci_transfer_intr_enqueue
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -5778,7 +5778,7 @@ name|usb2_error_t
 name|ehci_non_isoc_done_sub
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -6181,7 +6181,7 @@ name|void
 name|ehci_non_isoc_done
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -6377,13 +6377,13 @@ name|uint8_t
 name|ehci_check_transfer
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
 block|{
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 modifier|*
 name|methods
 init|=
@@ -6917,7 +6917,7 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
@@ -7221,7 +7221,7 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 init|=
@@ -7262,7 +7262,7 @@ name|void
 name|ehci_do_poll
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 parameter_list|)
@@ -7312,7 +7312,7 @@ name|temp
 parameter_list|)
 block|{
 name|struct
-name|usb2_page_search
+name|usb_page_search
 name|buf_res
 decl_stmt|;
 name|ehci_qtd_t
@@ -7966,7 +7966,7 @@ name|void
 name|ehci_setup_standard_chain
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
@@ -7981,7 +7981,7 @@ name|ehci_std_temp
 name|temp
 decl_stmt|;
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 modifier|*
 name|methods
 decl_stmt|;
@@ -9341,7 +9341,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -9584,7 +9584,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -9853,7 +9853,7 @@ name|void
 name|ehci_device_done
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
@@ -9862,7 +9862,7 @@ name|error
 parameter_list|)
 block|{
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 modifier|*
 name|methods
 init|=
@@ -10089,7 +10089,7 @@ name|void
 name|ehci_device_bulk_open
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -10104,7 +10104,7 @@ name|void
 name|ehci_device_bulk_close
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -10125,7 +10125,7 @@ name|void
 name|ehci_device_bulk_enter
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -10140,7 +10140,7 @@ name|void
 name|ehci_device_bulk_start
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -10213,7 +10213,7 @@ end_function
 
 begin_decl_stmt
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 name|ehci_device_bulk_methods
 init|=
 block|{
@@ -10250,7 +10250,7 @@ name|void
 name|ehci_device_ctrl_open
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -10265,7 +10265,7 @@ name|void
 name|ehci_device_ctrl_close
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -10286,7 +10286,7 @@ name|void
 name|ehci_device_ctrl_enter
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -10301,7 +10301,7 @@ name|void
 name|ehci_device_ctrl_start
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -10341,7 +10341,7 @@ end_function
 
 begin_decl_stmt
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 name|ehci_device_ctrl_methods
 init|=
 block|{
@@ -10378,7 +10378,7 @@ name|void
 name|ehci_device_intr_open
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -10610,7 +10610,7 @@ name|void
 name|ehci_device_intr_close
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -10679,7 +10679,7 @@ name|void
 name|ehci_device_intr_enter
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -10694,7 +10694,7 @@ name|void
 name|ehci_device_intr_start
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -10739,7 +10739,7 @@ end_function
 
 begin_decl_stmt
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 name|ehci_device_intr_methods
 init|=
 block|{
@@ -10776,7 +10776,7 @@ name|void
 name|ehci_device_isoc_fs_open
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -10942,7 +10942,7 @@ name|void
 name|ehci_device_isoc_fs_close
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -10963,13 +10963,13 @@ name|void
 name|ehci_device_isoc_fs_enter
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
 block|{
 name|struct
-name|usb2_page_search
+name|usb_page_search
 name|buf_res
 decl_stmt|;
 name|ehci_softc_t
@@ -10986,17 +10986,17 @@ name|bus
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_fs_isoc_schedule
+name|usb_fs_isoc_schedule
 modifier|*
 name|fss_start
 decl_stmt|;
 name|struct
-name|usb2_fs_isoc_schedule
+name|usb_fs_isoc_schedule
 modifier|*
 name|fss_end
 decl_stmt|;
 name|struct
-name|usb2_fs_isoc_schedule
+name|usb_fs_isoc_schedule
 modifier|*
 name|fss
 decl_stmt|;
@@ -11830,7 +11830,7 @@ name|void
 name|ehci_device_isoc_fs_start
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -11846,7 +11846,7 @@ end_function
 
 begin_decl_stmt
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 name|ehci_device_isoc_fs_methods
 init|=
 block|{
@@ -11883,7 +11883,7 @@ name|void
 name|ehci_device_isoc_hs_open
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -12130,7 +12130,7 @@ name|void
 name|ehci_device_isoc_hs_close
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -12151,13 +12151,13 @@ name|void
 name|ehci_device_isoc_hs_enter
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
 block|{
 name|struct
-name|usb2_page_search
+name|usb_page_search
 name|buf_res
 decl_stmt|;
 name|ehci_softc_t
@@ -13032,7 +13032,7 @@ name|void
 name|ehci_device_isoc_hs_start
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -13048,7 +13048,7 @@ end_function
 
 begin_decl_stmt
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 name|ehci_device_isoc_hs_methods
 init|=
 block|{
@@ -13083,14 +13083,14 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_device_descriptor
+name|usb_device_descriptor
 name|ehci_devd
 init|=
 block|{
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_descriptor
+name|usb_device_descriptor
 argument_list|)
 block|,
 name|UDESC_DEVICE
@@ -13147,14 +13147,14 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_device_qualifier
+name|usb_device_qualifier
 name|ehci_odevd
 init|=
 block|{
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_qualifier
+name|usb_device_qualifier
 argument_list|)
 block|,
 name|UDESC_DEVICE_QUALIFIER
@@ -13205,7 +13205,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 argument_list|)
 block|,
 operator|.
@@ -13261,7 +13261,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 argument_list|)
 block|,
 operator|.
@@ -13302,7 +13302,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_endpoint_descriptor
+name|usb_endpoint_descriptor
 argument_list|)
 block|,
 operator|.
@@ -13344,7 +13344,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_hub_descriptor
+name|usb_hub_descriptor
 name|ehci_hubd
 init|=
 block|{
@@ -13442,12 +13442,12 @@ name|usb2_error_t
 name|ehci_roothub_exec
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
 name|struct
-name|usb2_device_request
+name|usb_device_request
 modifier|*
 name|req
 parameter_list|,
@@ -15358,17 +15358,17 @@ name|void
 name|ehci_xfer_setup
 parameter_list|(
 name|struct
-name|usb2_setup_params
+name|usb_setup_params
 modifier|*
 name|parm
 parameter_list|)
 block|{
 name|struct
-name|usb2_page_search
+name|usb_page_search
 name|page_info
 decl_stmt|;
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 decl_stmt|;
@@ -15377,7 +15377,7 @@ modifier|*
 name|sc
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
@@ -16355,7 +16355,7 @@ name|void
 name|ehci_xfer_unsetup
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -16370,17 +16370,17 @@ name|void
 name|ehci_pipe_init
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
 name|struct
-name|usb2_endpoint_descriptor
+name|usb_endpoint_descriptor
 modifier|*
 name|edesc
 parameter_list|,
 name|struct
-name|usb2_pipe
+name|usb_pipe
 modifier|*
 name|pipe
 parameter_list|)
@@ -16608,7 +16608,7 @@ name|void
 name|ehci_get_dma_delay
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 parameter_list|,
@@ -16635,7 +16635,7 @@ name|void
 name|ehci_device_resume
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|)
@@ -16652,12 +16652,12 @@ name|bus
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 modifier|*
 name|methods
 decl_stmt|;
@@ -16788,7 +16788,7 @@ name|void
 name|ehci_device_suspend
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|)
@@ -16805,12 +16805,12 @@ name|bus
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 modifier|*
 name|methods
 decl_stmt|;
@@ -16941,7 +16941,7 @@ name|void
 name|ehci_set_hw_power
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 parameter_list|)
@@ -17057,7 +17057,7 @@ end_function
 
 begin_decl_stmt
 name|struct
-name|usb2_bus_methods
+name|usb_bus_methods
 name|ehci_bus_methods
 init|=
 block|{

@@ -942,7 +942,7 @@ name|avr32dci_clocks_t
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 parameter_list|)
 function_decl|;
@@ -962,7 +962,7 @@ modifier|*
 name|func
 decl_stmt|;
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 decl_stmt|;
@@ -1018,7 +1018,7 @@ modifier|*
 name|func
 decl_stmt|;
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 decl_stmt|;
@@ -1063,15 +1063,15 @@ struct|struct
 name|avr32dci_config_desc
 block|{
 name|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 name|confd
 decl_stmt|;
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 name|ifcd
 decl_stmt|;
 name|struct
-name|usb2_endpoint_descriptor
+name|usb_endpoint_descriptor
 name|endpd
 decl_stmt|;
 block|}
@@ -1087,7 +1087,7 @@ name|uWord
 name|wValue
 decl_stmt|;
 name|struct
-name|usb2_port_status
+name|usb_port_status
 name|ps
 decl_stmt|;
 block|}
@@ -1165,7 +1165,7 @@ struct|struct
 name|avr32dci_softc
 block|{
 name|struct
-name|usb2_bus
+name|usb_bus
 name|sc_bus
 decl_stmt|;
 name|union
@@ -1182,7 +1182,7 @@ modifier|*
 name|sc_clocks_off
 decl_stmt|;
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|sc_devices
 index|[

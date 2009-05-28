@@ -3786,7 +3786,7 @@ modifier|*
 name|pdev
 parameter_list|,
 name|struct
-name|usb2_device_info
+name|usb_device_info
 modifier|*
 name|pinfo
 parameter_list|)

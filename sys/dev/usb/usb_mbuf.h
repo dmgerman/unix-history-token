@@ -25,7 +25,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_mbuf
+name|usb_mbuf
 block|{
 name|uint8_t
 modifier|*
@@ -36,12 +36,12 @@ modifier|*
 name|min_data_ptr
 decl_stmt|;
 name|struct
-name|usb2_mbuf
+name|usb_mbuf
 modifier|*
 name|usb2_nextpkt
 decl_stmt|;
 name|struct
-name|usb2_mbuf
+name|usb_mbuf
 modifier|*
 name|usb2_next
 decl_stmt|;
@@ -71,15 +71,15 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_ifqueue
+name|usb_ifqueue
 block|{
 name|struct
-name|usb2_mbuf
+name|usb_mbuf
 modifier|*
 name|ifq_head
 decl_stmt|;
 name|struct
-name|usb2_mbuf
+name|usb_mbuf
 modifier|*
 name|ifq_tail
 decl_stmt|;
@@ -186,7 +186,7 @@ modifier|*
 name|type
 parameter_list|,
 name|struct
-name|usb2_ifqueue
+name|usb_ifqueue
 modifier|*
 name|ifq
 parameter_list|,

@@ -946,43 +946,43 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_bus
+name|usb_bus
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_device
+name|usb_device
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_device_request
+name|usb_device_request
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_page
+name|usb_page
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_page_cache
+name|usb_page_cache
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_xfer
+name|usb_xfer
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_xfer_root
+name|usb_xfer_root
 struct_decl|;
 end_struct_decl
 
@@ -998,7 +998,7 @@ name|usb2_callback_t
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1166,11 +1166,11 @@ name|usb2_handle_request_t
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 parameter_list|,
 name|struct
-name|usb2_device_request
+name|usb_device_request
 modifier|*
 parameter_list|,
 specifier|const
@@ -1194,17 +1194,17 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_xfer_queue
+name|usb_xfer_queue
 block|{
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|usb2_xfer
+argument|usb_xfer
 argument_list|)
 name|head
 expr_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|curr
 decl_stmt|;
@@ -1216,7 +1216,7 @@ name|command
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_xfer_queue
+name|usb_xfer_queue
 modifier|*
 name|pq
 parameter_list|)
@@ -1241,7 +1241,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_callout
+name|usb_callout
 block|{
 name|struct
 name|callout
@@ -1257,7 +1257,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_xfer_flags
+name|usb_xfer_flags
 block|{
 name|uint8_t
 name|force_short_xfer
@@ -1323,7 +1323,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_xfer_flags_int
+name|usb_xfer_flags_int
 block|{
 name|enum
 name|usb_hc_mode
@@ -1462,7 +1462,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_config
+name|usb_config
 block|{
 name|usb2_callback_t
 modifier|*
@@ -1490,7 +1490,7 @@ name|timeout
 decl_stmt|;
 comment|/* transfer timeout in milliseconds */
 name|struct
-name|usb2_xfer_flags
+name|usb_xfer_flags
 name|flags
 decl_stmt|;
 comment|/* transfer flags */
@@ -1529,44 +1529,44 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_xfer
+name|usb_xfer
 block|{
 name|struct
-name|usb2_callout
+name|usb_callout
 name|timeout_handle
 decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
-argument|usb2_xfer
+argument|usb_xfer
 argument_list|)
 name|wait_entry
 expr_stmt|;
 comment|/* used at various places */
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|buf_fixup
 decl_stmt|;
 comment|/* fixup buffer(s) */
 name|struct
-name|usb2_xfer_queue
+name|usb_xfer_queue
 modifier|*
 name|wait_queue
 decl_stmt|;
 comment|/* pointer to queue that we 						 * are waiting on */
 name|struct
-name|usb2_page
+name|usb_page
 modifier|*
 name|dma_page_ptr
 decl_stmt|;
 name|struct
-name|usb2_pipe
+name|usb_pipe
 modifier|*
 name|pipe
 decl_stmt|;
 comment|/* our USB pipe */
 name|struct
-name|usb2_xfer_root
+name|usb_xfer_root
 modifier|*
 name|xroot
 decl_stmt|;
@@ -1621,7 +1621,7 @@ modifier|*
 name|frlengths
 decl_stmt|;
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|frbuffers
 decl_stmt|;
@@ -1712,11 +1712,11 @@ name|usb2_error_t
 name|error
 decl_stmt|;
 name|struct
-name|usb2_xfer_flags
+name|usb_xfer_flags
 name|flags
 decl_stmt|;
 name|struct
-name|usb2_xfer_flags_int
+name|usb_xfer_flags_int
 name|flags_int
 decl_stmt|;
 block|}
@@ -1724,12 +1724,12 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The following structure keeps information that is used to match  * against an array of "usb2_device_id" elements.  */
+comment|/*  * The following structure keeps information that is used to match  * against an array of "usb_device_id" elements.  */
 end_comment
 
 begin_struct
 struct|struct
-name|usb2_lookup_info
+name|usb_lookup_info
 block|{
 name|uint16_t
 name|idVendor
@@ -1780,10 +1780,10 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 block|{
 name|struct
-name|usb2_lookup_info
+name|usb_lookup_info
 name|info
 decl_stmt|;
 name|device_t
@@ -1797,13 +1797,13 @@ name|driver_info
 decl_stmt|;
 comment|/* for internal use */
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|device
 decl_stmt|;
 comment|/* current device */
 name|struct
-name|usb2_interface
+name|usb_interface
 modifier|*
 name|iface
 decl_stmt|;
@@ -1904,12 +1904,12 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 modifier|*
 name|usb2_get_config_descriptor
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|)
@@ -1918,12 +1918,12 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|usb2_device_descriptor
+name|usb_device_descriptor
 modifier|*
 name|usb2_get_device_descriptor
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|)
@@ -1932,12 +1932,12 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|usb2_interface
+name|usb_interface
 modifier|*
 name|usb2_get_iface
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
@@ -1949,12 +1949,12 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 modifier|*
 name|usb2_get_interface_descriptor
 parameter_list|(
 name|struct
-name|usb2_interface
+name|usb_interface
 modifier|*
 name|iface
 parameter_list|)
@@ -1966,12 +1966,12 @@ name|uint8_t
 name|usb2_clear_stall_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer1
 parameter_list|,
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer2
 parameter_list|)
@@ -1983,7 +1983,7 @@ name|uint8_t
 name|usb2_get_interface_altindex
 parameter_list|(
 name|struct
-name|usb2_interface
+name|usb_interface
 modifier|*
 name|iface
 parameter_list|)
@@ -1995,7 +1995,7 @@ name|usb2_error_t
 name|usb2_set_alt_interface_index
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
@@ -2014,7 +2014,7 @@ name|usb_hc_mode
 name|usb2_get_mode
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|)
@@ -2027,7 +2027,7 @@ name|usb_dev_speed
 name|usb2_get_speed
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|)
@@ -2039,7 +2039,7 @@ name|uint32_t
 name|usb2_get_isoc_fps
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|)
@@ -2051,7 +2051,7 @@ name|usb2_error_t
 name|usb2_transfer_setup
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
@@ -2061,14 +2061,14 @@ modifier|*
 name|ifaces
 parameter_list|,
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 modifier|*
 name|pxfer
 parameter_list|,
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 modifier|*
 name|setup_start
 parameter_list|,
@@ -2092,7 +2092,7 @@ name|void
 name|usb2_set_frame_data
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
@@ -2111,7 +2111,7 @@ name|void
 name|usb2_set_frame_offset
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
@@ -2129,7 +2129,7 @@ name|void
 name|usb2_start_hardware
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2141,7 +2141,7 @@ name|void
 name|usb2_transfer_clear_stall
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2153,7 +2153,7 @@ name|void
 name|usb2_transfer_drain
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2165,7 +2165,7 @@ name|void
 name|usb2_transfer_set_stall
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2177,7 +2177,7 @@ name|uint8_t
 name|usb2_transfer_pending
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2189,7 +2189,7 @@ name|void
 name|usb2_transfer_start
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2201,7 +2201,7 @@ name|void
 name|usb2_transfer_stop
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2213,7 +2213,7 @@ name|void
 name|usb2_transfer_unsetup
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 modifier|*
 name|pxfer
@@ -2229,7 +2229,7 @@ name|void
 name|usb2_set_parent_iface
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
@@ -2247,7 +2247,7 @@ name|uint8_t
 name|usb2_get_bus_index
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|)
@@ -2259,7 +2259,7 @@ name|uint8_t
 name|usb2_get_device_index
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|)
@@ -2271,7 +2271,7 @@ name|void
 name|usb2_set_power_mode
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
@@ -2286,7 +2286,7 @@ name|uint8_t
 name|usb2_device_attached
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|)

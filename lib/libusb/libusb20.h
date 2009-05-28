@@ -261,7 +261,7 @@ name|LIBUSB20_POWER_RESUME
 block|, }
 enum|;
 struct_decl|struct
-name|usb2_device_info
+name|usb_device_info
 struct_decl|;
 struct_decl|struct
 name|libusb20_transfer
@@ -961,7 +961,7 @@ modifier|*
 name|pdev
 parameter_list|,
 name|struct
-name|usb2_device_info
+name|usb_device_info
 modifier|*
 name|pinfo
 parameter_list|)

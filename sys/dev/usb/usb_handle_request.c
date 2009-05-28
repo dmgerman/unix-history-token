@@ -116,7 +116,7 @@ name|uint8_t
 name|usb2_handle_get_stall
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -130,7 +130,7 @@ name|usb2_error_t
 name|usb2_handle_remote_wakeup
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -144,7 +144,7 @@ name|usb2_error_t
 name|usb2_handle_request
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 parameter_list|)
 function_decl|;
@@ -156,7 +156,7 @@ name|usb2_error_t
 name|usb2_handle_set_config
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -170,7 +170,7 @@ name|usb2_error_t
 name|usb2_handle_set_stall
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -186,7 +186,7 @@ name|usb2_error_t
 name|usb2_handle_iface_request
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 parameter_list|,
 name|void
@@ -197,7 +197,7 @@ name|uint16_t
 modifier|*
 parameter_list|,
 name|struct
-name|usb2_device_request
+name|usb_device_request
 parameter_list|,
 name|uint16_t
 parameter_list|,
@@ -215,7 +215,7 @@ name|void
 name|usb2_handle_request_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -313,7 +313,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 expr_stmt|;
 name|xfer
@@ -365,7 +365,7 @@ name|usb2_error_t
 name|usb2_handle_set_config
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
@@ -374,7 +374,7 @@ name|conf_no
 parameter_list|)
 block|{
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 init|=
@@ -519,7 +519,7 @@ name|usb2_error_t
 name|usb2_handle_iface_request
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
@@ -533,7 +533,7 @@ modifier|*
 name|plen
 parameter_list|,
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 parameter_list|,
 name|uint16_t
@@ -544,18 +544,18 @@ name|state
 parameter_list|)
 block|{
 name|struct
-name|usb2_interface
+name|usb_interface
 modifier|*
 name|iface
 decl_stmt|;
 name|struct
-name|usb2_interface
+name|usb_interface
 modifier|*
 name|iface_parent
 decl_stmt|;
 comment|/* parent interface */
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 init|=
@@ -1165,7 +1165,7 @@ name|usb2_error_t
 name|usb2_handle_set_stall
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
@@ -1177,7 +1177,7 @@ name|do_stall
 parameter_list|)
 block|{
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 init|=
@@ -1234,7 +1234,7 @@ name|uint8_t
 name|usb2_handle_get_stall
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
@@ -1243,7 +1243,7 @@ name|ea_val
 parameter_list|)
 block|{
 name|struct
-name|usb2_pipe
+name|usb_pipe
 modifier|*
 name|pipe
 decl_stmt|;
@@ -1311,7 +1311,7 @@ name|usb2_error_t
 name|usb2_handle_remote_wakeup
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
@@ -1320,12 +1320,12 @@ name|is_on
 parameter_list|)
 block|{
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 decl_stmt|;
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 decl_stmt|;
@@ -1405,17 +1405,17 @@ name|usb2_error_t
 name|usb2_handle_request
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 decl_stmt|;

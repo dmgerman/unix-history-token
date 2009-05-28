@@ -627,7 +627,7 @@ name|int
 name|ubt_isoc_read_one_frame
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 parameter_list|,
 name|int
@@ -643,7 +643,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 name|ubt_config
 index|[
 name|UBT_N_TRANSFER
@@ -1084,7 +1084,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_device_id
+name|usb_device_id
 name|ubt_ignore_devs
 index|[]
 init|=
@@ -1112,7 +1112,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_device_id
+name|usb_device_id
 name|ubt_devs
 index|[]
 init|=
@@ -1164,7 +1164,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -1271,7 +1271,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -1291,12 +1291,12 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_endpoint_descriptor
+name|usb_endpoint_descriptor
 modifier|*
 name|ed
 decl_stmt|;
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 modifier|*
 name|id
 decl_stmt|;
@@ -1531,7 +1531,7 @@ name|ed
 operator|=
 operator|(
 expr|struct
-name|usb2_endpoint_descriptor
+name|usb_endpoint_descriptor
 operator|*
 operator|)
 name|usb2_desc_foreach
@@ -1545,7 +1545,7 @@ argument_list|)
 argument_list|,
 operator|(
 expr|struct
-name|usb2_descriptor
+name|usb_descriptor
 operator|*
 operator|)
 name|ed
@@ -1580,7 +1580,7 @@ name|id
 operator|=
 operator|(
 expr|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 operator|*
 operator|)
 name|ed
@@ -1939,7 +1939,7 @@ name|void
 name|ubt_ctrl_write_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -1954,7 +1954,7 @@ operator|->
 name|priv_sc
 decl_stmt|;
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|struct
@@ -2227,7 +2227,7 @@ name|void
 name|ubt_intr_read_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2635,7 +2635,7 @@ name|void
 name|ubt_bulk_read_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -3049,7 +3049,7 @@ name|void
 name|ubt_bulk_write_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -3268,7 +3268,7 @@ name|void
 name|ubt_isoc_read_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -3401,7 +3401,7 @@ name|int
 name|ubt_isoc_read_one_frame
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
@@ -3761,7 +3761,7 @@ name|void
 name|ubt_isoc_write_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)

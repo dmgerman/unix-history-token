@@ -34,7 +34,7 @@ modifier|*
 name|type
 parameter_list|,
 name|struct
-name|usb2_ifqueue
+name|usb_ifqueue
 modifier|*
 name|ifq
 parameter_list|,
@@ -46,7 +46,7 @@ name|nblocks
 parameter_list|)
 block|{
 name|struct
-name|usb2_mbuf
+name|usb_mbuf
 modifier|*
 name|m_ptr
 decl_stmt|;
@@ -94,7 +94,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_mbuf
+name|usb_mbuf
 argument_list|)
 operator|)
 operator|*

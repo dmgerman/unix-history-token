@@ -70,7 +70,7 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_proc_msg
+name|usb_proc_msg
 struct_decl|;
 end_struct_decl
 
@@ -86,7 +86,7 @@ name|usb2_proc_callback_t
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_proc_msg
+name|usb_proc_msg
 modifier|*
 name|hdr
 parameter_list|)
@@ -99,11 +99,11 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_proc_msg
+name|usb_proc_msg
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|usb2_proc_msg
+argument|usb_proc_msg
 argument_list|)
 name|pm_qentry
 expr_stmt|;
@@ -124,12 +124,12 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_process
+name|usb_process
 block|{
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|usb2_proc_msg
+argument|usb_proc_msg
 argument_list|)
 name|up_qhead
 expr_stmt|;
@@ -187,7 +187,7 @@ name|uint8_t
 name|usb2_proc_is_gone
 parameter_list|(
 name|struct
-name|usb2_process
+name|usb_process
 modifier|*
 name|up
 parameter_list|)
@@ -199,7 +199,7 @@ name|int
 name|usb2_proc_create
 parameter_list|(
 name|struct
-name|usb2_process
+name|usb_process
 modifier|*
 name|up
 parameter_list|,
@@ -224,7 +224,7 @@ name|void
 name|usb2_proc_drain
 parameter_list|(
 name|struct
-name|usb2_process
+name|usb_process
 modifier|*
 name|up
 parameter_list|)
@@ -236,7 +236,7 @@ name|void
 name|usb2_proc_mwait
 parameter_list|(
 name|struct
-name|usb2_process
+name|usb_process
 modifier|*
 name|up
 parameter_list|,
@@ -256,7 +256,7 @@ name|void
 name|usb2_proc_free
 parameter_list|(
 name|struct
-name|usb2_process
+name|usb_process
 modifier|*
 name|up
 parameter_list|)
@@ -269,7 +269,7 @@ modifier|*
 name|usb2_proc_msignal
 parameter_list|(
 name|struct
-name|usb2_process
+name|usb_process
 modifier|*
 name|up
 parameter_list|,

@@ -258,7 +258,7 @@ name|device_t
 name|sc_dev
 decl_stmt|;
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|sc_udev
 decl_stmt|;
@@ -384,7 +384,7 @@ name|sc_sens
 decl_stmt|;
 comment|/* for LED  */
 name|struct
-name|usb2_callout
+name|usb_callout
 name|sc_led_ch
 decl_stmt|;
 name|struct
@@ -421,7 +421,7 @@ name|sc_gpio_blinkstate
 decl_stmt|;
 comment|/* RX/TX */
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|sc_xfer
 index|[

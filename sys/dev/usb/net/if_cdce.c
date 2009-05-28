@@ -319,7 +319,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 name|cdce_config
 index|[
 name|CDCE_N_TRANSFER
@@ -798,7 +798,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_ether_methods
+name|usb_ether_methods
 name|cdce_ue_methods
 init|=
 block|{
@@ -839,7 +839,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_device_id
+name|usb_device_id
 name|cdce_devs
 index|[]
 init|=
@@ -1022,7 +1022,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -1055,7 +1055,7 @@ name|void
 name|cdce_attach_post
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)
@@ -1085,7 +1085,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 init|=
@@ -1095,7 +1095,7 @@ operator|->
 name|sc_ue
 decl_stmt|;
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -1105,25 +1105,25 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_interface
+name|usb_interface
 modifier|*
 name|iface
 decl_stmt|;
 specifier|const
 name|struct
-name|usb2_cdc_union_descriptor
+name|usb_cdc_union_descriptor
 modifier|*
 name|ud
 decl_stmt|;
 specifier|const
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 modifier|*
 name|id
 decl_stmt|;
 specifier|const
 name|struct
-name|usb2_cdc_ethernet_descriptor
+name|usb_cdc_ethernet_descriptor
 modifier|*
 name|ued
 decl_stmt|;
@@ -1855,7 +1855,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 init|=
@@ -1901,7 +1901,7 @@ name|void
 name|cdce_start
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)
@@ -2008,7 +2008,7 @@ name|void
 name|cdce_bulk_write_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2486,7 +2486,7 @@ name|void
 name|cdce_init
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)
@@ -2571,7 +2571,7 @@ name|void
 name|cdce_stop
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)
@@ -2660,7 +2660,7 @@ name|void
 name|cdce_setmulti
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)
@@ -2676,7 +2676,7 @@ name|void
 name|cdce_setpromisc
 parameter_list|(
 name|struct
-name|usb2_ether
+name|usb_ether
 modifier|*
 name|ue
 parameter_list|)
@@ -2740,7 +2740,7 @@ name|void
 name|cdce_bulk_read_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -3073,7 +3073,7 @@ name|void
 name|cdce_intr_read_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -3159,7 +3159,7 @@ name|void
 name|cdce_intr_write_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)

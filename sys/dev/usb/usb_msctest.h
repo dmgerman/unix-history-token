@@ -24,7 +24,7 @@ name|usb2_error_t
 name|usb2_test_autoinstall
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
