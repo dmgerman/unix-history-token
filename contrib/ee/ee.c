@@ -6015,7 +6015,7 @@ name|WINDOW
 modifier|*
 name|window
 decl_stmt|;
-name|char
+name|int
 name|character
 decl_stmt|;
 name|int
@@ -6284,7 +6284,7 @@ parameter_list|,
 name|column
 parameter_list|)
 comment|/* return the length of the character	*/
-name|char
+name|int
 name|character
 decl_stmt|;
 name|int
