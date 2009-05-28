@@ -3065,25 +3065,15 @@ operator|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * If the upper level VM system doesn't know anything about  		 * the page being dirty, we have to check for it again.  As  		 * far as the VM code knows, any partially dirty pages are  		 * fully dirty. 		 */
+comment|/* 		 * If the upper level VM system does not believe that the page 		 * is fully dirty, but it is mapped for write access, then we 		 * consult the pmap to see if the page's dirty status should 		 * be updated. 		 */
 if|if
 condition|(
 name|m
 operator|->
 name|dirty
-operator|==
-literal|0
+operator|!=
+name|VM_PAGE_BITS_ALL
 operator|&&
-operator|!
-name|pmap_is_modified
-argument_list|(
-name|m
-argument_list|)
-condition|)
-block|{
-comment|/* 			 * Avoid a race condition: Unless write access is 			 * removed from the page, another processor could 			 * modify it before all access is removed by the call 			 * to vm_page_cache() below.  If vm_page_cache() finds 			 * that the page has been modified when it removes all 			 * access, it panics because it cannot cache dirty 			 * pages.  In principle, we could eliminate just write 			 * access here rather than all access.  In the expected 			 * case, when there are no last instant modifications 			 * to the page, removing all access will be cheaper 			 * overall. 			 */
-if|if
-condition|(
 operator|(
 name|m
 operator|->
@@ -3094,15 +3084,30 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|pmap_remove_all
+block|{
+comment|/* 			 * Avoid a race condition: Unless write access is 			 * removed from the page, another processor could 			 * modify it before all access is removed by the call 			 * to vm_page_cache() below.  If vm_page_cache() finds 			 * that the page has been modified when it removes all 			 * access, it panics because it cannot cache dirty 			 * pages.  In principle, we could eliminate just write 			 * access here rather than all access.  In the expected 			 * case, when there are no last instant modifications 			 * to the page, removing all access will be cheaper 			 * overall. 			 */
+if|if
+condition|(
+name|pmap_is_modified
+argument_list|(
+name|m
+argument_list|)
+condition|)
+name|vm_page_dirty
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|vm_page_dirty
+elseif|else
+if|if
+condition|(
+name|m
+operator|->
+name|dirty
+operator|==
+literal|0
+condition|)
+name|pmap_remove_all
 argument_list|(
 name|m
 argument_list|)
