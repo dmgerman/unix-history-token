@@ -7559,6 +7559,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * We handled all bits, clear status 	 */
+name|sc
+operator|->
+name|arge_intr_status
+operator|=
+literal|0
+expr_stmt|;
 name|ARGE_UNLOCK
 argument_list|(
 name|sc
