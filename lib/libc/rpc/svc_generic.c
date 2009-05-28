@@ -800,7 +800,7 @@ name|slen
 decl_stmt|;
 specifier|static
 specifier|const
-name|uint32_t
+name|int
 name|true_value
 init|=
 literal|1
