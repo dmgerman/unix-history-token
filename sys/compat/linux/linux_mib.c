@@ -1258,10 +1258,7 @@ condition|(
 name|pr
 operator|!=
 name|NULL
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|pr
 operator|->
 name|pr_linux
@@ -1286,7 +1283,6 @@ name|lpr
 operator|->
 name|pr_osrel
 expr_stmt|;
-block|}
 block|}
 else|else
 name|osrel
