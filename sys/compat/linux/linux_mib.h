@@ -108,7 +108,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|linux_use26
+name|linux_kernver
 parameter_list|(
 name|struct
 name|thread
@@ -117,6 +117,23 @@ name|td
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|LINUX_KERNVER_2006000
+value|2006000
+end_define
+
+begin_define
+define|#
+directive|define
+name|linux_use26
+parameter_list|(
+name|t
+parameter_list|)
+value|(linux_kernver(t)>= LINUX_KERNVER_2006000)
+end_define
 
 begin_endif
 endif|#
