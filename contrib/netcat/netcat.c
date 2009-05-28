@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: netcat.c,v 1.91 2008/05/09 09:00:11 markus Exp $ */
+comment|/* $OpenBSD: netcat.c,v 1.92 2008/09/19 13:24:41 sobrado Exp $ */
 end_comment
 
 begin_comment
@@ -4724,46 +4724,22 @@ name|int
 name|ret
 parameter_list|)
 block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 ifdef|#
 directive|ifdef
 name|IPSEC
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: nc [-46DdEhklnorStUuvz] [-e policy] [-I receive_buffer_len] [-i interval]\n"
-argument_list|)
-expr_stmt|;
+literal|"usage: nc [-46DdEhklnorStUuvz] [-e policy] [-I length] [-i interval] [-O length]\n"
 else|#
 directive|else
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: nc [-46DdhklnorStUuvz] [-I receive_buffer_len] [-i interval]\n"
-argument_list|)
-expr_stmt|;
+literal|"usage: nc [-46DdhklnorStUuvz] [-I length] [-i interval] [-O length]\n"
 endif|#
 directive|endif
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t  [-O send_buffer_len] [-P proxy_username] [-p source_port]\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t  [-s source_ip_address] [-T ToS] [-w timeout] [-X proxy_protocol]\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t  [-x proxy_address[:port]] [hostname] [port[s]]\n"
+literal|"\t  [-P proxy_username] [-p source_port] [-s source_ip_address] [-T ToS]\n"
+literal|"\t  [-w timeout] [-X proxy_protocol] [-x proxy_address[:port]] [hostname]\n"
+literal|"\t  [port]\n"
 argument_list|)
 expr_stmt|;
 if|if
