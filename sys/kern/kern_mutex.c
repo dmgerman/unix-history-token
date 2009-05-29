@@ -1923,9 +1923,6 @@ argument_list|(
 name|ts
 argument_list|)
 expr_stmt|;
-name|cpu_spinwait
-argument_list|()
-expr_stmt|;
 continue|continue;
 block|}
 ifdef|#
@@ -1958,9 +1955,6 @@ name|turnstile_cancel
 argument_list|(
 name|ts
 argument_list|)
-expr_stmt|;
-name|cpu_spinwait
-argument_list|()
 expr_stmt|;
 continue|continue;
 block|}
@@ -1997,9 +1991,6 @@ name|turnstile_cancel
 argument_list|(
 name|ts
 argument_list|)
-expr_stmt|;
-name|cpu_spinwait
-argument_list|()
 expr_stmt|;
 continue|continue;
 block|}

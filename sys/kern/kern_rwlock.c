@@ -1592,9 +1592,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|cpu_spinwait
-argument_list|()
-expr_stmt|;
 continue|continue;
 block|}
 name|lock_profile_obtain_lock_failed
@@ -1800,9 +1797,6 @@ argument_list|(
 name|ts
 argument_list|)
 expr_stmt|;
-name|cpu_spinwait
-argument_list|()
-expr_stmt|;
 continue|continue;
 block|}
 ifdef|#
@@ -1844,9 +1838,6 @@ name|turnstile_cancel
 argument_list|(
 name|ts
 argument_list|)
-expr_stmt|;
-name|cpu_spinwait
-argument_list|()
 expr_stmt|;
 continue|continue;
 block|}
@@ -1896,9 +1887,6 @@ name|turnstile_cancel
 argument_list|(
 name|ts
 argument_list|)
-expr_stmt|;
-name|cpu_spinwait
-argument_list|()
 expr_stmt|;
 continue|continue;
 block|}
@@ -3046,9 +3034,6 @@ name|RW_LOCK_WRITE_SPINNER
 argument_list|)
 condition|)
 block|{
-name|cpu_spinwait
-argument_list|()
-expr_stmt|;
 continue|continue;
 block|}
 block|}
@@ -3162,9 +3147,6 @@ argument_list|(
 name|ts
 argument_list|)
 expr_stmt|;
-name|cpu_spinwait
-argument_list|()
-expr_stmt|;
 continue|continue;
 block|}
 block|}
@@ -3237,9 +3219,6 @@ argument_list|(
 name|ts
 argument_list|)
 expr_stmt|;
-name|cpu_spinwait
-argument_list|()
-expr_stmt|;
 continue|continue;
 block|}
 comment|/* 		 * If the RW_LOCK_WRITE_WAITERS flag isn't set, then try to 		 * set it.  If we fail to set it, then loop back and try 		 * again. 		 */
@@ -3275,9 +3254,6 @@ name|turnstile_cancel
 argument_list|(
 name|ts
 argument_list|)
-expr_stmt|;
-name|cpu_spinwait
-argument_list|()
 expr_stmt|;
 continue|continue;
 block|}
