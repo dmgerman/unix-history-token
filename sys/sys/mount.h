@@ -540,6 +540,10 @@ name|mnt_flag
 decl_stmt|;
 comment|/* (i) flags shared with user */
 name|u_int
+name|mnt_xflag
+decl_stmt|;
+comment|/* (i) more flags shared with user */
+name|u_int
 name|mnt_noasync
 decl_stmt|;
 comment|/* (i) # noasync overrides */
@@ -804,7 +808,7 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * User specifiable flags.  */
+comment|/*  * User specifiable flags, stored in mnt_flag.  */
 end_comment
 
 begin_define
