@@ -456,7 +456,7 @@ name|ns_part1
 operator|.
 name|np_tty
 operator|=
-name|tty_alloc
+name|tty_alloc_mutex
 argument_list|(
 operator|&
 name|nmdm_class
@@ -491,7 +491,7 @@ name|ns_part2
 operator|.
 name|np_tty
 operator|=
-name|tty_alloc
+name|tty_alloc_mutex
 argument_list|(
 operator|&
 name|nmdm_class

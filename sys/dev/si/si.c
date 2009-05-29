@@ -2631,7 +2631,7 @@ name|pp
 operator|->
 name|sp_tty
 operator|=
-name|tty_alloc
+name|tty_alloc_mutex
 argument_list|(
 operator|&
 name|si_tty_class

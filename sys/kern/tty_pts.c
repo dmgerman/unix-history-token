@@ -3046,8 +3046,6 @@ operator|&
 name|pts_class
 argument_list|,
 name|psc
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|knlist_init
@@ -3302,8 +3300,6 @@ operator|&
 name|pts_class
 argument_list|,
 name|psc
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|knlist_init

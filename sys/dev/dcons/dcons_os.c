@@ -1589,8 +1589,6 @@ operator|&
 name|dcons_ttydevsw
 argument_list|,
 name|dc
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|dc

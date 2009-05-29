@@ -1111,7 +1111,7 @@ decl_stmt|;
 comment|/* temporary TTY device name buffer */
 name|tp
 operator|=
-name|tty_alloc
+name|tty_alloc_mutex
 argument_list|(
 operator|&
 name|usb2_com_class

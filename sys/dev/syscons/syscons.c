@@ -2095,7 +2095,7 @@ name|NULL
 expr_stmt|;
 name|tp
 operator|=
-name|tty_alloc
+name|tty_alloc_mutex
 argument_list|(
 operator|&
 name|sc_ttydevsw

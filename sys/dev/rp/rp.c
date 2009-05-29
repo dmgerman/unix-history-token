@@ -3674,8 +3674,6 @@ operator|&
 name|rp_tty_class
 argument_list|,
 name|rp
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|rp
