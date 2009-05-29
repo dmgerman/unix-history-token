@@ -2094,10 +2094,10 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-literal|1
+literal|11
 index|]
 decl_stmt|;
-comment|/* XXX NetBSD uses 256, but that seems 				     like awfully excessive kstack usage 				     for an empty string... */
+comment|/* XXX NetBSD uses 256, but we use 11 				     here as that seems like awfully 				     excessive kstack usage for hostid 				     string... */
 name|u_int
 name|rlen
 init|=
@@ -2163,9 +2163,23 @@ break|break;
 case|case
 name|SVR4_SI_HW_SERIAL
 case|:
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%lu"
+argument_list|,
+name|hostid
+argument_list|)
+expr_stmt|;
 name|str
 operator|=
-literal|"0"
+name|buf
 expr_stmt|;
 break|break;
 case|case
