@@ -401,7 +401,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|rm_init(&(p)->ph_lock, "PFil hook read/write mutex", LO_RECURSABLE)
+value|rm_init_flags(&(p)->ph_lock, "PFil hook read/write mutex", RM_RECURSE)
 end_define
 
 begin_define

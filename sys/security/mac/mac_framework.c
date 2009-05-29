@@ -738,8 +738,6 @@ operator|&
 name|mac_policy_rm
 argument_list|,
 literal|"mac_policy_rm"
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|sx_init
