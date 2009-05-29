@@ -1688,7 +1688,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -1919,21 +1918,23 @@ name|error
 return|;
 end_return
 
-begin_expr_stmt
+begin_macro
 unit|}  int
 name|svr4_sys_open64
 argument_list|(
-name|td
+argument|td
 argument_list|,
-name|uap
+argument|uap
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|thread
-operator|*
+modifier|*
 name|td
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -1969,7 +1970,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -2044,7 +2044,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -2080,7 +2079,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -2183,7 +2181,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -2261,7 +2258,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -2346,7 +2342,6 @@ name|v
 parameter_list|,
 name|retval
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -2447,7 +2442,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -2532,7 +2526,6 @@ name|v
 parameter_list|,
 name|retval
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -2624,7 +2617,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*

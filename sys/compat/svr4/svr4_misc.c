@@ -542,7 +542,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -1053,7 +1052,6 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|dirent
 modifier|*
@@ -3220,7 +3218,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
