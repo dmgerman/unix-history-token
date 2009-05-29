@@ -1244,12 +1244,9 @@ argument_list|,
 name|tracker
 argument_list|)
 expr_stmt|;
-name|td
-operator|->
-name|td_pinned
-operator|++
+name|sched_pin
+argument_list|()
 expr_stmt|;
-comment|/*  sched_pin(); */
 name|compiler_memory_barrier
 argument_list|()
 expr_stmt|;
@@ -1477,12 +1474,9 @@ operator|->
 name|td_critnest
 operator|--
 expr_stmt|;
-name|td
-operator|->
-name|td_pinned
-operator|--
+name|sched_unpin
+argument_list|()
 expr_stmt|;
-comment|/*  sched_unpin(); */
 if|if
 condition|(
 literal|0
