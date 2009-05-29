@@ -1917,7 +1917,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%c %8s\t(%6s) Last dump: Level %c, Date %s\n"
+literal|"%c %8s\t(%6s) Last dump: Level %d, Date %s\n"
 argument_list|,
 name|dumpme
 operator|&&
