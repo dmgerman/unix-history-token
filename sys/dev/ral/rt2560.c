@@ -9355,6 +9355,15 @@ operator|->
 name|ni_vap
 decl_stmt|;
 name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|ni
+operator|->
+name|ni_ic
+decl_stmt|;
+name|struct
 name|rt2560_tx_desc
 modifier|*
 name|desc
@@ -9417,15 +9426,18 @@ operator|=
 name|params
 operator|->
 name|ibp_rate0
-operator|&
-name|IEEE80211_RATE_VAL
 expr_stmt|;
-comment|/* XXX validate */
 if|if
 condition|(
+operator|!
+name|ieee80211_isratevalid
+argument_list|(
+name|ic
+operator|->
+name|ic_rt
+argument_list|,
 name|rate
-operator|==
-literal|0
+argument_list|)
 condition|)
 block|{
 comment|/* XXX fall back to mcast/mgmt rate? */
