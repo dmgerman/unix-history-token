@@ -554,6 +554,14 @@ name|p
 operator|->
 name|p_fd
 expr_stmt|;
+comment|/* We will set this ourselves if we need it. */
+name|cnp
+operator|->
+name|cn_flags
+operator|&=
+operator|~
+name|TRAILINGSLASH
+expr_stmt|;
 comment|/* 	 * Get a buffer for the name to be translated, and copy the 	 * name into the buffer. 	 */
 if|if
 condition|(
@@ -2332,6 +2340,12 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* XXX for direnter() ... */
+name|cnp
+operator|->
+name|cn_flags
+operator||=
+name|TRAILINGSLASH
+expr_stmt|;
 block|}
 block|}
 name|ndp
@@ -3587,26 +3601,6 @@ goto|goto
 name|success
 goto|;
 block|}
-comment|/* 	 * Check for bogus trailing slashes. 	 */
-if|if
-condition|(
-name|trailing_slash
-operator|&&
-name|dp
-operator|->
-name|v_type
-operator|!=
-name|VDIR
-condition|)
-block|{
-name|error
-operator|=
-name|ENOTDIR
-expr_stmt|;
-goto|goto
-name|bad2
-goto|;
-block|}
 name|nextname
 label|:
 comment|/* 	 * Not a symbolic link.  If more pathname, 	 * continue at next component, else return. 	 */
@@ -3710,6 +3704,32 @@ literal|0
 expr_stmt|;
 goto|goto
 name|dirloop
+goto|;
+block|}
+comment|/* 	 * If we're processing a path with a trailing slash, 	 * check that the end result is a directory. 	 */
+if|if
+condition|(
+operator|(
+name|cnp
+operator|->
+name|cn_flags
+operator|&
+name|TRAILINGSLASH
+operator|)
+operator|&&
+name|dp
+operator|->
+name|v_type
+operator|!=
+name|VDIR
+condition|)
+block|{
+name|error
+operator|=
+name|ENOTDIR
+expr_stmt|;
+goto|goto
+name|bad2
 goto|;
 block|}
 comment|/* 	 * Disallow directory write attempts on read-only filesystems. 	 */

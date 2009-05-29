@@ -531,8 +531,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TRAILINGSLASH
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* path ended in a slash */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PARAMASK
-value|0x0ffffe00
+value|0x1ffffe00
 end_define
 
 begin_comment
