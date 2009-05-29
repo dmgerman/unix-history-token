@@ -100,7 +100,7 @@ begin_define
 define|#
 directive|define
 name|MUTEX_FLAGS
-value|(SX_DUPOK | SX_NOWITNESS | SX_ADAPTIVESPIN)
+value|(SX_DUPOK | SX_NOWITNESS)
 end_define
 
 begin_else
@@ -112,7 +112,7 @@ begin_define
 define|#
 directive|define
 name|MUTEX_FLAGS
-value|(SX_DUPOK | SX_ADAPTIVESPIN)
+value|(SX_DUPOK)
 end_define
 
 begin_endif

@@ -1235,7 +1235,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SX_ADAPTIVESPIN
+name|SX_NOADAPTIVE
 value|0x10
 end_define
 
