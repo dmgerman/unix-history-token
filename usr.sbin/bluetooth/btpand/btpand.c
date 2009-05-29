@@ -411,7 +411,7 @@ comment|/* local address */
 if|if
 condition|(
 operator|!
-name|bt_aton
+name|bt_devaddr
 argument_list|(
 name|optarg
 argument_list|,
