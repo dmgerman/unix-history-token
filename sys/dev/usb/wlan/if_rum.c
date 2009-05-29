@@ -887,21 +887,21 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|rum_bulk_read_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|rum_bulk_write_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|rum_do_request
 parameter_list|(
 name|struct
@@ -1203,7 +1203,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|rum_write
 parameter_list|(
 name|struct
@@ -1219,7 +1219,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|rum_write_multi
 parameter_list|(
 name|struct
@@ -3980,7 +3980,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|rum_do_request
 parameter_list|(
 name|struct
@@ -3998,7 +3998,7 @@ modifier|*
 name|data
 parameter_list|)
 block|{
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|int
@@ -8085,7 +8085,7 @@ name|struct
 name|usb_device_request
 name|req
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|req
@@ -8228,7 +8228,7 @@ name|struct
 name|usb_device_request
 name|req
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|req
@@ -8309,7 +8309,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|rum_write
 parameter_list|(
 name|struct
@@ -8353,7 +8353,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|rum_write_multi
 parameter_list|(
 name|struct
@@ -8376,7 +8376,7 @@ name|struct
 name|usb_device_request
 name|req
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|req
@@ -11386,7 +11386,7 @@ decl_stmt|;
 name|uint32_t
 name|tmp
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|int
@@ -11948,7 +11948,7 @@ name|reg
 init|=
 name|RT2573_MCU_CODE_BASE
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 comment|/* copy firmware image into NIC */

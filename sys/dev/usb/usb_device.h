@@ -153,7 +153,7 @@ modifier|*
 name|extra
 decl_stmt|;
 comment|/* Extra descriptors */
-name|usb2_frlength_t
+name|usb_frlength_t
 name|fbsd_buf_size
 decl_stmt|;
 name|uint16_t
@@ -386,22 +386,22 @@ begin_struct
 struct|struct
 name|usb_power_save
 block|{
-name|usb2_ticks_t
+name|usb_ticks_t
 name|last_xfer_time
 decl_stmt|;
 comment|/* copy of "ticks" */
-name|usb2_size_t
+name|size_t
 name|type_refs
 index|[
 literal|4
 index|]
 decl_stmt|;
 comment|/* transfer reference count */
-name|usb2_size_t
+name|size_t
 name|read_refs
 decl_stmt|;
 comment|/* data read references */
-name|usb2_size_t
+name|size_t
 name|write_refs
 decl_stmt|;
 comment|/* data write references */
@@ -557,7 +557,7 @@ decl_stmt|;
 comment|/* name of ugenX.X device */
 endif|#
 directive|endif
-name|usb2_ticks_t
+name|usb_ticks_t
 name|plugtime
 decl_stmt|;
 comment|/* copy of "ticks" */
@@ -802,7 +802,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|usb2_error_t
+name|usb_error_t
 name|usb2_interface_count
 parameter_list|(
 name|struct
@@ -818,7 +818,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|usb2_error_t
+name|usb_error_t
 name|usb2_probe_and_attach
 parameter_list|(
 name|struct
@@ -833,7 +833,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|usb2_error_t
+name|usb_error_t
 name|usb2_reset_iface_endpoints
 parameter_list|(
 name|struct
@@ -848,7 +848,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|usb2_error_t
+name|usb_error_t
 name|usb2_set_config_index
 parameter_list|(
 name|struct
@@ -863,7 +863,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|usb2_error_t
+name|usb_error_t
 name|usb2_set_endpoint_stall
 parameter_list|(
 name|struct
@@ -883,7 +883,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|usb2_error_t
+name|usb_error_t
 name|usb2_suspend_resume
 parameter_list|(
 name|struct

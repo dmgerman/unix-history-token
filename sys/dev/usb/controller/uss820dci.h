@@ -2096,7 +2096,7 @@ comment|/* prototypes */
 end_comment
 
 begin_function_decl
-name|usb2_error_t
+name|usb_error_t
 name|uss820dci_init
 parameter_list|(
 name|struct

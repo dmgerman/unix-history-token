@@ -3608,7 +3608,7 @@ name|hid_ptr
 init|=
 name|NULL
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|uint32_t

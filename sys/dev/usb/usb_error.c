@@ -223,7 +223,7 @@ name|char
 modifier|*
 name|usb2_errstr
 parameter_list|(
-name|usb2_error_t
+name|usb_error_t
 name|err
 parameter_list|)
 block|{

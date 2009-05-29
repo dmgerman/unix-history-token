@@ -1248,13 +1248,13 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
-name|usb2_bus_mem_cb_t
+name|usb_bus_mem_cb_t
 name|uhci_iterate_hw_softc
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|usb2_error_t
+name|usb_error_t
 name|uhci_init
 parameter_list|(
 name|uhci_softc_t

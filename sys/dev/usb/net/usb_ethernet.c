@@ -160,49 +160,49 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_proc_callback_t
+name|usb_proc_callback_t
 name|ue_attach_post_task
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_proc_callback_t
+name|usb_proc_callback_t
 name|ue_promisc_task
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_proc_callback_t
+name|usb_proc_callback_t
 name|ue_setmulti_task
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_proc_callback_t
+name|usb_proc_callback_t
 name|ue_ifmedia_task
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_proc_callback_t
+name|usb_proc_callback_t
 name|ue_tick_task
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_proc_callback_t
+name|usb_proc_callback_t
 name|ue_start_task
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_proc_callback_t
+name|usb_proc_callback_t
 name|ue_stop_task
 decl_stmt|;
 end_decl_stmt
@@ -316,7 +316,7 @@ name|usb_ether
 modifier|*
 name|ue
 parameter_list|,
-name|usb2_proc_callback_t
+name|usb_proc_callback_t
 modifier|*
 name|fn
 parameter_list|,

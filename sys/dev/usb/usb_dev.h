@@ -91,7 +91,7 @@ begin_typedef
 typedef|typedef
 name|int
 function_decl|(
-name|usb2_fifo_open_t
+name|usb_fifo_open_t
 function_decl|)
 parameter_list|(
 name|struct
@@ -109,7 +109,7 @@ begin_typedef
 typedef|typedef
 name|void
 function_decl|(
-name|usb2_fifo_close_t
+name|usb_fifo_close_t
 function_decl|)
 parameter_list|(
 name|struct
@@ -127,7 +127,7 @@ begin_typedef
 typedef|typedef
 name|int
 function_decl|(
-name|usb2_fifo_ioctl_t
+name|usb_fifo_ioctl_t
 function_decl|)
 parameter_list|(
 name|struct
@@ -152,7 +152,7 @@ begin_typedef
 typedef|typedef
 name|void
 function_decl|(
-name|usb2_fifo_cmd_t
+name|usb_fifo_cmd_t
 function_decl|)
 parameter_list|(
 name|struct
@@ -167,7 +167,7 @@ begin_typedef
 typedef|typedef
 name|void
 function_decl|(
-name|usb2_fifo_filter_t
+name|usb_fifo_filter_t
 function_decl|)
 parameter_list|(
 name|struct
@@ -220,51 +220,51 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Locking note for the following functions.  All the  * "usb2_fifo_cmd_t" and "usb2_fifo_filter_t" functions are called  * locked. The others are called unlocked.  */
+comment|/*  * Locking note for the following functions.  All the  * "usb_fifo_cmd_t" and "usb_fifo_filter_t" functions are called  * locked. The others are called unlocked.  */
 end_comment
 
 begin_struct
 struct|struct
 name|usb_fifo_methods
 block|{
-name|usb2_fifo_open_t
+name|usb_fifo_open_t
 modifier|*
 name|f_open
 decl_stmt|;
-name|usb2_fifo_close_t
+name|usb_fifo_close_t
 modifier|*
 name|f_close
 decl_stmt|;
-name|usb2_fifo_ioctl_t
+name|usb_fifo_ioctl_t
 modifier|*
 name|f_ioctl
 decl_stmt|;
 comment|/* 	 * NOTE: The post-ioctl callback is called after the USB reference 	 * gets locked in the IOCTL handler: 	 */
-name|usb2_fifo_ioctl_t
+name|usb_fifo_ioctl_t
 modifier|*
 name|f_ioctl_post
 decl_stmt|;
-name|usb2_fifo_cmd_t
+name|usb_fifo_cmd_t
 modifier|*
 name|f_start_read
 decl_stmt|;
-name|usb2_fifo_cmd_t
+name|usb_fifo_cmd_t
 modifier|*
 name|f_stop_read
 decl_stmt|;
-name|usb2_fifo_cmd_t
+name|usb_fifo_cmd_t
 modifier|*
 name|f_start_write
 decl_stmt|;
-name|usb2_fifo_cmd_t
+name|usb_fifo_cmd_t
 modifier|*
 name|f_stop_write
 decl_stmt|;
-name|usb2_fifo_filter_t
+name|usb_fifo_filter_t
 modifier|*
 name|f_filter_read
 decl_stmt|;
-name|usb2_fifo_filter_t
+name|usb_fifo_filter_t
 modifier|*
 name|f_filter_write
 decl_stmt|;
@@ -492,15 +492,15 @@ name|void
 modifier|*
 name|queue_data
 decl_stmt|;
-name|usb2_timeout_t
+name|usb_timeout_t
 name|timeout
 decl_stmt|;
 comment|/* timeout in milliseconds */
-name|usb2_frlength_t
+name|usb_frlength_t
 name|bufsize
 decl_stmt|;
 comment|/* BULK and INTERRUPT buffer size */
-name|usb2_frcount_t
+name|usb_frcount_t
 name|nframes
 decl_stmt|;
 comment|/* for isochronous mode */
@@ -732,10 +732,10 @@ name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|,
-name|usb2_frlength_t
+name|usb_frlength_t
 name|offset
 parameter_list|,
-name|usb2_frlength_t
+name|usb_frlength_t
 name|len
 parameter_list|,
 name|uint8_t
@@ -757,7 +757,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|usb2_size_t
+name|size_t
 name|len
 parameter_list|,
 name|uint8_t
@@ -779,7 +779,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|usb2_size_t
+name|size_t
 name|len
 parameter_list|)
 function_decl|;
@@ -811,13 +811,13 @@ name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|,
-name|usb2_frlength_t
+name|usb_frlength_t
 name|offset
 parameter_list|,
-name|usb2_frlength_t
+name|usb_frlength_t
 name|len
 parameter_list|,
-name|usb2_frlength_t
+name|usb_frlength_t
 modifier|*
 name|actlen
 parameter_list|,
@@ -840,10 +840,10 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|usb2_size_t
+name|size_t
 name|len
 parameter_list|,
-name|usb2_size_t
+name|size_t
 modifier|*
 name|actlen
 parameter_list|,
@@ -867,7 +867,7 @@ modifier|*
 modifier|*
 name|pptr
 parameter_list|,
-name|usb2_size_t
+name|size_t
 modifier|*
 name|plen
 parameter_list|)

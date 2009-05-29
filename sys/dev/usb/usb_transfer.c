@@ -115,7 +115,7 @@ end_struct
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|usb2_request_callback
 decl_stmt|;
 end_decl_stmt
@@ -500,7 +500,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_timeout_t
+name|usb_timeout_t
 name|usb2_get_dma_delay
 parameter_list|(
 name|struct
@@ -580,13 +580,13 @@ modifier|*
 modifier|*
 name|ppc
 parameter_list|,
-name|usb2_size_t
+name|size_t
 name|size
 parameter_list|,
-name|usb2_size_t
+name|size_t
 name|align
 parameter_list|,
-name|usb2_size_t
+name|size_t
 name|count
 parameter_list|)
 block|{
@@ -604,22 +604,22 @@ name|void
 modifier|*
 name|buf
 decl_stmt|;
-name|usb2_size_t
+name|size_t
 name|n_dma_pc
 decl_stmt|;
-name|usb2_size_t
+name|size_t
 name|n_obj
 decl_stmt|;
-name|usb2_size_t
+name|size_t
 name|x
 decl_stmt|;
-name|usb2_size_t
+name|size_t
 name|y
 decl_stmt|;
-name|usb2_size_t
+name|size_t
 name|r
 decl_stmt|;
-name|usb2_size_t
+name|size_t
 name|z
 decl_stmt|;
 name|USB_ASSERT
@@ -1128,13 +1128,13 @@ name|struct
 name|usb2_std_packet_size
 name|std_size
 decl_stmt|;
-name|usb2_frcount_t
+name|usb_frcount_t
 name|n_frlengths
 decl_stmt|;
-name|usb2_frcount_t
+name|usb_frcount_t
 name|n_frbuffers
 decl_stmt|;
-name|usb2_frcount_t
+name|usb_frcount_t
 name|x
 decl_stmt|;
 name|uint8_t
@@ -2583,7 +2583,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_transfer_setup
 parameter_list|(
 name|struct
@@ -2787,7 +2787,7 @@ operator|->
 name|bufsize
 operator|==
 operator|(
-name|usb2_frlength_t
+name|usb_frlength_t
 operator|)
 operator|-
 literal|1
@@ -4188,7 +4188,7 @@ condition|(
 name|needs_delay
 condition|)
 block|{
-name|usb2_timeout_t
+name|usb_timeout_t
 name|temp
 decl_stmt|;
 name|temp
@@ -4626,7 +4626,7 @@ modifier|*
 name|xfer
 parameter_list|)
 block|{
-name|usb2_frlength_t
+name|usb_frlength_t
 name|len
 decl_stmt|;
 comment|/* Check for control endpoint stall */
@@ -5092,7 +5092,7 @@ name|usb_bus
 modifier|*
 name|bus
 decl_stmt|;
-name|usb2_frcount_t
+name|usb_frcount_t
 name|x
 decl_stmt|;
 name|info
@@ -6378,7 +6378,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|usb2_frcount_t
+name|usb_frcount_t
 name|frindex
 parameter_list|)
 block|{
@@ -6410,10 +6410,10 @@ name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
-name|usb2_frlength_t
+name|usb_frlength_t
 name|offset
 parameter_list|,
-name|usb2_frcount_t
+name|usb_frcount_t
 name|frindex
 parameter_list|)
 block|{
@@ -7200,7 +7200,7 @@ name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
-name|usb2_error_t
+name|usb_error_t
 name|error
 parameter_list|)
 block|{
@@ -7979,7 +7979,7 @@ modifier|*
 name|arg
 parameter_list|)
 parameter_list|,
-name|usb2_timeout_t
+name|usb_timeout_t
 name|ms
 parameter_list|)
 block|{
@@ -8035,7 +8035,7 @@ name|usb_pipe
 modifier|*
 name|pipe
 decl_stmt|;
-name|usb2_frcount_t
+name|usb_frcount_t
 name|x
 decl_stmt|;
 if|if
@@ -8142,7 +8142,7 @@ name|did_dma_delay
 operator|)
 condition|)
 block|{
-name|usb2_timeout_t
+name|usb_timeout_t
 name|temp
 decl_stmt|;
 comment|/* only delay once */

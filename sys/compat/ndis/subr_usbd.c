@@ -242,14 +242,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|usbd_non_isoc_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|usbd_ctrl_callback
 decl_stmt|;
 end_decl_stmt
@@ -467,7 +467,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usbd_setup_endpoint
 parameter_list|(
 name|irp
@@ -484,7 +484,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usbd_setup_endpoint_default
 parameter_list|(
 name|irp
@@ -497,7 +497,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usbd_setup_endpoint_one
 parameter_list|(
 name|irp
@@ -1687,7 +1687,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Convert FreeBSD's usb2_error_t to USBD_STATUS  */
+comment|/* Convert FreeBSD's usb_error_t to USBD_STATUS  */
 end_comment
 
 begin_function
@@ -2086,7 +2086,7 @@ name|usb_config_descriptor_t
 modifier|*
 name|cdp
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|status
 decl_stmt|;
 name|urb
@@ -2384,7 +2384,7 @@ name|usb_endpoint_descriptor_t
 modifier|*
 name|edesc
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|ret
 decl_stmt|;
 name|urb
@@ -2740,7 +2740,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usbd_setup_endpoint_one
 parameter_list|(
 name|ip
@@ -2792,7 +2792,7 @@ name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|status
 decl_stmt|;
 name|InitializeListHead
@@ -2896,7 +2896,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usbd_setup_endpoint_default
 parameter_list|(
 name|ip
@@ -2929,7 +2929,7 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|status
 decl_stmt|;
 if|if
@@ -3006,7 +3006,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usbd_setup_endpoint
 parameter_list|(
 name|ip
@@ -3060,7 +3060,7 @@ name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|status
 decl_stmt|;
 comment|/* check for non-supported transfer types */
@@ -3913,7 +3913,7 @@ name|ndisusb_xfer
 modifier|*
 name|nx
 parameter_list|,
-name|usb2_error_t
+name|usb_error_t
 name|status
 parameter_list|)
 block|{
@@ -5563,7 +5563,7 @@ name|usbd_urb
 modifier|*
 name|urb
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|status
 decl_stmt|;
 name|void

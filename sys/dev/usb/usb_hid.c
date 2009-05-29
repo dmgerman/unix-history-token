@@ -332,7 +332,7 @@ name|void
 modifier|*
 name|d
 parameter_list|,
-name|usb2_size_t
+name|size_t
 name|len
 parameter_list|,
 name|int
@@ -2019,7 +2019,7 @@ name|void
 modifier|*
 name|buf
 parameter_list|,
-name|usb2_size_t
+name|size_t
 name|len
 parameter_list|,
 name|enum
@@ -2258,7 +2258,7 @@ name|void
 modifier|*
 name|desc
 parameter_list|,
-name|usb2_size_t
+name|size_t
 name|size
 parameter_list|,
 name|uint32_t
@@ -2460,7 +2460,7 @@ name|uint8_t
 modifier|*
 name|buf
 parameter_list|,
-name|usb2_size_t
+name|size_t
 name|len
 parameter_list|,
 name|struct
@@ -2655,7 +2655,7 @@ name|void
 modifier|*
 name|desc
 parameter_list|,
-name|usb2_size_t
+name|size_t
 name|size
 parameter_list|,
 name|uint32_t
@@ -2854,7 +2854,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_get_hid_desc
 parameter_list|(
 name|struct
@@ -2876,7 +2876,9 @@ name|uint16_t
 modifier|*
 name|sizep
 parameter_list|,
-name|usb2_malloc_type
+name|struct
+name|malloc_type
+modifier|*
 name|mem
 parameter_list|,
 name|uint8_t
@@ -2900,7 +2902,7 @@ name|usb_hid_descriptor
 modifier|*
 name|hid
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 if|if

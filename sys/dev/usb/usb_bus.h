@@ -171,11 +171,11 @@ modifier|*
 modifier|*
 name|devices
 decl_stmt|;
-name|usb2_power_mask_t
+name|usb_power_mask_t
 name|hw_power_state
 decl_stmt|;
 comment|/* see USB_HW_POWER_XXX */
-name|usb2_size_t
+name|size_t
 name|uframe_usage
 index|[
 name|USB_HS_MICRO_FRAMES_MAX

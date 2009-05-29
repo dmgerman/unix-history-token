@@ -692,7 +692,7 @@ name|usb_proc_msg
 modifier|*
 name|pm2
 decl_stmt|;
-name|usb2_size_t
+name|size_t
 name|d
 decl_stmt|;
 name|uint8_t

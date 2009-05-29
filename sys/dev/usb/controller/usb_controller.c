@@ -1052,7 +1052,7 @@ decl_stmt|;
 name|device_t
 name|dev
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|enum
@@ -1949,7 +1949,7 @@ name|usb_bus
 modifier|*
 name|bus
 parameter_list|,
-name|usb2_bus_mem_cb_t
+name|usb_bus_mem_cb_t
 modifier|*
 name|cb
 parameter_list|)
@@ -2067,7 +2067,7 @@ parameter_list|,
 name|bus_dma_tag_t
 name|dmat
 parameter_list|,
-name|usb2_bus_mem_cb_t
+name|usb_bus_mem_cb_t
 modifier|*
 name|cb
 parameter_list|)
@@ -2303,7 +2303,7 @@ name|usb_bus
 modifier|*
 name|bus
 parameter_list|,
-name|usb2_bus_mem_cb_t
+name|usb_bus_mem_cb_t
 modifier|*
 name|cb
 parameter_list|)

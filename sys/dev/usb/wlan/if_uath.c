@@ -797,28 +797,28 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|uath_intr_rx_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|uath_intr_tx_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|uath_bulk_rx_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|uath_bulk_tx_callback
 decl_stmt|;
 end_decl_stmt
@@ -1920,7 +1920,7 @@ init|=
 name|UATH_IFACE_INDEX
 decl_stmt|;
 comment|/* XXX */
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|uint8_t

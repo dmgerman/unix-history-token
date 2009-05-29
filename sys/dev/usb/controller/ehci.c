@@ -322,7 +322,7 @@ name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
-name|usb2_error_t
+name|usb_error_t
 name|error
 parameter_list|)
 function_decl|;
@@ -423,7 +423,7 @@ name|usb_bus
 modifier|*
 name|bus
 parameter_list|,
-name|usb2_bus_mem_sub_cb_t
+name|usb_bus_mem_sub_cb_t
 modifier|*
 name|cb
 parameter_list|)
@@ -627,7 +627,7 @@ block|}
 end_function
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|ehci_reset
 parameter_list|(
 name|ehci_softc_t
@@ -816,7 +816,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|ehci_hcreset
 parameter_list|(
 name|ehci_softc_t
@@ -907,7 +907,7 @@ block|}
 end_function
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|ehci_init
 parameter_list|(
 name|ehci_softc_t
@@ -943,7 +943,7 @@ decl_stmt|;
 name|uint16_t
 name|bit
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 init|=
 literal|0
@@ -5774,7 +5774,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|ehci_non_isoc_done_sub
 parameter_list|(
 name|struct
@@ -6186,7 +6186,7 @@ modifier|*
 name|xfer
 parameter_list|)
 block|{
-name|usb2_error_t
+name|usb_error_t
 name|err
 init|=
 literal|0
@@ -9857,7 +9857,7 @@ name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
-name|usb2_error_t
+name|usb_error_t
 name|error
 parameter_list|)
 block|{
@@ -13438,7 +13438,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|ehci_roothub_exec
 parameter_list|(
 name|struct
@@ -13504,7 +13504,7 @@ decl_stmt|;
 name|uint8_t
 name|l
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|USB_BUS_LOCK_ASSERT

@@ -171,98 +171,98 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|ugen_read_clear_stall_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|ugen_write_clear_stall_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|ugen_default_read_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|ugen_default_write_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|ugen_isoc_read_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|ugen_isoc_write_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|ugen_default_fs_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_open_t
+name|usb_fifo_open_t
 name|ugen_open
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_close_t
+name|usb_fifo_close_t
 name|ugen_close
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_ioctl_t
+name|usb_fifo_ioctl_t
 name|ugen_ioctl
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_ioctl_t
+name|usb_fifo_ioctl_t
 name|ugen_ioctl_post
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_cmd_t
+name|usb_fifo_cmd_t
 name|ugen_start_read
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_cmd_t
+name|usb_fifo_cmd_t
 name|ugen_start_write
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_cmd_t
+name|usb_fifo_cmd_t
 name|ugen_stop_io
 decl_stmt|;
 end_decl_stmt
@@ -2248,7 +2248,7 @@ name|xfer
 operator|->
 name|priv_sc
 decl_stmt|;
-name|usb2_frlength_t
+name|usb_frlength_t
 name|actlen
 decl_stmt|;
 name|DPRINTFN
@@ -2549,10 +2549,10 @@ name|xfer
 operator|->
 name|priv_sc
 decl_stmt|;
-name|usb2_frlength_t
+name|usb_frlength_t
 name|offset
 decl_stmt|;
-name|usb2_frcount_t
+name|usb_frcount_t
 name|n
 decl_stmt|;
 name|DPRINTFN
@@ -2719,13 +2719,13 @@ name|xfer
 operator|->
 name|priv_sc
 decl_stmt|;
-name|usb2_frlength_t
+name|usb_frlength_t
 name|actlen
 decl_stmt|;
-name|usb2_frlength_t
+name|usb_frlength_t
 name|offset
 decl_stmt|;
-name|usb2_frcount_t
+name|usb_frcount_t
 name|n
 decl_stmt|;
 name|DPRINTFN
@@ -4861,13 +4861,13 @@ name|void
 modifier|*
 name|kaddr
 decl_stmt|;
-name|usb2_frlength_t
+name|usb_frlength_t
 name|offset
 decl_stmt|;
-name|usb2_frlength_t
+name|usb_frlength_t
 name|rem
 decl_stmt|;
-name|usb2_frcount_t
+name|usb_frcount_t
 name|n
 decl_stmt|;
 name|uint32_t
@@ -5666,13 +5666,13 @@ name|void
 modifier|*
 name|kaddr
 decl_stmt|;
-name|usb2_frlength_t
+name|usb_frlength_t
 name|offset
 decl_stmt|;
-name|usb2_frlength_t
+name|usb_frlength_t
 name|rem
 decl_stmt|;
-name|usb2_frcount_t
+name|usb_frcount_t
 name|n
 decl_stmt|;
 name|uint32_t
@@ -7725,7 +7725,7 @@ modifier|*
 name|addr
 parameter_list|)
 block|{
-name|usb2_frlength_t
+name|usb_frlength_t
 name|t
 decl_stmt|;
 if|if

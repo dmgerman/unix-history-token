@@ -400,7 +400,7 @@ name|ndisusb_xfer
 modifier|*
 name|nd_xfer
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|nd_status
 decl_stmt|;
 name|list_entry

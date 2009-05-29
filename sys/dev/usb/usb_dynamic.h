@@ -47,7 +47,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|usb2_error_t
+name|usb_error_t
 function_decl|(
 name|usb2_temp_setup_by_index_t
 function_decl|)
@@ -65,7 +65,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|usb2_error_t
+name|usb_error_t
 function_decl|(
 name|usb2_test_huawei_autoinst_t
 function_decl|)
@@ -148,7 +148,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|usb2_handle_request_t
+name|usb_handle_req_t
 modifier|*
 name|usb2_temp_get_desc_p
 decl_stmt|;

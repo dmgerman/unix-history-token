@@ -94,7 +94,7 @@ modifier|*
 name|hubudev
 decl_stmt|;
 comment|/* the HUB device */
-name|usb2_error_t
+name|usb_error_t
 function_decl|(
 modifier|*
 name|explore
@@ -110,7 +110,7 @@ name|void
 modifier|*
 name|hubsoftc
 decl_stmt|;
-name|usb2_size_t
+name|size_t
 name|uframe_usage
 index|[
 name|USB_HS_MICRO_FRAMES_MAX

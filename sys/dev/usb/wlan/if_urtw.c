@@ -5144,14 +5144,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|urtw_bulk_rx_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|urtw_bulk_tx_callback
 decl_stmt|;
 end_decl_stmt
@@ -6015,7 +6015,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_set_rate
 parameter_list|(
 name|struct
@@ -6027,7 +6027,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_update_msr
 parameter_list|(
 name|struct
@@ -6039,7 +6039,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_read8_c
 parameter_list|(
 name|struct
@@ -6056,7 +6056,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_read16_c
 parameter_list|(
 name|struct
@@ -6073,7 +6073,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_read32_c
 parameter_list|(
 name|struct
@@ -6090,7 +6090,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_write8_c
 parameter_list|(
 name|struct
@@ -6106,7 +6106,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_write16_c
 parameter_list|(
 name|struct
@@ -6122,7 +6122,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_write32_c
 parameter_list|(
 name|struct
@@ -6138,7 +6138,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_eprom_cs
 parameter_list|(
 name|struct
@@ -6152,7 +6152,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_eprom_ck
 parameter_list|(
 name|struct
@@ -6164,7 +6164,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_eprom_sendbits
 parameter_list|(
 name|struct
@@ -6181,7 +6181,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_eprom_read32
 parameter_list|(
 name|struct
@@ -6198,7 +6198,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_eprom_readbit
 parameter_list|(
 name|struct
@@ -6213,7 +6213,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_eprom_writebit
 parameter_list|(
 name|struct
@@ -6227,7 +6227,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_get_macaddr
 parameter_list|(
 name|struct
@@ -6239,7 +6239,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_get_txpwr
 parameter_list|(
 name|struct
@@ -6251,7 +6251,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_get_rfchip
 parameter_list|(
 name|struct
@@ -6263,7 +6263,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_led_init
 parameter_list|(
 name|struct
@@ -6275,7 +6275,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8185_rf_pins_enable
 parameter_list|(
 name|struct
@@ -6287,7 +6287,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8185_tx_antenna
 parameter_list|(
 name|struct
@@ -6301,7 +6301,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8187_write_phy
 parameter_list|(
 name|struct
@@ -6317,7 +6317,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8187_write_phy_ofdm_c
 parameter_list|(
 name|struct
@@ -6333,7 +6333,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8187_write_phy_cck_c
 parameter_list|(
 name|struct
@@ -6349,7 +6349,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225_setgain
 parameter_list|(
 name|struct
@@ -6363,7 +6363,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225_usb_init
 parameter_list|(
 name|struct
@@ -6375,7 +6375,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225_write_c
 parameter_list|(
 name|struct
@@ -6391,7 +6391,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225_write_s16
 parameter_list|(
 name|struct
@@ -6410,7 +6410,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225_read
 parameter_list|(
 name|struct
@@ -6427,7 +6427,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225_rf_init
 parameter_list|(
 name|struct
@@ -6439,7 +6439,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225_rf_set_chan
 parameter_list|(
 name|struct
@@ -6453,7 +6453,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225_rf_set_sens
 parameter_list|(
 name|struct
@@ -6467,7 +6467,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225_set_txpwrlvl
 parameter_list|(
 name|struct
@@ -6481,7 +6481,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225_rf_stop
 parameter_list|(
 name|struct
@@ -6493,7 +6493,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225v2_rf_init
 parameter_list|(
 name|struct
@@ -6505,7 +6505,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225v2_rf_set_chan
 parameter_list|(
 name|struct
@@ -6519,7 +6519,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225v2_set_txpwrlvl
 parameter_list|(
 name|struct
@@ -6533,7 +6533,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225v2_setgain
 parameter_list|(
 name|struct
@@ -6547,7 +6547,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225_isv2
 parameter_list|(
 name|struct
@@ -6562,7 +6562,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225v2b_rf_init
 parameter_list|(
 name|struct
@@ -6574,7 +6574,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225v2b_rf_set_chan
 parameter_list|(
 name|struct
@@ -6588,7 +6588,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_read8e
 parameter_list|(
 name|struct
@@ -6605,7 +6605,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_write8e
 parameter_list|(
 name|struct
@@ -6621,7 +6621,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8180_set_anaparam
 parameter_list|(
 name|struct
@@ -6635,7 +6635,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8185_set_anaparam2
 parameter_list|(
 name|struct
@@ -6649,7 +6649,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_intr_enable
 parameter_list|(
 name|struct
@@ -6661,7 +6661,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_intr_disable
 parameter_list|(
 name|struct
@@ -6673,7 +6673,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_reset
 parameter_list|(
 name|struct
@@ -6685,7 +6685,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_led_on
 parameter_list|(
 name|struct
@@ -6699,7 +6699,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_led_ctl
 parameter_list|(
 name|struct
@@ -6713,7 +6713,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_led_blink
 parameter_list|(
 name|struct
@@ -6725,7 +6725,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_led_mode0
 parameter_list|(
 name|struct
@@ -6739,7 +6739,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_led_mode1
 parameter_list|(
 name|struct
@@ -6753,7 +6753,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_led_mode2
 parameter_list|(
 name|struct
@@ -6767,7 +6767,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_led_mode3
 parameter_list|(
 name|struct
@@ -6781,7 +6781,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_rx_setconf
 parameter_list|(
 name|struct
@@ -6793,7 +6793,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_rx_enable
 parameter_list|(
 name|struct
@@ -6805,7 +6805,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_tx_enable
 parameter_list|(
 name|struct
@@ -6863,7 +6863,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_adapter_start
 parameter_list|(
 name|struct
@@ -6875,7 +6875,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_adapter_start_b
 parameter_list|(
 name|struct
@@ -6887,7 +6887,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_set_mode
 parameter_list|(
 name|struct
@@ -6901,7 +6901,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8187b_cmd_reset
 parameter_list|(
 name|struct
@@ -6913,7 +6913,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_write16_i
 parameter_list|(
 name|struct
@@ -6931,7 +6931,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_write8_i
 parameter_list|(
 name|struct
@@ -6949,7 +6949,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_write32_i
 parameter_list|(
 name|struct
@@ -6967,7 +6967,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_do_request
 parameter_list|(
 name|struct
@@ -6986,7 +6986,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225v2b_set_txpwrlvl
 parameter_list|(
 name|struct
@@ -7000,7 +7000,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_led_off
 parameter_list|(
 name|struct
@@ -7183,7 +7183,7 @@ decl_stmt|;
 name|uint32_t
 name|data
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|device_set_usb2_desc
@@ -8395,7 +8395,7 @@ name|sc
 operator|->
 name|sc_ifp
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 if|if
@@ -8602,7 +8602,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_adapter_start_b
 parameter_list|(
 name|struct
@@ -8624,7 +8624,7 @@ decl_stmt|;
 name|uint8_t
 name|data8
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|error
@@ -9675,7 +9675,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_adapter_start
 parameter_list|(
 name|struct
@@ -9684,7 +9684,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|error
@@ -10002,7 +10002,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_set_mode
 parameter_list|(
 name|struct
@@ -10017,7 +10017,7 @@ block|{
 name|uint8_t
 name|data
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|urtw_read8_m
@@ -10077,7 +10077,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8187b_cmd_reset
 parameter_list|(
 name|struct
@@ -10092,7 +10092,7 @@ decl_stmt|;
 name|uint8_t
 name|data8
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 comment|/* XXX the code can be duplicate with urtw_reset().  */
@@ -10283,7 +10283,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_write16_i
 parameter_list|(
 name|struct
@@ -10370,7 +10370,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_do_request
 parameter_list|(
 name|struct
@@ -10388,7 +10388,7 @@ modifier|*
 name|data
 parameter_list|)
 block|{
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|int
@@ -10476,7 +10476,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_write8_i
 parameter_list|(
 name|struct
@@ -10563,7 +10563,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_write32_i
 parameter_list|(
 name|struct
@@ -10674,7 +10674,7 @@ decl_stmt|;
 name|uint8_t
 name|data8
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 operator|(
@@ -12037,7 +12037,7 @@ name|data
 decl_stmt|,
 name|orig
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 comment|/* 	 * if the user set a channel explicitly using ifconfig(8) this function 	 * can be called earlier than we're expected that in some cases the 	 * initialization would be failed if setting a channel is called before 	 * the init have done. 	 */
@@ -12366,7 +12366,7 @@ name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|URTW_ASSERT_LOCKED
@@ -13196,7 +13196,7 @@ argument_list|(
 name|vap
 argument_list|)
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 init|=
 literal|0
@@ -13560,7 +13560,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_set_rate
 parameter_list|(
 name|struct
@@ -13581,7 +13581,7 @@ decl_stmt|;
 name|uint16_t
 name|data
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|basic_rate
@@ -13811,7 +13811,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_update_msr
 parameter_list|(
 name|struct
@@ -13841,7 +13841,7 @@ decl_stmt|;
 name|uint8_t
 name|data
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|urtw_read8_m
@@ -13953,7 +13953,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_read8_c
 parameter_list|(
 name|struct
@@ -13973,7 +13973,7 @@ name|struct
 name|usb_device_request
 name|req
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|URTW_ASSERT_LOCKED
@@ -14047,7 +14047,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_read16_c
 parameter_list|(
 name|struct
@@ -14067,7 +14067,7 @@ name|struct
 name|usb_device_request
 name|req
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|URTW_ASSERT_LOCKED
@@ -14141,7 +14141,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_read32_c
 parameter_list|(
 name|struct
@@ -14161,7 +14161,7 @@ name|struct
 name|usb_device_request
 name|req
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|URTW_ASSERT_LOCKED
@@ -14235,7 +14235,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_write8_c
 parameter_list|(
 name|struct
@@ -14322,7 +14322,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_write16_c
 parameter_list|(
 name|struct
@@ -14409,7 +14409,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_write32_c
 parameter_list|(
 name|struct
@@ -14496,7 +14496,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_get_macaddr
 parameter_list|(
 name|struct
@@ -14508,7 +14508,7 @@ block|{
 name|uint32_t
 name|data
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|error
@@ -14668,7 +14668,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_eprom_read32
 parameter_list|(
 name|struct
@@ -14712,7 +14712,7 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 comment|/* NB: make sure the buffer is initialized  */
@@ -15155,7 +15155,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_eprom_cs
 parameter_list|(
 name|struct
@@ -15170,7 +15170,7 @@ block|{
 name|uint8_t
 name|data
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|urtw_read8_m
@@ -15230,7 +15230,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_eprom_ck
 parameter_list|(
 name|struct
@@ -15242,7 +15242,7 @@ block|{
 name|uint8_t
 name|data
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 comment|/* masking  */
@@ -15312,7 +15312,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_eprom_readbit
 parameter_list|(
 name|struct
@@ -15328,7 +15328,7 @@ block|{
 name|uint8_t
 name|data8
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|urtw_read8_m
@@ -15371,7 +15371,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_eprom_writebit
 parameter_list|(
 name|struct
@@ -15386,7 +15386,7 @@ block|{
 name|uint8_t
 name|data
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|urtw_read8_m
@@ -15446,7 +15446,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_eprom_sendbits
 parameter_list|(
 name|struct
@@ -15467,7 +15467,7 @@ name|i
 init|=
 literal|0
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 init|=
 literal|0
@@ -15536,7 +15536,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_get_txpwr
 parameter_list|(
 name|struct
@@ -15553,7 +15553,7 @@ decl_stmt|;
 name|uint32_t
 name|data
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|error
@@ -16171,7 +16171,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_get_rfchip
 parameter_list|(
 name|struct
@@ -16189,7 +16189,7 @@ decl_stmt|;
 name|uint32_t
 name|data
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|error
@@ -16473,7 +16473,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_led_init
 parameter_list|(
 name|struct
@@ -16485,7 +16485,7 @@ block|{
 name|uint32_t
 name|rev
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|urtw_read8_m
@@ -16591,7 +16591,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225_rf_init
 parameter_list|(
 name|struct
@@ -16613,7 +16613,7 @@ decl_stmt|;
 name|uint16_t
 name|data
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|error
@@ -17198,7 +17198,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8185_rf_pins_enable
 parameter_list|(
 name|struct
@@ -17207,7 +17207,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|usb2_error_t
+name|usb_error_t
 name|error
 init|=
 literal|0
@@ -17233,7 +17233,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8185_tx_antenna
 parameter_list|(
 name|struct
@@ -17245,7 +17245,7 @@ name|uint8_t
 name|ant
 parameter_list|)
 block|{
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|urtw_write8_m
@@ -17279,7 +17279,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8187_write_phy_ofdm_c
 parameter_list|(
 name|struct
@@ -17315,7 +17315,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8187_write_phy_cck_c
 parameter_list|(
 name|struct
@@ -17353,7 +17353,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8187_write_phy
 parameter_list|(
 name|struct
@@ -17371,7 +17371,7 @@ block|{
 name|uint32_t
 name|phyw
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|phyw
@@ -17478,7 +17478,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225_setgain
 parameter_list|(
 name|struct
@@ -17490,7 +17490,7 @@ name|int16_t
 name|gain
 parameter_list|)
 block|{
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|urtw_8187_write_phy_ofdm
@@ -17567,7 +17567,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225_usb_init
 parameter_list|(
 name|struct
@@ -17579,7 +17579,7 @@ block|{
 name|uint8_t
 name|data
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|urtw_write8_m
@@ -17723,7 +17723,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225_write_c
 parameter_list|(
 name|struct
@@ -17745,7 +17745,7 @@ name|d82
 decl_stmt|,
 name|d84
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|urtw_read16_m
@@ -17928,7 +17928,7 @@ end_comment
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225_write_s16
 parameter_list|(
 name|struct
@@ -17959,7 +17959,7 @@ name|usb_device_request
 modifier|*
 name|req
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 init|=
 literal|0
@@ -18151,7 +18151,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225_rf_set_chan
 parameter_list|(
 name|struct
@@ -18183,7 +18183,7 @@ name|ic
 operator|->
 name|ic_curchan
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|error
@@ -18350,7 +18350,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225_rf_set_sens
 parameter_list|(
 name|struct
@@ -18362,7 +18362,7 @@ name|int
 name|sens
 parameter_list|)
 block|{
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 if|if
@@ -18450,7 +18450,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225_set_txpwrlvl
 parameter_list|(
 name|struct
@@ -18504,7 +18504,7 @@ index|]
 operator|&
 literal|0xff
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|cck_pwrlvl_max
@@ -18760,7 +18760,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225_rf_stop
 parameter_list|(
 name|struct
@@ -18772,7 +18772,7 @@ block|{
 name|uint8_t
 name|data
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|urtw_8225_write
@@ -18919,7 +18919,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225v2_rf_init
 parameter_list|(
 name|struct
@@ -18944,7 +18944,7 @@ decl_stmt|;
 name|uint32_t
 name|data32
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|error
@@ -19613,7 +19613,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225v2_rf_set_chan
 parameter_list|(
 name|struct
@@ -19645,7 +19645,7 @@ name|ic
 operator|->
 name|ic_curchan
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|error
@@ -19812,7 +19812,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225_read
 parameter_list|(
 name|struct
@@ -19877,7 +19877,7 @@ name|value
 init|=
 literal|0
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|urtw_read16_m
@@ -20398,7 +20398,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225v2_set_txpwrlvl
 parameter_list|(
 name|struct
@@ -20454,7 +20454,7 @@ index|]
 operator|&
 literal|0xff
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 comment|/* CCK power setting */
@@ -20681,7 +20681,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225v2_setgain
 parameter_list|(
 name|struct
@@ -20697,7 +20697,7 @@ name|uint8_t
 modifier|*
 name|gainp
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 comment|/* XXX for A?  */
@@ -20812,7 +20812,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225_isv2
 parameter_list|(
 name|struct
@@ -20828,7 +20828,7 @@ block|{
 name|uint32_t
 name|data
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 operator|*
@@ -20970,7 +20970,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225v2b_rf_init
 parameter_list|(
 name|struct
@@ -20989,7 +20989,7 @@ value|(sizeof(a) / sizeof((a)[0]))
 name|int
 name|i
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 for|for
@@ -21405,7 +21405,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225v2b_rf_set_chan
 parameter_list|(
 name|struct
@@ -21431,7 +21431,7 @@ name|sc_ifp
 operator|->
 name|if_l2com
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|error
@@ -21638,7 +21638,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8225v2b_set_txpwrlvl
 parameter_list|(
 name|struct
@@ -21686,7 +21686,7 @@ index|]
 operator|&
 literal|0xff
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 comment|/* CCK power setting */
@@ -22103,7 +22103,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_read8e
 parameter_list|(
 name|struct
@@ -22123,7 +22123,7 @@ name|struct
 name|usb_device_request
 name|req
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|req
@@ -22192,7 +22192,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_write8e
 parameter_list|(
 name|struct
@@ -22274,7 +22274,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8180_set_anaparam
 parameter_list|(
 name|struct
@@ -22289,7 +22289,7 @@ block|{
 name|uint8_t
 name|data
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|error
@@ -22388,7 +22388,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_8185_set_anaparam2
 parameter_list|(
 name|struct
@@ -22403,7 +22403,7 @@ block|{
 name|uint8_t
 name|data
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|error
@@ -22502,7 +22502,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_intr_enable
 parameter_list|(
 name|struct
@@ -22511,7 +22511,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|urtw_write16_m
@@ -22535,7 +22535,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_intr_disable
 parameter_list|(
 name|struct
@@ -22544,7 +22544,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|urtw_write16_m
@@ -22568,7 +22568,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_reset
 parameter_list|(
 name|struct
@@ -22580,7 +22580,7 @@ block|{
 name|uint8_t
 name|data
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|error
@@ -22848,7 +22848,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_led_ctl
 parameter_list|(
 name|struct
@@ -22860,7 +22860,7 @@ name|int
 name|mode
 parameter_list|)
 block|{
-name|usb2_error_t
+name|usb_error_t
 name|error
 init|=
 literal|0
@@ -22946,7 +22946,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_led_mode0
 parameter_list|(
 name|struct
@@ -23148,7 +23148,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_led_mode1
 parameter_list|(
 name|struct
@@ -23170,7 +23170,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_led_mode2
 parameter_list|(
 name|struct
@@ -23192,7 +23192,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_led_mode3
 parameter_list|(
 name|struct
@@ -23214,7 +23214,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_led_on
 parameter_list|(
 name|struct
@@ -23226,7 +23226,7 @@ name|int
 name|type
 parameter_list|)
 block|{
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 if|if
@@ -23307,7 +23307,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_led_off
 parameter_list|(
 name|struct
@@ -23319,7 +23319,7 @@ name|int
 name|type
 parameter_list|)
 block|{
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 if|if
@@ -23503,7 +23503,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_led_blink
 parameter_list|(
 name|struct
@@ -23517,7 +23517,7 @@ name|ing
 init|=
 literal|0
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 if|if
@@ -23726,7 +23726,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_rx_enable
 parameter_list|(
 name|struct
@@ -23738,7 +23738,7 @@ block|{
 name|uint8_t
 name|data
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|usb2_transfer_start
@@ -23815,7 +23815,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_tx_enable
 parameter_list|(
 name|struct
@@ -23830,7 +23830,7 @@ decl_stmt|;
 name|uint32_t
 name|data
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 if|if
@@ -24117,7 +24117,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|urtw_rx_setconf
 parameter_list|(
 name|struct
@@ -24147,7 +24147,7 @@ decl_stmt|;
 name|uint32_t
 name|data
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|urtw_read32_m

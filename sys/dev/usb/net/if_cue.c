@@ -190,63 +190,63 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|cue_bulk_read_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|cue_bulk_write_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_ether_fn_t
+name|uether_fn_t
 name|cue_attach_post
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_ether_fn_t
+name|uether_fn_t
 name|cue_init
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_ether_fn_t
+name|uether_fn_t
 name|cue_stop
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_ether_fn_t
+name|uether_fn_t
 name|cue_start
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_ether_fn_t
+name|uether_fn_t
 name|cue_tick
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_ether_fn_t
+name|uether_fn_t
 name|cue_setmulti
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_ether_fn_t
+name|uether_fn_t
 name|cue_setpromisc
 decl_stmt|;
 end_decl_stmt

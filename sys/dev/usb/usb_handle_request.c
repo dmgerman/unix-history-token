@@ -126,7 +126,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usb2_handle_remote_wakeup
 parameter_list|(
 name|struct
@@ -140,7 +140,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usb2_handle_request
 parameter_list|(
 name|struct
@@ -152,7 +152,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usb2_handle_set_config
 parameter_list|(
 name|struct
@@ -166,7 +166,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usb2_handle_set_stall
 parameter_list|(
 name|struct
@@ -182,7 +182,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usb2_handle_iface_request
 parameter_list|(
 name|struct
@@ -220,7 +220,7 @@ modifier|*
 name|xfer
 parameter_list|)
 block|{
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 comment|/* check the current transfer state */
@@ -361,7 +361,7 @@ end_comment
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usb2_handle_set_config
 parameter_list|(
 name|struct
@@ -384,7 +384,7 @@ name|xroot
 operator|->
 name|udev
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 init|=
 literal|0
@@ -515,7 +515,7 @@ end_comment
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usb2_handle_iface_request
 parameter_list|(
 name|struct
@@ -1161,7 +1161,7 @@ end_comment
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usb2_handle_set_stall
 parameter_list|(
 name|struct
@@ -1187,7 +1187,7 @@ name|xroot
 operator|->
 name|udev
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|USB_XFER_UNLOCK
@@ -1307,7 +1307,7 @@ end_comment
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usb2_handle_remote_wakeup
 parameter_list|(
 name|struct
@@ -1401,7 +1401,7 @@ end_comment
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usb2_handle_request
 parameter_list|(
 name|struct
@@ -1452,7 +1452,7 @@ decl_stmt|;
 name|uint8_t
 name|state
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 union|union

@@ -96,7 +96,7 @@ begin_typedef
 typedef|typedef
 name|void
 function_decl|(
-name|usb2_bus_mem_sub_cb_t
+name|usb_bus_mem_sub_cb_t
 function_decl|)
 parameter_list|(
 name|struct
@@ -114,10 +114,10 @@ name|usb_page
 modifier|*
 name|pg
 parameter_list|,
-name|usb2_size_t
+name|size_t
 name|size
 parameter_list|,
-name|usb2_size_t
+name|size_t
 name|align
 parameter_list|)
 function_decl|;
@@ -127,7 +127,7 @@ begin_typedef
 typedef|typedef
 name|void
 function_decl|(
-name|usb2_bus_mem_cb_t
+name|usb_bus_mem_cb_t
 function_decl|)
 parameter_list|(
 name|struct
@@ -135,7 +135,7 @@ name|usb_bus
 modifier|*
 name|bus
 parameter_list|,
-name|usb2_bus_mem_sub_cb_t
+name|usb_bus_mem_sub_cb_t
 modifier|*
 name|scb
 parameter_list|)
@@ -151,7 +151,7 @@ struct|struct
 name|usb_bus_methods
 block|{
 comment|/* USB Device and Host mode - Mandatory */
-name|usb2_handle_request_t
+name|usb_handle_req_t
 modifier|*
 name|roothub_exec
 decl_stmt|;
@@ -343,19 +343,19 @@ struct|struct
 name|usb_pipe_methods
 block|{
 comment|/* Mandatory USB Device and Host mode callbacks: */
-name|usb2_callback_t
+name|usb_callback_t
 modifier|*
 name|open
 decl_stmt|;
-name|usb2_callback_t
+name|usb_callback_t
 modifier|*
 name|close
 decl_stmt|;
-name|usb2_callback_t
+name|usb_callback_t
 modifier|*
 name|enter
 decl_stmt|;
-name|usb2_callback_t
+name|usb_callback_t
 modifier|*
 name|start
 decl_stmt|;
@@ -545,7 +545,7 @@ name|void
 modifier|*
 name|buf
 decl_stmt|;
-name|usb2_size_t
+name|size_t
 name|size
 decl_stmt|;
 name|enum
@@ -567,7 +567,7 @@ decl_stmt|;
 name|uint8_t
 name|bConfigurationValue
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 block|}
@@ -587,7 +587,7 @@ name|usb_bus
 modifier|*
 name|bus
 parameter_list|,
-name|usb2_bus_mem_cb_t
+name|usb_bus_mem_cb_t
 modifier|*
 name|cb
 parameter_list|)
@@ -606,7 +606,7 @@ parameter_list|,
 name|bus_dma_tag_t
 name|dmat
 parameter_list|,
-name|usb2_bus_mem_cb_t
+name|usb_bus_mem_cb_t
 modifier|*
 name|cb
 parameter_list|)
@@ -622,7 +622,7 @@ name|usb_bus
 modifier|*
 name|bus
 parameter_list|,
-name|usb2_bus_mem_cb_t
+name|usb_bus_mem_cb_t
 modifier|*
 name|cb
 parameter_list|)

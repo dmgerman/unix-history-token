@@ -498,21 +498,21 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|axe_intr_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|axe_bulk_read_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|axe_bulk_write_callback
 decl_stmt|;
 end_decl_stmt
@@ -540,49 +540,49 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_ether_fn_t
+name|uether_fn_t
 name|axe_attach_post
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_ether_fn_t
+name|uether_fn_t
 name|axe_init
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_ether_fn_t
+name|uether_fn_t
 name|axe_stop
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_ether_fn_t
+name|uether_fn_t
 name|axe_start
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_ether_fn_t
+name|uether_fn_t
 name|axe_tick
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_ether_fn_t
+name|uether_fn_t
 name|axe_setmulti
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_ether_fn_t
+name|uether_fn_t
 name|axe_setpromisc
 decl_stmt|;
 end_decl_stmt
@@ -1147,7 +1147,7 @@ name|struct
 name|usb_device_request
 name|req
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|AXE_LOCK_ASSERT
@@ -2926,7 +2926,7 @@ name|usb_config_descriptor
 modifier|*
 name|cd
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|cd

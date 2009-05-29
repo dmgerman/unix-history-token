@@ -3176,13 +3176,13 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|usb2_bus_mem_cb_t
+name|usb_bus_mem_cb_t
 name|ehci_iterate_hw_softc
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|usb2_error_t
+name|usb_error_t
 name|ehci_reset
 parameter_list|(
 name|ehci_softc_t
@@ -3193,7 +3193,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|usb2_error_t
+name|usb_error_t
 name|ehci_init
 parameter_list|(
 name|ehci_softc_t

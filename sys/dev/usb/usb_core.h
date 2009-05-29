@@ -994,7 +994,7 @@ begin_typedef
 typedef|typedef
 name|void
 function_decl|(
-name|usb2_callback_t
+name|usb_callback_t
 function_decl|)
 parameter_list|(
 name|struct
@@ -1013,7 +1013,7 @@ end_ifndef
 begin_typedef
 typedef|typedef
 name|uint8_t
-name|usb2_error_t
+name|usb_error_t
 typedef|;
 end_typedef
 
@@ -1035,7 +1035,7 @@ end_ifndef
 begin_typedef
 typedef|typedef
 name|uint32_t
-name|usb2_timeout_t
+name|usb_timeout_t
 typedef|;
 end_typedef
 
@@ -1057,7 +1057,7 @@ end_ifndef
 begin_typedef
 typedef|typedef
 name|uint32_t
-name|usb2_frlength_t
+name|usb_frlength_t
 typedef|;
 end_typedef
 
@@ -1079,34 +1079,12 @@ end_ifndef
 begin_typedef
 typedef|typedef
 name|uint32_t
-name|usb2_frcount_t
+name|usb_frcount_t
 typedef|;
 end_typedef
 
 begin_comment
 comment|/* units */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|USB_HAVE_SIZE_T
-end_ifndef
-
-begin_typedef
-typedef|typedef
-name|uint32_t
-name|usb2_size_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* bytes */
 end_comment
 
 begin_endif
@@ -1123,7 +1101,7 @@ end_ifndef
 begin_typedef
 typedef|typedef
 name|uint32_t
-name|usb2_ticks_t
+name|usb_ticks_t
 typedef|;
 end_typedef
 
@@ -1145,7 +1123,7 @@ end_ifndef
 begin_typedef
 typedef|typedef
 name|uint16_t
-name|usb2_power_mask_t
+name|usb_power_mask_t
 typedef|;
 end_typedef
 
@@ -1160,9 +1138,9 @@ end_endif
 
 begin_typedef
 typedef|typedef
-name|usb2_error_t
+name|usb_error_t
 function_decl|(
-name|usb2_handle_request_t
+name|usb_handle_req_t
 function_decl|)
 parameter_list|(
 name|struct
@@ -1464,20 +1442,20 @@ begin_struct
 struct|struct
 name|usb_config
 block|{
-name|usb2_callback_t
+name|usb_callback_t
 modifier|*
 name|callback
 decl_stmt|;
 comment|/* USB transfer callback */
-name|usb2_frlength_t
+name|usb_frlength_t
 name|bufsize
 decl_stmt|;
 comment|/* total pipe buffer size in bytes */
-name|usb2_frcount_t
+name|usb_frcount_t
 name|frames
 decl_stmt|;
 comment|/* maximum number of USB frames */
-name|usb2_timeout_t
+name|usb_timeout_t
 name|interval
 decl_stmt|;
 comment|/* interval in milliseconds */
@@ -1485,7 +1463,7 @@ define|#
 directive|define
 name|USB_DEFAULT_INTERVAL
 value|0
-name|usb2_timeout_t
+name|usb_timeout_t
 name|timeout
 decl_stmt|;
 comment|/* transfer timeout in milliseconds */
@@ -1616,7 +1594,7 @@ name|void
 modifier|*
 name|local_buffer
 decl_stmt|;
-name|usb2_frlength_t
+name|usb_frlength_t
 modifier|*
 name|frlengths
 decl_stmt|;
@@ -1625,25 +1603,25 @@ name|usb_page_cache
 modifier|*
 name|frbuffers
 decl_stmt|;
-name|usb2_callback_t
+name|usb_callback_t
 modifier|*
 name|callback
 decl_stmt|;
-name|usb2_frlength_t
+name|usb_frlength_t
 name|max_hc_frame_size
 decl_stmt|;
-name|usb2_frlength_t
+name|usb_frlength_t
 name|max_data_length
 decl_stmt|;
-name|usb2_frlength_t
+name|usb_frlength_t
 name|sumlen
 decl_stmt|;
 comment|/* sum of all lengths in bytes */
-name|usb2_frlength_t
+name|usb_frlength_t
 name|actlen
 decl_stmt|;
 comment|/* actual length in bytes */
-name|usb2_timeout_t
+name|usb_timeout_t
 name|timeout
 decl_stmt|;
 comment|/* milliseconds */
@@ -1656,15 +1634,15 @@ directive|define
 name|USB_DEFAULT_TIMEOUT
 value|5000
 comment|/* 5000 ms = 5 seconds */
-name|usb2_frcount_t
+name|usb_frcount_t
 name|max_frame_count
 decl_stmt|;
 comment|/* initial value of "nframes" after 					 * setup */
-name|usb2_frcount_t
+name|usb_frcount_t
 name|nframes
 decl_stmt|;
 comment|/* number of USB frames to transfer */
-name|usb2_frcount_t
+name|usb_frcount_t
 name|aframes
 decl_stmt|;
 comment|/* actual number of USB frames 					 * transferred */
@@ -1681,7 +1659,7 @@ name|uint16_t
 name|isoc_time_complete
 decl_stmt|;
 comment|/* in ms */
-name|usb2_timeout_t
+name|usb_timeout_t
 name|interval
 decl_stmt|;
 comment|/* milliseconds */
@@ -1708,7 +1686,7 @@ decl_stmt|;
 name|uint8_t
 name|usb2_state
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|struct
@@ -1861,19 +1839,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* typedefs */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|struct
-name|malloc_type
-modifier|*
-name|usb2_malloc_type
-typedef|;
-end_typedef
-
-begin_comment
 comment|/* prototypes */
 end_comment
 
@@ -1883,7 +1848,7 @@ name|char
 modifier|*
 name|usb2_errstr
 parameter_list|(
-name|usb2_error_t
+name|usb_error_t
 name|error
 parameter_list|)
 function_decl|;
@@ -1991,7 +1956,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|usb2_error_t
+name|usb_error_t
 name|usb2_set_alt_interface_index
 parameter_list|(
 name|struct
@@ -2047,7 +2012,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|usb2_error_t
+name|usb_error_t
 name|usb2_transfer_setup
 parameter_list|(
 name|struct
@@ -2100,7 +2065,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|usb2_frcount_t
+name|usb_frcount_t
 name|frindex
 parameter_list|)
 function_decl|;
@@ -2115,10 +2080,10 @@ name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
-name|usb2_frlength_t
+name|usb_frlength_t
 name|offset
 parameter_list|,
-name|usb2_frcount_t
+name|usb_frcount_t
 name|frindex
 parameter_list|)
 function_decl|;

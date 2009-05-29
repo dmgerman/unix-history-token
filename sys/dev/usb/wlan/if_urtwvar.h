@@ -325,7 +325,7 @@ modifier|*
 name|sc_curchan
 decl_stmt|;
 comment|/* for RF  */
-name|usb2_error_t
+name|usb_error_t
 function_decl|(
 modifier|*
 name|sc_rf_init
@@ -336,7 +336,7 @@ name|urtw_softc
 modifier|*
 parameter_list|)
 function_decl|;
-name|usb2_error_t
+name|usb_error_t
 function_decl|(
 modifier|*
 name|sc_rf_set_chan
@@ -349,7 +349,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-name|usb2_error_t
+name|usb_error_t
 function_decl|(
 modifier|*
 name|sc_rf_set_sens
@@ -362,7 +362,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-name|usb2_error_t
+name|usb_error_t
 function_decl|(
 modifier|*
 name|sc_rf_stop

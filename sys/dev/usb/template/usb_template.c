@@ -269,7 +269,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usb2_hw_ep_resolve
 parameter_list|(
 name|struct
@@ -395,7 +395,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usb2_temp_get_desc
 parameter_list|(
 name|struct
@@ -419,7 +419,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usb_temp_setup
 parameter_list|(
 name|struct
@@ -448,7 +448,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usb2_temp_setup_by_index
 parameter_list|(
 name|struct
@@ -3223,7 +3223,7 @@ end_comment
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usb2_hw_ep_resolve
 parameter_list|(
 name|struct
@@ -4304,7 +4304,7 @@ end_comment
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usb2_temp_get_desc
 parameter_list|(
 name|struct
@@ -4668,7 +4668,7 @@ end_comment
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usb_temp_setup
 parameter_list|(
 name|struct
@@ -5043,7 +5043,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usb2_temp_setup_by_index
 parameter_list|(
 name|struct
@@ -5055,7 +5055,7 @@ name|uint16_t
 name|index
 parameter_list|)
 block|{
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 switch|switch

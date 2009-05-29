@@ -1030,18 +1030,18 @@ modifier|*
 name|complete
 decl_stmt|;
 comment|/* (in) completion routine */
-name|usb2_size_t
+name|size_t
 name|transfer_buffer_length
 decl_stmt|;
 comment|/* (in) data buffer length */
-name|usb2_size_t
+name|size_t
 name|bsd_length_rem
 decl_stmt|;
-name|usb2_size_t
+name|size_t
 name|actual_length
 decl_stmt|;
 comment|/* (return) actual transfer length */
-name|usb2_timeout_t
+name|usb_timeout_t
 name|timeout
 decl_stmt|;
 comment|/* FreeBSD specific */
@@ -1079,11 +1079,11 @@ directive|define
 name|URB_IS_SLEEPING
 value|0x0020
 comment|/* custom flags */
-name|usb2_frcount_t
+name|usb_frcount_t
 name|start_frame
 decl_stmt|;
 comment|/* (modify) start frame (ISO) */
-name|usb2_frcount_t
+name|usb_frcount_t
 name|number_of_packets
 decl_stmt|;
 comment|/* (in) number of ISO packets */
@@ -1201,7 +1201,7 @@ parameter_list|,
 name|uint16_t
 name|size
 parameter_list|,
-name|usb2_timeout_t
+name|usb_timeout_t
 name|timeout
 parameter_list|)
 function_decl|;
@@ -1239,7 +1239,7 @@ name|usb_host_endpoint
 modifier|*
 name|uhe
 parameter_list|,
-name|usb2_frlength_t
+name|usb_frlength_t
 name|bufsize
 parameter_list|)
 function_decl|;
@@ -1325,7 +1325,7 @@ name|usb_device
 modifier|*
 name|dev
 parameter_list|,
-name|usb2_size_t
+name|size_t
 name|size
 parameter_list|,
 name|uint16_t
@@ -1360,7 +1360,7 @@ name|usb_device
 modifier|*
 name|dev
 parameter_list|,
-name|usb2_size_t
+name|size_t
 name|size
 parameter_list|,
 name|void

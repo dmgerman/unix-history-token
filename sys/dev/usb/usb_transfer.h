@@ -140,24 +140,24 @@ modifier|*
 name|udev
 decl_stmt|;
 comment|/* pointer to USB device */
-name|usb2_size_t
+name|size_t
 name|memory_size
 decl_stmt|;
-name|usb2_size_t
+name|size_t
 name|setup_refcount
 decl_stmt|;
 if|#
 directive|if
 name|USB_HAVE_BUSDMA
-name|usb2_frcount_t
+name|usb_frcount_t
 name|dma_nframes
 decl_stmt|;
 comment|/* number of page caches to load */
-name|usb2_frcount_t
+name|usb_frcount_t
 name|dma_currframe
 decl_stmt|;
 comment|/* currect page cache number */
-name|usb2_frlength_t
+name|usb_frlength_t
 name|dma_frlength_0
 decl_stmt|;
 comment|/* length of page cache zero */
@@ -231,20 +231,20 @@ name|void
 modifier|*
 name|buf
 decl_stmt|;
-name|usb2_frlength_t
+name|usb_frlength_t
 modifier|*
 name|xfer_length_ptr
 decl_stmt|;
-name|usb2_size_t
+name|size_t
 name|size
 index|[
 literal|7
 index|]
 decl_stmt|;
-name|usb2_frlength_t
+name|usb_frlength_t
 name|bufsize
 decl_stmt|;
-name|usb2_frlength_t
+name|usb_frlength_t
 name|bufsize_max
 decl_stmt|;
 name|uint16_t
@@ -263,7 +263,7 @@ decl_stmt|;
 name|uint8_t
 name|dma_tag_max
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 block|}
@@ -289,13 +289,13 @@ modifier|*
 modifier|*
 name|ppc
 parameter_list|,
-name|usb2_size_t
+name|size_t
 name|size
 parameter_list|,
-name|usb2_size_t
+name|size_t
 name|align
 parameter_list|,
-name|usb2_size_t
+name|size_t
 name|count
 parameter_list|)
 function_decl|;
@@ -363,7 +363,7 @@ name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
-name|usb2_error_t
+name|usb_error_t
 name|error
 parameter_list|)
 function_decl|;
@@ -444,19 +444,19 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|usb2_callback_t
+name|usb_callback_t
 name|usb2_do_request_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|usb2_callback_t
+name|usb_callback_t
 name|usb2_handle_request_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|usb2_callback_t
+name|usb_callback_t
 name|usb2_do_clear_stall_callback
 decl_stmt|;
 end_decl_stmt
@@ -481,14 +481,14 @@ modifier|*
 name|arg
 parameter_list|)
 parameter_list|,
-name|usb2_timeout_t
+name|usb_timeout_t
 name|ms
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|usb2_timeout_t
+name|usb_timeout_t
 name|usb2_get_dma_delay
 parameter_list|(
 name|struct

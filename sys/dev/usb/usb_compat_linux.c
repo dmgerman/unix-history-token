@@ -177,14 +177,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|usb_linux_isoc_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|usb_linux_non_isoc_callback
 decl_stmt|;
 end_decl_stmt
@@ -217,7 +217,7 @@ name|struct
 name|urb
 modifier|*
 parameter_list|,
-name|usb2_timeout_t
+name|usb_timeout_t
 parameter_list|,
 name|uint16_t
 modifier|*
@@ -2122,7 +2122,7 @@ name|urb
 modifier|*
 name|urb
 parameter_list|,
-name|usb2_timeout_t
+name|usb_timeout_t
 name|timeout
 parameter_list|,
 name|uint16_t
@@ -2297,7 +2297,7 @@ parameter_list|,
 name|uint16_t
 name|size
 parameter_list|,
-name|usb2_timeout_t
+name|usb_timeout_t
 name|timeout
 parameter_list|)
 block|{
@@ -2782,7 +2782,7 @@ name|usb_host_endpoint
 modifier|*
 name|uhe
 parameter_list|,
-name|usb2_size_t
+name|size_t
 name|bufsize
 parameter_list|)
 block|{
@@ -3239,7 +3239,7 @@ name|p_uhe
 init|=
 name|NULL
 decl_stmt|;
-name|usb2_size_t
+name|size_t
 name|size
 decl_stmt|;
 name|uint16_t
@@ -3767,7 +3767,7 @@ name|urb
 modifier|*
 name|urb
 decl_stmt|;
-name|usb2_size_t
+name|size_t
 name|size
 decl_stmt|;
 if|if
@@ -4284,7 +4284,7 @@ name|usb_device
 modifier|*
 name|dev
 parameter_list|,
-name|usb2_size_t
+name|size_t
 name|size
 parameter_list|,
 name|uint16_t
@@ -4568,7 +4568,7 @@ name|usb_device
 modifier|*
 name|dev
 parameter_list|,
-name|usb2_size_t
+name|size_t
 name|size
 parameter_list|,
 name|void
@@ -4954,17 +4954,17 @@ modifier|*
 name|xfer
 parameter_list|)
 block|{
-name|usb2_frlength_t
+name|usb_frlength_t
 name|max_frame
 init|=
 name|xfer
 operator|->
 name|max_frame_size
 decl_stmt|;
-name|usb2_frlength_t
+name|usb_frlength_t
 name|offset
 decl_stmt|;
-name|usb2_frcount_t
+name|usb_frcount_t
 name|x
 decl_stmt|;
 name|struct
@@ -5659,7 +5659,7 @@ name|uint8_t
 modifier|*
 name|ptr
 decl_stmt|;
-name|usb2_frlength_t
+name|usb_frlength_t
 name|max_bulk
 init|=
 name|xfer

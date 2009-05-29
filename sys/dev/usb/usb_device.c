@@ -298,7 +298,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|usb2_error_t
+name|usb_error_t
 name|usb2_config_parse
 parameter_list|(
 name|struct
@@ -1168,7 +1168,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_interface_count
 parameter_list|(
 name|struct
@@ -1639,7 +1639,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_set_config_index
 parameter_list|(
 name|struct
@@ -1672,7 +1672,7 @@ decl_stmt|;
 name|uint8_t
 name|do_unlock
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|DPRINTFN
@@ -2212,7 +2212,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_config_parse
 parameter_list|(
 name|struct
@@ -2251,7 +2251,7 @@ name|usb_pipe
 modifier|*
 name|pipe
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|uint8_t
@@ -2959,7 +2959,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_set_alt_interface_index
 parameter_list|(
 name|struct
@@ -2986,7 +2986,7 @@ argument_list|,
 name|iface_index
 argument_list|)
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|uint8_t
@@ -3165,7 +3165,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_set_endpoint_stall
 parameter_list|(
 name|struct
@@ -3423,7 +3423,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_reset_iface_endpoints
 parameter_list|(
 name|struct
@@ -3445,7 +3445,7 @@ name|usb_pipe
 modifier|*
 name|pipe_end
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|pipe
@@ -4303,7 +4303,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_probe_and_attach
 parameter_list|(
 name|struct
@@ -4781,7 +4781,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_suspend_resume
 parameter_list|(
 name|struct
@@ -5085,7 +5085,7 @@ decl_stmt|;
 name|uint32_t
 name|scratch_size
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|uint8_t
@@ -5380,7 +5380,7 @@ operator|->
 name|plugtime
 operator|=
 operator|(
-name|usb2_ticks_t
+name|usb_ticks_t
 operator|)
 name|ticks
 expr_stmt|;

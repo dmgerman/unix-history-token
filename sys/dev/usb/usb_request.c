@@ -613,7 +613,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_handle_request_t
+name|usb_handle_req_t
 modifier|*
 name|usb2_get_hr_func
 parameter_list|(
@@ -673,7 +673,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_do_request_flags
 parameter_list|(
 name|struct
@@ -702,11 +702,11 @@ name|uint16_t
 modifier|*
 name|actlen
 parameter_list|,
-name|usb2_timeout_t
+name|usb_timeout_t
 name|timeout
 parameter_list|)
 block|{
-name|usb2_handle_request_t
+name|usb_handle_req_t
 modifier|*
 name|hr_func
 decl_stmt|;
@@ -725,13 +725,13 @@ name|err
 init|=
 literal|0
 decl_stmt|;
-name|usb2_ticks_t
+name|usb_ticks_t
 name|start_ticks
 decl_stmt|;
-name|usb2_ticks_t
+name|usb_ticks_t
 name|delta_ticks
 decl_stmt|;
-name|usb2_ticks_t
+name|usb_ticks_t
 name|max_ticks
 decl_stmt|;
 name|uint16_t
@@ -1759,7 +1759,7 @@ block|}
 return|return
 operator|(
 operator|(
-name|usb2_error_t
+name|usb_error_t
 operator|)
 name|err
 operator|)
@@ -1772,7 +1772,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_do_request_proc
 parameter_list|(
 name|struct
@@ -1801,11 +1801,11 @@ name|uint16_t
 modifier|*
 name|actlen
 parameter_list|,
-name|usb2_timeout_t
+name|usb_timeout_t
 name|timeout
 parameter_list|)
 block|{
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|uint16_t
@@ -1939,7 +1939,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_reset_port
 parameter_list|(
 name|struct
@@ -1960,7 +1960,7 @@ name|struct
 name|usb_port_status
 name|ps
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|uint16_t
@@ -2266,7 +2266,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_get_desc
 parameter_list|(
 name|struct
@@ -2314,7 +2314,7 @@ name|uint8_t
 modifier|*
 name|buf
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|DPRINTFN
@@ -2580,7 +2580,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_get_string_any
 parameter_list|(
 name|struct
@@ -2624,7 +2624,7 @@ decl_stmt|;
 name|uint8_t
 name|swap
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 if|if
@@ -2949,7 +2949,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_get_string_desc
 parameter_list|(
 name|struct
@@ -3010,7 +3010,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_get_descriptor_ptr
 parameter_list|(
 name|struct
@@ -3032,7 +3032,7 @@ name|struct
 name|usb_device_request
 name|req
 decl_stmt|;
-name|usb2_handle_request_t
+name|usb_handle_req_t
 modifier|*
 name|hr_func
 decl_stmt|;
@@ -3044,7 +3044,7 @@ decl_stmt|;
 name|uint16_t
 name|len
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|req
@@ -3190,7 +3190,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_get_config_desc
 parameter_list|(
 name|struct
@@ -3212,7 +3212,7 @@ name|uint8_t
 name|conf_index
 parameter_list|)
 block|{
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|DPRINTFN
@@ -3303,7 +3303,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_get_config_desc_full
 parameter_list|(
 name|struct
@@ -3343,7 +3343,7 @@ decl_stmt|;
 name|uint16_t
 name|len
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|DPRINTFN
@@ -3509,7 +3509,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_get_device_desc
 parameter_list|(
 name|struct
@@ -3577,7 +3577,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_get_alt_interface_no
 parameter_list|(
 name|struct
@@ -3712,7 +3712,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_set_alt_interface_no
 parameter_list|(
 name|struct
@@ -3855,7 +3855,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_get_device_status
 parameter_list|(
 name|struct
@@ -3944,7 +3944,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_get_hub_descriptor
 parameter_list|(
 name|struct
@@ -4051,7 +4051,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_get_hub_status
 parameter_list|(
 name|struct
@@ -4140,7 +4140,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_set_address
 parameter_list|(
 name|struct
@@ -4239,7 +4239,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_get_port_status
 parameter_list|(
 name|struct
@@ -4338,7 +4338,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_clear_hub_feature
 parameter_list|(
 name|struct
@@ -4421,7 +4421,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_set_hub_feature
 parameter_list|(
 name|struct
@@ -4504,7 +4504,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_clear_port_feature
 parameter_list|(
 name|struct
@@ -4599,7 +4599,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_set_port_feature
 parameter_list|(
 name|struct
@@ -4694,7 +4694,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_set_protocol
 parameter_list|(
 name|struct
@@ -4845,7 +4845,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_set_report
 parameter_list|(
 name|struct
@@ -5000,7 +5000,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_get_report
 parameter_list|(
 name|struct
@@ -5161,7 +5161,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_set_idle
 parameter_list|(
 name|struct
@@ -5311,7 +5311,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_get_report_descriptor
 parameter_list|(
 name|struct
@@ -5452,7 +5452,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_set_config
 parameter_list|(
 name|struct
@@ -5552,7 +5552,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_get_config
 parameter_list|(
 name|struct
@@ -5636,7 +5636,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_re_enumerate
 parameter_list|(
 name|struct
@@ -5655,7 +5655,7 @@ name|usb_device
 modifier|*
 name|parent_hub
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|uint8_t
@@ -5956,7 +5956,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_clear_device_feature
 parameter_list|(
 name|struct
@@ -6039,7 +6039,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_set_device_feature
 parameter_list|(
 name|struct

@@ -165,42 +165,42 @@ end_endif
 
 begin_decl_stmt
 specifier|static
-name|usb2_proc_callback_t
+name|usb_proc_callback_t
 name|usb2_com_cfg_start_transfers
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_proc_callback_t
+name|usb_proc_callback_t
 name|usb2_com_cfg_open
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_proc_callback_t
+name|usb_proc_callback_t
 name|usb2_com_cfg_close
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_proc_callback_t
+name|usb_proc_callback_t
 name|usb2_com_cfg_line_state
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_proc_callback_t
+name|usb_proc_callback_t
 name|usb2_com_cfg_status_change
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_proc_callback_t
+name|usb_proc_callback_t
 name|usb2_com_cfg_param
 decl_stmt|;
 end_decl_stmt
@@ -265,7 +265,7 @@ name|struct
 name|ucom_softc
 modifier|*
 parameter_list|,
-name|usb2_proc_callback_t
+name|usb_proc_callback_t
 modifier|*
 parameter_list|,
 name|struct
@@ -1491,7 +1491,7 @@ name|ucom_softc
 modifier|*
 name|sc
 parameter_list|,
-name|usb2_proc_callback_t
+name|usb_proc_callback_t
 modifier|*
 name|fn
 parameter_list|,

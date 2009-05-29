@@ -487,21 +487,21 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|uvisor_write_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|uvisor_read_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|uvisor_init
 parameter_list|(
 name|struct
@@ -1586,7 +1586,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|uvisor_init
 parameter_list|(
 name|struct
@@ -1605,7 +1605,7 @@ modifier|*
 name|config
 parameter_list|)
 block|{
-name|usb2_error_t
+name|usb_error_t
 name|err
 init|=
 literal|0
@@ -2340,7 +2340,7 @@ name|struct
 name|usb_device_request
 name|req
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|req

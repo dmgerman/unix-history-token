@@ -82,7 +82,7 @@ begin_typedef
 typedef|typedef
 name|void
 function_decl|(
-name|usb2_proc_callback_t
+name|usb_proc_callback_t
 function_decl|)
 parameter_list|(
 name|struct
@@ -107,11 +107,11 @@ argument|usb_proc_msg
 argument_list|)
 name|pm_qentry
 expr_stmt|;
-name|usb2_proc_callback_t
+name|usb_proc_callback_t
 modifier|*
 name|pm_callback
 decl_stmt|;
-name|usb2_size_t
+name|size_t
 name|pm_num
 decl_stmt|;
 block|}
@@ -156,7 +156,7 @@ name|mtx
 modifier|*
 name|up_mtx
 decl_stmt|;
-name|usb2_size_t
+name|size_t
 name|up_msg_num
 decl_stmt|;
 name|uint8_t

@@ -387,7 +387,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|uhub_intr_callback
 decl_stmt|;
 end_decl_stmt
@@ -755,7 +755,7 @@ end_comment
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|uhub_explore_sub
 parameter_list|(
 name|struct
@@ -782,7 +782,7 @@ decl_stmt|;
 name|uint8_t
 name|refcount
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|bus
@@ -917,7 +917,7 @@ end_comment
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|uhub_read_port_status
 parameter_list|(
 name|struct
@@ -933,7 +933,7 @@ name|struct
 name|usb_port_status
 name|ps
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|err
@@ -1021,7 +1021,7 @@ end_comment
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|uhub_reattach_port
 parameter_list|(
 name|struct
@@ -1051,7 +1051,7 @@ name|enum
 name|usb_hc_mode
 name|mode
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|uint8_t
@@ -1645,7 +1645,7 @@ end_comment
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|uhub_suspend_resume_port
 parameter_list|(
 name|struct
@@ -1670,7 +1670,7 @@ decl_stmt|;
 name|uint8_t
 name|is_suspend
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|DPRINTF
@@ -1878,7 +1878,7 @@ end_comment
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|uhub_explore
 parameter_list|(
 name|struct
@@ -1902,7 +1902,7 @@ name|usb_port
 modifier|*
 name|up
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|uint8_t
@@ -2436,7 +2436,7 @@ decl_stmt|;
 name|uint8_t
 name|iface_index
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|sc
@@ -3898,7 +3898,7 @@ specifier|static
 name|uint8_t
 name|usb2_intr_find_best_slot
 parameter_list|(
-name|usb2_size_t
+name|size_t
 modifier|*
 name|ptr
 parameter_list|,
@@ -3909,7 +3909,7 @@ name|uint8_t
 name|end
 parameter_list|)
 block|{
-name|usb2_size_t
+name|size_t
 name|max
 init|=
 literal|0
@@ -5182,7 +5182,7 @@ parameter_list|)
 block|{
 specifier|static
 specifier|const
-name|usb2_power_mask_t
+name|usb_power_mask_t
 name|power_mask
 index|[
 literal|4
@@ -5546,16 +5546,16 @@ name|usb_device
 modifier|*
 name|udev
 decl_stmt|;
-name|usb2_ticks_t
+name|usb_ticks_t
 name|temp
 decl_stmt|;
-name|usb2_ticks_t
+name|usb_ticks_t
 name|limit
 decl_stmt|;
-name|usb2_ticks_t
+name|usb_ticks_t
 name|mintime
 decl_stmt|;
-name|usb2_size_t
+name|size_t
 name|type_refs
 index|[
 literal|5
@@ -6722,7 +6722,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|usb2_timeout_t
+name|usb_timeout_t
 name|temp
 decl_stmt|;
 comment|/* suspend device on the USB controller */

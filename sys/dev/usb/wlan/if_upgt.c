@@ -1312,14 +1312,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|upgt_bulk_rx_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|upgt_bulk_tx_callback
 decl_stmt|;
 end_decl_stmt

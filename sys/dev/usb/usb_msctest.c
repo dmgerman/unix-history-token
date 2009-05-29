@@ -289,19 +289,19 @@ name|uint8_t
 modifier|*
 name|data_ptr
 decl_stmt|;
-name|usb2_size_t
+name|size_t
 name|data_len
 decl_stmt|;
 comment|/* bytes */
-name|usb2_size_t
+name|size_t
 name|data_rem
 decl_stmt|;
 comment|/* bytes */
-name|usb2_timeout_t
+name|usb_timeout_t
 name|data_timeout
 decl_stmt|;
 comment|/* ms */
-name|usb2_frlength_t
+name|usb_frlength_t
 name|actlen
 decl_stmt|;
 comment|/* bytes */
@@ -336,42 +336,42 @@ end_struct
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|bbb_command_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|bbb_data_read_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|bbb_data_rd_cs_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|bbb_data_write_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|bbb_data_wr_cs_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|bbb_status_callback
 decl_stmt|;
 end_decl_stmt
@@ -1162,7 +1162,7 @@ name|xfer
 operator|->
 name|priv_sc
 decl_stmt|;
-name|usb2_frlength_t
+name|usb_frlength_t
 name|max_bulk
 init|=
 name|xfer
@@ -1382,7 +1382,7 @@ name|xfer
 operator|->
 name|priv_sc
 decl_stmt|;
-name|usb2_frlength_t
+name|usb_frlength_t
 name|max_bulk
 init|=
 name|xfer
@@ -1794,13 +1794,13 @@ name|void
 modifier|*
 name|data_ptr
 parameter_list|,
-name|usb2_size_t
+name|size_t
 name|data_len
 parameter_list|,
 name|uint8_t
 name|cmd_len
 parameter_list|,
-name|usb2_timeout_t
+name|usb_timeout_t
 name|data_timeout
 parameter_list|)
 block|{
@@ -1916,7 +1916,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_test_autoinstall
 parameter_list|(
 name|struct
@@ -1941,7 +1941,7 @@ name|usb_interface_descriptor
 modifier|*
 name|id
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|uint8_t

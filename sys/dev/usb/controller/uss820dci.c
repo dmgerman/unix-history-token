@@ -272,7 +272,7 @@ name|struct
 name|usb_xfer
 modifier|*
 parameter_list|,
-name|usb2_error_t
+name|usb_error_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4238,7 +4238,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|uss820dci_standard_done_sub
 parameter_list|(
 name|struct
@@ -4448,7 +4448,7 @@ modifier|*
 name|xfer
 parameter_list|)
 block|{
-name|usb2_error_t
+name|usb_error_t
 name|err
 init|=
 literal|0
@@ -4608,7 +4608,7 @@ name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
-name|usb2_error_t
+name|usb_error_t
 name|error
 parameter_list|)
 block|{
@@ -5155,7 +5155,7 @@ block|}
 end_function
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|uss820dci_init
 parameter_list|(
 name|struct
@@ -6993,7 +6993,7 @@ end_expr_stmt
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|uss820dci_roothub_exec
 parameter_list|(
 name|struct
@@ -7043,7 +7043,7 @@ decl_stmt|;
 name|uint16_t
 name|index
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|USB_BUS_LOCK_ASSERT

@@ -248,7 +248,7 @@ name|char
 modifier|*
 name|temp_p
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 if|if

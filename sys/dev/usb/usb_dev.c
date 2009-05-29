@@ -416,7 +416,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usb2_ref_device
 parameter_list|(
 name|struct
@@ -430,7 +430,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usb2_usb_ref_device
 parameter_list|(
 name|struct
@@ -496,28 +496,28 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_open_t
+name|usb_fifo_open_t
 name|usb2_fifo_dummy_open
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_close_t
+name|usb_fifo_close_t
 name|usb2_fifo_dummy_close
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_ioctl_t
+name|usb_fifo_ioctl_t
 name|usb2_fifo_dummy_ioctl
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_cmd_t
+name|usb_fifo_cmd_t
 name|usb2_fifo_dummy_cmd
 decl_stmt|;
 end_decl_stmt
@@ -700,7 +700,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_ref_device
 parameter_list|(
 name|struct
@@ -1295,7 +1295,7 @@ end_comment
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usb2_usb_ref_device
 parameter_list|(
 name|struct
@@ -7128,7 +7128,7 @@ name|usb_fifo
 modifier|*
 name|f
 parameter_list|,
-name|usb2_size_t
+name|size_t
 name|bufsize
 parameter_list|,
 name|uint16_t
@@ -7398,7 +7398,7 @@ block|}
 end_function
 
 begin_function
-name|usb2_size_t
+name|size_t
 name|usb2_fifo_put_bytes_max
 parameter_list|(
 name|struct
@@ -7412,7 +7412,7 @@ name|usb_mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|usb2_size_t
+name|size_t
 name|len
 decl_stmt|;
 name|USB_IF_POLL
@@ -7470,10 +7470,10 @@ name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|,
-name|usb2_frlength_t
+name|usb_frlength_t
 name|offset
 parameter_list|,
-name|usb2_frlength_t
+name|usb_frlength_t
 name|len
 parameter_list|,
 name|uint8_t
@@ -7485,7 +7485,7 @@ name|usb_mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|usb2_frlength_t
+name|usb_frlength_t
 name|io_len
 decl_stmt|;
 while|while
@@ -7633,7 +7633,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|usb2_size_t
+name|size_t
 name|len
 parameter_list|,
 name|uint8_t
@@ -7645,7 +7645,7 @@ name|usb_mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|usb2_size_t
+name|size_t
 name|io_len
 decl_stmt|;
 while|while
@@ -7796,7 +7796,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|usb2_size_t
+name|size_t
 name|len
 parameter_list|)
 block|{
@@ -7903,13 +7903,13 @@ name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|,
-name|usb2_frlength_t
+name|usb_frlength_t
 name|offset
 parameter_list|,
-name|usb2_frlength_t
+name|usb_frlength_t
 name|len
 parameter_list|,
-name|usb2_frlength_t
+name|usb_frlength_t
 modifier|*
 name|actlen
 parameter_list|,
@@ -7922,7 +7922,7 @@ name|usb_mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|usb2_frlength_t
+name|usb_frlength_t
 name|io_len
 decl_stmt|;
 name|uint8_t
@@ -8153,10 +8153,10 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|usb2_size_t
+name|size_t
 name|len
 parameter_list|,
-name|usb2_size_t
+name|size_t
 modifier|*
 name|actlen
 parameter_list|,
@@ -8169,7 +8169,7 @@ name|usb_mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|usb2_size_t
+name|size_t
 name|io_len
 decl_stmt|;
 name|uint8_t
@@ -8404,7 +8404,7 @@ modifier|*
 modifier|*
 name|pptr
 parameter_list|,
-name|usb2_size_t
+name|size_t
 modifier|*
 name|plen
 parameter_list|)
