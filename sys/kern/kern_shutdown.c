@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kdb.h>
 end_include
 
@@ -181,12 +187,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sysproto.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vimage.h>
 end_include
 
 begin_include
@@ -2733,7 +2733,9 @@ name|kdh
 operator|->
 name|hostname
 argument_list|,
-name|G_hostname
+name|prison0
+operator|.
+name|pr_host
 argument_list|,
 sizeof|sizeof
 argument_list|(

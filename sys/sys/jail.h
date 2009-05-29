@@ -446,6 +446,13 @@ directive|include
 file|<sys/osd.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|HOSTUUIDLEN
+value|64
+end_define
+
 begin_comment
 comment|/*  * This structure describes a prison.  It is pointed to by all struct  * ucreds's of the inmates.  pr_ref keeps track of them and is used to  * delete the struture when the last inmate is dead.  *  * Lock key:  *   (a) allprison_lock  *   (p) locked by pr_mtx  *   (c) set only during creation before the structure is shared, no mutex  *       required to read  *   (d) set only during destruction of jail, no mutex needed  */
 end_comment
@@ -581,6 +588,25 @@ name|int
 name|pr_enforce_statfs
 decl_stmt|;
 comment|/* (p) statfs permission */
+name|char
+name|pr_domain
+index|[
+name|MAXHOSTNAMELEN
+index|]
+decl_stmt|;
+comment|/* (p) jail domainname */
+name|char
+name|pr_uuid
+index|[
+name|HOSTUUIDLEN
+index|]
+decl_stmt|;
+comment|/* (p) jail hostuuid */
+name|unsigned
+name|long
+name|pr_hostid
+decl_stmt|;
+comment|/* (p) jail hostid */
 block|}
 struct|;
 end_struct
@@ -613,6 +639,17 @@ end_define
 
 begin_comment
 comment|/* Can exist without processes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PR_HOST
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Virtualize hostname et al */
 end_comment
 
 begin_define

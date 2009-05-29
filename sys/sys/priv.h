@@ -228,12 +228,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRIV_SETHOSTID
+name|_PRIV_SETHOSTID
 value|19
 end_define
 
 begin_comment
-comment|/* Can call sethostid. */
+comment|/* Removed. */
 end_comment
 
 begin_define

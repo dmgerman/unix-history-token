@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -49,12 +55,6 @@ begin_include
 include|#
 directive|include
 file|<sys/fbio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vimage.h>
 end_include
 
 begin_include
@@ -1646,12 +1646,21 @@ modifier|*
 name|adp
 parameter_list|)
 block|{
-comment|/* XXXRW: Locking -- these can change! */
+name|mtx_lock
+argument_list|(
+operator|&
+name|prison0
+operator|.
+name|pr_mtx
+argument_list|)
+expr_stmt|;
 name|messagelen
 operator|=
 name|strlen
 argument_list|(
-name|G_hostname
+name|prison0
+operator|.
+name|pr_host
 argument_list|)
 operator|+
 literal|3
@@ -1687,11 +1696,21 @@ name|message
 argument_list|,
 literal|"%s - %s %s"
 argument_list|,
-name|G_hostname
+name|prison0
+operator|.
+name|pr_host
 argument_list|,
 name|ostype
 argument_list|,
 name|osrelease
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|prison0
+operator|.
+name|pr_mtx
 argument_list|)
 expr_stmt|;
 name|blanked

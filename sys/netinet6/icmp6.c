@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -1537,15 +1543,6 @@ argument_list|(
 name|curvnet
 argument_list|)
 expr_stmt|;
-name|INIT_VPROCG
-argument_list|(
-name|TD_TO_VPROCG
-argument_list|(
-name|curthread
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* XXX V_hostname needs this */
 name|struct
 name|mbuf
 modifier|*
@@ -2599,10 +2596,6 @@ else|else
 goto|goto
 name|badlen
 goto|;
-define|#
-directive|define
-name|hostnamelen
-value|strlen(V_hostname)
 if|if
 condition|(
 name|mode
@@ -2666,6 +2659,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|struct
+name|prison
+modifier|*
+name|pr
+decl_stmt|;
 name|u_char
 modifier|*
 name|p
@@ -2674,6 +2672,8 @@ name|int
 name|maxlen
 decl_stmt|,
 name|maxhlen
+decl_stmt|,
+name|hlen
 decl_stmt|;
 comment|/* 			 * XXX: this combination of flags is pointless, 			 * but should we keep this for compatibility? 			 */
 if|if
@@ -2832,21 +2832,40 @@ argument_list|)
 operator|-
 name|maxlen
 expr_stmt|;
+name|pr
+operator|=
+name|curthread
+operator|->
+name|td_ucred
+operator|->
+name|cr_prison
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|hostname_mtx
+name|pr
+operator|->
+name|pr_mtx
+argument_list|)
+expr_stmt|;
+name|hlen
+operator|=
+name|strlen
+argument_list|(
+name|pr
+operator|->
+name|pr_host
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|maxhlen
 operator|>
-name|hostnamelen
+name|hlen
 condition|)
 name|maxhlen
 operator|=
-name|hostnamelen
+name|hlen
 expr_stmt|;
 comment|/* 			 * Copy IPv6 and ICMPv6 only. 			 */
 name|nip6
@@ -2920,7 +2939,9 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|V_hostname
+name|pr
+operator|->
+name|pr_host
 argument_list|,
 name|p
 operator|+
@@ -2933,7 +2954,9 @@ comment|/* meaningless TTL */
 name|mtx_unlock
 argument_list|(
 operator|&
-name|hostname_mtx
+name|pr
+operator|->
+name|pr_mtx
 argument_list|)
 expr_stmt|;
 name|noff
@@ -2983,9 +3006,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-undef|#
-directive|undef
-name|hostnamelen
 if|if
 condition|(
 name|n
@@ -4946,13 +4966,6 @@ begin_comment
 comment|/*  * Process a Node Information Query packet, based on  * draft-ietf-ipngwg-icmp-name-lookups-07.  *  * Spec incompatibilities:  * - IPv6 Subject address handling  * - IPv4 Subject address handling support missing  * - Proxy reply (answer even if it's not for me)  * - joins NI group address at in6_ifattach() time only, does not cope  *   with hostname changes by sethostname(3)  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|hostnamelen
-value|strlen(V_hostname)
-end_define
-
 begin_function
 specifier|static
 name|struct
@@ -4974,15 +4987,6 @@ argument_list|(
 name|curvnet
 argument_list|)
 expr_stmt|;
-name|INIT_VPROCG
-argument_list|(
-name|TD_TO_VPROCG
-argument_list|(
-name|curthread
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* XXX V_hostname needs this */
 name|struct
 name|icmp6_nodeinfo
 modifier|*
@@ -4997,6 +5001,11 @@ modifier|*
 name|n
 init|=
 name|NULL
+decl_stmt|;
+name|struct
+name|prison
+modifier|*
+name|pr
 decl_stmt|;
 name|u_int16_t
 name|qtype
@@ -5459,19 +5468,36 @@ case|case
 name|ICMP6_NI_SUBJ_FQDN
 case|:
 comment|/* 			 * Validate Subject name with gethostname(3). 			 * 			 * The behavior may need some debate, since: 			 * - we are not sure if the node has FQDN as 			 *   hostname (returned by gethostname(3)). 			 * - the code does wildcard match for truncated names. 			 *   however, we are not sure if we want to perform 			 *   wildcard match, if gethostname(3) side has 			 *   truncated hostname. 			 */
+name|pr
+operator|=
+name|curthread
+operator|->
+name|td_ucred
+operator|->
+name|cr_prison
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|hostname_mtx
+name|pr
+operator|->
+name|pr_mtx
 argument_list|)
 expr_stmt|;
 name|n
 operator|=
 name|ni6_nametodns
 argument_list|(
-name|V_hostname
+name|pr
+operator|->
+name|pr_host
 argument_list|,
-name|hostnamelen
+name|strlen
+argument_list|(
+name|pr
+operator|->
+name|pr_host
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)
@@ -5479,7 +5505,9 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|hostname_mtx
+name|pr
+operator|->
+name|pr_mtx
 argument_list|)
 expr_stmt|;
 if|if
@@ -6018,11 +6046,21 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* ditto. */
-comment|/* 		 * XXX do we really have FQDN in variable "hostname"? 		 */
+comment|/* 		 * XXX do we really have FQDN in hostname? 		 */
+name|pr
+operator|=
+name|curthread
+operator|->
+name|td_ucred
+operator|->
+name|cr_prison
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|hostname_mtx
+name|pr
+operator|->
+name|pr_mtx
 argument_list|)
 expr_stmt|;
 name|n
@@ -6031,9 +6069,16 @@ name|m_next
 operator|=
 name|ni6_nametodns
 argument_list|(
-name|V_hostname
+name|pr
+operator|->
+name|pr_host
 argument_list|,
-name|hostnamelen
+name|strlen
+argument_list|(
+name|pr
+operator|->
+name|pr_host
+argument_list|)
 argument_list|,
 name|oldfqdn
 argument_list|)
@@ -6041,7 +6086,9 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|hostname_mtx
+name|pr
+operator|->
+name|pr_mtx
 argument_list|)
 expr_stmt|;
 if|if
@@ -6209,12 +6256,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_undef
-undef|#
-directive|undef
-name|hostnamelen
-end_undef
 
 begin_comment
 comment|/*  * make a mbuf with DNS-encoded string.  no compression support.  *  * XXX names with less than 2 dots (like "foo" or "foo.section") will be  * treated as truncated name (two \0 at the end).  this is a wild guess.  *  * old - return pascal string if non-zero  */

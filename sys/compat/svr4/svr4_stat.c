@@ -104,12 +104,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 
@@ -1893,7 +1887,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*extern char ostype[], hostname[], osrelease[], version[], machine[];*/
+comment|/*extern char ostype[], osrelease[], version[], machine[];*/
 end_comment
 
 begin_function
@@ -2059,14 +2053,11 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
-name|INIT_VPROCG
-argument_list|(
-name|TD_TO_VPROCG
-argument_list|(
-name|td
-argument_list|)
-argument_list|)
-expr_stmt|;
+name|struct
+name|prison
+modifier|*
+name|pr
+decl_stmt|;
 name|char
 modifier|*
 name|str
@@ -2094,10 +2085,9 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-literal|11
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
-comment|/* XXX NetBSD uses 256, but we use 11 				     here as that seems like awfully 				     excessive kstack usage for hostid 				     string... */
 name|u_int
 name|rlen
 init|=
@@ -2123,9 +2113,23 @@ break|break;
 case|case
 name|SVR4_SI_HOSTNAME
 case|:
+name|getcredhostname
+argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|str
 operator|=
-name|V_hostname
+name|buf
 expr_stmt|;
 break|break;
 case|case
@@ -2235,10 +2239,47 @@ break|break;
 case|case
 name|SVR4_SI_SRPC_DOMAIN
 case|:
-comment|/* XXXRW: locking? */
+name|pr
+operator|=
+name|td
+operator|->
+name|td_ucred
+operator|->
+name|cr_prison
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|pr
+operator|->
+name|pr_mtx
+argument_list|)
+expr_stmt|;
+name|strlcpy
+argument_list|(
+name|buf
+argument_list|,
+name|pr
+operator|->
+name|pr_domain
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|pr
+operator|->
+name|pr_mtx
+argument_list|)
+expr_stmt|;
 name|str
 operator|=
-name|V_domainname
+name|buf
 expr_stmt|;
 break|break;
 case|case
