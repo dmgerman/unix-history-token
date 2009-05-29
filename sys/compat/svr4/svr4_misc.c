@@ -2338,6 +2338,10 @@ argument_list|(
 literal|"svr4_sys_getdents64: bad reclen"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cookie
+condition|)
 name|off
 operator|=
 operator|*
@@ -2345,6 +2349,11 @@ name|cookie
 operator|++
 expr_stmt|;
 comment|/* each entry points to the next */
+else|else
+name|off
+operator|+=
+name|reclen
+expr_stmt|;
 if|if
 condition|(
 operator|(
