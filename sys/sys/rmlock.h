@@ -243,7 +243,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Public interface for lock operations.  *  */
+comment|/*  * Public interface for lock operations.  */
 end_comment
 
 begin_ifndef
@@ -370,16 +370,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|rm_initialized
-parameter_list|(
-name|rm
-parameter_list|)
-value|lock_initalized(&(rm)->lock_object)
-end_define
 
 begin_struct
 struct|struct
