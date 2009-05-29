@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_adaptive_sx.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ddb.h"
 end_include
 
@@ -23,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_no_adaptive_sx.h"
 end_include
 
 begin_include
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker_set.h>
 end_include
 
 begin_include
@@ -84,14 +90,29 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ADAPTIVE_SX
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SMP
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_ADAPTIVE_SX
+argument_list|)
+end_if
 
 begin_include
 include|#
