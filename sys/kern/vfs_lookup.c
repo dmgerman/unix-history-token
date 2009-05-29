@@ -1231,7 +1231,7 @@ operator|&=
 operator|~
 name|GIANTHELD
 expr_stmt|;
-comment|/* 		 * Check for symbolic link 		 */
+comment|/* 		 * If not a symbolic link, we're done. 		 */
 if|if
 condition|(
 operator|(
