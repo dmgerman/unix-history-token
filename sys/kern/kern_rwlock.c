@@ -1808,7 +1808,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|ADAPTIVE_RWLOCKS
-comment|/* 		 * If the current owner of the lock is executing on another 		 * CPU quit the hard path and try to spin. 		 */
+comment|/* 		 * The current lock owner might have started executing 		 * on another CPU (or the lock could have changed 		 * owners) while we were waiting on the turnstile 		 * chain lock.  If so, drop the turnstile lock and try 		 * again. 		 */
 if|if
 condition|(
 operator|(
@@ -3126,7 +3126,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ADAPTIVE_RWLOCKS
-comment|/* 		 * If the current owner of the lock is executing on another 		 * CPU quit the hard path and try to spin. 		 */
+comment|/* 		 * The current lock owner might have started executing 		 * on another CPU (or the lock could have changed 		 * owners) while we were waiting on the turnstile 		 * chain lock.  If so, drop the turnstile lock and try 		 * again. 		 */
 if|if
 condition|(
 operator|!
