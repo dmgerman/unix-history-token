@@ -425,6 +425,20 @@ parameter_list|)
 value|(1<= (_bintval))
 end_define
 
+begin_comment
+comment|/*  * This code is not prepared to handle more than 2 slots.  */
+end_comment
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|TDMA_MAXSLOTS
+operator|==
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -952,6 +966,16 @@ name|vap
 operator|->
 name|iv_tdma
 decl_stmt|;
+if|if
+condition|(
+name|ts
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* NB: should not have touched any ic state */
+return|return;
+block|}
 name|ts
 operator|->
 name|tdma_opdetach
@@ -967,6 +991,12 @@ name|iv_tdma
 argument_list|,
 name|M_80211_VAP
 argument_list|)
+expr_stmt|;
+name|vap
+operator|->
+name|iv_tdma
+operator|=
+name|NULL
 expr_stmt|;
 name|setackpolicy
 argument_list|(
@@ -3471,9 +3501,9 @@ name|ireq
 operator|->
 name|i_val
 expr_stmt|;
-return|return
-name|ERESTART
-return|;
+goto|goto
+name|restart
+goto|;
 block|}
 break|break;
 case|case
@@ -3511,9 +3541,9 @@ name|ireq
 operator|->
 name|i_val
 expr_stmt|;
-return|return
-name|ERESTART
-return|;
+goto|goto
+name|restart
+goto|;
 block|}
 break|break;
 case|case
@@ -3552,9 +3582,9 @@ name|ireq
 operator|->
 name|i_val
 expr_stmt|;
-return|return
-name|ERESTART
-return|;
+goto|goto
+name|restart
+goto|;
 block|}
 break|break;
 case|case
@@ -3592,9 +3622,9 @@ name|ireq
 operator|->
 name|i_val
 expr_stmt|;
-return|return
-name|ERESTART
-return|;
+goto|goto
+name|restart
+goto|;
 block|}
 break|break;
 default|default:
@@ -3604,6 +3634,18 @@ return|;
 block|}
 return|return
 literal|0
+return|;
+name|restart
+label|:
+name|ieee80211_beacon_notify
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_BEACON_TDMA
+argument_list|)
+expr_stmt|;
+return|return
+name|ERESTART
 return|;
 block|}
 end_function
