@@ -6107,9 +6107,7 @@ comment|/* XXX should not happen */
 block|}
 block|}
 return|return
-operator|(
 name|rx_npkts
-operator|)
 return|;
 undef|#
 directive|undef
@@ -6187,9 +6185,7 @@ expr_stmt|;
 comment|/* XXX polls both NPE's */
 block|}
 return|return
-operator|(
 name|rx_npkts
-operator|)
 return|;
 block|}
 end_function
