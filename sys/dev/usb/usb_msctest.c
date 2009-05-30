@@ -289,11 +289,11 @@ name|uint8_t
 modifier|*
 name|data_ptr
 decl_stmt|;
-name|size_t
+name|usb_size_t
 name|data_len
 decl_stmt|;
 comment|/* bytes */
-name|size_t
+name|usb_size_t
 name|data_rem
 decl_stmt|;
 comment|/* bytes */
@@ -1794,7 +1794,7 @@ name|void
 modifier|*
 name|data_ptr
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|data_len
 parameter_list|,
 name|uint8_t

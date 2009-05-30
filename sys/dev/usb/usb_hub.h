@@ -110,7 +110,7 @@ name|void
 modifier|*
 name|hubsoftc
 decl_stmt|;
-name|size_t
+name|usb_size_t
 name|uframe_usage
 index|[
 name|USB_HS_MICRO_FRAMES_MAX

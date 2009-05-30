@@ -2782,7 +2782,7 @@ name|usb_host_endpoint
 modifier|*
 name|uhe
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|bufsize
 parameter_list|)
 block|{
@@ -3239,7 +3239,7 @@ name|p_uhe
 init|=
 name|NULL
 decl_stmt|;
-name|size_t
+name|usb_size_t
 name|size
 decl_stmt|;
 name|uint16_t
@@ -3767,7 +3767,7 @@ name|urb
 modifier|*
 name|urb
 decl_stmt|;
-name|size_t
+name|usb_size_t
 name|size
 decl_stmt|;
 if|if
@@ -4284,7 +4284,7 @@ name|usb_device
 modifier|*
 name|dev
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|size
 parameter_list|,
 name|uint16_t
@@ -4568,7 +4568,7 @@ name|usb_device
 modifier|*
 name|dev
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|size
 parameter_list|,
 name|void

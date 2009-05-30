@@ -757,7 +757,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|len
 parameter_list|,
 name|uint8_t
@@ -779,7 +779,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|len
 parameter_list|)
 function_decl|;
@@ -840,10 +840,10 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|len
 parameter_list|,
-name|size_t
+name|usb_size_t
 modifier|*
 name|actlen
 parameter_list|,
@@ -867,7 +867,7 @@ modifier|*
 modifier|*
 name|pptr
 parameter_list|,
-name|size_t
+name|usb_size_t
 modifier|*
 name|plen
 parameter_list|)

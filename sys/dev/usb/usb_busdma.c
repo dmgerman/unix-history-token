@@ -101,9 +101,9 @@ name|struct
 name|usb_dma_tag
 modifier|*
 parameter_list|,
-name|size_t
+name|usb_size_t
 parameter_list|,
-name|size_t
+name|usb_size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -721,7 +721,7 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|src_offset
 parameter_list|,
 name|usb_frlength_t
@@ -1246,10 +1246,10 @@ name|usb_dma_tag
 modifier|*
 name|udt
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|size
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|align
 parameter_list|)
 block|{
@@ -1508,7 +1508,7 @@ name|usb_page
 modifier|*
 name|pg
 decl_stmt|;
-name|size_t
+name|usb_size_t
 name|rem
 decl_stmt|;
 name|uint8_t
@@ -1752,10 +1752,10 @@ name|usb_page
 modifier|*
 name|pg
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|size
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|align
 parameter_list|)
 block|{
@@ -2162,7 +2162,7 @@ name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|size
 parameter_list|,
 name|uint8_t
@@ -2492,7 +2492,7 @@ name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|size
 parameter_list|)
 block|{
@@ -2672,10 +2672,10 @@ name|usb_dma_parent_tag
 modifier|*
 name|udpt
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|size
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|align
 parameter_list|)
 block|{

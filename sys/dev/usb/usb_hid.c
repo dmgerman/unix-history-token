@@ -332,7 +332,7 @@ name|void
 modifier|*
 name|d
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|len
 parameter_list|,
 name|int
@@ -2019,7 +2019,7 @@ name|void
 modifier|*
 name|buf
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|len
 parameter_list|,
 name|enum
@@ -2258,7 +2258,7 @@ name|void
 modifier|*
 name|desc
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|size
 parameter_list|,
 name|uint32_t
@@ -2460,7 +2460,7 @@ name|uint8_t
 modifier|*
 name|buf
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|len
 parameter_list|,
 name|struct
@@ -2655,7 +2655,7 @@ name|void
 modifier|*
 name|desc
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|size
 parameter_list|,
 name|uint32_t

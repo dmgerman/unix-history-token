@@ -182,7 +182,7 @@ name|physaddr
 decl_stmt|;
 endif|#
 directive|endif
-name|size_t
+name|usb_size_t
 name|length
 decl_stmt|;
 block|}
@@ -227,10 +227,10 @@ comment|/* virtual buffer pointer */
 if|#
 directive|if
 name|USB_HAVE_BUSDMA
-name|size_t
+name|usb_size_t
 name|page_offset_buf
 decl_stmt|;
-name|size_t
+name|usb_size_t
 name|page_offset_end
 decl_stmt|;
 name|uint8_t
@@ -353,10 +353,10 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|tag
 decl_stmt|;
-name|size_t
+name|usb_size_t
 name|align
 decl_stmt|;
-name|size_t
+name|usb_size_t
 name|size
 decl_stmt|;
 block|}
@@ -422,10 +422,10 @@ name|usb_dma_parent_tag
 modifier|*
 name|udpt
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|size
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|align
 parameter_list|)
 function_decl|;
@@ -445,10 +445,10 @@ name|usb_page
 modifier|*
 name|pg
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|size
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|align
 parameter_list|)
 function_decl|;
@@ -463,7 +463,7 @@ name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|size
 parameter_list|)
 function_decl|;
@@ -478,7 +478,7 @@ name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|size
 parameter_list|,
 name|uint8_t
@@ -727,7 +727,7 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|src_offset
 parameter_list|,
 name|usb_frlength_t

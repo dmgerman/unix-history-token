@@ -1030,14 +1030,14 @@ modifier|*
 name|complete
 decl_stmt|;
 comment|/* (in) completion routine */
-name|size_t
+name|usb_size_t
 name|transfer_buffer_length
 decl_stmt|;
 comment|/* (in) data buffer length */
-name|size_t
+name|usb_size_t
 name|bsd_length_rem
 decl_stmt|;
-name|size_t
+name|usb_size_t
 name|actual_length
 decl_stmt|;
 comment|/* (return) actual transfer length */
@@ -1325,7 +1325,7 @@ name|usb_device
 modifier|*
 name|dev
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|size
 parameter_list|,
 name|uint16_t
@@ -1360,7 +1360,7 @@ name|usb_device
 modifier|*
 name|dev
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|size
 parameter_list|,
 name|void

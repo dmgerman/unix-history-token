@@ -140,10 +140,10 @@ modifier|*
 name|udev
 decl_stmt|;
 comment|/* pointer to USB device */
-name|size_t
+name|usb_size_t
 name|memory_size
 decl_stmt|;
-name|size_t
+name|usb_size_t
 name|setup_refcount
 decl_stmt|;
 if|#
@@ -235,7 +235,7 @@ name|usb_frlength_t
 modifier|*
 name|xfer_length_ptr
 decl_stmt|;
-name|size_t
+name|usb_size_t
 name|size
 index|[
 literal|7
@@ -289,13 +289,13 @@ modifier|*
 modifier|*
 name|ppc
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|size
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|align
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|count
 parameter_list|)
 function_decl|;

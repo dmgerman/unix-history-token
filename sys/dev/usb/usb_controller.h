@@ -114,10 +114,10 @@ name|usb_page
 modifier|*
 name|pg
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|size
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|align
 parameter_list|)
 function_decl|;
@@ -545,7 +545,7 @@ name|void
 modifier|*
 name|buf
 decl_stmt|;
-name|size_t
+name|usb_size_t
 name|size
 decl_stmt|;
 name|enum

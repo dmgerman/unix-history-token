@@ -1095,6 +1095,28 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|USB_HAVE_SIZE_T
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|usb_size_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* bytes */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|USB_HAVE_TICKS_T
 end_ifndef
 

@@ -45,10 +45,10 @@ name|usb_mbuf
 modifier|*
 name|usb2_next
 decl_stmt|;
-name|size_t
+name|usb_size_t
 name|cur_data_len
 decl_stmt|;
-name|size_t
+name|usb_size_t
 name|max_data_len
 decl_stmt|;
 name|uint8_t
@@ -83,10 +83,10 @@ name|usb_mbuf
 modifier|*
 name|ifq_tail
 decl_stmt|;
-name|size_t
+name|usb_size_t
 name|ifq_len
 decl_stmt|;
-name|size_t
+name|usb_size_t
 name|ifq_maxlen
 decl_stmt|;
 block|}
@@ -190,7 +190,7 @@ name|usb_ifqueue
 modifier|*
 name|ifq
 parameter_list|,
-name|size_t
+name|usb_size_t
 name|block_size
 parameter_list|,
 name|uint16_t

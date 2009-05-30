@@ -390,18 +390,18 @@ name|usb_ticks_t
 name|last_xfer_time
 decl_stmt|;
 comment|/* copy of "ticks" */
-name|size_t
+name|usb_size_t
 name|type_refs
 index|[
 literal|4
 index|]
 decl_stmt|;
 comment|/* transfer reference count */
-name|size_t
+name|usb_size_t
 name|read_refs
 decl_stmt|;
 comment|/* data read references */
-name|size_t
+name|usb_size_t
 name|write_refs
 decl_stmt|;
 comment|/* data write references */

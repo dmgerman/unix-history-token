@@ -3898,7 +3898,7 @@ specifier|static
 name|uint8_t
 name|usb2_intr_find_best_slot
 parameter_list|(
-name|size_t
+name|usb_size_t
 modifier|*
 name|ptr
 parameter_list|,
@@ -3909,7 +3909,7 @@ name|uint8_t
 name|end
 parameter_list|)
 block|{
-name|size_t
+name|usb_size_t
 name|max
 init|=
 literal|0
@@ -5555,7 +5555,7 @@ decl_stmt|;
 name|usb_ticks_t
 name|mintime
 decl_stmt|;
-name|size_t
+name|usb_size_t
 name|type_refs
 index|[
 literal|5
