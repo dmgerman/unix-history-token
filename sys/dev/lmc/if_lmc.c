@@ -20290,7 +20290,9 @@ argument_list|,
 name|TLP_INT_TXRX
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 endif|#
 directive|endif
@@ -20311,6 +20313,9 @@ name|POLL_AND_CHECK_STATUS
 operator|)
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

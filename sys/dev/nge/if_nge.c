@@ -438,7 +438,7 @@ end_endif
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|nge_rxeof
 parameter_list|(
 name|struct
@@ -7254,7 +7254,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|nge_rxeof
 parameter_list|(
 name|struct
@@ -7288,6 +7288,8 @@ name|cons
 decl_stmt|,
 name|prog
 decl_stmt|,
+name|rx_npkts
+decl_stmt|,
 name|total_len
 decl_stmt|;
 name|uint32_t
@@ -7313,6 +7315,10 @@ operator|->
 name|nge_cdata
 operator|.
 name|nge_rx_cons
+expr_stmt|;
+name|rx_npkts
+operator|=
+literal|0
 expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
@@ -7976,6 +7982,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|rx_npkts
+operator|++
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -8012,6 +8021,11 @@ name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
@@ -8749,7 +8763,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|void
+name|int
 name|nge_poll
 parameter_list|(
 name|struct
@@ -8769,6 +8783,11 @@ name|struct
 name|nge_softc
 modifier|*
 name|sc
+decl_stmt|;
+name|int
+name|rx_npkts
+init|=
+literal|0
 decl_stmt|;
 name|sc
 operator|=
@@ -8799,7 +8818,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 comment|/* 	 * On the nge, reading the status register also clears it. 	 * So before returning to intr mode we must make sure that all 	 * possible pending sources of interrupts have been served. 	 * In practice this means run to completion the *eof routines, 	 * and then call the interrupt routine. 	 */
 name|sc
@@ -8808,6 +8831,8 @@ name|rxcycles
 operator|=
 name|count
 expr_stmt|;
+name|rx_npkts
+operator|=
 name|nge_rxeof
 argument_list|(
 name|sc
@@ -8874,6 +8899,8 @@ operator|)
 operator|!=
 literal|0
 condition|)
+name|rx_npkts
+operator|+=
 name|nge_rxeof
 argument_list|(
 name|sc
@@ -8928,6 +8955,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
