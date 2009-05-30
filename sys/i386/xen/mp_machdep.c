@@ -4035,11 +4035,6 @@ name|struct
 name|_call_data
 name|data
 decl_stmt|;
-name|call_data
-operator|=
-operator|&
-name|data
-expr_stmt|;
 name|ncpu
 operator|=
 name|mp_ncpus
@@ -4077,6 +4072,22 @@ argument_list|(
 operator|&
 name|smp_ipi_mtx
 argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|call_data
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"call_data isn't null?!"
+operator|)
+argument_list|)
+expr_stmt|;
+name|call_data
+operator|=
+operator|&
+name|data
 expr_stmt|;
 name|call_data
 operator|->
@@ -4263,6 +4274,17 @@ name|mtx_lock_spin
 argument_list|(
 operator|&
 name|smp_ipi_mtx
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|call_data
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"call_data isn't null?!"
+operator|)
 argument_list|)
 expr_stmt|;
 name|call_data
