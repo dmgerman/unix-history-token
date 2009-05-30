@@ -15494,7 +15494,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|rk_npkts
+name|rx_npkts
 operator|++
 expr_stmt|;
 if|if
