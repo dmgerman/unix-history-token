@@ -15671,7 +15671,7 @@ block|{
 comment|/* XXX fall back to mcast/mgmt rate? */
 name|m_freem
 argument_list|(
-name|m0
+name|m
 argument_list|)
 expr_stmt|;
 return|return
@@ -15709,7 +15709,7 @@ block|{
 comment|/* XXX fall back to rate0? */
 name|m_freem
 argument_list|(
-name|m0
+name|m
 argument_list|)
 expr_stmt|;
 return|return
