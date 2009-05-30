@@ -157,10 +157,10 @@ begin_struct
 struct|struct
 name|sctp_initmsg
 block|{
-name|uint32_t
+name|uint16_t
 name|sinit_num_ostreams
 decl_stmt|;
-name|uint32_t
+name|uint16_t
 name|sinit_max_instreams
 decl_stmt|;
 name|uint16_t
