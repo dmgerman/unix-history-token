@@ -19960,6 +19960,16 @@ name|set
 decl_stmt|,
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|time
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Its disabled */
+return|return;
+block|}
 operator|(
 name|void
 operator|)
@@ -21603,7 +21613,10 @@ name|asoc
 operator|->
 name|my_vtag
 argument_list|,
-name|SCTP_TIME_WAIT
+name|SCTP_BASE_SYSCTL
+argument_list|(
+name|sctp_vtag_time_wait
+argument_list|)
 argument_list|,
 name|inp
 operator|->
