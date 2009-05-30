@@ -2893,13 +2893,6 @@ define|\
 value|({if (*(MP)->mnt_op->vfs_susp_clean != NULL)		\ 	       (*(MP)->mnt_op->vfs_susp_clean)(MP); })
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|mpsafe_vfs
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -2908,7 +2901,7 @@ parameter_list|(
 name|MP
 parameter_list|)
 define|\
-value|(!mpsafe_vfs || ((MP) != NULL&& ((MP)->mnt_kern_flag& MNTK_MPSAFE) == 0))
+value|((MP) != NULL&& ((MP)->mnt_kern_flag& MNTK_MPSAFE) == 0)
 end_define
 
 begin_define

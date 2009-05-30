@@ -534,50 +534,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Enable Giant pushdown based on whether or not the vm is mpsafe in this  * build.  Without mpsafevm the buffer cache can not run Giant free.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|mpsafe_vfs
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"debug.mpsafevfs"
-argument_list|,
-operator|&
-name|mpsafe_vfs
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_debug
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|mpsafevfs
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|mpsafe_vfs
-argument_list|,
-literal|0
-argument_list|,
-literal|"MPSAFE VFS"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*  * Number of vnodes in existence.  Increased whenever getnewvnode()  * allocates a new vnode, decreased on vdestroy() called on VI_DOOMed  * vnode.  */
 end_comment
 
