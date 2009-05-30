@@ -321,11 +321,8 @@ define|\
 value|memcpy(dst, src, sizeof(struct ether_header))
 end_define
 
-begin_comment
-comment|/* XXX public for sysctl hookup */
-end_comment
-
 begin_decl_stmt
+specifier|static
 name|int
 name|ieee80211_ffppsmin
 init|=
@@ -337,7 +334,31 @@ begin_comment
 comment|/* pps threshold for ff aggregation */
 end_comment
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_wlan
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ffppsmin
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ieee80211_ffppsmin
+argument_list|,
+literal|0
+argument_list|,
+literal|"min packet rate before fast-frame staging"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
+specifier|static
 name|int
 name|ieee80211_ffagemax
 init|=
@@ -349,6 +370,33 @@ end_decl_stmt
 begin_comment
 comment|/* max time frames held on stage q */
 end_comment
+
+begin_expr_stmt
+name|SYSCTL_PROC
+argument_list|(
+name|_net_wlan
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ffagemax
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ieee80211_ffagemax
+argument_list|,
+literal|0
+argument_list|,
+name|ieee80211_sysctl_msecs_ticks
+argument_list|,
+literal|"I"
+argument_list|,
+literal|"max hold time for fast-frame staging (ms)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|void

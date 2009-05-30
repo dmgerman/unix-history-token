@@ -140,11 +140,8 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* XXX public for sysctl hookup */
-end_comment
-
 begin_decl_stmt
+specifier|static
 name|int
 name|ieee80211_nol_timeout
 init|=
@@ -158,6 +155,27 @@ begin_comment
 comment|/* 30 minutes */
 end_comment
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_wlan
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|nol_timeout
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ieee80211_nol_timeout
+argument_list|,
+literal|0
+argument_list|,
+literal|"NOL timeout (secs)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -166,6 +184,7 @@ value|msecs_to_ticks(ieee80211_nol_timeout*1000)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ieee80211_cac_timeout
 init|=
@@ -176,6 +195,27 @@ end_decl_stmt
 begin_comment
 comment|/* 60 seconds */
 end_comment
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_wlan
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|cac_timeout
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ieee80211_cac_timeout
+argument_list|,
+literal|0
+argument_list|,
+literal|"CAC timeout (secs)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#

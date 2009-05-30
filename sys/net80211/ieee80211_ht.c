@@ -374,11 +374,8 @@ directive|ifdef
 name|IEEE80211_AMPDU_AGE
 end_ifdef
 
-begin_comment
-comment|/* XXX public for sysctl hookup */
-end_comment
-
 begin_decl_stmt
+specifier|static
 name|int
 name|ieee80211_ampdu_age
 init|=
@@ -391,12 +388,40 @@ begin_comment
 comment|/* threshold for ampdu reorder q (ms) */
 end_comment
 
+begin_expr_stmt
+name|SYSCTL_PROC
+argument_list|(
+name|_net_wlan
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ampdu_age
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ieee80211_ampdu_age
+argument_list|,
+literal|0
+argument_list|,
+name|ieee80211_sysctl_msecs_ticks
+argument_list|,
+literal|"I"
+argument_list|,
+literal|"AMPDU max reorder age (ms)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ieee80211_recv_bar_ena
 init|=
@@ -404,7 +429,29 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_wlan
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|recv_bar
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ieee80211_recv_bar_ena
+argument_list|,
+literal|0
+argument_list|,
+literal|"BAR frame processing (ena/dis)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
+specifier|static
 name|int
 name|ieee80211_addba_timeout
 init|=
@@ -414,10 +461,38 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* timeout waiting for ADDBA response */
+comment|/* timeout for ADDBA response */
 end_comment
 
+begin_expr_stmt
+name|SYSCTL_PROC
+argument_list|(
+name|_net_wlan
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|addba_timeout
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ieee80211_addba_timeout
+argument_list|,
+literal|0
+argument_list|,
+name|ieee80211_sysctl_msecs_ticks
+argument_list|,
+literal|"I"
+argument_list|,
+literal|"ADDBA request timeout (ms)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
+specifier|static
 name|int
 name|ieee80211_addba_backoff
 init|=
@@ -430,7 +505,35 @@ begin_comment
 comment|/* backoff after max ADDBA requests */
 end_comment
 
+begin_expr_stmt
+name|SYSCTL_PROC
+argument_list|(
+name|_net_wlan
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|addba_backoff
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ieee80211_addba_backoff
+argument_list|,
+literal|0
+argument_list|,
+name|ieee80211_sysctl_msecs_ticks
+argument_list|,
+literal|"I"
+argument_list|,
+literal|"ADDBA request backoff (ms)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
+specifier|static
 name|int
 name|ieee80211_addba_maxtries
 init|=
@@ -442,7 +545,31 @@ begin_comment
 comment|/* max ADDBA requests before backoff */
 end_comment
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_wlan
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|addba_maxtries
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ieee80211_addba_maxtries
+argument_list|,
+literal|0
+argument_list|,
+literal|"max ADDBA requests sent before backoff"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
+specifier|static
 name|int
 name|ieee80211_bar_timeout
 init|=
@@ -456,6 +583,7 @@ comment|/* timeout waiting for BAR response */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ieee80211_bar_maxtries
 init|=
