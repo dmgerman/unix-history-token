@@ -4693,6 +4693,8 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+else|else
+block|{
 name|KASSERT
 argument_list|(
 name|call_data
@@ -4711,6 +4713,7 @@ argument_list|,
 name|CALL_FUNCTION_VECTOR
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
