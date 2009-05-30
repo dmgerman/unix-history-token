@@ -1839,6 +1839,19 @@ literal|"vm_page_dirty: page is free!"
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|m
+operator|->
+name|valid
+operator|==
+name|VM_PAGE_BITS_ALL
+argument_list|,
+operator|(
+literal|"vm_page_dirty: page is invalid!"
+operator|)
+argument_list|)
+expr_stmt|;
 name|m
 operator|->
 name|dirty
@@ -6632,6 +6645,36 @@ name|DEV_BSIZE
 operator|-
 literal|1
 operator|)
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Assert that no previously invalid block that is now being validated 	 * is already dirty.  	 */
+name|KASSERT
+argument_list|(
+operator|(
+operator|~
+name|m
+operator|->
+name|valid
+operator|&
+name|vm_page_bits
+argument_list|(
+name|base
+argument_list|,
+name|size
+argument_list|)
+operator|&
+name|m
+operator|->
+name|dirty
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"vm_page_set_valid: page %p is dirty"
+operator|,
+name|m
 operator|)
 argument_list|)
 expr_stmt|;
