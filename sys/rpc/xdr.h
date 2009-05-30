@@ -653,7 +653,7 @@ parameter_list|,
 name|op
 parameter_list|)
 define|\
-value|if ((xdrs)->x_ops->x_control)			\ 		(*(xdrs)->x_ops->x_control)(xdrs, req, op)
+value|(((xdrs)->x_ops->x_control == NULL) ? (FALSE) :	\ 		(*(xdrs)->x_ops->x_control)(xdrs, req, op))
 end_define
 
 begin_define
