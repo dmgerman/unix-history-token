@@ -1860,11 +1860,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cpu=%d irq=%d vector=%d\n"
+literal|"[XEN] IPI cpu=%d irq=%d vector=RESCHEDULE_VECTOR (%d)\n"
 argument_list|,
 name|cpu
 argument_list|,
-name|rc
+name|irq
 argument_list|,
 name|RESCHEDULE_VECTOR
 argument_list|)
@@ -1935,11 +1935,11 @@ name|irq
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cpu=%d irq=%d vector=%d\n"
+literal|"[XEN] IPI cpu=%d irq=%d vector=CALL_FUNCTION_VECTOR (%d)\n"
 argument_list|,
 name|cpu
 argument_list|,
-name|rc
+name|irq
 argument_list|,
 name|CALL_FUNCTION_VECTOR
 argument_list|)
