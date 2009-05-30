@@ -984,6 +984,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Send an IPI from the current CPU to the destination CPU.  */
+end_comment
+
 begin_function
 name|void
 name|ipi_pcpu
@@ -1001,13 +1005,15 @@ name|irq
 decl_stmt|;
 name|irq
 operator|=
-name|PCPU_GET
+name|pcpu_find
 argument_list|(
-name|ipi_to_irq
+name|cpu
+argument_list|)
+operator|->
+name|pc_ipi_to_irq
 index|[
 name|vector
 index|]
-argument_list|)
 expr_stmt|;
 name|notify_remote_via_irq
 argument_list|(
