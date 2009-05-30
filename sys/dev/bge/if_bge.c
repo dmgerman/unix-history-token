@@ -1516,7 +1516,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|bge_rxeof
 parameter_list|(
 name|struct
@@ -2156,7 +2156,7 @@ end_ifdef
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|bge_poll
 parameter_list|(
 name|struct
@@ -14741,7 +14741,7 @@ return|;
 block|}
 comment|/*  * Frame reception handling. This is called if there's a frame  * on the receive return list.  *  * Note: we have to be able to handle two possibilities here:  * 1) the frame is from the jumbo receive ring  * 2) the frame is from the standard receive ring  */
 specifier|static
-name|void
+name|int
 name|bge_rxeof
 parameter_list|(
 name|struct
@@ -14756,6 +14756,10 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|int
+name|rx_npkts
+init|=
+literal|0
+decl_stmt|,
 name|stdcnt
 init|=
 literal|0
@@ -14789,7 +14793,11 @@ index|]
 operator|.
 name|bge_rx_prod_idx
 condition|)
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 name|ifp
 operator|=
 name|sc
@@ -15486,6 +15494,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|rk_npkts
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -15615,6 +15626,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 specifier|static
 name|void
@@ -15869,7 +15885,7 @@ ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
 specifier|static
-name|void
+name|int
 name|bge_poll
 parameter_list|(
 name|struct
@@ -15897,6 +15913,11 @@ decl_stmt|;
 name|uint32_t
 name|statusword
 decl_stmt|;
+name|int
+name|rx_npkts
+init|=
+literal|0
+decl_stmt|;
 name|BGE_LOCK
 argument_list|(
 name|sc
@@ -15919,7 +15940,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 name|bus_dmamap_sync
 argument_list|(
@@ -16026,6 +16051,8 @@ name|rxcycles
 operator|=
 name|count
 expr_stmt|;
+name|rx_npkts
+operator|=
 name|bge_rxeof
 argument_list|(
 name|sc
@@ -16076,6 +16103,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 endif|#
 directive|endif

@@ -599,7 +599,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|tsec_receive_intr_locked
 parameter_list|(
 name|struct
@@ -3974,7 +3974,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|void
+name|int
 name|tsec_poll
 parameter_list|(
 name|struct
@@ -4002,6 +4002,13 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+name|int
+name|rx_npkts
+decl_stmt|;
+name|rx_npkts
+operator|=
+literal|0
+expr_stmt|;
 name|TSEC_GLOBAL_LOCK
 argument_list|(
 name|sc
@@ -4024,7 +4031,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -4070,6 +4081,8 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|rx_npkts
+operator|=
 name|tsec_receive_intr_locked
 argument_list|(
 name|sc
@@ -4082,6 +4095,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
@@ -5707,7 +5725,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|tsec_receive_intr_locked
 parameter_list|(
 name|struct
@@ -5747,6 +5765,8 @@ name|i
 decl_stmt|;
 name|int
 name|c
+decl_stmt|,
+name|rx_npkts
 decl_stmt|;
 name|uint16_t
 name|flags
@@ -5773,6 +5793,10 @@ operator|=
 name|sc
 operator|->
 name|dev
+expr_stmt|;
+name|rx_npkts
+operator|=
+literal|0
 expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
@@ -6189,6 +6213,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|rx_npkts
+operator|++
+expr_stmt|;
 block|}
 block|}
 name|bus_dmamap_sync
@@ -6216,6 +6243,11 @@ argument_list|,
 name|TSEC_RSTAT_QHLT
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 

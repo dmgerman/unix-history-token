@@ -1008,7 +1008,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|fxp_intr_body
 parameter_list|(
 name|struct
@@ -7844,7 +7844,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|void
+name|int
 name|fxp_poll
 parameter_list|(
 name|struct
@@ -7872,6 +7872,11 @@ decl_stmt|;
 name|uint8_t
 name|statack
 decl_stmt|;
+name|int
+name|rx_npkts
+init|=
+literal|0
+decl_stmt|;
 name|FXP_LOCK
 argument_list|(
 name|sc
@@ -7894,7 +7899,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 name|statack
 operator|=
@@ -7939,7 +7948,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 comment|/* nothing to do */
 block|}
 name|tmp
@@ -7968,6 +7981,8 @@ operator||=
 name|tmp
 expr_stmt|;
 block|}
+name|rx_npkts
+operator|=
 name|fxp_intr_body
 argument_list|(
 name|sc
@@ -7984,6 +7999,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
@@ -8802,7 +8822,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|fxp_intr_body
 parameter_list|(
 name|struct
@@ -8850,9 +8870,16 @@ literal|1
 else|:
 literal|0
 decl_stmt|;
+name|int
+name|rx_npkts
+decl_stmt|;
 name|uint16_t
 name|status
 decl_stmt|;
+name|rx_npkts
+operator|=
+literal|0
+expr_stmt|;
 name|FXP_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -8943,7 +8970,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 comment|/* 	 * Process receiver interrupts. If a no-resource (RNR) 	 * condition exists, get whatever packets we can and 	 * re-start the receiver. 	 * 	 * When using polling, we do not process the list to completion, 	 * so when we get an RNR interrupt we must defer the restart 	 * until we hit the last buffer with the C bit set. 	 * If we run out of cycles and rfa_headm has the C bit set, 	 * record the pending RNR in the FXP_FLAG_DEFERRED_RNR flag so 	 * that the info will be used in the subsequent polling cycle. 	 */
 for|for
 control|(
@@ -9263,6 +9294,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|rx_npkts
+operator|++
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -9321,6 +9355,11 @@ name|FXP_SCB_COMMAND_RU_START
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 

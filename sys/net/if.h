@@ -819,6 +819,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFCAP_POLLING_NOCOUNT
+value|0x20000
+end_define
+
+begin_comment
+comment|/* polling ticks cannot be fragmented */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IFCAP_HWCSUM
 value|(IFCAP_RXCSUM | IFCAP_TXCSUM)
 end_define

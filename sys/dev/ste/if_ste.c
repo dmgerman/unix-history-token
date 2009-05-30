@@ -399,7 +399,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|ste_rxeof
 parameter_list|(
 name|struct
@@ -2879,7 +2879,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ste_poll
 parameter_list|(
 name|struct
@@ -2904,6 +2904,11 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+name|int
+name|rx_npkts
+init|=
+literal|0
+decl_stmt|;
 name|STE_LOCK
 argument_list|(
 name|sc
@@ -2917,6 +2922,8 @@ name|if_drv_flags
 operator|&
 name|IFF_DRV_RUNNING
 condition|)
+name|rx_npkts
+operator|=
 name|ste_poll_locked
 argument_list|(
 name|ifp
@@ -2931,12 +2938,17 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ste_poll_locked
 parameter_list|(
 name|struct
@@ -2961,6 +2973,9 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+name|int
+name|rx_npkts
+decl_stmt|;
 name|STE_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -2983,6 +2998,8 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|rx_npkts
+operator|=
 name|ste_rxeof
 argument_list|(
 name|sc
@@ -3095,6 +3112,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
@@ -3461,7 +3483,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ste_rxeof
 parameter_list|(
 name|sc
@@ -3493,6 +3515,10 @@ init|=
 literal|0
 decl_stmt|,
 name|count
+init|=
+literal|0
+decl_stmt|,
+name|rx_npkts
 init|=
 literal|0
 decl_stmt|;
@@ -3752,8 +3778,15 @@ expr_stmt|;
 name|count
 operator|++
 expr_stmt|;
+name|rx_npkts
+operator|++
+expr_stmt|;
 block|}
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 

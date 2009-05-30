@@ -3325,7 +3325,7 @@ end_enum
 
 begin_typedef
 typedef|typedef
-name|void
+name|int
 name|poll_handler_t
 parameter_list|(
 name|struct

@@ -512,7 +512,7 @@ end_endif
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|sf_rxeof
 parameter_list|(
 name|struct
@@ -899,7 +899,7 @@ end_ifdef
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|sf_poll
 parameter_list|(
 name|struct
@@ -7492,7 +7492,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|sf_rxeof
 parameter_list|(
 name|struct
@@ -7527,6 +7527,8 @@ decl_stmt|,
 name|eidx
 decl_stmt|,
 name|prog
+decl_stmt|,
+name|rx_npkts
 decl_stmt|;
 name|uint32_t
 name|status
@@ -7543,6 +7545,10 @@ operator|=
 name|sc
 operator|->
 name|sf_ifp
+expr_stmt|;
+name|rx_npkts
+operator|=
+literal|0
 expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
@@ -7946,6 +7952,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|rx_npkts
+operator|++
+expr_stmt|;
 comment|/* Clear completion status. */
 name|cur_cmp
 operator|->
@@ -8060,6 +8069,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
@@ -8555,7 +8569,7 @@ end_ifdef
 
 begin_function
 specifier|static
-name|void
+name|int
 name|sf_poll
 parameter_list|(
 name|struct
@@ -8579,11 +8593,18 @@ decl_stmt|;
 name|uint32_t
 name|status
 decl_stmt|;
+name|int
+name|rx_npkts
+decl_stmt|;
 name|sc
 operator|=
 name|ifp
 operator|->
 name|if_softc
+expr_stmt|;
+name|rx_npkts
+operator|=
+literal|0
 expr_stmt|;
 name|SF_LOCK
 argument_list|(
@@ -8608,7 +8629,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 name|sc
 operator|->
@@ -8616,6 +8641,8 @@ name|rxcycles
 operator|=
 name|count
 expr_stmt|;
+name|rx_npkts
+operator|=
 name|sf_rxeof
 argument_list|(
 name|sc
@@ -8803,6 +8830,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 

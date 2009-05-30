@@ -933,7 +933,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|npe_rxdone
 parameter_list|(
 name|int
@@ -4130,6 +4130,10 @@ literal|1
 argument_list|,
 name|IX_QMGR_Q_SOURCE_ID_NOT_E
 argument_list|,
+operator|(
+name|qconfig_hand_t
+operator|*
+operator|)
 name|npe_rxdone
 argument_list|,
 name|sc
@@ -5839,7 +5843,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|npe_rxdone
 parameter_list|(
 name|int
@@ -5879,6 +5883,11 @@ name|rxdma
 decl_stmt|;
 name|uint32_t
 name|entry
+decl_stmt|;
+name|int
+name|rx_npkts
+init|=
+literal|0
 decl_stmt|;
 while|while
 condition|(
@@ -6051,6 +6060,9 @@ argument_list|,
 name|mrx
 argument_list|)
 expr_stmt|;
+name|rx_npkts
+operator|++
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -6094,6 +6106,11 @@ block|{
 comment|/* XXX should not happen */
 block|}
 block|}
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 undef|#
 directive|undef
 name|P2V
@@ -6108,7 +6125,7 @@ end_ifdef
 
 begin_function
 specifier|static
-name|void
+name|int
 name|npe_poll
 parameter_list|(
 name|struct
@@ -6133,6 +6150,11 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+name|int
+name|rx_npkts
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|ifp
@@ -6142,6 +6164,8 @@ operator|&
 name|IFF_DRV_RUNNING
 condition|)
 block|{
+name|rx_npkts
+operator|=
 name|npe_rxdone
 argument_list|(
 name|sc
@@ -6162,6 +6186,11 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX polls both NPE's */
 block|}
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 

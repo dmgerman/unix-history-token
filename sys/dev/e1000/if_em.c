@@ -1749,6 +1749,9 @@ name|adapter
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -8008,7 +8011,7 @@ directive|ifdef
 name|DEVICE_POLLING
 comment|/*********************************************************************  *  *  Legacy polling routine    *  *********************************************************************/
 specifier|static
-name|void
+name|int
 name|em_poll
 parameter_list|(
 name|struct
@@ -8028,14 +8031,23 @@ name|struct
 name|adapter
 modifier|*
 name|adapter
-init|=
-name|ifp
-operator|->
-name|if_softc
 decl_stmt|;
 name|u32
 name|reg_icr
 decl_stmt|;
+name|int
+name|rx_npkts
+decl_stmt|;
+name|adapter
+operator|=
+name|ifp
+operator|->
+name|if_softc
+expr_stmt|;
+name|rx_npkts
+operator|=
+literal|0
+expr_stmt|;
 name|EM_CORE_LOCK
 argument_list|(
 name|adapter
@@ -8059,7 +8071,11 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -8140,6 +8156,9 @@ argument_list|(
 name|adapter
 argument_list|,
 name|count
+argument_list|,
+operator|&
+name|rx_npkts
 argument_list|)
 expr_stmt|;
 name|EM_TX_LOCK
@@ -8170,6 +8189,11 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 endif|#
 directive|endif
@@ -8300,6 +8324,8 @@ name|adapter
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|em_txeof
@@ -8539,6 +8565,8 @@ argument_list|,
 name|adapter
 operator|->
 name|rx_process_limit
+argument_list|,
+name|NULL
 argument_list|)
 operator|!=
 literal|0
@@ -8904,6 +8932,8 @@ argument_list|,
 name|adapter
 operator|->
 name|rx_process_limit
+argument_list|,
+name|NULL
 argument_list|)
 operator|!=
 literal|0
@@ -9067,6 +9097,8 @@ argument_list|,
 name|adapter
 operator|->
 name|rx_process_limit
+argument_list|,
+name|NULL
 argument_list|)
 operator|!=
 literal|0
@@ -14398,11 +14430,13 @@ argument|if (adapter->rx_buffer_area != NULL) { 		rx_buffer = adapter->rx_buffer
 literal|0
 argument|; i< adapter->num_rx_desc; i++, rx_buffer++) { 			if (rx_buffer->m_head != NULL) { 				bus_dmamap_sync(adapter->rxtag, rx_buffer->map, 				    BUS_DMASYNC_POSTREAD); 				bus_dmamap_unload(adapter->rxtag, 				    rx_buffer->map); 				m_freem(rx_buffer->m_head); 				rx_buffer->m_head = NULL; 			} else if (rx_buffer->map != NULL) 				bus_dmamap_unload(adapter->rxtag, 				    rx_buffer->map); 			if (rx_buffer->map != NULL) { 				bus_dmamap_destroy(adapter->rxtag, 				    rx_buffer->map); 				rx_buffer->map = NULL; 			} 		} 	}  	if (adapter->rx_buffer_area != NULL) { 		free(adapter->rx_buffer_area, M_DEVBUF); 		adapter->rx_buffer_area = NULL; 	}  	if (adapter->rxtag != NULL) { 		bus_dma_tag_destroy(adapter->rxtag); 		adapter->rxtag = NULL; 	} }
 comment|/*********************************************************************  *  *  This routine executes in interrupt context. It replenishes  *  the mbufs in the descriptor and sends data which has been  *  dma'ed into host memory to upper layer.  *  *  We loop at most count times if count is> 0, or until done if  *  count< 0.  *  *********************************************************************/
-argument|static int em_rxeof(struct adapter *adapter, int count) { 	struct ifnet	*ifp = adapter->ifp;; 	struct mbuf	*mp; 	u8		status, accept_frame =
+argument|static int em_rxeof(struct adapter *adapter, int count, int *rx_npktsp) { 	struct ifnet	*ifp = adapter->ifp;; 	struct mbuf	*mp; 	u8		status, accept_frame =
 literal|0
 argument|, eop =
 literal|0
-argument|; 	u16 		len, desc_len, prev_len_adj; 	int		i; 	struct e1000_rx_desc   *current_desc;  	EM_RX_LOCK(adapter); 	i = adapter->next_rx_desc_to_check; 	current_desc =&adapter->rx_desc_base[i]; 	bus_dmamap_sync(adapter->rxdma.dma_tag, adapter->rxdma.dma_map, 	    BUS_DMASYNC_POSTREAD);  	if (!((current_desc->status)& E1000_RXD_STAT_DD)) { 		EM_RX_UNLOCK(adapter); 		return (
+argument|; 	u16 		len, desc_len, prev_len_adj; 	int		i, rx_npkts; 	struct e1000_rx_desc   *current_desc;  	EM_RX_LOCK(adapter); 	i = adapter->next_rx_desc_to_check; 	rx_npkts =
+literal|0
+argument|; 	current_desc =&adapter->rx_desc_base[i]; 	bus_dmamap_sync(adapter->rxdma.dma_tag, adapter->rxdma.dma_map, 	    BUS_DMASYNC_POSTREAD);  	if (!((current_desc->status)& E1000_RXD_STAT_DD)) { 		EM_RX_UNLOCK(adapter); 		if (rx_npktsp != NULL) 			*rx_npktsp = rx_npkts; 		return (
 literal|0
 argument|); 	}  	while ((current_desc->status& E1000_RXD_STAT_DD)&& 	    (count !=
 literal|0
@@ -14476,7 +14510,7 @@ argument|if (++i == adapter->num_rx_desc) 			i =
 literal|0
 argument|; 		if (m != NULL) { 			adapter->next_rx_desc_to_check = i;
 comment|/* Unlock for call into stack */
-argument|EM_RX_UNLOCK(adapter); 			(*ifp->if_input)(ifp, m); 			EM_RX_LOCK(adapter); 			i = adapter->next_rx_desc_to_check; 		} 		current_desc =&adapter->rx_desc_base[i]; 	} 	adapter->next_rx_desc_to_check = i;
+argument|EM_RX_UNLOCK(adapter); 			(*ifp->if_input)(ifp, m); 			EM_RX_LOCK(adapter); 			rx_npkts++; 			i = adapter->next_rx_desc_to_check; 		} 		current_desc =&adapter->rx_desc_base[i]; 	} 	adapter->next_rx_desc_to_check = i;
 comment|/* Advance the E1000's Receive Queue #0  "Tail Pointer". */
 argument|if (--i<
 literal|0
@@ -14484,7 +14518,7 @@ argument|) 		i = adapter->num_rx_desc -
 literal|1
 argument|; 	E1000_WRITE_REG(&adapter->hw, E1000_RDT(
 literal|0
-argument|), i); 	EM_RX_UNLOCK(adapter); 	if (!((current_desc->status)& E1000_RXD_STAT_DD)) 		return (
+argument|), i); 	EM_RX_UNLOCK(adapter); 	if (rx_npktsp != NULL) 		*rx_npktsp = rx_npkts; 	if (!((current_desc->status)& E1000_RXD_STAT_DD)) 		return (
 literal|0
 argument|);  	return (
 literal|1

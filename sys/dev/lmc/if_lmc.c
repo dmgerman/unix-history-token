@@ -20220,7 +20220,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|fbsd_poll
 parameter_list|(
 name|struct
@@ -24389,6 +24389,12 @@ operator|->
 name|if_capabilities
 operator||=
 name|IFCAP_POLLING
+expr_stmt|;
+name|ifp
+operator|->
+name|if_capenable
+operator||=
+name|IFCAP_POLLING_NOCOUNT
 expr_stmt|;
 if|#
 directive|if

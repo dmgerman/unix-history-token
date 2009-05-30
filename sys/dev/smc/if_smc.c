@@ -5301,6 +5301,15 @@ operator|&=
 operator|~
 name|IFCAP_POLLING
 expr_stmt|;
+name|sc
+operator|->
+name|smc_ifp
+operator|->
+name|if_capenable
+operator|&=
+operator|~
+name|IFCAP_POLLING_NOCOUNT
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Disable transmit and receive. 	 */
@@ -5535,6 +5544,12 @@ operator|->
 name|if_capenable
 operator||=
 name|IFCAP_POLLING
+expr_stmt|;
+name|ifp
+operator|->
+name|if_capenable
+operator||=
+name|IFCAP_POLLING_NOCOUNT
 expr_stmt|;
 endif|#
 directive|endif
