@@ -15508,7 +15508,11 @@ operator|&
 name|IFF_DRV_RUNNING
 operator|)
 condition|)
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -16075,7 +16079,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 name|bge_txeof
 argument_list|(
