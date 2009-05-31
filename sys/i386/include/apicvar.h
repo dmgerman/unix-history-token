@@ -112,7 +112,7 @@ begin_define
 define|#
 directive|define
 name|IPI_RENDEZVOUS
-value|(2)
+value|(APIC_IPI_INTS)
 end_define
 
 begin_comment
@@ -123,7 +123,7 @@ begin_define
 define|#
 directive|define
 name|IPI_INVLTLB
-value|(3)
+value|(APIC_IPI_INTS + 1)
 end_define
 
 begin_comment
@@ -134,28 +134,28 @@ begin_define
 define|#
 directive|define
 name|IPI_INVLPG
-value|(4)
+value|(APIC_IPI_INTS + 2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPI_INVLRNG
-value|(5)
+value|(APIC_IPI_INTS + 3)
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPI_INVLCACHE
-value|(6)
+value|(APIC_IPI_INTS + 4)
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPI_LAZYPMAP
-value|(7)
+value|(APIC_IPI_INTS + 5)
 end_define
 
 begin_comment
@@ -170,7 +170,7 @@ begin_define
 define|#
 directive|define
 name|IPI_BITMAP_VECTOR
-value|(8)
+value|(APIC_IPI_INTS + 6)
 end_define
 
 begin_else

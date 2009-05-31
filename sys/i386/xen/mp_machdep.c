@@ -1365,28 +1365,9 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|iv_noop
-parameter_list|(
-name|uintptr_t
-name|a
-parameter_list|,
-name|uintptr_t
-name|b
-parameter_list|)
-block|{
-name|atomic_add_int
-argument_list|(
-operator|&
-name|smp_tlb_wait
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+begin_comment
+comment|/*  * These start from "IPI offset" APIC_IPI_INTS  */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1394,14 +1375,10 @@ name|call_data_func_t
 modifier|*
 name|ipi_vectors
 index|[
-name|IPI_BITMAP_VECTOR
+literal|6
 index|]
 init|=
 block|{
-name|iv_noop
-block|,
-name|iv_noop
-block|,
 name|iv_rendezvous
 block|,
 name|iv_invltlb
@@ -1607,8 +1584,15 @@ name|call_data
 operator|->
 name|finished
 decl_stmt|;
+comment|/* We only handle function IPIs, not bitmap IPIs */
 if|if
 condition|(
+name|call_data
+operator|->
+name|func_id
+operator|<
+name|APIC_IPI_INTS
+operator|||
 name|call_data
 operator|->
 name|func_id
@@ -1631,6 +1615,8 @@ index|[
 name|call_data
 operator|->
 name|func_id
+operator|-
+name|APIC_IPI_INTS
 index|]
 expr_stmt|;
 comment|/* 	 * Notify initiating CPU that I've grabbed the data and am 	 * about to execute the function 	 */
