@@ -784,7 +784,26 @@ operator|->
 name|saved_freq
 argument_list|)
 expr_stmt|;
-comment|/* Try to get current CPU freq to use it as maximum later if needed */
+comment|/* Try to get nominal CPU freq to use it as maximum later if needed */
+name|sc
+operator|->
+name|max_mhz
+operator|=
+name|cpu_get_nominal_mhz
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+comment|/* If that fails, try to measure the current rate */
+if|if
+condition|(
+name|sc
+operator|->
+name|max_mhz
+operator|<=
+literal|0
+condition|)
+block|{
 name|pc
 operator|=
 name|cpu_get_pcpu
@@ -821,6 +840,7 @@ name|max_mhz
 operator|=
 name|CPUFREQ_VAL_UNKNOWN
 expr_stmt|;
+block|}
 comment|/* 	 * Only initialize one set of sysctls for all CPUs.  In the future, 	 * if multiple CPUs can have different settings, we can move these 	 * sysctls to be under every CPU instead of just the first one. 	 */
 name|numdevs
 operator|=
@@ -2729,7 +2749,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 	 * If there are no absolute levels, create a fake one at 100%.  We 	 * then cache the clockrate for later use as our base frequency. 	 * 	 * XXX This assumes that the first time through, if we only have 	 * relative drivers, the CPU is currently running at 100%. 	 */
+comment|/* 	 * If there are no absolute levels, create a fake one at 100%.  We 	 * then cache the clockrate for later use as our base frequency. 	 */
 if|if
 condition|(
 name|TAILQ_EMPTY
@@ -2748,6 +2768,25 @@ operator|->
 name|max_mhz
 operator|==
 name|CPUFREQ_VAL_UNKNOWN
+condition|)
+block|{
+name|sc
+operator|->
+name|max_mhz
+operator|=
+name|cpu_get_nominal_mhz
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+comment|/* 			 * If the CPU can't report a rate for 100%, hope 			 * the CPU is running at its nominal rate right now, 			 * and use that instead. 			 */
+if|if
+condition|(
+name|sc
+operator|->
+name|max_mhz
+operator|<=
+literal|0
 condition|)
 block|{
 name|pc
@@ -2775,6 +2814,7 @@ name|rate
 operator|/
 literal|1000000
 expr_stmt|;
+block|}
 block|}
 name|memset
 argument_list|(
