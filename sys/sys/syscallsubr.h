@@ -2601,6 +2601,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|kern_socketpair
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|domain
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|int
+name|protocol
+parameter_list|,
+name|int
+modifier|*
+name|rsv
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* flags for kern_sigaction */
 end_comment
