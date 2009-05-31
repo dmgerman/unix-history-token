@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: globals.h,v 1.64.18.6 2008/10/24 01:43:17 tbox Exp $ */
+comment|/* $Id: globals.h,v 1.80 2008/11/16 22:49:18 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -113,6 +113,24 @@ name|INIT
 parameter_list|(
 name|v
 parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NS_RUN_PID_DIR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NS_RUN_PID_DIR
+value|1
 end_define
 
 begin_endif
@@ -253,6 +271,19 @@ name|ns_g_version
 name|INIT
 parameter_list|(
 name|VERSION
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|EXTERN
+specifier|const
+name|char
+modifier|*
+name|ns_g_configargs
+name|INIT
+parameter_list|(
+name|CONFIGARGS
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -570,6 +601,47 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|NS_RUN_PID_DIR
+end_if
+
+begin_decl_stmt
+name|EXTERN
+specifier|const
+name|char
+modifier|*
+name|ns_g_defaultpidfile
+name|INIT
+argument_list|(
+name|NS_LOCALSTATEDIR
+literal|"/run/named/"
+literal|"named.pid"
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+specifier|const
+name|char
+modifier|*
+name|lwresd_g_defaultpidfile
+name|INIT
+argument_list|(
+name|NS_LOCALSTATEDIR
+literal|"/run/lwresd/"
+literal|"lwresd.pid"
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|EXTERN
 specifier|const
@@ -598,6 +670,11 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|EXTERN
 specifier|const
@@ -621,6 +698,35 @@ literal|3
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|isc_time_t
+name|ns_g_boottime
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|EXTERN
+name|isc_boolean_t
+name|ns_g_memstatistics
+name|INIT
+parameter_list|(
+name|ISC_FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|EXTERN
+name|isc_boolean_t
+name|ns_g_clienttest
+name|INIT
+parameter_list|(
+name|ISC_FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_undef
 undef|#

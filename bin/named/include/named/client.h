@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: client.h,v 1.69.18.9 2006/06/06 00:11:41 marka Exp $ */
+comment|/* $Id: client.h,v 1.86.120.2 2009/01/18 23:47:34 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*! \file   * \brief  * This module defines two objects, ns_client_t and ns_clientmgr_t.  *  * An ns_client_t object handles incoming DNS requests from clients  * on a given network interface.  *  * Each ns_client_t object can handle only one TCP connection or UDP  * request at a time.  Therefore, several ns_client_t objects are  * typically created to serve each network interface, e.g., one  * for handling TCP requests and a few (one per CPU) for handling  * UDP requests.  *  * Incoming requests are classified as queries, zone transfer  * requests, update requests, notify requests, etc, and handed off  * to the appropriate request handler.  When the request has been  * fully handled (which can be much later), the ns_client_t must be  * notified of this by calling one of the following functions  * exactly once in the context of its task:  * \code  *   ns_client_send()	(sending a non-error response)  *   ns_client_sendraw() (sending a raw response)  *   ns_client_error()	(sending an error response)  *   ns_client_next()	(sending no response)  *\endcode  * This will release any resources used by the request and  * and allow the ns_client_t to listen for the next request.  *  * A ns_clientmgr_t manages a number of ns_client_t objects.  * New ns_client_t objects are created by calling  * ns_clientmgr_createclients(). They are destroyed by  * destroying their manager.  */
+comment|/*! \file  * \brief  * This module defines two objects, ns_client_t and ns_clientmgr_t.  *  * An ns_client_t object handles incoming DNS requests from clients  * on a given network interface.  *  * Each ns_client_t object can handle only one TCP connection or UDP  * request at a time.  Therefore, several ns_client_t objects are  * typically created to serve each network interface, e.g., one  * for handling TCP requests and a few (one per CPU) for handling  * UDP requests.  *  * Incoming requests are classified as queries, zone transfer  * requests, update requests, notify requests, etc, and handed off  * to the appropriate request handler.  When the request has been  * fully handled (which can be much later), the ns_client_t must be  * notified of this by calling one of the following functions  * exactly once in the context of its task:  * \code  *   ns_client_send()	(sending a non-error response)  *   ns_client_sendraw() (sending a raw response)  *   ns_client_error()	(sending an error response)  *   ns_client_next()	(sending no response)  *\endcode  * This will release any resources used by the request and  * and allow the ns_client_t to listen for the next request.  *  * A ns_clientmgr_t manages a number of ns_client_t objects.  * New ns_client_t objects are created by calling  * ns_clientmgr_createclients(). They are destroyed by  * destroying their manager.  */
 end_comment
 
 begin_comment
@@ -165,6 +165,10 @@ decl_stmt|;
 name|int
 name|references
 decl_stmt|;
+name|isc_boolean_t
+name|needshutdown
+decl_stmt|;
+comment|/* 						 * Used by clienttest to get 						 * the client to go from 						 * inactive to free state 						 * by shutting down the 						 * client's task. 						 */
 name|unsigned
 name|int
 name|attributes
@@ -379,7 +383,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/*%< Client gets recusive service */
+comment|/*%< Client gets recursive service */
 end_comment
 
 begin_define
@@ -413,6 +417,17 @@ end_define
 
 begin_comment
 comment|/*%< include dnssec records */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NS_CLIENTATTR_WANTNSID
+value|0x20
+end_define
+
+begin_comment
+comment|/*%< include nameserver ID */
 end_comment
 
 begin_decl_stmt
@@ -680,6 +695,10 @@ name|ns_client_t
 modifier|*
 name|client
 parameter_list|,
+name|isc_sockaddr_t
+modifier|*
+name|sockaddr
+parameter_list|,
 name|dns_acl_t
 modifier|*
 name|acl
@@ -691,7 +710,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%  * Convenience function for client request ACL checking.  *  * Check the current client request against 'acl'.  If 'acl'  * is NULL, allow the request iff 'default_allow' is ISC_TRUE.  *  * Notes:  *\li	This is appropriate for checking allow-update,  * 	allow-query, allow-transfer, etc.  It is not appropriate  * 	for checking the blackhole list because we treat positive  * 	matches as "allow" and negative matches as "deny"; in  *	the case of the blackhole list this would be backwards.  *  * Requires:  *\li	'client' points to a valid client.  *\li	'acl' points to a valid ACL, or is NULL.  *  * Returns:  *\li	ISC_R_SUCCESS	if the request should be allowed  * \li	ISC_R_REFUSED	if the request should be denied  *\li	No other return values are possible.  */
+comment|/*%  * Convenience function for client request ACL checking.  *  * Check the current client request against 'acl'.  If 'acl'  * is NULL, allow the request iff 'default_allow' is ISC_TRUE.  * If netaddr is NULL, check the ACL against client->peeraddr;  * otherwise check it against netaddr.  *  * Notes:  *\li	This is appropriate for checking allow-update,  * 	allow-query, allow-transfer, etc.  It is not appropriate  * 	for checking the blackhole list because we treat positive  * 	matches as "allow" and negative matches as "deny"; in  *	the case of the blackhole list this would be backwards.  *  * Requires:  *\li	'client' points to a valid client.  *\li	'sockaddr' points to a valid address, or is NULL.  *\li	'acl' points to a valid ACL, or is NULL.  *  * Returns:  *\li	ISC_R_SUCCESS	if the request should be allowed  * \li	ISC_R_REFUSED	if the request should be denied  *\li	No other return values are possible.  */
 end_comment
 
 begin_function_decl
@@ -701,6 +720,10 @@ parameter_list|(
 name|ns_client_t
 modifier|*
 name|client
+parameter_list|,
+name|isc_sockaddr_t
+modifier|*
+name|sockaddr
 parameter_list|,
 specifier|const
 name|char
@@ -721,7 +744,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%  * Like ns_client_checkacl, but also logs the outcome of the  * check at log level 'log_level' if denied, and at debug 3  * if approved.  Log messages will refer to the request as  * an 'opname' request.  *  * Requires:  *\li	Those of ns_client_checkaclsilent(), and:  *  *\li	'opname' points to a null-terminated string.  */
+comment|/*%  * Like ns_client_checkaclsilent, except the outcome of the check is  * logged at log level 'log_level' if denied, and at debug 3 if approved.  * Log messages will refer to the request as an 'opname' request.  *  * Requires:  *\li	'client' points to a valid client.  *\li	'sockaddr' points to a valid address, or is NULL.  *\li	'acl' points to a valid ACL, or is NULL.  *\li	'opname' points to a null-terminated string.  */
 end_comment
 
 begin_function_decl

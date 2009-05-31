@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2008  Internet Systems Consortium,
 end_comment
 
 begin_comment
-comment|/* $Id: rootns.c,v 1.26.18.7 2008/02/05 23:46:09 tbox Exp $ */
+comment|/* $Id: rootns.c,v 1.36 2008/09/24 02:46:22 marka Exp $ */
 end_comment
 
 begin_comment
@@ -282,6 +282,12 @@ operator|=
 name|dns_rdataset_next
 argument_list|(
 name|rootns
+argument_list|)
+expr_stmt|;
+name|dns_rdata_reset
+argument_list|(
+operator|&
+name|rdata
 argument_list|)
 expr_stmt|;
 block|}
@@ -563,7 +569,7 @@ name|dns_db_createiterator
 argument_list|(
 name|db
 argument_list|,
-name|ISC_FALSE
+literal|0
 argument_list|,
 operator|&
 name|dbiter
@@ -1549,6 +1555,12 @@ operator|==
 name|ISC_R_SUCCESS
 condition|)
 block|{
+name|dns_rdata_reset
+argument_list|(
+operator|&
+name|rdata
+argument_list|)
+expr_stmt|;
 name|dns_rdataset_current
 argument_list|(
 operator|&
@@ -1606,6 +1618,12 @@ operator|==
 name|ISC_R_SUCCESS
 condition|)
 block|{
+name|dns_rdata_reset
+argument_list|(
+operator|&
+name|rdata
+argument_list|)
+expr_stmt|;
 name|dns_rdataset_current
 argument_list|(
 operator|&
@@ -1681,6 +1699,12 @@ operator|==
 name|ISC_R_SUCCESS
 condition|)
 block|{
+name|dns_rdata_reset
+argument_list|(
+operator|&
+name|rdata
+argument_list|)
+expr_stmt|;
 name|dns_rdataset_current
 argument_list|(
 operator|&
@@ -1825,6 +1849,12 @@ operator|==
 name|ISC_R_SUCCESS
 condition|)
 block|{
+name|dns_rdata_reset
+argument_list|(
+operator|&
+name|rdata
+argument_list|)
+expr_stmt|;
 name|dns_rdataset_current
 argument_list|(
 operator|&
@@ -1888,6 +1918,12 @@ operator|==
 name|ISC_R_SUCCESS
 condition|)
 block|{
+name|dns_rdata_reset
+argument_list|(
+operator|&
+name|rdata
+argument_list|)
+expr_stmt|;
 name|dns_rdataset_current
 argument_list|(
 operator|&
@@ -1969,6 +2005,12 @@ operator|==
 name|ISC_R_SUCCESS
 condition|)
 block|{
+name|dns_rdata_reset
+argument_list|(
+operator|&
+name|rdata
+argument_list|)
+expr_stmt|;
 name|dns_rdataset_current
 argument_list|(
 operator|&

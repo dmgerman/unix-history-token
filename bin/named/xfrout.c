@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: xfrout.c,v 1.115.18.8 2006/03/05 23:58:51 marka Exp $ */
+comment|/* $Id: xfrout.c,v 1.131.26.4 2009/01/29 22:40:34 jinmei Exp $ */
 end_comment
 
 begin_include
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|<isc/print.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/stats.h>
 end_include
 
 begin_include
@@ -135,6 +141,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dns/stats.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dns/timer.h>
 end_include
 
@@ -187,7 +199,7 @@ file|<named/xfrout.h>
 end_include
 
 begin_comment
-comment|/*! \file   * \brief  * Outgoing AXFR and IXFR.  */
+comment|/*! \file  * \brief  * Outgoing AXFR and IXFR.  */
 end_comment
 
 begin_comment
@@ -250,7 +262,7 @@ parameter_list|,
 name|msg
 parameter_list|)
 define|\
-value|do {							\ 		result = (code);				\ 		ns_client_log(client, DNS_LOGCATEGORY_XFER_OUT, \ 			   NS_LOGMODULE_XFER_OUT, ISC_LOG_INFO, \ 			   "bad zone transfer request: %s (%s)", \ 		      	   msg, isc_result_totext(code));	\ 		if (result != ISC_R_SUCCESS) goto failure;	\ 	} while (0)
+value|do {							\ 		result = (code);				\ 		ns_client_log(client, DNS_LOGCATEGORY_XFER_OUT, \ 			   NS_LOGMODULE_XFER_OUT, ISC_LOG_INFO, \ 			   "bad zone transfer request: %s (%s)", \ 			   msg, isc_result_totext(code));	\ 		if (result != ISC_R_SUCCESS) goto failure;	\ 	} while (0)
 end_define
 
 begin_define
@@ -267,7 +279,7 @@ parameter_list|,
 name|rdclass
 parameter_list|)
 define|\
-value|do {							\ 		char _buf1[DNS_NAME_FORMATSIZE];		\ 		char _buf2[DNS_RDATACLASS_FORMATSIZE]; 		\ 		result = (code);				\ 		dns_name_format(question, _buf1, sizeof(_buf1));  \ 		dns_rdataclass_format(rdclass, _buf2, sizeof(_buf2)); \ 		ns_client_log(client, DNS_LOGCATEGORY_XFER_OUT, \ 			   NS_LOGMODULE_XFER_OUT, ISC_LOG_INFO, \ 			   "bad zone transfer request: '%s/%s': %s (%s)", \ 		      	   _buf1, _buf2, msg, isc_result_totext(code));	\ 		if (result != ISC_R_SUCCESS) goto failure;	\ 	} while (0)
+value|do {							\ 		char _buf1[DNS_NAME_FORMATSIZE];		\ 		char _buf2[DNS_RDATACLASS_FORMATSIZE]; 		\ 		result = (code);				\ 		dns_name_format(question, _buf1, sizeof(_buf1));  \ 		dns_rdataclass_format(rdclass, _buf2, sizeof(_buf2)); \ 		ns_client_log(client, DNS_LOGCATEGORY_XFER_OUT, \ 			   NS_LOGMODULE_XFER_OUT, ISC_LOG_INFO, \ 			   "bad zone transfer request: '%s/%s': %s (%s)", \ 			   _buf1, _buf2, msg, isc_result_totext(code));	\ 		if (result != ISC_R_SUCCESS) goto failure;	\ 	} while (0)
 end_define
 
 begin_define
@@ -431,6 +443,62 @@ end_function_decl
 
 begin_function
 specifier|static
+specifier|inline
+name|void
+name|inc_stats
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|isc_statscounter_t
+name|counter
+parameter_list|)
+block|{
+name|isc_stats_increment
+argument_list|(
+name|ns_g_server
+operator|->
+name|nsstats
+argument_list|,
+name|counter
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|zone
+operator|!=
+name|NULL
+condition|)
+block|{
+name|isc_stats_t
+modifier|*
+name|zonestats
+init|=
+name|dns_zone_getrequeststats
+argument_list|(
+name|zone
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|zonestats
+operator|!=
+name|NULL
+condition|)
+name|isc_stats_increment
+argument_list|(
+name|zonestats
+argument_list|,
+name|counter
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
 name|isc_result_t
 name|db_rr_iterator_init
 parameter_list|(
@@ -491,7 +559,7 @@ name|it
 operator|->
 name|db
 argument_list|,
-name|ISC_FALSE
+literal|0
 argument_list|,
 operator|&
 name|it
@@ -1384,6 +1452,36 @@ operator|.
 name|ttl
 operator|=
 name|ttl
+expr_stmt|;
+if|if
+condition|(
+name|rdata
+operator|->
+name|type
+operator|==
+name|dns_rdatatype_sig
+operator|||
+name|rdata
+operator|->
+name|type
+operator|==
+name|dns_rdatatype_rrsig
+condition|)
+name|rdl
+operator|.
+name|covers
+operator|=
+name|dns_rdata_covers
+argument_list|(
+name|rdata
+argument_list|)
+expr_stmt|;
+else|else
+name|rdl
+operator|.
+name|covers
+operator|=
+name|dns_rdatatype_none
 expr_stmt|;
 name|ISC_LIST_INIT
 argument_list|(
@@ -3772,6 +3870,11 @@ comment|/* dns_rdatatype_{a,i}xfr */
 name|dns_rdataclass_t
 name|qclass
 decl_stmt|;
+name|dns_zone_t
+modifier|*
+name|zone
+decl_stmt|;
+comment|/* (necessary for stats) */
 name|dns_db_t
 modifier|*
 name|db
@@ -3875,6 +3978,10 @@ name|qtype
 parameter_list|,
 name|dns_rdataclass_t
 name|qclass
+parameter_list|,
+name|dns_zone_t
+modifier|*
+name|zone
 parameter_list|,
 name|dns_db_t
 modifier|*
@@ -4618,7 +4725,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 	 * not DLZ and not in normal zone table, we are 			 * not authoritative 			 */
+comment|/* 			 * not DLZ and not in normal zone table, we are 			 * not authoritative 			 */
 name|FAILQ
 argument_list|(
 name|DNS_R_NOTAUTH
@@ -4922,6 +5029,8 @@ argument_list|(
 name|ns_client_checkacl
 argument_list|(
 name|client
+argument_list|,
+name|NULL
 argument_list|,
 name|msg
 argument_list|,
@@ -5269,7 +5378,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Bracket the the data stream with SOAs. 	 */
+comment|/* 	 * Bracket the data stream with SOAs. 	 */
 name|CHECK
 argument_list|(
 name|soa_rrstream_create
@@ -5351,6 +5460,8 @@ name|reqtype
 argument_list|,
 name|question_class
 argument_list|,
+name|zone
+argument_list|,
 name|db
 argument_list|,
 name|ver
@@ -5405,6 +5516,8 @@ argument_list|,
 name|reqtype
 argument_list|,
 name|question_class
+argument_list|,
+name|zone
 argument_list|,
 name|db
 argument_list|,
@@ -5591,6 +5704,19 @@ name|ISC_R_SUCCESS
 expr_stmt|;
 name|failure
 label|:
+if|if
+condition|(
+name|result
+operator|==
+name|DNS_R_REFUSED
+condition|)
+name|inc_stats
+argument_list|(
+name|zone
+argument_list|,
+name|dns_nsstatscounter_xfrrej
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|quota
@@ -5783,6 +5909,10 @@ parameter_list|,
 name|dns_rdataclass_t
 name|qclass
 parameter_list|,
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
 name|dns_db_t
 modifier|*
 name|db
@@ -5923,6 +6053,12 @@ name|qclass
 expr_stmt|;
 name|xfr
 operator|->
+name|zone
+operator|=
+name|NULL
+expr_stmt|;
+name|xfr
+operator|->
 name|db
 operator|=
 name|NULL
@@ -5932,6 +6068,23 @@ operator|->
 name|ver
 operator|=
 name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|zone
+operator|!=
+name|NULL
+condition|)
+comment|/* zone will be NULL if it's DLZ */
+name|dns_zone_attach
+argument_list|(
+name|zone
+argument_list|,
+operator|&
+name|xfr
+operator|->
+name|zone
+argument_list|)
 expr_stmt|;
 name|dns_db_attach
 argument_list|(
@@ -6246,7 +6399,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Arrange to send as much as we can of "stream" without blocking.  *  * Requires:  *	The stream iterator is initialized and points at an RR,  *      or possiby at the end of the stream (that is, the  *      _first method of the iterator has been called).  */
+comment|/*  * Arrange to send as much as we can of "stream" without blocking.  *  * Requires:  *	The stream iterator is initialized and points at an RR,  *      or possibly at the end of the stream (that is, the  *      _first method of the iterator has been called).  */
 end_comment
 
 begin_function
@@ -7045,6 +7198,36 @@ name|ttl
 operator|=
 name|ttl
 expr_stmt|;
+if|if
+condition|(
+name|rdata
+operator|->
+name|type
+operator|==
+name|dns_rdatatype_sig
+operator|||
+name|rdata
+operator|->
+name|type
+operator|==
+name|dns_rdatatype_rrsig
+condition|)
+name|msgrdl
+operator|->
+name|covers
+operator|=
+name|dns_rdata_covers
+argument_list|(
+name|rdata
+argument_list|)
+expr_stmt|;
+else|else
+name|msgrdl
+operator|->
+name|covers
+operator|=
+name|dns_rdatatype_none
+expr_stmt|;
 name|ISC_LINK_INIT
 argument_list|(
 name|msgrdl
@@ -7755,6 +7938,22 @@ if|if
 condition|(
 name|xfr
 operator|->
+name|zone
+operator|!=
+name|NULL
+condition|)
+name|dns_zone_detach
+argument_list|(
+operator|&
+name|xfr
+operator|->
+name|zone
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|xfr
+operator|->
 name|db
 operator|!=
 name|NULL
@@ -7939,6 +8138,15 @@ block|}
 else|else
 block|{
 comment|/* End of zone transfer stream. */
+name|inc_stats
+argument_list|(
+name|xfr
+operator|->
+name|zone
+argument_list|,
+name|dns_nsstatscounter_xfrdone
+argument_list|)
+expr_stmt|;
 name|xfrout_log
 argument_list|(
 name|xfr

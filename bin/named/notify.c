@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: notify.c,v 1.30.18.3 2005/04/29 00:15:26 marka Exp $ */
+comment|/* $Id: notify.c,v 1.37 2007/06/19 23:46:59 tbox Exp $ */
 end_comment
 
 begin_include
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<dns/result.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dns/tsig.h>
 end_include
 
 begin_include
@@ -291,9 +297,9 @@ literal|": TSIG ''"
 argument_list|)
 index|]
 decl_stmt|;
-name|dns_name_t
+name|dns_tsigkey_t
 modifier|*
-name|tsigname
+name|tsigkey
 decl_stmt|;
 comment|/* 	 * Interpret the question section. 	 */
 name|result
@@ -427,26 +433,26 @@ goto|goto
 name|formerr
 goto|;
 block|}
-name|tsigname
+name|tsigkey
 operator|=
-name|NULL
+name|dns_message_gettsigkey
+argument_list|(
+name|request
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dns_message_gettsig
-argument_list|(
-name|request
-argument_list|,
-operator|&
-name|tsigname
-argument_list|)
+name|tsigkey
 operator|!=
 name|NULL
 condition|)
 block|{
 name|dns_name_format
 argument_list|(
-name|tsigname
+operator|&
+name|tsigkey
+operator|->
+name|name
 argument_list|,
 name|namebuf
 argument_list|,
@@ -456,6 +462,52 @@ name|namebuf
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tsigkey
+operator|->
+name|generated
+condition|)
+block|{
+name|char
+name|cnamebuf
+index|[
+name|DNS_NAME_FORMATSIZE
+index|]
+decl_stmt|;
+name|dns_name_format
+argument_list|(
+name|tsigkey
+operator|->
+name|creator
+argument_list|,
+name|cnamebuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cnamebuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|tsigbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tsigbuf
+argument_list|)
+argument_list|,
+literal|": TSIG '%s' (%s)"
+argument_list|,
+name|namebuf
+argument_list|,
+name|cnamebuf
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|snprintf
 argument_list|(
 name|tsigbuf
@@ -470,6 +522,7 @@ argument_list|,
 name|namebuf
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 name|tsigbuf

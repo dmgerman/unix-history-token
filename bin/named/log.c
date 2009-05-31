@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: log.c,v 1.37.18.6 2006/06/09 00:54:08 marka Exp $ */
+comment|/* $Id: log.c,v 1.46.334.3 2009/01/07 01:50:14 jinmei Exp $ */
 end_comment
 
 begin_comment
@@ -54,7 +54,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*%  * When adding a new category, be sure to add the appropriate  * #define to<named/log.h> and to update the list in  * bin/check/check-tool.c.  */
+comment|/*%  * When adding a new category, be sure to add the appropriate  * \#define to<named/log.h> and to update the list in  * bin/check/check-tool.c.  */
 end_comment
 
 begin_decl_stmt
@@ -107,6 +107,12 @@ literal|0
 block|}
 block|,
 block|{
+literal|"query-errors"
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0
@@ -116,7 +122,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*%  * When adding a new module, be sure to add the appropriate  * #define to<dns/log.h>.  */
+comment|/*%  * When adding a new module, be sure to add the appropriate  * \#define to<dns/log.h>.  */
 end_comment
 
 begin_decl_stmt
@@ -376,7 +382,7 @@ decl_stmt|;
 name|isc_logdestination_t
 name|destination
 decl_stmt|;
-comment|/* 	 * By default, the logging library makes "default_debug" log to 	 * stderr.  In BIND, we want to override this and log to named.run 	 * instead, unless the the -g option was given. 	 */
+comment|/* 	 * By default, the logging library makes "default_debug" log to 	 * stderr.  In BIND, we want to override this and log to named.run 	 * instead, unless the -g option was given. 	 */
 if|if
 condition|(
 operator|!

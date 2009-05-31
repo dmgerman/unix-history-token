@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: getipnode.c,v 1.37.18.7 2007/08/28 07:20:06 tbox Exp $ */
+comment|/* $Id: getipnode.c,v 1.42 2007/06/18 23:47:51 tbox Exp $ */
 end_comment
 
 begin_comment

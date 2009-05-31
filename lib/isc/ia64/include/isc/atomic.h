@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2006  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2006, 2007, 2009  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: atomic.h,v 1.2.2.1 2006/06/21 03:38:32 marka Exp $ */
+comment|/* $Id: atomic.h,v 1.4.326.2 2009/02/06 23:47:11 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -55,6 +55,21 @@ parameter_list|,
 name|isc_int32_t
 name|val
 parameter_list|)
+ifdef|#
+directive|ifdef
+name|__GNUC__
+function|__attribute__
+parameter_list|(
+function|(unused
+end_function
+
+begin_endif
+unit|))
+endif|#
+directive|endif
+end_endif
+
+begin_block
 block|{
 name|isc_int32_t
 name|prev
@@ -102,7 +117,7 @@ name|prev
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * This routine atomically stores the value 'val' in 'p'.  */
@@ -121,12 +136,27 @@ parameter_list|,
 name|isc_int32_t
 name|val
 parameter_list|)
+ifdef|#
+directive|ifdef
+name|__GNUC__
+function|__attribute__
+parameter_list|(
+function|(unused
+end_function
+
+begin_endif
+unit|))
+endif|#
+directive|endif
+end_endif
+
+begin_block
 block|{
 asm|__asm__
 specifier|volatile
 asm|( 		"st4.rel %0=%1" 		: "=m" (*p) 		: "r" (val) 		: "memory" 		);
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * This routine atomically replaces the value in 'p' with 'val', if the  * original value is equal to 'cmpval'.  The original value is returned in any  * case.  */
@@ -148,6 +178,21 @@ parameter_list|,
 name|isc_int32_t
 name|val
 parameter_list|)
+ifdef|#
+directive|ifdef
+name|__GNUC__
+function|__attribute__
+parameter_list|(
+function|(unused
+end_function
+
+begin_endif
+unit|))
+endif|#
+directive|endif
+end_endif
+
+begin_block
 block|{
 name|isc_int32_t
 name|ret
@@ -161,7 +206,7 @@ name|ret
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_else
 else|#

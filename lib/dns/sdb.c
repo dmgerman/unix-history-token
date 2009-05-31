@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: sdb.c,v 1.45.18.16 2008/01/17 23:45:58 tbox Exp $ */
+comment|/* $Id: sdb.c,v 1.66.48.2 2009/04/21 23:47:18 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -4538,12 +4538,19 @@ condition|(
 name|sigrdataset
 operator|!=
 name|NULL
+operator|&&
+name|dns_rdataset_isassociated
+argument_list|(
+name|sigrdataset
+argument_list|)
 condition|)
+block|{
 name|dns_rdataset_disassociate
 argument_list|(
 name|sigrdataset
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 name|result
@@ -5179,8 +5186,9 @@ name|dns_db_t
 modifier|*
 name|db
 parameter_list|,
-name|isc_boolean_t
-name|relative_names
+name|unsigned
+name|int
+name|options
 parameter_list|,
 name|dns_dbiterator_t
 modifier|*
@@ -5230,6 +5238,29 @@ operator|->
 name|allnodes
 operator|==
 name|NULL
+condition|)
+return|return
+operator|(
+name|ISC_R_NOTIMPLEMENTED
+operator|)
+return|;
+if|if
+condition|(
+operator|(
+name|options
+operator|&
+name|DNS_DB_NSEC3ONLY
+operator|)
+operator|!=
+literal|0
+operator|||
+operator|(
+name|options
+operator|&
+name|DNS_DB_NONSEC3
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -5298,7 +5329,12 @@ name|common
 operator|.
 name|relative_names
 operator|=
-name|relative_names
+name|ISC_TF
+argument_list|(
+name|options
+operator|&
+name|DNS_DB_RELATIVENAMES
+argument_list|)
 expr_stmt|;
 name|sdbiter
 operator|->
@@ -6137,6 +6173,22 @@ block|,
 name|settask
 block|,
 name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -6754,6 +6806,10 @@ block|,
 name|isc__rdatalist_addnoqname
 block|,
 name|isc__rdatalist_getnoqname
+block|,
+name|NULL
+block|,
+name|NULL
 block|,
 name|NULL
 block|,

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: ncache.h,v 1.17.18.2 2005/04/29 00:16:16 marka Exp $ */
+comment|/* $Id: ncache.h,v 1.25 2008/09/25 04:02:39 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*! \file  *\brief  * DNS Ncache  *  * XXX TBS XXX  *  * MP:  *\li	The caller must ensure any required synchronization.  *  * Reliability:  *\li	No anticipated impact.  *  * Resources:  *\li	TBS  *  * Security:  *\li	No anticipated impact.  *  * Standards:  *\li	RFC2308  */
+comment|/*! \file dns/ncache.h  *\brief  * DNS Ncache  *  * XXX TBS XXX  *  * MP:  *\li	The caller must ensure any required synchronization.  *  * Reliability:  *\li	No anticipated impact.  *  * Resources:  *\li	TBS  *  * Security:  *\li	No anticipated impact.  *  * Standards:  *\li	RFC2308  */
 end_comment
 
 begin_include
@@ -84,8 +84,43 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|isc_result_t
+name|dns_ncache_addoptout
+parameter_list|(
+name|dns_message_t
+modifier|*
+name|message
+parameter_list|,
+name|dns_db_t
+modifier|*
+name|cache
+parameter_list|,
+name|dns_dbnode_t
+modifier|*
+name|node
+parameter_list|,
+name|dns_rdatatype_t
+name|covers
+parameter_list|,
+name|isc_stdtime_t
+name|now
+parameter_list|,
+name|dns_ttl_t
+name|maxttl
+parameter_list|,
+name|isc_boolean_t
+name|optout
+parameter_list|,
+name|dns_rdataset_t
+modifier|*
+name|addedrdataset
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*%<  * Convert the authority data from 'message' into a negative cache  * rdataset, and store it in 'cache' at 'node' with a TTL limited to  * 'maxttl'.  *  * The 'covers' argument is the RR type whose nonexistence we are caching,  * or dns_rdatatype_any when caching a NXDOMAIN response.  *  * Note:  *\li	If 'addedrdataset' is not NULL, then it will be attached to the added  *	rdataset.  See dns_db_addrdataset() for more details.  *  * Requires:  *\li	'message' is a valid message with a properly formatting negative cache  *	authority section.  *  *\li	The requirements of dns_db_addrdataset() apply to 'cache', 'node',  *	'now', and 'addedrdataset'.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOSPACE  *  *\li	Any result code of dns_db_addrdataset() is a possible result code  *	of dns_ncache_add().  */
+comment|/*%<  * Convert the authority data from 'message' into a negative cache  * rdataset, and store it in 'cache' at 'node' with a TTL limited to  * 'maxttl'.  *  * The 'covers' argument is the RR type whose nonexistence we are caching,  * or dns_rdatatype_any when caching a NXDOMAIN response.  *  * 'optout' indicates a DNS_RATASETATTR_OPTOUT should be set.  *  * Note:  *\li	If 'addedrdataset' is not NULL, then it will be attached to the added  *	rdataset.  See dns_db_addrdataset() for more details.  *  * Requires:  *\li	'message' is a valid message with a properly formatting negative cache  *	authority section.  *  *\li	The requirements of dns_db_addrdataset() apply to 'cache', 'node',  *	'now', and 'addedrdataset'.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOSPACE  *  *\li	Any result code of dns_db_addrdataset() is a possible result code  *	of dns_ncache_add().  */
 end_comment
 
 begin_function_decl
@@ -144,6 +179,29 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Search the negative caching rdataset for an rdataset with the  * specified name and type.  *  * Requires:  *\li	'ncacherdataset' is a valid negative caching rdataset.  *  *\li	'ncacherdataset' is not empty.  *  *\li	'name' is a valid name.  *  *\li	'type' is not SIG, or a meta-RR type.  *  *\li	'rdataset' is a valid disassociated rdataset.  *  * Ensures:  *\li	On a return of ISC_R_SUCCESS, 'rdataset' is bound to the found  *	rdataset.  *  * Returns:  *\li	#ISC_R_SUCCESS		- the rdataset was found.  *\li	#ISC_R_NOTFOUND		- the rdataset was not found.  *  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_ncache_current
+parameter_list|(
+name|dns_rdataset_t
+modifier|*
+name|ncacherdataset
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|found
+parameter_list|,
+name|dns_rdataset_t
+modifier|*
+name|rdataset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Extract the current rdataset and name from a ncache entry.  *  * Requires:  * \li	'ncacherdataset' to be valid and to be a negative cache entry  * \li	'found' to be valid.  * \li	'rdataset' to be unassociated.  */
 end_comment
 
 begin_macro

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: diff.h,v 1.6.18.2 2005/04/29 00:16:12 marka Exp $ */
+comment|/* $Id: diff.h,v 1.15.120.2 2009/01/18 23:47:41 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*! \file  * \brief  * A diff is a convenience type representing a list of changes to be  * made to a database.  */
+comment|/*! \file dns/diff.h  * \brief  * A diff is a convenience type representing a list of changes to be  * made to a database.  */
 end_comment
 
 begin_comment
@@ -67,7 +67,7 @@ comment|/***  *** Types  ***/
 end_comment
 
 begin_comment
-comment|/*%  * A dns_difftuple_t represents a single RR being added or deleted.  * The RR type and class are in the 'rdata' member; the class is always  * the real one, not a DynDNS meta-class, so that the rdatas can be  * compared using dns_rdata_compare().  The TTL is significant  * even for deletions, because a deletion/addition pair cannot  * be canceled out if the TTL differs (it might be an explicit  * TTL update).  *  * Tuples are also used to represent complete RRs with owner  * names for a couple of other purposes, such as the  * individual RRs of a "RRset exists (value dependent)"  * prerequisite set.  In this case, op==DNS_DIFFOP_EXISTS,  * and the TTL is ignored.  */
+comment|/*%  * A dns_difftuple_t represents a single RR being added or deleted.  * The RR type and class are in the 'rdata' member; the class is always  * the real one, not a DynDNS meta-class, so that the rdatas can be  * compared using dns_rdata_compare().  The TTL is significant  * even for deletions, because a deletion/addition pair cannot  * be canceled out if the TTL differs (it might be an explicit  * TTL update).  *  * Tuples are also used to represent complete RRs with owner  * names for a couple of other purposes, such as the  * individual RRs of a "RRset exists (value dependent)"  * prerequisite set.  In this case, op==DNS_DIFFOP_EXISTS,  * and the TTL is ignored.  *  * DNS_DIFFOP_*RESIGN will cause the 'resign' attribute of the resulting  * RRset to be recomputed to be 'resign' seconds before the earliest RRSIG  * timeexpire.  */
 end_comment
 
 begin_typedef
@@ -75,13 +75,30 @@ typedef|typedef
 enum|enum
 block|{
 name|DNS_DIFFOP_ADD
+init|=
+literal|0
 block|,
 comment|/*%< Add an RR. */
 name|DNS_DIFFOP_DEL
+init|=
+literal|1
 block|,
 comment|/*%< Delete an RR. */
 name|DNS_DIFFOP_EXISTS
+init|=
+literal|2
+block|,
 comment|/*%< Assert RR existence. */
+name|DNS_DIFFOP_ADDRESIGN
+init|=
+literal|4
+block|,
+comment|/*%< ADD + RESIGN. */
+name|DNS_DIFFOP_DELRESIGN
+init|=
+literal|5
+block|,
+comment|/*%< DEL + RESIGN. */
 block|}
 name|dns_diffop_t
 typedef|;
@@ -188,6 +205,10 @@ name|isc_mem_t
 modifier|*
 name|mctx
 decl_stmt|;
+comment|/* 	 * Set the 'resign' attribute to this many second before the 	 * earliest RRSIG timeexpire. 	 */
+name|isc_uint32_t
+name|resign
+decl_stmt|;
 name|ISC_LIST
 argument_list|(
 argument|dns_difftuple_t
@@ -199,7 +220,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Type of comparision function for sorting diffs. */
+comment|/* Type of comparison function for sorting diffs. */
 end_comment
 
 begin_typedef
@@ -225,7 +246,7 @@ end_comment
 begin_function_decl
 name|ISC_LANG_BEGINDECLS
 comment|/**************************************************************************/
-comment|/*  * Maniuplation of diffs and tuples.  */
+comment|/*  * Manipulation of diffs and tuples.  */
 name|isc_result_t
 name|dns_difftuple_create
 parameter_list|(

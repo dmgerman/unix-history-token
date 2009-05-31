@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rdataset.h,v 1.51.18.7 2006/03/03 00:56:53 marka Exp $ */
+comment|/* $Id: rdataset.h,v 1.65.50.2 2009/01/18 23:47:41 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*! \file  * \brief  * A DNS rdataset is a handle that can be associated with a collection of  * rdata all having a common owner name, class, and type.  *  * The dns_rdataset_t type is like a "virtual class".  To actually use  * rdatasets, an implementation of the method suite (e.g. "slabbed rdata") is  * required.  *  * XXX&lt;more&gt; XXX  *  * MP:  *\li	Clients of this module must impose any required synchronization.  *  * Reliability:  *\li	No anticipated impact.  *  * Resources:  *\li	TBS  *  * Security:  *\li	No anticipated impact.  *  * Standards:  *\li	None.  */
+comment|/*! \file dns/rdataset.h  * \brief  * A DNS rdataset is a handle that can be associated with a collection of  * rdata all having a common owner name, class, and type.  *  * The dns_rdataset_t type is like a "virtual class".  To actually use  * rdatasets, an implementation of the method suite (e.g. "slabbed rdata") is  * required.  *  * XXX&lt;more&gt; XXX  *  * MP:  *\li	Clients of this module must impose any required synchronization.  *  * Reliability:  *\li	No anticipated impact.  *  * Resources:  *\li	TBS  *  * Security:  *\li	No anticipated impact.  *  * Standards:  *\li	None.  */
 end_comment
 
 begin_include
@@ -181,11 +181,49 @@ name|name
 parameter_list|,
 name|dns_rdataset_t
 modifier|*
-name|nsec
+name|neg
 parameter_list|,
 name|dns_rdataset_t
 modifier|*
-name|nsecsig
+name|negsig
+parameter_list|)
+function_decl|;
+name|isc_result_t
+function_decl|(
+modifier|*
+name|addclosest
+function_decl|)
+parameter_list|(
+name|dns_rdataset_t
+modifier|*
+name|rdataset
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+name|isc_result_t
+function_decl|(
+modifier|*
+name|getclosest
+function_decl|)
+parameter_list|(
+name|dns_rdataset_t
+modifier|*
+name|rdataset
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|dns_rdataset_t
+modifier|*
+name|neg
+parameter_list|,
+name|dns_rdataset_t
+modifier|*
+name|negsig
 parameter_list|)
 function_decl|;
 name|isc_result_t
@@ -372,6 +410,10 @@ comment|/*% 	 * the counter provides the starting point in the "cyclic" order. 	
 name|isc_uint32_t
 name|count
 decl_stmt|;
+comment|/* 	 * This RRSIG RRset should be re-generated around this time. 	 * Only valid if DNS_RDATASETATTR_RESIGN is set in attributes. 	 */
+name|isc_stdtime_t
+name|resign
+decl_stmt|;
 comment|/*@{*/
 comment|/*% 	 * These are for use by the rdataset implementation, and MUST NOT 	 * be changed by clients. 	 */
 name|void
@@ -397,6 +439,10 @@ decl_stmt|;
 name|void
 modifier|*
 name|private6
+decl_stmt|;
+name|void
+modifier|*
+name|private7
 decl_stmt|;
 comment|/*@}*/
 block|}
@@ -576,6 +622,31 @@ directive|define
 name|DNS_RDATASETATTR_LOADORDER
 value|0x00020000
 end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_RDATASETATTR_RESIGN
+value|0x00040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_RDATASETATTR_CLOSEST
+value|0x00080000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_RDATASETATTR_OPTOUT
+value|0x00100000
+end_define
+
+begin_comment
+comment|/*%< OPTOUT proof */
+end_comment
 
 begin_comment
 comment|/*%  * _OMITDNSSEC:  * 	Omit DNSSEC records when rendering ncache records.  */
@@ -779,7 +850,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Convert 'rdataset' to text format, storing the result in 'target'.  *  * Notes:  *\li	The rdata cursor position will be changed.  *  *\li	The 'question' flag should normally be #ISC_FALSE.  If it is   *	#ISC_TRUE, the TTL and rdata fields are not printed.  This is   *	for use when printing an rdata representing a question section.  *  *\li	This interface is deprecated; use dns_master_rdatasettottext()  * 	and/or dns_master_questiontotext() instead.  *  * Requires:  *\li	'rdataset' is a valid rdataset.  *  *\li	'rdataset' is not empty.  */
+comment|/*%<  * Convert 'rdataset' to text format, storing the result in 'target'.  *  * Notes:  *\li	The rdata cursor position will be changed.  *  *\li	The 'question' flag should normally be #ISC_FALSE.  If it is  *	#ISC_TRUE, the TTL and rdata fields are not printed.  This is  *	for use when printing an rdata representing a question section.  *  *\li	This interface is deprecated; use dns_master_rdatasettottext()  * 	and/or dns_master_questiontotext() instead.  *  * Requires:  *\li	'rdataset' is a valid rdataset.  *  *\li	'rdataset' is not empty.  */
 end_comment
 
 begin_function_decl
@@ -860,7 +931,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Like dns_rdataset_towire(), but sorting the rdatasets according to  * the integer value returned by 'order' when called witih the rdataset  * and 'order_arg' as arguments.  *  * Requires:  *\li	All the requirements of dns_rdataset_towire(), and  *	that order_arg is NULL if and only if order is NULL.  */
+comment|/*%<  * Like dns_rdataset_towire(), but sorting the rdatasets according to  * the integer value returned by 'order' when called with the rdataset  * and 'order_arg' as arguments.  *  * Requires:  *\li	All the requirements of dns_rdataset_towire(), and  *	that order_arg is NULL if and only if order is NULL.  */
 end_comment
 
 begin_function_decl
@@ -949,17 +1020,17 @@ name|name
 parameter_list|,
 name|dns_rdataset_t
 modifier|*
-name|nsec
+name|neg
 parameter_list|,
 name|dns_rdataset_t
 modifier|*
-name|nsecsig
+name|negsig
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Return the noqname proof for this record.  *  * Requires:  *\li	'rdataset' to be valid and #DNS_RDATASETATTR_NOQNAME to be set.  *\li	'name' to be valid.  *\li	'nsec' and 'nsecsig' to be valid and not associated.  */
+comment|/*%<  * Return the noqname proof for this record.  *  * Requires:  *\li	'rdataset' to be valid and #DNS_RDATASETATTR_NOQNAME to be set.  *\li	'name' to be valid.  *\li	'neg' and 'negsig' to be valid and not associated.  */
 end_comment
 
 begin_function_decl
@@ -978,7 +1049,53 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Associate a noqname proof with this record.  * Sets #DNS_RDATASETATTR_NOQNAME if successful.  * Adjusts the 'rdataset->ttl' to minimum of the 'rdataset->ttl' and  * the 'nsec' and 'rrsig(nsec)' ttl.  *  * Requires:  *\li	'rdataset' to be valid and #DNS_RDATASETATTR_NOQNAME to be set.  *\li	'name' to be valid and have NSEC and RRSIG(NSEC) rdatasets.  */
+comment|/*%<  * Associate a noqname proof with this record.  * Sets #DNS_RDATASETATTR_NOQNAME if successful.  * Adjusts the 'rdataset->ttl' to minimum of the 'rdataset->ttl' and  * the 'nsec'/'nsec3' and 'rrsig(nsec)'/'rrsig(nsec3)' ttl.  *  * Requires:  *\li	'rdataset' to be valid and #DNS_RDATASETATTR_NOQNAME to be set.  *\li	'name' to be valid and have NSEC or NSEC3 and associated RRSIG  *	 rdatasets.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_rdataset_getclosest
+parameter_list|(
+name|dns_rdataset_t
+modifier|*
+name|rdataset
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|dns_rdataset_t
+modifier|*
+name|nsec
+parameter_list|,
+name|dns_rdataset_t
+modifier|*
+name|nsecsig
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Return the closest encloser for this record.  *  * Requires:  *\li	'rdataset' to be valid and #DNS_RDATASETATTR_CLOSEST to be set.  *\li	'name' to be valid.  *\li	'nsec' and 'nsecsig' to be valid and not associated.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_rdataset_addclosest
+parameter_list|(
+name|dns_rdataset_t
+modifier|*
+name|rdataset
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Associate a closest encloset proof with this record.  * Sets #DNS_RDATASETATTR_CLOSEST if successful.  * Adjusts the 'rdataset->ttl' to minimum of the 'rdataset->ttl' and  * the 'nsec' and 'rrsig(nsec)' ttl.  *  * Requires:  *\li	'rdataset' to be valid and #DNS_RDATASETATTR_CLOSEST to be set.  *\li	'name' to be valid and have NSEC3 and RRSIG(NSEC3) rdatasets.  */
 end_comment
 
 begin_function_decl

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: journal.h,v 1.25.18.2 2005/04/29 00:16:13 marka Exp $ */
+comment|/* $Id: journal.h,v 1.33.120.2 2009/01/18 23:47:41 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*! \file  * \brief  * Database journalling.  */
+comment|/*! \file dns/journal.h  * \brief  * Database journaling.  */
 end_comment
 
 begin_comment
@@ -67,6 +67,17 @@ include|#
 directive|include
 file|<dns/types.h>
 end_include
+
+begin_comment
+comment|/***  *** Defines.  ***/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_JOURNALOPT_RESIGN
+value|0x00000001
+end_define
 
 begin_comment
 comment|/***  *** Types  ***/
@@ -337,7 +348,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Prepare to iterate over the transactions that will bring the database  * from SOA serial number 'begin_serial' to 'end_serial'.  *  * Returns:  *\li	ISC_R_SUCCESS  *\li	ISC_R_RANGE	begin_serial is outside the addressable range.  *\li	ISC_R_NOTFOUND	begin_serial is within the range of adressable  *			serial numbers covered by the journal, but  *			this particular serial number does not exist.  */
+comment|/*%<  * Prepare to iterate over the transactions that will bring the database  * from SOA serial number 'begin_serial' to 'end_serial'.  *  * Returns:  *\li	ISC_R_SUCCESS  *\li	ISC_R_RANGE	begin_serial is outside the addressable range.  *\li	ISC_R_NOTFOUND	begin_serial is within the range of addressable  *			serial numbers covered by the journal, but  *			this particular serial number does not exist.  */
 end_comment
 
 begin_comment
@@ -423,6 +434,10 @@ name|dns_db_t
 modifier|*
 name|db
 parameter_list|,
+name|unsigned
+name|int
+name|options
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -432,7 +447,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Roll forward (play back) the journal file "filename" into the  * database "db".  This should be called when the server starts  * after a shutdown or crash.  *  * Requires:  *\li      'mctx' is a valid memory context.  *\li	'db' is a valid database which does not have a version  *           open for writing.  *  \li    'filename' is the name of the journal file belonging to 'db'.  *  * Returns:  *\li	DNS_R_NOJOURNAL when journal does not exist.  *\li	ISC_R_NOTFOUND when current serial in not in journal.  *\li	ISC_R_RANGE when current serial in not in journals range.  *\li	ISC_R_SUCCESS journal has been applied successfully to database.  *	others  */
+comment|/*%<  * Roll forward (play back) the journal file "filename" into the  * database "db".  This should be called when the server starts  * after a shutdown or crash.  *  * Requires:  *\li   'mctx' is a valid memory context.  *\li	'db' is a valid database which does not have a version  *           open for writing.  *\li   'filename' is the name of the journal file belonging to 'db'.  *  * Returns:  *\li	DNS_R_NOJOURNAL when journal does not exist.  *\li	ISC_R_NOTFOUND when current serial in not in journal.  *\li	ISC_R_RANGE when current serial in not in journals range.  *\li	ISC_R_SUCCESS journal has been applied successfully to database.  *	others  */
 end_comment
 
 begin_function_decl
