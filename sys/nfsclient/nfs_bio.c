@@ -5557,7 +5557,7 @@ operator|+
 name|n
 expr_stmt|;
 block|}
-name|vfs_bio_set_validclean
+name|vfs_bio_set_valid
 argument_list|(
 name|bp
 argument_list|,
