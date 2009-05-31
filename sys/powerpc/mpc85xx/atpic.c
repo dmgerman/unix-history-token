@@ -1045,7 +1045,7 @@ name|sc_ires
 argument_list|,
 name|INTR_TYPE_MISC
 operator||
-name|INTR_FAST
+name|INTR_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,
