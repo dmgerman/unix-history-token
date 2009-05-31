@@ -12,11 +12,11 @@ comment|/* config.h.in.  Generated from configure.in by autoheader.  */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: acconfig.h,v 1.44.18.5 2005/04/29 00:15:20 marka Exp $ */
+comment|/* $Id: acconfig.h,v 1.51.334.2 2009/02/16 23:47:15 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -25,14 +25,6 @@ end_comment
 
 begin_comment
 comment|/***  *** This file is not to be included by any public header files, because  *** it does not get installed.  ***/
-end_comment
-
-begin_comment
-comment|/** define to `int' if<sys/types.h> doesn't define.  */
-end_comment
-
-begin_comment
-comment|/* #undef ssize_t */
 end_comment
 
 begin_comment
@@ -138,17 +130,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_IFLIST_SYSCTL
-value|1
-end_define
-
-begin_comment
-comment|/** define if chroot() is available */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_CHROOT
 value|1
 end_define
 
@@ -487,6 +468,14 @@ comment|/* #undef BROKEN_TCP_BIND_BEFORE_CONNECT */
 end_comment
 
 begin_comment
+comment|/* Define to enable "rrset-order fixed" syntax. */
+end_comment
+
+begin_comment
+comment|/* #undef DNS_RDATASET_FIXED */
+end_comment
+
+begin_comment
 comment|/* Solaris hack to get select_large_fdset. */
 end_comment
 
@@ -495,20 +484,26 @@ comment|/* #undef FD_SETSIZE */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the `capset' function. */
+comment|/* Define to 1 if you have the `chroot' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_CAPSET */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_CHROOT
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<dlfcn.h> header file. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_DLFCN_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_DLFCN_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<fcntl.h> header file. */
@@ -520,6 +515,22 @@ directive|define
 name|HAVE_FCNTL_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<gssapi/gssapi.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GSSAPI_GSSAPI_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<gssapi.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GSSAPI_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<inttypes.h> header file. */
@@ -538,6 +549,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_LIBC */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `cap' library (-lcap). */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBCAP */
 end_comment
 
 begin_comment
@@ -589,6 +608,14 @@ comment|/* #undef HAVE_LIBTHR */
 end_comment
 
 begin_comment
+comment|/* Define if libxml2 was found */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBXML2 */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<linux/capability.h> header file. */
 end_comment
 
@@ -615,6 +642,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_MEMORY_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `nanosleep' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_NANOSLEEP
 value|1
 end_define
 

@@ -4,11 +4,11 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: platform.h.in,v 1.34.18.11 2008/06/24 23:45:55 tbox Exp $ */
+comment|/* $Id: platform.h.in,v 1.48.84.2 2009/02/16 23:47:15 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -31,17 +31,6 @@ end_comment
 begin_comment
 comment|/*****  ***** Platform-dependent defines.  *****/
 end_comment
-
-begin_comment
-comment|/*  * Define if the platform has<strings.h>.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISC_PLATFORM_HAVESTRINGSH
-value|1
-end_define
 
 begin_comment
 comment|/***  *** Network.  ***/
@@ -162,16 +151,6 @@ name|ISC_PLATFORM_NEEDPTON
 end_undef
 
 begin_comment
-comment|/*! \brief  * If this system needs inet_aton(), ISC_PLATFORM_NEEDATON will be defined.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ISC_PLATFORM_NEEDATON
-end_undef
-
-begin_comment
 comment|/*! \brief  * If this system needs in_port_t, ISC_PLATFORM_NEEDPORTT will be defined.  */
 end_comment
 
@@ -182,33 +161,33 @@ name|ISC_PLATFORM_NEEDPORTT
 end_undef
 
 begin_comment
-comment|/*! \brief  * If the system needs strsep(), ISC_PLATFORM_NEEDSTRSEP will be defined.  */
+comment|/*! \brief  * Define if the system has struct lifconf which is a extended struct ifconf  * for IPv6.  */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|ISC_PLATFORM_NEEDSTRSEP
+name|ISC_PLATFORM_HAVELIFCONF
 end_undef
 
 begin_comment
-comment|/*! \brief  * If the system needs strlcpy(), ISC_PLATFORM_NEEDSTRLCPY will be defined.  */
+comment|/*! \brief  * Define if the system has struct if_laddrconf which is a extended struct  * ifconf for IPv6.  */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|ISC_PLATFORM_NEEDSTRLCPY
+name|ISC_PLATFORM_HAVEIF_LADDRCONF
 end_undef
 
 begin_comment
-comment|/*! \brief  * If the system needs strlcat(), ISC_PLATFORM_NEEDSTRLCAT will be defined.  */
+comment|/*! \brief  * Define if the system has struct if_laddrreq.  */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|ISC_PLATFORM_NEEDSTRLCAT
+name|ISC_PLATFORM_HAVEIF_LADDRREQ
 end_undef
 
 begin_comment
@@ -223,14 +202,15 @@ value|1
 end_define
 
 begin_comment
-comment|/*! \brief  * Define if PTHREAD_ONCE_INIT should be surrounded by braces to  * prevent compiler warnings (such as with gcc on Solaris 2.8).  */
+comment|/*! \brief  * Define if the system supports if_nametoindex.  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|ISC_PLATFORM_BRACEPTHREADONCEINIT
-end_undef
+begin_define
+define|#
+directive|define
+name|ISC_PLATFORM_HAVEIFNAMETOINDEX
+value|1
+end_define
 
 begin_comment
 comment|/*! \brief  * Define on some UnixWare systems to fix erroneous definitions of various  * IN6_IS_ADDR_* macros.  */
@@ -309,7 +289,65 @@ value|"ll"
 end_define
 
 begin_comment
-comment|/*! \brief  * Defined if we are using threads.  */
+comment|/***  *** String functions.  ***/
+end_comment
+
+begin_comment
+comment|/*  * If the system needs strsep(), ISC_PLATFORM_NEEDSTRSEP will be defined.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ISC_PLATFORM_NEEDSTRSEP
+end_undef
+
+begin_comment
+comment|/*  * If the system needs strlcpy(), ISC_PLATFORM_NEEDSTRLCPY will be defined.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ISC_PLATFORM_NEEDSTRLCPY
+end_undef
+
+begin_comment
+comment|/*  * If the system needs strlcat(), ISC_PLATFORM_NEEDSTRLCAT will be defined.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ISC_PLATFORM_NEEDSTRLCAT
+end_undef
+
+begin_comment
+comment|/*  * Define if this system needs strtoul.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ISC_PLATFORM_NEEDSTRTOUL
+end_undef
+
+begin_comment
+comment|/*  * Define if this system needs memmove.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ISC_PLATFORM_NEEDMEMMOVE
+end_undef
+
+begin_comment
+comment|/***  *** Miscellaneous.  ***/
+end_comment
+
+begin_comment
+comment|/*  * Defined if we are using threads.  */
 end_comment
 
 begin_define
@@ -320,7 +358,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*! \brief  * Defined if unistd.h does not cause fd_set to be delared.  */
+comment|/*  * Defined if unistd.h does not cause fd_set to be delared.  */
 end_comment
 
 begin_undef
@@ -330,7 +368,11 @@ name|ISC_PLATFORM_NEEDSYSSELECTH
 end_undef
 
 begin_comment
-comment|/*! \brief  * Type used for resource limits.  */
+comment|/*  * Defined to<gssapi.h> or<gssapi/gssapi.h> for how to include  * the GSSAPI header.  */
+end_comment
+
+begin_comment
+comment|/*  * Type used for resource limits.  */
 end_comment
 
 begin_define
@@ -341,7 +383,7 @@ value|rlim_t
 end_define
 
 begin_comment
-comment|/*! \brief  * Define if your compiler supports "long long int".  */
+comment|/*  * Define if your compiler supports "long long int".  */
 end_comment
 
 begin_define
@@ -352,74 +394,23 @@ value|1
 end_define
 
 begin_comment
-comment|/*! \brief  * Define if the system has struct lifconf which is a extended struct ifconf  * for IPv6.  */
+comment|/*  * Define if PTHREAD_ONCE_INIT should be surrounded by braces to  * prevent compiler warnings (such as with gcc on Solaris 2.8).  */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|ISC_PLATFORM_HAVELIFCONF
+name|ISC_PLATFORM_BRACEPTHREADONCEINIT
 end_undef
 
 begin_comment
-comment|/*! \brief  * Define if the system has struct if_laddrconf which is a extended struct  * ifconf for IPv6.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ISC_PLATFORM_HAVEIF_LADDRCONF
-end_undef
-
-begin_comment
-comment|/*! \brief  * Define if the system has struct if_laddrreq.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ISC_PLATFORM_HAVEIF_LADDRREQ
-end_undef
-
-begin_comment
-comment|/*! \brief  * Used to control how extern data is linked; needed for Win32 platforms.  */
+comment|/*  * Used to control how extern data is linked; needed for Win32 platforms.  */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
 name|ISC_PLATFORM_USEDECLSPEC
-end_undef
-
-begin_comment
-comment|/*! \brief  * Define if the system supports if_nametoindex.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISC_PLATFORM_HAVEIFNAMETOINDEX
-value|1
-end_define
-
-begin_comment
-comment|/*! \brief  * Define if this system needs strtoul.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ISC_PLATFORM_NEEDSTRTOUL
-end_undef
-
-begin_comment
-comment|/*! \brief  * Define if this system needs memmove.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ISC_PLATFORM_NEEDMEMMOVE
 end_undef
 
 begin_comment
@@ -443,6 +434,16 @@ directive|define
 name|ISC_PLATFORM_HAVEXADD
 value|1
 end_define
+
+begin_comment
+comment|/*  * If the "xaddq" operation (64bit xadd) is available on this architecture,  * ISC_PLATFORM_HAVEXADDQ will be defined.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ISC_PLATFORM_HAVEXADDQ
+end_undef
 
 begin_comment
 comment|/*  * If the "atomic swap" operation is available on this architecture,  * ISC_PLATFORM_HAVEATOMICSTORE" will be defined.  */
@@ -489,6 +490,21 @@ end_undef
 
 begin_comment
 comment|/*  * Define if the standard __asm function must be used.  */
+end_comment
+
+begin_comment
+comment|/*  * Define if the platform has<strings.h>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISC_PLATFORM_HAVESTRINGSH
+value|1
+end_define
+
+begin_comment
+comment|/***  ***	Windows dll support.  ***/
 end_comment
 
 begin_comment

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: cfg.h,v 1.34.18.5 2006/03/02 00:37:22 marka Exp $ */
+comment|/* $Id: cfg.h,v 1.44 2007/10/12 04:17:18 each Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*! \file  * \brief  * This is the new, table-driven, YACC-free configuration file parser.  */
+comment|/*! \file isccfg/cfg.h  * \brief  * This is the new, table-driven, YACC-free configuration file parser.  */
 end_comment
 
 begin_comment
@@ -630,6 +630,26 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Returns the next element of a list of configuration objects.  *  * Requires:  * \li     'elt' points to cfg_listelt_t obtained from cfg_list_first() or  *	a previous call to cfg_list_next().  *  * Returns:  * \li     A pointer to a cfg_listelt_t representing the next element,  * 	or NULL if there are no more elements.  */
+end_comment
+
+begin_function_decl
+name|unsigned
+name|int
+name|cfg_list_length
+parameter_list|(
+specifier|const
+name|cfg_obj_t
+modifier|*
+name|obj
+parameter_list|,
+name|isc_boolean_t
+name|recurse
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Returns the length of a list of configure objects.  If obj is  * not a list, returns 0.  If recurse is true, add in the length of  * all contained lists.  */
 end_comment
 
 begin_function_decl

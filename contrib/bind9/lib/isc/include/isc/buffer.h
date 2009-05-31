@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: buffer.h,v 1.43.18.2 2005/04/29 00:16:53 marka Exp $ */
+comment|/* $Id: buffer.h,v 1.53 2008/09/25 04:02:39 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*! \file buffer.h  *  * \brief A buffer is a region of memory, together with a set of related subregions.  * Buffers are used for parsing and I/O operations.  *  * The 'used region' and the 'available' region are disjoint, and their  * union is the buffer's region.  The used region extends from the beginning  * of the buffer region to the last used byte.  The available region  * extends from one byte greater than the last used byte to the end of the  * buffer's region.  The size of the used region can be changed using various  * buffer commands.  Initially, the used region is empty.  *  * The used region is further subdivided into two disjoint regions: the  * 'consumed region' and the 'remaining region'.  The union of these two  * regions is the used region.  The consumed region extends from the beginning  * of the used region to the byte before the 'current' offset (if any).  The  * 'remaining' region the current pointer to the end of the used  * region.  The size of the consumed region can be changed using various  * buffer commands.  Initially, the consumed region is empty.  *  * The 'active region' is an (optional) subregion of the remaining region.  * It extends from the current offset to an offset in the remaining region  * that is selected with isc_buffer_setactive().  Initially, the active region  * is empty.  If the current offset advances beyond the chosen offset, the  * active region will also be empty.  *  * \verbatim  *  /------------entire length---------------\  *  /----- used region -----\/-- available --\  *  +----------------------------------------+  *  | consumed  | remaining |                |  *  +----------------------------------------+  *  a           b     c     d                e  *  * a == base of buffer.  * b == current pointer.  Can be anywhere between a and d.  * c == active pointer.  Meaningful between b and d.  * d == used pointer.  * e == length of buffer.  *  * a-e == entire length of buffer.  * a-d == used region.  * a-b == consumed region.  * b-d == remaining region.  * b-c == optional active region.  *\endverbatim  *  * The following invariants are maintained by all routines:  *  *\code  *	length> 0  *  *	base is a valid pointer to length bytes of memory  *  *	0<= used<= length  *  *	0<= current<= used  *  *	0<= active<= used  *	(although active< current implies empty active region)  *\endcode  *  * \li MP:  *	Buffers have no synchronization.  Clients must ensure exclusive  *	access.  *  * \li Reliability:  *	No anticipated impact.  *  * \li Resources:  *	Memory: 1 pointer + 6 unsigned integers per buffer.  *  * \li Security:  *	No anticipated impact.  *  * \li Standards:  *	None.  */
+comment|/*! \file isc/buffer.h  *  * \brief A buffer is a region of memory, together with a set of related subregions.  * Buffers are used for parsing and I/O operations.  *  * The 'used region' and the 'available' region are disjoint, and their  * union is the buffer's region.  The used region extends from the beginning  * of the buffer region to the last used byte.  The available region  * extends from one byte greater than the last used byte to the end of the  * buffer's region.  The size of the used region can be changed using various  * buffer commands.  Initially, the used region is empty.  *  * The used region is further subdivided into two disjoint regions: the  * 'consumed region' and the 'remaining region'.  The union of these two  * regions is the used region.  The consumed region extends from the beginning  * of the used region to the byte before the 'current' offset (if any).  The  * 'remaining' region the current pointer to the end of the used  * region.  The size of the consumed region can be changed using various  * buffer commands.  Initially, the consumed region is empty.  *  * The 'active region' is an (optional) subregion of the remaining region.  * It extends from the current offset to an offset in the remaining region  * that is selected with isc_buffer_setactive().  Initially, the active region  * is empty.  If the current offset advances beyond the chosen offset, the  * active region will also be empty.  *  * \verbatim  *  /------------entire length---------------\  *  /----- used region -----\/-- available --\  *  +----------------------------------------+  *  | consumed  | remaining |                |  *  +----------------------------------------+  *  a           b     c     d                e  *  * a == base of buffer.  * b == current pointer.  Can be anywhere between a and d.  * c == active pointer.  Meaningful between b and d.  * d == used pointer.  * e == length of buffer.  *  * a-e == entire length of buffer.  * a-d == used region.  * a-b == consumed region.  * b-d == remaining region.  * b-c == optional active region.  *\endverbatim  *  * The following invariants are maintained by all routines:  *  *\code  *	length> 0  *  *	base is a valid pointer to length bytes of memory  *  *	0<= used<= length  *  *	0<= current<= used  *  *	0<= active<= used  *	(although active< current implies empty active region)  *\endcode  *  * \li MP:  *	Buffers have no synchronization.  Clients must ensure exclusive  *	access.  *  * \li Reliability:  *	No anticipated impact.  *  * \li Resources:  *	Memory: 1 pointer + 6 unsigned integers per buffer.  *  * \li Security:  *	No anticipated impact.  *  * \li Standards:  *	None.  */
 end_comment
 
 begin_comment
@@ -51,7 +51,7 @@ file|<isc/types.h>
 end_include
 
 begin_comment
-comment|/*!  * To make many functions be inline macros (via #define) define this.  * If it is undefined, a function will be used.  */
+comment|/*!  * To make many functions be inline macros (via \#define) define this.  * If it is undefined, a function will be used.  */
 end_comment
 
 begin_comment
@@ -383,6 +383,44 @@ end_function_decl
 
 begin_comment
 comment|/*!<  * \brief Make 'b' refer to the 'length'-byte region starting at base.  *  * Requires:  *  *\li	'length'> 0  *  *\li	'base' is a pointer to a sequence of 'length' bytes.  *  */
+end_comment
+
+begin_function_decl
+name|void
+name|isc__buffer_initnull
+parameter_list|(
+name|isc_buffer_t
+modifier|*
+name|b
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*!<  *\brief Initialize a buffer 'b' with a null data and zero length/  */
+end_comment
+
+begin_function_decl
+name|void
+name|isc_buffer_reinit
+parameter_list|(
+name|isc_buffer_t
+modifier|*
+name|b
+parameter_list|,
+name|void
+modifier|*
+name|base
+parameter_list|,
+name|unsigned
+name|int
+name|length
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*!<  * \brief Make 'b' refer to the 'length'-byte region starting at base.  * Any existing data will be copied.  *  * Requires:  *  *\li	'length'> 0 AND length>= previous length  *  *\li	'base' is a pointer to a sequence of 'length' bytes.  *  */
 end_comment
 
 begin_function_decl
@@ -754,6 +792,57 @@ comment|/*!<  * \brief Store an unsigned 32-bit integer in host byte order from 
 end_comment
 
 begin_function_decl
+name|isc_uint64_t
+name|isc_buffer_getuint48
+parameter_list|(
+name|isc_buffer_t
+modifier|*
+name|b
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*!<  * \brief Read an unsigned 48-bit integer in network byte order from 'b',  * convert it to host byte order, and return it.  *  * Requires:  *  *\li	'b' is a valid buffer.  *  *\li	The length of the available region of 'b' is at least 6.  *  * Ensures:  *  *\li	The current pointer in 'b' is advanced by 6.  *  * Returns:  *  *\li	A 48-bit unsigned integer (stored in a 64-bit integer).  */
+end_comment
+
+begin_function_decl
+name|void
+name|isc__buffer_putuint48
+parameter_list|(
+name|isc_buffer_t
+modifier|*
+name|b
+parameter_list|,
+name|isc_uint64_t
+name|val
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*!<  * \brief Store an unsigned 48-bit integer in host byte order from 'val'  * into 'b' in network byte order.  *  * Requires:  *\li	'b' is a valid buffer.  *  *\li	The length of the unused region of 'b' is at least 6.  *  * Ensures:  *\li	The used pointer in 'b' is advanced by 6.  */
+end_comment
+
+begin_function_decl
+name|void
+name|isc__buffer_putuint24
+parameter_list|(
+name|isc_buffer_t
+modifier|*
+name|b
+parameter_list|,
+name|isc_uint32_t
+name|val
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*!<  * Store an unsigned 24-bit integer in host byte order from 'val'  * into 'b' in network byte order.  *  * Requires:  *\li	'b' is a valid buffer.  *  *	The length of the unused region of 'b' is at least 3.  *  * Ensures:  *\li	The used pointer in 'b' is advanced by 3.  */
+end_comment
+
+begin_function_decl
 name|void
 name|isc__buffer_putmem
 parameter_list|(
@@ -843,6 +932,16 @@ name|_length
 parameter_list|)
 define|\
 value|do { \ 		union { \ 			const void *	konst; \ 			void *		var; \ 		} _u; \ 		_u.konst = (_base); \ 		(_b)->base = _u.var; \ 		(_b)->length = (_length); \ 		(_b)->used = 0; \ 		(_b)->current = 0; \ 		(_b)->active = 0; \ 		(_b)->mctx = NULL; \ 		ISC_LINK_INIT(_b, link); \ 		(_b)->magic = ISC_BUFFER_MAGIC; \ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISC__BUFFER_INITNULL
+parameter_list|(
+name|_b
+parameter_list|)
+value|ISC__BUFFER_INIT(_b, NULL, 0)
 end_define
 
 begin_define
@@ -1078,6 +1177,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISC__BUFFER_PUTUINT24
+parameter_list|(
+name|_b
+parameter_list|,
+name|_val
+parameter_list|)
+define|\
+value|do { \ 		unsigned char *_cp; \ 		isc_uint32_t _val2 = (_val); \ 		_cp = isc_buffer_used(_b); \ 		(_b)->used += 3; \ 		_cp[0] = (unsigned char)((_val2& 0xff0000U)>> 16); \ 		_cp[1] = (unsigned char)((_val2& 0xff00U)>> 8); \ 		_cp[2] = (unsigned char)(_val2& 0x00ffU); \ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISC__BUFFER_PUTUINT32
 parameter_list|(
 name|_b
@@ -1102,6 +1214,13 @@ define|#
 directive|define
 name|isc_buffer_init
 value|ISC__BUFFER_INIT
+end_define
+
+begin_define
+define|#
+directive|define
+name|isc_buffer_initnull
+value|ISC__BUFFER_INITNULL
 end_define
 
 begin_define
@@ -1233,6 +1352,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|isc_buffer_putuint24
+value|ISC__BUFFER_PUTUINT24
+end_define
+
+begin_define
+define|#
+directive|define
 name|isc_buffer_putuint32
 value|ISC__BUFFER_PUTUINT32
 end_define
@@ -1247,6 +1373,13 @@ define|#
 directive|define
 name|isc_buffer_init
 value|isc__buffer_init
+end_define
+
+begin_define
+define|#
+directive|define
+name|isc_buffer_initnull
+value|isc__buffer_initnull
 end_define
 
 begin_define
@@ -1378,6 +1511,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|isc_buffer_putuint24
+value|isc__buffer_putuint24
+end_define
+
+begin_define
+define|#
+directive|define
 name|isc_buffer_putuint32
 value|isc__buffer_putuint32
 end_define
@@ -1386,6 +1526,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * No inline method for this one (yet).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|isc_buffer_putuint48
+value|isc__buffer_putuint48
+end_define
 
 begin_endif
 endif|#

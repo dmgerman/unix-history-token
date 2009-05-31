@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: view.h,v 1.91.18.9 2006/03/09 23:38:21 marka Exp $ */
+comment|/* $Id: view.h,v 1.111.88.4 2009/01/29 22:40:35 jinmei Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*! \file  * \brief  * DNS View  *  * A "view" is a DNS namespace, together with an optional resolver and a  * forwarding policy.  A "DNS namespace" is a (possibly empty) set of  * authoritative zones together with an optional cache and optional  * "hints" information.  *  * Views start out "unfrozen".  In this state, core attributes like  * the cache, set of zones, and forwarding policy may be set.  While  * "unfrozen", the caller (e.g. nameserver configuration loading  * code), must ensure exclusive access to the view.  When the view is  * "frozen", the core attributes become immutable, and the view module  * will ensure synchronization.  Freezing allows the view's core attributes  * to be accessed without locking.  *  * MP:  *\li	Before the view is frozen, the caller must ensure synchronization.  *  *\li	After the view is frozen, the module guarantees appropriate  *	synchronization of any data structures it creates and manipulates.  *  * Reliability:  *\li	No anticipated impact.  *  * Resources:  *\li	TBS  *  * Security:  *\li	No anticipated impact.  *  * Standards:  *\li	None.  */
+comment|/*! \file dns/view.h  * \brief  * DNS View  *  * A "view" is a DNS namespace, together with an optional resolver and a  * forwarding policy.  A "DNS namespace" is a (possibly empty) set of  * authoritative zones together with an optional cache and optional  * "hints" information.  *  * Views start out "unfrozen".  In this state, core attributes like  * the cache, set of zones, and forwarding policy may be set.  While  * "unfrozen", the caller (e.g. nameserver configuration loading  * code), must ensure exclusive access to the view.  When the view is  * "frozen", the core attributes become immutable, and the view module  * will ensure synchronization.  Freezing allows the view's core attributes  * to be accessed without locking.  *  * MP:  *\li	Before the view is frozen, the caller must ensure synchronization.  *  *\li	After the view is frozen, the module guarantees appropriate  *	synchronization of any data structures it creates and manipulates.  *  * Reliability:  *\li	No anticipated impact.  *  * Resources:  *\li	TBS  *  * Security:  *\li	No anticipated impact.  *  * Standards:  *\li	None.  */
 end_comment
 
 begin_include
@@ -187,6 +187,14 @@ decl_stmt|;
 name|isc_event_t
 name|reqevent
 decl_stmt|;
+name|isc_stats_t
+modifier|*
+name|resstats
+decl_stmt|;
+name|dns_stats_t
+modifier|*
+name|resquerystats
+decl_stmt|;
 comment|/* Configurable data. */
 name|dns_tsig_keyring_t
 modifier|*
@@ -241,17 +249,44 @@ name|queryacl
 decl_stmt|;
 name|dns_acl_t
 modifier|*
+name|queryonacl
+decl_stmt|;
+name|dns_acl_t
+modifier|*
 name|recursionacl
 decl_stmt|;
 name|dns_acl_t
 modifier|*
+name|recursiononacl
+decl_stmt|;
+name|dns_acl_t
+modifier|*
 name|sortlist
+decl_stmt|;
+name|dns_acl_t
+modifier|*
+name|notifyacl
+decl_stmt|;
+name|dns_acl_t
+modifier|*
+name|transferacl
+decl_stmt|;
+name|dns_acl_t
+modifier|*
+name|updateacl
+decl_stmt|;
+name|dns_acl_t
+modifier|*
+name|upfwdacl
 decl_stmt|;
 name|isc_boolean_t
 name|requestixfr
 decl_stmt|;
 name|isc_boolean_t
 name|provideixfr
+decl_stmt|;
+name|isc_boolean_t
+name|requestnsid
 decl_stmt|;
 name|dns_ttl_t
 name|maxcachettl
@@ -446,7 +481,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Detach '*viewp' from its view.  If this was the last reference  * uncommited changed in zones will be flushed to disk.  *  * Requires:  *  *\li	'viewp' points to a valid dns_view_t *  *  * Ensures:  *  *\li	*viewp is NULL.  */
+comment|/*%<  * Detach '*viewp' from its view.  If this was the last reference  * uncommitted changed in zones will be flushed to disk.  *  * Requires:  *  *\li	'viewp' points to a valid dns_view_t *  *  * Ensures:  *  *\li	*viewp is NULL.  */
 end_comment
 
 begin_function_decl
@@ -604,7 +639,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Set the view's destination port.  This is the port to  * which outgoing queries are sent.  The default is 53,  * the standard DNS port.  *  * Requires:  *  *\li      'view' is a valid view.  *  *\li      'dstport' is a valid TCP/UDP port number.  *  * Ensures:  *\li	External name servers will be assumed to be listning  *	on 'dstport'.  For servers whose address has already  *	obtained obtained at the time of the call, the view may  *	continue to use the previously set port until the address  *	times out from the view's address database.  */
+comment|/*%<  * Set the view's destination port.  This is the port to  * which outgoing queries are sent.  The default is 53,  * the standard DNS port.  *  * Requires:  *  *\li      'view' is a valid view.  *  *\li      'dstport' is a valid TCP/UDP port number.  *  * Ensures:  *\li	External name servers will be assumed to be listening  *	on 'dstport'.  For servers whose address has already  *	obtained obtained at the time of the call, the view may  *	continue to use the previously set port until the address  *	times out from the view's address database.  */
 end_comment
 
 begin_function_decl
@@ -850,6 +885,36 @@ end_comment
 
 begin_function_decl
 name|isc_result_t
+name|dns_viewlist_findzone
+parameter_list|(
+name|dns_viewlist_t
+modifier|*
+name|list
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|isc_boolean_t
+name|allclasses
+parameter_list|,
+name|dns_rdataclass_t
+name|rdclass
+parameter_list|,
+name|dns_zone_t
+modifier|*
+modifier|*
+name|zonep
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Search zone with 'name' in view with 'rdclass' in viewlist 'list'  * If found, zone is returned in *zonep. If allclasses is set rdclass is ignored  *  * Returns:  *\li	#ISC_R_SUCCESS          A matching zone was found.  *\li	#ISC_R_NOTFOUND         No matching zone was found.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
 name|dns_view_findzone
 parameter_list|(
 name|dns_view_t
@@ -901,7 +966,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Load zones attached to this view.  dns_view_load() loads  * all zones whose master file has changed since the last  * load; dns_view_loadnew() loads only zones that have never   * been loaded.  *  * If 'stop' is ISC_TRUE, stop on the first error and return it.  * If 'stop' is ISC_FALSE, ignore errors.  *  * Requires:  *  *\li	'view' is valid.  */
+comment|/*%<  * Load zones attached to this view.  dns_view_load() loads  * all zones whose master file has changed since the last  * load; dns_view_loadnew() loads only zones that have never  * been loaded.  *  * If 'stop' is ISC_TRUE, stop on the first error and return it.  * If 'stop' is ISC_FALSE, ignore errors.  *  * Requires:  *  *\li	'view' is valid.  */
 end_comment
 
 begin_function_decl
@@ -925,7 +990,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Find the TSIG key configured in 'view' with name 'keyname',  * if any.  *  * Reqires:  *\li	keyp points to a NULL dns_tsigkey_t *.  *  * Returns:  *\li	#ISC_R_SUCCESS	A key was found and '*keyp' now points to it.  *\li	#ISC_R_NOTFOUND	No key was found.  *\li	others		An error occurred.  */
+comment|/*%<  * Find the TSIG key configured in 'view' with name 'keyname',  * if any.  *  * Requires:  *\li	keyp points to a NULL dns_tsigkey_t *.  *  * Returns:  *\li	#ISC_R_SUCCESS	A key was found and '*keyp' now points to it.  *\li	#ISC_R_NOTFOUND	No key was found.  *\li	others		An error occurred.  */
 end_comment
 
 begin_function_decl
@@ -949,7 +1014,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Find the TSIG key configured in 'view' for the server whose  * address is 'peeraddr', if any.  *  * Reqires:  *	keyp points to a NULL dns_tsigkey_t *.  *  * Returns:  *\li	#ISC_R_SUCCESS	A key was found and '*keyp' now points to it.  *\li	#ISC_R_NOTFOUND	No key was found.  *\li	others		An error occurred.  */
+comment|/*%<  * Find the TSIG key configured in 'view' for the server whose  * address is 'peeraddr', if any.  *  * Requires:  *	keyp points to a NULL dns_tsigkey_t *.  *  * Returns:  *\li	#ISC_R_SUCCESS	A key was found and '*keyp' now points to it.  *\li	#ISC_R_NOTFOUND	No key was found.  *\li	others		An error occurred.  */
 end_comment
 
 begin_function_decl
@@ -1006,7 +1071,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Dump the current state of the view 'view' to the stream 'fp'  * for purposes of analysis or debugging.  *  * Currently the dumped state includes the view's cache; in the future  * it may also include other state such as the address database.  * It will not not include authoritative data since it is voluminous and  * easily obtainable by other means.  *  * Requires:  * 	  *\li	'view' is valid.  *  *\li	'fp' refers to a file open for writing.  *  * Returns:  * \li	ISC_R_SUCCESS	The cache was successfully dumped.  * \li	others		An error occurred (see dns_master_dump)  */
+comment|/*%<  * Dump the current state of the view 'view' to the stream 'fp'  * for purposes of analysis or debugging.  *  * Currently the dumped state includes the view's cache; in the future  * it may also include other state such as the address database.  * It will not not include authoritative data since it is voluminous and  * easily obtainable by other means.  *  * Requires:  *  *\li	'view' is valid.  *  *\li	'fp' refers to a file open for writing.  *  * Returns:  * \li	ISC_R_SUCCESS	The cache was successfully dumped.  * \li	others		An error occurred (see dns_master_dump)  */
 end_comment
 
 begin_function_decl
@@ -1058,7 +1123,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Add the given name to the delegation only table.  *   *  * Requires:  *\li	'view' is valid.  *\li	'name' is valid.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  */
+comment|/*%<  * Add the given name to the delegation only table.  *  *  * Requires:  *\li	'view' is valid.  *\li	'name' is valid.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  */
 end_comment
 
 begin_function_decl
@@ -1077,7 +1142,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Add the given name to be excluded from the root-delegation-only.  *   *  * Requires:  *\li	'view' is valid.  *\li	'name' is valid.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  */
+comment|/*%<  * Add the given name to be excluded from the root-delegation-only.  *  *  * Requires:  *\li	'view' is valid.  *\li	'name' is valid.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  */
 end_comment
 
 begin_function_decl
@@ -1096,7 +1161,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Check if 'name' is in the delegation only table or if  * rootdelonly is set that name is not being excluded.  *  * Requires:  *\li	'view' is valid.  *\li	'name' is valid.  *  * Returns:  *\li	#ISC_TRUE if the name is is the table.  *\li	#ISC_FALSE othewise.  */
+comment|/*%<  * Check if 'name' is in the delegation only table or if  * rootdelonly is set that name is not being excluded.  *  * Requires:  *\li	'view' is valid.  *\li	'name' is valid.  *  * Returns:  *\li	#ISC_TRUE if the name is the table.  *\li	#ISC_FALSE otherwise.  */
 end_comment
 
 begin_function_decl
@@ -1148,6 +1213,84 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Freeze/thaw updates to master zones.  *  * Requires:  * \li	'view' is valid.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_view_setresstats
+parameter_list|(
+name|dns_view_t
+modifier|*
+name|view
+parameter_list|,
+name|isc_stats_t
+modifier|*
+name|stats
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Set a general resolver statistics counter set 'stats' for 'view'.  *  * Requires:  * \li	'view' is valid and is not frozen.  *  *\li	stats is a valid statistics supporting resolver statistics counters  *	(see dns/stats.h).  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_view_getresstats
+parameter_list|(
+name|dns_view_t
+modifier|*
+name|view
+parameter_list|,
+name|isc_stats_t
+modifier|*
+modifier|*
+name|statsp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Get the general statistics counter set for 'view'.  If a statistics set is  * set '*statsp' will be attached to the set; otherwise, '*statsp' will be  * untouched.  *  * Requires:  * \li	'view' is valid and is not frozen.  *  *\li	'statsp' != NULL&& '*statsp' != NULL  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_view_setresquerystats
+parameter_list|(
+name|dns_view_t
+modifier|*
+name|view
+parameter_list|,
+name|dns_stats_t
+modifier|*
+name|stats
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Set a statistics counter set of rdata type, 'stats', for 'view'.  Once the  * statistic set is installed, view's resolver will count outgoing queries  * per rdata type.  *  * Requires:  * \li	'view' is valid and is not frozen.  *  *\li	stats is a valid statistics created by dns_rdatatypestats_create().  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_view_getresquerystats
+parameter_list|(
+name|dns_view_t
+modifier|*
+name|view
+parameter_list|,
+name|dns_stats_t
+modifier|*
+modifier|*
+name|statsp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Get the rdatatype statistics counter set for 'view'.  If a statistics set is  * set '*statsp' will be attached to the set; otherwise, '*statsp' will be  * untouched.  *  * Requires:  * \li	'view' is valid and is not frozen.  *  *\li	'statsp' != NULL&& '*statsp' != NULL  */
 end_comment
 
 begin_endif

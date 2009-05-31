@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dispatch.h,v 1.48.18.9 2008/06/24 23:45:55 tbox Exp $ */
+comment|/* $Id: dispatch.h,v 1.60.82.2 2009/01/29 23:47:44 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*! \file  * \brief  * DNS Dispatch Management  * 	Shared UDP and single-use TCP dispatches for queries and responses.  *  * MP:  *  *\li     	All locking is performed internally to each dispatch.  * 	Restrictions apply to dns_dispatch_removeresponse().  *  * Reliability:  *  * Resources:  *  * Security:  *  *\li	Depends on the isc_socket_t and dns_message_t for prevention of  *	buffer overruns.  *  * Standards:  *  *\li	None.  */
+comment|/*! \file dns/dispatch.h  * \brief  * DNS Dispatch Management  * 	Shared UDP and single-use TCP dispatches for queries and responses.  *  * MP:  *  *\li     	All locking is performed internally to each dispatch.  * 	Restrictions apply to dns_dispatch_removeresponse().  *  * Reliability:  *  * Resources:  *  * Security:  *  *\li	Depends on the isc_socket_t and dns_message_t for prevention of  *	buffer overruns.  *  * Standards:  *  *\li	None.  */
 end_comment
 
 begin_comment
@@ -53,7 +53,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dns/types.h>
+file|<isc/types.h>
 end_include
 
 begin_include
@@ -319,6 +319,25 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Sets a list of UDP ports that can be used for outgoing UDP messages.  *  * Requires:  *\li	mgr is a valid dispatchmgr  *\li	v4portset is NULL or a valid port set  *\li	v6portset is NULL or a valid port set  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_dispatchmgr_setstats
+parameter_list|(
+name|dns_dispatchmgr_t
+modifier|*
+name|mgr
+parameter_list|,
+name|isc_stats_t
+modifier|*
+name|stats
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Sets statistics counter for the dispatchmgr.  This function is expected to  * be called only on zone creation (when necessary).  * Once installed, it cannot be removed or replaced.  Also, there is no  * interface to get the installed stats from the zone; the caller must keep the  * stats to reference (e.g. dump) it later.  *  * Requires:  *\li	mgr is a valid dispatchmgr with no managed dispatch.  *\li	stats is a valid statistics supporting resolver statistics counters  *	(see dns/stats.h).  */
 end_comment
 
 begin_function_decl

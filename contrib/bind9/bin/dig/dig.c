@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dig.c,v 1.186.18.33 2008/10/15 02:19:18 marka Exp $ */
+comment|/* $Id: dig.c,v 1.225.26.4 2009/05/06 10:18:33 fdupont Exp $ */
 end_comment
 
 begin_comment
@@ -368,6 +368,103 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*% safe rcodetext[] */
+end_comment
+
+begin_function
+specifier|static
+name|char
+modifier|*
+name|rcode_totext
+parameter_list|(
+name|dns_rcode_t
+name|rcode
+parameter_list|)
+block|{
+specifier|static
+name|char
+name|buf
+index|[
+sizeof|sizeof
+argument_list|(
+literal|"?65535"
+argument_list|)
+index|]
+decl_stmt|;
+union|union
+block|{
+specifier|const
+name|char
+modifier|*
+name|consttext
+decl_stmt|;
+name|char
+modifier|*
+name|deconsttext
+decl_stmt|;
+block|}
+name|totext
+union|;
+if|if
+condition|(
+name|rcode
+operator|>=
+operator|(
+sizeof|sizeof
+argument_list|(
+name|rcodetext
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|rcodetext
+index|[
+literal|0
+index|]
+argument_list|)
+operator|)
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"?%u"
+argument_list|,
+name|rcode
+argument_list|)
+expr_stmt|;
+name|totext
+operator|.
+name|deconsttext
+operator|=
+name|buf
+expr_stmt|;
+block|}
+else|else
+name|totext
+operator|.
+name|consttext
+operator|=
+name|rcodetext
+index|[
+name|rcode
+index|]
+expr_stmt|;
+return|return
+name|totext
+operator|.
+name|deconsttext
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*% print usage */
 end_comment
 
@@ -521,6 +618,7 @@ literal|"                 +[no]nssearch       (Search all authoritative nameserv
 literal|"                 +[no]identify       (ID responders in short answers)\n"
 literal|"                 +[no]trace          (Trace delegation down from root)\n"
 literal|"                 +[no]dnssec         (Request DNSSEC records)\n"
+literal|"                 +[no]nsid           (Request Name Server ID)\n"
 ifdef|#
 directive|ifdef
 name|DIG_SIGCHASE
@@ -1934,12 +2032,12 @@ operator|->
 name|opcode
 index|]
 argument_list|,
-name|rcodetext
-index|[
+name|rcode_totext
+argument_list|(
 name|msg
 operator|->
 name|rcode
-index|]
+argument_list|)
 argument_list|,
 name|msg
 operator|->
@@ -2869,17 +2967,17 @@ argument_list|(
 name|append
 argument_list|)
 argument_list|,
-literal|";; global options: %s %s\n"
+literal|";; global options:%s%s\n"
 argument_list|,
 name|short_form
 condition|?
-literal|"short_form"
+literal|" +short"
 else|:
 literal|""
 argument_list|,
 name|printcmd
 condition|?
-literal|"printcmd"
+literal|" +cmd"
 else|:
 literal|""
 argument_list|)
@@ -3510,10 +3608,19 @@ argument_list|(
 literal|"defname"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|lookup
+operator|->
+name|trace
+condition|)
+block|{
 name|usesearch
 operator|=
 name|state
 expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'n'
@@ -3702,7 +3809,7 @@ literal|'g'
 case|:
 comment|/* ignore */
 default|default:
-comment|/* Inherets default for compatibility */
+comment|/* Inherits default for compatibility */
 name|FULLCHECK
 argument_list|(
 literal|"ignore"
@@ -3777,6 +3884,50 @@ literal|"ndots"
 argument_list|,
 name|MAXNDOTS
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+switch|switch
+condition|(
+name|cmd
+index|[
+literal|2
+index|]
+condition|)
+block|{
+case|case
+literal|'i'
+case|:
+comment|/* nsid */
+name|FULLCHECK
+argument_list|(
+literal|"nsid"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|state
+operator|&&
+name|lookup
+operator|->
+name|edns
+operator|==
+operator|-
+literal|1
+condition|)
+name|lookup
+operator|->
+name|edns
+operator|=
+literal|0
+expr_stmt|;
+name|lookup
+operator|->
+name|nsid
+operator|=
+name|state
 expr_stmt|;
 break|break;
 case|case
@@ -3863,6 +4014,12 @@ name|short_form
 operator|=
 name|ISC_TRUE
 expr_stmt|;
+block|}
+break|break;
+default|default:
+goto|goto
+name|invalid_option
+goto|;
 block|}
 break|break;
 default|default:
@@ -4047,10 +4204,19 @@ argument_list|(
 literal|"search"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|lookup
+operator|->
+name|trace
+condition|)
+block|{
 name|usesearch
 operator|=
 name|state
 expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'h'
@@ -4144,6 +4310,14 @@ argument_list|(
 literal|"showsearch"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|lookup
+operator|->
+name|trace
+condition|)
+block|{
 name|showsearch
 operator|=
 name|state
@@ -4152,6 +4326,7 @@ name|usesearch
 operator|=
 name|state
 expr_stmt|;
+block|}
 break|break;
 default|default:
 goto|goto
@@ -4391,6 +4566,10 @@ expr_stmt|;
 name|lookup
 operator|->
 name|section_question
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+name|usesearch
 operator|=
 name|ISC_FALSE
 expr_stmt|;
@@ -5612,6 +5791,15 @@ operator|->
 name|comments
 operator|=
 name|pluscomm
+expr_stmt|;
+operator|(
+operator|*
+name|lookup
+operator|)
+operator|->
+name|tcp_mode
+operator|=
+name|ISC_TRUE
 expr_stmt|;
 block|}
 else|else
@@ -7530,6 +7718,12 @@ operator|->
 name|comments
 operator|=
 name|pluscomm
+expr_stmt|;
+name|lookup
+operator|->
+name|tcp_mode
+operator|=
+name|ISC_TRUE
 expr_stmt|;
 block|}
 else|else

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rcode.c,v 1.2.18.2 2006/01/27 23:57:44 marka Exp $ */
+comment|/* $Id: rcode.c,v 1.8 2008/09/25 04:02:38 tbox Exp $ */
 end_comment
 
 begin_include
@@ -200,7 +200,7 @@ define|#
 directive|define
 name|SECALGNAMES
 define|\
-value|{ DNS_KEYALG_RSAMD5, "RSAMD5", 0 }, \ 	{ DNS_KEYALG_RSAMD5, "RSA", 0 }, \ 	{ DNS_KEYALG_DH, "DH", 0 }, \ 	{ DNS_KEYALG_DSA, "DSA", 0 }, \ 	{ DNS_KEYALG_ECC, "ECC", 0 }, \ 	{ DNS_KEYALG_RSASHA1, "RSASHA1", 0 }, \ 	{ DNS_KEYALG_INDIRECT, "INDIRECT", 0 }, \ 	{ DNS_KEYALG_PRIVATEDNS, "PRIVATEDNS", 0 }, \ 	{ DNS_KEYALG_PRIVATEOID, "PRIVATEOID", 0 }, \ 	{ 0, NULL, 0}
+value|{ DNS_KEYALG_RSAMD5, "RSAMD5", 0 }, \ 	{ DNS_KEYALG_RSAMD5, "RSA", 0 }, \ 	{ DNS_KEYALG_DH, "DH", 0 }, \ 	{ DNS_KEYALG_DSA, "DSA", 0 }, \ 	{ DNS_KEYALG_NSEC3DSA, "NSEC3DSA", 0 }, \ 	{ DNS_KEYALG_ECC, "ECC", 0 }, \ 	{ DNS_KEYALG_RSASHA1, "RSASHA1", 0 }, \ 	{ DNS_KEYALG_NSEC3RSASHA1, "NSEC3RSASHA1", 0 }, \ 	{ DNS_KEYALG_INDIRECT, "INDIRECT", 0 }, \ 	{ DNS_KEYALG_PRIVATEDNS, "PRIVATEDNS", 0 }, \ 	{ DNS_KEYALG_PRIVATEOID, "PRIVATEOID", 0 }, \ 	{ 0, NULL, 0}
 end_define
 
 begin_comment
@@ -213,6 +213,14 @@ directive|define
 name|SECPROTONAMES
 define|\
 value|{   0,    "NONE", 0 }, \ 	{   1,    "TLS", 0 }, \ 	{   2,    "EMAIL", 0 }, \ 	{   3,    "DNSSEC", 0 }, \ 	{   4,    "IPSEC", 0 }, \ 	{ 255,    "ALL", 0 }, \ 	{ 0, NULL, 0}
+end_define
+
+begin_define
+define|#
+directive|define
+name|HASHALGNAMES
+define|\
+value|{ 1, "SHA-1", 0 }, \ 	{ 0, NULL, 0 }
 end_define
 
 begin_struct
@@ -298,6 +306,19 @@ index|[]
 init|=
 block|{
 name|SECPROTONAMES
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|tbl
+name|hashalgs
+index|[]
+init|=
+block|{
+name|HASHALGNAMES
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1421,6 +1442,52 @@ name|target
 argument_list|,
 name|secprotos
 argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|isc_result_t
+name|dns_hashalg_fromtext
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|hashalg
+parameter_list|,
+name|isc_textregion_t
+modifier|*
+name|source
+parameter_list|)
+block|{
+name|unsigned
+name|int
+name|value
+decl_stmt|;
+name|RETERR
+argument_list|(
+name|dns_mnemonic_fromtext
+argument_list|(
+operator|&
+name|value
+argument_list|,
+name|source
+argument_list|,
+name|hashalgs
+argument_list|,
+literal|0xff
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|*
+name|hashalg
+operator|=
+name|value
+expr_stmt|;
+return|return
+operator|(
+name|ISC_R_SUCCESS
 operator|)
 return|;
 block|}

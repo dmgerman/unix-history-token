@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: journal.c,v 1.86.18.14 2008/09/25 04:01:36 tbox Exp $ */
+comment|/* $Id: journal.c,v 1.103.48.2 2009/01/18 23:47:37 tbox Exp $ */
 end_comment
 
 begin_include
@@ -128,7 +128,7 @@ file|<dns/soa.h>
 end_include
 
 begin_comment
-comment|/*! \file  * \brief Journalling.  *  * A journal file consists of  *  *   \li A fixed-size header of type journal_rawheader_t.  *  *   \li The index.  This is an unordered array of index entries  *     of type journal_rawpos_t giving the locations  *     of some arbitrary subset of the journal's addressable  *     transactions.  The index entries are used as hints to  *     speed up the process of locating a transaction with a given  *     serial number.  Unused index entries have an "offset"  *     field of zero.  The size of the index can vary between  *     journal files, but does not change during the lifetime  *     of a file.  The size can be zero.  *  *   \li The journal data.  This  consists of one or more transactions.  *     Each transaction begins with a transaction header of type  *     journal_rawxhdr_t.  The transaction header is followed by a  *     sequence of RRs, similar in structure to an IXFR difference  *     sequence (RFC1995).  That is, the pre-transaction SOA,  *     zero or more other deleted RRs, the post-transaction SOA,  *     and zero or more other added RRs.  Unlike in IXFR, each RR  *     is prefixed with a 32-bit length.  *  *     The journal data part grows as new transactions are  *     appended to the file.  Only those transactions  *     whose serial number is current-(2^31-1) to current  *     are considered "addressable" and may be pointed  *     to from the header or index.  They may be preceded  *     by old transactions that are no longer addressable,  *     and they may be followed by transactions that were  *     appended to the journal but never committed by updating  *     the "end" position in the header.  The latter will  *     be overwritten when new transactions are added.  */
+comment|/*! \file  * \brief Journaling.  *  * A journal file consists of  *  *   \li A fixed-size header of type journal_rawheader_t.  *  *   \li The index.  This is an unordered array of index entries  *     of type journal_rawpos_t giving the locations  *     of some arbitrary subset of the journal's addressable  *     transactions.  The index entries are used as hints to  *     speed up the process of locating a transaction with a given  *     serial number.  Unused index entries have an "offset"  *     field of zero.  The size of the index can vary between  *     journal files, but does not change during the lifetime  *     of a file.  The size can be zero.  *  *   \li The journal data.  This  consists of one or more transactions.  *     Each transaction begins with a transaction header of type  *     journal_rawxhdr_t.  The transaction header is followed by a  *     sequence of RRs, similar in structure to an IXFR difference  *     sequence (RFC1995).  That is, the pre-transaction SOA,  *     zero or more other deleted RRs, the post-transaction SOA,  *     and zero or more other added RRs.  Unlike in IXFR, each RR  *     is prefixed with a 32-bit length.  *  *     The journal data part grows as new transactions are  *     appended to the file.  Only those transactions  *     whose serial number is current-(2^31-1) to current  *     are considered "addressable" and may be pointed  *     to from the header or index.  They may be preceded  *     by old transactions that are no longer addressable,  *     and they may be followed by transactions that were  *     appended to the journal but never committed by updating  *     the "end" position in the header.  The latter will  *     be overwritten when new transactions are added.  */
 end_comment
 
 begin_comment
@@ -553,7 +553,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Journalling */
+comment|/* Journaling */
 end_comment
 
 begin_comment
@@ -2741,7 +2741,7 @@ operator|.
 name|rdata
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set up empty initial buffers for uncheched and checked 	 * wire format RR data.  They will be reallocated 	 * later. 	 */
+comment|/* 	 * Set up empty initial buffers for unchecked and checked 	 * wire format RR data.  They will be reallocated 	 * later. 	 */
 name|isc_buffer_init
 argument_list|(
 operator|&
@@ -3088,23 +3088,92 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
-name|r
-operator|=
-operator|(
-name|b
-operator|->
-name|op
-operator|==
-name|DNS_DIFFOP_DEL
-operator|)
-operator|-
-operator|(
+name|int
+name|bop
+init|=
+literal|0
+decl_stmt|,
+name|aop
+init|=
+literal|0
+decl_stmt|;
+switch|switch
+condition|(
 name|a
 operator|->
 name|op
-operator|==
+condition|)
+block|{
+case|case
 name|DNS_DIFFOP_DEL
-operator|)
+case|:
+case|case
+name|DNS_DIFFOP_DELRESIGN
+case|:
+name|aop
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|DNS_DIFFOP_ADD
+case|:
+case|case
+name|DNS_DIFFOP_ADDRESIGN
+case|:
+name|aop
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+default|default:
+name|INSIST
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+switch|switch
+condition|(
+name|b
+operator|->
+name|op
+condition|)
+block|{
+case|case
+name|DNS_DIFFOP_DEL
+case|:
+case|case
+name|DNS_DIFFOP_DELRESIGN
+case|:
+name|bop
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|DNS_DIFFOP_ADD
+case|:
+case|case
+name|DNS_DIFFOP_ADDRESIGN
+case|:
+name|bop
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+default|default:
+name|INSIST
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+name|r
+operator|=
+name|bop
+operator|-
+name|aop
 expr_stmt|;
 if|if
 condition|(
@@ -5447,6 +5516,10 @@ parameter_list|,
 name|dns_db_t
 modifier|*
 name|db
+parameter_list|,
+name|unsigned
+name|int
+name|options
 parameter_list|)
 block|{
 name|isc_buffer_t
@@ -5492,6 +5565,9 @@ name|n_put
 init|=
 literal|0
 decl_stmt|;
+name|dns_diffop_t
+name|op
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|DNS_JOURNAL_VALID
@@ -5518,7 +5594,7 @@ operator|&
 name|diff
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set up empty initial buffers for uncheched and checked 	 * wire format transaction data.  They will be reallocated 	 * later. 	 */
+comment|/* 	 * Set up empty initial buffers for unchecked and checked 	 * wire format transaction data.  They will be reallocated 	 * later. 	 */
 name|isc_buffer_init
 argument_list|(
 operator|&
@@ -5735,6 +5811,41 @@ name|ISC_R_UNEXPECTED
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
+name|options
+operator|&
+name|DNS_JOURNALOPT_RESIGN
+operator|)
+operator|!=
+literal|0
+condition|)
+name|op
+operator|=
+operator|(
+name|n_soa
+operator|==
+literal|1
+operator|)
+condition|?
+name|DNS_DIFFOP_DELRESIGN
+else|:
+name|DNS_DIFFOP_ADDRESIGN
+expr_stmt|;
+else|else
+name|op
+operator|=
+operator|(
+name|n_soa
+operator|==
+literal|1
+operator|)
+condition|?
+name|DNS_DIFFOP_DEL
+else|:
+name|DNS_DIFFOP_ADD
+expr_stmt|;
 name|CHECK
 argument_list|(
 name|dns_difftuple_create
@@ -5743,13 +5854,7 @@ name|diff
 operator|.
 name|mctx
 argument_list|,
-name|n_soa
-operator|==
-literal|1
-condition|?
-name|DNS_DIFFOP_DEL
-else|:
-name|DNS_DIFFOP_ADD
+name|op
 argument_list|,
 name|name
 argument_list|,
@@ -5996,6 +6101,10 @@ name|dns_db_t
 modifier|*
 name|db
 parameter_list|,
+name|unsigned
+name|int
+name|options
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -6098,6 +6207,8 @@ argument_list|(
 name|j
 argument_list|,
 name|db
+argument_list|,
+name|options
 argument_list|)
 expr_stmt|;
 name|dns_journal_destroy
@@ -6257,7 +6368,7 @@ operator|&
 name|diff
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set up empty initial buffers for uncheched and checked 	 * wire format transaction data.  They will be reallocated 	 * later. 	 */
+comment|/* 	 * Set up empty initial buffers for unchecked and checked 	 * wire format transaction data.  They will be reallocated 	 * later. 	 */
 name|isc_buffer_init
 argument_list|(
 operator|&
@@ -8660,7 +8771,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-name|ISC_FALSE
+literal|0
 argument_list|,
 operator|&
 name|dbit
@@ -8687,7 +8798,7 @@ index|[
 literal|1
 index|]
 argument_list|,
-name|ISC_FALSE
+literal|0
 argument_list|,
 operator|&
 name|dbit
