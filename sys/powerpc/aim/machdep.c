@@ -4131,30 +4131,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get current clock frequency for the given cpu id. */
-end_comment
-
-begin_function
-name|int
-name|cpu_est_clockrate
-parameter_list|(
-name|int
-name|cpu_id
-parameter_list|,
-name|uint64_t
-modifier|*
-name|rate
-parameter_list|)
-block|{
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Shutdown the CPU as much as possible.  */
 end_comment
 
