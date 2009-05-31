@@ -713,6 +713,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIOCSPVIMAGE
+value|_IOW('i', 101, struct vi_req)
+end_define
+
+begin_comment
+comment|/* set proc vimage */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGPVIMAGE
+value|_IOWR('i', 102, struct vi_req)
+end_define
+
+begin_comment
+comment|/* get proc vimage */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSIFVIMAGE
+value|_IOWR('i', 103, struct vi_req)
+end_define
+
+begin_comment
+comment|/* set ifc vi/net */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SIOCSDRVSPEC
 value|_IOW('i', 123, struct ifdrv)
 end_define

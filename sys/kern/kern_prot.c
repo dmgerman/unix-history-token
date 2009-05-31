@@ -7601,6 +7601,26 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+ifdef|#
+directive|ifdef
+name|VIMAGE
+comment|/* XXX temporary until struct vimage goes away */
+operator|!
+name|vi_child_of
+argument_list|(
+name|TD_TO_VIMAGE
+argument_list|(
+name|td
+argument_list|)
+argument_list|,
+name|P_TO_VIMAGE
+argument_list|(
+name|p
+argument_list|)
+argument_list|)
+operator|&&
+endif|#
+directive|endif
 operator|(
 name|error
 operator|=
