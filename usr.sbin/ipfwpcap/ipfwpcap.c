@@ -40,6 +40,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -229,6 +241,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|prog
@@ -238,15 +251,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|pidfile
 index|[
 name|MAXPATHLEN
 index|]
-init|=
-block|{
-literal|'\0'
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -255,14 +265,13 @@ comment|/*  * tidy up.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|quit
 parameter_list|(
-name|sig
-parameter_list|)
 name|int
 name|sig
-decl_stmt|;
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -284,31 +293,17 @@ begin_comment
 comment|/*  * do the "paper work"  *	- save my own pid in /var/run/$0.{port#}.pid  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|okay
-argument_list|(
-argument|pn
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|int
 name|pn
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
 name|int
 name|fd
-decl_stmt|,
-name|numlen
-decl_stmt|,
-name|n
 decl_stmt|;
 name|char
 modifier|*
@@ -319,41 +314,6 @@ index|[
 literal|80
 index|]
 decl_stmt|;
-name|numlen
-operator|=
-sizeof|sizeof
-argument_list|(
-name|numbuf
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|numbuf
-argument_list|,
-name|numlen
-argument_list|)
-expr_stmt|;
-name|snprintf
-argument_list|(
-name|numbuf
-argument_list|,
-name|numlen
-operator|-
-literal|1
-argument_list|,
-literal|"%ld\n"
-argument_list|,
-name|getpid
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|numlen
-operator|=
-name|strlen
-argument_list|(
-name|numbuf
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|pidfile
@@ -366,10 +326,6 @@ condition|)
 block|{
 name|p
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|rindex
 argument_list|(
 name|prog
@@ -396,11 +352,7 @@ argument_list|(
 name|pidfile
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|pidfile
-argument_list|)
-operator|-
-literal|1
 argument_list|,
 literal|"%s%s.%d.pid"
 argument_list|,
@@ -480,20 +432,32 @@ argument_list|,
 name|quit
 argument_list|)
 expr_stmt|;
-name|n
-operator|=
+name|snprintf
+argument_list|(
+name|numbuf
+argument_list|,
+sizeof|sizeof
+name|numbuf
+argument_list|,
+literal|"%d\n"
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|write
 argument_list|(
 name|fd
 argument_list|,
 name|numbuf
 argument_list|,
-name|numlen
+name|strlen
+argument_list|(
+name|numbuf
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|n
+argument_list|)
 operator|<
 literal|0
 condition|)
@@ -518,57 +482,73 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\ \n\ usage:\n\     %s [-dr] [-b maxbytes] [-p maxpkts] [-P pidfile] portnum dumpfile\n\ \n\ where:\n\ 	'-d'  = enable debugging messages.\n\ 	'-r'  = reflect. write packets back to the divert socket.\n\ 		(ie. simulate the original intent of \"ipfw tee\").\n\ 	'-rr' = indicate that it is okay to quit if packet-count or\n\ 		byte-count limits are reached (see the NOTE below\n\ 		about what this implies).\n\ 	'-b bytcnt'   = stop dumping after {bytcnt} bytes.\n\ 	'-p pktcnt'   = stop dumping after {pktcnt} packets.\n\ 	'-P pidfile'  = alternate file to store the PID\n\ 			(default: /var/run/%s.{portnum}.pid).\n\ \n\ 	portnum  = divert(4) socket port number.\n\ 	dumpfile = file to write captured packets (tcpdump format).\n\ 		   (specify '-' to write packets to stdout).\n\ \n\ "
+literal|"\n"
+literal|"usage:\n"
+literal|"    %s [-dr] [-b maxbytes] [-p maxpkts] [-P pidfile] portnum dumpfile\n"
+literal|"\n"
+literal|"where:\n"
+literal|"	'-d'  = enable debugging messages.\n"
+literal|"	'-r'  = reflect. write packets back to the divert socket.\n"
+literal|"		(ie. simulate the original intent of \"ipfw tee\").\n"
+literal|"	'-rr' = indicate that it is okay to quit if packet-count or\n"
+literal|"		byte-count limits are reached (see the NOTE below\n"
+literal|"		about what this implies).\n"
+literal|"	'-b bytcnt'   = stop dumping after {bytcnt} bytes.\n"
+literal|"	'-p pktcnt'   = stop dumping after {pktcnt} packets.\n"
+literal|"	'-P pidfile'  = alternate file to store the PID\n"
+literal|"			(default: /var/run/%s.{portnum}.pid).\n"
+literal|"\n"
+literal|"	portnum  = divert(4) socket port number.\n"
+literal|"	dumpfile = file to write captured packets (tcpdump format).\n"
+literal|"		   (specify '-' to write packets to stdout).\n"
+literal|"\n"
+literal|"The '-r' option should not be necessary, but because \"ipfw tee\" is broken\n"
+literal|"(see BUGS in ipfw(8) for details) this feature can be used along with\n"
+literal|"an \"ipfw divert\" rule to simulate the original intent of \"ipfw tee\".\n"
+literal|"\n"
+literal|"NOTE: With an \"ipfw divert\" rule, diverted packets will silently\n"
+literal|"      disappear if there is nothing listening to the divert socket.\n"
+literal|"\n"
 argument_list|,
 name|prog
 argument_list|,
 name|prog
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\ The '-r' option should not be necessary, but because \"ipfw tee\" is broken\n\ (see BUGS in ipfw(8) for details) this feature can be used along with\n\ an \"ipfw divert\" rule to simulate the original intent of \"ipfw tee\".\n\ \n\ NOTE: With an \"ipfw divert\" rule, diverted packets will silently\n\       disappear if there is nothing listening to the divert socket.\n\ \n\ "
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-operator|-
 literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
+name|int
 name|main
 parameter_list|(
-name|ac
-parameter_list|,
-name|av
-parameter_list|)
 name|int
 name|ac
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|av
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|r
@@ -1020,7 +1000,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"recvfrom(%d) = %d (%d)\n"
+literal|"recvfrom(%d) = %zd (%d)\n"
 argument_list|,
 name|sd
 argument_list|,
