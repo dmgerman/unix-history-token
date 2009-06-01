@@ -530,6 +530,7 @@ name|symbol_t
 modifier|*
 name|symtable_get
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name

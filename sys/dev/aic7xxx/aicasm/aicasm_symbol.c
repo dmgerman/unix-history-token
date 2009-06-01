@@ -40,6 +40,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
@@ -100,10 +106,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|symbol_t
 modifier|*
 name|symbol_create
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -555,6 +563,7 @@ name|symbol_t
 modifier|*
 name|symtable_get
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -577,11 +586,10 @@ name|key
 operator|.
 name|data
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
+name|strdup
+argument_list|(
 name|name
+argument_list|)
 expr_stmt|;
 name|key
 operator|.
@@ -705,6 +713,13 @@ name|EX_SOFTWARE
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|key
+operator|.
+name|data
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|new_symbol
@@ -739,6 +754,13 @@ sizeof|sizeof
 argument_list|(
 name|stored_ptr
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|key
+operator|.
+name|data
 argument_list|)
 expr_stmt|;
 return|return
@@ -1320,6 +1342,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|aic_print_file_prologue
 parameter_list|(
@@ -1352,6 +1375,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|aic_print_include
 parameter_list|(
@@ -1361,7 +1385,7 @@ name|dfile
 parameter_list|,
 name|char
 modifier|*
-name|include_file
+name|header_file
 parameter_list|)
 block|{
 if|if
@@ -1377,13 +1401,14 @@ name|dfile
 argument_list|,
 literal|"\n#include \"%s\"\n\n"
 argument_list|,
-name|include_file
+name|header_file
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|aic_print_reg_dump_types
 parameter_list|(
@@ -2321,17 +2346,15 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|symbol_node_t
-modifier|*
-name|curnode
-decl_stmt|;
 name|u_int
 name|value
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|tab_str
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|tab_str2
@@ -2538,10 +2561,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|symbol_node_t
-modifier|*
-name|curnode
-decl_stmt|;
 name|curnode
 operator|=
 name|SLIST_FIRST
@@ -2612,10 +2631,6 @@ name|i
 operator|++
 control|)
 block|{
-name|symbol_node_t
-modifier|*
-name|curnode
-decl_stmt|;
 name|curnode
 operator|=
 name|SLIST_FIRST
@@ -2688,10 +2703,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|symbol_node_t
-modifier|*
-name|curnode
-decl_stmt|;
 name|curnode
 operator|=
 name|SLIST_FIRST
