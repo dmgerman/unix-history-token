@@ -733,7 +733,7 @@ name|INTEL_AHCI
 block|,
 literal|0
 block|,
-name|ATA_SA300
+name|ATA_SA150
 block|,
 literal|"ICH7M"
 block|}
@@ -747,7 +747,7 @@ name|INTEL_AHCI
 block|,
 literal|0
 block|,
-name|ATA_SA300
+name|ATA_SA150
 block|,
 literal|"ICH7M"
 block|}
@@ -761,7 +761,7 @@ name|INTEL_AHCI
 block|,
 literal|0
 block|,
-name|ATA_SA300
+name|ATA_SA150
 block|,
 literal|"ICH7M"
 block|}
