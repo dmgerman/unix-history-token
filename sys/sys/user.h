@@ -193,7 +193,7 @@ begin_define
 define|#
 directive|define
 name|KI_NSPARE_INT
-value|10
+value|9
 end_define
 
 begin_define
@@ -748,6 +748,10 @@ name|KI_NSPARE_INT
 index|]
 decl_stmt|;
 comment|/* spare room for growth */
+name|u_int
+name|ki_cr_flags
+decl_stmt|;
+comment|/* Credential flags */
 name|int
 name|ki_jid
 decl_stmt|;

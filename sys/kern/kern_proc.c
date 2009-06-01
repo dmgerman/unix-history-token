@@ -3821,6 +3821,14 @@ name|cred
 operator|->
 name|cr_svgid
 expr_stmt|;
+name|kp
+operator|->
+name|ki_cr_flags
+operator|=
+name|cred
+operator|->
+name|cr_flags
+expr_stmt|;
 comment|/* If jailed(cred), emulate the old P_JAILED flag. */
 if|if
 condition|(
