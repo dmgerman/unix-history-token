@@ -2740,8 +2740,8 @@ decl_stmt|;
 name|int
 name|do_clearcmdentry
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__GNUC__
 comment|/* Avoid longjmp clobbering */
 operator|(

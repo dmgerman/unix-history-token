@@ -4439,8 +4439,8 @@ comment|/* syntax before arithmetic */
 name|int
 name|synentry
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__GNUC__
 comment|/* Avoid longjmp clobbering */
 operator|(
@@ -6333,8 +6333,8 @@ decl_stmt|;
 name|int
 name|saveprompt
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__GNUC__
 comment|/* Avoid longjmp clobbering */
 operator|(
