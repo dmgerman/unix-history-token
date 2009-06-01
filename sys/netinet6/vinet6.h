@@ -286,9 +286,6 @@ name|int
 name|_udp6_recvspace
 decl_stmt|;
 name|int
-name|_ip6qmaxlen
-decl_stmt|;
-name|int
 name|_ip6_prefer_tempaddr
 decl_stmt|;
 name|int
@@ -806,13 +803,6 @@ define|#
 directive|define
 name|V_ip6q
 value|VNET_INET6(ip6q)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_ip6qmaxlen
-value|VNET_INET6(ip6qmaxlen)
 end_define
 
 begin_define

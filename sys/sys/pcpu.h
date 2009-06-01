@@ -208,6 +208,11 @@ name|device
 modifier|*
 name|pc_device
 decl_stmt|;
+name|void
+modifier|*
+name|pc_netisr
+decl_stmt|;
+comment|/* netisr SWI cookie. */
 comment|/*  	 * Stuff for read mostly lock 	 *  	 * XXXUPS remove as soon as we have per cpu variable 	 * linker sets. 	 */
 name|struct
 name|rm_queue

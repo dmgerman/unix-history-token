@@ -1818,9 +1818,14 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Send packet to input processing via netisr */
-name|netisr_queue
+name|netisr_queue_src
 argument_list|(
 name|NETISR_IP
+argument_list|,
+operator|(
+name|uintptr_t
+operator|)
+name|so
 argument_list|,
 name|m
 argument_list|)

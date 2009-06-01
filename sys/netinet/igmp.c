@@ -776,6 +776,37 @@ name|vnet_igmp_idetach
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|netisr_handler
+name|igmp_nh
+init|=
+block|{
+operator|.
+name|nh_name
+operator|=
+literal|"igmp"
+block|,
+operator|.
+name|nh_handler
+operator|=
+name|igmp_intr
+block|,
+operator|.
+name|nh_proto
+operator|=
+name|NETISR_IGMP
+block|,
+operator|.
+name|nh_policy
+operator|=
+name|NETISR_POLICY_SOURCE
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * System-wide globals.  *  * Unlocked access to these is OK, except for the global IGMP output  * queue. The IGMP subsystem lock ends up being system-wide for the moment,  * because all VIMAGEs have to share a global output queue, as netisrs  * themselves are not virtualized.  *  * Locking:  *  * The permitted lock order is: IN_MULTI_LOCK, IGMP_LOCK, IF_ADDR_LOCK.  *    Any may be taken independently; if any are held at the same  *    time, the above lock order must be followed.  *  * All output is delegated to the netisr.  *    Now that Giant has been eliminated, the netisr may be inlined.  *  * IN_MULTI_LOCK covers in_multi.  *  * IGMP_LOCK covers igmp_ifinfo and any global variables in this file,  *    including the output queue.  *  * IF_ADDR_LOCK covers if_multiaddrs, which is used for a variety of  *    per-link state iterators.  *  * igmp_ifinfo is valid as long as PF_INET is attached to the interface,  *    therefore it is not refcounted.  *    We allow unlocked reads of igmp_ifinfo when accessed via in_multi.  *  * Reference counting  *  * IGMP acquires its own reference every time an in_multi is passed to  *    it and the group is being joined for the first time.  *  * IGMP releases its reference(s) on in_multi in a deferred way,  *    because the operations which process the release run as part of  *    a loop whose control variables are directly affected by the release  *    (that, and not recursing on the IF_ADDR_LOCK).  *  * VIMAGE: Each in_multi corresponds to an ifp, and each ifp corresponds  * to a vnet in ifp->if_vnet.  *  * SMPng: XXX We may potentially race operations on ifma_protospec.  * The problem is that we currently lack a clean way of taking the  * IF_ADDR_LOCK() between the ifnet and in layers w/o recursing,  * as anything which modifies ifma needs to be covered by that lock.  * So check for ifma_protospec being NULL before proceeding.  */
 end_comment
@@ -810,17 +841,6 @@ literal|"igmp state"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/*  * Global netisr output queue.  */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|ifqueue
-name|igmpoq
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * VIMAGE-wide globals.  *  * The IGMPv3 timers themselves need to run per-image, however,  * protosw timers run globally (see tcp).  * An ifnet can only be in one vimage at a time, and the loopback  * ifnet, loif, is itself virtualized.  * It would otherwise be possible to seriously hose IGMP state,  * and create inconsistencies in upstream multicast routing, if you have  * multiple VIMAGEs running on the same link joining different multicast  * groups, UNLESS the "primary IP address" is different. This is because  * IGMP for IPv4 does not force link-local addresses to be used for each  * node, unlike MLD for IPv6.  * Obviously the IGMPv3 per-interface state has per-vimage granularity  * also as a result.  *  * FUTURE: Stop using IFP_TO_IA/INADDR_ANY, and use source address selection  * policy to control the address used by IGMP on the link.  */
@@ -13432,28 +13452,6 @@ expr_stmt|;
 name|IGMP_LOCK_INIT
 argument_list|()
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|igmpoq
-operator|.
-name|ifq_mtx
-argument_list|,
-literal|"igmpoq_mtx"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
-name|IFQ_SET_MAXLEN
-argument_list|(
-operator|&
-name|igmpoq
-argument_list|,
-name|IFQ_MAXLEN
-argument_list|)
-expr_stmt|;
 name|m_raopt
 operator|=
 name|igmp_ra_alloc
@@ -13461,14 +13459,8 @@ argument_list|()
 expr_stmt|;
 name|netisr_register
 argument_list|(
-name|NETISR_IGMP
-argument_list|,
-name|igmp_intr
-argument_list|,
 operator|&
-name|igmpoq
-argument_list|,
-literal|0
+name|igmp_nh
 argument_list|)
 expr_stmt|;
 block|}
@@ -13493,15 +13485,8 @@ argument_list|)
 expr_stmt|;
 name|netisr_unregister
 argument_list|(
-name|NETISR_IGMP
-argument_list|)
-expr_stmt|;
-name|mtx_destroy
-argument_list|(
 operator|&
-name|igmpoq
-operator|.
-name|ifq_mtx
+name|igmp_nh
 argument_list|)
 expr_stmt|;
 name|m_free
