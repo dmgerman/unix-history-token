@@ -3431,6 +3431,14 @@ argument_list|(
 operator|&
 name|sc
 operator|->
+name|sc_led_blink_ch
+argument_list|)
+expr_stmt|;
+name|callout_drain
+argument_list|(
+operator|&
+name|sc
+operator|->
 name|sc_calib_ch
 argument_list|)
 expr_stmt|;
