@@ -990,7 +990,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/actbl1.h>
+file|"actbl1.h"
 end_include
 
 begin_comment

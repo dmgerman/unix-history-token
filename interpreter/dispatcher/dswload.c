@@ -16,43 +16,43 @@ end_define
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acpi.h>
+file|"acpi.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acparser.h>
+file|"acparser.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/amlcode.h>
+file|"amlcode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acdispat.h>
+file|"acdispat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acinterp.h>
+file|"acinterp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acnamesp.h>
+file|"acnamesp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acevents.h>
+file|"acevents.h"
 end_include
 
 begin_ifdef
@@ -64,7 +64,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acdisasm.h>
+file|"acdisasm.h"
 end_include
 
 begin_endif

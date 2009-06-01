@@ -26,7 +26,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/amlresrc.h>
+file|"amlresrc.h"
 end_include
 
 begin_comment

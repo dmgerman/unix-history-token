@@ -10,55 +10,55 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acpi.h>
+file|"acpi.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acdispat.h>
+file|"acdispat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/amlcode.h>
+file|"amlcode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acnamesp.h>
+file|"acnamesp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acevents.h>
+file|"acevents.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acdebug.h>
+file|"acdebug.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acresrc.h>
+file|"acresrc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acdisasm.h>
+file|"acdisasm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acparser.h>
+file|"acparser.h"
 end_include
 
 begin_ifdef

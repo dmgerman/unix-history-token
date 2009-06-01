@@ -16,7 +16,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/compiler/aslcompiler.h>
+file|"aslcompiler.h"
 end_include
 
 begin_define

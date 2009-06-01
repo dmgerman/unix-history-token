@@ -109,19 +109,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acpi.h>
+file|"acpi.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/amlresrc.h>
+file|"amlresrc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acdebug.h>
+file|"acdebug.h"
 end_include
 
 begin_comment
@@ -131,19 +131,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/compiler/asldefine.h>
+file|"asldefine.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/compiler/asltypes.h>
+file|"asltypes.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/compiler/aslglobal.h>
+file|"aslglobal.h"
 end_include
 
 begin_comment

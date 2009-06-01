@@ -10,13 +10,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/compiler/aslcompiler.h>
+file|"aslcompiler.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acapps.h>
+file|"acapps.h"
 end_include
 
 begin_define

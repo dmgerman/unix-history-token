@@ -16,19 +16,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acpi.h>
+file|"acpi.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acnamesp.h>
+file|"acnamesp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/actables.h>
+file|"actables.h"
 end_include
 
 begin_define

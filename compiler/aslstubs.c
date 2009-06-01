@@ -16,19 +16,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/compiler/aslcompiler.h>
+file|"aslcompiler.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acdispat.h>
+file|"acdispat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/actables.h>
+file|"actables.h"
 end_include
 
 begin_define

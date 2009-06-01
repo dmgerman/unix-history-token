@@ -16,25 +16,25 @@ end_define
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/compiler/aslcompiler.h>
+file|"aslcompiler.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acnamesp.h>
+file|"acnamesp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/actables.h>
+file|"actables.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acapps.h>
+file|"acapps.h"
 end_include
 
 begin_ifdef
