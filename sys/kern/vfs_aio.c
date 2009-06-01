@@ -6203,6 +6203,11 @@ decl_stmt|;
 name|int
 name|opcode
 decl_stmt|;
+name|SOCKBUF_LOCK_ASSERT
+argument_list|(
+name|sb
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sb
@@ -6220,11 +6225,6 @@ else|else
 name|opcode
 operator|=
 name|LIO_READ
-expr_stmt|;
-name|SOCKBUF_LOCK
-argument_list|(
-name|sb
-argument_list|)
 expr_stmt|;
 name|sb
 operator|->
@@ -6310,11 +6310,6 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|aio_job_mtx
-argument_list|)
-expr_stmt|;
-name|SOCKBUF_UNLOCK
-argument_list|(
-name|sb
 argument_list|)
 expr_stmt|;
 block|}

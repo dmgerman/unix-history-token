@@ -57,7 +57,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|sohasdns
 parameter_list|(
 name|struct
@@ -198,7 +198,7 @@ end_expr_stmt
 
 begin_function
 specifier|static
-name|void
+name|int
 name|sohasdns
 parameter_list|(
 name|struct
@@ -256,30 +256,18 @@ argument_list|)
 operator|==
 name|DNS_WAIT
 condition|)
-return|return;
+return|return
+operator|(
+name|SU_OK
+operator|)
+return|;
 name|ready
 label|:
-name|so
-operator|->
-name|so_upcall
-operator|=
-name|NULL
-expr_stmt|;
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_flags
-operator|&=
-operator|~
-name|SB_UPCALL
-expr_stmt|;
-name|soisconnected
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-return|return;
+return|return
+operator|(
+name|SU_ISCONNECTED
+operator|)
+return|;
 block|}
 end_function
 

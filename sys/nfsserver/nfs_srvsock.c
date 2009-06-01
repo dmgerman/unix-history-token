@@ -1787,7 +1787,7 @@ comment|/*  * Socket upcall routine for the nfsd sockets.  * The caddr_t arg is 
 end_comment
 
 begin_function
-name|void
+name|int
 name|nfsrv_rcv
 parameter_list|(
 name|struct
@@ -1855,7 +1855,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+operator|(
+name|SU_OK
+operator|)
+return|;
 comment|/* 	 * We can't do this in the context of a socket callback 	 * because we're called with locks held. 	 * XXX: SMP 	 */
 if|if
 condition|(
