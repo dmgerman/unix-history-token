@@ -1436,15 +1436,11 @@ operator|.
 name|ip6s_m2m
 index|[
 name|V_loif
-index|[
-literal|0
-index|]
-operator|.
+operator|->
 name|if_index
 index|]
 operator|++
 expr_stmt|;
-comment|/* XXX */
 block|}
 elseif|else
 if|if
