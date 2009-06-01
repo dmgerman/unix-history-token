@@ -328,6 +328,11 @@ specifier|const
 name|struct
 name|ip
 modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|igmp
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2766,6 +2771,12 @@ name|struct
 name|ip
 modifier|*
 name|ip
+parameter_list|,
+specifier|const
+name|struct
+name|igmp
+modifier|*
+name|igmp
 parameter_list|)
 block|{
 name|INIT_VNET_INET
@@ -2790,7 +2801,7 @@ name|in_multi
 modifier|*
 name|inm
 decl_stmt|;
-comment|/* 	 * IGMPv1 General Queries SHOULD always addressed to 224.0.0.1. 	 * igmp_group is always ignored. Do not drop it as a userland 	 * daemon may wish to see it. 	 */
+comment|/* 	 * IGMPv1 Host Mmembership Queries SHOULD always be addressed to 	 * 224.0.0.1. They are always treated as General Queries. 	 * igmp_group is always ignored. Do not drop it as a userland 	 * daemon may wish to see it. 	 * XXX SMPng: unlocked increments in igmpstat assumed atomic. 	 */
 if|if
 condition|(
 operator|!
@@ -2799,6 +2810,14 @@ argument_list|(
 name|ip
 operator|->
 name|ip_dst
+argument_list|)
+operator|||
+operator|!
+name|in_nullhost
+argument_list|(
+name|igmp
+operator|->
+name|igmp_group
 argument_list|)
 condition|)
 block|{
@@ -2818,7 +2837,6 @@ argument_list|(
 name|igps_rcv_gen_queries
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Switch to IGMPv1 host compatibility mode. 	 */
 name|IN_MULTI_LOCK
 argument_list|()
 expr_stmt|;
@@ -2884,6 +2902,7 @@ goto|goto
 name|out_locked
 goto|;
 block|}
+comment|/* 	 * Switch to IGMPv1 host compatibility mode. 	 */
 name|igmp_set_version
 argument_list|(
 name|igi
@@ -3089,10 +3108,62 @@ name|in_multi
 modifier|*
 name|inm
 decl_stmt|;
+name|int
+name|is_general_query
+decl_stmt|;
 name|uint16_t
 name|timer
 decl_stmt|;
-comment|/* 	 * Perform lazy allocation of IGMP link info if required, 	 * and switch to IGMPv2 host compatibility mode. 	 */
+name|is_general_query
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 	 * Validate address fields upfront. 	 * XXX SMPng: unlocked increments in igmpstat assumed atomic. 	 */
+if|if
+condition|(
+name|in_nullhost
+argument_list|(
+name|igmp
+operator|->
+name|igmp_group
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * IGMPv2 General Query. 		 * If this was not sent to the all-hosts group, ignore it. 		 */
+if|if
+condition|(
+operator|!
+name|in_allhosts
+argument_list|(
+name|ip
+operator|->
+name|ip_dst
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|IGMPSTAT_INC
+argument_list|(
+name|igps_rcv_gen_queries
+argument_list|)
+expr_stmt|;
+name|is_general_query
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* IGMPv2 Group-Specific Query. */
+name|IGMPSTAT_INC
+argument_list|(
+name|igps_rcv_group_queries
+argument_list|)
+expr_stmt|;
+block|}
 name|IN_MULTI_LOCK
 argument_list|()
 expr_stmt|;
@@ -3158,6 +3229,18 @@ goto|goto
 name|out_locked
 goto|;
 block|}
+comment|/* 	 * Ignore v2 query if in v1 Compatibility Mode. 	 */
+if|if
+condition|(
+name|igi
+operator|->
+name|igi_version
+operator|==
+name|IGMP_VERSION_1
+condition|)
+goto|goto
+name|out_locked
+goto|;
 name|igmp_set_version
 argument_list|(
 name|igi
@@ -3187,82 +3270,10 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|in_nullhost
-argument_list|(
-name|igmp
-operator|->
-name|igmp_group
-argument_list|)
+name|is_general_query
 condition|)
 block|{
-comment|/* 		 * IGMPv2 Group-Specific Query. 		 * If this is a group-specific IGMPv2 query, we need only 		 * look up the single group to process it. 		 */
-name|inm
-operator|=
-name|inm_lookup
-argument_list|(
-name|ifp
-argument_list|,
-name|igmp
-operator|->
-name|igmp_group
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|inm
-operator|!=
-name|NULL
-condition|)
-block|{
-name|CTR3
-argument_list|(
-name|KTR_IGMPV3
-argument_list|,
-literal|"process v2 query %s on ifp %p(%s)"
-argument_list|,
-name|inet_ntoa
-argument_list|(
-name|igmp
-operator|->
-name|igmp_group
-argument_list|)
-argument_list|,
-name|ifp
-argument_list|,
-name|ifp
-operator|->
-name|if_xname
-argument_list|)
-expr_stmt|;
-name|igmp_v2_update_group
-argument_list|(
-name|inm
-argument_list|,
-name|timer
-argument_list|)
-expr_stmt|;
-block|}
-name|IGMPSTAT_INC
-argument_list|(
-name|igps_rcv_group_queries
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 		 * IGMPv2 General Query. 		 * If this was not sent to the all-hosts group, ignore it. 		 */
-if|if
-condition|(
-name|in_allhosts
-argument_list|(
-name|ip
-operator|->
-name|ip_dst
-argument_list|)
-condition|)
-block|{
-comment|/* 			 * For each reporting group joined on this 			 * interface, kick the report timer. 			 */
+comment|/* 		 * For each reporting group joined on this 		 * interface, kick the report timer. 		 */
 name|CTR2
 argument_list|(
 name|KTR_IGMPV3
@@ -3332,11 +3343,55 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
-name|IGMPSTAT_INC
+else|else
+block|{
+comment|/* 		 * Group-specific IGMPv2 query, we need only 		 * look up the single group to process it. 		 */
+name|inm
+operator|=
+name|inm_lookup
 argument_list|(
-name|igps_rcv_gen_queries
+name|ifp
+argument_list|,
+name|igmp
+operator|->
+name|igmp_group
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|inm
+operator|!=
+name|NULL
+condition|)
+block|{
+name|CTR3
+argument_list|(
+name|KTR_IGMPV3
+argument_list|,
+literal|"process v2 query %s on ifp %p(%s)"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|igmp
+operator|->
+name|igmp_group
+argument_list|)
+argument_list|,
+name|ifp
+argument_list|,
+name|ifp
+operator|->
+name|if_xname
+argument_list|)
+expr_stmt|;
+name|igmp_v2_update_group
+argument_list|(
+name|inm
+argument_list|,
+name|timer
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|out_locked
 label|:
@@ -3565,6 +3620,9 @@ name|in_multi
 modifier|*
 name|inm
 decl_stmt|;
+name|int
+name|is_general_query
+decl_stmt|;
 name|uint32_t
 name|maxresp
 decl_stmt|,
@@ -3578,6 +3636,10 @@ decl_stmt|;
 name|uint8_t
 name|qrv
 decl_stmt|;
+name|is_general_query
+operator|=
+literal|0
+expr_stmt|;
 name|CTR2
 argument_list|(
 name|KTR_IGMPV3
@@ -3626,7 +3688,7 @@ literal|3
 operator|)
 expr_stmt|;
 block|}
-comment|/* 	 * Robustness must never be less than 2 for on-wire IGMPv3. 	 * FIXME: Check if ifp has IGIF_LOOPBACK set, as we make 	 * an exception for interfaces whose IGMPv3 state changes 	 * are redirected to loopback (e.g. MANET). 	 */
+comment|/* 	 * Robustness must never be less than 2 for on-wire IGMPv3. 	 * FUTURE: Check if ifp has IGIF_LOOPBACK set, as we will make 	 * an exception for interfaces whose IGMPv3 state changes 	 * are redirected to loopback (e.g. MANET). 	 */
 name|qrv
 operator|=
 name|IGMP_QRV
@@ -3722,6 +3784,75 @@ operator|->
 name|igmp_numsrc
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Validate address fields and versions upfront before 	 * accepting v3 query. 	 * XXX SMPng: Unlocked access to igmpstat counters here. 	 */
+if|if
+condition|(
+name|in_nullhost
+argument_list|(
+name|igmpv3
+operator|->
+name|igmp_group
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * IGMPv3 General Query. 		 * 		 * General Queries SHOULD be directed to 224.0.0.1. 		 * A general query with a source list has undefined 		 * behaviour; discard it. 		 */
+name|IGMPSTAT_INC
+argument_list|(
+name|igps_rcv_gen_queries
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|in_allhosts
+argument_list|(
+name|ip
+operator|->
+name|ip_dst
+argument_list|)
+operator|||
+name|nsrc
+operator|>
+literal|0
+condition|)
+block|{
+name|IGMPSTAT_INC
+argument_list|(
+name|igps_rcv_badqueries
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+name|is_general_query
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Group or group-source specific query. */
+if|if
+condition|(
+name|nsrc
+operator|==
+literal|0
+condition|)
+name|IGMPSTAT_INC
+argument_list|(
+name|igps_rcv_group_queries
+argument_list|)
+expr_stmt|;
+else|else
+name|IGMPSTAT_INC
+argument_list|(
+name|igps_rcv_gsr_queries
+argument_list|)
+expr_stmt|;
+block|}
 name|IN_MULTI_LOCK
 argument_list|()
 expr_stmt|;
@@ -3787,6 +3918,37 @@ goto|goto
 name|out_locked
 goto|;
 block|}
+comment|/* 	 * Discard the v3 query if we're in Compatibility Mode. 	 * The RFC is not obviously worded that hosts need to stay in 	 * compatibility mode until the Old Version Querier Present 	 * timer expires. 	 */
+if|if
+condition|(
+name|igi
+operator|->
+name|igi_version
+operator|!=
+name|IGMP_VERSION_3
+condition|)
+block|{
+name|CTR3
+argument_list|(
+name|KTR_IGMPV3
+argument_list|,
+literal|"ignore v3 query in v%d mode on ifp %p(%s)"
+argument_list|,
+name|igi
+operator|->
+name|igi_version
+argument_list|,
+name|ifp
+argument_list|,
+name|ifp
+operator|->
+name|if_xname
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out_locked
+goto|;
+block|}
 name|igmp_set_version
 argument_list|(
 name|igi
@@ -3829,45 +3991,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|in_nullhost
-argument_list|(
-name|igmpv3
-operator|->
-name|igmp_group
-argument_list|)
+name|is_general_query
 condition|)
 block|{
-comment|/* 		 * IGMPv3 General Query. 		 * Schedule a current-state report on this ifp for 		 * all groups, possibly containing source lists. 		 */
-name|IGMPSTAT_INC
-argument_list|(
-name|igps_rcv_gen_queries
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|in_allhosts
-argument_list|(
-name|ip
-operator|->
-name|ip_dst
-argument_list|)
-operator|||
-name|nsrc
-operator|>
-literal|0
-condition|)
-block|{
-comment|/* 			 * General Queries SHOULD be directed to 224.0.0.1. 			 * A general query with a source list has undefined 			 * behaviour; discard it. 			 */
-name|IGMPSTAT_INC
-argument_list|(
-name|igps_rcv_badqueries
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out_locked
-goto|;
-block|}
+comment|/* 		 * Schedule a current-state report on this ifp for 		 * all groups, possibly containing source lists. 		 * If there is a pending General Query response 		 * scheduled earlier than the selected delay, do 		 * not schedule any other reports. 		 * Otherwise, reset the interface timer. 		 */
 name|CTR2
 argument_list|(
 name|KTR_IGMPV3
@@ -3881,7 +4008,6 @@ operator|->
 name|if_xname
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If there is a pending General Query response 		 * scheduled earlier than the selected delay, do 		 * not schedule any other reports. 		 * Otherwise, reset the interface timer. 		 */
 if|if
 condition|(
 name|igi
@@ -3914,7 +4040,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * IGMPv3 Group-specific or Group-and-source-specific Query. 		 * 		 * Group-source-specific queries are throttled on 		 * a per-group basis to defeat denial-of-service attempts. 		 * Queries for groups we are not a member of on this 		 * link are simply ignored. 		 */
+comment|/* 		 * Group-source-specific queries are throttled on 		 * a per-group basis to defeat denial-of-service attempts. 		 * Queries for groups we are not a member of on this 		 * link are simply ignored. 		 */
 name|inm
 operator|=
 name|inm_lookup
@@ -3942,11 +4068,6 @@ operator|>
 literal|0
 condition|)
 block|{
-name|IGMPSTAT_INC
-argument_list|(
-name|igps_rcv_gsr_queries
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3980,14 +4101,6 @@ goto|goto
 name|out_locked
 goto|;
 block|}
-block|}
-else|else
-block|{
-name|IGMPSTAT_INC
-argument_list|(
-name|igps_rcv_group_queries
-argument_list|)
-expr_stmt|;
 block|}
 name|CTR3
 argument_list|(
@@ -5469,6 +5582,8 @@ argument_list|(
 name|ifp
 argument_list|,
 name|ip
+argument_list|,
+name|igmp
 argument_list|)
 operator|!=
 literal|0
@@ -6851,6 +6966,9 @@ name|int
 name|version
 parameter_list|)
 block|{
+name|int
+name|old_version_timer
+decl_stmt|;
 name|IGMP_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -6886,9 +7004,6 @@ operator|==
 name|IGMP_VERSION_2
 condition|)
 block|{
-name|int
-name|old_version_timer
-decl_stmt|;
 comment|/* 		 * Compute the "Older Version Querier Present" timer as per 		 * Section 8.12. 		 */
 name|old_version_timer
 operator|=
@@ -7023,7 +7138,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Cancel pending IGMPv3 timers for the given link and all groups  * joined on it; state-change, general-query, and group-query timers.  */
+comment|/*  * Cancel pending IGMPv3 timers for the given link and all groups  * joined on it; state-change, general-query, and group-query timers.  *  * Only ever called on a transition from v3 to Compatibility mode. Kill  * the timers stone dead (this may be expensive for large N groups), they  * will be restarted if Compatibility Mode deems that they must be due to  * query processing.  */
 end_comment
 
 begin_function
@@ -7082,25 +7197,14 @@ expr_stmt|;
 name|IGMP_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Fast-track this potentially expensive operation 	 * by checking all the global 'timer pending' flags. 	 */
-if|if
-condition|(
-operator|!
-name|V_interface_timers_running
-operator|&&
-operator|!
-name|V_state_change_timers_running
-operator|&&
-operator|!
-name|V_current_state_timers_running
-condition|)
-return|return;
+comment|/* 	 * Stop the v3 General Query Response on this link stone dead. 	 * If fasttimo is woken up due to V_interface_timers_running, 	 * the flag will be cleared if there are no pending link timers. 	 */
 name|igi
 operator|->
 name|igi_v3_timer
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * Now clear the current-state and state-change report timers 	 * for all memberships scoped to this link. 	 */
 name|ifp
 operator|=
 name|igi
@@ -7130,6 +7234,12 @@ operator|->
 name|sa_family
 operator|!=
 name|AF_INET
+operator|||
+name|ifma
+operator|->
+name|ifma_protospec
+operator|==
+name|NULL
 condition|)
 continue|continue;
 name|inm
@@ -7168,11 +7278,12 @@ case|:
 case|case
 name|IGMP_AWAKENING_MEMBER
 case|:
+comment|/* 			 * These states are either not relevant in v3 mode, 			 * or are unreported. Do nothing. 			 */
 break|break;
 case|case
 name|IGMP_LEAVING_MEMBER
 case|:
-comment|/* 			 * If we are leaving the group and switching 			 * IGMP version, we need to release the final 			 * reference held for issuing the INCLUDE {}. 			 * 			 * SMPNG: Must drop and re-acquire IF_ADDR_LOCK 			 * around inm_release_locked(), as it is not 			 * a recursive mutex. 			 */
+comment|/* 			 * If we are leaving the group and switching to 			 * compatibility mode, we need to release the final 			 * reference held for issuing the INCLUDE {}, and 			 * transition to REPORTING to ensure the host leave 			 * message is sent upstream to the old querier -- 			 * transition to NOT would lose the leave and race. 			 * 			 * SMPNG: Must drop and re-acquire IF_ADDR_LOCK 			 * around inm_release_locked(), as it is not 			 * a recursive mutex. 			 */
 name|IF_ADDR_UNLOCK
 argument_list|(
 name|ifp
@@ -7206,6 +7317,15 @@ name|IGMP_REPORTING_MEMBER
 case|:
 name|inm
 operator|->
+name|inm_state
+operator|=
+name|IGMP_REPORTING_MEMBER
+expr_stmt|;
+break|break;
+block|}
+comment|/* 		 * Always clear state-change and group report timers. 		 * Free any pending IGMPv3 state-change records. 		 */
+name|inm
+operator|->
 name|inm_sctimer
 operator|=
 literal|0
@@ -7216,13 +7336,6 @@ name|inm_timer
 operator|=
 literal|0
 expr_stmt|;
-name|inm
-operator|->
-name|inm_state
-operator|=
-name|IGMP_REPORTING_MEMBER
-expr_stmt|;
-comment|/* 			 * Free any pending IGMPv3 state-change records. 			 */
 name|_IF_DRAIN
 argument_list|(
 operator|&
@@ -7231,8 +7344,6 @@ operator|->
 name|inm_scq
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
 block|}
 name|IF_ADDR_UNLOCK
 argument_list|(
