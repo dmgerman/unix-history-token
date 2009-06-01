@@ -289,6 +289,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|vm_object
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|vnode
 struct_decl|;
 end_struct_decl
@@ -525,6 +531,35 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|int
+name|d_mmap_single_t
+parameter_list|(
+name|struct
+name|cdev
+modifier|*
+name|cdev
+parameter_list|,
+name|vm_ooffset_t
+modifier|*
+name|offset
+parameter_list|,
+name|vm_size_t
+name|size
+parameter_list|,
+name|struct
+name|vm_object
+modifier|*
+modifier|*
+name|object
+parameter_list|,
+name|int
+name|nprot
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|void
 name|d_purge_t
 parameter_list|(
@@ -720,8 +755,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|D_VERSION_02
+value|0x28042009
+end_define
+
+begin_comment
+comment|/* Add d_mmap_single */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|D_VERSION
-value|D_VERSION_01
+value|D_VERSION_02
 end_define
 
 begin_comment
@@ -806,9 +852,9 @@ name|d_purge_t
 modifier|*
 name|d_purge
 decl_stmt|;
-name|d_spare2_t
+name|d_mmap_single_t
 modifier|*
-name|d_spare2
+name|d_mmap_single
 decl_stmt|;
 name|uid_t
 name|d_uid
