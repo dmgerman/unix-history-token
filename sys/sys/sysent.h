@@ -149,6 +149,10 @@ name|u_int32_t
 name|sy_return
 decl_stmt|;
 comment|/* DTrace return ID for systrace. */
+name|u_int32_t
+name|sy_flags
+decl_stmt|;
+comment|/* General flags for system calls. */
 block|}
 struct|;
 end_struct
