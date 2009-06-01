@@ -3528,11 +3528,6 @@ index|[
 name|proto
 index|]
 expr_stmt|;
-name|NWS_LOCK
-argument_list|(
-name|nwsp
-argument_list|)
-expr_stmt|;
 name|npwp
 operator|->
 name|nw_dispatched
@@ -3542,11 +3537,6 @@ name|npwp
 operator|->
 name|nw_handled
 operator|++
-expr_stmt|;
-name|NWS_UNLOCK
-argument_list|(
-name|nwsp
-argument_list|)
 expr_stmt|;
 name|np
 index|[
