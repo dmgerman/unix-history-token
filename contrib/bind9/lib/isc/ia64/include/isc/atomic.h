@@ -55,21 +55,6 @@ parameter_list|,
 name|isc_int32_t
 name|val
 parameter_list|)
-ifdef|#
-directive|ifdef
-name|__GNUC__
-function|__attribute__
-parameter_list|(
-function|(unused
-end_function
-
-begin_endif
-unit|))
-endif|#
-directive|endif
-end_endif
-
-begin_block
 block|{
 name|isc_int32_t
 name|prev
@@ -117,7 +102,7 @@ name|prev
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * This routine atomically stores the value 'val' in 'p'.  */
@@ -136,27 +121,12 @@ parameter_list|,
 name|isc_int32_t
 name|val
 parameter_list|)
-ifdef|#
-directive|ifdef
-name|__GNUC__
-function|__attribute__
-parameter_list|(
-function|(unused
-end_function
-
-begin_endif
-unit|))
-endif|#
-directive|endif
-end_endif
-
-begin_block
 block|{
 asm|__asm__
 specifier|volatile
 asm|( 		"st4.rel %0=%1" 		: "=m" (*p) 		: "r" (val) 		: "memory" 		);
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * This routine atomically replaces the value in 'p' with 'val', if the  * original value is equal to 'cmpval'.  The original value is returned in any  * case.  */
@@ -178,21 +148,6 @@ parameter_list|,
 name|isc_int32_t
 name|val
 parameter_list|)
-ifdef|#
-directive|ifdef
-name|__GNUC__
-function|__attribute__
-parameter_list|(
-function|(unused
-end_function
-
-begin_endif
-unit|))
-endif|#
-directive|endif
-end_endif
-
-begin_block
 block|{
 name|isc_int32_t
 name|ret
@@ -206,7 +161,7 @@ name|ret
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_else
 else|#
