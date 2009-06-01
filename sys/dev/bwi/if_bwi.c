@@ -8336,6 +8336,7 @@ argument_list|,
 name|BWI_ALL_INTRS
 argument_list|)
 expr_stmt|;
+comment|/* 	 * http://bcm-specs.sipsolutions.net/Interrupts 	 * Says for this bit (0x800): 	 * "Fatal Error 	 * 	 * We got this one while testing things when by accident the 	 * template ram wasn't set to big endian when it should have 	 * been after writing the initial values. It keeps on being 	 * triggered, the only way to stop it seems to shut down the 	 * chip." 	 * 	 * Suggesting that we should never get it and if we do we're not 	 * feeding TX packets into the MAC correctly if we do...  Apparently, 	 * it is valid only on mac version 5 and higher, but I couldn't 	 * find a reference for that...  Since I see them from time to time 	 * on my card, this suggests an error in the tx path still... 	 */
 if|if
 condition|(
 name|intr_status
