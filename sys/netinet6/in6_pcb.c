@@ -588,8 +588,6 @@ name|struct
 name|ifaddr
 modifier|*
 name|ia
-init|=
-name|NULL
 decl_stmt|;
 name|sin6
 operator|->
@@ -614,13 +612,25 @@ name|sin6
 argument_list|)
 operator|)
 operator|==
+name|NULL
+operator|&&
+operator|(
+name|inp
+operator|->
+name|inp_flags
+operator|&
+name|INP_BINDANY
+operator|)
+operator|==
 literal|0
 condition|)
+block|{
 return|return
 operator|(
 name|EADDRNOTAVAIL
 operator|)
 return|;
+block|}
 comment|/* 			 * XXX: bind to an anycast address might accidentally 			 * cause sending a packet with anycast source address. 			 * We should allow to bind to a deprecated address, since 			 * the application dares to use it. 			 */
 if|if
 condition|(

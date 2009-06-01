@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_inet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ipsec.h"
 end_include
 
@@ -1718,30 +1712,19 @@ name|sin_zero
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Is the address a local IP address?  			 * If INP_NONLOCALOK is set, then the socket may be bound 			 * to any endpoint address, local or not. 			 */
+comment|/* 			 * Is the address a local IP address?  			 * If INP_BINDANY is set, then the socket may be bound 			 * to any endpoint address, local or not. 			 */
 if|if
 condition|(
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IP_NONLOCALBIND
-argument_list|)
-operator|(
 operator|(
 name|inp
 operator|->
 name|inp_flags
 operator|&
-name|INP_NONLOCALOK
+name|INP_BINDANY
 operator|)
 operator|==
 literal|0
-operator|)
 operator|&&
-endif|#
-directive|endif
-operator|(
 name|ifa_ifwithaddr
 argument_list|(
 operator|(
@@ -1752,8 +1735,7 @@ operator|)
 name|sin
 argument_list|)
 operator|==
-literal|0
-operator|)
+name|NULL
 condition|)
 return|return
 operator|(
