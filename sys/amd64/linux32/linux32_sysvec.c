@@ -242,6 +242,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<compat/linux/linux_futex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<compat/linux/linux_emul.h>
 end_include
 
@@ -538,26 +544,6 @@ name|which
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_extern
-extern|extern LIST_HEAD(futex_list
-operator|,
-extern|futex
-end_extern
-
-begin_expr_stmt
-unit|)
-name|futex_list
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mtx
-name|futex_mtx
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
