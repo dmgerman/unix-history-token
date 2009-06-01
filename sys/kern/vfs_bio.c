@@ -2822,7 +2822,6 @@ name|numfreebuffers
 operator|=
 name|nbuf
 expr_stmt|;
-comment|/*  * Maximum number of async ops initiated per buf_daemon loop.  This is  * somewhat of a hack at the moment, we really need to limit ourselves  * based on the number of bytes of I/O in-transit that were initiated  * from buf_daemon.  */
 name|bogus_page
 operator|=
 name|vm_page_alloc
@@ -4885,7 +4884,7 @@ name|B_INVAL
 operator|)
 condition|)
 block|{
-comment|/* 		 * Failed write, redirty.  Must clear BIO_ERROR to prevent 		 * pages from being scrapped.  If the error is anything 		 * other than an I/O error (EIO), assume that retryingi 		 * is futile. 		 */
+comment|/* 		 * Failed write, redirty.  Must clear BIO_ERROR to prevent 		 * pages from being scrapped.  If the error is anything 		 * other than an I/O error (EIO), assume that retrying 		 * is futile. 		 */
 name|bp
 operator|->
 name|b_ioflags
@@ -9557,7 +9556,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* 	 * We qualify the scan for modified pages on whether the 	 * object has been flushed yet. 	 */
 if|if
 condition|(
 operator|(
@@ -9629,6 +9627,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We qualify the scan for modified pages on whether the 	 * object has been flushed yet. 	 */
 if|if
 condition|(
 name|object
