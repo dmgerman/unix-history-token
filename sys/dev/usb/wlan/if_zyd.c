@@ -1839,17 +1839,6 @@ argument|ZYD_ZD1211
 argument_list|)
 block|}
 block|,
-block|{
-name|USB_VPI
-argument_list|(
-argument|USB_VENDOR_ZYXEL
-argument_list|,
-argument|USB_PRODUCT_ZYXEL_G202
-argument_list|,
-argument|ZYD_ZD1211
-argument_list|)
-block|}
-block|,
 comment|/* ZYD_ZD1211B */
 block|{
 name|USB_VPI
@@ -2044,6 +2033,17 @@ argument_list|(
 argument|USB_VENDOR_ZYXEL
 argument_list|,
 argument|USB_PRODUCT_ZYXEL_M202
+argument_list|,
+argument|ZYD_ZD1211B
+argument_list|)
+block|}
+block|,
+block|{
+name|USB_VPI
+argument_list|(
+argument|USB_VENDOR_ZYXEL
+argument_list|,
+argument|USB_PRODUCT_ZYXEL_G202
 argument_list|,
 argument|ZYD_ZD1211B
 argument_list|)
