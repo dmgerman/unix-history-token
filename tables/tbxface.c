@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxface - Public interfaces to the ACPI subsystem  *                         ACPI table oriented interfaces  *              $Revision: 1.86 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxface - Public interfaces to the ACPI subsystem  *                         ACPI table oriented interfaces  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2009, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -17,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|"acpi.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"accommon.h"
 end_include
 
 begin_include
@@ -160,6 +166,9 @@ name|InitialTableArray
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|ACPI_SIZE
+operator|)
 name|InitialTableCount
 operator|*
 sizeof|sizeof
@@ -223,8 +232,6 @@ operator|=
 name|AcpiTbParseRootTable
 argument_list|(
 name|RsdpAddress
-argument_list|,
-name|ACPI_TABLE_ORIGIN_MAPPED
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -284,6 +291,9 @@ block|}
 name|NewSize
 operator|=
 operator|(
+operator|(
+name|ACPI_SIZE
+operator|)
 name|AcpiGbl_RootTableList
 operator|.
 name|Count
@@ -365,7 +375,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiGetTableHeader  *  * PARAMETERS:  Signature           - ACPI signature of needed table  *              Instance            - Which instance (for SSDTs)  *              OutTableHeader      - The pointer to the table header to fill  *  * RETURN:      Status and pointer to mapped table header  *  * DESCRIPTION: Finds an ACPI table header.  *  * NOTE:        Caller is responsible in unmapping the header with  *              AcpiOsUnmapMemory  *  *****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetTableHeader  *  * PARAMETERS:  Signature           - ACPI signature of needed table  *              Instance            - Which instance (for SSDTs)  *              OutTableHeader      - The pointer to the table header to fill  *  * RETURN:      Status and pointer to mapped table header  *  * DESCRIPTION: Finds an ACPI table header.  *  * NOTE:        Caller is responsible in unmapping the header with  *              AcpiOsUnmapMemory  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -376,7 +386,7 @@ name|char
 modifier|*
 name|Signature
 parameter_list|,
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|Instance
 parameter_list|,
 name|ACPI_TABLE_HEADER
@@ -384,10 +394,10 @@ modifier|*
 name|OutTableHeader
 parameter_list|)
 block|{
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|i
 decl_stmt|;
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|j
 decl_stmt|;
 name|ACPI_TABLE_HEADER
@@ -410,7 +420,7 @@ name|AE_BAD_PARAMETER
 operator|)
 return|;
 block|}
-comment|/*      * Walk the root table list      */
+comment|/* Walk the root table list */
 for|for
 control|(
 name|i
@@ -598,7 +608,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiGetTable  *  * PARAMETERS:  Signature           - ACPI signature of needed table  *              Instance            - Which instance (for SSDTs)  *              OutTable            - Where the pointer to the table is returned  *  * RETURN:      Status and pointer to table  *  * DESCRIPTION: Finds and verifies an ACPI table.  *  *****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetTable  *  * PARAMETERS:  Signature           - ACPI signature of needed table  *              Instance            - Which instance (for SSDTs)  *              OutTable            - Where the pointer to the table is returned  *  * RETURN:      Status and pointer to table  *  * DESCRIPTION: Finds and verifies an ACPI table.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -609,7 +619,7 @@ name|char
 modifier|*
 name|Signature
 parameter_list|,
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|Instance
 parameter_list|,
 name|ACPI_TABLE_HEADER
@@ -618,10 +628,10 @@ modifier|*
 name|OutTable
 parameter_list|)
 block|{
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|i
 decl_stmt|;
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|j
 decl_stmt|;
 name|ACPI_STATUS
@@ -643,7 +653,7 @@ name|AE_BAD_PARAMETER
 operator|)
 return|;
 block|}
-comment|/*      * Walk the root table list      */
+comment|/* Walk the root table list */
 for|for
 control|(
 name|i
@@ -760,7 +770,7 @@ begin_function
 name|ACPI_STATUS
 name|AcpiGetTableByIndex
 parameter_list|(
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|TableIndex
 parameter_list|,
 name|ACPI_TABLE_HEADER
@@ -922,15 +932,8 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|ACPI_TABLE_HEADER
-modifier|*
-name|Table
-decl_stmt|;
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|i
-decl_stmt|;
-name|BOOLEAN
-name|DsdtOverriden
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -994,106 +997,7 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
-comment|/*      * Find DSDT table      */
-name|DsdtOverriden
-operator|=
-name|FALSE
-expr_stmt|;
-name|Status
-operator|=
-name|AcpiOsTableOverride
-argument_list|(
-name|AcpiGbl_RootTableList
-operator|.
-name|Tables
-index|[
-name|ACPI_TABLE_INDEX_DSDT
-index|]
-operator|.
-name|Pointer
-argument_list|,
-operator|&
-name|Table
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_SUCCESS
-argument_list|(
-name|Status
-argument_list|)
-operator|&&
-name|Table
-condition|)
-block|{
-comment|/*          * DSDT table has been found          */
-name|AcpiTbDeleteTable
-argument_list|(
-operator|&
-name|AcpiGbl_RootTableList
-operator|.
-name|Tables
-index|[
-name|ACPI_TABLE_INDEX_DSDT
-index|]
-argument_list|)
-expr_stmt|;
-name|AcpiGbl_RootTableList
-operator|.
-name|Tables
-index|[
-name|ACPI_TABLE_INDEX_DSDT
-index|]
-operator|.
-name|Pointer
-operator|=
-name|Table
-expr_stmt|;
-name|AcpiGbl_RootTableList
-operator|.
-name|Tables
-index|[
-name|ACPI_TABLE_INDEX_DSDT
-index|]
-operator|.
-name|Length
-operator|=
-name|Table
-operator|->
-name|Length
-expr_stmt|;
-name|AcpiGbl_RootTableList
-operator|.
-name|Tables
-index|[
-name|ACPI_TABLE_INDEX_DSDT
-index|]
-operator|.
-name|Flags
-operator|=
-name|ACPI_TABLE_ORIGIN_UNKNOWN
-expr_stmt|;
-name|DsdtOverriden
-operator|=
-name|TRUE
-expr_stmt|;
-name|ACPI_INFO
-argument_list|(
-operator|(
-name|AE_INFO
-operator|,
-literal|"Table DSDT replaced by host OS"
-operator|)
-argument_list|)
-expr_stmt|;
-name|AcpiTbPrintTableHeader
-argument_list|(
-literal|0
-argument_list|,
-name|Table
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* A valid DSDT is required */
 name|Status
 operator|=
 name|AcpiTbVerifyTable
@@ -1115,7 +1019,6 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/* A valid DSDT is required */
 name|Status
 operator|=
 name|AE_NO_ACPI_TABLES
@@ -1132,7 +1035,7 @@ argument_list|(
 name|ACPI_MTX_TABLES
 argument_list|)
 expr_stmt|;
-comment|/*      * Load and parse tables.      */
+comment|/* Load and parse tables */
 name|Status
 operator|=
 name|AcpiNsLoadTable
@@ -1156,7 +1059,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Load any SSDT or PSDT tables. Note: Loop leaves tables locked      */
+comment|/* Load any SSDT or PSDT tables. Note: Loop leaves tables locked */
 operator|(
 name|void
 operator|)
@@ -1169,7 +1072,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|2
+literal|0
 init|;
 name|i
 operator|<
@@ -1236,42 +1139,6 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-continue|continue;
-block|}
-comment|/* Delete SSDT when DSDT is overriden */
-if|if
-condition|(
-name|ACPI_COMPARE_NAME
-argument_list|(
-operator|&
-operator|(
-name|AcpiGbl_RootTableList
-operator|.
-name|Tables
-index|[
-name|i
-index|]
-operator|.
-name|Signature
-operator|)
-argument_list|,
-name|ACPI_SIG_SSDT
-argument_list|)
-operator|&&
-name|DsdtOverriden
-condition|)
-block|{
-name|AcpiTbDeleteTable
-argument_list|(
-operator|&
-name|AcpiGbl_RootTableList
-operator|.
-name|Tables
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
 comment|/* Ignore errors while loading tables, get as many as possible */
@@ -1348,7 +1215,7 @@ argument_list|(
 name|AcpiLoadTables
 argument_list|)
 expr_stmt|;
-comment|/*      * Load the namespace from the tables      */
+comment|/* Load the namespace from the tables */
 name|Status
 operator|=
 name|AcpiTbLoadNamespace
@@ -1386,6 +1253,201 @@ begin_macro
 name|ACPI_EXPORT_SYMBOL
 argument_list|(
 argument|AcpiLoadTables
+argument_list|)
+end_macro
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiInstallTableHandler  *  * PARAMETERS:  Handler         - Table event handler  *              Context         - Value passed to the handler on each event  *  * RETURN:      Status  *  * DESCRIPTION: Install table event handler  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiInstallTableHandler
+parameter_list|(
+name|ACPI_TABLE_HANDLER
+name|Handler
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+name|AcpiInstallTableHandler
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Handler
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_BAD_PARAMETER
+argument_list|)
+expr_stmt|;
+block|}
+name|Status
+operator|=
+name|AcpiUtAcquireMutex
+argument_list|(
+name|ACPI_MTX_EVENTS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Don't allow more than one handler */
+if|if
+condition|(
+name|AcpiGbl_TableHandler
+condition|)
+block|{
+name|Status
+operator|=
+name|AE_ALREADY_EXISTS
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
+comment|/* Install the handler */
+name|AcpiGbl_TableHandler
+operator|=
+name|Handler
+expr_stmt|;
+name|AcpiGbl_TableHandlerContext
+operator|=
+name|Context
+expr_stmt|;
+name|Cleanup
+label|:
+operator|(
+name|void
+operator|)
+name|AcpiUtReleaseMutex
+argument_list|(
+name|ACPI_MTX_EVENTS
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiInstallTableHandler
+argument_list|)
+end_macro
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRemoveTableHandler  *  * PARAMETERS:  Handler         - Table event handler that was installed  *                                previously.  *  * RETURN:      Status  *  * DESCRIPTION: Remove table event handler  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiRemoveTableHandler
+parameter_list|(
+name|ACPI_TABLE_HANDLER
+name|Handler
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+name|AcpiRemoveTableHandler
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiUtAcquireMutex
+argument_list|(
+name|ACPI_MTX_EVENTS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Make sure that the installed handler is the same */
+if|if
+condition|(
+operator|!
+name|Handler
+operator|||
+name|Handler
+operator|!=
+name|AcpiGbl_TableHandler
+condition|)
+block|{
+name|Status
+operator|=
+name|AE_BAD_PARAMETER
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
+comment|/* Remove the handler */
+name|AcpiGbl_TableHandler
+operator|=
+name|NULL
+expr_stmt|;
+name|Cleanup
+label|:
+operator|(
+name|void
+operator|)
+name|AcpiUtReleaseMutex
+argument_list|(
+name|ACPI_MTX_EVENTS
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiRemoveTableHandler
 argument_list|)
 end_macro
 

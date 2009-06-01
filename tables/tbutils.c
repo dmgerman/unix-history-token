@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbutils   - table utilities  *              $Revision: 1.88 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbutils   - table utilities  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2009, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -17,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|"acpi.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"accommon.h"
 end_include
 
 begin_include
@@ -52,11 +58,48 @@ name|UINT8
 modifier|*
 name|TableEntry
 parameter_list|,
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|TableEntrySize
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbInitializeFacs  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Create a permanent mapping for the FADT and save it in a global  *              for accessing the Global Lock and Firmware Waking Vector  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiTbInitializeFacs
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|Status
+operator|=
+name|AcpiGetTableByIndex
+argument_list|(
+name|ACPI_TABLE_INDEX_FACS
+argument_list|,
+name|ACPI_CAST_INDIRECT_PTR
+argument_list|(
+name|ACPI_TABLE_HEADER
+argument_list|,
+operator|&
+name|AcpiGbl_FACS
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbTablesLoaded  *  * PARAMETERS:  None  *  * RETURN:      TRUE if required ACPI tables are loaded  *  * DESCRIPTION: Determine if the minimum required ACPI tables are present  *              (FADT, FACS, DSDT)  *  ******************************************************************************/
@@ -108,6 +151,7 @@ modifier|*
 name|Header
 parameter_list|)
 block|{
+comment|/*      * The reason that the Address is cast to a void pointer is so that we      * can use %p which will work properly on both 32-bit and 64-bit hosts.      */
 if|if
 condition|(
 name|ACPI_COMPARE_NAME
@@ -120,13 +164,13 @@ name|ACPI_SIG_FACS
 argument_list|)
 condition|)
 block|{
-comment|/* FACS only has signature and length fields of common table header */
+comment|/* FACS only has signature and length fields */
 name|ACPI_INFO
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%4.4s @ 0x%p/0x%04X"
+literal|"%4.4s %p %05X"
 operator|,
 name|Header
 operator|->
@@ -165,7 +209,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"RSDP @ 0x%p/0x%04X (v%3.3d %6.6s)"
+literal|"RSDP %p %05X (v%.2d %6.6s)"
 operator|,
 name|ACPI_CAST_PTR
 argument_list|(
@@ -227,7 +271,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%4.4s @ 0x%p/0x%04X (v%3.3d %6.6s %8.8s 0x%08X %4.4s 0x%08X)"
+literal|"%4.4s %p %05X (v%.2d %6.6s %8.8s %08X %4.4s %08X)"
 operator|,
 name|Header
 operator|->
@@ -319,7 +363,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Incorrect checksum in table [%4.4s] -  %2.2X, should be %2.2X"
+literal|"Incorrect checksum in table [%4.4s] - %2.2X, should be %2.2X"
 operator|,
 name|Table
 operator|->
@@ -375,7 +419,7 @@ name|UINT8
 modifier|*
 name|Buffer
 parameter_list|,
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|Length
 parameter_list|)
 block|{
@@ -422,7 +466,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbInstallTable  *  * PARAMETERS:  Address                 - Physical address of DSDT or FACS  *              Flags                   - Flags  *              Signature               - Table signature, NULL if no need to  *                                        match  *              TableIndex              - Index into root table array  *  * RETURN:      None  *  * DESCRIPTION: Install an ACPI table into the global data structure.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbInstallTable  *  * PARAMETERS:  Address                 - Physical address of DSDT or FACS  *              Signature               - Table signature, NULL if no need to  *                                        match  *              TableIndex              - Index into root table array  *  * RETURN:      None  *  * DESCRIPTION: Install an ACPI table into the global data structure. The  *              table override mechanism is implemented here to allow the host  *              OS to replace any table before it is installed in the root  *              table array.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -432,20 +476,33 @@ parameter_list|(
 name|ACPI_PHYSICAL_ADDRESS
 name|Address
 parameter_list|,
-name|UINT8
-name|Flags
-parameter_list|,
 name|char
 modifier|*
 name|Signature
 parameter_list|,
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|TableIndex
 parameter_list|)
 block|{
+name|UINT8
+name|Flags
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 name|ACPI_TABLE_HEADER
 modifier|*
-name|Table
+name|TableToInstall
+decl_stmt|;
+name|ACPI_TABLE_HEADER
+modifier|*
+name|MappedTable
+decl_stmt|;
+name|ACPI_TABLE_HEADER
+modifier|*
+name|OverrideTable
+init|=
+name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -467,7 +524,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Map just the table header */
-name|Table
+name|MappedTable
 operator|=
 name|AcpiOsMapMemory
 argument_list|(
@@ -482,12 +539,12 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|Table
+name|MappedTable
 condition|)
 block|{
 return|return;
 block|}
-comment|/* If a particular signature is expected, signature must match */
+comment|/* If a particular signature is expected (DSDT/FACS), it must match */
 if|if
 condition|(
 name|Signature
@@ -495,7 +552,7 @@ operator|&&
 operator|!
 name|ACPI_COMPARE_NAME
 argument_list|(
-name|Table
+name|MappedTable
 operator|->
 name|Signature
 argument_list|,
@@ -508,14 +565,14 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid signature 0x%X for ACPI table [%s]"
+literal|"Invalid signature 0x%X for ACPI table, expected [%s]"
 operator|,
 operator|*
 name|ACPI_CAST_PTR
 argument_list|(
 name|UINT32
 argument_list|,
-name|Table
+name|MappedTable
 operator|->
 name|Signature
 argument_list|)
@@ -527,6 +584,85 @@ expr_stmt|;
 goto|goto
 name|UnmapAndExit
 goto|;
+block|}
+comment|/*      * ACPI Table Override:      *      * Before we install the table, let the host OS override it with a new      * one if desired. Any table within the RSDT/XSDT can be replaced,      * including the DSDT which is pointed to by the FADT.      */
+name|Status
+operator|=
+name|AcpiOsTableOverride
+argument_list|(
+name|MappedTable
+argument_list|,
+operator|&
+name|OverrideTable
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+operator|&&
+name|OverrideTable
+condition|)
+block|{
+name|ACPI_INFO
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"%4.4s @ 0x%p Table override, replaced with:"
+operator|,
+name|MappedTable
+operator|->
+name|Signature
+operator|,
+name|ACPI_CAST_PTR
+argument_list|(
+name|void
+argument_list|,
+name|Address
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|AcpiGbl_RootTableList
+operator|.
+name|Tables
+index|[
+name|TableIndex
+index|]
+operator|.
+name|Pointer
+operator|=
+name|OverrideTable
+expr_stmt|;
+name|Address
+operator|=
+name|ACPI_PTR_TO_PHYSADDR
+argument_list|(
+name|OverrideTable
+argument_list|)
+expr_stmt|;
+name|TableToInstall
+operator|=
+name|OverrideTable
+expr_stmt|;
+name|Flags
+operator|=
+name|ACPI_TABLE_ORIGIN_OVERRIDE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|TableToInstall
+operator|=
+name|MappedTable
+expr_stmt|;
+name|Flags
+operator|=
+name|ACPI_TABLE_ORIGIN_MAPPED
+expr_stmt|;
 block|}
 comment|/* Initialize the table entry */
 name|AcpiGbl_RootTableList
@@ -549,7 +685,7 @@ index|]
 operator|.
 name|Length
 operator|=
-name|Table
+name|TableToInstall
 operator|->
 name|Length
 expr_stmt|;
@@ -578,7 +714,7 @@ operator|.
 name|Signature
 operator|)
 argument_list|,
-name|Table
+name|TableToInstall
 operator|->
 name|Signature
 argument_list|)
@@ -587,7 +723,7 @@ name|AcpiTbPrintTableHeader
 argument_list|(
 name|Address
 argument_list|,
-name|Table
+name|TableToInstall
 argument_list|)
 expr_stmt|;
 if|if
@@ -600,7 +736,7 @@ block|{
 comment|/* Global integer width is based upon revision of the DSDT */
 name|AcpiUtSetIntegerWidth
 argument_list|(
-name|Table
+name|TableToInstall
 operator|->
 name|Revision
 argument_list|)
@@ -610,7 +746,7 @@ name|UnmapAndExit
 label|:
 name|AcpiOsUnmapMemory
 argument_list|(
-name|Table
+name|MappedTable
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -634,7 +770,7 @@ name|UINT8
 modifier|*
 name|TableEntry
 parameter_list|,
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|TableEntrySize
 parameter_list|)
 block|{
@@ -672,7 +808,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/*          * 32-bit platform, XSDT: Truncate 64-bit to 32-bit and return          * 64-bit platform, XSDT: Move (unaligned) 64-bit to local, return 64-bit          */
+comment|/*          * 32-bit platform, XSDT: Truncate 64-bit to 32-bit and return          * 64-bit platform, XSDT: Move (unaligned) 64-bit to local,          *  return 64-bit          */
 name|ACPI_MOVE_64_TO_64
 argument_list|(
 operator|&
@@ -699,7 +835,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"64-bit Physical Address in XSDT is too large (%8.8X%8.8X), truncating"
+literal|"64-bit Physical Address in XSDT is too large (%8.8X%8.8X),"
+literal|" truncating"
 operator|,
 name|ACPI_FORMAT_UINT64
 argument_list|(
@@ -726,7 +863,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbParseRootTable  *  * PARAMETERS:  Rsdp                    - Pointer to the RSDP  *              Flags                   - Flags  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to parse the Root System Description  *              Table (RSDT or XSDT)  *  * NOTE:        Tables are mapped (not copied) for efficiency. The FACS must  *              be mapped and cannot be copied because it contains the actual  *              memory location of the ACPI Global Lock.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbParseRootTable  *  * PARAMETERS:  Rsdp                    - Pointer to the RSDP  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to parse the Root System Description  *              Table (RSDT or XSDT)  *  * NOTE:        Tables are mapped (not copied) for efficiency. The FACS must  *              be mapped and cannot be copied because it contains the actual  *              memory location of the ACPI Global Lock.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -735,19 +872,16 @@ name|AcpiTbParseRootTable
 parameter_list|(
 name|ACPI_PHYSICAL_ADDRESS
 name|RsdpAddress
-parameter_list|,
-name|UINT8
-name|Flags
 parameter_list|)
 block|{
 name|ACPI_TABLE_RSDP
 modifier|*
 name|Rsdp
 decl_stmt|;
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|TableEntrySize
 decl_stmt|;
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|i
 decl_stmt|;
 name|UINT32
@@ -1024,7 +1158,7 @@ operator|/
 name|TableEntrySize
 argument_list|)
 expr_stmt|;
-comment|/*      * First two entries in the table array are reserved for the DSDT and FACS,      * which are not actually present in the RSDT/XSDT - they come from the FADT      */
+comment|/*      * First two entries in the table array are reserved for the DSDT      * and FACS, which are not actually present in the RSDT/XSDT - they      * come from the FADT      */
 name|TableEntry
 operator|=
 name|ACPI_CAST_PTR
@@ -1096,13 +1230,15 @@ call|(
 name|unsigned
 call|)
 argument_list|(
-name|AcpiGbl_RootTableList
-operator|.
-name|Size
+name|TableCount
 operator|-
+operator|(
 name|AcpiGbl_RootTableList
 operator|.
 name|Count
+operator|-
+literal|2
+operator|)
 argument_list|)
 operator|)
 argument_list|)
@@ -1175,8 +1311,6 @@ index|]
 operator|.
 name|Address
 argument_list|,
-name|Flags
-argument_list|,
 name|NULL
 argument_list|,
 name|i
@@ -1204,8 +1338,6 @@ block|{
 name|AcpiTbParseFadt
 argument_list|(
 name|i
-argument_list|,
-name|Flags
 argument_list|)
 expr_stmt|;
 block|}

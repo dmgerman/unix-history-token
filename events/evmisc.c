@@ -1,16 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evmisc - Miscellaneous event manager support functions  *              $Revision: 1.103 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evmisc - Miscellaneous event manager support functions  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2009, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"acpi.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"accommon.h"
 end_include
 
 begin_include
@@ -44,63 +50,6 @@ argument_list|(
 literal|"evmisc"
 argument_list|)
 end_macro
-
-begin_comment
-comment|/* Names for Notify() values, used for debug output */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DEBUG_OUTPUT
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|AcpiNotifyValueNames
-index|[]
-init|=
-block|{
-literal|"Bus Check"
-block|,
-literal|"Device Check"
-block|,
-literal|"Device Wake"
-block|,
-literal|"Eject Request"
-block|,
-literal|"Device Check Light"
-block|,
-literal|"Frequency Mismatch"
-block|,
-literal|"Bus Mode Mismatch"
-block|,
-literal|"Power Fault"
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Pointer to FACS needed for the Global Lock */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|ACPI_TABLE_FACS
-modifier|*
-name|Facs
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Local prototypes */
@@ -168,9 +117,6 @@ case|case
 name|ACPI_TYPE_PROCESSOR
 case|:
 case|case
-name|ACPI_TYPE_POWER
-case|:
-case|case
 name|ACPI_TYPE_THERMAL
 case|:
 comment|/*          * These are the ONLY objects that can receive ACPI notifications          */
@@ -235,50 +181,24 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"Dispatching Notify(%X) on node %p\n"
+literal|"Dispatching Notify on [%4.4s] Node %p Value 0x%2.2X (%s)\n"
 operator|,
-name|NotifyValue
+name|AcpiUtGetNodeName
+argument_list|(
+name|Node
+argument_list|)
 operator|,
 name|Node
-operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|,
 name|NotifyValue
-operator|<=
-literal|7
-condition|)
-block|{
-name|ACPI_DEBUG_PRINT
+operator|,
+name|AcpiUtGetNotifyName
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"Notify value: %s\n"
-operator|,
-name|AcpiNotifyValueNames
-index|[
 name|NotifyValue
-index|]
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"Notify value: 0x%2.2X **Device Specific**\n"
-operator|,
-name|NotifyValue
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Get the notify object attached to the NS Node */
 name|ObjDesc
 operator|=
@@ -300,6 +220,7 @@ operator|->
 name|Type
 condition|)
 block|{
+comment|/* Notify allowed only on these types */
 case|case
 name|ACPI_TYPE_DEVICE
 case|:
@@ -308,9 +229,6 @@ name|ACPI_TYPE_THERMAL
 case|:
 case|case
 name|ACPI_TYPE_PROCESSOR
-case|:
-case|case
-name|ACPI_TYPE_POWER
 case|:
 if|if
 condition|(
@@ -349,7 +267,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* If there is any handler to run, schedule the dispatcher */
+comment|/*      * If there is any handler to run, schedule the dispatcher.      * Check for:      * 1) Global system notify handler      * 2) Global device notify handler      * 3) Per-device notify handler      */
 if|if
 condition|(
 operator|(
@@ -395,6 +313,32 @@ operator|(
 name|AE_NO_MEMORY
 operator|)
 return|;
+block|}
+if|if
+condition|(
+operator|!
+name|HandlerObj
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_INFO
+operator|,
+literal|"Executing system notify handler for Notify (%4.4s, %X) "
+literal|"node %p\n"
+operator|,
+name|AcpiUtGetNodeName
+argument_list|(
+name|Node
+argument_list|)
+operator|,
+name|NotifyValue
+operator|,
+name|Node
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 name|NotifyInfo
 operator|->
@@ -457,19 +401,15 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-operator|!
-name|HandlerObj
-condition|)
+else|else
 block|{
-comment|/*          * There is no per-device notify handler for this device.          * This may or may not be a problem.          */
+comment|/* There is no notify handler (per-device or system) for this device */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"No notify handler for Notify(%4.4s, %X) node %p\n"
+literal|"No notify handler for Notify (%4.4s, %X) node %p\n"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -534,7 +474,7 @@ decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
-comment|/*      * We will invoke a global notify handler if installed.      * This is done _before_ we invoke the per-device handler attached      * to the device.      */
+comment|/*      * We will invoke a global notify handler if installed. This is done      * _before_ we invoke the per-device handler attached to the device.      */
 if|if
 condition|(
 name|NotifyInfo
@@ -690,7 +630,7 @@ decl_stmt|;
 comment|/*      * Attempt to get the lock.      *      * If we don't get it now, it will be marked pending and we will      * take another interrupt when it becomes free.      */
 name|ACPI_ACQUIRE_GLOBAL_LOCK
 argument_list|(
-name|Facs
+name|AcpiGbl_FACS
 argument_list|,
 name|Acquired
 argument_list|)
@@ -761,39 +701,7 @@ argument_list|(
 name|EvInitGlobalLockHandler
 argument_list|)
 expr_stmt|;
-name|Status
-operator|=
-name|AcpiGetTableByIndex
-argument_list|(
-name|ACPI_TABLE_INDEX_FACS
-argument_list|,
-name|ACPI_CAST_INDIRECT_PTR
-argument_list|(
-name|ACPI_TABLE_HEADER
-argument_list|,
-operator|&
-name|Facs
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-name|AcpiGbl_GlobalLockPresent
-operator|=
-name|TRUE
-expr_stmt|;
+comment|/* Attempt installation of the global lock handler */
 name|Status
 operator|=
 name|AcpiInstallFixedEventHandler
@@ -805,7 +713,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/*      * If the global lock does not exist on this platform, the attempt      * to enable GBL_STATUS will fail (the GBL_ENABLE bit will not stick)      * Map to AE_OK, but mark global lock as not present.      * Any attempt to actually use the global lock will be flagged      * with an error.      */
+comment|/*      * If the global lock does not exist on this platform, the attempt to      * enable GBL_STATUS will fail (the GBL_ENABLE bit will not stick).      * Map to AE_OK, but mark global lock as not present. Any attempt to      * actually use the global lock will be flagged with an error.      */
 if|if
 condition|(
 name|Status
@@ -826,11 +734,16 @@ name|AcpiGbl_GlobalLockPresent
 operator|=
 name|FALSE
 expr_stmt|;
-name|Status
-operator|=
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
+argument_list|)
 expr_stmt|;
 block|}
+name|AcpiGbl_GlobalLockPresent
+operator|=
+name|TRUE
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -951,7 +864,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/*      * Make sure that a global lock actually exists. If not, just treat      * the lock as a standard mutex.      */
+comment|/*      * Make sure that a global lock actually exists. If not, just treat the      * lock as a standard mutex.      */
 if|if
 condition|(
 operator|!
@@ -971,7 +884,7 @@ block|}
 comment|/* Attempt to acquire the actual hardware lock */
 name|ACPI_ACQUIRE_GLOBAL_LOCK
 argument_list|(
-name|Facs
+name|AcpiGbl_FACS
 argument_list|,
 name|Acquired
 argument_list|)
@@ -1085,7 +998,7 @@ block|{
 comment|/* Allow any thread to release the lock */
 name|ACPI_RELEASE_GLOBAL_LOCK
 argument_list|(
-name|Facs
+name|AcpiGbl_FACS
 argument_list|,
 name|Pending
 argument_list|)
@@ -1098,11 +1011,11 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AcpiSetRegister
+name|AcpiWriteBitRegister
 argument_list|(
 name|ACPI_BITREG_GLOBAL_LOCK_RELEASE
 argument_list|,
-literal|1
+name|ACPI_ENABLE_EVENT
 argument_list|)
 expr_stmt|;
 block|}
@@ -1149,7 +1062,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|i
 decl_stmt|;
 name|ACPI_STATUS
@@ -1165,7 +1078,7 @@ condition|(
 name|AcpiGbl_EventsInitialized
 condition|)
 block|{
-comment|/*          * Disable all event-related functionality.          * In all cases, on error, print a message but obviously we don't abort.          */
+comment|/*          * Disable all event-related functionality. In all cases, on error,          * print a message but obviously we don't abort.          */
 comment|/* Disable all fixed events */
 for|for
 control|(
@@ -1185,9 +1098,6 @@ name|Status
 operator|=
 name|AcpiDisableEvent
 argument_list|(
-operator|(
-name|UINT32
-operator|)
 name|i
 argument_list|,
 literal|0
@@ -1223,6 +1133,8 @@ operator|=
 name|AcpiEvWalkGpeList
 argument_list|(
 name|AcpiHwDisableGpeBlock
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Remove SCI handler */
@@ -1279,6 +1191,8 @@ operator|=
 name|AcpiEvWalkGpeList
 argument_list|(
 name|AcpiEvDeleteGpeHandlers
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Return to original mode if necessary */

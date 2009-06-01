@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evregion - ACPI AddressSpace (OpRegion) handler dispatch  *              $Revision: 1.168 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evregion - ACPI AddressSpace (OpRegion) handler dispatch  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2009, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -17,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|"acpi.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"accommon.h"
 end_include
 
 begin_include
@@ -50,33 +56,6 @@ argument_list|(
 literal|"evregion"
 argument_list|)
 end_macro
-
-begin_define
-define|#
-directive|define
-name|ACPI_NUM_DEFAULT_SPACES
-value|4
-end_define
-
-begin_decl_stmt
-specifier|static
-name|UINT8
-name|AcpiGbl_DefaultAddressSpaces
-index|[
-name|ACPI_NUM_DEFAULT_SPACES
-index|]
-init|=
-block|{
-name|ACPI_ADR_SPACE_SYSTEM_MEMORY
-block|,
-name|ACPI_ADR_SPACE_SYSTEM_IO
-block|,
-name|ACPI_ADR_SPACE_PCI_CONFIG
-block|,
-name|ACPI_ADR_SPACE_DATA_TABLE
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Local prototypes */
@@ -129,6 +108,37 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* These are the address spaces that will get default handlers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NUM_DEFAULT_SPACES
+value|4
+end_define
+
+begin_decl_stmt
+specifier|static
+name|UINT8
+name|AcpiGbl_DefaultAddressSpaces
+index|[
+name|ACPI_NUM_DEFAULT_SPACES
+index|]
+init|=
+block|{
+name|ACPI_ADR_SPACE_SYSTEM_MEMORY
+block|,
+name|ACPI_ADR_SPACE_SYSTEM_IO
+block|,
+name|ACPI_ADR_SPACE_PCI_CONFIG
+block|,
+name|ACPI_ADR_SPACE_DATA_TABLE
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvInstallRegionHandlers  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Installs the core subsystem default address space handlers.  *  ******************************************************************************/
 end_comment
 
@@ -142,7 +152,7 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|i
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
@@ -171,7 +181,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * All address spaces (PCI Config, EC, SMBus) are scope dependent      * and registration must occur for a specific device.      *      * In the case of the system memory and IO address spaces there is currently      * no device associated with the address space.  For these we use the root.      *      * We install the default PCI config space handler at the root so      * that this space is immediately available even though the we have      * not enumerated all the PCI Root Buses yet.  This is to conform      * to the ACPI specification which states that the PCI config      * space must be always available -- even though we are nowhere      * near ready to find the PCI root buses at this point.      *      * NOTE: We ignore AE_ALREADY_EXISTS because this means that a handler      * has already been installed (via AcpiInstallAddressSpaceHandler).      * Similar for AE_SAME_HANDLER.      */
+comment|/*      * All address spaces (PCI Config, EC, SMBus) are scope dependent and      * registration must occur for a specific device.      *      * In the case of the system memory and IO address spaces there is      * currently no device associated with the address space. For these we      * use the root.      *      * We install the default PCI config space handler at the root so that      * this space is immediately available even though the we have not      * enumerated all the PCI Root Buses yet. This is to conform to the ACPI      * specification which states that the PCI config space must be always      * available -- even though we are nowhere near ready to find the PCI root      * buses at this point.      *      * NOTE: We ignore AE_ALREADY_EXISTS because this means that a handler      * has already been installed (via AcpiInstallAddressSpaceHandler).      * Similar for AE_SAME_HANDLER.      */
 for|for
 control|(
 name|i
@@ -262,7 +272,7 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|i
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
@@ -291,7 +301,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Run the _REG methods for OpRegions in each default address space      */
+comment|/* Run the _REG methods for OpRegions in each default address space */
 for|for
 control|(
 name|i
@@ -306,7 +316,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* TBD: Make sure handler is the DEFAULT handler, otherwise          * _REG will have already been run.          */
+comment|/*          * TBD: Make sure handler is the DEFAULT handler, otherwise          * _REG will have already been run.          */
 name|Status
 operator|=
 name|AcpiEvExecuteRegMethods
@@ -455,12 +465,6 @@ operator|->
 name|Parameters
 operator|=
 name|Args
-expr_stmt|;
-name|Info
-operator|->
-name|ParameterType
-operator|=
-name|ACPI_PARAM_ARGS
 expr_stmt|;
 name|Info
 operator|->
@@ -613,7 +617,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvAddressSpaceDispatch  *  * PARAMETERS:  RegionObj           - Internal region object  *              Function            - Read or Write operation  *              Address             - Where in the space to read or write  *              BitWidth            - Field width in bits (8, 16, 32, or 64)  *              Value               - Pointer to in or out value, must be  *                                    full 64-bit ACPI_INTEGER  *  * RETURN:      Status  *  * DESCRIPTION: Dispatch an address space or operation region access to  *              a previously installed handler.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvAddressSpaceDispatch  *  * PARAMETERS:  RegionObj           - Internal region object  *              Function            - Read or Write operation  *              RegionOffset        - Where in the region to read or write  *              BitWidth            - Field width in bits (8, 16, 32, or 64)  *              Value               - Pointer to in or out value, must be  *                                    full 64-bit ACPI_INTEGER  *  * RETURN:      Status  *  * DESCRIPTION: Dispatch an address space or operation region access to  *              a previously installed handler.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -627,8 +631,8 @@ parameter_list|,
 name|UINT32
 name|Function
 parameter_list|,
-name|ACPI_PHYSICAL_ADDRESS
-name|Address
+name|UINT32
+name|RegionOffset
 parameter_list|,
 name|UINT32
 name|BitWidth
@@ -735,7 +739,7 @@ name|AE_NOT_EXIST
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * It may be the case that the region has never been initialized      * Some types of regions require special init code      */
+comment|/*      * It may be the case that the region has never been initialized.      * Some types of regions require special init code      */
 if|if
 condition|(
 operator|!
@@ -750,7 +754,7 @@ name|AOPOBJ_SETUP_COMPLETE
 operator|)
 condition|)
 block|{
-comment|/*          * This region has not been initialized yet, do it          */
+comment|/* This region has not been initialized yet, do it */
 name|RegionSetup
 operator|=
 name|HandlerDesc
@@ -792,8 +796,8 @@ name|AE_NOT_EXIST
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * We must exit the interpreter because the region          * setup will potentially execute control methods          * (e.g., _REG method for this region)          */
-name|AcpiExRelinquishInterpreter
+comment|/*          * We must exit the interpreter because the region setup will          * potentially execute control methods (for example, the _REG method          * for this region)          */
+name|AcpiExExitInterpreter
 argument_list|()
 expr_stmt|;
 name|Status
@@ -815,7 +819,7 @@ name|RegionContext
 argument_list|)
 expr_stmt|;
 comment|/* Re-enter the interpreter */
-name|AcpiExReacquireInterpreter
+name|AcpiExEnterInterpreter
 argument_list|()
 expr_stmt|;
 comment|/* Check for failure of the Region Setup */
@@ -853,7 +857,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Region initialization may have been completed by RegionSetup          */
+comment|/* Region initialization may have been completed by RegionSetup */
 if|if
 condition|(
 operator|!
@@ -933,9 +937,15 @@ name|AddressSpace
 operator|,
 name|Handler
 operator|,
-name|ACPI_FORMAT_UINT64
+name|ACPI_FORMAT_NATIVE_UINT
 argument_list|(
+name|RegionObj
+operator|->
+name|Region
+operator|.
 name|Address
+operator|+
+name|RegionOffset
 argument_list|)
 operator|,
 name|AcpiUtGetRegionName
@@ -964,7 +974,7 @@ operator|)
 condition|)
 block|{
 comment|/*          * For handlers other than the default (supplied) handlers, we must          * exit the interpreter because the handler *might* block -- we don't          * know what it will do, so we can't hold the lock on the intepreter.          */
-name|AcpiExRelinquishInterpreter
+name|AcpiExExitInterpreter
 argument_list|()
 expr_stmt|;
 block|}
@@ -975,7 +985,15 @@ name|Handler
 argument_list|(
 name|Function
 argument_list|,
+operator|(
+name|RegionObj
+operator|->
+name|Region
+operator|.
 name|Address
+operator|+
+name|RegionOffset
+operator|)
 argument_list|,
 name|BitWidth
 argument_list|,
@@ -1038,7 +1056,7 @@ operator|)
 condition|)
 block|{
 comment|/*          * We just returned from a non-default handler, we must re-enter the          * interpreter          */
-name|AcpiExReacquireInterpreter
+name|AcpiExEnterInterpreter
 argument_list|()
 expr_stmt|;
 block|}
@@ -1293,7 +1311,7 @@ name|return_VOID
 expr_stmt|;
 block|}
 block|}
-comment|/*              * If the region has been activated, call the setup handler              * with the deactivate notification              */
+comment|/*              * If the region has been activated, call the setup handler with              * the deactivate notification              */
 if|if
 condition|(
 name|RegionObj
@@ -1631,7 +1649,7 @@ name|AE_BAD_PARAMETER
 operator|)
 return|;
 block|}
-comment|/*      * We only care about regions.and objects      * that are allowed to have address space handlers      */
+comment|/*      * We only care about regions and objects that are allowed to have      * address space handlers      */
 if|if
 condition|(
 operator|(
@@ -1687,10 +1705,11 @@ block|}
 comment|/* Devices are handled different than regions */
 if|if
 condition|(
-name|ACPI_GET_OBJECT_TYPE
-argument_list|(
 name|ObjDesc
-argument_list|)
+operator|->
+name|Common
+operator|.
+name|Type
 operator|==
 name|ACPI_TYPE_DEVICE
 condition|)
@@ -1730,7 +1749,8 @@ argument_list|(
 operator|(
 name|ACPI_DB_OPREGION
 operator|,
-literal|"Found handler for region [%s] in device %p(%p) handler %p\n"
+literal|"Found handler for region [%s] in device %p(%p) "
+literal|"handler %p\n"
 operator|,
 name|AcpiUtGetRegionName
 argument_list|(
@@ -1749,7 +1769,7 @@ name|HandlerObj
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*                  * Since the object we found it on was a device, then it                  * means that someone has already installed a handler for                  * the branch of the namespace from this device on.  Just                  * bail out telling the walk routine to not traverse this                  * branch.  This preserves the scoping rule for handlers.                  */
+comment|/*                  * Since the object we found it on was a device, then it                  * means that someone has already installed a handler for                  * the branch of the namespace from this device on. Just                  * bail out telling the walk routine to not traverse this                  * branch. This preserves the scoping rule for handlers.                  */
 return|return
 operator|(
 name|AE_CTRL_DEPTH
@@ -1766,7 +1786,7 @@ operator|.
 name|Next
 expr_stmt|;
 block|}
-comment|/*          * As long as the device didn't have a handler for this          * space we don't care about it.  We just ignore it and          * proceed.          */
+comment|/*          * As long as the device didn't have a handler for this space we          * don't care about it. We just ignore it and proceed.          */
 return|return
 operator|(
 name|AE_OK
@@ -1789,14 +1809,14 @@ operator|.
 name|SpaceId
 condition|)
 block|{
-comment|/*          * This region is for a different address space          * -- just ignore it          */
+comment|/* This region is for a different address space, just ignore it */
 return|return
 operator|(
 name|AE_OK
 operator|)
 return|;
 block|}
-comment|/*      * Now we have a region and it is for the handler's address      * space type.      *      * First disconnect region for any previous handler (if any)      */
+comment|/*      * Now we have a region and it is for the handler's address space type.      *      * First disconnect region for any previous handler (if any)      */
 name|AcpiEvDetachRegion
 argument_list|(
 name|ObjDesc
@@ -1874,7 +1894,7 @@ argument_list|(
 name|EvInstallSpaceHandler
 argument_list|)
 expr_stmt|;
-comment|/*      * This registration is valid for only the types below      * and the root.  This is where the default handlers      * get placed.      */
+comment|/*      * This registration is valid for only the types below and the root. This      * is where the default handlers get placed.      */
 if|if
 condition|(
 operator|(
@@ -2039,7 +2059,7 @@ condition|(
 name|ObjDesc
 condition|)
 block|{
-comment|/*          * The attached device object already exists.          * Make sure the handler is not already installed.          */
+comment|/*          * The attached device object already exists. Make sure the handler          * is not already installed.          */
 name|HandlerObj
 operator|=
 name|ObjDesc
@@ -2077,7 +2097,7 @@ operator|==
 name|Handler
 condition|)
 block|{
-comment|/*                      * It is (relatively) OK to attempt to install the SAME                      * handler twice. This can easily happen                      * with PCI_Config space.                      */
+comment|/*                      * It is (relatively) OK to attempt to install the SAME                      * handler twice. This can easily happen with the                      * PCI_Config space.                      */
 name|Status
 operator|=
 name|AE_SAME_HANDLER
@@ -2235,7 +2255,7 @@ name|ObjDesc
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Install the handler      *      * At this point there is no existing handler.      * Just allocate the object for the handler and link it      * into the list.      */
+comment|/*      * Install the handler      *      * At this point there is no existing handler. Just allocate the object      * for the handler and link it into the list.      */
 name|HandlerObj
 operator|=
 name|AcpiUtCreateInternalObject
@@ -2393,7 +2413,7 @@ argument_list|(
 name|EvExecuteRegMethods
 argument_list|)
 expr_stmt|;
-comment|/*      * Run all _REG methods for all Operation Regions for this      * space ID.  This is a separate walk in order to handle any      * interdependencies between regions and _REG methods.  (i.e. handlers      * must be installed for all regions of this Space ID before we      * can run any _REG methods)      */
+comment|/*      * Run all _REG methods for all Operation Regions for this space ID. This      * is a separate walk in order to handle any interdependencies between      * regions and _REG methods. (i.e. handlers must be installed for all      * regions of this Space ID before we can run any _REG methods)      */
 name|Status
 operator|=
 name|AcpiNsWalkNamespace
@@ -2491,7 +2511,7 @@ name|AE_BAD_PARAMETER
 operator|)
 return|;
 block|}
-comment|/*      * We only care about regions.and objects      * that are allowed to have address space handlers      */
+comment|/*      * We only care about regions.and objects that are allowed to have address      * space handlers      */
 if|if
 condition|(
 operator|(
@@ -2548,7 +2568,7 @@ operator|!=
 name|SpaceId
 condition|)
 block|{
-comment|/*          * This region is for a different address space          * -- just ignore it          */
+comment|/* This region is for a different address space, just ignore it */
 return|return
 operator|(
 name|AE_OK

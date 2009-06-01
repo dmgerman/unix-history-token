@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 1.316 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2009, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_ifndef
@@ -104,7 +104,7 @@ value|0x7F
 end_define
 
 begin_comment
-comment|/*  * Architecture-specific ACPICA Subsystem Data Types  *  * The goal of these types is to provide source code portability across  * 16-bit, 32-bit, and 64-bit targets.  *  * 1) The following types are of fixed size for all targets (16/32/64):  *  * BOOLEAN      Logical boolean  *  * UINT8        8-bit  (1 byte) unsigned value  * UINT16       16-bit (2 byte) unsigned value  * UINT32       32-bit (4 byte) unsigned value  * UINT64       64-bit (8 byte) unsigned value  *  * INT16        16-bit (2 byte) signed value  * INT32        32-bit (4 byte) signed value  * INT64        64-bit (8 byte) signed value  *  * COMPILER_DEPENDENT_UINT64/INT64 - These types are defined in the  * compiler-dependent header(s) and were introduced because there is no common  * 64-bit integer type across the various compilation models, as shown in  * the table below.  *  * Datatype  LP64 ILP64 LLP64 ILP32 LP32 16bit  * char      8    8     8     8     8    8  * short     16   16    16    16    16   16  * _int32         32  * int       32   64    32    32    16   16  * long      64   64    32    32    32   32  * long long            64    64  * pointer   64   64    64    32    32   32  *  * Note: ILP64 and LP32 are currently not supported.  *  *  * 2) These types represent the native word size of the target mode of the  * processor, and may be 16-bit, 32-bit, or 64-bit as required. They are  * usually used for memory allocation, efficient loop counters, and array  * indexes. The types are similar to the size_t type in the C library and are  * required because there is no C type that consistently represents the native  * data width.  *  * ACPI_SIZE        16/32/64-bit unsigned value  * ACPI_NATIVE_UINT 16/32/64-bit unsigned value  * ACPI_NATIVE_INT  16/32/64-bit signed value  *  */
+comment|/*  * Architecture-specific ACPICA Subsystem Data Types  *  * The goal of these types is to provide source code portability across  * 16-bit, 32-bit, and 64-bit targets.  *  * 1) The following types are of fixed size for all targets (16/32/64):  *  * BOOLEAN      Logical boolean  *  * UINT8        8-bit  (1 byte) unsigned value  * UINT16       16-bit (2 byte) unsigned value  * UINT32       32-bit (4 byte) unsigned value  * UINT64       64-bit (8 byte) unsigned value  *  * INT16        16-bit (2 byte) signed value  * INT32        32-bit (4 byte) signed value  * INT64        64-bit (8 byte) signed value  *  * COMPILER_DEPENDENT_UINT64/INT64 - These types are defined in the  * compiler-dependent header(s) and were introduced because there is no common  * 64-bit integer type across the various compilation models, as shown in  * the table below.  *  * Datatype  LP64 ILP64 LLP64 ILP32 LP32 16bit  * char      8    8     8     8     8    8  * short     16   16    16    16    16   16  * _int32         32  * int       32   64    32    32    16   16  * long      64   64    32    32    32   32  * long long            64    64  * pointer   64   64    64    32    32   32  *  * Note: ILP64 and LP32 are currently not supported.  *  *  * 2) These types represent the native word size of the target mode of the  * processor, and may be 16-bit, 32-bit, or 64-bit as required. They are  * usually used for memory allocation, efficient loop counters, and array  * indexes. The types are similar to the size_t type in the C library and are  * required because there is no C type that consistently represents the native  * data width. ACPI_SIZE is needed because there is no guarantee that a  * kernel-level C library is present.  *  * ACPI_SIZE        16/32/64-bit unsigned value  * ACPI_NATIVE_INT  16/32/64-bit signed value  *  */
 end_comment
 
 begin_comment
@@ -190,15 +190,15 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|UINT64
-name|ACPI_NATIVE_UINT
+name|INT64
+name|ACPI_NATIVE_INT
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|INT64
-name|ACPI_NATIVE_INT
+name|UINT64
+name|ACPI_SIZE
 typedef|;
 end_typedef
 
@@ -306,15 +306,15 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|UINT32
-name|ACPI_NATIVE_UINT
+name|INT32
+name|ACPI_NATIVE_INT
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|INT32
-name|ACPI_NATIVE_INT
+name|UINT32
+name|ACPI_SIZE
 typedef|;
 end_typedef
 
@@ -367,18 +367,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Variable-width type, used instead of clib size_t */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|ACPI_NATIVE_UINT
-name|ACPI_SIZE
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*******************************************************************************  *  * OS-dependent and compiler-dependent types  *  * If the defaults below are not appropriate for the host system, they can  * be defined in the compiler-specific or OS-specific header, and this will  * take precedence.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * OS-dependent types  *  * If the defaults below are not appropriate for the host system, they can  * be defined in the OS-specific header, and this will take precedence.  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -395,29 +384,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_THREAD_ID
-value|ACPI_NATIVE_UINT
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Object returned from AcpiOsCreateLock */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ACPI_SPINLOCK
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ACPI_SPINLOCK
-value|void *
+value|ACPI_SIZE
 end_define
 
 begin_endif
@@ -439,7 +406,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CPU_FLAGS
-value|ACPI_NATIVE_UINT
+value|ACPI_SIZE
 end_define
 
 begin_endif
@@ -457,6 +424,12 @@ directive|ifndef
 name|ACPI_CACHE_T
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_USE_LOCAL_CACHE
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -464,10 +437,161 @@ name|ACPI_CACHE_T
 value|ACPI_MEMORY_LIST
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ACPI_CACHE_T
+value|void *
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Synchronization objects - Mutexes, Semaphores, and SpinLocks  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|ACPI_MUTEX_TYPE
+operator|==
+name|ACPI_BINARY_SEMAPHORE
+operator|)
+end_if
+
+begin_comment
+comment|/*  * These macros are used if the host OS does not support a mutex object.  * Map the OSL Mutex interfaces to binary semaphores.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_MUTEX
+value|ACPI_SEMAPHORE
+end_define
+
+begin_define
+define|#
+directive|define
+name|AcpiOsCreateMutex
+parameter_list|(
+name|OutHandle
+parameter_list|)
+value|AcpiOsCreateSemaphore (1, 1, OutHandle)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AcpiOsDeleteMutex
+parameter_list|(
+name|Handle
+parameter_list|)
+value|(void) AcpiOsDeleteSemaphore (Handle)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AcpiOsAcquireMutex
+parameter_list|(
+name|Handle
+parameter_list|,
+name|Time
+parameter_list|)
+value|AcpiOsWaitSemaphore (Handle, 1, Time)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AcpiOsReleaseMutex
+parameter_list|(
+name|Handle
+parameter_list|)
+value|(void) AcpiOsSignalSemaphore (Handle, 1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Configurable types for synchronization objects */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_SPINLOCK
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_SPINLOCK
+value|void *
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_SEMAPHORE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_SEMAPHORE
+value|void *
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_MUTEX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_MUTEX
+value|void *
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*******************************************************************************  *  * Compiler-dependent types  *  * If the defaults below are not appropriate for the host compiler, they can  * be defined in the compiler-specific header, and this will take precedence.  *  ******************************************************************************/
+end_comment
 
 begin_comment
 comment|/* Use C99 uintptr_t for pointer casting if available, "void *" otherwise */
@@ -561,6 +685,129 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/******************************************************************************  *  * ACPI Specification constants (Do not change unless the specification changes)  *  *****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Number of distinct FADT-based GPE register blocks (GPE0 and GPE1) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_MAX_GPE_BLOCKS
+value|2
+end_define
+
+begin_comment
+comment|/* Default ACPI register widths */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_REGISTER_WIDTH
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PM1_REGISTER_WIDTH
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PM2_REGISTER_WIDTH
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PM_TIMER_WIDTH
+value|32
+end_define
+
+begin_comment
+comment|/* Names within the namespace are 4 bytes long */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NAME_SIZE
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PATH_SEGMENT_LENGTH
+value|5
+end_define
+
+begin_comment
+comment|/* 4 chars for name + 1 char for separator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PATH_SEPARATOR
+value|'.'
+end_define
+
+begin_comment
+comment|/* Sizes for ACPI table headers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_OEM_ID_SIZE
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_OEM_TABLE_ID_SIZE
+value|8
+end_define
+
+begin_comment
+comment|/* ACPI/PNP hardware IDs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_ROOT_HID_STRING
+value|"PNP0A03"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_EXPRESS_ROOT_HID_STRING
+value|"PNP0A08"
+end_define
+
+begin_comment
+comment|/* PM Timer ticks per second (HZ) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PM_TIMER_FREQUENCY
+value|3579545
+end_define
+
+begin_comment
 comment|/*******************************************************************************  *  * Independent types  *  ******************************************************************************/
 end_comment
 
@@ -635,7 +882,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Mescellaneous types  */
+comment|/*  * Miscellaneous types  */
 end_comment
 
 begin_typedef
@@ -683,6 +930,24 @@ end_typedef
 begin_comment
 comment|/* Actually a ptr to a NS Node */
 end_comment
+
+begin_comment
+comment|/* Owner IDs are used to track namespace nodes for selective deletion */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|UINT8
+name|ACPI_OWNER_ID
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|ACPI_OWNER_ID_MAX
+value|0xFF
+end_define
 
 begin_typedef
 typedef|typedef
@@ -733,25 +998,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Synchronization objects */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MUTEX
-value|void *
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_SEMAPHORE
-value|void *
-end_define
-
-begin_comment
-comment|/*  * Acpi integer width. In ACPI version 1, integers are 32 bits.  In ACPI  * version 2, integers are 64 bits. Note that this pertains to the ACPI integer  * type only, not other integers used in the implementation of the ACPI CA  * subsystem.  */
+comment|/*  * Acpi integer width. In ACPI version 1, integers are 32 bits. In ACPI  * version 2, integers are 64 bits. Note that this pertains to the ACPI integer  * type only, not other integers used in the implementation of the ACPI CA  * subsystem.  */
 end_comment
 
 begin_typedef
@@ -785,29 +1032,6 @@ end_define
 begin_comment
 comment|/* 2^64 = 18,446,744,073,709,551,616 */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|ACPI_MACHINE_WIDTH
-operator|==
-literal|64
-end_if
-
-begin_define
-define|#
-directive|define
-name|ACPI_USE_NATIVE_DIVIDE
-end_define
-
-begin_comment
-comment|/* Use compiler native 64-bit divide */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -847,6 +1071,308 @@ directive|define
 name|ACPI_ROOT_OBJECT
 value|ACPI_ADD_PTR (ACPI_HANDLE, NULL, ACPI_MAX_PTR)
 end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_WAIT_FOREVER
+value|0xFFFF
+end_define
+
+begin_comment
+comment|/* UINT16, as per ACPI spec */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DO_NOT_WAIT
+value|0
+end_define
+
+begin_comment
+comment|/*******************************************************************************  *  * Commonly used macros  *  ******************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Data manipulation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_LOBYTE
+parameter_list|(
+name|Integer
+parameter_list|)
+value|((UINT8)   (UINT16)(Integer))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HIBYTE
+parameter_list|(
+name|Integer
+parameter_list|)
+value|((UINT8) (((UINT16)(Integer))>> 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LOWORD
+parameter_list|(
+name|Integer
+parameter_list|)
+value|((UINT16)  (UINT32)(Integer))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HIWORD
+parameter_list|(
+name|Integer
+parameter_list|)
+value|((UINT16)(((UINT32)(Integer))>> 16))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LODWORD
+parameter_list|(
+name|Integer64
+parameter_list|)
+value|((UINT32)  (UINT64)(Integer64))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HIDWORD
+parameter_list|(
+name|Integer64
+parameter_list|)
+value|((UINT32)(((UINT64)(Integer64))>> 32))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_SET_BIT
+parameter_list|(
+name|target
+parameter_list|,
+name|bit
+parameter_list|)
+value|((target) |= (bit))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_CLEAR_BIT
+parameter_list|(
+name|target
+parameter_list|,
+name|bit
+parameter_list|)
+value|((target)&= ~(bit))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MIN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a)<(b))?(a):(b))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MAX
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a)>(b))?(a):(b))
+end_define
+
+begin_comment
+comment|/* Size calculation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_ARRAY_LENGTH
+parameter_list|(
+name|x
+parameter_list|)
+value|(sizeof(x) / sizeof((x)[0]))
+end_define
+
+begin_comment
+comment|/* Pointer manipulation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_CAST_PTR
+parameter_list|(
+name|t
+parameter_list|,
+name|p
+parameter_list|)
+value|((t *) (ACPI_UINTPTR_T) (p))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_CAST_INDIRECT_PTR
+parameter_list|(
+name|t
+parameter_list|,
+name|p
+parameter_list|)
+value|((t **) (ACPI_UINTPTR_T) (p))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ADD_PTR
+parameter_list|(
+name|t
+parameter_list|,
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|ACPI_CAST_PTR (t, (ACPI_CAST_PTR (UINT8, (a)) + (ACPI_SIZE)(b)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PTR_DIFF
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(ACPI_SIZE) (ACPI_CAST_PTR (UINT8, (a)) - ACPI_CAST_PTR (UINT8, (b)))
+end_define
+
+begin_comment
+comment|/* Pointer/Integer type conversions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_TO_POINTER
+parameter_list|(
+name|i
+parameter_list|)
+value|ACPI_ADD_PTR (void, (void *) NULL,(ACPI_SIZE) i)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TO_INTEGER
+parameter_list|(
+name|p
+parameter_list|)
+value|ACPI_PTR_DIFF (p, (void *) NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_OFFSET
+parameter_list|(
+name|d
+parameter_list|,
+name|f
+parameter_list|)
+value|(ACPI_SIZE) ACPI_PTR_DIFF (&(((d *)0)->f), (void *) NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PHYSADDR_TO_PTR
+parameter_list|(
+name|i
+parameter_list|)
+value|ACPI_TO_POINTER(i)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PTR_TO_PHYSADDR
+parameter_list|(
+name|i
+parameter_list|)
+value|ACPI_TO_INTEGER(i)
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_MISALIGNMENT_NOT_SUPPORTED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_COMPARE_NAME
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(*ACPI_CAST_PTR (UINT32, (a)) == *ACPI_CAST_PTR (UINT32, (b)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ACPI_COMPARE_NAME
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(!ACPI_STRNCMP (ACPI_CAST_PTR (char, (a)), ACPI_CAST_PTR (char, (b)), ACPI_NAME_SIZE))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*******************************************************************************  *  * Miscellaneous constants  *  ******************************************************************************/
+end_comment
 
 begin_comment
 comment|/*  * Initialization sequence  */
@@ -1103,60 +1629,95 @@ begin_define
 define|#
 directive|define
 name|ACPI_NOTIFY_BUS_CHECK
-value|(UINT8) 0
+value|(UINT8) 0x00
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_NOTIFY_DEVICE_CHECK
-value|(UINT8) 1
+value|(UINT8) 0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_NOTIFY_DEVICE_WAKE
-value|(UINT8) 2
+value|(UINT8) 0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_NOTIFY_EJECT_REQUEST
-value|(UINT8) 3
+value|(UINT8) 0x03
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_NOTIFY_DEVICE_CHECK_LIGHT
-value|(UINT8) 4
+value|(UINT8) 0x04
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_NOTIFY_FREQUENCY_MISMATCH
-value|(UINT8) 5
+value|(UINT8) 0x05
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_NOTIFY_BUS_MODE_MISMATCH
-value|(UINT8) 6
+value|(UINT8) 0x06
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_NOTIFY_POWER_FAULT
-value|(UINT8) 7
+value|(UINT8) 0x07
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NOTIFY_CAPABILITIES_CHECK
+value|(UINT8) 0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NOTIFY_DEVICE_PLD_CHECK
+value|(UINT8) 0x09
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NOTIFY_RESERVED
+value|(UINT8) 0x0A
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NOTIFY_LOCALITY_UPDATE
+value|(UINT8) 0x0B
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NOTIFY_MAX
+value|0x0B
 end_define
 
 begin_comment
-comment|/*  * Types associated with ACPI names and objects.  The first group of  * values (up to ACPI_TYPE_EXTERNAL_MAX) correspond to the definition  * of the ACPI ObjectType() operator (See the ACPI Spec).  Therefore,  * only add to the first group if the spec changes.  *  * NOTE: Types must be kept in sync with the global AcpiNsProperties  * and AcpiNsTypeNames arrays.  */
+comment|/*  * Types associated with ACPI names and objects. The first group of  * values (up to ACPI_TYPE_EXTERNAL_MAX) correspond to the definition  * of the ACPI ObjectType() operator (See the ACPI Spec). Therefore,  * only add to the first group if the spec changes.  *  * NOTE: Types must be kept in sync with the global AcpiNsProperties  * and AcpiNsTypeNames arrays.  */
 end_comment
 
 begin_typedef
@@ -1461,6 +2022,13 @@ define|#
 directive|define
 name|ACPI_TYPE_NOT_FOUND
 value|0xFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NUM_NS_TYPES
+value|(ACPI_TYPE_INVALID + 1)
 end_define
 
 begin_comment
@@ -1842,7 +2410,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_ALL_NOTIFY
-value|0x3
+value|(ACPI_SYSTEM_NOTIFY | ACPI_DEVICE_NOTIFY)
 end_define
 
 begin_define
@@ -1934,7 +2502,11 @@ value|(ACPI_ADR_SPACE_TYPE) 127
 end_define
 
 begin_comment
-comment|/*  * BitRegister IDs  * These are bitfields defined within the full ACPI registers  */
+comment|/*  * BitRegister IDs  *  * These values are intended to be used by the hardware interfaces  * and are mapped to individual bitfields defined within the ACPI  * registers. See the AcpiGbl_BitRegisterInfo global table in utglobal.c  * for this mapping.  */
+end_comment
+
+begin_comment
+comment|/* PM1 Status register */
 end_comment
 
 begin_define
@@ -1993,6 +2565,10 @@ name|ACPI_BITREG_PCIEXP_WAKE_STATUS
 value|0x07
 end_define
 
+begin_comment
+comment|/* PM1 Enable register */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2031,71 +2607,65 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_BITREG_WAKE_ENABLE
+name|ACPI_BITREG_PCIEXP_WAKE_DISABLE
 value|0x0D
 end_define
+
+begin_comment
+comment|/* PM1 Control register */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_BITREG_PCIEXP_WAKE_DISABLE
+name|ACPI_BITREG_SCI_ENABLE
 value|0x0E
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_BITREG_SCI_ENABLE
+name|ACPI_BITREG_BUS_MASTER_RLD
 value|0x0F
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_BITREG_BUS_MASTER_RLD
+name|ACPI_BITREG_GLOBAL_LOCK_RELEASE
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_BITREG_GLOBAL_LOCK_RELEASE
+name|ACPI_BITREG_SLEEP_TYPE
 value|0x11
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_BITREG_SLEEP_TYPE_A
+name|ACPI_BITREG_SLEEP_ENABLE
 value|0x12
 end_define
+
+begin_comment
+comment|/* PM2 Control register */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_BITREG_SLEEP_TYPE_B
+name|ACPI_BITREG_ARB_DISABLE
 value|0x13
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_BITREG_SLEEP_ENABLE
-value|0x14
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BITREG_ARB_DISABLE
-value|0x15
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_BITREG_MAX
-value|0x15
+value|0x13
 end_define
 
 begin_define
@@ -2106,7 +2676,40 @@ value|ACPI_BITREG_MAX + 1
 end_define
 
 begin_comment
+comment|/* Status register values. A 1 clears a status bit. 0 = no effect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_CLEAR_STATUS
+value|1
+end_define
+
+begin_comment
+comment|/* Enable and Control register values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_ENABLE_EVENT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DISABLE_EVENT
+value|0
+end_define
+
+begin_comment
 comment|/*  * External ACPI object definition  */
+end_comment
+
+begin_comment
+comment|/*  * Note: Type == ACPI_TYPE_ANY (0) is used to indicate a NULL package element  * or an unresolved named reference.  */
 end_comment
 
 begin_typedef
@@ -2123,6 +2726,7 @@ block|{
 name|ACPI_OBJECT_TYPE
 name|Type
 decl_stmt|;
+comment|/* ACPI_TYPE_INTEGER */
 name|ACPI_INTEGER
 name|Value
 decl_stmt|;
@@ -2135,6 +2739,7 @@ block|{
 name|ACPI_OBJECT_TYPE
 name|Type
 decl_stmt|;
+comment|/* ACPI_TYPE_STRING */
 name|UINT32
 name|Length
 decl_stmt|;
@@ -2152,6 +2757,7 @@ block|{
 name|ACPI_OBJECT_TYPE
 name|Type
 decl_stmt|;
+comment|/* ACPI_TYPE_BUFFER */
 name|UINT32
 name|Length
 decl_stmt|;
@@ -2169,21 +2775,7 @@ block|{
 name|ACPI_OBJECT_TYPE
 name|Type
 decl_stmt|;
-name|UINT32
-name|Fill1
-decl_stmt|;
-name|ACPI_HANDLE
-name|Handle
-decl_stmt|;
-comment|/* object reference */
-block|}
-name|Reference
-struct|;
-struct|struct
-block|{
-name|ACPI_OBJECT_TYPE
-name|Type
-decl_stmt|;
+comment|/* ACPI_TYPE_PACKAGE */
 name|UINT32
 name|Count
 decl_stmt|;
@@ -2202,6 +2794,24 @@ block|{
 name|ACPI_OBJECT_TYPE
 name|Type
 decl_stmt|;
+comment|/* ACPI_TYPE_LOCAL_REFERENCE */
+name|ACPI_OBJECT_TYPE
+name|ActualType
+decl_stmt|;
+comment|/* Type associated with the Handle */
+name|ACPI_HANDLE
+name|Handle
+decl_stmt|;
+comment|/* object reference */
+block|}
+name|Reference
+struct|;
+struct|struct
+block|{
+name|ACPI_OBJECT_TYPE
+name|Type
+decl_stmt|;
+comment|/* ACPI_TYPE_PROCESSOR */
 name|UINT32
 name|ProcId
 decl_stmt|;
@@ -2219,6 +2829,7 @@ block|{
 name|ACPI_OBJECT_TYPE
 name|Type
 decl_stmt|;
+comment|/* ACPI_TYPE_POWER */
 name|UINT32
 name|SystemLevel
 decl_stmt|;
@@ -2324,6 +2935,31 @@ value|1
 end_define
 
 begin_comment
+comment|/*  * Predefined Namespace items  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_predefined_names
+block|{
+name|char
+modifier|*
+name|Name
+decl_stmt|;
+name|UINT8
+name|Type
+decl_stmt|;
+name|char
+modifier|*
+name|Val
+decl_stmt|;
+block|}
+name|ACPI_PREDEFINED_NAMES
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Structure and flags for AcpiGetSystemInfo  */
 end_comment
 
@@ -2389,6 +3025,60 @@ block|}
 name|ACPI_SYSTEM_INFO
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*  * System statistics returned by AcpiGetStatistics()  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_statistics
+block|{
+name|UINT32
+name|SciCount
+decl_stmt|;
+name|UINT32
+name|GpeCount
+decl_stmt|;
+name|UINT32
+name|FixedEventCount
+index|[
+name|ACPI_NUM_FIXED_EVENTS
+index|]
+decl_stmt|;
+name|UINT32
+name|MethodCount
+decl_stmt|;
+block|}
+name|ACPI_STATISTICS
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Table Event Types */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_TABLE_EVENT_LOAD
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TABLE_EVENT_UNLOAD
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NUM_TABLE_EVENTS
+value|2
+end_define
 
 begin_comment
 comment|/*  * Types specific to the OS service interfaces  */
@@ -2539,6 +3229,53 @@ function_decl|;
 end_typedef
 
 begin_comment
+comment|/* Table Event handler (Load, LoadTable, etc.) and types */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|ACPI_STATUS
+function_decl|(
+modifier|*
+name|ACPI_TABLE_HANDLER
+function_decl|)
+parameter_list|(
+name|UINT32
+name|Event
+parameter_list|,
+name|void
+modifier|*
+name|Table
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|ACPI_TABLE_LOAD
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TABLE_UNLOAD
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NUM_TABLE_EVENTS
+value|2
+end_define
+
+begin_comment
 comment|/* Address Spaces (For Operation Regions) */
 end_comment
 
@@ -2663,6 +3400,31 @@ define|#
 directive|define
 name|ACPI_INTERRUPT_HANDLED
 value|0x01
+end_define
+
+begin_comment
+comment|/* Length of _HID, _UID, _CID, and UUID values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEVICE_ID_LENGTH
+value|0x09
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MAX_CID_LENGTH
+value|48
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_UUID_LENGTH
+value|16
 end_define
 
 begin_comment
@@ -2861,6 +3623,10 @@ block|{
 name|ACPI_COMMON_OBJ_INFO
 expr_stmt|;
 name|UINT32
+name|ParamCount
+decl_stmt|;
+comment|/* If a method, required parameter count */
+name|UINT32
 name|Valid
 decl_stmt|;
 comment|/* Indicates which fields below are valid */
@@ -2949,1242 +3715,63 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Definitions for Resource Attributes  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|UINT16
-name|ACPI_RS_LENGTH
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Resource Length field is fixed at 16 bits */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|UINT32
-name|ACPI_RSDESC_SIZE
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Max Resource Descriptor size is (Length+3) = (64K-1)+3 */
-end_comment
-
-begin_comment
-comment|/*  *  Memory Attributes  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_READ_ONLY_MEMORY
-value|(UINT8) 0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_READ_WRITE_MEMORY
-value|(UINT8) 0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_NON_CACHEABLE_MEMORY
-value|(UINT8) 0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_CACHABLE_MEMORY
-value|(UINT8) 0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_WRITE_COMBINING_MEMORY
-value|(UINT8) 0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_PREFETCHABLE_MEMORY
-value|(UINT8) 0x03
-end_define
-
-begin_comment
-comment|/*  *  IO Attributes  *  The ISA IO ranges are:     n000-n0FFh,  n400-n4FFh, n800-n8FFh, nC00-nCFFh.  *  The non-ISA IO ranges are: n100-n3FFh,  n500-n7FFh, n900-nBFFh, nCD0-nFFFh.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_NON_ISA_ONLY_RANGES
-value|(UINT8) 0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_ISA_ONLY_RANGES
-value|(UINT8) 0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_ENTIRE_RANGE
-value|(ACPI_NON_ISA_ONLY_RANGES | ACPI_ISA_ONLY_RANGES)
-end_define
-
-begin_comment
-comment|/* Type of translation - 1=Sparse, 0=Dense */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_SPARSE_TRANSLATION
-value|(UINT8) 0x01
-end_define
-
-begin_comment
-comment|/*  *  IO Port Descriptor Decode  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_DECODE_10
-value|(UINT8) 0x00
-end_define
-
-begin_comment
-comment|/* 10-bit IO address decode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_DECODE_16
-value|(UINT8) 0x01
-end_define
-
-begin_comment
-comment|/* 16-bit IO address decode */
-end_comment
-
-begin_comment
-comment|/*  *  IRQ Attributes  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_LEVEL_SENSITIVE
-value|(UINT8) 0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_EDGE_SENSITIVE
-value|(UINT8) 0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_ACTIVE_HIGH
-value|(UINT8) 0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_ACTIVE_LOW
-value|(UINT8) 0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_EXCLUSIVE
-value|(UINT8) 0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_SHARED
-value|(UINT8) 0x01
-end_define
-
-begin_comment
-comment|/*  *  DMA Attributes  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_COMPATIBILITY
-value|(UINT8) 0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TYPE_A
-value|(UINT8) 0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TYPE_B
-value|(UINT8) 0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TYPE_F
-value|(UINT8) 0x03
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_NOT_BUS_MASTER
-value|(UINT8) 0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BUS_MASTER
-value|(UINT8) 0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TRANSFER_8
-value|(UINT8) 0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TRANSFER_8_16
-value|(UINT8) 0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TRANSFER_16
-value|(UINT8) 0x02
-end_define
-
-begin_comment
-comment|/*  * Start Dependent Functions Priority definitions  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_GOOD_CONFIGURATION
-value|(UINT8) 0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_ACCEPTABLE_CONFIGURATION
-value|(UINT8) 0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_SUB_OPTIMAL_CONFIGURATION
-value|(UINT8) 0x02
-end_define
-
-begin_comment
-comment|/*  *  16, 32 and 64-bit Address Descriptor resource types  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MEMORY_RANGE
-value|(UINT8) 0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_IO_RANGE
-value|(UINT8) 0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BUS_NUMBER_RANGE
-value|(UINT8) 0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_ADDRESS_NOT_FIXED
-value|(UINT8) 0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_ADDRESS_FIXED
-value|(UINT8) 0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_POS_DECODE
-value|(UINT8) 0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_SUB_DECODE
-value|(UINT8) 0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_PRODUCER
-value|(UINT8) 0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_CONSUMER
-value|(UINT8) 0x01
-end_define
-
-begin_comment
-comment|/*  * If possible, pack the following structures to byte alignment  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ACPI_MISALIGNMENT_NOT_SUPPORTED
-end_ifndef
-
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|1
-name|)
-end_pragma
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* UUID data structures for use in vendor-defined resource descriptors */
+comment|/*  * ACPI_MEMORY_LIST is used only if the ACPICA local cache is enabled  */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|acpi_uuid
+name|acpi_memory_list
 block|{
-name|UINT8
-name|Data
-index|[
-name|ACPI_UUID_LENGTH
-index|]
-decl_stmt|;
-block|}
-name|ACPI_UUID
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_vendor_uuid
-block|{
-name|UINT8
-name|Subtype
-decl_stmt|;
-name|UINT8
-name|Data
-index|[
-name|ACPI_UUID_LENGTH
-index|]
-decl_stmt|;
-block|}
-name|ACPI_VENDOR_UUID
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  *  Structures used to describe device resources  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_resource_irq
-block|{
-name|UINT8
-name|Triggering
-decl_stmt|;
-name|UINT8
-name|Polarity
-decl_stmt|;
-name|UINT8
-name|Sharable
-decl_stmt|;
-name|UINT8
-name|InterruptCount
-decl_stmt|;
-name|UINT8
-name|Interrupts
-index|[
-literal|1
-index|]
-decl_stmt|;
-block|}
-name|ACPI_RESOURCE_IRQ
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|ACPI_RESOURCE_DMA
-block|{
-name|UINT8
-name|Type
-decl_stmt|;
-name|UINT8
-name|BusMaster
-decl_stmt|;
-name|UINT8
-name|Transfer
-decl_stmt|;
-name|UINT8
-name|ChannelCount
-decl_stmt|;
-name|UINT8
-name|Channels
-index|[
-literal|1
-index|]
-decl_stmt|;
-block|}
-name|ACPI_RESOURCE_DMA
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_resource_start_dependent
-block|{
-name|UINT8
-name|CompatibilityPriority
-decl_stmt|;
-name|UINT8
-name|PerformanceRobustness
-decl_stmt|;
-block|}
-name|ACPI_RESOURCE_START_DEPENDENT
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * END_DEPENDENT_FUNCTIONS_RESOURCE struct is not  * needed because it has no fields  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_resource_io
-block|{
-name|UINT8
-name|IoDecode
-decl_stmt|;
-name|UINT8
-name|Alignment
-decl_stmt|;
-name|UINT8
-name|AddressLength
-decl_stmt|;
-name|UINT16
-name|Minimum
-decl_stmt|;
-name|UINT16
-name|Maximum
-decl_stmt|;
-block|}
-name|ACPI_RESOURCE_IO
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_resource_fixed_io
-block|{
-name|UINT16
-name|Address
-decl_stmt|;
-name|UINT8
-name|AddressLength
-decl_stmt|;
-block|}
-name|ACPI_RESOURCE_FIXED_IO
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_resource_vendor
-block|{
-name|UINT16
-name|ByteLength
-decl_stmt|;
-name|UINT8
-name|ByteData
-index|[
-literal|1
-index|]
-decl_stmt|;
-block|}
-name|ACPI_RESOURCE_VENDOR
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Vendor resource with UUID info (introduced in ACPI 3.0) */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_resource_vendor_typed
-block|{
-name|UINT16
-name|ByteLength
-decl_stmt|;
-name|UINT8
-name|UuidSubtype
-decl_stmt|;
-name|UINT8
-name|Uuid
-index|[
-name|ACPI_UUID_LENGTH
-index|]
-decl_stmt|;
-name|UINT8
-name|ByteData
-index|[
-literal|1
-index|]
-decl_stmt|;
-block|}
-name|ACPI_RESOURCE_VENDOR_TYPED
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_resource_end_tag
-block|{
-name|UINT8
-name|Checksum
-decl_stmt|;
-block|}
-name|ACPI_RESOURCE_END_TAG
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_resource_memory24
-block|{
-name|UINT8
-name|WriteProtect
-decl_stmt|;
-name|UINT16
-name|Minimum
-decl_stmt|;
-name|UINT16
-name|Maximum
-decl_stmt|;
-name|UINT16
-name|Alignment
-decl_stmt|;
-name|UINT16
-name|AddressLength
-decl_stmt|;
-block|}
-name|ACPI_RESOURCE_MEMORY24
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_resource_memory32
-block|{
-name|UINT8
-name|WriteProtect
-decl_stmt|;
-name|UINT32
-name|Minimum
-decl_stmt|;
-name|UINT32
-name|Maximum
-decl_stmt|;
-name|UINT32
-name|Alignment
-decl_stmt|;
-name|UINT32
-name|AddressLength
-decl_stmt|;
-block|}
-name|ACPI_RESOURCE_MEMORY32
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_resource_fixed_memory32
-block|{
-name|UINT8
-name|WriteProtect
-decl_stmt|;
-name|UINT32
-name|Address
-decl_stmt|;
-name|UINT32
-name|AddressLength
-decl_stmt|;
-block|}
-name|ACPI_RESOURCE_FIXED_MEMORY32
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_memory_attribute
-block|{
-name|UINT8
-name|WriteProtect
-decl_stmt|;
-name|UINT8
-name|Caching
-decl_stmt|;
-name|UINT8
-name|RangeType
-decl_stmt|;
-name|UINT8
-name|Translation
-decl_stmt|;
-block|}
-name|ACPI_MEMORY_ATTRIBUTE
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_io_attribute
-block|{
-name|UINT8
-name|RangeType
-decl_stmt|;
-name|UINT8
-name|Translation
-decl_stmt|;
-name|UINT8
-name|TranslationType
-decl_stmt|;
-name|UINT8
-name|Reserved1
-decl_stmt|;
-block|}
-name|ACPI_IO_ATTRIBUTE
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-union|union
-name|acpi_resource_attribute
-block|{
-name|ACPI_MEMORY_ATTRIBUTE
-name|Mem
-decl_stmt|;
-name|ACPI_IO_ATTRIBUTE
-name|Io
-decl_stmt|;
-comment|/* Used for the *WordSpace macros */
-name|UINT8
-name|TypeSpecific
-decl_stmt|;
-block|}
-name|ACPI_RESOURCE_ATTRIBUTE
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_resource_source
-block|{
-name|UINT8
-name|Index
-decl_stmt|;
-name|UINT16
-name|StringLength
-decl_stmt|;
 name|char
 modifier|*
-name|StringPtr
+name|ListName
 decl_stmt|;
-block|}
-name|ACPI_RESOURCE_SOURCE
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Fields common to all address descriptors, 16/32/64 bit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_RESOURCE_ADDRESS_COMMON
-define|\
-value|UINT8                           ResourceType; \     UINT8                           ProducerConsumer; \     UINT8                           Decode; \     UINT8                           MinAddressFixed; \     UINT8                           MaxAddressFixed; \     ACPI_RESOURCE_ATTRIBUTE         Info;
-end_define
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_resource_address
-block|{
-name|ACPI_RESOURCE_ADDRESS_COMMON
-block|}
-name|ACPI_RESOURCE_ADDRESS
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_resource_address16
-block|{
-name|ACPI_RESOURCE_ADDRESS_COMMON
-name|UINT16
-name|Granularity
+name|void
+modifier|*
+name|ListHead
 decl_stmt|;
 name|UINT16
-name|Minimum
+name|ObjectSize
 decl_stmt|;
 name|UINT16
-name|Maximum
+name|MaxDepth
 decl_stmt|;
 name|UINT16
-name|TranslationOffset
+name|CurrentDepth
 decl_stmt|;
 name|UINT16
-name|AddressLength
+name|LinkOffset
 decl_stmt|;
-name|ACPI_RESOURCE_SOURCE
-name|ResourceSource
+ifdef|#
+directive|ifdef
+name|ACPI_DBG_TRACK_ALLOCATIONS
+comment|/* Statistics for debug memory tracking only */
+name|UINT32
+name|TotalAllocated
 decl_stmt|;
+name|UINT32
+name|TotalFreed
+decl_stmt|;
+name|UINT32
+name|MaxOccupied
+decl_stmt|;
+name|UINT32
+name|TotalSize
+decl_stmt|;
+name|UINT32
+name|CurrentTotalSize
+decl_stmt|;
+name|UINT32
+name|Requests
+decl_stmt|;
+name|UINT32
+name|Hits
+decl_stmt|;
+endif|#
+directive|endif
 block|}
-name|ACPI_RESOURCE_ADDRESS16
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_resource_address32
-block|{
-name|ACPI_RESOURCE_ADDRESS_COMMON
-name|UINT32
-name|Granularity
-decl_stmt|;
-name|UINT32
-name|Minimum
-decl_stmt|;
-name|UINT32
-name|Maximum
-decl_stmt|;
-name|UINT32
-name|TranslationOffset
-decl_stmt|;
-name|UINT32
-name|AddressLength
-decl_stmt|;
-name|ACPI_RESOURCE_SOURCE
-name|ResourceSource
-decl_stmt|;
-block|}
-name|ACPI_RESOURCE_ADDRESS32
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_resource_address64
-block|{
-name|ACPI_RESOURCE_ADDRESS_COMMON
-name|UINT64
-name|Granularity
-decl_stmt|;
-name|UINT64
-name|Minimum
-decl_stmt|;
-name|UINT64
-name|Maximum
-decl_stmt|;
-name|UINT64
-name|TranslationOffset
-decl_stmt|;
-name|UINT64
-name|AddressLength
-decl_stmt|;
-name|ACPI_RESOURCE_SOURCE
-name|ResourceSource
-decl_stmt|;
-block|}
-name|ACPI_RESOURCE_ADDRESS64
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_resource_extended_address64
-block|{
-name|ACPI_RESOURCE_ADDRESS_COMMON
-name|UINT8
-name|RevisionID
-decl_stmt|;
-name|UINT64
-name|Granularity
-decl_stmt|;
-name|UINT64
-name|Minimum
-decl_stmt|;
-name|UINT64
-name|Maximum
-decl_stmt|;
-name|UINT64
-name|TranslationOffset
-decl_stmt|;
-name|UINT64
-name|AddressLength
-decl_stmt|;
-name|UINT64
-name|TypeSpecific
-decl_stmt|;
-block|}
-name|ACPI_RESOURCE_EXTENDED_ADDRESS64
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_resource_extended_irq
-block|{
-name|UINT8
-name|ProducerConsumer
-decl_stmt|;
-name|UINT8
-name|Triggering
-decl_stmt|;
-name|UINT8
-name|Polarity
-decl_stmt|;
-name|UINT8
-name|Sharable
-decl_stmt|;
-name|UINT8
-name|InterruptCount
-decl_stmt|;
-name|ACPI_RESOURCE_SOURCE
-name|ResourceSource
-decl_stmt|;
-name|UINT32
-name|Interrupts
-index|[
-literal|1
-index|]
-decl_stmt|;
-block|}
-name|ACPI_RESOURCE_EXTENDED_IRQ
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_resource_generic_register
-block|{
-name|UINT8
-name|SpaceId
-decl_stmt|;
-name|UINT8
-name|BitWidth
-decl_stmt|;
-name|UINT8
-name|BitOffset
-decl_stmt|;
-name|UINT8
-name|AccessSize
-decl_stmt|;
-name|UINT64
-name|Address
-decl_stmt|;
-block|}
-name|ACPI_RESOURCE_GENERIC_REGISTER
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* ACPI_RESOURCE_TYPEs */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_RESOURCE_TYPE_IRQ
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_RESOURCE_TYPE_DMA
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_RESOURCE_TYPE_START_DEPENDENT
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_RESOURCE_TYPE_END_DEPENDENT
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_RESOURCE_TYPE_IO
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_RESOURCE_TYPE_FIXED_IO
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_RESOURCE_TYPE_VENDOR
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_RESOURCE_TYPE_END_TAG
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_RESOURCE_TYPE_MEMORY24
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_RESOURCE_TYPE_MEMORY32
-value|9
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_RESOURCE_TYPE_FIXED_MEMORY32
-value|10
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_RESOURCE_TYPE_ADDRESS16
-value|11
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_RESOURCE_TYPE_ADDRESS32
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_RESOURCE_TYPE_ADDRESS64
-value|13
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_RESOURCE_TYPE_EXTENDED_ADDRESS64
-value|14
-end_define
-
-begin_comment
-comment|/* ACPI 3.0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_RESOURCE_TYPE_EXTENDED_IRQ
-value|15
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_RESOURCE_TYPE_GENERIC_REGISTER
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_RESOURCE_TYPE_MAX
-value|16
-end_define
-
-begin_typedef
-typedef|typedef
-union|union
-name|acpi_resource_data
-block|{
-name|ACPI_RESOURCE_IRQ
-name|Irq
-decl_stmt|;
-name|ACPI_RESOURCE_DMA
-name|Dma
-decl_stmt|;
-name|ACPI_RESOURCE_START_DEPENDENT
-name|StartDpf
-decl_stmt|;
-name|ACPI_RESOURCE_IO
-name|Io
-decl_stmt|;
-name|ACPI_RESOURCE_FIXED_IO
-name|FixedIo
-decl_stmt|;
-name|ACPI_RESOURCE_VENDOR
-name|Vendor
-decl_stmt|;
-name|ACPI_RESOURCE_VENDOR_TYPED
-name|VendorTyped
-decl_stmt|;
-name|ACPI_RESOURCE_END_TAG
-name|EndTag
-decl_stmt|;
-name|ACPI_RESOURCE_MEMORY24
-name|Memory24
-decl_stmt|;
-name|ACPI_RESOURCE_MEMORY32
-name|Memory32
-decl_stmt|;
-name|ACPI_RESOURCE_FIXED_MEMORY32
-name|FixedMemory32
-decl_stmt|;
-name|ACPI_RESOURCE_ADDRESS16
-name|Address16
-decl_stmt|;
-name|ACPI_RESOURCE_ADDRESS32
-name|Address32
-decl_stmt|;
-name|ACPI_RESOURCE_ADDRESS64
-name|Address64
-decl_stmt|;
-name|ACPI_RESOURCE_EXTENDED_ADDRESS64
-name|ExtAddress64
-decl_stmt|;
-name|ACPI_RESOURCE_EXTENDED_IRQ
-name|ExtendedIrq
-decl_stmt|;
-name|ACPI_RESOURCE_GENERIC_REGISTER
-name|GenericReg
-decl_stmt|;
-comment|/* Common fields */
-name|ACPI_RESOURCE_ADDRESS
-name|Address
-decl_stmt|;
-comment|/* Common 16/32/64 address fields */
-block|}
-name|ACPI_RESOURCE_DATA
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_resource
-block|{
-name|UINT32
-name|Type
-decl_stmt|;
-name|UINT32
-name|Length
-decl_stmt|;
-name|ACPI_RESOURCE_DATA
-name|Data
-decl_stmt|;
-block|}
-name|ACPI_RESOURCE
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* restore default alignment */
-end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|)
-end_pragma
-
-begin_define
-define|#
-directive|define
-name|ACPI_RS_SIZE_MIN
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_RS_SIZE_NO_DATA
-value|8
-end_define
-
-begin_comment
-comment|/* Id + Length fields */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_RS_SIZE
-parameter_list|(
-name|Type
-parameter_list|)
-value|(UINT32) (ACPI_RS_SIZE_NO_DATA + sizeof (Type))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_NEXT_RESOURCE
-parameter_list|(
-name|Res
-parameter_list|)
-value|(ACPI_RESOURCE *)((UINT8 *) Res + Res->Length)
-end_define
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_pci_routing_table
-block|{
-name|UINT32
-name|Length
-decl_stmt|;
-name|UINT32
-name|Pin
-decl_stmt|;
-name|ACPI_INTEGER
-name|Address
-decl_stmt|;
-comment|/* here for 64-bit alignment */
-name|UINT32
-name|SourceIndex
-decl_stmt|;
-name|char
-name|Source
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* pad to 64 bits so sizeof() works in all cases */
-block|}
-name|ACPI_PCI_ROUTING_TABLE
+name|ACPI_MEMORY_LIST
 typedef|;
 end_typedef
 

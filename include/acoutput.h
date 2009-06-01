@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acoutput.h -- debug output  *       $Revision: 1.101 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acoutput.h -- debug output  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2009, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_ifndef
@@ -20,7 +20,7 @@ name|__ACOUTPUT_H__
 end_define
 
 begin_comment
-comment|/*  * Debug levels and component IDs.  These are used to control the  * granularity of the output of the DEBUG_PRINT macro -- on a per-  * component basis and a per-exception-type basis.  */
+comment|/*  * Debug levels and component IDs. These are used to control the  * granularity of the output of the ACPI_DEBUG_PRINT macro -- on a  * per-component basis and a per-exception-type basis.  */
 end_comment
 
 begin_comment
@@ -132,8 +132,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_EXAMPLE
+value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DRIVER
+value|0x00008000
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_ALL_COMPONENTS
-value|0x00003FFF
+value|0x0000FFFF
 end_define
 
 begin_define
@@ -155,49 +169,35 @@ value|0xFFFF0000
 end_define
 
 begin_comment
-comment|/*  * Raw debug output levels, do not use these in the DEBUG_PRINT macros  */
+comment|/*  * Raw debug output levels, do not use these in the ACPI_DEBUG_PRINT macros  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_LV_ERROR
+name|ACPI_LV_INIT
 value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_LV_WARN
+name|ACPI_LV_DEBUG_OBJECT
 value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_LV_INIT
+name|ACPI_LV_INFO
 value|0x00000004
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_LV_DEBUG_OBJECT
-value|0x00000008
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_LV_INFO
-value|0x00000010
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_LV_ALL_EXCEPTIONS
-value|0x0000001F
+value|0x00000007
 end_define
 
 begin_comment
@@ -441,7 +441,7 @@ value|(UINT32) dl,ACPI_DEBUG_PARAMETERS
 end_define
 
 begin_comment
-comment|/* Exception level -- used in the global "DebugLevel" */
+comment|/*  * Exception level -- used in the global "DebugLevel"  *  * Note: For errors, use the ACPI_ERROR or ACPI_EXCEPTION interfaces.  * For warnings, use ACPI_WARNING.  */
 end_comment
 
 begin_define
@@ -470,24 +470,6 @@ define|#
 directive|define
 name|ACPI_DB_ALL_EXCEPTIONS
 value|ACPI_DEBUG_LEVEL (ACPI_LV_ALL_EXCEPTIONS)
-end_define
-
-begin_comment
-comment|/*  * These two levels are essentially obsolete, all instances in the  * ACPICA core code have been replaced by ACPI_ERROR and ACPI_WARNING  * (Kept here because some drivers may still use them)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_DB_ERROR
-value|ACPI_DEBUG_LEVEL (ACPI_LV_ERROR)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DB_WARN
-value|ACPI_DEBUG_LEVEL (ACPI_LV_WARN)
 end_define
 
 begin_comment
@@ -644,6 +626,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_DB_EVENTS
+value|ACPI_DEBUG_LEVEL (ACPI_LV_EVENTS)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_DB_ALL
 value|ACPI_DEBUG_LEVEL (ACPI_LV_ALL)
 end_define
@@ -656,14 +645,14 @@ begin_define
 define|#
 directive|define
 name|ACPI_DEBUG_DEFAULT
-value|(ACPI_LV_INIT | ACPI_LV_WARN | ACPI_LV_ERROR | ACPI_LV_DEBUG_OBJECT)
+value|(ACPI_LV_INIT | ACPI_LV_DEBUG_OBJECT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_NORMAL_DEFAULT
-value|(ACPI_LV_INIT | ACPI_LV_WARN | ACPI_LV_ERROR | ACPI_LV_DEBUG_OBJECT)
+value|(ACPI_LV_INIT | ACPI_LV_DEBUG_OBJECT)
 end_define
 
 begin_define
@@ -672,6 +661,317 @@ directive|define
 name|ACPI_DEBUG_ALL
 value|(ACPI_LV_AML_DISASSEMBLE | ACPI_LV_ALL_EXCEPTIONS | ACPI_LV_ALL)
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ACPI_DEBUG_OUTPUT
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|ACPI_NO_ERROR_MESSAGES
+argument_list|)
+end_if
+
+begin_comment
+comment|/*  * Module name is included in both debug and non-debug versions primarily for  * error messages. The __FILE__ macro is not very useful for this, because it  * often includes the entire pathname to the module  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_MODULE_NAME
+parameter_list|(
+name|Name
+parameter_list|)
+value|static const char ACPI_UNUSED_VAR _AcpiModuleName[] = Name;
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ACPI_MODULE_NAME
+parameter_list|(
+name|Name
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Ascii error messages can be configured out  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_NO_ERROR_MESSAGES
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|AE_INFO
+value|_AcpiModuleName, __LINE__
+end_define
+
+begin_comment
+comment|/*  * Error reporting. Callers module and line number are inserted by AE_INFO,  * the plist contains a set of parens to allow variable-length lists.  * These macros are used for both the debug and non-debug versions of the code.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_INFO
+parameter_list|(
+name|plist
+parameter_list|)
+value|AcpiInfo plist
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_WARNING
+parameter_list|(
+name|plist
+parameter_list|)
+value|AcpiWarning plist
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXCEPTION
+parameter_list|(
+name|plist
+parameter_list|)
+value|AcpiException plist
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ERROR
+parameter_list|(
+name|plist
+parameter_list|)
+value|AcpiError plist
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* No error messages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_INFO
+parameter_list|(
+name|plist
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_WARNING
+parameter_list|(
+name|plist
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXCEPTION
+parameter_list|(
+name|plist
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ERROR
+parameter_list|(
+name|plist
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_NO_ERROR_MESSAGES */
+end_comment
+
+begin_comment
+comment|/*  * Debug macros that are conditionally compiled  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUG_OUTPUT
+end_ifdef
+
+begin_comment
+comment|/*  * If ACPI_GET_FUNCTION_NAME was not defined in the compiler-dependent header,  * define it now. This is the case where there the compiler does not support  * a __FUNCTION__ macro or equivalent.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_GET_FUNCTION_NAME
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_GET_FUNCTION_NAME
+value|_AcpiFunctionName
+end_define
+
+begin_comment
+comment|/*  * The Name parameter should be the procedure name as a quoted string.  * The function name is also used by the function exit macros below.  * Note: (const char) is used to be compatible with the debug interfaces  * and macros such as __FUNCTION__.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_FUNCTION_NAME
+parameter_list|(
+name|Name
+parameter_list|)
+value|static const char _AcpiFunctionName[] = #Name;
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Compiler supports __FUNCTION__ (or equivalent) -- Ignore this macro */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_FUNCTION_NAME
+parameter_list|(
+name|Name
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_GET_FUNCTION_NAME */
+end_comment
+
+begin_comment
+comment|/*  * Common parameters used for debug output functions:  * line number, function name, module(file) name, component ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEBUG_PARAMETERS
+value|__LINE__, ACPI_GET_FUNCTION_NAME, _AcpiModuleName, _COMPONENT
+end_define
+
+begin_comment
+comment|/*  * Master debug print macros  * Print message if and only if:  *    1) Debug print for the current component is enabled  *    2) Debug error level or trace level for the print statement is enabled  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEBUG_PRINT
+parameter_list|(
+name|plist
+parameter_list|)
+value|AcpiDebugPrint plist
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEBUG_PRINT_RAW
+parameter_list|(
+name|plist
+parameter_list|)
+value|AcpiDebugPrintRaw plist
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*  * This is the non-debug case -- make everything go away,  * leaving no executable debug code!  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_FUNCTION_NAME
+parameter_list|(
+name|a
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEBUG_PRINT
+parameter_list|(
+name|pl
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEBUG_PRINT_RAW
+parameter_list|(
+name|pl
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_DEBUG_OUTPUT */
+end_comment
 
 begin_endif
 endif|#

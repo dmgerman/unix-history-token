@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 1.247 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2009, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_ifndef
@@ -22,24 +22,6 @@ end_define
 begin_comment
 comment|/* acpisrc:StructDefs -- for acpisrc conversion */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_WAIT_FOREVER
-value|0xFFFF
-end_define
-
-begin_comment
-comment|/* UINT16, as per ACPI spec */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_DO_NOT_WAIT
-value|0
-end_define
 
 begin_define
 define|#
@@ -241,9 +223,9 @@ init|=
 block|{
 literal|"ACPI_MTX_Interpreter"
 block|,
-literal|"ACPI_MTX_Tables"
-block|,
 literal|"ACPI_MTX_Namespace"
+block|,
+literal|"ACPI_MTX_Tables"
 block|,
 literal|"ACPI_MTX_Events"
 block|,
@@ -267,6 +249,29 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Lock structure for reader/writer interfaces */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_rw_lock
+block|{
+name|ACPI_MUTEX
+name|WriterMutex
+decl_stmt|;
+name|ACPI_MUTEX
+name|ReaderMutex
+decl_stmt|;
+name|UINT32
+name|NumReaders
+decl_stmt|;
+block|}
+name|ACPI_RW_LOCK
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * Predefined handles for spinlocks used within the subsystem.  * These spinlocks are created by AcpiUtMutexInitialize  */
@@ -301,24 +306,6 @@ value|ACPI_MAX_LOCK+1
 end_define
 
 begin_comment
-comment|/* Owner IDs are used to track namespace nodes for selective deletion */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|UINT8
-name|ACPI_OWNER_ID
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|ACPI_OWNER_ID_MAX
-value|0xFF
-end_define
-
-begin_comment
 comment|/* This Thread ID means that the mutex is not in use (unlocked) */
 end_comment
 
@@ -326,7 +313,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_MUTEX_NOT_ACQUIRED
-value|(UINT32) -1
+value|(ACPI_THREAD_ID) -1
 end_define
 
 begin_comment
@@ -434,25 +421,6 @@ init|=
 literal|0x03
 block|}
 name|ACPI_INTERPRETER_MODE
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-union|union
-name|acpi_name_union
-block|{
-name|UINT32
-name|Integer
-decl_stmt|;
-name|char
-name|Ascii
-index|[
-literal|4
-index|]
-decl_stmt|;
-block|}
-name|ACPI_NAME_UNION
 typedef|;
 end_typedef
 
@@ -587,6 +555,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ANOBJ_EVALUATED
+value|0x20
+end_define
+
+begin_comment
+comment|/* Set on first evaluation of node */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ANOBJ_ALLOCATED_BUFFER
+value|0x40
+end_define
+
+begin_comment
+comment|/* Method AML buffer is dynamic (InstallMethod) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ANOBJ_IS_EXTERNAL
 value|0x08
 end_define
@@ -638,79 +628,6 @@ end_define
 begin_comment
 comment|/* iASL only: Object was referenced */
 end_comment
-
-begin_comment
-comment|/*  * ACPI Table Descriptor.  One per ACPI table  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_table_desc
-block|{
-name|ACPI_PHYSICAL_ADDRESS
-name|Address
-decl_stmt|;
-name|ACPI_TABLE_HEADER
-modifier|*
-name|Pointer
-decl_stmt|;
-name|UINT32
-name|Length
-decl_stmt|;
-comment|/* Length fixed at 32 bits */
-name|ACPI_NAME_UNION
-name|Signature
-decl_stmt|;
-name|ACPI_OWNER_ID
-name|OwnerId
-decl_stmt|;
-name|UINT8
-name|Flags
-decl_stmt|;
-block|}
-name|ACPI_TABLE_DESC
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Flags for above */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_TABLE_ORIGIN_UNKNOWN
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TABLE_ORIGIN_MAPPED
-value|(1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TABLE_ORIGIN_ALLOCATED
-value|(2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TABLE_ORIGIN_MASK
-value|(3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TABLE_IS_LOADED
-value|(4)
-end_define
 
 begin_comment
 comment|/* One internal RSDT for table management */
@@ -823,31 +740,6 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Predefined Namespace items  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_predefined_names
-block|{
-name|char
-modifier|*
-name|Name
-decl_stmt|;
-name|UINT8
-name|Type
-decl_stmt|;
-name|char
-modifier|*
-name|Val
-decl_stmt|;
-block|}
-name|ACPI_PREDEFINED_NAMES
-typedef|;
-end_typedef
-
-begin_comment
 comment|/* Object types used during package copies */
 end_comment
 
@@ -874,10 +766,12 @@ typedef|typedef
 struct|struct
 name|acpi_namestring_info
 block|{
+specifier|const
 name|char
 modifier|*
 name|ExternalName
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|NextExternalChar
@@ -1151,6 +1045,219 @@ value|0x0000FFFF
 end_define
 
 begin_comment
+comment|/*  * Information structure for ACPI predefined names.  * Each entry in the table contains the following items:  *  * Name                 - The ACPI reserved name  * ParamCount           - Number of arguments to the method  * ExpectedReturnBtypes - Allowed type(s) for the return value  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_name_info
+block|{
+name|char
+name|Name
+index|[
+name|ACPI_NAME_SIZE
+index|]
+decl_stmt|;
+name|UINT8
+name|ParamCount
+decl_stmt|;
+name|UINT8
+name|ExpectedBtypes
+decl_stmt|;
+block|}
+name|ACPI_NAME_INFO
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Secondary information structures for ACPI predefined objects that return  * package objects. This structure appears as the next entry in the table  * after the NAME_INFO structure above.  *  * The reason for this is to minimize the size of the predefined name table.  */
+end_comment
+
+begin_comment
+comment|/*  * Used for ACPI_PTYPE1_FIXED, ACPI_PTYPE1_VAR, ACPI_PTYPE2,  * ACPI_PTYPE2_MIN, ACPI_PTYPE2_PKG_COUNT, ACPI_PTYPE2_COUNT  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_package_info
+block|{
+name|UINT8
+name|Type
+decl_stmt|;
+name|UINT8
+name|ObjectType1
+decl_stmt|;
+name|UINT8
+name|Count1
+decl_stmt|;
+name|UINT8
+name|ObjectType2
+decl_stmt|;
+name|UINT8
+name|Count2
+decl_stmt|;
+name|UINT8
+name|Reserved
+decl_stmt|;
+block|}
+name|ACPI_PACKAGE_INFO
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Used for ACPI_PTYPE2_FIXED */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_package_info2
+block|{
+name|UINT8
+name|Type
+decl_stmt|;
+name|UINT8
+name|Count
+decl_stmt|;
+name|UINT8
+name|ObjectType
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+name|ACPI_PACKAGE_INFO2
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Used for ACPI_PTYPE1_OPTION */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_package_info3
+block|{
+name|UINT8
+name|Type
+decl_stmt|;
+name|UINT8
+name|Count
+decl_stmt|;
+name|UINT8
+name|ObjectType
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|UINT8
+name|TailObjectType
+decl_stmt|;
+name|UINT8
+name|Reserved
+decl_stmt|;
+block|}
+name|ACPI_PACKAGE_INFO3
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+union|union
+name|acpi_predefined_info
+block|{
+name|ACPI_NAME_INFO
+name|Info
+decl_stmt|;
+name|ACPI_PACKAGE_INFO
+name|RetInfo
+decl_stmt|;
+name|ACPI_PACKAGE_INFO2
+name|RetInfo2
+decl_stmt|;
+name|ACPI_PACKAGE_INFO3
+name|RetInfo3
+decl_stmt|;
+block|}
+name|ACPI_PREDEFINED_INFO
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Bitmapped return value types  * Note: the actual data types must be contiguous, a loop in nspredef.c  * depends on this.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_RTYPE_ANY
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RTYPE_NONE
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RTYPE_INTEGER
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RTYPE_STRING
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RTYPE_BUFFER
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RTYPE_PACKAGE
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RTYPE_REFERENCE
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RTYPE_ALL
+value|0x3F
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NUM_RTYPES
+value|5
+end_define
+
+begin_comment
+comment|/* Number of actual object types */
+end_comment
+
+begin_comment
 comment|/*****************************************************************************  *  * Event typedefs and structs  *  ****************************************************************************/
 end_comment
 
@@ -1378,6 +1485,29 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+struct|struct
+name|acpi_gpe_device_info
+block|{
+name|UINT32
+name|Index
+decl_stmt|;
+name|UINT32
+name|NextBlockBaseIndex
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|GpeDevice
+decl_stmt|;
+block|}
+name|ACPI_GPE_DEVICE_INFO
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|ACPI_STATUS
 function_decl|(
 modifier|*
@@ -1391,6 +1521,10 @@ parameter_list|,
 name|ACPI_GPE_BLOCK_INFO
 modifier|*
 name|GpeBlock
+parameter_list|,
+name|void
+modifier|*
+name|Context
 parameter_list|)
 function_decl|;
 end_typedef
@@ -1615,6 +1749,10 @@ modifier|*
 name|PackageEnd
 decl_stmt|;
 comment|/* End of if/while block */
+name|UINT32
+name|LoopCount
+decl_stmt|;
+comment|/* While() loop counter */
 block|}
 name|ACPI_CONTROL_STATE
 typedef|;
@@ -1957,6 +2095,41 @@ block|}
 name|ACPI_PARSE_VALUE
 typedef|;
 end_typedef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_DISASSEMBLER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_DISASM_ONLY_MEMBERS
+parameter_list|(
+name|a
+parameter_list|)
+value|a;
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ACPI_DISASM_ONLY_MEMBERS
+parameter_list|(
+name|a
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -2381,20 +2554,6 @@ begin_comment
 comment|/*****************************************************************************  *  * Hardware (ACPI registers) and PNP  *  ****************************************************************************/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PCI_ROOT_HID_STRING
-value|"PNP0A03"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_EXPRESS_ROOT_HID_STRING
-value|"PNP0A08"
-end_define
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -2429,15 +2588,68 @@ begin_comment
 comment|/* Bit 11 */
 end_comment
 
+begin_comment
+comment|/* Write-only bits must be zeroed by software */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PM1_CONTROL_WRITEONLY_BITS
+value|0x2004
+end_define
+
+begin_comment
+comment|/* Bits 13, 2 */
+end_comment
+
+begin_comment
+comment|/* For control registers, both ignored and reserved bits must be preserved */
+end_comment
+
+begin_comment
+comment|/*  * For PM1 control, the SCI enable bit (bit 0, SCI_EN) is defined by the  * ACPI specification to be a "preserved" bit - "OSPM always preserves this  * bit position", section 4.7.3.2.1. However, on some machines the OS must  * write a one to this bit after resume for the machine to work properly.  * To enable this, we no longer attempt to preserve this bit. No machines  * are known to fail if the bit is not preserved. (May 2009)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PM1_CONTROL_IGNORED_BITS
+value|0x0200
+end_define
+
+begin_comment
+comment|/* Bit 9 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PM1_CONTROL_RESERVED_BITS
+value|0xC1F8
+end_define
+
+begin_comment
+comment|/* Bits 14-15, 3-8 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ACPI_PM1_CONTROL_PRESERVED_BITS
-value|0x0201
+define|\
+value|(ACPI_PM1_CONTROL_IGNORED_BITS | ACPI_PM1_CONTROL_RESERVED_BITS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PM2_CONTROL_PRESERVED_BITS
+value|0xFFFFFFFE
 end_define
 
 begin_comment
-comment|/* Bit 9, Bit 0 (SCI_EN) */
+comment|/* All except bit 0 */
 end_comment
 
 begin_comment
@@ -2468,43 +2680,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_REGISTER_PM1A_CONTROL
+name|ACPI_REGISTER_PM2_CONTROL
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_REGISTER_PM1B_CONTROL
+name|ACPI_REGISTER_PM_TIMER
 value|0x05
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_REGISTER_PM2_CONTROL
+name|ACPI_REGISTER_PROCESSOR_BLOCK
 value|0x06
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_REGISTER_PM_TIMER
-value|0x07
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_REGISTER_PROCESSOR_BLOCK
-value|0x08
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_REGISTER_SMI_COMMAND_BLOCK
-value|0x09
+value|0x07
 end_define
 
 begin_comment
@@ -2648,7 +2846,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_BITMASK_SLEEP_TYPE_X
+name|ACPI_BITMASK_SLEEP_TYPE
 value|0x1C00
 end_define
 
@@ -2800,7 +2998,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_BITPOSITION_SLEEP_TYPE_X
+name|ACPI_BITPOSITION_SLEEP_TYPE
 value|0x0A
 end_define
 
@@ -2817,6 +3015,106 @@ directive|define
 name|ACPI_BITPOSITION_ARB_DISABLE
 value|0x00
 end_define
+
+begin_comment
+comment|/* Structs and definitions for _OSI support and I/O port validation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_OSI_WIN_2000
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_OSI_WIN_XP
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_OSI_WIN_XP_SP1
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_OSI_WINSRV_2003
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_OSI_WIN_XP_SP2
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_OSI_WINSRV_2003_SP1
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_OSI_WIN_VISTA
+value|0x07
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ALWAYS_ILLEGAL
+value|0x00
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_interface_info
+block|{
+name|char
+modifier|*
+name|Name
+decl_stmt|;
+name|UINT8
+name|Value
+decl_stmt|;
+block|}
+name|ACPI_INTERFACE_INFO
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_port_info
+block|{
+name|char
+modifier|*
+name|Name
+decl_stmt|;
+name|UINT16
+name|Start
+decl_stmt|;
+name|UINT16
+name|End
+decl_stmt|;
+name|UINT8
+name|OsiDependency
+decl_stmt|;
+block|}
+name|ACPI_PORT_INFO
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*****************************************************************************  *  * Resource descriptors  *  ****************************************************************************/
@@ -3100,6 +3398,9 @@ decl_stmt|;
 name|ACPI_HANDLE
 name|ThreadCompleteGate
 decl_stmt|;
+name|ACPI_HANDLE
+name|InfoGate
+decl_stmt|;
 name|UINT32
 modifier|*
 name|Threads
@@ -3294,63 +3595,6 @@ directive|define
 name|ACPI_NUM_MEM_LISTS
 value|2
 end_define
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_memory_list
-block|{
-name|char
-modifier|*
-name|ListName
-decl_stmt|;
-name|void
-modifier|*
-name|ListHead
-decl_stmt|;
-name|UINT16
-name|ObjectSize
-decl_stmt|;
-name|UINT16
-name|MaxDepth
-decl_stmt|;
-name|UINT16
-name|CurrentDepth
-decl_stmt|;
-name|UINT16
-name|LinkOffset
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ACPI_DBG_TRACK_ALLOCATIONS
-comment|/* Statistics for debug memory tracking only */
-name|UINT32
-name|TotalAllocated
-decl_stmt|;
-name|UINT32
-name|TotalFreed
-decl_stmt|;
-name|UINT32
-name|MaxOccupied
-decl_stmt|;
-name|UINT32
-name|TotalSize
-decl_stmt|;
-name|UINT32
-name|CurrentTotalSize
-decl_stmt|;
-name|UINT32
-name|Requests
-decl_stmt|;
-name|UINT32
-name|Hits
-decl_stmt|;
-endif|#
-directive|endif
-block|}
-name|ACPI_MEMORY_LIST
-typedef|;
-end_typedef
 
 begin_endif
 endif|#

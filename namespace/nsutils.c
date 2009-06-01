@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 1.155 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2009, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"accommon.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"acnamesp.h"
 end_include
 
@@ -29,12 +35,6 @@ begin_include
 include|#
 directive|include
 file|"amlcode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"actables.h"
 end_include
 
 begin_define
@@ -96,6 +96,7 @@ begin_function
 name|void
 name|AcpiNsReportError
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|ModuleName
@@ -103,6 +104,7 @@ parameter_list|,
 name|UINT32
 name|LineNumber
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|InternalName
@@ -145,7 +147,12 @@ argument_list|(
 operator|&
 name|BadName
 argument_list|,
+name|ACPI_CAST_PTR
+argument_list|(
+name|UINT32
+argument_list|,
 name|InternalName
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -231,6 +238,7 @@ begin_function
 name|void
 name|AcpiNsReportMethodError
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|ModuleName
@@ -238,6 +246,7 @@ parameter_list|,
 name|UINT32
 name|LineNumber
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Message
@@ -246,6 +255,7 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|PrefixNode
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Path
@@ -338,6 +348,7 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Message
@@ -606,6 +617,7 @@ modifier|*
 name|Info
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|NextExternalChar
@@ -645,10 +657,8 @@ if|if
 condition|(
 name|AcpiNsValidRootPrefix
 argument_list|(
+operator|*
 name|NextExternalChar
-index|[
-literal|0
-index|]
 argument_list|)
 condition|)
 block|{
@@ -661,10 +671,24 @@ expr_stmt|;
 name|NextExternalChar
 operator|++
 expr_stmt|;
+comment|/* Skip redundant RootPrefix, like \\_SB.PCI0.SBRG.EC0 */
+while|while
+condition|(
+name|AcpiNsValidRootPrefix
+argument_list|(
+operator|*
+name|NextExternalChar
+argument_list|)
+condition|)
+block|{
+name|NextExternalChar
+operator|++
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
-comment|/*          * Handle Carat prefixes          */
+comment|/* Handle Carat prefixes */
 while|while
 condition|(
 operator|*
@@ -785,6 +809,7 @@ name|Info
 operator|->
 name|InternalName
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|ExternalName
@@ -799,7 +824,7 @@ name|Result
 init|=
 name|NULL
 decl_stmt|;
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|i
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
@@ -966,14 +991,12 @@ operator|=
 operator|&
 name|InternalName
 index|[
-call|(
-name|ACPI_NATIVE_UINT
-call|)
-argument_list|(
+operator|(
+name|ACPI_SIZE
+operator|)
 name|i
 operator|+
 literal|1
-argument_list|)
 index|]
 expr_stmt|;
 block|}
@@ -988,14 +1011,12 @@ name|AML_MULTI_NAME_PREFIX_OP
 expr_stmt|;
 name|InternalName
 index|[
-call|(
-name|ACPI_NATIVE_UINT
-call|)
-argument_list|(
+operator|(
+name|ACPI_SIZE
+operator|)
 name|i
 operator|+
 literal|1
-argument_list|)
 index|]
 operator|=
 operator|(
@@ -1008,14 +1029,12 @@ operator|=
 operator|&
 name|InternalName
 index|[
-call|(
-name|ACPI_NATIVE_UINT
-call|)
-argument_list|(
+operator|(
+name|ACPI_SIZE
+operator|)
 name|i
 operator|+
 literal|2
-argument_list|)
 index|]
 expr_stmt|;
 block|}
@@ -1186,6 +1205,7 @@ begin_function
 name|ACPI_STATUS
 name|AcpiNsInternalizeName
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|ExternalName
@@ -1330,6 +1350,7 @@ parameter_list|(
 name|UINT32
 name|InternalNameLength
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|InternalName
@@ -1344,30 +1365,30 @@ modifier|*
 name|ConvertedName
 parameter_list|)
 block|{
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|NamesIndex
 init|=
 literal|0
 decl_stmt|;
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|NumSegments
 init|=
 literal|0
 decl_stmt|;
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|RequiredLength
 decl_stmt|;
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|PrefixLength
 init|=
 literal|0
 decl_stmt|;
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|i
 init|=
 literal|0
 decl_stmt|;
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|j
 init|=
 literal|0
@@ -1395,7 +1416,7 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Check for a prefix (one '\' | one or more '^').      */
+comment|/* Check for a prefix (one '\' | one or more '^') */
 switch|switch
 condition|(
 name|InternalName
@@ -1467,7 +1488,7 @@ break|break;
 default|default:
 break|break;
 block|}
-comment|/*      * Check for object names.  Note that there could be 0-255 of these      * 4-byte elements.      */
+comment|/*      * Check for object names. Note that there could be 0-255 of these      * 4-byte elements.      */
 if|if
 condition|(
 name|PrefixLength
@@ -1496,21 +1517,16 @@ expr_stmt|;
 name|NumSegments
 operator|=
 operator|(
-name|ACPI_NATIVE_UINT
-operator|)
-operator|(
 name|UINT8
 operator|)
 name|InternalName
 index|[
-call|(
-name|ACPI_NATIVE_UINT
-call|)
-argument_list|(
+operator|(
+name|ACPI_SIZE
+operator|)
 name|PrefixLength
 operator|+
 literal|1
-argument_list|)
 index|]
 expr_stmt|;
 break|break;
@@ -1607,7 +1623,7 @@ name|AE_BAD_PATHNAME
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Build ConvertedName      */
+comment|/* Build the ConvertedName */
 operator|*
 name|ConvertedName
 operator|=
@@ -1789,7 +1805,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsMapHandleToNode  *  * PARAMETERS:  Handle          - Handle to be converted to an Node  *  * RETURN:      A Name table entry pointer  *  * DESCRIPTION: Convert a namespace handle to a real Node  *  * Note: Real integer handles would allow for more verification  *       and keep all pointers within this subsystem - however this introduces  *       more (and perhaps unnecessary) overhead.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsMapHandleToNode  *  * PARAMETERS:  Handle          - Handle to be converted to an Node  *  * RETURN:      A Name table entry pointer  *  * DESCRIPTION: Convert a namespace handle to a real Node  *  * Note: Real integer handles would allow for more verification  *       and keep all pointers within this subsystem - however this introduces  *       more (and perhaps unnecessary) overhead.  *  * The current implemenation is basically a placeholder until such time comes  * that it is needed.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1804,7 +1820,7 @@ block|{
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
-comment|/*      * Simple implementation      */
+comment|/* Parameter validation */
 if|if
 condition|(
 operator|(
@@ -2019,6 +2035,7 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|PrefixNode
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Pathname
@@ -2046,7 +2063,12 @@ name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
 name|NsGetNode
 argument_list|,
+name|ACPI_CAST_PTR
+argument_list|(
+name|char
+argument_list|,
 name|Pathname
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2168,7 +2190,7 @@ block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_EXEC
 operator|,
 literal|"%s, %s\n"
 operator|,

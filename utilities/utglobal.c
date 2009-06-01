@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 1.249 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2009, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -28,15 +28,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acnamesp.h"
+file|"accommon.h"
 end_include
 
-begin_macro
-name|ACPI_EXPORT_SYMBOL
-argument_list|(
-argument|AcpiGbl_FADT
-argument_list|)
-end_macro
+begin_include
+include|#
+directive|include
+file|"acnamesp.h"
+end_include
 
 begin_define
 define|#
@@ -422,7 +421,9 @@ begin_decl_stmt
 specifier|const
 name|UINT8
 name|AcpiGbl_NsProperties
-index|[]
+index|[
+name|ACPI_NUM_NS_TYPES
+index|]
 init|=
 block|{
 name|ACPI_NS_NORMAL
@@ -734,15 +735,6 @@ block|,
 name|ACPI_BITMASK_RT_CLOCK_ENABLE
 block|}
 block|,
-comment|/* ACPI_BITREG_WAKE_ENABLE          */
-block|{
-name|ACPI_REGISTER_PM1_ENABLE
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
 comment|/* ACPI_BITREG_PCIEXP_WAKE_DISABLE  */
 block|{
 name|ACPI_REGISTER_PM1_ENABLE
@@ -779,22 +771,13 @@ block|,
 name|ACPI_BITMASK_GLOBAL_LOCK_RELEASE
 block|}
 block|,
-comment|/* ACPI_BITREG_SLEEP_TYPE_A         */
+comment|/* ACPI_BITREG_SLEEP_TYPE           */
 block|{
 name|ACPI_REGISTER_PM1_CONTROL
 block|,
-name|ACPI_BITPOSITION_SLEEP_TYPE_X
+name|ACPI_BITPOSITION_SLEEP_TYPE
 block|,
-name|ACPI_BITMASK_SLEEP_TYPE_X
-block|}
-block|,
-comment|/* ACPI_BITREG_SLEEP_TYPE_B         */
-block|{
-name|ACPI_REGISTER_PM1_CONTROL
-block|,
-name|ACPI_BITPOSITION_SLEEP_TYPE_X
-block|,
-name|ACPI_BITMASK_SLEEP_TYPE_X
+name|ACPI_BITMASK_SLEEP_TYPE
 block|}
 block|,
 comment|/* ACPI_BITREG_SLEEP_ENABLE         */
@@ -912,7 +895,7 @@ literal|"EmbeddedControl"
 block|,
 literal|"SMBus"
 block|,
-literal|"CMOS"
+literal|"SystemCMOS"
 block|,
 literal|"PCIBARTarget"
 block|,
@@ -1240,10 +1223,11 @@ return|return
 operator|(
 name|AcpiUtGetTypeName
 argument_list|(
-name|ACPI_GET_OBJECT_TYPE
-argument_list|(
 name|ObjDesc
-argument_list|)
+operator|->
+name|Common
+operator|.
+name|Type
 argument_list|)
 operator|)
 return|;
@@ -1326,26 +1310,7 @@ literal|"####"
 operator|)
 return|;
 block|}
-comment|/* Name must be a valid ACPI name */
-if|if
-condition|(
-operator|!
-name|AcpiUtValidAcpiName
-argument_list|(
-name|Node
-operator|->
-name|Name
-operator|.
-name|Integer
-argument_list|)
-condition|)
-block|{
-name|Node
-operator|->
-name|Name
-operator|.
-name|Integer
-operator|=
+comment|/*      * Ensure name is valid. The name was validated/repaired when the node      * was created, but make sure it has not been corrupted.      */
 name|AcpiUtRepairName
 argument_list|(
 name|Node
@@ -1355,7 +1320,6 @@ operator|.
 name|Ascii
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Return the name */
 return|return
 operator|(
@@ -1499,6 +1463,135 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtGetReferenceName  *  * PARAMETERS:  Object               - An ACPI reference object  *  * RETURN:      Pointer to a string  *  * DESCRIPTION: Decode a reference object sub-type to a string.  *  ******************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Printable names of reference object sub-types */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_RefClassNames
+index|[]
+init|=
+block|{
+comment|/* 00 */
+literal|"Local"
+block|,
+comment|/* 01 */
+literal|"Argument"
+block|,
+comment|/* 02 */
+literal|"RefOf"
+block|,
+comment|/* 03 */
+literal|"Index"
+block|,
+comment|/* 04 */
+literal|"DdbHandle"
+block|,
+comment|/* 05 */
+literal|"Named Object"
+block|,
+comment|/* 06 */
+literal|"Debug"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|AcpiUtGetReferenceName
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|Object
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|Object
+condition|)
+block|{
+return|return
+operator|(
+literal|"NULL Object"
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|ACPI_GET_DESCRIPTOR_TYPE
+argument_list|(
+name|Object
+argument_list|)
+operator|!=
+name|ACPI_DESC_TYPE_OPERAND
+condition|)
+block|{
+return|return
+operator|(
+literal|"Not an Operand object"
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|Object
+operator|->
+name|Common
+operator|.
+name|Type
+operator|!=
+name|ACPI_TYPE_LOCAL_REFERENCE
+condition|)
+block|{
+return|return
+operator|(
+literal|"Not a Reference object"
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|Object
+operator|->
+name|Reference
+operator|.
+name|Class
+operator|>
+name|ACPI_REFCLASS_MAX
+condition|)
+block|{
+return|return
+operator|(
+literal|"Unknown Reference class"
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|AcpiGbl_RefClassNames
+index|[
+name|Object
+operator|->
+name|Reference
+operator|.
+name|Class
+index|]
+operator|)
+return|;
+block|}
+end_function
+
 begin_if
 if|#
 directive|if
@@ -1554,6 +1647,102 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtGetNotifyName  *  * PARAMETERS:  NotifyValue     - Value from the Notify() request  *  * RETURN:      String corresponding to the Notify Value.  *  * DESCRIPTION: Translate a Notify Value to a notify namestring.  *  ******************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Names for Notify() values, used for debug output */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_NotifyValueNames
+index|[]
+init|=
+block|{
+literal|"Bus Check"
+block|,
+literal|"Device Check"
+block|,
+literal|"Device Wake"
+block|,
+literal|"Eject Request"
+block|,
+literal|"Device Check Light"
+block|,
+literal|"Frequency Mismatch"
+block|,
+literal|"Bus Mode Mismatch"
+block|,
+literal|"Power Fault"
+block|,
+literal|"Capabilities Check"
+block|,
+literal|"Device PLD Check"
+block|,
+literal|"Reserved"
+block|,
+literal|"System Locality Update"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|AcpiUtGetNotifyName
+parameter_list|(
+name|UINT32
+name|NotifyValue
+parameter_list|)
+block|{
+if|if
+condition|(
+name|NotifyValue
+operator|<=
+name|ACPI_NOTIFY_MAX
+condition|)
+block|{
+return|return
+operator|(
+name|AcpiGbl_NotifyValueNames
+index|[
+name|NotifyValue
+index|]
+operator|)
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|NotifyValue
+operator|<=
+name|ACPI_MAX_SYS_NOTIFY
+condition|)
+block|{
+return|return
+operator|(
+literal|"Reserved"
+operator|)
+return|;
+block|}
+else|else
+comment|/* Greater or equal to 0x80 */
+block|{
+return|return
+operator|(
+literal|"**Device Specific**"
+operator|)
+return|;
+block|}
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif
@@ -1594,11 +1783,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtInitGlobals  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Init library globals.  All globals that require specific  *              initialization should be initialized here!  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtInitGlobals  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Init library globals.  All globals that require specific  *              initialization should be initialized here!  *  ******************************************************************************/
 end_comment
 
 begin_function
-name|void
+name|ACPI_STATUS
 name|AcpiUtInitGlobals
 parameter_list|(
 name|void
@@ -1629,7 +1818,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-return|return;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Mutex locked flags */
 for|for
@@ -1696,6 +1889,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* Last OwnerID is never valid */
 name|AcpiGbl_OwnerIdMask
 index|[
 name|ACPI_NUM_OWNERID_MASKS
@@ -1705,12 +1899,42 @@ index|]
 operator|=
 literal|0x80000000
 expr_stmt|;
-comment|/* Last ID is never valid */
-comment|/* GPE support */
+comment|/* Event counters */
+name|AcpiMethodCount
+operator|=
+literal|0
+expr_stmt|;
+name|AcpiSciCount
+operator|=
+literal|0
+expr_stmt|;
 name|AcpiGpeCount
 operator|=
 literal|0
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ACPI_NUM_FIXED_EVENTS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|AcpiFixedEventCount
+index|[
+name|i
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+comment|/* GPE support */
 name|AcpiGbl_GpeXruptListHead
 operator|=
 name|NULL
@@ -1729,7 +1953,11 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Global notify handlers */
+name|AcpiCurrentGpeCount
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Global handlers */
 name|AcpiGbl_SystemNotify
 operator|.
 name|Handler
@@ -1750,6 +1978,10 @@ name|AcpiGbl_InitHandler
 operator|=
 name|NULL
 expr_stmt|;
+name|AcpiGbl_TableHandler
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Global Lock support */
 name|AcpiGbl_GlobalLockSemaphore
 operator|=
@@ -1766,6 +1998,10 @@ expr_stmt|;
 name|AcpiGbl_GlobalLockHandle
 operator|=
 literal|0
+expr_stmt|;
+name|AcpiGbl_GlobalLockPresent
+operator|=
+name|FALSE
 expr_stmt|;
 comment|/* Miscellaneous variables */
 name|AcpiGbl_CmSingleStep
@@ -1819,6 +2055,10 @@ expr_stmt|;
 name|AcpiGbl_DbOutputFlags
 operator|=
 name|ACPI_DB_CONSOLE_OUTPUT
+expr_stmt|;
+name|AcpiGbl_OsiData
+operator|=
+literal|0
 expr_stmt|;
 comment|/* Hardware oriented */
 name|AcpiGbl_EventsInitialized
@@ -1883,7 +2123,12 @@ directive|ifdef
 name|ACPI_DEBUG_OUTPUT
 name|AcpiGbl_LowestStackPointer
 operator|=
+name|ACPI_CAST_PTR
+argument_list|(
+name|ACPI_SIZE
+argument_list|,
 name|ACPI_SIZE_MAX
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -1896,7 +2141,10 @@ name|FALSE
 expr_stmt|;
 endif|#
 directive|endif
-name|return_VOID
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1904,6 +2152,13 @@ end_function
 begin_comment
 comment|/* Public globals */
 end_comment
+
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiGbl_FADT
+argument_list|)
+end_macro
 
 begin_macro
 name|ACPI_EXPORT_SYMBOL
@@ -1923,6 +2178,13 @@ begin_macro
 name|ACPI_EXPORT_SYMBOL
 argument_list|(
 argument|AcpiGpeCount
+argument_list|)
+end_macro
+
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiCurrentGpeCount
 argument_list|)
 end_macro
 
