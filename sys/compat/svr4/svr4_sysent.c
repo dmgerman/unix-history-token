@@ -88,6 +88,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 0 = unused */
@@ -110,6 +112,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 1 = exit */
@@ -125,6 +129,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -151,6 +157,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 3 = read */
@@ -169,6 +177,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -195,6 +205,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 5 = svr4_sys_open */
@@ -213,6 +225,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -239,6 +253,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 7 = svr4_sys_wait */
@@ -257,6 +273,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -283,6 +301,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 9 = link */
@@ -301,6 +321,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -327,6 +349,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 11 = svr4_sys_execv */
@@ -345,6 +369,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -371,6 +397,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 13 = svr4_sys_time */
@@ -389,6 +417,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -415,6 +445,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 15 = chmod */
@@ -433,6 +465,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -459,6 +493,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 17 = svr4_sys_break */
@@ -477,6 +513,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -503,6 +541,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 19 = lseek */
@@ -518,6 +558,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -541,6 +583,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 21 = old_mount */
@@ -556,6 +600,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -582,6 +628,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 23 = setuid */
@@ -597,6 +645,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -620,6 +670,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 25 = stime */
@@ -635,6 +687,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -661,6 +715,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 27 = svr4_sys_alarm */
@@ -683,6 +739,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 28 = svr4_sys_fstat */
@@ -698,6 +756,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -724,6 +784,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 30 = svr4_sys_utime */
@@ -743,6 +805,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 31 = stty */
@@ -758,6 +822,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -784,6 +850,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 33 = svr4_sys_access */
@@ -802,6 +870,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -825,6 +895,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 35 = statfs */
@@ -840,6 +912,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -866,6 +940,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 37 = svr4_sys_kill */
@@ -881,6 +957,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -907,6 +985,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 39 = svr4_sys_pgrpsys */
@@ -922,6 +1002,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -948,6 +1030,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 41 = dup */
@@ -963,6 +1047,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -989,6 +1075,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 43 = svr4_sys_times */
@@ -1008,6 +1096,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 44 = profil */
@@ -1023,6 +1113,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1049,6 +1141,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 46 = setgid */
@@ -1064,6 +1158,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1090,6 +1186,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 48 = svr4_sys_signal */
@@ -1108,6 +1206,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1134,6 +1234,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 50 = svr4_sys_sysarch */
@@ -1149,6 +1251,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1175,6 +1279,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 52 = svr4_sys_shmsys */
@@ -1193,6 +1299,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1219,6 +1327,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 54 = svr4_sys_ioctl */
@@ -1238,6 +1348,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 55 = uadmin */
@@ -1253,6 +1365,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1279,6 +1393,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 57 = svr4_sys_utssys */
@@ -1297,6 +1413,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1323,6 +1441,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 59 = svr4_sys_execve */
@@ -1341,6 +1461,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1367,6 +1489,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 61 = chroot */
@@ -1385,6 +1509,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1411,6 +1537,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 63 = svr4_sys_ulimit */
@@ -1426,6 +1554,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1449,6 +1579,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 65 = reserved */
@@ -1464,6 +1596,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1487,6 +1621,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 67 = reserved */
@@ -1502,6 +1638,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1525,6 +1663,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 69 = reserved */
@@ -1540,6 +1680,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1563,6 +1705,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 71 = unadvfs */
@@ -1578,6 +1722,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1601,6 +1747,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 73 = rumount */
@@ -1616,6 +1764,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1639,6 +1789,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 75 = sigret */
@@ -1654,6 +1806,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1677,6 +1831,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 77 = rfstop */
@@ -1692,6 +1848,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1718,6 +1876,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 79 = rmdir */
@@ -1736,6 +1896,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1762,6 +1924,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 81 = svr4_sys_getdents */
@@ -1777,6 +1941,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1800,6 +1966,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 83 = libdetach */
@@ -1815,6 +1983,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1841,6 +2011,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 85 = svr4_sys_getmsg */
@@ -1859,6 +2031,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1885,6 +2059,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 87 = svr4_sys_poll */
@@ -1903,6 +2079,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1929,6 +2107,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 89 = symlink */
@@ -1947,6 +2127,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1973,6 +2155,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 91 = getgroups */
@@ -1991,6 +2175,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2017,6 +2203,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 93 = fchmod */
@@ -2035,6 +2223,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2061,6 +2251,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 95 = svr4_sys_sigprocmask */
@@ -2079,6 +2271,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2105,6 +2299,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 97 = svr4_sys_sigaltstack */
@@ -2123,6 +2319,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2149,6 +2347,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 99 = svr4_sys_sigpending */
@@ -2167,6 +2367,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2190,6 +2392,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 101 = evsys */
@@ -2205,6 +2409,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2231,6 +2437,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 103 = svr4_sys_statvfs */
@@ -2249,6 +2457,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2272,6 +2482,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 105 = whoknows */
@@ -2287,6 +2499,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2313,6 +2527,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 107 = svr4_sys_waitsys */
@@ -2328,6 +2544,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2354,6 +2572,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 109 = svr4_sys_hrtsys */
@@ -2369,6 +2589,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2392,6 +2614,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 111 = async */
@@ -2407,6 +2631,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2433,6 +2659,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 113 = svr4_sys_pathconf */
@@ -2448,6 +2676,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2474,6 +2704,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 115 = svr4_sys_mmap */
@@ -2492,6 +2724,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2518,6 +2752,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 117 = munmap */
@@ -2540,6 +2776,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 118 = svr4_sys_fpathconf */
@@ -2555,6 +2793,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2581,6 +2821,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 120 = fchdir */
@@ -2599,6 +2841,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2625,6 +2869,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 122 = writev */
@@ -2643,6 +2889,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2669,6 +2917,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 124 = svr4_sys_lxstat */
@@ -2687,6 +2937,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2713,6 +2965,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 126 = svr4_sys_xmknod */
@@ -2728,6 +2982,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2754,6 +3010,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 128 = svr4_sys_setrlimit */
@@ -2772,6 +3030,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2798,6 +3058,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 130 = lchown */
@@ -2816,6 +3078,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2839,6 +3103,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 132 = getpmsg */
@@ -2854,6 +3120,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2880,6 +3148,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 134 = rename */
@@ -2898,6 +3168,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2924,6 +3196,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 136 = setegid */
@@ -2942,6 +3216,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2968,6 +3244,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 138 = adjtime */
@@ -2990,6 +3268,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 139 = svr4_sys_systeminfo */
@@ -3005,6 +3285,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3031,6 +3313,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 141 = seteuid */
@@ -3046,6 +3330,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3069,6 +3355,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 143 = { */
@@ -3084,6 +3372,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3107,6 +3397,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 145 = lwp_info */
@@ -3122,6 +3414,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3145,6 +3439,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 147 = lwp_sema_wait */
@@ -3160,6 +3456,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3183,6 +3481,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 149 = lwp_sema_trywait */
@@ -3198,6 +3498,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3221,6 +3523,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 151 = notused */
@@ -3236,6 +3540,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3262,6 +3568,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 153 = svr4_sys_fchroot */
@@ -3284,6 +3592,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 154 = svr4_sys_utimes */
@@ -3299,6 +3609,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3325,6 +3637,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 156 = svr4_sys_gettimeofday */
@@ -3343,6 +3657,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3369,6 +3685,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 158 = setitimer */
@@ -3384,6 +3702,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3407,6 +3727,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 160 = lwp_exit */
@@ -3422,6 +3744,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3445,6 +3769,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 162 = lwp_continue */
@@ -3460,6 +3786,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3483,6 +3811,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 164 = lwp_self */
@@ -3498,6 +3828,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3521,6 +3853,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 166 = lwp_setprivate */
@@ -3536,6 +3870,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3559,6 +3895,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 168 = lwp_mutex_unlock */
@@ -3574,6 +3912,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3597,6 +3937,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 170 = lwp_cond_wait */
@@ -3612,6 +3954,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3635,6 +3979,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 172 = lwp_cond_broadcast */
@@ -3654,6 +4000,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 173 = { */
@@ -3669,6 +4017,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3695,6 +4045,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 175 = svr4_sys_llseek */
@@ -3710,6 +4062,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3733,6 +4087,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 177 = whoknows */
@@ -3748,6 +4104,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3771,6 +4129,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 179 = whoknows */
@@ -3786,6 +4146,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3809,6 +4171,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 181 = whoknows */
@@ -3824,6 +4188,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3847,6 +4213,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 183 = whoknows */
@@ -3862,6 +4230,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3888,6 +4258,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 185 = svr4_sys_acl */
@@ -3906,6 +4278,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3929,6 +4303,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 187 = processor_bind */
@@ -3944,6 +4320,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3967,6 +4345,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 189 = p_online */
@@ -3982,6 +4362,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4005,6 +4387,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 191 = clock_gettime */
@@ -4020,6 +4404,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4043,6 +4429,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 193 = clock_getres */
@@ -4058,6 +4446,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4081,6 +4471,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 195 = timer_delete */
@@ -4096,6 +4488,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4119,6 +4513,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 197 = timer_gettime */
@@ -4134,6 +4530,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4160,6 +4558,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 199 = nanosleep */
@@ -4182,6 +4582,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 200 = svr4_sys_facl */
@@ -4197,6 +4599,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4223,6 +4627,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 202 = setreuid */
@@ -4241,6 +4647,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4264,6 +4672,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 204 = install_utrap */
@@ -4279,6 +4689,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4302,6 +4714,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 206 = schedctl */
@@ -4321,6 +4735,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 207 = pset */
@@ -4336,6 +4752,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4362,6 +4780,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 209 = svr4_sys_resolvepath */
@@ -4377,6 +4797,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4400,6 +4822,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 211 = lwp_sigredirect */
@@ -4415,6 +4839,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4441,6 +4867,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 213 = svr4_sys_getdents64 */
@@ -4459,6 +4887,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4485,6 +4915,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 215 = svr4_sys_stat64 */
@@ -4503,6 +4935,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4529,6 +4963,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 217 = svr4_sys_fstat64 */
@@ -4547,6 +4983,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4573,6 +5011,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 219 = svr4_sys_fstatvfs64 */
@@ -4591,6 +5031,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4617,6 +5059,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 221 = svr4_sys_getrlimit64 */
@@ -4636,6 +5080,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 222 = pread64 */
@@ -4651,6 +5097,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4677,6 +5125,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 224 = svr4_sys_creat64 */
@@ -4695,6 +5145,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4718,6 +5170,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 226 = rpcsys */
@@ -4733,6 +5187,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4756,6 +5212,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 228 = whoknows */
@@ -4771,6 +5229,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4797,6 +5257,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 230 = svr4_sys_socket */
@@ -4815,6 +5277,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4841,6 +5305,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 232 = bind */
@@ -4859,6 +5325,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4885,6 +5353,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 234 = accept */
@@ -4903,6 +5373,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4929,6 +5401,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 236 = shutdown */
@@ -4947,6 +5421,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4973,6 +5449,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 238 = recvfrom */
@@ -4991,6 +5469,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5017,6 +5497,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 240 = svr4_sys_send */
@@ -5035,6 +5517,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5061,6 +5545,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 242 = svr4_sys_sendto */
@@ -5079,6 +5565,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5105,6 +5593,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 244 = getsockname */
@@ -5123,6 +5613,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5149,6 +5641,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 246 = setsockopt */
@@ -5164,6 +5658,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5187,6 +5683,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 248 = { */
@@ -5202,6 +5700,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,

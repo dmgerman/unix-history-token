@@ -76,6 +76,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 0 = syscall */
@@ -98,6 +100,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 1 = exit */
@@ -113,6 +117,8 @@ block|,
 name|AUE_FORK
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -139,6 +145,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 3 = ibcs2_read */
@@ -157,6 +165,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -183,6 +193,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 5 = ibcs2_open */
@@ -201,6 +213,8 @@ block|,
 name|AUE_CLOSE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -227,6 +241,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 7 = ibcs2_wait */
@@ -245,6 +261,8 @@ block|,
 name|AUE_CREAT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -271,6 +289,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 9 = link */
@@ -289,6 +309,8 @@ block|,
 name|AUE_UNLINK
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -315,6 +337,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 11 = ibcs2_execv */
@@ -333,6 +357,8 @@ block|,
 name|AUE_CHDIR
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -359,6 +385,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 13 = ibcs2_time */
@@ -377,6 +405,8 @@ block|,
 name|AUE_MKNOD
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -403,6 +433,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 15 = ibcs2_chmod */
@@ -421,6 +453,8 @@ block|,
 name|AUE_CHOWN
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -447,6 +481,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 17 = obreak */
@@ -465,6 +501,8 @@ block|,
 name|AUE_STAT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -491,6 +529,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 19 = ibcs2_lseek */
@@ -506,6 +546,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -532,6 +574,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 21 = ibcs2_mount */
@@ -550,6 +594,8 @@ block|,
 name|AUE_UMOUNT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -576,6 +622,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 23 = ibcs2_setuid */
@@ -591,6 +639,8 @@ block|,
 name|AUE_GETUID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -617,6 +667,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 25 = ibcs2_stime */
@@ -635,6 +687,8 @@ block|,
 name|AUE_PTRACE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -661,6 +715,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 27 = ibcs2_alarm */
@@ -683,6 +739,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 28 = ibcs2_fstat */
@@ -698,6 +756,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -724,6 +784,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 30 = ibcs2_utime */
@@ -743,6 +805,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 31 = ibcs2_stty */
@@ -758,6 +822,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -784,6 +850,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 33 = ibcs2_access */
@@ -802,6 +870,8 @@ block|,
 name|AUE_NICE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -828,6 +898,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 35 = ibcs2_statfs */
@@ -843,6 +915,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -869,6 +943,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 37 = ibcs2_kill */
@@ -887,6 +963,8 @@ block|,
 name|AUE_FSTATFS
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -913,6 +991,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 39 = ibcs2_pgrpsys */
@@ -931,6 +1011,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -957,6 +1039,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 41 = dup */
@@ -972,6 +1056,8 @@ block|,
 name|AUE_PIPE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -998,6 +1084,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 43 = ibcs2_times */
@@ -1016,6 +1104,8 @@ block|,
 name|AUE_PROFILE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1042,6 +1132,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 45 = ibcs2_plock */
@@ -1064,6 +1156,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 46 = ibcs2_setgid */
@@ -1079,6 +1173,8 @@ block|,
 name|AUE_GETGID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1105,6 +1201,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 48 = ibcs2_sigsys */
@@ -1123,6 +1221,8 @@ block|,
 name|AUE_MSGSYS
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1149,6 +1249,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 50 = ibcs2_sysi86 */
@@ -1164,6 +1266,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1190,6 +1294,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 52 = ibcs2_shmsys */
@@ -1208,6 +1314,8 @@ block|,
 name|AUE_SEMSYS
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1234,6 +1342,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 54 = ibcs2_ioctl */
@@ -1256,6 +1366,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 55 = ibcs2_uadmin */
@@ -1271,6 +1383,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1297,6 +1411,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 57 = ibcs2_utssys */
@@ -1315,6 +1431,8 @@ block|,
 name|AUE_FSYNC
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1341,6 +1459,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 59 = ibcs2_execve */
@@ -1359,6 +1479,8 @@ block|,
 name|AUE_UMASK
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1385,6 +1507,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 61 = chroot */
@@ -1403,6 +1527,8 @@ block|,
 name|AUE_FCNTL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1429,6 +1555,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 63 = ibcs2_ulimit */
@@ -1444,6 +1572,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1467,6 +1597,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 65 = reserved for unix/pc */
@@ -1482,6 +1614,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1505,6 +1639,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 67 = reserved for unix/pc */
@@ -1520,6 +1656,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1543,6 +1681,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 69 = reserved for unix/pc */
@@ -1558,6 +1698,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1581,6 +1723,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 71 = obsolete rfs_unadvfs */
@@ -1596,6 +1740,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1619,6 +1765,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 73 = obsolete rfs_rumount */
@@ -1634,6 +1782,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1657,6 +1807,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 75 = obsolete rfs_sigret */
@@ -1672,6 +1824,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1695,6 +1849,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 77 = obsolete rfs_rfstop */
@@ -1710,6 +1866,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1736,6 +1894,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 79 = ibcs2_rmdir */
@@ -1754,6 +1914,8 @@ block|,
 name|AUE_MKDIR
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1780,6 +1942,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 81 = ibcs2_getdents */
@@ -1799,6 +1963,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 82 = nosys */
@@ -1814,6 +1980,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1840,6 +2008,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 84 = ibcs2_sysfs */
@@ -1858,6 +2028,8 @@ block|,
 name|AUE_GETMSG
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1884,6 +2056,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 86 = ibcs2_putmsg */
@@ -1906,6 +2080,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 87 = poll */
@@ -1921,6 +2097,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1947,6 +2125,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 89 = ibcs2_secure */
@@ -1965,6 +2145,8 @@ block|,
 name|AUE_SYMLINK
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1991,6 +2173,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 91 = ibcs2_lstat */
@@ -2009,6 +2193,8 @@ block|,
 name|AUE_READLINK
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2032,6 +2218,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 93 = nosys */
@@ -2047,6 +2235,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2070,6 +2260,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 95 = nosys */
@@ -2085,6 +2277,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2108,6 +2302,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 97 = nosys */
@@ -2123,6 +2319,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2146,6 +2344,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 99 = nosys */
@@ -2161,6 +2361,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2184,6 +2386,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 101 = nosys */
@@ -2199,6 +2403,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2225,6 +2431,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 103 = sigreturn */
@@ -2240,6 +2448,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2263,6 +2473,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 105 = ibcs2_isc */
@@ -2278,6 +2490,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2301,6 +2515,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 107 = nosys */
@@ -2316,6 +2532,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2339,6 +2557,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 109 = nosys */
@@ -2354,6 +2574,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2377,6 +2599,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 111 = nosys */
@@ -2392,6 +2616,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2415,6 +2641,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 113 = nosys */
@@ -2430,6 +2658,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2453,6 +2683,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 115 = nosys */
@@ -2468,6 +2700,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2491,6 +2725,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 117 = nosys */
@@ -2506,6 +2742,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2529,6 +2767,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 119 = nosys */
@@ -2544,6 +2784,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2567,6 +2809,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 121 = nosys */
@@ -2582,6 +2826,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2605,6 +2851,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 123 = nosys */
@@ -2620,6 +2868,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2643,6 +2893,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 125 = nosys */
@@ -2662,6 +2914,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 126 = nosys */
@@ -2677,6 +2931,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,

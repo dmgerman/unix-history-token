@@ -208,6 +208,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 0 = syscall */
@@ -230,6 +232,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 1 = exit */
@@ -245,6 +249,8 @@ block|,
 name|AUE_FORK
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -271,6 +277,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 3 = read */
@@ -289,6 +297,8 @@ block|,
 name|AUE_WRITE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -315,6 +325,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 5 = open */
@@ -333,6 +345,8 @@ block|,
 name|AUE_CLOSE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -359,6 +373,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 7 = freebsd32_wait4 */
@@ -374,6 +390,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -400,6 +418,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 9 = link */
@@ -422,6 +442,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 10 = unlink */
@@ -437,6 +459,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -463,6 +487,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 12 = chdir */
@@ -481,6 +507,8 @@ block|,
 name|AUE_FCHDIR
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -507,6 +535,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 14 = mknod */
@@ -525,6 +555,8 @@ block|,
 name|AUE_CHMOD
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -551,6 +583,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 16 = chown */
@@ -569,6 +603,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -594,6 +630,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 18 = old freebsd32_getfsstat */
@@ -613,6 +651,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 19 = obsolete olseek */
@@ -628,6 +668,8 @@ block|,
 name|AUE_GETPID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -654,6 +696,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 21 = mount */
@@ -672,6 +716,8 @@ block|,
 name|AUE_UMOUNT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -698,6 +744,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 23 = setuid */
@@ -717,6 +765,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 24 = getuid */
@@ -732,6 +782,8 @@ block|,
 name|AUE_GETEUID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -758,6 +810,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 26 = ptrace */
@@ -776,6 +830,8 @@ block|,
 name|AUE_RECVMSG
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -802,6 +858,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 28 = freebsd32_sendmsg */
@@ -820,6 +878,8 @@ block|,
 name|AUE_RECVFROM
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -846,6 +906,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 30 = accept */
@@ -864,6 +926,8 @@ block|,
 name|AUE_GETPEERNAME
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -890,6 +954,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 32 = getsockname */
@@ -908,6 +974,8 @@ block|,
 name|AUE_ACCESS
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -934,6 +1002,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 34 = chflags */
@@ -956,6 +1026,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 35 = fchflags */
@@ -971,6 +1043,8 @@ block|,
 name|AUE_SYNC
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -997,6 +1071,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 37 = kill */
@@ -1012,6 +1088,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1035,6 +1113,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 39 = getppid */
@@ -1050,6 +1130,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1076,6 +1158,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 41 = dup */
@@ -1095,6 +1179,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 42 = pipe */
@@ -1110,6 +1196,8 @@ block|,
 name|AUE_GETEGID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1136,6 +1224,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 44 = profil */
@@ -1154,6 +1244,8 @@ block|,
 name|AUE_KTRACE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1179,6 +1271,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 46 = old freebsd32_sigaction */
@@ -1194,6 +1288,8 @@ block|,
 name|AUE_GETGID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1215,6 +1311,8 @@ block|,
 name|AUE_SIGPROCMASK
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1241,6 +1339,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 49 = getlogin */
@@ -1259,6 +1359,8 @@ block|,
 name|AUE_SETLOGIN
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1285,6 +1387,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 51 = acct */
@@ -1299,6 +1403,8 @@ block|,
 name|AUE_SIGPENDING
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1325,6 +1431,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 53 = freebsd32_sigaltstack */
@@ -1343,6 +1451,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1369,6 +1479,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 55 = reboot */
@@ -1387,6 +1499,8 @@ block|,
 name|AUE_REVOKE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1413,6 +1527,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 57 = symlink */
@@ -1431,6 +1547,8 @@ block|,
 name|AUE_READLINK
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1457,6 +1575,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 59 = freebsd32_execve */
@@ -1475,6 +1595,8 @@ block|,
 name|AUE_UMASK
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1501,6 +1623,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 61 = chroot */
@@ -1516,6 +1640,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1539,6 +1665,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 63 = obsolete ogetkerninfo */
@@ -1554,6 +1682,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1580,6 +1710,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 65 = msync */
@@ -1595,6 +1727,8 @@ block|,
 name|AUE_VFORK
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1618,6 +1752,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 67 = obsolete vread */
@@ -1633,6 +1769,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1659,6 +1797,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 69 = sbrk */
@@ -1681,6 +1821,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 70 = sstk */
@@ -1696,6 +1838,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1722,6 +1866,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 72 = vadvise */
@@ -1740,6 +1886,8 @@ block|,
 name|AUE_MUNMAP
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1766,6 +1914,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 74 = mprotect */
@@ -1784,6 +1934,8 @@ block|,
 name|AUE_MADVISE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1807,6 +1959,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 76 = obsolete vhangup */
@@ -1822,6 +1976,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1848,6 +2004,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 78 = mincore */
@@ -1866,6 +2024,8 @@ block|,
 name|AUE_GETGROUPS
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1892,6 +2052,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 80 = setgroups */
@@ -1907,6 +2069,8 @@ block|,
 name|AUE_GETPGRP
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1933,6 +2097,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 82 = setpgid */
@@ -1955,6 +2121,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 83 = freebsd32_setitimer */
@@ -1970,6 +2138,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1996,6 +2166,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 85 = swapon */
@@ -2014,6 +2186,8 @@ block|,
 name|AUE_GETITIMER
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2037,6 +2211,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 87 = obsolete ogethostname */
@@ -2056,6 +2232,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 88 = obsolete osethostname */
@@ -2071,6 +2249,8 @@ block|,
 name|AUE_GETDTABLESIZE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2097,6 +2277,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 90 = dup2 */
@@ -2112,6 +2294,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2138,6 +2322,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 92 = fcntl */
@@ -2160,6 +2346,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 93 = freebsd32_select */
@@ -2175,6 +2363,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2201,6 +2391,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 95 = fsync */
@@ -2219,6 +2411,8 @@ block|,
 name|AUE_SETPRIORITY
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2245,6 +2439,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 97 = socket */
@@ -2267,6 +2463,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 98 = connect */
@@ -2282,6 +2480,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2308,6 +2508,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 100 = getpriority */
@@ -2323,6 +2525,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2346,6 +2550,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 102 = obsolete orecv */
@@ -2361,6 +2567,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2387,6 +2595,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 104 = bind */
@@ -2405,6 +2615,8 @@ block|,
 name|AUE_SETSOCKOPT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2431,6 +2643,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 106 = listen */
@@ -2446,6 +2660,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2471,6 +2687,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 108 = old freebsd32_sigvec */
@@ -2488,6 +2706,8 @@ block|,
 name|AUE_O_SIGBLOCK
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2513,6 +2733,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 110 = old freebsd32_sigsetmask */
@@ -2530,6 +2752,8 @@ block|,
 name|AUE_SIGSUSPEND
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2555,6 +2779,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 112 = old freebsd32_sigstack */
@@ -2570,6 +2796,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2593,6 +2821,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 114 = obsolete osendmsg */
@@ -2608,6 +2838,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2634,6 +2866,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 116 = freebsd32_gettimeofday */
@@ -2652,6 +2886,8 @@ block|,
 name|AUE_GETRUSAGE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2678,6 +2914,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 118 = getsockopt */
@@ -2693,6 +2931,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2719,6 +2959,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 120 = freebsd32_readv */
@@ -2737,6 +2979,8 @@ block|,
 name|AUE_WRITEV
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2763,6 +3007,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 122 = freebsd32_settimeofday */
@@ -2781,6 +3027,8 @@ block|,
 name|AUE_FCHOWN
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2807,6 +3055,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 124 = fchmod */
@@ -2822,6 +3072,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2848,6 +3100,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 126 = setreuid */
@@ -2866,6 +3120,8 @@ block|,
 name|AUE_SETREGID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2892,6 +3148,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 128 = rename */
@@ -2911,6 +3169,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 129 = obsolete otruncate */
@@ -2926,6 +3186,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2952,6 +3214,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 131 = flock */
@@ -2970,6 +3234,8 @@ block|,
 name|AUE_MKFIFO
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2996,6 +3262,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 133 = sendto */
@@ -3014,6 +3282,8 @@ block|,
 name|AUE_SHUTDOWN
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3040,6 +3310,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 135 = socketpair */
@@ -3058,6 +3330,8 @@ block|,
 name|AUE_MKDIR
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3084,6 +3358,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 137 = rmdir */
@@ -3106,6 +3382,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 138 = freebsd32_utimes */
@@ -3121,6 +3399,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3147,6 +3427,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 140 = freebsd32_adjtime */
@@ -3162,6 +3444,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3185,6 +3469,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 142 = obsolete ogethostid */
@@ -3200,6 +3486,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3223,6 +3511,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 144 = obsolete getrlimit */
@@ -3238,6 +3528,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3261,6 +3553,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 146 = obsolete killpg */
@@ -3276,6 +3570,8 @@ block|,
 name|AUE_SETSID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3302,6 +3598,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 148 = quotactl */
@@ -3317,6 +3615,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3340,6 +3640,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 150 = obsolete ogetsockname */
@@ -3355,6 +3657,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3378,6 +3682,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 152 = sem_wakeup */
@@ -3393,6 +3699,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3416,6 +3724,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 154 = nlm_syscall */
@@ -3435,6 +3745,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 155 = nfssvc */
@@ -3450,6 +3762,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3475,6 +3789,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 157 = old freebsd32_statfs */
@@ -3492,6 +3808,8 @@ block|,
 name|AUE_FSTATFS
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3515,6 +3833,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 159 = nosys */
@@ -3530,6 +3850,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3556,6 +3878,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 161 = getfh */
@@ -3571,6 +3895,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3594,6 +3920,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 163 = obsolete setdomainname */
@@ -3609,6 +3937,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3635,6 +3965,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 165 = freebsd32_sysarch */
@@ -3653,6 +3985,8 @@ block|,
 name|AUE_RTPRIO
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3676,6 +4010,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 167 = nosys */
@@ -3691,6 +4027,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3717,6 +4055,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 169 = freebsd32_semsys */
@@ -3735,6 +4075,8 @@ block|,
 name|AUE_MSGSYS
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3761,6 +4103,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 171 = freebsd32_shmsys */
@@ -3776,6 +4120,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3801,6 +4147,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 173 = old freebsd32_pread */
@@ -3822,6 +4170,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 174 = old freebsd32_pwrite */
@@ -3837,6 +4187,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3863,6 +4215,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 176 = ntp_adjtime */
@@ -3878,6 +4232,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3901,6 +4257,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 178 = getdescriptor */
@@ -3920,6 +4278,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 179 = setdescriptor */
@@ -3935,6 +4295,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3961,6 +4323,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 181 = setgid */
@@ -3979,6 +4343,8 @@ block|,
 name|AUE_SETEGID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4005,6 +4371,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 183 = seteuid */
@@ -4020,6 +4388,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4043,6 +4413,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 185 = lfs_markv */
@@ -4062,6 +4434,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 186 = lfs_segclean */
@@ -4077,6 +4451,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4103,6 +4479,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 188 = freebsd32_stat */
@@ -4121,6 +4499,8 @@ block|,
 name|AUE_FSTAT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4147,6 +4527,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 190 = freebsd32_lstat */
@@ -4165,6 +4547,8 @@ block|,
 name|AUE_PATHCONF
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4191,6 +4575,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 192 = fpathconf */
@@ -4206,6 +4592,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4232,6 +4620,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 194 = getrlimit */
@@ -4250,6 +4640,8 @@ block|,
 name|AUE_SETRLIMIT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4276,6 +4668,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 196 = freebsd32_getdirentries */
@@ -4297,6 +4691,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 197 = old freebsd32_mmap */
@@ -4312,6 +4708,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4337,6 +4735,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 199 = old freebsd32_lseek */
@@ -4358,6 +4758,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 200 = old freebsd32_truncate */
@@ -4375,6 +4777,8 @@ block|,
 name|AUE_FTRUNCATE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4401,6 +4805,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 202 = freebsd32_sysctl */
@@ -4419,6 +4825,8 @@ block|,
 name|AUE_MLOCK
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4445,6 +4853,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 204 = munlock */
@@ -4463,6 +4873,8 @@ block|,
 name|AUE_UNDELETE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4489,6 +4901,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 206 = freebsd32_futimes */
@@ -4511,6 +4925,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 207 = getpgid */
@@ -4526,6 +4942,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4552,6 +4970,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 209 = poll */
@@ -4570,6 +4990,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4596,6 +5018,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 211 = lkmnosys */
@@ -4614,6 +5038,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4640,6 +5066,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 213 = lkmnosys */
@@ -4658,6 +5086,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4684,6 +5114,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 215 = lkmnosys */
@@ -4702,6 +5134,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4728,6 +5162,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 217 = lkmnosys */
@@ -4746,6 +5182,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4772,6 +5210,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 219 = lkmnosys */
@@ -4790,6 +5230,8 @@ block|,
 name|AUE_SEMCTL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4816,6 +5258,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 221 = semget */
@@ -4838,6 +5282,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 222 = semop */
@@ -4853,6 +5299,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4879,6 +5327,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 224 = freebsd32_msgctl */
@@ -4897,6 +5347,8 @@ block|,
 name|AUE_MSGGET
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4923,6 +5375,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 226 = freebsd32_msgsnd */
@@ -4941,6 +5395,8 @@ block|,
 name|AUE_MSGRCV
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4967,6 +5423,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 228 = shmat */
@@ -4985,6 +5443,8 @@ block|,
 name|AUE_SHMCTL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5011,6 +5471,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 230 = shmdt */
@@ -5029,6 +5491,8 @@ block|,
 name|AUE_SHMGET
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5055,6 +5519,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 232 = freebsd32_clock_gettime */
@@ -5073,6 +5539,8 @@ block|,
 name|AUE_CLOCK_SETTIME
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5099,6 +5567,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 234 = freebsd32_clock_getres */
@@ -5114,6 +5584,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5137,6 +5609,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 236 = timer_delete */
@@ -5152,6 +5626,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5175,6 +5651,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 238 = timer_gettime */
@@ -5190,6 +5668,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5216,6 +5696,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 240 = freebsd32_nanosleep */
@@ -5231,6 +5713,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5254,6 +5738,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 242 = nosys */
@@ -5269,6 +5755,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5292,6 +5780,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 244 = nosys */
@@ -5307,6 +5797,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5330,6 +5822,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 246 = nosys */
@@ -5345,6 +5839,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5368,6 +5864,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 248 = ntp_gettime */
@@ -5383,6 +5881,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5409,6 +5909,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 250 = minherit */
@@ -5427,6 +5929,8 @@ block|,
 name|AUE_RFORK
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5453,6 +5957,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 252 = openbsd_poll */
@@ -5468,6 +5974,8 @@ block|,
 name|AUE_ISSETUGID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5494,6 +6002,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 254 = lchown */
@@ -5512,6 +6022,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5538,6 +6050,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 256 = freebsd32_aio_write */
@@ -5556,6 +6070,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5579,6 +6095,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 258 = nosys */
@@ -5594,6 +6112,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5617,6 +6137,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 260 = nosys */
@@ -5632,6 +6154,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5655,6 +6179,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 262 = nosys */
@@ -5670,6 +6196,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5693,6 +6221,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 264 = nosys */
@@ -5708,6 +6238,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5731,6 +6263,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 266 = nosys */
@@ -5746,6 +6280,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5769,6 +6305,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 268 = nosys */
@@ -5784,6 +6322,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5807,6 +6347,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 270 = nosys */
@@ -5822,6 +6364,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5848,6 +6392,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 272 = getdents */
@@ -5863,6 +6409,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5889,6 +6437,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 274 = lchmod */
@@ -5907,6 +6457,8 @@ block|,
 name|AUE_LCHOWN
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5933,6 +6485,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 276 = freebsd32_lutimes */
@@ -5951,6 +6505,8 @@ block|,
 name|AUE_MSYNC
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5977,6 +6533,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 278 = nstat */
@@ -5995,6 +6553,8 @@ block|,
 name|AUE_FSTAT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6021,6 +6581,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 280 = nlstat */
@@ -6036,6 +6598,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6059,6 +6623,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 282 = nosys */
@@ -6074,6 +6640,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6097,6 +6665,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 284 = nosys */
@@ -6112,6 +6682,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6135,6 +6707,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 286 = nosys */
@@ -6154,6 +6728,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 287 = nosys */
@@ -6169,6 +6745,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6195,6 +6773,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 289 = freebsd32_preadv */
@@ -6213,6 +6793,8 @@ block|,
 name|AUE_PWRITEV
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6236,6 +6818,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 291 = nosys */
@@ -6251,6 +6835,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6274,6 +6860,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 293 = nosys */
@@ -6289,6 +6877,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6312,6 +6902,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 295 = nosys */
@@ -6327,6 +6919,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6348,6 +6942,8 @@ block|,
 name|AUE_FHSTATFS
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6374,6 +6970,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 298 = fhopen */
@@ -6392,6 +6990,8 @@ block|,
 name|AUE_FHSTAT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6418,6 +7018,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 300 = modnext */
@@ -6436,6 +7038,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6462,6 +7066,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 302 = modfnext */
@@ -6480,6 +7086,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6506,6 +7114,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 304 = kldload */
@@ -6524,6 +7134,8 @@ block|,
 name|AUE_MODUNLOAD
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6550,6 +7162,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 306 = kldfind */
@@ -6568,6 +7182,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6594,6 +7210,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 308 = kldstat */
@@ -6612,6 +7230,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6638,6 +7258,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 310 = getsid */
@@ -6656,6 +7278,8 @@ block|,
 name|AUE_SETRESUID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6682,6 +7306,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 312 = setresgid */
@@ -6697,6 +7323,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6723,6 +7351,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 314 = freebsd32_aio_return */
@@ -6741,6 +7371,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6767,6 +7399,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 316 = freebsd32_aio_cancel */
@@ -6785,6 +7419,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6811,6 +7447,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 318 = freebsd32_oaio_read */
@@ -6829,6 +7467,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6855,6 +7495,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 320 = freebsd32_olio_listio */
@@ -6870,6 +7512,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6893,6 +7537,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 322 = obsolete thr_sleep */
@@ -6908,6 +7554,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6934,6 +7582,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 324 = mlockall */
@@ -6949,6 +7599,8 @@ block|,
 name|AUE_MUNLOCKALL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6975,6 +7627,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 326 = __getcwd */
@@ -6993,6 +7647,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -7019,6 +7675,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 328 = sched_getparam */
@@ -7037,6 +7695,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -7063,6 +7723,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 330 = sched_getscheduler */
@@ -7078,6 +7740,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -7104,6 +7768,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 332 = sched_get_priority_max */
@@ -7122,6 +7788,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -7148,6 +7816,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 334 = sched_rr_get_interval */
@@ -7170,6 +7840,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 335 = utrace */
@@ -7187,6 +7859,8 @@ block|,
 name|AUE_SENDFILE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -7213,6 +7887,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 337 = kldsym */
@@ -7235,6 +7911,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 338 = freebsd32_jail */
@@ -7250,6 +7928,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -7276,6 +7956,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 340 = sigprocmask */
@@ -7298,6 +7980,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 341 = sigsuspend */
@@ -7315,6 +7999,8 @@ block|,
 name|AUE_SIGACTION
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -7341,6 +8027,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 343 = sigpending */
@@ -7358,6 +8046,8 @@ block|,
 name|AUE_SIGRETURN
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -7384,6 +8074,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 345 = freebsd32_sigtimedwait */
@@ -7402,6 +8094,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -7428,6 +8122,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 347 = __acl_get_file */
@@ -7446,6 +8142,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -7472,6 +8170,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 349 = __acl_get_fd */
@@ -7490,6 +8190,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -7516,6 +8218,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 351 = __acl_delete_file */
@@ -7534,6 +8238,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -7560,6 +8266,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 353 = __acl_aclcheck_file */
@@ -7578,6 +8286,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -7604,6 +8314,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 355 = extattrctl */
@@ -7622,6 +8334,8 @@ block|,
 name|AUE_EXTATTR_SET_FILE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -7648,6 +8362,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 357 = extattr_get_file */
@@ -7666,6 +8382,8 @@ block|,
 name|AUE_EXTATTR_DELETE_FILE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -7692,6 +8410,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 359 = freebsd32_aio_waitcomplete */
@@ -7710,6 +8430,8 @@ block|,
 name|AUE_GETRESUID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -7736,6 +8458,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 361 = getresgid */
@@ -7751,6 +8475,8 @@ block|,
 name|AUE_KQUEUE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -7777,6 +8503,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 363 = freebsd32_kevent */
@@ -7792,6 +8520,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -7815,6 +8545,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 365 = __cap_set_proc */
@@ -7830,6 +8562,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -7853,6 +8587,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 367 = __cap_get_file */
@@ -7868,6 +8604,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -7891,6 +8629,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 369 = __cap_set_file */
@@ -7906,6 +8646,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -7932,6 +8674,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 371 = extattr_set_fd */
@@ -7950,6 +8694,8 @@ block|,
 name|AUE_EXTATTR_GET_FD
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -7976,6 +8722,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 373 = extattr_delete_fd */
@@ -7998,6 +8746,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 374 = __setugid */
@@ -8013,6 +8763,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -8039,6 +8791,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 376 = eaccess */
@@ -8054,6 +8808,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -8080,6 +8836,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 378 = freebsd32_nmount */
@@ -8095,6 +8853,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -8118,6 +8878,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 380 = kse_wakeup */
@@ -8133,6 +8895,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -8156,6 +8920,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 382 = kse_thr_interrupt */
@@ -8171,6 +8937,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -8194,6 +8962,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 384 = __mac_get_proc */
@@ -8209,6 +8979,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -8232,6 +9004,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 386 = __mac_get_fd */
@@ -8247,6 +9021,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -8270,6 +9046,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 388 = __mac_set_fd */
@@ -8285,6 +9063,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -8311,6 +9091,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 390 = kenv */
@@ -8329,6 +9111,8 @@ block|,
 name|AUE_LCHFLAGS
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -8355,6 +9139,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 392 = uuidgen */
@@ -8377,6 +9163,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 393 = freebsd32_sendfile */
@@ -8392,6 +9180,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -8418,6 +9208,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 395 = getfsstat */
@@ -8436,6 +9228,8 @@ block|,
 name|AUE_STATFS
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -8462,6 +9256,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 397 = fstatfs */
@@ -8480,6 +9276,8 @@ block|,
 name|AUE_FHSTATFS
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -8503,6 +9301,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 399 = nosys */
@@ -8518,6 +9318,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -8541,6 +9343,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 401 = ksem_post */
@@ -8556,6 +9360,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -8579,6 +9385,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 403 = ksem_trywait */
@@ -8594,6 +9402,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -8617,6 +9427,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 405 = ksem_open */
@@ -8632,6 +9444,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -8655,6 +9469,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 407 = ksem_getvalue */
@@ -8670,6 +9486,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -8693,6 +9511,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 409 = __mac_get_pid */
@@ -8708,6 +9528,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -8731,6 +9553,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 411 = __mac_set_link */
@@ -8746,6 +9570,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -8769,6 +9595,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 413 = extattr_get_link */
@@ -8788,6 +9616,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 414 = extattr_delete_link */
@@ -8803,6 +9633,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -8829,6 +9661,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 416 = freebsd32_sigaction */
@@ -8847,6 +9681,8 @@ block|,
 name|AUE_SIGRETURN
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -8870,6 +9706,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 418 = __xstat */
@@ -8889,6 +9727,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 419 = __xfstat */
@@ -8904,6 +9744,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -8930,6 +9772,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 421 = freebsd32_getcontext */
@@ -8948,6 +9792,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -8974,6 +9820,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 423 = freebsd32_swapcontext */
@@ -8989,6 +9837,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -9012,6 +9862,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 425 = __acl_get_link */
@@ -9027,6 +9879,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -9050,6 +9904,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 427 = __acl_delete_link */
@@ -9065,6 +9921,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -9091,6 +9949,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 429 = sigwait */
@@ -9106,6 +9966,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -9132,6 +9994,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 431 = thr_exit */
@@ -9150,6 +10014,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -9176,6 +10042,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 433 = thr_kill */
@@ -9194,6 +10062,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -9220,6 +10090,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 435 = freebsd32_umtx_unlock */
@@ -9238,6 +10110,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -9261,6 +10135,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 437 = extattr_list_fd */
@@ -9276,6 +10152,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -9299,6 +10177,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 439 = extattr_list_link */
@@ -9318,6 +10198,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 440 = kse_switchin */
@@ -9333,6 +10215,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -9359,6 +10243,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 442 = freebsd32_thr_suspend */
@@ -9377,6 +10263,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -9403,6 +10291,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 444 = kldunloadf */
@@ -9421,6 +10311,8 @@ block|,
 name|AUE_AUDIT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -9447,6 +10339,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 446 = auditon */
@@ -9465,6 +10359,8 @@ block|,
 name|AUE_GETAUID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -9491,6 +10387,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 448 = setauid */
@@ -9509,6 +10407,8 @@ block|,
 name|AUE_GETAUDIT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -9535,6 +10435,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 450 = setaudit */
@@ -9553,6 +10455,8 @@ block|,
 name|AUE_GETAUDIT_ADDR
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -9579,6 +10483,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 452 = setaudit_addr */
@@ -9597,6 +10503,8 @@ block|,
 name|AUE_AUDITCTL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -9623,6 +10531,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 454 = freebsd32_umtx_op */
@@ -9641,6 +10551,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -9667,6 +10579,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 456 = sigqueue */
@@ -9682,6 +10596,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -9705,6 +10621,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 458 = kmq_setattr */
@@ -9720,6 +10638,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -9743,6 +10663,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 460 = kmq_timedsend */
@@ -9762,6 +10684,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 461 = kmq_notify */
@@ -9777,6 +10701,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -9803,6 +10729,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 463 = abort2 */
@@ -9821,6 +10749,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -9847,6 +10777,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 465 = freebsd32_aio_fsync */
@@ -9865,6 +10797,8 @@ block|,
 name|AUE_RTPRIO
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -9888,6 +10822,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 467 = nosys */
@@ -9903,6 +10839,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -9926,6 +10864,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 469 = __getpath_fromfd */
@@ -9941,6 +10881,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -9967,6 +10909,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 471 = sctp_peeloff */
@@ -9985,6 +10929,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -10011,6 +10957,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 473 = sctp_generic_sendmsg_iov */
@@ -10029,6 +10977,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -10055,6 +11005,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 475 = freebsd32_pread */
@@ -10073,6 +11025,8 @@ block|,
 name|AUE_PWRITE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -10099,6 +11053,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 477 = freebsd32_mmap */
@@ -10117,6 +11073,8 @@ block|,
 name|AUE_LSEEK
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -10143,6 +11101,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 479 = freebsd32_truncate */
@@ -10161,6 +11121,8 @@ block|,
 name|AUE_FTRUNCATE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -10187,6 +11149,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 481 = thr_kill2 */
@@ -10205,6 +11169,8 @@ block|,
 name|AUE_SHMOPEN
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -10231,6 +11197,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 483 = shm_unlink */
@@ -10249,6 +11217,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -10275,6 +11245,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 485 = freebsd32_cpuset_setid */
@@ -10293,6 +11265,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -10319,6 +11293,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 487 = freebsd32_cpuset_getaffinity */
@@ -10337,6 +11313,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -10363,6 +11341,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 489 = faccessat */
@@ -10381,6 +11361,8 @@ block|,
 name|AUE_FCHMODAT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -10407,6 +11389,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 491 = fchownat */
@@ -10425,6 +11409,8 @@ block|,
 name|AUE_FEXECVE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -10451,6 +11437,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 493 = freebsd32_fstatat */
@@ -10469,6 +11457,8 @@ block|,
 name|AUE_FUTIMESAT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -10495,6 +11485,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 495 = linkat */
@@ -10513,6 +11505,8 @@ block|,
 name|AUE_MKDIRAT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -10539,6 +11533,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 497 = mkfifoat */
@@ -10557,6 +11553,8 @@ block|,
 name|AUE_MKNODAT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -10583,6 +11581,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 499 = openat */
@@ -10601,6 +11601,8 @@ block|,
 name|AUE_READLINKAT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -10627,6 +11629,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 501 = renameat */
@@ -10645,6 +11649,8 @@ block|,
 name|AUE_SYMLINKAT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -10671,6 +11677,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 503 = unlinkat */
@@ -10693,6 +11701,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 504 = posix_openpt */
@@ -10708,6 +11718,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -10734,6 +11746,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 506 = freebsd32_jail_get */
@@ -10756,6 +11770,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 507 = freebsd32_jail_set */
@@ -10774,6 +11790,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
