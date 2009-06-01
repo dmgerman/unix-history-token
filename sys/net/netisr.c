@@ -586,7 +586,7 @@ begin_define
 define|#
 directive|define
 name|NETISR_MAXPROT
-value|32
+value|16
 end_define
 
 begin_comment
@@ -4096,34 +4096,76 @@ name|netisr_maxthreads
 operator|<
 literal|1
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"netisr2: forcing maxthreads to 1\n"
+argument_list|)
+expr_stmt|;
 name|netisr_maxthreads
 operator|=
 literal|1
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|netisr_maxthreads
 operator|>
 name|MAXCPU
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"netisr2: forcing maxthreads to %d\n"
+argument_list|,
+name|MAXCPU
+argument_list|)
+expr_stmt|;
 name|netisr_maxthreads
 operator|=
 name|MAXCPU
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|netisr_defaultqlimit
 operator|>
 name|netisr_maxqlimit
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"netisr2: forcing defaultqlimit to %d\n"
+argument_list|,
+name|netisr_maxqlimit
+argument_list|)
+expr_stmt|;
 name|netisr_defaultqlimit
 operator|=
 name|netisr_maxqlimit
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
 comment|/* 	 * The device polling code is not yet aware of how to deal with 	 * multiple netisr threads, so for the time being compiling in device 	 * polling disables parallel netisr workers. 	 */
+if|if
+condition|(
+name|netisr_maxthreads
+operator|!=
+literal|1
+operator|||
+name|netisr_bindthreads
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"netisr2: forcing maxthreads to 1 and bindthreads to "
+literal|"0 for device polling\n"
+argument_list|)
+expr_stmt|;
 name|netisr_maxthreads
 operator|=
 literal|1
@@ -4132,6 +4174,7 @@ name|netisr_bindthreads
 operator|=
 literal|0
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|netisr_start_swi
