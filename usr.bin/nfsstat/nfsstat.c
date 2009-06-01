@@ -459,7 +459,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"csWM:N:w:z4"
+literal|"cesWM:N:w:z"
 argument_list|)
 operator|)
 operator|!=
@@ -551,7 +551,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'4'
+literal|'e'
 case|:
 name|run_v4
 operator|=
@@ -2559,7 +2559,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: nfsstat [-cszW] [-M core] [-N system] [-w interval]\n"
+literal|"usage: nfsstat [-ceszW] [-M core] [-N system] [-w interval]\n"
 argument_list|)
 expr_stmt|;
 name|exit
