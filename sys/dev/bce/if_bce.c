@@ -21276,7 +21276,7 @@ name|nsegs
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* ToDo: Do we need bus_dmamap_sync(,,BUS_DMASYNC_PREWRITE) here? */
+comment|/* ToDo: Do we need bus_dmamap_sync(,,BUS_DMASYNC_PREREAD) here? */
 comment|/* Setup the rx_bd for the segment. */
 name|rxbd
 operator|=
@@ -21785,7 +21785,7 @@ goto|goto
 name|bce_get_pg_buf_exit
 goto|;
 block|}
-comment|/* ToDo: Do we need bus_dmamap_sync(,,BUS_DMASYNC_PREWRITE) here? */
+comment|/* ToDo: Do we need bus_dmamap_sync(,,BUS_DMASYNC_PREREAD) here? */
 comment|/* 	 * The page chain uses the same rx_bd data structure 	 * as the receive chain but doesn't require a byte sequence (bseq). 	 */
 name|pgbd
 operator|=
@@ -25068,7 +25068,7 @@ index|[
 name|i
 index|]
 argument_list|,
-name|BUS_DMASYNC_POSTWRITE
+name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -25102,7 +25102,7 @@ index|[
 name|i
 index|]
 argument_list|,
-name|BUS_DMASYNC_POSTWRITE
+name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
 endif|#
@@ -25920,6 +25920,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* Prepare the page chain pages to be accessed by the NIC. */
 for|for
 control|(
 name|int
@@ -29891,6 +29892,7 @@ name|interrupts_generated
 operator|++
 argument_list|)
 expr_stmt|;
+comment|/* Synchnorize before we read from interface's status block */
 name|bus_dmamap_sync
 argument_list|(
 name|sc
@@ -29901,7 +29903,7 @@ name|sc
 operator|->
 name|status_map
 argument_list|,
-name|BUS_DMASYNC_POSTWRITE
+name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If the hardware status block index 	 * matches the last value read by the 	 * driver and we haven't asserted our 	 * interrupt then there's nothing to do. 	 */
@@ -30208,7 +30210,7 @@ name|sc
 operator|->
 name|status_map
 argument_list|,
-name|BUS_DMASYNC_PREWRITE
+name|BUS_DMASYNC_PREREAD
 argument_list|)
 expr_stmt|;
 comment|/* Re-enable interrupts. */
