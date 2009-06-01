@@ -3125,6 +3125,9 @@ name|addr
 parameter_list|,
 name|l_uintptr_t
 name|namelen
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -3388,6 +3391,8 @@ argument_list|,
 name|args
 operator|->
 name|namelen
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 return|;
