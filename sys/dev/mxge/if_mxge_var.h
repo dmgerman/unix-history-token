@@ -380,6 +380,9 @@ name|int
 name|mask
 decl_stmt|;
 comment|/* number of rx slots -1 */
+name|int
+name|mlen
+decl_stmt|;
 block|}
 name|mxge_rx_ring_t
 typedef|;
