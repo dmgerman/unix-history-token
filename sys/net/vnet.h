@@ -56,14 +56,6 @@ name|struct
 name|radix_node_head
 modifier|*
 name|_rt_tables
-index|[
-name|RT_MAXFIBS
-index|]
-index|[
-name|AF_MAX
-operator|+
-literal|1
-index|]
 decl_stmt|;
 name|int
 name|_rttrash

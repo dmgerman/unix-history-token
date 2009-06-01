@@ -1564,14 +1564,21 @@ name|struct
 name|radix_node_head
 modifier|*
 name|rt_tables
-index|[]
-index|[
-name|AF_MAX
-operator|+
-literal|1
-index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|struct
+name|radix_node_head
+modifier|*
+name|rt_tables_get_rnh
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_struct_decl
 struct_decl|struct

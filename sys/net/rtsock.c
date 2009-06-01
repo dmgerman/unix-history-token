@@ -2165,13 +2165,6 @@ parameter_list|,
 name|a2
 parameter_list|)
 value|(bcmp((a1), (a2), (a1)->sa_len) == 0)
-name|INIT_VNET_NET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|rt_msghdr
 modifier|*
@@ -2792,13 +2785,12 @@ name|RTM_LOCK
 case|:
 name|rnh
 operator|=
-name|V_rt_tables
-index|[
+name|rt_tables_get_rnh
+argument_list|(
 name|so
 operator|->
 name|so_fibnum
-index|]
-index|[
+argument_list|,
 name|info
 operator|.
 name|rti_info
@@ -2807,7 +2799,7 @@ name|RTAX_DST
 index|]
 operator|->
 name|sa_family
-index|]
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -7389,11 +7381,6 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 modifier|*
 name|name
@@ -7413,7 +7400,10 @@ name|struct
 name|radix_node_head
 modifier|*
 name|rnh
+init|=
+name|NULL
 decl_stmt|;
+comment|/* silence compiler. */
 name|int
 name|i
 decl_stmt|,
@@ -7641,13 +7631,10 @@ condition|;
 name|i
 operator|++
 control|)
-if|if
-condition|(
-operator|(
 name|rnh
 operator|=
-name|V_rt_tables
-index|[
+name|rt_tables_get_rnh
+argument_list|(
 name|req
 operator|->
 name|td
@@ -7655,11 +7642,13 @@ operator|->
 name|td_proc
 operator|->
 name|p_fibnum
-index|]
-index|[
+argument_list|,
 name|i
-index|]
-operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rnh
 operator|!=
 name|NULL
 condition|)
