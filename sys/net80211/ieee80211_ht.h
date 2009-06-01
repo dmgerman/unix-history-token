@@ -140,6 +140,12 @@ modifier|*
 name|txa_private
 decl_stmt|;
 comment|/* driver-private storage */
+name|uint64_t
+name|txa_pad
+index|[
+literal|4
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -409,6 +415,12 @@ modifier|*
 name|rxa_m
 index|[
 name|IEEE80211_AGGR_BAWMAX
+index|]
+decl_stmt|;
+name|uint64_t
+name|rxa_pad
+index|[
+literal|4
 index|]
 decl_stmt|;
 block|}

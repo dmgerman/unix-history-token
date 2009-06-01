@@ -211,6 +211,13 @@ modifier|*
 name|tdma_ie
 decl_stmt|;
 comment|/* captured TDMA ie */
+name|uint8_t
+modifier|*
+name|spare
+index|[
+literal|4
+index|]
+decl_stmt|;
 comment|/* NB: these must be the last members of this structure */
 name|uint8_t
 modifier|*
@@ -641,6 +648,12 @@ name|ifqueue
 name|ni_wdsq
 decl_stmt|;
 comment|/* wds pending queue */
+name|uint64_t
+name|ni_spare
+index|[
+literal|4
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -1772,6 +1772,13 @@ modifier|*
 name|bo_csa
 decl_stmt|;
 comment|/* start of CSA element */
+name|uint8_t
+modifier|*
+name|bo_spare
+index|[
+literal|4
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct

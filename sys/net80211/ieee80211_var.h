@@ -1341,6 +1341,12 @@ name|ieee80211_rx_ampdu
 modifier|*
 parameter_list|)
 function_decl|;
+name|uint64_t
+name|ic_spare
+index|[
+literal|8
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2060,6 +2066,12 @@ name|route
 modifier|*
 parameter_list|)
 function_decl|;
+name|uint64_t
+name|iv_spare
+index|[
+literal|8
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct

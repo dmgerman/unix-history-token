@@ -138,6 +138,10 @@ name|ns_tx_mgmt
 decl_stmt|;
 comment|/* tx management frames */
 name|uint32_t
+name|ns_tx_ctrl
+decl_stmt|;
+comment|/* tx control frames */
+name|uint32_t
 name|ns_tx_ucast
 decl_stmt|;
 comment|/* tx unicast frames */
@@ -198,6 +202,12 @@ name|uint32_t
 name|ns_tx_disassoc_code
 decl_stmt|;
 comment|/* last disassociation reason */
+name|uint32_t
+name|ns_spare
+index|[
+literal|8
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -261,7 +271,7 @@ comment|/* rx discard mgt frames */
 name|uint32_t
 name|is_rx_ctl
 decl_stmt|;
-comment|/* rx discard ctrl frames */
+comment|/* rx ctrl frames */
 name|uint32_t
 name|is_rx_beacon
 decl_stmt|;
@@ -723,9 +733,21 @@ name|is_ff_flush
 decl_stmt|;
 comment|/* ff's flush'd from stageq */
 name|uint32_t
+name|is_tx_ctl
+decl_stmt|;
+comment|/* tx ctrl frames */
+name|uint32_t
+name|is_ampdu_rexmt
+decl_stmt|;
+comment|/* A-MPDU frames rexmt ok */
+name|uint32_t
+name|is_ampdu_rexmt_fail
+decl_stmt|;
+comment|/* A-MPDU frames rexmt fail */
+name|uint32_t
 name|is_spare
 index|[
-literal|11
+literal|16
 index|]
 decl_stmt|;
 block|}
