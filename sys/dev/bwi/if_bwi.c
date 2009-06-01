@@ -20035,17 +20035,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|BWI_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 literal|0
 block|bwi_start_locked(ifp);
 endif|#
 directive|endif
+name|BWI_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
