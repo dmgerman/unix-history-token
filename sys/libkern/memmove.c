@@ -23,6 +23,16 @@ directive|include
 file|<sys/libkern.h>
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+end_if
+
 begin_function
 name|void
 modifier|*
@@ -57,6 +67,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
