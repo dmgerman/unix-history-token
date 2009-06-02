@@ -774,9 +774,9 @@ name|ic_rxchan
 decl_stmt|;
 comment|/* channel state in ic_rh */
 name|int
-name|ic_monvaps
+name|ic_montaps
 decl_stmt|;
-comment|/* # monitor mode vaps */
+comment|/* active monitor mode taps */
 comment|/* virtual ap create/delete */
 name|struct
 name|ieee80211vap
@@ -3736,6 +3736,12 @@ name|iv_flags_ext
 operator|&
 name|IEEE80211_FEXT_BPF
 operator|)
+operator|||
+name|vap
+operator|->
+name|iv_ic
+operator|->
+name|ic_montaps
 operator|!=
 literal|0
 return|;
