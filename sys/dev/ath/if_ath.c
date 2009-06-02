@@ -5795,6 +5795,27 @@ name|sc
 operator|->
 name|sc_beacons
 condition|)
+block|{
+comment|/* restart beacons */
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_TDMA
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_tdma
+condition|)
+name|ath_tdma_config
+argument_list|(
+name|sc
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
 name|ath_beacon_config
 argument_list|(
 name|sc
@@ -5802,6 +5823,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 name|ath_hal_intrset
 argument_list|(
 name|ah
@@ -7869,6 +7891,7 @@ operator|->
 name|sc_beacons
 condition|)
 block|{
+comment|/* restart beacons */
 ifdef|#
 directive|ifdef
 name|IEEE80211_SUPPORT_TDMA
@@ -7895,7 +7918,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* restart beacons */
 block|}
 name|ath_hal_intrset
 argument_list|(
