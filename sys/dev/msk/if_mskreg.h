@@ -217,7 +217,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEVICEID_MRVL_8070
+name|DEVICEID_MRVL_4365
 value|0x4365
 end_define
 
@@ -226,6 +226,20 @@ define|#
 directive|define
 name|DEVICEID_MRVL_436A
 value|0x436A
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_MRVL_436B
+value|0x436B
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_MRVL_436C
+value|0x436C
 end_define
 
 begin_comment
