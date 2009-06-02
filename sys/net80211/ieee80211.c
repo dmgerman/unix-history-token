@@ -1649,6 +1649,11 @@ name|ieee80211vap
 modifier|*
 name|vap
 decl_stmt|;
+name|if_detach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1744,11 +1749,6 @@ expr_stmt|;
 name|IEEE80211_LOCK_DESTROY
 argument_list|(
 name|ic
-argument_list|)
-expr_stmt|;
-name|if_detach
-argument_list|(
-name|ifp
 argument_list|)
 expr_stmt|;
 block|}
