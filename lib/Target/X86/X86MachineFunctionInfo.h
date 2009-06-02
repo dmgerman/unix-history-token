@@ -1,0 +1,392 @@
+begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|//====- X86MachineFuctionInfo.h - X86 machine function info -----*- C++ -*-===//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//                     The LLVM Compiler Infrastructure
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This file is distributed under the University of Illinois Open Source
+end_comment
+
+begin_comment
+comment|// License. See LICENSE.TXT for details.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This file declares X86-specific per-machine-function information.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|X86MACHINEFUNCTIONINFO_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|X86MACHINEFUNCTIONINFO_H
+end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineFunction.h"
+end_include
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+enum|enum
+name|NameDecorationStyle
+block|{
+name|None
+block|,
+name|StdCall
+block|,
+name|FastCall
+block|}
+enum|;
+comment|/// X86MachineFunctionInfo - This class is derived from MachineFunction and
+comment|/// contains private X86 target-specific information for each MachineFunction.
+name|class
+name|X86MachineFunctionInfo
+range|:
+name|public
+name|MachineFunctionInfo
+block|{
+comment|/// ForceFramePointer - True if the function is required to use of frame
+comment|/// pointer for reasons other than it containing dynamic allocation or
+comment|/// that FP eliminatation is turned off. For example, Cygwin main function
+comment|/// contains stack pointer re-alignment code which requires FP.
+name|bool
+name|ForceFramePointer
+block|;
+comment|/// CalleeSavedFrameSize - Size of the callee-saved register portion of the
+comment|/// stack frame in bytes.
+name|unsigned
+name|CalleeSavedFrameSize
+block|;
+comment|/// BytesToPopOnReturn - Number of bytes function pops on return.
+comment|/// Used on windows platform for stdcall& fastcall name decoration
+name|unsigned
+name|BytesToPopOnReturn
+block|;
+comment|/// DecorationStyle - If the function requires additional name decoration,
+comment|/// DecorationStyle holds the right way to do so.
+name|NameDecorationStyle
+name|DecorationStyle
+block|;
+comment|/// ReturnAddrIndex - FrameIndex for return slot.
+name|int
+name|ReturnAddrIndex
+block|;
+comment|/// TailCallReturnAddrDelta - Delta the ReturnAddr stack slot is moved
+comment|/// Used for creating an area before the register spill area on the stack
+comment|/// the returnaddr can be savely move to this area
+name|int
+name|TailCallReturnAddrDelta
+block|;
+comment|/// SRetReturnReg - Some subtargets require that sret lowering includes
+comment|/// returning the value of the returned struct in a register. This field
+comment|/// holds the virtual register into which the sret argument is passed.
+name|unsigned
+name|SRetReturnReg
+block|;
+comment|/// GlobalBaseReg - keeps track of the virtual register initialized for
+comment|/// use as the global base register. This is used for PIC in some PIC
+comment|/// relocation models.
+name|unsigned
+name|GlobalBaseReg
+block|;
+name|public
+operator|:
+name|X86MachineFunctionInfo
+argument_list|()
+operator|:
+name|ForceFramePointer
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|CalleeSavedFrameSize
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|BytesToPopOnReturn
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|DecorationStyle
+argument_list|(
+name|None
+argument_list|)
+block|,
+name|ReturnAddrIndex
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|TailCallReturnAddrDelta
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|SRetReturnReg
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|GlobalBaseReg
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|X86MachineFunctionInfo
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+operator|:
+name|ForceFramePointer
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|CalleeSavedFrameSize
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|BytesToPopOnReturn
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|DecorationStyle
+argument_list|(
+name|None
+argument_list|)
+block|,
+name|ReturnAddrIndex
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|TailCallReturnAddrDelta
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|SRetReturnReg
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|GlobalBaseReg
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|bool
+name|getForceFramePointer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ForceFramePointer
+return|;
+block|}
+name|void
+name|setForceFramePointer
+argument_list|(
+argument|bool forceFP
+argument_list|)
+block|{
+name|ForceFramePointer
+operator|=
+name|forceFP
+block|; }
+name|unsigned
+name|getCalleeSavedFrameSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CalleeSavedFrameSize
+return|;
+block|}
+name|void
+name|setCalleeSavedFrameSize
+argument_list|(
+argument|unsigned bytes
+argument_list|)
+block|{
+name|CalleeSavedFrameSize
+operator|=
+name|bytes
+block|; }
+name|unsigned
+name|getBytesToPopOnReturn
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BytesToPopOnReturn
+return|;
+block|}
+name|void
+name|setBytesToPopOnReturn
+argument_list|(
+argument|unsigned bytes
+argument_list|)
+block|{
+name|BytesToPopOnReturn
+operator|=
+name|bytes
+block|;}
+name|NameDecorationStyle
+name|getDecorationStyle
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DecorationStyle
+return|;
+block|}
+name|void
+name|setDecorationStyle
+argument_list|(
+argument|NameDecorationStyle style
+argument_list|)
+block|{
+name|DecorationStyle
+operator|=
+name|style
+block|;}
+name|int
+name|getRAIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ReturnAddrIndex
+return|;
+block|}
+name|void
+name|setRAIndex
+argument_list|(
+argument|int Index
+argument_list|)
+block|{
+name|ReturnAddrIndex
+operator|=
+name|Index
+block|; }
+name|int
+name|getTCReturnAddrDelta
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TailCallReturnAddrDelta
+return|;
+block|}
+name|void
+name|setTCReturnAddrDelta
+argument_list|(
+argument|int delta
+argument_list|)
+block|{
+name|TailCallReturnAddrDelta
+operator|=
+name|delta
+block|;}
+name|unsigned
+name|getSRetReturnReg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SRetReturnReg
+return|;
+block|}
+name|void
+name|setSRetReturnReg
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+block|{
+name|SRetReturnReg
+operator|=
+name|Reg
+block|; }
+name|unsigned
+name|getGlobalBaseReg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GlobalBaseReg
+return|;
+block|}
+name|void
+name|setGlobalBaseReg
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+block|{
+name|GlobalBaseReg
+operator|=
+name|Reg
+block|; }
+expr|}
+block|;  }
+end_decl_stmt
+
+begin_comment
+comment|// End llvm namespace
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+end_unit
+
