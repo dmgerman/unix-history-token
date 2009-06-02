@@ -3614,15 +3614,10 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* NB: if_softc is NULL on vap detach */
 block|}
 elseif|else
 if|if
 condition|(
-name|vap
-operator|!=
-name|NULL
-operator|&&
 operator|!
 name|bpf_peers_present
 argument_list|(
