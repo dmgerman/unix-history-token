@@ -116,7 +116,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acpi.h>
+file|<contrib/dev/acpica/include/acpi.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/accommon.h>
 end_include
 
 begin_include
@@ -4136,7 +4142,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|AcpiGetRegister
+name|AcpiReadBitRegister
 argument_list|(
 name|ACPI_BITREG_BUS_MASTER_STATUS
 argument_list|,
@@ -4151,7 +4157,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|AcpiSetRegister
+name|AcpiWriteBitRegister
 argument_list|(
 name|ACPI_BITREG_BUS_MASTER_STATUS
 argument_list|,
@@ -4257,14 +4263,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|AcpiSetRegister
+name|AcpiWriteBitRegister
 argument_list|(
 name|ACPI_BITREG_ARB_DISABLE
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|AcpiSetRegister
+name|AcpiWriteBitRegister
 argument_list|(
 name|ACPI_BITREG_BUS_MASTER_RLD
 argument_list|,
@@ -4278,10 +4284,8 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/*      * Read from P_LVLx to enter C2(+), checking time spent asleep.      * Use the ACPI timer for measuring sleep time.  Since we need to      * get the time very close to the CPU start/stop clock logic, this      * is the only reliable time source.      */
-name|AcpiHwLowLevelRead
+name|AcpiRead
 argument_list|(
-literal|32
-argument_list|,
 operator|&
 name|start_time
 argument_list|,
@@ -4301,10 +4305,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/*      * Read the end time twice.  Since it may take an arbitrary time      * to enter the idle state, the first read may be executed before      * the processor has stopped.  Doing it again provides enough      * margin that we are certain to have a correct value.      */
-name|AcpiHwLowLevelRead
+name|AcpiRead
 argument_list|(
-literal|32
-argument_list|,
 operator|&
 name|end_time
 argument_list|,
@@ -4314,10 +4316,8 @@ operator|.
 name|XPmTimerBlock
 argument_list|)
 expr_stmt|;
-name|AcpiHwLowLevelRead
+name|AcpiRead
 argument_list|(
-literal|32
-argument_list|,
 operator|&
 name|end_time
 argument_list|,
@@ -4345,14 +4345,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|AcpiSetRegister
+name|AcpiWriteBitRegister
 argument_list|(
 name|ACPI_BITREG_ARB_DISABLE
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|AcpiSetRegister
+name|AcpiWriteBitRegister
 argument_list|(
 name|ACPI_BITREG_BUS_MASTER_RLD
 argument_list|,
@@ -4726,7 +4726,7 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiGetRegister
+name|AcpiReadBitRegister
 argument_list|(
 name|ACPI_BITREG_BUS_MASTER_RLD
 argument_list|,
@@ -4748,7 +4748,7 @@ literal|"acpi_cpu: PIIX4: reset BRLD_EN_BM\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiSetRegister
+name|AcpiWriteBitRegister
 argument_list|(
 name|ACPI_BITREG_BUS_MASTER_RLD
 argument_list|,

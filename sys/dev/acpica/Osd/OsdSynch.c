@@ -24,7 +24,13 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acpi.h>
+file|<contrib/dev/acpica/include/acpi.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/accommon.h>
 end_include
 
 begin_include
@@ -1475,7 +1481,7 @@ comment|/*  * The Flags parameter seems to state whether or not caller is an ISR
 end_comment
 
 begin_function
-name|ACPI_NATIVE_UINT
+name|ACPI_CPU_FLAGS
 name|AcpiOsAcquireLock
 parameter_list|(
 name|ACPI_SPINLOCK
