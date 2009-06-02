@@ -183,7 +183,7 @@ parameter_list|(
 name|_vap
 parameter_list|)
 define|\
-value|(IFNET_IS_UP_RUNNING(vap->iv_ifp)&& \ 	 (_vap)->iv_roaming == IEEE80211_ROAMING_AUTO)
+value|(IFNET_IS_UP_RUNNING((_vap)->iv_ifp)&& \ 	 (_vap)->iv_roaming == IEEE80211_ROAMING_AUTO)
 end_define
 
 begin_decl_stmt
