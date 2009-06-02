@@ -514,6 +514,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|u_int
+name|mac_policy_count
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|uint64_t
 name|mac_labeled
 decl_stmt|;

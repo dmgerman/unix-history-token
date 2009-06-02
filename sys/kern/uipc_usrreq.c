@@ -5663,11 +5663,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|SOCK_LOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|mac_socketpeer_set_from_socket
 argument_list|(
 name|so
@@ -5679,11 +5674,6 @@ name|mac_socketpeer_set_from_socket
 argument_list|(
 name|so3
 argument_list|,
-name|so
-argument_list|)
-expr_stmt|;
-name|SOCK_UNLOCK
-argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
