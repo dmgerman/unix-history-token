@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswload - Dispatcher namespace load callbacks  *              $Revision: 1.77 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswload - Dispatcher namespace load callbacks  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2009, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -16,25 +16,25 @@ end_define
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/compiler/aslcompiler.h>
+file|"aslcompiler.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/amlcode.h>
+file|"amlcode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acdispat.h>
+file|"acdispat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acnamesp.h>
+file|"acnamesp.h"
 end_include
 
 begin_include
@@ -115,7 +115,26 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|ACPI_STATUS
-name|LdNamespace1End
+name|LdNamespace2Begin
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|UINT32
+name|Level
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|ACPI_STATUS
+name|LdCommonNamespaceEnd
 parameter_list|(
 name|ACPI_PARSE_OBJECT
 modifier|*
@@ -132,7 +151,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    LdLoadNamespace  *  * PARAMETERS:  RootOp      - Root of the parse tree  *  * RETURN:      Status  *  * DESCRIPTION: Perform a walk of the parse tree that in turn loads all of the  *              named ASL/AML objects into the namespace.  The namespace is  *              constructed in order to resolve named references and references  *              to named fields within resource templates/descriptors.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    LdLoadNamespace  *  * PARAMETERS:  RootOp      - Root of the parse tree  *  * RETURN:      Status  *  * DESCRIPTION: Perform a walk of the parse tree that in turn loads all of the  *              named ASL/AML objects into the namespace. The namespace is  *              constructed in order to resolve named references and references  *              to named fields within resource templates/descriptors.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -179,7 +198,7 @@ return|return
 name|AE_NO_MEMORY
 return|;
 block|}
-comment|/* Perform the walk of the parse tree */
+comment|/* Walk the entire parse tree, first pass */
 name|TrWalkParseTree
 argument_list|(
 name|RootOp
@@ -188,7 +207,21 @@ name|ASL_WALK_VISIT_TWICE
 argument_list|,
 name|LdNamespace1Begin
 argument_list|,
-name|LdNamespace1End
+name|LdCommonNamespaceEnd
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
+comment|/* Second pass to handle forward references */
+name|TrWalkParseTree
+argument_list|(
+name|RootOp
+argument_list|,
+name|ASL_WALK_VISIT_TWICE
+argument_list|,
+name|LdNamespace2Begin
+argument_list|,
+name|LdCommonNamespaceEnd
 argument_list|,
 name|WalkState
 argument_list|)
@@ -444,7 +477,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    LdLoadResourceElements  *  * PARAMETERS:  Op              - Parent node (Resource Descriptor)  *              WalkState       - Current walk state  *  * RETURN:      Status  *  * DESCRIPTION: Enter the named elements of the resource descriptor (children  *              of the parent) into the namespace.  *  * NOTE: In the real AML namespace, these named elements never exist.  But  *       we simply use the namespace here as a symbol table so we can look  *       them up as they are referenced.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    LdLoadResourceElements  *  * PARAMETERS:  Op              - Parent node (Resource Descriptor)  *              WalkState       - Current walk state  *  * RETURN:      Status  *  * DESCRIPTION: Enter the named elements of the resource descriptor (children  *              of the parent) into the namespace.  *  * NOTE: In the real AML namespace, these named elements never exist. But  *       we simply use the namespace here as a symbol table so we can look  *       them up as they are referenced.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -706,7 +739,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    LdNamespace1Begin  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Descending callback used during the parse tree walk.  If this  *              is a named AML opcode, enter into the namespace  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    LdNamespace1Begin  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Descending callback used during the parse tree walk. If this  *              is a named AML opcode, enter into the namespace  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1022,7 +1055,7 @@ break|break;
 case|case
 name|PARSEOP_SCOPE
 case|:
-comment|/*          * The name referenced by Scope(Name) must already exist at this point.          * In other words, forward references for Scope() are not supported.          * The only real reason for this is that the MS interpreter cannot          * handle this case.  Perhaps someday this case can go away.          */
+comment|/*          * The name referenced by Scope(Name) must already exist at this point.          * In other words, forward references for Scope() are not supported.          * The only real reason for this is that the MS interpreter cannot          * handle this case. Perhaps someday this case can go away.          */
 name|Status
 operator|=
 name|AcpiNsLookup
@@ -1269,7 +1302,7 @@ argument_list|,
 name|MsgBuffer
 argument_list|)
 expr_stmt|;
-comment|/*              * However, switch the type to be an actual scope so              * that compilation can continue without generating a whole              * cascade of additional errors.  Open the new scope.              */
+comment|/*              * However, switch the type to be an actual scope so              * that compilation can continue without generating a whole              * cascade of additional errors. Open the new scope.              */
 name|Node
 operator|->
 name|Type
@@ -1349,7 +1382,7 @@ name|Flags
 operator||=
 name|ACPI_NS_ERROR_IF_FOUND
 expr_stmt|;
-comment|/*      * Enter the named type into the internal namespace.  We enter the name      * as we go downward in the parse tree.  Any necessary subobjects that      * involve arguments to the opcode must be created as we go back up the      * parse tree later.      */
+comment|/*      * Enter the named type into the internal namespace. We enter the name      * as we go downward in the parse tree. Any necessary subobjects that      * involve arguments to the opcode must be created as we go back up the      * parse tree later.      */
 name|Status
 operator|=
 name|AcpiNsLookup
@@ -1415,11 +1448,23 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|Node
 operator|->
 name|Flags
 operator|&
 name|ANOBJ_IS_EXTERNAL
+operator|)
+operator|&&
+operator|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|!=
+name|PARSEOP_EXTERNAL
+operator|)
 condition|)
 block|{
 comment|/*                  * Allow one create on an object or segment that was                  * previously declared External                  */
@@ -1633,13 +1678,412 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    LdNamespace1End  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Ascending callback used during the loading of the namespace,  *              We only need to worry about managing the scope stack here.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    LdNamespace2Begin  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Descending callback used during the pass 2 parse tree walk.  *              Second pass resolves some forward references.  *  * Notes:  * Currently only needs to handle the Alias operator.  * Could be used to allow forward references from the Scope() operator, but  * the MS interpreter does not allow this, so this compiler does not either.  *  ******************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|ACPI_STATUS
-name|LdNamespace1End
+name|LdNamespace2Begin
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|UINT32
+name|Level
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+block|{
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+init|=
+operator|(
+name|ACPI_WALK_STATE
+operator|*
+operator|)
+name|Context
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+decl_stmt|;
+name|ACPI_OBJECT_TYPE
+name|ObjectType
+decl_stmt|;
+name|BOOLEAN
+name|ForceNewScope
+init|=
+name|FALSE
+decl_stmt|;
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Arg
+decl_stmt|;
+name|char
+modifier|*
+name|Path
+decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|TargetNode
+decl_stmt|;
+name|ACPI_FUNCTION_NAME
+argument_list|(
+name|LdNamespace2Begin
+argument_list|)
+expr_stmt|;
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_DISPATCH
+operator|,
+literal|"Op %p [%s]\n"
+operator|,
+name|Op
+operator|,
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpName
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Ignore Ops with no namespace node */
+name|Node
+operator|=
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Node
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Node
+condition|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+comment|/* Get the type to determine if we should push the scope */
+if|if
+condition|(
+operator|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_DEFAULT_ARG
+operator|)
+operator|&&
+operator|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|CompileFlags
+operator|==
+name|NODE_IS_RESOURCE_DESC
+operator|)
+condition|)
+block|{
+name|ObjectType
+operator|=
+name|ACPI_TYPE_LOCAL_RESOURCE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ObjectType
+operator|=
+name|AslMapNamedOpcodeToDataType
+argument_list|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|AmlOpcode
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Push scope for Resource Templates */
+if|if
+condition|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_NAME
+condition|)
+block|{
+if|if
+condition|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|CompileFlags
+operator|&
+name|NODE_IS_RESOURCE_DESC
+condition|)
+block|{
+name|ForceNewScope
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+block|}
+comment|/* Push the scope stack */
+if|if
+condition|(
+name|ForceNewScope
+operator|||
+name|AcpiNsOpensScope
+argument_list|(
+name|ObjectType
+argument_list|)
+condition|)
+block|{
+name|Status
+operator|=
+name|AcpiDsScopeStackPush
+argument_list|(
+name|Node
+argument_list|,
+name|ObjectType
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_ALIAS
+condition|)
+block|{
+comment|/* Complete the alias node by getting and saving the target node */
+comment|/* First child is the alias target */
+name|Arg
+operator|=
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Child
+expr_stmt|;
+comment|/* Get the target pathname */
+name|Path
+operator|=
+name|Arg
+operator|->
+name|Asl
+operator|.
+name|Namepath
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Path
+condition|)
+block|{
+name|Status
+operator|=
+name|UtInternalizeName
+argument_list|(
+name|Arg
+operator|->
+name|Asl
+operator|.
+name|ExternalName
+argument_list|,
+operator|&
+name|Path
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
+block|}
+comment|/* Get the NS node associated with the target. It must exist. */
+name|Status
+operator|=
+name|AcpiNsLookup
+argument_list|(
+name|WalkState
+operator|->
+name|ScopeInfo
+argument_list|,
+name|Path
+argument_list|,
+name|ACPI_TYPE_ANY
+argument_list|,
+name|ACPI_IMODE_EXECUTE
+argument_list|,
+name|ACPI_NS_SEARCH_PARENT
+operator||
+name|ACPI_NS_DONT_OPEN_SCOPE
+argument_list|,
+name|WalkState
+argument_list|,
+operator|&
+name|TargetNode
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|Status
+operator|==
+name|AE_NOT_FOUND
+condition|)
+block|{
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_NOT_FOUND
+argument_list|,
+name|Op
+argument_list|,
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ExternalName
+argument_list|)
+expr_stmt|;
+comment|/*                  * The name was not found, go ahead and create it.                  * This prevents more errors later.                  */
+name|Status
+operator|=
+name|AcpiNsLookup
+argument_list|(
+name|WalkState
+operator|->
+name|ScopeInfo
+argument_list|,
+name|Path
+argument_list|,
+name|ACPI_TYPE_ANY
+argument_list|,
+name|ACPI_IMODE_LOAD_PASS1
+argument_list|,
+name|ACPI_NS_NO_UPSEARCH
+argument_list|,
+name|WalkState
+argument_list|,
+operator|&
+operator|(
+name|Node
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+name|AslCoreSubsystemError
+argument_list|(
+name|Op
+argument_list|,
+name|Status
+argument_list|,
+literal|"Failure from lookup\n"
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+comment|/* Save the target node within the alias node */
+name|Node
+operator|->
+name|Object
+operator|=
+name|ACPI_CAST_PTR
+argument_list|(
+name|ACPI_OPERAND_OBJECT
+argument_list|,
+name|TargetNode
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    LdCommonNamespaceEnd  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Ascending callback used during the loading of the namespace,  *              We only need to worry about managing the scope stack here.  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|ACPI_STATUS
+name|LdCommonNamespaceEnd
 parameter_list|(
 name|ACPI_PARSE_OBJECT
 modifier|*
@@ -1673,7 +2117,7 @@ name|FALSE
 decl_stmt|;
 name|ACPI_FUNCTION_NAME
 argument_list|(
-name|LdNamespace1End
+name|LdCommonNamespaceEnd
 argument_list|)
 expr_stmt|;
 comment|/* We are only interested in opcodes that have an associated name */
