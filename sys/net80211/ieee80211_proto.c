@@ -6803,14 +6803,6 @@ name|vap
 init|=
 name|arg
 decl_stmt|;
-comment|/* 	 * This routine is publicly accessible through the vap's 	 * if_init method so guard against calls during detach. 	 * ieee80211_vap_detach null's the backpointer before 	 * tearing down state to signal any callback should be 	 * rejected/ignored. 	 */
-if|if
-condition|(
-name|vap
-operator|!=
-name|NULL
-condition|)
-block|{
 name|IEEE80211_DPRINTF
 argument_list|(
 name|vap
@@ -6843,7 +6835,6 @@ operator|->
 name|iv_ic
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
