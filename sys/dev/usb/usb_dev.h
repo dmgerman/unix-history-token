@@ -311,16 +311,6 @@ name|usb_interface
 modifier|*
 name|iface
 decl_stmt|;
-name|struct
-name|usb_fifo
-modifier|*
-name|rxfifo
-decl_stmt|;
-name|struct
-name|usb_fifo
-modifier|*
-name|txfifo
-decl_stmt|;
 name|int
 name|bus_index
 decl_stmt|;
@@ -340,6 +330,28 @@ name|uint8_t
 name|fifo_index
 decl_stmt|;
 comment|/* FIFO index */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Private per-device and per-thread reference information  */
+end_comment
+
+begin_struct
+struct|struct
+name|usb_cdev_refdata
+block|{
+name|struct
+name|usb_fifo
+modifier|*
+name|rxfifo
+decl_stmt|;
+name|struct
+name|usb_fifo
+modifier|*
+name|txfifo
+decl_stmt|;
 name|uint8_t
 name|is_read
 decl_stmt|;
