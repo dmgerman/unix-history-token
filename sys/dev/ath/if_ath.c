@@ -19154,7 +19154,7 @@ operator|->
 name|sc_tdma
 condition|)
 block|{
-comment|/* 		 * AIFS is zero so there's no pre-transmit wait.  The 		 * burst time defines the slot duration and is configured 		 * via sysctl.  The QCU is setup to not do post-xmit 		 * back off, lockout all lower-priority QCU's, and fire 		 * off the DMA beacon alert timer which is setup based 		 * on the slot configuration. 		 */
+comment|/* 		 * AIFS is zero so there's no pre-transmit wait.  The 		 * burst time defines the slot duration and is configured 		 * through net80211.  The QCU is setup to not do post-xmit 		 * back off, lockout all lower-priority QCU's, and fire 		 * off the DMA beacon alert timer which is setup based 		 * on the slot configuration. 		 */
 name|qi
 operator|.
 name|tqi_qflags
