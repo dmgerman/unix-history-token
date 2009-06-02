@@ -8599,6 +8599,11 @@ operator|.
 name|ast_tx_nofrag
 operator|++
 expr_stmt|;
+name|ifp
+operator|->
+name|if_oerrors
+operator|++
+expr_stmt|;
 name|ath_freetx
 argument_list|(
 name|m
