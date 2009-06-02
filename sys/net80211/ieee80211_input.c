@@ -188,6 +188,16 @@ name|mbuf
 modifier|*
 name|mcopy
 decl_stmt|;
+comment|/* NB: could check for IFF_UP but this is cheaper */
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_state
+operator|==
+name|IEEE80211_S_INIT
+condition|)
+continue|continue;
 comment|/* 		 * WDS vap's only receive directed traffic from the 		 * station at the ``far end''.  That traffic should 		 * be passed through the AP vap the station is associated 		 * to--so don't spam them with mcast frames. 		 */
 if|if
 condition|(
