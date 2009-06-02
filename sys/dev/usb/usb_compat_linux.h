@@ -1464,7 +1464,7 @@ name|interface_to_bsddev
 parameter_list|(
 name|intf
 parameter_list|)
-value|(intf)->linux_udev->bsd_udev
+value|(intf)->linux_udev
 end_define
 
 begin_endif
