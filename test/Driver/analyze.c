@@ -1,0 +1,31 @@
+begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|// Verify that the analyzer gets the same flags as normal compilation
+end_comment
+
+begin_comment
+comment|// (at least for a few key ones).
+end_comment
+
+begin_comment
+comment|// RUN: clang -ccc-host-triple i386-apple-darwin9  -### --analyze -o /dev/null %s -msse 2> %t.log&&
+end_comment
+
+begin_comment
+comment|// RUN: grep '"-analyze"' %t.log&&
+end_comment
+
+begin_comment
+comment|// RUN: grep '"--fmath-errno=0"' %t.log&&
+end_comment
+
+begin_comment
+comment|// RUN: grep '"-target-feature" "+sse"' %t.log&&
+end_comment
+
+begin_comment
+comment|// RUN: grep '"-mmacosx-version-min=10.5.0"' %t.log
+end_comment
+
+end_unit
+
