@@ -10,31 +10,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"aslcompiler.h"
+file|<contrib/dev/acpica/compiler/aslcompiler.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"acdispat.h"
+file|<contrib/dev/acpica/include/acdispat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"actables.h"
+file|<contrib/dev/acpica/include/actables.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"acevents.h"
+file|<contrib/dev/acpica/include/acevents.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"acinterp.h"
+file|<contrib/dev/acpica/include/acinterp.h>
 end_include
 
 begin_define

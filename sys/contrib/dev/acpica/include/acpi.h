@@ -26,7 +26,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"platform/acenv.h"
+file|<contrib/dev/acpica/include/platform/acenv.h>
 end_include
 
 begin_comment
@@ -36,7 +36,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acnames.h"
+file|<contrib/dev/acpica/include/acnames.h>
 end_include
 
 begin_comment
@@ -46,7 +46,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"actypes.h"
+file|<contrib/dev/acpica/include/actypes.h>
 end_include
 
 begin_comment
@@ -56,7 +56,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acexcep.h"
+file|<contrib/dev/acpica/include/acexcep.h>
 end_include
 
 begin_comment
@@ -66,7 +66,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"actbl.h"
+file|<contrib/dev/acpica/include/actbl.h>
 end_include
 
 begin_comment
@@ -76,7 +76,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acoutput.h"
+file|<contrib/dev/acpica/include/acoutput.h>
 end_include
 
 begin_comment
@@ -86,7 +86,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acrestyp.h"
+file|<contrib/dev/acpica/include/acrestyp.h>
 end_include
 
 begin_comment
@@ -96,7 +96,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acpiosxf.h"
+file|<contrib/dev/acpica/include/acpiosxf.h>
 end_include
 
 begin_comment
@@ -106,7 +106,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acpixf.h"
+file|<contrib/dev/acpica/include/acpixf.h>
 end_include
 
 begin_comment

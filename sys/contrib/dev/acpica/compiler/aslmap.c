@@ -10,19 +10,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"aslcompiler.h"
+file|<contrib/dev/acpica/compiler/aslcompiler.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"amlcode.h"
+file|<contrib/dev/acpica/include/amlcode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"acparser.h"
+file|<contrib/dev/acpica/include/acparser.h>
 end_include
 
 begin_define

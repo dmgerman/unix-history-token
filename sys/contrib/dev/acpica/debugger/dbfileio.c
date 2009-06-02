@@ -10,19 +10,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acpi.h"
+file|<contrib/dev/acpica/include/acpi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"accommon.h"
+file|<contrib/dev/acpica/include/accommon.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"acdebug.h"
+file|<contrib/dev/acpica/include/acdebug.h>
 end_include
 
 begin_ifdef
@@ -34,7 +34,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"actables.h"
+file|<contrib/dev/acpica/include/actables.h>
 end_include
 
 begin_endif

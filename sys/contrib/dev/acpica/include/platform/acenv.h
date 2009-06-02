@@ -279,7 +279,7 @@ end_elif
 begin_include
 include|#
 directive|include
-file|"acfreebsd.h"
+file|<contrib/dev/acpica/include/platform/acfreebsd.h>
 end_include
 
 begin_elif

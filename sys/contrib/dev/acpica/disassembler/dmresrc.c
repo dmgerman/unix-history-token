@@ -10,25 +10,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acpi.h"
+file|<contrib/dev/acpica/include/acpi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"accommon.h"
+file|<contrib/dev/acpica/include/accommon.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"amlcode.h"
+file|<contrib/dev/acpica/include/amlcode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"acdisasm.h"
+file|<contrib/dev/acpica/include/acdisasm.h>
 end_include
 
 begin_ifdef

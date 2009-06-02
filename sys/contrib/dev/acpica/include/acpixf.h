@@ -33,13 +33,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"actypes.h"
+file|<contrib/dev/acpica/include/actypes.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"actbl.h"
+file|<contrib/dev/acpica/include/actbl.h>
 end_include
 
 begin_comment

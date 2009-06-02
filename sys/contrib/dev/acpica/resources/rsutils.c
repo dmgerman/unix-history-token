@@ -16,25 +16,25 @@ end_define
 begin_include
 include|#
 directive|include
-file|"acpi.h"
+file|<contrib/dev/acpica/include/acpi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"accommon.h"
+file|<contrib/dev/acpica/include/accommon.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"acnamesp.h"
+file|<contrib/dev/acpica/include/acnamesp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"acresrc.h"
+file|<contrib/dev/acpica/include/acresrc.h>
 end_include
 
 begin_define

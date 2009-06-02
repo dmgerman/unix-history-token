@@ -1116,7 +1116,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"actbl1.h"
+file|<contrib/dev/acpica/include/actbl1.h>
 end_include
 
 begin_comment

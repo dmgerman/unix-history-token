@@ -26,7 +26,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acconfig.h"
+file|<contrib/dev/acpica/include/acconfig.h>
 end_include
 
 begin_comment
@@ -36,7 +36,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acmacros.h"
+file|<contrib/dev/acpica/include/acmacros.h>
 end_include
 
 begin_comment
@@ -46,7 +46,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"aclocal.h"
+file|<contrib/dev/acpica/include/aclocal.h>
 end_include
 
 begin_comment
@@ -56,7 +56,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acobject.h"
+file|<contrib/dev/acpica/include/acobject.h>
 end_include
 
 begin_comment
@@ -66,7 +66,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acstruct.h"
+file|<contrib/dev/acpica/include/acstruct.h>
 end_include
 
 begin_comment
@@ -76,7 +76,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acglobal.h"
+file|<contrib/dev/acpica/include/acglobal.h>
 end_include
 
 begin_comment
@@ -86,7 +86,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"achware.h"
+file|<contrib/dev/acpica/include/achware.h>
 end_include
 
 begin_comment
@@ -96,7 +96,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acutils.h"
+file|<contrib/dev/acpica/include/acutils.h>
 end_include
 
 begin_comment

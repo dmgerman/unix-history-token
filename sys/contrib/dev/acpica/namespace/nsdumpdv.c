@@ -16,7 +16,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"acpi.h"
+file|<contrib/dev/acpica/include/acpi.h>
 end_include
 
 begin_comment
@@ -60,7 +60,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"acnamesp.h"
+file|<contrib/dev/acpica/include/acnamesp.h>
 end_include
 
 begin_comment
