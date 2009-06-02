@@ -4191,6 +4191,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ukbd_detach
 parameter_list|(
