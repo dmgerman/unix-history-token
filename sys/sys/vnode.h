@@ -1702,7 +1702,7 @@ parameter_list|(
 name|vp
 parameter_list|)
 define|\
-value|((vp)->v_vnlock->lock_object.lo_flags |= LK_CANRECURSE)
+value|((vp)->v_vnlock->lock_object.lo_flags |= LO_RECURSABLE)
 end_define
 
 begin_define
