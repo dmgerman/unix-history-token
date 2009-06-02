@@ -107,12 +107,6 @@ directive|include
 file|<sys/uio.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<security/mac/mac_framework.h>
-end_include
-
 begin_decl_stmt
 name|int
 name|max_linkhdr
