@@ -5665,9 +5665,7 @@ name|iv_des_mode
 operator|=
 name|newmode
 expr_stmt|;
-return|return
-name|ENETRESET
-return|;
+comment|/* XXX kick state machine if up+running */
 block|}
 return|return
 literal|0
