@@ -44,6 +44,16 @@ name|u
 operator|)
 literal|351
 decl_stmt|;
+name|union
+name|u
+name|olb
+init|=
+operator|(
+expr|union
+name|u
+operator|)
+literal|1.0
+decl_stmt|;
 block|}
 end_function
 

@@ -817,13 +817,92 @@ name|ImplicitParamDecl
 modifier|*
 name|CXXThisDecl
 decl_stmt|;
+comment|/// CXXLiveTemporaryInfo - Holds information about a live C++ temporary.
+struct|struct
+name|CXXLiveTemporaryInfo
+block|{
+comment|/// Temporary - The live temporary.
+specifier|const
+name|CXXTemporary
+modifier|*
+name|Temporary
+decl_stmt|;
+comment|/// ThisPtr - The pointer to the temporary.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|ThisPtr
+expr_stmt|;
+comment|/// DtorBlock - The destructor block.
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|DtorBlock
+expr_stmt|;
+comment|/// CondPtr - If this is a conditional temporary, this is the pointer to
+comment|/// the condition variable that states whether the destructor should be
+comment|/// called or not.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|CondPtr
+expr_stmt|;
+name|CXXLiveTemporaryInfo
+argument_list|(
+specifier|const
+name|CXXTemporary
+operator|*
+name|temporary
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|thisptr
+argument_list|,
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|dtorblock
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|condptr
+argument_list|)
+operator|:
+name|Temporary
+argument_list|(
+name|temporary
+argument_list|)
+operator|,
+name|ThisPtr
+argument_list|(
+name|thisptr
+argument_list|)
+operator|,
+name|DtorBlock
+argument_list|(
+name|dtorblock
+argument_list|)
+operator|,
+name|CondPtr
+argument_list|(
+argument|condptr
+argument_list|)
+block|{ }
+block|}
+struct|;
 name|llvm
 operator|::
 name|SmallVector
 operator|<
-specifier|const
-name|CXXTemporary
-operator|*
+name|CXXLiveTemporaryInfo
 operator|,
 literal|4
 operator|>
@@ -1735,6 +1814,10 @@ operator|*
 name|Ptr
 argument_list|)
 decl_stmt|;
+name|void
+name|PopCXXTemporary
+parameter_list|()
+function_decl|;
 name|llvm
 operator|::
 name|Value

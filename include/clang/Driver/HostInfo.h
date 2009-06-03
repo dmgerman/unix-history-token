@@ -87,6 +87,8 @@ comment|/// driver may differ from the actual host.
 name|class
 name|HostInfo
 block|{
+name|protected
+label|:
 specifier|const
 name|Driver
 modifier|&
@@ -98,8 +100,6 @@ operator|::
 name|Triple
 name|Triple
 expr_stmt|;
-name|protected
-label|:
 name|HostInfo
 argument_list|(
 specifier|const

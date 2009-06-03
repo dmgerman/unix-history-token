@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -emit-llvm -o %t %s&&
+comment|// RUN: clang -emit-llvm -S -o %t %s&&
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|// RUN: grep '@f0' %t | count 0&&
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -disable-llvm-optzns -emit-llvm -o %t %s&&
+comment|// RUN: clang -mllvm -disable-llvm-optzns -emit-llvm -S -o %t %s&&
 end_comment
 
 begin_comment
