@@ -3203,7 +3203,7 @@ expr_stmt|;
 name|getdisk
 argument_list|()
 expr_stmt|;
-comment|/* Are there any unreferenced inodes in this cylinder group? */
+comment|/* Are there any unreferenced inodes in this file system? */
 if|if
 condition|(
 name|fs
