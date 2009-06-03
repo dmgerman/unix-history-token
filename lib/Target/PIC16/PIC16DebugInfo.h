@@ -259,6 +259,11 @@ name|TargetAsmInfo
 modifier|*
 name|TAI
 decl_stmt|;
+name|std
+operator|::
+name|string
+name|CurFile
+expr_stmt|;
 name|public
 label|:
 name|PIC16DbgInfo
@@ -282,7 +287,11 @@ name|TAI
 argument_list|(
 argument|T
 argument_list|)
-block|{}
+block|{
+name|CurFile
+operator|=
+literal|""
+block|;       }
 operator|~
 name|PIC16DbgInfo
 argument_list|()
@@ -414,6 +423,19 @@ name|Module
 modifier|&
 name|M
 parameter_list|)
+function_decl|;
+name|void
+name|EmitFileDirective
+parameter_list|(
+specifier|const
+name|Function
+modifier|*
+name|F
+parameter_list|)
+function_decl|;
+name|void
+name|EmitEOF
+parameter_list|()
 function_decl|;
 block|}
 empty_stmt|;

@@ -322,6 +322,28 @@ argument_list|(
 argument|SmallVectorImpl<MachineOperand>&Cond
 argument_list|)
 specifier|const
+block|;
+comment|/// getGlobalBaseReg - Return a virtual register initialized with the
+comment|/// the global base register value. Output instructions required to
+comment|/// initialize the register in the function entry block, if necessary.
+comment|///
+name|unsigned
+name|getGlobalBaseReg
+argument_list|(
+argument|MachineFunction *MF
+argument_list|)
+specifier|const
+block|;
+comment|/// getGlobalRetAddr - Return a virtual register initialized with the
+comment|/// the global return address register value. Output instructions required to
+comment|/// initialize the register in the function entry block, if necessary.
+comment|///
+name|unsigned
+name|getGlobalRetAddr
+argument_list|(
+argument|MachineFunction *MF
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 block|}

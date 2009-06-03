@@ -130,7 +130,8 @@ name|protected
 label|:
 comment|/// BufferBegin/BufferEnd - Pointers to the start and end of the memory
 comment|/// allocated for this code buffer.
-name|uint8_t
+name|unsigned
+name|char
 modifier|*
 name|BufferBegin
 decl_stmt|,
@@ -142,7 +143,8 @@ comment|/// code.  This is guranteed to be in the range [BufferBegin,BufferEnd].
 comment|/// this pointer is at BufferEnd, it will never move due to code emission, and
 comment|/// all code emission requests will be ignored (this is the buffer overflow
 comment|/// condition).
-name|uint8_t
+name|unsigned
+name|char
 modifier|*
 name|CurBufferPtr
 decl_stmt|;
@@ -252,7 +254,8 @@ comment|///
 name|void
 name|emitByte
 parameter_list|(
-name|uint8_t
+name|unsigned
+name|char
 name|B
 parameter_list|)
 block|{
@@ -293,7 +296,8 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|uint8_t
+name|unsigned
+name|char
 call|)
 argument_list|(
 name|W
@@ -306,7 +310,8 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|uint8_t
+name|unsigned
+name|char
 call|)
 argument_list|(
 name|W
@@ -319,7 +324,8 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|uint8_t
+name|unsigned
+name|char
 call|)
 argument_list|(
 name|W
@@ -332,7 +338,8 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|uint8_t
+name|unsigned
+name|char
 call|)
 argument_list|(
 name|W
@@ -373,7 +380,8 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|uint8_t
+name|unsigned
+name|char
 call|)
 argument_list|(
 name|W
@@ -386,7 +394,8 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|uint8_t
+name|unsigned
+name|char
 call|)
 argument_list|(
 name|W
@@ -399,7 +408,8 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|uint8_t
+name|unsigned
+name|char
 call|)
 argument_list|(
 name|W
@@ -412,7 +422,8 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|uint8_t
+name|unsigned
+name|char
 call|)
 argument_list|(
 name|W
@@ -453,7 +464,8 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|uint8_t
+name|unsigned
+name|char
 call|)
 argument_list|(
 name|W
@@ -466,7 +478,8 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|uint8_t
+name|unsigned
+name|char
 call|)
 argument_list|(
 name|W
@@ -479,7 +492,8 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|uint8_t
+name|unsigned
+name|char
 call|)
 argument_list|(
 name|W
@@ -492,7 +506,8 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|uint8_t
+name|unsigned
+name|char
 call|)
 argument_list|(
 name|W
@@ -505,7 +520,8 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|uint8_t
+name|unsigned
+name|char
 call|)
 argument_list|(
 name|W
@@ -518,7 +534,8 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|uint8_t
+name|unsigned
+name|char
 call|)
 argument_list|(
 name|W
@@ -531,7 +548,8 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|uint8_t
+name|unsigned
+name|char
 call|)
 argument_list|(
 name|W
@@ -544,7 +562,8 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|uint8_t
+name|unsigned
+name|char
 call|)
 argument_list|(
 name|W
@@ -585,7 +604,8 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|uint8_t
+name|unsigned
+name|char
 call|)
 argument_list|(
 name|W
@@ -598,7 +618,8 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|uint8_t
+name|unsigned
+name|char
 call|)
 argument_list|(
 name|W
@@ -611,7 +632,8 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|uint8_t
+name|unsigned
+name|char
 call|)
 argument_list|(
 name|W
@@ -624,7 +646,8 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|uint8_t
+name|unsigned
+name|char
 call|)
 argument_list|(
 name|W
@@ -637,7 +660,8 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|uint8_t
+name|unsigned
+name|char
 call|)
 argument_list|(
 name|W
@@ -650,7 +674,8 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|uint8_t
+name|unsigned
+name|char
 call|)
 argument_list|(
 name|W
@@ -663,7 +688,8 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|uint8_t
+name|unsigned
+name|char
 call|)
 argument_list|(
 name|W
@@ -676,7 +702,8 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|uint8_t
+name|unsigned
+name|char
 call|)
 argument_list|(
 name|W
@@ -730,7 +757,8 @@ comment|// Move the current buffer ptr up to the specified alignment.
 name|CurBufferPtr
 operator|=
 operator|(
-name|uint8_t
+name|unsigned
+name|char
 operator|*
 operator|)
 operator|(
@@ -776,7 +804,8 @@ parameter_list|)
 block|{
 do|do
 block|{
-name|uint8_t
+name|unsigned
+name|char
 name|Byte
 init|=
 name|Value
@@ -812,11 +841,11 @@ comment|/// written to the output stream.
 name|void
 name|emitSLEB128Bytes
 parameter_list|(
-name|int32_t
+name|int
 name|Value
 parameter_list|)
 block|{
-name|int32_t
+name|int
 name|Sign
 init|=
 name|Value
@@ -837,7 +866,8 @@ name|IsMore
 decl_stmt|;
 do|do
 block|{
-name|uint8_t
+name|unsigned
+name|char
 name|Byte
 init|=
 name|Value
@@ -927,7 +957,8 @@ operator|++
 name|i
 control|)
 block|{
-name|uint8_t
+name|unsigned
+name|char
 name|C
 init|=
 name|String
@@ -951,7 +982,7 @@ comment|/// emitInt32 - Emit a int32 directive.
 name|void
 name|emitInt32
 parameter_list|(
-name|int32_t
+name|int
 name|Value
 parameter_list|)
 block|{

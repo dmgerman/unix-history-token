@@ -214,7 +214,21 @@ argument_list|,
 argument|unsigned&DstSubIdx
 argument_list|)
 specifier|const
-block|;    }
+block|;
+name|virtual
+name|unsigned
+name|InsertBranch
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock *TBB
+argument_list|,
+argument|MachineBasicBlock *FBB
+argument_list|,
+argument|const SmallVectorImpl<MachineOperand>&Cond
+argument_list|)
+specifier|const
+block|;     }
 decl_stmt|;
 block|}
 end_decl_stmt
