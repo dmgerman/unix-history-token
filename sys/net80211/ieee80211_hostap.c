@@ -1074,6 +1074,20 @@ name|vap
 operator|->
 name|iv_ifp
 decl_stmt|;
+comment|/* clear driver/net80211 flags before passing up */
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+operator|(
+name|M_80211_RX
+operator||
+name|M_MCAST
+operator||
+name|M_BCAST
+operator|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|vap
@@ -1149,14 +1163,6 @@ name|ni
 argument_list|,
 name|rx_ucast
 argument_list|)
-expr_stmt|;
-comment|/* clear driver/net80211 flags before passing up */
-name|m
-operator|->
-name|m_flags
-operator|&=
-operator|~
-name|M_80211_RX
 expr_stmt|;
 comment|/* perform as a bridge within the AP */
 if|if

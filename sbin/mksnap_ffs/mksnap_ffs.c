@@ -404,6 +404,14 @@ argument_list|,
 literal|"Cannot retrieve operator gid"
 argument_list|)
 expr_stmt|;
+name|iov
+operator|=
+name|NULL
+expr_stmt|;
+name|iovlen
+operator|=
+literal|0
+expr_stmt|;
 name|build_iovec
 argument_list|(
 operator|&

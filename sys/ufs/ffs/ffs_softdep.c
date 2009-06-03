@@ -2558,7 +2558,7 @@ name|BUF_AREC
 parameter_list|(
 name|bp
 parameter_list|)
-value|((bp)->b_lock.lock_object.lo_flags |= LK_CANRECURSE)
+value|((bp)->b_lock.lock_object.lo_flags |= LO_RECURSABLE)
 end_define
 
 begin_define
@@ -2568,7 +2568,7 @@ name|BUF_NOREC
 parameter_list|(
 name|bp
 parameter_list|)
-value|((bp)->b_lock.lock_object.lo_flags&= ~LK_CANRECURSE)
+value|((bp)->b_lock.lock_object.lo_flags&= ~LO_RECURSABLE)
 end_define
 
 begin_comment

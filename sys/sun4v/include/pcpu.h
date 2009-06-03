@@ -56,7 +56,7 @@ begin_define
 define|#
 directive|define
 name|PCPU_MD_FIELDS_PAD
-value|(4 - (PCPU_NAME_LEN + 7) / 8)
+value|(3 - (PCPU_NAME_LEN + 7) / 8)
 end_define
 
 begin_else
@@ -68,7 +68,7 @@ begin_define
 define|#
 directive|define
 name|PCPU_MD_FIELDS_PAD
-value|4
+value|3
 end_define
 
 begin_endif

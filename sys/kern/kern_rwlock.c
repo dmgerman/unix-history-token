@@ -105,20 +105,6 @@ directive|include
 file|<machine/cpu.h>
 end_include
 
-begin_expr_stmt
-name|CTASSERT
-argument_list|(
-operator|(
-name|RW_RECURSE
-operator|&
-name|LO_CLASSFLAGS
-operator|)
-operator|==
-name|RW_RECURSE
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_if
 if|#
 directive|if
@@ -753,8 +739,6 @@ expr_stmt|;
 name|flags
 operator|=
 name|LO_UPGRADABLE
-operator||
-name|LO_RECURSABLE
 expr_stmt|;
 if|if
 condition|(
@@ -793,17 +777,21 @@ if|if
 condition|(
 name|opts
 operator|&
+name|RW_RECURSE
+condition|)
+name|flags
+operator||=
+name|LO_RECURSABLE
+expr_stmt|;
+if|if
+condition|(
+name|opts
+operator|&
 name|RW_QUIET
 condition|)
 name|flags
 operator||=
 name|LO_QUIET
-expr_stmt|;
-name|flags
-operator||=
-name|opts
-operator|&
-name|RW_RECURSE
 expr_stmt|;
 name|rw
 operator|->
@@ -1142,7 +1130,7 @@ name|lock_object
 operator|.
 name|lo_flags
 operator|&
-name|RW_RECURSE
+name|LO_RECURSABLE
 operator|)
 operator|!=
 literal|0
@@ -2769,7 +2757,7 @@ name|lock_object
 operator|.
 name|lo_flags
 operator|&
-name|RW_RECURSE
+name|LO_RECURSABLE
 argument_list|,
 operator|(
 literal|"%s: recursing but non-recursive rw %s @ %s:%d\n"

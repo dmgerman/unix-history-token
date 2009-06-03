@@ -2608,7 +2608,8 @@ name|int32_t
 name|flag
 name|__unused
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|td
 name|__unused

@@ -423,6 +423,10 @@ name|struct
 name|usb_cdev_privdata
 modifier|*
 parameter_list|,
+name|struct
+name|usb_cdev_refdata
+modifier|*
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -436,6 +440,10 @@ parameter_list|(
 name|struct
 name|usb_cdev_privdata
 modifier|*
+parameter_list|,
+name|struct
+name|usb_cdev_refdata
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -447,6 +455,10 @@ name|usb2_unref_device
 parameter_list|(
 name|struct
 name|usb_cdev_privdata
+modifier|*
+parameter_list|,
+name|struct
+name|usb_cdev_refdata
 modifier|*
 parameter_list|)
 function_decl|;
@@ -708,6 +720,11 @@ name|usb_cdev_privdata
 modifier|*
 name|cpd
 parameter_list|,
+name|struct
+name|usb_cdev_refdata
+modifier|*
+name|crd
+parameter_list|,
 name|int
 name|need_uref
 parameter_list|)
@@ -727,11 +744,25 @@ name|DPRINTFN
 argument_list|(
 literal|2
 argument_list|,
-literal|"usb2_ref_device, cpd=%p need uref=%d\n"
+literal|"cpd=%p need uref=%d\n"
 argument_list|,
 name|cpd
 argument_list|,
 name|need_uref
+argument_list|)
+expr_stmt|;
+comment|/* clear all refs */
+name|memset
+argument_list|(
+name|crd
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|crd
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -857,12 +888,6 @@ operator|->
 name|refcount
 operator|++
 expr_stmt|;
-name|cpd
-operator|->
-name|is_uref
-operator|=
-literal|1
-expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -887,6 +912,13 @@ operator|&
 name|usb2_ref_lock
 argument_list|)
 expr_stmt|;
+comment|/*  		 * Set "is_uref" after grabbing the default SX lock 		 */
+name|crd
+operator|->
+name|is_uref
+operator|=
+literal|1
+expr_stmt|;
 block|}
 comment|/* check if we are doing an open */
 if|if
@@ -898,47 +930,10 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* set defaults */
-name|cpd
-operator|->
-name|txfifo
-operator|=
-name|NULL
-expr_stmt|;
-name|cpd
-operator|->
-name|rxfifo
-operator|=
-name|NULL
-expr_stmt|;
-name|cpd
-operator|->
-name|is_write
-operator|=
-literal|0
-expr_stmt|;
-name|cpd
-operator|->
-name|is_read
-operator|=
-literal|0
-expr_stmt|;
-name|cpd
-operator|->
-name|is_usbfs
-operator|=
-literal|0
-expr_stmt|;
+comment|/* use zero defaults */
 block|}
 else|else
 block|{
-comment|/* initialise "is_usbfs" flag */
-name|cpd
-operator|->
-name|is_usbfs
-operator|=
-literal|0
-expr_stmt|;
 comment|/* check for write */
 if|if
 condition|(
@@ -968,13 +963,13 @@ operator|+
 name|USB_FIFO_TX
 index|]
 expr_stmt|;
-name|cpd
+name|crd
 operator|->
 name|txfifo
 operator|=
 name|f
 expr_stmt|;
-name|cpd
+name|crd
 operator|->
 name|is_write
 operator|=
@@ -1017,29 +1012,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|cpd
+name|crd
 operator|->
 name|is_usbfs
 operator|=
 literal|1
 expr_stmt|;
 block|}
-block|}
-else|else
-block|{
-name|cpd
-operator|->
-name|txfifo
-operator|=
-name|NULL
-expr_stmt|;
-name|cpd
-operator|->
-name|is_write
-operator|=
-literal|0
-expr_stmt|;
-comment|/* no ref */
 block|}
 comment|/* check for read */
 if|if
@@ -1070,13 +1049,13 @@ operator|+
 name|USB_FIFO_RX
 index|]
 expr_stmt|;
-name|cpd
+name|crd
 operator|->
 name|rxfifo
 operator|=
 name|f
 expr_stmt|;
-name|cpd
+name|crd
 operator|->
 name|is_read
 operator|=
@@ -1119,7 +1098,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|cpd
+name|crd
 operator|->
 name|is_usbfs
 operator|=
@@ -1127,27 +1106,11 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-else|else
-block|{
-name|cpd
-operator|->
-name|rxfifo
-operator|=
-name|NULL
-expr_stmt|;
-name|cpd
-operator|->
-name|is_read
-operator|=
-literal|0
-expr_stmt|;
-comment|/* no ref */
-block|}
 block|}
 comment|/* when everything is OK we increment the refcounts */
 if|if
 condition|(
-name|cpd
+name|crd
 operator|->
 name|is_write
 condition|)
@@ -1159,7 +1122,7 @@ argument_list|,
 literal|"ref write\n"
 argument_list|)
 expr_stmt|;
-name|cpd
+name|crd
 operator|->
 name|txfifo
 operator|->
@@ -1169,7 +1132,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|cpd
+name|crd
 operator|->
 name|is_read
 condition|)
@@ -1181,7 +1144,7 @@ argument_list|,
 literal|"ref read\n"
 argument_list|)
 expr_stmt|;
-name|cpd
+name|crd
 operator|->
 name|rxfifo
 operator|->
@@ -1197,7 +1160,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cpd
+name|crd
 operator|->
 name|is_uref
 condition|)
@@ -1219,7 +1182,7 @@ name|error
 label|:
 if|if
 condition|(
-name|cpd
+name|crd
 operator|->
 name|is_uref
 condition|)
@@ -1261,12 +1224,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|cpd
-operator|->
-name|is_uref
-operator|=
-literal|0
-expr_stmt|;
 block|}
 name|mtx_unlock
 argument_list|(
@@ -1302,12 +1259,17 @@ name|struct
 name|usb_cdev_privdata
 modifier|*
 name|cpd
+parameter_list|,
+name|struct
+name|usb_cdev_refdata
+modifier|*
+name|crd
 parameter_list|)
 block|{
 comment|/* 	 * Check if we already got an USB reference on this location: 	 */
 if|if
 condition|(
-name|cpd
+name|crd
 operator|->
 name|is_uref
 condition|)
@@ -1321,6 +1283,8 @@ comment|/* 	 * To avoid deadlock at detach we need to drop the FIFO ref 	 * and 
 name|usb2_unref_device
 argument_list|(
 name|cpd
+argument_list|,
+name|crd
 argument_list|)
 expr_stmt|;
 return|return
@@ -1328,6 +1292,8 @@ operator|(
 name|usb2_ref_device
 argument_list|(
 name|cpd
+argument_list|,
+name|crd
 argument_list|,
 literal|1
 comment|/* need uref */
@@ -1349,11 +1315,29 @@ name|struct
 name|usb_cdev_privdata
 modifier|*
 name|cpd
+parameter_list|,
+name|struct
+name|usb_cdev_refdata
+modifier|*
+name|crd
 parameter_list|)
 block|{
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+literal|"cpd=%p is_uref=%d\n"
+argument_list|,
+name|cpd
+argument_list|,
+name|crd
+operator|->
+name|is_uref
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|cpd
+name|crd
 operator|->
 name|is_uref
 condition|)
@@ -1385,7 +1369,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cpd
+name|crd
 operator|->
 name|is_read
 condition|)
@@ -1394,7 +1378,7 @@ if|if
 condition|(
 operator|--
 operator|(
-name|cpd
+name|crd
 operator|->
 name|rxfifo
 operator|->
@@ -1407,7 +1391,7 @@ block|{
 name|usb2_cv_signal
 argument_list|(
 operator|&
-name|cpd
+name|crd
 operator|->
 name|rxfifo
 operator|->
@@ -1415,7 +1399,7 @@ name|cv_drain
 argument_list|)
 expr_stmt|;
 block|}
-name|cpd
+name|crd
 operator|->
 name|is_read
 operator|=
@@ -1424,7 +1408,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|cpd
+name|crd
 operator|->
 name|is_write
 condition|)
@@ -1433,7 +1417,7 @@ if|if
 condition|(
 operator|--
 operator|(
-name|cpd
+name|crd
 operator|->
 name|txfifo
 operator|->
@@ -1446,7 +1430,7 @@ block|{
 name|usb2_cv_signal
 argument_list|(
 operator|&
-name|cpd
+name|crd
 operator|->
 name|txfifo
 operator|->
@@ -1454,7 +1438,7 @@ name|cv_drain
 argument_list|)
 expr_stmt|;
 block|}
-name|cpd
+name|crd
 operator|->
 name|is_write
 operator|=
@@ -1463,7 +1447,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|cpd
+name|crd
 operator|->
 name|is_uref
 condition|)
@@ -1494,7 +1478,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|cpd
+name|crd
 operator|->
 name|is_uref
 operator|=
@@ -1595,6 +1579,11 @@ name|struct
 name|usb_cdev_privdata
 modifier|*
 name|cpd
+parameter_list|,
+name|struct
+name|usb_cdev_refdata
+modifier|*
+name|crd
 parameter_list|)
 block|{
 name|struct
@@ -1718,7 +1707,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|cpd
+name|crd
 operator|->
 name|txfifo
 operator|=
@@ -1754,7 +1743,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|cpd
+name|crd
 operator|->
 name|rxfifo
 operator|=
@@ -2357,7 +2346,7 @@ condition|(
 name|is_tx
 condition|)
 block|{
-name|cpd
+name|crd
 operator|->
 name|txfifo
 operator|=
@@ -2376,7 +2365,7 @@ condition|(
 name|is_rx
 condition|)
 block|{
-name|cpd
+name|crd
 operator|->
 name|rxfifo
 operator|=
@@ -3455,6 +3444,10 @@ operator|->
 name|si_drv1
 decl_stmt|;
 name|struct
+name|usb_cdev_refdata
+name|refs
+decl_stmt|;
+name|struct
 name|usb_cdev_privdata
 modifier|*
 name|cpd
@@ -3582,6 +3575,9 @@ name|usb2_ref_device
 argument_list|(
 name|cpd
 argument_list|,
+operator|&
+name|refs
+argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -3623,6 +3619,9 @@ operator|=
 name|usb2_fifo_create
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|)
 expr_stmt|;
 comment|/* check for error */
@@ -3641,6 +3640,9 @@ expr_stmt|;
 name|usb2_unref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|)
 expr_stmt|;
 name|free
@@ -3669,8 +3671,8 @@ name|usb2_fifo_open
 argument_list|(
 name|cpd
 argument_list|,
-name|cpd
-operator|->
+name|refs
+operator|.
 name|rxfifo
 argument_list|,
 name|fflags
@@ -3691,6 +3693,9 @@ expr_stmt|;
 name|usb2_unref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|)
 expr_stmt|;
 name|free
@@ -3720,8 +3725,8 @@ name|usb2_fifo_open
 argument_list|(
 name|cpd
 argument_list|,
-name|cpd
-operator|->
+name|refs
+operator|.
 name|txfifo
 argument_list|,
 name|fflags
@@ -3748,8 +3753,8 @@ condition|)
 block|{
 name|usb2_fifo_close
 argument_list|(
-name|cpd
-operator|->
+name|refs
+operator|.
 name|rxfifo
 argument_list|,
 name|fflags
@@ -3759,6 +3764,9 @@ block|}
 name|usb2_unref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|)
 expr_stmt|;
 name|free
@@ -3778,6 +3786,9 @@ block|}
 name|usb2_unref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|)
 expr_stmt|;
 name|devfs_set_cdevpriv
@@ -3810,6 +3821,10 @@ name|arg
 parameter_list|)
 block|{
 name|struct
+name|usb_cdev_refdata
+name|refs
+decl_stmt|;
+name|struct
 name|usb_cdev_privdata
 modifier|*
 name|cpd
@@ -3833,6 +3848,9 @@ operator|=
 name|usb2_ref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|,
 literal|1
 argument_list|)
@@ -3862,8 +3880,8 @@ condition|)
 block|{
 name|usb2_fifo_close
 argument_list|(
-name|cpd
-operator|->
+name|refs
+operator|.
 name|rxfifo
 argument_list|,
 name|cpd
@@ -3883,8 +3901,8 @@ condition|)
 block|{
 name|usb2_fifo_close
 argument_list|(
-name|cpd
-operator|->
+name|refs
+operator|.
 name|txfifo
 argument_list|,
 name|cpd
@@ -3896,6 +3914,9 @@ block|}
 name|usb2_unref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|)
 expr_stmt|;
 name|free
@@ -4291,6 +4312,10 @@ name|td
 parameter_list|)
 block|{
 name|struct
+name|usb_cdev_refdata
+name|refs
+decl_stmt|;
+name|struct
 name|usb_cdev_privdata
 modifier|*
 name|cpd
@@ -4339,12 +4364,15 @@ operator|(
 name|err
 operator|)
 return|;
-comment|/*  	 * Performance optimistaion: We try to check for IOCTL's that 	 * don't need the USB reference first. Then we grab the USB 	 * reference if we need it! 	 */
+comment|/*  	 * Performance optimisation: We try to check for IOCTL's that 	 * don't need the USB reference first. Then we grab the USB 	 * reference if we need it! 	 */
 name|err
 operator|=
 name|usb2_ref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|,
 literal|0
 comment|/* no uref */
@@ -4386,8 +4414,8 @@ condition|)
 block|{
 name|f
 operator|=
-name|cpd
-operator|->
+name|refs
+operator|.
 name|txfifo
 expr_stmt|;
 name|err
@@ -4413,8 +4441,8 @@ condition|)
 block|{
 name|f
 operator|=
-name|cpd
-operator|->
+name|refs
+operator|.
 name|rxfifo
 expr_stmt|;
 name|err
@@ -4491,6 +4519,9 @@ condition|(
 name|usb2_usb_ref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|)
 condition|)
 block|{
@@ -4551,6 +4582,9 @@ label|:
 name|usb2_unref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|)
 expr_stmt|;
 return|return
@@ -4584,6 +4618,10 @@ modifier|*
 name|td
 parameter_list|)
 block|{
+name|struct
+name|usb_cdev_refdata
+name|refs
+decl_stmt|;
 name|struct
 name|usb_cdev_privdata
 modifier|*
@@ -4622,6 +4660,9 @@ operator|||
 name|usb2_ref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|,
 literal|0
 argument_list|)
@@ -4677,8 +4718,8 @@ condition|)
 block|{
 name|f
 operator|=
-name|cpd
-operator|->
+name|refs
+operator|.
 name|txfifo
 expr_stmt|;
 name|mtx_lock
@@ -4691,8 +4732,8 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|cpd
-operator|->
+name|refs
+operator|.
 name|is_usbfs
 condition|)
 block|{
@@ -4840,8 +4881,8 @@ condition|)
 block|{
 name|f
 operator|=
-name|cpd
-operator|->
+name|refs
+operator|.
 name|rxfifo
 expr_stmt|;
 name|mtx_lock
@@ -4854,8 +4895,8 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|cpd
-operator|->
+name|refs
+operator|.
 name|is_usbfs
 condition|)
 block|{
@@ -4976,8 +5017,8 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|cpd
-operator|->
+name|refs
+operator|.
 name|is_usbfs
 condition|)
 block|{
@@ -5006,6 +5047,9 @@ block|}
 name|usb2_unref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|)
 expr_stmt|;
 return|return
@@ -5035,6 +5079,10 @@ name|int
 name|ioflag
 parameter_list|)
 block|{
+name|struct
+name|usb_cdev_refdata
+name|refs
+decl_stmt|;
 name|struct
 name|usb_cdev_privdata
 modifier|*
@@ -5097,6 +5145,9 @@ name|usb2_ref_device
 argument_list|(
 name|cpd
 argument_list|,
+operator|&
+name|refs
+argument_list|,
 literal|0
 comment|/* no uref */
 argument_list|)
@@ -5120,8 +5171,8 @@ name|fflags
 expr_stmt|;
 name|f
 operator|=
-name|cpd
-operator|->
+name|refs
+operator|.
 name|rxfifo
 expr_stmt|;
 if|if
@@ -5132,6 +5183,14 @@ name|NULL
 condition|)
 block|{
 comment|/* should not happen */
+name|usb2_unref_device
+argument_list|(
+name|cpd
+argument_list|,
+operator|&
+name|refs
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EPERM
@@ -5170,8 +5229,8 @@ block|}
 comment|/* check if USB-FS interface is active */
 if|if
 condition|(
-name|cpd
-operator|->
+name|refs
+operator|.
 name|is_usbfs
 condition|)
 block|{
@@ -5415,6 +5474,9 @@ expr_stmt|;
 name|usb2_unref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|)
 expr_stmt|;
 return|return
@@ -5444,6 +5506,10 @@ name|int
 name|ioflag
 parameter_list|)
 block|{
+name|struct
+name|usb_cdev_refdata
+name|refs
+decl_stmt|;
 name|struct
 name|usb_cdev_privdata
 modifier|*
@@ -5513,6 +5579,9 @@ name|usb2_ref_device
 argument_list|(
 name|cpd
 argument_list|,
+operator|&
+name|refs
+argument_list|,
 literal|0
 comment|/* no uref */
 argument_list|)
@@ -5536,8 +5605,8 @@ name|fflags
 expr_stmt|;
 name|f
 operator|=
-name|cpd
-operator|->
+name|refs
+operator|.
 name|txfifo
 expr_stmt|;
 if|if
@@ -5551,6 +5620,9 @@ comment|/* should not happen */
 name|usb2_unref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|)
 expr_stmt|;
 return|return
@@ -5591,8 +5663,8 @@ block|}
 comment|/* check if USB-FS interface is active */
 if|if
 condition|(
-name|cpd
-operator|->
+name|refs
+operator|.
 name|is_usbfs
 condition|)
 block|{
@@ -5829,6 +5901,9 @@ expr_stmt|;
 name|usb2_unref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|)
 expr_stmt|;
 return|return

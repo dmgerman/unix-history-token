@@ -433,6 +433,16 @@ name|mac_static_policy_list
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|u_int
+name|mac_policy_count
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Registered policy count. */
+end_comment
+
 begin_function_decl
 specifier|static
 name|void
@@ -732,20 +742,24 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|MAC_STATIC
-name|rm_init
+name|rm_init_flags
 argument_list|(
 operator|&
 name|mac_policy_rm
 argument_list|,
 literal|"mac_policy_rm"
+argument_list|,
+name|RM_NOWITNESS
 argument_list|)
 expr_stmt|;
-name|sx_init
+name|sx_init_flags
 argument_list|(
 operator|&
 name|mac_policy_sx
 argument_list|,
 literal|"mac_policy_sx"
+argument_list|,
+name|SX_NOWITNESS
 argument_list|)
 expr_stmt|;
 endif|#
@@ -958,7 +972,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|mac_policy_updateflags
+name|mac_policy_update
 parameter_list|(
 name|void
 parameter_list|)
@@ -975,6 +989,10 @@ name|mac_labeled
 operator|=
 literal|0
 expr_stmt|;
+name|mac_policy_count
+operator|=
+literal|0
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|mpc
@@ -983,6 +1001,7 @@ argument|&mac_static_policy_list
 argument_list|,
 argument|mpc_list
 argument_list|)
+block|{
 name|mac_labeled
 operator||=
 name|mac_policy_getlabeled
@@ -990,6 +1009,10 @@ argument_list|(
 name|mpc
 argument_list|)
 expr_stmt|;
+name|mac_policy_count
+operator|++
+expr_stmt|;
+block|}
 name|LIST_FOREACH
 argument_list|(
 argument|mpc
@@ -998,6 +1021,7 @@ argument|&mac_policy_list
 argument_list|,
 argument|mpc_list
 argument_list|)
+block|{
 name|mac_labeled
 operator||=
 name|mac_policy_getlabeled
@@ -1005,6 +1029,10 @@ argument_list|(
 name|mpc
 argument_list|)
 expr_stmt|;
+name|mac_policy_count
+operator|++
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1241,7 +1269,7 @@ operator|(
 name|mpc
 operator|)
 expr_stmt|;
-name|mac_policy_updateflags
+name|mac_policy_update
 argument_list|()
 expr_stmt|;
 name|SDT_PROBE
@@ -1396,7 +1424,7 @@ operator|&=
 operator|~
 name|MPC_RUNTIME_FLAG_REGISTERED
 expr_stmt|;
-name|mac_policy_updateflags
+name|mac_policy_update
 argument_list|()
 expr_stmt|;
 name|mac_policy_xunlock

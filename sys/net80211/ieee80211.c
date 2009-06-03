@@ -1649,6 +1649,11 @@ name|ieee80211vap
 modifier|*
 name|vap
 decl_stmt|;
+name|if_detach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1744,11 +1749,6 @@ expr_stmt|;
 name|IEEE80211_LOCK_DESTROY
 argument_list|(
 name|ic
-argument_list|)
-expr_stmt|;
-name|if_detach
-argument_list|(
-name|ifp
 argument_list|)
 expr_stmt|;
 block|}
@@ -2478,19 +2478,6 @@ argument_list|,
 name|iv_next
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|vap
-operator|->
-name|iv_opmode
-operator|==
-name|IEEE80211_M_MONITOR
-condition|)
-name|ic
-operator|->
-name|ic_monvaps
-operator|++
-expr_stmt|;
 name|ieee80211_syncflag_locked
 argument_list|(
 name|ic
@@ -2619,34 +2606,15 @@ operator|->
 name|if_xname
 argument_list|)
 expr_stmt|;
-name|IEEE80211_LOCK
+comment|/* NB: bpfdetach is called by ether_ifdetach and claims all taps */
+name|ether_ifdetach
 argument_list|(
-name|ic
+name|ifp
 argument_list|)
 expr_stmt|;
-comment|/* block traffic from above */
-name|ifp
-operator|->
-name|if_drv_flags
-operator||=
-name|IFF_DRV_OACTIVE
-expr_stmt|;
-comment|/* 	 * Evil hack.  Clear the backpointer from the ifnet to the 	 * vap so any requests from above will return an error or 	 * be ignored.  In particular this short-circuits requests 	 * by the bridge to turn off promiscuous mode as a result 	 * of calling ether_ifdetach. 	 */
-name|ifp
-operator|->
-name|if_softc
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* 	 * Stop the vap before detaching the ifnet.  Ideally we'd 	 * do this in the other order so the ifnet is inaccessible 	 * while we cleanup internal state but that is hard. 	 */
-name|ieee80211_stop_locked
+name|ieee80211_stop
 argument_list|(
 name|vap
-argument_list|)
-expr_stmt|;
-name|IEEE80211_UNLOCK
-argument_list|(
-name|ic
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Flush any deferred vap tasks. 	 * NB: must be before ether_ifdetach() and removal from ic_vaps list 	 */
@@ -2699,19 +2667,6 @@ name|vap
 argument_list|,
 name|iv_next
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|vap
-operator|->
-name|iv_opmode
-operator|==
-name|IEEE80211_M_MONITOR
-condition|)
-name|ic
-operator|->
-name|ic_monvaps
-operator|--
 expr_stmt|;
 name|ieee80211_syncflag_locked
 argument_list|(
@@ -2785,13 +2740,6 @@ expr_stmt|;
 name|IEEE80211_UNLOCK
 argument_list|(
 name|ic
-argument_list|)
-expr_stmt|;
-comment|/* XXX can't hold com lock */
-comment|/* NB: bpfdetach is called by ether_ifdetach and claims all taps */
-name|ether_ifdetach
-argument_list|(
-name|ifp
 argument_list|)
 expr_stmt|;
 name|ifmedia_removeall
@@ -5717,9 +5665,7 @@ name|iv_des_mode
 operator|=
 name|newmode
 expr_stmt|;
-return|return
-name|ENETRESET
-return|;
+comment|/* XXX kick state machine if up+running */
 block|}
 return|return
 literal|0

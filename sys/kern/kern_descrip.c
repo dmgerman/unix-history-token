@@ -9603,9 +9603,10 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+comment|/* 		 * Use an acquire barrier to prevent caching of fd_ofiles 		 * so it is refreshed for verification. 		 */
 if|if
 condition|(
-name|atomic_cmpset_int
+name|atomic_cmpset_acq_int
 argument_list|(
 operator|&
 name|fp
@@ -9626,18 +9627,9 @@ if|if
 condition|(
 name|fp
 operator|==
-operator|(
-operator|(
-expr|struct
-name|file
-operator|*
-specifier|volatile
-operator|*
-operator|)
 name|fdp
 operator|->
 name|fd_ofiles
-operator|)
 index|[
 name|fd
 index|]

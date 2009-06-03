@@ -1222,7 +1222,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* 88E1116 page 2 */
+comment|/* 88E1116, 88E1149 page 2 */
 end_comment
 
 begin_define
@@ -1230,6 +1230,78 @@ define|#
 directive|define
 name|E1000_SCR_RGMII_POWER_UP
 value|0x0008
+end_define
+
+begin_comment
+comment|/* 88E1116, 88E1149 page 3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_SCR_LED_STAT0_MASK
+value|0x000F
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SCR_LED_STAT1_MASK
+value|0x00F0
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SCR_LED_INIT_MASK
+value|0x0F00
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SCR_LED_LOS_MASK
+value|0xF000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SCR_LED_STAT0
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& E1000_SCR_LED_STAT0_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SCR_LED_STAT1
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& E1000_SCR_LED_STAT1_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SCR_LED_INIT
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& E1000_SCR_LED_INIT_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SCR_LED_LOS
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& E1000_SCR_LED_LOS_MASK)
 end_define
 
 begin_define
@@ -1413,6 +1485,187 @@ define|#
 directive|define
 name|E1000_IER_AUTO_NEG_ERR
 value|0x8000
+end_define
+
+begin_comment
+comment|/* 88E1116, 88E1149 page 3, LED timer control. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PULSE_MASK
+value|0x7000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PULSE_NO_STR
+value|0
+end_define
+
+begin_comment
+comment|/* no pulse stretching */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PULSE_21MS
+value|1
+end_define
+
+begin_comment
+comment|/* 21 ms to 42 ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PULSE_42MS
+value|2
+end_define
+
+begin_comment
+comment|/* 42 ms to 84 ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PULSE_84MS
+value|3
+end_define
+
+begin_comment
+comment|/* 84 ms to 170 ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PULSE_170MS
+value|4
+end_define
+
+begin_comment
+comment|/* 170 ms to 340 ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PULSE_340MS
+value|5
+end_define
+
+begin_comment
+comment|/* 340 ms to 670 ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PULSE_670MS
+value|6
+end_define
+
+begin_comment
+comment|/* 670 ms to 1300 ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PULSE_1300MS
+value|7
+end_define
+
+begin_comment
+comment|/* 1300 ms to 2700 ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PULSE_DUR
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)&	E1000_PULSE_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_BLINK_MASK
+value|0x0700
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_BLINK_42MS
+value|0
+end_define
+
+begin_comment
+comment|/* 42 ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_BLINK_84MS
+value|1
+end_define
+
+begin_comment
+comment|/* 84 ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_BLINK_170MS
+value|2
+end_define
+
+begin_comment
+comment|/* 170 ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_BLINK_340MS
+value|3
+end_define
+
+begin_comment
+comment|/* 340 ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_BLINK_670MS
+value|4
+end_define
+
+begin_comment
+comment|/* 670 ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_BLINK_RATE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)&	E1000_BLINK_MASK)
 end_define
 
 begin_define

@@ -1250,11 +1250,6 @@ block|}
 ifdef|#
 directive|ifdef
 name|MAC
-name|SOCK_LOCK
-argument_list|(
-name|head
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|mac_socket_check_accept
@@ -1263,11 +1258,6 @@ name|td
 operator|->
 name|td_ucred
 argument_list|,
-name|head
-argument_list|)
-expr_stmt|;
-name|SOCK_UNLOCK
-argument_list|(
 name|head
 argument_list|)
 expr_stmt|;
