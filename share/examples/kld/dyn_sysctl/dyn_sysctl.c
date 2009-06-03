@@ -567,6 +567,8 @@ argument_list|(
 operator|&
 name|clist
 argument_list|)
+operator|!=
+literal|0
 condition|)
 name|printf
 argument_list|(
@@ -597,6 +599,8 @@ argument_list|(
 operator|&
 name|clist2
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|printf
@@ -646,6 +650,8 @@ argument_list|(
 operator|&
 name|clist
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|printf
@@ -695,6 +701,8 @@ argument_list|(
 operator|&
 name|clist1
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|printf
@@ -731,7 +739,9 @@ expr_stmt|;
 break|break;
 block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
