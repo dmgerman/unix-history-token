@@ -101,17 +101,17 @@ begin_comment
 comment|/* 0x397B839A, 0x252049C1 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|INLINE_REM_PIO2
-end_ifdef
+end_ifndef
 
 begin_function
 specifier|extern
-name|__gnu89_inline
 endif|#
 directive|endif
+name|__inline
 name|int
 name|__ieee754_rem_pio2
 parameter_list|(

@@ -96,17 +96,17 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|INLINE_KERNEL_TANDF
-end_ifdef
+end_ifndef
 
 begin_function
 specifier|extern
-name|__gnu89_inline
 endif|#
 directive|endif
+name|__inline
 name|float
 name|__kernel_tandf
 parameter_list|(
