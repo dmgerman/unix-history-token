@@ -13094,7 +13094,7 @@ operator|&&
 name|vap
 operator|->
 name|iv_state
-operator|==
+operator|>=
 name|IEEE80211_S_RUN
 condition|)
 block|{
@@ -13163,7 +13163,7 @@ operator|&&
 name|vap
 operator|->
 name|iv_state
-operator|==
+operator|>=
 name|IEEE80211_S_RUN
 condition|)
 block|{
@@ -13457,7 +13457,7 @@ argument_list|(
 name|vap
 operator|->
 name|iv_state
-operator|==
+operator|>=
 name|IEEE80211_S_RUN
 argument_list|,
 operator|(
@@ -25632,7 +25632,7 @@ operator|&&
 name|vap
 operator|->
 name|iv_state
-operator|==
+operator|>=
 name|IEEE80211_S_RUN
 condition|)
 return|return
