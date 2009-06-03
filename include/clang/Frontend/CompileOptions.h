@@ -82,6 +82,19 @@ name|CompileOptions
 block|{
 name|public
 label|:
+enum|enum
+name|InliningMethod
+block|{
+name|NoInlining
+block|,
+comment|// Perform no inlining whatsoever.
+name|NormalInlining
+block|,
+comment|// Use the standard function inlining pass.
+name|OnlyAlwaysInlining
+comment|// Only run the always inlining pass.
+block|}
+enum|;
 name|unsigned
 name|OptimizationLevel
 range|:
@@ -107,12 +120,6 @@ literal|1
 decl_stmt|;
 comment|/// Unused. For mirroring GCC
 comment|/// optimization selection.
-name|unsigned
-name|InlineFunctions
-range|:
-literal|1
-decl_stmt|;
-comment|/// Should functions be inlined?
 name|unsigned
 name|SimplifyLibCalls
 range|:
@@ -145,6 +152,10 @@ range|:
 literal|1
 decl_stmt|;
 comment|/// Set when -fno-common or C++ is enabled.
+comment|/// Inlining - The kind of inlining to perform.
+name|InliningMethod
+name|Inlining
+decl_stmt|;
 comment|/// CPU - An optional CPU to target.
 name|std
 operator|::
@@ -184,8 +195,6 @@ name|UnitAtATime
 operator|=
 literal|1
 expr_stmt|;
-name|InlineFunctions
-operator|=
 name|SimplifyLibCalls
 operator|=
 name|UnrollLoops
@@ -203,6 +212,10 @@ expr_stmt|;
 name|NoCommon
 operator|=
 literal|0
+expr_stmt|;
+name|Inlining
+operator|=
+name|NoInlining
 expr_stmt|;
 block|}
 block|}
