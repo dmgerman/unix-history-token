@@ -859,6 +859,13 @@ decl_stmt|,
 modifier|*
 name|dest_label
 decl_stmt|;
+if|if
+condition|(
+name|mac_policy_count
+operator|==
+literal|0
+condition|)
+return|return;
 name|src_label
 operator|=
 name|mac_mbuf_to_label
