@@ -519,6 +519,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|interfaces_equal
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
