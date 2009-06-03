@@ -1357,7 +1357,13 @@ name|label
 modifier|*
 name|inplabel
 parameter_list|)
-block|{  }
+block|{
+name|SOCK_LOCK_ASSERT
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -2842,6 +2848,12 @@ modifier|*
 name|solabel
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|0
+block|SOCK_LOCK(so); 	SOCK_UNLOCK(so);
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -2876,6 +2888,12 @@ modifier|*
 name|sa
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|0
+block|SOCK_LOCK(so); 	SOCK_UNLOCK(so);
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -2910,6 +2928,12 @@ modifier|*
 name|sa
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|0
+block|SOCK_LOCK(so); 	SOCK_UNLOCK(so);
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -2972,6 +2996,12 @@ modifier|*
 name|mlabel
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|0
+block|SOCK_LOCK(so); 	SOCK_UNLOCK(so);
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -3001,6 +3031,12 @@ modifier|*
 name|solabel
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|0
+block|SOCK_LOCK(so); 	SOCK_UNLOCK(so);
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -3030,6 +3066,12 @@ modifier|*
 name|solabel
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|0
+block|SOCK_LOCK(so); 	SOCK_UNLOCK(so);
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -3059,6 +3101,12 @@ modifier|*
 name|solabel
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|0
+block|SOCK_LOCK(so); 	SOCK_UNLOCK(so);
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -3093,6 +3141,11 @@ modifier|*
 name|newlabel
 parameter_list|)
 block|{
+name|SOCK_LOCK_ASSERT
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3122,6 +3175,12 @@ modifier|*
 name|solabel
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|0
+block|SOCK_LOCK(so); 	SOCK_UNLOCK(so);
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -3151,6 +3210,12 @@ modifier|*
 name|solabel
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|0
+block|SOCK_LOCK(so); 	SOCK_UNLOCK(so);
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -3209,6 +3274,12 @@ modifier|*
 name|solabel
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|0
+block|SOCK_LOCK(so); 	SOCK_UNLOCK(so);
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -3265,7 +3336,14 @@ name|label
 modifier|*
 name|mlabel
 parameter_list|)
-block|{  }
+block|{
+if|#
+directive|if
+literal|0
+block|SOCK_LOCK(so); 	SOCK_UNLOCK(so);
+endif|#
+directive|endif
+block|}
 end_function
 
 begin_function
@@ -3293,7 +3371,20 @@ name|label
 modifier|*
 name|newsolabel
 parameter_list|)
-block|{  }
+block|{
+if|#
+directive|if
+literal|0
+block|SOCK_LOCK(oldso); 	SOCK_UNLOCK(oldso);
+endif|#
+directive|endif
+if|#
+directive|if
+literal|0
+block|SOCK_LOCK(newso); 	SOCK_UNLOCK(newso);
+endif|#
+directive|endif
+block|}
 end_function
 
 begin_function
@@ -3321,7 +3412,13 @@ name|label
 modifier|*
 name|newlabel
 parameter_list|)
-block|{  }
+block|{
+name|SOCK_LOCK_ASSERT
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -3349,7 +3446,14 @@ name|label
 modifier|*
 name|sopeerlabel
 parameter_list|)
-block|{  }
+block|{
+if|#
+directive|if
+literal|0
+block|SOCK_LOCK(so); 	SOCK_UNLOCK(so);
+endif|#
+directive|endif
+block|}
 end_function
 
 begin_function
@@ -3377,7 +3481,20 @@ name|label
 modifier|*
 name|newsopeerlabel
 parameter_list|)
-block|{  }
+block|{
+if|#
+directive|if
+literal|0
+block|SOCK_LOCK(oldso); 	SOCK_UNLOCK(oldso);
+endif|#
+directive|endif
+if|#
+directive|if
+literal|0
+block|SOCK_LOCK(newso); 	SOCK_UNLOCK(newso);
+endif|#
+directive|endif
+block|}
 end_function
 
 begin_function
