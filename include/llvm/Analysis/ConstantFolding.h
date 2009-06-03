@@ -121,6 +121,8 @@ specifier|const
 name|TargetData
 modifier|*
 name|TD
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// ConstantFoldInstOperands - Attempt to constant fold an instruction with the

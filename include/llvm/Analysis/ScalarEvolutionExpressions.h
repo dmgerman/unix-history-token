@@ -76,9 +76,6 @@ name|class
 name|ConstantRange
 decl_stmt|;
 name|class
-name|APInt
-decl_stmt|;
-name|class
 name|DominatorTree
 decl_stmt|;
 enum|enum

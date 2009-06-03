@@ -2555,6 +2555,8 @@ decl_stmt|,
 modifier|*
 name|Prev
 init|=
+name|this
+operator|->
 name|getPrev
 argument_list|(
 name|First
@@ -2572,6 +2574,8 @@ decl_stmt|,
 modifier|*
 name|Last
 init|=
+name|this
+operator|->
 name|getPrev
 argument_list|(
 name|Next
@@ -2620,6 +2624,8 @@ name|NodeTy
 modifier|*
 name|PosPrev
 init|=
+name|this
+operator|->
 name|getPrev
 argument_list|(
 name|PosNext
@@ -2672,6 +2678,8 @@ argument_list|,
 name|Last
 argument_list|)
 expr_stmt|;
+name|this
+operator|->
 name|transferNodesFromList
 argument_list|(
 name|L2

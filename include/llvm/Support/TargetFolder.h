@@ -44,11 +44,19 @@ comment|// It provides IRBuilder with a set of methods for creating constants wi
 end_comment
 
 begin_comment
-comment|// target dependent folding.  For general constant creation and folding,
+comment|// target dependent folding, in addition to the same target-independent
 end_comment
 
 begin_comment
-comment|// use ConstantExpr and the routines in llvm/Analysis/ConstantFolding.h.
+comment|// folding that the ConstantFolder class provides.  For general constant
+end_comment
+
+begin_comment
+comment|// creation and folding, use ConstantExpr and the routines in
+end_comment
+
+begin_comment
+comment|// llvm/Analysis/ConstantFolding.h.
 end_comment
 
 begin_comment
@@ -96,7 +104,7 @@ name|TargetFolder
 block|{
 specifier|const
 name|TargetData
-modifier|&
+modifier|*
 name|TD
 decl_stmt|;
 comment|/// Fold - Fold the constant using target specific information.
@@ -134,7 +142,6 @@ name|ConstantFoldConstantExpression
 argument_list|(
 name|CE
 argument_list|,
-operator|&
 name|TD
 argument_list|)
 condition|)
@@ -147,11 +154,12 @@ return|;
 block|}
 name|public
 label|:
+name|explicit
 name|TargetFolder
 argument_list|(
 specifier|const
 name|TargetData
-operator|&
+operator|*
 name|TheTD
 argument_list|)
 operator|:
