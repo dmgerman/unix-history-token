@@ -12078,8 +12078,15 @@ condition|)
 return|return
 name|error
 return|;
+comment|/* XXX adhoc mode not supported */
 if|if
 condition|(
+name|vap
+operator|->
+name|iv_opmode
+operator|!=
+name|IEEE80211_M_HOSTAP
+operator|||
 operator|(
 name|vap
 operator|->
@@ -12091,7 +12098,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|EINVAL
+name|EOPNOTSUPP
 return|;
 name|c
 operator|=
@@ -12151,6 +12158,20 @@ argument_list|,
 name|csr
 operator|.
 name|csa_count
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|csr
+operator|.
+name|csa_count
+operator|==
+literal|0
+condition|)
+name|ieee80211_csa_cancelswitch
+argument_list|(
+name|ic
 argument_list|)
 expr_stmt|;
 else|else

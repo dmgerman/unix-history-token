@@ -3440,7 +3440,7 @@ name|IEEE80211_ELEMID_SUPPCHAN
 init|=
 literal|36
 block|,
-name|IEEE80211_ELEMID_CHANSWITCHANN
+name|IEEE80211_ELEMID_CSA
 init|=
 literal|37
 block|,
@@ -3627,6 +3627,24 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Note the min acceptable CSA count is used to guard against  * malicious CSA injection in station mode.  Defining this value  * as other than 0 violates the 11h spec.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CSA_COUNT_MIN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CSA_COUNT_MAX
+value|255
+end_define
 
 begin_comment
 comment|/* rate set entries are in .5 Mb/s units, and potentially marked as basic */

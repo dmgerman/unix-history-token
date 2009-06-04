@@ -662,7 +662,11 @@ modifier|*
 name|ic_csa_newchan
 decl_stmt|;
 comment|/* channel for doing CSA */
-name|int
+name|short
+name|ic_csa_mode
+decl_stmt|;
+comment|/* mode for doing CSA */
+name|short
 name|ic_csa_count
 decl_stmt|;
 comment|/* count for doing CSA */

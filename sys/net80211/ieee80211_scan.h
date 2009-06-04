@@ -626,6 +626,11 @@ init|=
 literal|0x40
 block|,
 comment|/* invalid beacon interval */
+name|IEEE80211_BPARSE_CSA_INVALID
+init|=
+literal|0x80
+block|,
+comment|/* invalid CSA ie */
 block|}
 enum|;
 end_enum
@@ -738,9 +743,13 @@ name|tdma
 decl_stmt|;
 name|uint8_t
 modifier|*
+name|csa
+decl_stmt|;
+name|uint8_t
+modifier|*
 name|spare
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
 block|}
