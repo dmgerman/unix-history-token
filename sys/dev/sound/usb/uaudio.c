@@ -369,12 +369,8 @@ name|UAUDIO_MAX_CHAN
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)< 2) ? (x) : 2)
+value|(x)
 end_define
-
-begin_comment
-comment|/* XXX fixme later */
-end_comment
 
 begin_struct
 struct|struct
@@ -4595,6 +4591,15 @@ operator|=
 name|asf1d
 operator|->
 name|bBitResolution
+expr_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|9
+argument_list|,
+literal|"bChannels=%u\n"
+argument_list|,
+name|bChannels
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
