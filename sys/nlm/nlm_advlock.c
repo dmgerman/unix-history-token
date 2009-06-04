@@ -3534,7 +3534,7 @@ name|error
 operator|==
 literal|0
 operator|||
-name|errno
+name|error
 operator|==
 name|ENOENT
 argument_list|,
