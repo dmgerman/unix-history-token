@@ -3533,6 +3533,10 @@ argument_list|(
 name|error
 operator|==
 literal|0
+operator|||
+name|error
+operator|==
+name|ENOENT
 argument_list|,
 operator|(
 literal|"Failed to register NFS lock locally - error=%d"

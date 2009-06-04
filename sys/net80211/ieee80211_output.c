@@ -6397,7 +6397,7 @@ name|csa
 operator|->
 name|csa_ie
 operator|=
-name|IEEE80211_ELEMID_CHANSWITCHANN
+name|IEEE80211_ELEMID_CSA
 expr_stmt|;
 name|csa
 operator|->

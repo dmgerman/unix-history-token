@@ -283,11 +283,11 @@ name|u_int
 name|len_bytes
 decl_stmt|;
 comment|/*      * When we emulate MAC overheads, or channel unavailability due      * to other traffic on a shared medium, we augment the packet at      * the head of the queue with an 'extra_bits' field representsing      * the additional delay the packet will be subject to:      *		extra_bits = bw*unavailable_time.      * With large bandwidth and large delays, extra_bits (and also numbytes)      * can become very large, so better play safe and use 64 bit      */
-name|dn_key
+name|uint64_t
 name|numbytes
 decl_stmt|;
 comment|/* credit for transmission (dynamic queues) */
-name|dn_key
+name|int64_t
 name|extra_bits
 decl_stmt|;
 comment|/* extra bits simulating unavailable channel */
@@ -616,7 +616,7 @@ name|sum
 decl_stmt|;
 comment|/* sum of weights of all active sessions */
 comment|/* Same as in dn_flow_queue, numbytes can become large */
-name|dn_key
+name|int64_t
 name|numbytes
 decl_stmt|;
 comment|/* bits I can transmit (more or less). */

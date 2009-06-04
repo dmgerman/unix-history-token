@@ -2225,7 +2225,7 @@ name|status
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * beacon/probe response frame format 	 *	[8] time stamp 	 *	[2] beacon interval 	 *	[2] capability information 	 *	[tlv] ssid 	 *	[tlv] supported rates 	 *	[tlv] country information 	 *	[tlv] parameter set (FH/DS) 	 *	[tlv] erp information 	 *	[tlv] extended supported rates 	 *	[tlv] WME 	 *	[tlv] WPA or RSN 	 *	[tlv] HT capabilities 	 *	[tlv] HT information 	 *	[tlv] Atheros capabilities 	 */
+comment|/* 	 * beacon/probe response frame format 	 *	[8] time stamp 	 *	[2] beacon interval 	 *	[2] capability information 	 *	[tlv] ssid 	 *	[tlv] supported rates 	 *	[tlv] country information 	 *	[tlv] channel switch announcement (CSA) 	 *	[tlv] parameter set (FH/DS) 	 *	[tlv] erp information 	 *	[tlv] extended supported rates 	 *	[tlv] WME 	 *	[tlv] WPA or RSN 	 *	[tlv] HT capabilities 	 *	[tlv] HT information 	 *	[tlv] Atheros capabilities 	 */
 name|IEEE80211_VERIFY_LENGTH
 argument_list|(
 argument|efrm - frm
@@ -2382,6 +2382,16 @@ case|:
 name|scan
 operator|->
 name|country
+operator|=
+name|frm
+expr_stmt|;
+break|break;
+case|case
+name|IEEE80211_ELEMID_CSA
+case|:
+name|scan
+operator|->
+name|csa
 operator|=
 name|frm
 expr_stmt|;
@@ -2965,6 +2975,40 @@ operator|->
 name|country
 operator|=
 name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|scan
+operator|->
+name|csa
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 		 * Validate Channel Switch Announcement; this must 		 * be the correct length or we toss the frame. 		 */
+name|IEEE80211_VERIFY_LENGTH
+argument_list|(
+name|scan
+operator|->
+name|csa
+index|[
+literal|1
+index|]
+argument_list|,
+literal|3
+operator|*
+sizeof|sizeof
+argument_list|(
+name|uint8_t
+argument_list|)
+argument_list|,
+name|scan
+operator|->
+name|status
+operator||=
+name|IEEE80211_BPARSE_CSA_INVALID
 argument_list|)
 expr_stmt|;
 block|}

@@ -796,14 +796,6 @@ name|sp_lock
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_destroy
-argument_list|(
-operator|&
-name|pool
-operator|->
-name|sp_lock
-argument_list|)
-expr_stmt|;
 name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|xprt
@@ -821,6 +813,14 @@ name|xprt
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_destroy
+argument_list|(
+operator|&
+name|pool
+operator|->
+name|sp_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pool
@@ -1511,6 +1511,14 @@ name|xprt
 operator|->
 name|xp_pool
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|pool
+operator|->
+name|sp_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1520,9 +1528,7 @@ name|xp_registered
 condition|)
 block|{
 comment|/* 		 * Race with xprt_unregister - we lose. 		 */
-return|return;
-block|}
-name|mtx_lock
+name|mtx_unlock
 argument_list|(
 operator|&
 name|pool
@@ -1530,6 +1536,8 @@ operator|->
 name|sp_lock
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 operator|!
