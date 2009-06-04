@@ -20,6 +20,18 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -41,17 +53,15 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/linker.h>
-end_include
+begin_function_decl
+specifier|static
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -127,6 +137,7 @@ operator|!=
 operator|-
 literal|1
 condition|)
+block|{
 switch|switch
 condition|(
 name|c
@@ -144,6 +155,7 @@ default|default:
 name|usage
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 name|argc
 operator|-=
@@ -201,11 +213,13 @@ name|errors
 operator|++
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|verbose
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"Loaded %s, id=%d\n"
@@ -218,16 +232,20 @@ argument_list|,
 name|fileid
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 name|argv
 operator|++
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|errors
 condition|?
 literal|1
 else|:
 literal|0
+operator|)
 return|;
 block|}
 end_function
