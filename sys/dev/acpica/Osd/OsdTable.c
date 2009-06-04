@@ -260,7 +260,7 @@ name|ExistingTable
 operator|->
 name|Signature
 argument_list|,
-literal|"DSDT"
+name|ACPI_SIG_DSDT
 argument_list|,
 name|ACPI_NAME_SIZE
 argument_list|)
