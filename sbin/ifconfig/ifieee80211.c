@@ -14447,7 +14447,7 @@ return|return
 literal|" SUPPCHAN"
 return|;
 case|case
-name|IEEE80211_ELEMID_CHANSWITCHANN
+name|IEEE80211_ELEMID_CSA
 case|:
 return|return
 literal|" CSA"
