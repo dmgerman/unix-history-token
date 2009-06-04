@@ -3702,14 +3702,6 @@ name|sc_mode
 operator|=
 name|K_XLATE
 expr_stmt|;
-name|sc
-operator|->
-name|sc_iface
-operator|=
-name|uaa
-operator|->
-name|iface
-expr_stmt|;
 name|usb2_callout_init_mtx
 argument_list|(
 operator|&
