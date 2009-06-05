@@ -72,13 +72,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acpi.h>
+file|<contrib/dev/acpica/include/acpi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acdebug.h>
+file|<contrib/dev/acpica/include/accommon.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acdebug.h>
 end_include
 
 begin_include
