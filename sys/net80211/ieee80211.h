@@ -1414,12 +1414,34 @@ end_struct
 begin_define
 define|#
 directive|define
-name|IEEE80211_ACTION_CAT_QOS
+name|IEEE80211_ACTION_CAT_SM
 value|0
 end_define
 
 begin_comment
+comment|/* Spectrum Management */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_ACTION_CAT_QOS
+value|1
+end_define
+
+begin_comment
 comment|/* QoS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_ACTION_CAT_DLS
+value|2
+end_define
+
+begin_comment
+comment|/* DLS */
 end_comment
 
 begin_define
@@ -1442,6 +1464,17 @@ end_define
 
 begin_comment
 comment|/* HT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_ACTION_CAT_VENDOR
+value|127
+end_define
+
+begin_comment
+comment|/* Vendor Specific */
 end_comment
 
 begin_define
@@ -4342,6 +4375,11 @@ init|=
 literal|26
 block|,
 comment|/* 11g */
+name|IEEE80211_STATUS_MISSING_HT_CAPS
+init|=
+literal|27
+block|,
+comment|/* 11n D3.0 */
 name|IEEE80211_STATUS_INVALID_IE
 init|=
 literal|40
