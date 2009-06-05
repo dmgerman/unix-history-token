@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**************************************************************************  Copyright (c) 2007, Chelsio Inc. All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Neither the name of the Chelsio Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
+comment|/**************************************************************************  Copyright (c) 2007-2009 Chelsio Inc. All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Neither the name of the Chelsio Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
 end_comment
 
 begin_include
@@ -886,6 +886,33 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* This will reduce the number of TXTOGGLES */
+comment|/* Clear: to stop the NIC traffic */
+name|t3_set_reg_field
+argument_list|(
+name|adap
+argument_list|,
+name|A_MPS_CFG
+argument_list|,
+name|F_ENFORCEPKT
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Ensure TX drains */
+name|t3_set_reg_field
+argument_list|(
+name|adap
+argument_list|,
+name|A_XGM_TX_CFG
+operator|+
+name|oft
+argument_list|,
+name|F_TXPAUSEEN
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* PCS in reset */
 name|t3_write_reg
 argument_list|(
@@ -1182,6 +1209,18 @@ argument_list|,
 name|F_PORT1ACTIVE
 argument_list|)
 expr_stmt|;
+comment|/*  Set: re-enable NIC traffic */
+name|t3_set_reg_field
+argument_list|(
+name|adap
+argument_list|,
+name|A_MPS_CFG
+argument_list|,
+name|F_ENFORCEPKT
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1448,9 +1487,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
-name|disable_exact_filters
+name|t3_mac_disable_exact_filters
 parameter_list|(
 name|struct
 name|cmac
@@ -1526,9 +1564,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
-name|enable_exact_filters
+name|t3_mac_enable_exact_filters
 parameter_list|(
 name|struct
 name|cmac
@@ -2081,7 +2118,7 @@ name|F_RXEN
 operator|)
 condition|)
 block|{
-name|disable_exact_filters
+name|t3_mac_disable_exact_filters
 argument_list|(
 name|mac
 argument_list|)
@@ -2166,7 +2203,7 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
-name|enable_exact_filters
+name|t3_mac_enable_exact_filters
 argument_list|(
 name|mac
 argument_list|)
@@ -2210,7 +2247,7 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
-name|enable_exact_filters
+name|t3_mac_enable_exact_filters
 argument_list|(
 name|mac
 argument_list|)
@@ -3315,14 +3352,9 @@ name|mac
 operator|->
 name|stats
 decl_stmt|;
-name|unsigned
-name|int
+name|u64
 name|tx_mcnt
 init|=
-operator|(
-name|unsigned
-name|int
-operator|)
 name|s
 operator|->
 name|tx_frames
@@ -3333,7 +3365,6 @@ name|mac
 operator|->
 name|multiport
 condition|)
-block|{
 name|tx_mcnt
 operator|=
 name|t3_read_reg
@@ -3343,20 +3374,6 @@ argument_list|,
 name|A_XGM_STAT_TX_FRAME_LOW
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|tx_mcnt
-operator|=
-operator|(
-name|unsigned
-name|int
-operator|)
-name|s
-operator|->
-name|tx_frames
-expr_stmt|;
-block|}
 name|status
 operator|=
 literal|0
@@ -3445,11 +3462,9 @@ operator|)
 expr_stmt|;
 block|}
 else|else
-block|{
 goto|goto
 name|out
 goto|;
-block|}
 block|}
 else|else
 block|{
