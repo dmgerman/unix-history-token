@@ -168,19 +168,6 @@ name|pc_spinlocks
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|KTR_PERCPU
-name|int
-name|pc_ktr_idx
-decl_stmt|;
-comment|/* Index into trace table */
-name|char
-modifier|*
-name|pc_ktr_buf
-decl_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
 name|KTR
 name|char
 name|pc_name
