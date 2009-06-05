@@ -6925,7 +6925,7 @@ name|ni
 argument_list|,
 name|resp
 argument_list|,
-name|IEEE80211_STATUS_OTHER
+name|IEEE80211_STATUS_MISSING_HT_CAPS
 argument_list|)
 expr_stmt|;
 name|ieee80211_node_leave
