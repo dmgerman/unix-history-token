@@ -285,19 +285,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Dummynet hooks. */
-end_comment
-
-begin_decl_stmt
-name|ip_dn_ruledel_t
-modifier|*
-name|ip_dn_ruledel_ptr
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Divert hooks. */
 end_comment
 
@@ -747,8 +734,9 @@ name|IP_FW_DUMMYNET
 case|:
 if|if
 condition|(
-operator|!
-name|DUMMYNET_LOADED
+name|ip_dn_io_ptr
+operator|==
+name|NULL
 condition|)
 goto|goto
 name|drop
@@ -1407,8 +1395,9 @@ name|IP_FW_DUMMYNET
 case|:
 if|if
 condition|(
-operator|!
-name|DUMMYNET_LOADED
+name|ip_dn_io_ptr
+operator|==
+name|NULL
 condition|)
 break|break;
 if|if

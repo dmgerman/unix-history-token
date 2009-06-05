@@ -16087,6 +16087,25 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Hook for cleaning up dummynet when an ipfw rule is deleted.  * Set/cleared when dummynet module is loaded/unloaded.  */
+end_comment
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|ip_dn_ruledel_ptr
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+init|=
+name|NULL
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * Reclaim storage associated with a list of rules.  This is  * typically the list created using remove_rule.  */
 end_comment
 
@@ -16125,7 +16144,7 @@ name|next
 expr_stmt|;
 if|if
 condition|(
-name|DUMMYNET_LOADED
+name|ip_dn_ruledel_ptr
 condition|)
 name|ip_dn_ruledel_ptr
 argument_list|(

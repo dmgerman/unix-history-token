@@ -1711,26 +1711,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_typedef
-typedef|typedef
-name|int
-name|ip_fw_ctl_t
-parameter_list|(
-name|struct
-name|sockopt
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_decl_stmt
-specifier|extern
-name|ip_fw_ctl_t
-modifier|*
-name|ip_fw_ctl_ptr
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1773,38 +1753,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* For kernel ipfw_ether and ipfw_bridge. */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-name|ip_fw_chk_t
-parameter_list|(
-name|struct
-name|ip_fw_args
-modifier|*
-name|args
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_decl_stmt
-specifier|extern
-name|ip_fw_chk_t
-modifier|*
-name|ip_fw_chk_ptr
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|IPFW_LOADED
-value|(ip_fw_chk_ptr != NULL)
-end_define
 
 begin_struct
 struct|struct

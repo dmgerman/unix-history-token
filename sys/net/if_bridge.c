@@ -13313,7 +13313,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|IPFW_LOADED
+name|ip_fw_chk_ptr
 operator|&&
 name|pfil_ipfw
 operator|!=
@@ -13424,7 +13424,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|DUMMYNET_LOADED
+name|ip_dn_io_ptr
 operator|&&
 operator|(
 name|i
