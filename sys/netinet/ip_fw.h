@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002 Luigi Rizzo, Universita` di Pisa  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2002-2009 Luigi Rizzo, Universita` di Pisa  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -36,6 +36,35 @@ directive|define
 name|IPFW_TABLES_MAX
 value|128
 end_define
+
+begin_comment
+comment|/*  * Most commands (queue, pipe, tag, untag, limit...) can have a 16-bit  * argument between 1 and 65534. The value 0 is unused, the value  * 65535 (IP_FW_TABLEARG) is used to represent 'tablearg', i.e. the  * can be 1..65534, or 65535 to indicate the use of a 'tablearg'  * result of the most recent table() lookup.  * Note that 16bit is only a historical limit, resulting from  * the use of a 16-bit fields for that value. In reality, we can have  * 2^32 pipes, queues, tag values and so on, and use 0 as a tablearg.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_ARG_MIN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_ARG_MAX
+value|65534
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_FW_TABLEARG
+value|65535
+end_define
+
+begin_comment
+comment|/* XXX should use 0 */
+end_comment
 
 begin_comment
 comment|/*  * The kernel representation of ipfw rules is made of a list of  * 'instructions' (for all practical purposes equivalent to BPF  * instructions), which specify which fields of the packet  * (or its metadata) should be analysed.  *  * Each instruction is stored in a structure which begins with  * "ipfw_insn", and can contain extra fields depending on the  * instruction type (listed below).  * Note that the code is written so that individual instructions  * have a size which is a multiple of 32 bits. This means that, if  * such structures contain pointers or other 64-bit entities,  * (there is just one instance now) they may end up unaligned on  * 64-bit architectures, so the must be handled with care.  *  * "enum ipfw_opcodes" are the opcodes supported. We can have up  * to 256 different opcodes. When adding new opcodes, they should  * be appended to the end of the opcode list before O_LAST_OPCODE,  * this will prevent the ABI from being broken, otherwise users  * will have to recompile ipfw(8) when they update the kernel.  */
@@ -421,17 +450,6 @@ name|t
 parameter_list|)
 value|((sizeof (t))/sizeof(u_int32_t))
 end_define
-
-begin_define
-define|#
-directive|define
-name|MTAG_IPFW
-value|1148380143
-end_define
-
-begin_comment
-comment|/* IPFW-tagged cookie */
-end_comment
 
 begin_comment
 comment|/*  * This is used to store an array of 16-bit entries (ports etc.)  */
@@ -1409,13 +1427,6 @@ name|ipfw_table
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|IP_FW_TABLEARG
-value|65535
-end_define
-
 begin_comment
 comment|/*  * Main firewall chains definitions and global var's definitions.  */
 end_comment
@@ -1425,6 +1436,17 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MTAG_IPFW
+value|1148380143
+end_define
+
+begin_comment
+comment|/* IPFW-tagged cookie */
+end_comment
 
 begin_comment
 comment|/* Return values from ipfw_chk() */
