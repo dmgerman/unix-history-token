@@ -1408,12 +1408,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
-name|ip_dn_io_t
+name|int
 name|dummynet_io
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|ip_fw_args
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -8031,7 +8043,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * when a firewall rule is deleted, scan all queues and remove the flow-id  * from packets matching this rule.  */
+comment|/*  * When a firewall rule is deleted, scan all queues and remove the pointer  * to the rule from matching packets, making them point to the default rule.  * The pointer is used to reinject packets in case one_pass = 0.  */
 end_comment
 
 begin_function
@@ -11581,7 +11593,7 @@ name|MOD_LOAD
 case|:
 if|if
 condition|(
-name|DUMMYNET_LOADED
+name|ip_dn_io_ptr
 condition|)
 block|{
 name|printf
