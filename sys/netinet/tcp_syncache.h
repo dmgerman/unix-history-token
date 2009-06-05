@@ -326,17 +326,12 @@ decl_stmt|;
 comment|/* TOE protocol block */
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|MAC
 name|struct
 name|label
 modifier|*
 name|sc_label
 decl_stmt|;
 comment|/* MAC label reference */
-endif|#
-directive|endif
 name|struct
 name|ucred
 modifier|*
