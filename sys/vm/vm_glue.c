@@ -1724,12 +1724,6 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|m
-operator|->
-name|valid
-operator|=
-name|VM_PAGE_BITS_ALL
-expr_stmt|;
 block|}
 name|ma
 index|[
