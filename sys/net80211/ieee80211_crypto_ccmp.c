@@ -1127,6 +1127,8 @@ argument_list|,
 name|k
 argument_list|,
 name|pn
+argument_list|,
+name|tid
 argument_list|)
 expr_stmt|;
 name|vap

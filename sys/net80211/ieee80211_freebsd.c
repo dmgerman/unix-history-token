@@ -2599,6 +2599,9 @@ name|k
 parameter_list|,
 name|u_int64_t
 name|rsc
+parameter_list|,
+name|int
+name|tid
 parameter_list|)
 block|{
 name|struct
@@ -2640,7 +2643,7 @@ name|k
 operator|->
 name|wk_keyrsc
 index|[
-name|IEEE80211_NONQOS_TID
+name|tid
 index|]
 argument_list|,
 name|k
@@ -2729,10 +2732,9 @@ name|k
 operator|->
 name|wk_keyrsc
 index|[
-literal|0
+name|tid
 index|]
 expr_stmt|;
-comment|/* XXX need tid */
 name|iev
 operator|.
 name|iev_rsc
