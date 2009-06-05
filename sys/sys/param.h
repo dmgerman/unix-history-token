@@ -754,39 +754,6 @@ begin_comment
 comment|/* non-existent device */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CBLOCK
-value|128
-end_define
-
-begin_comment
-comment|/* Clist block size, must be a power of 2. */
-end_comment
-
-begin_comment
-comment|/* Data chars/clist. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CBSIZE
-value|(CBLOCK - sizeof(struct cblock *))
-end_define
-
-begin_define
-define|#
-directive|define
-name|CROUND
-value|(CBLOCK - 1)
-end_define
-
-begin_comment
-comment|/* Clist rounding. */
-end_comment
-
 begin_comment
 comment|/*  * File system parameters and macros.  *  * MAXBSIZE -	Filesystems are made out of blocks of at most MAXBSIZE bytes  *		per block.  MAXBSIZE may be made larger without effecting  *		any existing filesystems as long as it does not exceed MAXPHYS,  *		and may be made smaller at the risk of not being able to use  *		filesystems which require a block size exceeding MAXBSIZE.  *  * BKVASIZE -	Nominal buffer space per buffer, in bytes.  BKVASIZE is the  *		minimum KVM memory reservation the kernel is willing to make.  *		Filesystems can of course request smaller chunks.  Actual   *		backing memory uses a chunk size of a page (PAGE_SIZE).  *  *		If you make BKVASIZE too small you risk seriously fragmenting  *		the buffer KVM map which may slow things down a bit.  If you  *		make it too big the kernel will not be able to optimally use   *		the KVM memory reserved for the buffer cache and will wind   *		up with too-few buffers.  *  *		The default is 16384, roughly 2x the block size used by a  *		normal UFS filesystem.  */
 end_comment
