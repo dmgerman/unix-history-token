@@ -188,6 +188,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<security/mac/mac_framework.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1217,7 +1223,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_ifnet_transmit
+name|mac_ifnet_check_transmit
 argument_list|(
 name|ifp
 argument_list|,
