@@ -369,6 +369,16 @@ directive|define
 name|IEEE80211_NODE_ASSOCID
 value|0x020000
 comment|/* xmit requires associd */
+define|#
+directive|define
+name|IEEE80211_NODE_AMSDU_RX
+value|0x040000
+comment|/* AMSDU rx enabled */
+define|#
+directive|define
+name|IEEE80211_NODE_AMSDU_TX
+value|0x080000
+comment|/* AMSDU tx enabled */
 name|uint16_t
 name|ni_associd
 decl_stmt|;
@@ -692,9 +702,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|IEEE80211_NODE_AMSDU
+define|\
+value|(IEEE80211_NODE_AMSDU_RX | IEEE80211_NODE_AMSDU_TX)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_NODE_HT_ALL
 define|\
-value|(IEEE80211_NODE_HT | IEEE80211_NODE_HTCOMPAT | \ 	 IEEE80211_NODE_AMPDU | IEEE80211_NODE_MIMO_PS | \ 	 IEEE80211_NODE_MIMO_RTS | IEEE80211_NODE_RIFS | \ 	 IEEE80211_NODE_SGI20 | IEEE80211_NODE_SGI40)
+value|(IEEE80211_NODE_HT | IEEE80211_NODE_HTCOMPAT | \ 	 IEEE80211_NODE_AMPDU | IEEE80211_NODE_AMSDU | \ 	 IEEE80211_NODE_MIMO_PS | IEEE80211_NODE_MIMO_RTS | \ 	 IEEE80211_NODE_RIFS | IEEE80211_NODE_SGI20 | IEEE80211_NODE_SGI40)
 end_define
 
 begin_define
