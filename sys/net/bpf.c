@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_netgraph.h"
 end_include
 

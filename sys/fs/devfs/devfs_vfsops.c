@@ -6,16 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_comment
-comment|/* To set MNT_MULTILABEL. */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 

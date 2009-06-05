@@ -47,6 +47,12 @@ directive|include
 file|<rpc/rpcsec_gss.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<security/mac/mac_framework.h>
+end_include
+
 begin_expr_stmt
 name|NFSDLOCKMUTEX
 expr_stmt|;

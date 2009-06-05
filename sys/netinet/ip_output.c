@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_mbuf_stress_test.h"
 end_include
 

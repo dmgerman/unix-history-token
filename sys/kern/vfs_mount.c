@@ -179,12 +179,6 @@ directive|include
 file|"opt_rootdevname.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_mac.h"
-end_include
-
 begin_define
 define|#
 directive|define
