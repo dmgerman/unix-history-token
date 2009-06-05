@@ -5801,11 +5801,16 @@ name|buflen
 operator|==
 literal|0
 condition|)
+block|{
+name|CACHE_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
 operator|)
 return|;
+block|}
 name|buf
 index|[
 operator|--
@@ -5956,6 +5961,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|CACHE_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|ENOMEM
