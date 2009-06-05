@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/protosw.h>
 end_include
 
@@ -159,6 +165,12 @@ begin_include
 include|#
 directive|include
 file|<rpc/rpc_com.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<security/mac/mac_framework.h>
 end_include
 
 begin_function_decl
@@ -1266,7 +1278,7 @@ name|error
 operator|=
 name|mac_socket_check_accept
 argument_list|(
-name|td
+name|curthread
 operator|->
 name|td_ucred
 argument_list|,
