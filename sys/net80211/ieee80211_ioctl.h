@@ -2596,6 +2596,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_IOC_GREENFIELD
+value|112
+end_define
+
+begin_comment
+comment|/* Greenfield (on, off) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_STBC
+value|113
+end_define
+
+begin_comment
+comment|/* STBC Tx/RX (on, off) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_IOC_TDMA_SLOT
 value|201
 end_define
