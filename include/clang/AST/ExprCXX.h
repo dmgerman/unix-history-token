@@ -4005,13 +4005,18 @@ block|;
 name|unsigned
 name|NumTemps
 block|;
+name|bool
+name|DestroyTemps
+block|;
 name|CXXExprWithTemporaries
 argument_list|(
-argument|Expr *subexpr
+argument|Expr *SubExpr
 argument_list|,
-argument|CXXTemporary **temps
+argument|CXXTemporary **Temps
 argument_list|,
-argument|unsigned numtemps
+argument|unsigned NumTemps
+argument_list|,
+argument|bool DestroyTemps
 argument_list|)
 block|;
 operator|~
@@ -4032,6 +4037,8 @@ argument_list|,
 argument|CXXTemporary **Temps
 argument_list|,
 argument|unsigned NumTemps
+argument_list|,
+argument|bool DestroyTems
 argument_list|)
 block|;
 name|void

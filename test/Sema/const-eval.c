@@ -663,5 +663,23 @@ literal|1
 argument_list|)
 end_macro
 
+begin_macro
+name|EVAL_EXPR
+argument_list|(
+literal|33
+argument_list|,
+argument|(void*)
+literal|0
+argument|- (void*)
+literal|0
+argument|==
+literal|0
+argument|?
+literal|1
+argument|: -
+literal|1
+argument_list|)
+end_macro
+
 end_unit
 

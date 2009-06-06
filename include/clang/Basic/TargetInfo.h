@@ -138,9 +138,6 @@ label|:
 comment|// Target values set by the ctor of the actual target implementation.  Default
 comment|// values are specified by the TargetInfo constructor.
 name|bool
-name|CharIsSigned
-decl_stmt|;
-name|bool
 name|TLSSupported
 decl_stmt|;
 name|unsigned
@@ -363,18 +360,6 @@ specifier|const
 block|{
 return|return
 name|WCharType
-return|;
-block|}
-comment|/// isCharSigned - Return true if 'char' is 'signed char' or false if it is
-comment|/// treated as 'unsigned char'.  This is implementation defined according to
-comment|/// C99 6.2.5p15.  In our implementation, this is target-specific.
-name|bool
-name|isCharSigned
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CharIsSigned
 return|;
 block|}
 comment|/// getPointerWidth - Return the width of pointers on this target, for the

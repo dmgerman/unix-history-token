@@ -2358,6 +2358,15 @@ name|getDefaultArg
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+operator|!
+name|hasUnparsedDefaultArg
+argument_list|()
+operator|&&
+literal|"Default argument is not yet parsed!"
+argument_list|)
+block|;
 return|return
 name|DefaultArg
 return|;
@@ -2367,6 +2376,15 @@ operator|*
 name|getDefaultArg
 argument_list|()
 block|{
+name|assert
+argument_list|(
+operator|!
+name|hasUnparsedDefaultArg
+argument_list|()
+operator|&&
+literal|"Default argument is not yet parsed!"
+argument_list|)
+block|;
 return|return
 name|DefaultArg
 return|;
@@ -2381,6 +2399,19 @@ name|DefaultArg
 operator|=
 name|defarg
 block|; }
+comment|/// hasDefaultArg - Determines whether this parameter has a default argument,
+comment|/// either parsed or not.
+name|bool
+name|hasDefaultArg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DefaultArg
+operator|!=
+literal|0
+return|;
+block|}
 comment|/// hasUnparsedDefaultArg - Determines whether this parameter has a
 comment|/// default argument that has not yet been parsed. This will occur
 comment|/// during the processing of a C++ class whose member functions have

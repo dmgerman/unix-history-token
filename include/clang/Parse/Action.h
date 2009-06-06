@@ -1861,6 +1861,9 @@ argument_list|,
 name|SourceLocation
 name|DeclStart
 argument_list|,
+name|DeclPtrTy
+name|IntfDecl
+argument_list|,
 name|Declarator
 operator|&
 name|D
@@ -7369,7 +7372,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// ActOnPragmaPack - Called on well formed #pragma pack(...).
+comment|/// ActOnPragmaUnused - Called on well formed #pragma unused(...).
 end_comment
 
 begin_function
@@ -7393,6 +7396,61 @@ name|LParenLoc
 parameter_list|,
 name|SourceLocation
 name|RParenLoc
+parameter_list|)
+block|{
+return|return;
+block|}
+end_function
+
+begin_comment
+comment|/// ActOnPragmaWeakID - Called on well formed #pragma weak ident.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|ActOnPragmaWeakID
+parameter_list|(
+name|IdentifierInfo
+modifier|*
+name|WeakName
+parameter_list|,
+name|SourceLocation
+name|PragmaLoc
+parameter_list|,
+name|SourceLocation
+name|WeakNameLoc
+parameter_list|)
+block|{
+return|return;
+block|}
+end_function
+
+begin_comment
+comment|/// ActOnPragmaWeakAlias - Called on well formed #pragma weak ident = ident.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|ActOnPragmaWeakAlias
+parameter_list|(
+name|IdentifierInfo
+modifier|*
+name|WeakName
+parameter_list|,
+name|IdentifierInfo
+modifier|*
+name|AliasName
+parameter_list|,
+name|SourceLocation
+name|PragmaLoc
+parameter_list|,
+name|SourceLocation
+name|WeakNameLoc
+parameter_list|,
+name|SourceLocation
+name|AliasNameLoc
 parameter_list|)
 block|{
 return|return;

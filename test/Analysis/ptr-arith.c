@@ -73,7 +73,7 @@ comment|// a pointer type, we would get a loc::SymbolVal for '*p'.
 end_comment
 
 begin_function_decl
-name|char
+name|void
 modifier|*
 name|memchr
 parameter_list|()

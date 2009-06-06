@@ -437,6 +437,32 @@ name|Type
 operator|*
 name|PtrToInt8Ty
 block|;
+name|std
+operator|::
+name|map
+operator|<
+name|uint64_t
+block|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+operator|>
+name|AssignCache
+block|;
+name|std
+operator|::
+name|map
+operator|<
+name|uint64_t
+block|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+operator|>
+name|DestroyCache
+block|;
 name|BlockModule
 argument_list|(
 name|ASTContext
@@ -613,7 +639,11 @@ comment|/* declared __weak, only used in byref copy                             
 name|BLOCK_BYREF_CALLER
 operator|=
 literal|128
+block|,
 comment|/* called from __block (byref) copy/dispose                                       support routines */
+name|BLOCK_BYREF_CURRENT_MAX
+operator|=
+literal|256
 block|}
 block|;
 comment|/// BlockInfo - Information to generate a block literal.
@@ -912,6 +942,8 @@ argument_list|(
 argument|const llvm::Type *T
 argument_list|,
 argument|int flag
+argument_list|,
+argument|unsigned Align
 argument_list|)
 block|;
 name|llvm
@@ -923,6 +955,8 @@ argument_list|(
 argument|const llvm::Type *T
 argument_list|,
 argument|int flag
+argument_list|,
+argument|unsigned Align
 argument_list|)
 block|;
 name|llvm

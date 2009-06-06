@@ -308,6 +308,12 @@ literal|1
 decl_stmt|;
 comment|// Whether C++ access control should
 comment|// be enabled.
+name|unsigned
+name|CharIsSigned
+range|:
+literal|1
+decl_stmt|;
+comment|// Whether char is a signed or unsigned type
 name|private
 label|:
 name|unsigned
@@ -497,6 +503,10 @@ expr_stmt|;
 name|NoInline
 operator|=
 literal|0
+expr_stmt|;
+name|CharIsSigned
+operator|=
+literal|1
 expr_stmt|;
 name|MainFileName
 operator|=

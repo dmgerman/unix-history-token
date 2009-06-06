@@ -576,7 +576,7 @@ return|return
 operator|(
 name|__m128i
 operator|)
-name|__builtin_ia32_psubd128
+name|__builtin_ia32_phsubd128
 argument_list|(
 operator|(
 name|__v4si
@@ -617,7 +617,7 @@ return|return
 operator|(
 name|__m64
 operator|)
-name|__builtin_ia32_psubw
+name|__builtin_ia32_phsubw
 argument_list|(
 operator|(
 name|__v4hi
@@ -658,7 +658,7 @@ return|return
 operator|(
 name|__m64
 operator|)
-name|__builtin_ia32_psubd
+name|__builtin_ia32_phsubd
 argument_list|(
 operator|(
 name|__v2si

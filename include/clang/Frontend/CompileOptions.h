@@ -152,6 +152,18 @@ range|:
 literal|1
 decl_stmt|;
 comment|/// Set when -fno-common or C++ is enabled.
+name|unsigned
+name|DisableRedZone
+range|:
+literal|1
+decl_stmt|;
+comment|/// Set when -mno-red-zone is enabled.
+name|unsigned
+name|NoImplicitFloat
+range|:
+literal|1
+decl_stmt|;
+comment|/// Set when -mno-implicit-float is enabled.
 comment|/// Inlining - The kind of inlining to perform.
 name|InliningMethod
 name|Inlining
@@ -216,6 +228,14 @@ expr_stmt|;
 name|Inlining
 operator|=
 name|NoInlining
+expr_stmt|;
+name|DisableRedZone
+operator|=
+literal|0
+expr_stmt|;
+name|NoImplicitFloat
+operator|=
+literal|0
 expr_stmt|;
 block|}
 block|}

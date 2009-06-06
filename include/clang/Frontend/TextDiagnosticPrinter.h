@@ -142,6 +142,9 @@ block|;
 name|unsigned
 name|MessageLength
 block|;
+name|bool
+name|UseColors
+block|;
 name|public
 operator|:
 name|TextDiagnosticPrinter
@@ -162,6 +165,8 @@ argument|bool printFixItInfo = true
 argument_list|,
 argument|unsigned messageLength =
 literal|0
+argument_list|,
+argument|bool useColors = false
 argument_list|)
 operator|:
 name|OS
@@ -211,7 +216,12 @@ argument_list|)
 block|,
 name|MessageLength
 argument_list|(
-argument|messageLength
+name|messageLength
+argument_list|)
+block|,
+name|UseColors
+argument_list|(
+argument|useColors
 argument_list|)
 block|{}
 name|void

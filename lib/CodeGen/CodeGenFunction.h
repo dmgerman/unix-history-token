@@ -561,6 +561,24 @@ operator|*
 name|Dest
 argument_list|)
 decl_stmt|;
+comment|/// PushConditionalTempDestruction - Should be called before a conditional
+comment|/// part of an expression is emitted. For example, before the RHS of the
+comment|/// expression below is emitted:
+comment|///
+comment|/// b&& f(T());
+comment|///
+comment|/// This is used to make sure that any temporaryes created in the conditional
+comment|/// branch are only destroyed if the branch is taken.
+name|void
+name|PushConditionalTempDestruction
+parameter_list|()
+function_decl|;
+comment|/// PopConditionalTempDestruction - Should be called after a conditional
+comment|/// part of an expression has been emitted.
+name|void
+name|PopConditionalTempDestruction
+parameter_list|()
+function_decl|;
 name|private
 label|:
 name|CGDebugInfo
@@ -907,6 +925,19 @@ operator|,
 literal|4
 operator|>
 name|LiveTemporaries
+expr_stmt|;
+comment|/// ConditionalTempDestructionStack - Contains the number of live temporaries
+comment|/// when PushConditionalTempDestruction was called. This is used so that
+comment|/// we know how many temporaries were created by a certain expression.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|size_t
+operator|,
+literal|4
+operator|>
+name|ConditionalTempDestructionStack
 expr_stmt|;
 name|public
 label|:

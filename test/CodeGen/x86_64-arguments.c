@@ -506,6 +506,40 @@ block|{}
 end_function
 
 begin_comment
+comment|// Check for valid coercion.
+end_comment
+
+begin_comment
+comment|// RUN: grep '.1 = bitcast i64. .tmp to .struct.f18_s0.' %t&&
+end_comment
+
+begin_comment
+comment|// RUN: grep '.2 = load .struct.f18_s0. .1, align 1' %t&&
+end_comment
+
+begin_comment
+comment|// RUN: grep 'store .struct.f18_s0 .2, .struct.f18_s0. .f18_arg1' %t&&
+end_comment
+
+begin_decl_stmt
+name|void
+name|f18
+argument_list|(
+name|int
+name|a
+argument_list|,
+expr|struct
+name|f18_s0
+block|{
+name|int
+name|f0
+block|; }
+name|f18_arg1
+argument_list|)
+block|{}
+end_decl_stmt
+
+begin_comment
 comment|// RUN: true
 end_comment
 

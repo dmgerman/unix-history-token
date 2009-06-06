@@ -744,6 +744,16 @@ return|return
 name|Position
 return|;
 block|}
+comment|/// Get the index of the template parameter within its parameter list.
+name|unsigned
+name|getIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Position
+return|;
+block|}
 expr|}
 block|;
 comment|/// TemplateTypeParmDecl - Declaration of a template type parameter,
@@ -1060,6 +1070,11 @@ name|TemplateParmPosition
 operator|::
 name|getPosition
 block|;
+name|using
+name|TemplateParmPosition
+operator|::
+name|getIndex
+block|;
 comment|/// \brief Determine whether this template parameter has a default
 comment|/// argument.
 name|bool
@@ -1222,6 +1237,11 @@ name|TemplateParmPosition
 operator|::
 name|getPosition
 block|;
+name|using
+name|TemplateParmPosition
+operator|::
+name|getIndex
+block|;
 comment|/// \brief Determine whether this template parameter has a default
 comment|/// argument.
 name|bool
@@ -1330,27 +1350,31 @@ comment|/// \brief The type of template argument we're storing.
 expr|enum
 name|ArgKind
 block|{
+name|Null
+operator|=
+literal|0
+block|,
 comment|/// The template argument is a type. It's value is stored in the
 comment|/// TypeOrValue field.
 name|Type
 operator|=
-literal|0
+literal|1
 block|,
 comment|/// The template argument is a declaration
 name|Declaration
 operator|=
-literal|1
+literal|2
 block|,
 comment|/// The template argument is an integral value stored in an llvm::APSInt.
 name|Integral
 operator|=
-literal|2
+literal|3
 block|,
 comment|/// The template argument is a value- or type-dependent expression
 comment|/// stored in an Expr*.
 name|Expression
 operator|=
-literal|3
+literal|4
 block|}
 name|Kind
 block|;
@@ -1368,7 +1392,7 @@ argument_list|()
 block|,
 name|Kind
 argument_list|(
-argument|Type
+argument|Null
 argument_list|)
 block|{ }
 comment|/// \brief Construct a template type argument.
@@ -1706,6 +1730,18 @@ return|return
 name|Kind
 return|;
 block|}
+comment|/// \brief Determine whether this template argument has no value.
+name|bool
+name|isNull
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|Null
+return|;
+block|}
 comment|/// \brief Retrieve the template argument as a type.
 name|QualType
 name|getAsType
@@ -1851,6 +1887,33 @@ name|Type
 argument_list|)
 return|;
 block|}
+name|void
+name|setIntegralType
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|Kind
+operator|==
+name|Integral
+operator|&&
+literal|"Cannot set the integral type of a non-integral template argument"
+argument_list|)
+expr_stmt|;
+name|Integer
+operator|.
+name|Type
+operator|=
+name|T
+operator|.
+name|getAsOpaquePtr
+argument_list|()
+expr_stmt|;
+block|}
+empty_stmt|;
 comment|/// \brief Retrieve the template argument as an expression.
 name|Expr
 operator|*
@@ -1925,6 +1988,10 @@ name|Kind
 condition|)
 block|{
 case|case
+name|Null
+case|:
+break|break;
+case|case
 name|Type
 case|:
 name|getAsType
@@ -1988,6 +2055,95 @@ end_decl_stmt
 
 begin_comment
 unit|};
+comment|/// \brief A helper class for making template argument lists.
+end_comment
+
+begin_decl_stmt
+name|class
+name|TemplateArgumentListBuilder
+block|{
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|TemplateArgument
+operator|,
+literal|16
+operator|>
+name|Args
+expr_stmt|;
+name|ASTContext
+modifier|&
+name|Context
+decl_stmt|;
+name|public
+label|:
+name|TemplateArgumentListBuilder
+argument_list|(
+name|ASTContext
+operator|&
+name|Context
+argument_list|)
+operator|:
+name|Context
+argument_list|(
+argument|Context
+argument_list|)
+block|{ }
+comment|// FIXME: Should use the  index array size.
+name|size_t
+name|size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Args
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+name|size_t
+name|flatSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Args
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+name|void
+name|push_back
+parameter_list|(
+specifier|const
+name|TemplateArgument
+modifier|&
+name|Arg
+parameter_list|)
+function_decl|;
+name|TemplateArgument
+modifier|*
+name|getFlatArgumentList
+parameter_list|()
+block|{
+return|return
+name|Args
+operator|.
+name|data
+argument_list|()
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief A template argument list.
 end_comment
 
@@ -2037,11 +2193,11 @@ name|TemplateArgumentList
 argument_list|(
 argument|ASTContext&Context
 argument_list|,
-argument|TemplateArgument *TemplateArgs
-argument_list|,
-argument|unsigned NumTemplateArgs
+argument|TemplateArgumentListBuilder&Builder
 argument_list|,
 argument|bool CopyArgs
+argument_list|,
+argument|bool FlattenArgs
 argument_list|)
 empty_stmt|;
 operator|~
@@ -2321,9 +2477,7 @@ argument|SourceLocation L
 argument_list|,
 argument|ClassTemplateDecl *SpecializedTemplate
 argument_list|,
-argument|TemplateArgument *TemplateArgs
-argument_list|,
-argument|unsigned NumTemplateArgs
+argument|TemplateArgumentListBuilder&Builder
 argument_list|)
 empty_stmt|;
 name|public
@@ -2348,12 +2502,9 @@ name|ClassTemplateDecl
 modifier|*
 name|SpecializedTemplate
 parameter_list|,
-name|TemplateArgument
-modifier|*
-name|TemplateArgs
-parameter_list|,
-name|unsigned
-name|NumTemplateArgs
+name|TemplateArgumentListBuilder
+modifier|&
+name|Builder
 parameter_list|,
 name|ClassTemplateSpecializationDecl
 modifier|*
@@ -2582,9 +2733,7 @@ argument|TemplateParameterList *Params
 argument_list|,
 argument|ClassTemplateDecl *SpecializedTemplate
 argument_list|,
-argument|TemplateArgument *TemplateArgs
-argument_list|,
-argument|unsigned NumTemplateArgs
+argument|TemplateArgumentListBuilder&Builder
 argument_list|)
 operator|:
 name|ClassTemplateSpecializationDecl
@@ -2599,9 +2748,7 @@ name|L
 argument_list|,
 name|SpecializedTemplate
 argument_list|,
-name|TemplateArgs
-argument_list|,
-name|NumTemplateArgs
+name|Builder
 argument_list|)
 block|,
 name|TemplateParams
@@ -2626,9 +2773,7 @@ argument|TemplateParameterList *Params
 argument_list|,
 argument|ClassTemplateDecl *SpecializedTemplate
 argument_list|,
-argument|TemplateArgument *TemplateArgs
-argument_list|,
-argument|unsigned NumTemplateArgs
+argument|TemplateArgumentListBuilder&Builder
 argument_list|,
 argument|ClassTemplatePartialSpecializationDecl *PrevDecl
 argument_list|)

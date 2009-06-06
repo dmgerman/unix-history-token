@@ -64,7 +64,7 @@ comment|// RUN: grep 'declare extern_weak i32 @t15()' %t&&
 end_comment
 
 begin_comment
-comment|// RUN: grep '@t16 = extern_weak global i32' %t
+comment|// RUN: grep '@t16 = extern_weak global i32' %t&&
 end_comment
 
 begin_function_decl
@@ -387,6 +387,69 @@ name|t16
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// RUN: grep '@t18 = global i[0-9]* 1, align .*' %t&&
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|t18
+name|__attribute__
+argument_list|(
+operator|(
+name|weak_import
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|t18
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// RUN: grep 'define i[0-9]* @t19() nounwind {' %t&&
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|t19
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(weak_import
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_function
+name|int
+name|t19
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+literal|10
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// RUN: true
+end_comment
 
 end_unit
 

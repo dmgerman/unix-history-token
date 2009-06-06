@@ -43,12 +43,27 @@ directive|define
 name|CLANG_CODEGEN_ABIINFO_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"clang/AST/Type.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
 name|Type
+decl_stmt|;
+name|class
+name|Value
 decl_stmt|;
 block|}
 end_decl_stmt
