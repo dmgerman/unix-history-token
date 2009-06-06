@@ -4063,17 +4063,6 @@ index|]
 operator|==
 name|NULL
 operator|)
-operator|||
-operator|(
-name|ma
-index|[
-literal|0
-index|]
-operator|->
-name|valid
-operator|==
-literal|0
-operator|)
 condition|)
 block|{
 if|if

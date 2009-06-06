@@ -930,12 +930,6 @@ name|out
 goto|;
 if|if
 condition|(
-name|m
-operator|->
-name|valid
-operator|==
-literal|0
-operator|||
 name|rv
 operator|!=
 name|VM_PAGER_OK
