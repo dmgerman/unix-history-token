@@ -80,6 +80,7 @@ comment|// how many 'out' registers are used
 comment|// by this machinefunction? (used to compute the appropriate
 comment|// entry in the 'alloc' instruction at the top of the
 comment|// machinefunction)
+name|explicit
 name|IA64FunctionInfo
 argument_list|(
 argument|MachineFunction& MF

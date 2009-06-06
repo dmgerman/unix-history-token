@@ -180,11 +180,7 @@ comment|/// for link time optimization.
 comment|///
 comment|/// Internalize - Run the internalize pass.
 comment|/// RunInliner - Use a function inlining pass.
-comment|/// RunSecondGlobalOpt - Run the global optimizer pass twice.
 comment|/// VerifyEach - Run the verifier after each pass.
-comment|//
-comment|// FIXME: RunSecondGlobalOpt should go away once we resolve which of LTO or
-comment|// llvm-ld is better.
 specifier|static
 specifier|inline
 name|void
@@ -199,9 +195,6 @@ name|Internalize
 parameter_list|,
 name|bool
 name|RunInliner
-parameter_list|,
-name|bool
-name|RunSecondGlobalOpt
 parameter_list|,
 name|bool
 name|VerifyEach
@@ -815,9 +808,6 @@ name|bool
 name|RunInliner
 parameter_list|,
 name|bool
-name|RunSecondGlobalOpt
-parameter_list|,
-name|bool
 name|VerifyEach
 parameter_list|)
 block|{
@@ -927,10 +917,10 @@ name|VerifyEach
 argument_list|)
 expr_stmt|;
 comment|// Remove dead EH info.
-comment|// Optimize globals again.
+comment|// Optimize globals again if we ran the inliner.
 if|if
 condition|(
-name|RunSecondGlobalOpt
+name|RunInliner
 condition|)
 name|addOnePass
 argument_list|(

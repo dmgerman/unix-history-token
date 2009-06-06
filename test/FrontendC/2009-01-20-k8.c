@@ -4,7 +4,11 @@ comment|// RUN: %llvmgcc %s -S -march=k8
 end_comment
 
 begin_comment
-comment|// XTARGET: x86
+comment|// XFAIL: *
+end_comment
+
+begin_comment
+comment|// XTARGET: x86,i386,i686
 end_comment
 
 begin_decl_stmt

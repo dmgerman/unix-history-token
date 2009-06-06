@@ -78,7 +78,9 @@ block|{
 name|public
 operator|:
 name|X86ELFWriterInfo
-argument_list|()
+argument_list|(
+argument|bool is64Bit
+argument_list|)
 block|;
 name|virtual
 operator|~

@@ -152,14 +152,6 @@ specifier|extern
 name|bool
 name|UseSoftFloat
 decl_stmt|;
-comment|/// NoImplicitFloat - This flag is enabled when the -no-implicit-float flag is
-comment|/// specified on the command line.  When this flag is on, the code generator
-comment|/// won't generate any implicit floating point instructions. I.e., no XMM or
-comment|/// x87 or vectorized memcpy/memmove instructions. This is for X86 only.
-specifier|extern
-name|bool
-name|NoImplicitFloat
-decl_stmt|;
 comment|/// NoZerosInBSS - By default some codegens place zero-initialized data to
 comment|/// .bss section. This flag disables such behaviour (necessary, e.g. for
 comment|/// crt*.o compiling).
@@ -215,12 +207,6 @@ comment|/// wth earlier copy coalescing.
 specifier|extern
 name|bool
 name|StrongPHIElim
-decl_stmt|;
-comment|/// DisableRedZone - This flag disables use of the "Red Zone" on
-comment|/// targets which would otherwise have one.
-specifier|extern
-name|bool
-name|DisableRedZone
 decl_stmt|;
 block|}
 end_decl_stmt

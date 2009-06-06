@@ -1602,20 +1602,26 @@ break|break;
 block|}
 end_for
 
-begin_expr_stmt
-name|assert
-argument_list|(
-name|i
-operator|!=
-name|PredBlocks
-operator|.
-name|size
-argument_list|()
-operator|&&
-literal|"No reachable preds?"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|// It's possible that none of the predecessors of NewBB are reachable;
+end_comment
+
+begin_comment
+comment|// in that case, NewBB itself is unreachable, so nothing needs to be
+end_comment
+
+begin_comment
+comment|// changed.
+end_comment
+
+begin_if
+if|if
+condition|(
+operator|!
+name|NewBBIDom
+condition|)
+return|return;
+end_if
 
 begin_for
 for|for
@@ -1665,16 +1671,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_for
-
-begin_expr_stmt
-name|assert
-argument_list|(
-name|NewBBIDom
-operator|&&
-literal|"No immediate dominator found??"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|// Create the new dominator tree node... and set the idom of NewBB.

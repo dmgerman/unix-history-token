@@ -822,6 +822,52 @@ block|;
 specifier|static
 name|BinaryOperator
 operator|*
+name|CreateFNeg
+argument_list|(
+name|Value
+operator|*
+name|Op
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
+operator|=
+literal|""
+argument_list|,
+name|Instruction
+operator|*
+name|InsertBefore
+operator|=
+literal|0
+argument_list|)
+block|;
+specifier|static
+name|BinaryOperator
+operator|*
+name|CreateFNeg
+argument_list|(
+name|Value
+operator|*
+name|Op
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
+argument_list|,
+name|BasicBlock
+operator|*
+name|InsertAtEnd
+argument_list|)
+block|;
+specifier|static
+name|BinaryOperator
+operator|*
 name|CreateNot
 argument_list|(
 name|Value
@@ -865,11 +911,22 @@ operator|*
 name|InsertAtEnd
 argument_list|)
 block|;
-comment|/// isNeg, isNot - Check if the given Value is a NEG or NOT instruction.
+comment|/// isNeg, isFNeg, isNot - Check if the given Value is a
+comment|/// NEG, FNeg, or NOT instruction.
 comment|///
 specifier|static
 name|bool
 name|isNeg
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|V
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|isFNeg
 argument_list|(
 specifier|const
 name|Value
@@ -888,7 +945,8 @@ name|V
 argument_list|)
 block|;
 comment|/// getNegArgument, getNotArgument - Helper functions to extract the
-comment|///     unary argument of a NEG or NOT operation implemented via Sub or Xor.
+comment|///     unary argument of a NEG, FNEG or NOT operation implemented via
+comment|///     Sub, FSub, or Xor.
 comment|///
 specifier|static
 specifier|const
@@ -906,6 +964,28 @@ specifier|static
 name|Value
 operator|*
 name|getNegArgument
+argument_list|(
+name|Value
+operator|*
+name|BinOp
+argument_list|)
+block|;
+specifier|static
+specifier|const
+name|Value
+operator|*
+name|getFNegArgument
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|BinOp
+argument_list|)
+block|;
+specifier|static
+name|Value
+operator|*
+name|getFNegArgument
 argument_list|(
 name|Value
 operator|*

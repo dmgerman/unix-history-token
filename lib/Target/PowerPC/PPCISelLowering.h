@@ -958,7 +958,7 @@ argument|SelectionDAG&DAG
 argument_list|)
 block|;
 name|SDValue
-name|LowerFP_TO_SINT
+name|LowerFP_TO_INT
 argument_list|(
 argument|SDValue Op
 argument_list|,

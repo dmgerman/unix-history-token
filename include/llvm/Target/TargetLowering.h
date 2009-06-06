@@ -2822,6 +2822,10 @@ name|isSrcConst
 argument_list|,
 name|bool
 name|isSrcStr
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
 argument_list|)
 decl|const
 block|{
@@ -3429,17 +3433,17 @@ name|Offset
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// isConsecutiveLoad - Return true if LD (which must be a LoadSDNode) is
-comment|/// loading 'Bytes' bytes from a location that is 'Dist' units away from the
-comment|/// location that the 'Base' load is loading from.
+comment|/// isConsecutiveLoad - Return true if LD is loading 'Bytes' bytes from a
+comment|/// location that is 'Dist' units away from the location that the 'Base' load
+comment|/// is loading from.
 name|bool
 name|isConsecutiveLoad
 argument_list|(
-name|SDNode
+name|LoadSDNode
 operator|*
 name|LD
 argument_list|,
-name|SDNode
+name|LoadSDNode
 operator|*
 name|Base
 argument_list|,

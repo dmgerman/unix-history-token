@@ -208,6 +208,70 @@ name|unsigned
 name|StandardErrColumns
 parameter_list|()
 function_decl|;
+comment|/// This function determines whether the terminal connected to standard
+comment|/// output supports colors. If standard output is not connected to a
+comment|/// terminal, this function returns false.
+specifier|static
+name|bool
+name|StandardOutHasColors
+parameter_list|()
+function_decl|;
+comment|/// This function determines whether the terminal connected to standard
+comment|/// error supports colors. If standard error is not connected to a
+comment|/// terminal, this function returns false.
+specifier|static
+name|bool
+name|StandardErrHasColors
+parameter_list|()
+function_decl|;
+comment|/// Whether changing colors requires the output to be flushed.
+comment|/// This is needed on systems that don't support escape sequences for
+comment|/// changing colors.
+specifier|static
+name|bool
+name|ColorNeedsFlush
+parameter_list|()
+function_decl|;
+comment|/// This function returns the colorcode escape sequences.
+comment|/// If ColorNeedsFlush() is true then this function will change the colors
+comment|/// and return an empty escape sequence. In that case it is the
+comment|/// responsibility of the client to flush the output stream prior to
+comment|/// calling this function.
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|OutputColor
+parameter_list|(
+name|char
+name|c
+parameter_list|,
+name|bool
+name|bold
+parameter_list|,
+name|bool
+name|bg
+parameter_list|)
+function_decl|;
+comment|/// Same as OutputColor, but only enables the bold attribute.
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|OutputBold
+parameter_list|(
+name|bool
+name|bg
+parameter_list|)
+function_decl|;
+comment|/// Resets the terminals colors, or returns an escape sequence to do so.
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|ResetColor
+parameter_list|()
+function_decl|;
 comment|/// @}
 block|}
 empty_stmt|;

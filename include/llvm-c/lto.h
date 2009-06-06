@@ -28,6 +28,13 @@ directive|include
 file|<stddef.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|LTO_API_VERSION
+value|3
+end_define
+
 begin_typedef
 typedef|typedef
 enum|enum
@@ -392,6 +399,20 @@ comment|/**  * Sets the location of the "gcc" to run. If not set, libLTO will se
 specifier|extern
 name|void
 name|lto_codegen_set_gcc_path
+parameter_list|(
+name|lto_code_gen_t
+name|cg
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|)
+function_decl|;
+comment|/**  * Sets the location of the assembler tool to run. If not set, libLTO  * will use gcc to invoke the assembler.  */
+specifier|extern
+name|void
+name|lto_codegen_set_assembler_path
 parameter_list|(
 name|lto_code_gen_t
 name|cg

@@ -147,6 +147,7 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
+name|explicit
 name|XCoreFunctionInfo
 argument_list|(
 name|MachineFunction

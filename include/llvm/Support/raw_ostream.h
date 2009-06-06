@@ -138,6 +138,31 @@ name|Unbuffered
 decl_stmt|;
 name|public
 label|:
+comment|// color order matches ANSI escape sequence, don't change
+enum|enum
+name|Colors
+block|{
+name|BLACK
+init|=
+literal|0
+block|,
+name|RED
+block|,
+name|GREEN
+block|,
+name|YELLOW
+block|,
+name|BLUE
+block|,
+name|MAGENTA
+block|,
+name|CYAN
+block|,
+name|WHITE
+block|,
+name|SAVEDCOLOR
+block|}
+enum|;
 name|explicit
 name|raw_ostream
 argument_list|(
@@ -698,6 +723,84 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// Changes the foreground color of text that will be output from this point
+end_comment
+
+begin_comment
+comment|/// forward.
+end_comment
+
+begin_comment
+comment|/// @param colors ANSI color to use, the special SAVEDCOLOR can be used to
+end_comment
+
+begin_comment
+comment|/// change only the bold attribute, and keep colors untouched
+end_comment
+
+begin_comment
+comment|/// @param bold bold/brighter text, default false
+end_comment
+
+begin_comment
+comment|/// @param bg if true change the background, default: change foreground
+end_comment
+
+begin_comment
+comment|/// @returns itself so it can be used within<< invocations
+end_comment
+
+begin_function
+name|virtual
+name|raw_ostream
+modifier|&
+name|changeColor
+parameter_list|(
+name|enum
+name|Colors
+name|colors
+parameter_list|,
+name|bool
+name|bold
+init|=
+name|false
+parameter_list|,
+name|bool
+name|bg
+init|=
+name|false
+parameter_list|)
+block|{
+return|return
+operator|*
+name|this
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// Resets the colors to terminal defaults. Call this when you are done
+end_comment
+
+begin_comment
+comment|/// outputting colored text, or before program exit.
+end_comment
+
+begin_function
+name|virtual
+name|raw_ostream
+modifier|&
+name|resetColor
+parameter_list|()
+block|{
+return|return
+operator|*
+name|this
+return|;
+block|}
+end_function
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
 end_comment
 
@@ -950,6 +1053,24 @@ name|seek
 argument_list|(
 argument|uint64_t off
 argument_list|)
+block|;
+name|virtual
+name|raw_ostream
+operator|&
+name|changeColor
+argument_list|(
+argument|enum Colors colors
+argument_list|,
+argument|bool bold=false
+argument_list|,
+argument|bool bg=false
+argument_list|)
+block|;
+name|virtual
+name|raw_ostream
+operator|&
+name|resetColor
+argument_list|()
 block|; }
 decl_stmt|;
 end_decl_stmt

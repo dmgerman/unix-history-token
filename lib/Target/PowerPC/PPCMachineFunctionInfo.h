@@ -125,6 +125,7 @@ name|HasFastCall
 block|;
 name|public
 operator|:
+name|explicit
 name|PPCFunctionInfo
 argument_list|(
 name|MachineFunction

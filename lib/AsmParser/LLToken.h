@@ -245,6 +245,10 @@ name|kw_ssp
 block|,
 name|kw_sspreq
 block|,
+name|kw_noredzone
+block|,
+name|kw_noimplicitfloat
+block|,
 name|kw_type
 block|,
 name|kw_opaque
@@ -292,9 +296,15 @@ block|,
 comment|// Instruction Opcodes (Opcode in UIntVal).
 name|kw_add
 block|,
+name|kw_fadd
+block|,
 name|kw_sub
 block|,
+name|kw_fsub
+block|,
 name|kw_mul
+block|,
+name|kw_fmul
 block|,
 name|kw_udiv
 block|,

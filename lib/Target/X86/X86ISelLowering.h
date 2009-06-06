@@ -715,6 +715,8 @@ argument_list|,
 argument|bool isSrcConst
 argument_list|,
 argument|bool isSrcStr
+argument_list|,
+argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;

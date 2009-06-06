@@ -164,8 +164,7 @@ block|}
 comment|/// getGOTBase - If this is managing a Global Offset Table, this method should
 comment|/// return a pointer to its base.
 name|virtual
-name|unsigned
-name|char
+name|uint8_t
 operator|*
 name|getGOTBase
 argument_list|()
@@ -221,8 +220,7 @@ comment|/// emit the function, so it doesn't pass in the size.  Instead, this me
 comment|/// is required to pass back a "valid size".  The JIT will be careful to not
 comment|/// write more than the returned ActualSize bytes of memory.
 name|virtual
-name|unsigned
-name|char
+name|uint8_t
 modifier|*
 name|startFunctionBody
 parameter_list|(
@@ -247,8 +245,7 @@ comment|/// thunk for it.  The stub should be "close" to the current function bo
 comment|/// but should not be included in the 'actualsize' returned by
 comment|/// startFunctionBody.
 name|virtual
-name|unsigned
-name|char
+name|uint8_t
 modifier|*
 name|allocateStub
 parameter_list|(
@@ -281,13 +278,11 @@ name|Function
 modifier|*
 name|F
 parameter_list|,
-name|unsigned
-name|char
+name|uint8_t
 modifier|*
 name|FunctionStart
 parameter_list|,
-name|unsigned
-name|char
+name|uint8_t
 modifier|*
 name|FunctionEnd
 parameter_list|)
@@ -296,8 +291,7 @@ literal|0
 function_decl|;
 comment|/// allocateSpace - Allocate a memory block of the given size.
 name|virtual
-name|unsigned
-name|char
+name|uint8_t
 modifier|*
 name|allocateSpace
 parameter_list|(
@@ -327,8 +321,7 @@ function_decl|;
 comment|/// startExceptionTable - When we finished JITing the function, if exception
 comment|/// handling is set, we emit the exception table.
 name|virtual
-name|unsigned
-name|char
+name|uint8_t
 modifier|*
 name|startExceptionTable
 parameter_list|(
@@ -355,18 +348,15 @@ name|Function
 modifier|*
 name|F
 parameter_list|,
-name|unsigned
-name|char
+name|uint8_t
 modifier|*
 name|TableStart
 parameter_list|,
-name|unsigned
-name|char
+name|uint8_t
 modifier|*
 name|TableEnd
 parameter_list|,
-name|unsigned
-name|char
+name|uint8_t
 modifier|*
 name|FrameRegister
 parameter_list|)

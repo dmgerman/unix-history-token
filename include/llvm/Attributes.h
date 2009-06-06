@@ -272,6 +272,25 @@ operator|<<
 literal|21
 decl_stmt|;
 comment|///< Function creates no aliases of pointer
+specifier|const
+name|Attributes
+name|NoRedZone
+init|=
+literal|1
+operator|<<
+literal|22
+decl_stmt|;
+comment|/// disable redzone
+specifier|const
+name|Attributes
+name|NoImplicitFloat
+init|=
+literal|1
+operator|<<
+literal|23
+decl_stmt|;
+comment|/// disable implicit floating point
+comment|/// instructions.
 comment|/// @brief Attributes that only apply to function parameters.
 specifier|const
 name|Attributes
@@ -307,6 +326,10 @@ operator||
 name|StackProtect
 operator||
 name|StackProtectReq
+operator||
+name|NoRedZone
+operator||
+name|NoImplicitFloat
 decl_stmt|;
 comment|/// @brief Parameter attributes that do not apply to vararg call arguments.
 specifier|const

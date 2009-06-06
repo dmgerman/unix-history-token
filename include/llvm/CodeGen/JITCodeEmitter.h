@@ -248,7 +248,7 @@ comment|///
 name|void
 name|emitByte
 argument_list|(
-argument|unsigned char B
+argument|uint8_t B
 argument_list|)
 block|{
 if|if
@@ -287,8 +287,7 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|unsigned
-name|char
+name|uint8_t
 call|)
 argument_list|(
 name|W
@@ -301,8 +300,7 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|unsigned
-name|char
+name|uint8_t
 call|)
 argument_list|(
 name|W
@@ -315,8 +313,7 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|unsigned
-name|char
+name|uint8_t
 call|)
 argument_list|(
 name|W
@@ -329,8 +326,7 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|unsigned
-name|char
+name|uint8_t
 call|)
 argument_list|(
 name|W
@@ -370,8 +366,7 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|unsigned
-name|char
+name|uint8_t
 call|)
 argument_list|(
 name|W
@@ -384,8 +379,7 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|unsigned
-name|char
+name|uint8_t
 call|)
 argument_list|(
 name|W
@@ -398,8 +392,7 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|unsigned
-name|char
+name|uint8_t
 call|)
 argument_list|(
 name|W
@@ -412,8 +405,7 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|unsigned
-name|char
+name|uint8_t
 call|)
 argument_list|(
 name|W
@@ -453,8 +445,7 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|unsigned
-name|char
+name|uint8_t
 call|)
 argument_list|(
 name|W
@@ -467,8 +458,7 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|unsigned
-name|char
+name|uint8_t
 call|)
 argument_list|(
 name|W
@@ -481,8 +471,7 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|unsigned
-name|char
+name|uint8_t
 call|)
 argument_list|(
 name|W
@@ -495,8 +484,7 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|unsigned
-name|char
+name|uint8_t
 call|)
 argument_list|(
 name|W
@@ -509,8 +497,7 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|unsigned
-name|char
+name|uint8_t
 call|)
 argument_list|(
 name|W
@@ -523,8 +510,7 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|unsigned
-name|char
+name|uint8_t
 call|)
 argument_list|(
 name|W
@@ -537,8 +523,7 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|unsigned
-name|char
+name|uint8_t
 call|)
 argument_list|(
 name|W
@@ -551,8 +536,7 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|unsigned
-name|char
+name|uint8_t
 call|)
 argument_list|(
 name|W
@@ -592,8 +576,7 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|unsigned
-name|char
+name|uint8_t
 call|)
 argument_list|(
 name|W
@@ -606,8 +589,7 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|unsigned
-name|char
+name|uint8_t
 call|)
 argument_list|(
 name|W
@@ -620,8 +602,7 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|unsigned
-name|char
+name|uint8_t
 call|)
 argument_list|(
 name|W
@@ -634,8 +615,7 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|unsigned
-name|char
+name|uint8_t
 call|)
 argument_list|(
 name|W
@@ -648,8 +628,7 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|unsigned
-name|char
+name|uint8_t
 call|)
 argument_list|(
 name|W
@@ -662,8 +641,7 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|unsigned
-name|char
+name|uint8_t
 call|)
 argument_list|(
 name|W
@@ -676,8 +654,7 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|unsigned
-name|char
+name|uint8_t
 call|)
 argument_list|(
 name|W
@@ -690,8 +667,7 @@ name|CurBufferPtr
 operator|++
 operator|=
 call|(
-name|unsigned
-name|char
+name|uint8_t
 call|)
 argument_list|(
 name|W
@@ -744,8 +720,7 @@ comment|// Move the current buffer ptr up to the specified alignment.
 name|CurBufferPtr
 operator|=
 operator|(
-name|unsigned
-name|char
+name|uint8_t
 operator|*
 operator|)
 operator|(
@@ -790,8 +765,7 @@ argument_list|)
 block|{
 do|do
 block|{
-name|unsigned
-name|char
+name|uint8_t
 name|Byte
 init|=
 name|Value
@@ -824,10 +798,10 @@ empty_stmt|;
 do|}
 comment|/// emitSLEB128Bytes - This callback is invoked when a SLEB128 needs to be
 comment|/// written to the output stream.
-do|void emitSLEB128Bytes(int Value
+do|void emitSLEB128Bytes(int32_t Value
 block|)
 block|{
-name|int
+name|int32_t
 name|Sign
 operator|=
 name|Value
@@ -848,8 +822,7 @@ name|IsMore
 block|;
 do|do
 block|{
-name|unsigned
-name|char
+name|uint8_t
 name|Byte
 init|=
 name|Value
@@ -931,8 +904,7 @@ operator|++
 name|i
 control|)
 block|{
-name|unsigned
-name|char
+name|uint8_t
 name|C
 init|=
 name|String
@@ -956,7 +928,7 @@ comment|/// emitInt32 - Emit a int32 directive.
 name|void
 name|emitInt32
 argument_list|(
-argument|int Value
+argument|int32_t Value
 argument_list|)
 block|{
 if|if
