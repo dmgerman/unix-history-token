@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -161,6 +167,12 @@ begin_include
 include|#
 directive|include
 file|<compat/linux/linux_emul.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<compat/linux/linux_util.h>
 end_include
 
 begin_expr_stmt
@@ -573,6 +585,21 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
+name|LINUX_CTR2
+argument_list|(
+name|sys_futex
+argument_list|,
+literal|"futex_put destroy uaddr %p ref %d"
+argument_list|,
+name|f
+operator|->
+name|f_uaddr
+argument_list|,
+name|f
+operator|->
+name|f_refcount
+argument_list|)
+expr_stmt|;
 name|FUTEX_DESTROY
 argument_list|(
 name|f
@@ -587,6 +614,21 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|LINUX_CTR2
+argument_list|(
+name|sys_futex
+argument_list|,
+literal|"futex_put uaddr %p ref %d"
+argument_list|,
+name|f
+operator|->
+name|f_uaddr
+argument_list|,
+name|f
+operator|->
+name|f_refcount
+argument_list|)
+expr_stmt|;
 name|FUTEXES_UNLOCK
 expr_stmt|;
 name|FUTEX_UNLOCK
@@ -711,6 +753,19 @@ name|newf
 operator|=
 name|f
 expr_stmt|;
+name|LINUX_CTR2
+argument_list|(
+name|sys_futex
+argument_list|,
+literal|"futex_get uaddr %p ref %d"
+argument_list|,
+name|uaddr
+argument_list|,
+name|f
+operator|->
+name|f_refcount
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -726,6 +781,15 @@ name|FUTEX_DONTCREATE
 condition|)
 block|{
 name|FUTEXES_UNLOCK
+expr_stmt|;
+name|LINUX_CTR1
+argument_list|(
+name|sys_futex
+argument_list|,
+literal|"futex_get uaddr %p null"
+argument_list|,
+name|uaddr
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -805,6 +869,19 @@ name|f_list
 argument_list|)
 expr_stmt|;
 name|FUTEXES_UNLOCK
+expr_stmt|;
+name|LINUX_CTR2
+argument_list|(
+name|sys_futex
+argument_list|,
+literal|"futex_get uaddr %p ref %d new"
+argument_list|,
+name|uaddr
+argument_list|,
+name|tmpf
+operator|->
+name|f_refcount
+argument_list|)
 expr_stmt|;
 operator|*
 name|newf
@@ -986,6 +1063,25 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
+name|LINUX_CTR4
+argument_list|(
+name|sys_futex
+argument_list|,
+literal|"futex_sleep enter uaddr %p wp %p timo %ld ref %d"
+argument_list|,
+name|f
+operator|->
+name|f_uaddr
+argument_list|,
+name|wp
+argument_list|,
+name|timeout
+argument_list|,
+name|f
+operator|->
+name|f_refcount
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|sx_sleep
@@ -1026,6 +1122,34 @@ literal|"futex != wp_futex"
 operator|)
 argument_list|)
 expr_stmt|;
+name|LINUX_CTR5
+argument_list|(
+name|sys_futex
+argument_list|,
+literal|"futex_sleep out error %d uaddr %p w"
+literal|" %p requeued uaddr %p ref %d"
+argument_list|,
+name|error
+argument_list|,
+name|f
+operator|->
+name|f_uaddr
+argument_list|,
+name|wp
+argument_list|,
+name|wp
+operator|->
+name|wp_futex
+operator|->
+name|f_uaddr
+argument_list|,
+name|wp
+operator|->
+name|wp_futex
+operator|->
+name|f_refcount
+argument_list|)
+expr_stmt|;
 name|futex_put
 argument_list|(
 name|f
@@ -1045,6 +1169,22 @@ name|f
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|LINUX_CTR3
+argument_list|(
+name|sys_futex
+argument_list|,
+literal|"futex_sleep out error %d uaddr %p wp %p"
+argument_list|,
+name|error
+argument_list|,
+name|f
+operator|->
+name|f_uaddr
+argument_list|,
+name|wp
+argument_list|)
+expr_stmt|;
 name|futex_put
 argument_list|(
 name|f
@@ -1103,6 +1243,23 @@ argument_list|,
 argument|wpt
 argument_list|)
 block|{
+name|LINUX_CTR3
+argument_list|(
+name|sys_futex
+argument_list|,
+literal|"futex_wake uaddr %p wp %p ref %d"
+argument_list|,
+name|f
+operator|->
+name|f_uaddr
+argument_list|,
+name|wp
+argument_list|,
+name|f
+operator|->
+name|f_refcount
+argument_list|)
+expr_stmt|;
 name|wp
 operator|->
 name|wp_flags
@@ -1207,6 +1364,19 @@ operator|<=
 name|n
 condition|)
 block|{
+name|LINUX_CTR2
+argument_list|(
+name|sys_futex
+argument_list|,
+literal|"futex_req_wake uaddr %p wp %p"
+argument_list|,
+name|f
+operator|->
+name|f_uaddr
+argument_list|,
+name|wp
+argument_list|)
+expr_stmt|;
 name|wp
 operator|->
 name|wp_flags
@@ -1233,6 +1403,23 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|LINUX_CTR3
+argument_list|(
+name|sys_futex
+argument_list|,
+literal|"futex_requeue uaddr %p wp %p to %p"
+argument_list|,
+name|f
+operator|->
+name|f_uaddr
+argument_list|,
+name|wp
+argument_list|,
+name|f2
+operator|->
+name|f_uaddr
+argument_list|)
+expr_stmt|;
 name|wp
 operator|->
 name|wp_flags
@@ -1844,6 +2031,21 @@ block|{
 case|case
 name|LINUX_FUTEX_WAIT
 case|:
+name|LINUX_CTR2
+argument_list|(
+name|sys_futex
+argument_list|,
+literal|"WAIT val %d uaddr %p"
+argument_list|,
+name|args
+operator|->
+name|val
+argument_list|,
+name|args
+operator|->
+name|uaddr
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1922,6 +2124,15 @@ condition|(
 name|error
 condition|)
 block|{
+name|LINUX_CTR1
+argument_list|(
+name|sys_futex
+argument_list|,
+literal|"WAIT copyin failed %d"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 name|futex_put
 argument_list|(
 name|f
@@ -1944,24 +2155,11 @@ operator|->
 name|val
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|ldebug
-argument_list|(
-name|sys_futex
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-name|ARGS
+name|LINUX_CTR3
 argument_list|(
 name|sys_futex
 argument_list|,
-literal|"futex_wait uaddr %p WHOOPS %d != %d"
-argument_list|)
+literal|"WAIT uaddr %p val %d != uval %d"
 argument_list|,
 name|args
 operator|->
@@ -1974,8 +2172,6 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|futex_put
 argument_list|(
 name|f
@@ -2006,6 +2202,21 @@ break|break;
 case|case
 name|LINUX_FUTEX_WAKE
 case|:
+name|LINUX_CTR2
+argument_list|(
+name|sys_futex
+argument_list|,
+literal|"WAKE val %d uaddr %p"
+argument_list|,
+name|args
+operator|->
+name|val
+argument_list|,
+name|args
+operator|->
+name|uaddr
+argument_list|)
+expr_stmt|;
 comment|/* 		 * XXX: Linux is able to cope with different addresses 		 * corresponding to the same mapped memory in the sleeping 		 * and waker process(es). 		 */
 ifdef|#
 directive|ifdef
@@ -2112,6 +2323,41 @@ break|break;
 case|case
 name|LINUX_FUTEX_CMP_REQUEUE
 case|:
+name|LINUX_CTR5
+argument_list|(
+name|sys_futex
+argument_list|,
+literal|"CMP_REQUEUE uaddr %p "
+literal|"val %d val3 %d uaddr2 %p val2 %d"
+argument_list|,
+name|args
+operator|->
+name|uaddr
+argument_list|,
+name|args
+operator|->
+name|val
+argument_list|,
+name|args
+operator|->
+name|val3
+argument_list|,
+name|args
+operator|->
+name|uaddr2
+argument_list|,
+operator|(
+name|int
+operator|)
+operator|(
+name|unsigned
+name|long
+operator|)
+name|args
+operator|->
+name|timeout
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -2256,6 +2502,15 @@ condition|(
 name|error
 condition|)
 block|{
+name|LINUX_CTR1
+argument_list|(
+name|sys_futex
+argument_list|,
+literal|"CMP_REQUEUE copyin failed %d"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 name|futex_put
 argument_list|(
 name|f2
@@ -2285,25 +2540,11 @@ operator|->
 name|val3
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|ldebug
-argument_list|(
-name|sys_futex
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-name|ARGS
+name|LINUX_CTR2
 argument_list|(
 name|sys_futex
 argument_list|,
-literal|"futex_cmp_requeue WHOOPS"
-literal|" VAL %d != UVAL %d"
-argument_list|)
+literal|"CMP_REQUEUE val %d != uval %d"
 argument_list|,
 name|args
 operator|->
@@ -2312,8 +2553,6 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|futex_put
 argument_list|(
 name|f2
@@ -2385,6 +2624,34 @@ break|break;
 case|case
 name|LINUX_FUTEX_WAKE_OP
 case|:
+name|LINUX_CTR5
+argument_list|(
+name|sys_futex
+argument_list|,
+literal|"WAKE_OP "
+literal|"uaddr %p op %d val %x uaddr2 %p val3 %x"
+argument_list|,
+name|args
+operator|->
+name|uaddr
+argument_list|,
+name|args
+operator|->
+name|op
+argument_list|,
+name|args
+operator|->
+name|val
+argument_list|,
+name|args
+operator|->
+name|uaddr2
+argument_list|,
+name|args
+operator|->
+name|val3
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
