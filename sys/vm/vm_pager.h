@@ -35,12 +35,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_struct_decl
-struct_decl|struct
-name|bio
-struct_decl|;
-end_struct_decl
-
 begin_typedef
 typedef|typedef
 name|void
