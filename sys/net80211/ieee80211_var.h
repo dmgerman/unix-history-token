@@ -2728,6 +2728,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_FEXT_GF
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* CONF: Greenfield enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_FEXT_HT
 value|0x00080000
 end_define
@@ -2755,7 +2766,7 @@ value|0x00200000
 end_define
 
 begin_comment
-comment|/* CONF: A-MPDU tx supported */
+comment|/* CONF: A-MPDU rx supported */
 end_comment
 
 begin_define
@@ -2777,7 +2788,7 @@ value|0x00800000
 end_define
 
 begin_comment
-comment|/* CONF: A-MSDU tx supported */
+comment|/* CONF: A-MSDU rx supported */
 end_comment
 
 begin_define
@@ -2849,9 +2860,31 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_FEXT_STBC_TX
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* CONF: STBC tx enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FEXT_STBC_RX
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* CONF: STBC rx enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_FEXT_BITS
 define|\
-value|"\20\1NONHT_PR\2INACT\3SCANWAIT\4BGSCAN\5WPS\6TSN\7SCANREQ\10RESUME" \ 	"\0114ADDR\12NONEPR_PR\13SWBMISS\14DFS\15DOTD\16STATEWAIT\17REINIT" \ 	"\20BPF\21WDSLEGACY\22PROBECHAN\24HT\25AMDPU_TX\26AMPDU_TX\27AMSDU_TX" \ 	"\30AMSDU_RX\31USEHT40\32PUREN\33SHORTGI20\34SHORTGI40\35HTCOMPAT" \ 	"\36RIFS"
+value|"\20\1NONHT_PR\2INACT\3SCANWAIT\4BGSCAN\5WPS\6TSN\7SCANREQ\10RESUME" \ 	"\0114ADDR\12NONEPR_PR\13SWBMISS\14DFS\15DOTD\16STATEWAIT\17REINIT" \ 	"\20BPF\21WDSLEGACY\22PROBECHAN\23GF\24HT\25AMDPU_TX\26AMPDU_TX" \ 	"\27AMSDU_TX\30AMSDU_RX\31USEHT40\32PUREN\33SHORTGI20\34SHORTGI40" \ 	"\35HTCOMPAT\36RIFS\37STBC_TX\40STBC_RX"
 end_define
 
 begin_define
