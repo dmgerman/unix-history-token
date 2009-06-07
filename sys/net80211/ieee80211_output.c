@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_inet6.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_wlan.h"
 end_include
 
@@ -181,6 +187,23 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip6.h>
 end_include
 
 begin_endif
@@ -3038,6 +3061,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* XXX m_copydata may be too slow for fast path */
 ifdef|#
 directive|ifdef
 name|INET
@@ -3057,7 +3081,6 @@ name|uint8_t
 name|tos
 decl_stmt|;
 comment|/* 		 * IP frame, map the DSCP bits from the TOS field. 		 */
-comment|/* XXX m_copydata may be too slow for fast path */
 comment|/* NB: ip header may not be in first mbuf */
 name|m_copydata
 argument_list|(
@@ -3104,10 +3127,100 @@ block|{
 endif|#
 directive|endif
 comment|/* INET */
+ifdef|#
+directive|ifdef
+name|INET6
+if|if
+condition|(
+name|eh
+operator|->
+name|ether_type
+operator|==
+name|htons
+argument_list|(
+name|ETHERTYPE_IPV6
+argument_list|)
+condition|)
+block|{
+name|uint32_t
+name|flow
+decl_stmt|;
+name|uint8_t
+name|tos
+decl_stmt|;
+comment|/* 		 * IPv6 frame, map the DSCP bits from the TOS field. 		 */
+name|m_copydata
+argument_list|(
+name|m
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ether_header
+argument_list|)
+operator|+
+name|offsetof
+argument_list|(
+expr|struct
+name|ip6_hdr
+argument_list|,
+name|ip6_flow
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|flow
+argument_list|)
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|flow
+argument_list|)
+expr_stmt|;
+name|tos
+operator|=
+call|(
+name|uint8_t
+call|)
+argument_list|(
+name|ntohl
+argument_list|(
+name|flow
+argument_list|)
+operator|>>
+literal|20
+argument_list|)
+expr_stmt|;
+name|tos
+operator|>>=
+literal|5
+expr_stmt|;
+comment|/* NB: ECN + low 3 bits of DSCP */
+name|d_wme_ac
+operator|=
+name|TID_TO_WME_AC
+argument_list|(
+name|tos
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+endif|#
+directive|endif
+comment|/* INET6 */
 name|d_wme_ac
 operator|=
 name|WME_AC_BE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
+block|}
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET
