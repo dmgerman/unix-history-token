@@ -852,10 +852,10 @@ name|IEEE80211_FEXT_NONERP_PR
 expr_stmt|;
 name|ic
 operator|->
-name|ic_flags_ext
+name|ic_flags_ht
 operator|&=
 operator|~
-name|IEEE80211_FEXT_NONHT_PR
+name|IEEE80211_FHT_NONHT_PR
 expr_stmt|;
 comment|/* fall thru... */
 case|case
@@ -1015,7 +1015,7 @@ name|ic_curchan
 argument_list|,
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8584,9 +8584,9 @@ if|if
 condition|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_HTCOMPAT
+name|IEEE80211_FHT_HTCOMPAT
 condition|)
 block|{
 if|if
@@ -9107,9 +9107,9 @@ condition|(
 operator|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_PUREN
+name|IEEE80211_FHT_PUREN
 operator|)
 operator|&&
 operator|(

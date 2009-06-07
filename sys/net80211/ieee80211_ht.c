@@ -1044,11 +1044,11 @@ block|{
 comment|/* 		 * Device is HT capable; enable all HT-related 		 * facilities by default. 		 * XXX these choices may be too aggressive. 		 */
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator||=
-name|IEEE80211_FEXT_HT
+name|IEEE80211_FHT_HT
 operator||
-name|IEEE80211_FEXT_HTCOMPAT
+name|IEEE80211_FHT_HTCOMPAT
 expr_stmt|;
 if|if
 condition|(
@@ -1060,9 +1060,9 @@ name|IEEE80211_HTCAP_SHORTGI20
 condition|)
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator||=
-name|IEEE80211_FEXT_SHORTGI20
+name|IEEE80211_FHT_SHORTGI20
 expr_stmt|;
 comment|/* XXX infer from channel list? */
 if|if
@@ -1076,9 +1076,9 @@ condition|)
 block|{
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator||=
-name|IEEE80211_FEXT_USEHT40
+name|IEEE80211_FHT_USEHT40
 expr_stmt|;
 if|if
 condition|(
@@ -1090,9 +1090,9 @@ name|IEEE80211_HTCAP_SHORTGI40
 condition|)
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator||=
-name|IEEE80211_FEXT_SHORTGI40
+name|IEEE80211_FHT_SHORTGI40
 expr_stmt|;
 block|}
 comment|/* enable RIFS if capable */
@@ -1106,16 +1106,16 @@ name|IEEE80211_HTC_RIFS
 condition|)
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator||=
-name|IEEE80211_FEXT_RIFS
+name|IEEE80211_FHT_RIFS
 expr_stmt|;
 comment|/* NB: A-MPDU and A-MSDU rx are mandated, these are tx only */
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator||=
-name|IEEE80211_FEXT_AMPDU_RX
+name|IEEE80211_FHT_AMPDU_RX
 expr_stmt|;
 if|if
 condition|(
@@ -1127,15 +1127,15 @@ name|IEEE80211_HTC_AMPDU
 condition|)
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator||=
-name|IEEE80211_FEXT_AMPDU_TX
+name|IEEE80211_FHT_AMPDU_TX
 expr_stmt|;
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator||=
-name|IEEE80211_FEXT_AMSDU_RX
+name|IEEE80211_FHT_AMSDU_RX
 expr_stmt|;
 if|if
 condition|(
@@ -1147,9 +1147,9 @@ name|IEEE80211_HTC_AMSDU
 condition|)
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator||=
-name|IEEE80211_FEXT_AMSDU_TX
+name|IEEE80211_FHT_AMSDU_TX
 expr_stmt|;
 block|}
 comment|/* NB: disable default legacy WDS, too many issues right now */
@@ -1163,10 +1163,10 @@ name|IEEE80211_FEXT_WDSLEGACY
 condition|)
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&=
 operator|~
-name|IEEE80211_FEXT_HT
+name|IEEE80211_FHT_HT
 expr_stmt|;
 block|}
 end_function
@@ -4135,7 +4135,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|IEEE80211_FEXT_HT
+name|IEEE80211_FHT_HT
 condition|)
 block|{
 comment|/* promote to HT if possible */
@@ -4143,7 +4143,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|IEEE80211_FEXT_USEHT40
+name|IEEE80211_FHT_USEHT40
 condition|)
 block|{
 if|if
@@ -4326,9 +4326,9 @@ name|KASSERT
 argument_list|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_HT
+name|IEEE80211_FHT_HT
 argument_list|,
 operator|(
 literal|"no HT requested"
@@ -4369,9 +4369,9 @@ if|if
 condition|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_SHORTGI20
+name|IEEE80211_FHT_SHORTGI20
 condition|)
 name|ni
 operator|->
@@ -4436,9 +4436,9 @@ if|if
 condition|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_SHORTGI40
+name|IEEE80211_FHT_SHORTGI40
 condition|)
 name|ni
 operator|->
@@ -4476,9 +4476,9 @@ if|if
 condition|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_RIFS
+name|IEEE80211_FHT_RIFS
 condition|)
 name|ni
 operator|->
@@ -4532,7 +4532,7 @@ operator|=
 name|ac
 expr_stmt|;
 block|}
-comment|/* NB: AMPDU tx/rx governed by IEEE80211_FEXT_AMPDU_{TX,RX} */
+comment|/* NB: AMPDU tx/rx governed by IEEE80211_FHT_AMPDU_{TX,RX} */
 name|ni
 operator|->
 name|ni_flags
@@ -4646,9 +4646,9 @@ argument_list|,
 operator|(
 name|ic
 operator|->
-name|ic_flags_ext
+name|ic_flags_ht
 operator|&
-name|IEEE80211_FEXT_NONHT_PR
+name|IEEE80211_FHT_NONHT_PR
 operator|)
 condition|?
 literal|", non-HT sta present"
@@ -4717,9 +4717,9 @@ if|if
 condition|(
 name|ic
 operator|->
-name|ic_flags_ext
+name|ic_flags_ht
 operator|&
-name|IEEE80211_FEXT_NONHT_PR
+name|IEEE80211_FHT_NONHT_PR
 condition|)
 block|{
 name|protmode
@@ -4963,9 +4963,9 @@ argument_list|)
 expr_stmt|;
 name|ic
 operator|->
-name|ic_flags_ext
+name|ic_flags_ht
 operator||=
-name|IEEE80211_FEXT_NONHT_PR
+name|IEEE80211_FHT_NONHT_PR
 expr_stmt|;
 name|ic
 operator|->
@@ -5048,9 +5048,9 @@ condition|(
 operator|(
 name|ic
 operator|->
-name|ic_flags_ext
+name|ic_flags_ht
 operator|&
-name|IEEE80211_FEXT_NONHT_PR
+name|IEEE80211_FHT_NONHT_PR
 operator|)
 operator|&&
 name|time_after
@@ -5073,10 +5073,10 @@ endif|#
 directive|endif
 name|ic
 operator|->
-name|ic_flags_ext
+name|ic_flags_ht
 operator|&=
 operator|~
-name|IEEE80211_FEXT_NONHT_PR
+name|IEEE80211_FHT_NONHT_PR
 expr_stmt|;
 name|htinfo_update
 argument_list|(
@@ -5652,9 +5652,9 @@ operator|&&
 operator|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_SHORTGI20
+name|IEEE80211_FHT_SHORTGI20
 operator|)
 condition|)
 name|ni
@@ -5676,9 +5676,9 @@ operator|&&
 operator|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_SHORTGI40
+name|IEEE80211_FHT_SHORTGI40
 operator|)
 condition|)
 name|ni
@@ -5792,9 +5792,9 @@ operator|=
 operator|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_HT
+name|IEEE80211_FHT_HT
 operator|)
 condition|?
 name|IEEE80211_CHAN_HT20
@@ -5815,9 +5815,9 @@ operator|&&
 operator|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_USEHT40
+name|IEEE80211_FHT_USEHT40
 operator|)
 condition|)
 block|{
@@ -5867,9 +5867,9 @@ operator|&&
 operator|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_RIFS
+name|IEEE80211_FHT_RIFS
 operator|)
 condition|)
 name|ni
@@ -5952,9 +5952,9 @@ operator|=
 operator|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_HT
+name|IEEE80211_FHT_HT
 operator|)
 condition|?
 name|IEEE80211_CHAN_HT20
@@ -5974,9 +5974,9 @@ operator|&&
 operator|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_USEHT40
+name|IEEE80211_FHT_USEHT40
 operator|)
 condition|)
 block|{
@@ -7097,9 +7097,9 @@ operator|&&
 operator|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_AMPDU_RX
+name|IEEE80211_FHT_AMPDU_RX
 operator|)
 condition|)
 block|{
@@ -10086,9 +10086,9 @@ if|if
 condition|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_USEHT40
+name|IEEE80211_FHT_USEHT40
 condition|)
 name|caps
 operator||=
@@ -10165,9 +10165,9 @@ condition|(
 operator|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_SHORTGI20
+name|IEEE80211_FHT_SHORTGI20
 operator|)
 operator|==
 literal|0
@@ -10182,9 +10182,9 @@ condition|(
 operator|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_SHORTGI40
+name|IEEE80211_FHT_SHORTGI40
 operator|)
 operator|==
 literal|0
@@ -10595,9 +10595,9 @@ if|if
 condition|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_RIFS
+name|IEEE80211_FHT_RIFS
 condition|)
 name|ht
 operator|->
@@ -10756,9 +10756,9 @@ if|if
 condition|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_RIFS
+name|IEEE80211_FHT_RIFS
 condition|)
 name|frm
 index|[

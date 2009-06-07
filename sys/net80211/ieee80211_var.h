@@ -523,6 +523,10 @@ name|ic_flags_ext
 decl_stmt|;
 comment|/* extended state flags */
 name|uint32_t
+name|ic_flags_ht
+decl_stmt|;
+comment|/* HT state flags */
+name|uint32_t
 name|ic_flags_ven
 decl_stmt|;
 comment|/* vendor state flags */
@@ -1436,6 +1440,10 @@ name|uint32_t
 name|iv_flags_ext
 decl_stmt|;
 comment|/* extended state flags */
+name|uint32_t
+name|iv_flags_ht
+decl_stmt|;
+comment|/* HT state flags */
 name|uint32_t
 name|iv_flags_ven
 decl_stmt|;
@@ -2522,17 +2530,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_NONHT_PR
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* STATUS: non-HT sta present */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IEEE80211_FEXT_INACT
 value|0x00000002
 end_define
@@ -2728,7 +2725,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_GF
+name|IEEE80211_FEXT_BITS
+define|\
+value|"\20\2INACT\3SCANWAIT\4BGSCAN\5WPS\6TSN\7SCANREQ\10RESUME" \ 	"\0114ADDR\12NONEPR_PR\13SWBMISS\14DFS\15DOTD\16STATEWAIT\17REINIT" \ 	"\20BPF\21WDSLEGACY\22PROBECHAN"
+end_define
+
+begin_comment
+comment|/* ic_flags_ht/iv_flags_ht */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FHT_NONHT_PR
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* STATUS: non-HT sta present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FHT_GF
 value|0x00040000
 end_define
 
@@ -2739,7 +2759,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_HT
+name|IEEE80211_FHT_HT
 value|0x00080000
 end_define
 
@@ -2750,7 +2770,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_AMPDU_TX
+name|IEEE80211_FHT_AMPDU_TX
 value|0x00100000
 end_define
 
@@ -2761,7 +2781,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_AMPDU_RX
+name|IEEE80211_FHT_AMPDU_RX
 value|0x00200000
 end_define
 
@@ -2772,7 +2792,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_AMSDU_TX
+name|IEEE80211_FHT_AMSDU_TX
 value|0x00400000
 end_define
 
@@ -2783,7 +2803,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_AMSDU_RX
+name|IEEE80211_FHT_AMSDU_RX
 value|0x00800000
 end_define
 
@@ -2794,7 +2814,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_USEHT40
+name|IEEE80211_FHT_USEHT40
 value|0x01000000
 end_define
 
@@ -2805,7 +2825,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_PUREN
+name|IEEE80211_FHT_PUREN
 value|0x02000000
 end_define
 
@@ -2816,7 +2836,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_SHORTGI20
+name|IEEE80211_FHT_SHORTGI20
 value|0x04000000
 end_define
 
@@ -2827,7 +2847,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_SHORTGI40
+name|IEEE80211_FHT_SHORTGI40
 value|0x08000000
 end_define
 
@@ -2838,7 +2858,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_HTCOMPAT
+name|IEEE80211_FHT_HTCOMPAT
 value|0x10000000
 end_define
 
@@ -2849,7 +2869,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_RIFS
+name|IEEE80211_FHT_RIFS
 value|0x20000000
 end_define
 
@@ -2860,7 +2880,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_STBC_TX
+name|IEEE80211_FHT_STBC_TX
 value|0x40000000
 end_define
 
@@ -2871,7 +2891,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_STBC_RX
+name|IEEE80211_FHT_STBC_RX
 value|0x80000000
 end_define
 
@@ -2882,9 +2902,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_BITS
+name|IEEE80211_FHT_BITS
 define|\
-value|"\20\1NONHT_PR\2INACT\3SCANWAIT\4BGSCAN\5WPS\6TSN\7SCANREQ\10RESUME" \ 	"\0114ADDR\12NONEPR_PR\13SWBMISS\14DFS\15DOTD\16STATEWAIT\17REINIT" \ 	"\20BPF\21WDSLEGACY\22PROBECHAN\23GF\24HT\25AMDPU_TX\26AMPDU_TX" \ 	"\27AMSDU_TX\30AMSDU_RX\31USEHT40\32PUREN\33SHORTGI20\34SHORTGI40" \ 	"\35HTCOMPAT\36RIFS\37STBC_TX\40STBC_RX"
+value|"\20\1NONHT_PR" \ 	"\23GF\24HT\25AMDPU_TX\26AMPDU_TX" \ 	"\27AMSDU_TX\30AMSDU_RX\31USEHT40\32PUREN\33SHORTGI20\34SHORTGI40" \ 	"\35HTCOMPAT\36RIFS\37STBC_TX\40STBC_RX"
 end_define
 
 begin_define
@@ -4053,7 +4073,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Calculate HT channel promotion flags for a channel.  * XXX belongs in ieee80211_ht.h but needs IEEE80211_FEXT_*  */
+comment|/*  * Calculate HT channel promotion flags for a channel.  * XXX belongs in ieee80211_ht.h but needs IEEE80211_FHT_*  */
 end_comment
 
 begin_function
@@ -4075,16 +4095,16 @@ argument_list|(
 name|c
 argument_list|)
 condition|?
-name|IEEE80211_FEXT_HT
+name|IEEE80211_FHT_HT
 operator||
-name|IEEE80211_FEXT_USEHT40
+name|IEEE80211_FHT_USEHT40
 else|:
 name|IEEE80211_IS_CHAN_HT
 argument_list|(
 name|c
 argument_list|)
 condition|?
-name|IEEE80211_FEXT_HT
+name|IEEE80211_FHT_HT
 else|:
 literal|0
 return|;

@@ -1251,9 +1251,9 @@ operator|&&
 operator|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_PUREN
+name|IEEE80211_FHT_PUREN
 operator|)
 operator|==
 literal|0
@@ -1272,9 +1272,9 @@ operator|&&
 operator|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_PUREN
+name|IEEE80211_FHT_PUREN
 operator|)
 operator|==
 literal|0
@@ -3082,7 +3082,7 @@ name|ic
 argument_list|)
 decl_stmt|;
 comment|/* 		 * Check for channel promotion required to support the 		 * set of running vap's.  This assumes we are called 		 * after ni_chan is setup for each vap. 		 */
-comment|/* NB: this assumes IEEE80211_FEXT_USEHT40> IEEE80211_FEXT_HT */
+comment|/* NB: this assumes IEEE80211_FHT_USEHT40> IEEE80211_FHT_HT */
 if|if
 condition|(
 name|flags
@@ -5535,9 +5535,9 @@ operator|&&
 operator|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_HT
+name|IEEE80211_FHT_HT
 operator|)
 condition|)
 block|{

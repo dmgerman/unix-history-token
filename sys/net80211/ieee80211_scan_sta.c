@@ -7418,7 +7418,7 @@ name|chan
 argument_list|,
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 argument_list|)
 expr_stmt|;
 block|}
@@ -8254,7 +8254,7 @@ name|bestchan
 argument_list|,
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 argument_list|)
 argument_list|)
 expr_stmt|;

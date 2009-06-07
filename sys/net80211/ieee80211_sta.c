@@ -5638,9 +5638,9 @@ operator|&&
 operator|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_HT
+name|IEEE80211_FHT_HT
 operator|)
 condition|)
 block|{
@@ -6338,9 +6338,9 @@ if|if
 condition|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_HTCOMPAT
+name|IEEE80211_FHT_HTCOMPAT
 condition|)
 block|{
 comment|/* 					 * Accept pre-draft HT ie's if the 					 * standard ones have not been seen. 					 */
@@ -6569,9 +6569,9 @@ operator|&&
 operator|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_HT
+name|IEEE80211_FHT_HT
 operator|)
 condition|)
 block|{
