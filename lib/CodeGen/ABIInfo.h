@@ -103,6 +103,10 @@ block|,
 comment|/// Pass the argument directly using the normal
 comment|/// converted LLVM type. Complex and structure types
 comment|/// are passed using first class aggregates.
+name|Extend
+block|,
+comment|/// Valid only for integer argument types. Same as 'direct'
+comment|/// but also emit a zero/sign extension attribute.
 name|Indirect
 block|,
 comment|/// Pass the argument indirectly via a hidden pointer
@@ -208,6 +212,18 @@ return|;
 block|}
 specifier|static
 name|ABIArgInfo
+name|getExtend
+parameter_list|()
+block|{
+return|return
+name|ABIArgInfo
+argument_list|(
+name|Extend
+argument_list|)
+return|;
+block|}
+specifier|static
+name|ABIArgInfo
 name|getIgnore
 parameter_list|()
 block|{
@@ -288,6 +304,17 @@ return|return
 name|TheKind
 operator|==
 name|Direct
+return|;
+block|}
+name|bool
+name|isExtend
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TheKind
+operator|==
+name|Extend
 return|;
 block|}
 name|bool

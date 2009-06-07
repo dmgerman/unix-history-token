@@ -86,5 +86,47 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// PR4339
+end_comment
+
+begin_typedef
+typedef|typedef
+name|float
+name|vec4
+name|__attribute__
+typedef|((
+name|vector_size
+typedef|(16)));
+end_typedef
+
+begin_function
+name|void
+name|vac
+parameter_list|(
+name|vec4
+modifier|*
+name|a
+parameter_list|,
+name|char
+name|b
+parameter_list|,
+name|float
+name|c
+parameter_list|)
+block|{
+operator|(
+operator|*
+name|a
+operator|)
+index|[
+name|b
+index|]
+operator|=
+name|c
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

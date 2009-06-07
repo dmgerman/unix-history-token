@@ -186,46 +186,6 @@ comment|// expected-error {{too many arguments to function call}}
 block|}
 end_function
 
-begin_typedef
-typedef|typedef
-name|__attribute__
-argument_list|(
-argument|( ext_vector_type(
-literal|16
-argument|) )
-argument_list|)
-name|unsigned
-name|char
-name|uchar16
-typedef|;
-end_typedef
-
-begin_comment
-comment|// rdar://5905347
-end_comment
-
-begin_function
-name|unsigned
-name|char
-name|test8
-parameter_list|(
-name|short
-name|v
-parameter_list|)
-block|{
-name|uchar16
-name|c
-decl_stmt|;
-return|return
-name|__builtin_ia32_vec_ext_v4si
-argument_list|(
-name|c
-argument_list|)
-return|;
-comment|// expected-error {{too few arguments to function}}
-block|}
-end_function
-
 begin_comment
 comment|// atomics.
 end_comment
