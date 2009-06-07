@@ -1869,6 +1869,17 @@ begin_comment
 comment|/* Administer lagg interface. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PRIV_NET_GIF
+value|416
+end_define
+
+begin_comment
+comment|/* Administer gif interface. */
+end_comment
+
 begin_comment
 comment|/*  * 802.11-related privileges.  */
 end_comment

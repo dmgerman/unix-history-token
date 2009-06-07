@@ -232,6 +232,9 @@ modifier|*
 name|gif_netgraph
 decl_stmt|;
 comment|/* ng_gif(4) netgraph node info */
+name|u_int
+name|gif_options
+decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
 argument|gif_softc
@@ -379,37 +382,56 @@ begin_struct
 struct|struct
 name|etherip_header
 block|{
-name|u_int8_t
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|LITTLE_ENDIAN
+name|u_int
+name|eip_resvl
+range|:
+literal|4
+decl_stmt|,
+comment|/* reserved */
 name|eip_ver
+range|:
+literal|4
 decl_stmt|;
-comment|/* version/reserved */
+comment|/* version */
+endif|#
+directive|endif
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+name|u_int
+name|eip_ver
+range|:
+literal|4
+decl_stmt|,
+comment|/* version */
+name|eip_resvl
+range|:
+literal|4
+decl_stmt|;
+comment|/* reserved */
+endif|#
+directive|endif
 name|u_int8_t
-name|eip_pad
+name|eip_resvh
 decl_stmt|;
-comment|/* required padding byte */
+comment|/* reserved */
 block|}
+name|__packed
 struct|;
 end_struct
 
 begin_define
 define|#
 directive|define
-name|ETHERIP_VER_VERS_MASK
-value|0x0f
-end_define
-
-begin_define
-define|#
-directive|define
-name|ETHERIP_VER_RSVD_MASK
-value|0xf0
-end_define
-
-begin_define
-define|#
-directive|define
 name|ETHERIP_VERSION
-value|0x03
+value|0x3
 end_define
 
 begin_comment
@@ -656,6 +678,41 @@ end_endif
 begin_comment
 comment|/* _KERNEL */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|GIFGOPTS
+value|_IOR('i', 150, struct ifreq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GIFSOPTS
+value|_IOW('i', 151, struct ifreq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GIF_ACCEPT_REVETHIP
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|GIF_SEND_REVETHIP
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|GIF_FULLOPTS
+value|(GIF_ACCEPT_REVETHIP|GIF_SEND_REVETHIP)
+end_define
 
 begin_endif
 endif|#
