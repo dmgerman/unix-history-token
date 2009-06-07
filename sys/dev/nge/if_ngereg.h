@@ -2621,7 +2621,7 @@ value|0x00008000
 end_define
 
 begin_comment
-comment|/*  * DMA descriptor structures. The RX and TX descriptor formats are  * deliberately designed to be similar to facilitate passing them between  * RX and TX queues on multiple controllers, in the case where you have  * multiple MACs in a switching configuration. With the 83820, the pointer  * values can be either 64 bits or 32 bits depending on how the chip is  * configured. For the 83821, the fields are always 32-bits. There is  * also an optional extended status field for VLAN and TCP/IP checksum  * functions. We use the checksum feature so we enable the use of this  * field. Descriptors must be 64-bit aligned.  * After this, we include some additional structure members for  * use by the driver. Note that for this structure will be a different  * size on the alpha, but that's okay as long as it's a multiple of 4  * bytes in size.   *  */
+comment|/*  * DMA descriptor structures. The RX and TX descriptor formats are  * deliberately designed to be similar to facilitate passing them between  * RX and TX queues on multiple controllers, in the case where you have  * multiple MACs in a switching configuration. With the 83820, the pointer  * values can be either 64 bits or 32 bits depending on how the chip is  * configured. For the 83821, the fields are always 32-bits. There is  * also an optional extended status field for VLAN and TCP/IP checksum  * functions. We use the checksum feature so we enable the use of this  * field. Descriptors must be 64-bit aligned.  * After this, we include some additional structure members for  * use by the driver. Note that for this structure will be a different  * size on the alpha, but that's okay as long as it's a multiple of 4  * bytes in size.  *  */
 end_comment
 
 begin_struct
@@ -2630,23 +2630,23 @@ name|nge_desc_64
 block|{
 comment|/* Hardware descriptor section */
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 name|nge_next_lo
 decl_stmt|;
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 name|nge_next_hi
 decl_stmt|;
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 name|nge_ptr_lo
 decl_stmt|;
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 name|nge_ptr_hi
 decl_stmt|;
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 name|nge_cmdsts
 decl_stmt|;
 define|#
@@ -2662,7 +2662,7 @@ directive|define
 name|nge_ctl
 value|nge_cmdsts
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 name|nge_extsts
 decl_stmt|;
 comment|/* Driver software section */
@@ -2673,7 +2673,7 @@ name|mbuf
 modifier|*
 name|nge_mbuf
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|nge_dummy
 decl_stmt|;
 block|}
@@ -2686,7 +2686,7 @@ name|nge_desc_32
 modifier|*
 name|nge_nextdesc
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|nge_dummy
 decl_stmt|;
 block|}
@@ -2702,15 +2702,15 @@ name|nge_desc_32
 block|{
 comment|/* Hardware descriptor section */
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 name|nge_next
 decl_stmt|;
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 name|nge_ptr
 decl_stmt|;
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 name|nge_cmdsts
 decl_stmt|;
 define|#
@@ -2726,7 +2726,7 @@ directive|define
 name|nge_ctl
 value|nge_cmdsts
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 name|nge_extsts
 decl_stmt|;
 comment|/* Driver software section */
@@ -2737,7 +2737,7 @@ name|mbuf
 modifier|*
 name|nge_mbuf
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|nge_dummy
 decl_stmt|;
 block|}
@@ -2750,7 +2750,7 @@ name|nge_desc_32
 modifier|*
 name|nge_nextdesc
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|nge_dummy
 decl_stmt|;
 block|}
@@ -2830,7 +2830,7 @@ name|NGE_LASTDESC
 parameter_list|(
 name|x
 parameter_list|)
-value|(!((x)->nge_ctl& NGE_CMDSTS_MORE)))
+value|(!((x)->nge_ctl& NGE_CMDSTS_MORE))
 end_define
 
 begin_define
@@ -2840,7 +2840,7 @@ name|NGE_MORE
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)->nge_ctl& NGE_CMDSTS_MORE))
+value|((x)->nge_ctl& NGE_CMDSTS_MORE)
 end_define
 
 begin_define
@@ -3265,10 +3265,10 @@ begin_struct
 struct|struct
 name|nge_type
 block|{
-name|u_int16_t
+name|uint16_t
 name|nge_vid
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|nge_did
 decl_stmt|;
 name|char
@@ -3283,22 +3283,22 @@ begin_struct
 struct|struct
 name|nge_mii_frame
 block|{
-name|u_int8_t
+name|uint8_t
 name|mii_stdelim
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|mii_opcode
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|mii_phyaddr
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|mii_regaddr
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|mii_turnaround
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|mii_data
 decl_stmt|;
 block|}
@@ -3430,13 +3430,13 @@ decl_stmt|;
 name|int
 name|nge_if_flags
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|nge_type
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|nge_link
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|nge_width
 decl_stmt|;
 define|#
@@ -3464,7 +3464,7 @@ name|struct
 name|mtx
 name|nge_mtx
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|nge_tbi
 decl_stmt|;
 name|struct
