@@ -530,7 +530,7 @@ name|Abstract
 return|;
 block|}
 comment|/// canLosslesslyBitCastTo - Return true if this type could be converted
-comment|/// with a lossless BitCast to type 'Ty'. For example, uint to int. BitCasts
+comment|/// with a lossless BitCast to type 'Ty'. For example, i8* to i32*. BitCasts
 comment|/// are valid for types of the same size only where no re-interpretation of
 comment|/// the bits is done.
 comment|/// @brief Determine if this type could be losslessly bitcast to Ty

@@ -940,10 +940,10 @@ name|TargetData
 operator|*
 name|TD
 block|;
-comment|/// UnknownValue - This SCEV is used to represent unknown trip counts and
-comment|/// things.
+comment|/// CouldNotCompute - This SCEV is used to represent unknown trip
+comment|/// counts and things.
 name|SCEVHandle
-name|UnknownValue
+name|CouldNotCompute
 block|;
 comment|/// Scalars - This is a cache of the scalars we have analyzed so far.
 comment|///
@@ -1205,7 +1205,7 @@ comment|/// ComputeBackedgeTakenCountExhaustively - If the trip is known to exec
 comment|/// a constant number of times (the condition evolves only from constants),
 comment|/// try to evaluate a few iterations of the loop until we get the exit
 comment|/// condition gets a value of ExitWhen (true or false).  If we cannot
-comment|/// evaluate the trip count of the loop, return UnknownValue.
+comment|/// evaluate the trip count of the loop, return CouldNotCompute.
 name|SCEVHandle
 name|ComputeBackedgeTakenCountExhaustively
 argument_list|(
@@ -1218,7 +1218,7 @@ argument_list|)
 block|;
 comment|/// HowFarToZero - Return the number of times a backedge comparing the
 comment|/// specified value to zero will execute.  If not computable, return
-comment|/// UnknownValue.
+comment|/// CouldNotCompute.
 name|SCEVHandle
 name|HowFarToZero
 argument_list|(
@@ -1235,7 +1235,7 @@ argument_list|)
 block|;
 comment|/// HowFarToNonZero - Return the number of times a backedge checking the
 comment|/// specified value for nonzero will execute.  If not computable, return
-comment|/// UnknownValue.
+comment|/// CouldNotCompute.
 name|SCEVHandle
 name|HowFarToNonZero
 argument_list|(
@@ -1252,7 +1252,7 @@ argument_list|)
 block|;
 comment|/// HowManyLessThans - Return the number of times a backedge containing the
 comment|/// specified less-than comparison will execute.  If not computable, return
-comment|/// UnknownValue. isSigned specifies whether the less-than is signed.
+comment|/// CouldNotCompute. isSigned specifies whether the less-than is signed.
 name|BackedgeTakenInfo
 name|HowManyLessThans
 argument_list|(

@@ -476,6 +476,18 @@ operator|*
 name|RetTy
 argument_list|)
 block|;
+comment|/// isValidArgumentType - Return true if the specified type is valid as an
+comment|/// argument type.
+specifier|static
+name|bool
+name|isValidArgumentType
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|ArgTy
+argument_list|)
+block|;
 specifier|inline
 name|bool
 name|isVarArg
@@ -819,6 +831,18 @@ argument_list|,
 argument|...
 argument_list|)
 name|END_WITH_NULL
+block|;
+comment|/// isValidElementType - Return true if the specified type is valid as a
+comment|/// element type.
+specifier|static
+name|bool
+name|isValidElementType
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|ElemTy
+argument_list|)
 block|;
 comment|// Iterator access to the elements
 typedef|typedef
@@ -1259,6 +1283,18 @@ argument_list|,
 argument|uint64_t NumElements
 argument_list|)
 block|;
+comment|/// isValidElementType - Return true if the specified type is valid as a
+comment|/// element type.
+specifier|static
+name|bool
+name|isValidElementType
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|ElemTy
+argument_list|)
+block|;
 specifier|inline
 name|uint64_t
 name|getNumElements
@@ -1553,6 +1589,18 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// isValidElementType - Return true if the specified type is valid as a
+comment|/// element type.
+specifier|static
+name|bool
+name|isValidElementType
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|ElemTy
+argument_list|)
+block|;
 comment|/// @brief Return the number of elements in the Vector type.
 specifier|inline
 name|unsigned
@@ -1722,6 +1770,18 @@ literal|0
 argument_list|)
 return|;
 block|}
+comment|/// isValidElementType - Return true if the specified type is valid as a
+comment|/// element type.
+specifier|static
+name|bool
+name|isValidElementType
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|ElemTy
+argument_list|)
+block|;
 comment|/// @brief Return the address space of the Pointer type.
 specifier|inline
 name|unsigned
