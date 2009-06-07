@@ -796,6 +796,14 @@ name|sp_lock
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|pool
+operator|->
+name|sp_lock
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|xprt
