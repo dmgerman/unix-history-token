@@ -139,7 +139,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb_pipe
+name|usb_endpoint
 struct_decl|;
 end_struct_decl
 
@@ -178,21 +178,21 @@ name|void
 name|usb2_dump_queue
 parameter_list|(
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_dump_pipe
+name|usb2_dump_endpoint
 parameter_list|(
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 function_decl|;
 end_function_decl

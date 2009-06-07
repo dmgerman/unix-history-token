@@ -795,7 +795,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|usb2_get_pipe
+name|usb2_get_endpoint
 argument_list|(
 name|uaa
 operator|->
@@ -812,7 +812,7 @@ name|NULL
 operator|)
 operator|||
 operator|(
-name|usb2_get_pipe
+name|usb2_get_endpoint
 argument_list|(
 name|uaa
 operator|->

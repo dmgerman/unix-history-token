@@ -48,7 +48,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb_pipe
+name|usb_endpoint
 struct_decl|;
 end_struct_decl
 
@@ -158,7 +158,7 @@ decl_stmt|;
 name|void
 function_decl|(
 modifier|*
-name|pipe_init
+name|endpoint_init
 function_decl|)
 parameter_list|(
 name|struct
@@ -170,7 +170,7 @@ name|usb_endpoint_descriptor
 modifier|*
 parameter_list|,
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
 parameter_list|)
 function_decl|;
@@ -308,9 +308,9 @@ modifier|*
 name|xfer
 parameter_list|,
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 function_decl|;
 name|void
@@ -325,9 +325,9 @@ modifier|*
 name|udev
 parameter_list|,
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 function_decl|;
 block|}

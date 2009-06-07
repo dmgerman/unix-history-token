@@ -1201,7 +1201,7 @@ name|usb2_set_endpoint_stall
 argument_list|(
 name|udev
 argument_list|,
-name|usb2_get_pipe_by_addr
+name|usb2_get_ep_by_addr
 argument_list|(
 name|udev
 argument_list|,
@@ -1243,16 +1243,16 @@ name|ea_val
 parameter_list|)
 block|{
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 decl_stmt|;
 name|uint8_t
 name|halted
 decl_stmt|;
-name|pipe
+name|ep
 operator|=
-name|usb2_get_pipe_by_addr
+name|usb2_get_ep_by_addr
 argument_list|(
 name|udev
 argument_list|,
@@ -1261,7 +1261,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pipe
+name|ep
 operator|==
 name|NULL
 condition|)
@@ -1282,7 +1282,7 @@ argument_list|)
 expr_stmt|;
 name|halted
 operator|=
-name|pipe
+name|ep
 operator|->
 name|is_stalled
 expr_stmt|;

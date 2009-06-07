@@ -5259,7 +5259,7 @@ name|xfer_type
 operator|=
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|edesc
 operator|->

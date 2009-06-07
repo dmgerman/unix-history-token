@@ -1529,7 +1529,7 @@ if|if
 condition|(
 name|urb
 operator|->
-name|pipe
+name|endpoint
 operator|==
 name|NULL
 condition|)
@@ -1545,7 +1545,7 @@ name|uhe
 operator|=
 name|urb
 operator|->
-name|pipe
+name|endpoint
 expr_stmt|;
 comment|/* 	 * Check that we have got a FreeBSD USB transfer that will dequeue 	 * the URB structure and do the real transfer. If there are no USB 	 * transfers, then we return an error. 	 */
 if|if
@@ -1787,7 +1787,7 @@ if|if
 condition|(
 name|urb
 operator|->
-name|pipe
+name|endpoint
 operator|==
 name|NULL
 condition|)
@@ -1803,7 +1803,7 @@ name|uhe
 operator|=
 name|urb
 operator|->
-name|pipe
+name|endpoint
 expr_stmt|;
 if|if
 condition|(
@@ -1961,9 +1961,9 @@ literal|1
 index|]
 decl_stmt|;
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 decl_stmt|;
 name|uint8_t
 name|type
@@ -2046,9 +2046,9 @@ operator||
 name|UE_DIR_IN
 operator|)
 expr_stmt|;
-name|pipe
+name|ep
 operator|=
-name|usb2_get_pipe
+name|usb2_get_endpoint
 argument_list|(
 name|dev
 argument_list|,
@@ -2061,7 +2061,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pipe
+name|ep
 operator|==
 name|NULL
 condition|)
@@ -2075,7 +2075,7 @@ name|usb2_clear_data_toggle
 argument_list|(
 name|dev
 argument_list|,
-name|pipe
+name|ep
 argument_list|)
 expr_stmt|;
 return|return
@@ -2528,7 +2528,7 @@ name|dev
 expr_stmt|;
 name|urb
 operator|->
-name|pipe
+name|endpoint
 operator|=
 name|uhe
 expr_stmt|;
@@ -3714,7 +3714,7 @@ name|bcopy
 argument_list|(
 name|udev
 operator|->
-name|default_pipe
+name|default_ep
 operator|.
 name|edesc
 argument_list|,

@@ -843,7 +843,7 @@ comment|/* UE_BULK */
 end_comment
 
 begin_comment
-comment|/* Whenever Linux references an USB endpoint:  * a) to initialize "urb->pipe"  * b) second argument passed to "usb_control_msg()"  *  * Then it uses one of the following macros. The "endpoint" argument  * is the physical endpoint value masked by 0xF. The "dev" argument  * is a pointer to "struct usb_device".  */
+comment|/* Whenever Linux references an USB endpoint:  * a) to initialize "urb->endpoint"  * b) second argument passed to "usb_control_msg()"  *  * Then it uses one of the following macros. The "endpoint" argument  * is the physical endpoint value masked by 0xF. The "dev" argument  * is a pointer to "struct usb_device".  */
 end_comment
 
 begin_define
@@ -1003,7 +1003,7 @@ comment|/* (in) pointer to associated device */
 name|struct
 name|usb_host_endpoint
 modifier|*
-name|pipe
+name|endpoint
 decl_stmt|;
 comment|/* (in) pipe pointer */
 name|uint8_t
@@ -1180,7 +1180,7 @@ parameter_list|,
 name|struct
 name|usb_host_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|,
 name|uint8_t
 name|request

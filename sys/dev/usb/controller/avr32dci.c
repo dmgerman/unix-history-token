@@ -4076,9 +4076,9 @@ modifier|*
 name|xfer
 parameter_list|,
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 block|{
 name|struct
@@ -4455,9 +4455,9 @@ modifier|*
 name|udev
 parameter_list|,
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 block|{
 name|struct
@@ -7665,7 +7665,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|avr32dci_pipe_init
+name|avr32dci_ep_init
 parameter_list|(
 name|struct
 name|usb_device
@@ -7678,9 +7678,9 @@ modifier|*
 name|edesc
 parameter_list|,
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 block|{
 name|struct
@@ -7811,10 +7811,10 @@ name|avr32dci_bus_methods
 init|=
 block|{
 operator|.
-name|pipe_init
+name|endpoint_init
 operator|=
 operator|&
-name|avr32dci_pipe_init
+name|avr32dci_ep_init
 block|,
 operator|.
 name|xfer_setup

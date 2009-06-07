@@ -2350,9 +2350,9 @@ operator|->
 name|ndisusb_dev
 decl_stmt|;
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|p
+name|ep
 init|=
 name|NULL
 decl_stmt|;
@@ -2509,13 +2509,13 @@ operator|=
 literal|0
 init|;
 operator|(
-name|p
+name|ep
 operator|=
-name|usb2_pipe_foreach
+name|usb2_endpoint_foreach
 argument_list|(
 name|udev
 argument_list|,
-name|p
+name|ep
 argument_list|)
 operator|)
 condition|;
@@ -2547,7 +2547,7 @@ break|break;
 block|}
 name|edesc
 operator|=
-name|p
+name|ep
 operator|->
 name|edesc
 expr_stmt|;

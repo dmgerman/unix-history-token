@@ -420,9 +420,9 @@ modifier|*
 name|udev
 parameter_list|,
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 function_decl|;
 end_function_decl

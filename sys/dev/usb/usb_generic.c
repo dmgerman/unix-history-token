@@ -610,9 +610,9 @@ name|n_setup
 parameter_list|)
 block|{
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 init|=
 name|f
 operator|->
@@ -630,7 +630,7 @@ decl_stmt|;
 name|uint8_t
 name|iface_index
 init|=
-name|pipe
+name|ep
 operator|->
 name|iface_index
 decl_stmt|;
@@ -785,9 +785,9 @@ name|fflags
 parameter_list|)
 block|{
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 init|=
 name|f
 operator|->
@@ -798,7 +798,7 @@ name|usb_endpoint_descriptor
 modifier|*
 name|ed
 init|=
-name|pipe
+name|ep
 operator|->
 name|edesc
 decl_stmt|;
@@ -1034,9 +1034,9 @@ literal|2
 index|]
 decl_stmt|;
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 init|=
 name|f
 operator|->
@@ -1047,7 +1047,7 @@ name|usb_endpoint_descriptor
 modifier|*
 name|ed
 init|=
-name|pipe
+name|ep
 operator|->
 name|edesc
 decl_stmt|;
@@ -1457,9 +1457,9 @@ literal|2
 index|]
 decl_stmt|;
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 init|=
 name|f
 operator|->
@@ -1470,7 +1470,7 @@ name|usb_endpoint_descriptor
 modifier|*
 name|ed
 init|=
-name|pipe
+name|ep
 operator|->
 name|edesc
 decl_stmt|;
@@ -4123,9 +4123,9 @@ name|req
 parameter_list|)
 block|{
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 decl_stmt|;
 name|int
 name|error
@@ -4220,9 +4220,9 @@ operator|==
 name|UT_WRITE_ENDPOINT
 condition|)
 block|{
-name|pipe
+name|ep
 operator|=
-name|usb2_get_pipe_by_addr
+name|usb2_get_ep_by_addr
 argument_list|(
 name|udev
 argument_list|,
@@ -4236,7 +4236,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pipe
+name|ep
 operator|==
 name|NULL
 condition|)
@@ -4273,7 +4273,7 @@ name|usb2_clear_data_toggle
 argument_list|(
 name|udev
 argument_list|,
-name|pipe
+name|ep
 argument_list|)
 expr_stmt|;
 block|}
@@ -6493,9 +6493,9 @@ block|}
 name|u
 union|;
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 decl_stmt|;
 name|struct
 name|usb_endpoint_descriptor
@@ -6801,9 +6801,9 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-name|pipe
+name|ep
 operator|=
-name|usb2_get_pipe_by_addr
+name|usb2_get_ep_by_addr
 argument_list|(
 name|f
 operator|->
@@ -6818,7 +6818,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pipe
+name|ep
 operator|==
 name|NULL
 condition|)
@@ -6831,7 +6831,7 @@ break|break;
 block|}
 name|ed
 operator|=
-name|pipe
+name|ep
 operator|->
 name|edesc
 expr_stmt|;
@@ -6850,7 +6850,7 @@ break|break;
 block|}
 name|iface_index
 operator|=
-name|pipe
+name|ep
 operator|->
 name|iface_index
 expr_stmt|;
@@ -7378,7 +7378,7 @@ name|EBUSY
 operator|)
 return|;
 block|}
-name|pipe
+name|ep
 operator|=
 name|f
 operator|->
@@ -7391,7 +7391,7 @@ operator|->
 name|ep_index
 index|]
 operator|->
-name|pipe
+name|endpoint
 expr_stmt|;
 comment|/* setup a clear-stall packet */
 name|req
@@ -7422,7 +7422,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|pipe
+name|ep
 operator|->
 name|edesc
 operator|->
@@ -7475,7 +7475,7 @@ name|f
 operator|->
 name|udev
 argument_list|,
-name|pipe
+name|ep
 argument_list|)
 expr_stmt|;
 block|}
@@ -7951,11 +7951,11 @@ name|ed
 parameter_list|)
 block|{
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 decl_stmt|;
-name|pipe
+name|ep
 operator|=
 name|f
 operator|->
@@ -7963,9 +7963,9 @@ name|priv_sc0
 expr_stmt|;
 if|if
 condition|(
-name|pipe
+name|ep
 operator|&&
-name|pipe
+name|ep
 operator|->
 name|edesc
 condition|)
@@ -7974,7 +7974,7 @@ operator|*
 name|ed
 operator|=
 operator|*
-name|pipe
+name|ep
 operator|->
 name|edesc
 expr_stmt|;

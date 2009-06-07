@@ -1185,7 +1185,7 @@ name|edesc
 operator|=
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|edesc
 expr_stmt|;
@@ -1241,7 +1241,7 @@ name|interval
 expr_stmt|;
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 operator|=
 name|edesc
 operator|->
@@ -2646,9 +2646,9 @@ modifier|*
 name|setup
 decl_stmt|;
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 decl_stmt|;
 name|struct
 name|usb_xfer_root
@@ -3280,9 +3280,9 @@ block|{
 continue|continue;
 block|}
 comment|/* see if there is a matching endpoint */
-name|pipe
+name|ep
 operator|=
-name|usb2_get_pipe
+name|usb2_get_endpoint
 argument_list|(
 name|udev
 argument_list|,
@@ -3299,13 +3299,13 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|pipe
+name|ep
 operator|==
 name|NULL
 operator|)
 operator|||
 operator|(
-name|pipe
+name|ep
 operator|->
 name|methods
 operator|==
@@ -3469,12 +3469,12 @@ name|refcount
 operator|++
 expr_stmt|;
 block|}
-comment|/* set transfer pipe pointer */
+comment|/* set transfer endpoint pointer */
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|=
-name|pipe
+name|ep
 expr_stmt|;
 name|parm
 operator|.
@@ -3497,7 +3497,7 @@ name|methods
 operator|=
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|methods
 expr_stmt|;
@@ -3537,10 +3537,10 @@ condition|(
 name|buf
 condition|)
 block|{
-comment|/* 				 * Increment the pipe refcount. This 				 * basically prevents setting a new 				 * configuration and alternate setting 				 * when USB transfers are in use on 				 * the given interface. Search the USB 				 * code for "pipe->refcount" if you 				 * want more information. 				 */
+comment|/* 				 * Increment the endpoint refcount. This 				 * basically prevents setting a new 				 * configuration and alternate setting 				 * when USB transfers are in use on 				 * the given interface. Search the USB 				 * code for "endpoint->refcount" if you 				 * want more information. 				 */
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|refcount
 operator|++
@@ -4456,10 +4456,10 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 		 * NOTE: default pipe does not have an 		 * interface, even if pipe->iface_index == 0 		 */
+comment|/* 		 * NOTE: default endpoint does not have an 		 * interface, even if endpoint->iface_index == 0 		 */
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|refcount
 operator|--
@@ -4583,7 +4583,7 @@ expr_stmt|;
 comment|/* copy direction to endpoint variable */
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 operator|&=
 operator|~
 operator|(
@@ -4594,7 +4594,7 @@ operator|)
 expr_stmt|;
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 operator||=
 operator|(
 name|req
@@ -5109,13 +5109,13 @@ name|bus
 expr_stmt|;
 name|DPRINTF
 argument_list|(
-literal|"xfer=%p, pipe=%p, nframes=%d, dir=%s\n"
+literal|"xfer=%p, endpoint=%p, nframes=%d, dir=%s\n"
 argument_list|,
 name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 argument_list|,
 name|xfer
 operator|->
@@ -5146,11 +5146,11 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
-name|usb2_dump_pipe
+name|usb2_dump_endpoint
 argument_list|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 argument_list|)
 expr_stmt|;
 name|USB_BUS_UNLOCK
@@ -5207,7 +5207,7 @@ expr_stmt|;
 call|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|methods
 operator|->
@@ -5415,9 +5415,9 @@ argument_list|(
 operator|&
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
-name|pipe_q
+name|endpoint_q
 argument_list|,
 name|xfer
 argument_list|)
@@ -5695,9 +5695,9 @@ name|xfer
 parameter_list|)
 block|{
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 decl_stmt|;
 name|USB_XFER_LOCK_ASSERT
 argument_list|(
@@ -5715,11 +5715,11 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-name|pipe
+name|ep
 operator|=
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 expr_stmt|;
 name|DPRINTF
 argument_list|(
@@ -5728,7 +5728,7 @@ argument_list|)
 expr_stmt|;
 comment|/* enter the transfer */
 call|(
-name|pipe
+name|ep
 operator|->
 name|methods
 operator|->
@@ -5777,9 +5777,9 @@ comment|/* start the transfer */
 name|usb2_command_wrapper
 argument_list|(
 operator|&
-name|pipe
+name|ep
 operator|->
-name|pipe_q
+name|endpoint_q
 argument_list|,
 name|xfer
 argument_list|)
@@ -5901,9 +5901,9 @@ name|xfer
 parameter_list|)
 block|{
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 decl_stmt|;
 if|if
 condition|(
@@ -6015,7 +6015,7 @@ comment|/* 			 * The following will lead to an USB_ERR_CANCELLED 			 * error cod
 call|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|methods
 operator|->
@@ -6051,7 +6051,7 @@ comment|/* close here and now */
 call|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|methods
 operator|->
@@ -6062,19 +6062,19 @@ name|xfer
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Any additional DMA delay is done by 		 * "usb2_transfer_unsetup()". 		 */
-comment|/* 		 * Special case. Check if we need to restart a blocked 		 * pipe. 		 */
-name|pipe
+comment|/* 		 * Special case. Check if we need to restart a blocked 		 * endpoint. 		 */
+name|ep
 operator|=
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 expr_stmt|;
 comment|/* 		 * If the current USB transfer is completing we need 		 * to start the next one: 		 */
 if|if
 condition|(
-name|pipe
+name|ep
 operator|->
-name|pipe_q
+name|endpoint_q
 operator|.
 name|curr
 operator|==
@@ -6084,9 +6084,9 @@ block|{
 name|usb2_command_wrapper
 argument_list|(
 operator|&
-name|pipe
+name|ep
 operator|->
-name|pipe_q
+name|endpoint_q
 argument_list|,
 name|NULL
 argument_list|)
@@ -7345,7 +7345,7 @@ name|uds_requests
 index|[
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|edesc
 operator|->
@@ -7370,7 +7370,7 @@ name|uds_requests
 index|[
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|edesc
 operator|->
@@ -7412,13 +7412,13 @@ init|=
 name|arg
 decl_stmt|;
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 init|=
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 decl_stmt|;
 name|USB_BUS_LOCK_ASSERT
 argument_list|(
@@ -7438,7 +7438,7 @@ argument_list|)
 expr_stmt|;
 comment|/* start the transfer */
 call|(
-name|pipe
+name|ep
 operator|->
 name|methods
 operator|->
@@ -7613,9 +7613,9 @@ name|pq
 parameter_list|)
 block|{
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 decl_stmt|;
 name|struct
 name|usb_xfer
@@ -7631,11 +7631,11 @@ name|pq
 operator|->
 name|curr
 expr_stmt|;
-name|pipe
+name|ep
 operator|=
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 expr_stmt|;
 name|USB_BUS_LOCK_ASSERT
 argument_list|(
@@ -7648,17 +7648,17 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the pipe is already stalled we do nothing ! 	 */
+comment|/* 	 * If the endpoint is already stalled we do nothing ! 	 */
 if|if
 condition|(
-name|pipe
+name|ep
 operator|->
 name|is_stalled
 condition|)
 block|{
 return|return;
 block|}
-comment|/* 	 * Check if we are supposed to stall the pipe: 	 */
+comment|/* 	 * Check if we are supposed to stall the endpoint: 	 */
 if|if
 condition|(
 name|xfer
@@ -7681,7 +7681,7 @@ comment|/* 		 * Only stall BULK and INTERRUPT endpoints. 		 */
 name|type
 operator|=
 operator|(
-name|pipe
+name|ep
 operator|->
 name|edesc
 operator|->
@@ -7727,7 +7727,7 @@ name|info
 operator|->
 name|udev
 expr_stmt|;
-name|pipe
+name|ep
 operator|->
 name|is_stalled
 operator|=
@@ -7758,7 +7758,7 @@ name|udev
 argument_list|,
 name|NULL
 argument_list|,
-name|pipe
+name|ep
 argument_list|)
 expr_stmt|;
 block|}
@@ -7871,7 +7871,7 @@ block|{
 name|type
 operator|=
 operator|(
-name|pipe
+name|ep
 operator|->
 name|edesc
 operator|->
@@ -7917,7 +7917,7 @@ argument_list|)
 expr_stmt|;
 comment|/* start USB transfer */
 call|(
-name|pipe
+name|ep
 operator|->
 name|methods
 operator|->
@@ -8016,7 +8016,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_callback_wrapper_sub  *  *  - This function will update variables in an USB transfer after  *  that the USB transfer is complete.  *  *  - This function is used to start the next USB transfer on the  *  pipe transfer queue, if any.  *  * NOTE: In some special cases the USB transfer will not be removed from  * the pipe queue, but remain first. To enforce USB transfer removal call  * this function passing the error code "USB_ERR_CANCELLED".  *  * Return values:  * 0: Success.  * Else: The callback has been deferred.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_callback_wrapper_sub  *  *  - This function will update variables in an USB transfer after  *  that the USB transfer is complete.  *  *  - This function is used to start the next USB transfer on the  *  ep transfer queue, if any.  *  * NOTE: In some special cases the USB transfer will not be removed from  * the pipe queue, but remain first. To enforce USB transfer removal call  * this function passing the error code "USB_ERR_CANCELLED".  *  * Return values:  * 0: Success.  * Else: The callback has been deferred.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -8031,9 +8031,9 @@ name|xfer
 parameter_list|)
 block|{
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 decl_stmt|;
 name|usb_frcount_t
 name|x
@@ -8076,7 +8076,7 @@ expr_stmt|;
 call|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|methods
 operator|->
@@ -8394,13 +8394,13 @@ name|DPRINTFN
 argument_list|(
 literal|6
 argument_list|,
-literal|"xfer=%p pipe=%p sts=%d alen=%d, slen=%d, afrm=%d, nfrm=%d\n"
+literal|"xfer=%p endpoint=%p sts=%d alen=%d, slen=%d, afrm=%d, nfrm=%d\n"
 argument_list|,
 name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 argument_list|,
 name|xfer
 operator|->
@@ -8464,13 +8464,13 @@ argument_list|(
 literal|2
 argument_list|,
 literal|"xfer=%p: Block On Failure "
-literal|"on pipe=%p\n"
+literal|"on endpoint=%p\n"
 argument_list|,
 name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -8531,13 +8531,13 @@ argument_list|(
 literal|2
 argument_list|,
 literal|"xfer=%p: Block On Failure on "
-literal|"Short Transfer on pipe %p.\n"
+literal|"Short Transfer on endpoint %p.\n"
 argument_list|,
 name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -8563,13 +8563,13 @@ argument_list|(
 literal|5
 argument_list|,
 literal|"xfer=%p: Control transfer "
-literal|"active on pipe=%p\n"
+literal|"active on endpoint=%p\n"
 argument_list|,
 name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -8578,11 +8578,11 @@ goto|;
 block|}
 block|}
 block|}
-name|pipe
+name|ep
 operator|=
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 expr_stmt|;
 comment|/* 	 * If the current USB transfer is completing we need to start the 	 * next one: 	 */
 name|USB_BUS_LOCK
@@ -8596,9 +8596,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pipe
+name|ep
 operator|->
-name|pipe_q
+name|endpoint_q
 operator|.
 name|curr
 operator|==
@@ -8608,27 +8608,27 @@ block|{
 name|usb2_command_wrapper
 argument_list|(
 operator|&
-name|pipe
+name|ep
 operator|->
-name|pipe_q
+name|endpoint_q
 argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pipe
+name|ep
 operator|->
-name|pipe_q
+name|endpoint_q
 operator|.
 name|curr
 operator|||
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|pipe
+name|ep
 operator|->
-name|pipe_q
+name|endpoint_q
 operator|.
 name|head
 argument_list|)
@@ -8642,7 +8642,7 @@ comment|/* this is the last USB transfer */
 comment|/* clear isochronous sync flag */
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|is_synced
 operator|=
@@ -9103,20 +9103,20 @@ modifier|*
 name|udev
 parameter_list|,
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 block|{
 name|DPRINTFN
 argument_list|(
 literal|5
 argument_list|,
-literal|"udev=%p pipe=%p\n"
+literal|"udev=%p endpoint=%p\n"
 argument_list|,
 name|udev
 argument_list|,
-name|pipe
+name|ep
 argument_list|)
 expr_stmt|;
 name|USB_BUS_LOCK
@@ -9126,7 +9126,7 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-name|pipe
+name|ep
 operator|->
 name|toggle_next
 operator|=
@@ -9220,7 +9220,7 @@ name|udev
 argument_list|,
 name|xfer2
 operator|->
-name|pipe
+name|endpoint
 argument_list|)
 expr_stmt|;
 comment|/* setup a clear-stall packet */
@@ -9254,7 +9254,7 @@ index|]
 operator|=
 name|xfer2
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|edesc
 operator|->

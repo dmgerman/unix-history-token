@@ -372,9 +372,9 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|usb2_dev_get_pipe
+name|usb2_dev_get_ep
 parameter_list|(
 name|struct
 name|usb_device
@@ -1601,9 +1601,9 @@ modifier|*
 name|f
 decl_stmt|;
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 decl_stmt|;
 name|uint8_t
 name|n
@@ -1621,7 +1621,7 @@ name|uint8_t
 name|is_busy
 decl_stmt|;
 name|int
-name|ep
+name|e
 init|=
 name|cpd
 operator|->
@@ -1666,7 +1666,7 @@ expr_stmt|;
 comment|/* Preallocated FIFO */
 if|if
 condition|(
-name|ep
+name|e
 operator|<
 literal|0
 condition|)
@@ -1758,18 +1758,18 @@ return|;
 block|}
 name|KASSERT
 argument_list|(
-name|ep
+name|e
 operator|>=
 literal|0
 operator|&&
-name|ep
+name|e
 operator|<=
 literal|15
 argument_list|,
 operator|(
 literal|"endpoint %d out of range"
 operator|,
-name|ep
+name|e
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1780,7 +1780,7 @@ literal|5
 argument_list|,
 literal|"Endpoint device, searching for 0x%02x\n"
 argument_list|,
-name|ep
+name|e
 argument_list|)
 expr_stmt|;
 for|for
@@ -1863,7 +1863,7 @@ name|f
 operator|->
 name|dev_ep_index
 operator|!=
-name|ep
+name|e
 condition|)
 block|{
 comment|/* wrong endpoint index */
@@ -1925,7 +1925,7 @@ name|f
 operator|->
 name|dev_ep_index
 operator|!=
-name|ep
+name|e
 condition|)
 block|{
 comment|/* wrong endpoint index */
@@ -1968,7 +1968,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ep
+name|e
 operator|>=
 operator|(
 name|USB_EP_MAX
@@ -1999,7 +1999,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|ep
+name|e
 operator|!=
 literal|0
 operator|)
@@ -2040,13 +2040,13 @@ name|NULL
 operator|)
 condition|)
 block|{
-name|pipe
+name|ep
 operator|=
-name|usb2_dev_get_pipe
+name|usb2_dev_get_ep
 argument_list|(
 name|udev
 argument_list|,
-name|ep
+name|e
 argument_list|,
 name|USB_FIFO_TX
 argument_list|)
@@ -2055,16 +2055,16 @@ name|DPRINTFN
 argument_list|(
 literal|5
 argument_list|,
-literal|"dev_get_pipe(%d, 0x%x)\n"
+literal|"dev_get_endpoint(%d, 0x%x)\n"
 argument_list|,
-name|ep
+name|e
 argument_list|,
 name|USB_FIFO_TX
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pipe
+name|ep
 operator|==
 name|NULL
 condition|)
@@ -2073,7 +2073,7 @@ name|DPRINTFN
 argument_list|(
 literal|5
 argument_list|,
-literal|"dev_get_pipe returned NULL\n"
+literal|"dev_get_endpoint returned NULL\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2120,7 +2120,7 @@ name|f
 operator|->
 name|dev_ep_index
 operator|=
-name|ep
+name|e
 expr_stmt|;
 name|f
 operator|->
@@ -2134,7 +2134,7 @@ name|f
 operator|->
 name|priv_sc0
 operator|=
-name|pipe
+name|ep
 expr_stmt|;
 name|f
 operator|->
@@ -2147,7 +2147,7 @@ name|f
 operator|->
 name|iface_index
 operator|=
-name|pipe
+name|ep
 operator|->
 name|iface_index
 expr_stmt|;
@@ -2200,13 +2200,13 @@ name|NULL
 operator|)
 condition|)
 block|{
-name|pipe
+name|ep
 operator|=
-name|usb2_dev_get_pipe
+name|usb2_dev_get_ep
 argument_list|(
 name|udev
 argument_list|,
-name|ep
+name|e
 argument_list|,
 name|USB_FIFO_RX
 argument_list|)
@@ -2215,16 +2215,16 @@ name|DPRINTFN
 argument_list|(
 literal|5
 argument_list|,
-literal|"dev_get_pipe(%d, 0x%x)\n"
+literal|"dev_get_endpoint(%d, 0x%x)\n"
 argument_list|,
-name|ep
+name|e
 argument_list|,
 name|USB_FIFO_RX
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pipe
+name|ep
 operator|==
 name|NULL
 condition|)
@@ -2233,7 +2233,7 @@ name|DPRINTFN
 argument_list|(
 literal|5
 argument_list|,
-literal|"dev_get_pipe returned NULL\n"
+literal|"dev_get_endpoint returned NULL\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2280,7 +2280,7 @@ name|f
 operator|->
 name|dev_ep_index
 operator|=
-name|ep
+name|e
 expr_stmt|;
 name|f
 operator|->
@@ -2294,7 +2294,7 @@ name|f
 operator|->
 name|priv_sc0
 operator|=
-name|pipe
+name|ep
 expr_stmt|;
 name|f
 operator|->
@@ -2307,7 +2307,7 @@ name|f
 operator|->
 name|iface_index
 operator|=
-name|pipe
+name|ep
 operator|->
 name|iface_index
 expr_stmt|;
@@ -2669,9 +2669,9 @@ end_function
 begin_function
 specifier|static
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|usb2_dev_get_pipe
+name|usb2_dev_get_ep
 parameter_list|(
 name|struct
 name|usb_device
@@ -2686,9 +2686,9 @@ name|dir
 parameter_list|)
 block|{
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 decl_stmt|;
 name|uint8_t
 name|ep_dir
@@ -2700,12 +2700,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|pipe
+name|ep
 operator|=
 operator|&
 name|udev
 operator|->
-name|default_pipe
+name|default_ep
 expr_stmt|;
 block|}
 else|else
@@ -2767,9 +2767,9 @@ name|UE_DIR_IN
 expr_stmt|;
 block|}
 block|}
-name|pipe
+name|ep
 operator|=
-name|usb2_get_pipe_by_addr
+name|usb2_get_ep_by_addr
 argument_list|(
 name|udev
 argument_list|,
@@ -2781,12 +2781,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|pipe
+name|ep
 operator|==
 name|NULL
 condition|)
 block|{
-comment|/* if the pipe does not exist then return */
+comment|/* if the endpoint does not exist then return */
 return|return
 operator|(
 name|NULL
@@ -2795,14 +2795,14 @@ return|;
 block|}
 if|if
 condition|(
-name|pipe
+name|ep
 operator|->
 name|edesc
 operator|==
 name|NULL
 condition|)
 block|{
-comment|/* invalid pipe */
+comment|/* invalid endpoint */
 return|return
 operator|(
 name|NULL
@@ -2811,7 +2811,7 @@ return|;
 block|}
 return|return
 operator|(
-name|pipe
+name|ep
 operator|)
 return|;
 comment|/* success */

@@ -781,7 +781,7 @@ name|USB_GET_DATA_ISREAD
 parameter_list|(
 name|xfer
 parameter_list|)
-value|((xfer)->flags_int.usb_mode == \ 	USB_MODE_DEVICE ? (((xfer)->endpoint& UE_DIR_IN) ? 0 : 1) : \ 	(((xfer)->endpoint& UE_DIR_IN) ? 1 : 0))
+value|((xfer)->flags_int.usb_mode == \ 	USB_MODE_DEVICE ? (((xfer)->endpointno& UE_DIR_IN) ? 0 : 1) : \ 	(((xfer)->endpointno& UE_DIR_IN) ? 1 : 0))
 end_define
 
 begin_comment
@@ -1560,11 +1560,11 @@ modifier|*
 name|dma_page_ptr
 decl_stmt|;
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|endpoint
 decl_stmt|;
-comment|/* our USB pipe */
+comment|/* our USB endpoint */
 name|struct
 name|usb_xfer_root
 modifier|*
@@ -1690,7 +1690,7 @@ name|address
 decl_stmt|;
 comment|/* physical USB address */
 name|uint8_t
-name|endpoint
+name|endpointno
 decl_stmt|;
 comment|/* physical USB endpoint */
 name|uint8_t

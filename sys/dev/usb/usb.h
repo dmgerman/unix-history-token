@@ -392,7 +392,7 @@ comment|/* ms */
 end_comment
 
 begin_comment
-comment|/*  * USB record layout in memory:  *  * - USB config 0  *   - USB interfaces  *     - USB alternative interfaces  *       - USB pipes  *  * - USB config 1  *   - USB interfaces  *     - USB alternative interfaces  *       - USB pipes  */
+comment|/*  * USB record layout in memory:  *  * - USB config 0  *   - USB interfaces  *     - USB alternative interfaces  *       - USB endpoints  *  * - USB config 1  *   - USB interfaces  *     - USB alternative interfaces  *       - USB endpoints  */
 end_comment
 
 begin_comment

@@ -223,7 +223,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_dump_queue  *  * This function dumps the USB transfer that are queued up on an USB pipe.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_dump_queue  *  * This function dumps the USB transfer that are queued up on an USB endpoint.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -231,9 +231,9 @@ name|void
 name|usb2_dump_queue
 parameter_list|(
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 block|{
 name|struct
@@ -243,16 +243,16 @@ name|xfer
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"usb2_dump_queue: pipe=%p xfer: "
+literal|"usb2_dump_queue: endpoint=%p xfer: "
 argument_list|,
-name|pipe
+name|ep
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|xfer
 argument_list|,
-argument|&pipe->pipe_q.head
+argument|&ep->endpoint_q.head
 argument_list|,
 argument|wait_entry
 argument_list|)
@@ -274,51 +274,51 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_dump_pipe  *  * This function dumps information about an USB pipe.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_dump_endpoint  *  * This function dumps information about an USB endpoint.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_dump_pipe
+name|usb2_dump_endpoint
 parameter_list|(
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 block|{
 if|if
 condition|(
-name|pipe
+name|ep
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"usb2_dump_pipe: pipe=%p"
+literal|"usb2_dump_endpoint: endpoint=%p"
 argument_list|,
-name|pipe
+name|ep
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
 literal|" edesc=%p isoc_next=%d toggle_next=%d"
 argument_list|,
-name|pipe
+name|ep
 operator|->
 name|edesc
 argument_list|,
-name|pipe
+name|ep
 operator|->
 name|isoc_next
 argument_list|,
-name|pipe
+name|ep
 operator|->
 name|toggle_next
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pipe
+name|ep
 operator|->
 name|edesc
 condition|)
@@ -327,7 +327,7 @@ name|printf
 argument_list|(
 literal|" bEndpointAddress=0x%02x"
 argument_list|,
-name|pipe
+name|ep
 operator|->
 name|edesc
 operator|->
@@ -342,7 +342,7 @@ argument_list|)
 expr_stmt|;
 name|usb2_dump_queue
 argument_list|(
-name|pipe
+name|ep
 argument_list|)
 expr_stmt|;
 block|}
@@ -350,7 +350,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"usb2_dump_pipe: pipe=NULL\n"
+literal|"usb2_dump_endpoint: endpoint=NULL\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -396,14 +396,14 @@ if|if
 condition|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|==
 name|NULL
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"xfer %p: pipe=NULL\n"
+literal|"xfer %p: endpoint=NULL\n"
 argument_list|,
 name|xfer
 argument_list|)
@@ -421,7 +421,7 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"xfer %p: udev=%p vid=0x%04x pid=0x%04x addr=%d "
-literal|"pipe=%p ep=0x%02x attr=0x%02x\n"
+literal|"endpoint=%p ep=0x%02x attr=0x%02x\n"
 argument_list|,
 name|xfer
 argument_list|,
@@ -451,11 +451,11 @@ name|address
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|edesc
 operator|->
@@ -463,7 +463,7 @@ name|bEndpointAddress
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|edesc
 operator|->

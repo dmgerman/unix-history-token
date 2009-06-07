@@ -170,7 +170,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|void
-name|usb2_init_pipe
+name|usb2_init_endpoint
 parameter_list|(
 name|struct
 name|usb_device
@@ -183,7 +183,7 @@ name|usb_endpoint_descriptor
 modifier|*
 parameter_list|,
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
 parameter_list|)
 function_decl|;
@@ -529,14 +529,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_get_pipe_by_addr  *  * This function searches for an USB pipe by endpoint address and  * direction.  *  * Returns:  * NULL: Failure  * Else: Success  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_get_ep_by_addr  *  * This function searches for an USB ep by endpoint address and  * direction.  *  * Returns:  * NULL: Failure  * Else: Success  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|usb2_get_pipe_by_addr
+name|usb2_get_ep_by_addr
 parameter_list|(
 name|struct
 name|usb_device
@@ -548,26 +548,26 @@ name|ea_val
 parameter_list|)
 block|{
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 init|=
 name|udev
 operator|->
-name|pipes
+name|endpoints
 decl_stmt|;
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe_end
+name|ep_end
 init|=
 name|udev
 operator|->
-name|pipes
+name|endpoints
 operator|+
 name|udev
 operator|->
-name|pipes_max
+name|endpoints_max
 decl_stmt|;
 enum|enum
 block|{
@@ -587,21 +587,21 @@ name|ea_val
 operator|&=
 name|EA_MASK
 expr_stmt|;
-comment|/* 	 * Iterate accross all the USB pipes searching for a match 	 * based on the endpoint address: 	 */
+comment|/* 	 * Iterate accross all the USB endpoints searching for a match 	 * based on the endpoint address: 	 */
 for|for
 control|(
 init|;
-name|pipe
+name|ep
 operator|!=
-name|pipe_end
+name|ep_end
 condition|;
-name|pipe
+name|ep
 operator|++
 control|)
 block|{
 if|if
 condition|(
-name|pipe
+name|ep
 operator|->
 name|edesc
 operator|==
@@ -614,7 +614,7 @@ comment|/* do the mask and check the value */
 if|if
 condition|(
 operator|(
-name|pipe
+name|ep
 operator|->
 name|edesc
 operator|->
@@ -631,13 +631,13 @@ name|found
 goto|;
 block|}
 block|}
-comment|/* 	 * The default pipe is always present and is checked separately: 	 */
+comment|/* 	 * The default endpoint is always present and is checked separately: 	 */
 if|if
 condition|(
 operator|(
 name|udev
 operator|->
-name|default_pipe
+name|default_ep
 operator|.
 name|edesc
 operator|)
@@ -646,7 +646,7 @@ operator|(
 operator|(
 name|udev
 operator|->
-name|default_pipe
+name|default_ep
 operator|.
 name|edesc
 operator|->
@@ -659,12 +659,12 @@ name|ea_val
 operator|)
 condition|)
 block|{
-name|pipe
+name|ep
 operator|=
 operator|&
 name|udev
 operator|->
-name|default_pipe
+name|default_ep
 expr_stmt|;
 goto|goto
 name|found
@@ -679,21 +679,21 @@ name|found
 label|:
 return|return
 operator|(
-name|pipe
+name|ep
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_get_pipe  *  * This function searches for an USB pipe based on the information  * given by the passed "struct usb_config" pointer.  *  * Return values:  * NULL: No match.  * Else: Pointer to "struct usb_pipe".  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_get_endpoint  *  * This function searches for an USB endpoint based on the information  * given by the passed "struct usb_config" pointer.  *  * Return values:  * NULL: No match.  * Else: Pointer to "struct usb_endpoint".  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|usb2_get_pipe
+name|usb2_get_endpoint
 parameter_list|(
 name|struct
 name|usb_device
@@ -711,26 +711,26 @@ name|setup
 parameter_list|)
 block|{
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 init|=
 name|udev
 operator|->
-name|pipes
+name|endpoints
 decl_stmt|;
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe_end
+name|ep_end
 init|=
 name|udev
 operator|->
-name|pipes
+name|endpoints
 operator|+
 name|udev
 operator|->
-name|pipes_max
+name|endpoints_max
 decl_stmt|;
 name|uint8_t
 name|index
@@ -799,7 +799,7 @@ operator|->
 name|usb_mode
 condition|)
 block|{
-comment|/* wrong mode - no pipe */
+comment|/* wrong mode - no endpoint */
 return|return
 operator|(
 name|NULL
@@ -1010,22 +1010,22 @@ name|UE_XFERTYPE
 operator|)
 expr_stmt|;
 block|}
-comment|/* 	 * Iterate accross all the USB pipes searching for a match 	 * based on the endpoint address. Note that we are searching 	 * the pipes from the beginning of the "udev->pipes" array. 	 */
+comment|/* 	 * Iterate accross all the USB endpoints searching for a match 	 * based on the endpoint address. Note that we are searching 	 * the endpoints from the beginning of the "udev->endpoints" array. 	 */
 for|for
 control|(
 init|;
-name|pipe
+name|ep
 operator|!=
-name|pipe_end
+name|ep_end
 condition|;
-name|pipe
+name|ep
 operator|++
 control|)
 block|{
 if|if
 condition|(
 operator|(
-name|pipe
+name|ep
 operator|->
 name|edesc
 operator|==
@@ -1033,7 +1033,7 @@ name|NULL
 operator|)
 operator|||
 operator|(
-name|pipe
+name|ep
 operator|->
 name|iface_index
 operator|!=
@@ -1048,7 +1048,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|pipe
+name|ep
 operator|->
 name|edesc
 operator|->
@@ -1062,7 +1062,7 @@ operator|)
 operator|&&
 operator|(
 operator|(
-name|pipe
+name|ep
 operator|->
 name|edesc
 operator|->
@@ -1088,13 +1088,13 @@ goto|;
 block|}
 block|}
 block|}
-comment|/* 	 * Match against default pipe last, so that "any pipe", "any 	 * address" and "any direction" returns the first pipe of the 	 * interface. "iface_index" and "direction" is ignored: 	 */
+comment|/* 	 * Match against default endpoint last, so that "any endpoint", "any 	 * address" and "any direction" returns the first endpoint of the 	 * interface. "iface_index" and "direction" is ignored: 	 */
 if|if
 condition|(
 operator|(
 name|udev
 operator|->
-name|default_pipe
+name|default_ep
 operator|.
 name|edesc
 operator|)
@@ -1103,7 +1103,7 @@ operator|(
 operator|(
 name|udev
 operator|->
-name|default_pipe
+name|default_ep
 operator|.
 name|edesc
 operator|->
@@ -1119,7 +1119,7 @@ operator|(
 operator|(
 name|udev
 operator|->
-name|default_pipe
+name|default_ep
 operator|.
 name|edesc
 operator|->
@@ -1137,12 +1137,12 @@ name|index
 operator|)
 condition|)
 block|{
-name|pipe
+name|ep
 operator|=
 operator|&
 name|udev
 operator|->
-name|default_pipe
+name|default_ep
 expr_stmt|;
 goto|goto
 name|found
@@ -1157,7 +1157,7 @@ name|found
 label|:
 return|return
 operator|(
-name|pipe
+name|ep
 operator|)
 return|;
 block|}
@@ -1217,13 +1217,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_init_pipe  *  * This function will initialise the USB pipe structure pointed to by  * the "pipe" argument. The structure pointed to by "pipe" must be  * zeroed before calling this function.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_init_endpoint  *  * This function will initialise the USB endpoint structure pointed to by  * the "endpoint" argument. The structure pointed to by "endpoint" must be  * zeroed before calling this function.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_init_pipe
+name|usb2_init_endpoint
 parameter_list|(
 name|struct
 name|usb_device
@@ -1239,9 +1239,9 @@ modifier|*
 name|edesc
 parameter_list|,
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 block|{
 name|struct
@@ -1260,24 +1260,24 @@ expr_stmt|;
 call|(
 name|methods
 operator|->
-name|pipe_init
+name|endpoint_init
 call|)
 argument_list|(
 name|udev
 argument_list|,
 name|edesc
 argument_list|,
-name|pipe
+name|ep
 argument_list|)
 expr_stmt|;
-comment|/* initialise USB pipe structure */
-name|pipe
+comment|/* initialise USB endpoint structure */
+name|ep
 operator|->
 name|edesc
 operator|=
 name|edesc
 expr_stmt|;
-name|pipe
+name|ep
 operator|->
 name|iface_index
 operator|=
@@ -1286,16 +1286,16 @@ expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
-name|pipe
+name|ep
 operator|->
-name|pipe_q
+name|endpoint_q
 operator|.
 name|head
 argument_list|)
 expr_stmt|;
-name|pipe
+name|ep
 operator|->
-name|pipe_q
+name|endpoint_q
 operator|.
 name|command
 operator|=
@@ -1305,7 +1305,7 @@ expr_stmt|;
 comment|/* the pipe is not supported by the hardware */
 if|if
 condition|(
-name|pipe
+name|ep
 operator|->
 name|methods
 operator|==
@@ -1337,7 +1337,7 @@ call|)
 argument_list|(
 name|udev
 argument_list|,
-name|pipe
+name|ep
 argument_list|)
 expr_stmt|;
 name|USB_BUS_UNLOCK
@@ -1352,14 +1352,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*-----------------------------------------------------------------------*  *	usb2_pipe_foreach  *  * This function will iterate all the USB endpoints except the control  * endpoint. This function is NULL safe.  *  * Return values:  * NULL: End of USB pipes  * Else: Pointer to next USB pipe  *------------------------------------------------------------------------*/
+comment|/*-----------------------------------------------------------------------*  *	usb2_endpoint_foreach  *  * This function will iterate all the USB endpoints except the control  * endpoint. This function is NULL safe.  *  * Return values:  * NULL: End of USB endpoints  * Else: Pointer to next USB endpoint  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|usb2_pipe_foreach
+name|usb2_endpoint_foreach
 parameter_list|(
 name|struct
 name|usb_device
@@ -1367,23 +1367,23 @@ modifier|*
 name|udev
 parameter_list|,
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 block|{
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe_end
+name|ep_end
 init|=
 name|udev
 operator|->
-name|pipes
+name|endpoints
 operator|+
 name|udev
 operator|->
-name|pipes_max
+name|endpoints_max
 decl_stmt|;
 comment|/* be NULL safe */
 if|if
@@ -1397,34 +1397,34 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* get next pipe */
+comment|/* get next endpoint */
 if|if
 condition|(
-name|pipe
+name|ep
 operator|==
 name|NULL
 condition|)
-name|pipe
+name|ep
 operator|=
 name|udev
 operator|->
-name|pipes
+name|endpoints
 expr_stmt|;
 else|else
-name|pipe
+name|ep
 operator|++
 expr_stmt|;
-comment|/* find next allocated pipe */
+comment|/* find next allocated ep */
 while|while
 condition|(
-name|pipe
+name|ep
 operator|!=
-name|pipe_end
+name|ep_end
 condition|)
 block|{
 if|if
 condition|(
-name|pipe
+name|ep
 operator|->
 name|edesc
 operator|!=
@@ -1432,10 +1432,10 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|pipe
+name|ep
 operator|)
 return|;
-name|pipe
+name|ep
 operator|++
 expr_stmt|;
 block|}
@@ -1448,7 +1448,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_unconfigure  *  * This function will free all USB interfaces and USB pipes belonging  * to an USB device.  *  * Flag values, see "USB_UNCFG_FLAG_XXX".  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_unconfigure  *  * This function will free all USB interfaces and USB endpoints belonging  * to an USB device.  *  * Flag values, see "USB_UNCFG_FLAG_XXX".  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -1567,7 +1567,7 @@ argument_list|,
 name|USB_CFG_FREE
 argument_list|)
 expr_stmt|;
-comment|/* free "cdesc" after "ifaces" and "pipes", if any */
+comment|/* free "cdesc" after "ifaces" and "endpoints", if any */
 if|if
 condition|(
 name|udev
@@ -2208,7 +2208,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_config_parse  *  * This function will allocate and free USB interfaces and USB pipes,  * parse the USB configuration structure and initialise the USB pipes  * and interfaces. If "iface_index" is not equal to  * "USB_IFACE_INDEX_ANY" then the "cmd" parameter is the  * alternate_setting to be selected for the given interface. Else the  * "cmd" parameter is defined by "USB_CFG_XXX". "iface_index" can be  * "USB_IFACE_INDEX_ANY" or a valid USB interface index. This function  * is typically called when setting the configuration or when setting  * an alternate interface.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_config_parse  *  * This function will allocate and free USB interfaces and USB endpoints,  * parse the USB configuration structure and initialise the USB endpoints  * and interfaces. If "iface_index" is not equal to  * "USB_IFACE_INDEX_ANY" then the "cmd" parameter is the  * alternate_setting to be selected for the given interface. Else the  * "cmd" parameter is defined by "USB_CFG_XXX". "iface_index" can be  * "USB_IFACE_INDEX_ANY" or a valid USB interface index. This function  * is typically called when setting the configuration or when setting  * an alternate interface.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -2247,9 +2247,9 @@ modifier|*
 name|iface
 decl_stmt|;
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 decl_stmt|;
 name|usb_error_t
 name|err
@@ -2336,18 +2336,18 @@ argument_list|,
 name|SA_LOCKED
 argument_list|)
 expr_stmt|;
-comment|/* check for in-use pipes */
-name|pipe
+comment|/* check for in-use endpoints */
+name|ep
 operator|=
 name|udev
 operator|->
-name|pipes
+name|endpoints
 expr_stmt|;
 name|ep_max
 operator|=
 name|udev
 operator|->
-name|pipes_max
+name|endpoints_max
 expr_stmt|;
 while|while
 condition|(
@@ -2355,7 +2355,7 @@ name|ep_max
 operator|--
 condition|)
 block|{
-comment|/* look for matching pipes */
+comment|/* look for matching endpoints */
 if|if
 condition|(
 operator|(
@@ -2367,7 +2367,7 @@ operator|||
 operator|(
 name|iface_index
 operator|==
-name|pipe
+name|ep
 operator|->
 name|iface_index
 operator|)
@@ -2375,7 +2375,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|pipe
+name|ep
 operator|->
 name|refcount
 operator|!=
@@ -2390,22 +2390,22 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* reset pipe */
+comment|/* reset endpoint */
 name|memset
 argument_list|(
-name|pipe
+name|ep
 argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
-name|pipe
+name|ep
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* make sure we don't zero the pipe again */
-name|pipe
+comment|/* make sure we don't zero the endpoint again */
+name|ep
 operator|->
 name|iface_index
 operator|=
@@ -2413,7 +2413,7 @@ name|USB_IFACE_INDEX_ANY
 expr_stmt|;
 block|}
 block|}
-name|pipe
+name|ep
 operator|++
 expr_stmt|;
 block|}
@@ -2640,11 +2640,11 @@ name|USB_EP_MAX
 condition|)
 break|break;
 comment|/* crazy */
-name|pipe
+name|ep
 operator|=
 name|udev
 operator|->
-name|pipes
+name|endpoints
 operator|+
 name|temp
 expr_stmt|;
@@ -2653,7 +2653,7 @@ condition|(
 name|do_init
 condition|)
 block|{
-name|usb2_init_pipe
+name|usb2_init_endpoint
 argument_list|(
 name|udev
 argument_list|,
@@ -2663,7 +2663,7 @@ name|iface_index
 argument_list|,
 name|ed
 argument_list|,
-name|pipe
+name|ep
 argument_list|)
 expr_stmt|;
 block|}
@@ -2774,14 +2774,14 @@ condition|)
 block|{
 name|udev
 operator|->
-name|pipes
+name|endpoints
 operator|=
 name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
-name|pipe
+name|ep
 argument_list|)
 operator|*
 name|ep_max
@@ -2797,7 +2797,7 @@ if|if
 condition|(
 name|udev
 operator|->
-name|pipes
+name|endpoints
 operator|==
 name|NULL
 condition|)
@@ -2815,7 +2815,7 @@ else|else
 block|{
 name|udev
 operator|->
-name|pipes
+name|endpoints
 operator|=
 name|NULL
 expr_stmt|;
@@ -2829,14 +2829,14 @@ argument_list|)
 expr_stmt|;
 name|udev
 operator|->
-name|pipes_max
+name|endpoints_max
 operator|=
 name|ep_max
 expr_stmt|;
 comment|/* reset any ongoing clear-stall */
 name|udev
 operator|->
-name|pipe_curr
+name|ep_curr
 operator|=
 name|NULL
 expr_stmt|;
@@ -2873,14 +2873,14 @@ argument_list|)
 expr_stmt|;
 name|udev
 operator|->
-name|pipes_max
+name|endpoints_max
 operator|=
 literal|0
 expr_stmt|;
 comment|/* reset any ongoing clear-stall */
 name|udev
 operator|->
-name|pipe_curr
+name|ep_curr
 operator|=
 name|NULL
 expr_stmt|;
@@ -2913,7 +2913,7 @@ if|if
 condition|(
 name|udev
 operator|->
-name|pipes
+name|endpoints
 operator|!=
 name|NULL
 condition|)
@@ -2921,7 +2921,7 @@ name|free
 argument_list|(
 name|udev
 operator|->
-name|pipes
+name|endpoints
 argument_list|,
 name|M_USB
 argument_list|)
@@ -2934,7 +2934,7 @@ name|NULL
 expr_stmt|;
 name|udev
 operator|->
-name|pipes
+name|endpoints
 operator|=
 name|NULL
 expr_stmt|;
@@ -3174,9 +3174,9 @@ modifier|*
 name|udev
 parameter_list|,
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|,
 name|uint8_t
 name|do_stall
@@ -3195,7 +3195,7 @@ name|was_stalled
 decl_stmt|;
 if|if
 condition|(
-name|pipe
+name|ep
 operator|==
 name|NULL
 condition|)
@@ -3216,7 +3216,7 @@ block|}
 name|et
 operator|=
 operator|(
-name|pipe
+name|ep
 operator|->
 name|edesc
 operator|->
@@ -3262,7 +3262,7 @@ expr_stmt|;
 comment|/* store current stall state */
 name|was_stalled
 operator|=
-name|pipe
+name|ep
 operator|->
 name|is_stalled
 expr_stmt|;
@@ -3274,7 +3274,7 @@ operator|&&
 name|do_stall
 condition|)
 block|{
-comment|/* if the pipe is already stalled do nothing */
+comment|/* if the endpoint is already stalled do nothing */
 name|USB_BUS_UNLOCK
 argument_list|(
 name|udev
@@ -3294,7 +3294,7 @@ operator|)
 return|;
 block|}
 comment|/* set stalled state */
-name|pipe
+name|ep
 operator|->
 name|is_stalled
 operator|=
@@ -3319,9 +3319,9 @@ block|{
 comment|/* lookup the current USB transfer, if any */
 name|xfer
 operator|=
-name|pipe
+name|ep
 operator|->
-name|pipe_q
+name|endpoint_q
 operator|.
 name|curr
 expr_stmt|;
@@ -3348,7 +3348,7 @@ name|udev
 argument_list|,
 name|xfer
 argument_list|,
-name|pipe
+name|ep
 argument_list|)
 expr_stmt|;
 block|}
@@ -3358,14 +3358,14 @@ operator|!
 name|do_stall
 condition|)
 block|{
-name|pipe
+name|ep
 operator|->
 name|toggle_next
 operator|=
 literal|0
 expr_stmt|;
 comment|/* reset data toggle */
-name|pipe
+name|ep
 operator|->
 name|is_stalled
 operator|=
@@ -3384,20 +3384,20 @@ call|)
 argument_list|(
 name|udev
 argument_list|,
-name|pipe
+name|ep
 argument_list|)
 expr_stmt|;
 comment|/* start up the current or next transfer, if any */
 name|usb2_command_wrapper
 argument_list|(
 operator|&
-name|pipe
+name|ep
 operator|->
-name|pipe_q
+name|endpoint_q
 argument_list|,
-name|pipe
+name|ep
 operator|->
-name|pipe_q
+name|endpoint_q
 operator|.
 name|curr
 argument_list|)
@@ -3436,49 +3436,49 @@ name|iface_index
 parameter_list|)
 block|{
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 decl_stmt|;
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe_end
+name|ep_end
 decl_stmt|;
 name|usb_error_t
 name|err
 decl_stmt|;
-name|pipe
+name|ep
 operator|=
 name|udev
 operator|->
-name|pipes
+name|endpoints
 expr_stmt|;
-name|pipe_end
+name|ep_end
 operator|=
 name|udev
 operator|->
-name|pipes
+name|endpoints
 operator|+
 name|udev
 operator|->
-name|pipes_max
+name|endpoints_max
 expr_stmt|;
 for|for
 control|(
 init|;
-name|pipe
+name|ep
 operator|!=
-name|pipe_end
+name|ep_end
 condition|;
-name|pipe
+name|ep
 operator|++
 control|)
 block|{
 if|if
 condition|(
 operator|(
-name|pipe
+name|ep
 operator|->
 name|edesc
 operator|==
@@ -3486,7 +3486,7 @@ name|NULL
 operator|)
 operator|||
 operator|(
-name|pipe
+name|ep
 operator|->
 name|iface_index
 operator|!=
@@ -3503,7 +3503,7 @@ name|usb2_set_endpoint_stall
 argument_list|(
 name|udev
 argument_list|,
-name|pipe
+name|ep
 argument_list|,
 literal|0
 argument_list|)
@@ -5563,8 +5563,8 @@ operator|->
 name|parent_hub
 expr_stmt|;
 block|}
-comment|/* init the default pipe */
-name|usb2_init_pipe
+comment|/* init the default endpoint */
+name|usb2_init_endpoint
 argument_list|(
 name|udev
 argument_list|,
@@ -5578,7 +5578,7 @@ argument_list|,
 operator|&
 name|udev
 operator|->
-name|default_pipe
+name|default_ep
 argument_list|)
 expr_stmt|;
 comment|/* set device index */

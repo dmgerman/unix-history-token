@@ -1206,7 +1206,7 @@ index|[
 name|UMCT_BULK_DT_RD
 index|]
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|edesc
 operator|->

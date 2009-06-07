@@ -2620,7 +2620,7 @@ condition|(
 operator|!
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|is_stalled
 condition|)
@@ -2911,7 +2911,7 @@ condition|(
 operator|!
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|is_stalled
 condition|)
@@ -3149,7 +3149,7 @@ condition|(
 operator|!
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|is_stalled
 condition|)
@@ -3426,7 +3426,7 @@ condition|(
 operator|!
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|is_stalled
 condition|)
@@ -3610,7 +3610,7 @@ condition|(
 operator|!
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|is_stalled
 condition|)

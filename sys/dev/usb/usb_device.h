@@ -210,16 +210,16 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The following structure defines an USB pipe which is equal to an  * USB endpoint.  */
+comment|/*  * The following structure defines an USB endpoint  * USB endpoint.  */
 end_comment
 
 begin_struct
 struct|struct
-name|usb_pipe
+name|usb_endpoint
 block|{
 name|struct
 name|usb_xfer_queue
-name|pipe_q
+name|endpoint_q
 decl_stmt|;
 comment|/* queue of USB transfers */
 name|struct
@@ -250,7 +250,7 @@ name|is_stalled
 range|:
 literal|1
 decl_stmt|;
-comment|/* set if pipe is stalled */
+comment|/* set if endpoint is stalled */
 name|uint8_t
 name|is_synced
 range|:
@@ -265,7 +265,7 @@ decl_stmt|;
 name|uint8_t
 name|iface_index
 decl_stmt|;
-comment|/* not used by "default pipe" */
+comment|/* not used by "default endpoint" */
 block|}
 struct|;
 end_struct
@@ -452,14 +452,14 @@ modifier|*
 name|ifaces
 decl_stmt|;
 name|struct
-name|usb_pipe
-name|default_pipe
+name|usb_endpoint
+name|default_ep
 decl_stmt|;
 comment|/* Control Endpoint 0 */
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipes
+name|endpoints
 decl_stmt|;
 name|struct
 name|usb_power_save
@@ -513,11 +513,11 @@ modifier|*
 name|usb2_template_ptr
 decl_stmt|;
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe_curr
+name|ep_curr
 decl_stmt|;
-comment|/* current clear stall pipe */
+comment|/* current clear stall endpoint */
 if|#
 directive|if
 name|USB_HAVE_UGEN
@@ -633,9 +633,9 @@ name|ifaces_max
 decl_stmt|;
 comment|/* number of interfaces present */
 name|uint8_t
-name|pipes_max
+name|endpoints_max
 decl_stmt|;
-comment|/* number of pipes present */
+comment|/* number of endpoints present */
 comment|/* the "flags" field is write-protected by "bus->mtx" */
 name|struct
 name|usb_device_flags
@@ -645,7 +645,7 @@ name|struct
 name|usb_endpoint_descriptor
 name|default_ep_desc
 decl_stmt|;
-comment|/* for pipe 0 */
+comment|/* for endpoint 0 */
 name|struct
 name|usb_device_descriptor
 name|ddesc
@@ -763,9 +763,9 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|usb2_get_pipe
+name|usb2_get_endpoint
 parameter_list|(
 name|struct
 name|usb_device
@@ -786,9 +786,9 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|usb2_get_pipe_by_addr
+name|usb2_get_ep_by_addr
 parameter_list|(
 name|struct
 name|usb_device
@@ -872,9 +872,9 @@ modifier|*
 name|udev
 parameter_list|,
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|,
 name|uint8_t
 name|do_stall
@@ -987,9 +987,9 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|usb2_pipe_foreach
+name|usb2_endpoint_foreach
 parameter_list|(
 name|struct
 name|usb_device
@@ -997,9 +997,9 @@ modifier|*
 name|udev
 parameter_list|,
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 function_decl|;
 end_function_decl

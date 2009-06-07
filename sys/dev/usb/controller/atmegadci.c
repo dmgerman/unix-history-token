@@ -2841,7 +2841,7 @@ name|UE_GET_ADDR
 argument_list|(
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 argument_list|)
 argument_list|,
 name|xfer
@@ -2948,7 +2948,7 @@ operator|=
 operator|(
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 operator|&
 name|UE_ADDR
 operator|)
@@ -3070,7 +3070,7 @@ if|if
 condition|(
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 operator|&
 name|UE_DIR_IN
 condition|)
@@ -3340,7 +3340,7 @@ if|if
 condition|(
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 operator|&
 name|UE_DIR_IN
 condition|)
@@ -3812,13 +3812,13 @@ name|DPRINTFN
 argument_list|(
 literal|13
 argument_list|,
-literal|"xfer=%p pipe=%p transfer done\n"
+literal|"xfer=%p endpoint=%p transfer done\n"
 argument_list|,
 name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 argument_list|)
 expr_stmt|;
 comment|/* reset scanner */
@@ -3998,13 +3998,13 @@ name|DPRINTFN
 argument_list|(
 literal|9
 argument_list|,
-literal|"xfer=%p, pipe=%p, error=%d\n"
+literal|"xfer=%p, endpoint=%p, error=%d\n"
 argument_list|,
 name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 argument_list|,
 name|error
 argument_list|)
@@ -4025,7 +4025,7 @@ operator|=
 operator|(
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 operator|&
 name|UE_ADDR
 operator|)
@@ -4085,9 +4085,9 @@ modifier|*
 name|xfer
 parameter_list|,
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 block|{
 name|struct
@@ -4111,9 +4111,9 @@ name|DPRINTFN
 argument_list|(
 literal|5
 argument_list|,
-literal|"pipe=%p\n"
+literal|"endpoint=%p\n"
 argument_list|,
-name|pipe
+name|ep
 argument_list|)
 expr_stmt|;
 if|if
@@ -4143,7 +4143,7 @@ comment|/* get endpoint number */
 name|ep_no
 operator|=
 operator|(
-name|pipe
+name|ep
 operator|->
 name|edesc
 operator|->
@@ -4399,9 +4399,9 @@ modifier|*
 name|udev
 parameter_list|,
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 block|{
 name|struct
@@ -4418,9 +4418,9 @@ name|DPRINTFN
 argument_list|(
 literal|5
 argument_list|,
-literal|"pipe=%p\n"
+literal|"endpoint=%p\n"
 argument_list|,
-name|pipe
+name|ep
 argument_list|)
 expr_stmt|;
 name|USB_BUS_LOCK_ASSERT
@@ -4460,7 +4460,7 @@ expr_stmt|;
 comment|/* get endpoint descriptor */
 name|ed
 operator|=
-name|pipe
+name|ep
 operator|->
 name|edesc
 expr_stmt|;
@@ -5221,7 +5221,7 @@ name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 argument_list|,
@@ -5265,7 +5265,7 @@ name|nframes
 operator|-
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 operator|)
@@ -5277,7 +5277,7 @@ condition|(
 operator|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|is_synced
 operator|==
@@ -5296,7 +5296,7 @@ block|{
 comment|/* 		 * If there is data underflow or the pipe queue is 		 * empty we schedule the transfer a few frames ahead 		 * of the current frame position. Else two isochronous 		 * transfers might overlap. 		 */
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 operator|=
@@ -5310,7 +5310,7 @@ name|ATMEGA_FRAME_MASK
 expr_stmt|;
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|is_synced
 operator|=
@@ -5324,7 +5324,7 @@ literal|"start next=%d\n"
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 argument_list|)
@@ -5336,7 +5336,7 @@ operator|=
 operator|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 operator|-
@@ -5369,7 +5369,7 @@ expr_stmt|;
 comment|/* compute frame number for next insertion */
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 operator|+=
@@ -7339,7 +7339,7 @@ condition|(
 operator|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|edesc
 operator|->
@@ -7397,7 +7397,7 @@ name|ep_no
 operator|=
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 operator|&
 name|UE_ADDR
 expr_stmt|;
@@ -7581,7 +7581,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|atmegadci_pipe_init
+name|atmegadci_ep_init
 parameter_list|(
 name|struct
 name|usb_device
@@ -7594,9 +7594,9 @@ modifier|*
 name|edesc
 parameter_list|,
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 block|{
 name|struct
@@ -7615,9 +7615,9 @@ name|DPRINTFN
 argument_list|(
 literal|2
 argument_list|,
-literal|"pipe=%p, addr=%d, endpt=%d, mode=%d (%d,%d)\n"
+literal|"endpoint=%p, addr=%d, endpt=%d, mode=%d (%d,%d)\n"
 argument_list|,
-name|pipe
+name|ep
 argument_list|,
 name|udev
 operator|->
@@ -7691,7 +7691,7 @@ operator|)
 operator|==
 name|UE_ISOCHRONOUS
 condition|)
-name|pipe
+name|ep
 operator|->
 name|methods
 operator|=
@@ -7699,7 +7699,7 @@ operator|&
 name|atmegadci_device_isoc_fs_methods
 expr_stmt|;
 else|else
-name|pipe
+name|ep
 operator|->
 name|methods
 operator|=
@@ -7717,10 +7717,10 @@ name|atmegadci_bus_methods
 init|=
 block|{
 operator|.
-name|pipe_init
+name|endpoint_init
 operator|=
 operator|&
-name|atmegadci_pipe_init
+name|atmegadci_ep_init
 block|,
 operator|.
 name|xfer_setup

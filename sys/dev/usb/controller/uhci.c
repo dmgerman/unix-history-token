@@ -4156,13 +4156,13 @@ name|DPRINTFN
 argument_list|(
 literal|13
 argument_list|,
-literal|"xfer=%p pipe=%p transfer done\n"
+literal|"xfer=%p endpoint=%p transfer done\n"
 argument_list|,
 name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 argument_list|)
 expr_stmt|;
 comment|/* sync any DMA memory before doing fixups */
@@ -4685,7 +4685,7 @@ expr_stmt|;
 comment|/* update data toggle */
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|toggle_next
 operator|=
@@ -4725,7 +4725,7 @@ name|address
 argument_list|,
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 argument_list|,
 name|xfer
 operator|->
@@ -4879,13 +4879,13 @@ name|DPRINTFN
 argument_list|(
 literal|13
 argument_list|,
-literal|"xfer=%p pipe=%p transfer done\n"
+literal|"xfer=%p endpoint=%p transfer done\n"
 argument_list|,
 name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 argument_list|)
 expr_stmt|;
 if|#
@@ -5285,7 +5285,7 @@ if|if
 condition|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|methods
 operator|==
@@ -6460,7 +6460,7 @@ name|UE_GET_ADDR
 argument_list|(
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 argument_list|)
 argument_list|,
 name|xfer
@@ -6616,7 +6616,7 @@ name|UHCI_TD_SET_ENDPT
 argument_list|(
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 argument_list|)
 operator||
 name|UHCI_TD_SET_DEVADDR
@@ -6631,7 +6631,7 @@ if|if
 condition|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|toggle_next
 condition|)
@@ -6952,7 +6952,7 @@ name|UE_GET_DIR
 argument_list|(
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 argument_list|)
 operator|==
 name|UE_DIR_IN
@@ -7024,7 +7024,7 @@ name|UE_GET_DIR
 argument_list|(
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 argument_list|)
 operator|==
 name|UE_DIR_OUT
@@ -7145,7 +7145,7 @@ literal|"nexttog=%d; data before transfer:\n"
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|toggle_next
 argument_list|)
@@ -7195,7 +7195,7 @@ name|methods
 init|=
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|methods
 decl_stmt|;
@@ -7230,13 +7230,13 @@ name|DPRINTFN
 argument_list|(
 literal|2
 argument_list|,
-literal|"xfer=%p, pipe=%p, error=%d\n"
+literal|"xfer=%p, endpoint=%p, error=%d\n"
 argument_list|,
 name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 argument_list|,
 name|error
 argument_list|)
@@ -8236,7 +8236,7 @@ name|UE_GET_DIR
 argument_list|(
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 argument_list|)
 operator|==
 name|UE_DIR_IN
@@ -8248,7 +8248,7 @@ literal|0
 argument_list|,
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 argument_list|,
 name|xfer
 operator|->
@@ -8263,7 +8263,7 @@ literal|0
 argument_list|,
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 argument_list|,
 name|xfer
 operator|->
@@ -8436,7 +8436,7 @@ name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 argument_list|,
@@ -8461,7 +8461,7 @@ name|nframes
 operator|-
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 operator|)
@@ -8477,7 +8477,7 @@ condition|(
 operator|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|is_synced
 operator|==
@@ -8496,7 +8496,7 @@ block|{
 comment|/* 		 * If there is data underflow or the pipe queue is empty we 		 * schedule the transfer a few frames ahead of the current 		 * frame position. Else two isochronous transfers might 		 * overlap. 		 */
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 operator|=
@@ -8514,7 +8514,7 @@ operator|)
 expr_stmt|;
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|is_synced
 operator|=
@@ -8528,7 +8528,7 @@ literal|"start next=%d\n"
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 argument_list|)
@@ -8540,7 +8540,7 @@ operator|=
 operator|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 operator|-
@@ -8633,7 +8633,7 @@ name|sc_isoc_p_last
 index|[
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 index|]
@@ -8645,7 +8645,7 @@ name|qh_pos
 operator|=
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 expr_stmt|;
@@ -8929,7 +8929,7 @@ expr_stmt|;
 comment|/* update isoc_next */
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 operator|=
@@ -12133,7 +12133,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|uhci_pipe_init
+name|uhci_ep_init
 parameter_list|(
 name|struct
 name|usb_device
@@ -12146,9 +12146,9 @@ modifier|*
 name|edesc
 parameter_list|,
 name|struct
-name|usb_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 block|{
 name|uhci_softc_t
@@ -12166,9 +12166,9 @@ name|DPRINTFN
 argument_list|(
 literal|2
 argument_list|,
-literal|"pipe=%p, addr=%d, endpt=%d, mode=%d (%d)\n"
+literal|"endpoint=%p, addr=%d, endpt=%d, mode=%d (%d)\n"
 argument_list|,
-name|pipe
+name|ep
 argument_list|,
 name|udev
 operator|->
@@ -12226,7 +12226,7 @@ block|{
 case|case
 name|UE_CONTROL
 case|:
-name|pipe
+name|ep
 operator|->
 name|methods
 operator|=
@@ -12237,7 +12237,7 @@ break|break;
 case|case
 name|UE_INTERRUPT
 case|:
-name|pipe
+name|ep
 operator|->
 name|methods
 operator|=
@@ -12257,7 +12257,7 @@ operator|==
 name|USB_SPEED_FULL
 condition|)
 block|{
-name|pipe
+name|ep
 operator|->
 name|methods
 operator|=
@@ -12278,7 +12278,7 @@ operator|!=
 name|USB_SPEED_LOW
 condition|)
 block|{
-name|pipe
+name|ep
 operator|->
 name|methods
 operator|=
@@ -12410,7 +12410,7 @@ name|methods
 operator|=
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|methods
 expr_stmt|;
@@ -12611,7 +12611,7 @@ name|methods
 operator|=
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|methods
 expr_stmt|;
@@ -12868,9 +12868,9 @@ name|uhci_bus_methods
 init|=
 block|{
 operator|.
-name|pipe_init
+name|endpoint_init
 operator|=
-name|uhci_pipe_init
+name|uhci_ep_init
 block|,
 operator|.
 name|xfer_setup
