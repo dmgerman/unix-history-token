@@ -1379,7 +1379,7 @@ argument_list|)
 block|,
 name|SND_FORMAT
 argument_list|(
-name|S16_LE
+name|AFMT_S16_LE
 argument_list|,
 literal|2
 argument_list|,
