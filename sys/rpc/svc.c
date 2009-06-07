@@ -1291,6 +1291,19 @@ name|xprt
 operator|->
 name|xp_pool
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|xprt
+operator|->
+name|xp_registered
+operator|==
+name|TRUE
+argument_list|,
+operator|(
+literal|"xprt_unregister_locked: not registered"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|xprt
@@ -1363,6 +1376,26 @@ operator|->
 name|sp_lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|xprt
+operator|->
+name|xp_registered
+operator|==
+name|FALSE
+condition|)
+block|{
+comment|/* Already unregistered by another thread */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|pool
+operator|->
+name|sp_lock
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|xprt_unregister_locked
 argument_list|(
 name|xprt
