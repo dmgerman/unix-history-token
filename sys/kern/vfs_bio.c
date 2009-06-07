@@ -11424,11 +11424,6 @@ name|b_bcount
 condition|)
 block|{
 comment|/* 			 * We are growing the buffer, possibly in a  			 * byte-granular fashion. 			 */
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
 name|vm_object_t
 name|obj
 decl_stmt|;
@@ -11439,12 +11434,6 @@ name|vm_offset_t
 name|tinc
 decl_stmt|;
 comment|/* 			 * Step 1, bring in the VM pages from the object,  			 * allocating them if necessary.  We must clear 			 * B_CACHE if these pages are not valid for the  			 * range covered by the buffer. 			 */
-name|vp
-operator|=
-name|bp
-operator|->
-name|b_vp
-expr_stmt|;
 name|obj
 operator|=
 name|bp
@@ -14888,12 +14877,6 @@ goto|goto
 name|tryagain
 goto|;
 block|}
-name|p
-operator|->
-name|valid
-operator|=
-name|VM_PAGE_BITS_ALL
-expr_stmt|;
 name|pmap_qenter
 argument_list|(
 name|pg
