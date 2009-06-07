@@ -77,6 +77,24 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|OPENSSL_FIPS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|FIPS_AES_SIZE_T
+value|int
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__cplusplus
 end_ifdef
 

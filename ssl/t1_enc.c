@@ -23,11 +23,22 @@ directive|include
 file|"ssl_locl.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_COMP
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<openssl/comp.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -46,6 +57,23 @@ include|#
 directive|include
 file|<openssl/md5.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSSL_DEBUG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<openssl/des.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -923,6 +951,10 @@ name|new_cipher
 operator|->
 name|algorithms
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|comp
 argument_list|)
 expr_stmt|;
@@ -930,6 +962,10 @@ name|printf
 argument_list|(
 literal|"\tevp_cipher == %p ==?&d_cbc_ede_cipher3\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|c
 argument_list|)
 expr_stmt|;
@@ -969,15 +1005,15 @@ argument_list|)
 expr_stmt|;
 block|{
 name|int
-name|i
+name|ki
 decl_stmt|;
 for|for
 control|(
-name|i
+name|ki
 operator|=
 literal|0
 init|;
-name|i
+name|ki
 operator|<
 name|s
 operator|->
@@ -987,7 +1023,7 @@ name|tmp
 operator|.
 name|key_block_length
 condition|;
-name|i
+name|ki
 operator|++
 control|)
 name|printf
@@ -996,7 +1032,7 @@ literal|"%02x"
 argument_list|,
 name|key_block
 index|[
-name|i
+name|ki
 index|]
 argument_list|)
 expr_stmt|;
@@ -1959,7 +1995,7 @@ directive|ifdef
 name|KSSL_DEBUG
 block|{
 name|int
-name|i
+name|ki
 decl_stmt|;
 name|printf
 argument_list|(
@@ -1973,17 +2009,17 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|i
+name|ki
 operator|=
 literal|0
 init|;
-name|i
+name|ki
 operator|<
 name|c
 operator|->
 name|key_len
 condition|;
-name|i
+name|ki
 operator|++
 control|)
 name|printf
@@ -1992,7 +2028,7 @@ literal|"%02x"
 argument_list|,
 name|key
 index|[
-name|i
+name|ki
 index|]
 argument_list|)
 expr_stmt|;
@@ -2008,17 +2044,17 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|i
+name|ki
 operator|=
 literal|0
 init|;
-name|i
+name|ki
 operator|<
 name|c
 operator|->
 name|iv_len
 condition|;
-name|i
+name|ki
 operator|++
 control|)
 name|printf
@@ -2027,7 +2063,7 @@ literal|"%02x"
 argument_list|,
 name|iv
 index|[
-name|i
+name|ki
 index|]
 argument_list|)
 expr_stmt|;
@@ -3133,6 +3169,10 @@ name|printf
 argument_list|(
 literal|"EVP_Cipher(ds=%p,rec->data=%p,rec->input=%p,l=%ld) ==>\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|ds
 argument_list|,
 name|rec
@@ -3148,7 +3188,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tEVP_CIPHER_CTX: %d buf_len, %d key_len [%d %d], %d iv_len\n"
+literal|"\tEVP_CIPHER_CTX: %d buf_len, %d key_len [%ld %ld], %d iv_len\n"
 argument_list|,
 name|ds
 operator|->
@@ -3160,8 +3200,16 @@ name|cipher
 operator|->
 name|key_len
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|DES_KEY_SZ
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|DES_SCHEDULE_SZ
 argument_list|,
 name|ds
@@ -3310,7 +3358,7 @@ name|KSSL_DEBUG
 block|{
 name|unsigned
 name|long
-name|i
+name|ki
 decl_stmt|;
 name|printf
 argument_list|(
@@ -3319,11 +3367,11 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|i
+name|ki
 operator|=
 literal|0
 init|;
-name|i
+name|ki
 operator|<
 name|l
 condition|;
@@ -3338,7 +3386,7 @@ name|rec
 operator|->
 name|data
 index|[
-name|i
+name|ki
 index|]
 argument_list|)
 expr_stmt|;
@@ -4472,6 +4520,10 @@ name|printf
 argument_list|(
 literal|"tls1_generate_master_secret(%p,%p, %p, %d)\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|s
 argument_list|,
 name|out

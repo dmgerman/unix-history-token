@@ -3500,8 +3500,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|r
+operator|<=
+literal|0
 condition|)
 name|CMSerr
 argument_list|(

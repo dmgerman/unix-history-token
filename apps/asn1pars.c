@@ -8,7 +8,7 @@ comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights 
 end_comment
 
 begin_comment
-comment|/* A nice addition from Dr Stephen Henson<shenson@bigfoot.com> to   * add the -strparse option which parses nested binary structures  */
+comment|/* A nice addition from Dr Stephen Henson<steve@openssl.org> to   * add the -strparse option which parses nested binary structures  */
 end_comment
 
 begin_include

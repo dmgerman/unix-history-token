@@ -3294,10 +3294,7 @@ condition|(
 name|j
 operator|==
 literal|0
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 operator|(
 name|s
 operator|->
@@ -3316,12 +3313,8 @@ literal|1
 operator|)
 condition|)
 block|{
-comment|/* Very bad for multi-threading.... */
-name|s
-operator|->
-name|session
-operator|->
-name|cipher
+comment|/* Special case as client bug workaround: the previously used cipher may 			 * not be in the current list, the client instead might be trying to 			 * continue using a cipher that before wasn't chosen due to server 			 * preferences.  We'll have to reject the connection if the cipher is not 			 * enabled, though. */
+name|c
 operator|=
 name|sk_SSL_CIPHER_value
 argument_list|(
@@ -3330,10 +3323,43 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
-else|else
+if|if
+condition|(
+name|sk_SSL_CIPHER_find
+argument_list|(
+name|SSL_get_ciphers
+argument_list|(
+name|s
+argument_list|)
+argument_list|,
+name|c
+argument_list|)
+operator|>=
+literal|0
+condition|)
 block|{
-comment|/* we need to have the cipher in the cipher 				 * list if we are asked to reuse it */
+name|s
+operator|->
+name|session
+operator|->
+name|cipher
+operator|=
+name|c
+expr_stmt|;
+name|j
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|j
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* we need to have the cipher in the cipher 			 * list if we are asked to reuse it */
 name|al
 operator|=
 name|SSL_AD_ILLEGAL_PARAMETER
@@ -3348,7 +3374,6 @@ expr_stmt|;
 goto|goto
 name|f_err
 goto|;
-block|}
 block|}
 block|}
 comment|/* compression */
@@ -10439,8 +10464,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|i
+operator|<=
+literal|0
 condition|)
 block|{
 name|al

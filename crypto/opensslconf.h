@@ -88,6 +88,23 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|OPENSSL_NO_JPAKE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_NO_JPAKE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|OPENSSL_NO_KRB5
 end_ifndef
 
@@ -163,23 +180,6 @@ begin_define
 define|#
 directive|define
 name|OPENSSL_NO_SEED
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_TLSEXT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|OPENSSL_NO_TLSEXT
 end_define
 
 begin_endif
@@ -332,6 +332,32 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|OPENSSL_NO_JPAKE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_JPAKE
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NO_JPAKE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|OPENSSL_NO_KRB5
 argument_list|)
 operator|&&
@@ -457,25 +483,35 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|OPENSSL_NO_TLSEXT
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|NO_TLSEXT
-argument_list|)
-end_if
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* crypto/opensslconf.h.in */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_DOING_MAKEDEPEND
+end_ifdef
+
+begin_comment
+comment|/* Include any symbols here that have to be explicitly set to enable a feature  * that should be visible to makedepend.  *  * [Our "make depend" doesn't actually look at this, we use actual build settings  * instead; we want to make it easy to remove subdirectories with disabled algorithms.]  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_FIPS
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|NO_TLSEXT
+name|OPENSSL_FIPS
 end_define
 
 begin_endif
@@ -487,10 +523,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* crypto/opensslconf.h.in */
-end_comment
 
 begin_comment
 comment|/* Generate 80386 code? */

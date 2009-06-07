@@ -15,28 +15,28 @@ begin_define
 define|#
 directive|define
 name|NUM_NID
-value|857
+value|859
 end_define
 
 begin_define
 define|#
 directive|define
 name|NUM_SN
-value|850
+value|852
 end_define
 
 begin_define
 define|#
 directive|define
 name|NUM_LN
-value|850
+value|852
 end_define
 
 begin_define
 define|#
 directive|define
 name|NUM_OBJ
-value|804
+value|806
 end_define
 
 begin_decl_stmt
@@ -45,7 +45,7 @@ name|unsigned
 name|char
 name|lvalues
 index|[
-literal|5711
+literal|5722
 index|]
 init|=
 block|{
@@ -12273,6 +12273,30 @@ block|,
 literal|0x02
 block|,
 comment|/* [5701] OBJ_LocalKeySet */
+literal|0x55
+block|,
+literal|0x1D
+block|,
+literal|0x2E
+block|,
+comment|/* [5710] OBJ_freshest_crl */
+literal|0x2B
+block|,
+literal|0x06
+block|,
+literal|0x01
+block|,
+literal|0x05
+block|,
+literal|0x05
+block|,
+literal|0x07
+block|,
+literal|0x08
+block|,
+literal|0x03
+block|,
+comment|/* [5713] OBJ_id_on_permanentIdentifier */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -29107,6 +29131,46 @@ operator|)
 block|,
 literal|0
 block|}
+block|,
+block|{
+literal|"freshestCRL"
+block|,
+literal|"X509v3 Freshest CRL"
+block|,
+name|NID_freshest_crl
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5710
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"id-on-permanentIdentifier"
+block|,
+literal|"Permanent Identifier"
+block|,
+name|NID_id_on_permanentIdentifier
+block|,
+literal|8
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5713
+index|]
+operator|)
+block|,
+literal|0
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -31600,6 +31664,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|857
+index|]
+operator|)
+block|,
+comment|/* "freshestCRL" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|453
 index|]
 operator|)
@@ -32892,6 +32965,15 @@ index|]
 operator|)
 block|,
 comment|/* "id-on" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|858
+index|]
+operator|)
+block|,
+comment|/* "id-on-permanentIdentifier" */
 operator|&
 operator|(
 name|nid_objs
@@ -37581,6 +37663,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|858
+index|]
+operator|)
+block|,
+comment|/* "Permanent Identifier" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|164
 index|]
 operator|)
@@ -37847,6 +37938,15 @@ index|]
 operator|)
 block|,
 comment|/* "X509v3 Extended Key Usage" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|857
+index|]
+operator|)
+block|,
+comment|/* "X509v3 Freshest CRL" */
 operator|&
 operator|(
 name|nid_objs
@@ -45029,6 +45129,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|857
+index|]
+operator|)
+block|,
+comment|/* OBJ_freshest_crl                 2 5 29 46 */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|748
 index|]
 operator|)
@@ -49048,6 +49157,15 @@ index|]
 operator|)
 block|,
 comment|/* OBJ_id_on_personalData           1 3 6 1 5 5 7 8 1 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|858
+index|]
+operator|)
+block|,
+comment|/* OBJ_id_on_permanentIdentifier    1 3 6 1 5 5 7 8 3 */
 operator|&
 operator|(
 name|nid_objs

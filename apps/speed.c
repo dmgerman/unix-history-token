@@ -13948,7 +13948,7 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
-operator|==
+operator|<=
 literal|0
 condition|)
 block|{
@@ -17278,6 +17278,16 @@ block|{
 name|pipe
 argument_list|(
 name|fd
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stderr
 argument_list|)
 expr_stmt|;
 if|if

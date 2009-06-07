@@ -320,6 +320,18 @@ directive|undef
 name|PKCS7_ISSUER_AND_SERIAL
 end_undef
 
+begin_undef
+undef|#
+directive|undef
+name|OCSP_REQUEST
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|OCSP_RESPONSE
+end_undef
+
 begin_endif
 endif|#
 directive|endif

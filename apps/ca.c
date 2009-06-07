@@ -176,6 +176,12 @@ name|defined
 argument_list|(
 name|OPENSSL_SYS_NETWARE
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__TANDEM
+argument_list|)
 end_elif
 
 begin_include

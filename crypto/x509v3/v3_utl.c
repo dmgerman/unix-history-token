@@ -4,7 +4,7 @@ comment|/* v3_utl.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project.  */
 end_comment
 
 begin_comment
@@ -287,7 +287,6 @@ condition|)
 goto|goto
 name|err
 goto|;
-empty_stmt|;
 if|if
 condition|(
 operator|!
@@ -3782,15 +3781,16 @@ return|;
 block|}
 block|}
 comment|/* Format result */
-comment|/* Copy initial part */
 if|if
 condition|(
 name|v6stat
 operator|.
 name|zero_pos
-operator|>
+operator|>=
 literal|0
 condition|)
+block|{
+comment|/* Copy initial part */
 name|memcpy
 argument_list|(
 name|v6
@@ -3805,14 +3805,6 @@ name|zero_pos
 argument_list|)
 expr_stmt|;
 comment|/* Zero middle */
-if|if
-condition|(
-name|v6stat
-operator|.
-name|total
-operator|!=
-literal|16
-condition|)
 name|memset
 argument_list|(
 name|v6
@@ -3870,6 +3862,19 @@ operator|-
 name|v6stat
 operator|.
 name|zero_pos
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|memcpy
+argument_list|(
+name|v6
+argument_list|,
+name|v6stat
+operator|.
+name|tmp
+argument_list|,
+literal|16
 argument_list|)
 expr_stmt|;
 return|return

@@ -41,11 +41,21 @@ directive|include
 file|<openssl/rand.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|RSA_NULL
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_FIPS
+argument_list|)
+end_if
 
 begin_function_decl
 specifier|static

@@ -939,7 +939,7 @@ name|outl
 operator|+
 name|outl2
 operator|!=
-name|cn
+name|pn
 condition|)
 block|{
 name|fprintf
@@ -952,7 +952,7 @@ name|outl
 operator|+
 name|outl2
 argument_list|,
-name|cn
+name|pn
 argument_list|)
 expr_stmt|;
 name|test1_exit
@@ -969,7 +969,7 @@ name|out
 argument_list|,
 name|plaintext
 argument_list|,
-name|cn
+name|pn
 argument_list|)
 condition|)
 block|{
@@ -988,7 +988,7 @@ literal|"Got"
 argument_list|,
 name|out
 argument_list|,
-name|cn
+name|pn
 argument_list|)
 expr_stmt|;
 name|hexdump
@@ -999,7 +999,7 @@ literal|"Expected"
 argument_list|,
 name|plaintext
 argument_list|,
-name|cn
+name|pn
 argument_list|)
 expr_stmt|;
 name|test1_exit

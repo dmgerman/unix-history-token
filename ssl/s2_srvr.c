@@ -5141,6 +5141,8 @@ expr_stmt|;
 if|if
 condition|(
 name|i
+operator|>
+literal|0
 condition|)
 comment|/* we like the packet, now check the chksum */
 block|{
@@ -5340,6 +5342,8 @@ expr_stmt|;
 if|if
 condition|(
 name|i
+operator|>
+literal|0
 condition|)
 block|{
 if|if

@@ -4,7 +4,7 @@ comment|/* p12_crt.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project.  */
 end_comment
 
 begin_comment
@@ -28,6 +28,23 @@ include|#
 directive|include
 file|<openssl/pkcs12.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<openssl/fips.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -221,10 +238,27 @@ condition|(
 operator|!
 name|nid_cert
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+if|if
+condition|(
+name|FIPS_mode
+argument_list|()
+condition|)
+name|nid_cert
+operator|=
+name|NID_pbe_WithSHA1And3_Key_TripleDES_CBC
+expr_stmt|;
+else|else
+endif|#
+directive|endif
 name|nid_cert
 operator|=
 name|NID_pbe_WithSHA1And40BitRC2_CBC
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -571,6 +605,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|p12
+condition|)
+goto|goto
+name|err
+goto|;
 name|sk_PKCS7_pop_free
 argument_list|(
 name|safes

@@ -1165,6 +1165,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|ASN1_R_BMPSTRING_IS_WRONG_LENGTH
+argument_list|)
+block|,
+literal|"bmpstring is wrong length"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|ASN1_R_BN_LIB
 argument_list|)
 block|,
@@ -1961,6 +1970,15 @@ name|ASN1_R_UNEXPECTED_EOC
 argument_list|)
 block|,
 literal|"unexpected eoc"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|ASN1_R_UNIVERSALSTRING_IS_WRONG_LENGTH
+argument_list|)
+block|,
+literal|"universalstring is wrong length"
 block|}
 block|,
 block|{

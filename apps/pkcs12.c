@@ -4,7 +4,7 @@ comment|/* pkcs12.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project.  */
 end_comment
 
 begin_comment
@@ -465,8 +465,6 @@ literal|0
 decl_stmt|;
 name|int
 name|cert_pbe
-init|=
-name|NID_pbe_WithSHA1And40BitRC2_CBC
 decl_stmt|;
 name|int
 name|key_pbe
@@ -562,6 +560,25 @@ endif|#
 directive|endif
 name|apps_startup
 argument_list|()
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+if|if
+condition|(
+name|FIPS_mode
+argument_list|()
+condition|)
+name|cert_pbe
+operator|=
+name|NID_pbe_WithSHA1And3_Key_TripleDES_CBC
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+name|cert_pbe
+operator|=
+name|NID_pbe_WithSHA1And40BitRC2_CBC
 expr_stmt|;
 name|enc
 operator|=

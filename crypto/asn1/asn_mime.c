@@ -649,11 +649,6 @@ operator|*
 name|mdalgs
 argument_list|)
 block|{
-specifier|const
-name|EVP_MD
-modifier|*
-name|md
-decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -719,13 +714,6 @@ name|i
 argument_list|)
 operator|->
 name|algorithm
-argument_list|)
-expr_stmt|;
-name|md
-operator|=
-name|EVP_get_digestbynid
-argument_list|(
-name|md_nid
 argument_list|)
 expr_stmt|;
 switch|switch

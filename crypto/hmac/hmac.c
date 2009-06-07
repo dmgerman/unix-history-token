@@ -37,6 +37,12 @@ directive|include
 file|<openssl/hmac.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_FIPS
+end_ifndef
+
 begin_function
 name|void
 name|HMAC_Init_ex
@@ -804,6 +810,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

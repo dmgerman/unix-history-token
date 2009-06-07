@@ -13,6 +13,23 @@ directive|include
 file|<openssl/opensslconf.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<openssl/fips.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -152,6 +169,14 @@ modifier|*
 name|c
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+name|FIPS_selftest_check
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|c
 operator|->
 name|h
@@ -287,6 +312,14 @@ modifier|*
 name|c
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+name|FIPS_selftest_check
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|c
 operator|->
 name|h
@@ -2499,7 +2532,7 @@ name|PULL64
 parameter_list|(
 name|x
 parameter_list|)
-value|({ const unsigned int *p=(const unsigned int *)(&(x));\ 			 unsigned int hi=p[0],lo=p[1];		\ 				asm ("bswapl %0; bswapl %1;"	\ 				: "=r"(lo),"=r"(hi)		\ 				: "0"(lo),"1"(hi));		\ 				((SHA_LONG64)hi)<<32|lo;	})
+value|({ const unsigned int *p=(const unsigned int *)(&(x));\ 			 unsigned int hi=p[0],lo=p[1];			\ 				asm ("bswapl %0; bswapl %1;"	\ 				: "=r"(lo),"=r"(hi)		\ 				: "0"(lo),"1"(hi));		\ 				((SHA_LONG64)hi)<<32|lo;	})
 end_define
 
 begin_endif

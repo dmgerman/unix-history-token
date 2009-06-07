@@ -236,7 +236,7 @@ literal|" -noout          - no certificate output\n"
 block|,
 literal|" -ocspid         - print OCSP hash values for the subject name and public key\n"
 block|,
-literal|" -ocspurl        - print OCSP Responder URL(s)\n"
+literal|" -ocsp_uri       - print OCSP Responder URL(s)\n"
 block|,
 literal|" -trustout       - output a \"trusted\" certificate\n"
 block|,
@@ -5919,12 +5919,13 @@ condition|(
 operator|!
 name|reqfile
 operator|&&
-operator|!
 name|X509_verify_cert
 argument_list|(
 operator|&
 name|xsc
 argument_list|)
+operator|<=
+literal|0
 condition|)
 goto|goto
 name|end

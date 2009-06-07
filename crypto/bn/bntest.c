@@ -5242,7 +5242,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|00
+literal|0
 operator|)
 return|;
 if|if
@@ -5819,7 +5819,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|00
+literal|0
 operator|)
 return|;
 if|if

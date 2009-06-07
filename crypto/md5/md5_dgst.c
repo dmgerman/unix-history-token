@@ -25,6 +25,29 @@ directive|include
 file|<openssl/opensslv.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/err.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<openssl/fips.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|const
 name|char
@@ -68,14 +91,14 @@ name|INIT_DATA_D
 value|(unsigned long)0x10325476L
 end_define
 
-begin_function
-name|int
-name|MD5_Init
-parameter_list|(
-name|MD5_CTX
-modifier|*
-name|c
-parameter_list|)
+begin_macro
+name|FIPS_NON_FIPS_MD_Init
+argument_list|(
+argument|MD5
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|c
 operator|->
@@ -123,7 +146,7 @@ return|return
 literal|1
 return|;
 block|}
-end_function
+end_block
 
 begin_ifndef
 ifndef|#

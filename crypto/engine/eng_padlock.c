@@ -796,19 +796,17 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_macro
 name|IMPLEMENT_DYNAMIC_CHECK_FN
 argument_list|()
-expr_stmt|;
-end_expr_stmt
+end_macro
 
-begin_expr_stmt
+begin_macro
 name|IMPLEMENT_DYNAMIC_BIND_FN
 argument_list|(
-name|padlock_bind_fn
+argument|padlock_bind_fn
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_endif
 endif|#

@@ -27,11 +27,22 @@ directive|include
 file|<openssl/objects.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_COMP
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<openssl/comp.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -6425,13 +6436,14 @@ if|if
 condition|(
 name|ssl_comp_methods
 operator|&&
-operator|!
 name|sk_SSL_COMP_find
 argument_list|(
 name|ssl_comp_methods
 argument_list|,
 name|comp
 argument_list|)
+operator|>=
+literal|0
 condition|)
 block|{
 name|OPENSSL_free

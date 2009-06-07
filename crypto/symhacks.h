@@ -32,6 +32,23 @@ name|OPENSSL_SYS_VMS
 end_ifdef
 
 begin_comment
+comment|/* Hack a long name in crypto/cryptlib.c */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|int_CRYPTO_set_do_dynlock_callback
+end_undef
+
+begin_define
+define|#
+directive|define
+name|int_CRYPTO_set_do_dynlock_callback
+value|int_CRYPTO_set_do_dynlock_cb
+end_define
+
+begin_comment
 comment|/* Hack a long name in crypto/ex_data.c */
 end_comment
 
@@ -694,6 +711,33 @@ define|#
 directive|define
 name|ENGINE_get_load_privkey_function
 value|ENGINE_get_load_privkey_fn
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ENGINE_set_load_ssl_client_cert_function
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ENGINE_set_load_ssl_client_cert_function
+define|\
+value|ENGINE_set_ld_ssl_clnt_cert_fn
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ENGINE_get_ssl_client_cert_function
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ENGINE_get_ssl_client_cert_function
+value|ENGINE_get_ssl_client_cert_fn
 end_define
 
 begin_comment

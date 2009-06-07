@@ -25,6 +25,29 @@ directive|include
 file|<openssl/opensslv.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/err.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<openssl/fips.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|const
 name|char
@@ -97,14 +120,14 @@ endif|#
 directive|endif
 end_endif
 
-begin_function
-name|int
-name|RIPEMD160_Init
-parameter_list|(
-name|RIPEMD160_CTX
-modifier|*
-name|c
-parameter_list|)
+begin_macro
+name|FIPS_NON_FIPS_MD_Init
+argument_list|(
+argument|RIPEMD160
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|c
 operator|->
@@ -158,7 +181,7 @@ return|return
 literal|1
 return|;
 block|}
-end_function
+end_block
 
 begin_ifndef
 ifndef|#

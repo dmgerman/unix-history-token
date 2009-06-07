@@ -1921,6 +1921,12 @@ operator|)
 argument_list|)
 condition|)
 block|{
+name|rr
+operator|->
+name|length
+operator|=
+literal|0
+expr_stmt|;
 name|s
 operator|->
 name|packet_length

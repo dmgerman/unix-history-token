@@ -135,10 +135,6 @@ name|HWCRHK_R_DSO_FAILURE
 value|104
 define|#
 directive|define
-name|HWCRHK_R_LOCKING_MISSING
-value|114
-define|#
-directive|define
 name|HWCRHK_R_MISSING_KEY_COMPONENTS
 value|105
 define|#

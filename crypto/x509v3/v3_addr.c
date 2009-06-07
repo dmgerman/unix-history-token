@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"cryptlib.h"
 end_include
 
@@ -269,15 +263,16 @@ unit|}
 comment|/*  * Extract the AFI from an IPAddressFamily.  */
 end_comment
 
-begin_macro
+begin_function
 unit|unsigned
+name|int
 name|v3_addr_get_afi
-argument_list|(
-argument|const IPAddressFamily *f
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+specifier|const
+name|IPAddressFamily
+modifier|*
+name|f
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -331,7 +326,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Expand the bitstring form of an address into a raw byte array.  * At the moment this is coded for simplicity, not speed.  */
@@ -362,7 +357,7 @@ name|char
 name|fill
 parameter_list|)
 block|{
-name|assert
+name|OPENSSL_assert
 argument_list|(
 name|bs
 operator|->
@@ -682,6 +677,19 @@ condition|(
 name|i
 operator|<
 literal|16
+condition|)
+name|BIO_puts
+argument_list|(
+name|out
+argument_list|,
+literal|":"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+literal|0
 condition|)
 name|BIO_puts
 argument_list|(
@@ -1012,6 +1020,7 @@ argument_list|)
 decl_stmt|;
 specifier|const
 name|unsigned
+name|int
 name|afi
 init|=
 name|v3_addr_get_afi
@@ -2057,7 +2066,7 @@ name|type
 operator|=
 name|IPAddressOrRange_addressRange
 expr_stmt|;
-name|assert
+name|OPENSSL_assert
 argument_list|(
 name|aor
 operator|->
@@ -2537,7 +2546,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|assert
+name|OPENSSL_assert
 argument_list|(
 name|f
 operator|->
@@ -3221,7 +3230,7 @@ name|int
 name|length
 parameter_list|)
 block|{
-name|assert
+name|OPENSSL_assert
 argument_list|(
 name|aor
 operator|!=
@@ -4298,12 +4307,22 @@ return|return
 literal|0
 return|;
 block|}
+operator|(
+name|void
+operator|)
+name|sk_IPAddressFamily_set_cmp_func
+argument_list|(
+name|addr
+argument_list|,
+name|IPAddressFamily_cmp
+argument_list|)
+expr_stmt|;
 name|sk_IPAddressFamily_sort
 argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
-name|assert
+name|OPENSSL_assert
 argument_list|(
 name|v3_addr_is_canonical
 argument_list|(
@@ -5541,14 +5560,25 @@ decl_stmt|;
 name|IPAddressFamily
 modifier|*
 name|fb
-init|=
+decl_stmt|;
+name|fb
+operator|=
 name|sk_IPAddressFamily_value
 argument_list|(
 name|b
 argument_list|,
 name|j
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+if|if
+condition|(
+name|fb
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 operator|!
@@ -5650,7 +5680,7 @@ name|x
 init|=
 name|NULL
 decl_stmt|;
-name|assert
+name|OPENSSL_assert
 argument_list|(
 name|chain
 operator|!=
@@ -5664,7 +5694,7 @@ operator|>
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|OPENSSL_assert
 argument_list|(
 name|ctx
 operator|!=
@@ -5675,7 +5705,7 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|OPENSSL_assert
 argument_list|(
 name|ctx
 operator|==
@@ -5717,7 +5747,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|assert
+name|OPENSSL_assert
 argument_list|(
 name|x
 operator|!=
@@ -5818,7 +5848,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|assert
+name|OPENSSL_assert
 argument_list|(
 name|x
 operator|!=

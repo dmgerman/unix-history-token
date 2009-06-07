@@ -4,7 +4,7 @@ comment|/* eng_cnf.c */
 end_comment
 
 begin_comment
-comment|/* Written by Stephen Henson (shenson@bigfoot.com) for the OpenSSL  * project 2001.  */
+comment|/* Written by Stephen Henson (steve@openssl.org) for the OpenSSL  * project 2001.  */
 end_comment
 
 begin_comment

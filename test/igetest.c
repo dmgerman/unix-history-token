@@ -1657,6 +1657,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|unsigned
 name|int
 name|n
 decl_stmt|;
@@ -2425,6 +2426,7 @@ name|err
 init|=
 literal|0
 decl_stmt|;
+name|unsigned
 name|int
 name|n
 decl_stmt|;

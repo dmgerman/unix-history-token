@@ -4,7 +4,7 @@ comment|/* apps/spkac.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project 1999. Based on an original idea by Massimiliano Pala  * (madwolf@openca.org).  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 1999. Based on an original idea by Massimiliano Pala  * (madwolf@openca.org).  */
 end_comment
 
 begin_comment
@@ -1232,6 +1232,8 @@ expr_stmt|;
 if|if
 condition|(
 name|i
+operator|>
+literal|0
 condition|)
 name|BIO_printf
 argument_list|(

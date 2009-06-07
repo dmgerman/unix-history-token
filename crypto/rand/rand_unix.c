@@ -672,6 +672,9 @@ name|FD_SETSIZE
 operator|>
 literal|0
 operator|&&
+operator|(
+name|unsigned
+operator|)
 name|fd
 operator|>=
 name|FD_SETSIZE

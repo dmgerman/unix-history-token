@@ -912,7 +912,7 @@ argument_list|)
 expr_stmt|;
 name|mdlen
 operator|=
-name|EVP_MD_size
+name|M_EVP_MD_size
 argument_list|(
 name|dgst
 argument_list|)

@@ -1757,7 +1757,6 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
-empty_stmt|;
 if|if
 condition|(
 name|v
@@ -2300,7 +2299,9 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|i
+name|tm
+operator|->
+name|length
 operator|>=
 literal|14
 operator|&&
@@ -2693,7 +2694,9 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|i
+name|tm
+operator|->
+name|length
 operator|>=
 literal|12
 operator|&&

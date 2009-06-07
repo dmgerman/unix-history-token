@@ -47,6 +47,12 @@ directive|include
 file|<openssl/asn1.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_FIPS
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|DSA_SIG
@@ -1714,6 +1720,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

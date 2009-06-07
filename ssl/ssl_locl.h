@@ -63,11 +63,22 @@ directive|include
 file|<openssl/buffer.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_COMP
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<openssl/comp.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1537,6 +1548,12 @@ name|SSL3_ENC_METHOD
 typedef|;
 end_typedef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_COMP
+end_ifndef
+
 begin_comment
 comment|/* Used for holding the relevant compression methods loaded into SSL_CTX */
 end_comment
@@ -1564,6 +1581,11 @@ block|}
 name|SSL3_COMP
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern

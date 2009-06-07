@@ -415,7 +415,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"usage:version -[avbofp]\n"
+literal|"usage:version -[avbofpd]\n"
 argument_list|)
 expr_stmt|;
 name|ret

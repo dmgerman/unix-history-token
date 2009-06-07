@@ -8515,6 +8515,8 @@ block|{
 if|if
 condition|(
 name|ok
+operator|>
+literal|0
 condition|)
 block|{
 specifier|const

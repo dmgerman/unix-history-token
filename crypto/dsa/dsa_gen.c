@@ -115,6 +115,12 @@ directive|include
 file|<openssl/sha.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_FIPS
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|int
@@ -1501,6 +1507,11 @@ name|ok
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

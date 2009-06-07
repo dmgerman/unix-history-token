@@ -31,6 +31,12 @@ directive|include
 file|"cryptlib.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SOCK
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -1018,6 +1024,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* #ifndef OPENSSL_NO_SOCK */
+end_comment
 
 end_unit
 

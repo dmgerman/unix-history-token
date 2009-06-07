@@ -1215,7 +1215,7 @@ argument_list|)
 name|int
 name|fd
 init|=
-name|fileno
+name|_fileno
 argument_list|(
 operator|(
 name|FILE

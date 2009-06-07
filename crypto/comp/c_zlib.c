@@ -3246,6 +3246,10 @@ name|odone
 operator|=
 literal|0
 expr_stmt|;
+name|ret
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 name|BIO_CTRL_FLUSH
@@ -3406,6 +3410,10 @@ operator|=
 name|obs
 expr_stmt|;
 block|}
+name|ret
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 name|BIO_C_DO_STATE_MACHINE

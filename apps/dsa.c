@@ -138,17 +138,12 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_ENGINE
 name|ENGINE
 modifier|*
 name|e
 init|=
 name|NULL
 decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|ret
 init|=
