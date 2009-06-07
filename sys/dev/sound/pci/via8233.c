@@ -7,6 +7,23 @@ begin_comment
 comment|/*  * Credits due to:  *  * Grzybowski Rafal, Russell Davies, Mark Handley, Daniel O'Connor for  * comments, machine time, testing patches, and patience.  VIA for  * providing specs.  ALSA for helpful comments and some register poke  * ordering.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_snd.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -421,17 +438,41 @@ name|via_fmt
 index|[]
 init|=
 block|{
+name|SND_FORMAT
+argument_list|(
 name|AFMT_U8
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
 block|,
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_U8
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
 block|,
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
 literal|0
 block|}
@@ -561,12 +602,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SND_DYNSYSCTL
-end_ifdef
 
 begin_function
 specifier|static
@@ -1033,15 +1068,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SND_DYNSYSCTL */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -1051,9 +1077,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|SND_DYNSYSCTL
 comment|/* XXX: an user should be able to set this with a control tool, 	   if not done before 7.0-RELEASE, this needs to be converted to 	   a device specific sysctl "dev.pcm.X.yyy" via device_get_sysctl_*() 	   as discussed on multimedia@ in msg-id<861wujij2q.fsf@xps.des.no> */
 name|SYSCTL_ADD_PROC
 argument_list|(
@@ -1166,8 +1189,6 @@ argument_list|,
 literal|"Enable polling mode"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -1688,11 +1709,7 @@ argument_list|,
 name|via_write_codec
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1859,9 +1876,12 @@ name|WR_FORMAT_STOP_INDEX
 decl_stmt|;
 if|if
 condition|(
+name|AFMT_CHANNEL
+argument_list|(
 name|format
-operator|&
-name|AFMT_STEREO
+argument_list|)
+operator|>
+literal|1
 condition|)
 name|f
 operator||=
@@ -1984,9 +2004,12 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+name|AFMT_CHANNEL
+argument_list|(
 name|format
-operator|&
-name|AFMT_STEREO
+argument_list|)
+operator|>
+literal|1
 condition|)
 name|v
 operator||=
@@ -2080,9 +2103,12 @@ name|MC_SGD_8BIT
 decl_stmt|;
 if|if
 condition|(
+name|AFMT_CHANNEL
+argument_list|(
 name|format
-operator|&
-name|AFMT_STEREO
+argument_list|)
+operator|>
+literal|1
 condition|)
 block|{
 name|v
@@ -2181,7 +2207,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|via8233wr_setspeed
 parameter_list|(
 name|kobj_t
@@ -2243,7 +2269,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|via8233dxs_setspeed
 parameter_list|(
 name|kobj_t
@@ -2352,7 +2378,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|via8233msgd_setspeed
 parameter_list|(
 name|kobj_t
@@ -2808,7 +2834,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
@@ -2816,7 +2842,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|via8233chan_setblocksize
 parameter_list|(
 name|kobj_t
@@ -2871,7 +2897,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|via8233chan_getptr
 parameter_list|(
 name|kobj_t
@@ -2904,8 +2930,7 @@ decl_stmt|,
 name|index
 decl_stmt|,
 name|count
-decl_stmt|;
-name|int
+decl_stmt|,
 name|ptr
 decl_stmt|;
 name|snd_mtxlock
@@ -4324,7 +4349,7 @@ operator|(
 operator|(
 name|uint64_t
 operator|)
-name|sndbuf_getbps
+name|sndbuf_getalign
 argument_list|(
 name|ch
 operator|->
@@ -4430,7 +4455,7 @@ operator|(
 operator|(
 name|uint64_t
 operator|)
-name|sndbuf_getbps
+name|sndbuf_getalign
 argument_list|(
 name|ch
 operator|->
@@ -4620,7 +4645,7 @@ operator|(
 operator|(
 name|uint64_t
 operator|)
-name|sndbuf_getbps
+name|sndbuf_getalign
 argument_list|(
 name|ch
 operator|->
@@ -4996,11 +5021,7 @@ argument_list|,
 name|via8233chan_getptr
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -5076,11 +5097,7 @@ argument_list|,
 name|via8233chan_getptr
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -5156,11 +5173,7 @@ argument_list|,
 name|via8233chan_getptr
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -57,11 +57,22 @@ directive|include
 file|<sys/rman.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|<sys/soundcard.h>
+file|"opt_snd.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -3699,15 +3710,11 @@ name|int
 name|i
 decl_stmt|;
 name|u_int32_t
-name|acsda
-decl_stmt|,
 name|acctl
 decl_stmt|,
 name|acsts
 decl_stmt|;
 comment|/* 	 * Make sure that there is not data sitting around from a previous 	 * uncompleted access. ACSDA = Status Data Register = 47Ch 	 */
-name|acsda
-operator|=
 name|csa_readio
 argument_list|(
 name|resp

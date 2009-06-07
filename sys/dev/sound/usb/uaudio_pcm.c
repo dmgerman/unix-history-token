@@ -7,11 +7,22 @@ begin_comment
 comment|/*-  * Copyright (c) 2000-2002 Hiroyuki Aizu<aizu@navi.org>  * Copyright (c) 2006 Hans Petter Selasky  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|<sys/soundcard.h>
+file|"opt_snd.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -141,7 +152,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|ua_chan_setspeed
 parameter_list|(
 name|kobj_t
@@ -170,7 +181,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|ua_chan_setblocksize
 parameter_list|(
 name|kobj_t
@@ -294,7 +305,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|ua_chan_getptr
 parameter_list|(
 name|kobj_t
@@ -336,6 +347,37 @@ operator|(
 name|uaudio_chan_getcaps
 argument_list|(
 name|data
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|struct
+name|pcmchan_matrix
+modifier|*
+name|ua_chan_getmatrix
+parameter_list|(
+name|kobj_t
+name|obj
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|uint32_t
+name|format
+parameter_list|)
+block|{
+return|return
+operator|(
+name|uaudio_chan_getmatrix
+argument_list|(
+name|data
+argument_list|,
+name|format
 argument_list|)
 operator|)
 return|;
@@ -412,11 +454,14 @@ argument_list|,
 name|ua_chan_getcaps
 argument_list|)
 block|,
-block|{
-literal|0
+name|KOBJMETHOD
+argument_list|(
+name|channel_getmatrix
+argument_list|,
+name|ua_chan_getmatrix
+argument_list|)
 block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -559,7 +604,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|ua_mixer_setrecsrc
 parameter_list|(
 name|struct
@@ -703,11 +748,7 @@ argument_list|,
 name|ua_mixer_setrecsrc
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt

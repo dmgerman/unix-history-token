@@ -7,6 +7,23 @@ begin_comment
 comment|/*  * Maestro-3/Allegro FreeBSD pcm sound driver  *  * executive status summary:  * (+) /dev/dsp multiple concurrent play channels.  * (+) /dev/dsp config (speed, mono/stereo, 8/16 bit).  * (+) /dev/mixer sets left/right volumes.  * (+) /dev/dsp recording works.  Tested successfully with the cdrom channel  * (+) apm suspend/resume works, and works properly!.  * (-) hardware volme controls don't work =-(  * (-) setblocksize() does nothing.  *  * The real credit goes to:  *  * Zach Brown for his Linux driver core and helpful technical comments.  *<zab@zabbo.net>, http://www.zabbo.net/maestro3  *  * Cameron Grant created the pcm framework used here nearly verbatim.  *<cg@freebsd.org>, http://people.freebsd.org/~cg/template.c  *  * Taku YAMAMOTO for his Maestro-1/2 FreeBSD driver and sanity reference.  *<taku@cent.saitama-u.ac.jp>  *  * ESS docs explained a few magic registers and numbers.  * http://virgo.caltech.edu/~dmoore/maestro3.pdf.gz  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_snd.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -532,7 +549,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|u_int32_t
 name|m3_pchan_setspeed
 parameter_list|(
 name|kobj_t
@@ -547,7 +564,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|u_int32_t
 name|m3_pchan_setblocksize
 parameter_list|(
 name|kobj_t
@@ -688,7 +705,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|u_int32_t
 name|m3_rchan_setspeed
 parameter_list|(
 name|kobj_t
@@ -703,7 +720,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|u_int32_t
 name|m3_rchan_setblocksize
 parameter_list|(
 name|kobj_t
@@ -804,7 +821,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|int
+name|u_int32_t
 name|m3_initcd
 parameter_list|(
 name|kobj_t
@@ -996,11 +1013,7 @@ argument_list|,
 name|m3_wrcd
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1028,17 +1041,41 @@ name|m3_playfmt
 index|[]
 init|=
 block|{
+name|SND_FORMAT
+argument_list|(
 name|AFMT_U8
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
 block|,
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_U8
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
 block|,
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
 literal|0
 block|}
@@ -1126,11 +1163,7 @@ argument_list|,
 name|m3_pchan_free
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1150,17 +1183,41 @@ name|m3_recfmt
 index|[]
 init|=
 block|{
+name|SND_FORMAT
+argument_list|(
 name|AFMT_U8
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
 block|,
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_U8
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
 block|,
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
 literal|0
 block|}
@@ -1248,11 +1305,7 @@ argument_list|,
 name|m3_rchan_free
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1581,7 +1634,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|m3_initcd
 parameter_list|(
 name|kobj_t
@@ -2140,7 +2193,14 @@ name|ch
 operator|->
 name|fmt
 operator|=
+name|SND_FORMAT
+argument_list|(
 name|AFMT_U8
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|ch
 operator|->
@@ -2879,9 +2939,14 @@ literal|"8bit"
 else|:
 literal|"16bit"
 operator|,
+operator|(
+name|AFMT_CHANNEL
+argument_list|(
 name|format
-operator|&
-name|AFMT_STEREO
+argument_list|)
+operator|>
+literal|1
+operator|)
 condition|?
 literal|"STEREO"
 else|:
@@ -2893,9 +2958,12 @@ comment|/* mono word */
 name|data
 operator|=
 operator|(
+name|AFMT_CHANNEL
+argument_list|(
 name|format
-operator|&
-name|AFMT_STEREO
+argument_list|)
+operator|>
+literal|1
 operator|)
 condition|?
 literal|0
@@ -2970,7 +3038,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|m3_pchan_setspeed
 parameter_list|(
 name|kobj_t
@@ -3083,7 +3151,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|m3_pchan_setblocksize
 parameter_list|(
 name|kobj_t
@@ -4108,7 +4176,14 @@ name|ch
 operator|->
 name|fmt
 operator|=
+name|SND_FORMAT
+argument_list|(
 name|AFMT_U8
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|ch
 operator|->
@@ -4815,9 +4890,14 @@ literal|"8bit"
 else|:
 literal|"16bit"
 operator|,
+operator|(
+name|AFMT_CHANNEL
+argument_list|(
 name|format
-operator|&
-name|AFMT_STEREO
+argument_list|)
+operator|>
+literal|1
+operator|)
 condition|?
 literal|"STEREO"
 else|:
@@ -4829,9 +4909,12 @@ comment|/* mono word */
 name|data
 operator|=
 operator|(
+name|AFMT_CHANNEL
+argument_list|(
 name|format
-operator|&
-name|AFMT_STEREO
+argument_list|)
+operator|>
+literal|1
 operator|)
 condition|?
 literal|0
@@ -4906,7 +4989,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|m3_rchan_setspeed
 parameter_list|(
 name|kobj_t
@@ -5019,7 +5102,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|m3_rchan_setblocksize
 parameter_list|(
 name|kobj_t

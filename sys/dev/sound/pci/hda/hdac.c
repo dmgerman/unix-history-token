@@ -7,6 +7,23 @@ begin_comment
 comment|/*  * Intel High Definition Audio (Controller) driver for FreeBSD. Be advised  * that this driver still in its early stage, and possible of rewrite are  * pretty much guaranteed. There are supposedly several distinct parent/child  * busses to make this "perfect", but as for now and for the sake of  * simplicity, everything is gobble up within single source.  *  * List of subsys:  *     1) HDA Controller support  *     2) HDA Codecs support, which may include  *        - HDA  *        - Modem  *        - HDMI  *     3) Widget parser - the real magic of why this driver works on so  *        many hardwares with minimal vendor specific quirk. The original  *        parser was written using Ruby and can be found at  *        http://people.freebsd.org/~ariff/HDA/parser.rb . This crude  *        ruby parser take the verbose dmesg dump as its input. Refer to  *        http://www.microsoft.com/whdc/device/audio/default.mspx for various  *        interesting documents, especially UAA (Universal Audio Architecture).  *     4) Possible vendor specific support.  *        (snd_hda_intel, snd_hda_ati, etc..)  *  * Thanks to Ahmad Ubaidah Omar @ Defenxis Sdn. Bhd. for the  * Compaq V3000 with Conexant HDA.  *  *    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  *    *                                                                 *  *    *        This driver is a collaborative effort made by:           *  *    *                                                                 *  *    *          Stephane E. Potvin<sepotvin@videotron.ca>             *  *    *               Andrea Bittau<a.bittau@cs.ucl.ac.uk>             *  *    *               Wesley Morgan<morganw@chemikals.org>             *  *    *              Daniel Eischen<deischen@FreeBSD.org>              *  *    *             Maxime Guillaud<bsd-ports@mguillaud.net>           *  *    *              Ariff Abdullah<ariff@FreeBSD.org>                 *  *    *             Alexander Motin<mav@FreeBSD.org>                   *  *    *                                                                 *  *    *   ....and various people from freebsd-multimedia@FreeBSD.org    *  *    *                                                                 *  *    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_snd.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -89,7 +106,7 @@ name|HDA_BOOTVERBOSE
 parameter_list|(
 name|stmt
 parameter_list|)
-value|do {			\ 	if (bootverbose != 0 || snd_verbose> 3) {	\ 		stmt					\ 	}						\ } while(0)
+value|do {			\ 	if (bootverbose != 0 || snd_verbose> 3) {	\ 		stmt					\ 	}						\ } while (0)
 end_define
 
 begin_define
@@ -99,7 +116,7 @@ name|HDA_BOOTHVERBOSE
 parameter_list|(
 name|stmt
 parameter_list|)
-value|do {			\ 	if (snd_verbose> 3) {				\ 		stmt					\ 	}						\ } while(0)
+value|do {			\ 	if (snd_verbose> 3) {				\ 		stmt					\ 	}						\ } while (0)
 end_define
 
 begin_if
@@ -2119,9 +2136,14 @@ name|hdac_fmt
 index|[]
 init|=
 block|{
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
 literal|0
 block|}
@@ -14557,7 +14579,7 @@ operator|(
 operator|(
 name|uint64_t
 operator|)
-name|sndbuf_getbps
+name|sndbuf_getalign
 argument_list|(
 name|ch
 operator|->
@@ -17216,7 +17238,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|hdac_channel_setspeed
 parameter_list|(
 name|kobj_t
@@ -17546,31 +17568,23 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-if|if
-condition|(
+name|totalchn
+operator|=
+name|AFMT_CHANNEL
+argument_list|(
 name|ch
 operator|->
 name|fmt
-operator|&
-operator|(
-name|AFMT_STEREO
-operator||
-name|AFMT_AC3
-operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|totalchn
+operator|>
+literal|1
 condition|)
-block|{
 name|fmt
 operator||=
-literal|1
-expr_stmt|;
-name|totalchn
-operator|=
-literal|2
-expr_stmt|;
-block|}
-else|else
-name|totalchn
-operator|=
 literal|1
 expr_stmt|;
 name|HDAC_WRITE_2
@@ -18060,7 +18074,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
@@ -18068,7 +18082,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|hdac_channel_setblocksize
 parameter_list|(
 name|kobj_t
@@ -18426,7 +18440,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|hdac_channel_getptr
 parameter_list|(
 name|kobj_t
@@ -18638,11 +18652,7 @@ argument_list|,
 name|hdac_channel_getcaps
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -19148,11 +19158,6 @@ operator|->
 name|play
 operator|>=
 literal|0
-operator|&&
-operator|!
-name|pdevinfo
-operator|->
-name|digital
 condition|)
 block|{
 name|ctl
@@ -20541,11 +20546,7 @@ argument_list|,
 name|hdac_audio_ctl_ossmixer_setrecsrc
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -32763,7 +32764,14 @@ name|i
 operator|++
 index|]
 operator|=
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|ch
 operator|->
@@ -32773,9 +32781,14 @@ name|i
 operator|++
 index|]
 operator|=
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
-operator||
-name|AFMT_STEREO
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -32809,7 +32822,14 @@ name|i
 operator|++
 index|]
 operator|=
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S32_LE
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|ch
 operator|->
@@ -32819,9 +32839,14 @@ name|i
 operator|++
 index|]
 operator|=
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S32_LE
-operator||
-name|AFMT_STEREO
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -32841,7 +32866,14 @@ name|i
 operator|++
 index|]
 operator|=
+name|SND_FORMAT
+argument_list|(
 name|AFMT_AC3
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 name|ch
@@ -37724,12 +37756,6 @@ block|}
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SND_DYNSYSCTL
-end_ifdef
-
 begin_function
 specifier|static
 name|int
@@ -39140,11 +39166,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|void
@@ -39904,9 +39925,6 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SND_DYNSYSCTL
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|device_get_sysctl_ctx
@@ -40042,8 +40060,6 @@ argument_list|,
 literal|"Dump pin states/data"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

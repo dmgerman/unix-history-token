@@ -7,6 +7,23 @@ begin_comment
 comment|/*  * This driver exists largely as a result of other people's efforts.  * Much of register handling is based on NetBSD CMI8x38 audio driver  * by Takuya Shiozaki<AoiMoe@imou.to>.  Chen-Li Tien  *<cltien@cmedia.com.tw> clarified points regarding the DMA related  * registers and the 8738 mixer devices.  His Linux driver was also a  * useful reference point.  *  * TODO: MIDI  *  * SPDIF contributed by Gerhard Gonter<gonter@whisky.wu-wien.ac.at>.  *  * This card/code does not always manage to sample at 44100 - actual  * rate drifts slightly between recordings (usually 0-3%).  No  * differences visible in register dumps between times that work and  * those that don't.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_snd.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -386,17 +403,41 @@ name|cmi_fmt
 index|[]
 init|=
 block|{
+name|SND_FORMAT
+argument_list|(
 name|AFMT_U8
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
 block|,
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_U8
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
 block|,
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
 literal|0
 block|}
@@ -1533,7 +1574,14 @@ name|ch
 operator|->
 name|fmt
 operator|=
+name|SND_FORMAT
+argument_list|(
 name|AFMT_U8
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|ch
 operator|->
@@ -1712,9 +1760,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|AFMT_CHANNEL
+argument_list|(
 name|format
-operator|&
-name|AFMT_STEREO
+argument_list|)
+operator|>
+literal|1
 condition|)
 block|{
 name|f
@@ -1806,7 +1857,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|cmichan_setspeed
 parameter_list|(
 name|kobj_t
@@ -2039,7 +2090,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|cmichan_setblocksize
 parameter_list|(
 name|kobj_t
@@ -2247,7 +2298,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|cmichan_getptr
 parameter_list|(
 name|kobj_t
@@ -2627,11 +2678,7 @@ argument_list|,
 name|cmichan_getcaps
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3495,7 +3542,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|cmimix_setrecsrc
 parameter_list|(
 name|struct
@@ -3667,9 +3714,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|SND_DYNSYSCTL
 comment|/* XXX: an user should be able to set this with a control tool, 	   if not done before 7.0-RELEASE, this needs to be converted 	   to a device specific sysctl "dev.pcm.X.yyy" via 	   device_get_sysctl_*() as discussed on multimedia@ in msg-id<861wujij2q.fsf@xps.des.no> */
 name|SYSCTL_ADD_INT
 argument_list|(
@@ -3706,9 +3750,6 @@ argument_list|,
 literal|"enable SPDIF output at 44.1 kHz and above"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SND_DYNSYSCTL */
 return|return
 literal|0
 return|;
@@ -3747,11 +3788,7 @@ argument_list|,
 name|cmimix_setrecsrc
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3774,12 +3811,12 @@ name|unsigned
 name|char
 name|cmi_mread
 parameter_list|(
-name|void
+name|struct
+name|mpu401
 modifier|*
 name|arg
 parameter_list|,
-name|struct
-name|sc_info
+name|void
 modifier|*
 name|sc
 parameter_list|,
@@ -3816,12 +3853,12 @@ specifier|static
 name|void
 name|cmi_mwrite
 parameter_list|(
-name|void
+name|struct
+name|mpu401
 modifier|*
 name|arg
 parameter_list|,
-name|struct
-name|sc_info
+name|void
 modifier|*
 name|sc
 parameter_list|,
@@ -3854,16 +3891,23 @@ specifier|static
 name|int
 name|cmi_muninit
 parameter_list|(
-name|void
+name|struct
+name|mpu401
 modifier|*
 name|arg
 parameter_list|,
+name|void
+modifier|*
+name|cookie
+parameter_list|)
+block|{
 name|struct
 name|sc_info
 modifier|*
 name|sc
-parameter_list|)
-block|{
+init|=
+name|cookie
+decl_stmt|;
 name|snd_mtxlock
 argument_list|(
 name|sc
@@ -3924,11 +3968,7 @@ argument_list|,
 name|cmi_muninit
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt

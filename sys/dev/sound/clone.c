@@ -39,6 +39,23 @@ directive|include
 file|<sys/proc.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_snd.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -172,7 +189,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|do {			\ 	if (!(x))						\ 		panic y;					\ } while(0)
+value|do {			\ 	if (!(x))						\ 		panic y;					\ } while (0)
 end_define
 
 begin_else
@@ -185,10 +202,9 @@ define|#
 directive|define
 name|SND_CLONE_ASSERT
 parameter_list|(
-name|x
 modifier|...
 parameter_list|)
-value|KASSERT(x)
+value|KASSERT(__VA_ARGS__)
 end_define
 
 begin_endif

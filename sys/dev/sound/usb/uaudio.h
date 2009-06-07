@@ -190,6 +190,24 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|struct
+name|pcmchan_matrix
+modifier|*
+name|uaudio_chan_getmatrix
+parameter_list|(
+name|struct
+name|uaudio_chan
+modifier|*
+name|ch
+parameter_list|,
+name|uint32_t
+name|format
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|uaudio_chan_set_param_format
 parameter_list|(

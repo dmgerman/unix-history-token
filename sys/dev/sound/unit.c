@@ -15,6 +15,23 @@ directive|include
 file|<sys/systm.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_snd.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -88,7 +105,7 @@ define|#
 directive|define
 name|SND_UNIT_ASSERT
 parameter_list|()
-value|do {					\ 	if (snd_unit_initialized == 0)					\ 		panic("%s(): Uninitialized sound unit!", __func__);	\ } while(0)
+value|do {					\ 	if (snd_unit_initialized == 0)					\ 		panic("%s(): Uninitialized sound unit!", __func__);	\ } while (0)
 end_define
 
 begin_else

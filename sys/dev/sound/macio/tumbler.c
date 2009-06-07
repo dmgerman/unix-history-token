@@ -113,6 +113,23 @@ directive|include
 file|<dev/ofw/ofw_bus.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_snd.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -236,7 +253,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|u_int32_t
 name|tumbler_setrecsrc
 parameter_list|(
 name|struct
@@ -393,11 +410,7 @@ argument_list|,
 name|tumbler_setrecsrc
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2599,7 +2612,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|tumbler_setrecsrc
 parameter_list|(
 name|struct
