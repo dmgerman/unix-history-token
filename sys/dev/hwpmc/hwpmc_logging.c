@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2005 Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*-  * Copyright (c) 2005-2007 Joseph Koshy  * Copyright (c) 2007 The FreeBSD Foundation  * All rights reserved.  *  * Portions of this software were developed by A. Joseph Koshy under  * sponsorship from the FreeBSD Foundation and Google, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -400,6 +400,29 @@ end_define
 begin_comment
 comment|/*  * Assertions about the log file format.  */
 end_comment
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pmclog_callchain
+argument_list|)
+operator|==
+literal|6
+operator|*
+literal|4
+operator|+
+name|PMC_CALLCHAIN_DEPTH_MAX
+operator|*
+sizeof|sizeof
+argument_list|(
+name|uintfptr_t
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|CTASSERT
@@ -879,7 +902,7 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"[pmc,%d] po=%p current buffer still valid"
+literal|"[pmclog,%d] po=%p current buffer still valid"
 operator|,
 name|__LINE__
 operator|,
@@ -964,7 +987,7 @@ operator|->
 name|plb_fence
 argument_list|,
 operator|(
-literal|"[pmc,%d] po=%p buffer invariants: ptr=%p "
+literal|"[pmclog,%d] po=%p buffer invariants: ptr=%p "
 literal|"base=%p fence=%p"
 operator|,
 name|__LINE__
@@ -1021,11 +1044,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|plb
 condition|?
 literal|0
 else|:
 name|ENOMEM
+operator|)
 return|;
 block|}
 end_function
@@ -1155,7 +1180,7 @@ operator|->
 name|td_proc
 argument_list|,
 operator|(
-literal|"[pmc,%d] proc mismatch po=%p po/kt=%p curproc=%p"
+literal|"[pmclog,%d] proc mismatch po=%p po/kt=%p curproc=%p"
 operator|,
 name|__LINE__
 operator|,
@@ -1243,7 +1268,7 @@ operator|->
 name|po_mtx
 argument_list|)
 expr_stmt|;
-comment|/* wakeup any processes waiting for a FLUSH */
+comment|/* 				 * Wakeup the thread waiting for the 				 * PMC_OP_FLUSHLOG request to 				 * complete. 				 */
 if|if
 condition|(
 name|po
@@ -1618,7 +1643,7 @@ operator|->
 name|plb_base
 argument_list|,
 operator|(
-literal|"[pmc,%d] buffer invariants po=%p ptr=%p base=%p"
+literal|"[pmclog,%d] buffer invariants po=%p ptr=%p base=%p"
 operator|,
 name|__LINE__
 operator|,
@@ -1653,7 +1678,7 @@ operator|->
 name|plb_fence
 argument_list|,
 operator|(
-literal|"[pmc,%d] buffer invariants po=%p ptr=%p fenc=%p"
+literal|"[pmclog,%d] buffer invariants po=%p ptr=%p fenc=%p"
 operator|,
 name|__LINE__
 operator|,
@@ -1817,7 +1842,9 @@ name|po_mtx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|KASSERT
@@ -1829,7 +1856,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"[pmc,%d] po=%p no current buffer"
+literal|"[pmclog,%d] po=%p no current buffer"
 operator|,
 name|__LINE__
 operator|,
@@ -1864,7 +1891,7 @@ operator|->
 name|plb_fence
 argument_list|,
 operator|(
-literal|"[pmc,%d] po=%p buffer invariants: ptr=%p base=%p fence=%p"
+literal|"[pmclog,%d] po=%p buffer invariants: ptr=%p base=%p fence=%p"
 operator|,
 name|__LINE__
 operator|,
@@ -1917,7 +1944,7 @@ operator|)
 name|NULL
 argument_list|,
 operator|(
-literal|"[pmc,%d] po=%p Null log buffer pointer"
+literal|"[pmclog,%d] po=%p Null log buffer pointer"
 operator|,
 name|__LINE__
 operator|,
@@ -1981,7 +2008,9 @@ name|po_mtx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|KASSERT
@@ -1993,7 +2022,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"[pmc,%d] po=%p no current buffer"
+literal|"[pmclog,%d] po=%p no current buffer"
 operator|,
 name|__LINE__
 operator|,
@@ -2012,7 +2041,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"[pmc,%d] null return from pmc_get_log_buffer"
+literal|"[pmclog,%d] null return from pmc_get_log_buffer"
 operator|,
 name|__LINE__
 operator|)
@@ -2045,7 +2074,7 @@ operator|->
 name|plb_fence
 argument_list|,
 operator|(
-literal|"[pmc,%d] po=%p buffer invariants: ptr=%p base=%p fence=%p"
+literal|"[pmclog,%d] po=%p buffer invariants: ptr=%p base=%p fence=%p"
 operator|,
 name|__LINE__
 operator|,
@@ -2125,10 +2154,12 @@ literal|0xFFFFFFF
 expr_stmt|;
 return|return
 operator|(
+operator|(
 name|uint32_t
 operator|*
 operator|)
 name|oldptr
+operator|)
 return|;
 block|}
 end_function
@@ -2157,7 +2188,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"[pmc,%d] schedule_io with null buffer po=%p"
+literal|"[pmclog,%d] schedule_io with null buffer po=%p"
 operator|,
 name|__LINE__
 operator|,
@@ -2180,7 +2211,7 @@ operator|->
 name|plb_base
 argument_list|,
 operator|(
-literal|"[pmc,%d] buffer invariants po=%p ptr=%p base=%p"
+literal|"[pmclog,%d] buffer invariants po=%p ptr=%p base=%p"
 operator|,
 name|__LINE__
 operator|,
@@ -2215,7 +2246,7 @@ operator|->
 name|plb_fence
 argument_list|,
 operator|(
-literal|"[pmc,%d] buffer invariants po=%p ptr=%p fenc=%p"
+literal|"[pmclog,%d] buffer invariants po=%p ptr=%p fenc=%p"
 operator|,
 name|__LINE__
 operator|,
@@ -2361,6 +2392,11 @@ name|int
 name|pmclog_configure_log
 parameter_list|(
 name|struct
+name|pmc_mdep
+modifier|*
+name|md
+parameter_list|,
+name|struct
 name|pmc_owner
 modifier|*
 name|po
@@ -2408,7 +2444,9 @@ operator|&
 name|PMC_PO_OWNS_LOGFILE
 condition|)
 return|return
+operator|(
 name|EBUSY
+operator|)
 return|;
 name|KASSERT
 argument_list|(
@@ -2419,7 +2457,7 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"[pmc,%d] po=%p kthread (%p) already present"
+literal|"[pmclog,%d] po=%p kthread (%p) already present"
 operator|,
 name|__LINE__
 operator|,
@@ -2440,7 +2478,7 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"[pmc,%d] po=%p file (%p) already present"
+literal|"[pmclog,%d] po=%p file (%p) already present"
 operator|,
 name|__LINE__
 operator|,
@@ -2561,7 +2599,9 @@ name|po
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|error
 label|:
@@ -2598,7 +2638,8 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"[pmc,%d] po=%p kthread not stopped"
+literal|"[pmclog,%d] po=%p kthread not "
+literal|"stopped"
 operator|,
 name|__LINE__
 operator|,
@@ -2638,7 +2679,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -2691,7 +2734,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|KASSERT
 argument_list|(
@@ -2702,7 +2747,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"[pmc,%d] po=%p still owning SS PMCs"
+literal|"[pmclog,%d] po=%p still owning SS PMCs"
 operator|,
 name|__LINE__
 operator|,
@@ -2719,7 +2764,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"[pmc,%d] po=%p no log file"
+literal|"[pmclog,%d] po=%p no log file"
 operator|,
 name|__LINE__
 operator|,
@@ -2760,7 +2805,7 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"[pmc,%d] po=%p kthread not stopped"
+literal|"[pmclog,%d] po=%p kthread not stopped"
 operator|,
 name|__LINE__
 operator|,
@@ -2893,7 +2938,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -2938,9 +2985,11 @@ operator|->
 name|po_error
 condition|)
 return|return
+operator|(
 name|po
 operator|->
 name|po_error
+operator|)
 return|;
 name|error
 operator|=
@@ -3043,6 +3092,18 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+name|error
+operator|=
+name|po
+operator|->
+name|po_error
+expr_stmt|;
 block|}
 name|error
 label|:
@@ -3053,14 +3114,160 @@ name|pmc_kthread_mtx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Send a 'close log' event to the log file.  */
-end_comment
+begin_function
+name|void
+name|pmclog_process_callchain
+parameter_list|(
+name|struct
+name|pmc
+modifier|*
+name|pm
+parameter_list|,
+name|struct
+name|pmc_sample
+modifier|*
+name|ps
+parameter_list|)
+block|{
+name|int
+name|n
+decl_stmt|,
+name|recordlen
+decl_stmt|;
+name|uint32_t
+name|flags
+decl_stmt|;
+name|struct
+name|pmc_owner
+modifier|*
+name|po
+decl_stmt|;
+name|PMCDBG
+argument_list|(
+name|LOG
+argument_list|,
+name|SAM
+argument_list|,
+literal|1
+argument_list|,
+literal|"pm=%p pid=%d n=%d"
+argument_list|,
+name|pm
+argument_list|,
+name|ps
+operator|->
+name|ps_pid
+argument_list|,
+name|ps
+operator|->
+name|ps_nsamples
+argument_list|)
+expr_stmt|;
+name|recordlen
+operator|=
+name|offsetof
+argument_list|(
+expr|struct
+name|pmclog_callchain
+argument_list|,
+name|pl_pc
+argument_list|)
+operator|+
+name|ps
+operator|->
+name|ps_nsamples
+operator|*
+sizeof|sizeof
+argument_list|(
+name|uintfptr_t
+argument_list|)
+expr_stmt|;
+name|po
+operator|=
+name|pm
+operator|->
+name|pm_owner
+expr_stmt|;
+name|flags
+operator|=
+name|PMC_CALLCHAIN_TO_CPUFLAGS
+argument_list|(
+name|ps
+operator|->
+name|ps_cpu
+argument_list|,
+name|ps
+operator|->
+name|ps_flags
+argument_list|)
+expr_stmt|;
+name|PMCLOG_RESERVE
+argument_list|(
+name|po
+argument_list|,
+name|CALLCHAIN
+argument_list|,
+name|recordlen
+argument_list|)
+expr_stmt|;
+name|PMCLOG_EMIT32
+argument_list|(
+name|ps
+operator|->
+name|ps_pid
+argument_list|)
+expr_stmt|;
+name|PMCLOG_EMIT32
+argument_list|(
+name|pm
+operator|->
+name|pm_id
+argument_list|)
+expr_stmt|;
+name|PMCLOG_EMIT32
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
+name|n
+operator|<
+name|ps
+operator|->
+name|ps_nsamples
+condition|;
+name|n
+operator|++
+control|)
+name|PMCLOG_EMITADDR
+argument_list|(
+name|ps
+operator|->
+name|ps_pc
+index|[
+name|n
+index|]
+argument_list|)
+expr_stmt|;
+name|PMCLOG_DESPATCH
+argument_list|(
+name|po
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|void
@@ -3277,106 +3484,6 @@ expr_stmt|;
 name|PMCLOG_EMITADDR
 argument_list|(
 name|end
-argument_list|)
-expr_stmt|;
-name|PMCLOG_DESPATCH
-argument_list|(
-name|po
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|pmclog_process_pcsample
-parameter_list|(
-name|struct
-name|pmc
-modifier|*
-name|pm
-parameter_list|,
-name|struct
-name|pmc_sample
-modifier|*
-name|ps
-parameter_list|)
-block|{
-name|struct
-name|pmc_owner
-modifier|*
-name|po
-decl_stmt|;
-name|PMCDBG
-argument_list|(
-name|LOG
-argument_list|,
-name|SAM
-argument_list|,
-literal|1
-argument_list|,
-literal|"pm=%p pid=%d pc=%p"
-argument_list|,
-name|pm
-argument_list|,
-name|ps
-operator|->
-name|ps_pid
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|ps
-operator|->
-name|ps_pc
-argument_list|)
-expr_stmt|;
-name|po
-operator|=
-name|pm
-operator|->
-name|pm_owner
-expr_stmt|;
-name|PMCLOG_RESERVE
-argument_list|(
-name|po
-argument_list|,
-name|PCSAMPLE
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pmclog_pcsample
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|PMCLOG_EMIT32
-argument_list|(
-name|ps
-operator|->
-name|ps_pid
-argument_list|)
-expr_stmt|;
-name|PMCLOG_EMITADDR
-argument_list|(
-name|ps
-operator|->
-name|ps_pc
-argument_list|)
-expr_stmt|;
-name|PMCLOG_EMIT32
-argument_list|(
-name|pm
-operator|->
-name|pm_id
-argument_list|)
-expr_stmt|;
-name|PMCLOG_EMIT32
-argument_list|(
-name|ps
-operator|->
-name|ps_usermode
 argument_list|)
 expr_stmt|;
 name|PMCLOG_DESPATCH
@@ -4140,7 +4247,9 @@ expr_stmt|;
 name|error
 label|:
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -4174,8 +4283,8 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"hwpmc: tunable logbuffersize=%d must be greater "
-literal|"than zero.\n"
+literal|"hwpmc: tunable logbuffersize=%d must be "
+literal|"greater than zero.\n"
 argument_list|,
 name|pmclog_buffer_size
 argument_list|)
@@ -4223,23 +4332,19 @@ name|n
 operator|++
 control|)
 block|{
-name|MALLOC
-argument_list|(
 name|plb
-argument_list|,
-expr|struct
-name|pmclog_buffer
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 literal|1024
 operator|*
 name|pmclog_buffer_size
 argument_list|,
 name|M_PMC
 argument_list|,
-name|M_ZERO
-operator||
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|PMCLOG_INIT_BUFFER_DESCRIPTOR

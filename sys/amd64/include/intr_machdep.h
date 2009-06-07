@@ -339,6 +339,25 @@ name|trapframe
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/*  * The following data structure holds per-cpu data, and is placed just  * above the top of the space used for the NMI stack.  */
+end_comment
+
+begin_struct
+struct|struct
+name|nmi_pcpu
+block|{
+name|register_t
+name|np_pcpu
+decl_stmt|;
+name|register_t
+name|__padding
+decl_stmt|;
+comment|/* pad to 16 bytes */
+block|}
+struct|;
+end_struct
+
 begin_decl_stmt
 specifier|extern
 name|struct

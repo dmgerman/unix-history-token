@@ -493,10 +493,6 @@ modifier|*
 name|op_list
 parameter_list|)
 block|{
-name|unsigned
-name|char
-name|op
-decl_stmt|;
 name|int
 name|c
 decl_stmt|,
@@ -512,10 +508,10 @@ name|npmc
 decl_stmt|,
 name|t
 decl_stmt|;
-name|int
-name|cpu
+name|cpumask_t
+name|haltedcpus
 decl_stmt|,
-name|pmc
+name|cpumask
 decl_stmt|;
 name|struct
 name|pmcc_op
@@ -526,6 +522,18 @@ name|unsigned
 name|char
 modifier|*
 name|map
+decl_stmt|;
+name|unsigned
+name|char
+name|op
+decl_stmt|;
+name|int
+name|cpu
+decl_stmt|,
+name|pmc
+decl_stmt|;
+name|size_t
+name|dummy
 decl_stmt|;
 if|if
 condition|(
@@ -545,7 +553,68 @@ argument_list|,
 literal|"Unable to determine the number of cpus"
 argument_list|)
 expr_stmt|;
-comment|/* determine the maximum number of PMCs in any CPU */
+comment|/* Determine the set of active CPUs. */
+name|cpumask
+operator|=
+operator|(
+literal|1
+operator|<<
+name|ncpu
+operator|)
+operator|-
+literal|1
+expr_stmt|;
+name|dummy
+operator|=
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+expr_stmt|;
+name|haltedcpus
+operator|=
+operator|(
+name|cpumask_t
+operator|)
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|ncpu
+operator|>
+literal|1
+operator|&&
+name|sysctlbyname
+argument_list|(
+literal|"machdep.hlt_cpus"
+argument_list|,
+operator|&
+name|haltedcpus
+argument_list|,
+operator|&
+name|dummy
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"ERROR: Cannot determine which CPUs are "
+literal|"halted"
+argument_list|)
+expr_stmt|;
+name|cpumask
+operator|&=
+operator|~
+name|haltedcpus
+expr_stmt|;
+comment|/* Determine the maximum number of PMCs in any CPU. */
 name|npmc
 operator|=
 literal|0
@@ -581,8 +650,8 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"Unable to determine the number of PMCs in "
-literal|"CPU %d"
+literal|"Unable to determine the number of "
+literal|"PMCs in CPU %d"
 argument_list|,
 name|c
 argument_list|)
@@ -762,6 +831,17 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
+if|if
+condition|(
+operator|(
+literal|1
+operator|<<
+name|i
+operator|)
+operator|&
+name|cpumask
+condition|)
 name|SET_PMCS
 argument_list|(
 name|i
@@ -771,6 +851,7 @@ argument_list|,
 name|op
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|SET_PMCS
 argument_list|(
@@ -1048,6 +1129,14 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENXIO
+condition|)
+continue|continue;
 name|err
 argument_list|(
 name|EX_OSERR
@@ -1057,6 +1146,7 @@ argument_list|,
 name|cpu
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"#CPU %d:\n"

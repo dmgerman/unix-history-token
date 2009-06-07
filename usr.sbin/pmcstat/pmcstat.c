@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003-2008, Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2003-2008, Joseph Koshy  * Copyright (c) 2007 The FreeBSD Foundation  * All rights reserved.  *  * Portions of this software were developed by A. Joseph Koshy under  * sponsorship from the FreeBSD Foundation and Google, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -411,6 +411,33 @@ operator|!=
 name|PMC_ID_INVALID
 condition|)
 block|{
+if|if
+condition|(
+name|pmc_stop
+argument_list|(
+name|ev
+operator|->
+name|ev_pmcid
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"ERROR: cannot stop pmc 0x%x "
+literal|"\"%s\""
+argument_list|,
+name|ev
+operator|->
+name|ev_pmcid
+argument_list|,
+name|ev
+operator|->
+name|ev_name
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pmc_release
@@ -2099,7 +2126,9 @@ literal|"\t Options include:\n"
 literal|"\t -C\t\t (toggle) show cumulative counts\n"
 literal|"\t -D path\t create profiles in directory \"path\"\n"
 literal|"\t -E\t\t (toggle) show counts at process exit\n"
+literal|"\t -G file\t write a system-wide callgraph to \"file\"\n"
 literal|"\t -M file\t print executable/gmon file map to \"file\"\n"
+literal|"\t -N\t\t (toggle) capture callchains\n"
 literal|"\t -O file\t send log output to \"file\"\n"
 literal|"\t -P spec\t allocate a process-private sampling PMC\n"
 literal|"\t -R file\t read events from \"file\"\n"
@@ -2115,9 +2144,11 @@ literal|"\t -p spec\t allocate a process-private counting PMC\n"
 literal|"\t -q\t\t suppress verbosity\n"
 literal|"\t -r fsroot\t specify FS root directory\n"
 literal|"\t -s spec\t allocate a system-wide counting PMC\n"
-literal|"\t -t pid\t\t attach to running process with pid \"pid\"\n"
+literal|"\t -t process-spec attach to running processes matching "
+literal|"\"process-spec\"\n"
 literal|"\t -v\t\t increase verbosity\n"
-literal|"\t -w secs\t set printing time interval"
+literal|"\t -w secs\t set printing time interval\n"
+literal|"\t -z depth\t limit callchain display depth"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2149,6 +2180,8 @@ decl_stmt|,
 name|npmc
 decl_stmt|,
 name|ncpu
+decl_stmt|,
+name|haltedcpus
 decl_stmt|;
 name|int
 name|c
@@ -2160,17 +2193,22 @@ decl_stmt|,
 name|current_sampling_count
 decl_stmt|;
 name|int
-name|do_print
+name|do_callchain
 decl_stmt|,
 name|do_descendants
-decl_stmt|;
-name|int
+decl_stmt|,
 name|do_logproccsw
 decl_stmt|,
 name|do_logprocexit
 decl_stmt|;
+name|int
+name|do_print
+decl_stmt|;
 name|size_t
 name|dummy
+decl_stmt|;
+name|int
+name|graphdepth
 decl_stmt|;
 name|int
 name|pipefd
@@ -2195,6 +2233,9 @@ specifier|const
 name|char
 modifier|*
 name|errmsg
+decl_stmt|,
+modifier|*
+name|graphfilename
 decl_stmt|;
 name|enum
 name|pmcstat_state
@@ -2245,6 +2286,10 @@ name|current_sampling_count
 operator|=
 name|DEFAULT_SAMPLE_COUNT
 expr_stmt|;
+name|do_callchain
+operator|=
+literal|1
+expr_stmt|;
 name|do_descendants
 operator|=
 literal|0
@@ -2260,6 +2305,10 @@ expr_stmt|;
 name|use_cumulative_counts
 operator|=
 literal|0
+expr_stmt|;
+name|graphfilename
+operator|=
+literal|"-"
 expr_stmt|;
 name|args
 operator|.
@@ -2315,6 +2364,18 @@ name|stderr
 expr_stmt|;
 name|args
 operator|.
+name|pa_graphdepth
+operator|=
+name|DEFAULT_CALLGRAPH_DEPTH
+expr_stmt|;
+name|args
+operator|.
+name|pa_graphfile
+operator|=
+name|NULL
+expr_stmt|;
+name|args
+operator|.
 name|pa_interval
 operator|=
 name|DEFAULT_WAIT_INTERVAL
@@ -2322,6 +2383,18 @@ expr_stmt|;
 name|args
 operator|.
 name|pa_mapfilename
+operator|=
+name|NULL
+expr_stmt|;
+name|args
+operator|.
+name|pa_inputpath
+operator|=
+name|NULL
+expr_stmt|;
+name|args
+operator|.
+name|pa_outputpath
 operator|=
 name|NULL
 expr_stmt|;
@@ -2367,11 +2440,12 @@ name|ev
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 	 * The initial CPU mask specifies all non-halted CPUS in the 	 * system. 	 */
 name|dummy
 operator|=
 sizeof|sizeof
 argument_list|(
-name|ncpu
+name|int
 argument_list|)
 expr_stmt|;
 if|if
@@ -2397,7 +2471,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: Cannot determine #cpus"
+literal|"ERROR: Cannot determine the number of CPUs"
 argument_list|)
 expr_stmt|;
 name|cpumask
@@ -2410,6 +2484,50 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
+name|haltedcpus
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|ncpu
+operator|>
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|sysctlbyname
+argument_list|(
+literal|"machdep.hlt_cpus"
+argument_list|,
+operator|&
+name|haltedcpus
+argument_list|,
+operator|&
+name|dummy
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"ERROR: Cannot determine which CPUs are "
+literal|"halted"
+argument_list|)
+expr_stmt|;
+name|cpumask
+operator|&=
+operator|~
+name|haltedcpus
+expr_stmt|;
+block|}
 while|while
 condition|(
 operator|(
@@ -2421,7 +2539,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"CD:EM:O:P:R:S:Wc:dgk:n:o:p:qr:s:t:vw:"
+literal|"CD:EG:M:NO:P:R:S:Wc:dgk:m:n:o:p:qr:s:t:vw:z:"
 argument_list|)
 operator|)
 operator|!=
@@ -2472,12 +2590,17 @@ condition|)
 name|cpumask
 operator|=
 operator|(
+operator|(
 literal|1
 operator|<<
 name|ncpu
 operator|)
 operator|-
 literal|1
+operator|)
+operator|&
+operator|~
+name|haltedcpus
 expr_stmt|;
 else|else
 name|cpumask
@@ -2574,6 +2697,21 @@ name|FLAG_HAS_PROCESS_PMCS
 expr_stmt|;
 break|break;
 case|case
+literal|'G'
+case|:
+comment|/* produce a system-wide callgraph */
+name|args
+operator|.
+name|pa_flags
+operator||=
+name|FLAG_DO_CALLGRAPHS
+expr_stmt|;
+name|graphfilename
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'g'
 case|:
 comment|/* produce gprof compatible profiles */
@@ -2608,13 +2746,27 @@ name|args
 operator|.
 name|pa_required
 operator||=
-name|FLAG_DO_GPROF
+name|FLAG_DO_ANALYSIS
 expr_stmt|;
 name|args
 operator|.
 name|pa_flags
 operator||=
 name|FLAG_HAS_KERNELPATH
+expr_stmt|;
+break|break;
+case|case
+literal|'m'
+case|:
+name|args
+operator|.
+name|pa_flags
+operator||=
+name|FLAG_WANTS_MAPPINGS
+expr_stmt|;
+name|graphfilename
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -2648,6 +2800,21 @@ operator|.
 name|pa_mapfilename
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'N'
+case|:
+name|do_callchain
+operator|=
+operator|!
+name|do_callchain
+expr_stmt|;
+name|args
+operator|.
+name|pa_required
+operator||=
+name|FLAG_HAS_SAMPLING_PMCS
 expr_stmt|;
 break|break;
 case|case
@@ -2890,6 +3057,16 @@ operator|->
 name|ev_flags
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|do_callchain
+condition|)
+name|ev
+operator|->
+name|ev_flags
+operator||=
+name|PMC_F_CALLCHAIN
 expr_stmt|;
 if|if
 condition|(
@@ -3187,7 +3364,7 @@ if|if
 condition|(
 name|args
 operator|.
-name|pa_logparser
+name|pa_inputpath
 operator|!=
 name|NULL
 condition|)
@@ -3338,6 +3515,53 @@ operator|)
 expr_stmt|;
 break|break;
 case|case
+literal|'z'
+case|:
+name|graphdepth
+operator|=
+name|strtod
+argument_list|(
+name|optarg
+argument_list|,
+operator|&
+name|end
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|end
+operator|!=
+literal|'\0'
+operator|||
+name|graphdepth
+operator|<=
+literal|0
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"ERROR: Illegal callchain "
+literal|"depth \"%s\"."
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|args
+operator|.
+name|pa_graphdepth
+operator|=
+name|graphdepth
+expr_stmt|;
+name|args
+operator|.
+name|pa_required
+operator||=
+name|FLAG_DO_CALLGRAPHS
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -3366,6 +3590,13 @@ operator|+=
 name|optind
 operator|)
 expr_stmt|;
+name|args
+operator|.
+name|pa_cpumask
+operator|=
+name|cpumask
+expr_stmt|;
+comment|/* For selecting CPUs using -R. */
 if|if
 condition|(
 name|argc
@@ -3376,6 +3607,26 @@ operator|.
 name|pa_flags
 operator||=
 name|FLAG_HAS_COMMANDLINE
+expr_stmt|;
+if|if
+condition|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+operator|(
+name|FLAG_DO_GPROF
+operator||
+name|FLAG_DO_CALLGRAPHS
+operator||
+name|FLAG_WANTS_MAPPINGS
+operator|)
+condition|)
+name|args
+operator|.
+name|pa_flags
+operator||=
+name|FLAG_DO_ANALYSIS
 expr_stmt|;
 comment|/* 	 * Check invocation syntax. 	 */
 comment|/* disallow -O and -R together */
@@ -3395,6 +3646,55 @@ name|EX_USAGE
 argument_list|,
 literal|"ERROR: options -O and -R are mutually "
 literal|"exclusive."
+argument_list|)
+expr_stmt|;
+comment|/* -m option is allowed with -R only. */
+if|if
+condition|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_WANTS_MAPPINGS
+operator|&&
+name|args
+operator|.
+name|pa_inputpath
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"ERROR: option -m requires an input file"
+argument_list|)
+expr_stmt|;
+comment|/* -m option is not allowed combined with -g or -G. */
+if|if
+condition|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_WANTS_MAPPINGS
+operator|&&
+name|args
+operator|.
+name|pa_flags
+operator|&
+operator|(
+name|FLAG_DO_GPROF
+operator||
+name|FLAG_DO_CALLGRAPHS
+operator|)
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"ERROR: option -m and -g | -G are mutually "
+literal|"exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3609,7 +3909,7 @@ literal|"ERROR: options -d, -E, and -W require a "
 literal|"process mode PMC to be specified."
 argument_list|)
 expr_stmt|;
-comment|/* check for -c cpu and not system mode PMCs */
+comment|/* check for -c cpu with no system mode PMCs or logfile. */
 if|if
 condition|(
 operator|(
@@ -3626,6 +3926,16 @@ operator|.
 name|pa_flags
 operator|&
 name|FLAG_HAS_SYSTEM_PMCS
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_READ_LOGFILE
 operator|)
 operator|==
 literal|0
@@ -3692,11 +4002,11 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: options -n and -O require at least "
-literal|"one sampling mode PMC to be specified."
+literal|"ERROR: options -N, -n and -O require at "
+literal|"least one sampling mode PMC to be specified."
 argument_list|)
 expr_stmt|;
-comment|/* check if -g is being used correctly */
+comment|/* check if -g/-G are being used correctly */
 if|if
 condition|(
 operator|(
@@ -3704,7 +4014,7 @@ name|args
 operator|.
 name|pa_flags
 operator|&
-name|FLAG_DO_GPROF
+name|FLAG_DO_ANALYSIS
 operator|)
 operator|&&
 operator|!
@@ -3724,8 +4034,8 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: option -g requires sampling PMCs or -R "
-literal|"to be specified."
+literal|"ERROR: options -g/-G require sampling PMCs "
+literal|"or -R to be specified."
 argument_list|)
 expr_stmt|;
 comment|/* check if -O was spuriously specified */
@@ -3757,7 +4067,7 @@ literal|"ERROR: option -O is used only with options "
 literal|"-E, -P, -S and -W."
 argument_list|)
 expr_stmt|;
-comment|/* -D dir and -k kernel path require -g or -R */
+comment|/* -k kernel path require -g/-G or -R */
 if|if
 condition|(
 operator|(
@@ -3773,7 +4083,7 @@ name|args
 operator|.
 name|pa_flags
 operator|&
-name|FLAG_DO_GPROF
+name|FLAG_DO_ANALYSIS
 operator|)
 operator|==
 literal|0
@@ -3795,6 +4105,7 @@ argument_list|,
 literal|"ERROR: option -k is only used with -g/-R."
 argument_list|)
 expr_stmt|;
+comment|/* -D only applies to gprof output mode (-g) */
 if|if
 condition|(
 operator|(
@@ -3814,22 +4125,12 @@ name|FLAG_DO_GPROF
 operator|)
 operator|==
 literal|0
-operator|&&
-operator|(
-name|args
-operator|.
-name|pa_flags
-operator|&
-name|FLAG_READ_LOGFILE
-operator|)
-operator|==
-literal|0
 condition|)
 name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: option -D is only used with -g/-R."
+literal|"ERROR: option -D is only used with -g."
 argument_list|)
 expr_stmt|;
 comment|/* -M mapfile requires -g or -R */
@@ -3907,7 +4208,7 @@ literal|"ERROR: option -O is required if counting and "
 literal|"sampling PMCs are specified together."
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check if "-k kerneldir" was specified, and if whether 'kerneldir' 	 * actually refers to a a file.  If so, use `dirname path` to determine 	 * the kernel directory. 	 */
+comment|/* 	 * Check if "-k kerneldir" was specified, and if whether 	 * 'kerneldir' actually refers to a a file.  If so, use 	 * `dirname path` to determine the kernel directory. 	 */
 if|if
 condition|(
 name|args
@@ -4090,6 +4391,106 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * If we have a callgraph be created, select the outputfile. 	 */
+if|if
+condition|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_DO_CALLGRAPHS
+condition|)
+block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|graphfilename
+argument_list|,
+literal|"-"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|args
+operator|.
+name|pa_graphfile
+operator|=
+name|args
+operator|.
+name|pa_printfile
+expr_stmt|;
+else|else
+block|{
+name|args
+operator|.
+name|pa_graphfile
+operator|=
+name|fopen
+argument_list|(
+name|graphfilename
+argument_list|,
+literal|"w"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|args
+operator|.
+name|pa_graphfile
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"ERROR: cannot open \"%s\" "
+literal|"for writing"
+argument_list|,
+name|graphfilename
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_WANTS_MAPPINGS
+condition|)
+block|{
+name|args
+operator|.
+name|pa_graphfile
+operator|=
+name|fopen
+argument_list|(
+name|graphfilename
+argument_list|,
+literal|"w"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|args
+operator|.
+name|pa_graphfile
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"ERROR: cannot open \"%s\" for writing"
+argument_list|,
+name|graphfilename
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* if we've been asked to process a log file, do that and exit */
 if|if
 condition|(
@@ -4100,7 +4501,7 @@ operator|&
 name|FLAG_READ_LOGFILE
 condition|)
 block|{
-comment|/* 		 * Print the log in textual form if we haven't been 		 * asked to generate gmon.out files. 		 */
+comment|/* 		 * Print the log in textual form if we haven't been 		 * asked to generate profiling information. 		 */
 if|if
 condition|(
 operator|(
@@ -4108,7 +4509,7 @@ name|args
 operator|.
 name|pa_flags
 operator|&
-name|FLAG_DO_GPROF
+name|FLAG_DO_ANALYSIS
 operator|)
 operator|==
 literal|0
@@ -5003,7 +5404,14 @@ literal|"ERROR: No matching target "
 literal|"processes."
 argument_list|)
 expr_stmt|;
-else|else
+if|if
+condition|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_HAS_PROCESS_PMCS
+condition|)
 name|pmcstat_attach_pmcs
 argument_list|(
 operator|&
@@ -5312,7 +5720,7 @@ operator|&
 operator|(
 name|FLAG_DO_PRINT
 operator||
-name|FLAG_DO_GPROF
+name|FLAG_DO_ANALYSIS
 operator|)
 condition|)
 name|pmcstat_process_log
@@ -5355,6 +5763,26 @@ name|pmcstat_kill_process
 argument_list|(
 operator|&
 name|args
+argument_list|)
+expr_stmt|;
+comment|/* Close the pipe to self, if present. */
+if|if
+condition|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_HAS_PIPE
+condition|)
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|pipefd
+index|[
+name|READPIPEFD
+index|]
 argument_list|)
 expr_stmt|;
 name|runstate

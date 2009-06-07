@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003-2006, Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2003-2008, Joseph Koshy  * Copyright (c) 2007 The FreeBSD Foundation  * All rights reserved.  *  * Portions of this software were developed by A. Joseph Koshy under  * sponsorship from the FreeBSD Foundation and Google, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -59,7 +59,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* #classes of PMCs in a system */
+comment|/* max #classes of PMCs per-system */
 end_comment
 
 begin_comment
@@ -70,14 +70,14 @@ begin_define
 define|#
 directive|define
 name|PMC_VERSION_MAJOR
-value|0x02
+value|0x03
 end_define
 
 begin_define
 define|#
 directive|define
 name|PMC_VERSION_MINOR
-value|0x00
+value|0x01
 end_define
 
 begin_define
@@ -95,7 +95,7 @@ value|(PMC_VERSION_MAJOR<< 24 |		\ 	PMC_VERSION_MINOR<< 16 | PMC_VERSION_PATCH)
 end_define
 
 begin_comment
-comment|/*  * Kinds of CPUs known  */
+comment|/*  * Kinds of CPUs known.  *  * We keep track of CPU variants that need to be distinguished in  * some way for PMC operations.  CPU names are grouped by manufacturer  * and numbered sparsely in order to minimize changes to the ABI involved  * when new CPUs are added.  */
 end_comment
 
 begin_define
@@ -104,7 +104,7 @@ directive|define
 name|__PMC_CPUS
 parameter_list|()
 define|\
-value|__PMC_CPU(AMD_K7,     "AMD K7")			\ 	__PMC_CPU(AMD_K8,     "AMD K8")			\ 	__PMC_CPU(INTEL_P5,   "Intel Pentium")		\ 	__PMC_CPU(INTEL_P6,   "Intel Pentium Pro")	\ 	__PMC_CPU(INTEL_CL,   "Intel Celeron")		\ 	__PMC_CPU(INTEL_PII,  "Intel Pentium II")	\ 	__PMC_CPU(INTEL_PIII, "Intel Pentium III")	\ 	__PMC_CPU(INTEL_PM,   "Intel Pentium M")	\ 	__PMC_CPU(INTEL_PIV,  "Intel Pentium IV")
+value|__PMC_CPU(AMD_K7,	0x00,	"AMD K7")		\ 	__PMC_CPU(AMD_K8,	0x01,	"AMD K8")		\ 	__PMC_CPU(INTEL_P5,	0x80,	"Intel Pentium")	\ 	__PMC_CPU(INTEL_P6,	0x81,	"Intel Pentium Pro")	\ 	__PMC_CPU(INTEL_CL,	0x82,	"Intel Celeron")	\ 	__PMC_CPU(INTEL_PII,	0x83,	"Intel Pentium II")	\ 	__PMC_CPU(INTEL_PIII,	0x84,	"Intel Pentium III")	\ 	__PMC_CPU(INTEL_PM,	0x85,	"Intel Pentium M")	\ 	__PMC_CPU(INTEL_PIV,	0x86,	"Intel Pentium IV")	\ 	__PMC_CPU(INTEL_CORE,	0x87,	"Intel Core Solo/Duo")	\ 	__PMC_CPU(INTEL_CORE2,	0x88,	"Intel Core2")		\ 	__PMC_CPU(INTEL_CORE2EXTREME,	0x89,	"Intel Core2 Extreme")	\ 	__PMC_CPU(INTEL_ATOM,	0x8A,	"Intel Atom") \ 	__PMC_CPU(INTEL_COREI7, 0x8B,   "Intel Core i7")
 end_define
 
 begin_enum
@@ -120,9 +120,11 @@ name|__PMC_CPU
 parameter_list|(
 name|S
 parameter_list|,
+name|V
+parameter_list|,
 name|D
 parameter_list|)
-value|PMC_CPU_##S ,
+value|PMC_CPU_##S = V,
 name|__PMC_CPUS
 argument_list|()
 block|}
@@ -140,7 +142,7 @@ begin_define
 define|#
 directive|define
 name|PMC_CPU_LAST
-value|PMC_CPU_INTEL_PIV
+value|PMC_CPU_INTEL_COREI7
 end_define
 
 begin_comment
@@ -164,10 +166,14 @@ comment|/* Intel Pentium counters */
 value|\ 	__PMC_CLASS(P6)
 comment|/* Intel Pentium Pro counters */
 value|\ 	__PMC_CLASS(P4)
+comment|/* Intel Pentium-IV counters */
+value|\ 	__PMC_CLASS(IAF)
+comment|/* Intel Core2/Atom, fixed function */
+value|\ 	__PMC_CLASS(IAP)
 end_define
 
 begin_comment
-comment|/* Intel Pentium-IV counters */
+comment|/* Intel Core...Atom, programmable */
 end_comment
 
 begin_enum
@@ -201,7 +207,7 @@ begin_define
 define|#
 directive|define
 name|PMC_CLASS_LAST
-value|PMC_CLASS_P4
+value|PMC_CLASS_IAP
 end_define
 
 begin_comment
@@ -487,6 +493,18 @@ block|{
 undef|#
 directive|undef
 name|__PMC_EV
+undef|#
+directive|undef
+name|__PMC_EV_BLOCK
+define|#
+directive|define
+name|__PMC_EV_BLOCK
+parameter_list|(
+name|C
+parameter_list|,
+name|V
+parameter_list|)
+value|PMC_EV_ ## C ## __BLOCK_START = (V) - 1 ,
 define|#
 directive|define
 name|__PMC_EV
@@ -494,8 +512,6 @@ parameter_list|(
 name|C
 parameter_list|,
 name|N
-parameter_list|,
-name|D
 parameter_list|)
 value|PMC_EV_ ## C ## _ ## N ,
 name|__PMC_EVENTS
@@ -503,20 +519,6 @@ argument_list|()
 block|}
 enum|;
 end_enum
-
-begin_define
-define|#
-directive|define
-name|PMC_EVENT_FIRST
-value|PMC_EV_TSC_TSC
-end_define
-
-begin_define
-define|#
-directive|define
-name|PMC_EVENT_LAST
-value|PMC_EV_P5_LAST
-end_define
 
 begin_comment
 comment|/*  * PMC SYSCALL INTERFACE  */
@@ -639,6 +641,21 @@ comment|/*OP ALLOCATE kgmon(8) profiling */
 end_comment
 
 begin_comment
+comment|/* V2 API */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_F_CALLCHAIN
+value|0x00000080
+end_define
+
+begin_comment
+comment|/*OP ALLOCATE capture callchains */
+end_comment
+
+begin_comment
 comment|/* internal flags */
 end_comment
 
@@ -673,6 +690,24 @@ end_define
 
 begin_comment
 comment|/*attached at least once */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_CALLCHAIN_DEPTH_MAX
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_CC_F_USERSPACE
+value|0x01
+end_define
+
+begin_comment
+comment|/*userspace callchain*/
 end_comment
 
 begin_comment
@@ -1007,6 +1042,10 @@ name|uint32_t
 name|pm_width
 decl_stmt|;
 comment|/* width of the PMC */
+name|uint32_t
+name|pm_num
+decl_stmt|;
+comment|/* number of PMCs in class */
 block|}
 struct|;
 end_struct
@@ -1023,7 +1062,7 @@ comment|/* what kind of CPU */
 name|uint32_t
 name|pm_ncpu
 decl_stmt|;
-comment|/* number of CPUs */
+comment|/* max CPU number */
 name|uint32_t
 name|pm_npmc
 decl_stmt|;
@@ -1174,6 +1213,12 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/frame.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1207,6 +1252,13 @@ define|#
 directive|define
 name|PMC_NSAMPLES
 value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_CALLCHAIN_DEPTH
+value|8
 end_define
 
 begin_define
@@ -1351,7 +1403,7 @@ union|;
 name|uint32_t
 name|pm_stalled
 decl_stmt|;
-comment|/* true for stalled sampling PMCs */
+comment|/* marks stalled sampling PMCs */
 name|uint32_t
 name|pm_caps
 decl_stmt|;
@@ -1607,6 +1659,13 @@ begin_comment
 comment|/* in the middle of a flush */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PMC_PO_INITIAL_MAPPINGS_DONE
+value|0x00000020
+end_define
+
 begin_comment
 comment|/*  * struct pmc_hw -- describe the state of the PMC hardware  *  * When in use, a HW PMC is associated with one allocated 'struct pmc'  * pointed to by field 'phw_pmc'.  When inactive, this field is NULL.  *  * On an SMP box, one or more HW PMC's in process virtual mode with  * the same 'phw_pmc' could be executing on different CPUs.  In order  * to handle this case correctly, we need to ensure that only  * incremental counts get added to the saved value in the associated  * 'struct pmc'.  The 'phw_save' field is used to keep the saved PMC  * value at the time the hardware is started during this context  * switch (i.e., the difference between the new (hardware) count and  * the saved count is atomically added to the count field in 'struct  * pmc' at context switch time).  *  */
 end_comment
@@ -1746,27 +1805,56 @@ begin_struct
 struct|struct
 name|pmc_sample
 block|{
-name|uintfptr_t
-name|ps_pc
+name|uint16_t
+name|ps_nsamples
 decl_stmt|;
-comment|/* PC value at interrupt */
+comment|/* callchain depth */
+name|uint8_t
+name|ps_cpu
+decl_stmt|;
+comment|/* cpu number */
+name|uint8_t
+name|ps_flags
+decl_stmt|;
+comment|/* other flags */
+name|pid_t
+name|ps_pid
+decl_stmt|;
+comment|/* process PID or -1 */
+name|struct
+name|thread
+modifier|*
+name|ps_td
+decl_stmt|;
+comment|/* which thread */
 name|struct
 name|pmc
 modifier|*
 name|ps_pmc
 decl_stmt|;
 comment|/* interrupting PMC */
-name|int
-name|ps_usermode
+name|uintptr_t
+modifier|*
+name|ps_pc
 decl_stmt|;
-comment|/* true for user mode PCs */
-name|pid_t
-name|ps_pid
-decl_stmt|;
-comment|/* process PID or -1 */
+comment|/* (const) callchain start */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|PMC_SAMPLE_FREE
+value|((uint16_t) 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_SAMPLE_INUSE
+value|((uint16_t) 0xFFFF)
+end_define
 
 begin_struct
 struct|struct
@@ -1786,6 +1874,11 @@ specifier|volatile
 name|ps_write
 decl_stmt|;
 comment|/* write pointer */
+name|uintptr_t
+modifier|*
+name|ps_callchains
+decl_stmt|;
+comment|/* all saved call chains */
 name|struct
 name|pmc_sample
 modifier|*
@@ -1827,7 +1920,6 @@ name|pc_hwpmcs
 index|[]
 decl_stmt|;
 comment|/* 'npmc' pointers */
-comment|/* other machine dependent fields come here */
 block|}
 struct|;
 end_struct
@@ -1920,6 +2012,257 @@ block|}
 struct|;
 end_struct
 
+begin_struct_decl
+struct_decl|struct
+name|pmc_mdep
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/*  * struct pmc_classdep  *  * PMC class-dependent operations.  */
+end_comment
+
+begin_struct
+struct|struct
+name|pmc_classdep
+block|{
+name|uint32_t
+name|pcd_caps
+decl_stmt|;
+comment|/* class capabilities */
+name|enum
+name|pmc_class
+name|pcd_class
+decl_stmt|;
+comment|/* class id */
+name|int
+name|pcd_num
+decl_stmt|;
+comment|/* number of PMCs */
+name|int
+name|pcd_ri
+decl_stmt|;
+comment|/* row index of the first PMC in class */
+name|int
+name|pcd_width
+decl_stmt|;
+comment|/* width of the PMC */
+comment|/* configuring/reading/writing the hardware PMCs */
+name|int
+function_decl|(
+modifier|*
+name|pcd_config_pmc
+function_decl|)
+parameter_list|(
+name|int
+name|_cpu
+parameter_list|,
+name|int
+name|_ri
+parameter_list|,
+name|struct
+name|pmc
+modifier|*
+name|_pm
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|pcd_get_config
+function_decl|)
+parameter_list|(
+name|int
+name|_cpu
+parameter_list|,
+name|int
+name|_ri
+parameter_list|,
+name|struct
+name|pmc
+modifier|*
+modifier|*
+name|_ppm
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|pcd_read_pmc
+function_decl|)
+parameter_list|(
+name|int
+name|_cpu
+parameter_list|,
+name|int
+name|_ri
+parameter_list|,
+name|pmc_value_t
+modifier|*
+name|_value
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|pcd_write_pmc
+function_decl|)
+parameter_list|(
+name|int
+name|_cpu
+parameter_list|,
+name|int
+name|_ri
+parameter_list|,
+name|pmc_value_t
+name|_value
+parameter_list|)
+function_decl|;
+comment|/* pmc allocation/release */
+name|int
+function_decl|(
+modifier|*
+name|pcd_allocate_pmc
+function_decl|)
+parameter_list|(
+name|int
+name|_cpu
+parameter_list|,
+name|int
+name|_ri
+parameter_list|,
+name|struct
+name|pmc
+modifier|*
+name|_t
+parameter_list|,
+specifier|const
+name|struct
+name|pmc_op_pmcallocate
+modifier|*
+name|_a
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|pcd_release_pmc
+function_decl|)
+parameter_list|(
+name|int
+name|_cpu
+parameter_list|,
+name|int
+name|_ri
+parameter_list|,
+name|struct
+name|pmc
+modifier|*
+name|_pm
+parameter_list|)
+function_decl|;
+comment|/* starting and stopping PMCs */
+name|int
+function_decl|(
+modifier|*
+name|pcd_start_pmc
+function_decl|)
+parameter_list|(
+name|int
+name|_cpu
+parameter_list|,
+name|int
+name|_ri
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|pcd_stop_pmc
+function_decl|)
+parameter_list|(
+name|int
+name|_cpu
+parameter_list|,
+name|int
+name|_ri
+parameter_list|)
+function_decl|;
+comment|/* description */
+name|int
+function_decl|(
+modifier|*
+name|pcd_describe
+function_decl|)
+parameter_list|(
+name|int
+name|_cpu
+parameter_list|,
+name|int
+name|_ri
+parameter_list|,
+name|struct
+name|pmc_info
+modifier|*
+name|_pi
+parameter_list|,
+name|struct
+name|pmc
+modifier|*
+modifier|*
+name|_ppmc
+parameter_list|)
+function_decl|;
+comment|/* class-dependent initialization& finalization */
+name|int
+function_decl|(
+modifier|*
+name|pcd_pcpu_init
+function_decl|)
+parameter_list|(
+name|struct
+name|pmc_mdep
+modifier|*
+name|_md
+parameter_list|,
+name|int
+name|_cpu
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|pcd_pcpu_fini
+function_decl|)
+parameter_list|(
+name|struct
+name|pmc_mdep
+modifier|*
+name|_md
+parameter_list|,
+name|int
+name|_cpu
+parameter_list|)
+function_decl|;
+comment|/* machine-specific interface */
+name|int
+function_decl|(
+modifier|*
+name|pcd_get_msr
+function_decl|)
+parameter_list|(
+name|int
+name|_ri
+parameter_list|,
+name|uint32_t
+modifier|*
+name|_msr
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * struct pmc_mdep  *  * Machine dependent bits needed per CPU type.  */
 end_comment
@@ -1935,47 +2278,43 @@ comment|/* from enum pmc_cputype */
 name|uint32_t
 name|pmd_npmc
 decl_stmt|;
-comment|/* max PMCs per CPU */
+comment|/* number of PMCs per CPU */
 name|uint32_t
 name|pmd_nclass
 decl_stmt|;
-comment|/* # PMC classes supported */
+comment|/* number of PMC classes present */
+comment|/* 	 * Machine dependent methods. 	 */
+comment|/* per-cpu initialization and finalization */
+name|int
+function_decl|(
+modifier|*
+name|pmd_pcpu_init
+function_decl|)
+parameter_list|(
 name|struct
-name|pmc_classinfo
-name|pmd_classes
-index|[
-name|PMC_CLASS_MAX
-index|]
-decl_stmt|;
-name|int
-name|pmd_nclasspmcs
-index|[
-name|PMC_CLASS_MAX
-index|]
-decl_stmt|;
-comment|/* 	 * Methods 	 */
-name|int
-function_decl|(
+name|pmc_mdep
 modifier|*
-name|pmd_init
-function_decl|)
-parameter_list|(
+name|_md
+parameter_list|,
 name|int
 name|_cpu
 parameter_list|)
 function_decl|;
-comment|/* machine dependent initialization */
 name|int
 function_decl|(
 modifier|*
-name|pmd_cleanup
+name|pmd_pcpu_fini
 function_decl|)
 parameter_list|(
+name|struct
+name|pmc_mdep
+modifier|*
+name|_md
+parameter_list|,
 name|int
 name|_cpu
 parameter_list|)
 function_decl|;
-comment|/* machine dependent cleanup  */
 comment|/* thread context switch in/out */
 name|int
 function_decl|(
@@ -2011,147 +2350,6 @@ modifier|*
 name|_pp
 parameter_list|)
 function_decl|;
-comment|/* configuring/reading/writing the hardware PMCs */
-name|int
-function_decl|(
-modifier|*
-name|pmd_config_pmc
-function_decl|)
-parameter_list|(
-name|int
-name|_cpu
-parameter_list|,
-name|int
-name|_ri
-parameter_list|,
-name|struct
-name|pmc
-modifier|*
-name|_pm
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|pmd_get_config
-function_decl|)
-parameter_list|(
-name|int
-name|_cpu
-parameter_list|,
-name|int
-name|_ri
-parameter_list|,
-name|struct
-name|pmc
-modifier|*
-modifier|*
-name|_ppm
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|pmd_read_pmc
-function_decl|)
-parameter_list|(
-name|int
-name|_cpu
-parameter_list|,
-name|int
-name|_ri
-parameter_list|,
-name|pmc_value_t
-modifier|*
-name|_value
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|pmd_write_pmc
-function_decl|)
-parameter_list|(
-name|int
-name|_cpu
-parameter_list|,
-name|int
-name|_ri
-parameter_list|,
-name|pmc_value_t
-name|_value
-parameter_list|)
-function_decl|;
-comment|/* pmc allocation/release */
-name|int
-function_decl|(
-modifier|*
-name|pmd_allocate_pmc
-function_decl|)
-parameter_list|(
-name|int
-name|_cpu
-parameter_list|,
-name|int
-name|_ri
-parameter_list|,
-name|struct
-name|pmc
-modifier|*
-name|_t
-parameter_list|,
-specifier|const
-name|struct
-name|pmc_op_pmcallocate
-modifier|*
-name|_a
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|pmd_release_pmc
-function_decl|)
-parameter_list|(
-name|int
-name|_cpu
-parameter_list|,
-name|int
-name|_ri
-parameter_list|,
-name|struct
-name|pmc
-modifier|*
-name|_pm
-parameter_list|)
-function_decl|;
-comment|/* starting and stopping PMCs */
-name|int
-function_decl|(
-modifier|*
-name|pmd_start_pmc
-function_decl|)
-parameter_list|(
-name|int
-name|_cpu
-parameter_list|,
-name|int
-name|_ri
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|pmd_stop_pmc
-function_decl|)
-parameter_list|(
-name|int
-name|_cpu
-parameter_list|,
-name|int
-name|_ri
-parameter_list|)
-function_decl|;
 comment|/* handle a PMC interrupt */
 name|int
 function_decl|(
@@ -2162,51 +2360,18 @@ parameter_list|(
 name|int
 name|_cpu
 parameter_list|,
-name|uintptr_t
-name|_pc
-parameter_list|,
-name|int
-name|_usermode
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|pmd_describe
-function_decl|)
-parameter_list|(
-name|int
-name|_cpu
-parameter_list|,
-name|int
-name|_ri
-parameter_list|,
 name|struct
-name|pmc_info
+name|trapframe
 modifier|*
-name|_pi
-parameter_list|,
+name|_tf
+parameter_list|)
+function_decl|;
+comment|/* 	 * PMC class dependent information. 	 */
 name|struct
-name|pmc
-modifier|*
-modifier|*
-name|_ppmc
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|pmd_get_msr
-function_decl|)
-parameter_list|(
-name|int
-name|_ri
-parameter_list|,
-name|uint32_t
-modifier|*
-name|_msr
-parameter_list|)
-function_decl|;
+name|pmc_classdep
+name|pmd_classdep
+index|[]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2222,15 +2387,6 @@ name|pmc_cpu
 modifier|*
 modifier|*
 name|pmc_pcpu
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pmc_mdep
-modifier|*
-name|md
 decl_stmt|;
 end_decl_stmt
 
@@ -2894,6 +3050,22 @@ comment|/* MD init function */
 end_comment
 
 begin_function_decl
+name|void
+name|pmc_md_finalize
+parameter_list|(
+name|struct
+name|pmc_mdep
+modifier|*
+name|_md
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* MD fini function */
+end_comment
+
+begin_function_decl
 name|int
 name|pmc_getrowdisp
 parameter_list|(
@@ -2915,11 +3087,51 @@ name|pmc
 modifier|*
 name|_pm
 parameter_list|,
-name|uintfptr_t
-name|_pc
+name|struct
+name|trapframe
+modifier|*
+name|_tf
 parameter_list|,
 name|int
-name|_usermode
+name|_inuserspace
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pmc_save_kernel_callchain
+parameter_list|(
+name|uintptr_t
+modifier|*
+name|_cc
+parameter_list|,
+name|int
+name|_maxsamples
+parameter_list|,
+name|struct
+name|trapframe
+modifier|*
+name|_tf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pmc_save_user_callchain
+parameter_list|(
+name|uintptr_t
+modifier|*
+name|_cc
+parameter_list|,
+name|int
+name|_maxsamples
+parameter_list|,
+name|struct
+name|trapframe
+modifier|*
+name|_tf
 parameter_list|)
 function_decl|;
 end_function_decl

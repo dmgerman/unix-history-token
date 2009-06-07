@@ -1490,6 +1490,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TDP_CALLCHAIN
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* Capture thread's callchain */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TDP_IGNSUSP
 value|0x00800000
 end_define
