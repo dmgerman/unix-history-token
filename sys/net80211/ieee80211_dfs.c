@@ -999,7 +999,7 @@ name|now
 condition|)
 block|{
 comment|/* arrange to process next channel up for a status change */
-name|callout_reset
+name|callout_schedule
 argument_list|(
 operator|&
 name|dfs
@@ -1009,10 +1009,6 @@ argument_list|,
 name|oldest
 operator|+
 name|NOL_TIMEOUT
-argument_list|,
-name|dfs_timeout
-argument_list|,
-name|ic
 argument_list|)
 expr_stmt|;
 block|}
