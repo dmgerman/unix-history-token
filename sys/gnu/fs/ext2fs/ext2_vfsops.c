@@ -999,8 +999,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: %s was not properly "
-literal|"dismounted\n"
+literal|"WARNING: %s was not properly dismounted\n"
 argument_list|,
 name|fs
 operator|->
@@ -1012,9 +1011,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: R/W mount of %s "
-literal|"denied. Filesystem is not clean"
-literal|" - run fsck\n"
+literal|"WARNING: R/W mount of %s denied.  Filesystem is not clean - run fsck\n"
 argument_list|,
 name|fs
 operator|->
@@ -1668,8 +1665,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: mount of %s denied due to unsupported "
-literal|"optional features\n"
+literal|"WARNING: mount of %s denied due to unsupported optional features\n"
 argument_list|,
 name|devtoname
 argument_list|(
@@ -3157,8 +3153,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: Filesystem was not properly "
-literal|"dismounted\n"
+literal|"WARNING: Filesystem was not properly dismounted\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3166,8 +3161,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: R/W mount denied.  Filesystem "
-literal|"is not clean - run fsck\n"
+literal|"WARNING: R/W mount denied.  Filesystem is not clean - run fsck\n"
 argument_list|)
 expr_stmt|;
 name|error
