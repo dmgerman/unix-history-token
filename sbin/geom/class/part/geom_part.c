@@ -291,7 +291,7 @@ literal|"start"
 block|,
 name|NULL
 block|,
-name|G_TYPE_STRING
+name|G_TYPE_ASCLBA
 block|}
 block|,
 block|{
@@ -301,7 +301,7 @@ literal|"size"
 block|,
 name|NULL
 block|,
-name|G_TYPE_STRING
+name|G_TYPE_ASCLBA
 block|}
 block|,
 block|{
@@ -321,7 +321,7 @@ name|index_param
 block|,
 name|optional
 block|,
-name|G_TYPE_STRING
+name|G_TYPE_ASCNUM
 block|}
 block|,
 block|{
@@ -387,7 +387,7 @@ name|index_param
 block|,
 name|optional
 block|,
-name|G_TYPE_STRING
+name|G_TYPE_ASCNUM
 block|}
 block|,
 block|{
@@ -447,7 +447,7 @@ literal|"entries"
 block|,
 name|optional
 block|,
-name|G_TYPE_STRING
+name|G_TYPE_ASCNUM
 block|}
 block|,
 block|{
@@ -483,7 +483,7 @@ name|index_param
 block|,
 name|NULL
 block|,
-name|G_TYPE_STRING
+name|G_TYPE_ASCNUM
 block|}
 block|,
 block|{
@@ -545,7 +545,7 @@ name|index_param
 block|,
 name|NULL
 block|,
-name|G_TYPE_STRING
+name|G_TYPE_ASCNUM
 block|}
 block|,
 block|{
@@ -611,7 +611,7 @@ name|index_param
 block|,
 name|NULL
 block|,
-name|G_TYPE_STRING
+name|G_TYPE_ASCNUM
 block|}
 block|,
 block|{
@@ -707,7 +707,7 @@ name|index_param
 block|,
 name|NULL
 block|,
-name|G_TYPE_STRING
+name|G_TYPE_ASCNUM
 block|}
 block|,
 block|{

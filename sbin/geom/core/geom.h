@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|G_LIB_VERSION
-value|3
+value|4
 end_define
 
 begin_define
@@ -74,8 +74,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_TYPE_ASCNUM
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_TYPE_ASCLBA
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
 name|G_TYPE_MASK
-value|0x03
+value|0x0f
 end_define
 
 begin_define
