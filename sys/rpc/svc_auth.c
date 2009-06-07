@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ucred.h>
 end_include
 
@@ -634,6 +640,20 @@ name|cr_groups
 index|[
 literal|0
 index|]
+expr_stmt|;
+name|cr
+operator|->
+name|cr_prison
+operator|=
+operator|&
+name|prison0
+expr_stmt|;
+name|prison_hold
+argument_list|(
+name|cr
+operator|->
+name|cr_prison
+argument_list|)
 expr_stmt|;
 operator|*
 name|crp
