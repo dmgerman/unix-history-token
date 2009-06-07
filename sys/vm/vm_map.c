@@ -6390,13 +6390,9 @@ break|break;
 block|}
 if|if
 condition|(
-operator|(
 name|p
 operator|->
 name|valid
-operator|&
-name|VM_PAGE_BITS_ALL
-operator|)
 operator|==
 name|VM_PAGE_BITS_ALL
 condition|)

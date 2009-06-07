@@ -3883,16 +3883,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|ma
 index|[
 literal|0
 index|]
 operator|->
 name|valid
-operator|&
-name|VM_PAGE_BITS_ALL
-operator|)
 operator|!=
 name|VM_PAGE_BITS_ALL
 condition|)
