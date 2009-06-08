@@ -24,12 +24,6 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"opt_route.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/ethernet.h>
 end_include
 

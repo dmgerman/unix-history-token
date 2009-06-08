@@ -17,12 +17,6 @@ directive|include
 file|"opt_ipsec.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_route.h"
-end_include
-
 begin_comment
 comment|/* This code has derived from sys/net/rtsock.c on FreeBSD2.2.5 */
 end_comment
