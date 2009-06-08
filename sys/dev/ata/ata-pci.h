@@ -1499,6 +1499,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_NFORCE_MCP67_AC
+value|0x058410de
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_NFORCE_MCP67
 value|0x056010de
 end_define
