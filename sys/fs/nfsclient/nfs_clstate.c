@@ -3306,7 +3306,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called to get a clientid structure. It will optionally lock the  * client data structures to do the SetClientId/SetClientId_confirm,  * but will release that lock and return the clientid with a refernce  * count on it.  * If the p argument is NULL, it will not do the SetClientId/Confirm  * and the cred argument is not used, so it can be NULL too.  * It always clpp with a reference count on it, unless returning an error.  */
+comment|/*  * Called to get a clientid structure. It will optionally lock the  * client data structures to do the SetClientId/SetClientId_confirm,  * but will release that lock and return the clientid with a refernce  * count on it.  * If the "cred" argument is NULL, a new clientid should not be created.  * If the "p" argument is NULL, a SetClientID/SetClientIDConfirm cannot  * be done.  * It always clpp with a reference count on it, unless returning an error.  */
 end_comment
 
 begin_function
@@ -3342,6 +3342,8 @@ name|struct
 name|nfsclclient
 modifier|*
 name|newclp
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|nfscllockowner
@@ -3390,7 +3392,16 @@ name|i
 decl_stmt|;
 name|u_int16_t
 name|idlen
+init|=
+literal|0
 decl_stmt|;
+if|if
+condition|(
+name|cred
+operator|!=
+name|NULL
+condition|)
+block|{
 name|pr
 operator|=
 name|cred
@@ -3479,6 +3490,7 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+block|}
 name|NFSLOCKCLSTATE
 argument_list|()
 expr_stmt|;
@@ -3495,6 +3507,22 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|newclp
+operator|==
+name|NULL
+condition|)
+block|{
+name|NFSUNLOCKCLSTATE
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|EACCES
+operator|)
+return|;
+block|}
 name|clp
 operator|=
 name|newclp
@@ -3643,6 +3671,12 @@ block|{
 name|NFSUNLOCKCLSTATE
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|newclp
+operator|!=
+name|NULL
+condition|)
 name|FREE
 argument_list|(
 operator|(
@@ -3735,6 +3769,10 @@ expr_stmt|;
 if|if
 condition|(
 name|p
+operator|==
+name|NULL
+operator|||
+name|cred
 operator|==
 name|NULL
 condition|)
