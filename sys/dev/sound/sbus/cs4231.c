@@ -700,7 +700,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|u_int32_t
 name|cs4231_mixer_setrecsrc
 parameter_list|(
 name|struct
@@ -753,7 +753,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|u_int32_t
 name|cs4231_chan_setspeed
 parameter_list|(
 name|kobj_t
@@ -784,7 +784,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|u_int32_t
 name|cs4231_chan_setblocksize
 parameter_list|(
 name|kobj_t
@@ -814,7 +814,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|u_int32_t
 name|cs4231_chan_getptr
 parameter_list|(
 name|kobj_t
@@ -5339,7 +5339,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|cs4231_mixer_setrecsrc
 parameter_list|(
 name|struct
@@ -5873,7 +5873,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|cs4231_chan_setspeed
 parameter_list|(
 name|kobj_t
@@ -6721,7 +6721,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|cs4231_chan_setblocksize
 parameter_list|(
 name|kobj_t
@@ -6889,7 +6889,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|cs4231_chan_getptr
 parameter_list|(
 name|kobj_t
@@ -6912,8 +6912,7 @@ name|ch
 decl_stmt|;
 name|u_int32_t
 name|cur
-decl_stmt|;
-name|int
+decl_stmt|,
 name|ptr
 decl_stmt|,
 name|sz
