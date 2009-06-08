@@ -1749,6 +1749,12 @@ operator|->
 name|sa_family
 operator|==
 name|AF_INET
+operator|&&
+name|lin
+operator|->
+name|s_addr
+operator|!=
+name|INADDR_ANY
 condition|)
 block|{
 name|msg
