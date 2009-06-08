@@ -51,6 +51,12 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_USE_DO_WHILE_0
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_USE_LOCAL_CACHE
 end_define
 
@@ -58,12 +64,6 @@ begin_define
 define|#
 directive|define
 name|ACPI_USE_SYSTEM_CLIBRARY
-end_define
-
-begin_define
-define|#
-directive|define
-name|__cdecl
 end_define
 
 begin_ifdef
@@ -249,10 +249,6 @@ name|ACPI_THREAD_ID
 value|pthread_t
 end_define
 
-begin_comment
-comment|/* Not building kernel code, so use libc */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -269,15 +265,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|__cli
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|__sti
-parameter_list|()
+name|__cdecl
 end_define
 
 begin_endif
