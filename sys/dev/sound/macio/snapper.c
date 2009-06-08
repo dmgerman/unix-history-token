@@ -205,7 +205,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|snapper_uninit
 parameter_list|(
 name|struct
@@ -3003,7 +3003,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|snapper_uninit
 parameter_list|(
 name|struct
@@ -3012,7 +3012,11 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
