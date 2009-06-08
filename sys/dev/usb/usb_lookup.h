@@ -34,9 +34,8 @@ struct|struct
 name|usb_device_id
 block|{
 comment|/* Hook for driver specific information */
-specifier|const
-name|void
-modifier|*
+name|unsigned
+name|long
 name|driver_info
 decl_stmt|;
 comment|/* Used for product specific matches; the BCD range is inclusive */
@@ -287,10 +286,10 @@ define|#
 directive|define
 name|USB_DRIVER_INFO
 parameter_list|(
-name|ptr
+name|n
 parameter_list|)
 define|\
-value|.driver_info = ((const void *)(ptr))
+value|.driver_info = (n)
 end_define
 
 begin_define
@@ -301,7 +300,7 @@ parameter_list|(
 name|did
 parameter_list|)
 define|\
-value|(((const uint8_t *)((did)->driver_info)) - ((const uint8_t *)0))
+value|(did)->driver_info
 end_define
 
 begin_function_decl

@@ -1790,12 +1790,15 @@ name|device_t
 name|temp_dev
 decl_stmt|;
 comment|/* for internal use */
-specifier|const
-name|void
-modifier|*
+name|unsigned
+name|long
 name|driver_info
 decl_stmt|;
 comment|/* for internal use */
+name|void
+modifier|*
+name|driver_ivar
+decl_stmt|;
 name|struct
 name|usb_device
 modifier|*
