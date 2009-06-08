@@ -5144,6 +5144,14 @@ condition|(
 name|error
 condition|)
 block|{
+if|if
+condition|(
+name|od
+operator|->
+name|od_nparts
+operator|>
+literal|0
+condition|)
 name|free
 argument_list|(
 name|od
@@ -5407,6 +5415,12 @@ operator|->
 name|od_flags
 operator|&
 name|BD_GPTOK
+operator|&&
+name|od
+operator|->
+name|od_nparts
+operator|>
+literal|0
 condition|)
 name|free
 argument_list|(
