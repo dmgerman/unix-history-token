@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SetVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineFunctionPass.h"
 end_include
 
@@ -165,19 +171,16 @@ expr_stmt|;
 name|protected
 operator|:
 comment|/// Output stream to send the resultant object file to.
-comment|///
 name|raw_ostream
 operator|&
 name|O
 decl_stmt|;
 comment|/// Target machine description.
-comment|///
 name|TargetMachine
 modifier|&
 name|TM
 decl_stmt|;
 comment|/// Mang - The object used to perform name mangling for this module.
-comment|///
 name|Mangler
 modifier|*
 name|Mang
@@ -189,21 +192,8 @@ modifier|*
 name|MCE
 decl_stmt|;
 comment|//===------------------------------------------------------------------===//
-comment|// Properties to be set by the derived class ctor, used to configure the
-comment|// ELFWriter.
-comment|// e_machine - This field is the target specific value to emit as the
-comment|// e_machine member of the ELF header.
-name|unsigned
-name|short
-name|e_machine
-decl_stmt|;
-comment|// e_flags - The machine flags for the target.  This defaults to zero.
-name|unsigned
-name|e_flags
-decl_stmt|;
-comment|//===------------------------------------------------------------------===//
 comment|// Properties inferred automatically from the target machine.
-comment|//
+comment|//===------------------------------------------------------------------===//
 comment|/// is64Bit/isLittleEndian - This information is inferred from the target
 comment|/// machine directly, indicating whether to emit a 32- or 64-bit ELF file.
 name|bool
@@ -246,6 +236,11 @@ comment|// changed into something much more efficient later (and the bitcode wri
 comment|// as well!).
 name|DataBuffer
 name|FileHeader
+decl_stmt|;
+comment|/// ElfHdr - Hold information about the ELF Header
+name|ELFHeader
+modifier|*
+name|ElfHdr
 decl_stmt|;
 comment|/// SectionList - This is the list of sections that we have emitted to the
 comment|/// file.  Once the file has been completely built, the section header table
@@ -447,6 +442,16 @@ name|ELFSym
 operator|>
 name|SymbolTable
 expr_stmt|;
+comment|/// PendingSyms - This is a list of externally defined symbols that we have
+comment|/// been asked to emit, but have not seen a reference to.  When a reference
+comment|/// is seen, the symbol will move from this list to the SymbolTable.
+name|SetVector
+operator|<
+name|GlobalValue
+operator|*
+operator|>
+name|PendingGlobals
+expr_stmt|;
 comment|// As we complete the ELF file, we need to update fields in the ELF header
 comment|// (e.g. the location of the section table).  These members keep track of
 comment|// the offset in ELFHeader of these various pieces to update and other
@@ -475,6 +480,10 @@ parameter_list|)
 function_decl|;
 name|void
 name|EmitSymbolTable
+parameter_list|()
+function_decl|;
+name|void
+name|EmitRelocations
 parameter_list|()
 function_decl|;
 name|void

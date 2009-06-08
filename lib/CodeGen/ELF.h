@@ -90,6 +90,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineRelocation.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -205,6 +211,122 @@ init|=
 literal|1
 block|}
 enum|;
+struct|struct
+name|ELFHeader
+block|{
+comment|// e_machine - This field is the target specific value to emit as the
+comment|// e_machine member of the ELF header.
+name|unsigned
+name|short
+name|e_machine
+decl_stmt|;
+comment|// e_flags - The machine flags for the target.  This defaults to zero.
+name|unsigned
+name|e_flags
+decl_stmt|;
+comment|// e_size - Holds the ELF header's size in bytes
+name|unsigned
+name|e_ehsize
+decl_stmt|;
+comment|// Endianess and ELF Class (64 or 32 bits)
+name|unsigned
+name|ByteOrder
+decl_stmt|;
+name|unsigned
+name|ElfClass
+decl_stmt|;
+name|unsigned
+name|getByteOrder
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ByteOrder
+return|;
+block|}
+name|unsigned
+name|getElfClass
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ElfClass
+return|;
+block|}
+name|unsigned
+name|getSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|e_ehsize
+return|;
+block|}
+name|unsigned
+name|getMachine
+argument_list|()
+specifier|const
+block|{
+return|return
+name|e_machine
+return|;
+block|}
+name|unsigned
+name|getFlags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|e_flags
+return|;
+block|}
+name|ELFHeader
+argument_list|(
+argument|unsigned short machine
+argument_list|,
+argument|unsigned flags
+argument_list|,
+argument|bool is64Bit
+argument_list|,
+argument|bool isLittleEndian
+argument_list|)
+block|:
+name|e_machine
+argument_list|(
+name|machine
+argument_list|)
+operator|,
+name|e_flags
+argument_list|(
+argument|flags
+argument_list|)
+block|{
+name|ElfClass
+operator|=
+name|is64Bit
+operator|?
+name|ELFCLASS64
+operator|:
+name|ELFCLASS32
+block|;
+name|ByteOrder
+operator|=
+name|isLittleEndian
+condition|?
+name|ELFDATA2LSB
+else|:
+name|ELFDATA2MSB
+block|;
+name|e_ehsize
+operator|=
+name|is64Bit
+condition|?
+literal|64
+else|:
+literal|52
+block|;       }
+block|}
+struct|;
 comment|/// ELFSection - This struct contains information about each section that is
 comment|/// emitted to the file.  This is eventually turned into the section header
 comment|/// table at the end of the file.
@@ -414,7 +536,7 @@ name|SHN_UNDEF
 init|=
 literal|0
 block|,
-comment|// Undefined, missing, irrelevant, or meaningless
+comment|// Undefined, missing, irrelevant
 name|SHN_LORESERVE
 init|=
 literal|0xff00
@@ -434,7 +556,7 @@ name|SHN_ABS
 init|=
 literal|0xfff1
 block|,
-comment|// Symbol has absolute value; does not need relocation
+comment|// Symbol has absolute value; no relocation
 name|SHN_COMMON
 init|=
 literal|0xfff2
@@ -462,6 +584,34 @@ name|char
 operator|>
 name|SectionData
 expr_stmt|;
+comment|/// Relocations - The relocations that we have encountered so far in this
+comment|/// section that we will need to convert to Elf relocation entries when
+comment|/// the file is written.
+name|std
+operator|::
+name|vector
+operator|<
+name|MachineRelocation
+operator|>
+name|Relocations
+expr_stmt|;
+comment|/// Section Header Size
+specifier|static
+name|unsigned
+name|getSectionHdrSize
+parameter_list|(
+name|bool
+name|is64Bit
+parameter_list|)
+block|{
+return|return
+name|is64Bit
+condition|?
+literal|64
+else|:
+literal|40
+return|;
+block|}
 name|ELFSection
 argument_list|(
 specifier|const
@@ -606,6 +756,11 @@ operator|:
 name|GV
 argument_list|(
 name|gv
+argument_list|)
+operator|,
+name|NameIdx
+argument_list|(
+literal|0
 argument_list|)
 operator|,
 name|Value
