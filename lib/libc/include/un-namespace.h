@@ -234,6 +234,12 @@ end_undef
 begin_undef
 undef|#
 directive|undef
+name|pthread_attr_getaffinity_np
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|pthread_attr_getdetachstate
 end_undef
 
@@ -289,6 +295,12 @@ begin_undef
 undef|#
 directive|undef
 name|pthread_attr_init
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|pthread_attr_setaffinity_np
 end_undef
 
 begin_undef
@@ -510,7 +522,19 @@ end_undef
 begin_undef
 undef|#
 directive|undef
+name|pthread_getaffinity_np
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|pthread_getconcurrency
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|pthread_getcpuclockid
 end_undef
 
 begin_undef
@@ -793,6 +817,12 @@ begin_undef
 undef|#
 directive|undef
 name|pthread_set_name_np
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|pthread_setaffinity_np
 end_undef
 
 begin_undef
