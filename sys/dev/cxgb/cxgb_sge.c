@@ -18119,6 +18119,28 @@ argument_list|,
 literal|"chip model"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_STRING
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"port_types"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|port_types
+argument_list|,
+literal|0
+argument_list|,
+literal|"type of ports"
+argument_list|)
+expr_stmt|;
 name|SYSCTL_ADD_INT
 argument_list|(
 name|ctx
@@ -20065,6 +20087,11 @@ expr_stmt|;
 name|CXGB_SYSCTL_ADD_ULONG
 argument_list|(
 name|num_resets
+argument_list|)
+expr_stmt|;
+name|CXGB_SYSCTL_ADD_ULONG
+argument_list|(
+name|link_faults
 argument_list|)
 expr_stmt|;
 undef|#
