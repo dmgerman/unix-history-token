@@ -631,7 +631,7 @@ operator|)
 return|;
 name|uaa
 operator|->
-name|driver_info
+name|driver_ivar
 operator|=
 name|db
 expr_stmt|;
@@ -701,7 +701,7 @@ name|db
 operator|=
 name|uaa
 operator|->
-name|driver_info
+name|driver_ivar
 expr_stmt|;
 name|sc
 operator|=
