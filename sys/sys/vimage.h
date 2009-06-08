@@ -1837,28 +1837,21 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|464
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_vnet_net_LINT
-value|5144
+value|176
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet
-value|4352
+value|4424
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet6
-value|8800
+value|8808
 end_define
 
 begin_define
@@ -1883,32 +1876,21 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|236
+value|96
 end_define
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_vnet_net_LINT
-value|1
-end_define
-
-begin_comment
-comment|/* No LINT kernel yet. */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet
-value|2580
+value|2616
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet6
-value|8536
+value|8524
 end_define
 
 begin_define
@@ -1937,35 +1919,28 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|236
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_vnet_net_LINT
-value|2576
+value|96
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet
-value|2576
+value|2612
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet6
-value|8528
+value|8512
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_ipsec
-value|31016
+value|31024
 end_define
 
 begin_endif
@@ -1983,28 +1958,21 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|464
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_vnet_net_LINT
-value|5144
+value|176
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet
-value|4352
+value|4424
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet6
-value|8800
+value|8808
 end_define
 
 begin_define
@@ -2029,32 +1997,21 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|236
+value|96
 end_define
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_vnet_net_LINT
-value|1
-end_define
-
-begin_comment
-comment|/* No LINT kernel yet. */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet
-value|2624
+value|2648
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet6
-value|8552
+value|8544
 end_define
 
 begin_define
@@ -2079,28 +2036,21 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|236
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_vnet_net_LINT
-value|2576
+value|96
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet
-value|2616
+value|2640
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet6
-value|8536
+value|8520
 end_define
 
 begin_define
@@ -2129,28 +2079,21 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|464
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_vnet_net_LINT
-value|5144
+value|176
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet
-value|4352
+value|4424
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet6
-value|8800
+value|8808
 end_define
 
 begin_define
@@ -2158,30 +2101,6 @@ define|#
 directive|define
 name|SIZEOF_vnet_ipsec
 value|31160
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPILING_LINT
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|SIZEOF_vnet_net
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_vnet_net
-value|SIZEOF_vnet_net_LINT
 end_define
 
 begin_endif
