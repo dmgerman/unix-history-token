@@ -119,6 +119,16 @@ modifier|*
 name|cred
 decl_stmt|;
 block|{
+name|enum
+name|authdes_namekind
+modifier|*
+name|padc_namekind
+init|=
+operator|&
+name|cred
+operator|->
+name|adc_namekind
+decl_stmt|;
 comment|/* 	 * Unrolled xdr 	 */
 name|ATTEMPT
 argument_list|(
@@ -130,10 +140,7 @@ operator|(
 name|enum_t
 operator|*
 operator|)
-operator|&
-name|cred
-operator|->
-name|adc_namekind
+name|padc_namekind
 argument_list|)
 argument_list|)
 expr_stmt|;
