@@ -83,6 +83,12 @@ name|route
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|vnet
+struct_decl|;
+end_struct_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -551,6 +557,31 @@ name|mbuf
 modifier|*
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|if_reassign
+function_decl|)
+comment|/* reassign to vnet routine */
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|vnet
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+name|struct
+name|vnet
+modifier|*
+name|if_home_vnet
+decl_stmt|;
+comment|/* where this ifnet originates from */
 name|struct
 name|ifaddr
 modifier|*

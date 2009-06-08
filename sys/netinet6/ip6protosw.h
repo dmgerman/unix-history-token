@@ -249,6 +249,18 @@ argument_list|)
 expr_stmt|;
 name|void
 argument_list|(
+argument|*pr_destroy
+argument_list|)
+comment|/* cleanup hook */
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
 argument|*pr_fasttimo
 argument_list|)
 comment|/* fast timeout (200ms) */

@@ -2392,6 +2392,16 @@ name|dom_init
 operator|=
 name|key_init0
 block|,
+ifdef|#
+directive|ifdef
+name|VIMAGE
+operator|.
+name|dom_destroy
+operator|=
+name|key_destroy
+block|,
+endif|#
+directive|endif
 operator|.
 name|dom_protosw
 operator|=

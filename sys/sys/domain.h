@@ -57,6 +57,16 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|dom_destroy
+function_decl|)
+comment|/* cleanup structures / state */
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 name|int
 function_decl|(
 modifier|*
@@ -105,6 +115,20 @@ modifier|*
 name|dom_rtattach
 function_decl|)
 comment|/* initialize routing table */
+parameter_list|(
+name|void
+modifier|*
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|dom_rtdetach
+function_decl|)
+comment|/* clean up routing table */
 parameter_list|(
 name|void
 modifier|*

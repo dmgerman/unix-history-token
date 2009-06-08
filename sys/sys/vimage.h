@@ -725,6 +725,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|vimage
+modifier|*
+name|vimage_by_name
+parameter_list|(
+name|struct
+name|vimage
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|vnet_mod_register
 parameter_list|(

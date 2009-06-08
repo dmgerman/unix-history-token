@@ -73,6 +73,11 @@ name|if_clone
 modifier|*
 name|_lo_cloner
 decl_stmt|;
+name|struct
+name|ifc_simple_data
+modifier|*
+name|_lo_cloner_data
+decl_stmt|;
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -238,6 +243,13 @@ define|#
 directive|define
 name|V_lo_cloner
 value|VNET_NET(lo_cloner)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_lo_cloner_data
+value|VNET_NET(lo_cloner_data)
 end_define
 
 begin_define

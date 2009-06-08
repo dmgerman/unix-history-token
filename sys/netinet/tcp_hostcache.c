@@ -885,6 +885,39 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_function
+name|void
+name|tcp_hc_destroy
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+comment|/* XXX TODO walk the hashtable and free all entries  */
+name|callout_drain
+argument_list|(
+operator|&
+name|V_tcp_hc_callout
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Internal function: look up an entry in the hostcache or return NULL.  *  * If an entry has been returned, the caller becomes responsible for  * unlocking the bucket row after he is done reading/modifying the entry.  */
 end_comment
