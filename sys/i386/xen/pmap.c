@@ -394,7 +394,7 @@ begin_define
 define|#
 directive|define
 name|PMAP_INLINE
-value|extern inline
+value|__gnu89_inline
 end_define
 
 begin_else
