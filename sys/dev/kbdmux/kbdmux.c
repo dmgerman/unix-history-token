@@ -626,7 +626,7 @@ end_function
 
 begin_function
 specifier|static
-name|char
+name|int
 name|kbdmux_kbd_getc
 parameter_list|(
 name|kbdmux_state_t
@@ -634,6 +634,7 @@ modifier|*
 name|state
 parameter_list|)
 block|{
+name|unsigned
 name|char
 name|c
 decl_stmt|;
