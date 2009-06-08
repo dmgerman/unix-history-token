@@ -788,6 +788,9 @@ name|print_ifclose
 parameter_list|(
 name|int
 name|indent
+parameter_list|,
+name|int
+name|brace
 parameter_list|)
 block|{
 name|f_print
@@ -809,6 +812,17 @@ argument_list|(
 name|fout
 argument_list|,
 literal|"\treturn (FALSE);\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|brace
+condition|)
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
+literal|"\t}\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -858,6 +872,11 @@ name|alt
 init|=
 name|NULL
 decl_stmt|;
+name|int
+name|brace
+init|=
+literal|0
+decl_stmt|;
 switch|switch
 condition|(
 name|rel
@@ -866,6 +885,28 @@ block|{
 case|case
 name|REL_POINTER
 case|:
+name|brace
+operator|=
+literal|1
+expr_stmt|;
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
+literal|"\t{\n"
+argument_list|)
+expr_stmt|;
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
+literal|"\t%s **pp = %s;\n"
+argument_list|,
+name|type
+argument_list|,
+name|objname
+argument_list|)
+expr_stmt|;
 name|print_ifopen
 argument_list|(
 name|indent
@@ -882,9 +923,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"%s"
-argument_list|,
-name|objname
+literal|"pp"
 argument_list|)
 expr_stmt|;
 name|print_ifsizeof
@@ -1171,6 +1210,8 @@ block|}
 name|print_ifclose
 argument_list|(
 name|indent
+argument_list|,
+name|brace
 argument_list|)
 expr_stmt|;
 block|}
@@ -1206,6 +1247,8 @@ expr_stmt|;
 name|print_ifclose
 argument_list|(
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
