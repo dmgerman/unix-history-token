@@ -534,7 +534,7 @@ operator|==
 name|NULL
 condition|)
 break|break;
-comment|/* 		 * Sanitize mbuf flags for net80211 use.  We cannot 		 * clear M_PWR_SAV because this may be set for frames 		 * that are re-submitted from the power save queue. 		 * 		 * NB: This must be done before ieee80211_classify as 		 *     it marks EAPOL in frames with M_EAPOL. 		 */
+comment|/* 		 * Sanitize mbuf flags for net80211 use.  We cannot 		 * clear M_PWR_SAV or M_MORE_DATA because these may 		 * be set for frames that are re-submitted from the 		 * power save queue. 		 * 		 * NB: This must be done before ieee80211_classify as 		 *     it marks EAPOL in frames with M_EAPOL. 		 */
 name|m
 operator|->
 name|m_flags
@@ -544,6 +544,8 @@ operator|(
 name|M_80211_TX
 operator|-
 name|M_PWR_SAV
+operator|-
+name|M_MORE_DATA
 operator|)
 expr_stmt|;
 comment|/* 		 * Cancel any background scan. 		 */
