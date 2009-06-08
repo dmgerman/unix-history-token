@@ -1893,7 +1893,7 @@ argument_list|(
 operator|&
 name|val
 argument_list|,
-literal|"%jd"
+literal|"%llu"
 argument_list|,
 name|size
 argument_list|)
@@ -1933,7 +1933,7 @@ argument_list|(
 operator|&
 name|val
 argument_list|,
-literal|"%jd"
+literal|"%llu"
 argument_list|,
 name|start
 argument_list|)
