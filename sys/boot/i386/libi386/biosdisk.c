@@ -2005,6 +2005,8 @@ name|line
 argument_list|,
 literal|"%s: %08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x%s\n"
 argument_list|,
+name|prefix
+argument_list|,
 name|gp
 operator|->
 name|gp_type
