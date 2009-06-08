@@ -70,7 +70,7 @@ name|PFR
 operator|==
 name|IFP
 condition|)
-comment|// expected-error {{comparison of distinct block types}}
+comment|// OK
 name|donotwarn
 argument_list|()
 expr_stmt|;
@@ -125,7 +125,7 @@ name|PFR
 operator|!=
 name|IFP
 return|;
-comment|// expected-error {{comparison of distinct block types}}
+comment|// OK
 block|}
 end_function
 
@@ -756,7 +756,6 @@ else|:
 name|bp1
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{incompatible operand types ('void (^)(int)' and 'void (^)()')}}
 call|(
 name|void
 call|)

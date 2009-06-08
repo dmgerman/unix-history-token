@@ -188,7 +188,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// C style (...), ok.
+comment|// expected-error {{too many arguments to block call}}
 end_comment
 
 begin_expr_stmt

@@ -64,7 +64,7 @@ parameter_list|)
 init|=
 name|IFP
 function_decl|;
-comment|// expected-error {{incompatible block pointer types initializing 'int (^)()', expected 'int (^)(int)'}}
+comment|// OK
 name|PFR
 operator|=
 name|II
@@ -79,6 +79,7 @@ parameter_list|()
 init|=
 name|PFR
 function_decl|;
+comment|// OK
 specifier|const
 name|int
 function_decl|(

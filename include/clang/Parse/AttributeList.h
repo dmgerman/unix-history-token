@@ -126,6 +126,9 @@ name|AttributeList
 modifier|*
 name|Next
 decl_stmt|;
+name|bool
+name|DeclspecAttribute
+decl_stmt|;
 name|AttributeList
 argument_list|(
 specifier|const
@@ -161,6 +164,8 @@ argument_list|,
 argument|unsigned numargs
 argument_list|,
 argument|AttributeList *Next
+argument_list|,
+argument|bool declspec = false
 argument_list|)
 empty_stmt|;
 operator|~
@@ -303,6 +308,15 @@ specifier|const
 block|{
 return|return
 name|ParmName
+return|;
+block|}
+name|bool
+name|isDeclspecAttribute
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DeclspecAttribute
 return|;
 block|}
 name|Kind

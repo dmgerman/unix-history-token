@@ -7721,6 +7721,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|Expr
+modifier|*
+name|BuildObjCEncodeExpression
+parameter_list|(
+name|SourceLocation
+name|AtLoc
+parameter_list|,
+name|QualType
+name|EncodedType
+parameter_list|,
+name|SourceLocation
+name|RParenLoc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|virtual
 name|ExprResult
 name|ParseObjCEncodeExpression

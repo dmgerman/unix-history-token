@@ -2370,16 +2370,6 @@ parameter_list|)
 function_decl|;
 comment|// C99 6.2.7p1
 name|bool
-name|typesAreBlockCompatible
-parameter_list|(
-name|QualType
-name|lhs
-parameter_list|,
-name|QualType
-name|rhs
-parameter_list|)
-function_decl|;
-name|bool
 name|isObjCIdType
 argument_list|(
 name|QualType

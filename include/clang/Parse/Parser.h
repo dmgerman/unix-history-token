@@ -3710,8 +3710,9 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-name|void
-name|FuzzyParseMicrosoftDeclSpec
+name|AttributeList
+modifier|*
+name|ParseMicrosoftDeclSpec
 parameter_list|()
 function_decl|;
 name|void
