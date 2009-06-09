@@ -1859,7 +1859,7 @@ condition|(
 name|using_lapic_timer
 operator|||
 operator|!
-name|using_atrtc_clock
+name|using_atrtc_timer
 condition|)
 return|return;
 name|atrtc_rate
@@ -1888,7 +1888,7 @@ condition|(
 name|using_lapic_timer
 operator|||
 operator|!
-name|using_atrtc_clock
+name|using_atrtc_timer
 condition|)
 return|return;
 name|atrtc_rate
