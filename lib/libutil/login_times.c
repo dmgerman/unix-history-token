@@ -249,7 +249,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ptr
+operator|)
 return|;
 block|}
 end_function
@@ -329,9 +331,7 @@ literal|64
 index|]
 decl_stmt|;
 comment|/* Make local copy and force lowercase to simplify parsing */
-name|p
-operator|=
-name|strncpy
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
@@ -340,16 +340,6 @@ argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|)
-expr_stmt|;
-name|buf
-index|[
-sizeof|sizeof
-name|buf
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 for|for
 control|(
@@ -380,6 +370,10 @@ index|[
 name|i
 index|]
 argument_list|)
+expr_stmt|;
+name|p
+operator|=
+name|buf
 expr_stmt|;
 while|while
 condition|(
@@ -535,7 +529,9 @@ name|m
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|t
+operator|)
 return|;
 block|}
 end_function
@@ -692,7 +688,9 @@ block|}
 block|}
 block|}
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 block|}
 end_function
@@ -712,6 +710,7 @@ name|t
 parameter_list|)
 block|{
 return|return
+operator|(
 name|in_ltm
 argument_list|(
 name|ltm
@@ -723,6 +722,7 @@ argument_list|)
 argument_list|,
 name|t
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -781,15 +781,19 @@ name|t
 argument_list|)
 condition|)
 return|return
+operator|(
 name|i
+operator|)
 return|;
 name|i
 operator|++
 expr_stmt|;
 block|}
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -809,6 +813,7 @@ name|t
 parameter_list|)
 block|{
 return|return
+operator|(
 name|in_ltms
 argument_list|(
 name|ltm
@@ -820,6 +825,7 @@ argument_list|)
 argument_list|,
 name|t
 argument_list|)
+operator|)
 return|;
 block|}
 end_function

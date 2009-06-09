@@ -187,8 +187,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LOGIN_SETCPUMASK
+value|0x0200
+end_define
+
+begin_comment
+comment|/* set user cpumask */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LOGIN_SETALL
-value|0x01ff
+value|0x03ff
 end_define
 
 begin_comment
@@ -722,6 +733,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|setclasscpumask
+parameter_list|(
+name|login_cap_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|setusercontext
 parameter_list|(
@@ -833,7 +854,6 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|n
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1042,6 +1062,20 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|in_lt
+parameter_list|(
+specifier|const
+name|login_time_t
+modifier|*
+parameter_list|,
+name|time_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|in_ltm
 parameter_list|(
 specifier|const
@@ -1068,6 +1102,20 @@ modifier|*
 parameter_list|,
 name|struct
 name|tm
+modifier|*
+parameter_list|,
+name|time_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|in_lts
+parameter_list|(
+specifier|const
+name|login_time_t
 modifier|*
 parameter_list|,
 name|time_t
