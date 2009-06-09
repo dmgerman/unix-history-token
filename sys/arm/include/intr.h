@@ -128,7 +128,7 @@ begin_function_decl
 name|int
 name|arm_get_next_irq
 parameter_list|(
-name|void
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

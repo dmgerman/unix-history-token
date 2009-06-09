@@ -1186,7 +1186,9 @@ end_return
 begin_macro
 unit|}  int
 name|arm_get_next_irq
-argument_list|()
+argument_list|(
+argument|int last __unused
+argument_list|)
 end_macro
 
 begin_block
