@@ -1063,19 +1063,19 @@ name|next_rule
 decl_stmt|;
 comment|/* ptr to next [skipto] rule	*/
 comment|/* 'next_rule' is used to pass up 'set_disable' status		*/
-name|u_int16_t
+name|uint16_t
 name|act_ofs
 decl_stmt|;
 comment|/* offset of action in 32-bit units */
-name|u_int16_t
+name|uint16_t
 name|cmd_len
 decl_stmt|;
 comment|/* # of 32-bit words in cmd	*/
-name|u_int16_t
+name|uint16_t
 name|rulenum
 decl_stmt|;
 comment|/* rule number			*/
-name|u_int8_t
+name|uint8_t
 name|set
 decl_stmt|;
 comment|/* rule set (0..31)		*/
@@ -1084,20 +1084,24 @@ directive|define
 name|RESVD_SET
 value|31
 comment|/* set for default and persistent rules */
-name|u_int8_t
+name|uint8_t
 name|_pad
 decl_stmt|;
 comment|/* padding			*/
+name|uint32_t
+name|id
+decl_stmt|;
+comment|/* rule id */
 comment|/* These fields are present in all rules.			*/
-name|u_int64_t
+name|uint64_t
 name|pcnt
 decl_stmt|;
 comment|/* Packet counter		*/
-name|u_int64_t
+name|uint64_t
 name|bcnt
 decl_stmt|;
 comment|/* Byte counter			*/
-name|u_int32_t
+name|uint32_t
 name|timestamp
 decl_stmt|;
 comment|/* tv_sec of last match		*/
@@ -1578,6 +1582,14 @@ modifier|*
 name|rule
 decl_stmt|;
 comment|/* matching rule		*/
+name|uint32_t
+name|rule_id
+decl_stmt|;
+comment|/* matching rule id */
+name|uint32_t
+name|chain_id
+decl_stmt|;
+comment|/* ruleset id */
 name|struct
 name|ether_header
 modifier|*
@@ -1589,7 +1601,7 @@ name|ipfw_flow_id
 name|f_id
 decl_stmt|;
 comment|/* grabbed from IP header	*/
-name|u_int32_t
+name|uint32_t
 name|cookie
 decl_stmt|;
 comment|/* a cookie depending on rule action */
@@ -1812,6 +1824,10 @@ name|struct
 name|rwlock
 name|rwmtx
 decl_stmt|;
+name|uint32_t
+name|id
+decl_stmt|;
+comment|/* ruleset id */
 block|}
 struct|;
 end_struct

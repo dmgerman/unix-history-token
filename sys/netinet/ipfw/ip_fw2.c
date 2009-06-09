@@ -546,6 +546,14 @@ name|ipfw_dyn_rule_zone
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|ip_fw
+modifier|*
+name|ip_fw_default_rule
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Data structure to cache our ucred related  * information. This structure only gets used if  * the user specified UID/GID based constraints in  * a firewall rule.  */
 end_comment
@@ -11566,7 +11574,72 @@ operator|->
 name|rule
 condition|)
 block|{
-comment|/* 		 * Packet has already been tagged. Look for the next rule 		 * to restart processing. 		 */
+comment|/* 		 * Packet has already been tagged. Look for the next rule 		 * to restart processing. Make sure that args->rule still 		 * exists and not changed. 		 */
+if|if
+condition|(
+name|chain
+operator|->
+name|id
+operator|!=
+name|args
+operator|->
+name|chain_id
+condition|)
+block|{
+for|for
+control|(
+name|f
+operator|=
+name|chain
+operator|->
+name|rules
+init|;
+name|f
+operator|!=
+name|NULL
+condition|;
+name|f
+operator|=
+name|f
+operator|->
+name|next
+control|)
+if|if
+condition|(
+name|f
+operator|==
+name|args
+operator|->
+name|rule
+operator|&&
+name|f
+operator|->
+name|id
+operator|==
+name|args
+operator|->
+name|rule_id
+condition|)
+break|break;
+if|if
+condition|(
+name|f
+operator|!=
+name|NULL
+condition|)
+name|f
+operator|=
+name|f
+operator|->
+name|next_rule
+expr_stmt|;
+else|else
+name|f
+operator|=
+name|ip_fw_default_rule
+expr_stmt|;
+block|}
+else|else
 name|f
 operator|=
 name|args
@@ -14462,6 +14535,22 @@ operator|=
 name|f
 expr_stmt|;
 comment|/* report matching rule */
+name|args
+operator|->
+name|rule_id
+operator|=
+name|f
+operator|->
+name|id
+expr_stmt|;
+name|args
+operator|->
+name|chain_id
+operator|=
+name|chain
+operator|->
+name|id
+expr_stmt|;
 if|if
 condition|(
 name|cmd
@@ -15003,6 +15092,22 @@ operator|=
 name|f
 expr_stmt|;
 comment|/* report matching rule */
+name|args
+operator|->
+name|rule_id
+operator|=
+name|f
+operator|->
+name|id
+expr_stmt|;
+name|args
+operator|->
+name|chain_id
+operator|=
+name|chain
+operator|->
+name|id
+expr_stmt|;
 if|if
 condition|(
 name|cmd
@@ -15110,6 +15215,22 @@ operator|=
 name|f
 expr_stmt|;
 comment|/* Report matching rule. */
+name|args
+operator|->
+name|rule_id
+operator|=
+name|f
+operator|->
+name|id
+expr_stmt|;
+name|args
+operator|->
+name|chain_id
+operator|=
+name|chain
+operator|->
+name|id
+expr_stmt|;
 name|t
 operator|=
 operator|(
@@ -15404,6 +15525,22 @@ name|rule
 operator|=
 name|f
 expr_stmt|;
+name|args
+operator|->
+name|rule_id
+operator|=
+name|f
+operator|->
+name|id
+expr_stmt|;
+name|args
+operator|->
+name|chain_id
+operator|=
+name|chain
+operator|->
+name|id
+expr_stmt|;
 goto|goto
 name|done
 goto|;
@@ -15580,6 +15717,11 @@ argument_list|(
 name|chain
 argument_list|)
 expr_stmt|;
+name|chain
+operator|->
+name|id
+operator|++
+expr_stmt|;
 for|for
 control|(
 name|rule
@@ -15751,6 +15893,15 @@ operator|->
 name|rules
 operator|=
 name|rule
+expr_stmt|;
+name|rule
+operator|->
+name|id
+operator|=
+operator|++
+name|chain
+operator|->
+name|id
 expr_stmt|;
 goto|goto
 name|done
@@ -15930,6 +16081,15 @@ argument_list|(
 name|chain
 argument_list|)
 expr_stmt|;
+comment|/* chain->id incremented inside flush_rule_ptrs() */
+name|rule
+operator|->
+name|id
+operator|=
+name|chain
+operator|->
+name|id
+expr_stmt|;
 name|done
 label|:
 name|V_static_count
@@ -16075,26 +16235,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Hook for cleaning up dummynet when an ipfw rule is deleted.  * Set/cleared when dummynet module is loaded/unloaded.  */
-end_comment
-
-begin_function_decl
-name|void
-function_decl|(
-modifier|*
-name|ip_dn_ruledel_ptr
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-init|=
-name|NULL
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**  * Reclaim storage associated with a list of rules.  This is  * typically the list created using remove_rule.  */
+comment|/*  * Reclaim storage associated with a list of rules.  This is  * typically the list created using remove_rule.  */
 end_comment
 
 begin_function
@@ -16129,15 +16270,6 @@ operator|=
 name|head
 operator|->
 name|next
-expr_stmt|;
-if|if
-condition|(
-name|ip_dn_ruledel_ptr
-condition|)
-name|ip_dn_ruledel_ptr
-argument_list|(
-name|rule
-argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
@@ -19703,18 +19835,6 @@ directive|undef
 name|RULE_MAXSIZE
 block|}
 end_function
-
-begin_comment
-comment|/**  * dummynet needs a reference to the default rule, because rules can be  * deleted while packets hold a reference to them. When this happens,  * dummynet changes the reference to the default rule (it could well be a  * NULL pointer, but this way we do not need to check for the special  * case, plus here he have info on the default behaviour).  */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|ip_fw
-modifier|*
-name|ip_fw_default_rule
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * This procedure is only used to handle keepalives. It is invoked  * every dyn_keepalive_period  */

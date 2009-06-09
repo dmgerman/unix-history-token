@@ -185,6 +185,14 @@ modifier|*
 name|rule
 decl_stmt|;
 comment|/* matching rule */
+name|uint32_t
+name|rule_id
+decl_stmt|;
+comment|/* matching rule id */
+name|uint32_t
+name|chain_id
+decl_stmt|;
+comment|/* ruleset id */
 name|int
 name|dn_dir
 decl_stmt|;
@@ -716,16 +724,16 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Return the IPFW rule associated with the dummynet tag; if any.  * Make sure that the dummynet tag is not reused by lower layers.  */
+comment|/*  * Return the dummynet tag; if any.  * Make sure that the dummynet tag is not reused by lower layers.  */
 end_comment
 
 begin_expr_stmt
 specifier|static
 name|__inline
 expr|struct
-name|ip_fw
+name|dn_pkt_tag
 operator|*
-name|ip_dn_claim_rule
+name|ip_dn_claim_tag
 argument_list|(
 argument|struct mbuf *m
 argument_list|)
@@ -759,7 +767,6 @@ expr_stmt|;
 return|return
 operator|(
 operator|(
-operator|(
 expr|struct
 name|dn_pkt_tag
 operator|*
@@ -769,9 +776,6 @@ name|mtag
 operator|+
 literal|1
 operator|)
-operator|)
-operator|->
-name|rule
 operator|)
 return|;
 block|}
