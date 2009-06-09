@@ -700,6 +700,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_IS_DSTODS
+parameter_list|(
+name|wh
+parameter_list|)
+define|\
+value|(((wh)->i_fc[1]& IEEE80211_FC1_DIR_MASK) == IEEE80211_FC1_DIR_DSTODS)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_FC1_MORE_FRAG
 value|0x04
 end_define
