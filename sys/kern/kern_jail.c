@@ -783,7 +783,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
-name|int
+name|unsigned
 name|jail_max_af_ips
 init|=
 literal|255
@@ -1259,7 +1259,38 @@ name|struct
 name|iovec
 name|optiov
 index|[
-literal|24
+literal|2
+operator|*
+operator|(
+literal|4
+operator|+
+sizeof|sizeof
+argument_list|(
+name|pr_allow_names
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|pr_allow_names
+index|[
+literal|0
+index|]
+argument_list|)
+ifdef|#
+directive|ifdef
+name|INET
+operator|+
+literal|1
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET6
+operator|+
+literal|1
+endif|#
+directive|endif
+operator|)
 index|]
 decl_stmt|;
 name|struct
@@ -1279,7 +1310,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INET
-name|int
+name|uint32_t
 name|ip4s
 decl_stmt|;
 name|struct
@@ -17761,7 +17792,7 @@ argument_list|)
 end_if
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_UINT
 argument_list|(
 name|_security_jail
 argument_list|,
