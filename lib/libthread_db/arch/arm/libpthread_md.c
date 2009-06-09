@@ -20,19 +20,13 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<proc_service.h>
+file|<string.h>
 end_include
 
 begin_include
@@ -512,6 +506,7 @@ name|struct
 name|fpreg
 modifier|*
 name|r
+name|__unused
 parameter_list|,
 name|ucontext_t
 modifier|*
@@ -556,6 +551,7 @@ specifier|const
 name|ucontext_t
 modifier|*
 name|uc
+name|__unused
 parameter_list|,
 name|struct
 name|fpreg
@@ -563,16 +559,6 @@ modifier|*
 name|r
 parameter_list|)
 block|{
-specifier|const
-name|mcontext_t
-modifier|*
-name|mc
-init|=
-operator|&
-name|uc
-operator|->
-name|uc_mcontext
-decl_stmt|;
 comment|/* XXX */
 name|memset
 argument_list|(
@@ -607,12 +593,19 @@ name|struct
 name|reg
 modifier|*
 name|reg
+name|__unused
 parameter_list|,
 name|int
 name|step
+name|__unused
 parameter_list|)
 block|{
 comment|/* XXX */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

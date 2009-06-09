@@ -20,19 +20,13 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<proc_service.h>
+file|<string.h>
 end_include
 
 begin_include
@@ -302,12 +296,19 @@ name|struct
 name|reg
 modifier|*
 name|reg
+name|__unused
 parameter_list|,
 name|int
 name|step
+name|__unused
 parameter_list|)
 block|{
 comment|/* XXX */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

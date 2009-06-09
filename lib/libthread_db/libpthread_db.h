@@ -33,11 +33,9 @@ directive|include
 file|"thread_db_int.h"
 end_include
 
-begin_struct
-struct|struct
-name|pt_map
-block|{
+begin_enum
 enum|enum
+name|pt_type
 block|{
 name|PT_NONE
 block|,
@@ -45,8 +43,17 @@ name|PT_USER
 block|,
 name|PT_LWP
 block|}
-name|type
 enum|;
+end_enum
+
+begin_struct
+struct|struct
+name|pt_map
+block|{
+name|enum
+name|pt_type
+name|type
+decl_stmt|;
 union|union
 block|{
 name|lwpid_t
