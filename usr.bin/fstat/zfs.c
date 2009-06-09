@@ -159,7 +159,7 @@ name|LOCATION_ZPHYS
 parameter_list|(
 name|zsize
 parameter_list|)
-value|((zsize) - (2 * sizeof(void *) - sizeof(struct task)))
+value|((zsize) - (2 * sizeof(void *) + sizeof(struct task)))
 end_define
 
 begin_function
