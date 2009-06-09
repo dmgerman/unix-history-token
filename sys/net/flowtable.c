@@ -1373,7 +1373,7 @@ name|u_int
 name|fib
 parameter_list|)
 block|{
-name|in_rtalloc_ign
+name|rtalloc_ign_fib
 argument_list|(
 name|ro
 argument_list|,
