@@ -260,9 +260,7 @@ begin_decl_stmt
 name|char
 name|ng_nodename
 index|[
-name|NG_PATHLEN
-operator|+
-literal|1
+name|NG_PATHSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
