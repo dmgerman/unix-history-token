@@ -683,7 +683,7 @@ begin_define
 define|#
 directive|define
 name|GIFGOPTS
-value|_IOR('i', 150, struct ifreq)
+value|_IOWR('i', 150, struct ifreq)
 end_define
 
 begin_define
@@ -710,7 +710,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|GIF_FULLOPTS
+name|GIF_OPTMASK
 value|(GIF_ACCEPT_REVETHIP|GIF_SEND_REVETHIP)
 end_define
 
