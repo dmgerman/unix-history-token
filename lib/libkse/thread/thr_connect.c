@@ -57,6 +57,25 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_function_decl
+name|int
+name|__connect
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+specifier|const
+name|struct
+name|sockaddr
+modifier|*
+name|name
+parameter_list|,
+name|socklen_t
+name|namelen
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 name|__weak_reference
 argument_list|(

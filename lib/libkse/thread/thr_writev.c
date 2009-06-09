@@ -73,6 +73,25 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_function_decl
+name|ssize_t
+name|__writev
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+specifier|const
+name|struct
+name|iovec
+modifier|*
+name|iov
+parameter_list|,
+name|int
+name|iovcnt
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 name|__weak_reference
 argument_list|(

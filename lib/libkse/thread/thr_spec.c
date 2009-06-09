@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -31,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -409,16 +421,10 @@ init|=
 name|_get_curthread
 argument_list|()
 decl_stmt|;
-name|void
-function_decl|(
-modifier|*
+name|const_key_destructor_t
 name|destructor
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
+decl_stmt|;
+specifier|const
 name|void
 modifier|*
 name|data
@@ -545,10 +551,6 @@ condition|)
 block|{
 name|data
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|curthread
 operator|->
 name|specific
@@ -560,6 +562,9 @@ name|data
 expr_stmt|;
 name|destructor
 operator|=
+operator|(
+name|const_key_destructor_t
+operator|)
 name|_thread_keytable
 index|[
 name|key
@@ -835,6 +840,14 @@ operator|->
 name|specific_data_count
 operator|--
 expr_stmt|;
+operator|*
+operator|(
+specifier|const
+name|void
+operator|*
+operator|*
+operator|)
+operator|&
 name|pthread
 operator|->
 name|specific
@@ -966,10 +979,6 @@ block|{
 comment|/* Return the value: */
 name|data
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|pthread
 operator|->
 name|specific

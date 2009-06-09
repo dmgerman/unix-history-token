@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -13,12 +19,6 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"namespace.h"
 end_include
 
 begin_include
@@ -222,6 +222,7 @@ specifier|const
 name|pthread_barrierattr_t
 modifier|*
 name|attr
+name|__unused
 parameter_list|,
 name|unsigned
 name|count

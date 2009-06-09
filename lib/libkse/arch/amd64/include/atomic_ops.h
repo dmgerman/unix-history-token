@@ -25,6 +25,7 @@ specifier|inline
 name|void
 name|atomic_swap64
 parameter_list|(
+specifier|volatile
 name|intptr_t
 modifier|*
 name|dst
@@ -68,6 +69,7 @@ specifier|inline
 name|void
 name|atomic_swap_int
 parameter_list|(
+specifier|volatile
 name|int
 modifier|*
 name|dst
@@ -118,7 +120,7 @@ parameter_list|,
 name|r
 parameter_list|)
 define|\
-value|atomic_swap64((intptr_t *)(d), (intptr_t)(v), (intptr_t *)(r))
+value|atomic_swap64((volatile intptr_t *)(d), (intptr_t)(v), (intptr_t *)(r))
 end_define
 
 begin_endif

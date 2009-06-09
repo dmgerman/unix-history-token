@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<pthread.h>
+file|"namespace.h"
 end_include
 
 begin_include
@@ -18,8 +18,30 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"thr_private.h"
 end_include
+
+begin_function_decl
+name|int
+name|_raise
+parameter_list|(
+name|int
+name|sig
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|LT10_COMPAT_PRIVATE
@@ -78,9 +100,9 @@ else|else
 block|{
 name|ret
 operator|=
-name|pthread_kill
+name|_pthread_kill
 argument_list|(
-name|pthread_self
+name|_pthread_self
 argument_list|()
 argument_list|,
 name|sig

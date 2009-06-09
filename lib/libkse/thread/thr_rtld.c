@@ -587,6 +587,7 @@ parameter_list|(
 name|void
 modifier|*
 name|lock
+name|__unused
 parameter_list|)
 block|{
 comment|/* XXX We really can not free memory after a fork() */
@@ -930,6 +931,7 @@ name|_thr_rtld_set_flag
 parameter_list|(
 name|int
 name|mask
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -947,6 +949,7 @@ name|_thr_rtld_clr_flag
 parameter_list|(
 name|int
 name|mask
+name|__unused
 parameter_list|)
 block|{
 return|return

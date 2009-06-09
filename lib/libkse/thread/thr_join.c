@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -13,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -488,7 +500,7 @@ name|pthread
 argument_list|)
 expr_stmt|;
 block|}
-name|pthread_exit
+name|_pthread_exit
 argument_list|(
 name|PTHREAD_CANCELED
 argument_list|)

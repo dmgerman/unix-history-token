@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pthread.h>
 end_include
 

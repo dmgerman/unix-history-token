@@ -6,13 +6,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|"namespace.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"namespace.h"
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -60,6 +60,28 @@ name|wait4
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function_decl
+name|pid_t
+name|__wait4
+parameter_list|(
+name|pid_t
+name|pid
+parameter_list|,
+name|int
+modifier|*
+name|istat
+parameter_list|,
+name|int
+name|options
+parameter_list|,
+name|struct
+name|rusage
+modifier|*
+name|rusage
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|__weak_reference

@@ -937,8 +937,8 @@ end_function_decl
 
 begin_function
 specifier|static
-name|void
 name|__inline
+name|void
 name|thr_accounting
 parameter_list|(
 name|struct
@@ -2179,6 +2179,7 @@ name|struct
 name|lock
 modifier|*
 name|lock
+name|__unused
 parameter_list|,
 name|struct
 name|lockuser
@@ -2389,6 +2390,7 @@ name|struct
 name|lock
 modifier|*
 name|lock
+name|__unused
 parameter_list|,
 name|struct
 name|lockuser
@@ -2450,6 +2452,7 @@ name|struct
 name|lock
 modifier|*
 name|lock
+name|__unused
 parameter_list|,
 name|struct
 name|lockuser
@@ -4470,10 +4473,12 @@ name|thr_resume_wrapper
 parameter_list|(
 name|int
 name|sig
+name|__unused
 parameter_list|,
 name|siginfo_t
 modifier|*
 name|siginfo
+name|__unused
 parameter_list|,
 name|ucontext_t
 modifier|*

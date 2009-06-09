@@ -58,6 +58,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|pid_t
+name|_waitpid
+parameter_list|(
+name|pid_t
+name|wpid
+parameter_list|,
+name|int
+modifier|*
+name|status
+parameter_list|,
+name|int
+name|options
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
@@ -118,7 +135,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 block|}
 end_function

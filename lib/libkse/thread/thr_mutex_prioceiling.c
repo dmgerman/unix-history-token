@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -25,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -331,7 +343,9 @@ operator|=
 name|EINVAL
 expr_stmt|;
 else|else
-name|ret
+block|{
+operator|*
+name|prioceiling
 operator|=
 operator|(
 operator|*
@@ -340,6 +354,11 @@ operator|)
 operator|->
 name|m_prio
 expr_stmt|;
+name|ret
+operator|=
+literal|0
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|ret
@@ -414,7 +433,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 argument_list|(
 name|mutex
 argument_list|)
@@ -445,7 +464,7 @@ expr_stmt|;
 comment|/* Unlock the mutex: */
 name|ret
 operator|=
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 name|mutex
 argument_list|)

@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -31,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -415,10 +427,6 @@ else|else
 block|{
 name|atomic_swap_int
 argument_list|(
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 operator|(
 name|lck
@@ -565,10 +573,6 @@ block|}
 block|}
 name|atomic_swap_int
 argument_list|(
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 operator|(
 name|lck
@@ -668,10 +672,6 @@ name|NULL
 expr_stmt|;
 name|atomic_swap_int
 argument_list|(
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|lck
 operator|->

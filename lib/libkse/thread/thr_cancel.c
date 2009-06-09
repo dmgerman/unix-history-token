@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/errno.h>
 end_include
 
@@ -13,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -246,7 +258,7 @@ expr_stmt|;
 name|_thr_exit_cleanup
 argument_list|()
 expr_stmt|;
-name|pthread_exit
+name|_pthread_exit
 argument_list|(
 name|PTHREAD_CANCELED
 argument_list|)
@@ -849,7 +861,7 @@ block|{
 name|_thr_exit_cleanup
 argument_list|()
 expr_stmt|;
-name|pthread_exit
+name|_pthread_exit
 argument_list|(
 name|PTHREAD_CANCELED
 argument_list|)
@@ -994,7 +1006,7 @@ block|{
 name|_thr_exit_cleanup
 argument_list|()
 expr_stmt|;
-name|pthread_exit
+name|_pthread_exit
 argument_list|(
 name|PTHREAD_CANCELED
 argument_list|)
@@ -1158,6 +1170,7 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -1217,7 +1230,7 @@ expr_stmt|;
 name|_thr_exit_cleanup
 argument_list|()
 expr_stmt|;
-name|pthread_exit
+name|_pthread_exit
 argument_list|(
 name|PTHREAD_CANCELED
 argument_list|)

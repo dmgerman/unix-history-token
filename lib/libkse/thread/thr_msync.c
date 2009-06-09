@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -19,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -42,6 +54,23 @@ name|msync
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function_decl
+name|int
+name|__msync
+parameter_list|(
+name|void
+modifier|*
+name|addr
+parameter_list|,
+name|size_t
+name|len
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|__weak_reference
@@ -104,7 +133,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 block|}
 end_function

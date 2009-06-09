@@ -6,7 +6,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -14,6 +26,19 @@ include|#
 directive|include
 file|"thr_private.h"
 end_include
+
+begin_function_decl
+name|int
+name|_pthread_setprio
+parameter_list|(
+name|pthread_t
+name|pthread
+parameter_list|,
+name|int
+name|prio
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|LT10_COMPAT_PRIVATE
@@ -66,7 +91,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|pthread_getschedparam
+name|_pthread_getschedparam
 argument_list|(
 name|pthread
 argument_list|,
@@ -89,7 +114,7 @@ name|prio
 expr_stmt|;
 name|ret
 operator|=
-name|pthread_setschedparam
+name|_pthread_setschedparam
 argument_list|(
 name|pthread
 argument_list|,

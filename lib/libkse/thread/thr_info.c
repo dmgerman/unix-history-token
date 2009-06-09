@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -43,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -105,6 +117,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|_pthread_set_name_np
+parameter_list|(
+name|pthread_t
+name|thread
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
@@ -123,6 +149,7 @@ name|enum
 name|pthread_state
 name|state
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -232,7 +259,7 @@ index|[
 literal|512
 index|]
 decl_stmt|,
-name|tmpfile
+name|tempfile
 index|[
 literal|128
 index|]
@@ -261,11 +288,11 @@ control|)
 block|{
 name|snprintf
 argument_list|(
-name|tmpfile
+name|tempfile
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|tmpfile
+name|tempfile
 argument_list|)
 argument_list|,
 literal|"/tmp/pthread.dump.%u.%i"
@@ -284,7 +311,7 @@ name|fd
 operator|=
 name|__sys_open
 argument_list|(
-name|tmpfile
+name|tempfile
 argument_list|,
 name|O_RDWR
 operator||
@@ -467,6 +494,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 name|NELEMENTS
 argument_list|(
 name|thread_info
