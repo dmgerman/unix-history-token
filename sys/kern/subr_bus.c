@@ -4125,6 +4125,7 @@ comment|/**  * @brief Add a device driver to a device class  *  * Add a device d
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|devclass_add_driver
 parameter_list|(
@@ -4270,6 +4271,7 @@ comment|/**  * @brief Delete a device driver from a device class  *  * Delete a 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|devclass_delete_driver
 parameter_list|(
@@ -4518,6 +4520,7 @@ comment|/**  * @brief Quiesces a set of device drivers from a device class  *  *
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|devclass_quiesce_driver
 parameter_list|(
@@ -4794,6 +4797,7 @@ comment|/**  * @brief Search a devclass for a driver  *  * This function searche
 end_comment
 
 begin_function
+specifier|static
 name|kobj_class_t
 name|devclass_find_driver
 parameter_list|(
