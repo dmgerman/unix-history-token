@@ -307,7 +307,7 @@ name|tty
 modifier|*
 name|tp
 decl_stmt|;
-name|atomic_add_acq_int
+name|atomic_add_int
 argument_list|(
 operator|&
 name|nmdm_count
@@ -385,7 +385,7 @@ operator|->
 name|ns_part1
 argument_list|)
 expr_stmt|;
-name|callout_init
+name|callout_init_mtx
 argument_list|(
 operator|&
 name|ns
@@ -394,7 +394,12 @@ name|ns_part1
 operator|.
 name|np_callout
 argument_list|,
-name|CALLOUT_MPSAFE
+operator|&
+name|ns
+operator|->
+name|ns_mtx
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ns
@@ -435,7 +440,7 @@ operator|->
 name|ns_part2
 argument_list|)
 expr_stmt|;
-name|callout_init
+name|callout_init_mtx
 argument_list|(
 operator|&
 name|ns
@@ -444,7 +449,12 @@ name|ns_part2
 operator|.
 name|np_callout
 argument_list|,
-name|CALLOUT_MPSAFE
+operator|&
+name|ns
+operator|->
+name|ns_mtx
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Create device nodes. */
