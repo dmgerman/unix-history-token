@@ -612,6 +612,12 @@ end_undef
 begin_undef
 undef|#
 directive|undef
+name|pthread_mutex_isowned_np
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|pthread_mutex_lock
 end_undef
 
