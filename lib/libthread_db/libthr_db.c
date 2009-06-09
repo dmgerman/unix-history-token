@@ -2113,6 +2113,9 @@ name|int
 name|state
 decl_stmt|;
 name|int
+name|traceme
+decl_stmt|;
+name|int
 name|ret
 decl_stmt|;
 name|TDBG_FUNC
@@ -2189,10 +2192,14 @@ operator|->
 name|thread_off_report_events
 argument_list|,
 operator|&
+name|traceme
+argument_list|)
+expr_stmt|;
 name|info
 operator|->
 name|ti_traceme
-argument_list|)
+operator|=
+name|traceme
 expr_stmt|;
 if|if
 condition|(
