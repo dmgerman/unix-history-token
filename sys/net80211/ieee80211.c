@@ -1524,6 +1524,11 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
+name|ieee80211_dfs_attach
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 name|ieee80211_sysctl_attach
 argument_list|(
 name|ic
@@ -1697,6 +1702,11 @@ name|ic
 argument_list|)
 expr_stmt|;
 name|ieee80211_sysctl_detach
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
+name|ieee80211_dfs_detach
 argument_list|(
 name|ic
 argument_list|)
