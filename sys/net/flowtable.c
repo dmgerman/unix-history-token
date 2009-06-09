@@ -29,6 +29,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_FLOWTABLE
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -4459,6 +4465,15 @@ name|flow_kp
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NO_FLOWTABLE */
+end_comment
 
 end_unit
 
