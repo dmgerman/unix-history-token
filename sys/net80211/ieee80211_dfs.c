@@ -244,24 +244,34 @@ name|ic
 operator|->
 name|ic_dfs
 decl_stmt|;
-name|callout_init
+name|callout_init_mtx
 argument_list|(
 operator|&
 name|dfs
 operator|->
 name|nol_timer
 argument_list|,
-name|CALLOUT_MPSAFE
+name|IEEE80211_LOCK_OBJ
+argument_list|(
+name|ic
+argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-name|callout_init
+name|callout_init_mtx
 argument_list|(
 operator|&
 name|dfs
 operator|->
 name|cac_timer
 argument_list|,
-name|CALLOUT_MPSAFE
+name|IEEE80211_LOCK_OBJ
+argument_list|(
+name|ic
+argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -393,6 +403,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|IEEE80211_LOCK_ASSERT
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vap
@@ -456,6 +471,7 @@ name|dfs
 operator|->
 name|newchan
 expr_stmt|;
+comment|/* XXX recursive lock need ieee80211_new_state_locked */
 name|ieee80211_new_state
 argument_list|(
 name|vap
@@ -734,7 +750,6 @@ name|IEEE80211_NOTIFY_CAC_STOP
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* XXX cannot use drain 'cuz holding a lock */
 name|callout_stop
 argument_list|(
 operator|&
@@ -854,7 +869,7 @@ name|oldest
 decl_stmt|,
 name|now
 decl_stmt|;
-name|IEEE80211_LOCK
+name|IEEE80211_LOCK_ASSERT
 argument_list|(
 name|ic
 argument_list|)
@@ -1012,11 +1027,6 @@ name|NOL_TIMEOUT
 argument_list|)
 expr_stmt|;
 block|}
-name|IEEE80211_UNLOCK
-argument_list|(
-name|ic
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
