@@ -8167,6 +8167,12 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_comment
 comment|/* Return a printable string for the IPv4 address. */
 end_comment
@@ -8275,6 +8281,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Return a printable string for the address. */
