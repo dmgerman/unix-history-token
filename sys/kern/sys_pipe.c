@@ -3363,6 +3363,17 @@ operator|->
 name|iov_base
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|endaddr
+operator|<
+name|addr
+condition|)
+return|return
+operator|(
+name|EFAULT
+operator|)
+return|;
 for|for
 control|(
 name|i
