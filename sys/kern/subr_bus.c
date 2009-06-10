@@ -4793,55 +4793,6 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Search a devclass for a driver  *  * This function searches the devclass's list of drivers and returns  * the first driver whose name is @p classname or @c NULL if there is  * no driver of that name.  *  * @param dc		the devclass to search  * @param classname	the driver name to search for  */
-end_comment
-
-begin_function
-specifier|static
-name|kobj_class_t
-name|devclass_find_driver
-parameter_list|(
-name|devclass_t
-name|dc
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|classname
-parameter_list|)
-block|{
-name|driverlink_t
-name|dl
-decl_stmt|;
-name|dl
-operator|=
-name|devclass_find_driver_internal
-argument_list|(
-name|dc
-argument_list|,
-name|classname
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dl
-condition|)
-return|return
-operator|(
-name|dl
-operator|->
-name|driver
-operator|)
-return|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/**  * @brief Return the name of the devclass  */
 end_comment
 
