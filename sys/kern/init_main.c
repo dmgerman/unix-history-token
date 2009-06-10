@@ -1697,7 +1697,7 @@ name|p_state
 operator|=
 name|PRS_NORMAL
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|p
@@ -1708,12 +1708,6 @@ operator|&
 name|p
 operator|->
 name|p_mtx
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|STAILQ_INIT

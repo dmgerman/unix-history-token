@@ -3048,7 +3048,7 @@ argument_list|,
 name|psc
 argument_list|)
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|psc
@@ -3060,15 +3060,9 @@ argument_list|,
 name|tp
 operator|->
 name|t_mtx
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|psc
@@ -3080,12 +3074,6 @@ argument_list|,
 name|tp
 operator|->
 name|t_mtx
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Expose the slave device as well. */
@@ -3302,7 +3290,7 @@ argument_list|,
 name|psc
 argument_list|)
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|psc
@@ -3314,15 +3302,9 @@ argument_list|,
 name|tp
 operator|->
 name|t_mtx
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|psc
@@ -3334,12 +3316,6 @@ argument_list|,
 name|tp
 operator|->
 name|t_mtx
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Expose the slave device as well. */
