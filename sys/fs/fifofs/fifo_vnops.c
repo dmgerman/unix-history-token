@@ -290,20 +290,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vop_ioctl_t
-name|fifo_ioctl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|vop_kqfilter_t
-name|fifo_kqfilter
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|vop_pathconf_t
 name|fifo_pathconf
 decl_stmt|;
@@ -497,12 +483,12 @@ block|,
 operator|.
 name|vop_ioctl
 operator|=
-name|fifo_ioctl
+name|VOP_PANIC
 block|,
 operator|.
 name|vop_kqfilter
 operator|=
-name|fifo_kqfilter
+name|VOP_PANIC
 block|,
 operator|.
 name|vop_link
@@ -1454,76 +1440,6 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Now unused vnode ioctl routine.  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|fifo_ioctl
-parameter_list|(
-name|ap
-parameter_list|)
-name|struct
-name|vop_ioctl_args
-comment|/* { 		struct vnode *a_vp; 		u_long  a_command; 		caddr_t  a_data; 		int  a_fflag; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
-modifier|*
-name|ap
-decl_stmt|;
-block|{
-name|printf
-argument_list|(
-literal|"WARNING: fifo_ioctl called unexpectedly\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENOTTY
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Now unused vnode kqfilter routine.  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|fifo_kqfilter
-parameter_list|(
-name|ap
-parameter_list|)
-name|struct
-name|vop_kqfilter_args
-comment|/* { 		struct vnode *a_vp; 		struct knote *a_kn; 	} */
-modifier|*
-name|ap
-decl_stmt|;
-block|{
-name|printf
-argument_list|(
-literal|"WARNING: fifo_kqfilter called unexpectedly\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EINVAL
 operator|)
 return|;
 block|}
