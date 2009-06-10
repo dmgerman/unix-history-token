@@ -194,6 +194,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+end_if
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -224,6 +238,11 @@ end_endif
 begin_comment
 comment|/* SCTP */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|MALLOC_DEFINE
@@ -5257,6 +5276,17 @@ name|cmd
 operator|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 ifdef|#
 directive|ifdef
 name|SCTP
@@ -5271,6 +5301,8 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* SCTP */
+endif|#
+directive|endif
 if|if
 condition|(
 name|route_cb
