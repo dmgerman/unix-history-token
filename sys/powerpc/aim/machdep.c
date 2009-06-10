@@ -1306,6 +1306,7 @@ argument_list|()
 expr_stmt|;
 name|mtmsr
 argument_list|(
+operator|(
 name|msr
 operator|&
 operator|~
@@ -1314,6 +1315,9 @@ name|PSL_IR
 operator||
 name|PSL_DR
 operator|)
+operator|)
+operator||
+name|PSL_RI
 argument_list|)
 expr_stmt|;
 name|isync
@@ -1371,6 +1375,24 @@ name|cacheline_size
 operator|++
 control|)
 empty_stmt|;
+comment|/* Work around psim bug */
+if|if
+condition|(
+name|cacheline_size
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"WARNING: cacheline size undetermined, setting to 32\n"
+argument_list|)
+expr_stmt|;
+name|cacheline_size
+operator|=
+literal|32
+expr_stmt|;
+block|}
 comment|/* 	 * Figure out whether we need to use the 64 bit PMAP. This works by 	 * executing an instruction that is only legal on 64-bit PPC (mtmsrd), 	 * and setting ppc64 = 0 if that causes a trap. 	 */
 name|ppc64
 operator|=
