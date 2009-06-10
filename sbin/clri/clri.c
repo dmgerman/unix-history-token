@@ -219,6 +219,12 @@ index|[
 name|SBLOCKSIZE
 index|]
 decl_stmt|;
+name|void
+modifier|*
+name|v
+init|=
+name|ibuf
+decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -555,7 +561,7 @@ expr|struct
 name|ufs2_dinode
 operator|*
 operator|)
-name|ibuf
+name|v
 operator|)
 index|[
 name|ino_to_fsbo
@@ -609,7 +615,7 @@ expr|struct
 name|ufs1_dinode
 operator|*
 operator|)
-name|ibuf
+name|v
 operator|)
 index|[
 name|ino_to_fsbo
