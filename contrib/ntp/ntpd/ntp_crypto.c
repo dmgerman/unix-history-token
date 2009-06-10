@@ -2477,9 +2477,11 @@ operator|)
 operator|&
 literal|0xffff
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"flags 0x%x host %s signature %s"
 argument_list|,
@@ -2685,9 +2687,11 @@ name|cinfo
 operator|->
 name|nid
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"cert %s 0x%x %s (%u) fs %u"
 argument_list|,
@@ -2807,9 +2811,11 @@ operator|&=
 operator|~
 name|TEST10
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"iff fs %u"
 argument_list|,
@@ -2914,9 +2920,11 @@ operator|&=
 operator|~
 name|TEST10
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"gq fs %u"
 argument_list|,
@@ -3021,9 +3029,11 @@ operator|&=
 operator|~
 name|TEST10
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"mv fs %u"
 argument_list|,
@@ -3135,9 +3145,11 @@ name|cinfo
 operator|->
 name|nid
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"sign %s 0x%x %s (%u) fs %u"
 argument_list|,
@@ -3340,9 +3352,11 @@ operator|&=
 operator|~
 name|TEST10
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"cook %x ts %u fs %u"
 argument_list|,
@@ -3581,9 +3595,11 @@ operator|&=
 operator|~
 name|TEST10
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"cook %x ts %u fs %u"
 argument_list|,
@@ -3786,9 +3802,11 @@ operator|&=
 operator|~
 name|TEST10
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"auto seq %d key %x ts %u fs %u"
 argument_list|,
@@ -4140,9 +4158,11 @@ comment|/* NTP_API */
 endif|#
 directive|endif
 comment|/* KERNEL_PLL */
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"leap %u ts %u fs %u"
 argument_list|,
@@ -4299,9 +4319,11 @@ operator|!=
 name|XEVNT_OK
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"error %x opcode %x ts %u fs %u"
 argument_list|,
@@ -5337,9 +5359,11 @@ name|opcode
 operator||=
 name|CRYPTO_ERROR
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"error %x opcode %x"
 argument_list|,
@@ -7500,9 +7524,11 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"update ts %u"
 argument_list|,
@@ -13987,9 +14013,11 @@ name|ptr
 operator|=
 literal|'\0'
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"%s mod %d"
 argument_list|,
@@ -14437,9 +14465,11 @@ name|ptr
 operator|=
 literal|'\0'
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"%s 0x%x len %lu"
 argument_list|,
@@ -14946,9 +14976,11 @@ comment|/* NTP_API */
 endif|#
 directive|endif
 comment|/* KERNEL_PLL */
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"%s link %d fs %u offset %u"
 argument_list|,
