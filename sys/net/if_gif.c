@@ -1344,10 +1344,15 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|INET
 name|V_ip_gif_ttl
 operator|=
 name|GIF_TTL
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
