@@ -62,6 +62,14 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|zfs_prefetch_enable
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* max # of streams per zfetch */
 end_comment
@@ -148,6 +156,38 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Disable prefetch"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.prefetch_enable"
+argument_list|,
+operator|&
+name|zfs_prefetch_enable
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_zfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|prefetch_enable
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|zfs_prefetch_enable
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable prefetch for systems with less than 4GB"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
