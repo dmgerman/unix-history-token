@@ -1,10 +1,37 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000,2001 Jonathan Chen.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2008, M. Warner Losh  * Copyright (c) 2000,2001 Jonathan Chen.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
 comment|/*  * Structure definitions for the Cardbus Bus driver  */
+end_comment
+
+begin_comment
+comment|/*  * Static copy of the CIS buffer.  Technically, you aren't supposed  * to do this.  In practice, however, it works well.  */
+end_comment
+
+begin_struct
+struct|struct
+name|cis_buffer
+block|{
+name|size_t
+name|len
+decl_stmt|;
+comment|/* Actual length of the CIS */
+name|uint8_t
+name|buffer
+index|[
+literal|2040
+index|]
+decl_stmt|;
+comment|/* small enough to be 2k */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Per child information for the PCI device.  Cardbus layers on some  * additional data.  */
 end_comment
 
 begin_struct
@@ -21,10 +48,6 @@ decl_stmt|;
 comment|/* bit mask of prefetchable BARs */
 name|uint8_t
 name|mbelow1mb
-decl_stmt|;
-comment|/* bit mask of BARs which require below 1Mb */
-name|uint8_t
-name|ibelow1mb
 decl_stmt|;
 comment|/* bit mask of BARs which require below 1Mb */
 name|uint16_t
@@ -60,37 +83,6 @@ name|uint32_t
 name|fepresent
 decl_stmt|;
 comment|/* bit mask of funce values present */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|cis_buffer
-block|{
-name|size_t
-name|len
-decl_stmt|;
-comment|/* Actual length of the CIS */
-name|uint8_t
-name|buffer
-index|[
-literal|2040
-index|]
-decl_stmt|;
-comment|/* small enough to be 2k */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|cardbus_softc
-block|{
-comment|/* XXX need mutex XXX */
-name|device_t
-name|sc_dev
-decl_stmt|;
 name|struct
 name|cdev
 modifier|*
@@ -98,15 +90,30 @@ name|sc_cisdev
 decl_stmt|;
 name|struct
 name|cis_buffer
-modifier|*
 name|sc_cis
-decl_stmt|;
-name|int
-name|sc_cis_open
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Per cardbus soft info.  Not sure why we even keep this around...  */
+end_comment
+
+begin_struct
+struct|struct
+name|cardbus_softc
+block|{
+name|device_t
+name|sc_dev
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Per node callback structures.  */
+end_comment
 
 begin_struct_decl
 struct_decl|struct
@@ -181,6 +188,18 @@ parameter_list|(
 name|struct
 name|cardbus_softc
 modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|cardbus_devinfo
+modifier|*
+name|devi
+parameter_list|,
+name|device_t
+name|parent
+parameter_list|,
+name|device_t
+name|child
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -190,8 +209,9 @@ name|int
 name|cardbus_device_destroy
 parameter_list|(
 name|struct
-name|cardbus_softc
+name|cardbus_devinfo
 modifier|*
+name|devi
 parameter_list|)
 function_decl|;
 end_function_decl
