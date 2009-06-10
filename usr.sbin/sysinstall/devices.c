@@ -395,7 +395,7 @@ name|NETWORK
 argument_list|(
 literal|"alc"
 argument_list|,
-literal|"Atheros AR8111/AR8132 PCIe Ethernet"
+literal|"Atheros AR8131/AR8132 PCIe Ethernet"
 argument_list|)
 block|,
 name|NETWORK
