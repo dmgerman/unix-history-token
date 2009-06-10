@@ -16235,7 +16235,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reclaim storage associated with a list of rules.  This is  * typically the list created using remove_rule.  */
+comment|/*  * Reclaim storage associated with a list of rules.  This is  * typically the list created using remove_rule.  * A NULL pointer on input is handled correctly.  */
 end_comment
 
 begin_function
@@ -16312,6 +16312,12 @@ name|IPFW_WLOCK_ASSERT
 argument_list|(
 name|chain
 argument_list|)
+expr_stmt|;
+name|chain
+operator|->
+name|reap
+operator|=
+name|NULL
 expr_stmt|;
 name|flush_rule_ptrs
 argument_list|(
@@ -16496,12 +16502,14 @@ name|chain
 operator|->
 name|rules
 expr_stmt|;
+comment|/* common starting point */
 name|chain
 operator|->
 name|reap
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* prepare for deletions */
 switch|switch
 condition|(
 name|cmd
@@ -16585,12 +16593,6 @@ argument_list|(
 name|chain
 argument_list|)
 expr_stmt|;
-name|rule
-operator|=
-name|chain
-operator|->
-name|rules
-expr_stmt|;
 while|while
 condition|(
 name|rule
@@ -16599,6 +16601,7 @@ name|rulenum
 operator|<
 name|IPFW_DEFAULT_RULE
 condition|)
+block|{
 if|if
 condition|(
 name|rule
@@ -16631,17 +16634,12 @@ operator|->
 name|next
 expr_stmt|;
 block|}
+block|}
 break|break;
 case|case
 literal|2
 case|:
 comment|/* move rules with given number to new set */
-name|rule
-operator|=
-name|chain
-operator|->
-name|rules
-expr_stmt|;
 for|for
 control|(
 init|;
@@ -16854,21 +16852,11 @@ name|chain
 operator|->
 name|reap
 expr_stmt|;
-name|chain
-operator|->
-name|reap
-operator|=
-name|NULL
-expr_stmt|;
 name|IPFW_WUNLOCK
 argument_list|(
 name|chain
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|rule
-condition|)
 name|reap_rules
 argument_list|(
 name|rule
@@ -18927,6 +18915,15 @@ name|ipfw_dyn_rule
 argument_list|)
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|size
+operator|>=
+name|sopt
+operator|->
+name|sopt_valsize
+condition|)
+break|break;
 comment|/* 		 * XXX todo: if the user passes a short length just to know 		 * how much room is needed, do not bother filling up the 		 * buffer, just jump to the sooptcopyout. 		 */
 name|buf
 operator|=
@@ -18976,12 +18973,6 @@ operator|&
 name|V_layer3_chain
 argument_list|)
 expr_stmt|;
-name|V_layer3_chain
-operator|.
-name|reap
-operator|=
-name|NULL
-expr_stmt|;
 name|free_chain
 argument_list|(
 operator|&
@@ -18997,24 +18988,12 @@ name|V_layer3_chain
 operator|.
 name|reap
 expr_stmt|;
-name|V_layer3_chain
-operator|.
-name|reap
-operator|=
-name|NULL
-expr_stmt|;
 name|IPFW_WUNLOCK
 argument_list|(
 operator|&
 name|V_layer3_chain
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|rule
-operator|!=
-name|NULL
-condition|)
 name|reap_rules
 argument_list|(
 name|rule
@@ -20716,12 +20695,6 @@ operator|&
 name|V_layer3_chain
 argument_list|)
 expr_stmt|;
-name|V_layer3_chain
-operator|.
-name|reap
-operator|=
-name|NULL
-expr_stmt|;
 name|free_chain
 argument_list|(
 operator|&
@@ -20736,12 +20709,6 @@ operator|=
 name|V_layer3_chain
 operator|.
 name|reap
-operator|,
-name|V_layer3_chain
-operator|.
-name|reap
-operator|=
-name|NULL
 expr_stmt|;
 name|IPFW_WUNLOCK
 argument_list|(
@@ -20749,12 +20716,6 @@ operator|&
 name|V_layer3_chain
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|reap
-operator|!=
-name|NULL
-condition|)
 name|reap_rules
 argument_list|(
 name|reap
