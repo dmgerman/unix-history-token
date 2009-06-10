@@ -1332,6 +1332,9 @@ case|:
 case|case
 name|SIOCSIFINFO_FLAGS
 case|:
+case|case
+name|SIOCSIFINFO_IN6
+case|:
 if|if
 condition|(
 operator|!
@@ -1348,9 +1351,6 @@ name|OSIOCGIFINFO_IN6
 case|:
 case|case
 name|SIOCGIFINFO_IN6
-case|:
-case|case
-name|SIOCSIFINFO_IN6
 case|:
 case|case
 name|SIOCGDRLST_IN6
