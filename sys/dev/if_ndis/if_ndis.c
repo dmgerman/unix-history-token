@@ -15163,17 +15163,7 @@ operator|->
 name|ic_vaps
 argument_list|)
 expr_stmt|;
-name|NDIS_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ndis_scan_results
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|NDIS_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -16054,11 +16044,6 @@ operator|->
 name|ic_vaps
 argument_list|)
 expr_stmt|;
-name|NDIS_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -16075,11 +16060,6 @@ literal|"%s: scan aborted\n"
 operator|,
 name|__func__
 operator|)
-argument_list|)
-expr_stmt|;
-name|NDIS_UNLOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 name|ieee80211_cancel_scan
@@ -16219,11 +16199,6 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|NDIS_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ieee80211_cancel_scan
 argument_list|(
 name|vap
@@ -16231,11 +16206,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|NDIS_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* Set a timer to collect the results */
 name|callout_reset
 argument_list|(
