@@ -580,7 +580,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_open_args
-comment|/* { 		struct vnode *a_vp; 		int a_mode; 		struct ucred *a_cred; 		struct thread *a_td; 		int a_fp; 	} */
+comment|/* { 		struct vnode *a_vp; 		int a_mode; 		struct ucred *a_cred; 		struct thread *a_td; 		struct file *a_fp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
