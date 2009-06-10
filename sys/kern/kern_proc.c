@@ -1652,6 +1652,16 @@ operator||
 name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
+name|cv_init
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_pwait
+argument_list|,
+literal|"ppwait"
+argument_list|)
+expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
