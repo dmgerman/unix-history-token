@@ -242,7 +242,7 @@ parameter_list|,
 name|FUNC
 parameter_list|)
 define|\
-value|{&NAME##_desc, (kobjop_t) (FUNC != (NAME##_t *)NULL ? FUNC : NULL) }
+value|{&NAME##_desc, (kobjop_t) (1 ? FUNC : (NAME##_t *)NULL) }
 end_define
 
 begin_endif
