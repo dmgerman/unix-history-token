@@ -7850,7 +7850,7 @@ operator|=
 name|NGQRW_R
 expr_stmt|;
 block|}
-comment|/* 	 * If sender or receiver requests queued delivery or stack usage 	 * level is dangerous - enqueue message. 	 */
+comment|/* 	 * If sender or receiver requests queued delivery, or call graph 	 * loops back from outbound to inbound path, or stack usage 	 * level is dangerous - enqueue message. 	 */
 if|if
 condition|(
 operator|(
@@ -7870,6 +7870,29 @@ operator|&
 name|HK_QUEUE
 operator|)
 operator|)
+condition|)
+block|{
+name|queue
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|hook
+operator|&&
+operator|(
+name|hook
+operator|->
+name|hk_flags
+operator|&
+name|HK_TO_INBOUND
+operator|)
+operator|&&
+name|curthread
+operator|->
+name|td_ng_outbound
 condition|)
 block|{
 name|queue

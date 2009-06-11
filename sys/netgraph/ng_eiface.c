@@ -918,6 +918,9 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* 		 * Send packet; if hook is not connected, mbuf will get 		 * freed. 		 */
+name|NG_OUTBOUND_THREAD_REF
+argument_list|()
+expr_stmt|;
 name|NG_SEND_DATA_ONLY
 argument_list|(
 name|error
@@ -928,6 +931,9 @@ name|ether
 argument_list|,
 name|m
 argument_list|)
+expr_stmt|;
+name|NG_OUTBOUND_THREAD_UNREF
+argument_list|()
 expr_stmt|;
 comment|/* Update stats */
 if|if
@@ -1452,6 +1458,11 @@ operator|&
 name|priv
 operator|->
 name|ether
+argument_list|)
+expr_stmt|;
+name|NG_HOOK_SET_TO_INBOUND
+argument_list|(
+name|hook
 argument_list|)
 expr_stmt|;
 name|if_link_state_change

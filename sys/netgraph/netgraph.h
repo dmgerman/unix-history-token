@@ -502,6 +502,17 @@ begin_comment
 comment|/* Hook has hi stack usage */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HK_TO_INBOUND
+value|0x0020
+end_define
+
+begin_comment
+comment|/* Hook on ntw. stack inbound path. */
+end_comment
+
 begin_comment
 comment|/*  * Public Methods for hook  * If you can't do it with these you probably shouldn;t be doing it.  */
 end_comment
@@ -663,6 +674,17 @@ parameter_list|(
 name|hook
 parameter_list|)
 value|do { hook->hk_flags |= HK_QUEUE; } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_NG_HOOK_SET_TO_INBOUND
+parameter_list|(
+name|hook
+parameter_list|)
+define|\
+value|do { hook->hk_flags |= HK_TO_INBOUND; } while (0)
 end_define
 
 begin_define
@@ -1009,6 +1031,25 @@ specifier|static
 name|__inline
 name|void
 name|_ng_hook_force_queue
+parameter_list|(
+name|hook_p
+name|hook
+parameter_list|,
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|__inline
+name|void
+name|_ng_hook_set_to_inbound
 parameter_list|(
 name|hook_p
 name|hook
@@ -1563,6 +1604,40 @@ begin_function
 specifier|static
 name|__inline
 name|void
+name|_ng_hook_set_to_inbound
+parameter_list|(
+name|hook_p
+name|hook
+parameter_list|,
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+block|{
+name|_chkhook
+argument_list|(
+name|hook
+argument_list|,
+name|file
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+name|_NG_HOOK_SET_TO_INBOUND
+argument_list|(
+name|hook
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
 name|_ng_hook_hi_stack
 parameter_list|(
 name|hook_p
@@ -1732,6 +1807,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|NG_HOOK_SET_TO_INBOUND
+parameter_list|(
+name|hook
+parameter_list|)
+value|_ng_hook_set_to_inbound(hook, _NN_)
+end_define
+
+begin_define
+define|#
+directive|define
 name|NG_HOOK_HI_STACK
 parameter_list|(
 name|hook
@@ -1886,6 +1971,16 @@ parameter_list|(
 name|hook
 parameter_list|)
 value|_NG_HOOK_FORCE_QUEUE(hook)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_HOOK_SET_TO_INBOUND
+parameter_list|(
+name|hook
+parameter_list|)
+value|_NG_HOOK_SET_TO_INBOUND(hook)
 end_define
 
 begin_define
@@ -6297,6 +6392,28 @@ end_define
 begin_comment
 comment|/* most systems wont need even this many */
 end_comment
+
+begin_comment
+comment|/*  * Mark the current thread when called from the outbound path of the  * network stack, in order to enforce queuing on ng nodes calling into  * the inbound network stack path.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_OUTBOUND_THREAD_REF
+parameter_list|()
+define|\
+value|curthread->td_ng_outbound++
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_OUTBOUND_THREAD_UNREF
+parameter_list|()
+define|\
+value|do {								\ 		curthread->td_ng_outbound--;				\ 		KASSERT(curthread->td_ng_outbound>= 0,			\ 		    ("%s: negative td_ng_outbound", __func__));		\ 	} while (0)
+end_define
 
 begin_comment
 comment|/* Virtualization macros */

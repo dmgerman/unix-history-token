@@ -697,6 +697,10 @@ name|int
 name|td_dbgflags
 decl_stmt|;
 comment|/* (c) Userland debugger flags */
+name|int
+name|td_ng_outbound
+decl_stmt|;
+comment|/* (k) Thread entered ng from above. */
 name|struct
 name|osd
 name|td_osd

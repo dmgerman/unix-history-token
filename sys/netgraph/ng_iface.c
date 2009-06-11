@@ -1957,7 +1957,10 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
-comment|/* Send packet. If hook is not connected, 	   mbuf will get freed. */
+comment|/* Send packet. If hook is not connected, mbuf will get freed. */
+name|NG_OUTBOUND_THREAD_REF
+argument_list|()
+expr_stmt|;
 name|NG_SEND_DATA_ONLY
 argument_list|(
 name|error
@@ -1972,6 +1975,9 @@ argument_list|)
 argument_list|,
 name|m
 argument_list|)
+expr_stmt|;
+name|NG_OUTBOUND_THREAD_UNREF
+argument_list|()
 expr_stmt|;
 comment|/* Update stats. */
 if|if
@@ -2476,6 +2482,11 @@ operator|=
 name|hook
 expr_stmt|;
 name|NG_HOOK_HI_STACK
+argument_list|(
+name|hook
+argument_list|)
+expr_stmt|;
+name|NG_HOOK_SET_TO_INBOUND
 argument_list|(
 name|hook
 argument_list|)
