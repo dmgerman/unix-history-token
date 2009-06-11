@@ -2678,7 +2678,9 @@ name|blksz
 decl_stmt|;
 if|if
 condition|(
-name|zfs_prefetch_disable
+name|zfs_prefetch_enable
+operator|==
+literal|0
 condition|)
 return|return;
 comment|/* files that aren't ln2 blocksz are only one block -- nothing to do */

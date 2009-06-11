@@ -1468,7 +1468,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|int
-name|zfs_prefetch_disable
+name|zfs_prefetch_enable
 decl_stmt|;
 comment|/*  * Asynchronously try to read in the data.  */
 name|void
