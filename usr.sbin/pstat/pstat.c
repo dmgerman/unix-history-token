@@ -300,6 +300,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|usagestr
@@ -405,7 +406,9 @@ name|buf
 index|[
 name|_POSIX2_LINE_MAX
 index|]
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|opts
 decl_stmt|;
@@ -1733,6 +1736,7 @@ name|size_t
 name|len
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|dtypes
@@ -2448,7 +2452,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|devname
+name|swdevname
 parameter_list|,
 name|intmax_t
 name|nblks
@@ -2501,7 +2505,7 @@ name|printf
 argument_list|(
 literal|"%-15s %*jd "
 argument_list|,
-name|devname
+name|swdevname
 argument_list|,
 name|hlen
 argument_list|,
