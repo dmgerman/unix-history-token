@@ -481,7 +481,7 @@ operator|<
 literal|0
 operator|||
 name|syscall_num
-operator|>
+operator|>=
 name|nsyscalls
 operator|)
 condition|?
