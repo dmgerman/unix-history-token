@@ -2390,9 +2390,9 @@ if|if
 condition|(
 name|ni
 operator|->
-name|ni_htcap
+name|ni_flags
 operator|&
-name|IEEE80211_HTCAP_SHORTGI40
+name|IEEE80211_NODE_SGI40
 condition|)
 name|si
 operator|->
@@ -2418,9 +2418,9 @@ if|if
 condition|(
 name|ni
 operator|->
-name|ni_htcap
+name|ni_flags
 operator|&
-name|IEEE80211_HTCAP_SHORTGI20
+name|IEEE80211_NODE_SGI20
 condition|)
 name|si
 operator|->
