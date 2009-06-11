@@ -33,6 +33,17 @@ name|bio
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/* Empty classifier tag, to prevent further classification. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIO_NOTCLASSIFIED
+value|(void *)(~0UL)
+end_define
+
 begin_typedef
 typedef|typedef
 name|void
@@ -193,6 +204,16 @@ modifier|*
 name|bio_task_arg
 decl_stmt|;
 comment|/* Argument to above */
+name|void
+modifier|*
+name|bio_classifier1
+decl_stmt|;
+comment|/* Classifier tag. */
+name|void
+modifier|*
+name|bio_classifier2
+decl_stmt|;
+comment|/* Classifier tag. */
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
