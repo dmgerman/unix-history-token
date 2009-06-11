@@ -618,7 +618,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|led_detach
 parameter_list|(
 name|device_t
@@ -676,6 +676,11 @@ name|led
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -702,7 +707,7 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|device_attach
+name|device_detach
 argument_list|,
 name|led_detach
 argument_list|)

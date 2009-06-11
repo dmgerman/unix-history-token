@@ -508,6 +508,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|buf
@@ -2097,6 +2098,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|buf

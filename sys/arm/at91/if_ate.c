@@ -5865,7 +5865,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ate_miibus_writereg
 parameter_list|(
 name|device_t
@@ -5926,7 +5926,11 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

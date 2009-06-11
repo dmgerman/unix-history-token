@@ -8689,7 +8689,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|npe_miibus_writereg
 parameter_list|(
 name|device_t
@@ -8727,7 +8727,11 @@ operator|->
 name|sc_phy
 condition|)
 comment|/* XXX */
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|v
 operator|=
 operator|(
@@ -8766,6 +8770,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
