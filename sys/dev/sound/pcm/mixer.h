@@ -453,28 +453,6 @@ name|MIXER_SIZE
 value|(512 + sizeof(struct kobj) +		\ 			    sizeof(oss_mixer_enuminfo))
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SND_DEBUG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MIXER_DECLARE
-parameter_list|(
-name|mixer
-parameter_list|)
-define|\
-value|static struct kobj_class mixer##_class = {			\ 		.name        = #mixer,					\ 		.methods     = mixer##_methods,				\ 		.size        = MIXER_SIZE,				\ 		.baseclasses = NULL,					\ 		.refs        = 0					\ 	}
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -484,11 +462,6 @@ name|name
 parameter_list|)
 value|static DEFINE_CLASS(name, name ## _methods, MIXER_SIZE)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

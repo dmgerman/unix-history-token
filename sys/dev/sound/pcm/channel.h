@@ -2045,28 +2045,6 @@ name|CHN_2NDBUFMAXSIZE
 value|(131072)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SND_DEBUG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|CHANNEL_DECLARE
-parameter_list|(
-name|channel
-parameter_list|)
-define|\
-value|static struct kobj_class channel##_class = {			\ 		.name 	     = #channel,				\ 		.methods     = channel##_methods,			\ 		.size        = sizeof(struct kobj),			\ 		.baseclasses = NULL,					\ 		.refs        = 0					\ 	}
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -2076,11 +2054,6 @@ name|name
 parameter_list|)
 value|static DEFINE_CLASS(name, name ## _methods, sizeof(struct kobj))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
