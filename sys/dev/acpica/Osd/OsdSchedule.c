@@ -193,6 +193,10 @@ name|at_flag
 decl_stmt|;
 define|#
 directive|define
+name|ACPI_TASK_FREE
+value|0
+define|#
+directive|define
 name|ACPI_TASK_USED
 value|1
 define|#
@@ -363,7 +367,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|atomic_cmpset_acq_int
+name|atomic_cmpset_int
 argument_list|(
 operator|&
 name|acpi_tasks
@@ -518,7 +522,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|atomic_cmpset_acq_int
+name|atomic_cmpset_int
 argument_list|(
 operator|&
 name|acpi_tasks
@@ -528,7 +532,7 @@ index|]
 operator|.
 name|at_flag
 argument_list|,
-literal|0
+name|ACPI_TASK_FREE
 argument_list|,
 name|ACPI_TASK_USED
 argument_list|)
