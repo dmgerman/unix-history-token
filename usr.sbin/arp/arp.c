@@ -3409,6 +3409,12 @@ decl_stmt|;
 name|struct
 name|sockaddr_in
 name|so_mask
+decl_stmt|,
+modifier|*
+name|som
+init|=
+operator|&
+name|so_mask
 decl_stmt|;
 specifier|static
 name|int
@@ -3663,7 +3669,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|if ((s) != NULL&& rtm->rtm_addrs& (w)) { \ 		bcopy((s), cp, sizeof(*(s))); cp += SA_SIZE(s);}
+value|do {						   \ 		if ((s) != NULL&& rtm->rtm_addrs& (w)) { \ 			bcopy((s), cp, sizeof(*(s)));	   \ 			cp += SA_SIZE(s);		   \ 		}					   \ 	} while (0)
 name|NEXTADDR
 argument_list|(
 name|RTA_DST
@@ -3682,8 +3688,7 @@ name|NEXTADDR
 argument_list|(
 name|RTA_NETMASK
 argument_list|,
-operator|&
-name|so_mask
+name|som
 argument_list|)
 expr_stmt|;
 name|rtm
