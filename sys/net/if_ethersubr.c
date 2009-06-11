@@ -279,6 +279,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+end_if
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -290,6 +304,11 @@ include|#
 directive|include
 file|<netinet/ip_carp.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -2116,6 +2135,17 @@ name|error
 operator|)
 return|;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 ifdef|#
 directive|ifdef
 name|DEV_CARP
@@ -2143,6 +2173,8 @@ condition|)
 goto|goto
 name|bad
 goto|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* Handle ng_ether(4) processing, if any */
@@ -3415,6 +3447,17 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 ifdef|#
 directive|ifdef
 name|DEV_CARP
@@ -3446,6 +3489,8 @@ name|M_PROMISC
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|{
