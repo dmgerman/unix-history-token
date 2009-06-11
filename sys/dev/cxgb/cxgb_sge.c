@@ -19951,6 +19951,11 @@ argument_list|)
 expr_stmt|;
 name|CXGB_SYSCTL_ADD_QUAD
 argument_list|(
+name|rx_fcs_errs
+argument_list|)
+expr_stmt|;
+name|CXGB_SYSCTL_ADD_QUAD
+argument_list|(
 name|rx_align_errs
 argument_list|)
 expr_stmt|;
