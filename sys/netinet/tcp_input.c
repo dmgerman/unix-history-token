@@ -7129,13 +7129,11 @@ block|{
 comment|/* Check to see if ts_recent is over 24 days old.  */
 if|if
 condition|(
-operator|(
 name|ticks
 operator|-
 name|tp
 operator|->
 name|ts_recent_age
-operator|)
 operator|>
 name|TCP_PAWS_IDLE
 condition|)
