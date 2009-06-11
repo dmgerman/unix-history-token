@@ -677,7 +677,7 @@ block|{
 name|int
 name|n
 decl_stmt|;
-asm|asm("cvtsd2si %1,%0" : "=r" (n) : "Y" (x));
+asm|asm("cvtsd2si %1,%0" : "=r" (n) : "x" (x));
 return|return
 operator|(
 name|n
