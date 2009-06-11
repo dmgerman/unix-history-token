@@ -6607,6 +6607,11 @@ argument_list|,
 name|htinfo
 argument_list|)
 expr_stmt|;
+name|ieee80211_node_setuptxparms
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{

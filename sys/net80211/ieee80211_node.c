@@ -1002,9 +1002,8 @@ comment|/*  * Fix tx parameters for a node according to ``association state''.  
 end_comment
 
 begin_function
-specifier|static
 name|void
-name|node_setuptxparms
+name|ieee80211_node_setuptxparms
 parameter_list|(
 name|struct
 name|ieee80211_node
@@ -3763,7 +3762,7 @@ name|ni_flags
 operator||=
 name|IEEE80211_NODE_ERP
 expr_stmt|;
-name|node_setuptxparms
+name|ieee80211_node_setuptxparms
 argument_list|(
 name|ni
 argument_list|)
@@ -6227,7 +6226,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-name|node_setuptxparms
+name|ieee80211_node_setuptxparms
 argument_list|(
 name|ni
 argument_list|)
@@ -6611,7 +6610,7 @@ name|ni_flags
 operator||=
 name|IEEE80211_NODE_ERP
 expr_stmt|;
-name|node_setuptxparms
+name|ieee80211_node_setuptxparms
 argument_list|(
 name|ni
 argument_list|)
@@ -10060,7 +10059,7 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
-name|node_setuptxparms
+name|ieee80211_node_setuptxparms
 argument_list|(
 name|ni
 argument_list|)
