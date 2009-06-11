@@ -3087,7 +3087,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|wi_shutdown
 parameter_list|(
 name|device_t
@@ -3111,6 +3111,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

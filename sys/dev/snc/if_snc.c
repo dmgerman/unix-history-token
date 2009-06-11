@@ -994,7 +994,7 @@ comment|/****************************************************************   Shut
 end_comment
 
 begin_function
-name|void
+name|int
 name|snc_shutdown
 parameter_list|(
 name|dev
@@ -1028,6 +1028,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
