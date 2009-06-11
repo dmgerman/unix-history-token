@@ -333,7 +333,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|mge_miibus_writereg
 parameter_list|(
 name|device_t
@@ -6460,7 +6460,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|mge_miibus_writereg
 parameter_list|(
 name|device_t
@@ -6492,7 +6492,11 @@ operator|)
 operator|!=
 name|phy
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|MGE_WRITE
 argument_list|(
 name|sc_mge0
@@ -6560,6 +6564,11 @@ argument_list|,
 literal|"Timeout while writing to PHY\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
