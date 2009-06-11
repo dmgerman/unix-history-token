@@ -539,6 +539,7 @@ name|link_elf_symtab_get
 parameter_list|(
 name|linker_file_t
 parameter_list|,
+specifier|const
 name|Elf_Sym
 modifier|*
 modifier|*
@@ -7146,6 +7147,7 @@ parameter_list|(
 name|linker_file_t
 name|lf
 parameter_list|,
+specifier|const
 name|Elf_Sym
 modifier|*
 modifier|*

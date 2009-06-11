@@ -465,6 +465,7 @@ name|tsizes
 modifier|*
 name|ts
 decl_stmt|;
+specifier|const
 name|Elf_Sym
 modifier|*
 name|symtab
@@ -603,10 +604,12 @@ name|toffsets
 modifier|*
 name|to
 decl_stmt|;
+specifier|const
 name|Elf_Sym
 modifier|*
 name|symtab
-decl_stmt|,
+decl_stmt|;
+name|Elf_Sym
 modifier|*
 name|symp
 decl_stmt|;
