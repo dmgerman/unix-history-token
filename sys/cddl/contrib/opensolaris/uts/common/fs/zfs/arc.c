@@ -201,7 +201,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|zfs_prefetch_enable
+name|zfs_prefetch_disable
 decl_stmt|;
 end_decl_stmt
 
@@ -16334,10 +16334,10 @@ if|if
 condition|(
 name|TUNABLE_INT_FETCH
 argument_list|(
-literal|"vfs.zfs.prefetch_enable"
+literal|"vfs.zfs.prefetch_disable"
 argument_list|,
 operator|&
-name|zfs_prefetch_enable
+name|zfs_prefetch_disable
 argument_list|)
 condition|)
 name|prefetch_tunable_set
@@ -16360,9 +16360,9 @@ literal|"ZFS NOTICE: prefetch is disabled by default on i386"
 literal|" - add enable to tunable to change.\n"
 argument_list|)
 expr_stmt|;
-name|zfs_prefetch_enable
+name|zfs_prefetch_disable
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 block|}
 else|#
@@ -16397,9 +16397,9 @@ literal|"ZFS NOTICE: system has less than 4GB and prefetch enable is not set"
 literal|"... disabling.\n"
 argument_list|)
 expr_stmt|;
-name|zfs_prefetch_enable
+name|zfs_prefetch_disable
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 block|}
 endif|#

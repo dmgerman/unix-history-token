@@ -1763,9 +1763,7 @@ name|err
 decl_stmt|;
 if|if
 condition|(
-name|zfs_prefetch_enable
-operator|==
-literal|0
+name|zfs_prefetch_disable
 condition|)
 return|return;
 if|if

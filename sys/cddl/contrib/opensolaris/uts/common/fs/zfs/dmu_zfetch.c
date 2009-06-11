@@ -56,9 +56,9 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|zfs_prefetch_enable
+name|zfs_prefetch_disable
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -127,16 +127,16 @@ name|_vfs_zfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|prefetch_enable
+name|prefetch_disable
 argument_list|,
 name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
-name|zfs_prefetch_enable
+name|zfs_prefetch_disable
 argument_list|,
 literal|0
 argument_list|,
-literal|"Enable prefetch for systems with less than 4GB"
+literal|"Disable prefetch"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2678,9 +2678,7 @@ name|blksz
 decl_stmt|;
 if|if
 condition|(
-name|zfs_prefetch_enable
-operator|==
-literal|0
+name|zfs_prefetch_disable
 condition|)
 return|return;
 comment|/* files that aren't ln2 blocksz are only one block -- nothing to do */
