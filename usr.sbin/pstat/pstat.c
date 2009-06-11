@@ -1736,9 +1736,10 @@ name|size_t
 name|len
 decl_stmt|;
 specifier|static
-specifier|const
 name|char
+specifier|const
 modifier|*
+specifier|const
 name|dtypes
 index|[]
 init|=
