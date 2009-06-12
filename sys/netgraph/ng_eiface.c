@@ -1355,13 +1355,31 @@ operator||
 name|IFF_MULTICAST
 operator|)
 expr_stmt|;
-if|#
-directive|if
+comment|/* Give this node the same name as the interface (if possible) */
+if|if
+condition|(
+name|ng_name_node
+argument_list|(
+name|node
+argument_list|,
+name|ifp
+operator|->
+name|if_xname
+argument_list|)
+operator|!=
 literal|0
-comment|/* Give this node name */
-block|bzero(ifname, sizeof(ifname)); 	sprintf(ifname, "if%s", ifp->if_xname); 	(void)ng_name_node(node, ifname);
-endif|#
-directive|endif
+condition|)
+name|log
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"%s: can't acquire netgraph name\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_xname
+argument_list|)
+expr_stmt|;
 comment|/* Attach the interface */
 name|ether_ifattach
 argument_list|(
