@@ -58,15 +58,6 @@ name|ip_ft
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|flowtable
-modifier|*
-name|ip_forward_ft
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|struct
 name|flowtable
@@ -83,7 +74,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Given a flow table, look up the L3 and L2 information and  * return it in the route  *  */
+comment|/*  * Given a flow table, look up the L3 and L2 information and  * return it in the route.  *  */
 end_comment
 
 begin_function_decl
@@ -112,6 +103,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#
