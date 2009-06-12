@@ -405,24 +405,6 @@ begin_typedef
 typedef|typedef
 name|int
 function_decl|(
-name|libusb20_claim_interface_t
-function_decl|)
-parameter_list|(
-name|struct
-name|libusb20_device
-modifier|*
-name|pdev
-parameter_list|,
-name|uint8_t
-name|iface_index
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-function_decl|(
 name|libusb20_detach_kernel_driver_t
 function_decl|)
 parameter_list|(
@@ -546,24 +528,6 @@ name|struct
 name|libusb20_device
 modifier|*
 name|pdev
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-function_decl|(
-name|libusb20_release_interface_t
-function_decl|)
-parameter_list|(
-name|struct
-name|libusb20_device
-modifier|*
-name|pdev
-parameter_list|,
-name|uint8_t
-name|iface_index
 parameter_list|)
 function_decl|;
 end_typedef
@@ -757,7 +721,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|m(n, claim_interface) \   m(n, detach_kernel_driver) \   m(n, do_request_sync) \   m(n, get_config_desc_full) \   m(n, get_config_index) \   m(n, kernel_driver_active) \   m(n, process) \   m(n, release_interface) \   m(n, reset_device) \   m(n, set_power_mode) \   m(n, get_power_mode) \   m(n, set_alt_index) \   m(n, set_config_index) \   m(n, tr_cancel_async) \   m(n, tr_clear_stall_sync) \   m(n, tr_close) \   m(n, tr_open) \   m(n, tr_submit) \  struct libusb20_device_methods {
+value|m(n, detach_kernel_driver) \   m(n, do_request_sync) \   m(n, get_config_desc_full) \   m(n, get_config_index) \   m(n, kernel_driver_active) \   m(n, process) \   m(n, reset_device) \   m(n, set_power_mode) \   m(n, get_power_mode) \   m(n, set_alt_index) \   m(n, set_config_index) \   m(n, tr_cancel_async) \   m(n, tr_clear_stall_sync) \   m(n, tr_close) \   m(n, tr_open) \   m(n, tr_submit) \  struct libusb20_device_methods {
 end_define
 
 begin_macro
@@ -930,9 +894,9 @@ name|void
 modifier|*
 name|priv01Data
 decl_stmt|;
-comment|/* claimed interfaces */
-name|uint32_t
-name|claimed_interfaces
+comment|/* claimed interface */
+name|uint8_t
+name|claimed_interface
 decl_stmt|;
 comment|/* device file handle */
 name|int
