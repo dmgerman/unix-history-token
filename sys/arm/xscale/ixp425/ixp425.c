@@ -888,7 +888,9 @@ begin_function
 name|int
 name|arm_get_next_irq
 parameter_list|(
-name|void
+name|int
+name|last
+name|__unused
 parameter_list|)
 block|{
 name|uint32_t
@@ -1609,7 +1611,7 @@ parameter_list|,
 name|int
 name|which
 parameter_list|,
-name|u_char
+name|uintptr_t
 modifier|*
 name|result
 parameter_list|)

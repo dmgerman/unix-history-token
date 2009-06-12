@@ -6544,7 +6544,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -7454,7 +7453,6 @@ name|uap
 parameter_list|,
 name|fp
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*

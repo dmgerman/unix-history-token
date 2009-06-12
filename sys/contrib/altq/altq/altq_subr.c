@@ -49,12 +49,6 @@ directive|include
 file|"opt_inet6.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_route.h"
-end_include
-
 begin_endif
 endif|#
 directive|endif

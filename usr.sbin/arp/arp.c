@@ -3664,7 +3664,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|if ((s) != NULL&& rtm->rtm_addrs& (w)) { \ 		bcopy((s), cp, sizeof(*(s))); cp += SA_SIZE(s);}
+value|do {						   \ 		if ((s) != NULL&& rtm->rtm_addrs& (w)) { \ 			bcopy((s), cp, sizeof(*(s)));	   \ 			cp += SA_SIZE(s);		   \ 		}					   \ 	} while (0)
 name|NEXTADDR
 argument_list|(
 name|RTA_DST

@@ -3,6 +3,23 @@ begin_comment
 comment|/*  * Copyright (c) 2001 Katsurajima Naoto<raven@katsurajima.seya.yokohama.jp>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHERIN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_snd.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -129,7 +146,7 @@ begin_define
 define|#
 directive|define
 name|ENVY24_DEFAULT_FORMAT
-value|(AFMT_STEREO | AFMT_S16_LE)
+value|SND_FORMAT(AFMT_S16_LE, 2, 0)
 end_define
 
 begin_define
@@ -729,7 +746,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|u_int32_t
 name|envy24chan_setspeed
 parameter_list|(
 name|kobj_t
@@ -744,7 +761,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|u_int32_t
 name|envy24chan_setblocksize
 parameter_list|(
 name|kobj_t
@@ -774,7 +791,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|u_int32_t
 name|envy24chan_getptr
 parameter_list|(
 name|kobj_t
@@ -1535,13 +1552,23 @@ name|envy24_recfmt
 index|[]
 init|=
 block|{
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S32_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
 literal|0
 block|}
@@ -1573,17 +1600,32 @@ name|envy24_playfmt
 index|[]
 init|=
 block|{
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_U8
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S32_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
 literal|0
 block|}
@@ -1642,9 +1684,14 @@ index|[]
 init|=
 block|{
 block|{
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_U8
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
 name|envy24_p8u
 block|,
@@ -1652,9 +1699,14 @@ literal|2
 block|}
 block|,
 block|{
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
 name|envy24_p16sl
 block|,
@@ -1662,9 +1714,14 @@ literal|4
 block|}
 block|,
 block|{
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S32_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
 name|envy24_p32sl
 block|,
@@ -1691,9 +1748,14 @@ index|[]
 init|=
 block|{
 block|{
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
 name|envy24_r16sl
 block|,
@@ -1701,9 +1763,14 @@ literal|4
 block|}
 block|,
 block|{
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S32_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
 name|envy24_r32sl
 block|,
@@ -3068,7 +3135,7 @@ directive|endif
 end_endif
 
 begin_endif
-unit|envy24_wrmt(sc, ENVY24_MT_AC97IDX, (u_int32_t)regno, 1); 	envy24_wrmt(sc, ENVY24_MT_AC97DLO, (u_int32_t)data, 2); 	envy24_wrmt(sc, ENVY24_MT_AC97CMD, ENVY24_MT_AC97CMD_WR, 1); 	for (i = 0; i< ENVY24_TIMEOUT; i++) { 		cmd = envy24_rdmt(sc, ENVY24_MT_AC97CMD, 1); 		if ((cmd& ENVY24_MT_AC97CMD_WR) == 0) 			break; 	}  	return 0; }  static kobj_method_t envy24_ac97_methods[] = { 	KOBJMETHOD(ac97_read,	envy24_rdcd), 	KOBJMETHOD(ac97_write,	envy24_wrcd), 	{0, 0} }; AC97_DECLARE(envy24_ac97);
+unit|envy24_wrmt(sc, ENVY24_MT_AC97IDX, (u_int32_t)regno, 1); 	envy24_wrmt(sc, ENVY24_MT_AC97DLO, (u_int32_t)data, 2); 	envy24_wrmt(sc, ENVY24_MT_AC97CMD, ENVY24_MT_AC97CMD_WR, 1); 	for (i = 0; i< ENVY24_TIMEOUT; i++) { 		cmd = envy24_rdmt(sc, ENVY24_MT_AC97CMD, 1); 		if ((cmd& ENVY24_MT_AC97CMD_WR) == 0) 			break; 	}  	return 0; }  static kobj_method_t envy24_ac97_methods[] = { 	KOBJMETHOD(ac97_read,	envy24_rdcd), 	KOBJMETHOD(ac97_write,	envy24_wrcd), 	KOBJMETHOD_END }; AC97_DECLARE(envy24_ac97);
 endif|#
 directive|endif
 end_endif
@@ -4804,7 +4871,7 @@ end_struct
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|envy24_setspeed
 parameter_list|(
 name|struct
@@ -8138,7 +8205,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|envy24chan_setspeed
 parameter_list|(
 name|kobj_t
@@ -8273,7 +8340,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|envy24chan_setblocksize
 parameter_list|(
 name|kobj_t
@@ -9093,7 +9160,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|envy24chan_getptr
 parameter_list|(
 name|kobj_t
@@ -9122,8 +9189,7 @@ name|parent
 decl_stmt|;
 name|u_int32_t
 name|ptr
-decl_stmt|;
-name|int
+decl_stmt|,
 name|rtn
 decl_stmt|;
 if|#
@@ -9401,11 +9467,7 @@ argument_list|,
 name|envy24chan_getcaps
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -10004,11 +10066,7 @@ argument_list|,
 name|envy24mixer_setrecsrc
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -57,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/jail.h>
 end_include
 
 begin_include
@@ -547,6 +547,14 @@ operator|=
 name|p
 operator|->
 name|p_fd
+expr_stmt|;
+comment|/* We will set this ourselves if we need it. */
+name|cnp
+operator|->
+name|cn_flags
+operator|&=
+operator|~
+name|TRAILINGSLASH
 expr_stmt|;
 comment|/* 	 * Get a buffer for the name to be translated, and copy the 	 * name into the buffer. 	 */
 if|if
@@ -1225,7 +1233,7 @@ operator|&=
 operator|~
 name|GIANTHELD
 expr_stmt|;
-comment|/* 		 * Check for symbolic link 		 */
+comment|/* 		 * If not a symbolic link, we're done. 		 */
 if|if
 condition|(
 operator|(
@@ -1934,6 +1942,11 @@ modifier|*
 name|mp
 decl_stmt|;
 comment|/* mount table entry */
+name|struct
+name|prison
+modifier|*
+name|pr
+decl_stmt|;
 name|int
 name|docache
 decl_stmt|;
@@ -1946,9 +1959,6 @@ name|int
 name|rdonly
 decl_stmt|;
 comment|/* lookup read-only flag bit */
-name|int
-name|trailing_slash
-decl_stmt|;
 name|int
 name|error
 init|=
@@ -2265,10 +2275,6 @@ operator|=
 name|cp
 expr_stmt|;
 comment|/* 	 * Replace multiple slashes by a single slash and trailing slashes 	 * by a null.  This must be done before VOP_LOOKUP() because some 	 * fs's don't know about trailing slashes.  Remember if there were 	 * trailing slashes to handle symlinks, existing non-directories 	 * and non-existing files that won't be directories specially later. 	 */
-name|trailing_slash
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -2309,10 +2315,6 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|trailing_slash
-operator|=
-literal|1
-expr_stmt|;
 operator|*
 name|ndp
 operator|->
@@ -2320,7 +2322,12 @@ name|ni_next
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* XXX for direnter() ... */
+name|cnp
+operator|->
+name|cn_flags
+operator||=
+name|TRAILINGSLASH
+expr_stmt|;
 block|}
 block|}
 name|ndp
@@ -2612,6 +2619,35 @@ init|;
 condition|;
 control|)
 block|{
+for|for
+control|(
+name|pr
+operator|=
+name|cnp
+operator|->
+name|cn_cred
+operator|->
+name|cr_prison
+init|;
+name|pr
+operator|!=
+name|NULL
+condition|;
+name|pr
+operator|=
+name|pr
+operator|->
+name|pr_parent
+control|)
+if|if
+condition|(
+name|dp
+operator|==
+name|pr
+operator|->
+name|pr_root
+condition|)
+break|break;
 if|if
 condition|(
 name|dp
@@ -2629,6 +2665,10 @@ operator|||
 name|dp
 operator|==
 name|rootvnode
+operator|||
+name|pr
+operator|!=
+name|NULL
 operator|||
 operator|(
 operator|(
@@ -3100,7 +3140,7 @@ condition|)
 goto|goto
 name|bad
 goto|;
-comment|/* 		 * If creating and at end of pathname, then can consider 		 * allowing file to be created. 		 */
+comment|/* 		 * At this point, we know we're at the end of the 		 * pathname.  If creating / renaming, we can consider 		 * allowing the file or directory to be created / renamed, 		 * provided we're not on a read-only filesystem. 		 */
 if|if
 condition|(
 name|rdonly
@@ -3114,14 +3154,16 @@ goto|goto
 name|bad
 goto|;
 block|}
+comment|/* trailing slash only allowed for directories */
 if|if
 condition|(
-operator|*
-name|cp
-operator|==
-literal|'\0'
-operator|&&
-name|trailing_slash
+operator|(
+name|cnp
+operator|->
+name|cn_flags
+operator|&
+name|TRAILINGSLASH
+operator|)
 operator|&&
 operator|!
 operator|(
@@ -3158,28 +3200,6 @@ argument_list|(
 name|dp
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-comment|/* 		 * This is a temporary assert to make sure I know what the 		 * behavior here was. 		 */
-name|KASSERT
-argument_list|(
-operator|(
-name|cnp
-operator|->
-name|cn_flags
-operator|&
-operator|(
-name|WANTPARENT
-operator||
-name|LOCKPARENT
-operator|)
-operator|)
-operator|!=
-literal|0
-argument_list|,
-operator|(
-literal|"lookup: Unhandled case."
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * We return with ni_vp NULL to indicate that the entry 		 * doesn't currently exist, leaving a pointer to the 		 * (possibly locked) directory vnode in ndp->ni_dvp. 		 */
@@ -3465,7 +3485,13 @@ operator|&
 name|FOLLOW
 operator|)
 operator|||
-name|trailing_slash
+operator|(
+name|cnp
+operator|->
+name|cn_flags
+operator|&
+name|TRAILINGSLASH
+operator|)
 operator|||
 operator|*
 name|ndp
@@ -3543,29 +3569,9 @@ goto|goto
 name|success
 goto|;
 block|}
-comment|/* 	 * Check for bogus trailing slashes. 	 */
-if|if
-condition|(
-name|trailing_slash
-operator|&&
-name|dp
-operator|->
-name|v_type
-operator|!=
-name|VDIR
-condition|)
-block|{
-name|error
-operator|=
-name|ENOTDIR
-expr_stmt|;
-goto|goto
-name|bad2
-goto|;
-block|}
 name|nextname
 label|:
-comment|/* 	 * Not a symbolic link.  If more pathname, 	 * continue at next component, else return. 	 */
+comment|/* 	 * Not a symbolic link that we will follow.  Continue with the 	 * next component if there is any; otherwise, we're done. 	 */
 name|KASSERT
 argument_list|(
 operator|(
@@ -3666,6 +3672,32 @@ literal|0
 expr_stmt|;
 goto|goto
 name|dirloop
+goto|;
+block|}
+comment|/* 	 * If we're processing a path with a trailing slash, 	 * check that the end result is a directory. 	 */
+if|if
+condition|(
+operator|(
+name|cnp
+operator|->
+name|cn_flags
+operator|&
+name|TRAILINGSLASH
+operator|)
+operator|&&
+name|dp
+operator|->
+name|v_type
+operator|!=
+name|VDIR
+condition|)
+block|{
+name|error
+operator|=
+name|ENOTDIR
+expr_stmt|;
+goto|goto
+name|bad2
 goto|;
 block|}
 comment|/* 	 * Disallow directory write attempts on read-only filesystems. 	 */
@@ -4326,28 +4358,6 @@ argument_list|(
 name|dp
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-comment|/* 		 * This is a temporary assert to make sure I know what the 		 * behavior here was. 		 */
-name|KASSERT
-argument_list|(
-operator|(
-name|cnp
-operator|->
-name|cn_flags
-operator|&
-operator|(
-name|WANTPARENT
-operator||
-name|LOCKPARENT
-operator|)
-operator|)
-operator|!=
-literal|0
-argument_list|,
-operator|(
-literal|"relookup: Unhandled case."
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * We return with ni_vp NULL to indicate that the entry 		 * doesn't currently exist, leaving a pointer to the 		 * (possibly locked) directory vnode in ndp->ni_dvp. 		 */

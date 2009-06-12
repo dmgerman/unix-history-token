@@ -607,7 +607,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_device_id
+name|usb_device_id
 name|uath_devs
 index|[]
 init|=
@@ -621,6 +621,20 @@ parameter_list|,
 name|p
 parameter_list|)
 value|{ USB_VP(USB_VENDOR_##v, USB_PRODUCT_##v##_##p) }
+name|UATH_DEV
+argument_list|(
+name|ACCTON
+argument_list|,
+name|SMCWUSBG
+argument_list|)
+block|,
+name|UATH_DEV
+argument_list|(
+name|ACCTON
+argument_list|,
+name|SMCWUSBTG2
+argument_list|)
+block|,
 name|UATH_DEV
 argument_list|(
 name|ATHEROS
@@ -783,28 +797,28 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|uath_intr_rx_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|uath_intr_tx_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|uath_bulk_rx_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|uath_bulk_tx_callback
 decl_stmt|;
 end_decl_stmt
@@ -813,7 +827,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 name|uath_usbconfig
 index|[
 name|UATH_N_XFERS
@@ -1789,7 +1803,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -1879,7 +1893,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -1906,7 +1920,7 @@ init|=
 name|UATH_IFACE_INDEX
 decl_stmt|;
 comment|/* XXX */
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|uint8_t
@@ -12038,7 +12052,7 @@ name|void
 name|uath_intr_rx_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -12224,7 +12238,7 @@ name|void
 name|uath_intr_tx_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -12620,7 +12634,7 @@ modifier|*
 name|uath_data_rxeof
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
@@ -13669,7 +13683,7 @@ name|void
 name|uath_bulk_rx_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -14117,7 +14131,7 @@ name|void
 name|uath_data_txeof
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
@@ -14251,7 +14265,7 @@ name|void
 name|uath_bulk_tx_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)

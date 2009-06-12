@@ -87,7 +87,11 @@ value|11
 end_define
 
 begin_comment
-comment|/* assume freebsd vendor options /* set DHCP_ENV to one of the values above to export dhcp options to kenv */
+comment|/* assume freebsd vendor options */
+end_comment
+
+begin_comment
+comment|/* set DHCP_ENV to one of the values above to export dhcp options to kenv */
 end_comment
 
 begin_define

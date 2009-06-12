@@ -55,7 +55,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|usb2_handle_request_t
+name|usb_handle_req_t
 name|usb2_temp_get_desc_w
 decl_stmt|;
 end_decl_stmt
@@ -100,7 +100,7 @@ comment|/* global variables */
 end_comment
 
 begin_decl_stmt
-name|usb2_handle_request_t
+name|usb_handle_req_t
 modifier|*
 name|usb2_temp_get_desc_p
 init|=
@@ -169,11 +169,11 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usb2_temp_setup_by_index_w
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
@@ -196,7 +196,7 @@ name|usb2_test_quirk_w
 parameter_list|(
 specifier|const
 name|struct
-name|usb2_lookup_info
+name|usb_lookup_info
 modifier|*
 name|info
 parameter_list|,
@@ -244,16 +244,16 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usb2_temp_get_desc_w
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
 name|struct
-name|usb2_device_request
+name|usb_device_request
 modifier|*
 name|req
 parameter_list|,
@@ -283,7 +283,7 @@ name|void
 name|usb2_temp_unsetup_w
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|)
@@ -320,12 +320,12 @@ name|uint8_t
 name|usb2_test_huawei_autoinst_w
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 parameter_list|)

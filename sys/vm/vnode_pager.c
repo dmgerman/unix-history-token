@@ -1507,11 +1507,8 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Clear out partial-page dirty bits.  This 			 * has the side effect of setting the valid 			 * bits, but that is ok.  There are a bunch 			 * of places in the VM system where we expected 			 * m->dirty == VM_PAGE_BITS_ALL.  The file EOF 			 * case is one of them.  If the page is still 			 * partially dirty, make it fully dirty. 			 * 			 * note that we do not clear out the valid 			 * bits.  This would prevent bogus_page 			 * replacement from working properly. 			 */
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-name|vm_page_set_validclean
+comment|/* 			 * Update the valid bits to reflect the blocks that 			 * have been zeroed.  Some of these valid bits may 			 * have already been set. 			 */
+name|vm_page_set_valid
 argument_list|(
 name|m
 argument_list|,
@@ -1520,19 +1517,30 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|m
-operator|->
-name|dirty
-operator|!=
-literal|0
-condition|)
-name|m
-operator|->
-name|dirty
+comment|/* 			 * Round "base" to the next block boundary so that the 			 * dirty bit for a partially zeroed block is not 			 * cleared. 			 */
+name|base
 operator|=
-name|VM_PAGE_BITS_ALL
+name|roundup2
+argument_list|(
+name|base
+argument_list|,
+name|DEV_BSIZE
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Clear out partial-page dirty bits. 			 * 			 * note that we do not clear out the valid 			 * bits.  This would prevent bogus_page 			 * replacement from working properly. 			 */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
+name|vm_page_clear_dirty
+argument_list|(
+name|m
+argument_list|,
+name|base
+argument_list|,
+name|PAGE_SIZE
+operator|-
+name|base
+argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()

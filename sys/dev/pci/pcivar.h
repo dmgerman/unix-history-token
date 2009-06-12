@@ -515,22 +515,22 @@ name|struct
 name|pcicfg_pp
 name|pp
 decl_stmt|;
-comment|/* pci power management */
+comment|/* Power management */
 name|struct
 name|pcicfg_vpd
 name|vpd
 decl_stmt|;
-comment|/* pci vital product data */
+comment|/* Vital product data */
 name|struct
 name|pcicfg_msi
 name|msi
 decl_stmt|;
-comment|/* pci msi */
+comment|/* PCI MSI */
 name|struct
 name|pcicfg_msix
 name|msix
 decl_stmt|;
-comment|/* pci msi-x */
+comment|/* PCI MSI-X */
 name|struct
 name|pcicfg_ht
 name|ht

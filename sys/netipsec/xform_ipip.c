@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_route.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_enc.h"
 end_include
 
@@ -577,12 +571,17 @@ argument_list|(
 name|curvnet
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 specifier|register
 name|struct
 name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
+endif|#
+directive|endif
 specifier|register
 name|struct
 name|ifnet

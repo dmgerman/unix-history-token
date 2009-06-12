@@ -230,9 +230,11 @@ modifier|*
 modifier|*
 name|start_patch
 parameter_list|,
+name|unsigned
 name|int
 name|start_instr
 parameter_list|,
+name|unsigned
 name|int
 modifier|*
 name|skip_addr
@@ -455,15 +457,6 @@ name|argv
 index|[]
 parameter_list|)
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
@@ -2135,6 +2128,7 @@ decl_stmt|;
 name|int
 name|instrptr
 decl_stmt|;
+name|unsigned
 name|int
 name|line
 decl_stmt|;
@@ -2692,9 +2686,11 @@ modifier|*
 modifier|*
 name|start_patch
 parameter_list|,
+name|unsigned
 name|int
 name|start_instr
 parameter_list|,
+name|unsigned
 name|int
 modifier|*
 name|skip_addr

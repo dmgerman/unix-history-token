@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: master.h,v 1.38.18.6 2005/06/20 01:19:43 marka Exp $ */
+comment|/* $Id: master.h,v 1.51 2008/04/02 02:37:42 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -21,7 +21,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*! \file */
+comment|/*! \file dns/master.h */
 end_comment
 
 begin_comment
@@ -124,7 +124,7 @@ value|0x00000040
 end_define
 
 begin_comment
-comment|/*%< 						 * Check NS records to see  						 * if they are an address 						 */
+comment|/*%< 						 * Check NS records to see 						 * if they are an address 						 */
 end_comment
 
 begin_define
@@ -175,6 +175,13 @@ define|#
 directive|define
 name|DNS_MASTER_CHECKMXFAIL
 value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_MASTER_RESIGN
+value|0x00002000
 end_define
 
 begin_macro
@@ -317,6 +324,47 @@ parameter_list|,
 name|unsigned
 name|int
 name|options
+parameter_list|,
+name|dns_rdatacallbacks_t
+modifier|*
+name|callbacks
+parameter_list|,
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|dns_masterformat_t
+name|format
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_result_t
+name|dns_master_loadfile3
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|master_file
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|top
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|origin
+parameter_list|,
+name|dns_rdataclass_t
+name|zclass
+parameter_list|,
+name|unsigned
+name|int
+name|options
+parameter_list|,
+name|isc_uint32_t
+name|resign
 parameter_list|,
 name|dns_rdatacallbacks_t
 modifier|*
@@ -541,6 +589,63 @@ end_function_decl
 
 begin_function_decl
 name|isc_result_t
+name|dns_master_loadfileinc3
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|master_file
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|top
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|origin
+parameter_list|,
+name|dns_rdataclass_t
+name|zclass
+parameter_list|,
+name|unsigned
+name|int
+name|options
+parameter_list|,
+name|isc_uint32_t
+name|resign
+parameter_list|,
+name|dns_rdatacallbacks_t
+modifier|*
+name|callbacks
+parameter_list|,
+name|isc_task_t
+modifier|*
+name|task
+parameter_list|,
+name|dns_loaddonefunc_t
+name|done
+parameter_list|,
+name|void
+modifier|*
+name|done_arg
+parameter_list|,
+name|dns_loadctx_t
+modifier|*
+modifier|*
+name|ctxp
+parameter_list|,
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|dns_masterformat_t
+name|format
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_result_t
 name|dns_master_loadstreaminc
 parameter_list|(
 name|FILE
@@ -690,7 +795,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Loads a RFC1305 master file from a file, stream, buffer, or existing  * lexer into rdatasets and then calls 'callbacks->commit' to commit the  * rdatasets.  Rdata memory belongs to dns_master_load and will be  * reused / released when the callback completes.  dns_load_master will  * abort if callbacks->commit returns any value other than ISC_R_SUCCESS.  *  * If 'DNS_MASTER_AGETTL' is set and the master file contains one or more  * $DATE directives, the TTLs of the data will be aged accordingly.  *  * 'callbacks->commit' is assumed to call 'callbacks->error' or  * 'callbacks->warn' to generate any error messages required.  *  * 'done' is called with 'done_arg' and a result code when the loading  * is completed or has failed.  If the initial setup fails 'done' is  * not called.  *  * Requires:  *\li	'master_file' points to a valid string.  *\li	'lexer' points to a valid lexer.  *\li	'top' points to a valid name.  *\li	'origin' points to a valid name.  *\li	'callbacks->commit' points to a valid function.  *\li	'callbacks->error' points to a valid function.  *\li	'callbacks->warn' points to a valid function.  *\li	'mctx' points to a valid memory context.  *\li	'task' and 'done' to be valid.  *\li	'lmgr' to be valid.  *\li	'ctxp != NULL&& ctxp == NULL'.  *  * Returns:  *\li	ISC_R_SUCCESS upon successfully loading the master file.  *\li	ISC_R_SEENINCLUDE upon successfully loading the master file with  *		a $INCLUDE statement.  *\li	ISC_R_NOMEMORY out of memory.  *\li	ISC_R_UNEXPECTEDEND expected to be able to read a input token and  *		there was not one.  *\li	ISC_R_UNEXPECTED  *\li	DNS_R_NOOWNER failed to specify a ownername.  *\li	DNS_R_NOTTL failed to specify a ttl.  *\li	DNS_R_BADCLASS record class did not match zone class.  *\li	DNS_R_CONTINUE load still in progress (dns_master_load*inc() only).  *\li	Any dns_rdata_fromtext() error code.  *\li	Any error code from callbacks->commit().  */
+comment|/*%<  * Loads a RFC1305 master file from a file, stream, buffer, or existing  * lexer into rdatasets and then calls 'callbacks->commit' to commit the  * rdatasets.  Rdata memory belongs to dns_master_load and will be  * reused / released when the callback completes.  dns_load_master will  * abort if callbacks->commit returns any value other than ISC_R_SUCCESS.  *  * If 'DNS_MASTER_AGETTL' is set and the master file contains one or more  * $DATE directives, the TTLs of the data will be aged accordingly.  *  * 'callbacks->commit' is assumed to call 'callbacks->error' or  * 'callbacks->warn' to generate any error messages required.  *  * 'done' is called with 'done_arg' and a result code when the loading  * is completed or has failed.  If the initial setup fails 'done' is  * not called.  *  * 'resign' the number of seconds before a RRSIG expires that it should  * be re-signed.  0 is used if not provided.  *  * Requires:  *\li	'master_file' points to a valid string.  *\li	'lexer' points to a valid lexer.  *\li	'top' points to a valid name.  *\li	'origin' points to a valid name.  *\li	'callbacks->commit' points to a valid function.  *\li	'callbacks->error' points to a valid function.  *\li	'callbacks->warn' points to a valid function.  *\li	'mctx' points to a valid memory context.  *\li	'task' and 'done' to be valid.  *\li	'lmgr' to be valid.  *\li	'ctxp != NULL&& ctxp == NULL'.  *  * Returns:  *\li	ISC_R_SUCCESS upon successfully loading the master file.  *\li	ISC_R_SEENINCLUDE upon successfully loading the master file with  *		a $INCLUDE statement.  *\li	ISC_R_NOMEMORY out of memory.  *\li	ISC_R_UNEXPECTEDEND expected to be able to read a input token and  *		there was not one.  *\li	ISC_R_UNEXPECTED  *\li	DNS_R_NOOWNER failed to specify a ownername.  *\li	DNS_R_NOTTL failed to specify a ttl.  *\li	DNS_R_BADCLASS record class did not match zone class.  *\li	DNS_R_CONTINUE load still in progress (dns_master_load*inc() only).  *\li	Any dns_rdata_fromtext() error code.  *\li	Any error code from callbacks->commit().  */
 end_comment
 
 begin_function_decl

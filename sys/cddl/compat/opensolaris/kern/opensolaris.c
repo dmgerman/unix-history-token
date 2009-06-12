@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -55,12 +61,6 @@ begin_include
 include|#
 directive|include
 file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vimage.h>
 end_include
 
 begin_decl_stmt
@@ -252,7 +252,9 @@ name|utsname
 operator|.
 name|nodename
 operator|=
-name|G_hostname
+name|prison0
+operator|.
+name|pr_host
 expr_stmt|;
 break|break;
 case|case

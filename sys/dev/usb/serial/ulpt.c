@@ -290,11 +290,11 @@ struct|struct
 name|ulpt_softc
 block|{
 name|struct
-name|usb2_fifo_sc
+name|usb_fifo_sc
 name|sc_fifo
 decl_stmt|;
 name|struct
-name|usb2_fifo_sc
+name|usb_fifo_sc
 name|sc_fifo_noreset
 decl_stmt|;
 name|struct
@@ -302,19 +302,19 @@ name|mtx
 name|sc_mtx
 decl_stmt|;
 name|struct
-name|usb2_callout
+name|usb_callout
 name|sc_watchdog
 decl_stmt|;
 name|device_t
 name|sc_dev
 decl_stmt|;
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|sc_udev
 decl_stmt|;
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|sc_fifo_open
 index|[
@@ -322,7 +322,7 @@ literal|2
 index|]
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|sc_xfer
 index|[
@@ -374,21 +374,21 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|ulpt_write_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|ulpt_read_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|ulpt_status_callback
 decl_stmt|;
 end_decl_stmt
@@ -418,56 +418,56 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_close_t
+name|usb_fifo_close_t
 name|ulpt_close
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_cmd_t
+name|usb_fifo_cmd_t
 name|ulpt_start_read
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_cmd_t
+name|usb_fifo_cmd_t
 name|ulpt_start_write
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_cmd_t
+name|usb_fifo_cmd_t
 name|ulpt_stop_read
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_cmd_t
+name|usb_fifo_cmd_t
 name|ulpt_stop_write
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_ioctl_t
+name|usb_fifo_ioctl_t
 name|ulpt_ioctl
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_open_t
+name|usb_fifo_open_t
 name|ulpt_open
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_open_t
+name|usb_fifo_open_t
 name|unlpt_open
 decl_stmt|;
 end_decl_stmt
@@ -475,7 +475,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|usb2_fifo_methods
+name|usb_fifo_methods
 name|ulpt_fifo_methods
 init|=
 block|{
@@ -535,7 +535,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|usb2_fifo_methods
+name|usb_fifo_methods
 name|unlpt_fifo_methods
 init|=
 block|{
@@ -604,7 +604,7 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|DPRINTFN
@@ -748,7 +748,7 @@ name|void
 name|ulpt_write_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -763,7 +763,7 @@ operator|->
 name|priv_sc
 decl_stmt|;
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 init|=
@@ -896,7 +896,7 @@ name|void
 name|ulpt_read_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -911,7 +911,7 @@ operator|->
 name|priv_sc
 decl_stmt|;
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 init|=
@@ -1108,7 +1108,7 @@ name|void
 name|ulpt_status_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -1123,7 +1123,7 @@ operator|->
 name|priv_sc
 decl_stmt|;
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|uint8_t
@@ -1384,7 +1384,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 name|ulpt_config
 index|[
 name|ULPT_N_TRANSFER
@@ -1517,7 +1517,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 operator|+
 literal|1
@@ -1545,7 +1545,7 @@ name|void
 name|ulpt_start_read
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|)
@@ -1578,7 +1578,7 @@ name|void
 name|ulpt_stop_read
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|)
@@ -1611,7 +1611,7 @@ name|void
 name|ulpt_start_write
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|)
@@ -1644,7 +1644,7 @@ name|void
 name|ulpt_stop_write
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|)
@@ -1677,7 +1677,7 @@ name|int
 name|ulpt_open
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|,
@@ -1729,7 +1729,7 @@ name|int
 name|unlpt_open
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|,
@@ -1927,7 +1927,7 @@ name|void
 name|ulpt_close
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|,
@@ -1985,7 +1985,7 @@ name|int
 name|ulpt_ioctl
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|,
@@ -2018,7 +2018,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -2128,7 +2128,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -2148,7 +2148,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 modifier|*
 name|id
 decl_stmt|;
@@ -2482,7 +2482,7 @@ if|#
 directive|if
 literal|0
 comment|/*  * This code is disabled because for some mysterious reason it causes  * printing not to work.  But only sometimes, and mostly with  * UHCI and less often with OHCI.  *sigh*  */
-block|{ 		struct usb2_config_descriptor *cd = usb2_get_config_descriptor(dev); 		struct usb2_device_request req; 		int len, alen;  		req.bmRequestType = UT_READ_CLASS_INTERFACE; 		req.bRequest = UR_GET_DEVICE_ID; 		USETW(req.wValue, cd->bConfigurationValue); 		USETW2(req.wIndex, id->bInterfaceNumber, id->bAlternateSetting); 		USETW(req.wLength, sizeof devinfo - 1); 		error = usb2_do_request_flags(dev,&req, devinfo, USB_SHORT_XFER_OK,&alen, USB_DEFAULT_TIMEOUT); 		if (error) { 			device_printf(sc->sc_dev, "cannot get device id\n"); 		} else if (alen<= 2) { 			device_printf(sc->sc_dev, "empty device id, no " 			    "printer connected?\n"); 		} else {
+block|{ 		struct usb_config_descriptor *cd = usb2_get_config_descriptor(dev); 		struct usb_device_request req; 		int len, alen;  		req.bmRequestType = UT_READ_CLASS_INTERFACE; 		req.bRequest = UR_GET_DEVICE_ID; 		USETW(req.wValue, cd->bConfigurationValue); 		USETW2(req.wIndex, id->bInterfaceNumber, id->bAlternateSetting); 		USETW(req.wLength, sizeof devinfo - 1); 		error = usb2_do_request_flags(dev,&req, devinfo, USB_SHORT_XFER_OK,&alen, USB_DEFAULT_TIMEOUT); 		if (error) { 			device_printf(sc->sc_dev, "cannot get device id\n"); 		} else if (alen<= 2) { 			device_printf(sc->sc_dev, "empty device id, no " 			    "printer connected?\n"); 		} else {
 comment|/* devinfo now contains an IEEE-1284 device ID */
 block|len = ((devinfo[0]& 0xff)<< 8) | (devinfo[1]& 0xff); 			if (len> sizeof devinfo - 3) 				len = sizeof devinfo - 3; 			devinfo[len] = 0; 			printf("%s: device id<", device_get_nameunit(sc->sc_dev)); 			ieee1284_print_id(devinfo + 2); 			printf(">\n"); 		} 	}
 endif|#

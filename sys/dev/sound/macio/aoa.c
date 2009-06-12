@@ -85,6 +85,23 @@ directive|include
 file|<dev/ofw/ofw_bus.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_snd.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -542,7 +559,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|aoa_chan_setblocksize
 parameter_list|(
 name|kobj_t
@@ -785,11 +802,14 @@ if|if
 condition|(
 name|format
 operator|!=
-operator|(
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_BE
-operator|)
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -806,7 +826,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|aoa_chan_setspeed
 parameter_list|(
 name|kobj_t
@@ -839,7 +859,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|aoa_chan_getptr
 parameter_list|(
 name|kobj_t
@@ -1439,9 +1459,14 @@ name|sc_fmt
 index|[]
 init|=
 block|{
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_BE
-operator||
-name|AFMT_STEREO
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
 literal|0
 block|}
@@ -1553,11 +1578,7 @@ argument_list|,
 name|aoa_chan_getcaps
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt

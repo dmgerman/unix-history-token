@@ -4,7 +4,7 @@ comment|/*  * ng_ubt_var.h  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2001-2002 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ng_ubt_var.h,v 1.5 2005/10/31 17:57:44 max Exp $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2001-2009 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ng_ubt_var.h,v 1.2 2003/03/22 23:44:36 max Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -17,23 +17,7 @@ begin_define
 define|#
 directive|define
 name|_NG_UBT_VAR_H_
-end_define
-
-begin_comment
-comment|/* pullup wrapper */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NG_UBT_M_PULLUP
-parameter_list|(
-name|m
-parameter_list|,
-name|s
-parameter_list|)
-define|\
-value|do { \ 		if ((m)->m_len< (s)) \ 			(m) = m_pullup((m), (s)); \ 		if ((m) == NULL) \ 			NG_UBT_ALERT("%s: %s - m_pullup(%d) failed\n", \ 				__func__, device_get_nameunit(sc->sc_dev), (s)); \ 	} while (0)
+value|1
 end_define
 
 begin_comment
@@ -43,29 +27,78 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NG_UBT_ALERT
-value|if (sc->sc_debug>= NG_UBT_ALERT_LEVEL) printf
+name|UBT_DEBUG
+parameter_list|(
+name|level
+parameter_list|,
+name|sc
+parameter_list|,
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|do {								\ 	if ((sc)->sc_debug>= (level))				\ 		device_printf((sc)->sc_dev, "%s:%d: " fmt, 	\ 			__FUNCTION__, __LINE__,## __VA_ARGS__);	\ } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|NG_UBT_ERR
-value|if (sc->sc_debug>= NG_UBT_ERR_LEVEL)   printf
+name|UBT_ALERT
+parameter_list|(
+modifier|...
+parameter_list|)
+value|UBT_DEBUG(NG_UBT_ALERT_LEVEL, __VA_ARGS__)
 end_define
 
 begin_define
 define|#
 directive|define
-name|NG_UBT_WARN
-value|if (sc->sc_debug>= NG_UBT_WARN_LEVEL)  printf
+name|UBT_ERR
+parameter_list|(
+modifier|...
+parameter_list|)
+value|UBT_DEBUG(NG_UBT_ERR_LEVEL, __VA_ARGS__)
 end_define
 
 begin_define
 define|#
 directive|define
-name|NG_UBT_INFO
-value|if (sc->sc_debug>= NG_UBT_INFO_LEVEL)  printf
+name|UBT_WARN
+parameter_list|(
+modifier|...
+parameter_list|)
+value|UBT_DEBUG(NG_UBT_WARN_LEVEL, __VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UBT_INFO
+parameter_list|(
+modifier|...
+parameter_list|)
+value|UBT_DEBUG(NG_UBT_INFO_LEVEL, __VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UBT_NG_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_lock(&(sc)->sc_ng_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UBT_NG_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_unlock(&(sc)->sc_ng_mtx)
 end_define
 
 begin_comment
@@ -83,77 +116,53 @@ begin_define
 define|#
 directive|define
 name|UBT_DEFAULT_QLEN
-value|12
+value|64
 end_define
-
-begin_comment
-comment|/* Isoc transfers */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|NG_UBT_NXFERS
-value|3
+name|UBT_ISOC_NFRAMES
+value|32
 end_define
 
 begin_comment
-comment|/* max xfers to queue */
+comment|/* should be factor of 8 */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|NG_UBT_NFRAMES
-value|10
-end_define
 
 begin_comment
-comment|/* frames per xfer */
+comment|/* Bluetooth USB defines */
 end_comment
 
-begin_struct
-struct|struct
-name|ubt_isoc_xfer
+begin_enum
+enum|enum
 block|{
-name|usbd_xfer_handle
-name|xfer
-decl_stmt|;
-comment|/* isoc xfer */
-name|void
-modifier|*
-name|buffer
-decl_stmt|;
-comment|/* isoc buffer */
-name|uint16_t
-modifier|*
-name|frlen
-decl_stmt|;
-comment|/* isoc frame length */
-name|int
-name|active
-decl_stmt|;
-comment|/* is xfer active */
+comment|/* Interface #0 transfers */
+name|UBT_IF_0_BULK_DT_WR
+init|=
+literal|0
+block|,
+name|UBT_IF_0_BULK_DT_RD
+block|,
+name|UBT_IF_0_INTR_DT_RD
+block|,
+name|UBT_IF_0_CTRL_DT_WR
+block|,
+comment|/* Interface #1 transfers */
+name|UBT_IF_1_ISOC_DT_RD1
+block|,
+name|UBT_IF_1_ISOC_DT_RD2
+block|,
+name|UBT_IF_1_ISOC_DT_WR1
+block|,
+name|UBT_IF_1_ISOC_DT_WR2
+block|,
+name|UBT_N_TRANSFER
+block|,
+comment|/* total number of transfers */
 block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|ubt_isoc_xfer
-name|ubt_isoc_xfer_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|struct
-name|ubt_isoc_xfer
-modifier|*
-name|ubt_isoc_xfer_p
-typedef|;
-end_typedef
+enum|;
+end_enum
 
 begin_comment
 comment|/* USB device softc structure */
@@ -163,157 +172,92 @@ begin_struct
 struct|struct
 name|ubt_softc
 block|{
+name|device_t
+name|sc_dev
+decl_stmt|;
+comment|/* for debug printf */
 comment|/* State */
 name|ng_ubt_node_debug_ep
 name|sc_debug
 decl_stmt|;
 comment|/* debug level */
-name|uint32_t
-name|sc_flags
-decl_stmt|;
-comment|/* device flags */
-define|#
-directive|define
-name|UBT_NEED_FRAME_TYPE
-value|(1<< 0)
-comment|/* device required frame type */
-define|#
-directive|define
-name|UBT_HAVE_FRAME_TYPE
-value|UBT_NEED_FRAME_TYPE
-define|#
-directive|define
-name|UBT_CMD_XMIT
-value|(1<< 1)
-comment|/* CMD xmit in progress */
-define|#
-directive|define
-name|UBT_ACL_XMIT
-value|(1<< 2)
-comment|/* ACL xmit in progress */
-define|#
-directive|define
-name|UBT_SCO_XMIT
-value|(1<< 3)
-comment|/* SCO xmit in progress */
-define|#
-directive|define
-name|UBT_EVT_RECV
-value|(1<< 4)
-comment|/* EVN recv in progress */
-define|#
-directive|define
-name|UBT_ACL_RECV
-value|(1<< 5)
-comment|/* ACL recv in progress */
-define|#
-directive|define
-name|UBT_SCO_RECV
-value|(1<< 6)
-comment|/* SCO recv in progress */
 name|ng_ubt_node_stat_ep
 name|sc_stat
 decl_stmt|;
 comment|/* statistic */
 define|#
 directive|define
-name|NG_UBT_STAT_PCKTS_SENT
+name|UBT_STAT_PCKTS_SENT
 parameter_list|(
-name|s
+name|sc
 parameter_list|)
-value|(s).pckts_sent ++
+value|(sc)->sc_stat.pckts_sent ++
 define|#
 directive|define
-name|NG_UBT_STAT_BYTES_SENT
+name|UBT_STAT_BYTES_SENT
 parameter_list|(
-name|s
+name|sc
 parameter_list|,
 name|n
 parameter_list|)
-value|(s).bytes_sent += (n)
+value|(sc)->sc_stat.bytes_sent += (n)
 define|#
 directive|define
-name|NG_UBT_STAT_PCKTS_RECV
+name|UBT_STAT_PCKTS_RECV
 parameter_list|(
-name|s
+name|sc
 parameter_list|)
-value|(s).pckts_recv ++
+value|(sc)->sc_stat.pckts_recv ++
 define|#
 directive|define
-name|NG_UBT_STAT_BYTES_RECV
+name|UBT_STAT_BYTES_RECV
 parameter_list|(
-name|s
+name|sc
 parameter_list|,
 name|n
 parameter_list|)
-value|(s).bytes_recv += (n)
+value|(sc)->sc_stat.bytes_recv += (n)
 define|#
 directive|define
-name|NG_UBT_STAT_OERROR
+name|UBT_STAT_OERROR
 parameter_list|(
-name|s
+name|sc
 parameter_list|)
-value|(s).oerrors ++
+value|(sc)->sc_stat.oerrors ++
 define|#
 directive|define
-name|NG_UBT_STAT_IERROR
+name|UBT_STAT_IERROR
 parameter_list|(
-name|s
+name|sc
 parameter_list|)
-value|(s).ierrors ++
+value|(sc)->sc_stat.ierrors ++
 define|#
 directive|define
-name|NG_UBT_STAT_RESET
+name|UBT_STAT_RESET
 parameter_list|(
-name|s
+name|sc
 parameter_list|)
-value|bzero(&(s), sizeof((s)))
+value|bzero(&(sc)->sc_stat, sizeof((sc)->sc_stat))
 comment|/* USB device specific */
-name|device_t
-name|sc_dev
-decl_stmt|;
-comment|/* pointer back to USB device */
-name|usbd_device_handle
-name|sc_udev
-decl_stmt|;
-comment|/* USB device handle */
-name|usbd_interface_handle
-name|sc_iface0
-decl_stmt|;
-comment|/* USB interface 0 */
-name|usbd_interface_handle
-name|sc_iface1
-decl_stmt|;
-comment|/* USB interface 1 */
-comment|/* Interrupt pipe (HCI events) */
-name|int
-name|sc_intr_ep
-decl_stmt|;
-comment|/* interrupt endpoint */
-name|usbd_pipe_handle
-name|sc_intr_pipe
-decl_stmt|;
-comment|/* interrupt pipe handle */
-name|usbd_xfer_handle
-name|sc_intr_xfer
-decl_stmt|;
-comment|/* intr xfer */
 name|struct
-name|mbuf
+name|mtx
+name|sc_if_mtx
+decl_stmt|;
+comment|/* interfaces lock */
+name|struct
+name|usb_xfer
 modifier|*
-name|sc_intr_buffer
+name|sc_xfer
+index|[
+name|UBT_N_TRANSFER
+index|]
 decl_stmt|;
-comment|/* interrupt buffer */
-comment|/* Control pipe (HCI commands) */
-name|usbd_xfer_handle
-name|sc_ctrl_xfer
+name|struct
+name|mtx
+name|sc_ng_mtx
 decl_stmt|;
-comment|/* control xfer handle */
-name|void
-modifier|*
-name|sc_ctrl_buffer
-decl_stmt|;
-comment|/* control buffer */
+comment|/* lock for shared NG data */
+comment|/* HCI commands */
 name|struct
 name|ng_bt_mbufq
 name|sc_cmdq
@@ -322,45 +266,13 @@ comment|/* HCI command queue */
 define|#
 directive|define
 name|UBT_CTRL_BUFFER_SIZE
-define|\
-value|(sizeof(ng_hci_cmd_pkt_t) + NG_HCI_CMD_PKT_SIZE)
-comment|/* Bulk in pipe (ACL data) */
-name|int
-name|sc_bulk_in_ep
-decl_stmt|;
-comment|/* bulk-in enpoint */
-name|usbd_pipe_handle
-name|sc_bulk_in_pipe
-decl_stmt|;
-comment|/* bulk-in pipe */
-name|usbd_xfer_handle
-name|sc_bulk_in_xfer
-decl_stmt|;
-comment|/* bulk-in xfer */
-name|struct
-name|mbuf
-modifier|*
-name|sc_bulk_in_buffer
-decl_stmt|;
-comment|/* bulk-in buffer */
-comment|/* Bulk out pipe (ACL data) */
-name|int
-name|sc_bulk_out_ep
-decl_stmt|;
-comment|/* bulk-out endpoint */
-name|usbd_pipe_handle
-name|sc_bulk_out_pipe
-decl_stmt|;
-comment|/* bulk-out pipe */
-name|usbd_xfer_handle
-name|sc_bulk_out_xfer
-decl_stmt|;
-comment|/* bulk-out xfer */
-name|void
-modifier|*
-name|sc_bulk_out_buffer
-decl_stmt|;
-comment|/* bulk-out buffer */
+value|(sizeof(struct usb_device_request) +	\ 				 sizeof(ng_hci_cmd_pkt_t) + NG_HCI_CMD_PKT_SIZE)
+define|#
+directive|define
+name|UBT_INTR_BUFFER_SIZE
+value|(MCLBYTES-1)
+comment|/* reserve 1 byte for ID-tag */
+comment|/* ACL data */
 name|struct
 name|ng_bt_mbufq
 name|sc_aclq
@@ -368,61 +280,25 @@ decl_stmt|;
 comment|/* ACL data queue */
 define|#
 directive|define
-name|UBT_BULK_BUFFER_SIZE
-define|\
-value|MCLBYTES
-comment|/* XXX should be big enough to hold one frame */
-comment|/* Isoc. in pipe (SCO data) */
-name|struct
-name|mbuf
-modifier|*
-name|sc_isoc_in_buffer
-decl_stmt|;
-name|int
-name|sc_isoc_in_ep
-decl_stmt|;
-comment|/* isoc-in endpoint */
-name|usbd_pipe_handle
-name|sc_isoc_in_pipe
-decl_stmt|;
-comment|/* isoc-in pipe */
-name|ubt_isoc_xfer_t
-name|sc_isoc_in
-index|[
-name|NG_UBT_NXFERS
-index|]
-decl_stmt|;
-comment|/* isoc-in xfers */
-comment|/* Isoc. out pipe (SCO data) */
-name|int
-name|sc_isoc_out_ep
-decl_stmt|;
-comment|/* isoc-out endpoint */
-name|usbd_pipe_handle
-name|sc_isoc_out_pipe
-decl_stmt|;
-comment|/* isoc-out pipe */
-name|ubt_isoc_xfer_t
-name|sc_isoc_out
-index|[
-name|NG_UBT_NXFERS
-index|]
-decl_stmt|;
-comment|/* isoc-out xfers */
+name|UBT_BULK_READ_BUFFER_SIZE
+value|(MCLBYTES-1)
+comment|/* reserve 1 byte for ID-tag */
+define|#
+directive|define
+name|UBT_BULK_WRITE_BUFFER_SIZE
+value|(MCLBYTES)
+comment|/* SCO data */
 name|struct
 name|ng_bt_mbufq
 name|sc_scoq
 decl_stmt|;
 comment|/* SCO data queue */
-name|int
-name|sc_isoc_size
+name|struct
+name|mbuf
+modifier|*
+name|sc_isoc_in_buffer
 decl_stmt|;
-comment|/* max. size of isoc. packet */
-define|#
-directive|define
-name|UBT_ISOC_BUFFER_SIZE
-define|\
-value|(sizeof(ng_hci_scodata_pkt_t) + NG_HCI_SCO_PKT_SIZE)
+comment|/* SCO reassembly buffer */
 comment|/* Netgraph specific */
 name|node_p
 name|sc_node
@@ -432,6 +308,40 @@ name|hook_p
 name|sc_hook
 decl_stmt|;
 comment|/* upstream hook */
+comment|/* Glue */
+name|int
+name|sc_task_flags
+decl_stmt|;
+comment|/* task flags */
+define|#
+directive|define
+name|UBT_FLAG_T_PENDING
+value|(1<< 0)
+comment|/* task pending */
+define|#
+directive|define
+name|UBT_FLAG_T_STOP_ALL
+value|(1<< 1)
+comment|/* stop all xfers */
+define|#
+directive|define
+name|UBT_FLAG_T_START_ALL
+value|(1<< 2)
+comment|/* start all read and isoc 						   write xfers */
+define|#
+directive|define
+name|UBT_FLAG_T_START_CTRL
+value|(1<< 3)
+comment|/* start control xfer (write) */
+define|#
+directive|define
+name|UBT_FLAG_T_START_BULK
+value|(1<< 4)
+comment|/* start bulk xfer (write) */
+name|struct
+name|task
+name|sc_task
+decl_stmt|;
 block|}
 struct|;
 end_struct

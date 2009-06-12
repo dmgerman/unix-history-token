@@ -1354,12 +1354,8 @@ name|dev
 argument_list|,
 literal|"cfid"
 argument_list|,
-name|devclass_find_free_unit
-argument_list|(
-name|cfi_diskclass
-argument_list|,
-literal|0
-argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|bus_generic_attach

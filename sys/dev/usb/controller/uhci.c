@@ -385,20 +385,20 @@ struct|struct
 name|uhci_mem_layout
 block|{
 name|struct
-name|usb2_page_search
+name|usb_page_search
 name|buf_res
 decl_stmt|;
 name|struct
-name|usb2_page_search
+name|usb_page_search
 name|fix_res
 decl_stmt|;
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|buf_pc
 decl_stmt|;
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|fix_pc
 decl_stmt|;
@@ -459,7 +459,7 @@ end_struct
 begin_decl_stmt
 specifier|extern
 name|struct
-name|usb2_bus_methods
+name|usb_bus_methods
 name|uhci_bus_methods
 decl_stmt|;
 end_decl_stmt
@@ -467,7 +467,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 name|uhci_device_bulk_methods
 decl_stmt|;
 end_decl_stmt
@@ -475,7 +475,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 name|uhci_device_ctrl_methods
 decl_stmt|;
 end_decl_stmt
@@ -483,7 +483,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 name|uhci_device_intr_methods
 decl_stmt|;
 end_decl_stmt
@@ -491,7 +491,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 name|uhci_device_isoc_methods
 decl_stmt|;
 end_decl_stmt
@@ -514,7 +514,7 @@ name|void
 name|uhci_do_poll
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 parameter_list|)
 function_decl|;
@@ -526,10 +526,10 @@ name|void
 name|uhci_device_done
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 parameter_list|,
-name|usb2_error_t
+name|usb_error_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -540,7 +540,7 @@ name|void
 name|uhci_transfer_intr_enqueue
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 parameter_list|)
 function_decl|;
@@ -563,7 +563,7 @@ name|uint8_t
 name|uhci_check_transfer
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 parameter_list|)
 function_decl|;
@@ -586,11 +586,11 @@ name|void
 name|uhci_iterate_hw_softc
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 parameter_list|,
-name|usb2_bus_mem_sub_cb_t
+name|usb_bus_mem_sub_cb_t
 modifier|*
 name|cb
 parameter_list|)
@@ -866,7 +866,7 @@ modifier|*
 name|ml
 parameter_list|,
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -1109,7 +1109,7 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|usb2_page_search
+name|usb_page_search
 name|buf_res
 decl_stmt|;
 name|USB_BUS_LOCK_ASSERT
@@ -1559,13 +1559,13 @@ modifier|*
 name|uhci_init_qh
 parameter_list|(
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|)
 block|{
 name|struct
-name|usb2_page_search
+name|usb_page_search
 name|buf_res
 decl_stmt|;
 name|struct
@@ -1627,13 +1627,13 @@ modifier|*
 name|uhci_init_td
 parameter_list|(
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|)
 block|{
 name|struct
-name|usb2_page_search
+name|usb_page_search
 name|buf_res
 decl_stmt|;
 name|struct
@@ -1688,7 +1688,7 @@ block|}
 end_function
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|uhci_init
 parameter_list|(
 name|uhci_softc_t
@@ -2406,7 +2406,7 @@ literal|1
 condition|)
 block|{
 name|struct
-name|usb2_page_search
+name|usb_page_search
 name|buf_res
 decl_stmt|;
 name|uint32_t
@@ -3548,7 +3548,7 @@ name|void
 name|uhci_transfer_intr_enqueue
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -4092,13 +4092,13 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
 block|{
 name|struct
-name|usb2_page_search
+name|usb_page_search
 name|res
 decl_stmt|;
 name|uint32_t
@@ -4156,13 +4156,13 @@ name|DPRINTFN
 argument_list|(
 literal|13
 argument_list|,
-literal|"xfer=%p pipe=%p transfer done\n"
+literal|"xfer=%p endpoint=%p transfer done\n"
 argument_list|,
 name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 argument_list|)
 expr_stmt|;
 comment|/* sync any DMA memory before doing fixups */
@@ -4366,17 +4366,17 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|uhci_non_isoc_done_sub
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
 block|{
 name|struct
-name|usb2_page_search
+name|usb_page_search
 name|res
 decl_stmt|;
 name|uhci_td_t
@@ -4685,7 +4685,7 @@ expr_stmt|;
 comment|/* update data toggle */
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|toggle_next
 operator|=
@@ -4725,7 +4725,7 @@ name|address
 argument_list|,
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 argument_list|,
 name|xfer
 operator|->
@@ -4865,12 +4865,12 @@ name|void
 name|uhci_non_isoc_done
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
 block|{
-name|usb2_error_t
+name|usb_error_t
 name|err
 init|=
 literal|0
@@ -4879,13 +4879,13 @@ name|DPRINTFN
 argument_list|(
 literal|13
 argument_list|,
-literal|"xfer=%p pipe=%p transfer done\n"
+literal|"xfer=%p endpoint=%p transfer done\n"
 argument_list|,
 name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 argument_list|)
 expr_stmt|;
 if|#
@@ -5052,7 +5052,7 @@ name|void
 name|uhci_check_transfer_sub
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -5257,7 +5257,7 @@ name|uint8_t
 name|uhci_check_transfer
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -5285,7 +5285,7 @@ if|if
 condition|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|methods
 operator|==
@@ -5564,7 +5564,7 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
@@ -5840,7 +5840,7 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 init|=
@@ -5881,7 +5881,7 @@ name|void
 name|uhci_do_poll
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 parameter_list|)
@@ -6430,7 +6430,7 @@ modifier|*
 name|uhci_setup_standard_chain
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -6460,7 +6460,7 @@ name|UE_GET_ADDR
 argument_list|(
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 argument_list|)
 argument_list|,
 name|xfer
@@ -6616,7 +6616,7 @@ name|UHCI_TD_SET_ENDPT
 argument_list|(
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 argument_list|)
 operator||
 name|UHCI_TD_SET_DEVADDR
@@ -6631,7 +6631,7 @@ if|if
 condition|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|toggle_next
 condition|)
@@ -6952,7 +6952,7 @@ name|UE_GET_DIR
 argument_list|(
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 argument_list|)
 operator|==
 name|UE_DIR_IN
@@ -7024,7 +7024,7 @@ name|UE_GET_DIR
 argument_list|(
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 argument_list|)
 operator|==
 name|UE_DIR_OUT
@@ -7145,7 +7145,7 @@ literal|"nexttog=%d; data before transfer:\n"
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|toggle_next
 argument_list|)
@@ -7180,22 +7180,22 @@ name|void
 name|uhci_device_done
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
-name|usb2_error_t
+name|usb_error_t
 name|error
 parameter_list|)
 block|{
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 modifier|*
 name|methods
 init|=
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|methods
 decl_stmt|;
@@ -7230,13 +7230,13 @@ name|DPRINTFN
 argument_list|(
 literal|2
 argument_list|,
-literal|"xfer=%p, pipe=%p, error=%d\n"
+literal|"xfer=%p, endpoint=%p, error=%d\n"
 argument_list|,
 name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 argument_list|,
 name|error
 argument_list|)
@@ -7437,7 +7437,7 @@ name|void
 name|uhci_device_bulk_open
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -7452,7 +7452,7 @@ name|void
 name|uhci_device_bulk_close
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -7473,7 +7473,7 @@ name|void
 name|uhci_device_bulk_enter
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -7488,7 +7488,7 @@ name|void
 name|uhci_device_bulk_start
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -7609,7 +7609,7 @@ end_function
 
 begin_decl_stmt
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 name|uhci_device_bulk_methods
 init|=
 block|{
@@ -7646,7 +7646,7 @@ name|void
 name|uhci_device_ctrl_open
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -7661,7 +7661,7 @@ name|void
 name|uhci_device_ctrl_close
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -7682,7 +7682,7 @@ name|void
 name|uhci_device_ctrl_enter
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -7697,7 +7697,7 @@ name|void
 name|uhci_device_ctrl_start
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -7832,7 +7832,7 @@ end_function
 
 begin_decl_stmt
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 name|uhci_device_ctrl_methods
 init|=
 block|{
@@ -7869,7 +7869,7 @@ name|void
 name|uhci_device_intr_open
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -8004,7 +8004,7 @@ name|void
 name|uhci_device_intr_close
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -8048,7 +8048,7 @@ name|void
 name|uhci_device_intr_enter
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -8063,7 +8063,7 @@ name|void
 name|uhci_device_intr_start
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -8177,7 +8177,7 @@ end_function
 
 begin_decl_stmt
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 name|uhci_device_intr_methods
 init|=
 block|{
@@ -8214,7 +8214,7 @@ name|void
 name|uhci_device_isoc_open
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -8236,7 +8236,7 @@ name|UE_GET_DIR
 argument_list|(
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 argument_list|)
 operator|==
 name|UE_DIR_IN
@@ -8248,7 +8248,7 @@ literal|0
 argument_list|,
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 argument_list|,
 name|xfer
 operator|->
@@ -8263,7 +8263,7 @@ literal|0
 argument_list|,
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 argument_list|,
 name|xfer
 operator|->
@@ -8348,7 +8348,7 @@ name|void
 name|uhci_device_isoc_close
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -8369,7 +8369,7 @@ name|void
 name|uhci_device_isoc_enter
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -8436,7 +8436,7 @@ name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 argument_list|,
@@ -8461,7 +8461,7 @@ name|nframes
 operator|-
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 operator|)
@@ -8477,7 +8477,7 @@ condition|(
 operator|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|is_synced
 operator|==
@@ -8496,7 +8496,7 @@ block|{
 comment|/* 		 * If there is data underflow or the pipe queue is empty we 		 * schedule the transfer a few frames ahead of the current 		 * frame position. Else two isochronous transfers might 		 * overlap. 		 */
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 operator|=
@@ -8514,7 +8514,7 @@ operator|)
 expr_stmt|;
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|is_synced
 operator|=
@@ -8528,7 +8528,7 @@ literal|"start next=%d\n"
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 argument_list|)
@@ -8540,7 +8540,7 @@ operator|=
 operator|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 operator|-
@@ -8633,7 +8633,7 @@ name|sc_isoc_p_last
 index|[
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 index|]
@@ -8645,7 +8645,7 @@ name|qh_pos
 operator|=
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 expr_stmt|;
@@ -8929,7 +8929,7 @@ expr_stmt|;
 comment|/* update isoc_next */
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 operator|=
@@ -8960,7 +8960,7 @@ name|void
 name|uhci_device_isoc_start
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -8976,7 +8976,7 @@ end_function
 
 begin_decl_stmt
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 name|uhci_device_isoc_methods
 init|=
 block|{
@@ -9011,14 +9011,14 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_device_descriptor
+name|usb_device_descriptor
 name|uhci_devd
 init|=
 block|{
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_descriptor
+name|usb_device_descriptor
 argument_list|)
 block|,
 name|UDESC_DEVICE
@@ -9089,7 +9089,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 argument_list|)
 block|,
 operator|.
@@ -9145,7 +9145,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 argument_list|)
 block|,
 operator|.
@@ -9184,7 +9184,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_endpoint_descriptor
+name|usb_endpoint_descriptor
 argument_list|)
 block|,
 operator|.
@@ -9226,7 +9226,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_hub_descriptor_min
+name|usb_hub_descriptor_min
 name|uhci_hubd_piix
 init|=
 block|{
@@ -9267,7 +9267,7 @@ end_comment
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|uhci_portreset
 parameter_list|(
 name|uhci_softc_t
@@ -9651,16 +9651,16 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|uhci_roothub_exec
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
 name|struct
-name|usb2_device_request
+name|usb_device_request
 modifier|*
 name|req
 parameter_list|,
@@ -9717,7 +9717,7 @@ decl_stmt|;
 name|uint16_t
 name|len
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|USB_BUS_LOCK_ASSERT
@@ -11346,17 +11346,17 @@ name|void
 name|uhci_xfer_setup
 parameter_list|(
 name|struct
-name|usb2_setup_params
+name|usb_setup_params
 modifier|*
 name|parm
 parameter_list|)
 block|{
 name|struct
-name|usb2_page_search
+name|usb_page_search
 name|page_info
 decl_stmt|;
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 decl_stmt|;
@@ -11365,7 +11365,7 @@ modifier|*
 name|sc
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
@@ -12133,22 +12133,22 @@ end_function
 begin_function
 specifier|static
 name|void
-name|uhci_pipe_init
+name|uhci_ep_init
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
 name|struct
-name|usb2_endpoint_descriptor
+name|usb_endpoint_descriptor
 modifier|*
 name|edesc
 parameter_list|,
 name|struct
-name|usb2_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 block|{
 name|uhci_softc_t
@@ -12166,9 +12166,9 @@ name|DPRINTFN
 argument_list|(
 literal|2
 argument_list|,
-literal|"pipe=%p, addr=%d, endpt=%d, mode=%d (%d)\n"
+literal|"endpoint=%p, addr=%d, endpt=%d, mode=%d (%d)\n"
 argument_list|,
-name|pipe
+name|ep
 argument_list|,
 name|udev
 operator|->
@@ -12226,7 +12226,7 @@ block|{
 case|case
 name|UE_CONTROL
 case|:
-name|pipe
+name|ep
 operator|->
 name|methods
 operator|=
@@ -12237,7 +12237,7 @@ break|break;
 case|case
 name|UE_INTERRUPT
 case|:
-name|pipe
+name|ep
 operator|->
 name|methods
 operator|=
@@ -12257,7 +12257,7 @@ operator|==
 name|USB_SPEED_FULL
 condition|)
 block|{
-name|pipe
+name|ep
 operator|->
 name|methods
 operator|=
@@ -12278,7 +12278,7 @@ operator|!=
 name|USB_SPEED_LOW
 condition|)
 block|{
-name|pipe
+name|ep
 operator|->
 name|methods
 operator|=
@@ -12301,7 +12301,7 @@ name|void
 name|uhci_xfer_unsetup
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -12316,7 +12316,7 @@ name|void
 name|uhci_get_dma_delay
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 parameter_list|,
@@ -12343,7 +12343,7 @@ name|void
 name|uhci_device_resume
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|)
@@ -12361,12 +12361,12 @@ name|bus
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 modifier|*
 name|methods
 decl_stmt|;
@@ -12410,7 +12410,7 @@ name|methods
 operator|=
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|methods
 expr_stmt|;
@@ -12544,7 +12544,7 @@ name|void
 name|uhci_device_suspend
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|)
@@ -12562,12 +12562,12 @@ name|bus
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 modifier|*
 name|methods
 decl_stmt|;
@@ -12611,7 +12611,7 @@ name|methods
 operator|=
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|methods
 expr_stmt|;
@@ -12755,7 +12755,7 @@ name|void
 name|uhci_set_hw_power
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 parameter_list|)
@@ -12863,14 +12863,14 @@ end_function
 
 begin_decl_stmt
 name|struct
-name|usb2_bus_methods
+name|usb_bus_methods
 name|uhci_bus_methods
 init|=
 block|{
 operator|.
-name|pipe_init
+name|endpoint_init
 operator|=
-name|uhci_pipe_init
+name|uhci_ep_init
 block|,
 operator|.
 name|xfer_setup

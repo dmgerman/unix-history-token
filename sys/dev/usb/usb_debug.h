@@ -127,25 +127,25 @@ end_endif
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_interface
+name|usb_interface
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_device
+name|usb_device
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_pipe
+name|usb_endpoint
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_xfer
+name|usb_xfer
 struct_decl|;
 end_struct_decl
 
@@ -154,7 +154,7 @@ name|void
 name|usb2_dump_iface
 parameter_list|(
 name|struct
-name|usb2_interface
+name|usb_interface
 modifier|*
 name|iface
 parameter_list|)
@@ -166,7 +166,7 @@ name|void
 name|usb2_dump_device
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|)
@@ -178,21 +178,21 @@ name|void
 name|usb2_dump_queue
 parameter_list|(
 name|struct
-name|usb2_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_dump_pipe
+name|usb2_dump_endpoint
 parameter_list|(
 name|struct
-name|usb2_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -202,7 +202,7 @@ name|void
 name|usb2_dump_xfer
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)

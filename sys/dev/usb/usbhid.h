@@ -104,7 +104,7 @@ end_define
 
 begin_struct
 struct|struct
-name|usb2_hid_descriptor
+name|usb_hid_descriptor
 block|{
 name|uByte
 name|bLength
@@ -636,6 +636,13 @@ define|#
 directive|define
 name|HUG_SYSTEM_MENU_DOWN
 value|0x008d
+end_define
+
+begin_define
+define|#
+directive|define
+name|HUG_APPLE_EJECT
+value|0x00b8
 end_define
 
 begin_comment

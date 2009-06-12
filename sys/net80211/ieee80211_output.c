@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_inet6.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_wlan.h"
 end_include
 
@@ -187,6 +193,29 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip6.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<security/mac/mac_framework.h>
+end_include
 
 begin_define
 define|#
@@ -505,7 +534,7 @@ operator|==
 name|NULL
 condition|)
 break|break;
-comment|/* 		 * Sanitize mbuf flags for net80211 use.  We cannot 		 * clear M_PWR_SAV because this may be set for frames 		 * that are re-submitted from the power save queue. 		 * 		 * NB: This must be done before ieee80211_classify as 		 *     it marks EAPOL in frames with M_EAPOL. 		 */
+comment|/* 		 * Sanitize mbuf flags for net80211 use.  We cannot 		 * clear M_PWR_SAV or M_MORE_DATA because these may 		 * be set for frames that are re-submitted from the 		 * power save queue. 		 * 		 * NB: This must be done before ieee80211_classify as 		 *     it marks EAPOL in frames with M_EAPOL. 		 */
 name|m
 operator|->
 name|m_flags
@@ -515,6 +544,8 @@ operator|(
 name|M_80211_TX
 operator|-
 name|M_PWR_SAV
+operator|-
+name|M_MORE_DATA
 operator|)
 expr_stmt|;
 comment|/* 		 * Cancel any background scan. 		 */
@@ -893,9 +924,9 @@ operator|&&
 operator|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_AMPDU_TX
+name|IEEE80211_FHT_AMPDU_TX
 operator|)
 operator|&&
 operator|(
@@ -1217,7 +1248,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_ifnet_transmit
+name|mac_ifnet_check_transmit
 argument_list|(
 name|ifp
 argument_list|,
@@ -3032,6 +3063,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* XXX m_copydata may be too slow for fast path */
 ifdef|#
 directive|ifdef
 name|INET
@@ -3051,7 +3083,6 @@ name|uint8_t
 name|tos
 decl_stmt|;
 comment|/* 		 * IP frame, map the DSCP bits from the TOS field. 		 */
-comment|/* XXX m_copydata may be too slow for fast path */
 comment|/* NB: ip header may not be in first mbuf */
 name|m_copydata
 argument_list|(
@@ -3098,10 +3129,100 @@ block|{
 endif|#
 directive|endif
 comment|/* INET */
+ifdef|#
+directive|ifdef
+name|INET6
+if|if
+condition|(
+name|eh
+operator|->
+name|ether_type
+operator|==
+name|htons
+argument_list|(
+name|ETHERTYPE_IPV6
+argument_list|)
+condition|)
+block|{
+name|uint32_t
+name|flow
+decl_stmt|;
+name|uint8_t
+name|tos
+decl_stmt|;
+comment|/* 		 * IPv6 frame, map the DSCP bits from the TOS field. 		 */
+name|m_copydata
+argument_list|(
+name|m
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ether_header
+argument_list|)
+operator|+
+name|offsetof
+argument_list|(
+expr|struct
+name|ip6_hdr
+argument_list|,
+name|ip6_flow
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|flow
+argument_list|)
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|flow
+argument_list|)
+expr_stmt|;
+name|tos
+operator|=
+call|(
+name|uint8_t
+call|)
+argument_list|(
+name|ntohl
+argument_list|(
+name|flow
+argument_list|)
+operator|>>
+literal|20
+argument_list|)
+expr_stmt|;
+name|tos
+operator|>>=
+literal|5
+expr_stmt|;
+comment|/* NB: ECN + low 3 bits of DSCP */
+name|d_wme_ac
+operator|=
+name|TID_TO_WME_AC
+argument_list|(
+name|tos
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+endif|#
+directive|endif
+comment|/* INET6 */
 name|d_wme_ac
 operator|=
 name|WME_AC_BE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
+block|}
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET
@@ -6397,7 +6518,7 @@ name|csa
 operator|->
 name|csa_ie
 operator|=
-name|IEEE80211_ELEMID_CHANSWITCHANN
+name|IEEE80211_ELEMID_CSA
 expr_stmt|;
 name|csa
 operator|->
@@ -8308,9 +8429,9 @@ condition|(
 operator|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_HT
+name|IEEE80211_FHT_HT
 operator|)
 operator|&&
 name|ni
@@ -8406,9 +8527,9 @@ condition|(
 operator|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_HT
+name|IEEE80211_FHT_HT
 operator|)
 operator|&&
 name|ni
@@ -9833,9 +9954,9 @@ operator|&&
 operator|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_HTCOMPAT
+name|IEEE80211_FHT_HTCOMPAT
 operator|)
 operator|&&
 name|legacy
@@ -11274,9 +11395,9 @@ operator|&&
 operator|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_HTCOMPAT
+name|IEEE80211_FHT_HTCOMPAT
 operator|)
 condition|)
 block|{

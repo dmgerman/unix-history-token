@@ -1002,9 +1002,8 @@ comment|/*  * Fix tx parameters for a node according to ``association state''.  
 end_comment
 
 begin_function
-specifier|static
 name|void
-name|node_setuptxparms
+name|ieee80211_node_setuptxparms
 parameter_list|(
 name|struct
 name|ieee80211_node
@@ -1251,9 +1250,9 @@ operator|&&
 operator|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_PUREN
+name|IEEE80211_FHT_PUREN
 operator|)
 operator|==
 literal|0
@@ -1272,9 +1271,9 @@ operator|&&
 operator|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_PUREN
+name|IEEE80211_FHT_PUREN
 operator|)
 operator|==
 literal|0
@@ -3082,7 +3081,7 @@ name|ic
 argument_list|)
 decl_stmt|;
 comment|/* 		 * Check for channel promotion required to support the 		 * set of running vap's.  This assumes we are called 		 * after ni_chan is setup for each vap. 		 */
-comment|/* NB: this assumes IEEE80211_FEXT_USEHT40> IEEE80211_FEXT_HT */
+comment|/* NB: this assumes IEEE80211_FHT_USEHT40> IEEE80211_FHT_HT */
 if|if
 condition|(
 name|flags
@@ -3763,7 +3762,7 @@ name|ni_flags
 operator||=
 name|IEEE80211_NODE_ERP
 expr_stmt|;
-name|node_setuptxparms
+name|ieee80211_node_setuptxparms
 argument_list|(
 name|ni
 argument_list|)
@@ -5535,9 +5534,9 @@ operator|&&
 operator|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_HT
+name|IEEE80211_FHT_HT
 operator|)
 condition|)
 block|{
@@ -6227,7 +6226,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-name|node_setuptxparms
+name|ieee80211_node_setuptxparms
 argument_list|(
 name|ni
 argument_list|)
@@ -6611,7 +6610,7 @@ name|ni_flags
 operator||=
 name|IEEE80211_NODE_ERP
 expr_stmt|;
-name|node_setuptxparms
+name|ieee80211_node_setuptxparms
 argument_list|(
 name|ni
 argument_list|)
@@ -10060,7 +10059,7 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
-name|node_setuptxparms
+name|ieee80211_node_setuptxparms
 argument_list|(
 name|ni
 argument_list|)

@@ -243,13 +243,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_process  *  * This function is the USB process dispatcher.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_process  *  * This function is the USB process dispatcher.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_process
+name|usb_process
 parameter_list|(
 name|void
 modifier|*
@@ -257,14 +257,14 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|usb2_process
+name|usb_process
 modifier|*
 name|up
 init|=
 name|arg
 decl_stmt|;
 name|struct
-name|usb2_proc_msg
+name|usb_proc_msg
 modifier|*
 name|pm
 decl_stmt|;
@@ -482,7 +482,7 @@ name|int
 name|usb2_proc_create
 parameter_list|(
 name|struct
-name|usb2_process
+name|usb_process
 modifier|*
 name|up
 parameter_list|,
@@ -545,7 +545,7 @@ condition|(
 name|USB_THREAD_CREATE
 argument_list|(
 operator|&
-name|usb2_process
+name|usb_process
 argument_list|,
 name|up
 argument_list|,
@@ -604,7 +604,7 @@ name|void
 name|usb2_proc_free
 parameter_list|(
 name|struct
-name|usb2_process
+name|usb_process
 modifier|*
 name|up
 parameter_list|)
@@ -660,7 +660,7 @@ modifier|*
 name|usb2_proc_msignal
 parameter_list|(
 name|struct
-name|usb2_process
+name|usb_process
 modifier|*
 name|up
 parameter_list|,
@@ -674,25 +674,25 @@ name|_pm1
 parameter_list|)
 block|{
 name|struct
-name|usb2_proc_msg
+name|usb_proc_msg
 modifier|*
 name|pm0
 init|=
 name|_pm0
 decl_stmt|;
 name|struct
-name|usb2_proc_msg
+name|usb_proc_msg
 modifier|*
 name|pm1
 init|=
 name|_pm1
 decl_stmt|;
 name|struct
-name|usb2_proc_msg
+name|usb_proc_msg
 modifier|*
 name|pm2
 decl_stmt|;
-name|usb2_size_t
+name|usb_size_t
 name|d
 decl_stmt|;
 name|uint8_t
@@ -961,7 +961,7 @@ name|uint8_t
 name|usb2_proc_is_gone
 parameter_list|(
 name|struct
-name|usb2_process
+name|usb_process
 modifier|*
 name|up
 parameter_list|)
@@ -1003,7 +1003,7 @@ name|void
 name|usb2_proc_mwait
 parameter_list|(
 name|struct
-name|usb2_process
+name|usb_process
 modifier|*
 name|up
 parameter_list|,
@@ -1017,14 +1017,14 @@ name|_pm1
 parameter_list|)
 block|{
 name|struct
-name|usb2_proc_msg
+name|usb_proc_msg
 modifier|*
 name|pm0
 init|=
 name|_pm0
 decl_stmt|;
 name|struct
-name|usb2_proc_msg
+name|usb_proc_msg
 modifier|*
 name|pm1
 init|=
@@ -1173,7 +1173,7 @@ name|void
 name|usb2_proc_drain
 parameter_list|(
 name|struct
-name|usb2_process
+name|usb_process
 modifier|*
 name|up
 parameter_list|)

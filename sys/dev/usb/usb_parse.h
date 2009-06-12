@@ -25,10 +25,10 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_idesc_parse_state
+name|usb_idesc_parse_state
 block|{
 name|struct
-name|usb2_descriptor
+name|usb_descriptor
 modifier|*
 name|desc
 decl_stmt|;
@@ -53,17 +53,17 @@ end_comment
 
 begin_function_decl
 name|struct
-name|usb2_descriptor
+name|usb_descriptor
 modifier|*
 name|usb2_desc_foreach
 parameter_list|(
 name|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 modifier|*
 name|cd
 parameter_list|,
 name|struct
-name|usb2_descriptor
+name|usb_descriptor
 modifier|*
 name|desc
 parameter_list|)
@@ -72,17 +72,17 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 modifier|*
 name|usb2_idesc_foreach
 parameter_list|(
 name|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 modifier|*
 name|cd
 parameter_list|,
 name|struct
-name|usb2_idesc_parse_state
+name|usb_idesc_parse_state
 modifier|*
 name|ps
 parameter_list|)
@@ -91,17 +91,17 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|usb2_endpoint_descriptor
+name|usb_endpoint_descriptor
 modifier|*
 name|usb2_edesc_foreach
 parameter_list|(
 name|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 modifier|*
 name|cd
 parameter_list|,
 name|struct
-name|usb2_endpoint_descriptor
+name|usb_endpoint_descriptor
 modifier|*
 name|ped
 parameter_list|)
@@ -113,7 +113,7 @@ name|uint8_t
 name|usb2_get_no_descriptors
 parameter_list|(
 name|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 modifier|*
 name|cd
 parameter_list|,
@@ -128,12 +128,12 @@ name|uint8_t
 name|usb2_get_no_alts
 parameter_list|(
 name|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 modifier|*
 name|cd
 parameter_list|,
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 modifier|*
 name|id
 parameter_list|)

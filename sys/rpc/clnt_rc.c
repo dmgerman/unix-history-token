@@ -749,6 +749,10 @@ operator|!
 name|rc
 operator|->
 name|rc_client
+operator|&&
+name|rc
+operator|->
+name|rc_connecting
 condition|)
 block|{
 name|error
@@ -802,11 +806,10 @@ operator|!
 name|rc
 operator|->
 name|rc_client
-operator|&&
-operator|!
+operator|||
 name|rc
 operator|->
-name|rc_connecting
+name|rc_closed
 condition|)
 goto|goto
 name|again

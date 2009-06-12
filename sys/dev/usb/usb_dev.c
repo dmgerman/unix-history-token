@@ -265,11 +265,11 @@ name|int
 name|usb2_fifo_open
 parameter_list|(
 name|struct
-name|usb2_cdev_privdata
+name|usb_cdev_privdata
 modifier|*
 parameter_list|,
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 parameter_list|,
 name|int
@@ -283,7 +283,7 @@ name|void
 name|usb2_fifo_close
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 parameter_list|,
 name|int
@@ -330,7 +330,7 @@ name|int
 name|usb2_fifo_uiomove
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 parameter_list|,
 name|void
@@ -351,7 +351,7 @@ name|void
 name|usb2_fifo_check_methods
 parameter_list|(
 name|struct
-name|usb2_fifo_methods
+name|usb_fifo_methods
 modifier|*
 parameter_list|)
 function_decl|;
@@ -360,7 +360,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|usb2_fifo_alloc
 parameter_list|(
@@ -372,12 +372,12 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|struct
-name|usb2_pipe
+name|usb_endpoint
 modifier|*
-name|usb2_dev_get_pipe
+name|usb2_dev_get_ep
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -393,11 +393,11 @@ name|void
 name|usb2_loc_fill
 parameter_list|(
 name|struct
-name|usb2_fs_privdata
+name|usb_fs_privdata
 modifier|*
 parameter_list|,
 name|struct
-name|usb2_cdev_privdata
+name|usb_cdev_privdata
 modifier|*
 parameter_list|)
 function_decl|;
@@ -416,11 +416,15 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usb2_ref_device
 parameter_list|(
 name|struct
-name|usb2_cdev_privdata
+name|usb_cdev_privdata
+modifier|*
+parameter_list|,
+name|struct
+name|usb_cdev_refdata
 modifier|*
 parameter_list|,
 name|int
@@ -430,11 +434,15 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usb2_usb_ref_device
 parameter_list|(
 name|struct
-name|usb2_cdev_privdata
+name|usb_cdev_privdata
+modifier|*
+parameter_list|,
+name|struct
+name|usb_cdev_refdata
 modifier|*
 parameter_list|)
 function_decl|;
@@ -446,7 +454,11 @@ name|void
 name|usb2_unref_device
 parameter_list|(
 name|struct
-name|usb2_cdev_privdata
+name|usb_cdev_privdata
+modifier|*
+parameter_list|,
+name|struct
+name|usb_cdev_refdata
 modifier|*
 parameter_list|)
 function_decl|;
@@ -496,28 +508,28 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_open_t
+name|usb_fifo_open_t
 name|usb2_fifo_dummy_open
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_close_t
+name|usb_fifo_close_t
 name|usb2_fifo_dummy_close
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_ioctl_t
+name|usb_fifo_ioctl_t
 name|usb2_fifo_dummy_ioctl
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_cmd_t
+name|usb_fifo_cmd_t
 name|usb2_fifo_dummy_cmd
 decl_stmt|;
 end_decl_stmt
@@ -619,7 +631,7 @@ specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|usb2_symlink
+argument|usb_symlink
 argument_list|)
 name|usb2_sym_head
 expr_stmt|;
@@ -641,7 +653,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_loc_fill  *  * This is used to fill out a usb2_cdev_privdata structure based on the  * device's address as contained in usb2_fs_privdata.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_loc_fill  *  * This is used to fill out a usb_cdev_privdata structure based on the  * device's address as contained in usb_fs_privdata.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -650,12 +662,12 @@ name|void
 name|usb2_loc_fill
 parameter_list|(
 name|struct
-name|usb2_fs_privdata
+name|usb_fs_privdata
 modifier|*
 name|pd
 parameter_list|,
 name|struct
-name|usb2_cdev_privdata
+name|usb_cdev_privdata
 modifier|*
 name|cpd
 parameter_list|)
@@ -700,26 +712,31 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_ref_device
 parameter_list|(
 name|struct
-name|usb2_cdev_privdata
+name|usb_cdev_privdata
 modifier|*
 name|cpd
+parameter_list|,
+name|struct
+name|usb_cdev_refdata
+modifier|*
+name|crd
 parameter_list|,
 name|int
 name|need_uref
 parameter_list|)
 block|{
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 modifier|*
 name|ppf
 decl_stmt|;
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 decl_stmt|;
@@ -727,11 +744,25 @@ name|DPRINTFN
 argument_list|(
 literal|2
 argument_list|,
-literal|"usb2_ref_device, cpd=%p need uref=%d\n"
+literal|"cpd=%p need uref=%d\n"
 argument_list|,
 name|cpd
 argument_list|,
 name|need_uref
+argument_list|)
+expr_stmt|;
+comment|/* clear all refs */
+name|memset
+argument_list|(
+name|crd
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|crd
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -857,12 +888,6 @@ operator|->
 name|refcount
 operator|++
 expr_stmt|;
-name|cpd
-operator|->
-name|is_uref
-operator|=
-literal|1
-expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -887,6 +912,13 @@ operator|&
 name|usb2_ref_lock
 argument_list|)
 expr_stmt|;
+comment|/*  		 * Set "is_uref" after grabbing the default SX lock 		 */
+name|crd
+operator|->
+name|is_uref
+operator|=
+literal|1
+expr_stmt|;
 block|}
 comment|/* check if we are doing an open */
 if|if
@@ -898,47 +930,10 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* set defaults */
-name|cpd
-operator|->
-name|txfifo
-operator|=
-name|NULL
-expr_stmt|;
-name|cpd
-operator|->
-name|rxfifo
-operator|=
-name|NULL
-expr_stmt|;
-name|cpd
-operator|->
-name|is_write
-operator|=
-literal|0
-expr_stmt|;
-name|cpd
-operator|->
-name|is_read
-operator|=
-literal|0
-expr_stmt|;
-name|cpd
-operator|->
-name|is_usbfs
-operator|=
-literal|0
-expr_stmt|;
+comment|/* use zero defaults */
 block|}
 else|else
 block|{
-comment|/* initialise "is_usbfs" flag */
-name|cpd
-operator|->
-name|is_usbfs
-operator|=
-literal|0
-expr_stmt|;
 comment|/* check for write */
 if|if
 condition|(
@@ -968,13 +963,13 @@ operator|+
 name|USB_FIFO_TX
 index|]
 expr_stmt|;
-name|cpd
+name|crd
 operator|->
 name|txfifo
 operator|=
 name|f
 expr_stmt|;
-name|cpd
+name|crd
 operator|->
 name|is_write
 operator|=
@@ -1017,29 +1012,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|cpd
+name|crd
 operator|->
 name|is_usbfs
 operator|=
 literal|1
 expr_stmt|;
 block|}
-block|}
-else|else
-block|{
-name|cpd
-operator|->
-name|txfifo
-operator|=
-name|NULL
-expr_stmt|;
-name|cpd
-operator|->
-name|is_write
-operator|=
-literal|0
-expr_stmt|;
-comment|/* no ref */
 block|}
 comment|/* check for read */
 if|if
@@ -1070,13 +1049,13 @@ operator|+
 name|USB_FIFO_RX
 index|]
 expr_stmt|;
-name|cpd
+name|crd
 operator|->
 name|rxfifo
 operator|=
 name|f
 expr_stmt|;
-name|cpd
+name|crd
 operator|->
 name|is_read
 operator|=
@@ -1119,7 +1098,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|cpd
+name|crd
 operator|->
 name|is_usbfs
 operator|=
@@ -1127,27 +1106,11 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-else|else
-block|{
-name|cpd
-operator|->
-name|rxfifo
-operator|=
-name|NULL
-expr_stmt|;
-name|cpd
-operator|->
-name|is_read
-operator|=
-literal|0
-expr_stmt|;
-comment|/* no ref */
-block|}
 block|}
 comment|/* when everything is OK we increment the refcounts */
 if|if
 condition|(
-name|cpd
+name|crd
 operator|->
 name|is_write
 condition|)
@@ -1159,7 +1122,7 @@ argument_list|,
 literal|"ref write\n"
 argument_list|)
 expr_stmt|;
-name|cpd
+name|crd
 operator|->
 name|txfifo
 operator|->
@@ -1169,7 +1132,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|cpd
+name|crd
 operator|->
 name|is_read
 condition|)
@@ -1181,7 +1144,7 @@ argument_list|,
 literal|"ref read\n"
 argument_list|)
 expr_stmt|;
-name|cpd
+name|crd
 operator|->
 name|rxfifo
 operator|->
@@ -1197,7 +1160,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cpd
+name|crd
 operator|->
 name|is_uref
 condition|)
@@ -1219,7 +1182,7 @@ name|error
 label|:
 if|if
 condition|(
-name|cpd
+name|crd
 operator|->
 name|is_uref
 condition|)
@@ -1261,12 +1224,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|cpd
-operator|->
-name|is_uref
-operator|=
-literal|0
-expr_stmt|;
 block|}
 name|mtx_unlock
 argument_list|(
@@ -1295,19 +1252,24 @@ end_comment
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usb2_usb_ref_device
 parameter_list|(
 name|struct
-name|usb2_cdev_privdata
+name|usb_cdev_privdata
 modifier|*
 name|cpd
+parameter_list|,
+name|struct
+name|usb_cdev_refdata
+modifier|*
+name|crd
 parameter_list|)
 block|{
 comment|/* 	 * Check if we already got an USB reference on this location: 	 */
 if|if
 condition|(
-name|cpd
+name|crd
 operator|->
 name|is_uref
 condition|)
@@ -1321,6 +1283,8 @@ comment|/* 	 * To avoid deadlock at detach we need to drop the FIFO ref 	 * and 
 name|usb2_unref_device
 argument_list|(
 name|cpd
+argument_list|,
+name|crd
 argument_list|)
 expr_stmt|;
 return|return
@@ -1328,6 +1292,8 @@ operator|(
 name|usb2_ref_device
 argument_list|(
 name|cpd
+argument_list|,
+name|crd
 argument_list|,
 literal|1
 comment|/* need uref */
@@ -1346,14 +1312,32 @@ name|void
 name|usb2_unref_device
 parameter_list|(
 name|struct
-name|usb2_cdev_privdata
+name|usb_cdev_privdata
 modifier|*
 name|cpd
+parameter_list|,
+name|struct
+name|usb_cdev_refdata
+modifier|*
+name|crd
 parameter_list|)
 block|{
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+literal|"cpd=%p is_uref=%d\n"
+argument_list|,
+name|cpd
+argument_list|,
+name|crd
+operator|->
+name|is_uref
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|cpd
+name|crd
 operator|->
 name|is_uref
 condition|)
@@ -1385,7 +1369,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cpd
+name|crd
 operator|->
 name|is_read
 condition|)
@@ -1394,7 +1378,7 @@ if|if
 condition|(
 operator|--
 operator|(
-name|cpd
+name|crd
 operator|->
 name|rxfifo
 operator|->
@@ -1407,7 +1391,7 @@ block|{
 name|usb2_cv_signal
 argument_list|(
 operator|&
-name|cpd
+name|crd
 operator|->
 name|rxfifo
 operator|->
@@ -1415,7 +1399,7 @@ name|cv_drain
 argument_list|)
 expr_stmt|;
 block|}
-name|cpd
+name|crd
 operator|->
 name|is_read
 operator|=
@@ -1424,7 +1408,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|cpd
+name|crd
 operator|->
 name|is_write
 condition|)
@@ -1433,7 +1417,7 @@ if|if
 condition|(
 operator|--
 operator|(
-name|cpd
+name|crd
 operator|->
 name|txfifo
 operator|->
@@ -1446,7 +1430,7 @@ block|{
 name|usb2_cv_signal
 argument_list|(
 operator|&
-name|cpd
+name|crd
 operator|->
 name|txfifo
 operator|->
@@ -1454,7 +1438,7 @@ name|cv_drain
 argument_list|)
 expr_stmt|;
 block|}
-name|cpd
+name|crd
 operator|->
 name|is_write
 operator|=
@@ -1463,7 +1447,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|cpd
+name|crd
 operator|->
 name|is_uref
 condition|)
@@ -1494,7 +1478,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|cpd
+name|crd
 operator|->
 name|is_uref
 operator|=
@@ -1513,7 +1497,7 @@ end_function
 begin_function
 specifier|static
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|usb2_fifo_alloc
 parameter_list|(
@@ -1521,7 +1505,7 @@ name|void
 parameter_list|)
 block|{
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 decl_stmt|;
@@ -1592,13 +1576,18 @@ name|int
 name|usb2_fifo_create
 parameter_list|(
 name|struct
-name|usb2_cdev_privdata
+name|usb_cdev_privdata
 modifier|*
 name|cpd
+parameter_list|,
+name|struct
+name|usb_cdev_refdata
+modifier|*
+name|crd
 parameter_list|)
 block|{
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 init|=
@@ -1607,14 +1596,14 @@ operator|->
 name|udev
 decl_stmt|;
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 decl_stmt|;
 name|struct
-name|usb2_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 decl_stmt|;
 name|uint8_t
 name|n
@@ -1632,7 +1621,7 @@ name|uint8_t
 name|is_busy
 decl_stmt|;
 name|int
-name|ep
+name|e
 init|=
 name|cpd
 operator|->
@@ -1677,7 +1666,7 @@ expr_stmt|;
 comment|/* Preallocated FIFO */
 if|if
 condition|(
-name|ep
+name|e
 operator|<
 literal|0
 condition|)
@@ -1718,7 +1707,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|cpd
+name|crd
 operator|->
 name|txfifo
 operator|=
@@ -1754,7 +1743,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|cpd
+name|crd
 operator|->
 name|rxfifo
 operator|=
@@ -1769,18 +1758,18 @@ return|;
 block|}
 name|KASSERT
 argument_list|(
-name|ep
+name|e
 operator|>=
 literal|0
 operator|&&
-name|ep
+name|e
 operator|<=
 literal|15
 argument_list|,
 operator|(
 literal|"endpoint %d out of range"
 operator|,
-name|ep
+name|e
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1791,7 +1780,7 @@ literal|5
 argument_list|,
 literal|"Endpoint device, searching for 0x%02x\n"
 argument_list|,
-name|ep
+name|e
 argument_list|)
 expr_stmt|;
 for|for
@@ -1874,7 +1863,7 @@ name|f
 operator|->
 name|dev_ep_index
 operator|!=
-name|ep
+name|e
 condition|)
 block|{
 comment|/* wrong endpoint index */
@@ -1936,7 +1925,7 @@ name|f
 operator|->
 name|dev_ep_index
 operator|!=
-name|ep
+name|e
 condition|)
 block|{
 comment|/* wrong endpoint index */
@@ -1979,7 +1968,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ep
+name|e
 operator|>=
 operator|(
 name|USB_EP_MAX
@@ -2010,7 +1999,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|ep
+name|e
 operator|!=
 literal|0
 operator|)
@@ -2051,13 +2040,13 @@ name|NULL
 operator|)
 condition|)
 block|{
-name|pipe
+name|ep
 operator|=
-name|usb2_dev_get_pipe
+name|usb2_dev_get_ep
 argument_list|(
 name|udev
 argument_list|,
-name|ep
+name|e
 argument_list|,
 name|USB_FIFO_TX
 argument_list|)
@@ -2066,16 +2055,16 @@ name|DPRINTFN
 argument_list|(
 literal|5
 argument_list|,
-literal|"dev_get_pipe(%d, 0x%x)\n"
+literal|"dev_get_endpoint(%d, 0x%x)\n"
 argument_list|,
-name|ep
+name|e
 argument_list|,
 name|USB_FIFO_TX
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pipe
+name|ep
 operator|==
 name|NULL
 condition|)
@@ -2084,7 +2073,7 @@ name|DPRINTFN
 argument_list|(
 literal|5
 argument_list|,
-literal|"dev_get_pipe returned NULL\n"
+literal|"dev_get_endpoint returned NULL\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2131,7 +2120,7 @@ name|f
 operator|->
 name|dev_ep_index
 operator|=
-name|ep
+name|e
 expr_stmt|;
 name|f
 operator|->
@@ -2145,7 +2134,7 @@ name|f
 operator|->
 name|priv_sc0
 operator|=
-name|pipe
+name|ep
 expr_stmt|;
 name|f
 operator|->
@@ -2158,7 +2147,7 @@ name|f
 operator|->
 name|iface_index
 operator|=
-name|pipe
+name|ep
 operator|->
 name|iface_index
 expr_stmt|;
@@ -2211,13 +2200,13 @@ name|NULL
 operator|)
 condition|)
 block|{
-name|pipe
+name|ep
 operator|=
-name|usb2_dev_get_pipe
+name|usb2_dev_get_ep
 argument_list|(
 name|udev
 argument_list|,
-name|ep
+name|e
 argument_list|,
 name|USB_FIFO_RX
 argument_list|)
@@ -2226,16 +2215,16 @@ name|DPRINTFN
 argument_list|(
 literal|5
 argument_list|,
-literal|"dev_get_pipe(%d, 0x%x)\n"
+literal|"dev_get_endpoint(%d, 0x%x)\n"
 argument_list|,
-name|ep
+name|e
 argument_list|,
 name|USB_FIFO_RX
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pipe
+name|ep
 operator|==
 name|NULL
 condition|)
@@ -2244,7 +2233,7 @@ name|DPRINTFN
 argument_list|(
 literal|5
 argument_list|,
-literal|"dev_get_pipe returned NULL\n"
+literal|"dev_get_endpoint returned NULL\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2291,7 +2280,7 @@ name|f
 operator|->
 name|dev_ep_index
 operator|=
-name|ep
+name|e
 expr_stmt|;
 name|f
 operator|->
@@ -2305,7 +2294,7 @@ name|f
 operator|->
 name|priv_sc0
 operator|=
-name|pipe
+name|ep
 expr_stmt|;
 name|f
 operator|->
@@ -2318,7 +2307,7 @@ name|f
 operator|->
 name|iface_index
 operator|=
-name|pipe
+name|ep
 operator|->
 name|iface_index
 expr_stmt|;
@@ -2357,7 +2346,7 @@ condition|(
 name|is_tx
 condition|)
 block|{
-name|cpd
+name|crd
 operator|->
 name|txfifo
 operator|=
@@ -2376,7 +2365,7 @@ condition|(
 name|is_rx
 condition|)
 block|{
-name|cpd
+name|crd
 operator|->
 name|rxfifo
 operator|=
@@ -2420,7 +2409,7 @@ name|void
 name|usb2_fifo_free
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 parameter_list|)
@@ -2680,12 +2669,12 @@ end_function
 begin_function
 specifier|static
 name|struct
-name|usb2_pipe
+name|usb_endpoint
 modifier|*
-name|usb2_dev_get_pipe
+name|usb2_dev_get_ep
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
@@ -2697,9 +2686,9 @@ name|dir
 parameter_list|)
 block|{
 name|struct
-name|usb2_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 decl_stmt|;
 name|uint8_t
 name|ep_dir
@@ -2711,12 +2700,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|pipe
+name|ep
 operator|=
 operator|&
 name|udev
 operator|->
-name|default_pipe
+name|default_ep
 expr_stmt|;
 block|}
 else|else
@@ -2778,9 +2767,9 @@ name|UE_DIR_IN
 expr_stmt|;
 block|}
 block|}
-name|pipe
+name|ep
 operator|=
-name|usb2_get_pipe_by_addr
+name|usb2_get_ep_by_addr
 argument_list|(
 name|udev
 argument_list|,
@@ -2792,12 +2781,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|pipe
+name|ep
 operator|==
 name|NULL
 condition|)
 block|{
-comment|/* if the pipe does not exist then return */
+comment|/* if the endpoint does not exist then return */
 return|return
 operator|(
 name|NULL
@@ -2806,14 +2795,14 @@ return|;
 block|}
 if|if
 condition|(
-name|pipe
+name|ep
 operator|->
 name|edesc
 operator|==
 name|NULL
 condition|)
 block|{
-comment|/* invalid pipe */
+comment|/* invalid endpoint */
 return|return
 operator|(
 name|NULL
@@ -2822,7 +2811,7 @@ return|;
 block|}
 return|return
 operator|(
-name|pipe
+name|ep
 operator|)
 return|;
 comment|/* success */
@@ -2839,12 +2828,12 @@ name|int
 name|usb2_fifo_open
 parameter_list|(
 name|struct
-name|usb2_cdev_privdata
+name|usb_cdev_privdata
 modifier|*
 name|cpd
 parameter_list|,
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 parameter_list|,
@@ -3063,13 +3052,13 @@ name|void
 name|usb2_fifo_reset
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 parameter_list|)
 block|{
 name|struct
-name|usb2_mbuf
+name|usb_mbuf
 modifier|*
 name|m
 decl_stmt|;
@@ -3131,7 +3120,7 @@ name|void
 name|usb2_fifo_close
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 parameter_list|,
@@ -3441,13 +3430,13 @@ name|td
 parameter_list|)
 block|{
 name|struct
-name|usb2_fs_privdata
+name|usb_fs_privdata
 modifier|*
 name|pd
 init|=
 operator|(
 expr|struct
-name|usb2_fs_privdata
+name|usb_fs_privdata
 operator|*
 operator|)
 name|dev
@@ -3455,7 +3444,11 @@ operator|->
 name|si_drv1
 decl_stmt|;
 name|struct
-name|usb2_cdev_privdata
+name|usb_cdev_refdata
+name|refs
+decl_stmt|;
+name|struct
+name|usb_cdev_privdata
 modifier|*
 name|cpd
 decl_stmt|;
@@ -3582,6 +3575,9 @@ name|usb2_ref_device
 argument_list|(
 name|cpd
 argument_list|,
+operator|&
+name|refs
+argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -3623,6 +3619,9 @@ operator|=
 name|usb2_fifo_create
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|)
 expr_stmt|;
 comment|/* check for error */
@@ -3641,6 +3640,9 @@ expr_stmt|;
 name|usb2_unref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|)
 expr_stmt|;
 name|free
@@ -3669,8 +3671,8 @@ name|usb2_fifo_open
 argument_list|(
 name|cpd
 argument_list|,
-name|cpd
-operator|->
+name|refs
+operator|.
 name|rxfifo
 argument_list|,
 name|fflags
@@ -3691,6 +3693,9 @@ expr_stmt|;
 name|usb2_unref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|)
 expr_stmt|;
 name|free
@@ -3720,8 +3725,8 @@ name|usb2_fifo_open
 argument_list|(
 name|cpd
 argument_list|,
-name|cpd
-operator|->
+name|refs
+operator|.
 name|txfifo
 argument_list|,
 name|fflags
@@ -3748,8 +3753,8 @@ condition|)
 block|{
 name|usb2_fifo_close
 argument_list|(
-name|cpd
-operator|->
+name|refs
+operator|.
 name|rxfifo
 argument_list|,
 name|fflags
@@ -3759,6 +3764,9 @@ block|}
 name|usb2_unref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|)
 expr_stmt|;
 name|free
@@ -3778,6 +3786,9 @@ block|}
 name|usb2_unref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|)
 expr_stmt|;
 name|devfs_set_cdevpriv
@@ -3810,7 +3821,11 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|usb2_cdev_privdata
+name|usb_cdev_refdata
+name|refs
+decl_stmt|;
+name|struct
+name|usb_cdev_privdata
 modifier|*
 name|cpd
 init|=
@@ -3833,6 +3848,9 @@ operator|=
 name|usb2_ref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|,
 literal|1
 argument_list|)
@@ -3862,8 +3880,8 @@ condition|)
 block|{
 name|usb2_fifo_close
 argument_list|(
-name|cpd
-operator|->
+name|refs
+operator|.
 name|rxfifo
 argument_list|,
 name|cpd
@@ -3883,8 +3901,8 @@ condition|)
 block|{
 name|usb2_fifo_close
 argument_list|(
-name|cpd
-operator|->
+name|refs
+operator|.
 name|txfifo
 argument_list|,
 name|cpd
@@ -3896,6 +3914,9 @@ block|}
 name|usb2_unref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|)
 expr_stmt|;
 name|free
@@ -4098,7 +4119,7 @@ name|int
 name|usb2_ioctl_f_sub
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 parameter_list|,
@@ -4291,12 +4312,16 @@ name|td
 parameter_list|)
 block|{
 name|struct
-name|usb2_cdev_privdata
+name|usb_cdev_refdata
+name|refs
+decl_stmt|;
+name|struct
+name|usb_cdev_privdata
 modifier|*
 name|cpd
 decl_stmt|;
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 decl_stmt|;
@@ -4339,12 +4364,15 @@ operator|(
 name|err
 operator|)
 return|;
-comment|/*  	 * Performance optimistaion: We try to check for IOCTL's that 	 * don't need the USB reference first. Then we grab the USB 	 * reference if we need it! 	 */
+comment|/*  	 * Performance optimisation: We try to check for IOCTL's that 	 * don't need the USB reference first. Then we grab the USB 	 * reference if we need it! 	 */
 name|err
 operator|=
 name|usb2_ref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|,
 literal|0
 comment|/* no uref */
@@ -4386,8 +4414,8 @@ condition|)
 block|{
 name|f
 operator|=
-name|cpd
-operator|->
+name|refs
+operator|.
 name|txfifo
 expr_stmt|;
 name|err
@@ -4413,8 +4441,8 @@ condition|)
 block|{
 name|f
 operator|=
-name|cpd
-operator|->
+name|refs
+operator|.
 name|rxfifo
 expr_stmt|;
 name|err
@@ -4491,6 +4519,9 @@ condition|(
 name|usb2_usb_ref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|)
 condition|)
 block|{
@@ -4551,6 +4582,9 @@ label|:
 name|usb2_unref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|)
 expr_stmt|;
 return|return
@@ -4585,17 +4619,21 @@ name|td
 parameter_list|)
 block|{
 name|struct
-name|usb2_cdev_privdata
+name|usb_cdev_refdata
+name|refs
+decl_stmt|;
+name|struct
+name|usb_cdev_privdata
 modifier|*
 name|cpd
 decl_stmt|;
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 decl_stmt|;
 name|struct
-name|usb2_mbuf
+name|usb_mbuf
 modifier|*
 name|m
 decl_stmt|;
@@ -4622,6 +4660,9 @@ operator|||
 name|usb2_ref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|,
 literal|0
 argument_list|)
@@ -4677,8 +4718,8 @@ condition|)
 block|{
 name|f
 operator|=
-name|cpd
-operator|->
+name|refs
+operator|.
 name|txfifo
 expr_stmt|;
 name|mtx_lock
@@ -4691,8 +4732,8 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|cpd
-operator|->
+name|refs
+operator|.
 name|is_usbfs
 condition|)
 block|{
@@ -4840,8 +4881,8 @@ condition|)
 block|{
 name|f
 operator|=
-name|cpd
-operator|->
+name|refs
+operator|.
 name|rxfifo
 expr_stmt|;
 name|mtx_lock
@@ -4854,8 +4895,8 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|cpd
-operator|->
+name|refs
+operator|.
 name|is_usbfs
 condition|)
 block|{
@@ -4976,8 +5017,8 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|cpd
-operator|->
+name|refs
+operator|.
 name|is_usbfs
 condition|)
 block|{
@@ -5006,6 +5047,9 @@ block|}
 name|usb2_unref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|)
 expr_stmt|;
 return|return
@@ -5036,17 +5080,21 @@ name|ioflag
 parameter_list|)
 block|{
 name|struct
-name|usb2_cdev_privdata
+name|usb_cdev_refdata
+name|refs
+decl_stmt|;
+name|struct
+name|usb_cdev_privdata
 modifier|*
 name|cpd
 decl_stmt|;
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 decl_stmt|;
 name|struct
-name|usb2_mbuf
+name|usb_mbuf
 modifier|*
 name|m
 decl_stmt|;
@@ -5097,6 +5145,9 @@ name|usb2_ref_device
 argument_list|(
 name|cpd
 argument_list|,
+operator|&
+name|refs
+argument_list|,
 literal|0
 comment|/* no uref */
 argument_list|)
@@ -5120,8 +5171,8 @@ name|fflags
 expr_stmt|;
 name|f
 operator|=
-name|cpd
-operator|->
+name|refs
+operator|.
 name|rxfifo
 expr_stmt|;
 if|if
@@ -5132,6 +5183,14 @@ name|NULL
 condition|)
 block|{
 comment|/* should not happen */
+name|usb2_unref_device
+argument_list|(
+name|cpd
+argument_list|,
+operator|&
+name|refs
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EPERM
@@ -5170,8 +5229,8 @@ block|}
 comment|/* check if USB-FS interface is active */
 if|if
 condition|(
-name|cpd
-operator|->
+name|refs
+operator|.
 name|is_usbfs
 condition|)
 block|{
@@ -5415,6 +5474,9 @@ expr_stmt|;
 name|usb2_unref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|)
 expr_stmt|;
 return|return
@@ -5445,17 +5507,21 @@ name|ioflag
 parameter_list|)
 block|{
 name|struct
-name|usb2_cdev_privdata
+name|usb_cdev_refdata
+name|refs
+decl_stmt|;
+name|struct
+name|usb_cdev_privdata
 modifier|*
 name|cpd
 decl_stmt|;
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 decl_stmt|;
 name|struct
-name|usb2_mbuf
+name|usb_mbuf
 modifier|*
 name|m
 decl_stmt|;
@@ -5513,6 +5579,9 @@ name|usb2_ref_device
 argument_list|(
 name|cpd
 argument_list|,
+operator|&
+name|refs
+argument_list|,
 literal|0
 comment|/* no uref */
 argument_list|)
@@ -5536,8 +5605,8 @@ name|fflags
 expr_stmt|;
 name|f
 operator|=
-name|cpd
-operator|->
+name|refs
+operator|.
 name|txfifo
 expr_stmt|;
 if|if
@@ -5551,6 +5620,9 @@ comment|/* should not happen */
 name|usb2_unref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|)
 expr_stmt|;
 return|return
@@ -5591,8 +5663,8 @@ block|}
 comment|/* check if USB-FS interface is active */
 if|if
 condition|(
-name|cpd
-operator|->
+name|refs
+operator|.
 name|is_usbfs
 condition|)
 block|{
@@ -5829,6 +5901,9 @@ expr_stmt|;
 name|usb2_unref_device
 argument_list|(
 name|cpd
+argument_list|,
+operator|&
+name|refs
 argument_list|)
 expr_stmt|;
 return|return
@@ -5866,7 +5941,7 @@ block|{
 union|union
 block|{
 name|struct
-name|usb2_read_dir
+name|usb_read_dir
 modifier|*
 name|urd
 decl_stmt|;
@@ -6001,7 +6076,7 @@ name|int
 name|usb2_fifo_uiomove
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 parameter_list|,
@@ -6060,7 +6135,7 @@ name|int
 name|usb2_fifo_wait
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 parameter_list|)
@@ -6137,7 +6212,7 @@ name|void
 name|usb2_fifo_signal
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 parameter_list|)
@@ -6172,7 +6247,7 @@ name|void
 name|usb2_fifo_wakeup
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 parameter_list|)
@@ -6246,7 +6321,7 @@ name|int
 name|usb2_fifo_dummy_open
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|,
@@ -6268,7 +6343,7 @@ name|void
 name|usb2_fifo_dummy_close
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|,
@@ -6286,7 +6361,7 @@ name|int
 name|usb2_fifo_dummy_ioctl
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|,
@@ -6315,7 +6390,7 @@ name|void
 name|usb2_fifo_dummy_cmd
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|)
@@ -6336,7 +6411,7 @@ name|void
 name|usb2_fifo_check_methods
 parameter_list|(
 name|struct
-name|usb2_fifo_methods
+name|usb_fifo_methods
 modifier|*
 name|pm
 parameter_list|)
@@ -6474,7 +6549,7 @@ name|int
 name|usb2_fifo_attach
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
@@ -6488,12 +6563,12 @@ modifier|*
 name|priv_mtx
 parameter_list|,
 name|struct
-name|usb2_fifo_methods
+name|usb_fifo_methods
 modifier|*
 name|pm
 parameter_list|,
 name|struct
-name|usb2_fifo_sc
+name|usb_fifo_sc
 modifier|*
 name|f_sc
 parameter_list|,
@@ -6517,12 +6592,12 @@ name|mode
 parameter_list|)
 block|{
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f_tx
 decl_stmt|;
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f_rx
 decl_stmt|;
@@ -6536,7 +6611,7 @@ name|uint8_t
 name|n
 decl_stmt|;
 name|struct
-name|usb2_fs_privdata
+name|usb_fs_privdata
 modifier|*
 name|pd
 decl_stmt|;
@@ -7006,7 +7081,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_fs_privdata
+name|usb_fs_privdata
 argument_list|)
 argument_list|,
 name|M_USBDEV
@@ -7124,11 +7199,11 @@ name|int
 name|usb2_fifo_alloc_buffer
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 parameter_list|,
-name|usb2_size_t
+name|usb_size_t
 name|bufsize
 parameter_list|,
 name|uint16_t
@@ -7214,7 +7289,7 @@ name|void
 name|usb2_fifo_free_buffer
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 parameter_list|)
@@ -7302,7 +7377,7 @@ name|void
 name|usb2_fifo_detach
 parameter_list|(
 name|struct
-name|usb2_fifo_sc
+name|usb_fifo_sc
 modifier|*
 name|f_sc
 parameter_list|)
@@ -7398,21 +7473,21 @@ block|}
 end_function
 
 begin_function
-name|usb2_size_t
+name|usb_size_t
 name|usb2_fifo_put_bytes_max
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 parameter_list|)
 block|{
 name|struct
-name|usb2_mbuf
+name|usb_mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|usb2_size_t
+name|usb_size_t
 name|len
 decl_stmt|;
 name|USB_IF_POLL
@@ -7461,19 +7536,19 @@ name|void
 name|usb2_fifo_put_data
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 parameter_list|,
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|,
-name|usb2_frlength_t
+name|usb_frlength_t
 name|offset
 parameter_list|,
-name|usb2_frlength_t
+name|usb_frlength_t
 name|len
 parameter_list|,
 name|uint8_t
@@ -7481,11 +7556,11 @@ name|what
 parameter_list|)
 block|{
 name|struct
-name|usb2_mbuf
+name|usb_mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|usb2_frlength_t
+name|usb_frlength_t
 name|io_len
 decl_stmt|;
 while|while
@@ -7625,7 +7700,7 @@ name|void
 name|usb2_fifo_put_data_linear
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 parameter_list|,
@@ -7633,7 +7708,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|usb2_size_t
+name|usb_size_t
 name|len
 parameter_list|,
 name|uint8_t
@@ -7641,11 +7716,11 @@ name|what
 parameter_list|)
 block|{
 name|struct
-name|usb2_mbuf
+name|usb_mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|usb2_size_t
+name|usb_size_t
 name|io_len
 decl_stmt|;
 while|while
@@ -7788,7 +7863,7 @@ name|uint8_t
 name|usb2_fifo_put_data_buffer
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 parameter_list|,
@@ -7796,12 +7871,12 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|usb2_size_t
+name|usb_size_t
 name|len
 parameter_list|)
 block|{
 name|struct
-name|usb2_mbuf
+name|usb_mbuf
 modifier|*
 name|m
 decl_stmt|;
@@ -7866,7 +7941,7 @@ name|void
 name|usb2_fifo_put_data_error
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 parameter_list|)
@@ -7886,7 +7961,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_fifo_get_data  *  * what:  *  0 - normal operation  *  1 - only get one "usb2_mbuf"  *  * returns:  *  0 - no more data  *  1 - data in buffer  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_fifo_get_data  *  * what:  *  0 - normal operation  *  1 - only get one "usb_mbuf"  *  * returns:  *  0 - no more data  *  1 - data in buffer  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -7894,22 +7969,22 @@ name|uint8_t
 name|usb2_fifo_get_data
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 parameter_list|,
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|,
-name|usb2_frlength_t
+name|usb_frlength_t
 name|offset
 parameter_list|,
-name|usb2_frlength_t
+name|usb_frlength_t
 name|len
 parameter_list|,
-name|usb2_frlength_t
+name|usb_frlength_t
 modifier|*
 name|actlen
 parameter_list|,
@@ -7918,11 +7993,11 @@ name|what
 parameter_list|)
 block|{
 name|struct
-name|usb2_mbuf
+name|usb_mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|usb2_frlength_t
+name|usb_frlength_t
 name|io_len
 decl_stmt|;
 name|uint8_t
@@ -8145,7 +8220,7 @@ name|uint8_t
 name|usb2_fifo_get_data_linear
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 parameter_list|,
@@ -8153,10 +8228,10 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|usb2_size_t
+name|usb_size_t
 name|len
 parameter_list|,
-name|usb2_size_t
+name|usb_size_t
 modifier|*
 name|actlen
 parameter_list|,
@@ -8165,11 +8240,11 @@ name|what
 parameter_list|)
 block|{
 name|struct
-name|usb2_mbuf
+name|usb_mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|usb2_size_t
+name|usb_size_t
 name|io_len
 decl_stmt|;
 name|uint8_t
@@ -8395,7 +8470,7 @@ name|uint8_t
 name|usb2_fifo_get_data_buffer
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 parameter_list|,
@@ -8404,13 +8479,13 @@ modifier|*
 modifier|*
 name|pptr
 parameter_list|,
-name|usb2_size_t
+name|usb_size_t
 modifier|*
 name|plen
 parameter_list|)
 block|{
 name|struct
-name|usb2_mbuf
+name|usb_mbuf
 modifier|*
 name|m
 decl_stmt|;
@@ -8462,7 +8537,7 @@ name|void
 name|usb2_fifo_get_data_error
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 parameter_list|)
@@ -8487,7 +8562,7 @@ end_comment
 
 begin_function
 name|struct
-name|usb2_symlink
+name|usb_symlink
 modifier|*
 name|usb2_alloc_symlink
 parameter_list|(
@@ -8498,7 +8573,7 @@ name|target
 parameter_list|)
 block|{
 name|struct
-name|usb2_symlink
+name|usb_symlink
 modifier|*
 name|ps
 decl_stmt|;
@@ -8624,7 +8699,7 @@ name|void
 name|usb2_free_symlink
 parameter_list|(
 name|struct
-name|usb2_symlink
+name|usb_symlink
 modifier|*
 name|ps
 parameter_list|)
@@ -8690,7 +8765,7 @@ name|user_len
 parameter_list|)
 block|{
 name|struct
-name|usb2_symlink
+name|usb_symlink
 modifier|*
 name|ps
 decl_stmt|;
@@ -8998,7 +9073,7 @@ name|void
 name|usb2_fifo_set_close_zlp
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 parameter_list|,

@@ -242,7 +242,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_cdc_union_descriptor
+name|usb_cdc_union_descriptor
 name|eth_union_desc
 init|=
 block|{
@@ -287,7 +287,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_cdc_header_descriptor
+name|usb_cdc_header_descriptor
 name|eth_header_desc
 init|=
 block|{
@@ -332,7 +332,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_cdc_ethernet_descriptor
+name|usb_cdc_ethernet_descriptor
 name|eth_enf_desc
 init|=
 block|{
@@ -426,7 +426,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_temp_packet_size
+name|usb_temp_packet_size
 name|bulk_mps
 init|=
 block|{
@@ -453,7 +453,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_temp_packet_size
+name|usb_temp_packet_size
 name|intr_mps
 init|=
 block|{
@@ -480,7 +480,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_temp_endpoint_desc
+name|usb_temp_endpoint_desc
 name|bulk_in_ep
 init|=
 block|{
@@ -519,7 +519,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_temp_endpoint_desc
+name|usb_temp_endpoint_desc
 name|bulk_out_ep
 init|=
 block|{
@@ -558,7 +558,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_temp_endpoint_desc
+name|usb_temp_endpoint_desc
 name|intr_in_ep
 init|=
 block|{
@@ -585,7 +585,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_temp_endpoint_desc
+name|usb_temp_endpoint_desc
 modifier|*
 name|eth_intr_endpoints
 index|[]
@@ -603,7 +603,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_temp_interface_desc
+name|usb_temp_interface_desc
 name|eth_control_interface
 init|=
 block|{
@@ -644,7 +644,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_temp_endpoint_desc
+name|usb_temp_endpoint_desc
 modifier|*
 name|eth_data_endpoints
 index|[]
@@ -665,7 +665,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_temp_interface_desc
+name|usb_temp_interface_desc
 name|eth_data_null_interface
 init|=
 block|{
@@ -702,7 +702,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_temp_interface_desc
+name|usb_temp_interface_desc
 name|eth_data_interface
 init|=
 block|{
@@ -745,7 +745,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_temp_interface_desc
+name|usb_temp_interface_desc
 modifier|*
 name|eth_interfaces
 index|[]
@@ -769,7 +769,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_temp_config_desc
+name|usb_temp_config_desc
 name|eth_config_desc
 init|=
 block|{
@@ -801,7 +801,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_temp_config_desc
+name|usb_temp_config_desc
 modifier|*
 name|eth_configs
 index|[]
@@ -818,7 +818,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|const
 name|struct
-name|usb2_temp_device_desc
+name|usb_temp_device_desc
 name|usb2_template_cdce
 init|=
 block|{

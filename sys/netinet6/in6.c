@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_route.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -875,6 +869,9 @@ case|:
 case|case
 name|SIOCSIFINFO_FLAGS
 case|:
+case|case
+name|SIOCSIFINFO_IN6
+case|:
 if|if
 condition|(
 name|td
@@ -907,9 +904,6 @@ name|OSIOCGIFINFO_IN6
 case|:
 case|case
 name|SIOCGIFINFO_IN6
-case|:
-case|case
-name|SIOCSIFINFO_IN6
 case|:
 case|case
 name|SIOCGDRLST_IN6
@@ -2594,15 +2588,6 @@ operator|->
 name|if_vnet
 argument_list|)
 expr_stmt|;
-name|INIT_VPROCG
-argument_list|(
-name|TD_TO_VPROCG
-argument_list|(
-name|curthread
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* XXX V_hostname needs this */
 name|int
 name|error
 init|=
@@ -4214,10 +4199,6 @@ name|i6mm_chain
 argument_list|)
 expr_stmt|;
 comment|/* 		 * join node information group address 		 */
-define|#
-directive|define
-name|hostnamelen
-value|strlen(V_hostname)
 name|delay
 operator|=
 literal|0
@@ -4244,21 +4225,16 @@ name|hz
 operator|)
 expr_stmt|;
 block|}
-name|mtx_lock
-argument_list|(
-operator|&
-name|hostname_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|in6_nigroup
 argument_list|(
 name|ifp
 argument_list|,
-name|V_hostname
+name|NULL
 argument_list|,
-name|hostnamelen
+operator|-
+literal|1
 argument_list|,
 operator|&
 name|mltaddr
@@ -4269,12 +4245,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|hostname_mtx
-argument_list|)
-expr_stmt|;
 name|imm
 operator|=
 name|in6_joingroup
@@ -4345,16 +4315,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|else
-name|mtx_unlock
-argument_list|(
-operator|&
-name|hostname_mtx
-argument_list|)
-expr_stmt|;
-undef|#
-directive|undef
-name|hostnamelen
 comment|/* 		 * join interface-local all-nodes address. 		 * (ff01::1%ifN, and ff01::%ifN/32) 		 */
 name|mltaddr
 operator|.

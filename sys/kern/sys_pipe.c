@@ -28,12 +28,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -1355,7 +1349,7 @@ name|pp
 operator|->
 name|pp_wpipe
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|rpipe
@@ -1368,15 +1362,9 @@ name|PIPE_MTX
 argument_list|(
 name|rpipe
 argument_list|)
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|wpipe
@@ -1389,12 +1377,6 @@ name|PIPE_MTX
 argument_list|(
 name|wpipe
 argument_list|)
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Only the forward direction pipe is backed by default */
@@ -3369,6 +3351,17 @@ operator|->
 name|iov_base
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|endaddr
+operator|<
+name|addr
+condition|)
+return|return
+operator|(
+name|EFAULT
+operator|)
+return|;
 for|for
 control|(
 name|i

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2005  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2005, 2007, 2008  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: atomic.h,v 1.2.2.3 2005/07/27 04:23:33 marka Exp $ */
+comment|/* $Id: atomic.h,v 1.10 2008/01/24 23:47:00 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -44,7 +44,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline__
 name|isc_int32_t
 name|isc_atomic_xadd
 parameter_list|(
@@ -79,13 +79,65 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_HAVEXADDQ
+end_ifdef
+
+begin_function
+specifier|static
+name|__inline__
+name|isc_int64_t
+name|isc_atomic_xaddq
+parameter_list|(
+name|isc_int64_t
+modifier|*
+name|p
+parameter_list|,
+name|isc_int64_t
+name|val
+parameter_list|)
+block|{
+name|isc_int64_t
+name|prev
+init|=
+name|val
+decl_stmt|;
+asm|__asm__
+specifier|volatile
+asm|(
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_USETHREADS
+asm|"lock;"
+endif|#
+directive|endif
+asm|"xaddq %0, %1" 	    :"=q"(prev) 	    :"m"(*p), "0"(prev) 	    :"memory", "cc");
+return|return
+operator|(
+name|prev
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ISC_PLATFORM_HAVEXADDQ */
+end_comment
+
 begin_comment
 comment|/*  * This routine atomically stores the value 'val' in 'p'.  */
 end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline__
 name|void
 name|isc_atomic_store
 parameter_list|(
@@ -117,7 +169,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline__
 name|isc_int32_t
 name|isc_atomic_cmpxchg
 parameter_list|(

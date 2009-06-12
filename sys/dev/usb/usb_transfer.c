@@ -115,7 +115,7 @@ end_struct
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|usb2_request_callback
 decl_stmt|;
 end_decl_stmt
@@ -124,7 +124,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 name|usb2_control_ep_cfg
 index|[
 name|USB_DEFAULT_XFER_MAX
@@ -211,7 +211,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 block|,
 operator|.
@@ -251,7 +251,7 @@ name|void
 name|usb2_update_max_frame_size
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 parameter_list|)
 function_decl|;
@@ -263,7 +263,7 @@ name|void
 name|usb2_transfer_unsetup_sub
 parameter_list|(
 name|struct
-name|usb2_xfer_root
+name|usb_xfer_root
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -277,7 +277,7 @@ name|void
 name|usb2_control_transfer_init
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 parameter_list|)
 function_decl|;
@@ -289,7 +289,7 @@ name|uint8_t
 name|usb2_start_hardware_sub
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 parameter_list|)
 function_decl|;
@@ -301,7 +301,7 @@ name|void
 name|usb2_callback_proc
 parameter_list|(
 name|struct
-name|usb2_proc_msg
+name|usb_proc_msg
 modifier|*
 parameter_list|)
 function_decl|;
@@ -313,7 +313,7 @@ name|void
 name|usb2_callback_ss_done_defer
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 parameter_list|)
 function_decl|;
@@ -325,7 +325,7 @@ name|void
 name|usb2_callback_wrapper
 parameter_list|(
 name|struct
-name|usb2_xfer_queue
+name|usb_xfer_queue
 modifier|*
 parameter_list|)
 function_decl|;
@@ -359,7 +359,7 @@ name|uint8_t
 name|usb2_callback_wrapper_sub
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 parameter_list|)
 function_decl|;
@@ -395,7 +395,7 @@ name|void
 name|usb2_request_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -434,7 +434,7 @@ name|void
 name|usb2_update_max_frame_size
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -500,11 +500,11 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_timeout_t
+name|usb_timeout_t
 name|usb2_get_dma_delay
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 parameter_list|)
@@ -570,33 +570,33 @@ name|uint8_t
 name|usb2_transfer_setup_sub_malloc
 parameter_list|(
 name|struct
-name|usb2_setup_params
+name|usb_setup_params
 modifier|*
 name|parm
 parameter_list|,
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 modifier|*
 name|ppc
 parameter_list|,
-name|usb2_size_t
+name|usb_size_t
 name|size
 parameter_list|,
-name|usb2_size_t
+name|usb_size_t
 name|align
 parameter_list|,
-name|usb2_size_t
+name|usb_size_t
 name|count
 parameter_list|)
 block|{
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 decl_stmt|;
 name|struct
-name|usb2_page
+name|usb_page
 modifier|*
 name|pg
 decl_stmt|;
@@ -604,22 +604,22 @@ name|void
 modifier|*
 name|buf
 decl_stmt|;
-name|usb2_size_t
+name|usb_size_t
 name|n_dma_pc
 decl_stmt|;
-name|usb2_size_t
+name|usb_size_t
 name|n_obj
 decl_stmt|;
-name|usb2_size_t
+name|usb_size_t
 name|x
 decl_stmt|;
-name|usb2_size_t
+name|usb_size_t
 name|y
 decl_stmt|;
-name|usb2_size_t
+name|usb_size_t
 name|r
 decl_stmt|;
-name|usb2_size_t
+name|usb_size_t
 name|z
 decl_stmt|;
 name|USB_ASSERT
@@ -1076,7 +1076,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_transfer_setup_sub - transfer setup subroutine  *  * This function must be called from the "xfer_setup" callback of the  * USB Host or Device controller driver when setting up an USB  * transfer. This function will setup correct packet sizes, buffer  * sizes, flags and more, that are stored in the "usb2_xfer"  * structure.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_transfer_setup_sub - transfer setup subroutine  *  * This function must be called from the "xfer_setup" callback of the  * USB Host or Device controller driver when setting up an USB  * transfer. This function will setup correct packet sizes, buffer  * sizes, flags and more, that are stored in the "usb_xfer"  * structure.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -1084,7 +1084,7 @@ name|void
 name|usb2_transfer_setup_sub
 parameter_list|(
 name|struct
-name|usb2_setup_params
+name|usb_setup_params
 modifier|*
 name|parm
 parameter_list|)
@@ -1101,7 +1101,7 @@ literal|8
 block|, 	}
 enum|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 init|=
@@ -1111,7 +1111,7 @@ name|curr_xfer
 decl_stmt|;
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 modifier|*
 name|setup
 init|=
@@ -1120,7 +1120,7 @@ operator|->
 name|curr_setup
 decl_stmt|;
 name|struct
-name|usb2_endpoint_descriptor
+name|usb_endpoint_descriptor
 modifier|*
 name|edesc
 decl_stmt|;
@@ -1128,13 +1128,13 @@ name|struct
 name|usb2_std_packet_size
 name|std_size
 decl_stmt|;
-name|usb2_frcount_t
+name|usb_frcount_t
 name|n_frlengths
 decl_stmt|;
-name|usb2_frcount_t
+name|usb_frcount_t
 name|n_frbuffers
 decl_stmt|;
-name|usb2_frcount_t
+name|usb_frcount_t
 name|x
 decl_stmt|;
 name|uint8_t
@@ -1185,7 +1185,7 @@ name|edesc
 operator|=
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|edesc
 expr_stmt|;
@@ -1241,7 +1241,7 @@ name|interval
 expr_stmt|;
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 operator|=
 name|edesc
 operator|->
@@ -2343,7 +2343,7 @@ operator|.
 name|bdma_enable
 condition|)
 block|{
-comment|/* 		 * Setup "dma_page_ptr". 		 * 		 * Proof for formula below: 		 * 		 * Assume there are three USB frames having length "a", "b" and 		 * "c". These USB frames will at maximum need "z" 		 * "usb2_page" structures. "z" is given by: 		 * 		 * z = ((a / USB_PAGE_SIZE) + 2) + ((b / USB_PAGE_SIZE) + 2) + 		 * ((c / USB_PAGE_SIZE) + 2); 		 * 		 * Constraining "a", "b" and "c" like this: 		 * 		 * (a + b + c)<= parm->bufsize 		 * 		 * We know that: 		 * 		 * z<= ((parm->bufsize / USB_PAGE_SIZE) + (3*2)); 		 * 		 * Here is the general formula: 		 */
+comment|/* 		 * Setup "dma_page_ptr". 		 * 		 * Proof for formula below: 		 * 		 * Assume there are three USB frames having length "a", "b" and 		 * "c". These USB frames will at maximum need "z" 		 * "usb_page" structures. "z" is given by: 		 * 		 * z = ((a / USB_PAGE_SIZE) + 2) + ((b / USB_PAGE_SIZE) + 2) + 		 * ((c / USB_PAGE_SIZE) + 2); 		 * 		 * Constraining "a", "b" and "c" like this: 		 * 		 * (a + b + c)<= parm->bufsize 		 * 		 * We know that: 		 * 		 * z<= ((parm->bufsize / USB_PAGE_SIZE) + (3*2)); 		 * 		 * Here is the general formula: 		 */
 name|xfer
 operator|->
 name|dma_page_ptr
@@ -2583,11 +2583,11 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_transfer_setup
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
@@ -2597,14 +2597,14 @@ modifier|*
 name|ifaces
 parameter_list|,
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 modifier|*
 name|ppxfer
 parameter_list|,
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 modifier|*
 name|setup_start
 parameter_list|,
@@ -2622,16 +2622,16 @@ name|xfer_mtx
 parameter_list|)
 block|{
 name|struct
-name|usb2_xfer
+name|usb_xfer
 name|dummy
 decl_stmt|;
 name|struct
-name|usb2_setup_params
+name|usb_setup_params
 name|parm
 decl_stmt|;
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 modifier|*
 name|setup_end
 init|=
@@ -2641,22 +2641,22 @@ name|n_setup
 decl_stmt|;
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 modifier|*
 name|setup
 decl_stmt|;
 name|struct
-name|usb2_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 decl_stmt|;
 name|struct
-name|usb2_xfer_root
+name|usb_xfer_root
 modifier|*
 name|info
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
@@ -2787,7 +2787,7 @@ operator|->
 name|bufsize
 operator|==
 operator|(
-name|usb2_frlength_t
+name|usb_frlength_t
 operator|)
 operator|-
 literal|1
@@ -2907,7 +2907,7 @@ condition|(
 name|buf
 condition|)
 block|{
-comment|/* 			 * Initialize the "usb2_xfer_root" structure, 			 * which is common for all our USB transfers. 			 */
+comment|/* 			 * Initialize the "usb_xfer_root" structure, 			 * which is common for all our USB transfers. 			 */
 name|info
 operator|=
 name|USB_ADD_BYTES
@@ -3280,9 +3280,9 @@ block|{
 continue|continue;
 block|}
 comment|/* see if there is a matching endpoint */
-name|pipe
+name|ep
 operator|=
-name|usb2_get_pipe
+name|usb2_get_endpoint
 argument_list|(
 name|udev
 argument_list|,
@@ -3299,13 +3299,13 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|pipe
+name|ep
 operator|==
 name|NULL
 operator|)
 operator|||
 operator|(
-name|pipe
+name|ep
 operator|->
 name|methods
 operator|==
@@ -3393,7 +3393,7 @@ condition|(
 name|buf
 condition|)
 block|{
-comment|/* 				 * Common initialization of the 				 * "usb2_xfer" structure. 				 */
+comment|/* 				 * Common initialization of the 				 * "usb_xfer" structure. 				 */
 name|xfer
 operator|=
 name|USB_ADD_BYTES
@@ -3448,7 +3448,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 				 * Setup a dummy xfer, hence we are 				 * writing to the "usb2_xfer" 				 * structure pointed to by "xfer" 				 * before we have allocated any 				 * memory: 				 */
+comment|/* 				 * Setup a dummy xfer, hence we are 				 * writing to the "usb_xfer" 				 * structure pointed to by "xfer" 				 * before we have allocated any 				 * memory: 				 */
 name|xfer
 operator|=
 operator|&
@@ -3469,12 +3469,12 @@ name|refcount
 operator|++
 expr_stmt|;
 block|}
-comment|/* set transfer pipe pointer */
+comment|/* set transfer endpoint pointer */
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|=
-name|pipe
+name|ep
 expr_stmt|;
 name|parm
 operator|.
@@ -3497,7 +3497,7 @@ name|methods
 operator|=
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|methods
 expr_stmt|;
@@ -3537,10 +3537,10 @@ condition|(
 name|buf
 condition|)
 block|{
-comment|/* 				 * Increment the pipe refcount. This 				 * basically prevents setting a new 				 * configuration and alternate setting 				 * when USB transfers are in use on 				 * the given interface. Search the USB 				 * code for "pipe->refcount" if you 				 * want more information. 				 */
+comment|/* 				 * Increment the endpoint refcount. This 				 * basically prevents setting a new 				 * configuration and alternate setting 				 * when USB transfers are in use on 				 * the given interface. Search the USB 				 * code for "endpoint->refcount" if you 				 * want more information. 				 */
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|refcount
 operator|++
@@ -4160,7 +4160,7 @@ name|void
 name|usb2_transfer_unsetup_sub
 parameter_list|(
 name|struct
-name|usb2_xfer_root
+name|usb_xfer_root
 modifier|*
 name|info
 parameter_list|,
@@ -4169,7 +4169,7 @@ name|needs_delay
 parameter_list|)
 block|{
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 decl_stmt|;
@@ -4188,7 +4188,7 @@ condition|(
 name|needs_delay
 condition|)
 block|{
-name|usb2_timeout_t
+name|usb_timeout_t
 name|temp
 decl_stmt|;
 name|temp
@@ -4341,7 +4341,7 @@ name|void
 name|usb2_transfer_unsetup
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 modifier|*
 name|pxfer
@@ -4351,12 +4351,12 @@ name|n_setup
 parameter_list|)
 block|{
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
 name|struct
-name|usb2_xfer_root
+name|usb_xfer_root
 modifier|*
 name|info
 decl_stmt|;
@@ -4456,10 +4456,10 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 		 * NOTE: default pipe does not have an 		 * interface, even if pipe->iface_index == 0 		 */
+comment|/* 		 * NOTE: default endpoint does not have an 		 * interface, even if endpoint->iface_index == 0 		 */
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|refcount
 operator|--
@@ -4530,7 +4530,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_control_transfer_init - factored out code  *  * In USB Device Mode we have to wait for the SETUP packet which  * containst the "struct usb2_device_request" structure, before we can  * transfer any data. In USB Host Mode we already have the SETUP  * packet at the moment the USB transfer is started. This leads us to  * having to setup the USB transfer at two different places in  * time. This function just contains factored out control transfer  * initialisation code, so that we don't duplicate the code.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_control_transfer_init - factored out code  *  * In USB Device Mode we have to wait for the SETUP packet which  * containst the "struct usb_device_request" structure, before we can  * transfer any data. In USB Host Mode we already have the SETUP  * packet at the moment the USB transfer is started. This leads us to  * having to setup the USB transfer at two different places in  * time. This function just contains factored out control transfer  * initialisation code, so that we don't duplicate the code.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -4539,13 +4539,13 @@ name|void
 name|usb2_control_transfer_init
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 comment|/* copy out the USB request header */
@@ -4583,7 +4583,7 @@ expr_stmt|;
 comment|/* copy direction to endpoint variable */
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 operator|&=
 operator|~
 operator|(
@@ -4594,7 +4594,7 @@ operator|)
 expr_stmt|;
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 operator||=
 operator|(
 name|req
@@ -4621,12 +4621,12 @@ name|uint8_t
 name|usb2_start_hardware_sub
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
 block|{
-name|usb2_frlength_t
+name|usb_frlength_t
 name|len
 decl_stmt|;
 comment|/* Check for control endpoint stall */
@@ -4775,7 +4775,7 @@ operator|!=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 condition|)
 block|{
@@ -4795,7 +4795,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4874,7 +4874,7 @@ operator|-
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 operator|)
 expr_stmt|;
@@ -5077,22 +5077,22 @@ name|void
 name|usb2_start_hardware
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
 block|{
 name|struct
-name|usb2_xfer_root
+name|usb_xfer_root
 modifier|*
 name|info
 decl_stmt|;
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 decl_stmt|;
-name|usb2_frcount_t
+name|usb_frcount_t
 name|x
 decl_stmt|;
 name|info
@@ -5109,13 +5109,13 @@ name|bus
 expr_stmt|;
 name|DPRINTF
 argument_list|(
-literal|"xfer=%p, pipe=%p, nframes=%d, dir=%s\n"
+literal|"xfer=%p, endpoint=%p, nframes=%d, dir=%s\n"
 argument_list|,
 name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 argument_list|,
 name|xfer
 operator|->
@@ -5146,11 +5146,11 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
-name|usb2_dump_pipe
+name|usb2_dump_endpoint
 argument_list|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 argument_list|)
 expr_stmt|;
 name|USB_BUS_UNLOCK
@@ -5207,7 +5207,7 @@ expr_stmt|;
 call|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|methods
 operator|->
@@ -5415,9 +5415,9 @@ argument_list|(
 operator|&
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
-name|pipe_q
+name|endpoint_q
 argument_list|,
 name|xfer
 argument_list|)
@@ -5689,15 +5689,15 @@ name|void
 name|usb2_pipe_enter
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
 block|{
 name|struct
-name|usb2_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 decl_stmt|;
 name|USB_XFER_LOCK_ASSERT
 argument_list|(
@@ -5715,11 +5715,11 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-name|pipe
+name|ep
 operator|=
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 expr_stmt|;
 name|DPRINTF
 argument_list|(
@@ -5728,7 +5728,7 @@ argument_list|)
 expr_stmt|;
 comment|/* enter the transfer */
 call|(
-name|pipe
+name|ep
 operator|->
 name|methods
 operator|->
@@ -5777,9 +5777,9 @@ comment|/* start the transfer */
 name|usb2_command_wrapper
 argument_list|(
 operator|&
-name|pipe
+name|ep
 operator|->
-name|pipe_q
+name|endpoint_q
 argument_list|,
 name|xfer
 argument_list|)
@@ -5805,7 +5805,7 @@ name|void
 name|usb2_transfer_start
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -5895,15 +5895,15 @@ name|void
 name|usb2_transfer_stop
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
 block|{
 name|struct
-name|usb2_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 decl_stmt|;
 if|if
 condition|(
@@ -6015,7 +6015,7 @@ comment|/* 			 * The following will lead to an USB_ERR_CANCELLED 			 * error cod
 call|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|methods
 operator|->
@@ -6051,7 +6051,7 @@ comment|/* close here and now */
 call|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|methods
 operator|->
@@ -6062,19 +6062,19 @@ name|xfer
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Any additional DMA delay is done by 		 * "usb2_transfer_unsetup()". 		 */
-comment|/* 		 * Special case. Check if we need to restart a blocked 		 * pipe. 		 */
-name|pipe
+comment|/* 		 * Special case. Check if we need to restart a blocked 		 * endpoint. 		 */
+name|ep
 operator|=
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 expr_stmt|;
 comment|/* 		 * If the current USB transfer is completing we need 		 * to start the next one: 		 */
 if|if
 condition|(
-name|pipe
+name|ep
 operator|->
-name|pipe_q
+name|endpoint_q
 operator|.
 name|curr
 operator|==
@@ -6084,9 +6084,9 @@ block|{
 name|usb2_command_wrapper
 argument_list|(
 operator|&
-name|pipe
+name|ep
 operator|->
-name|pipe_q
+name|endpoint_q
 argument_list|,
 name|NULL
 argument_list|)
@@ -6114,18 +6114,18 @@ name|uint8_t
 name|usb2_transfer_pending
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
 block|{
 name|struct
-name|usb2_xfer_root
+name|usb_xfer_root
 modifier|*
 name|info
 decl_stmt|;
 name|struct
-name|usb2_xfer_queue
+name|usb_xfer_queue
 modifier|*
 name|pq
 decl_stmt|;
@@ -6263,7 +6263,7 @@ name|void
 name|usb2_transfer_drain
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -6370,7 +6370,7 @@ name|void
 name|usb2_set_frame_data
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
@@ -6378,7 +6378,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|usb2_frcount_t
+name|usb_frcount_t
 name|frindex
 parameter_list|)
 block|{
@@ -6406,14 +6406,14 @@ name|void
 name|usb2_set_frame_offset
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
-name|usb2_frlength_t
+name|usb_frlength_t
 name|offset
 parameter_list|,
-name|usb2_frcount_t
+name|usb_frcount_t
 name|frindex
 parameter_list|)
 block|{
@@ -6464,13 +6464,13 @@ name|void
 name|usb2_callback_proc
 parameter_list|(
 name|struct
-name|usb2_proc_msg
+name|usb_proc_msg
 modifier|*
 name|_pm
 parameter_list|)
 block|{
 name|struct
-name|usb2_done_msg
+name|usb_done_msg
 modifier|*
 name|pm
 init|=
@@ -6481,7 +6481,7 @@ operator|)
 name|_pm
 decl_stmt|;
 name|struct
-name|usb2_xfer_root
+name|usb_xfer_root
 modifier|*
 name|info
 init|=
@@ -6547,13 +6547,13 @@ name|void
 name|usb2_callback_ss_done_defer
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
 block|{
 name|struct
-name|usb2_xfer_root
+name|usb_xfer_root
 modifier|*
 name|info
 init|=
@@ -6562,7 +6562,7 @@ operator|->
 name|xroot
 decl_stmt|;
 name|struct
-name|usb2_xfer_queue
+name|usb_xfer_queue
 modifier|*
 name|pq
 init|=
@@ -6661,13 +6661,13 @@ name|void
 name|usb2_callback_wrapper
 parameter_list|(
 name|struct
-name|usb2_xfer_queue
+name|usb_xfer_queue
 modifier|*
 name|pq
 parameter_list|)
 block|{
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 init|=
@@ -6676,7 +6676,7 @@ operator|->
 name|curr
 decl_stmt|;
 name|struct
-name|usb2_xfer_root
+name|usb_xfer_root
 modifier|*
 name|info
 init|=
@@ -7047,7 +7047,7 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 init|=
@@ -7093,13 +7093,13 @@ name|void
 name|usb2_transfer_dequeue
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
 block|{
 name|struct
-name|usb2_xfer_queue
+name|usb_xfer_queue
 modifier|*
 name|pq
 decl_stmt|;
@@ -7145,12 +7145,12 @@ name|void
 name|usb2_transfer_enqueue
 parameter_list|(
 name|struct
-name|usb2_xfer_queue
+name|usb_xfer_queue
 modifier|*
 name|pq
 parameter_list|,
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -7196,11 +7196,11 @@ name|void
 name|usb2_transfer_done
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
-name|usb2_error_t
+name|usb_error_t
 name|error
 parameter_list|)
 block|{
@@ -7290,7 +7290,7 @@ argument_list|)
 condition|)
 block|{
 name|struct
-name|usb2_xfer_queue
+name|usb_xfer_queue
 modifier|*
 name|pq
 decl_stmt|;
@@ -7345,7 +7345,7 @@ name|uds_requests
 index|[
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|edesc
 operator|->
@@ -7370,7 +7370,7 @@ name|uds_requests
 index|[
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|edesc
 operator|->
@@ -7405,20 +7405,20 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 init|=
 name|arg
 decl_stmt|;
 name|struct
-name|usb2_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 init|=
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 decl_stmt|;
 name|USB_BUS_LOCK_ASSERT
 argument_list|(
@@ -7438,7 +7438,7 @@ argument_list|)
 expr_stmt|;
 comment|/* start the transfer */
 call|(
-name|pipe
+name|ep
 operator|->
 name|methods
 operator|->
@@ -7485,7 +7485,7 @@ name|void
 name|usb2_transfer_set_stall
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -7546,7 +7546,7 @@ name|void
 name|usb2_transfer_clear_stall
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -7607,18 +7607,18 @@ name|void
 name|usb2_pipe_start
 parameter_list|(
 name|struct
-name|usb2_xfer_queue
+name|usb_xfer_queue
 modifier|*
 name|pq
 parameter_list|)
 block|{
 name|struct
-name|usb2_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
@@ -7631,11 +7631,11 @@ name|pq
 operator|->
 name|curr
 expr_stmt|;
-name|pipe
+name|ep
 operator|=
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 expr_stmt|;
 name|USB_BUS_LOCK_ASSERT
 argument_list|(
@@ -7648,17 +7648,17 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the pipe is already stalled we do nothing ! 	 */
+comment|/* 	 * If the endpoint is already stalled we do nothing ! 	 */
 if|if
 condition|(
-name|pipe
+name|ep
 operator|->
 name|is_stalled
 condition|)
 block|{
 return|return;
 block|}
-comment|/* 	 * Check if we are supposed to stall the pipe: 	 */
+comment|/* 	 * Check if we are supposed to stall the endpoint: 	 */
 if|if
 condition|(
 name|xfer
@@ -7681,7 +7681,7 @@ comment|/* 		 * Only stall BULK and INTERRUPT endpoints. 		 */
 name|type
 operator|=
 operator|(
-name|pipe
+name|ep
 operator|->
 name|edesc
 operator|->
@@ -7706,12 +7706,12 @@ operator|)
 condition|)
 block|{
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 decl_stmt|;
 name|struct
-name|usb2_xfer_root
+name|usb_xfer_root
 modifier|*
 name|info
 decl_stmt|;
@@ -7727,7 +7727,7 @@ name|info
 operator|->
 name|udev
 expr_stmt|;
-name|pipe
+name|ep
 operator|->
 name|is_stalled
 operator|=
@@ -7758,7 +7758,7 @@ name|udev
 argument_list|,
 name|NULL
 argument_list|,
-name|pipe
+name|ep
 argument_list|)
 expr_stmt|;
 block|}
@@ -7871,7 +7871,7 @@ block|{
 name|type
 operator|=
 operator|(
-name|pipe
+name|ep
 operator|->
 name|edesc
 operator|->
@@ -7917,7 +7917,7 @@ argument_list|)
 expr_stmt|;
 comment|/* start USB transfer */
 call|(
-name|pipe
+name|ep
 operator|->
 name|methods
 operator|->
@@ -7964,7 +7964,7 @@ name|void
 name|usb2_transfer_timeout_ms
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
@@ -7979,7 +7979,7 @@ modifier|*
 name|arg
 parameter_list|)
 parameter_list|,
-name|usb2_timeout_t
+name|usb_timeout_t
 name|ms
 parameter_list|)
 block|{
@@ -8016,7 +8016,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_callback_wrapper_sub  *  *  - This function will update variables in an USB transfer after  *  that the USB transfer is complete.  *  *  - This function is used to start the next USB transfer on the  *  pipe transfer queue, if any.  *  * NOTE: In some special cases the USB transfer will not be removed from  * the pipe queue, but remain first. To enforce USB transfer removal call  * this function passing the error code "USB_ERR_CANCELLED".  *  * Return values:  * 0: Success.  * Else: The callback has been deferred.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_callback_wrapper_sub  *  *  - This function will update variables in an USB transfer after  *  that the USB transfer is complete.  *  *  - This function is used to start the next USB transfer on the  *  ep transfer queue, if any.  *  * NOTE: In some special cases the USB transfer will not be removed from  * the pipe queue, but remain first. To enforce USB transfer removal call  * this function passing the error code "USB_ERR_CANCELLED".  *  * Return values:  * 0: Success.  * Else: The callback has been deferred.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -8025,17 +8025,17 @@ name|uint8_t
 name|usb2_callback_wrapper_sub
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
 block|{
 name|struct
-name|usb2_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 decl_stmt|;
-name|usb2_frcount_t
+name|usb_frcount_t
 name|x
 decl_stmt|;
 if|if
@@ -8076,7 +8076,7 @@ expr_stmt|;
 call|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|methods
 operator|->
@@ -8142,7 +8142,7 @@ name|did_dma_delay
 operator|)
 condition|)
 block|{
-name|usb2_timeout_t
+name|usb_timeout_t
 name|temp
 decl_stmt|;
 comment|/* only delay once */
@@ -8394,13 +8394,13 @@ name|DPRINTFN
 argument_list|(
 literal|6
 argument_list|,
-literal|"xfer=%p pipe=%p sts=%d alen=%d, slen=%d, afrm=%d, nfrm=%d\n"
+literal|"xfer=%p endpoint=%p sts=%d alen=%d, slen=%d, afrm=%d, nfrm=%d\n"
 argument_list|,
 name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 argument_list|,
 name|xfer
 operator|->
@@ -8464,13 +8464,13 @@ argument_list|(
 literal|2
 argument_list|,
 literal|"xfer=%p: Block On Failure "
-literal|"on pipe=%p\n"
+literal|"on endpoint=%p\n"
 argument_list|,
 name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -8531,13 +8531,13 @@ argument_list|(
 literal|2
 argument_list|,
 literal|"xfer=%p: Block On Failure on "
-literal|"Short Transfer on pipe %p.\n"
+literal|"Short Transfer on endpoint %p.\n"
 argument_list|,
 name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -8563,13 +8563,13 @@ argument_list|(
 literal|5
 argument_list|,
 literal|"xfer=%p: Control transfer "
-literal|"active on pipe=%p\n"
+literal|"active on endpoint=%p\n"
 argument_list|,
 name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -8578,11 +8578,11 @@ goto|;
 block|}
 block|}
 block|}
-name|pipe
+name|ep
 operator|=
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 expr_stmt|;
 comment|/* 	 * If the current USB transfer is completing we need to start the 	 * next one: 	 */
 name|USB_BUS_LOCK
@@ -8596,9 +8596,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pipe
+name|ep
 operator|->
-name|pipe_q
+name|endpoint_q
 operator|.
 name|curr
 operator|==
@@ -8608,27 +8608,27 @@ block|{
 name|usb2_command_wrapper
 argument_list|(
 operator|&
-name|pipe
+name|ep
 operator|->
-name|pipe_q
+name|endpoint_q
 argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pipe
+name|ep
 operator|->
-name|pipe_q
+name|endpoint_q
 operator|.
 name|curr
 operator|||
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|pipe
+name|ep
 operator|->
-name|pipe_q
+name|endpoint_q
 operator|.
 name|head
 argument_list|)
@@ -8642,7 +8642,7 @@ comment|/* this is the last USB transfer */
 comment|/* clear isochronous sync flag */
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|is_synced
 operator|=
@@ -8678,12 +8678,12 @@ name|void
 name|usb2_command_wrapper
 parameter_list|(
 name|struct
-name|usb2_xfer_queue
+name|usb_xfer_queue
 modifier|*
 name|pq
 parameter_list|,
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -8892,13 +8892,13 @@ name|void
 name|usb2_default_transfer_setup
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|)
 block|{
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
@@ -9098,25 +9098,25 @@ name|void
 name|usb2_clear_data_toggle
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
 name|struct
-name|usb2_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 block|{
 name|DPRINTFN
 argument_list|(
 literal|5
 argument_list|,
-literal|"udev=%p pipe=%p\n"
+literal|"udev=%p endpoint=%p\n"
 argument_list|,
 name|udev
 argument_list|,
-name|pipe
+name|ep
 argument_list|)
 expr_stmt|;
 name|USB_BUS_LOCK
@@ -9126,7 +9126,7 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-name|pipe
+name|ep
 operator|->
 name|toggle_next
 operator|=
@@ -9143,7 +9143,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_clear_stall_callback - factored out clear stall callback  *  * Input parameters:  *  xfer1: Clear Stall Control Transfer  *  xfer2: Stalled USB Transfer  *  * This function is NULL safe.  *  * Return values:  *   0: In progress  *   Else: Finished  *  * Clear stall config example:  *  * static const struct usb2_config my_clearstall =  {  *	.type = UE_CONTROL,  *	.endpoint = 0,  *	.direction = UE_DIR_ANY,  *	.interval = 50, //50 milliseconds  *	.bufsize = sizeof(struct usb2_device_request),  *	.timeout = 1000, //1.000 seconds  *	.callback =&my_clear_stall_callback, // **  *	.usb_mode = USB_MODE_HOST,  * };  *  * ** "my_clear_stall_callback" calls "usb2_clear_stall_callback"  * passing the correct parameters.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_clear_stall_callback - factored out clear stall callback  *  * Input parameters:  *  xfer1: Clear Stall Control Transfer  *  xfer2: Stalled USB Transfer  *  * This function is NULL safe.  *  * Return values:  *   0: In progress  *   Else: Finished  *  * Clear stall config example:  *  * static const struct usb_config my_clearstall =  {  *	.type = UE_CONTROL,  *	.endpoint = 0,  *	.direction = UE_DIR_ANY,  *	.interval = 50, //50 milliseconds  *	.bufsize = sizeof(struct usb_device_request),  *	.timeout = 1000, //1.000 seconds  *	.callback =&my_clear_stall_callback, // **  *	.usb_mode = USB_MODE_HOST,  * };  *  * ** "my_clear_stall_callback" calls "usb2_clear_stall_callback"  * passing the correct parameters.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -9151,18 +9151,18 @@ name|uint8_t
 name|usb2_clear_stall_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer1
 parameter_list|,
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer2
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 if|if
@@ -9220,7 +9220,7 @@ name|udev
 argument_list|,
 name|xfer2
 operator|->
-name|pipe
+name|endpoint
 argument_list|)
 expr_stmt|;
 comment|/* setup a clear-stall packet */
@@ -9254,7 +9254,7 @@ index|]
 operator|=
 name|xfer2
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|edesc
 operator|->
@@ -9363,7 +9363,7 @@ name|void
 name|usb2_do_poll
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 modifier|*
 name|ppxfer

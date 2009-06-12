@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_route.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_bpf.h"
 end_include
 
@@ -19973,11 +19967,7 @@ name|m_flags
 operator|&
 name|M_LOOP
 condition|?
-operator|&
 name|V_loif
-index|[
-literal|0
-index|]
 else|:
 name|ifp
 argument_list|,

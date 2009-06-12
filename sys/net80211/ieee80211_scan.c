@@ -540,6 +540,17 @@ operator|->
 name|ss_scan_task
 argument_list|)
 expr_stmt|;
+name|callout_drain
+argument_list|(
+operator|&
+name|SCAN_PRIVATE
+argument_list|(
+name|ss
+argument_list|)
+operator|->
+name|ss_scan_timer
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(

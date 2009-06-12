@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: nsec.h,v 1.4.20.2 2005/04/29 00:16:16 marka Exp $ */
+comment|/* $Id: nsec.h,v 1.12 2008/09/25 04:02:39 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -21,7 +21,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*! \file */
+comment|/*! \file dns/nsec.h */
 end_comment
 
 begin_include
@@ -132,6 +132,29 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Determine if a type is marked as present in an NSEC record.  *  * Requires:  *\li	'nsec' points to a valid rdataset of type NSEC  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_nsec_nseconly
+parameter_list|(
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|,
+name|dns_dbversion_t
+modifier|*
+name|version
+parameter_list|,
+name|isc_boolean_t
+modifier|*
+name|answer
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Report whether the DNSKEY RRset has a NSEC only algorithm.  Unknown  * algorithms are assumed to support NSEC3.  *  * Requires:  * 	'answer' to be non NULL.  */
 end_comment
 
 begin_macro

@@ -64,7 +64,7 @@ end_define
 
 begin_struct
 struct|struct
-name|usb2_read_dir
+name|usb_read_dir
 block|{
 name|void
 modifier|*
@@ -82,7 +82,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_ctl_request
+name|usb_ctl_request
 block|{
 name|void
 modifier|*
@@ -115,7 +115,7 @@ name|ucr_addr
 decl_stmt|;
 comment|/* zero - currently not used */
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|ucr_request
 decl_stmt|;
 block|}
@@ -124,7 +124,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_alt_interface
+name|usb_alt_interface
 block|{
 name|uint8_t
 name|uai_interface_index
@@ -138,7 +138,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_gen_descriptor
+name|usb_gen_descriptor
 block|{
 name|void
 modifier|*
@@ -186,7 +186,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_device_info
+name|usb_device_info
 block|{
 name|uint16_t
 name|udi_productNo
@@ -297,7 +297,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_device_stats
+name|usb_device_stats
 block|{
 name|uint32_t
 name|uds_requests_ok
@@ -319,7 +319,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_fs_start
+name|usb_fs_start
 block|{
 name|uint8_t
 name|ep_index
@@ -330,7 +330,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_fs_stop
+name|usb_fs_stop
 block|{
 name|uint8_t
 name|ep_index
@@ -341,7 +341,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_fs_complete
+name|usb_fs_complete
 block|{
 name|uint8_t
 name|ep_index
@@ -356,7 +356,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_fs_endpoint
+name|usb_fs_endpoint
 block|{
 comment|/* 	 * NOTE: isochronous USB transfer only use one buffer, but can have 	 * multiple frame lengths ! 	 */
 name|void
@@ -424,11 +424,11 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_fs_init
+name|usb_fs_init
 block|{
 comment|/* userland pointer to endpoints structure */
 name|struct
-name|usb2_fs_endpoint
+name|usb_fs_endpoint
 modifier|*
 name|pEndpoints
 decl_stmt|;
@@ -442,7 +442,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_fs_uninit
+name|usb_fs_uninit
 block|{
 name|uint8_t
 name|dummy
@@ -454,7 +454,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_fs_open
+name|usb_fs_open
 block|{
 define|#
 directive|define
@@ -491,7 +491,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_fs_close
+name|usb_fs_close
 block|{
 name|uint8_t
 name|ep_index
@@ -502,7 +502,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_fs_clear_stall_sync
+name|usb_fs_clear_stall_sync
 block|{
 name|uint8_t
 name|ep_index
@@ -513,7 +513,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_gen_quirk
+name|usb_gen_quirk
 block|{
 name|uint16_t
 name|index
@@ -562,7 +562,7 @@ begin_define
 define|#
 directive|define
 name|USB_REQUEST
-value|_IOWR('U', 1, struct usb2_ctl_request)
+value|_IOWR('U', 1, struct usb_ctl_request)
 end_define
 
 begin_define
@@ -583,14 +583,14 @@ begin_define
 define|#
 directive|define
 name|USB_DEVICEINFO
-value|_IOWR('U', 4, struct usb2_device_info)
+value|_IOWR('U', 4, struct usb_device_info)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USB_DEVICESTATS
-value|_IOR ('U', 5, struct usb2_device_stats)
+value|_IOR ('U', 5, struct usb_device_stats)
 end_define
 
 begin_define
@@ -608,7 +608,7 @@ begin_define
 define|#
 directive|define
 name|USB_GET_REPORT_DESC
-value|_IOWR('U', 21, struct usb2_gen_descriptor)
+value|_IOWR('U', 21, struct usb_gen_descriptor)
 end_define
 
 begin_define
@@ -622,14 +622,14 @@ begin_define
 define|#
 directive|define
 name|USB_GET_REPORT
-value|_IOWR('U', 23, struct usb2_gen_descriptor)
+value|_IOWR('U', 23, struct usb_gen_descriptor)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USB_SET_REPORT
-value|_IOW ('U', 24, struct usb2_gen_descriptor)
+value|_IOW ('U', 24, struct usb_gen_descriptor)
 end_define
 
 begin_define
@@ -661,70 +661,70 @@ begin_define
 define|#
 directive|define
 name|USB_GET_ALTINTERFACE
-value|_IOWR('U', 102, struct usb2_alt_interface)
+value|_IOWR('U', 102, struct usb_alt_interface)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USB_SET_ALTINTERFACE
-value|_IOWR('U', 103, struct usb2_alt_interface)
+value|_IOWR('U', 103, struct usb_alt_interface)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USB_GET_DEVICE_DESC
-value|_IOR ('U', 105, struct usb2_device_descriptor)
+value|_IOR ('U', 105, struct usb_device_descriptor)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USB_GET_CONFIG_DESC
-value|_IOR ('U', 106, struct usb2_config_descriptor)
+value|_IOR ('U', 106, struct usb_config_descriptor)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USB_GET_RX_INTERFACE_DESC
-value|_IOR ('U', 107, struct usb2_interface_descriptor)
+value|_IOR ('U', 107, struct usb_interface_descriptor)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USB_GET_RX_ENDPOINT_DESC
-value|_IOR ('U', 108, struct usb2_endpoint_descriptor)
+value|_IOR ('U', 108, struct usb_endpoint_descriptor)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USB_GET_FULL_DESC
-value|_IOWR('U', 109, struct usb2_gen_descriptor)
+value|_IOWR('U', 109, struct usb_gen_descriptor)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USB_GET_STRING_DESC
-value|_IOWR('U', 110, struct usb2_gen_descriptor)
+value|_IOWR('U', 110, struct usb_gen_descriptor)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USB_DO_REQUEST
-value|_IOWR('U', 111, struct usb2_ctl_request)
+value|_IOWR('U', 111, struct usb_ctl_request)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USB_GET_DEVICEINFO
-value|_IOR ('U', 112, struct usb2_device_info)
+value|_IOR ('U', 112, struct usb_device_info)
 end_define
 
 begin_define
@@ -780,7 +780,7 @@ begin_define
 define|#
 directive|define
 name|USB_GET_IFACE_DRIVER
-value|_IOWR('U', 121, struct usb2_gen_descriptor)
+value|_IOWR('U', 121, struct usb_gen_descriptor)
 end_define
 
 begin_define
@@ -822,7 +822,7 @@ begin_define
 define|#
 directive|define
 name|USB_READ_DIR
-value|_IOW ('U', 127, struct usb2_read_dir)
+value|_IOW ('U', 127, struct usb_read_dir)
 end_define
 
 begin_comment
@@ -868,14 +868,14 @@ begin_define
 define|#
 directive|define
 name|USB_GET_TX_INTERFACE_DESC
-value|_IOR ('U', 141, struct usb2_interface_descriptor)
+value|_IOR ('U', 141, struct usb_interface_descriptor)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USB_GET_TX_ENDPOINT_DESC
-value|_IOR ('U', 142, struct usb2_endpoint_descriptor)
+value|_IOR ('U', 142, struct usb_endpoint_descriptor)
 end_define
 
 begin_define
@@ -946,56 +946,56 @@ begin_define
 define|#
 directive|define
 name|USB_FS_START
-value|_IOW ('U', 192, struct usb2_fs_start)
+value|_IOW ('U', 192, struct usb_fs_start)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USB_FS_STOP
-value|_IOW ('U', 193, struct usb2_fs_stop)
+value|_IOW ('U', 193, struct usb_fs_stop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USB_FS_COMPLETE
-value|_IOR ('U', 194, struct usb2_fs_complete)
+value|_IOR ('U', 194, struct usb_fs_complete)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USB_FS_INIT
-value|_IOW ('U', 195, struct usb2_fs_init)
+value|_IOW ('U', 195, struct usb_fs_init)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USB_FS_UNINIT
-value|_IOW ('U', 196, struct usb2_fs_uninit)
+value|_IOW ('U', 196, struct usb_fs_uninit)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USB_FS_OPEN
-value|_IOWR('U', 197, struct usb2_fs_open)
+value|_IOWR('U', 197, struct usb_fs_open)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USB_FS_CLOSE
-value|_IOW ('U', 198, struct usb2_fs_close)
+value|_IOW ('U', 198, struct usb_fs_close)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USB_FS_CLEAR_STALL_SYNC
-value|_IOW ('U', 199, struct usb2_fs_clear_stall_sync)
+value|_IOW ('U', 199, struct usb_fs_clear_stall_sync)
 end_define
 
 begin_comment
@@ -1006,28 +1006,28 @@ begin_define
 define|#
 directive|define
 name|USB_DEV_QUIRK_GET
-value|_IOWR('Q', 0, struct usb2_gen_quirk)
+value|_IOWR('Q', 0, struct usb_gen_quirk)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USB_QUIRK_NAME_GET
-value|_IOWR('Q', 1, struct usb2_gen_quirk)
+value|_IOWR('Q', 1, struct usb_gen_quirk)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USB_DEV_QUIRK_ADD
-value|_IOW ('Q', 2, struct usb2_gen_quirk)
+value|_IOW ('Q', 2, struct usb_gen_quirk)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USB_DEV_QUIRK_REMOVE
-value|_IOW ('Q', 3, struct usb2_gen_quirk)
+value|_IOW ('Q', 3, struct usb_gen_quirk)
 end_define
 
 begin_endif

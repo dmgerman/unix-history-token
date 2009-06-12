@@ -32,18 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_route.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -584,29 +572,9 @@ argument_list|(
 name|curvnet
 argument_list|)
 expr_stmt|;
-specifier|static
-name|int
-name|nd6_init_done
-init|=
-literal|0
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-if|if
-condition|(
-name|nd6_init_done
-condition|)
-block|{
-name|log
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-literal|"nd6_init called more than once(ignored)\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|V_nd6_prune
 operator|=
 literal|1
@@ -730,6 +698,10 @@ name|V_ip6_temp_regen_advance
 operator|=
 name|TEMPADDR_REGEN_ADVANCE
 expr_stmt|;
+name|V_ip6_desync_factor
+operator|=
+literal|0
+expr_stmt|;
 name|all1_sa
 operator|.
 name|sin6_family
@@ -805,12 +777,44 @@ argument_list|,
 name|curvnet
 argument_list|)
 expr_stmt|;
-name|nd6_init_done
-operator|=
-literal|1
+block|}
+end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_function
+name|void
+name|nd6_destroy
+parameter_list|()
+block|{
+name|INIT_VNET_INET6
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+name|callout_drain
+argument_list|(
+operator|&
+name|V_nd6_slowtimo_ch
+argument_list|)
+expr_stmt|;
+name|callout_drain
+argument_list|(
+operator|&
+name|V_nd6_timer_ch
+argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|struct
@@ -1121,9 +1125,6 @@ name|in6_setmaxmtu
 argument_list|()
 expr_stmt|;
 comment|/* check all interfaces just in case */
-undef|#
-directive|undef
-name|MIN
 block|}
 end_function
 
@@ -1953,16 +1954,6 @@ argument_list|(
 literal|"ln ifp == NULL"
 argument_list|)
 expr_stmt|;
-comment|/*  * XXX XXX XXX XXX XXX  *  * Why the ^%(@)*&%^) is this #define MIN() needed for CURVNET_SET()?!?  * And #define MIN() is in sys/param.h already, which is #included first  * here?!?  */
-define|#
-directive|define
-name|MIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(((a)<(b))?(a):(b))
 name|CURVNET_SET
 argument_list|(
 name|ifp

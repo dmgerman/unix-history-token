@@ -104,6 +104,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>
+literal|800082
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|IFNET_BUF_RING
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -380,6 +402,9 @@ name|int
 name|mask
 decl_stmt|;
 comment|/* number of rx slots -1 */
+name|int
+name|mlen
+decl_stmt|;
 block|}
 name|mxge_rx_ring_t
 typedef|;
@@ -642,12 +667,6 @@ name|ipackets
 decl_stmt|;
 name|u_long
 name|opackets
-decl_stmt|;
-name|u_long
-name|obytes
-decl_stmt|;
-name|u_long
-name|omcasts
 decl_stmt|;
 name|u_long
 name|oerrors

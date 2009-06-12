@@ -209,6 +209,23 @@ directive|include
 file|<sys/selinfo.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_snd.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -1185,6 +1202,24 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KOBJMETHOD_END
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|KOBJMETHOD_END
+value|{ NULL, NULL }
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * static const char *mpu401_mprovider(kobj_t obj, struct mpu401 *m);  */
 end_comment
@@ -1197,11 +1232,7 @@ index|[]
 init|=
 block|{
 comment|/* KOBJMETHOD(mpu_provider,mpu401_mprovider), */
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2261,11 +2292,31 @@ literal|"seq_eventthread finished\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800002
 name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|kthread_exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -2943,7 +2994,17 @@ goto|;
 comment|/* 	 * TODO: Add to list of sequencers this module provides 	 */
 name|ret
 operator|=
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800002
 name|kproc_create
+else|#
+directive|else
+name|kthread_create
+endif|#
+directive|endif
 argument_list|(
 name|seq_eventthread
 argument_list|,

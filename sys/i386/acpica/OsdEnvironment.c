@@ -48,13 +48,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acpi.h>
+file|<contrib/dev/acpica/include/acpi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/actables.h>
+file|<contrib/dev/acpica/include/actables.h>
 end_include
 
 begin_decl_stmt
@@ -153,7 +153,7 @@ operator|||
 name|AcpiFindRootPointer
 argument_list|(
 operator|(
-name|ACPI_NATIVE_UINT
+name|ACPI_SIZE
 operator|*
 operator|)
 operator|&

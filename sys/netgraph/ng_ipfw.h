@@ -74,6 +74,14 @@ modifier|*
 name|rule
 decl_stmt|;
 comment|/* matching rule */
+name|uint32_t
+name|rule_id
+decl_stmt|;
+comment|/* matching rule id */
+name|uint32_t
+name|chain_id
+decl_stmt|;
+comment|/* ruleset id */
 name|struct
 name|ifnet
 modifier|*

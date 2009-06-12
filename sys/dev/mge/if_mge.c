@@ -333,7 +333,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|mge_miibus_writereg
 parameter_list|(
 name|device_t
@@ -535,7 +535,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|mge_intr_rx_locked
 parameter_list|(
 name|struct
@@ -3324,7 +3324,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|void
+name|int
 name|mge_poll
 parameter_list|(
 name|struct
@@ -3354,6 +3354,11 @@ name|int_cause
 decl_stmt|,
 name|int_cause_ext
 decl_stmt|;
+name|int
+name|rx_npkts
+init|=
+literal|0
+decl_stmt|;
 name|MGE_GLOBAL_LOCK
 argument_list|(
 name|sc
@@ -3376,7 +3381,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -3449,6 +3458,8 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|rx_npkts
+operator|=
 name|mge_intr_rx_locked
 argument_list|(
 name|sc
@@ -3461,6 +3472,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
@@ -5255,7 +5271,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|mge_intr_rx_locked
 parameter_list|(
 name|struct
@@ -5291,6 +5307,11 @@ name|struct
 name|mbuf
 modifier|*
 name|mb
+decl_stmt|;
+name|int
+name|rx_npkts
+init|=
+literal|0
 decl_stmt|;
 name|MGE_RECEIVE_LOCK_ASSERT
 argument_list|(
@@ -5472,6 +5493,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|rx_npkts
+operator|++
+expr_stmt|;
 block|}
 name|dw
 operator|->
@@ -5530,7 +5554,11 @@ operator|-=
 literal|1
 expr_stmt|;
 block|}
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
@@ -6432,7 +6460,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|mge_miibus_writereg
 parameter_list|(
 name|device_t
@@ -6464,7 +6492,11 @@ operator|)
 operator|!=
 name|phy
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|MGE_WRITE
 argument_list|(
 name|sc_mge0
@@ -6532,6 +6564,11 @@ argument_list|,
 literal|"Timeout while writing to PHY\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

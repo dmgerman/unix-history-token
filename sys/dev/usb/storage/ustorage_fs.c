@@ -597,12 +597,12 @@ name|device_t
 name|sc_dev
 decl_stmt|;
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|sc_udev
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|sc_xfer
 index|[
@@ -677,35 +677,35 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|ustorage_fs_t_bbb_command_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|ustorage_fs_t_bbb_data_dump_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|ustorage_fs_t_bbb_data_read_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|ustorage_fs_t_bbb_data_write_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|ustorage_fs_t_bbb_status_callback
 decl_stmt|;
 end_decl_stmt
@@ -1077,7 +1077,7 @@ end_expr_stmt
 
 begin_decl_stmt
 name|struct
-name|usb2_config
+name|usb_config
 name|ustorage_fs_bbb_config
 index|[
 name|USTORAGE_FS_T_BBB_MAX
@@ -1373,7 +1373,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -1383,7 +1383,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 modifier|*
 name|id
 decl_stmt|;
@@ -1495,7 +1495,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -1505,7 +1505,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 modifier|*
 name|id
 decl_stmt|;
@@ -2013,7 +2013,7 @@ argument_list|)
 decl_stmt|;
 specifier|const
 name|struct
-name|usb2_device_request
+name|usb_device_request
 modifier|*
 name|req
 init|=
@@ -2162,7 +2162,7 @@ name|void
 name|ustorage_fs_t_bbb_command_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2620,7 +2620,7 @@ condition|(
 operator|!
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|is_stalled
 condition|)
@@ -2724,7 +2724,7 @@ name|void
 name|ustorage_fs_t_bbb_data_dump_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2911,7 +2911,7 @@ condition|(
 operator|!
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|is_stalled
 condition|)
@@ -2939,7 +2939,7 @@ name|void
 name|ustorage_fs_t_bbb_data_read_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -3149,7 +3149,7 @@ condition|(
 operator|!
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|is_stalled
 condition|)
@@ -3177,7 +3177,7 @@ name|void
 name|ustorage_fs_t_bbb_data_write_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -3426,7 +3426,7 @@ condition|(
 operator|!
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|is_stalled
 condition|)
@@ -3454,7 +3454,7 @@ name|void
 name|ustorage_fs_t_bbb_status_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -3610,7 +3610,7 @@ condition|(
 operator|!
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|is_stalled
 condition|)

@@ -729,6 +729,7 @@ name|p
 operator|++
 control|)
 empty_stmt|;
+comment|/* nothing */
 name|len
 operator|=
 name|p

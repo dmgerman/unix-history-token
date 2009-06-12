@@ -2781,7 +2781,11 @@ end_function
 begin_function
 name|int
 name|arm_get_next_irq
-parameter_list|()
+parameter_list|(
+name|int
+name|last
+name|__unused
+parameter_list|)
 block|{
 name|int
 name|status

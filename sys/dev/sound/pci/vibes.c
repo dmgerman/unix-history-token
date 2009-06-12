@@ -1,7 +1,28 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 Orion Hodson<O.Hodson@cs.ucl.ac.uk>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This card has the annoying habit of "clicking" when attached and  * detached, haven't been able to remedy this with any combination of  * muting.  */
+comment|/*-  * Copyright (c) 2001 Orion Hodson<O.Hodson@cs.ucl.ac.uk>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
+
+begin_comment
+comment|/*  * This card has the annoying habit of "clicking" when attached and  * detached, haven't been able to remedy this with any combination of  * muting.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_snd.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -247,17 +268,41 @@ name|sc_fmt
 index|[]
 init|=
 block|{
+name|SND_FORMAT
+argument_list|(
 name|AFMT_U8
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
 block|,
+name|SND_FORMAT
+argument_list|(
 name|AFMT_U8
-operator||
-name|AFMT_STEREO
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
 block|,
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
-operator||
-name|AFMT_STEREO
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
 literal|0
 block|}
@@ -826,7 +871,14 @@ name|ch
 operator|->
 name|fmt
 operator|=
+name|SND_FORMAT
+argument_list|(
 name|AFMT_U8
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|ch
 operator|->
@@ -874,7 +926,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|svchan_setblocksize
 parameter_list|(
 name|kobj_t
@@ -974,9 +1026,12 @@ operator|->
 name|fmt
 operator|=
 operator|(
+name|AFMT_CHANNEL
+argument_list|(
 name|format
-operator|&
-name|AFMT_STEREO
+argument_list|)
+operator|>
+literal|1
 operator|)
 condition|?
 name|SV_AFMT_STEREO
@@ -1005,7 +1060,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|svchan_setspeed
 parameter_list|(
 name|kobj_t
@@ -1633,7 +1688,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|svrchan_getptr
 parameter_list|(
 name|kobj_t
@@ -1758,11 +1813,7 @@ argument_list|,
 name|svchan_getcaps
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2055,7 +2106,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|svpchan_getptr
 parameter_list|(
 name|kobj_t
@@ -2178,11 +2229,7 @@ argument_list|,
 name|svchan_getcaps
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2807,7 +2854,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|sv_mix_setrecsrc
 parameter_list|(
 name|struct
@@ -2936,11 +2983,7 @@ argument_list|,
 name|sv_mix_setrecsrc
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt

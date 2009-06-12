@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|__FreeBSD_version
-value|800090
+value|800097
 end_define
 
 begin_comment
@@ -752,39 +752,6 @@ end_define
 
 begin_comment
 comment|/* non-existent device */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CBLOCK
-value|128
-end_define
-
-begin_comment
-comment|/* Clist block size, must be a power of 2. */
-end_comment
-
-begin_comment
-comment|/* Data chars/clist. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CBSIZE
-value|(CBLOCK - sizeof(struct cblock *))
-end_define
-
-begin_define
-define|#
-directive|define
-name|CROUND
-value|(CBLOCK - 1)
-end_define
-
-begin_comment
-comment|/* Clist rounding. */
 end_comment
 
 begin_comment

@@ -1491,7 +1491,7 @@ value|PMC_ID_TO_CPU((P)->pm_id)
 end_define
 
 begin_comment
-comment|/*  * struct pmc_process  *  * Record a 'target' process being profiled.  *  * The target process being profiled could be different from the owner  * process which allocated the PMCs.  Each target process descriptor  * is associated with NHWPMC 'struct pmc *' pointers.  Each PMC at a  * given hardware row-index 'n' will use slot 'n' of the 'pp_pmcs[]'  * array.  The size of this structure is thus PMC architecture  * dependent.  *  * TODO: Only process-private counting mode PMCs may be attached to a  * process different from the allocator process (since we do not have  * the infrastructure to make sense of an interrupted PC value from a  * 'target' process (yet)).  *  */
+comment|/*  * struct pmc_process  *  * Record a 'target' process being profiled.  *  * The target process being profiled could be different from the owner  * process which allocated the PMCs.  Each target process descriptor  * is associated with NHWPMC 'struct pmc *' pointers.  Each PMC at a  * given hardware row-index 'n' will use slot 'n' of the 'pp_pmcs[]'  * array.  The size of this structure is thus PMC architecture  * dependent.  *  */
 end_comment
 
 begin_struct

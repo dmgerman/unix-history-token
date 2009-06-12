@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2006-2008 University of Zagreb  * Copyright (c) 2006-2008 FreeBSD Foundation  *  * This software was developed by the University of Zagreb and the  * FreeBSD Foundation under sponsorship by the Stichting NLnet and the  * FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2006-2009 University of Zagreb  * Copyright (c) 2006-2009 FreeBSD Foundation  *  * This software was developed by the University of Zagreb and the  * FreeBSD Foundation under sponsorship by the Stichting NLnet and the  * FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -26,6 +26,123 @@ include|#
 directive|include
 file|<sys/queue.h>
 end_include
+
+begin_comment
+comment|/* Interim userspace API. */
+end_comment
+
+begin_struct
+struct|struct
+name|vi_req
+block|{
+name|int
+name|vi_api_cookie
+decl_stmt|;
+comment|/* Catch API mismatch. */
+name|int
+name|vi_req_action
+decl_stmt|;
+comment|/* What to do with this request? */
+name|u_short
+name|vi_proc_count
+decl_stmt|;
+comment|/* Current number of processes. */
+name|int
+name|vi_if_count
+decl_stmt|;
+comment|/* Current number of ifnets. */
+name|int
+name|vi_sock_count
+decl_stmt|;
+name|char
+name|vi_name
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+name|char
+name|vi_if_xname
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+comment|/* XXX should be IFNAMSIZ */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|VI_CREATE
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|VI_DESTROY
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|VI_SWITCHTO
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|VI_IFACE
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|VI_GET
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|VI_GETNEXT
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|VI_GETNEXT_RECURSE
+value|0x00000300
+end_define
+
+begin_define
+define|#
+directive|define
+name|VI_API_VERSION
+value|1
+end_define
+
+begin_comment
+comment|/* Bump on struct changes. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VI_API_COOKIE
+value|((sizeof(struct vi_req)<< 16) | VI_API_VERSION)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_if
 if|#
@@ -78,6 +195,18 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|vnet
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|vi_req
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ifnet
 struct_decl|;
 end_struct_decl
 
@@ -545,6 +674,73 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|vi_td_ioctl
+parameter_list|(
+name|u_long
+parameter_list|,
+name|struct
+name|vi_req
+modifier|*
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vi_if_move
+parameter_list|(
+name|struct
+name|vi_req
+modifier|*
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|vimage
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vi_child_of
+parameter_list|(
+name|struct
+name|vimage
+modifier|*
+parameter_list|,
+name|struct
+name|vimage
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|vimage
+modifier|*
+name|vimage_by_name
+parameter_list|(
+name|struct
+name|vimage
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|vnet_mod_register
 parameter_list|(
@@ -875,18 +1071,6 @@ decl_stmt|;
 comment|/* ID num */
 name|u_int
 name|nprocs
-decl_stmt|;
-name|char
-name|_hostname
-index|[
-name|MAXHOSTNAMELEN
-index|]
-decl_stmt|;
-name|char
-name|_domainname
-index|[
-name|MAXHOSTNAMELEN
-index|]
 decl_stmt|;
 block|}
 struct|;
@@ -1655,50 +1839,6 @@ parameter_list|)
 value|VSYM(vprocg, sym)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|G_hostname
-value|TD_TO_VPROCG(&thread0)->_hostname
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|G_hostname
-value|VPROCG(hostname)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|V_hostname
-value|VPROCG(hostname)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_domainname
-value|VPROCG(domainname)
-end_define
-
 begin_comment
 comment|/*  * Size-guards for the vimage structures.  * If you need to update the values you MUST increment __FreeBSD_version.  * See description further down to see how to get the new values.  */
 end_comment
@@ -1713,28 +1853,21 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|464
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_vnet_net_LINT
-value|5144
+value|192
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet
-value|4352
+value|4424
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet6
-value|8800
+value|8808
 end_define
 
 begin_define
@@ -1759,32 +1892,21 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|236
+value|104
 end_define
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_vnet_net_LINT
-value|1
-end_define
-
-begin_comment
-comment|/* No LINT kernel yet. */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet
-value|2580
+value|2616
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet6
-value|8536
+value|8524
 end_define
 
 begin_define
@@ -1813,35 +1935,28 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|236
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_vnet_net_LINT
-value|2576
+value|104
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet
-value|2576
+value|2612
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet6
-value|8528
+value|8512
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_ipsec
-value|31016
+value|31024
 end_define
 
 begin_endif
@@ -1859,28 +1974,21 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|464
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_vnet_net_LINT
-value|5144
+value|192
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet
-value|4352
+value|4424
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet6
-value|8800
+value|8808
 end_define
 
 begin_define
@@ -1905,32 +2013,21 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|236
+value|104
 end_define
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_vnet_net_LINT
-value|1
-end_define
-
-begin_comment
-comment|/* No LINT kernel yet. */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet
-value|2624
+value|2648
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet6
-value|8552
+value|8544
 end_define
 
 begin_define
@@ -1955,28 +2052,21 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|236
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_vnet_net_LINT
-value|2576
+value|104
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet
-value|2616
+value|2640
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet6
-value|8536
+value|8520
 end_define
 
 begin_define
@@ -2005,28 +2095,21 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|464
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_vnet_net_LINT
-value|5144
+value|192
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet
-value|4352
+value|4424
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_inet6
-value|8800
+value|8808
 end_define
 
 begin_define
@@ -2034,30 +2117,6 @@ define|#
 directive|define
 name|SIZEOF_vnet_ipsec
 value|31160
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPILING_LINT
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|SIZEOF_vnet_net
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_vnet_net
-value|SIZEOF_vnet_net_LINT
 end_define
 
 begin_endif
@@ -2234,6 +2293,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#

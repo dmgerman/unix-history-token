@@ -180,7 +180,7 @@ file|<security/mac/mac_policy.h>
 end_include
 
 begin_comment
-comment|/*  * Currently, sockets hold two labels: the label of the socket itself, and a  * peer label, which may be used by policies to hold a copy of the label of  * any remote endpoint.  *  * Possibly, this peer label should be maintained at the protocol layer  * (inpcb, unpcb, etc), as this would allow protocol-aware code to maintain  * the label consistently.  For example, it might be copied live from a  * remote socket for UNIX domain sockets rather than keeping a local copy on  * this endpoint, but be cached and updated based on packets received for  * TCP/IP.  */
+comment|/*  * Currently, sockets hold two labels: the label of the socket itself, and a  * peer label, which may be used by policies to hold a copy of the label of  * any remote endpoint.  *  * Possibly, this peer label should be maintained at the protocol layer  * (inpcb, unpcb, etc), as this would allow protocol-aware code to maintain  * the label consistently.  For example, it might be copied live from a  * remote socket for UNIX domain sockets rather than keeping a local copy on  * this endpoint, but be cached and updated based on packets received for  * TCP/IP.  *  * Unlike with many other object types, the lock protecting MAC labels on  * sockets (the socket lock) is not frequently held at the points in code  * where socket-related checks are called.  The MAC Framework acquires the  * lock over some entry points in order to enforce atomicity (such as label  * copies) but in other cases the policy modules will have to acquire the  * lock themselves if they use labels.  This approach (a) avoids lock  * acquisitions when policies don't require labels and (b) solves a number of  * potential lock order issues when multiple sockets are used in the same  * entry point.  */
 end_comment
 
 begin_function
@@ -769,11 +769,6 @@ modifier|*
 name|newso
 parameter_list|)
 block|{
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|oldso
-argument_list|)
-expr_stmt|;
 name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|socket_newconn
@@ -858,11 +853,13 @@ name|label
 modifier|*
 name|label
 decl_stmt|;
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+name|mac_policy_count
+operator|==
+literal|0
+condition|)
+return|return;
 name|label
 operator|=
 name|mac_mbuf_to_label
@@ -903,7 +900,13 @@ modifier|*
 name|newso
 parameter_list|)
 block|{
-comment|/* 	 * XXXRW: only hold the socket lock on one at a time, as one socket 	 * is the original, and one is the new.  However, it's called in both 	 * directions, so we can't assert the lock here currently. 	 */
+if|if
+condition|(
+name|mac_policy_count
+operator|==
+literal|0
+condition|)
+return|return;
 name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|socketpeer_set_from_socket
@@ -944,11 +947,13 @@ name|label
 modifier|*
 name|label
 decl_stmt|;
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+name|mac_policy_count
+operator|==
+literal|0
+condition|)
+return|return;
 name|label
 operator|=
 name|mac_mbuf_to_label
@@ -1004,11 +1009,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_accept
@@ -1078,11 +1078,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_bind
@@ -1156,11 +1151,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_connect
@@ -1306,11 +1296,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+name|mac_policy_count
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|label
 operator|=
 name|mac_mbuf_to_label
@@ -1382,11 +1378,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_listen
@@ -1449,11 +1440,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_poll
@@ -1516,11 +1502,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_receive
@@ -1662,11 +1643,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_send
@@ -1729,11 +1705,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_stat
@@ -1796,11 +1767,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_visible

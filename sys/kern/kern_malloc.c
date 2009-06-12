@@ -2774,17 +2774,17 @@ name|mtp
 operator|=
 name|data
 expr_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|mtp
 operator|->
 name|ks_magic
-operator|==
+operator|!=
 name|M_MAGIC
-argument_list|,
-operator|(
+condition|)
+name|panic
+argument_list|(
 literal|"malloc_init: bad malloc type magic"
-operator|)
 argument_list|)
 expr_stmt|;
 name|mtip
@@ -2950,6 +2950,7 @@ name|ks_next
 operator|==
 name|mtp
 condition|)
+block|{
 name|temp
 operator|->
 name|ks_next
@@ -2958,7 +2959,22 @@ name|mtp
 operator|->
 name|ks_next
 expr_stmt|;
+break|break;
 block|}
+block|}
+name|KASSERT
+argument_list|(
+name|temp
+argument_list|,
+operator|(
+literal|"malloc_uninit: type '%s' not found"
+operator|,
+name|mtp
+operator|->
+name|ks_shortdesc
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 name|kmemstatistics

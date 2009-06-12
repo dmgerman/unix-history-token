@@ -321,6 +321,12 @@ parameter_list|)
 value|((p) == IPPROTO_ESP ? (x)++ : \ 			    (p) == IPPROTO_AH ? (y)++ : (z)++)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -339,6 +345,11 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * ipsec_common_input gets called when an IPsec-protected packet  * is received by IPv4 or IPv6.  It's job is to find the right SA  * and call the appropriate transform.  The transform callback  * takes care of further processing (like ingress filtering).  */
@@ -2299,9 +2310,14 @@ condition|(
 operator|(
 name|error
 operator|=
-name|netisr_queue
+name|netisr_queue_src
 argument_list|(
 name|NETISR_IP
+argument_list|,
+operator|(
+name|uintptr_t
+operator|)
+name|sav
 argument_list|,
 name|m
 argument_list|)

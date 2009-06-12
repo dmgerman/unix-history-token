@@ -1127,6 +1127,8 @@ argument_list|,
 name|k
 argument_list|,
 name|pn
+argument_list|,
+name|tid
 argument_list|)
 expr_stmt|;
 name|vap
@@ -1357,14 +1359,6 @@ parameter_list|)
 block|{
 define|#
 directive|define
-name|IS_4ADDRESS
-parameter_list|(
-name|wh
-parameter_list|)
-define|\
-value|((wh->i_fc[1]& IEEE80211_FC1_DIR_MASK) == IEEE80211_FC1_DIR_DSTODS)
-define|#
-directive|define
 name|IS_QOS_DATA
 parameter_list|(
 name|wh
@@ -1547,7 +1541,7 @@ comment|/* all bits masked */
 comment|/* 	 * Construct variable-length portion of AAD based 	 * on whether this is a 4-address frame/QOS frame. 	 * We always zero-pad to 32 bytes before running it 	 * through the cipher. 	 * 	 * We also fill in the priority bits of the CCM 	 * initial block as we know whether or not we have 	 * a QOS frame. 	 */
 if|if
 condition|(
-name|IS_4ADDRESS
+name|IEEE80211_IS_DSTODS
 argument_list|(
 name|wh
 argument_list|)
@@ -1870,9 +1864,6 @@ expr_stmt|;
 undef|#
 directive|undef
 name|IS_QOS_DATA
-undef|#
-directive|undef
-name|IS_4ADDRESS
 block|}
 end_function
 

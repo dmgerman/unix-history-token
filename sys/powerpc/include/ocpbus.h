@@ -96,6 +96,13 @@ name|OCPBUS_DEVTYPE_I2C
 value|7
 end_define
 
+begin_define
+define|#
+directive|define
+name|OCPBUS_DEVTYPE_SEC
+value|8
+end_define
+
 begin_endif
 endif|#
 directive|endif

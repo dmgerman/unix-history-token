@@ -819,6 +819,20 @@ literal|"nForce MCP67"
 block|}
 block|,
 block|{
+name|ATA_NFORCE_MCP67_AC
+block|,
+literal|0
+block|,
+name|NVAHCI
+block|,
+literal|0
+block|,
+name|ATA_SA300
+block|,
+literal|"nForce MCP67"
+block|}
+block|,
+block|{
 name|ATA_NFORCE_MCP73
 block|,
 literal|0

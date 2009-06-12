@@ -1527,7 +1527,9 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"getport: prog=0x%x vers=%d\n"
+literal|"%s: prog=0x%x vers=%d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|prog
 argument_list|,
@@ -1543,11 +1545,15 @@ name|prog
 operator|==
 name|PMAPPROG
 condition|)
-return|return
-operator|(
+block|{
+name|port
+operator|=
 name|PMAPPORT
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 comment|/* Try for cached answer first */
 name|port
 operator|=
@@ -1569,11 +1575,9 @@ operator|!=
 operator|-
 literal|1
 condition|)
-return|return
-operator|(
-name|port
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 name|args
 operator|=
 operator|&
@@ -1707,6 +1711,26 @@ argument_list|,
 name|port
 argument_list|)
 expr_stmt|;
+name|out
+label|:
+ifdef|#
+directive|ifdef
+name|RPC_DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"%s: port=%u\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|port
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|port

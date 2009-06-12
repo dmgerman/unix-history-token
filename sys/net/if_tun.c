@@ -34,12 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -2071,7 +2065,7 @@ operator|->
 name|if_snd
 argument_list|)
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|sc
@@ -2079,12 +2073,6 @@ operator|->
 name|tun_rsel
 operator|.
 name|si_note
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|)

@@ -335,7 +335,7 @@ struct|struct
 name|ndisusb_ep
 block|{
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|ne_xfer
 index|[
@@ -400,7 +400,7 @@ name|ndisusb_xfer
 modifier|*
 name|nd_xfer
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|nd_status
 decl_stmt|;
 name|list_entry
@@ -709,7 +709,7 @@ name|int
 name|ndis_hang_timer
 decl_stmt|;
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|ndisusb_dev
 decl_stmt|;

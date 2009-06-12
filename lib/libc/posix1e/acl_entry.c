@@ -103,12 +103,15 @@ operator|)
 operator|->
 name|ats_acl
 expr_stmt|;
+comment|/* 	 * +1, because we are checking if there is space left for one more 	 * entry. 	 */
 if|if
 condition|(
 operator|(
 name|acl_int
 operator|->
 name|acl_cnt
+operator|+
+literal|1
 operator|>=
 name|ACL_MAX_ENTRIES
 operator|)

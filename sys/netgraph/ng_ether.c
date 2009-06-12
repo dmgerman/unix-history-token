@@ -14,12 +14,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_route.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -1015,6 +1009,9 @@ literal|0
 operator|)
 return|;
 comment|/* Send it out "upper" hook */
+name|NG_OUTBOUND_THREAD_REF
+argument_list|()
+expr_stmt|;
 name|NG_SEND_DATA_ONLY
 argument_list|(
 name|error
@@ -1026,6 +1023,9 @@ argument_list|,
 operator|*
 name|mp
 argument_list|)
+expr_stmt|;
+name|NG_OUTBOUND_THREAD_UNREF
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1516,6 +1516,11 @@ argument_list|(
 name|hook
 argument_list|,
 name|ng_ether_rcv_upper
+argument_list|)
+expr_stmt|;
+name|NG_HOOK_SET_TO_INBOUND
+argument_list|(
+name|hook
 argument_list|)
 expr_stmt|;
 block|}

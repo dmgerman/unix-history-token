@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_route.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -335,8 +329,30 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|ifqueue
-name|ip6intrq
+name|netisr_handler
+name|ip6_nh
+init|=
+block|{
+operator|.
+name|nh_name
+operator|=
+literal|"ip6"
+block|,
+operator|.
+name|nh_handler
+operator|=
+name|ip6_input
+block|,
+operator|.
+name|nh_proto
+operator|=
+name|NETISR_IPV6
+block|,
+operator|.
+name|nh_policy
+operator|=
+name|NETISR_POLICY_FLOW
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -374,13 +390,6 @@ ifdef|#
 directive|ifdef
 name|VIMAGE_GLOBALS
 end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ip6qmaxlen
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -673,10 +682,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|V_ip6qmaxlen
-operator|=
-name|IFQ_MAXLEN
-expr_stmt|;
 name|V_in6_maxmtu
 operator|=
 literal|0
@@ -1114,41 +1119,47 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|ip6intrq
-operator|.
-name|ifq_maxlen
-operator|=
-name|V_ip6qmaxlen
-expr_stmt|;
-comment|/* XXX */
-name|mtx_init
-argument_list|(
-operator|&
-name|ip6intrq
-operator|.
-name|ifq_mtx
-argument_list|,
-literal|"ip6_inq"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 name|netisr_register
 argument_list|(
-name|NETISR_IPV6
-argument_list|,
-name|ip6_input
-argument_list|,
 operator|&
-name|ip6intrq
-argument_list|,
-literal|0
+name|ip6_nh
 argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_function
+name|void
+name|ip6_destroy
+parameter_list|()
+block|{
+name|INIT_VNET_INET6
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+name|nd6_destroy
+argument_list|()
+expr_stmt|;
+name|callout_drain
+argument_list|(
+operator|&
+name|V_in6_tmpaddrtimer_ch
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -1452,15 +1463,11 @@ operator|.
 name|ip6s_m2m
 index|[
 name|V_loif
-index|[
-literal|0
-index|]
-operator|.
+operator|->
 name|if_index
 index|]
 operator|++
 expr_stmt|;
-comment|/* XXX */
 block|}
 elseif|else
 if|if
@@ -2898,8 +2905,6 @@ name|rtalert
 operator|!=
 operator|~
 literal|0
-operator|&&
-name|V_ip6_forwarding
 condition|)
 block|{
 switch|switch
@@ -2910,6 +2915,10 @@ block|{
 case|case
 name|IP6OPT_RTALERT_MLD
 case|:
+if|if
+condition|(
+name|V_ip6_forwarding
+condition|)
 name|ours
 operator|=
 literal|1
@@ -3058,7 +3067,7 @@ name|ip6_dst
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * If we are acting as a multicast router, all 		 * incoming multicast packets are passed to the 		 * kernel-level multicast forwarding function. 		 * The packet is returned (relatively) intact; if 		 * ip6_mforward() returns a non-zero value, the packet 		 * must be discarded, else it may be accepted below. 		 */
+comment|/* 		 * If we are acting as a multicast router, all 		 * incoming multicast packets are passed to the 		 * kernel-level multicast forwarding function. 		 * The packet is returned (relatively) intact; if 		 * ip6_mforward() returns a non-zero value, the packet 		 * must be discarded, else it may be accepted below. 		 * 		 * XXX TODO: Check hlim and multicast scope here to avoid 		 * unnecessarily calling into ip6_mforward(). 		 */
 if|if
 condition|(
 name|ip6_mforward
@@ -3263,6 +3272,24 @@ goto|;
 endif|#
 directive|endif
 comment|/* IPSEC */
+comment|/* 		 * Use mbuf flags to propagate Router Alert option to 		 * ICMPv6 layer, as hop-by-hop options have been stripped. 		 */
+if|if
+condition|(
+name|nxt
+operator|==
+name|IPPROTO_ICMPV6
+operator|&&
+name|rtalert
+operator|!=
+operator|~
+literal|0
+condition|)
+name|m
+operator|->
+name|m_flags
+operator||=
+name|M_RTALERT_MLD
+expr_stmt|;
 name|nxt
 operator|=
 operator|(

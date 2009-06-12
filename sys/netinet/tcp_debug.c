@@ -35,23 +35,6 @@ directive|include
 file|"opt_tcpdebug.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|INET
-end_ifndef
-
-begin_error
-error|#
-directive|error
-error|The option TCPDEBUG requires option INET.
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -426,6 +409,9 @@ endif|#
 directive|endif
 name|AF_INET
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|td
 operator|->
 name|td_time
@@ -433,6 +419,8 @@ operator|=
 name|iptime
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|td
 operator|->
 name|td_act
@@ -481,6 +469,9 @@ operator|->
 name|td_family
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 case|case
 name|AF_INET
 case|:
@@ -506,6 +497,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
@@ -547,6 +540,9 @@ operator|->
 name|td_family
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 case|case
 name|AF_INET
 case|:
@@ -560,6 +556,8 @@ operator|*
 name|th
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6

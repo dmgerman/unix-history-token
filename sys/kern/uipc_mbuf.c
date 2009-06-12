@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_param.h"
 end_include
 
@@ -105,12 +99,6 @@ begin_include
 include|#
 directive|include
 file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<security/mac/mac_framework.h>
 end_include
 
 begin_decl_stmt

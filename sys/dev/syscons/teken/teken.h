@@ -380,6 +380,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+name|unsigned
 name|int
 parameter_list|)
 function_decl|;
@@ -425,6 +426,33 @@ define|#
 directive|define
 name|TP_132COLS
 value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|TP_SETBELLPD
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|TP_SETBELLPD_PITCH
+parameter_list|(
+name|pd
+parameter_list|)
+value|((pd)>> 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TP_SETBELLPD_DURATION
+parameter_list|(
+name|pd
+parameter_list|)
+value|((pd)& 0xffff)
 end_define
 
 begin_typedef

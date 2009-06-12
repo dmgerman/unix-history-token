@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -1580,13 +1574,6 @@ goto|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|SOCK_LOCK
-argument_list|(
-name|ddp
-operator|->
-name|ddp_socket
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mac_socket_check_deliver
@@ -1600,25 +1587,9 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|SOCK_UNLOCK
-argument_list|(
-name|ddp
-operator|->
-name|ddp_socket
-argument_list|)
-expr_stmt|;
 goto|goto
 name|out
 goto|;
-block|}
-name|SOCK_UNLOCK
-argument_list|(
-name|ddp
-operator|->
-name|ddp_socket
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 comment|/*  	 * If we found one, deliver the packet to the socket 	 */

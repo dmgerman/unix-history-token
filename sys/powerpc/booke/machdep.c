@@ -2402,30 +2402,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get current clock frequency for the given cpu id. */
-end_comment
-
-begin_function
-name|int
-name|cpu_est_clockrate
-parameter_list|(
-name|int
-name|cpu_id
-parameter_list|,
-name|uint64_t
-modifier|*
-name|rate
-parameter_list|)
-block|{
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Construct a PCB from a trapframe. This is called from kdb_trap() where  * we want to start a backtrace from the function that caused us to enter  * the debugger. We have the context in the trapframe, but base the trace  * on the PCB. The PCB doesn't have to be perfect, as long as it contains  * enough for a backtrace.  */
 end_comment
 

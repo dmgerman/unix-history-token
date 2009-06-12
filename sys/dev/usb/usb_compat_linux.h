@@ -325,139 +325,6 @@ define|\
 value|SYSINIT(id,SI_SUB_KLD,SI_ORDER_FIRST,usb_linux_register,p_usb_drv); \   SYSUNINIT(id,SI_SUB_KLD,SI_ORDER_ANY,usb_linux_deregister,p_usb_drv)
 end_define
 
-begin_comment
-comment|/*  * The following structure is the same as "usb_device_descriptor_t"  * except that 16-bit values are "uint16_t" and not an array of "uint8_t".  * It is used by Linux USB device drivers.  */
-end_comment
-
-begin_struct
-struct|struct
-name|usb_device_descriptor
-block|{
-name|uint8_t
-name|bLength
-decl_stmt|;
-name|uint8_t
-name|bDescriptorType
-decl_stmt|;
-name|uint16_t
-name|bcdUSB
-decl_stmt|;
-name|uint8_t
-name|bDeviceClass
-decl_stmt|;
-name|uint8_t
-name|bDeviceSubClass
-decl_stmt|;
-name|uint8_t
-name|bDeviceProtocol
-decl_stmt|;
-name|uint8_t
-name|bMaxPacketSize0
-decl_stmt|;
-name|uint16_t
-name|idVendor
-decl_stmt|;
-name|uint16_t
-name|idProduct
-decl_stmt|;
-name|uint16_t
-name|bcdDevice
-decl_stmt|;
-name|uint8_t
-name|iManufacturer
-decl_stmt|;
-name|uint8_t
-name|iProduct
-decl_stmt|;
-name|uint8_t
-name|iSerialNumber
-decl_stmt|;
-name|uint8_t
-name|bNumConfigurations
-decl_stmt|;
-block|}
-name|__packed
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * The following structure is the same as  * "usb_interface_descriptor_t". It is used by  * Linux USB device drivers.  */
-end_comment
-
-begin_struct
-struct|struct
-name|usb_interface_descriptor
-block|{
-name|uint8_t
-name|bLength
-decl_stmt|;
-name|uint8_t
-name|bDescriptorType
-decl_stmt|;
-name|uint8_t
-name|bInterfaceNumber
-decl_stmt|;
-name|uint8_t
-name|bAlternateSetting
-decl_stmt|;
-name|uint8_t
-name|bNumEndpoints
-decl_stmt|;
-name|uint8_t
-name|bInterfaceClass
-decl_stmt|;
-name|uint8_t
-name|bInterfaceSubClass
-decl_stmt|;
-name|uint8_t
-name|bInterfaceProtocol
-decl_stmt|;
-name|uint8_t
-name|iInterface
-decl_stmt|;
-block|}
-name|__packed
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * The following structure is the same as "usb_endpoint_descriptor_t"  * except that 16-bit values are "uint16_t" and not an array of "uint8_t".  * It is used by Linux USB device drivers.  */
-end_comment
-
-begin_struct
-struct|struct
-name|usb_endpoint_descriptor
-block|{
-name|uint8_t
-name|bLength
-decl_stmt|;
-name|uint8_t
-name|bDescriptorType
-decl_stmt|;
-name|uint8_t
-name|bEndpointAddress
-decl_stmt|;
-name|uint8_t
-name|bmAttributes
-decl_stmt|;
-name|uint16_t
-name|wMaxPacketSize
-decl_stmt|;
-name|uint8_t
-name|bInterval
-decl_stmt|;
-comment|/* extension for audio endpoints only: */
-name|uint8_t
-name|bRefresh
-decl_stmt|;
-name|uint8_t
-name|bSynchAddress
-decl_stmt|;
-block|}
-name|__packed
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
@@ -976,7 +843,7 @@ comment|/* UE_BULK */
 end_comment
 
 begin_comment
-comment|/* Whenever Linux references an USB endpoint:  * a) to initialize "urb->pipe"  * b) second argument passed to "usb_control_msg()"  *  * Then it uses one of the following macros. The "endpoint" argument  * is the physical endpoint value masked by 0xF. The "dev" argument  * is a pointer to "struct usb_device".  */
+comment|/* Whenever Linux references an USB endpoint:  * a) to initialize "urb->endpoint"  * b) second argument passed to "usb_control_msg()"  *  * Then it uses one of the following macros. The "endpoint" argument  * is the physical endpoint value masked by 0xF. The "dev" argument  * is a pointer to "struct usb_device".  */
 end_comment
 
 begin_define
@@ -1084,206 +951,6 @@ value|usb_find_host_endpoint(dev, PIPE_INTERRUPT, (endpoint) | USB_DIR_IN)
 end_define
 
 begin_comment
-comment|/* The following four structures makes up a tree, where we have the  * leaf structure, "usb_host_endpoint", first, and the root structure,  * "usb_device", last. The four structures below mirror the structure  * of the USB descriptors belonging to an USB configuration. Please  * refer to the USB specification for a definition of "endpoints" and  * "interfaces".  */
-end_comment
-
-begin_struct
-struct|struct
-name|usb_host_endpoint
-block|{
-name|struct
-name|usb_endpoint_descriptor
-name|desc
-decl_stmt|;
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|urb
-argument_list|)
-name|bsd_urb_list
-expr_stmt|;
-name|struct
-name|usb2_xfer
-modifier|*
-name|bsd_xfer
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|uint8_t
-modifier|*
-name|extra
-decl_stmt|;
-comment|/* Extra descriptors */
-name|usb2_frlength_t
-name|fbsd_buf_size
-decl_stmt|;
-name|uint16_t
-name|extralen
-decl_stmt|;
-name|uint8_t
-name|bsd_iface_index
-decl_stmt|;
-block|}
-name|__aligned
-argument_list|(
-name|USB_HOST_ALIGN
-argument_list|)
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|usb_host_interface
-block|{
-name|struct
-name|usb_interface_descriptor
-name|desc
-decl_stmt|;
-comment|/* the following array has size "desc.bNumEndpoint" */
-name|struct
-name|usb_host_endpoint
-modifier|*
-name|endpoint
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|string
-decl_stmt|;
-comment|/* iInterface string, if present */
-name|uint8_t
-modifier|*
-name|extra
-decl_stmt|;
-comment|/* Extra descriptors */
-name|uint16_t
-name|extralen
-decl_stmt|;
-name|uint8_t
-name|bsd_iface_index
-decl_stmt|;
-block|}
-name|__aligned
-argument_list|(
-name|USB_HOST_ALIGN
-argument_list|)
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|usb_interface
-block|{
-comment|/* array of alternate settings for this interface */
-name|struct
-name|usb_host_interface
-modifier|*
-name|altsetting
-decl_stmt|;
-name|struct
-name|usb_host_interface
-modifier|*
-name|cur_altsetting
-decl_stmt|;
-name|struct
-name|usb_device
-modifier|*
-name|linux_udev
-decl_stmt|;
-name|void
-modifier|*
-name|bsd_priv_sc
-decl_stmt|;
-comment|/* device specific information */
-name|uint8_t
-name|num_altsetting
-decl_stmt|;
-comment|/* number of alternate settings */
-name|uint8_t
-name|bsd_iface_index
-decl_stmt|;
-block|}
-name|__aligned
-argument_list|(
-name|USB_HOST_ALIGN
-argument_list|)
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|usb_device
-block|{
-name|struct
-name|usb_device_descriptor
-name|descriptor
-decl_stmt|;
-name|struct
-name|usb_host_endpoint
-name|ep0
-decl_stmt|;
-name|struct
-name|usb2_device
-modifier|*
-name|bsd_udev
-decl_stmt|;
-name|struct
-name|usb_interface
-modifier|*
-name|bsd_iface_start
-decl_stmt|;
-name|struct
-name|usb_interface
-modifier|*
-name|bsd_iface_end
-decl_stmt|;
-name|struct
-name|usb_host_endpoint
-modifier|*
-name|bsd_endpoint_start
-decl_stmt|;
-name|struct
-name|usb_host_endpoint
-modifier|*
-name|bsd_endpoint_end
-decl_stmt|;
-comment|/* static strings from the device */
-specifier|const
-name|char
-modifier|*
-name|product
-decl_stmt|;
-comment|/* iProduct string, if present */
-specifier|const
-name|char
-modifier|*
-name|manufacturer
-decl_stmt|;
-comment|/* iManufacturer string, if present */
-specifier|const
-name|char
-modifier|*
-name|serial
-decl_stmt|;
-comment|/* iSerialNumber string, if present */
-name|uint16_t
-name|devnum
-decl_stmt|;
-name|enum
-name|usb_dev_speed
-name|speed
-decl_stmt|;
-comment|/* USB_SPEED_XXX */
-block|}
-name|__aligned
-argument_list|(
-name|USB_HOST_ALIGN
-argument_list|)
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * The following structure is used to extend "struct urb" when we are  * dealing with an isochronous endpoint. It contains information about  * the data offset and data length of an isochronous packet.  * The "actual_length" field is updated before the "complete"  * callback in the "urb" structure is called.  */
 end_comment
 
@@ -1336,7 +1003,7 @@ comment|/* (in) pointer to associated device */
 name|struct
 name|usb_host_endpoint
 modifier|*
-name|pipe
+name|endpoint
 decl_stmt|;
 comment|/* (in) pipe pointer */
 name|uint8_t
@@ -1363,18 +1030,18 @@ modifier|*
 name|complete
 decl_stmt|;
 comment|/* (in) completion routine */
-name|usb2_size_t
+name|usb_size_t
 name|transfer_buffer_length
 decl_stmt|;
 comment|/* (in) data buffer length */
-name|usb2_size_t
+name|usb_size_t
 name|bsd_length_rem
 decl_stmt|;
-name|usb2_size_t
+name|usb_size_t
 name|actual_length
 decl_stmt|;
 comment|/* (return) actual transfer length */
-name|usb2_timeout_t
+name|usb_timeout_t
 name|timeout
 decl_stmt|;
 comment|/* FreeBSD specific */
@@ -1412,11 +1079,11 @@ directive|define
 name|URB_IS_SLEEPING
 value|0x0020
 comment|/* custom flags */
-name|usb2_frcount_t
+name|usb_frcount_t
 name|start_frame
 decl_stmt|;
 comment|/* (modify) start frame (ISO) */
-name|usb2_frcount_t
+name|usb_frcount_t
 name|number_of_packets
 decl_stmt|;
 comment|/* (in) number of ISO packets */
@@ -1513,7 +1180,7 @@ parameter_list|,
 name|struct
 name|usb_host_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|,
 name|uint8_t
 name|request
@@ -1534,7 +1201,7 @@ parameter_list|,
 name|uint16_t
 name|size
 parameter_list|,
-name|usb2_timeout_t
+name|usb_timeout_t
 name|timeout
 parameter_list|)
 function_decl|;
@@ -1572,7 +1239,7 @@ name|usb_host_endpoint
 modifier|*
 name|uhe
 parameter_list|,
-name|usb2_frlength_t
+name|usb_frlength_t
 name|bufsize
 parameter_list|)
 function_decl|;
@@ -1658,7 +1325,7 @@ name|usb_device
 modifier|*
 name|dev
 parameter_list|,
-name|usb2_size_t
+name|usb_size_t
 name|size
 parameter_list|,
 name|uint16_t
@@ -1693,7 +1360,7 @@ name|usb_device
 modifier|*
 name|dev
 parameter_list|,
-name|usb2_size_t
+name|usb_size_t
 name|size
 parameter_list|,
 name|void
@@ -1797,7 +1464,7 @@ name|interface_to_bsddev
 parameter_list|(
 name|intf
 parameter_list|)
-value|(intf)->linux_udev->bsd_udev
+value|(intf)->linux_udev
 end_define
 
 begin_endif

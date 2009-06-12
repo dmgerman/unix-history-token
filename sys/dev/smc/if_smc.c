@@ -4435,7 +4435,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|smc_miibus_writereg
 parameter_list|(
 name|device_t
@@ -4540,6 +4540,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -5301,6 +5306,15 @@ operator|&=
 operator|~
 name|IFCAP_POLLING
 expr_stmt|;
+name|sc
+operator|->
+name|smc_ifp
+operator|->
+name|if_capenable
+operator|&=
+operator|~
+name|IFCAP_POLLING_NOCOUNT
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Disable transmit and receive. 	 */
@@ -5535,6 +5549,12 @@ operator|->
 name|if_capenable
 operator||=
 name|IFCAP_POLLING
+expr_stmt|;
+name|ifp
+operator|->
+name|if_capenable
+operator||=
+name|IFCAP_POLLING_NOCOUNT
 expr_stmt|;
 endif|#
 directive|endif

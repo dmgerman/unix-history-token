@@ -836,28 +836,49 @@ name|IEEE80211_CIPHER_MAX
 index|]
 init|=
 block|{
+index|[
+name|IEEE80211_CIPHER_WEP
+index|]
+operator|=
 literal|"wlan_wep"
 block|,
-comment|/* IEEE80211_CIPHER_WEP */
+index|[
+name|IEEE80211_CIPHER_TKIP
+index|]
+operator|=
 literal|"wlan_tkip"
 block|,
-comment|/* IEEE80211_CIPHER_TKIP */
+index|[
+name|IEEE80211_CIPHER_AES_OCB
+index|]
+operator|=
 literal|"wlan_aes_ocb"
 block|,
-comment|/* IEEE80211_CIPHER_AES_OCB */
+index|[
+name|IEEE80211_CIPHER_AES_CCM
+index|]
+operator|=
 literal|"wlan_ccmp"
 block|,
-comment|/* IEEE80211_CIPHER_AES_CCM */
+index|[
+name|IEEE80211_CIPHER_TKIPMIC
+index|]
+operator|=
 literal|"#4"
 block|,
-comment|/* reserved */
+comment|/* NB: reserved */
+index|[
+name|IEEE80211_CIPHER_CKIP
+index|]
+operator|=
 literal|"wlan_ckip"
 block|,
-comment|/* IEEE80211_CIPHER_CKIP */
+index|[
+name|IEEE80211_CIPHER_NONE
+index|]
+operator|=
 literal|"wlan_none"
-block|,
-comment|/* IEEE80211_CIPHER_NONE */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

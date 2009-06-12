@@ -904,7 +904,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%-11s  %17lld %17lld "
+literal|"%-11s  %17jd %17jd "
 argument_list|,
 name|lock_flags
 argument_list|(

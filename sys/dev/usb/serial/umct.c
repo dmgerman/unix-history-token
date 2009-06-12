@@ -250,20 +250,20 @@ struct|struct
 name|umct_softc
 block|{
 name|struct
-name|usb2_com_super_softc
+name|ucom_super_softc
 name|sc_super_ucom
 decl_stmt|;
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 name|sc_ucom
 decl_stmt|;
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|sc_udev
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|sc_xfer
 index|[
@@ -332,21 +332,21 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|umct_intr_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|umct_write_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|umct_read_callback
 decl_stmt|;
 end_decl_stmt
@@ -379,7 +379,7 @@ name|void
 name|umct_cfg_get_status
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -397,7 +397,7 @@ name|void
 name|umct_cfg_set_break
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -411,7 +411,7 @@ name|void
 name|umct_cfg_set_dtr
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -425,7 +425,7 @@ name|void
 name|umct_cfg_set_rts
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -449,7 +449,7 @@ name|int
 name|umct_pre_param
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|struct
@@ -465,7 +465,7 @@ name|void
 name|umct_cfg_param
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|struct
@@ -481,7 +481,7 @@ name|void
 name|umct_start_read
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -493,7 +493,7 @@ name|void
 name|umct_stop_read
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -505,7 +505,7 @@ name|void
 name|umct_start_write
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -517,7 +517,7 @@ name|void
 name|umct_stop_write
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -527,7 +527,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 name|umct_config
 index|[
 name|UMCT_N_TRANSFER
@@ -699,7 +699,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_com_callback
+name|ucom_callback
 name|umct_callback
 init|=
 block|{
@@ -770,7 +770,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_device_id
+name|usb_device_id
 name|umct_devs
 index|[]
 init|=
@@ -965,7 +965,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -1051,7 +1051,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -1206,7 +1206,7 @@ index|[
 name|UMCT_BULK_DT_RD
 index|]
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|edesc
 operator|->
@@ -1222,7 +1222,7 @@ condition|)
 block|{
 comment|/* guessed wrong - switch around endpoints */
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|temp
 init|=
@@ -1460,10 +1460,10 @@ name|value
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|uint8_t
@@ -1591,7 +1591,7 @@ name|void
 name|umct_intr_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -1739,7 +1739,7 @@ name|void
 name|umct_cfg_get_status
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|,
@@ -1784,7 +1784,7 @@ name|void
 name|umct_cfg_set_break
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|,
@@ -1841,7 +1841,7 @@ name|void
 name|umct_cfg_set_dtr
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|,
@@ -1898,7 +1898,7 @@ name|void
 name|umct_cfg_set_rts
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|,
@@ -2063,7 +2063,7 @@ name|int
 name|umct_pre_param
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|,
@@ -2088,7 +2088,7 @@ name|void
 name|umct_cfg_param
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|,
@@ -2252,7 +2252,7 @@ name|void
 name|umct_start_read
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|)
@@ -2297,7 +2297,7 @@ name|void
 name|umct_stop_read
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|)
@@ -2342,7 +2342,7 @@ name|void
 name|umct_start_write
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|)
@@ -2375,7 +2375,7 @@ name|void
 name|umct_stop_write
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|)
@@ -2408,7 +2408,7 @@ name|void
 name|umct_write_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2516,7 +2516,7 @@ name|void
 name|umct_read_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)

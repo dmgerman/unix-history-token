@@ -697,6 +697,10 @@ name|int
 name|td_dbgflags
 decl_stmt|;
 comment|/* (c) Userland debugger flags */
+name|int
+name|td_ng_outbound
+decl_stmt|;
+comment|/* (k) Thread entered ng from above. */
 name|struct
 name|osd
 name|td_osd
@@ -858,13 +862,13 @@ name|vnet
 modifier|*
 name|td_vnet
 decl_stmt|;
-comment|/* (*) Effective vnet. */
+comment|/* (k) Effective vnet. */
 specifier|const
 name|char
 modifier|*
 name|td_vnet_lpush
 decl_stmt|;
-comment|/* (*) Debugging vnet push / pop. */
+comment|/* (k) Debugging vnet push / pop. */
 block|}
 struct|;
 end_struct

@@ -278,7 +278,7 @@ name|bbb_csw
 name|csw
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 index|[
@@ -289,19 +289,19 @@ name|uint8_t
 modifier|*
 name|data_ptr
 decl_stmt|;
-name|usb2_size_t
+name|usb_size_t
 name|data_len
 decl_stmt|;
 comment|/* bytes */
-name|usb2_size_t
+name|usb_size_t
 name|data_rem
 decl_stmt|;
 comment|/* bytes */
-name|usb2_timeout_t
+name|usb_timeout_t
 name|data_timeout
 decl_stmt|;
 comment|/* ms */
-name|usb2_frlength_t
+name|usb_frlength_t
 name|actlen
 decl_stmt|;
 comment|/* bytes */
@@ -336,42 +336,42 @@ end_struct
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|bbb_command_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|bbb_data_read_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|bbb_data_rd_cs_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|bbb_data_write_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|bbb_data_wr_cs_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|bbb_status_callback
 decl_stmt|;
 end_decl_stmt
@@ -380,7 +380,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 name|bbb_config
 index|[
 name|ST_MAX
@@ -515,7 +515,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 block|,
 operator|.
@@ -612,7 +612,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 block|,
 operator|.
@@ -704,7 +704,7 @@ name|error
 parameter_list|)
 block|{
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
@@ -820,7 +820,7 @@ name|void
 name|bbb_data_clear_stall_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
@@ -897,7 +897,7 @@ name|void
 name|bbb_command_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -1148,7 +1148,7 @@ name|void
 name|bbb_data_read_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -1162,7 +1162,7 @@ name|xfer
 operator|->
 name|priv_sc
 decl_stmt|;
-name|usb2_frlength_t
+name|usb_frlength_t
 name|max_bulk
 init|=
 name|xfer
@@ -1345,7 +1345,7 @@ name|void
 name|bbb_data_rd_cs_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -1368,7 +1368,7 @@ name|void
 name|bbb_data_write_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -1382,7 +1382,7 @@ name|xfer
 operator|->
 name|priv_sc
 decl_stmt|;
-name|usb2_frlength_t
+name|usb_frlength_t
 name|max_bulk
 init|=
 name|xfer
@@ -1565,7 +1565,7 @@ name|void
 name|bbb_data_wr_cs_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -1588,7 +1588,7 @@ name|void
 name|bbb_status_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -1794,13 +1794,13 @@ name|void
 modifier|*
 name|data_ptr
 parameter_list|,
-name|usb2_size_t
+name|usb_size_t
 name|data_len
 parameter_list|,
 name|uint8_t
 name|cmd_len
 parameter_list|,
-name|usb2_timeout_t
+name|usb_timeout_t
 name|data_timeout
 parameter_list|)
 block|{
@@ -1916,11 +1916,11 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|usb2_test_autoinstall
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
@@ -1932,16 +1932,16 @@ name|do_eject
 parameter_list|)
 block|{
 name|struct
-name|usb2_interface
+name|usb_interface
 modifier|*
 name|iface
 decl_stmt|;
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 modifier|*
 name|id
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|uint8_t

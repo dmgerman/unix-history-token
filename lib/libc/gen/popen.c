@@ -829,11 +829,8 @@ name|next
 argument_list|)
 expr_stmt|;
 else|else
-name|SLIST_REMOVE_NEXT
+name|SLIST_REMOVE_AFTER
 argument_list|(
-operator|&
-name|pidlist
-argument_list|,
 name|last
 argument_list|,
 name|next

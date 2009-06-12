@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -63,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<sys/filedesc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/jail.h>
 end_include
 
 begin_include
@@ -111,12 +111,6 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/jail.h>
 end_include
 
 begin_include
@@ -1330,7 +1324,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|newproc
@@ -1341,12 +1335,6 @@ operator|&
 name|newproc
 operator|->
 name|p_mtx
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|STAILQ_INIT
@@ -1958,16 +1946,7 @@ operator|->
 name|td_ucred
 argument_list|)
 expr_stmt|;
-comment|/* In case we are jailed tell the prison that we exist. */
-if|if
-condition|(
-name|jailed
-argument_list|(
-name|p2
-operator|->
-name|p_ucred
-argument_list|)
-condition|)
+comment|/* Tell the prison that we exist. */
 name|prison_proc_hold
 argument_list|(
 name|p2

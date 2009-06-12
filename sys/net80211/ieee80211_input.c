@@ -168,6 +168,13 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+name|m
+operator|->
+name|m_flags
+operator||=
+name|M_BCAST
+expr_stmt|;
+comment|/* NB: mark for bpf tap'ing */
 comment|/* XXX locking */
 name|TAILQ_FOREACH
 argument_list|(
@@ -188,6 +195,16 @@ name|mbuf
 modifier|*
 name|mcopy
 decl_stmt|;
+comment|/* NB: could check for IFF_UP but this is cheaper */
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_state
+operator|==
+name|IEEE80211_S_INIT
+condition|)
+continue|continue;
 comment|/* 		 * WDS vap's only receive directed traffic from the 		 * station at the ``far end''.  That traffic should 		 * be passed through the AP vap the station is associated 		 * to--so don't spam them with mcast frames. 		 */
 if|if
 condition|(
@@ -735,6 +752,20 @@ name|vap
 operator|->
 name|iv_ifp
 decl_stmt|;
+comment|/* clear driver/net80211 flags before passing up */
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+operator|(
+name|M_80211_RX
+operator||
+name|M_MCAST
+operator||
+name|M_BCAST
+operator|)
+expr_stmt|;
 comment|/* NB: see hostap_deliver_data, this path doesn't handle hostap */
 name|KASSERT
 argument_list|(
@@ -815,14 +846,6 @@ operator|.
 name|rcvif
 operator|=
 name|ifp
-expr_stmt|;
-comment|/* clear driver/net80211 flags before passing up */
-name|m
-operator|->
-name|m_flags
-operator|&=
-operator|~
-name|M_80211_RX
 expr_stmt|;
 if|if
 condition|(
@@ -2202,7 +2225,7 @@ name|status
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * beacon/probe response frame format 	 *	[8] time stamp 	 *	[2] beacon interval 	 *	[2] capability information 	 *	[tlv] ssid 	 *	[tlv] supported rates 	 *	[tlv] country information 	 *	[tlv] parameter set (FH/DS) 	 *	[tlv] erp information 	 *	[tlv] extended supported rates 	 *	[tlv] WME 	 *	[tlv] WPA or RSN 	 *	[tlv] HT capabilities 	 *	[tlv] HT information 	 *	[tlv] Atheros capabilities 	 */
+comment|/* 	 * beacon/probe response frame format 	 *	[8] time stamp 	 *	[2] beacon interval 	 *	[2] capability information 	 *	[tlv] ssid 	 *	[tlv] supported rates 	 *	[tlv] country information 	 *	[tlv] channel switch announcement (CSA) 	 *	[tlv] parameter set (FH/DS) 	 *	[tlv] erp information 	 *	[tlv] extended supported rates 	 *	[tlv] WME 	 *	[tlv] WPA or RSN 	 *	[tlv] HT capabilities 	 *	[tlv] HT information 	 *	[tlv] Atheros capabilities 	 */
 name|IEEE80211_VERIFY_LENGTH
 argument_list|(
 argument|efrm - frm
@@ -2359,6 +2382,16 @@ case|:
 name|scan
 operator|->
 name|country
+operator|=
+name|frm
+expr_stmt|;
+break|break;
+case|case
+name|IEEE80211_ELEMID_CSA
+case|:
+name|scan
+operator|->
+name|csa
 operator|=
 name|frm
 expr_stmt|;
@@ -2644,9 +2677,9 @@ if|if
 condition|(
 name|vap
 operator|->
-name|iv_flags_ext
+name|iv_flags_ht
 operator|&
-name|IEEE80211_FEXT_HTCOMPAT
+name|IEEE80211_FHT_HTCOMPAT
 condition|)
 block|{
 comment|/* 				 * Accept pre-draft HT ie's if the 				 * standard ones have not been seen. 				 */
@@ -2942,6 +2975,40 @@ operator|->
 name|country
 operator|=
 name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|scan
+operator|->
+name|csa
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 		 * Validate Channel Switch Announcement; this must 		 * be the correct length or we toss the frame. 		 */
+name|IEEE80211_VERIFY_LENGTH
+argument_list|(
+name|scan
+operator|->
+name|csa
+index|[
+literal|1
+index|]
+argument_list|,
+literal|3
+operator|*
+sizeof|sizeof
+argument_list|(
+name|uint8_t
+argument_list|)
+argument_list|,
+name|scan
+operator|->
+name|status
+operator||=
+name|IEEE80211_BPARSE_CSA_INVALID
 argument_list|)
 expr_stmt|;
 block|}

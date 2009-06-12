@@ -1,28 +1,34 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dmtable - Support for ACPI tables that contain no AML code  *              $Revision: 1.12 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dmtable - Support for ACPI tables that contain no AML code  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2009, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acpi.h>
+file|<contrib/dev/acpica/include/acpi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acdisasm.h>
+file|<contrib/dev/acpica/include/accommon.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/actables.h>
+file|<contrib/dev/acpica/include/acdisasm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/actables.h>
 end_include
 
 begin_comment
@@ -75,9 +81,45 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|UINT8
+name|AcpiTbGenerateChecksum
+parameter_list|(
+name|ACPI_TABLE_HEADER
+modifier|*
+name|Table
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* These tables map a subtable type to a description string */
 end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiDmAsfSubnames
+index|[]
+init|=
+block|{
+literal|"ASF Information"
+block|,
+literal|"ASF Alerts"
+block|,
+literal|"ASF Remote Control"
+block|,
+literal|"ASF RMCP Boot Options"
+block|,
+literal|"ASF Address"
+block|,
+literal|"Unknown SubTable Type"
+comment|/* Reserved */
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -92,7 +134,69 @@ literal|"Hardware Unit Definition"
 block|,
 literal|"Reserved Memory Region"
 block|,
+literal|"Root Port ATS Capability"
+block|,
 literal|"Unknown SubTable Type"
+comment|/* Reserved */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiDmHestSubnames
+index|[]
+init|=
+block|{
+literal|"XPF Machine Check Exception"
+block|,
+literal|"XPF Corrected Machine Check"
+block|,
+literal|"NOT USED???"
+block|,
+literal|"XPF Non-Maskable Interrupt"
+block|,
+literal|"IPF Corrected Machine Check"
+block|,
+literal|"IPF Corrected Platform Error"
+block|,
+literal|"PCI Express Root Port AER"
+block|,
+literal|"PCI Express AER (AER Endpoint)"
+block|,
+literal|"PCI Express/PCI-X Bridge AER"
+block|,
+literal|"Generic Hardware Error Source"
+block|,
+literal|"Unknown SubTable Type"
+comment|/* Reserved */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiDmHestNotifySubnames
+index|[]
+init|=
+block|{
+literal|"Polled"
+block|,
+literal|"External Interrupt"
+block|,
+literal|"Local Interrupt"
+block|,
+literal|"SCI"
+block|,
+literal|"NMI"
+block|,
+literal|"Unknown Notify Type"
 comment|/* Reserved */
 block|}
 decl_stmt|;
@@ -134,6 +238,12 @@ comment|/* ACPI_MADT_TYPE_LOCAL_SAPIC */
 literal|"Platform Interrupt Sources"
 block|,
 comment|/* ACPI_MADT_TYPE_INTERRUPT_SOURCE */
+literal|"Processor Local x2APIC"
+block|,
+comment|/* ACPI_MADT_TYPE_LOCAL_X2APIC */
+literal|"Local x2APIC NMI"
+block|,
+comment|/* ACPI_MADT_TYPE_LOCAL_X2APIC_NMI */
 literal|"Unknown SubTable Type"
 comment|/* Reserved */
 block|}
@@ -153,8 +263,47 @@ literal|"Processor Local APIC/SAPIC Affinity"
 block|,
 literal|"Memory Affinity"
 block|,
+literal|"Processor Local x2APIC Affinity"
+block|,
 literal|"Unknown SubTable Type"
 comment|/* Reserved */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|ACPI_FADT_PM_RESERVED
+value|8
+end_define
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiDmFadtProfiles
+index|[]
+init|=
+block|{
+literal|"Unspecified"
+block|,
+literal|"Desktop"
+block|,
+literal|"Mobile"
+block|,
+literal|"Workstation"
+block|,
+literal|"Enterprise Server"
+block|,
+literal|"SOHO Server"
+block|,
+literal|"Appliance PC"
+block|,
+literal|"Performance Server"
+block|,
+literal|"Unknown Profile Type"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -188,6 +337,16 @@ block|,
 name|NULL
 block|,
 literal|"Simple Boot Flag Table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_BERT
+block|,
+name|AcpiDmTableInfoBert
+block|,
+name|NULL
+block|,
+literal|"Boot Error Record Table"
 block|}
 block|,
 block|{
@@ -231,6 +390,26 @@ literal|"Embedded Controller Boot Resources Table"
 block|}
 block|,
 block|{
+name|ACPI_SIG_EINJ
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpEinj
+block|,
+literal|"Error Injection table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_ERST
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpErst
+block|,
+literal|"Error Record Serialization Table"
+block|}
+block|,
+block|{
 name|ACPI_SIG_FADT
 block|,
 name|NULL
@@ -238,6 +417,16 @@ block|,
 name|AcpiDmDumpFadt
 block|,
 literal|"Fixed ACPI Description Table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_HEST
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpHest
+block|,
+literal|"Hardware Error Source Table"
 block|}
 block|,
 block|{
@@ -288,6 +477,16 @@ block|,
 name|NULL
 block|,
 literal|"Smart Battery Specification Table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_SLIC
+block|,
+name|AcpiDmTableInfoSlic
+block|,
+name|NULL
+block|,
+literal|"Software Licensing Description Table"
 block|}
 block|,
 block|{
@@ -512,6 +711,9 @@ modifier|*
 name|Table
 parameter_list|)
 block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 name|ACPI_DMTABLE_DATA
 modifier|*
 name|TableData
@@ -593,6 +795,8 @@ name|Table
 operator|->
 name|Length
 expr_stmt|;
+name|Status
+operator|=
 name|AcpiDmDumpTable
 argument_list|(
 name|Length
@@ -606,6 +810,16 @@ argument_list|,
 name|AcpiDmTableInfoHeader
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return;
+block|}
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
@@ -757,7 +971,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"[%3.3Xh %3.3d% 3d] %28s : "
+literal|"[%3.3Xh %4.4d% 3d] %28s : "
 argument_list|,
 name|Offset
 argument_list|,
@@ -773,7 +987,7 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%42s : "
+literal|"%43s : "
 argument_list|,
 name|Name
 argument_list|)
@@ -807,7 +1021,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"[%3.3Xh %3.3d% 3d] %24s % 3d : "
+literal|"[%3.3Xh %4.4d% 3d] %24s % 3d : "
 argument_list|,
 name|Offset
 argument_list|,
@@ -825,7 +1039,7 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"[%3.3Xh %3.3d   ] %24s % 3d : "
+literal|"[%3.3Xh %4.4d   ] %24s % 3d : "
 argument_list|,
 name|Offset
 argument_list|,
@@ -841,11 +1055,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDumpTable  *  * PARAMETERS:  TableLength         - Length of the entire ACPI table  *              TableOffset         - Starting offset within the table for this  *                                    sub-descriptor (0 if main table)  *              Table               - The ACPI table  *              SubtableLength      - Lenghth of this sub-descriptor  *              Info                - Info table for this ACPI table  *  * RETURN:      None  *  * DESCRIPTION: Display ACPI table contents by walking the Info table.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDumpTable  *  * PARAMETERS:  TableLength         - Length of the entire ACPI table  *              TableOffset         - Starting offset within the table for this  *                                    sub-descriptor (0 if main table)  *              Table               - The ACPI table  *              SubtableLength      - Length of this sub-descriptor  *              Info                - Info table for this ACPI table  *  * RETURN:      None  *  * DESCRIPTION: Display ACPI table contents by walking the Info table.  *  ******************************************************************************/
 end_comment
 
 begin_function
-name|void
+name|ACPI_STATUS
 name|AcpiDmDumpTable
 parameter_list|(
 name|UINT32
@@ -886,6 +1100,11 @@ name|ACPI_DMTABLE_DATA
 modifier|*
 name|TableData
 decl_stmt|;
+name|BOOLEAN
+name|LastOutputBlankLine
+init|=
+name|FALSE
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -897,7 +1116,11 @@ argument_list|(
 literal|"Display not implemented\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|AE_NOT_IMPLEMENTED
+operator|)
+return|;
 block|}
 comment|/* Walk entire Info table; Null name terminates */
 for|for
@@ -955,7 +1178,16 @@ operator|)
 operator|)
 condition|)
 block|{
-return|return;
+name|AcpiOsPrintf
+argument_list|(
+literal|"**** ACPI table terminates in the middle of a data structure!\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_BAD_DATA
+operator|)
+return|;
 block|}
 comment|/* Generate the byte length for this field */
 switch|switch
@@ -980,6 +1212,15 @@ case|:
 case|case
 name|ACPI_DMT_SRAT
 case|:
+case|case
+name|ACPI_DMT_ASF
+case|:
+case|case
+name|ACPI_DMT_HESTNTYP
+case|:
+case|case
+name|ACPI_DMT_FADTPM
+case|:
 name|ByteLength
 operator|=
 literal|1
@@ -990,6 +1231,9 @@ name|ACPI_DMT_UINT16
 case|:
 case|case
 name|ACPI_DMT_DMAR
+case|:
+case|case
+name|ACPI_DMT_HEST
 case|:
 name|ByteLength
 operator|=
@@ -1066,16 +1310,54 @@ break|break;
 case|case
 name|ACPI_DMT_GAS
 case|:
+if|if
+condition|(
+operator|!
+name|LastOutputBlankLine
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+name|LastOutputBlankLine
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 name|ByteLength
 operator|=
 sizeof|sizeof
 argument_list|(
 name|ACPI_GENERIC_ADDRESS
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_HESTNTFY
+case|:
+if|if
+condition|(
+operator|!
+name|LastOutputBlankLine
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|LastOutputBlankLine
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+name|ByteLength
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ACPI_HEST_NOTIFY
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1085,6 +1367,26 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+block|}
+if|if
+condition|(
+name|CurrentOffset
+operator|+
+name|ByteLength
+operator|>
+name|TableLength
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"**** ACPI table terminates in the middle of a data structure!\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_BAD_DATA
+operator|)
+return|;
 block|}
 comment|/* Start a new line and decode the opcode */
 name|AcpiDmLineHeader
@@ -1250,27 +1552,34 @@ break|break;
 case|case
 name|ACPI_DMT_UINT56
 case|:
+for|for
+control|(
+name|Temp8
+operator|=
+literal|0
+init|;
+name|Temp8
+operator|<
+literal|7
+condition|;
+name|Temp8
+operator|++
+control|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%6.6X%8.8X\n"
+literal|"%2.2X"
 argument_list|,
-name|ACPI_HIDWORD
-argument_list|(
-name|ACPI_GET64
-argument_list|(
 name|Target
+index|[
+name|Temp8
+index|]
 argument_list|)
-argument_list|)
-operator|&
-literal|0x00FFFFFF
-argument_list|,
-name|ACPI_LODWORD
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
 argument_list|(
-name|ACPI_GET64
-argument_list|(
-name|Target
-argument_list|)
-argument_list|)
+literal|"\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1503,9 +1812,66 @@ name|CurrentOffset
 argument_list|,
 name|Target
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+name|ACPI_GENERIC_ADDRESS
+argument_list|)
 argument_list|,
 name|AcpiDmTableInfoGas
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|LastOutputBlankLine
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_ASF
+case|:
+comment|/* ASF subtable types */
+name|Temp16
+operator|=
+call|(
+name|UINT16
+call|)
+argument_list|(
+operator|(
+operator|*
+name|Target
+operator|)
+operator|&
+literal|0x7F
+argument_list|)
+expr_stmt|;
+comment|/* Top bit can be zero or one */
+if|if
+condition|(
+name|Temp16
+operator|>
+name|ACPI_ASF_TYPE_RESERVED
+condition|)
+block|{
+name|Temp16
+operator|=
+name|ACPI_ASF_TYPE_RESERVED
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"%2.2X<%s>\n"
+argument_list|,
+operator|*
+name|Target
+argument_list|,
+name|AcpiDmAsfSubnames
+index|[
+name|Temp16
+index|]
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1515,8 +1881,10 @@ case|:
 comment|/* DMAR subtable types */
 name|Temp16
 operator|=
-operator|*
+name|ACPI_GET16
+argument_list|(
 name|Target
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1534,12 +1902,129 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"%4.4X<%s>\n"
 argument_list|,
-operator|*
+name|ACPI_GET16
+argument_list|(
 name|Target
+argument_list|)
 argument_list|,
 name|AcpiDmDmarSubnames
 index|[
 name|Temp16
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_HEST
+case|:
+comment|/* HEST subtable types */
+name|Temp16
+operator|=
+name|ACPI_GET16
+argument_list|(
+name|Target
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Temp16
+operator|>
+name|ACPI_HEST_TYPE_RESERVED
+condition|)
+block|{
+name|Temp16
+operator|=
+name|ACPI_HEST_TYPE_RESERVED
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"%4.4X (%s)\n"
+argument_list|,
+name|ACPI_GET16
+argument_list|(
+name|Target
+argument_list|)
+argument_list|,
+name|AcpiDmHestSubnames
+index|[
+name|Temp16
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_HESTNTFY
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"<Hardware Error Notification Structure>\n"
+argument_list|)
+expr_stmt|;
+name|AcpiDmDumpTable
+argument_list|(
+name|ACPI_CAST_PTR
+argument_list|(
+name|ACPI_TABLE_HEADER
+argument_list|,
+name|Table
+argument_list|)
+operator|->
+name|Length
+argument_list|,
+name|CurrentOffset
+argument_list|,
+name|Target
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ACPI_HEST_NOTIFY
+argument_list|)
+argument_list|,
+name|AcpiDmTableInfoHestNotify
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|LastOutputBlankLine
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_HESTNTYP
+case|:
+comment|/* HEST Notify types */
+name|Temp8
+operator|=
+operator|*
+name|Target
+expr_stmt|;
+if|if
+condition|(
+name|Temp8
+operator|>
+name|ACPI_HEST_NOTIFY_RESERVED
+condition|)
+block|{
+name|Temp8
+operator|=
+name|ACPI_HEST_NOTIFY_RESERVED
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"%2.2X (%s)\n"
+argument_list|,
+operator|*
+name|Target
+argument_list|,
+name|AcpiDmHestNotifySubnames
+index|[
+name|Temp8
 index|]
 argument_list|)
 expr_stmt|;
@@ -1615,9 +2100,48 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|ACPI_DMT_FADTPM
+case|:
+comment|/* FADT Preferred PM Profile names */
+name|Temp8
+operator|=
+operator|*
+name|Target
+expr_stmt|;
+if|if
+condition|(
+name|Temp8
+operator|>
+name|ACPI_FADT_PM_RESERVED
+condition|)
+block|{
+name|Temp8
+operator|=
+name|ACPI_FADT_PM_RESERVED
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"%2.2X (%s)\n"
+argument_list|,
+operator|*
+name|Target
+argument_list|,
+name|AcpiDmFadtProfiles
+index|[
+name|Temp8
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|ACPI_DMT_EXIT
 case|:
-return|return;
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
 default|default:
 name|ACPI_ERROR
 argument_list|(
@@ -1632,9 +2156,38 @@ name|Opcode
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|AE_SUPPORT
+operator|)
+return|;
 block|}
 block|}
+if|if
+condition|(
+name|TableOffset
+operator|&&
+operator|!
+name|SubtableLength
+condition|)
+block|{
+comment|/* If this table is not the main table, subtable must have valid length */
+name|AcpiOsPrintf
+argument_list|(
+literal|"Invalid zero length subtable\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_BAD_DATA
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
 block|}
 end_function
 

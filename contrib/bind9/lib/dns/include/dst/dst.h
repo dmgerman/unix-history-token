@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dst.h,v 1.1.6.5 2006/01/27 23:57:44 marka Exp $ */
+comment|/* $Id: dst.h,v 1.12 2008/09/24 02:46:23 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -21,7 +21,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*! \file */
+comment|/*! \file dst/dst.h */
 end_comment
 
 begin_include
@@ -34,6 +34,12 @@ begin_include
 include|#
 directive|include
 file|<dns/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dst/gssapi.h>
 end_include
 
 begin_macro
@@ -119,6 +125,20 @@ define|#
 directive|define
 name|DST_ALG_RSASHA1
 value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|DST_ALG_NSEC3DSA
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|DST_ALG_NSEC3RSASHA1
+value|7
 end_define
 
 begin_define
@@ -693,6 +713,22 @@ comment|/*%<  * Converts a public key into a private key, reading the private ke
 end_comment
 
 begin_function_decl
+name|gss_ctx_id_t
+name|dst_key_getgssctx
+parameter_list|(
+specifier|const
+name|dst_key_t
+modifier|*
+name|key
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Returns the opaque key data.  * Be cautions when using this value unless you know what you are doing.  *  * Requires:  *\li	"key" is not NULL.  *  * Returns:  *\li	gssctx key data, possibly NULL.  */
+end_comment
+
+begin_function_decl
 name|isc_result_t
 name|dst_key_fromgssapi
 parameter_list|(
@@ -700,9 +736,8 @@ name|dns_name_t
 modifier|*
 name|name
 parameter_list|,
-name|void
-modifier|*
-name|opaque
+name|gss_ctx_id_t
+name|gssctx
 parameter_list|,
 name|isc_mem_t
 modifier|*
@@ -717,8 +752,57 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Converts a GSSAPI opaque context id into a DST key.  *  * Requires:  *\li	"name" is a valid absolute dns name.  *\li	"opaque" is a GSSAPI context id.  *\li	"mctx" is a valid memory context.  *\li	"keyp" is not NULL and "*keyp" is NULL.  *  * Returns:  *\li 	ISC_R_SUCCESS  * \li	any other result indicates failure  *  * Ensures:  *\li	If successful, *keyp will contain a valid key and be responsible for  *	the context id.  */
+comment|/*%<  * Converts a GSSAPI opaque context id into a DST key.  *  * Requires:  *\li	"name" is a valid absolute dns name.  *\li	"gssctx" is a GSSAPI context id.  *\li	"mctx" is a valid memory context.  *\li	"keyp" is not NULL and "*keyp" is NULL.  *  * Returns:  *\li 	ISC_R_SUCCESS  * \li	any other result indicates failure  *  * Ensures:  *\li	If successful, *keyp will contain a valid key and be responsible for  *	the context id.  */
 end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dst_key_fromlabel
+parameter_list|(
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|alg
+parameter_list|,
+name|unsigned
+name|int
+name|flags
+parameter_list|,
+name|unsigned
+name|int
+name|protocol
+parameter_list|,
+name|dns_rdataclass_t
+name|rdclass
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|engine
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|label
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|pin
+parameter_list|,
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|dst_key_t
+modifier|*
+modifier|*
+name|keyp
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|isc_result_t

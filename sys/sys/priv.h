@@ -228,12 +228,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRIV_SETHOSTID
+name|_PRIV_SETHOSTID
 value|19
 end_define
 
 begin_comment
-comment|/* Can call sethostid. */
+comment|/* Removed. */
 end_comment
 
 begin_define
@@ -1869,6 +1869,17 @@ begin_comment
 comment|/* Administer lagg interface. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PRIV_NET_GIF
+value|416
+end_define
+
+begin_comment
+comment|/* Administer gif interface. */
+end_comment
+
 begin_comment
 comment|/*  * 802.11-related privileges.  */
 end_comment
@@ -2161,6 +2172,17 @@ end_define
 
 begin_comment
 comment|/* Set certain IPv4/6 header options. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_NETINET_BINDANY
+value|506
+end_define
+
+begin_comment
+comment|/* Allow bind to any address. */
 end_comment
 
 begin_comment

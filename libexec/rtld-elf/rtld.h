@@ -905,7 +905,7 @@ begin_define
 define|#
 directive|define
 name|RTLD_STATIC_TLS_EXTRA
-value|64
+value|128
 end_define
 
 begin_comment

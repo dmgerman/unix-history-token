@@ -1074,7 +1074,6 @@ directive|ifdef
 name|WITH_KVM
 if|if
 condition|(
-operator|!
 name|Kflag
 condition|)
 name|error
@@ -1089,6 +1088,7 @@ expr_stmt|;
 comment|/* 	 * If KVM failed, and user did not explicitly specify a core file, 	 * or force KVM backend to be disabled, try the sysctl backend. 	 */
 if|if
 condition|(
+operator|!
 name|Kflag
 operator|||
 operator|(

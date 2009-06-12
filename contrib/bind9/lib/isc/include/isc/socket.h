@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: socket.h,v 1.57.18.15 2008/09/04 08:03:08 marka Exp $ */
+comment|/* $Id: socket.h,v 1.85.58.3 2009/01/29 22:40:35 jinmei Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*! \file  * \brief Provides TCP and UDP sockets for network I/O.  The sockets are event  * sources in the task system.  *  * When I/O completes, a completion event for the socket is posted to the  * event queue of the task which requested the I/O.  *  * \li MP:  *	The module ensures appropriate synchronization of data structures it  *	creates and manipulates.  *	Clients of this module must not be holding a socket's task's lock when  *	making a call that affects that socket.  Failure to follow this rule  *	can result in deadlock.  *	The caller must ensure that isc_socketmgr_destroy() is called only  *	once for a given manager.  *  * \li Reliability:  *	No anticipated impact.  *  * \li Resources:  *	TBS  *  * \li Security:  *	No anticipated impact.  *  * \li Standards:  *	None.  */
+comment|/*! \file isc/socket.h  * \brief Provides TCP and UDP sockets for network I/O.  The sockets are event  * sources in the task system.  *  * When I/O completes, a completion event for the socket is posted to the  * event queue of the task which requested the I/O.  *  * \li MP:  *	The module ensures appropriate synchronization of data structures it  *	creates and manipulates.  *	Clients of this module must not be holding a socket's task's lock when  *	making a call that affects that socket.  Failure to follow this rule  *	can result in deadlock.  *	The caller must ensure that isc_socketmgr_destroy() is called only  *	once for a given manager.  *  * \li Reliability:  *	No anticipated impact.  *  * \li Resources:  *	TBS  *  * \li Security:  *	No anticipated impact.  *  * \li Standards:  *	None.  */
 end_comment
 
 begin_comment
@@ -74,37 +74,243 @@ directive|include
 file|<isc/sockaddr.h>
 end_include
 
-begin_macro
+begin_include
+include|#
+directive|include
+file|<isc/xml.h>
+end_include
+
+begin_decl_stmt
 name|ISC_LANG_BEGINDECLS
-end_macro
-
-begin_comment
 comment|/***  *** Constants  ***/
-end_comment
-
-begin_comment
 comment|/*%  * Maximum number of buffers in a scatter/gather read/write.  The operating  * system in use must support at least this number (plus one on some.)  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|ISC_SOCKET_MAXSCATTERGATHER
 value|8
-end_define
-
-begin_comment
 comment|/*%  * In isc_socket_bind() set socket option SO_REUSEADDR prior to calling  * bind() if a non zero port is specified (AF_INET and AF_INET6).  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|ISC_SOCKET_REUSEADDRESS
 value|0x01U
-end_define
+comment|/*%  * Statistics counters.  Used as isc_statscounter_t values.  */
+name|enum
+type|{
+name|isc_sockstatscounter_udp4open
+init|=
+literal|0
+decl_stmt|,
+name|isc_sockstatscounter_udp6open
+init|=
+literal|1
+decl_stmt|,
+name|isc_sockstatscounter_tcp4open
+init|=
+literal|2
+decl_stmt|,
+name|isc_sockstatscounter_tcp6open
+init|=
+literal|3
+decl_stmt|,
+name|isc_sockstatscounter_unixopen
+init|=
+literal|4
+decl_stmt|,
+name|isc_sockstatscounter_udp4openfail
+init|=
+literal|5
+decl_stmt|,
+name|isc_sockstatscounter_udp6openfail
+init|=
+literal|6
+decl_stmt|,
+name|isc_sockstatscounter_tcp4openfail
+init|=
+literal|7
+decl_stmt|,
+name|isc_sockstatscounter_tcp6openfail
+init|=
+literal|8
+decl_stmt|,
+name|isc_sockstatscounter_unixopenfail
+init|=
+literal|9
+decl_stmt|,
+name|isc_sockstatscounter_udp4close
+init|=
+literal|10
+decl_stmt|,
+name|isc_sockstatscounter_udp6close
+init|=
+literal|11
+decl_stmt|,
+name|isc_sockstatscounter_tcp4close
+init|=
+literal|12
+decl_stmt|,
+name|isc_sockstatscounter_tcp6close
+init|=
+literal|13
+decl_stmt|,
+name|isc_sockstatscounter_unixclose
+init|=
+literal|14
+decl_stmt|,
+name|isc_sockstatscounter_fdwatchclose
+init|=
+literal|15
+decl_stmt|,
+name|isc_sockstatscounter_udp4bindfail
+init|=
+literal|16
+decl_stmt|,
+name|isc_sockstatscounter_udp6bindfail
+init|=
+literal|17
+decl_stmt|,
+name|isc_sockstatscounter_tcp4bindfail
+init|=
+literal|18
+decl_stmt|,
+name|isc_sockstatscounter_tcp6bindfail
+init|=
+literal|19
+decl_stmt|,
+name|isc_sockstatscounter_unixbindfail
+init|=
+literal|20
+decl_stmt|,
+name|isc_sockstatscounter_fdwatchbindfail
+init|=
+literal|21
+decl_stmt|,
+name|isc_sockstatscounter_udp4connect
+init|=
+literal|22
+decl_stmt|,
+name|isc_sockstatscounter_udp6connect
+init|=
+literal|23
+decl_stmt|,
+name|isc_sockstatscounter_tcp4connect
+init|=
+literal|24
+decl_stmt|,
+name|isc_sockstatscounter_tcp6connect
+init|=
+literal|25
+decl_stmt|,
+name|isc_sockstatscounter_unixconnect
+init|=
+literal|26
+decl_stmt|,
+name|isc_sockstatscounter_fdwatchconnect
+init|=
+literal|27
+decl_stmt|,
+name|isc_sockstatscounter_udp4connectfail
+init|=
+literal|28
+decl_stmt|,
+name|isc_sockstatscounter_udp6connectfail
+init|=
+literal|29
+decl_stmt|,
+name|isc_sockstatscounter_tcp4connectfail
+init|=
+literal|30
+decl_stmt|,
+name|isc_sockstatscounter_tcp6connectfail
+init|=
+literal|31
+decl_stmt|,
+name|isc_sockstatscounter_unixconnectfail
+init|=
+literal|32
+decl_stmt|,
+name|isc_sockstatscounter_fdwatchconnectfail
+init|=
+literal|33
+decl_stmt|,
+name|isc_sockstatscounter_tcp4accept
+init|=
+literal|34
+decl_stmt|,
+name|isc_sockstatscounter_tcp6accept
+init|=
+literal|35
+decl_stmt|,
+name|isc_sockstatscounter_unixaccept
+init|=
+literal|36
+decl_stmt|,
+name|isc_sockstatscounter_tcp4acceptfail
+init|=
+literal|37
+decl_stmt|,
+name|isc_sockstatscounter_tcp6acceptfail
+init|=
+literal|38
+decl_stmt|,
+name|isc_sockstatscounter_unixacceptfail
+init|=
+literal|39
+decl_stmt|,
+name|isc_sockstatscounter_udp4sendfail
+init|=
+literal|40
+decl_stmt|,
+name|isc_sockstatscounter_udp6sendfail
+init|=
+literal|41
+decl_stmt|,
+name|isc_sockstatscounter_tcp4sendfail
+init|=
+literal|42
+decl_stmt|,
+name|isc_sockstatscounter_tcp6sendfail
+init|=
+literal|43
+decl_stmt|,
+name|isc_sockstatscounter_unixsendfail
+init|=
+literal|44
+decl_stmt|,
+name|isc_sockstatscounter_fdwatchsendfail
+init|=
+literal|45
+decl_stmt|,
+name|isc_sockstatscounter_udp4recvfail
+init|=
+literal|46
+decl_stmt|,
+name|isc_sockstatscounter_udp6recvfail
+init|=
+literal|47
+decl_stmt|,
+name|isc_sockstatscounter_tcp4recvfail
+init|=
+literal|48
+decl_stmt|,
+name|isc_sockstatscounter_tcp6recvfail
+init|=
+literal|49
+decl_stmt|,
+name|isc_sockstatscounter_unixrecvfail
+init|=
+literal|50
+decl_stmt|,
+name|isc_sockstatscounter_fdwatchrecvfail
+init|=
+literal|51
+decl_stmt|,
+name|isc_sockstatscounter_max
+init|=
+literal|52
+end_decl_stmt
 
 begin_comment
+unit|};
 comment|/***  *** Types  ***/
 end_comment
 
@@ -373,6 +579,10 @@ block|,
 name|isc_sockettype_unix
 init|=
 literal|3
+block|,
+name|isc_sockettype_fdwatch
+init|=
+literal|4
 block|}
 name|isc_sockettype_t
 typedef|;
@@ -525,7 +735,78 @@ comment|/*@}*/
 end_comment
 
 begin_comment
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*!  * Flags for fdwatchcreate.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISC_SOCKFDWATCH_READ
+value|0x00000001
+end_define
+
+begin_comment
+comment|/*%< watch for readable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISC_SOCKFDWATCH_WRITE
+value|0x00000002
+end_define
+
+begin_comment
+comment|/*%< watch for writable */
+end_comment
+
+begin_comment
+comment|/*@}*/
+end_comment
+
+begin_comment
 comment|/***  *** Socket and Socket Manager Functions  ***  *** Note: all Ensures conditions apply only if the result is success for  *** those functions which return an isc_result.  ***/
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|isc_socket_fdwatchcreate
+parameter_list|(
+name|isc_socketmgr_t
+modifier|*
+name|manager
+parameter_list|,
+name|int
+name|fd
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|isc_sockfdwatch_t
+name|callback
+parameter_list|,
+name|void
+modifier|*
+name|cbarg
+parameter_list|,
+name|isc_task_t
+modifier|*
+name|task
+parameter_list|,
+name|isc_socket_t
+modifier|*
+modifier|*
+name|socketp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Create a new file descriptor watch socket managed by 'manager'.  *  * Note:  *  *\li   'fd' is the already-opened file descriptor.  *\li	This function is not available on Windows.  *\li	The callback function is called "in-line" - this means the function  *	needs to return as fast as possible, as all other I/O will be suspended  *	until the callback completes.  *  * Requires:  *  *\li	'manager' is a valid manager  *  *\li	'socketp' is a valid pointer, and *socketp == NULL  *  *\li	'fd' be opened.  *  * Ensures:  *  *	'*socketp' is attached to the newly created fdwatch socket  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  *\li	#ISC_R_NORESOURCES  *\li	#ISC_R_UNEXPECTED  */
 end_comment
 
 begin_function_decl
@@ -551,7 +832,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Create a new 'type' socket managed by 'manager'.  *  * Note:  *  *\li	'pf' is the desired protocol family, e.g. PF_INET or PF_INET6.  *  * Requires:  *  *\li	'manager' is a valid manager  *  *\li	'socketp' is a valid pointer, and *socketp == NULL  *  * Ensures:  *  *	'*socketp' is attached to the newly created socket  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  *\li	#ISC_R_NORESOURCES  *\li	#ISC_R_UNEXPECTED  */
+comment|/*%<  * Create a new 'type' socket managed by 'manager'.  *  * For isc_sockettype_fdwatch sockets you should use isc_socket_fdwatchcreate()  * rather than isc_socket_create().  *  * Note:  *  *\li	'pf' is the desired protocol family, e.g. PF_INET or PF_INET6.  *  * Requires:  *  *\li	'manager' is a valid manager  *  *\li	'socketp' is a valid pointer, and *socketp == NULL  *  *\li	'type' is not isc_sockettype_fdwatch  *  * Ensures:  *  *	'*socketp' is attached to the newly created socket  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  *\li	#ISC_R_NORESOURCES  *\li	#ISC_R_UNEXPECTED  */
 end_comment
 
 begin_function_decl
@@ -644,7 +925,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Open a new socket file descriptor of the given socket structure.  It simply  * opens a new descriptor; all of the other parameters including the socket  * type are inherited from the existing socket.  This function is provided to  * avoid overhead of destroying and creating sockets when many short-lived  * sockets are frequently opened and closed.  When the efficiency is not an  * issue, it should be safer to detach the unused socket and re-create a new  * one.  This optimization may not be available for some systems, in which  * case this function will return ISC_R_NOTIMPLEMENTED and must not be used.  *  * Requires:  *  * \li	there must be no other reference to this socket.  *  * \li	'socket' is a valid and previously closed by isc_socket_close()  *  * Returns:  *	Same as isc_socket_create().  * \li	ISC_R_NOTIMPLEMENTED  */
+comment|/*%<  * Open a new socket file descriptor of the given socket structure.  It simply  * opens a new descriptor; all of the other parameters including the socket  * type are inherited from the existing socket.  This function is provided to  * avoid overhead of destroying and creating sockets when many short-lived  * sockets are frequently opened and closed.  When the efficiency is not an  * issue, it should be safer to detach the unused socket and re-create a new  * one.  This optimization may not be available for some systems, in which  * case this function will return ISC_R_NOTIMPLEMENTED and must not be used.  *  * isc_socket_open() should not be called on sockets created by  * isc_socket_fdwatchcreate().  *  * Requires:  *  * \li	there must be no other reference to this socket.  *  * \li	'socket' is a valid and previously closed by isc_socket_close()  *  * \li  'sock->type' is not isc_sockettype_fdwatch  *  * Returns:  *	Same as isc_socket_create().  * \li	ISC_R_NOTIMPLEMENTED  */
 end_comment
 
 begin_function_decl
@@ -659,7 +940,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Close a socket file descriptor of the given socket structure.  This function  * is provided as an alternative to destroying an unused socket when overhead  * destroying/re-creating sockets can be significant, and is expected to be  * used with isc_socket_open().  This optimization may not be available for some  * systems, in which case this function will return ISC_R_NOTIMPLEMENTED and  * must not be used.  *  * Requires:  *  * \li	The socket must have a valid descriptor.  *  * \li	There must be no other reference to this socket.  *  * \li	There must be no pending I/O requests.  *  * Returns:  * \li	#ISC_R_NOTIMPLEMENTED  */
+comment|/*%<  * Close a socket file descriptor of the given socket structure.  This function  * is provided as an alternative to destroying an unused socket when overhead  * destroying/re-creating sockets can be significant, and is expected to be  * used with isc_socket_open().  This optimization may not be available for some  * systems, in which case this function will return ISC_R_NOTIMPLEMENTED and  * must not be used.  *  * isc_socket_close() should not be called on sockets created by  * isc_socket_fdwatchcreate().  *  * Requires:  *  * \li	The socket must have a valid descriptor.  *  * \li	There must be no other reference to this socket.  *  * \li	There must be no pending I/O requests.  *  * \li  'sock->type' is not isc_sockettype_fdwatch  *  * Returns:  * \li	#ISC_R_NOTIMPLEMENTED  */
 end_comment
 
 begin_function_decl
@@ -1161,6 +1442,25 @@ end_comment
 
 begin_function_decl
 name|void
+name|isc_socketmgr_setstats
+parameter_list|(
+name|isc_socketmgr_t
+modifier|*
+name|manager
+parameter_list|,
+name|isc_stats_t
+modifier|*
+name|stats
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Set a general socket statistics counter set 'stats' for 'manager'.  *  * Requires:  * \li	'manager' is valid, hasn't opened any socket, and doesn't have  *	stats already set.  *  *\li	stats is a valid statistics supporting socket statistics counters  *	(see above).  */
+end_comment
+
+begin_function_decl
+name|void
 name|isc_socketmgr_destroy
 parameter_list|(
 name|isc_socketmgr_t
@@ -1266,7 +1566,64 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Set ownership and file permissions on the UNIX domain socket.  *  * Note: On Solaris and SunOS this secures the directory containing  *       the socket as Solaris and SunOS do not honour the filesytem  *	 permissions on the socket.  *  * Requires:  * \li	'sockaddr' to be a valid UNIX domain sockaddr.  *  * Returns:  * \li	#ISC_R_SUCCESS  * \li	#ISC_R_FAILURE  */
+comment|/*%<  * Set ownership and file permissions on the UNIX domain socket.  *  * Note: On Solaris and SunOS this secures the directory containing  *       the socket as Solaris and SunOS do not honour the filesystem  *	 permissions on the socket.  *  * Requires:  * \li	'sockaddr' to be a valid UNIX domain sockaddr.  *  * Returns:  * \li	#ISC_R_SUCCESS  * \li	#ISC_R_FAILURE  */
+end_comment
+
+begin_function_decl
+name|void
+name|isc_socket_setname
+parameter_list|(
+name|isc_socket_t
+modifier|*
+name|socket
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|void
+modifier|*
+name|tag
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Set the name and optional tag for a socket.  This allows tracking of the  * owner or purpose for this socket, and is useful for tracing and statistics  * reporting.  */
+end_comment
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|isc_socket_getname
+parameter_list|(
+name|isc_socket_t
+modifier|*
+name|socket
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Get the name associated with a socket, if any.  */
+end_comment
+
+begin_function_decl
+name|void
+modifier|*
+name|isc_socket_gettag
+parameter_list|(
+name|isc_socket_t
+modifier|*
+name|socket
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Get the tag associated with a socket, if any.  */
 end_comment
 
 begin_function_decl
@@ -1284,6 +1641,39 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Temporary.  For use by named only.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LIBXML2
+end_ifdef
+
+begin_function_decl
+name|void
+name|isc_socketmgr_renderxml
+parameter_list|(
+name|isc_socketmgr_t
+modifier|*
+name|mgr
+parameter_list|,
+name|xmlTextWriterPtr
+name|writer
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Render internal statistics and other state into the XML document.  */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_LIBXML2 */
 end_comment
 
 begin_macro

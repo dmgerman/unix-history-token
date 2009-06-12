@@ -1691,6 +1691,8 @@ name|trap
 index|[
 name|i
 index|]
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|exitstatus
@@ -1882,6 +1884,8 @@ expr_stmt|;
 name|evalstring
 argument_list|(
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

@@ -378,6 +378,29 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_function_decl
+specifier|static
+name|int
+name|ipsec_idetach
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|VIMAGE_GLOBALS
 end_ifdef
 
@@ -1459,6 +1482,16 @@ operator|.
 name|vmi_iattach
 operator|=
 name|ipsec_iattach
+block|,
+ifdef|#
+directive|ifdef
+name|VIMAGE
+operator|.
+name|vmi_idetach
+operator|=
+name|ipsec_idetach
+endif|#
+directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -8134,6 +8167,12 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_comment
 comment|/* Return a printable string for the IPv4 address. */
 end_comment
@@ -8242,6 +8281,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Return a printable string for the address. */
@@ -8679,6 +8723,38 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_function
+specifier|static
+name|int
+name|ipsec_idetach
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|unused
+name|__unused
+parameter_list|)
+block|{
+comment|/* XXX revisit this! */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSINIT

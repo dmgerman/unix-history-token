@@ -491,9 +491,7 @@ name|NETGRAPH
 name|char
 name|nodename
 index|[
-name|NG_NODELEN
-operator|+
-literal|1
+name|NG_NODESIZE
 index|]
 decl_stmt|;
 name|hook_p
@@ -12905,7 +12903,7 @@ name|cmdstr
 argument_list|,
 literal|"status"
 argument_list|,
-name|NG_CMDSTRLEN
+name|NG_CMDSTRSIZ
 argument_list|)
 expr_stmt|;
 block|}

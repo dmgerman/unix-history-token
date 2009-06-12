@@ -267,10 +267,12 @@ parameter_list|,
 name|phandle_t
 name|package
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|propname
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|buf
@@ -2054,10 +2056,12 @@ parameter_list|,
 name|phandle_t
 name|package
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|propname
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|buf

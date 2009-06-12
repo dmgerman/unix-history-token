@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -210,16 +216,6 @@ include|#
 directive|include
 file|<sys/acl.h>
 end_include
-
-begin_comment
-comment|/* until the nfsv4 acl stuff is all committed, undef NFS4_ACL_EXTATTR_NAME */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|NFS4_ACL_EXTATTR_NAME
-end_undef
 
 begin_include
 include|#
@@ -3432,8 +3428,19 @@ name|NFSHASNFS4ACL
 parameter_list|(
 name|m
 parameter_list|)
-value|((m)->mnt_flag& MNT_NFS4ACLS)
+value|nfs_supportsnfsv4acls(m)
 end_define
+
+begin_function_decl
+name|int
+name|nfs_supportsnfsv4acls
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_else
 else|#

@@ -140,11 +140,8 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* XXX public for sysctl hookup */
-end_comment
-
 begin_decl_stmt
+specifier|static
 name|int
 name|ieee80211_nol_timeout
 init|=
@@ -158,6 +155,27 @@ begin_comment
 comment|/* 30 minutes */
 end_comment
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_wlan
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|nol_timeout
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ieee80211_nol_timeout
+argument_list|,
+literal|0
+argument_list|,
+literal|"NOL timeout (secs)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -166,6 +184,7 @@ value|msecs_to_ticks(ieee80211_nol_timeout*1000)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ieee80211_cac_timeout
 init|=
@@ -176,6 +195,27 @@ end_decl_stmt
 begin_comment
 comment|/* 60 seconds */
 end_comment
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_wlan
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|cac_timeout
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ieee80211_cac_timeout
+argument_list|,
+literal|0
+argument_list|,
+literal|"CAC timeout (secs)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -204,24 +244,34 @@ name|ic
 operator|->
 name|ic_dfs
 decl_stmt|;
-name|callout_init
+name|callout_init_mtx
 argument_list|(
 operator|&
 name|dfs
 operator|->
 name|nol_timer
 argument_list|,
-name|CALLOUT_MPSAFE
+name|IEEE80211_LOCK_OBJ
+argument_list|(
+name|ic
+argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-name|callout_init
+name|callout_init_mtx
 argument_list|(
 operator|&
 name|dfs
 operator|->
 name|cac_timer
 argument_list|,
-name|CALLOUT_MPSAFE
+name|IEEE80211_LOCK_OBJ
+argument_list|(
+name|ic
+argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -353,6 +403,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|IEEE80211_LOCK_ASSERT
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vap
@@ -416,6 +471,7 @@ name|dfs
 operator|->
 name|newchan
 expr_stmt|;
+comment|/* XXX recursive lock need ieee80211_new_state_locked */
 name|ieee80211_new_state
 argument_list|(
 name|vap
@@ -694,7 +750,6 @@ name|IEEE80211_NOTIFY_CAC_STOP
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* XXX cannot use drain 'cuz holding a lock */
 name|callout_stop
 argument_list|(
 operator|&
@@ -814,7 +869,7 @@ name|oldest
 decl_stmt|,
 name|now
 decl_stmt|;
-name|IEEE80211_LOCK
+name|IEEE80211_LOCK_ASSERT
 argument_list|(
 name|ic
 argument_list|)
@@ -959,7 +1014,7 @@ name|now
 condition|)
 block|{
 comment|/* arrange to process next channel up for a status change */
-name|callout_reset
+name|callout_schedule
 argument_list|(
 operator|&
 name|dfs
@@ -969,18 +1024,9 @@ argument_list|,
 name|oldest
 operator|+
 name|NOL_TIMEOUT
-argument_list|,
-name|dfs_timeout
-argument_list|,
-name|ic
 argument_list|)
 expr_stmt|;
 block|}
-name|IEEE80211_UNLOCK
-argument_list|(
-name|ic
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

@@ -437,18 +437,25 @@ operator|)
 operator|+
 literal|1
 expr_stmt|;
-comment|/* 	 * PSIM seems to report 1 too many IRQs 	 */
+comment|/* 	 * PSIM seems to report 1 too many IRQs and CPUs 	 */
 if|if
 condition|(
 name|sc
 operator|->
 name|sc_psim
 condition|)
+block|{
 name|sc
 operator|->
 name|sc_nirq
 operator|--
 expr_stmt|;
+name|sc
+operator|->
+name|sc_ncpu
+operator|--
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|bootverbose

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2002, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2002, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: grammar.h,v 1.4.18.8 2006/02/28 03:10:49 marka Exp $ */
+comment|/* $Id: grammar.h,v 1.17 2008/09/25 04:02:39 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -21,7 +21,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*! \file */
+comment|/*! \file isccfg/grammar.h */
 end_comment
 
 begin_include
@@ -128,6 +128,17 @@ define|#
 directive|define
 name|CFG_CLAUSEFLAG_CALLBACK
 value|0x00000020
+end_define
+
+begin_comment
+comment|/*% A option that is only used in testing. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CFG_CLAUSEFLAG_TESTONLY
+value|0x00000040
 end_define
 
 begin_typedef
@@ -607,7 +618,7 @@ comment|/*% The current token has been pushed back. */
 name|isc_boolean_t
 name|ungotten
 decl_stmt|;
-comment|/*% 	 * The stack of currently active files, represented 	 * as a configuration list of configuration strings. 	 * The head is the top-level file, subsequent elements  	 * (if any) are the nested include files, and the  	 * last element is the file currently being parsed. 	 */
+comment|/*% 	 * The stack of currently active files, represented 	 * as a configuration list of configuration strings. 	 * The head is the top-level file, subsequent elements 	 * (if any) are the nested include files, and the 	 * last element is the file currently being parsed. 	 */
 name|cfg_obj_t
 modifier|*
 name|open_files
@@ -1883,7 +1894,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/*!   * Pass one of these flags to cfg_parser_error() to include the  * token text in log message.  */
+comment|/*!  * Pass one of these flags to cfg_parser_error() to include the  * token text in log message.  */
 end_comment
 
 begin_define

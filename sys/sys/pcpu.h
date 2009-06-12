@@ -168,19 +168,6 @@ name|pc_spinlocks
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|KTR_PERCPU
-name|int
-name|pc_ktr_idx
-decl_stmt|;
-comment|/* Index into trace table */
-name|char
-modifier|*
-name|pc_ktr_buf
-decl_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
 name|KTR
 name|char
 name|pc_name
@@ -208,6 +195,11 @@ name|device
 modifier|*
 name|pc_device
 decl_stmt|;
+name|void
+modifier|*
+name|pc_netisr
+decl_stmt|;
+comment|/* netisr SWI cookie. */
 comment|/*  	 * Stuff for read mostly lock 	 *  	 * XXXUPS remove as soon as we have per cpu variable 	 * linker sets. 	 */
 name|struct
 name|rm_queue

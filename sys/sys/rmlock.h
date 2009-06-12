@@ -39,9 +39,44 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_comment
+comment|/*  * Flags passed to rm_init(9).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RM_NOWITNESS
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|RM_RECURSE
+value|0x00000002
+end_define
+
 begin_function_decl
 name|void
 name|rm_init
+parameter_list|(
+name|struct
+name|rmlock
+modifier|*
+name|rm
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|rm_init_flags
 parameter_list|(
 name|struct
 name|rmlock
@@ -86,6 +121,17 @@ end_function_decl
 begin_function_decl
 name|void
 name|rm_sysinit
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|rm_sysinit_flags
 parameter_list|(
 name|void
 modifier|*
@@ -243,7 +289,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Public interface for lock operations.  *  */
+comment|/*  * Public interface for lock operations.  */
 end_comment
 
 begin_ifndef
@@ -371,19 +417,27 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|rm_initialized
-parameter_list|(
-name|rm
-parameter_list|)
-value|lock_initalized(&(rm)->lock_object)
-end_define
-
 begin_struct
 struct|struct
 name|rm_args
+block|{
+name|struct
+name|rmlock
+modifier|*
+name|ra_rm
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|ra_desc
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|rm_args_flags
 block|{
 name|struct
 name|rmlock
@@ -412,11 +466,26 @@ parameter_list|,
 name|rm
 parameter_list|,
 name|desc
+parameter_list|)
+define|\
+value|static struct rm_args name##_args = {				\ 		(rm),							\ 		(desc),							\ 	};								\ 	SYSINIT(name##_rm_sysinit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    rm_sysinit,&name##_args);					\ 	SYSUNINIT(name##_rm_sysuninit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    rm_destroy, (rm))
+end_define
+
+begin_define
+define|#
+directive|define
+name|RM_SYSINIT_FLAGS
+parameter_list|(
+name|name
+parameter_list|,
+name|rm
+parameter_list|,
+name|desc
 parameter_list|,
 name|opts
 parameter_list|)
 define|\
-value|static struct rm_args name##_args = {				\ 		(rm),							\ 		(desc),							\                 (opts),							\ 	};								\ 	SYSINIT(name##_rm_sysinit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    rm_sysinit,&name##_args);					\ 	SYSUNINIT(name##_rm_sysuninit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    rm_destroy, (rm))
+value|static struct rm_args name##_args = {				\ 		(rm),							\ 		(desc),							\                 (opts),							\ 	};								\ 	SYSINIT(name##_rm_sysinit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    rm_sysinit_flags,&name##_args);				\ 	SYSUNINIT(name##_rm_sysuninit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    rm_destroy, (rm))
 end_define
 
 begin_endif

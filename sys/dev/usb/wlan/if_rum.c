@@ -376,7 +376,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_device_id
+name|usb_device_id
 name|rum_devs
 index|[]
 init|=
@@ -887,21 +887,21 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|rum_bulk_read_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|rum_bulk_write_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|rum_do_request
 parameter_list|(
 name|struct
@@ -910,7 +910,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|usb2_device_request
+name|usb_device_request
 modifier|*
 name|req
 parameter_list|,
@@ -1203,7 +1203,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|rum_write
 parameter_list|(
 name|struct
@@ -1219,7 +1219,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|rum_write_multi
 parameter_list|(
 name|struct
@@ -3088,7 +3088,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 name|rum_config
 index|[
 name|RUM_N_TRANSFER
@@ -3217,7 +3217,7 @@ name|self
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -3297,7 +3297,7 @@ name|self
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -3980,7 +3980,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|rum_do_request
 parameter_list|(
 name|struct
@@ -3989,7 +3989,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|usb2_device_request
+name|usb_device_request
 modifier|*
 name|req
 parameter_list|,
@@ -3998,7 +3998,7 @@ modifier|*
 name|data
 parameter_list|)
 block|{
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|int
@@ -4998,7 +4998,7 @@ name|void
 name|rum_bulk_write_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -5432,7 +5432,7 @@ name|void
 name|rum_bulk_read_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -6995,6 +6995,15 @@ name|params
 parameter_list|)
 block|{
 name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|ni
+operator|->
+name|ni_ic
+decl_stmt|;
+name|struct
 name|rum_tx_data
 modifier|*
 name|data
@@ -7030,15 +7039,18 @@ operator|=
 name|params
 operator|->
 name|ibp_rate0
-operator|&
-name|IEEE80211_RATE_VAL
 expr_stmt|;
-comment|/* XXX validate */
 if|if
 condition|(
+operator|!
+name|ieee80211_isratevalid
+argument_list|(
+name|ic
+operator|->
+name|ic_rt
+argument_list|,
 name|rate
-operator|==
-literal|0
+argument_list|)
 condition|)
 block|{
 name|m_freem
@@ -8082,10 +8094,10 @@ name|len
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|req
@@ -8225,10 +8237,10 @@ name|len
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|req
@@ -8309,7 +8321,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|rum_write
 parameter_list|(
 name|struct
@@ -8353,7 +8365,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|rum_write_multi
 parameter_list|(
 name|struct
@@ -8373,10 +8385,10 @@ name|len
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|req
@@ -11386,7 +11398,7 @@ decl_stmt|;
 name|uint32_t
 name|tmp
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|error
 decl_stmt|;
 name|int
@@ -11940,7 +11952,7 @@ name|size
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|uint16_t
@@ -11948,7 +11960,7 @@ name|reg
 init|=
 name|RT2573_MCU_CODE_BASE
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 comment|/* copy firmware image into NIC */

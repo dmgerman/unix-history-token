@@ -1365,28 +1365,9 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|iv_noop
-parameter_list|(
-name|uintptr_t
-name|a
-parameter_list|,
-name|uintptr_t
-name|b
-parameter_list|)
-block|{
-name|atomic_add_int
-argument_list|(
-operator|&
-name|smp_tlb_wait
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+begin_comment
+comment|/*  * These start from "IPI offset" APIC_IPI_INTS  */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1394,14 +1375,10 @@ name|call_data_func_t
 modifier|*
 name|ipi_vectors
 index|[
-name|IPI_BITMAP_VECTOR
+literal|6
 index|]
 init|=
 block|{
-name|iv_noop
-block|,
-name|iv_noop
-block|,
 name|iv_rendezvous
 block|,
 name|iv_invltlb
@@ -1607,8 +1584,15 @@ name|call_data
 operator|->
 name|finished
 decl_stmt|;
+comment|/* We only handle function IPIs, not bitmap IPIs */
 if|if
 condition|(
+name|call_data
+operator|->
+name|func_id
+operator|<
+name|APIC_IPI_INTS
+operator|||
 name|call_data
 operator|->
 name|func_id
@@ -1631,6 +1615,8 @@ index|[
 name|call_data
 operator|->
 name|func_id
+operator|-
+name|APIC_IPI_INTS
 index|]
 expr_stmt|;
 comment|/* 	 * Notify initiating CPU that I've grabbed the data and am 	 * about to execute the function 	 */
@@ -1860,11 +1846,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cpu=%d irq=%d vector=%d\n"
+literal|"[XEN] IPI cpu=%d irq=%d vector=RESCHEDULE_VECTOR (%d)\n"
 argument_list|,
 name|cpu
 argument_list|,
-name|rc
+name|irq
 argument_list|,
 name|RESCHEDULE_VECTOR
 argument_list|)
@@ -1935,11 +1921,11 @@ name|irq
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cpu=%d irq=%d vector=%d\n"
+literal|"[XEN] IPI cpu=%d irq=%d vector=CALL_FUNCTION_VECTOR (%d)\n"
 argument_list|,
 name|cpu
 argument_list|,
-name|rc
+name|irq
 argument_list|,
 name|CALL_FUNCTION_VECTOR
 argument_list|)
@@ -4035,11 +4021,6 @@ name|struct
 name|_call_data
 name|data
 decl_stmt|;
-name|call_data
-operator|=
-operator|&
-name|data
-expr_stmt|;
 name|ncpu
 operator|=
 name|mp_ncpus
@@ -4077,6 +4058,22 @@ argument_list|(
 operator|&
 name|smp_ipi_mtx
 argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|call_data
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"call_data isn't null?!"
+operator|)
+argument_list|)
+expr_stmt|;
+name|call_data
+operator|=
+operator|&
+name|data
 expr_stmt|;
 name|call_data
 operator|->
@@ -4263,6 +4260,17 @@ name|mtx_lock_spin
 argument_list|(
 operator|&
 name|smp_ipi_mtx
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|call_data
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"call_data isn't null?!"
+operator|)
 argument_list|)
 expr_stmt|;
 name|call_data
@@ -4693,6 +4701,8 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+else|else
+block|{
 name|KASSERT
 argument_list|(
 name|call_data
@@ -4713,6 +4723,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
 end_function
 
 begin_comment
@@ -4727,34 +4738,6 @@ name|u_int
 name|ipi
 parameter_list|)
 block|{
-if|if
-condition|(
-name|IPI_IS_BITMAPED
-argument_list|(
-name|ipi
-argument_list|)
-operator|||
-operator|(
-name|ipi
-operator|==
-name|IPI_STOP
-operator|&&
-name|stop_cpus_with_nmi
-operator|)
-condition|)
-block|{
-name|ipi_selected
-argument_list|(
-name|PCPU_GET
-argument_list|(
-name|other_cpus
-argument_list|)
-argument_list|,
-name|ipi
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|CTR2
 argument_list|(
 name|KTR_SMP

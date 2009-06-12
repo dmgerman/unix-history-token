@@ -212,6 +212,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PMUAC
+value|"dev.pmu.0.acline"
+end_define
+
+begin_define
+define|#
+directive|define
 name|APMDEV
 value|"/dev/apm"
 end_define
@@ -394,8 +401,15 @@ specifier|static
 name|int
 name|acline_mib
 index|[
-literal|3
+literal|4
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|size_t
+name|acline_mib_len
 decl_stmt|;
 end_decl_stmt
 
@@ -452,7 +466,7 @@ enum|enum
 block|{
 name|ac_none
 block|,
-name|ac_acpi_sysctl
+name|ac_sysctl
 block|,
 name|ac_acpi_devd
 block|,
@@ -1314,12 +1328,9 @@ name|void
 name|acline_init
 parameter_list|()
 block|{
-name|size_t
-name|len
-decl_stmt|;
-name|len
+name|acline_mib_len
 operator|=
-literal|3
+literal|4
 expr_stmt|;
 if|if
 condition|(
@@ -1330,7 +1341,7 @@ argument_list|,
 name|acline_mib
 argument_list|,
 operator|&
-name|len
+name|acline_mib_len
 argument_list|)
 operator|==
 literal|0
@@ -1338,7 +1349,7 @@ condition|)
 block|{
 name|acline_mode
 operator|=
-name|ac_acpi_sysctl
+name|ac_sysctl
 expr_stmt|;
 if|if
 condition|(
@@ -1349,6 +1360,41 @@ argument_list|(
 literal|"using sysctl for AC line status"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__powerpc__
+block|}
+elseif|else
+if|if
+condition|(
+name|sysctlnametomib
+argument_list|(
+name|PMUAC
+argument_list|,
+name|acline_mib
+argument_list|,
+operator|&
+name|acline_mib_len
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|acline_mode
+operator|=
+name|ac_sysctl
+expr_stmt|;
+if|if
+condition|(
+name|vflag
+condition|)
+name|warnx
+argument_list|(
+literal|"using sysctl for AC line status"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|USE_APM
@@ -1476,7 +1522,7 @@ argument_list|()
 expr_stmt|;
 name|acline_mode
 operator|=
-name|ac_acpi_sysctl
+name|ac_sysctl
 expr_stmt|;
 comment|/* FALLTHROUGH */
 block|}
@@ -1552,7 +1598,7 @@ if|if
 condition|(
 name|acline_mode
 operator|==
-name|ac_acpi_sysctl
+name|ac_sysctl
 condition|)
 block|{
 name|int
@@ -1574,7 +1620,7 @@ name|sysctl
 argument_list|(
 name|acline_mib
 argument_list|,
-literal|3
+name|acline_mib_len
 argument_list|,
 operator|&
 name|acline
@@ -1676,7 +1722,7 @@ if|if
 condition|(
 name|acline_mode
 operator|==
-name|ac_acpi_sysctl
+name|ac_sysctl
 condition|)
 block|{
 name|struct

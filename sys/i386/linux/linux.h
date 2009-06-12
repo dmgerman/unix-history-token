@@ -2796,6 +2796,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LINUX_ACCEPT4
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_SOL_SOCKET
 value|1
 end_define

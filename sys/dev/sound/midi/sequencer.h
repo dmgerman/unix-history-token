@@ -86,7 +86,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|do {				\ 		if (seq_debug>= y) {	\ 			(x);		\ 		}			\ 	} while(0)
+value|do {				\ 		if (seq_debug>= y) {	\ 			(x);		\ 		}			\ 	} while (0)
 end_define
 
 begin_expr_stmt

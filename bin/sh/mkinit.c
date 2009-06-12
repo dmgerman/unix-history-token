@@ -554,7 +554,7 @@ name|void
 modifier|*
 name|ckmalloc
 parameter_list|(
-name|int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2242,7 +2242,7 @@ name|void
 modifier|*
 name|ckmalloc
 parameter_list|(
-name|int
+name|size_t
 name|nbytes
 parameter_list|)
 block|{

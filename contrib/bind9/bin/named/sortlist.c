@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: sortlist.c,v 1.9.18.4 2006/03/02 00:37:21 marka Exp $ */
+comment|/* $Id: sortlist.c,v 1.17 2007/09/14 01:46:05 marka Exp $ */
 end_comment
 
 begin_comment
@@ -152,8 +152,6 @@ name|inner
 init|=
 name|e
 operator|->
-name|u
-operator|.
 name|nestedacl
 decl_stmt|;
 if|if
@@ -161,9 +159,16 @@ condition|(
 name|inner
 operator|->
 name|length
-operator|<
-literal|1
-operator|||
+operator|==
+literal|0
+condition|)
+name|try_elt
+operator|=
+name|e
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|inner
 operator|->
 name|length
@@ -173,6 +178,7 @@ condition|)
 goto|goto
 name|dont_sort
 goto|;
+elseif|else
 if|if
 condition|(
 name|inner
@@ -187,6 +193,8 @@ condition|)
 goto|goto
 name|dont_sort
 goto|;
+else|else
+block|{
 name|try_elt
 operator|=
 operator|&
@@ -215,6 +223,7 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -265,8 +274,6 @@ name|argp
 operator|=
 name|order_elt
 operator|->
-name|u
-operator|.
 name|nestedacl
 expr_stmt|;
 return|return

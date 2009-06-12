@@ -32,6 +32,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rmlock.h>
+end_include
+
 begin_comment
 comment|/*  * MAC Framework sysctl namespace.  */
 end_comment
@@ -502,6 +514,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|u_int
+name|mac_policy_count
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|uint64_t
 name|mac_labeled
 decl_stmt|;
@@ -536,7 +555,10 @@ begin_function_decl
 name|void
 name|mac_policy_slock_nosleep
 parameter_list|(
-name|void
+name|struct
+name|rm_priotracker
+modifier|*
+name|tracker
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -554,7 +576,10 @@ begin_function_decl
 name|void
 name|mac_policy_sunlock_nosleep
 parameter_list|(
-name|void
+name|struct
+name|rm_priotracker
+modifier|*
+name|tracker
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1093,7 +1118,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {			\ 	struct mac_policy_conf *mpc;					\ 									\ 	error = 0;							\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## check != NULL)		\ 			error = mac_error_select(			\ 			    mpc->mpc_ops->mpo_ ## check (args),		\ 			    error);					\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		mac_policy_slock_nosleep();				\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## check != NULL)	\ 				error = mac_error_select(		\ 				    mpc->mpc_ops->mpo_ ## check (args),	\ 				    error);				\ 		}							\ 		mac_policy_sunlock_nosleep();				\ 	}								\ } while (0)
+value|do {			\ 	struct mac_policy_conf *mpc;					\ 									\ 	error = 0;							\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## check != NULL)		\ 			error = mac_error_select(			\ 			    mpc->mpc_ops->mpo_ ## check (args),		\ 			    error);					\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		struct rm_priotracker tracker;				\ 									\ 		mac_policy_slock_nosleep(&tracker);			\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## check != NULL)	\ 				error = mac_error_select(		\ 				    mpc->mpc_ops->mpo_ ## check (args),	\ 				    error);				\ 		}							\ 		mac_policy_sunlock_nosleep(&tracker);			\ 	}								\ } while (0)
 end_define
 
 begin_comment
@@ -1110,7 +1135,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {			\ 	struct mac_policy_conf *mpc;					\ 									\ 	error = EPERM;							\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## check != NULL) {		\ 			if (mpc->mpc_ops->mpo_ ## check(args) == 0)	\ 				error = 0;				\ 		}							\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		mac_policy_slock_nosleep();				\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## check != NULL) {	\ 				if (mpc->mpc_ops->mpo_ ## check (args)	\ 				    == 0)				\ 					error = 0;			\ 			}						\ 		}							\ 		mac_policy_sunlock_nosleep();				\ 	}								\ } while (0)
+value|do {			\ 	struct mac_policy_conf *mpc;					\ 									\ 	error = EPERM;							\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## check != NULL) {		\ 			if (mpc->mpc_ops->mpo_ ## check(args) == 0)	\ 				error = 0;				\ 		}							\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		struct rm_priotracker tracker;				\ 									\ 		mac_policy_slock_nosleep(&tracker);			\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## check != NULL) {	\ 				if (mpc->mpc_ops->mpo_ ## check (args)	\ 				    == 0)				\ 					error = 0;			\ 			}						\ 		}							\ 		mac_policy_sunlock_nosleep(&tracker);			\ 	}								\ } while (0)
 end_define
 
 begin_comment
@@ -1144,7 +1169,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {\ 	struct mac_policy_conf *mpc;					\ 									\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## operation != NULL)		\ 			result = result composition			\ 			    mpc->mpc_ops->mpo_ ## operation (args);	\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		mac_policy_slock_nosleep();				\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## operation != NULL)	\ 				result = result composition		\ 				    mpc->mpc_ops->mpo_ ## operation	\ 				    (args);				\ 		}							\ 		mac_policy_sunlock_nosleep();				\ 	}								\ } while (0)
+value|do {\ 	struct mac_policy_conf *mpc;					\ 									\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## operation != NULL)		\ 			result = result composition			\ 			    mpc->mpc_ops->mpo_ ## operation (args);	\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		struct rm_priotracker tracker;				\ 									\ 		mac_policy_slock_nosleep(&tracker);			\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## operation != NULL)	\ 				result = result composition		\ 				    mpc->mpc_ops->mpo_ ## operation	\ 				    (args);				\ 		}							\ 		mac_policy_sunlock_nosleep(&tracker);			\ 	}								\ } while (0)
 end_define
 
 begin_comment
@@ -1222,7 +1247,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {		\ 	struct mac_policy_conf *mpc;					\ 									\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## operation != NULL)		\ 			mpc->mpc_ops->mpo_ ## operation (args);		\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		mac_policy_slock_nosleep();				\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## operation != NULL)	\ 				mpc->mpc_ops->mpo_ ## operation (args);	\ 		}							\ 		mac_policy_sunlock_nosleep();				\ 	}								\ } while (0)
+value|do {		\ 	struct mac_policy_conf *mpc;					\ 									\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## operation != NULL)		\ 			mpc->mpc_ops->mpo_ ## operation (args);		\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		struct rm_priotracker tracker;				\ 									\ 		mac_policy_slock_nosleep(&tracker);			\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## operation != NULL)	\ 				mpc->mpc_ops->mpo_ ## operation (args);	\ 		}							\ 		mac_policy_sunlock_nosleep(&tracker);			\ 	}								\ } while (0)
 end_define
 
 begin_endif

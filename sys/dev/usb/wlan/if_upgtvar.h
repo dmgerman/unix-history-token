@@ -1629,7 +1629,7 @@ modifier|*
 name|sc_ifp
 decl_stmt|;
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|sc_udev
 decl_stmt|;
@@ -1749,7 +1749,7 @@ name|sc_eeprom_freq6_settings
 decl_stmt|;
 comment|/* RX/TX  */
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|sc_xfer
 index|[

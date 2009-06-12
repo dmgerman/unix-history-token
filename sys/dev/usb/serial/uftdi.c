@@ -232,20 +232,20 @@ struct|struct
 name|uftdi_softc
 block|{
 name|struct
-name|usb2_com_super_softc
+name|ucom_super_softc
 name|sc_super_ucom
 decl_stmt|;
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 name|sc_ucom
 decl_stmt|;
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|sc_udev
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|sc_xfer
 index|[
@@ -341,14 +341,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|uftdi_write_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|uftdi_read_callback
 decl_stmt|;
 end_decl_stmt
@@ -359,7 +359,7 @@ name|void
 name|uftdi_cfg_open
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -371,7 +371,7 @@ name|void
 name|uftdi_cfg_set_dtr
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -385,7 +385,7 @@ name|void
 name|uftdi_cfg_set_rts
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -399,7 +399,7 @@ name|void
 name|uftdi_cfg_set_break
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -431,7 +431,7 @@ name|int
 name|uftdi_pre_param
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|struct
@@ -447,7 +447,7 @@ name|void
 name|uftdi_cfg_param
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|struct
@@ -463,7 +463,7 @@ name|void
 name|uftdi_cfg_get_status
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -481,7 +481,7 @@ name|void
 name|uftdi_start_read
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -493,7 +493,7 @@ name|void
 name|uftdi_stop_read
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -505,7 +505,7 @@ name|void
 name|uftdi_start_write
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -517,7 +517,7 @@ name|void
 name|uftdi_stop_write
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -540,7 +540,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 name|uftdi_config
 index|[
 name|UFTDI_N_TRANSFER
@@ -648,7 +648,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_com_callback
+name|ucom_callback
 name|uftdi_callback
 init|=
 block|{
@@ -847,7 +847,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|usb2_device_id
+name|usb_device_id
 name|uftdi_devs
 index|[]
 init|=
@@ -1217,7 +1217,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -1287,7 +1287,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -1660,7 +1660,7 @@ name|void
 name|uftdi_cfg_open
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|)
@@ -1682,7 +1682,7 @@ operator|->
 name|sc_portno
 decl_stmt|;
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|DPRINTF
@@ -1824,7 +1824,7 @@ name|void
 name|uftdi_write_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -1985,7 +1985,7 @@ name|void
 name|uftdi_read_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2266,7 +2266,7 @@ name|void
 name|uftdi_cfg_set_dtr
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|,
@@ -2294,7 +2294,7 @@ name|uint16_t
 name|wValue
 decl_stmt|;
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|wValue
@@ -2374,7 +2374,7 @@ name|void
 name|uftdi_cfg_set_rts
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|,
@@ -2402,7 +2402,7 @@ name|uint16_t
 name|wValue
 decl_stmt|;
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|wValue
@@ -2482,7 +2482,7 @@ name|void
 name|uftdi_cfg_set_break
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|,
@@ -2510,7 +2510,7 @@ name|uint16_t
 name|wValue
 decl_stmt|;
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 if|if
@@ -2992,7 +2992,7 @@ name|int
 name|uftdi_pre_param
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|,
@@ -3044,7 +3044,7 @@ name|void
 name|uftdi_cfg_param
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|,
@@ -3075,7 +3075,7 @@ name|uftdi_param_config
 name|cfg
 decl_stmt|;
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 if|if
@@ -3312,7 +3312,7 @@ name|void
 name|uftdi_cfg_get_status
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|,
@@ -3370,7 +3370,7 @@ name|void
 name|uftdi_start_read
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|)
@@ -3403,7 +3403,7 @@ name|void
 name|uftdi_stop_read
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|)
@@ -3436,7 +3436,7 @@ name|void
 name|uftdi_start_write
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|)
@@ -3469,7 +3469,7 @@ name|void
 name|uftdi_stop_write
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|)

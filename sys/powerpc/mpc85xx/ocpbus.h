@@ -315,6 +315,20 @@ name|OCP85XX_QUICC_SIZE
 value|0x20000
 end_define
 
+begin_define
+define|#
+directive|define
+name|OCP85XX_SEC_OFF
+value|0x30000
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_SEC_SIZE
+value|0x10000
+end_define
+
 begin_comment
 comment|/*  * PIC definitions  */
 end_comment

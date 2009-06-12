@@ -24,7 +24,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acpi.h>
+file|<contrib/dev/acpica/include/acpi.h>
 end_include
 
 begin_include
@@ -114,7 +114,7 @@ parameter_list|(
 name|ACPI_PHYSICAL_ADDRESS
 name|PhysicalAddress
 parameter_list|,
-name|ACPI_NATIVE_UINT
+name|ACPI_SIZE
 name|Length
 parameter_list|)
 block|{
@@ -193,32 +193,6 @@ block|{
 return|return
 operator|(
 name|AE_SUPPORT
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * There is no clean way to do this.  We make the charitable assumption  * that callers will not pass garbage to us.  */
-end_comment
-
-begin_function
-name|ACPI_STATUS
-name|AcpiOsValidateAddress
-parameter_list|(
-name|UINT8
-name|SpaceId
-parameter_list|,
-name|ACPI_PHYSICAL_ADDRESS
-name|Address
-parameter_list|,
-name|ACPI_SIZE
-name|Length
-parameter_list|)
-block|{
-return|return
-operator|(
-name|AE_OK
 operator|)
 return|;
 block|}

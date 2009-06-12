@@ -838,6 +838,9 @@ parameter_list|(
 name|struct
 name|rl_softc
 modifier|*
+parameter_list|,
+name|int
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -862,7 +865,7 @@ end_ifdef
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|re_poll
 parameter_list|(
 name|struct
@@ -879,7 +882,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|re_poll_locked
 parameter_list|(
 name|struct
@@ -8300,6 +8303,10 @@ name|struct
 name|rl_softc
 modifier|*
 name|sc
+parameter_list|,
+name|int
+modifier|*
+name|rx_npktsp
 parameter_list|)
 block|{
 name|struct
@@ -8331,6 +8338,10 @@ name|int
 name|maxpkt
 init|=
 literal|16
+decl_stmt|,
+name|rx_npkts
+init|=
+literal|0
 decl_stmt|;
 name|RL_LOCK_ASSERT
 argument_list|(
@@ -9105,6 +9116,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|rx_npkts
+operator|++
+expr_stmt|;
 block|}
 comment|/* Flush the RX DMA ring */
 name|bus_dmamap_sync
@@ -9133,6 +9147,17 @@ operator|.
 name|rl_rx_prodidx
 operator|=
 name|i
+expr_stmt|;
+if|if
+condition|(
+name|rx_npktsp
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|rx_npktsp
+operator|=
+name|rx_npkts
 expr_stmt|;
 if|if
 condition|(
@@ -9539,7 +9564,7 @@ end_ifdef
 
 begin_function
 specifier|static
-name|void
+name|int
 name|re_poll
 parameter_list|(
 name|struct
@@ -9564,6 +9589,11 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+name|int
+name|rx_npkts
+init|=
+literal|0
+decl_stmt|;
 name|RL_LOCK
 argument_list|(
 name|sc
@@ -9577,6 +9607,8 @@ name|if_drv_flags
 operator|&
 name|IFF_DRV_RUNNING
 condition|)
+name|rx_npkts
+operator|=
 name|re_poll_locked
 argument_list|(
 name|ifp
@@ -9591,12 +9623,17 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|re_poll_locked
 parameter_list|(
 name|struct
@@ -9621,6 +9658,9 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+name|int
+name|rx_npkts
+decl_stmt|;
 name|RL_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -9635,6 +9675,9 @@ expr_stmt|;
 name|re_rxeof
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|rx_npkts
 argument_list|)
 expr_stmt|;
 name|re_txeof
@@ -9689,7 +9732,11 @@ name|status
 operator|==
 literal|0xffff
 condition|)
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 if|if
 condition|(
 name|status
@@ -9747,6 +9794,11 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
@@ -9962,6 +10014,8 @@ operator|=
 name|re_rxeof
 argument_list|(
 name|sc
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Some chips will ignore a second TX request issued 	 * while an existing transmission is in progress. If 	 * the transmitter goes idle but there are still 	 * packets waiting to be sent, we need to restart the 	 * channel here to flush them out. This only seems to 	 * be required with the PCIe devices. 	 */
@@ -13067,6 +13121,8 @@ expr_stmt|;
 name|re_rxeof
 argument_list|(
 name|sc
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|re_init_locked

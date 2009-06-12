@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_vm.h"
 end_include
 
@@ -3889,16 +3883,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|ma
 index|[
 literal|0
 index|]
 operator|->
 name|valid
-operator|&
-name|VM_PAGE_BITS_ALL
-operator|)
 operator|!=
 name|VM_PAGE_BITS_ALL
 condition|)
@@ -4068,17 +4058,6 @@ literal|0
 index|]
 operator|==
 name|NULL
-operator|)
-operator|||
-operator|(
-name|ma
-index|[
-literal|0
-index|]
-operator|->
-name|valid
-operator|==
-literal|0
 operator|)
 condition|)
 block|{

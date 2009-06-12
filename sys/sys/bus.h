@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<machine/_limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_bus_dma.h>
 end_include
 
@@ -944,6 +950,16 @@ parameter_list|(
 name|device_t
 parameter_list|,
 name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bus_generic_new_pass
+parameter_list|(
+name|device_t
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2269,32 +2285,6 @@ comment|/*  * Access functions for devclass.  */
 end_comment
 
 begin_function_decl
-name|int
-name|devclass_add_driver
-parameter_list|(
-name|devclass_t
-name|dc
-parameter_list|,
-name|kobj_class_t
-name|driver
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|devclass_delete_driver
-parameter_list|(
-name|devclass_t
-name|dc
-parameter_list|,
-name|kobj_class_t
-name|driver
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|devclass_t
 name|devclass_create
 parameter_list|(
@@ -2310,21 +2300,6 @@ begin_function_decl
 name|devclass_t
 name|devclass_find
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|classname
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|kobj_class_t
-name|devclass_find_driver
-parameter_list|(
-name|devclass_t
-name|dc
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -2487,19 +2462,6 @@ name|devclass_get_sysctl_tree
 parameter_list|(
 name|devclass_t
 name|dc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|devclass_quiesce_driver
-parameter_list|(
-name|devclass_t
-name|dc
-parameter_list|,
-name|kobj_class_t
-name|driver
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2834,6 +2796,115 @@ comment|/* No wildcard device matches */
 end_comment
 
 begin_comment
+comment|/**  * During boot, the device tree is scanned multiple times.  Each scan,  * or pass, drivers may be attached to devices.  Each driver  * attachment is assigned a pass number.  Drivers may only probe and  * attach to devices if their pass number is less than or equal to the  * current system-wide pass number.  The default pass is the last pass  * and is used by most drivers.  Drivers needed by the scheduler are  * probed in earlier passes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUS_PASS_ROOT
+value|0
+end_define
+
+begin_comment
+comment|/* Used to attach root0. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUS_PASS_BUS
+value|10
+end_define
+
+begin_comment
+comment|/* Busses and bridges. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUS_PASS_CPU
+value|20
+end_define
+
+begin_comment
+comment|/* CPU devices. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUS_PASS_RESOURCE
+value|30
+end_define
+
+begin_comment
+comment|/* Resource discovery. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUS_PASS_INTERRUPT
+value|40
+end_define
+
+begin_comment
+comment|/* Interrupt controllers. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUS_PASS_TIMER
+value|50
+end_define
+
+begin_comment
+comment|/* Timers and clocks. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUS_PASS_SCHEDULER
+value|60
+end_define
+
+begin_comment
+comment|/* Start scheduler. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUS_PASS_DEFAULT
+value|__INT_MAX
+end_define
+
+begin_comment
+comment|/* Everything else. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|bus_current_pass
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|void
+name|bus_set_pass
+parameter_list|(
+name|int
+name|pass
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * Shorthand for constructing method tables.  */
 end_comment
 
@@ -2922,9 +2993,35 @@ name|devclass_t
 modifier|*
 name|dmd_devclass
 decl_stmt|;
+name|int
+name|dmd_pass
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|EARLY_DRIVER_MODULE
+parameter_list|(
+name|name
+parameter_list|,
+name|busname
+parameter_list|,
+name|driver
+parameter_list|,
+name|devclass
+parameter_list|,
+name|evh
+parameter_list|,
+name|arg
+parameter_list|,
+name|pass
+parameter_list|)
+define|\ 									\
+value|static struct driver_module_data name##_##busname##_driver_mod = {	\ 	evh, arg,							\ 	#busname,							\ 	(kobj_class_t)&driver,						\&devclass,							\ 	pass								\ };									\ 									\ static moduledata_t name##_##busname##_mod = {				\ 	#busname "/" #name,						\ 	driver_module_handler,						\&name##_##busname##_driver_mod					\ };									\ DECLARE_MODULE(name##_##busname, name##_##busname##_mod,		\ 	       SI_SUB_DRIVERS, SI_ORDER_MIDDLE)
+end_define
 
 begin_define
 define|#
@@ -2943,8 +3040,8 @@ name|evh
 parameter_list|,
 name|arg
 parameter_list|)
-define|\ 									\
-value|static struct driver_module_data name##_##busname##_driver_mod = {	\ 	evh, arg,							\ 	#busname,							\ 	(kobj_class_t)&driver,						\&devclass							\ };									\ 									\ static moduledata_t name##_##busname##_mod = {				\ 	#busname "/" #name,						\ 	driver_module_handler,						\&name##_##busname##_driver_mod					\ };									\ DECLARE_MODULE(name##_##busname, name##_##busname##_mod,		\ 	       SI_SUB_DRIVERS, SI_ORDER_MIDDLE)
+define|\
+value|EARLY_DRIVER_MODULE(name, busname, driver, devclass, evh, arg,	\ 	    BUS_PASS_DEFAULT)
 end_define
 
 begin_comment

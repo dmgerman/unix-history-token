@@ -118,7 +118,7 @@ name|void
 name|atmegadci_clocks_on
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 parameter_list|)
@@ -133,7 +133,7 @@ name|void
 name|atmegadci_clocks_off
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 parameter_list|)

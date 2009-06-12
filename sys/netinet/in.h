@@ -2528,12 +2528,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IP_NONLOCALOK
+name|IP_BINDANY
 value|24
 end_define
 
 begin_comment
-comment|/* bool: allow bind to spoof non-local addresses; 					requires kernel compile option IP_NONLOCALBIND */
+comment|/* bool: allow bind to any address */
 end_comment
 
 begin_define

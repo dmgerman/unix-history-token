@@ -24,12 +24,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -1156,7 +1150,7 @@ operator|-
 name|nobjsize
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If the last page is partially mapped, then zero out 		 * the garbage at the end of the page.  See comments 		 * in vnode_page_setsize() for more details. 		 * 		 * XXXJHB: This handles in memory pages, but what about 		 * a page swapped out to disk? 		 */
+comment|/* 		 * If the last page is partially mapped, then zero out 		 * the garbage at the end of the page.  See comments 		 * in vnode_pager_setsize() for more details. 		 * 		 * XXXJHB: This handles in memory pages, but what about 		 * a page swapped out to disk? 		 */
 if|if
 condition|(
 operator|(
@@ -1214,10 +1208,8 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-name|vm_page_set_validclean
+comment|/* 			 * Update the valid bits to reflect the blocks that 			 * have been zeroed.  Some of these valid bits may 			 * have already been set. 			 */
+name|vm_page_set_valid
 argument_list|(
 name|m
 argument_list|,
@@ -1226,19 +1218,29 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|m
-operator|->
-name|dirty
-operator|!=
-literal|0
-condition|)
-name|m
-operator|->
-name|dirty
+comment|/* 			 * Round "base" to the next block boundary so that the 			 * dirty bit for a partially zeroed block is not 			 * cleared. 			 */
+name|base
 operator|=
-name|VM_PAGE_BITS_ALL
+name|roundup2
+argument_list|(
+name|base
+argument_list|,
+name|DEV_BSIZE
+argument_list|)
+expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
+name|vm_page_clear_dirty
+argument_list|(
+name|m
+argument_list|,
+name|base
+argument_list|,
+name|PAGE_SIZE
+operator|-
+name|base
+argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()

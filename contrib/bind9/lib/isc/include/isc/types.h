@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: types.h,v 1.35.18.4 2008/06/24 23:45:55 tbox Exp $ */
+comment|/* $Id: types.h,v 1.46.84.2 2009/01/29 23:47:44 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -21,7 +21,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*! \file  * \brief  * OS-specific types, from the OS-specific include directories.  */
+comment|/*! \file isc/types.h  * \brief  * OS-specific types, from the OS-specific include directories.  */
 end_comment
 
 begin_include
@@ -205,6 +205,79 @@ end_typedef
 
 begin_comment
 comment|/*%< Hash */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|isc_httpd
+name|isc_httpd_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*%< HTTP client */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+name|isc_httpdfree_t
+function_decl|)
+parameter_list|(
+name|isc_buffer_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/*%< HTTP free function */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|isc_httpdmgr
+name|isc_httpdmgr_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*%< HTTP manager */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|isc_httpdurl
+name|isc_httpdurl_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*%< HTTP URL */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+name|isc_httpdondestroy_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/*%< Callback on destroying httpd */
 end_comment
 
 begin_typedef
@@ -509,6 +582,29 @@ end_comment
 begin_typedef
 typedef|typedef
 name|struct
+name|isc_stats
+name|isc_stats_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*%< Statistics */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|isc_statscounter_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*%< Statistics Counter */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
 name|isc_symtab
 name|isc_symtab_t
 typedef|;
@@ -616,6 +712,102 @@ name|isc_task_t
 modifier|*
 parameter_list|,
 name|isc_event_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|isc_sockfdwatch_t
+function_decl|)
+parameter_list|(
+name|isc_task_t
+modifier|*
+parameter_list|,
+name|isc_socket_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/* The following cannot be listed alphabetically due to forward reference */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|isc_result_t
+function_decl|(
+name|isc_httpdaction_t
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|url
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|querystring
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|retcode
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|retmsg
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|mimetype
+parameter_list|,
+name|isc_buffer_t
+modifier|*
+name|body
+parameter_list|,
+name|isc_httpdfree_t
+modifier|*
+modifier|*
+name|freecb
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|freecb_args
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|isc_boolean_t
+function_decl|(
+name|isc_httpdclientok_t
+function_decl|)
+parameter_list|(
+specifier|const
+name|isc_sockaddr_t
+modifier|*
+parameter_list|,
+name|void
 modifier|*
 parameter_list|)
 function_decl|;

@@ -2205,8 +2205,6 @@ name|i
 index|]
 argument_list|,
 literal|"osd_object"
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|mtx_init

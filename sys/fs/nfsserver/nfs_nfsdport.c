@@ -749,9 +749,18 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|NFS4_ACL_EXTATTR_NAME
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|notyet
+argument_list|)
+comment|/* 	 * This function should be called once FFS has NFSv4 ACL support 	 * in it. 	 */
 comment|/* 	 * Should the override still be applied when ACLs are enabled? 	 */
 if|if
 condition|(
@@ -13417,6 +13426,13 @@ modifier|*
 name|unap
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|inpcb
 modifier|*

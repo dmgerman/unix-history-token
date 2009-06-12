@@ -1505,8 +1505,6 @@ operator|&
 name|uart_tty_class
 argument_list|,
 name|sc
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|unit

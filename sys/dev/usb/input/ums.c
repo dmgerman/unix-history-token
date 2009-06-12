@@ -388,7 +388,7 @@ struct|struct
 name|ums_softc
 block|{
 name|struct
-name|usb2_fifo_sc
+name|usb_fifo_sc
 name|sc_fifo
 decl_stmt|;
 name|struct
@@ -396,7 +396,7 @@ name|mtx
 name|sc_mtx
 decl_stmt|;
 name|struct
-name|usb2_callout
+name|usb_callout
 name|sc_callout
 decl_stmt|;
 name|struct
@@ -416,7 +416,7 @@ name|mousestatus_t
 name|sc_status
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|sc_xfer
 index|[
@@ -453,7 +453,7 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|ums_intr_callback
 decl_stmt|;
 end_decl_stmt
@@ -481,35 +481,35 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_cmd_t
+name|usb_fifo_cmd_t
 name|ums_start_read
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_cmd_t
+name|usb_fifo_cmd_t
 name|ums_stop_read
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_open_t
+name|usb_fifo_open_t
 name|ums_open
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_close_t
+name|usb_fifo_close_t
 name|ums_close
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_ioctl_t
+name|usb_fifo_ioctl_t
 name|ums_ioctl
 decl_stmt|;
 end_decl_stmt
@@ -545,7 +545,7 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|struct
-name|usb2_fifo_methods
+name|usb_fifo_methods
 name|ums_fifo_methods
 init|=
 block|{
@@ -641,7 +641,7 @@ name|void
 name|ums_intr_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -1480,7 +1480,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 name|ums_config
 index|[
 name|UMS_N_TRANSFER
@@ -1548,7 +1548,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -1558,7 +1558,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 modifier|*
 name|id
 decl_stmt|;
@@ -2306,7 +2306,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -3235,7 +3235,7 @@ name|void
 name|ums_start_read
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|)
@@ -3268,7 +3268,7 @@ name|void
 name|ums_stop_read
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|)
@@ -3647,7 +3647,7 @@ name|int
 name|ums_open
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|,
@@ -3761,7 +3761,7 @@ name|void
 name|ums_close
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|,
@@ -3791,7 +3791,7 @@ name|int
 name|ums_ioctl
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|,

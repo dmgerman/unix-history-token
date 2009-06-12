@@ -93,22 +93,11 @@ directive|include
 file|<sys/resourcevar.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MAC
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<sys/mac.h>
+file|<security/mac/mac_framework.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#

@@ -1320,12 +1320,6 @@ operator|(
 name|cred
 operator|->
 name|cr_prison
-operator|!=
-name|NULL
-operator|&&
-name|cred
-operator|->
-name|cr_prison
 operator|->
 name|pr_id
 operator|==

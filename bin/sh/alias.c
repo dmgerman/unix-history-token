@@ -284,7 +284,7 @@ else|#
 directive|else
 comment|/* hack */
 block|{
-name|int
+name|size_t
 name|len
 init|=
 name|strlen

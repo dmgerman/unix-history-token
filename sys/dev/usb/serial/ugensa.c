@@ -153,12 +153,12 @@ struct|struct
 name|ugensa_sub_softc
 block|{
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|sc_usb2_com_ptr
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|sc_xfer
 index|[
@@ -174,11 +174,11 @@ struct|struct
 name|ugensa_softc
 block|{
 name|struct
-name|usb2_com_super_softc
+name|ucom_super_softc
 name|sc_super_ucom
 decl_stmt|;
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 name|sc_ucom
 index|[
 name|UGENSA_IFACE_MAX
@@ -229,14 +229,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|ugensa_bulk_write_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|ugensa_bulk_read_callback
 decl_stmt|;
 end_decl_stmt
@@ -247,7 +247,7 @@ name|void
 name|ugensa_start_read
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -259,7 +259,7 @@ name|void
 name|ugensa_stop_read
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -271,7 +271,7 @@ name|void
 name|ugensa_start_write
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -283,7 +283,7 @@ name|void
 name|ugensa_stop_write
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -293,7 +293,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 name|ugensa_xfer_config
 index|[
 name|UGENSA_N_TRANSFER
@@ -401,7 +401,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_com_callback
+name|ucom_callback
 name|ugensa_callback
 init|=
 block|{
@@ -559,7 +559,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_device_id
+name|usb_device_id
 name|ugensa_devs
 index|[]
 init|=
@@ -632,7 +632,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -718,7 +718,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -743,7 +743,7 @@ modifier|*
 name|ssc
 decl_stmt|;
 name|struct
-name|usb2_interface
+name|usb_interface
 modifier|*
 name|iface
 decl_stmt|;
@@ -795,7 +795,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|usb2_get_pipe
+name|usb2_get_endpoint
 argument_list|(
 name|uaa
 operator|->
@@ -812,7 +812,7 @@ name|NULL
 operator|)
 operator|||
 operator|(
-name|usb2_get_pipe
+name|usb2_get_endpoint
 argument_list|(
 name|uaa
 operator|->
@@ -1207,7 +1207,7 @@ name|void
 name|ugensa_bulk_write_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -1312,7 +1312,7 @@ name|void
 name|ugensa_bulk_read_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -1411,7 +1411,7 @@ name|void
 name|ugensa_start_read
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|)
@@ -1457,7 +1457,7 @@ name|void
 name|ugensa_stop_read
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|)
@@ -1503,7 +1503,7 @@ name|void
 name|ugensa_start_write
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|)
@@ -1549,7 +1549,7 @@ name|void
 name|ugensa_stop_write
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|)

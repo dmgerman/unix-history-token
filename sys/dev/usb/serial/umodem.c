@@ -193,7 +193,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_device_id
+name|usb_device_id
 name|umodem_devs
 index|[]
 init|=
@@ -294,15 +294,15 @@ struct|struct
 name|umodem_softc
 block|{
 name|struct
-name|usb2_com_super_softc
+name|ucom_super_softc
 name|sc_super_ucom
 decl_stmt|;
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 name|sc_ucom
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|sc_xfer
 index|[
@@ -310,7 +310,7 @@ name|UMODEM_N_TRANSFER
 index|]
 decl_stmt|;
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|sc_udev
 decl_stmt|;
@@ -379,21 +379,21 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|umodem_intr_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|umodem_write_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|umodem_read_callback
 decl_stmt|;
 end_decl_stmt
@@ -404,7 +404,7 @@ name|void
 name|umodem_start_read
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -416,7 +416,7 @@ name|void
 name|umodem_stop_read
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -428,7 +428,7 @@ name|void
 name|umodem_start_write
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -440,7 +440,7 @@ name|void
 name|umodem_stop_write
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -452,7 +452,7 @@ name|void
 name|umodem_get_caps
 parameter_list|(
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -470,7 +470,7 @@ name|void
 name|umodem_cfg_get_status
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -488,7 +488,7 @@ name|int
 name|umodem_pre_param
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|struct
@@ -504,7 +504,7 @@ name|void
 name|umodem_cfg_param
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|struct
@@ -520,7 +520,7 @@ name|int
 name|umodem_ioctl
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|uint32_t
@@ -542,7 +542,7 @@ name|void
 name|umodem_cfg_set_dtr
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -556,7 +556,7 @@ name|void
 name|umodem_cfg_set_rts
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -570,7 +570,7 @@ name|void
 name|umodem_cfg_set_break
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -585,7 +585,7 @@ modifier|*
 name|umodem_get_desc
 parameter_list|(
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -597,11 +597,11 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|umodem_set_comm_feature
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -617,7 +617,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 name|umodem_config
 index|[
 name|UMODEM_N_TRANSFER
@@ -793,7 +793,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_com_callback
+name|ucom_callback
 name|umodem_callback
 init|=
 block|{
@@ -1008,7 +1008,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -1074,7 +1074,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -1094,12 +1094,12 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_cdc_cm_descriptor
+name|usb_cdc_cm_descriptor
 modifier|*
 name|cmd
 decl_stmt|;
 name|struct
-name|usb2_cdc_union_descriptor
+name|usb_cdc_union_descriptor
 modifier|*
 name|cud
 decl_stmt|;
@@ -1336,12 +1336,12 @@ operator|++
 control|)
 block|{
 name|struct
-name|usb2_interface
+name|usb_interface
 modifier|*
 name|iface
 decl_stmt|;
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 modifier|*
 name|id
 decl_stmt|;
@@ -1604,7 +1604,7 @@ name|void
 name|umodem_start_read
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|)
@@ -1649,7 +1649,7 @@ name|void
 name|umodem_stop_read
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|)
@@ -1694,7 +1694,7 @@ name|void
 name|umodem_start_write
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|)
@@ -1727,7 +1727,7 @@ name|void
 name|umodem_stop_write
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|)
@@ -1760,7 +1760,7 @@ name|void
 name|umodem_get_caps
 parameter_list|(
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 parameter_list|,
@@ -1774,12 +1774,12 @@ name|acm
 parameter_list|)
 block|{
 name|struct
-name|usb2_cdc_cm_descriptor
+name|usb_cdc_cm_descriptor
 modifier|*
 name|cmd
 decl_stmt|;
 name|struct
-name|usb2_cdc_acm_descriptor
+name|usb_cdc_acm_descriptor
 modifier|*
 name|cad
 decl_stmt|;
@@ -1896,7 +1896,7 @@ name|void
 name|umodem_cfg_get_status
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|,
@@ -1946,7 +1946,7 @@ name|int
 name|umodem_pre_param
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|,
@@ -1971,7 +1971,7 @@ name|void
 name|umodem_cfg_param
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|,
@@ -1991,11 +1991,11 @@ operator|->
 name|sc_parent
 decl_stmt|;
 name|struct
-name|usb2_cdc_line_state
+name|usb_cdc_line_state
 name|ls
 decl_stmt|;
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|DPRINTF
@@ -2229,7 +2229,7 @@ name|int
 name|umodem_ioctl
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|,
@@ -2335,7 +2335,7 @@ name|void
 name|umodem_cfg_set_dtr
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|,
@@ -2353,7 +2353,7 @@ operator|->
 name|sc_parent
 decl_stmt|;
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|DPRINTF
@@ -2463,7 +2463,7 @@ name|void
 name|umodem_cfg_set_rts
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|,
@@ -2481,7 +2481,7 @@ operator|->
 name|sc_parent
 decl_stmt|;
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|DPRINTF
@@ -2591,7 +2591,7 @@ name|void
 name|umodem_cfg_set_break
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|ucom
 parameter_list|,
@@ -2609,7 +2609,7 @@ operator|->
 name|sc_parent
 decl_stmt|;
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|uint16_t
@@ -2720,13 +2720,13 @@ name|void
 name|umodem_intr_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
 block|{
 name|struct
-name|usb2_cdc_notification
+name|usb_cdc_notification
 name|pkt
 decl_stmt|;
 name|struct
@@ -3071,7 +3071,7 @@ name|void
 name|umodem_write_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -3177,7 +3177,7 @@ name|void
 name|umodem_read_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -3287,7 +3287,7 @@ modifier|*
 name|umodem_get_desc
 parameter_list|(
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 parameter_list|,
@@ -3333,11 +3333,11 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|umodem_set_comm_feature
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
@@ -3352,11 +3352,11 @@ name|state
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|struct
-name|usb2_cdc_abstract_state
+name|usb_cdc_abstract_state
 name|ast
 decl_stmt|;
 name|DPRINTF

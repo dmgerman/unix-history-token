@@ -1942,6 +1942,17 @@ begin_comment
 comment|/* int; prefer temporary addresses as 				    * the source address. 				    */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IPV6_BINDANY
+value|64
+end_define
+
+begin_comment
+comment|/* bool: allow bind to any address */
+end_comment
+
 begin_comment
 comment|/*  * The following option is private; do not use it from user applications.  * It is deliberately defined to the same value as IP_MSFILTER.  */
 end_comment
@@ -2682,6 +2693,13 @@ define|#
 directive|define
 name|M_AUTHIPDGM
 value|M_PROTO5
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_RTALERT_MLD
+value|M_PROTO6
 end_define
 
 begin_ifdef

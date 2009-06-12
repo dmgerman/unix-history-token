@@ -10689,7 +10689,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check the vdev configuration to ensure that it's capable of supporting  * a root pool. Currently, we do not support RAID-Z or partial configuration.  * In addition, only a single top-level vdev is allowed and none of the leaves  * can be wholedisks.  */
+comment|/*  * Check the vdev configuration to ensure that it's capable of supporting  * a root pool.  *  * On Solaris, we do not support RAID-Z or partial configuration.  In  * addition, only a single top-level vdev is allowed and none of the  * leaves can be wholedisks.  *  * For FreeBSD, we can boot from any configuration. There is a  * limitation that the boot filesystem must be either uncompressed or  * compresses with lzjb compression but I'm not sure how to enforce  * that here.  */
 end_comment
 
 begin_function
@@ -10701,6 +10701,16 @@ modifier|*
 name|vd
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|__FreeBSD_version
+return|return
+operator|(
+name|B_TRUE
+operator|)
+return|;
+else|#
+directive|else
 name|int
 name|c
 decl_stmt|;
@@ -10833,6 +10843,8 @@ operator|(
 name|B_TRUE
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 

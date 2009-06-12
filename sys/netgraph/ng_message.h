@@ -78,56 +78,6 @@ begin_comment
 comment|/* max command string (including null) */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
-end_ifndef
-
-begin_comment
-comment|/* don't use these - they will go away */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NG_TYPELEN
-value|(NG_TYPESIZ - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NG_HOOKLEN
-value|(NG_HOOKSIZ - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NG_NODELEN
-value|(NG_NODESIZ - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NG_PATHLEN
-value|(NG_PATHSIZ - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NG_CMDSTRLEN
-value|(NG_CMDSTRSIZ - 1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define

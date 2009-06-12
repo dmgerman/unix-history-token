@@ -1531,16 +1531,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INP_NONLOCALOK
+name|INP_BINDANY
 value|0x00001000
 end_define
 
 begin_comment
-comment|/* Allow bind to spoof any address */
-end_comment
-
-begin_comment
-comment|/* - requires options IP_NONLOCALBIND */
+comment|/* allow bind to any address */
 end_comment
 
 begin_define

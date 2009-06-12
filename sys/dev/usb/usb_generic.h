@@ -22,7 +22,7 @@ end_define
 begin_decl_stmt
 specifier|extern
 name|struct
-name|usb2_fifo_methods
+name|usb_fifo_methods
 name|usb2_ugen_methods
 decl_stmt|;
 end_decl_stmt
@@ -32,12 +32,12 @@ name|int
 name|ugen_do_request
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 parameter_list|,
 name|struct
-name|usb2_ctl_request
+name|usb_ctl_request
 modifier|*
 name|ur
 parameter_list|)

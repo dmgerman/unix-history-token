@@ -56,14 +56,6 @@ name|struct
 name|radix_node_head
 modifier|*
 name|_rt_tables
-index|[
-name|RT_MAXFIBS
-index|]
-index|[
-name|AF_MAX
-operator|+
-literal|1
-index|]
 decl_stmt|;
 name|int
 name|_rttrash
@@ -80,6 +72,11 @@ name|struct
 name|if_clone
 modifier|*
 name|_lo_cloner
+decl_stmt|;
+name|struct
+name|ifc_simple_data
+modifier|*
+name|_lo_cloner_data
 decl_stmt|;
 name|LIST_HEAD
 argument_list|(
@@ -246,6 +243,13 @@ define|#
 directive|define
 name|V_lo_cloner
 value|VNET_NET(lo_cloner)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_lo_cloner_data
+value|VNET_NET(lo_cloner_data)
 end_define
 
 begin_define

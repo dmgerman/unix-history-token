@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_quota.h"
 end_include
 
@@ -153,12 +147,6 @@ begin_include
 include|#
 directive|include
 file|<sys/acl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/jail.h>
 end_include
 
 begin_include

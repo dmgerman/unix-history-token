@@ -1702,7 +1702,7 @@ parameter_list|(
 name|vp
 parameter_list|)
 define|\
-value|((vp)->v_vnlock->lock_object.lo_flags |= LK_CANRECURSE)
+value|((vp)->v_vnlock->lock_object.lo_flags |= LO_RECURSABLE)
 end_define
 
 begin_define
@@ -2675,6 +2675,27 @@ name|int
 name|speedup_syncer
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vn_vptocnp
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|vp
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|u_int
+modifier|*
+name|buflen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3728,6 +3749,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|vop_stdaccessx
+parameter_list|(
+name|struct
+name|vop_accessx_args
+modifier|*
+name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vop_stdadvlock
 parameter_list|(
 name|struct
@@ -4481,6 +4514,17 @@ name|dp
 parameter_list|,
 name|off_t
 name|off
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vfs_unixify_accmode
+parameter_list|(
+name|accmode_t
+modifier|*
+name|accmode
 parameter_list|)
 function_decl|;
 end_function_decl

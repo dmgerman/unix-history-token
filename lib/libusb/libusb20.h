@@ -261,7 +261,7 @@ name|LIBUSB20_POWER_RESUME
 block|, }
 enum|;
 struct_decl|struct
-name|usb2_device_info
+name|usb_device_info
 struct_decl|;
 struct_decl|struct
 name|libusb20_transfer
@@ -516,6 +516,18 @@ name|xfer
 parameter_list|,
 name|uint8_t
 name|flags
+parameter_list|)
+function_decl|;
+name|uint32_t
+name|libusb20_tr_get_length
+parameter_list|(
+name|struct
+name|libusb20_transfer
+modifier|*
+name|xfer
+parameter_list|,
+name|uint16_t
+name|fr_index
 parameter_list|)
 function_decl|;
 name|void
@@ -961,7 +973,7 @@ modifier|*
 name|pdev
 parameter_list|,
 name|struct
-name|usb2_device_info
+name|usb_device_info
 modifier|*
 name|pinfo
 parameter_list|)

@@ -834,8 +834,8 @@ name|err
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__GNUC__
 comment|/* Avoid longjmp clobbering */
 operator|(

@@ -30,6 +30,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_function_decl
+name|void
+name|syncache_destroy
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|void
 name|syncache_unreach
@@ -326,17 +346,12 @@ decl_stmt|;
 comment|/* TOE protocol block */
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|MAC
 name|struct
 name|label
 modifier|*
 name|sc_label
 decl_stmt|;
 comment|/* MAC label reference */
-endif|#
-directive|endif
 name|struct
 name|ucred
 modifier|*

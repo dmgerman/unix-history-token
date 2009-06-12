@@ -50,7 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acfreebsd.h"
+file|"platform/acfreebsd.h"
 end_include
 
 begin_include

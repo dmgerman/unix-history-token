@@ -106,6 +106,10 @@ modifier|*
 name|cr_vimage
 decl_stmt|;
 comment|/* vimage */
+name|u_int
+name|cr_flags
+decl_stmt|;
+comment|/* credential flags */
 name|void
 modifier|*
 name|cr_pspare

@@ -3821,6 +3821,14 @@ name|cred
 operator|->
 name|cr_svgid
 expr_stmt|;
+name|kp
+operator|->
+name|ki_cr_flags
+operator|=
+name|cred
+operator|->
+name|cr_flags
+expr_stmt|;
 comment|/* If jailed(cred), emulate the old P_JAILED flag. */
 if|if
 condition|(
@@ -3836,16 +3844,18 @@ name|ki_flag
 operator||=
 name|P_JAILED
 expr_stmt|;
-comment|/* If inside a jail, use 0 as a jail ID. */
+comment|/* If inside the jail, use 0 as a jail ID. */
 if|if
 condition|(
-operator|!
-name|jailed
-argument_list|(
+name|cred
+operator|->
+name|cr_prison
+operator|!=
 name|curthread
 operator|->
 name|td_ucred
-argument_list|)
+operator|->
+name|cr_prison
 condition|)
 name|kp
 operator|->

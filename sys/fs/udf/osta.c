@@ -1204,7 +1204,7 @@ comment|/*-  *******************************************************************
 end_comment
 
 begin_comment
-comment|/***********************************************************************  * To use these routines with different operating systems.  *  * OS/2  * Define OS2  * Define MAXLEN = 254  *  * Windows 95  * Define WIN_95  * Define MAXLEN = 255  *  * Windows NT  * Define WIN_NT  * Define MAXLEN = 255  *  * Macintosh:  * Define MAC.  * Define MAXLEN = 31.  *  * UNIX  * Define UNIX.  * Define MAXLEN as specified by unix version.  */
+comment|/***********************************************************************  * To use these routines with different operating systems.  *  * OS/2  * Define OS2  * Define MAXLEN = 254  *  * Windows 95  * Define WIN_95  * Define MAXLEN = 255  *  * Windows NT  * Define WIN_NT  * Define MAXLEN = 255  *  * Macintosh:  * Define APPLE_MAC.  * Define MAXLEN = 31.  *  * UNIX  * Define UNIX.  * Define MAXLEN as specified by unix version.  */
 end_comment
 
 begin_define
@@ -2003,7 +2003,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|MAC
+name|APPLE_MAC
 comment|/* Only illegal character on the MAC is the colon. */
 if|if
 condition|(

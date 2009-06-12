@@ -540,6 +540,10 @@ name|mnt_flag
 decl_stmt|;
 comment|/* (i) flags shared with user */
 name|u_int
+name|mnt_xflag
+decl_stmt|;
+comment|/* (i) more flags shared with user */
+name|u_int
 name|mnt_noasync
 decl_stmt|;
 comment|/* (i) # noasync overrides */
@@ -804,7 +808,7 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * User specifiable flags.  */
+comment|/*  * User specifiable flags, stored in mnt_flag.  */
 end_comment
 
 begin_define
@@ -1295,6 +1299,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MNTK_SHARED_WRITES
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* Allow shared locking for writes */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MNTK_UNMOUNT
 value|0x01000000
 end_define
@@ -1379,6 +1394,16 @@ end_define
 begin_comment
 comment|/* Don't send KNOTEs from VOP hooks */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MNT_SHARED_WRITES
+parameter_list|(
+name|mp
+parameter_list|)
+value|(((mp) != NULL)&& 	\ 				((mp)->mnt_kern_flag& MNTK_SHARED_WRITES))
+end_define
 
 begin_comment
 comment|/*  * Sysctl CTL_VFS definitions.  *  * Second level identifier specifies which filesystem. Second level  * identifier VFS_VFSCONF returns information about all filesystems.  * Second level identifier VFS_GENERIC is non-terminal.  */
@@ -2889,13 +2914,6 @@ define|\
 value|({if (*(MP)->mnt_op->vfs_susp_clean != NULL)		\ 	       (*(MP)->mnt_op->vfs_susp_clean)(MP); })
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|mpsafe_vfs
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -2904,7 +2922,7 @@ parameter_list|(
 name|MP
 parameter_list|)
 define|\
-value|(!mpsafe_vfs || ((MP) != NULL&& ((MP)->mnt_kern_flag& MNTK_MPSAFE) == 0))
+value|((MP) != NULL&& ((MP)->mnt_kern_flag& MNTK_MPSAFE) == 0)
 end_define
 
 begin_define

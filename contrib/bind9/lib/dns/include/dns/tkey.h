@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: tkey.h,v 1.19.18.2 2005/04/29 00:16:23 marka Exp $ */
+comment|/* $Id: tkey.h,v 1.26.332.2 2009/01/18 23:47:41 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -21,7 +21,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*! \file */
+comment|/*! \file dns/tkey.h */
 end_comment
 
 begin_include
@@ -40,6 +40,12 @@ begin_include
 include|#
 directive|include
 file|<dst/dst.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dst/gssapi.h>
 end_include
 
 begin_macro
@@ -97,8 +103,7 @@ name|dns_name_t
 modifier|*
 name|domain
 decl_stmt|;
-name|void
-modifier|*
+name|gss_cred_id_t
 name|gsscred
 decl_stmt|;
 name|isc_mem_t
@@ -226,23 +231,25 @@ name|dns_name_t
 modifier|*
 name|gname
 parameter_list|,
-name|void
+name|isc_buffer_t
 modifier|*
-name|cred
+name|intoken
 parameter_list|,
 name|isc_uint32_t
 name|lifetime
 parameter_list|,
-name|void
-modifier|*
+name|gss_ctx_id_t
 modifier|*
 name|context
+parameter_list|,
+name|isc_boolean_t
+name|win2k
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * XXX  */
+comment|/*%<  *	Builds a query containing a TKEY that will generate a GSSAPI context.  *	The key is requested to have the specified lifetime (in seconds).  *  *	Requires:  *\li		'msg'	  is a valid message  *\li		'name'	  is a valid name  *\li		'gname'	  is a valid name  *\li		'context' is a pointer to a valid gss_ctx_id_t  *			  (which may have the value GSS_C_NO_CONTEXT)  *\li		'win2k'   when true says to turn on some hacks to work  *			  with the non-standard GSS-TSIG of Windows 2000  *  *	Returns:  *\li		ISC_R_SUCCESS	msg was successfully updated to include the  *				query to be sent  *\li		other		an error occurred while building the message  */
 end_comment
 
 begin_function_decl
@@ -316,14 +323,13 @@ name|dns_name_t
 modifier|*
 name|gname
 parameter_list|,
-name|void
-modifier|*
-name|cred
-parameter_list|,
-name|void
-modifier|*
+name|gss_ctx_id_t
 modifier|*
 name|context
+parameter_list|,
+name|isc_buffer_t
+modifier|*
+name|outtoken
 parameter_list|,
 name|dns_tsigkey_t
 modifier|*
@@ -362,6 +368,45 @@ end_function_decl
 
 begin_comment
 comment|/*%<  *	Processes a response to a query containing a TKEY that was  *	designed to delete a shared secret.  If the query was successful,  *	the shared key is deleted from the list of shared keys.  *  *	Requires:  *\li		'qmsg' is a valid message (the query)  *\li		'rmsg' is a valid message (the response)  *\li		'ring' is not NULL  *  *	Returns:  *\li		#ISC_R_SUCCESS	the shared key was successfully deleted  *\li		#ISC_R_NOTFOUND	an error occurred while looking for a  *				component of the query or response  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_tkey_gssnegotiate
+parameter_list|(
+name|dns_message_t
+modifier|*
+name|qmsg
+parameter_list|,
+name|dns_message_t
+modifier|*
+name|rmsg
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|server
+parameter_list|,
+name|gss_ctx_id_t
+modifier|*
+name|context
+parameter_list|,
+name|dns_tsigkey_t
+modifier|*
+modifier|*
+name|outkey
+parameter_list|,
+name|dns_tsig_keyring_t
+modifier|*
+name|ring
+parameter_list|,
+name|isc_boolean_t
+name|win2k
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  *	Client side negotiation of GSS-TSIG.  Process the response  *	to a TKEY, and establish a TSIG key if negotiation was successful.  *	Build a response to the input TKEY message.  Can take multiple  *	calls to successfully establish the context.  *  *	Requires:  *		'qmsg'    is a valid message, the original TKEY request;  *			     it will be filled with the new message to send  *		'rmsg'    is a valid message, the incoming TKEY message  *		'server'  is the server name  *		'context' is the input context handle  *		'outkey'  receives the established key, if non-NULL;  *			      if non-NULL must point to NULL  *		'ring'	  is the keyring in which to establish the key,  *			      or NULL  *		'win2k'   when true says to turn on some hacks to work  *			      with the non-standard GSS-TSIG of Windows 2000  *  *	Returns:  *		ISC_R_SUCCESS	context was successfully established  *		ISC_R_NOTFOUND  couldn't find a needed part of the query  *					or response  *		DNS_R_CONTINUE  additional context negotiation is required;  *					send the new qmsg to the server  */
 end_comment
 
 begin_macro

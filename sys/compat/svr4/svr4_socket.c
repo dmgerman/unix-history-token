@@ -458,9 +458,10 @@ name|svr4_sockcache_entry
 modifier|*
 name|e
 decl_stmt|;
-name|int
+name|size_t
 name|len
-decl_stmt|,
+decl_stmt|;
+name|int
 name|error
 decl_stmt|;
 name|e

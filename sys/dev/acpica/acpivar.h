@@ -2311,6 +2311,28 @@ value|10
 end_define
 
 begin_comment
+comment|/* Default maximum number of tasks to enqueue. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_MAX_TASKS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_MAX_TASKS
+value|32
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Default number of task queue threads to start. */
 end_comment
 

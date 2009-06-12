@@ -20220,7 +20220,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|fbsd_poll
 parameter_list|(
 name|struct
@@ -20290,7 +20290,9 @@ argument_list|,
 name|TLP_INT_TXRX
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 endif|#
 directive|endif
@@ -20311,6 +20313,9 @@ name|POLL_AND_CHECK_STATUS
 operator|)
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -24389,6 +24394,12 @@ operator|->
 name|if_capabilities
 operator||=
 name|IFCAP_POLLING
+expr_stmt|;
+name|ifp
+operator|->
+name|if_capenable
+operator||=
+name|IFCAP_POLLING_NOCOUNT
 expr_stmt|;
 if|#
 directive|if

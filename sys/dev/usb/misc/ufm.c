@@ -134,7 +134,7 @@ struct|struct
 name|ufm_softc
 block|{
 name|struct
-name|usb2_fifo_sc
+name|usb_fifo_sc
 name|sc_fifo
 decl_stmt|;
 name|struct
@@ -142,7 +142,7 @@ name|mtx
 name|sc_mtx
 decl_stmt|;
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|sc_udev
 decl_stmt|;
@@ -189,14 +189,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_ioctl_t
+name|usb_fifo_ioctl_t
 name|ufm_ioctl
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_open_t
+name|usb_fifo_open_t
 name|ufm_open
 decl_stmt|;
 end_decl_stmt
@@ -204,7 +204,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|usb2_fifo_methods
+name|usb_fifo_methods
 name|ufm_fifo_methods
 init|=
 block|{
@@ -443,7 +443,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -514,7 +514,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -719,7 +719,7 @@ name|int
 name|ufm_open
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|dev
 parameter_list|,
@@ -788,7 +788,7 @@ name|int
 name|error
 decl_stmt|;
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|uint8_t
@@ -1285,7 +1285,7 @@ name|int
 name|ufm_ioctl
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|,

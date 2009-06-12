@@ -210,21 +210,21 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|usb2_bus_methods
+name|usb_bus_methods
 name|atmegadci_bus_methods
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 name|atmegadci_device_non_isoc_methods
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 name|atmegadci_device_isoc_fs_methods
 decl_stmt|;
 end_decl_stmt
@@ -263,10 +263,10 @@ name|void
 name|atmegadci_device_done
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 parameter_list|,
-name|usb2_error_t
+name|usb_error_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -277,7 +277,7 @@ name|void
 name|atmegadci_do_poll
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 parameter_list|)
 function_decl|;
@@ -289,7 +289,7 @@ name|void
 name|atmegadci_standard_done
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 parameter_list|)
 function_decl|;
@@ -316,7 +316,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_hw_ep_profile
+name|usb_hw_ep_profile
 name|atmegadci_ep_profile
 index|[
 literal|2
@@ -404,13 +404,13 @@ name|void
 name|atmegadci_get_hw_ep_profile
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
 specifier|const
 name|struct
-name|usb2_hw_ep_profile
+name|usb_hw_ep_profile
 modifier|*
 modifier|*
 name|ppf
@@ -807,7 +807,7 @@ modifier|*
 name|sc
 decl_stmt|;
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|uint16_t
@@ -1170,7 +1170,7 @@ modifier|*
 name|sc
 decl_stmt|;
 name|struct
-name|usb2_page_search
+name|usb_page_search
 name|buf_res
 decl_stmt|;
 name|uint16_t
@@ -1589,7 +1589,7 @@ modifier|*
 name|sc
 decl_stmt|;
 name|struct
-name|usb2_page_search
+name|usb_page_search
 name|buf_res
 decl_stmt|;
 name|uint16_t
@@ -2044,7 +2044,7 @@ name|uint8_t
 name|atmegadci_xfer_do_fifo
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2190,7 +2190,7 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
@@ -2799,7 +2799,7 @@ name|void
 name|atmegadci_setup_standard_chain
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2841,7 +2841,7 @@ name|UE_GET_ADDR
 argument_list|(
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 argument_list|)
 argument_list|,
 name|xfer
@@ -2948,7 +2948,7 @@ operator|=
 operator|(
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 operator|&
 name|UE_ADDR
 operator|)
@@ -3070,7 +3070,7 @@ if|if
 condition|(
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 operator|&
 name|UE_DIR_IN
 condition|)
@@ -3340,7 +3340,7 @@ if|if
 condition|(
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 operator|&
 name|UE_DIR_IN
 condition|)
@@ -3426,7 +3426,7 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 init|=
@@ -3467,7 +3467,7 @@ name|void
 name|atmegadci_start_standard_chain
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -3593,11 +3593,11 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|atmegadci_standard_done_sub
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -3798,12 +3798,12 @@ name|void
 name|atmegadci_standard_done
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
 block|{
-name|usb2_error_t
+name|usb_error_t
 name|err
 init|=
 literal|0
@@ -3812,13 +3812,13 @@ name|DPRINTFN
 argument_list|(
 literal|13
 argument_list|,
-literal|"xfer=%p pipe=%p transfer done\n"
+literal|"xfer=%p endpoint=%p transfer done\n"
 argument_list|,
 name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 argument_list|)
 expr_stmt|;
 comment|/* reset scanner */
@@ -3959,11 +3959,11 @@ name|void
 name|atmegadci_device_done
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
-name|usb2_error_t
+name|usb_error_t
 name|error
 parameter_list|)
 block|{
@@ -3998,13 +3998,13 @@ name|DPRINTFN
 argument_list|(
 literal|9
 argument_list|,
-literal|"xfer=%p, pipe=%p, error=%d\n"
+literal|"xfer=%p, endpoint=%p, error=%d\n"
 argument_list|,
 name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 argument_list|,
 name|error
 argument_list|)
@@ -4025,7 +4025,7 @@ operator|=
 operator|(
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 operator|&
 name|UE_ADDR
 operator|)
@@ -4075,19 +4075,19 @@ name|void
 name|atmegadci_set_stall
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
 name|struct
-name|usb2_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 block|{
 name|struct
@@ -4111,9 +4111,9 @@ name|DPRINTFN
 argument_list|(
 literal|5
 argument_list|,
-literal|"pipe=%p\n"
+literal|"endpoint=%p\n"
 argument_list|,
-name|pipe
+name|ep
 argument_list|)
 expr_stmt|;
 if|if
@@ -4143,7 +4143,7 @@ comment|/* get endpoint number */
 name|ep_no
 operator|=
 operator|(
-name|pipe
+name|ep
 operator|->
 name|edesc
 operator|->
@@ -4394,14 +4394,14 @@ name|void
 name|atmegadci_clear_stall
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
 name|struct
-name|usb2_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 block|{
 name|struct
@@ -4410,7 +4410,7 @@ modifier|*
 name|sc
 decl_stmt|;
 name|struct
-name|usb2_endpoint_descriptor
+name|usb_endpoint_descriptor
 modifier|*
 name|ed
 decl_stmt|;
@@ -4418,9 +4418,9 @@ name|DPRINTFN
 argument_list|(
 literal|5
 argument_list|,
-literal|"pipe=%p\n"
+literal|"endpoint=%p\n"
 argument_list|,
-name|pipe
+name|ep
 argument_list|)
 expr_stmt|;
 name|USB_BUS_LOCK_ASSERT
@@ -4460,7 +4460,7 @@ expr_stmt|;
 comment|/* get endpoint descriptor */
 name|ed
 operator|=
-name|pipe
+name|ep
 operator|->
 name|edesc
 expr_stmt|;
@@ -4502,7 +4502,7 @@ block|}
 end_function
 
 begin_function
-name|usb2_error_t
+name|usb_error_t
 name|atmegadci_init
 parameter_list|(
 name|struct
@@ -4992,7 +4992,7 @@ name|void
 name|atmegadci_do_poll
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 parameter_list|)
@@ -5041,7 +5041,7 @@ name|void
 name|atmegadci_device_non_isoc_open
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -5056,7 +5056,7 @@ name|void
 name|atmegadci_device_non_isoc_close
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -5077,7 +5077,7 @@ name|void
 name|atmegadci_device_non_isoc_enter
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -5092,7 +5092,7 @@ name|void
 name|atmegadci_device_non_isoc_start
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -5113,7 +5113,7 @@ end_function
 
 begin_decl_stmt
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 name|atmegadci_device_non_isoc_methods
 init|=
 block|{
@@ -5150,7 +5150,7 @@ name|void
 name|atmegadci_device_isoc_fs_open
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -5165,7 +5165,7 @@ name|void
 name|atmegadci_device_isoc_fs_close
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -5186,7 +5186,7 @@ name|void
 name|atmegadci_device_isoc_fs_enter
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -5221,7 +5221,7 @@ name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 argument_list|,
@@ -5265,7 +5265,7 @@ name|nframes
 operator|-
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 operator|)
@@ -5277,7 +5277,7 @@ condition|(
 operator|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|is_synced
 operator|==
@@ -5296,7 +5296,7 @@ block|{
 comment|/* 		 * If there is data underflow or the pipe queue is 		 * empty we schedule the transfer a few frames ahead 		 * of the current frame position. Else two isochronous 		 * transfers might overlap. 		 */
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 operator|=
@@ -5310,7 +5310,7 @@ name|ATMEGA_FRAME_MASK
 expr_stmt|;
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|is_synced
 operator|=
@@ -5324,7 +5324,7 @@ literal|"start next=%d\n"
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 argument_list|)
@@ -5336,7 +5336,7 @@ operator|=
 operator|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 operator|-
@@ -5369,7 +5369,7 @@ expr_stmt|;
 comment|/* compute frame number for next insertion */
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 operator|+=
@@ -5392,7 +5392,7 @@ name|void
 name|atmegadci_device_isoc_fs_start
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -5408,7 +5408,7 @@ end_function
 
 begin_decl_stmt
 name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 name|atmegadci_device_isoc_fs_methods
 init|=
 block|{
@@ -5443,7 +5443,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_device_descriptor
+name|usb_device_descriptor
 name|atmegadci_devd
 init|=
 block|{
@@ -5453,7 +5453,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_descriptor
+name|usb_device_descriptor
 argument_list|)
 block|,
 operator|.
@@ -5521,7 +5521,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_device_qualifier
+name|usb_device_qualifier
 name|atmegadci_odevd
 init|=
 block|{
@@ -5531,7 +5531,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_qualifier
+name|usb_device_qualifier
 argument_list|)
 block|,
 operator|.
@@ -5594,7 +5594,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 argument_list|)
 block|,
 operator|.
@@ -5649,7 +5649,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 argument_list|)
 block|,
 operator|.
@@ -5688,7 +5688,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_endpoint_descriptor
+name|usb_endpoint_descriptor
 argument_list|)
 block|,
 operator|.
@@ -5731,7 +5731,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_hub_descriptor_min
+name|usb_hub_descriptor_min
 name|atmegadci_hubd
 init|=
 block|{
@@ -5863,16 +5863,16 @@ end_expr_stmt
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|atmegadci_roothub_exec
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
 name|struct
-name|usb2_device_request
+name|usb_device_request
 modifier|*
 name|req
 parameter_list|,
@@ -5916,7 +5916,7 @@ decl_stmt|;
 name|uint8_t
 name|temp
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|USB_BUS_LOCK_ASSERT
@@ -7258,14 +7258,14 @@ name|void
 name|atmegadci_xfer_setup
 parameter_list|(
 name|struct
-name|usb2_setup_params
+name|usb_setup_params
 modifier|*
 name|parm
 parameter_list|)
 block|{
 specifier|const
 name|struct
-name|usb2_hw_ep_profile
+name|usb_hw_ep_profile
 modifier|*
 name|pf
 decl_stmt|;
@@ -7275,7 +7275,7 @@ modifier|*
 name|sc
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
@@ -7339,7 +7339,7 @@ condition|(
 operator|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|edesc
 operator|->
@@ -7397,7 +7397,7 @@ name|ep_no
 operator|=
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 operator|&
 name|UE_ADDR
 expr_stmt|;
@@ -7569,7 +7569,7 @@ name|void
 name|atmegadci_xfer_unsetup
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -7581,22 +7581,22 @@ end_function
 begin_function
 specifier|static
 name|void
-name|atmegadci_pipe_init
+name|atmegadci_ep_init
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
 name|struct
-name|usb2_endpoint_descriptor
+name|usb_endpoint_descriptor
 modifier|*
 name|edesc
 parameter_list|,
 name|struct
-name|usb2_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 block|{
 name|struct
@@ -7615,9 +7615,9 @@ name|DPRINTFN
 argument_list|(
 literal|2
 argument_list|,
-literal|"pipe=%p, addr=%d, endpt=%d, mode=%d (%d,%d)\n"
+literal|"endpoint=%p, addr=%d, endpt=%d, mode=%d (%d,%d)\n"
 argument_list|,
-name|pipe
+name|ep
 argument_list|,
 name|udev
 operator|->
@@ -7691,7 +7691,7 @@ operator|)
 operator|==
 name|UE_ISOCHRONOUS
 condition|)
-name|pipe
+name|ep
 operator|->
 name|methods
 operator|=
@@ -7699,7 +7699,7 @@ operator|&
 name|atmegadci_device_isoc_fs_methods
 expr_stmt|;
 else|else
-name|pipe
+name|ep
 operator|->
 name|methods
 operator|=
@@ -7712,15 +7712,15 @@ end_function
 
 begin_decl_stmt
 name|struct
-name|usb2_bus_methods
+name|usb_bus_methods
 name|atmegadci_bus_methods
 init|=
 block|{
 operator|.
-name|pipe_init
+name|endpoint_init
 operator|=
 operator|&
-name|atmegadci_pipe_init
+name|atmegadci_ep_init
 block|,
 operator|.
 name|xfer_setup

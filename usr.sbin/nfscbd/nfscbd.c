@@ -252,6 +252,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|nonfs
 parameter_list|(
@@ -261,6 +262,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|reapchild
 parameter_list|(
@@ -270,6 +272,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -279,6 +282,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|cleanup
 parameter_list|(
@@ -288,6 +292,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|child_cleanup
 parameter_list|(
@@ -297,6 +302,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|nfscbd_exit
 parameter_list|(
@@ -306,6 +312,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|killchildren
 parameter_list|(
@@ -329,18 +336,8 @@ name|char
 modifier|*
 name|argv
 index|[]
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|envp
 parameter_list|)
 block|{
-name|struct
-name|group
-modifier|*
-name|grp
-decl_stmt|;
 name|struct
 name|nfscbd_args
 name|nfscbdargs
@@ -350,24 +347,10 @@ name|nfsd_nfscbd_args
 name|nfscbdargs2
 decl_stmt|;
 name|struct
-name|passwd
-modifier|*
-name|pwd
-decl_stmt|;
-name|struct
-name|ucred
-modifier|*
-name|cr
-decl_stmt|;
-name|struct
 name|sockaddr_in
 name|inetaddr
 decl_stmt|,
 name|inetpeer
-decl_stmt|;
-name|struct
-name|timeval
-name|ktv
 decl_stmt|;
 name|fd_set
 name|ready
@@ -378,8 +361,6 @@ name|int
 name|ch
 decl_stmt|,
 name|connect_type_cnt
-decl_stmt|,
-name|i
 decl_stmt|,
 name|len
 decl_stmt|,
@@ -408,10 +389,6 @@ name|char
 modifier|*
 name|cp
 decl_stmt|,
-modifier|*
-modifier|*
-name|cpp
-decl_stmt|,
 name|princname
 index|[
 literal|128
@@ -437,9 +414,6 @@ name|hints
 decl_stmt|;
 name|pid_t
 name|pid
-decl_stmt|;
-name|sigset_t
-name|signew
 decl_stmt|;
 name|short
 name|myport
@@ -1655,6 +1629,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -1674,11 +1649,13 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|nonfs
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 name|syslog
@@ -1692,18 +1669,17 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|reapchild
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 name|pid_t
 name|pid
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 while|while
 condition|(
@@ -1739,15 +1715,13 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|killchildren
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
 if|if
 condition|(
 name|children
@@ -1769,11 +1743,13 @@ comment|/*  * Cleanup master after SIGUSR1.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|cleanup
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 name|nfscbd_exit
@@ -1789,11 +1765,13 @@ comment|/*  * Cleanup child after SIGUSR1.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|child_cleanup
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 name|exit
@@ -1805,11 +1783,13 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|nfscbd_exit
 parameter_list|(
 name|int
 name|status
+name|__unused
 parameter_list|)
 block|{
 name|killchildren

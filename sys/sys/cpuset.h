@@ -479,13 +479,13 @@ end_decl_stmt
 
 begin_struct_decl
 struct_decl|struct
-name|proc
+name|prison
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|thread
+name|proc
 struct_decl|;
 end_struct_decl
 
@@ -542,7 +542,7 @@ name|int
 name|cpuset_create_root
 parameter_list|(
 name|struct
-name|thread
+name|prison
 modifier|*
 parameter_list|,
 name|struct

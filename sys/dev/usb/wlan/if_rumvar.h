@@ -193,7 +193,7 @@ name|ieee80211_amrr
 name|amrr
 decl_stmt|;
 name|struct
-name|usb2_callout
+name|usb_callout
 name|amrr_ch
 decl_stmt|;
 name|struct
@@ -257,12 +257,12 @@ name|device_t
 name|sc_dev
 decl_stmt|;
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|sc_udev
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|sc_xfer
 index|[

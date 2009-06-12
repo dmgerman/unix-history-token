@@ -57,12 +57,6 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_bpf.h"
 end_include
 

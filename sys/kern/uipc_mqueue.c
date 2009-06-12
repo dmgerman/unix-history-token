@@ -5156,7 +5156,7 @@ literal|0
 end_if
 
 begin_endif
-unit|struct vop_open_args { 	struct vop_generic_args a_gen; 	struct vnode *a_vp; 	int a_mode; 	struct ucred *a_cred; 	struct thread *a_td; 	int a_fdidx; };
+unit|struct vop_open_args { 	struct vop_generic_args a_gen; 	struct vnode *a_vp; 	int a_mode; 	struct ucred *a_cred; 	struct thread *a_td; 	struct file *a_fp; };
 endif|#
 directive|endif
 end_endif
@@ -7163,7 +7163,7 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|mq
@@ -7176,15 +7176,9 @@ operator|&
 name|mq
 operator|->
 name|mq_mutex
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|mq
@@ -7197,12 +7191,6 @@ operator|&
 name|mq
 operator|->
 name|mq_mutex
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|atomic_add_int

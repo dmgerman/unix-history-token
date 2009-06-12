@@ -315,7 +315,7 @@ name|agp_nvidia_bind_page
 parameter_list|(
 name|device_t
 parameter_list|,
-name|int
+name|vm_offset_t
 parameter_list|,
 name|vm_offset_t
 parameter_list|)
@@ -329,7 +329,7 @@ name|agp_nvidia_unbind_page
 parameter_list|(
 name|device_t
 parameter_list|,
-name|int
+name|vm_offset_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1504,7 +1504,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|int
+name|vm_offset_t
 name|offset
 parameter_list|,
 name|vm_offset_t
@@ -1526,10 +1526,6 @@ name|index
 decl_stmt|;
 if|if
 condition|(
-name|offset
-operator|<
-literal|0
-operator|||
 name|offset
 operator|>=
 operator|(
@@ -1588,7 +1584,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|int
+name|vm_offset_t
 name|offset
 parameter_list|)
 block|{
@@ -1607,10 +1603,6 @@ name|index
 decl_stmt|;
 if|if
 condition|(
-name|offset
-operator|<
-literal|0
-operator|||
 name|offset
 operator|>=
 operator|(
@@ -1661,14 +1653,11 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|agp_nvidia_flush_tlb
 parameter_list|(
 name|device_t
 name|dev
-parameter_list|,
-name|int
-name|offset
 parameter_list|)
 block|{
 name|struct
@@ -1887,11 +1876,6 @@ name|u_int32_t
 argument_list|)
 index|]
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 

@@ -653,7 +653,7 @@ parameter_list|,
 name|op
 parameter_list|)
 define|\
-value|if ((xdrs)->x_ops->x_control)			\ 		(*(xdrs)->x_ops->x_control)(xdrs, req, op)
+value|(((xdrs)->x_ops->x_control == NULL) ? (FALSE) :	\ 		(*(xdrs)->x_ops->x_control)(xdrs, req, op))
 end_define
 
 begin_define
@@ -1556,6 +1556,53 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * These are XDR control operators  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XDR_GET_BYTES_AVAIL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|XDR_PEEK
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|XDR_SKIPBYTES
+value|3
+end_define
+
+begin_struct
+struct|struct
+name|xdr_bytesrec
+block|{
+name|bool_t
+name|xc_is_last_record
+decl_stmt|;
+name|size_t
+name|xc_num_avail
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xdr_bytesrec
+name|xdr_bytesrec
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * These are the public routines for the various implementations of  * xdr streams.  */

@@ -573,8 +573,14 @@ index|]
 expr_stmt|;
 name|err
 operator|=
-name|buf_ring_enqueue
+name|drbr_enqueue
 argument_list|(
+name|qs
+operator|->
+name|port
+operator|->
+name|ifp
+argument_list|,
 name|txq
 operator|->
 name|txq_mr

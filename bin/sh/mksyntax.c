@@ -1658,7 +1658,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|"#define is_digit(c)\t((unsigned)((c) - '0')<= 9)"
+literal|"#define is_digit(c)\t((unsigned int)((c) - '0')<= 9)"
 expr_stmt|;
 for|for
 control|(

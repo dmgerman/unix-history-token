@@ -106,7 +106,7 @@ begin_function
 name|pointer
 name|ckmalloc
 parameter_list|(
-name|int
+name|size_t
 name|nbytes
 parameter_list|)
 block|{

@@ -1281,6 +1281,18 @@ name|NO_QUIRKS
 block|}
 block|,
 block|{
+name|USB_VENDOR_AIPTEK2
+block|,
+name|USB_PRODUCT_AIPTEK2_SUNPLUS_TECH
+block|,
+name|RID_WILDCARD
+block|,
+name|UMASS_PROTO_DEFAULT
+block|,
+name|NO_SYNCHRONIZE_CACHE
+block|}
+block|,
+block|{
 name|USB_VENDOR_ALCOR
 block|,
 name|USB_PRODUCT_ALCOR_AU6390
@@ -3288,7 +3300,7 @@ name|device_t
 name|sc_dev
 decl_stmt|;
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|sc_udev
 decl_stmt|;
@@ -3299,7 +3311,7 @@ name|sc_sim
 decl_stmt|;
 comment|/* SCSI Interface Module */
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|sc_xfer
 index|[
@@ -3390,140 +3402,140 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|umass_tr_error
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|umass_t_bbb_reset1_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|umass_t_bbb_reset2_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|umass_t_bbb_reset3_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|umass_t_bbb_command_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|umass_t_bbb_data_read_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|umass_t_bbb_data_rd_cs_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|umass_t_bbb_data_write_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|umass_t_bbb_data_wr_cs_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|umass_t_bbb_status_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|umass_t_cbi_reset1_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|umass_t_cbi_reset2_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|umass_t_cbi_reset3_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|umass_t_cbi_reset4_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|umass_t_cbi_command_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|umass_t_cbi_data_read_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|umass_t_cbi_data_rd_cs_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|umass_t_cbi_data_write_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|umass_t_cbi_data_wr_cs_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|umass_t_cbi_status_callback
 decl_stmt|;
 end_decl_stmt
@@ -3570,7 +3582,7 @@ name|void
 name|umass_t_bbb_data_clear_stall_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -3638,7 +3650,7 @@ name|void
 name|umass_t_cbi_data_clear_stall_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -3985,7 +3997,7 @@ end_endif
 
 begin_decl_stmt
 name|struct
-name|usb2_config
+name|usb_config
 name|umass_bbb_config
 index|[
 name|UMASS_T_BBB_MAX
@@ -4019,7 +4031,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 block|,
 operator|.
@@ -4069,7 +4081,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 block|,
 operator|.
@@ -4119,7 +4131,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 block|,
 operator|.
@@ -4267,7 +4279,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 block|,
 operator|.
@@ -4367,7 +4379,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 block|,
 operator|.
@@ -4441,7 +4453,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|usb2_config
+name|usb_config
 name|umass_cbi_config
 index|[
 name|UMASS_T_CBI_MAX
@@ -4476,7 +4488,7 @@ operator|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 operator|+
 name|UMASS_CBI_DIAGNOSTIC_CMDLEN
@@ -4529,7 +4541,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 block|,
 operator|.
@@ -4579,7 +4591,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 block|,
 operator|.
@@ -4630,7 +4642,7 @@ operator|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 operator|+
 name|UMASS_MAX_CMDLEN
@@ -4733,7 +4745,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 block|,
 operator|.
@@ -4833,7 +4845,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 block|,
 operator|.
@@ -4929,7 +4941,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 block|,
 operator|.
@@ -5139,13 +5151,13 @@ name|uint16_t
 name|umass_get_proto
 parameter_list|(
 name|struct
-name|usb2_interface
+name|usb_interface
 modifier|*
 name|iface
 parameter_list|)
 block|{
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 modifier|*
 name|id
 decl_stmt|;
@@ -5303,7 +5315,7 @@ name|device_t
 name|dev
 parameter_list|,
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 parameter_list|)
@@ -5625,7 +5637,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -5708,7 +5720,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -5729,7 +5741,7 @@ name|uaa
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 modifier|*
 name|id
 decl_stmt|;
@@ -6469,10 +6481,10 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|uint8_t
@@ -6784,7 +6796,7 @@ name|void
 name|umass_tr_error
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -6843,7 +6855,7 @@ name|void
 name|umass_t_bbb_reset1_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -6858,7 +6870,7 @@ operator|->
 name|priv_sc
 decl_stmt|;
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 switch|switch
@@ -7003,7 +7015,7 @@ name|void
 name|umass_t_bbb_reset2_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -7026,7 +7038,7 @@ name|void
 name|umass_t_bbb_reset3_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -7049,7 +7061,7 @@ name|void
 name|umass_t_bbb_data_clear_stall_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
@@ -7131,7 +7143,7 @@ name|void
 name|umass_t_bbb_command_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -7486,7 +7498,7 @@ name|void
 name|umass_t_bbb_data_read_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -7745,7 +7757,7 @@ name|void
 name|umass_t_bbb_data_rd_cs_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -7768,7 +7780,7 @@ name|void
 name|umass_t_bbb_data_write_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -8017,7 +8029,7 @@ name|void
 name|umass_t_bbb_data_wr_cs_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -8040,7 +8052,7 @@ name|void
 name|umass_t_bbb_status_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -8830,10 +8842,10 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 name|uint8_t
@@ -9041,7 +9053,7 @@ name|void
 name|umass_t_cbi_reset1_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -9056,7 +9068,7 @@ operator|->
 name|priv_sc
 decl_stmt|;
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|uint8_t
@@ -9277,7 +9289,7 @@ name|void
 name|umass_t_cbi_reset2_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -9300,7 +9312,7 @@ name|void
 name|umass_t_cbi_reset3_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -9350,7 +9362,7 @@ name|void
 name|umass_t_cbi_reset4_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -9373,7 +9385,7 @@ name|void
 name|umass_t_cbi_data_clear_stall_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
@@ -9472,7 +9484,7 @@ name|void
 name|umass_t_cbi_command_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -9498,7 +9510,7 @@ operator|.
 name|ccb
 decl_stmt|;
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 switch|switch
@@ -9751,7 +9763,7 @@ name|void
 name|umass_t_cbi_data_read_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -10021,7 +10033,7 @@ name|void
 name|umass_t_cbi_data_rd_cs_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -10044,7 +10056,7 @@ name|void
 name|umass_t_cbi_data_write_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -10304,7 +10316,7 @@ name|void
 name|umass_t_cbi_data_wr_cs_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -10327,7 +10339,7 @@ name|void
 name|umass_t_cbi_status_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)

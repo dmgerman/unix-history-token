@@ -438,7 +438,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 decl_stmt|;
@@ -538,7 +538,7 @@ modifier|*
 name|db
 decl_stmt|;
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -631,7 +631,7 @@ operator|)
 return|;
 name|uaa
 operator|->
-name|driver_info
+name|driver_ivar
 operator|=
 name|db
 expr_stmt|;
@@ -669,7 +669,7 @@ name|self
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -701,7 +701,7 @@ name|db
 operator|=
 name|uaa
 operator|->
-name|driver_info
+name|driver_ivar
 expr_stmt|;
 name|sc
 operator|=

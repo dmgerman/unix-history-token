@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2005  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2005, 2007, 2008  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: atomic.h,v 1.2.20.1 2005/09/02 13:27:12 marka Exp $ */
+comment|/* $Id: atomic.h,v 1.6 2008/01/24 23:47:00 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -104,13 +104,64 @@ literal|"lock;"
 endif|#
 directive|endif
 literal|"xadd %eax, (%rdx)\n"
-comment|/* 		 * set the return value directly in the register so that we 		 * can avoid guessing the correct position in the stack for a 		 * local variable. 		 */
+comment|/* 		 * XXX: assume %eax will be used as the return value. 		 */
 block|)
 function|;
 end_function
 
+begin_ifdef
+unit|}
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_HAVEXADDQ
+end_ifdef
+
 begin_function
-unit|}  static
+unit|static
+name|isc_int64_t
+name|isc_atomic_xaddq
+parameter_list|(
+name|isc_int64_t
+modifier|*
+name|p
+parameter_list|,
+name|isc_int64_t
+name|val
+parameter_list|)
+block|{
+name|UNUSED
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+asm|__asm (
+literal|"movq %rdi, %rdx\n"
+literal|"movq %rsi, %rax\n"
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_USETHREADS
+literal|"lock;"
+endif|#
+directive|endif
+literal|"xaddq %rax, (%rdx)\n"
+comment|/* 		 * XXX: assume %rax will be used as the return value. 		 */
+block|)
+function|;
+end_function
+
+begin_endif
+unit|}
+endif|#
+directive|endif
+end_endif
+
+begin_function
+unit|static
 name|void
 name|isc_atomic_store
 parameter_list|(
@@ -142,6 +193,7 @@ literal|"lock;"
 endif|#
 directive|endif
 literal|"xchgl (%rax), %edx\n"
+comment|/* 		 * XXX: assume %rax will be used as the return value. 		 */
 block|)
 function|;
 end_function
@@ -187,7 +239,7 @@ name|ISC_PLATFORM_USETHREADS
 literal|"lock;"
 endif|#
 directive|endif
-comment|/* 		 * If (%rdi) == %eax then (%rdi) := %edx. 		 % %eax is set to old (%ecx), which will be the return value. 		 */
+comment|/* 		 * If (%rdi) == %eax then (%rdi) := %edx. 		 * %eax is set to old (%ecx), which will be the return value. 		 */
 literal|"cmpxchgl %ecx, (%rdx)"
 block|)
 function|;

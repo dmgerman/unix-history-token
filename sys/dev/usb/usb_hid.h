@@ -21,13 +21,13 @@ end_define
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_hid_descriptor
+name|usb_hid_descriptor
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 struct_decl|;
 end_struct_decl
 
@@ -163,7 +163,7 @@ name|void
 modifier|*
 name|d
 parameter_list|,
-name|usb2_size_t
+name|usb_size_t
 name|len
 parameter_list|,
 name|int
@@ -210,7 +210,7 @@ name|void
 modifier|*
 name|buf
 parameter_list|,
-name|usb2_size_t
+name|usb_size_t
 name|len
 parameter_list|,
 name|enum
@@ -233,7 +233,7 @@ name|void
 modifier|*
 name|desc
 parameter_list|,
-name|usb2_size_t
+name|usb_size_t
 name|size
 parameter_list|,
 name|uint32_t
@@ -271,7 +271,7 @@ name|uint8_t
 modifier|*
 name|buf
 parameter_list|,
-name|usb2_size_t
+name|usb_size_t
 name|len
 parameter_list|,
 name|struct
@@ -291,7 +291,7 @@ name|void
 modifier|*
 name|desc
 parameter_list|,
-name|usb2_size_t
+name|usb_size_t
 name|size
 parameter_list|,
 name|uint32_t
@@ -302,17 +302,17 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|usb2_hid_descriptor
+name|usb_hid_descriptor
 modifier|*
 name|hid_get_descriptor_from_usb
 parameter_list|(
 name|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 modifier|*
 name|cd
 parameter_list|,
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 modifier|*
 name|id
 parameter_list|)
@@ -320,11 +320,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|usb2_error_t
+name|usb_error_t
 name|usb2_req_get_hid_desc
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
@@ -342,7 +342,9 @@ name|uint16_t
 modifier|*
 name|sizep
 parameter_list|,
-name|usb2_malloc_type
+name|struct
+name|malloc_type
+modifier|*
 name|mem
 parameter_list|,
 name|uint8_t

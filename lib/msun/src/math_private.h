@@ -677,7 +677,7 @@ block|{
 name|int
 name|n
 decl_stmt|;
-asm|asm("cvtsd2si %1,%0" : "=r" (n) : "Y" (x));
+asm|asm("cvtsd2si %1,%0" : "=r" (n) : "x" (x));
 return|return
 operator|(
 name|n
@@ -1140,7 +1140,16 @@ begin_comment
 comment|/* double precision kernel functions */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INLINE_REM_PIO2
+end_ifdef
+
 begin_function_decl
+name|__inline
+endif|#
+directive|endif
 name|int
 name|__ieee754_rem_pio2
 parameter_list|(
@@ -1193,7 +1202,16 @@ begin_comment
 comment|/* float precision kernel functions */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INLINE_REM_PIO2F
+end_ifdef
+
 begin_function_decl
+name|__inline
+endif|#
+directive|endif
 name|int
 name|__ieee754_rem_pio2f
 parameter_list|(
@@ -1205,7 +1223,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INLINE_KERNEL_SINDF
+end_ifdef
+
 begin_function_decl
+name|__inline
+endif|#
+directive|endif
 name|float
 name|__kernel_sindf
 parameter_list|(
@@ -1214,7 +1241,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INLINE_KERNEL_COSDF
+end_ifdef
+
 begin_function_decl
+name|__inline
+endif|#
+directive|endif
 name|float
 name|__kernel_cosdf
 parameter_list|(
@@ -1223,7 +1259,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INLINE_KERNEL_TANDF
+end_ifdef
+
 begin_function_decl
+name|__inline
+endif|#
+directive|endif
 name|float
 name|__kernel_tandf
 parameter_list|(

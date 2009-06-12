@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -55,12 +61,6 @@ begin_include
 include|#
 directive|include
 file|<sys/kthread.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vimage.h>
 end_include
 
 begin_include
@@ -3865,6 +3865,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|mtx_lock
+argument_list|(
+operator|&
+name|prison0
+operator|.
+name|pr_mtx
+argument_list|)
+expr_stmt|;
 name|crom_add_simple_text
 argument_list|(
 name|src
@@ -3876,7 +3884,17 @@ name|buf
 operator|->
 name|hw
 argument_list|,
-name|G_hostname
+name|prison0
+operator|.
+name|pr_host
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|prison0
+operator|.
+name|pr_mtx
 argument_list|)
 expr_stmt|;
 block|}

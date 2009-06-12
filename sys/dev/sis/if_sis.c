@@ -6079,7 +6079,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|sis_rxeof
 parameter_list|(
 name|struct
@@ -6108,6 +6108,10 @@ name|cur_rx
 decl_stmt|;
 name|int
 name|total_len
+init|=
+literal|0
+decl_stmt|,
+name|rx_npkts
 init|=
 literal|0
 decl_stmt|;
@@ -6417,6 +6421,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|rx_npkts
+operator|++
+expr_stmt|;
 block|}
 name|sc
 operator|->
@@ -6424,6 +6431,11 @@ name|sis_rx_pdsc
 operator|=
 name|cur_rx
 expr_stmt|;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
@@ -6849,7 +6861,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|void
+name|int
 name|sis_poll
 parameter_list|(
 name|struct
@@ -6874,6 +6886,11 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+name|int
+name|rx_npkts
+init|=
+literal|0
+decl_stmt|;
 name|SIS_LOCK
 argument_list|(
 name|sc
@@ -6896,7 +6913,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 comment|/* 	 * On the sis, reading the status register also clears it. 	 * So before returning to intr mode we must make sure that all 	 * possible pending sources of interrupts have been served. 	 * In practice this means run to completion the *eof routines, 	 * and then call the interrupt routine 	 */
 name|sc
@@ -6905,6 +6926,8 @@ name|rxcycles
 operator|=
 name|count
 expr_stmt|;
+name|rx_npkts
+operator|=
 name|sis_rxeof
 argument_list|(
 name|sc
@@ -7013,6 +7036,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 

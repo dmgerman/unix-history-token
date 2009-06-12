@@ -371,11 +371,11 @@ name|u_int
 name|t_maxopd
 decl_stmt|;
 comment|/* mss plus options */
-name|u_long
+name|int
 name|t_rcvtime
 decl_stmt|;
 comment|/* inactivity time */
-name|u_long
+name|int
 name|t_starttime
 decl_stmt|;
 comment|/* time connection was established */
@@ -461,7 +461,7 @@ name|u_int32_t
 name|ts_recent
 decl_stmt|;
 comment|/* timestamp echo data */
-name|u_long
+name|int
 name|ts_recent_age
 decl_stmt|;
 comment|/* when last updated */
@@ -485,7 +485,7 @@ name|tcp_seq
 name|snd_recover_prev
 decl_stmt|;
 comment|/* snd_recover prior to retransmit */
-name|u_long
+name|int
 name|t_badrxtwin
 decl_stmt|;
 comment|/* window for retransmit recovery */
@@ -2401,6 +2401,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_function_decl
+name|void
+name|tcp_destroy
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|void
 name|tcp_fini
@@ -2641,6 +2661,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_function_decl
+name|void
+name|tcp_tw_destroy
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|void
 name|tcp_tw_zone_change
@@ -2850,6 +2890,26 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_function_decl
+name|void
+name|tcp_hc_destroy
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void

@@ -494,7 +494,7 @@ end_endif
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|vge_rxeof
 parameter_list|(
 name|struct
@@ -5633,7 +5633,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|vge_rxeof
 parameter_list|(
 name|sc
@@ -6373,7 +6373,11 @@ argument_list|,
 name|lim
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|lim
+operator|)
+return|;
 block|}
 end_function
 
@@ -6780,7 +6784,7 @@ end_ifdef
 
 begin_function
 specifier|static
-name|void
+name|int
 name|vge_poll
 parameter_list|(
 name|struct
@@ -6804,6 +6808,11 @@ init|=
 name|ifp
 operator|->
 name|if_softc
+decl_stmt|;
+name|int
+name|rx_npkts
+init|=
+literal|0
 decl_stmt|;
 name|VGE_LOCK
 argument_list|(
@@ -6830,6 +6839,8 @@ name|rxcycles
 operator|=
 name|count
 expr_stmt|;
+name|rx_npkts
+operator|=
 name|vge_rxeof
 argument_list|(
 name|sc
@@ -6967,6 +6978,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 

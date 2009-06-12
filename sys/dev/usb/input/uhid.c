@@ -250,7 +250,7 @@ struct|struct
 name|uhid_softc
 block|{
 name|struct
-name|usb2_fifo_sc
+name|usb_fifo_sc
 name|sc_fifo
 decl_stmt|;
 name|struct
@@ -258,7 +258,7 @@ name|mtx
 name|sc_mtx
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|sc_xfer
 index|[
@@ -266,7 +266,7 @@ name|UHID_N_TRANSFER
 index|]
 decl_stmt|;
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|sc_udev
 decl_stmt|;
@@ -387,70 +387,70 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|uhid_intr_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|uhid_write_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|uhid_read_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_cmd_t
+name|usb_fifo_cmd_t
 name|uhid_start_read
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_cmd_t
+name|usb_fifo_cmd_t
 name|uhid_stop_read
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_cmd_t
+name|usb_fifo_cmd_t
 name|uhid_start_write
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_cmd_t
+name|usb_fifo_cmd_t
 name|uhid_stop_write
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_open_t
+name|usb_fifo_open_t
 name|uhid_open
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_close_t
+name|usb_fifo_close_t
 name|uhid_close
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_ioctl_t
+name|usb_fifo_ioctl_t
 name|uhid_ioctl
 decl_stmt|;
 end_decl_stmt
@@ -458,7 +458,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|usb2_fifo_methods
+name|usb_fifo_methods
 name|uhid_fifo_methods
 init|=
 block|{
@@ -521,7 +521,7 @@ name|void
 name|uhid_intr_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -676,7 +676,7 @@ name|void
 name|uhid_fill_set_report
 parameter_list|(
 name|struct
-name|usb2_device_request
+name|usb_device_request
 modifier|*
 name|req
 parameter_list|,
@@ -752,7 +752,7 @@ name|void
 name|uhid_fill_get_report
 parameter_list|(
 name|struct
-name|usb2_device_request
+name|usb_device_request
 modifier|*
 name|req
 parameter_list|,
@@ -828,7 +828,7 @@ name|void
 name|uhid_write_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -843,7 +843,7 @@ operator|->
 name|priv_sc
 decl_stmt|;
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 name|uint32_t
@@ -1100,7 +1100,7 @@ name|void
 name|uhid_read_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -1115,7 +1115,7 @@ operator|->
 name|priv_sc
 decl_stmt|;
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 switch|switch
@@ -1283,7 +1283,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 name|uhid_config
 index|[
 name|UHID_N_TRANSFER
@@ -1364,7 +1364,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 operator|+
 name|UHID_BSIZE
@@ -1410,7 +1410,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 operator|+
 name|UHID_BSIZE
@@ -1438,7 +1438,7 @@ name|void
 name|uhid_start_read
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|)
@@ -1494,7 +1494,7 @@ name|void
 name|uhid_stop_read
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|)
@@ -1537,7 +1537,7 @@ name|void
 name|uhid_start_write
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|)
@@ -1570,7 +1570,7 @@ name|void
 name|uhid_stop_write
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|)
@@ -1916,7 +1916,7 @@ name|int
 name|uhid_open
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|,
@@ -2016,7 +2016,7 @@ name|void
 name|uhid_close
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|,
@@ -2050,7 +2050,7 @@ name|int
 name|uhid_ioctl
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|,
@@ -2075,7 +2075,7 @@ operator|->
 name|priv_sc0
 decl_stmt|;
 name|struct
-name|usb2_gen_descriptor
+name|usb_gen_descriptor
 modifier|*
 name|ugd
 decl_stmt|;
@@ -2522,7 +2522,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -2655,7 +2655,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=

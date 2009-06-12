@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_sctp.h"
 end_include
 
@@ -1798,11 +1792,6 @@ block|}
 ifdef|#
 directive|ifdef
 name|MAC
-name|SOCK_LOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|mac_socket_create_mbuf
 argument_list|(
 name|so
@@ -1810,17 +1799,17 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|SOCK_UNLOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 comment|/* Send packet to input processing via netisr */
-name|netisr_queue
+name|netisr_queue_src
 argument_list|(
 name|NETISR_IP
+argument_list|,
+operator|(
+name|uintptr_t
+operator|)
+name|so
 argument_list|,
 name|m
 argument_list|)

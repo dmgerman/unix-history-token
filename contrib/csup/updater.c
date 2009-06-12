@@ -10687,6 +10687,10 @@ name|errmsg
 argument_list|,
 literal|"%s: Error reading: %s"
 argument_list|,
+name|fup
+operator|->
+name|destpath
+argument_list|,
 name|strerror
 argument_list|(
 name|errno

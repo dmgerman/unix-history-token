@@ -584,7 +584,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|stg_detach
 parameter_list|(
 name|device_t
@@ -637,7 +637,11 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

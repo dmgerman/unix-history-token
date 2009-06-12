@@ -17,12 +17,6 @@ directive|include
 file|"opt_ipsec.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_route.h"
-end_include
-
 begin_comment
 comment|/* This code has derived from sys/net/rtsock.c on FreeBSD2.2.5 */
 end_comment
@@ -2392,6 +2386,16 @@ name|dom_init
 operator|=
 name|key_init0
 block|,
+ifdef|#
+directive|ifdef
+name|VIMAGE
+operator|.
+name|dom_destroy
+operator|=
+name|key_destroy
+block|,
+endif|#
+directive|endif
 operator|.
 name|dom_protosw
 operator|=

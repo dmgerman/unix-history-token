@@ -245,7 +245,7 @@ struct|struct
 name|urio_softc
 block|{
 name|struct
-name|usb2_fifo_sc
+name|usb_fifo_sc
 name|sc_fifo
 decl_stmt|;
 name|struct
@@ -253,12 +253,12 @@ name|mtx
 name|sc_mtx
 decl_stmt|;
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|sc_udev
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|sc_xfer
 index|[
@@ -315,77 +315,77 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|urio_write_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|urio_write_clear_stall_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|urio_read_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|urio_read_clear_stall_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_close_t
+name|usb_fifo_close_t
 name|urio_close
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_cmd_t
+name|usb_fifo_cmd_t
 name|urio_start_read
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_cmd_t
+name|usb_fifo_cmd_t
 name|urio_start_write
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_cmd_t
+name|usb_fifo_cmd_t
 name|urio_stop_read
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_cmd_t
+name|usb_fifo_cmd_t
 name|urio_stop_write
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_ioctl_t
+name|usb_fifo_ioctl_t
 name|urio_ioctl
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_fifo_open_t
+name|usb_fifo_open_t
 name|urio_open
 decl_stmt|;
 end_decl_stmt
@@ -393,7 +393,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|usb2_fifo_methods
+name|usb_fifo_methods
 name|urio_fifo_methods
 init|=
 block|{
@@ -454,7 +454,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 name|urio_config
 index|[
 name|URIO_T_MAX
@@ -592,7 +592,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 block|,
 operator|.
@@ -642,7 +642,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 block|,
 operator|.
@@ -785,7 +785,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -893,7 +893,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -1097,7 +1097,7 @@ name|void
 name|urio_write_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -1112,7 +1112,7 @@ operator|->
 name|priv_sc
 decl_stmt|;
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 init|=
@@ -1242,7 +1242,7 @@ name|void
 name|urio_write_clear_stall_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -1257,7 +1257,7 @@ operator|->
 name|priv_sc
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer_other
 init|=
@@ -1305,7 +1305,7 @@ name|void
 name|urio_read_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -1320,7 +1320,7 @@ operator|->
 name|priv_sc
 decl_stmt|;
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|f
 init|=
@@ -1453,7 +1453,7 @@ name|void
 name|urio_read_clear_stall_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -1468,7 +1468,7 @@ operator|->
 name|priv_sc
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer_other
 init|=
@@ -1516,7 +1516,7 @@ name|void
 name|urio_start_read
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|)
@@ -1549,7 +1549,7 @@ name|void
 name|urio_stop_read
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|)
@@ -1592,7 +1592,7 @@ name|void
 name|urio_start_write
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|)
@@ -1625,7 +1625,7 @@ name|void
 name|urio_stop_write
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|)
@@ -1668,7 +1668,7 @@ name|int
 name|urio_open
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|,
@@ -1821,7 +1821,7 @@ name|void
 name|urio_close
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|,
@@ -1855,7 +1855,7 @@ name|int
 name|urio_ioctl
 parameter_list|(
 name|struct
-name|usb2_fifo
+name|usb_fifo
 modifier|*
 name|fifo
 parameter_list|,
@@ -1871,7 +1871,7 @@ name|fflags
 parameter_list|)
 block|{
 name|struct
-name|usb2_ctl_request
+name|usb_ctl_request
 name|ur
 decl_stmt|;
 name|struct

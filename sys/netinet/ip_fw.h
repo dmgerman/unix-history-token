@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002 Luigi Rizzo, Universita` di Pisa  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2002-2009 Luigi Rizzo, Universita` di Pisa  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -36,6 +36,35 @@ directive|define
 name|IPFW_TABLES_MAX
 value|128
 end_define
+
+begin_comment
+comment|/*  * Most commands (queue, pipe, tag, untag, limit...) can have a 16-bit  * argument between 1 and 65534. The value 0 is unused, the value  * 65535 (IP_FW_TABLEARG) is used to represent 'tablearg', i.e. the  * can be 1..65534, or 65535 to indicate the use of a 'tablearg'  * result of the most recent table() lookup.  * Note that 16bit is only a historical limit, resulting from  * the use of a 16-bit fields for that value. In reality, we can have  * 2^32 pipes, queues, tag values and so on, and use 0 as a tablearg.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_ARG_MIN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_ARG_MAX
+value|65534
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_FW_TABLEARG
+value|65535
+end_define
+
+begin_comment
+comment|/* XXX should use 0 */
+end_comment
 
 begin_comment
 comment|/*  * The kernel representation of ipfw rules is made of a list of  * 'instructions' (for all practical purposes equivalent to BPF  * instructions), which specify which fields of the packet  * (or its metadata) should be analysed.  *  * Each instruction is stored in a structure which begins with  * "ipfw_insn", and can contain extra fields depending on the  * instruction type (listed below).  * Note that the code is written so that individual instructions  * have a size which is a multiple of 32 bits. This means that, if  * such structures contain pointers or other 64-bit entities,  * (there is just one instance now) they may end up unaligned on  * 64-bit architectures, so the must be handled with care.  *  * "enum ipfw_opcodes" are the opcodes supported. We can have up  * to 256 different opcodes. When adding new opcodes, they should  * be appended to the end of the opcode list before O_LAST_OPCODE,  * this will prevent the ABI from being broken, otherwise users  * will have to recompile ipfw(8) when they update the kernel.  */
@@ -421,17 +450,6 @@ name|t
 parameter_list|)
 value|((sizeof (t))/sizeof(u_int32_t))
 end_define
-
-begin_define
-define|#
-directive|define
-name|MTAG_IPFW
-value|1148380143
-end_define
-
-begin_comment
-comment|/* IPFW-tagged cookie */
-end_comment
 
 begin_comment
 comment|/*  * This is used to store an array of 16-bit entries (ports etc.)  */
@@ -1045,19 +1063,19 @@ name|next_rule
 decl_stmt|;
 comment|/* ptr to next [skipto] rule	*/
 comment|/* 'next_rule' is used to pass up 'set_disable' status		*/
-name|u_int16_t
+name|uint16_t
 name|act_ofs
 decl_stmt|;
 comment|/* offset of action in 32-bit units */
-name|u_int16_t
+name|uint16_t
 name|cmd_len
 decl_stmt|;
 comment|/* # of 32-bit words in cmd	*/
-name|u_int16_t
+name|uint16_t
 name|rulenum
 decl_stmt|;
 comment|/* rule number			*/
-name|u_int8_t
+name|uint8_t
 name|set
 decl_stmt|;
 comment|/* rule set (0..31)		*/
@@ -1066,20 +1084,24 @@ directive|define
 name|RESVD_SET
 value|31
 comment|/* set for default and persistent rules */
-name|u_int8_t
+name|uint8_t
 name|_pad
 decl_stmt|;
 comment|/* padding			*/
+name|uint32_t
+name|id
+decl_stmt|;
+comment|/* rule id */
 comment|/* These fields are present in all rules.			*/
-name|u_int64_t
+name|uint64_t
 name|pcnt
 decl_stmt|;
 comment|/* Packet counter		*/
-name|u_int64_t
+name|uint64_t
 name|bcnt
 decl_stmt|;
 comment|/* Byte counter			*/
-name|u_int32_t
+name|uint32_t
 name|timestamp
 decl_stmt|;
 comment|/* tv_sec of last match		*/
@@ -1409,13 +1431,6 @@ name|ipfw_table
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|IP_FW_TABLEARG
-value|65535
-end_define
-
 begin_comment
 comment|/*  * Main firewall chains definitions and global var's definitions.  */
 end_comment
@@ -1425,6 +1440,17 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MTAG_IPFW
+value|1148380143
+end_define
+
+begin_comment
+comment|/* IPFW-tagged cookie */
+end_comment
 
 begin_comment
 comment|/* Return values from ipfw_chk() */
@@ -1556,6 +1582,14 @@ modifier|*
 name|rule
 decl_stmt|;
 comment|/* matching rule		*/
+name|uint32_t
+name|rule_id
+decl_stmt|;
+comment|/* matching rule id */
+name|uint32_t
+name|chain_id
+decl_stmt|;
+comment|/* ruleset id */
 name|struct
 name|ether_header
 modifier|*
@@ -1567,7 +1601,7 @@ name|ipfw_flow_id
 name|f_id
 decl_stmt|;
 comment|/* grabbed from IP header	*/
-name|u_int32_t
+name|uint32_t
 name|cookie
 decl_stmt|;
 comment|/* a cookie depending on rule action */
@@ -1711,26 +1745,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_typedef
-typedef|typedef
-name|int
-name|ip_fw_ctl_t
-parameter_list|(
-name|struct
-name|sockopt
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_decl_stmt
-specifier|extern
-name|ip_fw_ctl_t
-modifier|*
-name|ip_fw_ctl_ptr
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1774,38 +1788,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* For kernel ipfw_ether and ipfw_bridge. */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-name|ip_fw_chk_t
-parameter_list|(
-name|struct
-name|ip_fw_args
-modifier|*
-name|args
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_decl_stmt
-specifier|extern
-name|ip_fw_chk_t
-modifier|*
-name|ip_fw_chk_ptr
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|IPFW_LOADED
-value|(ip_fw_chk_ptr != NULL)
-end_define
-
 begin_struct
 struct|struct
 name|ip_fw_chain
@@ -1842,6 +1824,10 @@ name|struct
 name|rwlock
 name|rwmtx
 decl_stmt|;
+name|uint32_t
+name|id
+decl_stmt|;
+comment|/* ruleset id */
 block|}
 struct|;
 end_struct

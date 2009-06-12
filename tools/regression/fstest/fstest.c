@@ -2710,8 +2710,7 @@ literal|0
 argument_list|)
 argument_list|,
 operator|(
-name|unsigned
-name|long
+name|int
 operator|)
 name|str2flags
 argument_list|(

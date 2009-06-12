@@ -631,7 +631,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|xl_rxeof
 parameter_list|(
 name|struct
@@ -850,7 +850,7 @@ end_ifdef
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|xl_poll
 parameter_list|(
 name|struct
@@ -870,7 +870,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|xl_poll_locked
 parameter_list|(
 name|struct
@@ -8407,7 +8407,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|xl_rxeof
 parameter_list|(
 name|struct
@@ -8437,6 +8437,11 @@ name|cur_rx
 decl_stmt|;
 name|int
 name|total_len
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|rx_npkts
 init|=
 literal|0
 decl_stmt|;
@@ -8864,6 +8869,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|rx_npkts
+operator|++
+expr_stmt|;
 comment|/* 		 * If we are running from the taskqueue, the interface 		 * might have been stopped while we were passing the last 		 * packet up the network stack. 		 */
 if|if
 condition|(
@@ -8876,7 +8884,11 @@ operator|&
 name|IFF_DRV_RUNNING
 operator|)
 condition|)
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 comment|/* 	 * Handle the 'end of channel' condition. When the upload 	 * engine hits the end of the RX ring, it will stall. This 	 * is our cue to flush the RX ring, reload the uplist pointer 	 * register and unstall the engine. 	 * XXX This is actually a little goofy. With the ThunderLAN 	 * chip, you get an interrupt when the receiver hits the end 	 * of the receive ring, which tells you exactly when you 	 * you need to reload the ring pointer. Here we have to 	 * fake it. I'm mad at myself for not being clever enough 	 * to avoid the use of a goto here. 	 */
 if|if
@@ -8956,6 +8968,11 @@ goto|goto
 name|again
 goto|;
 block|}
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
@@ -10023,7 +10040,7 @@ end_ifdef
 
 begin_function
 specifier|static
-name|void
+name|int
 name|xl_poll
 parameter_list|(
 name|struct
@@ -10048,6 +10065,11 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+name|int
+name|rx_npkts
+init|=
+literal|0
+decl_stmt|;
 name|XL_LOCK
 argument_list|(
 name|sc
@@ -10061,6 +10083,8 @@ name|if_drv_flags
 operator|&
 name|IFF_DRV_RUNNING
 condition|)
+name|rx_npkts
+operator|=
 name|xl_poll_locked
 argument_list|(
 name|ifp
@@ -10075,12 +10099,17 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|xl_poll_locked
 parameter_list|(
 name|struct
@@ -10105,6 +10134,9 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+name|int
+name|rx_npkts
+decl_stmt|;
 name|XL_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -10116,6 +10148,8 @@ name|rxcycles
 operator|=
 name|count
 expr_stmt|;
+name|rx_npkts
+operator|=
 name|xl_rxeof
 argument_list|(
 name|sc
@@ -10280,6 +10314,11 @@ expr_stmt|;
 block|}
 block|}
 block|}
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 

@@ -2898,6 +2898,14 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+name|sx_xunlock
+argument_list|(
+operator|&
+name|state
+operator|->
+name|ls_lock
+argument_list|)
+expr_stmt|;
 name|lf_free_lock
 argument_list|(
 name|lock

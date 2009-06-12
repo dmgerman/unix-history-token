@@ -700,6 +700,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_IS_DSTODS
+parameter_list|(
+name|wh
+parameter_list|)
+define|\
+value|(((wh)->i_fc[1]& IEEE80211_FC1_DIR_MASK) == IEEE80211_FC1_DIR_DSTODS)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_FC1_MORE_FRAG
 value|0x04
 end_define
@@ -1414,12 +1425,34 @@ end_struct
 begin_define
 define|#
 directive|define
-name|IEEE80211_ACTION_CAT_QOS
+name|IEEE80211_ACTION_CAT_SM
 value|0
 end_define
 
 begin_comment
+comment|/* Spectrum Management */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_ACTION_CAT_QOS
+value|1
+end_define
+
+begin_comment
 comment|/* QoS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_ACTION_CAT_DLS
+value|2
+end_define
+
+begin_comment
+comment|/* DLS */
 end_comment
 
 begin_define
@@ -1442,6 +1475,17 @@ end_define
 
 begin_comment
 comment|/* HT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_ACTION_CAT_VENDOR
+value|127
+end_define
+
+begin_comment
+comment|/* Vendor Specific */
 end_comment
 
 begin_define
@@ -3440,7 +3484,7 @@ name|IEEE80211_ELEMID_SUPPCHAN
 init|=
 literal|36
 block|,
-name|IEEE80211_ELEMID_CHANSWITCHANN
+name|IEEE80211_ELEMID_CSA
 init|=
 literal|37
 block|,
@@ -3627,6 +3671,24 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Note the min acceptable CSA count is used to guard against  * malicious CSA injection in station mode.  Defining this value  * as other than 0 violates the 11h spec.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CSA_COUNT_MIN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CSA_COUNT_MAX
+value|255
+end_define
 
 begin_comment
 comment|/* rate set entries are in .5 Mb/s units, and potentially marked as basic */
@@ -4324,6 +4386,11 @@ init|=
 literal|26
 block|,
 comment|/* 11g */
+name|IEEE80211_STATUS_MISSING_HT_CAPS
+init|=
+literal|27
+block|,
+comment|/* 11n D3.0 */
 name|IEEE80211_STATUS_INVALID_IE
 init|=
 literal|40

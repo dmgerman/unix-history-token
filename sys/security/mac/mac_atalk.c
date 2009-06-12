@@ -157,6 +157,13 @@ name|label
 modifier|*
 name|mlabel
 decl_stmt|;
+if|if
+condition|(
+name|mac_policy_count
+operator|==
+literal|0
+condition|)
+return|return;
 name|mlabel
 operator|=
 name|mac_mbuf_to_label

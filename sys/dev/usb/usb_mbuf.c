@@ -34,11 +34,11 @@ modifier|*
 name|type
 parameter_list|,
 name|struct
-name|usb2_ifqueue
+name|usb_ifqueue
 modifier|*
 name|ifq
 parameter_list|,
-name|usb2_size_t
+name|usb_size_t
 name|block_size
 parameter_list|,
 name|uint16_t
@@ -46,7 +46,7 @@ name|nblocks
 parameter_list|)
 block|{
 name|struct
-name|usb2_mbuf
+name|usb_mbuf
 modifier|*
 name|m_ptr
 decl_stmt|;
@@ -60,7 +60,7 @@ name|free_ptr
 init|=
 name|NULL
 decl_stmt|;
-name|usb2_size_t
+name|usb_size_t
 name|alloc_size
 decl_stmt|;
 comment|/* align data */
@@ -94,7 +94,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_mbuf
+name|usb_mbuf
 argument_list|)
 operator|)
 operator|*

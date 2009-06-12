@@ -2023,13 +2023,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
 name|m
 operator|->
 name|valid
-operator|&
-name|VM_PAGE_BITS_ALL
-operator|)
 operator|==
 name|VM_PAGE_BITS_ALL
 condition|)
@@ -2146,7 +2142,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|bp
 operator|->
 name|b_pages
@@ -2155,13 +2150,9 @@ name|j
 index|]
 operator|->
 name|valid
-operator|&
-name|VM_PAGE_BITS_ALL
-operator|)
 operator|==
 name|VM_PAGE_BITS_ALL
 condition|)
-block|{
 name|bp
 operator|->
 name|b_pages
@@ -2171,7 +2162,6 @@ index|]
 operator|=
 name|bogus_page
 expr_stmt|;
-block|}
 block|}
 name|VM_OBJECT_UNLOCK
 argument_list|(

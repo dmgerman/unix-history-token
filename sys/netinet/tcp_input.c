@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_tcpdebug.h"
 end_include
 
@@ -6560,20 +6554,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|SOCK_LOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|mac_socketpeer_set_from_mbuf
 argument_list|(
 name|m
 argument_list|,
-name|so
-argument_list|)
-expr_stmt|;
-name|SOCK_UNLOCK
-argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
@@ -7145,16 +7129,11 @@ block|{
 comment|/* Check to see if ts_recent is over 24 days old.  */
 if|if
 condition|(
-call|(
-name|int
-call|)
-argument_list|(
 name|ticks
 operator|-
 name|tp
 operator|->
 name|ts_recent_age
-argument_list|)
 operator|>
 name|TCP_PAWS_IDLE
 condition|)
@@ -7244,11 +7223,20 @@ operator|>
 literal|0
 condition|)
 block|{
+comment|/* 		 * If this is a duplicate SYN for our current connection, 		 * advance over it and pretend and it's not a SYN. 		 */
 if|if
 condition|(
 name|thflags
 operator|&
 name|TH_SYN
+operator|&&
+name|th
+operator|->
+name|th_seq
+operator|==
+name|tp
+operator|->
+name|irs
 condition|)
 block|{
 name|thflags

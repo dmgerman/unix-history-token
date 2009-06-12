@@ -162,6 +162,7 @@ file|<unistd.h>
 end_include
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -169,13 +170,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|int
@@ -204,7 +198,7 @@ name|even
 decl_stmt|;
 name|struct
 name|nfsd_clid
-name|revoke
+name|revoke_handle
 decl_stmt|;
 if|if
 condition|(
@@ -276,7 +270,7 @@ operator|*
 name|cp
 operator|>=
 literal|'0'
-operator|&
+operator|&&
 operator|*
 name|cp
 operator|<=
@@ -381,7 +375,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|revoke
+name|revoke_handle
 operator|.
 name|nclid_id
 index|[
@@ -423,7 +417,7 @@ operator|++
 expr_stmt|;
 block|}
 comment|/* 	 * Do the revocation system call. 	 */
-name|revoke
+name|revoke_handle
 operator|.
 name|nclid_idlen
 operator|=
@@ -436,7 +430,7 @@ name|printf
 argument_list|(
 literal|"Idlen=%d\n"
 argument_list|,
-name|revoke
+name|revoke_handle
 operator|.
 name|nclid_idlen
 argument_list|)
@@ -449,7 +443,7 @@ literal|0
 init|;
 name|cnt
 operator|<
-name|revoke
+name|revoke_handle
 operator|.
 name|nclid_idlen
 condition|;
@@ -460,7 +454,7 @@ name|printf
 argument_list|(
 literal|"%02x"
 argument_list|,
-name|revoke
+name|revoke_handle
 operator|.
 name|nclid_id
 index|[
@@ -482,7 +476,7 @@ argument_list|(
 name|NFSSVC_ADMINREVOKE
 argument_list|,
 operator|&
-name|revoke
+name|revoke_handle
 argument_list|)
 operator|<
 literal|0
@@ -500,6 +494,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(

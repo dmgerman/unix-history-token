@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 Cameron Grant<cg@freebsd.org>  * Copyright by Hannu Savolainen 1995  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2005-2009 Ariff Abdullah<ariff@FreeBSD.org>  * Copyright (c) 1999 Cameron Grant<cg@FreeBSD.org>  * Copyright (c) 1995 Hannu Savolainen  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -222,26 +222,6 @@ directive|include
 file|<vm/pmap.h>
 end_include
 
-begin_undef
-undef|#
-directive|undef
-name|USING_MUTEX
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|USING_DEVFS
-end_undef
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|500000
-end_if
-
 begin_include
 include|#
 directive|include
@@ -260,47 +240,23 @@ directive|include
 file|<sys/condvar.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|USING_MUTEX
-end_define
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KOBJMETHOD_END
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|USING_DEVFS
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|INTR_TYPE_AV
-value|INTR_TYPE_TTY
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTR_MPSAFE
-value|0
+name|KOBJMETHOD_END
+value|{ NULL, NULL }
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|SND_DYNSYSCTL
-end_define
 
 begin_struct_decl
 struct_decl|struct
@@ -330,6 +286,18 @@ begin_include
 include|#
 directive|include
 file|<dev/sound/pcm/buffer.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/sound/pcm/matrix.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/sound/pcm/matrix_map.h>
 end_include
 
 begin_include
@@ -372,7 +340,7 @@ begin_define
 define|#
 directive|define
 name|PCM_SOFTC_SIZE
-value|512
+value|(sizeof(struct snddev_info))
 end_define
 
 begin_define
@@ -386,7 +354,7 @@ begin_define
 define|#
 directive|define
 name|SOUND_MODVER
-value|2
+value|5
 end_define
 
 begin_define
@@ -473,6 +441,48 @@ value|(snd_unit2c(dev2unit(x)))
 end_define
 
 begin_comment
+comment|/* XXX unit2minor compat */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800062
+end_if
+
+begin_define
+define|#
+directive|define
+name|PCMMINOR
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PCMMINOR
+parameter_list|(
+name|x
+parameter_list|)
+value|unit2minor(x)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * By design, limit possible channels for each direction.  */
 end_comment
 
@@ -511,6 +521,16 @@ name|SD_F_SOFTPCMVOL
 value|0x00000004
 end_define
 
+begin_comment
+comment|/*  * Obsolete due to better matrixing  */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -525,39 +545,120 @@ name|SD_F_RSWAPLR
 value|0x00000010
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|SD_F_DYING
-value|0x00000020
+value|0x00000008
 end_define
 
 begin_define
 define|#
 directive|define
 name|SD_F_SUICIDE
-value|0x00000040
+value|0x00000010
 end_define
 
 begin_define
 define|#
 directive|define
 name|SD_F_BUSY
-value|0x00000080
+value|0x00000020
 end_define
 
 begin_define
 define|#
 directive|define
 name|SD_F_MPSAFE
-value|0x00000100
+value|0x00000040
 end_define
 
 begin_define
 define|#
 directive|define
 name|SD_F_REGISTERED
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
+name|SD_F_BITPERFECT
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|SD_F_VPC
 value|0x00000200
+end_define
+
+begin_comment
+comment|/* volume-per-channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SD_F_EQ
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* EQ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SD_F_EQ_ENABLED
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* EQ enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SD_F_EQ_BYPASSED
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* EQ bypassed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SD_F_EQ_PC
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* EQ per-channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SD_F_EQ_DEFAULT
+value|(SD_F_EQ | SD_F_EQ_ENABLED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SD_F_EQ_MASK
+value|(SD_F_EQ | SD_F_EQ_ENABLED |		\ 				 SD_F_EQ_BYPASSED | SD_F_EQ_PC)
 end_define
 
 begin_define
@@ -593,6 +694,13 @@ define|#
 directive|define
 name|SD_F_TRANSIENT
 value|0xf0000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SD_F_BITS
+value|"\020"					\ 				"\001SIMPLEX"				\ 				"\002AUTOVCHAN"				\ 				"\003SOFTPCMVOL"			\ 				"\004DYING"				\ 				"\005SUICIDE"				\ 				"\006BUSY"				\ 				"\007MPSAFE"				\ 				"\010REGISTERED"			\ 				"\011BITPERFECT"			\ 				"\012VPC"				\ 				"\013EQ"				\ 				"\014EQ_ENABLED"			\ 				"\015EQ_BYPASSED"			\ 				"\016EQ_PC"				\ 				"\035PRIO_RD"				\ 				"\036PRIO_WR"				\ 				"\037DIR_SET"
 end_define
 
 begin_define
@@ -641,1137 +749,6 @@ value|(8192)
 end_define
 
 begin_comment
-comment|/*  * Macros for reading/writing PCM sample / int values from bytes array.  * Since every process is done using signed integer (and to make our life  * less miserable), unsigned sample will be converted to its signed  * counterpart and restored during writing back. To avoid overflow,  * we truncate 32bit (and only 32bit) samples down to 24bit (see below  * for the reason), unless PCM_USE_64BIT_ARITH is defined.  */
-end_comment
-
-begin_comment
-comment|/*  * Automatically turn on 64bit arithmetic on suitable archs  * (amd64 64bit, ia64, etc..) for wider 32bit samples / integer processing.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|LONG_BIT
-operator|>=
-literal|64
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|PCM_USE_64BIT_ARITH
-end_undef
-
-begin_define
-define|#
-directive|define
-name|PCM_USE_64BIT_ARITH
-value|1
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|PCM_USE_64BIT_ARITH
-end_undef
-
-begin_define
-define|#
-directive|define
-name|PCM_USE_64BIT_ARITH
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PCM_USE_64BIT_ARITH
-end_ifdef
-
-begin_typedef
-typedef|typedef
-name|int64_t
-name|intpcm_t
-typedef|;
-end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|int32_t
-name|intpcm_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 32bit fixed point shift */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCM_FXSHIFT
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_S8_MAX
-value|0x7f
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_S8_MIN
-value|-0x80
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_S16_MAX
-value|0x7fff
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_S16_MIN
-value|-0x8000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_S24_MAX
-value|0x7fffff
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_S24_MIN
-value|-0x800000
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PCM_USE_64BIT_ARITH
-end_ifdef
-
-begin_if
-if|#
-directive|if
-name|LONG_BIT
-operator|>=
-literal|64
-end_if
-
-begin_define
-define|#
-directive|define
-name|PCM_S32_MAX
-value|0x7fffffffL
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_S32_MIN
-value|-0x80000000L
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PCM_S32_MAX
-value|0x7fffffffLL
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_S32_MIN
-value|-0x80000000LL
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PCM_S32_MAX
-value|0x7fffffff
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_S32_MIN
-value|(-0x7fffffff - 1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Bytes-per-sample definition */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCM_8_BPS
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_16_BPS
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_24_BPS
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_32_BPS
-value|4
-end_define
-
-begin_if
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|LITTLE_ENDIAN
-end_if
-
-begin_define
-define|#
-directive|define
-name|PCM_READ_S16_LE
-parameter_list|(
-name|b8
-parameter_list|)
-value|*((int16_t *)(b8))
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PCM_READ_S32_LE
-parameter_list|(
-name|b8
-parameter_list|)
-value|*((int32_t *)(b8))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_READ_S16_BE
-parameter_list|(
-name|b8
-parameter_list|)
-define|\
-value|((int32_t)((b8)[1] | ((int8_t)((b8)[0]))<< 8))
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PCM_READ_S32_BE
-parameter_list|(
-name|b8
-parameter_list|)
-define|\
-value|((int32_t)((b8)[3] | (b8)[2]<< 8 | (b8)[1]<< 16 | \ 			((int8_t)((b8)[0]))<< 24))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_WRITE_S16_LE
-parameter_list|(
-name|b8
-parameter_list|,
-name|val
-parameter_list|)
-value|*((int16_t *)(b8)) = (val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PCM_WRITE_S32_LE
-parameter_list|(
-name|b8
-parameter_list|,
-name|val
-parameter_list|)
-value|*((int32_t *)(b8)) = (val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_WRITE_S16_BE
-parameter_list|(
-name|bb8
-parameter_list|,
-name|vval
-parameter_list|)
-value|do { \ 			int32_t val = (vval); \ 			uint8_t *b8 = (bb8); \ 			b8[1] = val; \ 			b8[0] = val>> 8; \ 		} while(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PCM_WRITE_S32_BE
-parameter_list|(
-name|bb8
-parameter_list|,
-name|vval
-parameter_list|)
-value|do { \ 			int32_t val = (vval); \ 			uint8_t *b8 = (bb8); \ 			b8[3] = val; \ 			b8[2] = val>> 8; \ 			b8[1] = val>> 16; \ 			b8[0] = val>> 24; \ 		} while(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_READ_U16_LE
-parameter_list|(
-name|b8
-parameter_list|)
-value|((int16_t)(*((uint16_t *)(b8)) ^ 0x8000))
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PCM_READ_U32_LE
-parameter_list|(
-name|b8
-parameter_list|)
-value|((int32_t)(*((uint32_t *)(b8)) ^ 0x80000000))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_READ_U16_BE
-parameter_list|(
-name|b8
-parameter_list|)
-define|\
-value|((int32_t)((b8)[1] | ((int8_t)((b8)[0] ^ 0x80))<< 8))
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PCM_READ_U32_BE
-parameter_list|(
-name|b8
-parameter_list|)
-define|\
-value|((int32_t)((b8)[3] | (b8)[2]<< 8 | (b8)[1]<< 16 | \ 			((int8_t)((b8)[0] ^ 0x80))<< 24))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_WRITE_U16_LE
-parameter_list|(
-name|b8
-parameter_list|,
-name|val
-parameter_list|)
-value|*((uint16_t *)(b8)) = (val) ^ 0x8000
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PCM_WRITE_U32_LE
-parameter_list|(
-name|b8
-parameter_list|,
-name|val
-parameter_list|)
-value|*((uint32_t *)(b8)) = (val) ^ 0x80000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_WRITE_U16_BE
-parameter_list|(
-name|bb8
-parameter_list|,
-name|vval
-parameter_list|)
-value|do { \ 			int32_t val = (vval); \ 			uint8_t *b8 = (bb8); \ 			b8[1] = val; \ 			b8[0] = (val>> 8) ^ 0x80; \ 		} while(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PCM_WRITE_U32_BE
-parameter_list|(
-name|bb8
-parameter_list|,
-name|vval
-parameter_list|)
-value|do { \ 			int32_t val = (vval); \ 			uint8_t *b8 = (bb8); \ 			b8[3] = val; \ 			b8[2] = val>> 8; \ 			b8[1] = val>> 16; \ 			b8[0] = (val>> 24) ^ 0x80; \ 		} while(0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !LITTLE_ENDIAN */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCM_READ_S16_LE
-parameter_list|(
-name|b8
-parameter_list|)
-define|\
-value|((int32_t)((b8)[0] | ((int8_t)((b8)[1]))<< 8))
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PCM_READ_S32_LE
-parameter_list|(
-name|b8
-parameter_list|)
-define|\
-value|((int32_t)((b8)[0] | (b8)[1]<< 8 | (b8)[2]<< 16 | \ 			((int8_t)((b8)[3]))<< 24))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_READ_S16_BE
-parameter_list|(
-name|b8
-parameter_list|)
-value|*((int16_t *)(b8))
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PCM_READ_S32_BE
-parameter_list|(
-name|b8
-parameter_list|)
-value|*((int32_t *)(b8))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_WRITE_S16_LE
-parameter_list|(
-name|bb8
-parameter_list|,
-name|vval
-parameter_list|)
-value|do { \ 			int32_t val = (vval); \ 			uint8_t *b8 = (bb8); \ 			b8[0] = val; \ 			b8[1] = val>> 8; \ 		} while(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PCM_WRITE_S32_LE
-parameter_list|(
-name|bb8
-parameter_list|,
-name|vval
-parameter_list|)
-value|do { \ 			int32_t val = (vval); \ 			uint8_t *b8 = (bb8); \ 			b8[0] = val; \ 			b8[1] = val>> 8; \ 			b8[2] = val>> 16; \ 			b8[3] = val>> 24; \ 		} while(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_WRITE_S16_BE
-parameter_list|(
-name|b8
-parameter_list|,
-name|val
-parameter_list|)
-value|*((int16_t *)(b8)) = (val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PCM_WRITE_S32_BE
-parameter_list|(
-name|b8
-parameter_list|,
-name|val
-parameter_list|)
-value|*((int32_t *)(b8)) = (val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_READ_U16_LE
-parameter_list|(
-name|b8
-parameter_list|)
-define|\
-value|((int32_t)((b8)[0] | ((int8_t)((b8)[1] ^ 0x80))<< 8))
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PCM_READ_U32_LE
-parameter_list|(
-name|b8
-parameter_list|)
-define|\
-value|((int32_t)((b8)[0] | (b8)[1]<< 8 | (b8)[2]<< 16 | \ 			((int8_t)((b8)[3] ^ 0x80))<< 24))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_READ_U16_BE
-parameter_list|(
-name|b8
-parameter_list|)
-value|((int16_t)(*((uint16_t *)(b8)) ^ 0x8000))
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PCM_READ_U32_BE
-parameter_list|(
-name|b8
-parameter_list|)
-value|((int32_t)(*((uint32_t *)(b8)) ^ 0x80000000))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_WRITE_U16_LE
-parameter_list|(
-name|bb8
-parameter_list|,
-name|vval
-parameter_list|)
-value|do { \ 			int32_t val = (vval); \ 			uint8_t *b8 = (bb8); \ 			b8[0] = val; \ 			b8[1] = (val>> 8) ^ 0x80; \ 		} while(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PCM_WRITE_U32_LE
-parameter_list|(
-name|bb8
-parameter_list|,
-name|vval
-parameter_list|)
-value|do { \ 			int32_t val = (vval); \ 			uint8_t *b8 = (bb8); \ 			b8[0] = val; \ 			b8[1] = val>> 8; \ 			b8[2] = val>> 16; \ 			b8[3] = (val>> 24) ^ 0x80; \ 		} while(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_WRITE_U16_BE
-parameter_list|(
-name|b8
-parameter_list|,
-name|val
-parameter_list|)
-value|*((uint16_t *)(b8)) = (val) ^ 0x8000
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PCM_WRITE_U32_BE
-parameter_list|(
-name|b8
-parameter_list|,
-name|val
-parameter_list|)
-value|*((uint32_t *)(b8)) = (val) ^ 0x80000000
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|PCM_READ_S24_LE
-parameter_list|(
-name|b8
-parameter_list|)
-define|\
-value|((int32_t)((b8)[0] | (b8)[1]<< 8 | ((int8_t)((b8)[2]))<< 16))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_READ_S24_BE
-parameter_list|(
-name|b8
-parameter_list|)
-define|\
-value|((int32_t)((b8)[2] | (b8)[1]<< 8 | ((int8_t)((b8)[0]))<< 16))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_WRITE_S24_LE
-parameter_list|(
-name|bb8
-parameter_list|,
-name|vval
-parameter_list|)
-value|do { \ 			int32_t val = (vval); \ 			uint8_t *b8 = (bb8); \ 			b8[0] = val; \ 			b8[1] = val>> 8; \ 			b8[2] = val>> 16; \ 		} while(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_WRITE_S24_BE
-parameter_list|(
-name|bb8
-parameter_list|,
-name|vval
-parameter_list|)
-value|do { \ 			int32_t val = (vval); \ 			uint8_t *b8 = (bb8); \ 			b8[2] = val; \ 			b8[1] = val>> 8; \ 			b8[0] = val>> 16; \ 		} while(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_READ_U24_LE
-parameter_list|(
-name|b8
-parameter_list|)
-define|\
-value|((int32_t)((b8)[0] | (b8)[1]<< 8 | \ 			((int8_t)((b8)[2] ^ 0x80))<< 16))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_READ_U24_BE
-parameter_list|(
-name|b8
-parameter_list|)
-define|\
-value|((int32_t)((b8)[2] | (b8)[1]<< 8 | \ 			((int8_t)((b8)[0] ^ 0x80))<< 16))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_WRITE_U24_LE
-parameter_list|(
-name|bb8
-parameter_list|,
-name|vval
-parameter_list|)
-value|do { \ 			int32_t val = (vval); \ 			uint8_t *b8 = (bb8); \ 			b8[0] = val; \ 			b8[1] = val>> 8; \ 			b8[2] = (val>> 16) ^ 0x80; \ 		} while(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_WRITE_U24_BE
-parameter_list|(
-name|bb8
-parameter_list|,
-name|vval
-parameter_list|)
-value|do { \ 			int32_t val = (vval); \ 			uint8_t *b8 = (bb8); \ 			b8[2] = val; \ 			b8[1] = val>> 8; \ 			b8[0] = (val>> 16) ^ 0x80; \ 		} while(0)
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PCM_USE_64BIT_ARITH
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PCM_READ_S32_LE
-parameter_list|(
-name|b8
-parameter_list|)
-value|_PCM_READ_S32_LE(b8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_READ_S32_BE
-parameter_list|(
-name|b8
-parameter_list|)
-value|_PCM_READ_S32_BE(b8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_WRITE_S32_LE
-parameter_list|(
-name|b8
-parameter_list|,
-name|val
-parameter_list|)
-value|_PCM_WRITE_S32_LE(b8, val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_WRITE_S32_BE
-parameter_list|(
-name|b8
-parameter_list|,
-name|val
-parameter_list|)
-value|_PCM_WRITE_S32_BE(b8, val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_READ_U32_LE
-parameter_list|(
-name|b8
-parameter_list|)
-value|_PCM_READ_U32_LE(b8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_READ_U32_BE
-parameter_list|(
-name|b8
-parameter_list|)
-value|_PCM_READ_U32_BE(b8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_WRITE_U32_LE
-parameter_list|(
-name|b8
-parameter_list|,
-name|val
-parameter_list|)
-value|_PCM_WRITE_U32_LE(b8, val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_WRITE_U32_BE
-parameter_list|(
-name|b8
-parameter_list|,
-name|val
-parameter_list|)
-value|_PCM_WRITE_U32_BE(b8, val)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !PCM_USE_64BIT_ARITH */
-end_comment
-
-begin_comment
-comment|/*  * 24bit integer ?!? This is quite unfortunate, eh? Get the fact straight:  * Dynamic range for:  *	1) Human =~ 140db  *	2) 16bit = 96db (close enough)  *	3) 24bit = 144db (perfect)  *	4) 32bit = 196db (way too much)  *	5) Bugs Bunny = Gazillion!@%$Erbzzztt-EINVAL db  * Since we're not Bugs Bunny ..uh..err.. avoiding 64bit arithmetic, 24bit  * is pretty much sufficient for our signed integer processing.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCM_READ_S32_LE
-parameter_list|(
-name|b8
-parameter_list|)
-value|(_PCM_READ_S32_LE(b8)>> PCM_FXSHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_READ_S32_BE
-parameter_list|(
-name|b8
-parameter_list|)
-value|(_PCM_READ_S32_BE(b8)>> PCM_FXSHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_WRITE_S32_LE
-parameter_list|(
-name|b8
-parameter_list|,
-name|val
-parameter_list|)
-value|_PCM_WRITE_S32_LE(b8, (val)<< PCM_FXSHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_WRITE_S32_BE
-parameter_list|(
-name|b8
-parameter_list|,
-name|val
-parameter_list|)
-value|_PCM_WRITE_S32_BE(b8, (val)<< PCM_FXSHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_READ_U32_LE
-parameter_list|(
-name|b8
-parameter_list|)
-value|(_PCM_READ_U32_LE(b8)>> PCM_FXSHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_READ_U32_BE
-parameter_list|(
-name|b8
-parameter_list|)
-value|(_PCM_READ_U32_BE(b8)>> PCM_FXSHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_WRITE_U32_LE
-parameter_list|(
-name|b8
-parameter_list|,
-name|val
-parameter_list|)
-value|_PCM_WRITE_U32_LE(b8, (val)<< PCM_FXSHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_WRITE_U32_BE
-parameter_list|(
-name|b8
-parameter_list|,
-name|val
-parameter_list|)
-value|_PCM_WRITE_U32_BE(b8, (val)<< PCM_FXSHIFT)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * 8bit sample is pretty much useless since it doesn't provide  * sufficient dynamic range throughout our filtering process.  * For the sake of completeness, declare it anyway.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCM_READ_S8
-parameter_list|(
-name|b8
-parameter_list|)
-value|*((int8_t *)(b8))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_READ_S8_NE
-parameter_list|(
-name|b8
-parameter_list|)
-value|PCM_READ_S8(b8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_READ_U8
-parameter_list|(
-name|b8
-parameter_list|)
-value|((int8_t)(*((uint8_t *)(b8)) ^ 0x80))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_READ_U8_NE
-parameter_list|(
-name|b8
-parameter_list|)
-value|PCM_READ_U8(b8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_WRITE_S8
-parameter_list|(
-name|b8
-parameter_list|,
-name|val
-parameter_list|)
-value|*((int8_t *)(b8)) = (val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_WRITE_S8_NE
-parameter_list|(
-name|b8
-parameter_list|,
-name|val
-parameter_list|)
-value|PCM_WRITE_S8(b8, val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_WRITE_U8
-parameter_list|(
-name|b8
-parameter_list|,
-name|val
-parameter_list|)
-value|*((uint8_t *)(b8)) = (val) ^ 0x80
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_WRITE_U8_NE
-parameter_list|(
-name|b8
-parameter_list|,
-name|val
-parameter_list|)
-value|PCM_WRITE_U8(b8, val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_CLAMP_S8
-parameter_list|(
-name|val
-parameter_list|)
-define|\
-value|(((val)> PCM_S8_MAX) ? PCM_S8_MAX : \ 			(((val)< PCM_S8_MIN) ? PCM_S8_MIN : (val)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_CLAMP_S16
-parameter_list|(
-name|val
-parameter_list|)
-define|\
-value|(((val)> PCM_S16_MAX) ? PCM_S16_MAX : \ 			(((val)< PCM_S16_MIN) ? PCM_S16_MIN : (val)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_CLAMP_S24
-parameter_list|(
-name|val
-parameter_list|)
-define|\
-value|(((val)> PCM_S24_MAX) ? PCM_S24_MAX : \ 			(((val)< PCM_S24_MIN) ? PCM_S24_MIN : (val)))
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PCM_USE_64BIT_ARITH
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PCM_CLAMP_S32
-parameter_list|(
-name|val
-parameter_list|)
-define|\
-value|(((val)> PCM_S32_MAX) ? PCM_S32_MAX : \ 			(((val)< PCM_S32_MIN) ? PCM_S32_MIN : (val)))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PCM_CLAMP_S32
-parameter_list|(
-name|val
-parameter_list|)
-define|\
-value|(((val)> PCM_S24_MAX) ? PCM_S32_MAX : \ 			(((val)< PCM_S24_MIN) ? PCM_S32_MIN : \ 			((val)<< PCM_FXSHIFT)))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|PCM_CLAMP_U8
-parameter_list|(
-name|val
-parameter_list|)
-value|PCM_CLAMP_S8(val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_CLAMP_U16
-parameter_list|(
-name|val
-parameter_list|)
-value|PCM_CLAMP_S16(val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_CLAMP_U24
-parameter_list|(
-name|val
-parameter_list|)
-value|PCM_CLAMP_S24(val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCM_CLAMP_U32
-parameter_list|(
-name|val
-parameter_list|)
-value|PCM_CLAMP_S32(val)
-end_define
-
-begin_comment
 comment|/* make figuring out what a format is easier. got AFMT_STEREO already */
 end_comment
 
@@ -1799,8 +776,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|AFMT_G711
+value|(AFMT_MU_LAW | AFMT_A_LAW)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AFMT_8BIT
-value|(AFMT_MU_LAW | AFMT_A_LAW | AFMT_U8 | AFMT_S8)
+value|(AFMT_G711 | AFMT_U8 | AFMT_S8)
 end_define
 
 begin_define
@@ -1817,29 +801,192 @@ name|AFMT_BIGENDIAN
 value|(AFMT_S32_BE | AFMT_U32_BE | AFMT_S24_BE | AFMT_U24_BE | \ 			AFMT_S16_BE | AFMT_U16_BE)
 end_define
 
-begin_function_decl
-name|struct
-name|pcm_channel
-modifier|*
-name|fkchan_setup
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_define
+define|#
+directive|define
+name|AFMT_CONVERTIBLE
+value|(AFMT_8BIT | AFMT_16BIT | AFMT_24BIT |	\ 				 AFMT_32BIT)
+end_define
 
-begin_function_decl
-name|int
-name|fkchan_kill
+begin_comment
+comment|/* Supported vchan mixing formats */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AFMT_VCHAN
+value|(AFMT_CONVERTIBLE& ~AFMT_G711)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFMT_PASSTHROUGH
+value|AFMT_AC3
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFMT_PASSTHROUGH_RATE
+value|48000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFMT_PASSTHROUGH_CHANNEL
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFMT_PASSTHROUGH_EXTCHANNEL
+value|0
+end_define
+
+begin_comment
+comment|/*  * We're simply using unused, contiguous bits from various AFMT_ definitions.  * ~(0xb00ff7ff)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AFMT_ENCODING_MASK
+value|0xf00fffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFMT_CHANNEL_MASK
+value|0x01f00000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFMT_CHANNEL_SHIFT
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFMT_EXTCHANNEL_MASK
+value|0x0e000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFMT_EXTCHANNEL_SHIFT
+value|25
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFMT_ENCODING
 parameter_list|(
-name|struct
-name|pcm_channel
-modifier|*
-name|c
+name|v
 parameter_list|)
-function_decl|;
-end_function_decl
+value|((v)& AFMT_ENCODING_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFMT_EXTCHANNEL
+parameter_list|(
+name|v
+parameter_list|)
+value|(((v)& AFMT_EXTCHANNEL_MASK)>>	\ 				AFMT_EXTCHANNEL_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFMT_CHANNEL
+parameter_list|(
+name|v
+parameter_list|)
+value|(((v)& AFMT_CHANNEL_MASK)>>		\ 				AFMT_CHANNEL_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFMT_BIT
+parameter_list|(
+name|v
+parameter_list|)
+value|(((v)& AFMT_32BIT) ? 32 :		\ 				(((v)& AFMT_24BIT) ? 24 :		\ 				((((v)& AFMT_16BIT) ||			\ 				((v)& AFMT_PASSTHROUGH)) ? 16 : 8)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFMT_BPS
+parameter_list|(
+name|v
+parameter_list|)
+value|(AFMT_BIT(v)>> 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFMT_ALIGN
+parameter_list|(
+name|v
+parameter_list|)
+value|(AFMT_BPS(v) * AFMT_CHANNEL(v))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SND_FORMAT
+parameter_list|(
+name|f
+parameter_list|,
+name|c
+parameter_list|,
+name|e
+parameter_list|)
+value|(AFMT_ENCODING(f) |		\ 				(((c)<< AFMT_CHANNEL_SHIFT)&		\ 				AFMT_CHANNEL_MASK) |			\ 				(((e)<< AFMT_EXTCHANNEL_SHIFT)&	\ 				AFMT_EXTCHANNEL_MASK))
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFMT_U8_NE
+value|AFMT_U8
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFMT_S8_NE
+value|AFMT_S8
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFMT_SIGNED_NE
+value|(AFMT_S8_NE | AFMT_S16_NE | AFMT_S24_NE | AFMT_S32_NE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFMT_NE
+value|(AFMT_SIGNED_NE | AFMT_U8_NE | AFMT_U16_NE |	\ 			 AFMT_U24_NE | AFMT_U32_NE)
+end_define
 
 begin_comment
 comment|/*  * Minor numbers for the sound driver.  *  * Unfortunately Creative called the codec chip of SB as a DSP. For this  * reason the /dev/dsp is reserved for digitized audio use. There is a  * device for true DSP processors but it will be called something else.  * In v3.0 it's /dev/sndproc but this could be a temporary solution.  */
@@ -2021,6 +1168,10 @@ begin_comment
 comment|/* s16le/stereo 44100Hz CD */
 end_comment
 
+begin_comment
+comment|/*   * OSSv4 compatible device. For now, it serve no purpose and  * the cloning itself will forward the request to ordinary /dev/dsp  * instead.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2029,14 +1180,58 @@ value|16
 end_define
 
 begin_comment
-comment|/* OSSv4 compatible /dev/dsp_mmap */
+comment|/* /dev/dsp_mmap     */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SND_DEV_DSP_AC3
+value|17
+end_define
+
+begin_comment
+comment|/* /dev/dsp_ac3      */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SND_DEV_DSP_MULTICH
+value|18
+end_define
+
+begin_comment
+comment|/* /dev/dsp_multich  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SND_DEV_DSP_SPDIFOUT
+value|19
+end_define
+
+begin_comment
+comment|/* /dev/dsp_spdifout */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SND_DEV_DSP_SPDIFIN
+value|20
+end_define
+
+begin_comment
+comment|/* /dev/dsp_spdifin  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SND_DEV_LAST
-value|SND_DEV_DSP_MMAP
+value|SND_DEV_DSP_SPDIFIN
 end_define
 
 begin_define
@@ -2154,15 +1349,22 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function_decl
-name|struct
-name|pcm_channel
-modifier|*
-name|pcm_getfakechan
+name|int
+name|pcm_setvchans
 parameter_list|(
 name|struct
 name|snddev_info
 modifier|*
 name|d
+parameter_list|,
+name|int
+name|direction
+parameter_list|,
+name|int
+name|newcnt
+parameter_list|,
+name|int
+name|num
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2187,6 +1389,10 @@ name|direction
 parameter_list|,
 name|pid_t
 name|pid
+parameter_list|,
+name|char
+modifier|*
+name|comm
 parameter_list|,
 name|int
 name|devunit
@@ -2525,15 +1731,6 @@ parameter_list|)
 value|mtx_unlock(m)
 end_define
 
-begin_function_decl
-name|int
-name|sysctl_hw_snd_vchans
-parameter_list|(
-name|SYSCTL_HANDLER_ARGS
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_typedef
 typedef|typedef
 name|int
@@ -2718,12 +1915,6 @@ begin_comment
 comment|/* force device type/class */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PCM_DEBUG_MTX
-end_define
-
 begin_comment
 comment|/*  * this is rather kludgey- we need to duplicate these struct def'ns from sound.c  * so that the macro versions of pcm_{,un}lock can dereference them.  * we also have to do this now makedev() has gone away.  */
 end_comment
@@ -2755,6 +1946,18 @@ expr_stmt|;
 block|}
 name|busy
 struct|;
+struct|struct
+block|{
+name|SLIST_HEAD
+argument_list|(
+argument_list|,
+argument|pcm_channel
+argument_list|)
+name|head
+expr_stmt|;
+block|}
+name|opened
+struct|;
 block|}
 name|pcm
 struct|;
@@ -2773,11 +1976,6 @@ name|struct
 name|snd_clone
 modifier|*
 name|clones
-decl_stmt|;
-name|struct
-name|pcm_channel
-modifier|*
-name|fakechan
 decl_stmt|;
 name|unsigned
 name|devcount
@@ -2833,6 +2031,9 @@ name|rvchanrate
 decl_stmt|,
 name|rvchanformat
 decl_stmt|;
+name|int32_t
+name|eqpreamp
+decl_stmt|;
 name|struct
 name|sysctl_ctx_list
 name|play_sysctl_ctx
@@ -2875,68 +2076,68 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PCM_DEBUG_MTX
-end_ifdef
-
 begin_define
 define|#
 directive|define
-name|pcm_lock
+name|PCM_LOCKOWNED
 parameter_list|(
 name|d
 parameter_list|)
-value|mtx_lock(((struct snddev_info *)(d))->lock)
+value|mtx_owned((d)->lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|pcm_unlock
+name|PCM_LOCK
 parameter_list|(
 name|d
 parameter_list|)
-value|mtx_unlock(((struct snddev_info *)(d))->lock)
+value|mtx_lock((d)->lock)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|void
-name|pcm_lock
+begin_define
+define|#
+directive|define
+name|PCM_UNLOCK
 parameter_list|(
-name|struct
-name|snddev_info
-modifier|*
 name|d
 parameter_list|)
-function_decl|;
-end_function_decl
+value|mtx_unlock((d)->lock)
+end_define
 
-begin_function_decl
-name|void
-name|pcm_unlock
+begin_define
+define|#
+directive|define
+name|PCM_TRYLOCK
 parameter_list|(
-name|struct
-name|snddev_info
-modifier|*
 name|d
 parameter_list|)
-function_decl|;
-end_function_decl
+value|mtx_trylock((d)->lock)
+end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|PCM_LOCKASSERT
+parameter_list|(
+name|d
+parameter_list|)
+value|mtx_assert((d)->lock, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCM_UNLOCKASSERT
+parameter_list|(
+name|d
+parameter_list|)
+value|mtx_assert((d)->lock, MA_NOTOWNED)
+end_define
 
 begin_comment
-comment|/*  * For PCM_CV_[WAIT | ACQUIRE | RELEASE], be sure to surround these  * with pcm_lock/unlock() sequence, or I'll come to gnaw upon you!  */
+comment|/*  * For PCM_[WAIT | ACQUIRE | RELEASE], be sure to surround these  * with PCM_LOCK/UNLOCK() sequence, or I'll come to gnaw upon you!  */
 end_comment
 
 begin_ifdef
@@ -2952,7 +2153,7 @@ name|PCM_WAIT
 parameter_list|(
 name|x
 parameter_list|)
-value|do {					\ 	if (mtx_owned((x)->lock) == 0)					\ 		panic("%s(%d): [PCM WAIT] Mutex not owned!",		\ 		    __func__, __LINE__);				\ 	while ((x)->flags& SD_F_BUSY) {				\ 		if (snd_verbose> 3)					\ 			device_printf((x)->dev,				\ 			    "%s(%d): [PCM WAIT] calling cv_wait().\n",	\ 			    __func__, __LINE__);			\ 		cv_wait(&(x)->cv, (x)->lock);				\ 	}								\ } while(0)
+value|do {					\ 	if (!PCM_LOCKOWNED(x))						\ 		panic("%s(%d): [PCM WAIT] Mutex not owned!",		\ 		    __func__, __LINE__);				\ 	while ((x)->flags& SD_F_BUSY) {				\ 		if (snd_verbose> 3)					\ 			device_printf((x)->dev,				\ 			    "%s(%d): [PCM WAIT] calling cv_wait().\n",	\ 			    __func__, __LINE__);			\ 		cv_wait(&(x)->cv, (x)->lock);				\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -2962,7 +2163,7 @@ name|PCM_ACQUIRE
 parameter_list|(
 name|x
 parameter_list|)
-value|do {					\ 	if (mtx_owned((x)->lock) == 0)					\ 		panic("%s(%d): [PCM ACQUIRE] Mutex not owned!",		\ 		    __func__, __LINE__);				\ 	if ((x)->flags& SD_F_BUSY)					\ 		panic("%s(%d): [PCM ACQUIRE] "				\ 		    "Trying to acquire BUSY cv!", __func__, __LINE__);	\ 	(x)->flags |= SD_F_BUSY;					\ } while(0)
+value|do {					\ 	if (!PCM_LOCKOWNED(x))						\ 		panic("%s(%d): [PCM ACQUIRE] Mutex not owned!",		\ 		    __func__, __LINE__);				\ 	if ((x)->flags& SD_F_BUSY)					\ 		panic("%s(%d): [PCM ACQUIRE] "				\ 		    "Trying to acquire BUSY cv!", __func__, __LINE__);	\ 	(x)->flags |= SD_F_BUSY;					\ } while (0)
 end_define
 
 begin_define
@@ -2972,7 +2173,7 @@ name|PCM_RELEASE
 parameter_list|(
 name|x
 parameter_list|)
-value|do {					\ 	if (mtx_owned((x)->lock) == 0)					\ 		panic("%s(%d): [PCM RELEASE] Mutex not owned!",		\ 		    __func__, __LINE__);				\ 	if ((x)->flags& SD_F_BUSY) {					\ 		(x)->flags&= ~SD_F_BUSY;				\ 		if ((x)->cv.cv_waiters != 0) {				\ 			if ((x)->cv.cv_waiters> 1&& snd_verbose> 3)	\ 				device_printf((x)->dev,			\ 				    "%s(%d): [PCM RELEASE] "		\ 				    "cv_waiters=%d> 1!\n",		\ 				    __func__, __LINE__,			\ 				    (x)->cv.cv_waiters);		\ 			cv_broadcast(&(x)->cv);				\ 		}							\ 	} else								\ 		panic("%s(%d): [PCM RELEASE] Releasing non-BUSY cv!",	\ 		    __func__, __LINE__);				\ } while(0)
+value|do {					\ 	if (!PCM_LOCKOWNED(x))						\ 		panic("%s(%d): [PCM RELEASE] Mutex not owned!",		\ 		    __func__, __LINE__);				\ 	if ((x)->flags& SD_F_BUSY) {					\ 		(x)->flags&= ~SD_F_BUSY;				\ 		if ((x)->cv.cv_waiters != 0) {				\ 			if ((x)->cv.cv_waiters> 1&& snd_verbose> 3)	\ 				device_printf((x)->dev,			\ 				    "%s(%d): [PCM RELEASE] "		\ 				    "cv_waiters=%d> 1!\n",		\ 				    __func__, __LINE__,			\ 				    (x)->cv.cv_waiters);		\ 			cv_broadcast(&(x)->cv);				\ 		}							\ 	} else								\ 		panic("%s(%d): [PCM RELEASE] Releasing non-BUSY cv!",	\ 		    __func__, __LINE__);				\ } while (0)
 end_define
 
 begin_comment
@@ -2986,7 +2187,7 @@ name|PCM_ACQUIRE_QUICK
 parameter_list|(
 name|x
 parameter_list|)
-value|do {					\ 	if (mtx_owned((x)->lock) != 0)					\ 		panic("%s(%d): [PCM ACQUIRE QUICK] Mutex owned!",	\ 		    __func__, __LINE__);				\ 	pcm_lock(x);							\ 	PCM_WAIT(x);							\ 	PCM_ACQUIRE(x);							\ 	pcm_unlock(x);							\ } while(0)
+value|do {					\ 	if (PCM_LOCKOWNED(x))						\ 		panic("%s(%d): [PCM ACQUIRE QUICK] Mutex owned!",	\ 		    __func__, __LINE__);				\ 	PCM_LOCK(x);							\ 	PCM_WAIT(x);							\ 	PCM_ACQUIRE(x);							\ 	PCM_UNLOCK(x);							\ } while (0)
 end_define
 
 begin_define
@@ -2996,7 +2197,7 @@ name|PCM_RELEASE_QUICK
 parameter_list|(
 name|x
 parameter_list|)
-value|do {					\ 	if (mtx_owned((x)->lock) != 0)					\ 		panic("%s(%d): [PCM RELEASE QUICK] Mutex owned!",	\ 		    __func__, __LINE__);				\ 	pcm_lock(x);							\ 	PCM_RELEASE(x);							\ 	pcm_unlock(x);							\ } while(0)
+value|do {					\ 	if (PCM_LOCKOWNED(x))						\ 		panic("%s(%d): [PCM RELEASE QUICK] Mutex owned!",	\ 		    __func__, __LINE__);				\ 	PCM_LOCK(x);							\ 	PCM_RELEASE(x);							\ 	PCM_UNLOCK(x);							\ } while (0)
 end_define
 
 begin_define
@@ -3006,7 +2207,7 @@ name|PCM_BUSYASSERT
 parameter_list|(
 name|x
 parameter_list|)
-value|do {					\ 	if (!((x) != NULL&& ((x)->flags& SD_F_BUSY)))			\ 		panic("%s(%d): [PCM BUSYASSERT] "			\ 		    "Failed, snddev_info=%p", __func__, __LINE__, x);	\ } while(0)
+value|do {					\ 	if (!((x) != NULL&& ((x)->flags& SD_F_BUSY)))			\ 		panic("%s(%d): [PCM BUSYASSERT] "			\ 		    "Failed, snddev_info=%p", __func__, __LINE__, x);	\ } while (0)
 end_define
 
 begin_define
@@ -3016,7 +2217,7 @@ name|PCM_GIANT_ENTER
 parameter_list|(
 name|x
 parameter_list|)
-value|do {					\ 	int _pcm_giant = 0;						\ 	if (mtx_owned((x)->lock) != 0)					\ 		panic("%s(%d): [GIANT ENTER] PCM lock owned!",		\ 		    __func__, __LINE__);				\ 	if (mtx_owned(&Giant) != 0&& snd_verbose> 3)			\ 		device_printf((x)->dev,					\ 		    "%s(%d): [GIANT ENTER] Giant owned!\n",		\ 		    __func__, __LINE__);				\ 	if (!((x)->flags& SD_F_MPSAFE)&& mtx_owned(&Giant) == 0)	\ 		do {							\ 			mtx_lock(&Giant);				\ 			_pcm_giant = 1;					\ 		} while(0)
+value|do {					\ 	int _pcm_giant = 0;						\ 	if (PCM_LOCKOWNED(x))						\ 		panic("%s(%d): [GIANT ENTER] PCM lock owned!",		\ 		    __func__, __LINE__);				\ 	if (mtx_owned(&Giant) != 0&& snd_verbose> 3)			\ 		device_printf((x)->dev,					\ 		    "%s(%d): [GIANT ENTER] Giant owned!\n",		\ 		    __func__, __LINE__);				\ 	if (!((x)->flags& SD_F_MPSAFE)&& mtx_owned(&Giant) == 0)	\ 		do {							\ 			mtx_lock(&Giant);				\ 			_pcm_giant = 1;					\ 		} while (0)
 end_define
 
 begin_define
@@ -3026,7 +2227,7 @@ name|PCM_GIANT_EXIT
 parameter_list|(
 name|x
 parameter_list|)
-value|do {					\ 	if (mtx_owned((x)->lock) != 0)					\ 		panic("%s(%d): [GIANT EXIT] PCM lock owned!",		\ 		    __func__, __LINE__);				\ 	if (!(_pcm_giant == 0 || _pcm_giant == 1))			\ 		panic("%s(%d): [GIANT EXIT] _pcm_giant screwed!",	\ 		    __func__, __LINE__);				\ 	if ((x)->flags& SD_F_MPSAFE) {					\ 		if (_pcm_giant == 1)					\ 			panic("%s(%d): [GIANT EXIT] MPSAFE Giant?",	\ 			    __func__, __LINE__);			\ 		if (mtx_owned(&Giant) != 0&& snd_verbose> 3)		\ 			device_printf((x)->dev,				\ 			    "%s(%d): [GIANT EXIT] Giant owned!\n",	\ 			    __func__, __LINE__);			\ 	}								\ 	if (_pcm_giant != 0) {						\ 		if (mtx_owned(&Giant) == 0)				\ 			panic("%s(%d): [GIANT EXIT] Giant not owned!",	\ 			    __func__, __LINE__);			\ 		_pcm_giant = 0;						\ 		mtx_unlock(&Giant);					\ 	}								\ } while(0)
+value|do {					\ 	if (PCM_LOCKOWNED(x))						\ 		panic("%s(%d): [GIANT EXIT] PCM lock owned!",		\ 		    __func__, __LINE__);				\ 	if (!(_pcm_giant == 0 || _pcm_giant == 1))			\ 		panic("%s(%d): [GIANT EXIT] _pcm_giant screwed!",	\ 		    __func__, __LINE__);				\ 	if ((x)->flags& SD_F_MPSAFE) {					\ 		if (_pcm_giant == 1)					\ 			panic("%s(%d): [GIANT EXIT] MPSAFE Giant?",	\ 			    __func__, __LINE__);			\ 		if (mtx_owned(&Giant) != 0&& snd_verbose> 3)		\ 			device_printf((x)->dev,				\ 			    "%s(%d): [GIANT EXIT] Giant owned!\n",	\ 			    __func__, __LINE__);			\ 	}								\ 	if (_pcm_giant != 0) {						\ 		if (mtx_owned(&Giant) == 0)				\ 			panic("%s(%d): [GIANT EXIT] Giant not owned!",	\ 			    __func__, __LINE__);			\ 		_pcm_giant = 0;						\ 		mtx_unlock(&Giant);					\ 	}								\ } while (0)
 end_define
 
 begin_else
@@ -3045,7 +2246,7 @@ name|PCM_WAIT
 parameter_list|(
 name|x
 parameter_list|)
-value|do {					\ 	mtx_assert((x)->lock, MA_OWNED);				\ 	while ((x)->flags& SD_F_BUSY)					\ 		cv_wait(&(x)->cv, (x)->lock);				\ } while(0)
+value|do {					\ 	PCM_LOCKASSERT(x);						\ 	while ((x)->flags& SD_F_BUSY)					\ 		cv_wait(&(x)->cv, (x)->lock);				\ } while (0)
 end_define
 
 begin_define
@@ -3055,7 +2256,7 @@ name|PCM_ACQUIRE
 parameter_list|(
 name|x
 parameter_list|)
-value|do {					\ 	mtx_assert((x)->lock, MA_OWNED);				\ 	KASSERT(!((x)->flags& SD_F_BUSY),				\ 	    ("%s(%d): [PCM ACQUIRE] Trying to acquire BUSY cv!",	\ 	    __func__, __LINE__));					\ 	(x)->flags |= SD_F_BUSY;					\ } while(0)
+value|do {					\ 	PCM_LOCKASSERT(x);						\ 	KASSERT(!((x)->flags& SD_F_BUSY),				\ 	    ("%s(%d): [PCM ACQUIRE] Trying to acquire BUSY cv!",	\ 	    __func__, __LINE__));					\ 	(x)->flags |= SD_F_BUSY;					\ } while (0)
 end_define
 
 begin_define
@@ -3065,7 +2266,7 @@ name|PCM_RELEASE
 parameter_list|(
 name|x
 parameter_list|)
-value|do {					\ 	mtx_assert((x)->lock, MA_OWNED);				\ 	KASSERT((x)->flags& SD_F_BUSY,					\ 	    ("%s(%d): [PCM RELEASE] Releasing non-BUSY cv!",		\ 	    __func__, __LINE__));					\ 	(x)->flags&= ~SD_F_BUSY;					\ 	if ((x)->cv.cv_waiters != 0)					\ 		cv_broadcast(&(x)->cv);					\ } while(0)
+value|do {					\ 	PCM_LOCKASSERT(x);						\ 	KASSERT((x)->flags& SD_F_BUSY,					\ 	    ("%s(%d): [PCM RELEASE] Releasing non-BUSY cv!",		\ 	    __func__, __LINE__));					\ 	(x)->flags&= ~SD_F_BUSY;					\ 	if ((x)->cv.cv_waiters != 0)					\ 		cv_broadcast(&(x)->cv);					\ } while (0)
 end_define
 
 begin_comment
@@ -3079,7 +2280,7 @@ name|PCM_ACQUIRE_QUICK
 parameter_list|(
 name|x
 parameter_list|)
-value|do {					\ 	mtx_assert((x)->lock, MA_NOTOWNED);				\ 	pcm_lock(x);							\ 	PCM_WAIT(x);							\ 	PCM_ACQUIRE(x);							\ 	pcm_unlock(x);							\ } while(0)
+value|do {					\ 	PCM_UNLOCKASSERT(x);						\ 	PCM_LOCK(x);							\ 	PCM_WAIT(x);							\ 	PCM_ACQUIRE(x);							\ 	PCM_UNLOCK(x);							\ } while (0)
 end_define
 
 begin_define
@@ -3089,7 +2290,7 @@ name|PCM_RELEASE_QUICK
 parameter_list|(
 name|x
 parameter_list|)
-value|do {					\ 	mtx_assert((x)->lock, MA_NOTOWNED);				\ 	pcm_lock(x);							\ 	PCM_RELEASE(x);							\ 	pcm_unlock(x);							\ } while(0)
+value|do {					\ 	PCM_UNLOCKASSERT(x);						\ 	PCM_LOCK(x);							\ 	PCM_RELEASE(x);							\ 	PCM_UNLOCK(x);							\ } while (0)
 end_define
 
 begin_define
@@ -3109,7 +2310,7 @@ name|PCM_GIANT_ENTER
 parameter_list|(
 name|x
 parameter_list|)
-value|do {					\ 	int _pcm_giant = 0;						\ 	mtx_assert((x)->lock, MA_NOTOWNED);				\ 	if (!((x)->flags& SD_F_MPSAFE)&& mtx_owned(&Giant) == 0)	\ 		do {							\ 			mtx_lock(&Giant);				\ 			_pcm_giant = 1;					\ 		} while(0)
+value|do {					\ 	int _pcm_giant = 0;						\ 	PCM_UNLOCKASSERT(x);						\ 	if (!((x)->flags& SD_F_MPSAFE)&& mtx_owned(&Giant) == 0)	\ 		do {							\ 			mtx_lock(&Giant);				\ 			_pcm_giant = 1;					\ 		} while (0)
 end_define
 
 begin_define
@@ -3119,7 +2320,7 @@ name|PCM_GIANT_EXIT
 parameter_list|(
 name|x
 parameter_list|)
-value|do {					\ 	mtx_assert((x)->lock, MA_NOTOWNED);				\ 	KASSERT(_pcm_giant == 0 || _pcm_giant == 1,			\ 	    ("%s(%d): [GIANT EXIT] _pcm_giant screwed!",		\ 	    __func__, __LINE__));					\ 	KASSERT(!((x)->flags& SD_F_MPSAFE) ||				\ 	    (((x)->flags& SD_F_MPSAFE)&& _pcm_giant == 0),		\ 	    ("%s(%d): [GIANT EXIT] MPSAFE Giant?",			\ 	    __func__, __LINE__));					\ 	if (_pcm_giant != 0) {						\ 		mtx_assert(&Giant, MA_OWNED);				\ 		_pcm_giant = 0;						\ 		mtx_unlock(&Giant);					\ 	}								\ } while(0)
+value|do {					\ 	PCM_UNLOCKASSERT(x);						\ 	KASSERT(_pcm_giant == 0 || _pcm_giant == 1,			\ 	    ("%s(%d): [GIANT EXIT] _pcm_giant screwed!",		\ 	    __func__, __LINE__));					\ 	KASSERT(!((x)->flags& SD_F_MPSAFE) ||				\ 	    (((x)->flags& SD_F_MPSAFE)&& _pcm_giant == 0),		\ 	    ("%s(%d): [GIANT EXIT] MPSAFE Giant?",			\ 	    __func__, __LINE__));					\ 	if (_pcm_giant != 0) {						\ 		mtx_assert(&Giant, MA_OWNED);				\ 		_pcm_giant = 0;						\ 		mtx_unlock(&Giant);					\ 	}								\ } while (0)
 end_define
 
 begin_endif
@@ -3139,7 +2340,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|PCM_GIANT_EXIT(x);						\ } while(0)
+value|PCM_GIANT_EXIT(x);						\ } while (0)
 end_define
 
 begin_ifdef

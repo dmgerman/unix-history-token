@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dirent.h>
+file|<ufs/ufs/dir.h>
 end_include
 
 begin_if
@@ -610,7 +610,7 @@ init|=
 name|ROOTINO
 decl_stmt|;
 name|struct
-name|dirent
+name|direct
 modifier|*
 name|dp
 decl_stmt|;
@@ -859,7 +859,7 @@ name|dp
 operator|=
 operator|(
 expr|struct
-name|dirent
+name|direct
 operator|*
 operator|)
 operator|(
@@ -878,7 +878,7 @@ if|if
 condition|(
 name|dp
 operator|->
-name|d_fileno
+name|d_ino
 operator|&&
 name|list_only
 condition|)
@@ -897,7 +897,7 @@ condition|(
 operator|!
 name|dp
 operator|->
-name|d_fileno
+name|d_ino
 operator|||
 name|strcmp
 argument_list|(
@@ -913,7 +913,7 @@ name|ino
 operator|=
 name|dp
 operator|->
-name|d_fileno
+name|d_ino
 expr_stmt|;
 operator|*
 operator|(

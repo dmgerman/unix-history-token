@@ -631,9 +631,9 @@ literal|"mfs"
 block|,
 literal|"msdosfs"
 block|,
-literal|"nfs"
+literal|"newnfs"
 block|,
-literal|"nfs4"
+literal|"nfs"
 block|,
 literal|"ntfs"
 block|,

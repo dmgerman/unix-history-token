@@ -242,14 +242,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|usbd_non_isoc_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|usbd_ctrl_callback
 decl_stmt|;
 end_decl_stmt
@@ -287,7 +287,7 @@ define|#
 directive|define
 name|USBD_CTRL_READ_BUFFER_SIZE
 define|\
-value|(sizeof(struct usb2_device_request) + USBD_CTRL_READ_BUFFER_SP)
+value|(sizeof(struct usb_device_request) + USBD_CTRL_READ_BUFFER_SP)
 end_define
 
 begin_define
@@ -295,13 +295,13 @@ define|#
 directive|define
 name|USBD_CTRL_WRITE_BUFFER_SIZE
 define|\
-value|(sizeof(struct usb2_device_request))
+value|(sizeof(struct usb_device_request))
 end_define
 
 begin_decl_stmt
 specifier|static
 name|struct
-name|usb2_config
+name|usb_config
 name|usbd_default_epconfig
 index|[
 name|USBD_CTRL_MAX_PIPE
@@ -467,7 +467,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usbd_setup_endpoint
 parameter_list|(
 name|irp
@@ -476,7 +476,7 @@ parameter_list|,
 name|uint8_t
 parameter_list|,
 name|struct
-name|usb2_endpoint_descriptor
+name|usb_endpoint_descriptor
 modifier|*
 parameter_list|)
 function_decl|;
@@ -484,7 +484,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usbd_setup_endpoint_default
 parameter_list|(
 name|irp
@@ -497,7 +497,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usbd_setup_endpoint_one
 parameter_list|(
 name|irp
@@ -510,7 +510,7 @@ name|ndisusb_ep
 modifier|*
 parameter_list|,
 name|struct
-name|usb2_config
+name|usb_config
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1687,7 +1687,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Convert FreeBSD's usb2_error_t to USBD_STATUS  */
+comment|/* Convert FreeBSD's usb_error_t to USBD_STATUS  */
 end_comment
 
 begin_function
@@ -2086,7 +2086,7 @@ name|usb_config_descriptor_t
 modifier|*
 name|cdp
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|status
 decl_stmt|;
 name|urb
@@ -2341,7 +2341,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 init|=
@@ -2350,9 +2350,9 @@ operator|->
 name|ndisusb_dev
 decl_stmt|;
 name|struct
-name|usb2_pipe
+name|usb_endpoint
 modifier|*
-name|p
+name|ep
 init|=
 name|NULL
 decl_stmt|;
@@ -2384,7 +2384,7 @@ name|usb_endpoint_descriptor_t
 modifier|*
 name|edesc
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|ret
 decl_stmt|;
 name|urb
@@ -2509,13 +2509,13 @@ operator|=
 literal|0
 init|;
 operator|(
-name|p
+name|ep
 operator|=
-name|usb2_pipe_foreach
+name|usb2_endpoint_foreach
 argument_list|(
 name|udev
 argument_list|,
-name|p
+name|ep
 argument_list|)
 operator|)
 condition|;
@@ -2547,7 +2547,7 @@ break|break;
 block|}
 name|edesc
 operator|=
-name|p
+name|ep
 operator|->
 name|edesc
 expr_stmt|;
@@ -2740,7 +2740,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usbd_setup_endpoint_one
 parameter_list|(
 name|ip
@@ -2764,7 +2764,7 @@ modifier|*
 name|ne
 decl_stmt|;
 name|struct
-name|usb2_config
+name|usb_config
 modifier|*
 name|epconf
 decl_stmt|;
@@ -2788,11 +2788,11 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|status
 decl_stmt|;
 name|InitializeListHead
@@ -2896,7 +2896,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usbd_setup_endpoint_default
 parameter_list|(
 name|ip
@@ -2929,7 +2929,7 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|status
 decl_stmt|;
 if|if
@@ -3006,7 +3006,7 @@ end_function
 
 begin_function
 specifier|static
-name|usb2_error_t
+name|usb_error_t
 name|usbd_setup_endpoint
 parameter_list|(
 name|ip
@@ -3023,7 +3023,7 @@ name|uint8_t
 name|ifidx
 decl_stmt|;
 name|struct
-name|usb2_endpoint_descriptor
+name|usb_endpoint_descriptor
 modifier|*
 name|ep
 decl_stmt|;
@@ -3052,15 +3052,15 @@ modifier|*
 name|ne
 decl_stmt|;
 name|struct
-name|usb2_config
+name|usb_config
 name|cfg
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|status
 decl_stmt|;
 comment|/* check for non-supported transfer types */
@@ -3169,7 +3169,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_config
+name|usb_config
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3913,7 +3913,7 @@ name|ndisusb_xfer
 modifier|*
 name|nx
 parameter_list|,
-name|usb2_error_t
+name|usb_error_t
 name|status
 parameter_list|)
 block|{
@@ -4142,7 +4142,7 @@ name|void
 name|usbd_non_isoc_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -4719,7 +4719,7 @@ name|void
 name|usbd_ctrl_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -4770,7 +4770,7 @@ init|=
 literal|0
 decl_stmt|;
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 switch|switch
@@ -5563,7 +5563,7 @@ name|usbd_urb
 modifier|*
 name|urb
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|status
 decl_stmt|;
 name|void
@@ -7164,7 +7164,7 @@ name|intfproto
 decl_stmt|;
 block|{
 name|struct
-name|usb2_descriptor
+name|usb_descriptor
 modifier|*
 name|next
 init|=

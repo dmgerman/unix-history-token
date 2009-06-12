@@ -90,19 +90,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acpi.h>
+file|<contrib/dev/acpica/include/acpi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acnamesp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<contrib/dev/acpica/acdebug.h>
+file|<contrib/dev/acpica/tools/acpiexec/aecommon.h>
 end_include
 
 begin_comment
@@ -312,9 +306,27 @@ name|void
 parameter_list|)
 block|{
 return|return
+operator|(
 name|AE_ERROR
+operator|)
 return|;
 block|}
+end_function
+
+begin_function
+name|void
+name|AeTableOverride
+parameter_list|(
+name|ACPI_TABLE_HEADER
+modifier|*
+name|ExistingTable
+parameter_list|,
+name|ACPI_TABLE_HEADER
+modifier|*
+modifier|*
+name|NewTable
+parameter_list|)
+block|{ }
 end_function
 
 begin_function

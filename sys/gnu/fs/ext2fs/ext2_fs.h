@@ -88,6 +88,16 @@ name|loff_t
 value|off_t
 end_define
 
+begin_define
+define|#
+directive|define
+name|cpu_to_le32
+parameter_list|(
+name|x
+parameter_list|)
+value|htole32(x)
+end_define
+
 begin_comment
 comment|/*  * The second extended filesystem constants/structures  */
 end_comment
@@ -187,7 +197,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Special inodes numbers  */
+comment|/*  * Special inode numbers  */
 end_comment
 
 begin_define
@@ -210,28 +220,6 @@ end_define
 
 begin_comment
 comment|/* Root inode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXT2_ACL_IDX_INO
-value|3
-end_define
-
-begin_comment
-comment|/* ACL inode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXT2_ACL_DATA_INO
-value|4
-end_define
-
-begin_comment
-comment|/* ACL inode */
 end_comment
 
 begin_define
@@ -278,6 +266,87 @@ name|EXT2_SUPER_MAGIC
 value|0xEF53
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__KERNEL__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<linux/ext2_fs_sb.h>
+end_include
+
+begin_function
+specifier|static
+specifier|inline
+name|struct
+name|ext2_sb_info
+modifier|*
+name|EXT2_SB
+parameter_list|(
+name|struct
+name|super_block
+modifier|*
+name|sb
+parameter_list|)
+block|{
+return|return
+name|sb
+operator|->
+name|s_fs_info
+return|;
+block|}
+end_function
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_elif
+
+begin_comment
+comment|/*  * FreeBSD passes the pointer to the in-core struct with relevant  * fields to EXT2_SB macro when accessing superblock fields.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_SB
+parameter_list|(
+name|sb
+parameter_list|)
+value|(sb)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Assume that user mode programs are passing in an ext2fs superblock, not  * a kernel struct super_block.  This will allow us to call the feature-test  * macros from user land. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_SB
+parameter_list|(
+name|sb
+parameter_list|)
+value|(sb)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Maximal count of links to a file  */
 end_comment
@@ -288,10 +357,6 @@ directive|define
 name|EXT2_LINK_MAX
 value|32000
 end_define
-
-begin_comment
-comment|/*  * Note: under FreeBSD, the "user" versions of the following macros are  * used (and must be used) in most cases, because ((s)->u.ext2_sb.s_es is  * not accessible.  This depends on __KERNEL__ not being defined for  * kernel builds under FreeBSD.  */
-end_comment
 
 begin_comment
 comment|/*  * Macro-instructions used to manage several block sizes  */
@@ -326,17 +391,10 @@ argument_list|(
 name|__KERNEL__
 argument_list|)
 operator|||
-operator|(
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
 name|defined
 argument_list|(
 name|_KERNEL
 argument_list|)
-operator|)
 end_if
 
 begin_define
@@ -372,16 +430,6 @@ end_endif
 begin_define
 define|#
 directive|define
-name|EXT2_ACLE_PER_BLOCK
-parameter_list|(
-name|s
-parameter_list|)
-value|(EXT2_BLOCK_SIZE(s) / sizeof (struct ext2_acl_entry))
-end_define
-
-begin_define
-define|#
-directive|define
 name|EXT2_ADDR_PER_BLOCK
 parameter_list|(
 name|s
@@ -389,11 +437,19 @@ parameter_list|)
 value|(EXT2_BLOCK_SIZE(s) / sizeof (__u32))
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__KERNEL__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -425,17 +481,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__KERNEL__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -444,7 +502,7 @@ name|EXT2_ADDR_PER_BLOCK_BITS
 parameter_list|(
 name|s
 parameter_list|)
-value|((s)->u.ext2_sb.s_addr_per_block_bits)
+value|(EXT2_SB(s)->s_addr_per_block_bits)
 end_define
 
 begin_define
@@ -454,7 +512,7 @@ name|EXT2_INODE_SIZE
 parameter_list|(
 name|s
 parameter_list|)
-value|((s)->u.ext2_sb.s_inode_size)
+value|(EXT2_SB(s)->s_inode_size)
 end_define
 
 begin_define
@@ -464,7 +522,17 @@ name|EXT2_FIRST_INO
 parameter_list|(
 name|s
 parameter_list|)
-value|((s)->u.ext2_sb.s_first_ino)
+value|(EXT2_SB(s)->s_first_ino)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_INODES_PER_BLOCK
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)->s_inodes_per_block)
 end_define
 
 begin_else
@@ -497,58 +565,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !notyet */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXT2_INODES_PER_BLOCK
-parameter_list|(
-name|s
-parameter_list|)
-value|((s)->s_inodes_per_block)
-end_define
-
-begin_comment
-comment|/* Should be sizeof(struct ext2_inode): */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXT2_INODE_SIZE
-parameter_list|(
-name|s
-parameter_list|)
-value|((s)->s_inode_size)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXT2_FIRST_INO
-parameter_list|(
-name|s
-parameter_list|)
-value|((s)->s_first_inode)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* notyet */
-end_comment
-
 begin_comment
 comment|/*  * Macro-instructions used to manage fragments  */
 end_comment
@@ -574,48 +590,17 @@ name|EXT2_MIN_FRAG_LOG_SIZE
 value|10
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__KERNEL__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|EXT2_FRAG_SIZE
-parameter_list|(
-name|s
-parameter_list|)
-value|((s)->u.ext2_sb.s_frag_size)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXT2_FRAGS_PER_BLOCK
-parameter_list|(
-name|s
-parameter_list|)
-value|((s)->u.ext2_sb.s_frags_per_block)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|_KERNEL
+name|__KERNEL__
 argument_list|)
-operator|&&
+operator|||
 name|defined
 argument_list|(
-name|__FreeBSD__
+name|_KERNEL
 argument_list|)
 end_if
 
@@ -626,7 +611,17 @@ name|EXT2_FRAG_SIZE
 parameter_list|(
 name|s
 parameter_list|)
-value|((s)->s_frag_size)
+value|(EXT2_SB(s)->s_frag_size)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_FRAGS_PER_BLOCK
+parameter_list|(
+name|s
+parameter_list|)
+value|(EXT2_SB(s)->s_frags_per_block)
 end_define
 
 begin_else
@@ -643,11 +638,6 @@ name|s
 parameter_list|)
 value|(EXT2_MIN_FRAG_SIZE<< (s)->s_log_frag_size)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -770,11 +760,19 @@ begin_comment
 comment|/*  * Macro-instructions used to manage group descriptors  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__KERNEL__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -783,7 +781,7 @@ name|EXT2_BLOCKS_PER_GROUP
 parameter_list|(
 name|s
 parameter_list|)
-value|((s)->u.ext2_sb.s_blocks_per_group)
+value|(EXT2_SB(s)->s_blocks_per_group)
 end_define
 
 begin_define
@@ -793,7 +791,7 @@ name|EXT2_DESC_PER_BLOCK
 parameter_list|(
 name|s
 parameter_list|)
-value|((s)->u.ext2_sb.s_desc_per_block)
+value|(EXT2_SB(s)->s_desc_per_block)
 end_define
 
 begin_define
@@ -803,7 +801,7 @@ name|EXT2_INODES_PER_GROUP
 parameter_list|(
 name|s
 parameter_list|)
-value|((s)->u.ext2_sb.s_inodes_per_group)
+value|(EXT2_SB(s)->s_inodes_per_group)
 end_define
 
 begin_define
@@ -813,7 +811,7 @@ name|EXT2_DESC_PER_BLOCK_BITS
 parameter_list|(
 name|s
 parameter_list|)
-value|((s)->u.ext2_sb.s_desc_per_block_bits)
+value|(EXT2_SB(s)->s_desc_per_block_bits)
 end_define
 
 begin_else
@@ -1606,7 +1604,7 @@ name|sb
 parameter_list|,
 name|opt
 parameter_list|)
-value|((sb)->u.ext2_sb.s_mount_opt& \ 					 EXT2_MOUNT_##opt)
+value|(EXT2_SB(sb)->s_mount_opt& \ 					 EXT2_MOUNT_##opt)
 end_define
 
 begin_comment
@@ -1860,46 +1858,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__KERNEL__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|EXT2_SB
-parameter_list|(
-name|sb
-parameter_list|)
-value|(&((sb)->u.ext2_sb))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* Assume that user mode programs are passing in an ext2fs superblock, not  * a kernel struct super_block.  This will allow us to call the feature-test  * macros from user land. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXT2_SB
-parameter_list|(
-name|sb
-parameter_list|)
-value|(sb)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Codes for operating systems  */
 end_comment
@@ -2000,7 +1958,7 @@ parameter_list|,
 name|mask
 parameter_list|)
 define|\
-value|( EXT2_SB(sb)->s_feature_compat& (mask) )
+value|( EXT2_SB(sb)->s_es->s_feature_compat& cpu_to_le32(mask) )
 end_define
 
 begin_define
@@ -2013,7 +1971,7 @@ parameter_list|,
 name|mask
 parameter_list|)
 define|\
-value|( EXT2_SB(sb)->s_feature_ro_compat& (mask) )
+value|( EXT2_SB(sb)->s_es->s_feature_ro_compat& cpu_to_le32(mask) )
 end_define
 
 begin_define
@@ -2026,7 +1984,7 @@ parameter_list|,
 name|mask
 parameter_list|)
 define|\
-value|( EXT2_SB(sb)->s_feature_incompat& (mask) )
+value|( EXT2_SB(sb)->s_es->s_feature_incompat& cpu_to_le32(mask) )
 end_define
 
 begin_define

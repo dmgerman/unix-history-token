@@ -489,7 +489,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|void
+name|int
 name|fwe_poll
 parameter_list|(
 name|struct
@@ -526,7 +526,11 @@ operator|&
 name|IFF_DRV_RUNNING
 operator|)
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|fwe
 operator|=
 operator|(
@@ -569,6 +573,11 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -2467,6 +2476,12 @@ name|if_capenable
 operator||=
 name|IFCAP_POLLING
 expr_stmt|;
+name|ifp
+operator|->
+name|if_capenable
+operator||=
+name|IFCAP_POLLING_NOCOUNT
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2514,6 +2529,13 @@ name|if_capenable
 operator|&=
 operator|~
 name|IFCAP_POLLING
+expr_stmt|;
+name|ifp
+operator|->
+name|if_capenable
+operator|&=
+operator|~
+name|IFCAP_POLLING_NOCOUNT
 expr_stmt|;
 return|return
 operator|(

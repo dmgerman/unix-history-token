@@ -58,17 +58,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|securelevel
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* system security level (see init(8)) */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|cold
 decl_stmt|;
 end_decl_stmt

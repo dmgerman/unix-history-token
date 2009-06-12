@@ -86,6 +86,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 0 = setup */
@@ -108,6 +110,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 1 = exit */
@@ -123,6 +127,8 @@ block|,
 name|AUE_FORK
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -149,6 +155,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 3 = read */
@@ -167,6 +175,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -193,6 +203,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 5 = linux_open */
@@ -211,6 +223,8 @@ block|,
 name|AUE_CLOSE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -237,6 +251,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 7 = linux_waitpid */
@@ -255,6 +271,8 @@ block|,
 name|AUE_CREAT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -281,6 +299,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 9 = linux_link */
@@ -299,6 +319,8 @@ block|,
 name|AUE_UNLINK
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -325,6 +347,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 11 = linux_execve */
@@ -343,6 +367,8 @@ block|,
 name|AUE_CHDIR
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -369,6 +395,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 13 = linux_time */
@@ -387,6 +415,8 @@ block|,
 name|AUE_MKNOD
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -413,6 +443,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 15 = linux_chmod */
@@ -435,6 +467,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 16 = linux_lchown16 */
@@ -450,6 +484,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -476,6 +512,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 18 = linux_stat */
@@ -498,6 +536,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 19 = linux_lseek */
@@ -513,6 +553,8 @@ block|,
 name|AUE_GETPID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -539,6 +581,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 21 = linux_mount */
@@ -557,6 +601,8 @@ block|,
 name|AUE_UMOUNT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -583,6 +629,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 23 = linux_setuid16 */
@@ -602,6 +650,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 24 = linux_getuid16 */
@@ -617,6 +667,8 @@ block|,
 name|AUE_SETTIMEOFDAY
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -643,6 +695,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 26 = linux_ptrace */
@@ -661,6 +715,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -684,6 +740,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 28 = fstat */
@@ -699,6 +757,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -725,6 +785,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 30 = linux_utime */
@@ -744,6 +806,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 31 = stty */
@@ -759,6 +823,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -785,6 +851,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 33 = linux_access */
@@ -803,6 +871,8 @@ block|,
 name|AUE_NICE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -826,6 +896,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 35 = ftime */
@@ -841,6 +913,8 @@ block|,
 name|AUE_SYNC
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -867,6 +941,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 37 = linux_kill */
@@ -885,6 +961,8 @@ block|,
 name|AUE_RENAME
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -911,6 +989,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 39 = linux_mkdir */
@@ -929,6 +1009,8 @@ block|,
 name|AUE_RMDIR
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -955,6 +1037,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 41 = dup */
@@ -973,6 +1057,8 @@ block|,
 name|AUE_PIPE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -999,6 +1085,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 43 = linux_times */
@@ -1014,6 +1102,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1040,6 +1130,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 45 = linux_brk */
@@ -1062,6 +1154,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 46 = linux_setgid16 */
@@ -1077,6 +1171,8 @@ block|,
 name|AUE_GETGID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1103,6 +1199,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 48 = linux_signal */
@@ -1122,6 +1220,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 49 = linux_geteuid16 */
@@ -1137,6 +1237,8 @@ block|,
 name|AUE_GETEGID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1163,6 +1265,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 51 = acct */
@@ -1185,6 +1289,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 52 = linux_umount */
@@ -1200,6 +1306,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1226,6 +1334,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 54 = linux_ioctl */
@@ -1248,6 +1358,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 55 = linux_fcntl */
@@ -1263,6 +1375,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1289,6 +1403,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 57 = setpgid */
@@ -1308,6 +1424,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 58 = ulimit */
@@ -1323,6 +1441,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1349,6 +1469,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 60 = umask */
@@ -1367,6 +1489,8 @@ block|,
 name|AUE_CHROOT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1393,6 +1517,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 62 = linux_ustat */
@@ -1411,6 +1537,8 @@ block|,
 name|AUE_DUP2
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1434,6 +1562,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 64 = linux_getppid */
@@ -1453,6 +1583,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 65 = getpgrp */
@@ -1468,6 +1600,8 @@ block|,
 name|AUE_SETSID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1494,6 +1628,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 67 = linux_sigaction */
@@ -1509,6 +1645,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1535,6 +1673,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 69 = linux_ssetmask */
@@ -1553,6 +1693,8 @@ block|,
 name|AUE_SETREUID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1579,6 +1721,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 71 = linux_setregid16 */
@@ -1597,6 +1741,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1623,6 +1769,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 73 = linux_sigpending */
@@ -1641,6 +1789,8 @@ block|,
 name|AUE_SYSCTL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1667,6 +1817,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 75 = linux_setrlimit */
@@ -1685,6 +1837,8 @@ block|,
 name|AUE_GETRLIMIT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1711,6 +1865,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 77 = linux_getrusage */
@@ -1729,6 +1885,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1755,6 +1913,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 79 = linux_settimeofday */
@@ -1773,6 +1933,8 @@ block|,
 name|AUE_GETGROUPS
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1799,6 +1961,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 81 = linux_setgroups16 */
@@ -1817,6 +1981,8 @@ block|,
 name|AUE_SELECT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1843,6 +2009,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 83 = linux_symlink */
@@ -1861,6 +2029,8 @@ block|,
 name|AUE_LSTAT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1887,6 +2057,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 85 = linux_readlink */
@@ -1902,6 +2074,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1928,6 +2102,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 87 = swapon */
@@ -1946,6 +2122,8 @@ block|,
 name|AUE_REBOOT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1972,6 +2150,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 89 = linux_readdir */
@@ -1990,6 +2170,8 @@ block|,
 name|AUE_MMAP
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2016,6 +2198,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 91 = munmap */
@@ -2034,6 +2218,8 @@ block|,
 name|AUE_TRUNCATE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2060,6 +2246,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 93 = linux_ftruncate */
@@ -2078,6 +2266,8 @@ block|,
 name|AUE_FCHMOD
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2104,6 +2294,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 95 = fchown */
@@ -2122,6 +2314,8 @@ block|,
 name|AUE_GETPRIORITY
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2148,6 +2342,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 97 = setpriority */
@@ -2163,6 +2359,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2189,6 +2387,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 99 = linux_statfs */
@@ -2211,6 +2411,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 100 = linux_fstatfs */
@@ -2226,6 +2428,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2252,6 +2456,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 102 = linux_socketcall */
@@ -2270,6 +2476,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2296,6 +2504,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 104 = linux_setitimer */
@@ -2314,6 +2524,8 @@ block|,
 name|AUE_GETITIMER
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2340,6 +2552,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 106 = linux_newstat */
@@ -2358,6 +2572,8 @@ block|,
 name|AUE_LSTAT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2384,6 +2600,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 108 = linux_newfstat */
@@ -2399,6 +2617,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2425,6 +2645,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 110 = linux_iopl */
@@ -2440,6 +2662,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2463,6 +2687,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 112 = idle */
@@ -2478,6 +2704,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2504,6 +2732,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 114 = linux_wait4 */
@@ -2519,6 +2749,8 @@ block|,
 name|AUE_SWAPOFF
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2545,6 +2777,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 116 = linux_sysinfo */
@@ -2563,6 +2797,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2589,6 +2825,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 118 = fsync */
@@ -2607,6 +2845,8 @@ block|,
 name|AUE_SIGRETURN
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2633,6 +2873,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 120 = linux_clone */
@@ -2651,6 +2893,8 @@ block|,
 name|AUE_SYSCTL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2677,6 +2921,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 122 = linux_newuname */
@@ -2696,6 +2942,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 123 = modify_ldt */
@@ -2711,6 +2959,8 @@ block|,
 name|AUE_ADJTIME
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2737,6 +2987,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 125 = linux_mprotect */
@@ -2755,6 +3007,8 @@ block|,
 name|AUE_SIGPROCMASK
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2778,6 +3032,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 127 = linux_create_module */
@@ -2793,6 +3049,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2816,6 +3074,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 129 = linux_delete_module */
@@ -2835,6 +3095,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 130 = linux_get_kernel_syms */
@@ -2850,6 +3112,8 @@ block|,
 name|AUE_QUOTACTL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2876,6 +3140,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 132 = getpgid */
@@ -2898,6 +3164,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 133 = fchdir */
@@ -2913,6 +3181,8 @@ block|,
 name|AUE_BDFLUSH
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -2939,6 +3209,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 135 = linux_sysfs */
@@ -2961,6 +3233,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 136 = linux_personality */
@@ -2976,6 +3250,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3002,6 +3278,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 138 = linux_setfsuid16 */
@@ -3020,6 +3298,8 @@ block|,
 name|AUE_SETFSGID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3046,6 +3326,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 140 = linux_llseek */
@@ -3064,6 +3346,8 @@ block|,
 name|AUE_GETDIRENTRIES
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3090,6 +3374,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 142 = linux_select */
@@ -3108,6 +3394,8 @@ block|,
 name|AUE_FLOCK
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3134,6 +3422,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 144 = linux_msync */
@@ -3152,6 +3442,8 @@ block|,
 name|AUE_READV
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3178,6 +3470,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 146 = linux_writev */
@@ -3196,6 +3490,8 @@ block|,
 name|AUE_GETSID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3222,6 +3518,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 148 = linux_fdatasync */
@@ -3240,6 +3538,8 @@ block|,
 name|AUE_SYSCTL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3266,6 +3566,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 150 = mlock */
@@ -3284,6 +3586,8 @@ block|,
 name|AUE_MUNLOCK
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3310,6 +3614,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 152 = mlockall */
@@ -3325,6 +3631,8 @@ block|,
 name|AUE_MUNLOCKALL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3351,6 +3659,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 154 = sched_setparam */
@@ -3369,6 +3679,8 @@ block|,
 name|AUE_SCHED_GETPARAM
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3395,6 +3707,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 156 = linux_sched_setscheduler */
@@ -3417,6 +3731,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 157 = linux_sched_getscheduler */
@@ -3432,6 +3748,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3458,6 +3776,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 159 = linux_sched_get_priority_max */
@@ -3476,6 +3796,8 @@ block|,
 name|AUE_SCHED_GET_PRIORITY_MIN
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3502,6 +3824,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 161 = linux_sched_rr_get_interval */
@@ -3520,6 +3844,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3546,6 +3872,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 163 = linux_mremap */
@@ -3564,6 +3892,8 @@ block|,
 name|AUE_SETRESUID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3590,6 +3920,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 165 = linux_getresuid16 */
@@ -3609,6 +3941,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 166 = vm86 */
@@ -3624,6 +3958,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3650,6 +3986,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 168 = poll */
@@ -3665,6 +4003,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3691,6 +4031,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 170 = linux_setresgid16 */
@@ -3709,6 +4051,8 @@ block|,
 name|AUE_GETRESGID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3735,6 +4079,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 172 = linux_prctl */
@@ -3753,6 +4099,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3779,6 +4127,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 174 = linux_rt_sigaction */
@@ -3797,6 +4147,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3823,6 +4175,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 176 = linux_rt_sigpending */
@@ -3845,6 +4199,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 177 = linux_rt_sigtimedwait */
@@ -3860,6 +4216,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3886,6 +4244,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 179 = linux_rt_sigsuspend */
@@ -3904,6 +4264,8 @@ block|,
 name|AUE_PREAD
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3930,6 +4292,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 181 = linux_pwrite */
@@ -3948,6 +4312,8 @@ block|,
 name|AUE_CHOWN
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -3974,6 +4340,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 183 = linux_getcwd */
@@ -3993,6 +4361,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 184 = linux_capget */
@@ -4008,6 +4378,8 @@ block|,
 name|AUE_CAPSET
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4034,6 +4406,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 186 = linux_sigaltstack */
@@ -4049,6 +4423,8 @@ block|,
 name|AUE_SENDFILE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4072,6 +4448,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 188 = getpmsg */
@@ -4091,6 +4469,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 189 = putpmsg */
@@ -4106,6 +4486,8 @@ block|,
 name|AUE_VFORK
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4132,6 +4514,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 191 = linux_getrlimit */
@@ -4150,6 +4534,8 @@ block|,
 name|AUE_MMAP
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4176,6 +4562,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 193 = linux_truncate64 */
@@ -4194,6 +4582,8 @@ block|,
 name|AUE_FTRUNCATE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4220,6 +4610,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 195 = linux_stat64 */
@@ -4238,6 +4630,8 @@ block|,
 name|AUE_LSTAT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4264,6 +4658,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 197 = linux_fstat64 */
@@ -4282,6 +4678,8 @@ block|,
 name|AUE_LCHOWN
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4305,6 +4703,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 199 = linux_getuid */
@@ -4320,6 +4720,8 @@ block|,
 name|AUE_GETGID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4343,6 +4745,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 201 = geteuid */
@@ -4358,6 +4762,8 @@ block|,
 name|AUE_GETEGID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4384,6 +4790,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 203 = setreuid */
@@ -4402,6 +4810,8 @@ block|,
 name|AUE_SETREGID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4428,6 +4838,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 205 = linux_getgroups */
@@ -4446,6 +4858,8 @@ block|,
 name|AUE_SETGROUPS
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4472,6 +4886,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 207 = fchown */
@@ -4490,6 +4906,8 @@ block|,
 name|AUE_SETRESUID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4516,6 +4934,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 209 = getresuid */
@@ -4534,6 +4954,8 @@ block|,
 name|AUE_SETRESGID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4560,6 +4982,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 211 = getresgid */
@@ -4578,6 +5002,8 @@ block|,
 name|AUE_CHOWN
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4604,6 +5030,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 213 = setuid */
@@ -4622,6 +5050,8 @@ block|,
 name|AUE_SETGID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4648,6 +5078,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 215 = linux_setfsuid */
@@ -4666,6 +5098,8 @@ block|,
 name|AUE_SETFSGID
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4692,6 +5126,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 217 = linux_pivot_root */
@@ -4710,6 +5146,8 @@ block|,
 name|AUE_MINCORE
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4736,6 +5174,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 219 = madvise */
@@ -4754,6 +5194,8 @@ block|,
 name|AUE_GETDIRENTRIES
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4780,6 +5222,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 221 = linux_fcntl64 */
@@ -4795,6 +5239,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4818,6 +5264,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 223 =  */
@@ -4833,6 +5281,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4856,6 +5306,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 225 = linux_readahead */
@@ -4871,6 +5323,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4894,6 +5348,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 227 = linux_lsetxattr */
@@ -4909,6 +5365,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4932,6 +5390,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 229 = linux_getxattr */
@@ -4947,6 +5407,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -4970,6 +5432,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 231 = linux_fgetxattr */
@@ -4985,6 +5449,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5008,6 +5474,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 233 = linux_llistxattr */
@@ -5023,6 +5491,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5046,6 +5516,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 235 = linux_removexattr */
@@ -5065,6 +5537,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 236 = linux_lremovexattr */
@@ -5080,6 +5554,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5106,6 +5582,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 238 = linux_tkill */
@@ -5121,6 +5599,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5147,6 +5627,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 240 = linux_sys_futex */
@@ -5165,6 +5647,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5191,6 +5675,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 242 = linux_sched_getaffinity */
@@ -5209,6 +5695,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5232,6 +5720,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 244 = linux_get_thread_area */
@@ -5247,6 +5737,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5270,6 +5762,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 246 = linux_io_destroy */
@@ -5285,6 +5779,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5308,6 +5804,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 248 = inux_io_submit */
@@ -5323,6 +5821,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5346,6 +5846,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 250 = linux_fadvise64 */
@@ -5361,6 +5863,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5387,6 +5891,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 252 = linux_exit_group */
@@ -5402,6 +5908,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5425,6 +5933,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 254 = linux_epoll_create */
@@ -5440,6 +5950,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5463,6 +5975,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 256 = linux_epoll_wait */
@@ -5478,6 +5992,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5504,6 +6020,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 258 = linux_set_tid_address */
@@ -5519,6 +6037,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5542,6 +6062,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 260 = linux_timer_settime */
@@ -5557,6 +6079,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5580,6 +6104,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 262 = linux_timer_getoverrun */
@@ -5595,6 +6121,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5621,6 +6149,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 264 = linux_clock_settime */
@@ -5639,6 +6169,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5665,6 +6197,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 266 = linux_clock_getres */
@@ -5683,6 +6217,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5709,6 +6245,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 268 = linux_statfs64 */
@@ -5724,6 +6262,8 @@ block|,
 name|AUE_FSTATFS
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5750,6 +6290,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 270 = linux_tgkill */
@@ -5768,6 +6310,8 @@ block|,
 name|AUE_UTIMES
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5791,6 +6335,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 272 = linux_fadvise64_64 */
@@ -5806,6 +6352,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5829,6 +6377,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 274 = linux_mbind */
@@ -5844,6 +6394,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5867,6 +6419,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 276 = linux_set_mempolicy */
@@ -5882,6 +6436,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5905,6 +6461,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 278 = linux_mq_unlink */
@@ -5920,6 +6478,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5943,6 +6503,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 280 = linux_mq_timedreceive */
@@ -5958,6 +6520,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5981,6 +6545,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 282 = linux_mq_getsetattr */
@@ -5996,6 +6562,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6019,6 +6587,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 284 = linux_waitid */
@@ -6034,6 +6604,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6057,6 +6629,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 286 = linux_add_key */
@@ -6072,6 +6646,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6095,6 +6671,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 288 = linux_keyctl */
@@ -6110,6 +6688,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6133,6 +6713,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 290 = linux_ioprio_get */
@@ -6148,6 +6730,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6171,6 +6755,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 292 = linux_inotify_add_watch */
@@ -6190,6 +6776,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 293 = linux_inotify_rm_watch */
@@ -6205,6 +6793,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6231,6 +6821,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 295 = linux_openat */
@@ -6249,6 +6841,8 @@ block|,
 name|AUE_MKDIRAT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6275,6 +6869,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 297 = linux_mknodat */
@@ -6293,6 +6889,8 @@ block|,
 name|AUE_FCHOWNAT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6319,6 +6917,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 299 = linux_futimesat */
@@ -6337,6 +6937,8 @@ block|,
 name|AUE_FSTATAT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6363,6 +6965,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 301 = linux_unlinkat */
@@ -6381,6 +6985,8 @@ block|,
 name|AUE_RENAMEAT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6407,6 +7013,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 303 = linux_linkat */
@@ -6425,6 +7033,8 @@ block|,
 name|AUE_SYMLINKAT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6451,6 +7061,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 305 = linux_readlinkat */
@@ -6469,6 +7081,8 @@ block|,
 name|AUE_FCHMODAT
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6495,6 +7109,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 307 = linux_faccessat */
@@ -6510,6 +7126,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6533,6 +7151,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 309 = linux_ppoll */
@@ -6548,6 +7168,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6574,6 +7196,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 311 = linux_set_robust_list */
@@ -6592,6 +7216,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6615,6 +7241,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 313 = linux_splice */
@@ -6630,6 +7258,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -6653,6 +7283,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 315 = linux_tee */
@@ -6668,6 +7300,8 @@ block|,
 name|AUE_NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,

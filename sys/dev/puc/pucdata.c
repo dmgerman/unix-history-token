@@ -786,6 +786,29 @@ block|,
 literal|8
 block|, 	}
 block|,
+comment|/* 	 * IBM SurePOS 300 Series (481033H) serial ports 	 * Details can be found on the IBM RSS websites 	 */
+block|{
+literal|0x1014
+block|,
+literal|0x0297
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"IBM SurePOS 300 Series (481033H) serial ports"
+block|,
+name|DEFAULT_RCLK
+block|,
+name|PUC_PORT_4S
+block|,
+literal|0x10
+block|,
+literal|4
+block|,
+literal|0
+block|}
+block|,
 comment|/* 	 * SIIG Boards. 	 * 	 * SIIG provides documentation for their boards at: 	 *<URL:http://www.siig.com/downloads.asp> 	 */
 block|{
 literal|0x131f

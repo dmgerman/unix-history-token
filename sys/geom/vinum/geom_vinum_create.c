@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -51,12 +57,6 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vimage.h>
 end_include
 
 begin_include
@@ -660,15 +660,9 @@ name|config_length
 operator|=
 name|GV_CFG_LEN
 expr_stmt|;
-name|mtx_lock
+name|getcredhostname
 argument_list|(
-operator|&
-name|hostname_mtx
-argument_list|)
-expr_stmt|;
-name|bcopy
-argument_list|(
-name|G_hostname
+name|NULL
 argument_list|,
 name|hdr
 operator|->
@@ -677,12 +671,6 @@ operator|.
 name|sysname
 argument_list|,
 name|GV_HOSTNAME_LEN
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|hostname_mtx
 argument_list|)
 expr_stmt|;
 name|strlcpy

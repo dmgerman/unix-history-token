@@ -190,6 +190,7 @@ comment|/*  * This program loads the password and group databases into the kerne
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|cleanup_term
 parameter_list|(
@@ -199,6 +200,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -208,6 +210,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|nfsuserdsrv
 parameter_list|(
@@ -222,6 +225,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|bool_t
 name|xdr_getid
 parameter_list|(
@@ -234,6 +238,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|bool_t
 name|xdr_getname
 parameter_list|(
@@ -246,6 +251,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|bool_t
 name|xdr_retval
 parameter_list|(
@@ -412,11 +418,6 @@ name|char
 modifier|*
 name|argv
 index|[]
-parameter_list|,
-name|char
-modifier|*
-name|envp
-index|[]
 parameter_list|)
 block|{
 name|int
@@ -455,14 +456,6 @@ decl_stmt|;
 name|SVCXPRT
 modifier|*
 name|udptransp
-decl_stmt|,
-modifier|*
-name|tcptransp
-decl_stmt|;
-name|struct
-name|passwd
-modifier|*
-name|pw
 decl_stmt|;
 name|u_short
 name|portnum
@@ -480,10 +473,6 @@ index|]
 decl_stmt|,
 modifier|*
 name|cp
-decl_stmt|,
-modifier|*
-modifier|*
-name|aliases
 decl_stmt|;
 name|struct
 name|addrinfo
@@ -835,7 +824,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usermax out of range 10<->100000\n"
+literal|"usermax %d out of range 10<->100000\n"
 argument_list|,
 name|i
 argument_list|)
@@ -902,7 +891,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usertimeout out of range 0<->100000\n"
+literal|"usertimeout %d out of range 0<->100000\n"
 argument_list|,
 name|i
 argument_list|)
@@ -1930,6 +1919,7 @@ comment|/*  * The nfsuserd rpc service  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|nfsuserdsrv
 parameter_list|(
@@ -1943,13 +1933,6 @@ modifier|*
 name|transp
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 name|struct
 name|passwd
 modifier|*
@@ -2889,6 +2872,7 @@ comment|/*  * Xdr routine to get an id number  */
 end_comment
 
 begin_function
+specifier|static
 name|bool_t
 name|xdr_getid
 parameter_list|(
@@ -2933,6 +2917,7 @@ comment|/*  * Xdr routine to get a user name  */
 end_comment
 
 begin_function
+specifier|static
 name|bool_t
 name|xdr_getname
 parameter_list|(
@@ -3027,6 +3012,7 @@ comment|/*  * Xdr routine to return the value.  */
 end_comment
 
 begin_function
+specifier|static
 name|bool_t
 name|xdr_retval
 parameter_list|(
@@ -3078,11 +3064,13 @@ comment|/*  * cleanup_term() called via SIGUSR1.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|cleanup_term
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 name|int
@@ -3205,6 +3193,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(

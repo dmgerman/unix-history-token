@@ -153,6 +153,23 @@ directive|include
 file|<sys/module.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_snd.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -188,6 +205,24 @@ literal|"Midi data allocation area"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KOBJMETHOD_END
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|KOBJMETHOD_END
+value|{ NULL, NULL }
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -516,11 +551,7 @@ argument_list|,
 name|midisynth_bender
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -6028,6 +6059,15 @@ name|si_drv1
 operator|=
 name|NULL
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|m
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
 name|destroy_dev
 argument_list|(
 name|m
@@ -6257,6 +6297,13 @@ goto|goto
 name|exit1
 goto|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|midistat_lock
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
 name|destroy_dev
 argument_list|(
 name|midistat_dev

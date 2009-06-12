@@ -324,7 +324,7 @@ directive|define
 name|ATAUSB_T_MAX
 value|ATAUSB_T_BBB_MAX
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 index|[
@@ -405,70 +405,70 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|atausb2_t_bbb_reset1_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|atausb2_t_bbb_reset2_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|atausb2_t_bbb_reset3_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|atausb2_t_bbb_command_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|atausb2_t_bbb_data_read_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|atausb2_t_bbb_data_rd_cs_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|atausb2_t_bbb_data_write_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|atausb2_t_bbb_data_wr_cs_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|atausb2_t_bbb_status_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_callback_t
+name|usb_callback_t
 name|atausb2_tr_error
 decl_stmt|;
 end_decl_stmt
@@ -508,7 +508,7 @@ name|void
 name|atausb2_t_bbb_data_clear_stall_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
@@ -588,7 +588,7 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|usb2_config
+name|usb_config
 name|atausb2_config
 index|[
 name|ATAUSB_T_BBB_MAX
@@ -624,7 +624,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 block|,
 operator|.
@@ -689,7 +689,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 block|,
 operator|.
@@ -754,7 +754,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 block|,
 operator|.
@@ -937,7 +937,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 block|,
 operator|.
@@ -1056,7 +1056,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|usb2_device_request
+name|usb_device_request
 argument_list|)
 block|,
 operator|.
@@ -1274,7 +1274,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -1284,7 +1284,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 modifier|*
 name|id
 decl_stmt|;
@@ -1437,7 +1437,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 init|=
@@ -1447,7 +1447,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 modifier|*
 name|id
 decl_stmt|;
@@ -1460,7 +1460,7 @@ modifier|*
 name|subclass
 decl_stmt|;
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|request
 decl_stmt|;
 name|device_t
@@ -2148,7 +2148,7 @@ name|void
 name|atausb2_t_bbb_reset1_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2163,7 +2163,7 @@ operator|->
 name|priv_sc
 decl_stmt|;
 name|struct
-name|usb2_device_request
+name|usb_device_request
 name|req
 decl_stmt|;
 switch|switch
@@ -2298,7 +2298,7 @@ name|void
 name|atausb2_t_bbb_reset2_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2321,7 +2321,7 @@ name|void
 name|atausb2_t_bbb_reset3_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2344,7 +2344,7 @@ name|void
 name|atausb2_t_bbb_data_clear_stall_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
@@ -2426,7 +2426,7 @@ name|void
 name|atausb2_t_bbb_command_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2710,7 +2710,7 @@ name|void
 name|atausb2_t_bbb_data_read_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2925,7 +2925,7 @@ name|void
 name|atausb2_t_bbb_data_rd_cs_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -2948,7 +2948,7 @@ name|void
 name|atausb2_t_bbb_data_write_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -3142,7 +3142,7 @@ name|void
 name|atausb2_t_bbb_data_wr_cs_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -3165,7 +3165,7 @@ name|void
 name|atausb2_t_bbb_status_callback
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -3787,7 +3787,7 @@ name|void
 name|atausb2_tr_error
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)

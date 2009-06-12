@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -298,11 +292,24 @@ specifier|static
 name|int
 name|next_dgl
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 name|struct
 name|llentry
 modifier|*
 name|lle
 decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|MAC

@@ -1008,6 +1008,9 @@ modifier|*
 parameter_list|,
 name|uint64_t
 name|rsc
+parameter_list|,
+name|int
+name|tid
 parameter_list|)
 function_decl|;
 end_function_decl

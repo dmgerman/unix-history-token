@@ -918,6 +918,9 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* 		 * Send packet; if hook is not connected, mbuf will get 		 * freed. 		 */
+name|NG_OUTBOUND_THREAD_REF
+argument_list|()
+expr_stmt|;
 name|NG_SEND_DATA_ONLY
 argument_list|(
 name|error
@@ -928,6 +931,9 @@ name|ether
 argument_list|,
 name|m
 argument_list|)
+expr_stmt|;
+name|NG_OUTBOUND_THREAD_UNREF
+argument_list|()
 expr_stmt|;
 comment|/* Update stats */
 if|if
@@ -1349,13 +1355,31 @@ operator||
 name|IFF_MULTICAST
 operator|)
 expr_stmt|;
-if|#
-directive|if
+comment|/* Give this node the same name as the interface (if possible) */
+if|if
+condition|(
+name|ng_name_node
+argument_list|(
+name|node
+argument_list|,
+name|ifp
+operator|->
+name|if_xname
+argument_list|)
+operator|!=
 literal|0
-comment|/* Give this node name */
-block|bzero(ifname, sizeof(ifname)); 	sprintf(ifname, "if%s", ifp->if_xname); 	(void)ng_name_node(node, ifname);
-endif|#
-directive|endif
+condition|)
+name|log
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"%s: can't acquire netgraph name\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_xname
+argument_list|)
+expr_stmt|;
 comment|/* Attach the interface */
 name|ether_ifattach
 argument_list|(
@@ -1452,6 +1476,11 @@ operator|&
 name|priv
 operator|->
 name|ether
+argument_list|)
+expr_stmt|;
+name|NG_HOOK_SET_TO_INBOUND
+argument_list|(
+name|hook
 argument_list|)
 expr_stmt|;
 name|if_link_state_change
