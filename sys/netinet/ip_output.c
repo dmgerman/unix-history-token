@@ -624,6 +624,9 @@ name|ro
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FLOWTABLE
 comment|/* 		 * The flow table returns route entries valid for up to 30 		 * seconds; we rely on the remainder of ip_output() taking no 		 * longer than that long for the stability of ro_rt.  The 		 * flow ID assignment must have happened before this point. 		 */
 if|if
 condition|(
@@ -642,6 +645,8 @@ name|nortfree
 operator|=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(

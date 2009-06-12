@@ -989,6 +989,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FLOWTABLE
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -1033,6 +1039,19 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|struct
+name|flowtable
+modifier|*
+name|ip_ft
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1049,14 +1068,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-name|struct
-name|flowtable
-modifier|*
-name|ip_ft
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -1805,6 +1816,9 @@ operator|&
 name|ip_nh
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FLOWTABLE
 name|ip_ft
 operator|=
 name|flowtable_alloc
@@ -1814,6 +1828,8 @@ argument_list|,
 name|FL_PCPU
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
