@@ -689,12 +689,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|vnet_attach_fn
@@ -708,44 +702,6 @@ name|vnet_detach_fn
 name|vnet_mld_idetach
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|static
-name|int
-name|vnet_mld_iattach
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|vnet_mld_idetach
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* VIMAGE */
-end_comment
 
 begin_comment
 comment|/*  * Normative references: RFC 2710, RFC 3590, RFC 3810.  *  * Locking:  *  * The MLD subsystem lock ends up being system-wide for the moment,  *    but could be per-VIMAGE later on.  *  * The permitted lock order is: IN6_MULTI_LOCK, MLD_LOCK, IF_ADDR_LOCK.  *    Any may be taken independently; if any are held at the same  *    time, the above lock order must be followed.  *  * IN6_MULTI_LOCK covers in_multi.  *  * MLD_LOCK covers per-link state and any global variables in this file.  *  * IF_ADDR_LOCK covers if_multiaddrs, which is used for a variety of  *    per-link state iterators.  *  *  XXX LOR PREVENTION  *  A special case for IPv6 is the in6_setscope() routine. ip6_output()  *  will not accept an ifp; it wants an embedded scope ID, unlike  *  ip_output(), which happily takes the ifp given to it. The embedded  *  scope ID is only used by MLD to select the outgoing interface.  *  *  During interface attach and detach, MLD will take MLD_LOCK *after*  *  the IF_AFDATA_LOCK.  *  As in6_setscope() takes IF_AFDATA_LOCK then SCOPE_LOCK, we can't call  *  it with MLD_LOCK held without triggering an LOR. A netisr with indirect  *  dispatch could work around this, but we'd rather not do that, as it  *  can introduce other races.  *  *  As such, we exploit the fact that the scope ID is just the interface  *  index, and embed it in the IPv6 destination address accordingly.  *  This is potentially NOT VALID for MLDv1 reports, as they  *  are always sent to the multicast group itself; as MLDv2  *  reports are always sent to ff02::16, this is not an issue  *  when MLDv2 is in use.  *  *  This does not however eliminate the LOR when ip6_output() itself  *  calls in6_setscope() internally whilst MLD_LOCK is held. This will  *  trigger a LOR warning in WITNESS when the ifnet is detached.  *  *  The right answer is probably to make IF_AFDATA_LOCK an rwlock, given  *  how it's used across the network stack. Here we're simply exploiting  *  the fact that MLD runs at a similar layer in the stack to scope6.c.  *  * VIMAGE:  *  * Each in6_multi corresponds to an ifp, and each ifp corresponds  *    to a vnet in ifp->if_vnet.  */
@@ -12456,17 +12412,12 @@ case|:
 ifndef|#
 directive|ifndef
 name|VIMAGE_GLOBALS
-ifdef|#
-directive|ifdef
-name|NOTYET
 name|vnet_mod_deregister
 argument_list|(
 operator|&
 name|vnet_mld_modinfo
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 else|#
 directive|else
 name|vnet_mld_idetach
