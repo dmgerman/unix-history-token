@@ -93,20 +93,6 @@ file|<dev/usb/usb_bus.h>
 end_include
 
 begin_comment
-comment|/* enum */
-end_comment
-
-begin_enum
-enum|enum
-block|{
-name|ST_DATA
-block|,
-name|ST_POST_STATUS
-block|, }
-enum|;
-end_enum
-
-begin_comment
 comment|/* function prototypes */
 end_comment
 
@@ -272,7 +258,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		         * If no control transfer is active, 		         * receive the next SETUP message: 		         */
 goto|goto
 name|tr_restart
 goto|;
@@ -284,6 +269,27 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+comment|/* check if a control transfer is active */
+if|if
+condition|(
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|control_rem
+operator|!=
+literal|0xFFFF
+condition|)
+block|{
+comment|/* handle the request */
+name|err
+operator|=
+name|usb2_handle_request
+argument_list|(
+name|xfer
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|xfer
@@ -303,6 +309,7 @@ block|}
 return|return;
 name|tr_restart
 label|:
+comment|/* 	 * If a control transfer is active, stall it, and wait for the 	 * next control transfer. 	 */
 name|xfer
 operator|->
 name|frlengths
@@ -717,11 +724,7 @@ name|plen
 argument_list|,
 name|off
 argument_list|,
-operator|(
 name|state
-operator|==
-name|ST_POST_STATUS
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -835,11 +838,7 @@ name|plen
 argument_list|,
 name|off
 argument_list|,
-operator|(
 name|state
-operator|==
-name|ST_POST_STATUS
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -912,8 +911,8 @@ block|}
 if|if
 condition|(
 name|state
-operator|==
-name|ST_POST_STATUS
+operator|!=
+name|USB_HR_NOT_COMPLETE
 condition|)
 block|{
 comment|/* we are complete */
@@ -1396,7 +1395,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_handle_request  *  * Internal state sequence:  *  * ST_DATA -> ST_POST_STATUS  *  * Returns:  * 0: Ready to start hardware  * Else: Stall current transfer, if any  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_handle_request  *  * Internal state sequence:  *  * USB_HR_NOT_COMPLETE -> USB_HR_COMPLETE_OK v USB_HR_COMPLETE_ERR  *  * Returns:  * 0: Ready to start hardware  * Else: Stall current transfer, if any  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -1483,7 +1482,7 @@ name|USB_ST_SETUP
 case|:
 name|state
 operator|=
-name|ST_DATA
+name|USB_HR_NOT_COMPLETE
 expr_stmt|;
 if|if
 condition|(
@@ -1501,8 +1500,9 @@ name|tr_stalled
 goto|;
 block|}
 break|break;
-default|default:
-comment|/* USB_ST_TRANSFERRED */
+case|case
+name|USB_ST_TRANSFERRED
+case|:
 if|if
 condition|(
 operator|!
@@ -1515,16 +1515,22 @@ condition|)
 block|{
 name|state
 operator|=
-name|ST_POST_STATUS
+name|USB_HR_COMPLETE_OK
 expr_stmt|;
 block|}
 else|else
 block|{
 name|state
 operator|=
-name|ST_DATA
+name|USB_HR_NOT_COMPLETE
 expr_stmt|;
 block|}
+break|break;
+default|default:
+name|state
+operator|=
+name|USB_HR_COMPLETE_ERR
+expr_stmt|;
 break|break;
 block|}
 comment|/* reset frame stuff */
@@ -1704,7 +1710,7 @@ if|if
 condition|(
 name|state
 operator|!=
-name|ST_DATA
+name|USB_HR_NOT_COMPLETE
 condition|)
 block|{
 break|break;
@@ -2086,7 +2092,7 @@ if|if
 condition|(
 name|state
 operator|==
-name|ST_DATA
+name|USB_HR_NOT_COMPLETE
 condition|)
 block|{
 if|if
@@ -2121,8 +2127,8 @@ elseif|else
 if|if
 condition|(
 name|state
-operator|==
-name|ST_POST_STATUS
+operator|!=
+name|USB_HR_NOT_COMPLETE
 condition|)
 block|{
 name|udev
@@ -2148,7 +2154,7 @@ if|if
 condition|(
 name|state
 operator|==
-name|ST_DATA
+name|USB_HR_NOT_COMPLETE
 condition|)
 block|{
 if|if
@@ -2180,7 +2186,7 @@ if|if
 condition|(
 name|state
 operator|==
-name|ST_DATA
+name|USB_HR_NOT_COMPLETE
 condition|)
 block|{
 if|if
@@ -2214,7 +2220,7 @@ if|if
 condition|(
 name|state
 operator|==
-name|ST_DATA
+name|USB_HR_NOT_COMPLETE
 condition|)
 block|{
 if|if
@@ -2241,7 +2247,7 @@ if|if
 condition|(
 name|state
 operator|==
-name|ST_DATA
+name|USB_HR_NOT_COMPLETE
 condition|)
 block|{
 if|if
@@ -2275,7 +2281,7 @@ if|if
 condition|(
 name|state
 operator|==
-name|ST_DATA
+name|USB_HR_NOT_COMPLETE
 condition|)
 block|{
 if|if
@@ -2302,7 +2308,7 @@ if|if
 condition|(
 name|state
 operator|==
-name|ST_DATA
+name|USB_HR_NOT_COMPLETE
 condition|)
 block|{
 name|temp
@@ -2357,8 +2363,8 @@ label|:
 if|if
 condition|(
 name|state
-operator|==
-name|ST_POST_STATUS
+operator|!=
+name|USB_HR_NOT_COMPLETE
 condition|)
 block|{
 goto|goto
@@ -2565,8 +2571,8 @@ literal|"%s\n"
 argument_list|,
 operator|(
 name|state
-operator|==
-name|ST_POST_STATUS
+operator|!=
+name|USB_HR_NOT_COMPLETE
 operator|)
 condition|?
 literal|"complete"

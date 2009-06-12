@@ -757,6 +757,31 @@ value|2
 end_define
 
 begin_comment
+comment|/* USB handle request states */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_HR_NOT_COMPLETE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_HR_COMPLETE_OK
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_HR_COMPLETE_ERR
+value|2
+end_define
+
+begin_comment
 comment|/*  * The following macro will return the current state of an USB  * transfer like defined by the "USB_ST_XXX" enums.  */
 end_comment
 
