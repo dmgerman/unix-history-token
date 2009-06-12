@@ -4547,7 +4547,9 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|uhe
+name|dev
+operator|->
+name|linux_endpoint_start
 argument_list|,
 name|M_USBDEV
 argument_list|)
