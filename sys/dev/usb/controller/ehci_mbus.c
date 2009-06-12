@@ -171,6 +171,17 @@ name|ih_err
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* EHCI HC regs start at this offset within USB range */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MV_USB_HOST_OFST
+value|0x0100
+end_define
+
 begin_define
 define|#
 directive|define
@@ -524,7 +535,12 @@ name|sc
 operator|->
 name|sc_io_size
 operator|=
-name|MV_USB_SIZE
+name|rman_get_size
+argument_list|(
+name|sc
+operator|->
+name|sc_io_res
+argument_list|)
 operator|-
 name|MV_USB_HOST_OFST
 expr_stmt|;
