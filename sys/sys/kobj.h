@@ -202,34 +202,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Shorthand for constructing method tables.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
-begin_define
-define|#
-directive|define
-name|KOBJMETHOD
-parameter_list|(
-name|NAME
-parameter_list|,
-name|FUNC
-parameter_list|)
-value|{&NAME##_desc, (kobjop_t) FUNC }
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* notyet */
+comment|/*  * Shorthand for constructing method tables.  * The ternary operator is (ab)used to provoke a warning when FUNC  * has a signature that is not compatible with kobj method signature.  */
 end_comment
 
 begin_define
@@ -244,11 +217,6 @@ parameter_list|)
 define|\
 value|{&NAME##_desc, (kobjop_t) (1 ? FUNC : (NAME##_t *)NULL) }
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  *  */
