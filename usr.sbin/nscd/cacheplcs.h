@@ -94,7 +94,9 @@ function_decl|(
 modifier|*
 name|create_item_func
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 name|void
 function_decl|(
@@ -346,7 +348,9 @@ name|struct
 name|cache_policy_
 modifier|*
 name|init_cache_fifo_policy
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -372,7 +376,9 @@ name|struct
 name|cache_policy_
 modifier|*
 name|init_cache_lru_policy
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -398,7 +404,9 @@ name|struct
 name|cache_policy_
 modifier|*
 name|init_cache_lfu_policy
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 

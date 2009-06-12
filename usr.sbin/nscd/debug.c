@@ -497,7 +497,9 @@ end_function
 begin_function
 name|void
 name|__trace_on
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|trace_level
 operator|=
@@ -513,7 +515,9 @@ end_function
 begin_function
 name|void
 name|__trace_off
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|trace_level_bk
 operator|=

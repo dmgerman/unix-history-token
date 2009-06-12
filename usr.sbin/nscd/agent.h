@@ -96,7 +96,9 @@ function_decl|(
 modifier|*
 name|mp_init_func
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 name|int
 function_decl|(
@@ -152,7 +154,9 @@ name|struct
 name|agent_table
 modifier|*
 name|init_agent_table
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 

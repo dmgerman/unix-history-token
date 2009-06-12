@@ -15,7 +15,9 @@ name|struct
 name|agent
 modifier|*
 name|init_services_agent
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -25,7 +27,9 @@ name|struct
 name|agent
 modifier|*
 name|init_services_mp_agent
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
