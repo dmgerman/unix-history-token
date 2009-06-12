@@ -2735,17 +2735,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The idea of _nss_cache_cycle_prevention_function is that nsdispatch will  * search for this symbol in the executable. This symbol is the attribute of  * the caching daemon. So, if it exists, nsdispatch won't try to connect to  * the caching daemon and will just ignore the 'cache' source in the  * nsswitch.conf. This method helps to avoid cycles and organize  * self-performing requests.  */
+comment|/*  * The idea of _nss_cache_cycle_prevention_function is that nsdispatch  * will search for this symbol in the executable. This symbol is the  * attribute of the caching daemon. So, if it exists, nsdispatch won't try  * to connect to the caching daemon and will just ignore the 'cache'  * source in the nsswitch.conf. This method helps to avoid cycles and  * organize self-performing requests.  *  * (not actually a function; it used to be, but it doesn't make any  * difference, as long as it has external linkage)  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|void
+modifier|*
 name|_nss_cache_cycle_prevention_function
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
-end_function
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
