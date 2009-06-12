@@ -441,7 +441,7 @@ block|,
 operator|.
 name|pr_ctloutput
 operator|=
-name|ip_ctloutput
+name|udp_ctloutput
 block|,
 operator|.
 name|pr_init

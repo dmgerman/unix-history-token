@@ -3935,6 +3935,17 @@ begin_comment
 comment|/* CARP info */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_IPSEC_NAT_T_PORTS
+value|29
+end_define
+
+begin_comment
+comment|/* two uint16_t */
+end_comment
+
 begin_comment
 comment|/* Specific cookies and tags. */
 end_comment

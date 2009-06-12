@@ -162,6 +162,36 @@ parameter_list|)
 value|(intoudpcb(sotoinpcb(so)))
 end_define
 
+begin_comment
+comment|/* IPsec: ESP in UDP tunneling: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UF_ESPINUDP_NON_IKE
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* w/ non-IKE marker .. */
+end_comment
+
+begin_comment
+comment|/* .. per draft-ietf-ipsec-nat-t-ike-0[01], 	 * and draft-ietf-ipsec-udp-encaps-(00/)01.txt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UF_ESPINUDP
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* w/ non-ESP marker. */
+end_comment
+
 begin_struct
 struct|struct
 name|udpstat
@@ -452,6 +482,21 @@ name|sockaddr
 modifier|*
 parameter_list|,
 name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|udp_ctloutput
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+parameter_list|,
+name|struct
+name|sockopt
 modifier|*
 parameter_list|)
 function_decl|;
