@@ -810,8 +810,8 @@ literal|"\020"
 literal|"\001SSE3"
 comment|/* SSE3 */
 literal|"\002<b1>"
-literal|"\003RSVD2"
-comment|/* "Reserved" bit 2 */
+literal|"\003DTES64"
+comment|/* 64-bit Debug Trace */
 literal|"\004MON"
 comment|/* MONITOR/MWAIT Instructions */
 literal|"\005DS_CPL"
@@ -840,11 +840,12 @@ literal|"\021<b16>"
 literal|"\022<b17>"
 literal|"\023DCA"
 comment|/* Direct Cache Access */
-literal|"\024<b19>"
-literal|"\025<b20>"
-literal|"\026<b21>"
+literal|"\024SSE4.1"
+literal|"\025SSE4.2"
+literal|"\026x2APIC"
+comment|/* xAPIC Extensions */
 literal|"\027<b22>"
-literal|"\030<b23>"
+literal|"\030POPCNT"
 literal|"\031<b24>"
 literal|"\032<b25>"
 literal|"\033XSAVE"
@@ -963,16 +964,24 @@ literal|"\004ExtAPIC"
 comment|/* Extended APIC register */
 literal|"\005CR8"
 comment|/* CR8 in legacy mode */
-literal|"\006<b5>"
-literal|"\007<b6>"
-literal|"\010<b7>"
+literal|"\006ABM"
+comment|/* LZCNT instruction */
+literal|"\007SSE4A"
+comment|/* SSE4A */
+literal|"\010MAS"
+comment|/* Misaligned SSE mode */
 literal|"\011Prefetch"
 comment|/* 3DNow! Prefetch/PrefetchW */
-literal|"\012<b9>"
-literal|"\013<b10>"
-literal|"\014<b11>"
-literal|"\015<b12>"
-literal|"\016<b13>"
+literal|"\012OSVW"
+comment|/* OS visible workaround */
+literal|"\013IBS"
+comment|/* Instruction based sampling */
+literal|"\014SSE5"
+comment|/* SSE5 */
+literal|"\015SKINIT"
+comment|/* SKINIT/STGI */
+literal|"\016WDT"
+comment|/* Watchdog timer */
 literal|"\017<b14>"
 literal|"\020<b15>"
 literal|"\021<b16>"
