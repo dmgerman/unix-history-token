@@ -6253,6 +6253,11 @@ operator|->
 name|cc_service
 operator|==
 name|rpc_gss_svc_none
+operator|||
+operator|*
+name|mp
+operator|==
+name|NULL
 condition|)
 block|{
 return|return
