@@ -1076,6 +1076,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|usb_config
 name|ustorage_fs_bbb_config

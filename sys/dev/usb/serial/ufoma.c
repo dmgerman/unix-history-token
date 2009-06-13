@@ -4997,6 +4997,7 @@ block|}
 end_function
 
 begin_struct
+specifier|static
 struct|struct
 name|umcpc_modetostr_tab
 block|{

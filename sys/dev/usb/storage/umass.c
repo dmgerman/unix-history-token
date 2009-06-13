@@ -3996,6 +3996,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|usb_config
 name|umass_bbb_config
@@ -4452,6 +4453,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|usb_config
 name|umass_cbi_config

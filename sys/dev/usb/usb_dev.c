@@ -603,6 +603,7 @@ comment|/* character device structure used for /dev/usb */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|cdevsw
 name|usb2_static_devsw

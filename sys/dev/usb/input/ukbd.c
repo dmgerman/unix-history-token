@@ -7719,6 +7719,7 @@ comment|/* UKBD_EMULATE_ATSCANCODE */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|keyboard_switch_t
 name|ukbdsw
 init|=
