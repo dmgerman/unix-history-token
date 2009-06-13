@@ -546,14 +546,26 @@ index|]
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
 name|m
 index|[
 name|i
 index|]
 operator|->
 name|dirty
-operator|=
+operator|==
 literal|0
+argument_list|,
+operator|(
+literal|"phys_pager_getpages: dirty page %p"
+operator|,
+name|m
+index|[
+name|i
+index|]
+operator|)
+argument_list|)
 expr_stmt|;
 comment|/* The requested page must remain busy, the others not. */
 if|if
