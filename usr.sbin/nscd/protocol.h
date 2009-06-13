@@ -15,12 +15,6 @@ directive|define
 name|__NSCD_PROTOCOL_H__
 end_define
 
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
 begin_comment
 comment|/* maximum buffer size to receive - larger buffers are not allowed */
 end_comment
