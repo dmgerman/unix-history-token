@@ -186,7 +186,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|sec_shutdown
 parameter_list|(
 name|device_t
@@ -2840,13 +2840,19 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|sec_shutdown
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|)
-block|{ }
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 end_function
 
 begin_function

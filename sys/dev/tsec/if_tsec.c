@@ -1745,7 +1745,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|tsec_shutdown
 parameter_list|(
 name|device_t
@@ -1779,6 +1779,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -7032,7 +7037,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|tsec_miibus_writereg
 parameter_list|(
 name|device_t
@@ -7147,6 +7152,11 @@ argument_list|,
 literal|"Timeout while writing to PHY!\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

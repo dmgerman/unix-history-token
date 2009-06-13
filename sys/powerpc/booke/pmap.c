@@ -1301,6 +1301,8 @@ specifier|static
 name|void
 name|mmu_booke_copy
 parameter_list|(
+name|mmu_t
+parameter_list|,
 name|pmap_t
 parameter_list|,
 name|pmap_t
@@ -8408,6 +8410,9 @@ specifier|static
 name|void
 name|mmu_booke_copy
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|pmap_t
 name|dst_pmap
 parameter_list|,

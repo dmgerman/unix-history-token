@@ -1094,7 +1094,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|tsec_miibus_writereg
 parameter_list|(
 name|device_t
@@ -1137,7 +1137,7 @@ comment|/* XXX */
 end_comment
 
 begin_function_decl
-name|void
+name|int
 name|tsec_shutdown
 parameter_list|(
 name|device_t
