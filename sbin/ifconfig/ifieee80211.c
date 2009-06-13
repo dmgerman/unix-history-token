@@ -217,7 +217,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_NODE_AUTH
-value|0x0001
+value|0x000001
 end_define
 
 begin_comment
@@ -228,7 +228,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_NODE_QOS
-value|0x0002
+value|0x000002
 end_define
 
 begin_comment
@@ -239,7 +239,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_NODE_ERP
-value|0x0004
+value|0x000004
 end_define
 
 begin_comment
@@ -250,7 +250,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_NODE_PWR_MGT
-value|0x0010
+value|0x000010
 end_define
 
 begin_comment
@@ -260,8 +260,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_NODE_AREF
+value|0x000020
+end_define
+
+begin_comment
+comment|/* authentication ref held */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_NODE_HT
-value|0x0040
+value|0x000040
 end_define
 
 begin_comment
@@ -272,7 +283,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_NODE_HTCOMPAT
-value|0x0080
+value|0x000080
 end_define
 
 begin_comment
@@ -283,7 +294,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_NODE_WPS
-value|0x0100
+value|0x000100
 end_define
 
 begin_comment
@@ -294,7 +305,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_NODE_TSN
-value|0x0200
+value|0x000200
 end_define
 
 begin_comment
@@ -305,7 +316,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_NODE_AMPDU_RX
-value|0x0400
+value|0x000400
 end_define
 
 begin_comment
@@ -316,7 +327,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_NODE_AMPDU_TX
-value|0x0800
+value|0x000800
 end_define
 
 begin_comment
@@ -327,7 +338,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_NODE_MIMO_PS
-value|0x1000
+value|0x001000
 end_define
 
 begin_comment
@@ -338,7 +349,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_NODE_MIMO_RTS
-value|0x2000
+value|0x002000
 end_define
 
 begin_comment
@@ -349,11 +360,66 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_NODE_RIFS
-value|0x4000
+value|0x004000
 end_define
 
 begin_comment
 comment|/* RIFS enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_NODE_SGI20
+value|0x008000
+end_define
+
+begin_comment
+comment|/* Short GI in HT20 enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_NODE_SGI40
+value|0x010000
+end_define
+
+begin_comment
+comment|/* Short GI in HT40 enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_NODE_ASSOCID
+value|0x020000
+end_define
+
+begin_comment
+comment|/* xmit requires associd */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_NODE_AMSDU_RX
+value|0x040000
+end_define
+
+begin_comment
+comment|/* AMSDU rx enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_NODE_AMSDU_TX
+value|0x080000
+end_define
+
+begin_comment
+comment|/* AMSDU tx enabled */
 end_comment
 
 begin_endif
@@ -11320,6 +11386,69 @@ operator|++
 operator|=
 literal|'I'
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|IEEE80211_NODE_SGI40
+condition|)
+block|{
+operator|*
+name|cp
+operator|++
+operator|=
+literal|'S'
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|IEEE80211_NODE_SGI20
+condition|)
+operator|*
+name|cp
+operator|++
+operator|=
+literal|'+'
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|flags
+operator|&
+name|IEEE80211_NODE_SGI20
+condition|)
+operator|*
+name|cp
+operator|++
+operator|=
+literal|'s'
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|IEEE80211_NODE_AMSDU_TX
+condition|)
+operator|*
+name|cp
+operator|++
+operator|=
+literal|'t'
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|IEEE80211_NODE_AMSDU_RX
+condition|)
+operator|*
+name|cp
+operator|++
+operator|=
+literal|'r'
+expr_stmt|;
 operator|*
 name|cp
 operator|=
@@ -15591,11 +15720,6 @@ modifier|*
 name|si
 parameter_list|)
 block|{
-define|#
-directive|define
-name|IEEE80211_NODE_QOS
-value|0x0002
-comment|/* QoS enabled */
 name|int
 name|i
 decl_stmt|,
@@ -15662,9 +15786,6 @@ expr_stmt|;
 return|return
 name|txseq
 return|;
-undef|#
-directive|undef
-name|IEEE80211_NODE_QOS
 block|}
 end_function
 
@@ -15680,11 +15801,6 @@ modifier|*
 name|si
 parameter_list|)
 block|{
-define|#
-directive|define
-name|IEEE80211_NODE_QOS
-value|0x0002
-comment|/* QoS enabled */
 name|int
 name|i
 decl_stmt|,
@@ -15751,9 +15867,6 @@ expr_stmt|;
 return|return
 name|rxseq
 return|;
-undef|#
-directive|undef
-name|IEEE80211_NODE_QOS
 block|}
 end_function
 
@@ -15895,7 +16008,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-17.17s %4s %4s %4s %4s %4s %6s %6s %4s %4s\n"
+literal|"%-17.17s %4s %4s %4s %4s %4s %6s %6s %4s %-7s\n"
 argument_list|,
 literal|"ADDR"
 argument_list|,
@@ -15964,7 +16077,7 @@ condition|)
 break|break;
 name|printf
 argument_list|(
-literal|"%s %4u %4d %3dM %3.1f %4d %6d %6d %-4.4s %-4.4s"
+literal|"%s %4u %4d %3dM %3.1f %4d %6d %6d %-4.4s %-7.7s"
 argument_list|,
 name|ether_ntoa
 argument_list|(

@@ -1150,7 +1150,7 @@ name|uint32_t
 name|isi_flags
 decl_stmt|;
 comment|/* channel flags */
-name|uint16_t
+name|uint32_t
 name|isi_state
 decl_stmt|;
 comment|/* state flags */
@@ -1229,6 +1229,9 @@ name|uint16_t
 name|isi_txmbps
 decl_stmt|;
 comment|/* current tx rate in .5 Mb/s */
+name|uint16_t
+name|isi_pad
+decl_stmt|;
 name|uint32_t
 name|isi_jointime
 decl_stmt|;
