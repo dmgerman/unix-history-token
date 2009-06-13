@@ -79,6 +79,7 @@ name|HASHTABLE_ENTRIES_COUNT
 parameter_list|(
 name|table
 parameter_list|)
+define|\
 value|((table)->entries_size)
 end_define
 
@@ -129,6 +130,7 @@ name|table
 parameter_list|,
 name|hash
 parameter_list|)
+define|\
 value|(&((table)->entries[hash]))
 end_define
 
@@ -219,7 +221,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|(entry)->field.capacity *= 2;					\ 	(entry)->field.values = realloc((entry)->field.values,		\ 		(entry)->field.capacity * sizeof(type));
+value|do {								\ 		(entry)->field.capacity *= 2;				\ 		(entry)->field.values = realloc((entry)->field.values,	\ 			 (entry)->field.capacity * sizeof(type));	\ 	} while (0)
 end_define
 
 begin_define
@@ -234,7 +236,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|(entry)->field.capacity /= 2;					\ 	(entry)->field.values = realloc((entry)->field.values,		\ 		(entry)->field.capacity * sizeof(type));
+value|do {								\ 		(entry)->field.capacity /= 2;				\ 		(entry)->field.values = realloc((entry)->field.values,	\ 			(entry)->field.capacity * sizeof(type));	\ 	} while (0)
 end_define
 
 begin_comment
