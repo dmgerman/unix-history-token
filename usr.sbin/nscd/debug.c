@@ -49,7 +49,7 @@ end_decl_stmt
 
 begin_function
 name|void
-name|__trace_in
+name|nscd_trace_in
 parameter_list|(
 specifier|const
 name|char
@@ -109,7 +109,7 @@ end_function
 
 begin_function
 name|void
-name|__trace_point
+name|nscd_trace_point
 parameter_list|(
 specifier|const
 name|char
@@ -165,7 +165,7 @@ end_function
 
 begin_function
 name|void
-name|__trace_msg
+name|nscd_trace_msg
 parameter_list|(
 specifier|const
 name|char
@@ -228,7 +228,7 @@ end_function
 
 begin_function
 name|void
-name|__trace_ptr
+name|nscd_trace_ptr
 parameter_list|(
 specifier|const
 name|char
@@ -298,7 +298,7 @@ end_function
 
 begin_function
 name|void
-name|__trace_int
+name|nscd_trace_int
 parameter_list|(
 specifier|const
 name|char
@@ -366,7 +366,7 @@ end_function
 
 begin_function
 name|void
-name|__trace_str
+name|nscd_trace_str
 parameter_list|(
 specifier|const
 name|char
@@ -436,7 +436,7 @@ end_function
 
 begin_function
 name|void
-name|__trace_out
+name|nscd_trace_out
 parameter_list|(
 specifier|const
 name|char
@@ -496,7 +496,7 @@ end_function
 
 begin_function
 name|void
-name|__trace_on
+name|nscd_trace_on
 parameter_list|(
 name|void
 parameter_list|)
@@ -514,7 +514,7 @@ end_function
 
 begin_function
 name|void
-name|__trace_off
+name|nscd_trace_off
 parameter_list|(
 name|void
 parameter_list|)

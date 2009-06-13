@@ -39,7 +39,7 @@ name|TRACE_IN
 parameter_list|(
 name|x
 parameter_list|)
-value|__trace_in(#x, __FILE__, __LINE__)
+value|nscd_trace_in(#x, __FILE__, __LINE__)
 end_define
 
 begin_define
@@ -47,7 +47,7 @@ define|#
 directive|define
 name|TRACE_POINT
 parameter_list|()
-value|__trace_point(__FILE__, __LINE__)
+value|nscd_trace_point(__FILE__, __LINE__)
 end_define
 
 begin_define
@@ -57,7 +57,7 @@ name|TRACE_MSG
 parameter_list|(
 name|x
 parameter_list|)
-value|__trace_msg(x, __FILE__, __LINE__)
+value|nscd_trace_msg(x, __FILE__, __LINE__)
 end_define
 
 begin_define
@@ -67,7 +67,7 @@ name|TRACE_PTR
 parameter_list|(
 name|p
 parameter_list|)
-value|__trace_ptr(#p, p, __FILE__, __LINE__)
+value|nscd_trace_ptr(#p, p, __FILE__, __LINE__)
 end_define
 
 begin_define
@@ -77,7 +77,7 @@ name|TRACE_INT
 parameter_list|(
 name|i
 parameter_list|)
-value|__trace_int(#i, i, __FILE__, __LINE__)
+value|nscd_trace_int(#i, i, __FILE__, __LINE__)
 end_define
 
 begin_define
@@ -87,7 +87,7 @@ name|TRACE_STR
 parameter_list|(
 name|s
 parameter_list|)
-value|__trace_str(#s, s, __FILE__, __LINE__)
+value|nscd_trace_str(#s, s, __FILE__, __LINE__)
 end_define
 
 begin_define
@@ -97,7 +97,7 @@ name|TRACE_OUT
 parameter_list|(
 name|x
 parameter_list|)
-value|__trace_out(#x, __FILE__, __LINE__)
+value|nscd_trace_out(#x, __FILE__, __LINE__)
 end_define
 
 begin_define
@@ -105,7 +105,7 @@ define|#
 directive|define
 name|TRACE_ON
 parameter_list|()
-value|__trace_on()
+value|nscd_trace_on()
 end_define
 
 begin_define
@@ -113,7 +113,7 @@ define|#
 directive|define
 name|TRACE_OFF
 parameter_list|()
-value|__trace_off()
+value|nscd_trace_off()
 end_define
 
 begin_else
@@ -128,6 +128,7 @@ name|TRACE_IN
 parameter_list|(
 name|x
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -135,6 +136,7 @@ define|#
 directive|define
 name|TRACE_POINT
 parameter_list|()
+value|(void)0
 end_define
 
 begin_define
@@ -144,6 +146,7 @@ name|TRACE_MSG
 parameter_list|(
 name|x
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -153,6 +156,7 @@ name|TRACE_PTR
 parameter_list|(
 name|p
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -162,6 +166,7 @@ name|TRACE_INT
 parameter_list|(
 name|i
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -171,6 +176,7 @@ name|TRACE_STR
 parameter_list|(
 name|s
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -180,6 +186,7 @@ name|TRACE_OUT
 parameter_list|(
 name|x
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -187,6 +194,7 @@ define|#
 directive|define
 name|TRACE_ON
 parameter_list|()
+value|(void)0
 end_define
 
 begin_define
@@ -194,6 +202,7 @@ define|#
 directive|define
 name|TRACE_OFF
 parameter_list|()
+value|(void)0
 end_define
 
 begin_endif
@@ -204,7 +213,7 @@ end_endif
 begin_function_decl
 specifier|extern
 name|void
-name|__trace_in
+name|nscd_trace_in
 parameter_list|(
 specifier|const
 name|char
@@ -222,7 +231,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|__trace_point
+name|nscd_trace_point
 parameter_list|(
 specifier|const
 name|char
@@ -236,89 +245,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|__trace_msg
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|__trace_ptr
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|__trace_int
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|__trace_str
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|__trace_out
+name|nscd_trace_msg
 parameter_list|(
 specifier|const
 name|char
@@ -336,7 +263,89 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|__trace_on
+name|nscd_trace_ptr
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|nscd_trace_int
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|nscd_trace_str
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|nscd_trace_out
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|nscd_trace_on
 parameter_list|(
 name|void
 parameter_list|)
@@ -346,7 +355,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|__trace_off
+name|nscd_trace_off
 parameter_list|(
 name|void
 parameter_list|)
