@@ -1043,8 +1043,8 @@ literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|nscd_connection_
+operator|*
+name|retval
 argument_list|)
 argument_list|)
 expr_stmt|;

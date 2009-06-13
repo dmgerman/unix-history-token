@@ -478,10 +478,6 @@ name|c_mp_ws_request
 operator|->
 name|entry
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|calloc
 argument_list|(
 literal|1
@@ -1521,10 +1517,6 @@ name|write_request
 operator|->
 name|data
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|calloc
 argument_list|(
 literal|1

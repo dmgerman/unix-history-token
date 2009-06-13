@@ -100,7 +100,7 @@ parameter_list|,
 name|_entries_size
 parameter_list|)
 define|\
-value|do {								\ 		hashtable_index_t var;					\ 		(table)->entries = (void *)calloc(1,			\ 			sizeof(*(table)->entries) * (_entries_size));	\ 		(table)->entries_size = (_entries_size);		\ 		for (var = 0; var< HASHTABLE_ENTRIES_COUNT(table); ++var) {\ 			(table)->entries[var].field.capacity = 		\ 				HASHTABLE_INITIAL_ENTRIES_CAPACITY;	\ 			(table)->entries[var].field.size = 0;		\ 			(table)->entries[var].field.values = (type *)malloc(\ 				sizeof(type) * 				\ 		    		HASHTABLE_INITIAL_ENTRIES_CAPACITY);	\ 			assert((table)->entries[var].field.values != NULL);\ 		}							\ 	} while (0)
+value|do {								\ 		hashtable_index_t var;					\ 		(table)->entries = calloc(1,				\ 			sizeof(*(table)->entries) * (_entries_size));	\ 		(table)->entries_size = (_entries_size);		\ 		for (var = 0; var< HASHTABLE_ENTRIES_COUNT(table); ++var) {\ 			(table)->entries[var].field.capacity = 		\ 				HASHTABLE_INITIAL_ENTRIES_CAPACITY;	\ 			(table)->entries[var].field.size = 0;		\ 			(table)->entries[var].field.values = malloc(	\ 				sizeof(type) *				\ 				HASHTABLE_INITIAL_ENTRIES_CAPACITY);	\ 			assert((table)->entries[var].field.values != NULL);\ 		}							\ 	} while (0)
 end_define
 
 begin_comment
@@ -219,7 +219,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|(entry)->field.capacity *= 2;					\ 	(entry)->field.values = (type *)realloc((entry)->field.values, 	\ 		(entry)->field.capacity * sizeof(type));
+value|(entry)->field.capacity *= 2;					\ 	(entry)->field.values = realloc((entry)->field.values,		\ 		(entry)->field.capacity * sizeof(type));
 end_define
 
 begin_define
@@ -234,7 +234,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|(entry)->field.capacity /= 2;					\ 	(entry)->field.values = (type *)realloc((entry)->field.values, 	\ 		(entry)->field.capacity * sizeof(type));
+value|(entry)->field.capacity /= 2;					\ 	(entry)->field.values = realloc((entry)->field.values,		\ 		(entry)->field.capacity * sizeof(type));
 end_define
 
 begin_comment

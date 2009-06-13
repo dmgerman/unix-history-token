@@ -452,10 +452,6 @@ name|c_mp_rs_request
 operator|->
 name|entry
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|calloc
 argument_list|(
 literal|1
@@ -1757,10 +1753,6 @@ name|read_response
 operator|->
 name|data
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|read_response
