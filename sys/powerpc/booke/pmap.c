@@ -548,13 +548,6 @@ begin_comment
 comment|/* Number of KVA ptbls. */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|int
-name|pagedaemon_waken
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * If user pmap is processed with mmu_booke_remove and the resident count  * drops to 0, there are no more pages to remove, so we need not continue.  */
 end_comment
@@ -3638,30 +3631,13 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|pv_entry_count
 operator|>
 name|pv_entry_high_water
-operator|)
-operator|&&
-operator|(
-name|pagedaemon_waken
-operator|==
-literal|0
-operator|)
 condition|)
-block|{
-name|pagedaemon_waken
-operator|=
-literal|1
+name|pagedaemon_wakeup
+argument_list|()
 expr_stmt|;
-name|wakeup
-argument_list|(
-operator|&
-name|vm_pages_needed
-argument_list|)
-expr_stmt|;
-block|}
 name|pv
 operator|=
 name|uma_zalloc
