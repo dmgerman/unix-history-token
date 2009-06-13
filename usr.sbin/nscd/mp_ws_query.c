@@ -584,6 +584,13 @@ expr_stmt|;
 if|if
 condition|(
 name|result
+operator|<
+literal|0
+operator|||
+operator|(
+name|size_t
+operator|)
+name|result
 operator|!=
 name|qstate
 operator|->
@@ -1614,6 +1621,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|result
+operator|<
+literal|0
+operator|||
+operator|(
+name|size_t
+operator|)
 name|result
 operator|!=
 name|qstate

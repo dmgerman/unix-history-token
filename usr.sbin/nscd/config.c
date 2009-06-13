@@ -2677,6 +2677,7 @@ modifier|*
 name|config
 parameter_list|)
 block|{
+name|unsigned
 name|int
 name|i
 decl_stmt|;

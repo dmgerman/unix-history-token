@@ -1504,6 +1504,9 @@ name|qstate
 operator|->
 name|kevent_watermark
 operator|<=
+operator|(
+name|size_t
+operator|)
 name|event_data
 operator|->
 name|data
@@ -1524,6 +1527,9 @@ name|qstate
 operator|->
 name|io_buffer_watermark
 operator|<=
+operator|(
+name|size_t
+operator|)
 name|event_data
 operator|->
 name|data
@@ -2433,6 +2439,9 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|event_data
 operator|->
 name|ident
