@@ -3856,9 +3856,6 @@ index|[
 name|ts
 operator|->
 name|ts_rate
-operator|&
-operator|~
-name|HAL_TXSTAT_ALTRATE
 index|]
 expr_stmt|;
 name|short_tries
@@ -3966,14 +3963,11 @@ condition|(
 operator|!
 name|mrr
 operator|||
-operator|!
-operator|(
 name|ts
 operator|->
-name|ts_rate
-operator|&
-name|HAL_TXSTAT_ALTRATE
-operator|)
+name|ts_finaltsi
+operator|==
+literal|0
 condition|)
 block|{
 if|if

@@ -22713,9 +22713,9 @@ if|if
 condition|(
 name|ts
 operator|->
-name|ts_rate
-operator|&
-name|HAL_TXSTAT_ALTRATE
+name|ts_finaltsi
+operator|!=
+literal|0
 condition|)
 name|sc
 operator|->
