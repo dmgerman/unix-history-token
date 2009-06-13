@@ -804,6 +804,8 @@ name|config_entry
 operator|->
 name|mp_cache_params
 operator|.
+name|cep
+operator|.
 name|entry_name
 argument_list|)
 expr_stmt|;
@@ -850,6 +852,8 @@ operator|->
 name|config_entry
 operator|->
 name|mp_cache_params
+operator|.
+name|cep
 operator|.
 name|entry_name
 argument_list|)

@@ -2825,6 +2825,8 @@ name|new_common_entry
 operator|->
 name|common_params
 operator|.
+name|cep
+operator|.
 name|entry_name
 operator|=
 operator|(
@@ -2844,6 +2846,8 @@ name|new_common_entry
 operator|->
 name|common_params
 operator|.
+name|cep
+operator|.
 name|entry_name
 operator|!=
 name|NULL
@@ -2854,6 +2858,8 @@ argument_list|(
 name|new_common_entry
 operator|->
 name|common_params
+operator|.
+name|cep
 operator|.
 name|entry_name
 argument_list|,
@@ -2871,6 +2877,8 @@ operator|=
 name|new_common_entry
 operator|->
 name|common_params
+operator|.
+name|cep
 operator|.
 name|entry_name
 expr_stmt|;
@@ -3101,6 +3109,8 @@ name|new_mp_entry
 operator|->
 name|mp_params
 operator|.
+name|cep
+operator|.
 name|entry_name
 operator|=
 operator|(
@@ -3120,6 +3130,8 @@ name|new_mp_entry
 operator|->
 name|mp_params
 operator|.
+name|cep
+operator|.
 name|entry_name
 operator|!=
 name|NULL
@@ -3130,6 +3142,8 @@ argument_list|(
 name|new_mp_entry
 operator|->
 name|mp_params
+operator|.
+name|cep
 operator|.
 name|entry_name
 argument_list|,
@@ -3147,6 +3161,8 @@ operator|=
 name|new_mp_entry
 operator|->
 name|mp_params
+operator|.
+name|cep
 operator|.
 name|entry_name
 expr_stmt|;

@@ -862,6 +862,8 @@ name|config_entry
 operator|->
 name|mp_cache_params
 operator|.
+name|cep
+operator|.
 name|entry_name
 argument_list|)
 expr_stmt|;
@@ -2177,6 +2179,8 @@ name|config_entry
 operator|->
 name|mp_cache_params
 operator|.
+name|cep
+operator|.
 name|entry_name
 expr_stmt|;
 name|qstate
@@ -2184,6 +2188,8 @@ operator|->
 name|config_entry
 operator|->
 name|mp_cache_params
+operator|.
+name|cep
 operator|.
 name|entry_name
 operator|=
@@ -2215,6 +2221,8 @@ operator|->
 name|config_entry
 operator|->
 name|mp_cache_params
+operator|.
+name|cep
 operator|.
 name|entry_name
 operator|=

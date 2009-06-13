@@ -2009,6 +2009,8 @@ name|config_entry
 operator|->
 name|positive_cache_params
 operator|.
+name|cep
+operator|.
 name|entry_name
 argument_list|)
 expr_stmt|;
@@ -2379,6 +2381,8 @@ operator|->
 name|config_entry
 operator|->
 name|negative_cache_params
+operator|.
+name|cep
 operator|.
 name|entry_name
 argument_list|)
@@ -3276,6 +3280,8 @@ name|config_entry
 operator|->
 name|positive_cache_params
 operator|.
+name|cep
+operator|.
 name|entry_name
 argument_list|)
 expr_stmt|;
@@ -3290,6 +3296,8 @@ operator|->
 name|config_entry
 operator|->
 name|negative_cache_params
+operator|.
+name|cep
 operator|.
 name|entry_name
 argument_list|)
