@@ -315,6 +315,12 @@ block|,
 operator|&
 name|g_label_ntfs
 block|,
+operator|&
+name|g_label_gpt
+block|,
+operator|&
+name|g_label_gpt_uuid
+block|,
 name|NULL
 block|}
 decl_stmt|;
