@@ -1558,47 +1558,16 @@ name|pt_entry_t
 name|pte
 parameter_list|)
 block|{
-name|pt_entry_t
-name|r
-decl_stmt|;
-asm|__asm __volatile(
-literal|"xchgl %0,%1"
-operator|:
-literal|"=m"
-operator|(
-operator|*
-name|ptep
-operator|)
-operator|,
-literal|"=r"
-operator|(
-name|r
-operator|)
-operator|:
-literal|"1"
+asm|__asm volatile("xchgl %0, %1" : "+m" (*ptep), "+r" (pte));
+return|return
 operator|(
 name|pte
 operator|)
-operator|,
-literal|"m"
-operator|(
-operator|*
-name|ptep
-operator|)
-block|)
-function|;
+return|;
+block|}
 end_function
 
-begin_return
-return|return
-operator|(
-name|r
-operator|)
-return|;
-end_return
-
 begin_define
-unit|}
 define|#
 directive|define
 name|pte_load_clear
@@ -1609,7 +1578,7 @@ value|atomic_readandclear_int(pte)
 end_define
 
 begin_function
-unit|static
+specifier|static
 name|__inline
 name|void
 name|pte_store
