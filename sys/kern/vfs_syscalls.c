@@ -7440,7 +7440,6 @@ block|}
 end_function
 
 begin_decl_stmt
-specifier|static
 name|int
 name|hardlink_check_uid
 init|=
