@@ -591,7 +591,6 @@ comment|/* cache initialization/destruction routines */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|cache
 name|init_cache
 parameter_list|(
@@ -604,7 +603,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|destroy_cache
 parameter_list|(
@@ -618,7 +616,6 @@ comment|/* cache entries manipulation routines */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|register_cache_entry
 parameter_list|(
@@ -633,7 +630,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|unregister_cache_entry
 parameter_list|(
@@ -647,7 +643,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|cache_entry
 name|find_cache_entry
 parameter_list|(
@@ -665,7 +660,6 @@ comment|/* read/write operations used on common entries */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|cache_read
 parameter_list|(
@@ -687,7 +681,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|cache_write
 parameter_list|(
@@ -713,7 +706,6 @@ comment|/* read/write operations used on multipart entries */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|cache_mp_write_session
 name|open_cache_mp_write_session
 parameter_list|(
@@ -723,7 +715,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|cache_mp_write
 parameter_list|(
@@ -738,7 +729,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|abandon_cache_mp_write_session
 parameter_list|(
@@ -748,7 +738,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|close_cache_mp_write_session
 parameter_list|(
@@ -758,7 +747,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|cache_mp_read_session
 name|open_cache_mp_read_session
 parameter_list|(
@@ -768,7 +756,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|cache_mp_read
 parameter_list|(
@@ -784,7 +771,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|close_cache_mp_read_session
 parameter_list|(
@@ -798,7 +784,6 @@ comment|/* transformation routines */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|transform_cache_entry
 parameter_list|(
@@ -811,7 +796,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|transform_cache_entry_part
 parameter_list|(

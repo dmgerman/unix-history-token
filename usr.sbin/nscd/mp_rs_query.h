@@ -16,7 +16,6 @@ name|__NSCD_MP_RS_QUERY_H__
 end_define
 
 begin_function_decl
-specifier|extern
 name|int
 name|on_mp_read_session_request_read1
 parameter_list|(

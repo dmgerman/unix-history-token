@@ -211,7 +211,6 @@ directive|endif
 end_endif
 
 begin_function_decl
-specifier|extern
 name|void
 name|nscd_trace_in
 parameter_list|(
@@ -229,7 +228,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|nscd_trace_point
 parameter_list|(
@@ -243,7 +241,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|nscd_trace_msg
 parameter_list|(
@@ -261,7 +258,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|nscd_trace_ptr
 parameter_list|(
@@ -283,7 +279,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|nscd_trace_int
 parameter_list|(
@@ -303,7 +298,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|nscd_trace_str
 parameter_list|(
@@ -325,7 +319,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|nscd_trace_out
 parameter_list|(
@@ -343,7 +336,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|nscd_trace_on
 parameter_list|(
@@ -353,7 +345,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|nscd_trace_off
 parameter_list|(

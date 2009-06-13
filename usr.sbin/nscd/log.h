@@ -100,7 +100,6 @@ value|__log_err(3, sender, err, ##__VA_ARGS__)
 end_define
 
 begin_function_decl
-specifier|extern
 name|void
 name|__log_msg
 parameter_list|(
@@ -120,7 +119,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|__log_err
 parameter_list|(

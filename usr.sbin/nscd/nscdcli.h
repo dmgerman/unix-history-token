@@ -91,7 +91,6 @@ comment|/* initialization/destruction routines */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|nscd_connection
 name|open_nscd_connection__
 parameter_list|(
@@ -104,7 +103,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|close_nscd_connection__
 parameter_list|(
@@ -114,7 +112,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|nscd_transform__
 parameter_list|(

@@ -149,7 +149,6 @@ struct|;
 end_struct
 
 begin_function_decl
-specifier|extern
 name|struct
 name|agent_table
 modifier|*
@@ -161,7 +160,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|register_agent
 parameter_list|(
@@ -177,7 +175,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|agent
 modifier|*
@@ -198,7 +195,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|destroy_agent_table
 parameter_list|(

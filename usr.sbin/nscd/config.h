@@ -264,7 +264,6 @@ enum|;
 end_enum
 
 begin_function_decl
-specifier|extern
 name|struct
 name|configuration
 modifier|*
@@ -276,7 +275,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|destroy_configuration
 parameter_list|(
@@ -288,7 +286,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|fill_configuration_defaults
 parameter_list|(
@@ -300,7 +297,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|add_configuration_entry
 parameter_list|(
@@ -316,7 +312,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|configuration_entry
 modifier|*
@@ -330,7 +325,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|destroy_configuration_entry
 parameter_list|(
@@ -342,7 +336,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|size_t
 name|configuration_get_entries_size
 parameter_list|(
@@ -354,7 +347,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|configuration_entry
 modifier|*
@@ -370,7 +362,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|configuration_entry
 modifier|*
@@ -388,7 +379,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|configuration_entry_add_mp_cache_entry
 parameter_list|(
@@ -402,7 +392,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|cache_entry
 name|configuration_entry_find_mp_cache_entry
 parameter_list|(
@@ -418,7 +407,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|configuration_entry_find_mp_cache_entries
 parameter_list|(
@@ -442,7 +430,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|configuration_lock_rdlock
 parameter_list|(
@@ -455,7 +442,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|configuration_lock_wrlock
 parameter_list|(
@@ -468,7 +454,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|configuration_unlock
 parameter_list|(
@@ -481,7 +466,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|configuration_lock_entry
 parameter_list|(
@@ -496,7 +480,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|configuration_unlock_entry
 parameter_list|(

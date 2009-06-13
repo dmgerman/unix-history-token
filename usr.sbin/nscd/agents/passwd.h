@@ -10,7 +10,6 @@ file|"../agent.h"
 end_include
 
 begin_function_decl
-specifier|extern
 name|struct
 name|agent
 modifier|*
@@ -22,7 +21,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|agent
 modifier|*

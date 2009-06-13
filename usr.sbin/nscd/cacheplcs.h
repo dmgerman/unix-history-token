@@ -331,7 +331,6 @@ comment|/* fifo policy routines */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|struct
 name|cache_policy_
 modifier|*
@@ -343,7 +342,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|destroy_cache_fifo_policy
 parameter_list|(
@@ -359,7 +357,6 @@ comment|/* lru policy routines */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|struct
 name|cache_policy_
 modifier|*
@@ -371,7 +368,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|destroy_cache_lru_policy
 parameter_list|(
@@ -387,7 +383,6 @@ comment|/* lfu policy routines */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|struct
 name|cache_policy_
 modifier|*
@@ -399,7 +394,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|destroy_cache_lfu_policy
 parameter_list|(

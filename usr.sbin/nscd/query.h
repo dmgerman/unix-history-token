@@ -238,7 +238,6 @@ struct|;
 end_struct
 
 begin_function_decl
-specifier|extern
 name|int
 name|check_query_eids
 parameter_list|(
@@ -250,7 +249,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|ssize_t
 name|query_io_buffer_read
 parameter_list|(
@@ -267,7 +265,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|ssize_t
 name|query_io_buffer_write
 parameter_list|(
@@ -285,7 +282,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|ssize_t
 name|query_socket_read
 parameter_list|(
@@ -302,7 +298,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|ssize_t
 name|query_socket_write
 parameter_list|(
@@ -320,7 +315,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|query_state
 modifier|*
@@ -338,7 +332,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|destroy_query_state
 parameter_list|(
