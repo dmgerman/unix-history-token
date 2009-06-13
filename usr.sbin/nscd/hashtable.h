@@ -30,6 +30,7 @@ end_define
 
 begin_typedef
 typedef|typedef
+name|unsigned
 name|int
 name|hashtable_index_t
 typedef|;
