@@ -3445,7 +3445,8 @@ operator|)
 operator|==
 literal|0
 operator|||
-name|Tflag
+name|have_traps
+argument_list|()
 operator|)
 operator|)
 operator|||
