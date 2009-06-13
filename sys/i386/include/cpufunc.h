@@ -242,7 +242,7 @@ block|{
 name|u_int
 name|result
 decl_stmt|;
-asm|__asm __volatile("bsfl %1,%0" : "=r" (result) : "rm" (mask));
+asm|__asm("bsfl %1,%0" : "=r" (result) : "rm" (mask) : "cc");
 return|return
 operator|(
 name|result
@@ -264,7 +264,7 @@ block|{
 name|u_int
 name|result
 decl_stmt|;
-asm|__asm __volatile("bsrl %1,%0" : "=r" (result) : "rm" (mask));
+asm|__asm("bsrl %1,%0" : "=r" (result) : "rm" (mask) : "cc");
 return|return
 operator|(
 name|result
