@@ -650,7 +650,11 @@ name|evalstring
 argument_list|(
 name|minusc
 argument_list|,
+name|sflag
+condition|?
 literal|0
+else|:
+name|EV_EXIT
 argument_list|)
 expr_stmt|;
 block|}

@@ -1143,6 +1143,56 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Returns if we are certain we are at EOF. Does not cause any more input  * to be read from the outside world.  */
+end_comment
+
+begin_function
+name|int
+name|preadateof
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|parsenleft
+operator|>
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|parsefile
+operator|->
+name|strpush
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|parsenleft
+operator|==
+name|EOF_NLEFT
+operator|||
+name|parsefile
+operator|->
+name|buf
+operator|==
+name|NULL
+condition|)
+return|return
+literal|1
+return|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Undo the last call to pgetc.  Only one character may be pushed back.  * PEOF may be pushed back.  */
 end_comment
 
