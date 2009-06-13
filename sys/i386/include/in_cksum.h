@@ -87,13 +87,12 @@ modifier|*
 name|ip
 parameter_list|)
 block|{
-specifier|register
 name|u_int
 name|sum
 init|=
 literal|0
 decl_stmt|;
-asm|__asm __volatile (
+asm|__asm(
 literal|"addl %1, %0\n"
 literal|"adcl %2, %0\n"
 literal|"adcl %3, %0\n"
@@ -180,6 +179,8 @@ index|[
 literal|4
 index|]
 operator|)
+operator|:
+literal|"cc"
 block|)
 function|;
 end_function
@@ -283,8 +284,7 @@ name|u_short
 name|b
 parameter_list|)
 block|{
-comment|/* __volatile is necessary because the condition codes are used. */
-asm|__asm __volatile (
+asm|__asm(
 literal|"addw %1, %0\n"
 literal|"adcw $0, %0"
 operator|:
@@ -293,10 +293,12 @@ operator|(
 name|sum
 operator|)
 operator|:
-literal|"r"
+literal|"g"
 operator|(
 name|b
 operator|)
+operator|:
+literal|"cc"
 block|)
 function|;
 end_function
@@ -325,8 +327,7 @@ name|u_int
 name|c
 parameter_list|)
 block|{
-comment|/* __volatile is necessary because the condition codes are used. */
-asm|__asm __volatile (
+asm|__asm(
 literal|"addl %1, %0\n"
 literal|"adcl %2, %0\n"
 literal|"adcl $0, %0"
@@ -345,6 +346,8 @@ literal|"g"
 operator|(
 name|c
 operator|)
+operator|:
+literal|"cc"
 block|)
 function|;
 end_function
