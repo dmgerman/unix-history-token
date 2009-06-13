@@ -254,7 +254,7 @@ name|nodename
 operator|=
 name|prison0
 operator|.
-name|pr_host
+name|pr_hostname
 expr_stmt|;
 break|break;
 case|case

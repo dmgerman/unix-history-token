@@ -2848,7 +2848,7 @@ name|strlen
 argument_list|(
 name|pr
 operator|->
-name|pr_host
+name|pr_hostname
 argument_list|)
 expr_stmt|;
 if|if
@@ -2931,11 +2931,12 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+comment|/* meaningless TTL */
 name|bcopy
 argument_list|(
 name|pr
 operator|->
-name|pr_host
+name|pr_hostname
 argument_list|,
 name|p
 operator|+
@@ -2944,7 +2945,6 @@ argument_list|,
 name|maxhlen
 argument_list|)
 expr_stmt|;
-comment|/* meaningless TTL */
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -5484,13 +5484,13 @@ name|ni6_nametodns
 argument_list|(
 name|pr
 operator|->
-name|pr_host
+name|pr_hostname
 argument_list|,
 name|strlen
 argument_list|(
 name|pr
 operator|->
-name|pr_host
+name|pr_hostname
 argument_list|)
 argument_list|,
 literal|0
@@ -6065,13 +6065,13 @@ name|ni6_nametodns
 argument_list|(
 name|pr
 operator|->
-name|pr_host
+name|pr_hostname
 argument_list|,
 name|strlen
 argument_list|(
 name|pr
 operator|->
-name|pr_host
+name|pr_hostname
 argument_list|)
 argument_list|,
 name|oldfqdn

@@ -2547,7 +2547,7 @@ name|strlcpy
 argument_list|(
 name|prison0
 operator|.
-name|pr_host
+name|pr_hostname
 argument_list|,
 name|nd
 operator|->
@@ -2557,7 +2557,7 @@ sizeof|sizeof
 argument_list|(
 name|prison0
 operator|.
-name|pr_host
+name|pr_hostname
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -5766,7 +5766,7 @@ name|caller_name
 operator|=
 name|prison0
 operator|.
-name|pr_host
+name|pr_hostname
 expr_stmt|;
 name|lock
 operator|->

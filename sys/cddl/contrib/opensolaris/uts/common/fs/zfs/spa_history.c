@@ -711,7 +711,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|_KERNEL
-comment|/* XXX: pr_host can be changed by default from within a jail! */
+comment|/* XXX: pr_hostname can be changed by default from within a jail! */
 if|if
 condition|(
 name|jailed
@@ -729,7 +729,7 @@ name|td_ucred
 operator|->
 name|cr_prison
 operator|->
-name|pr_host
+name|pr_hostname
 operator|)
 return|;
 endif|#

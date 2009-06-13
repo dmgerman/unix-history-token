@@ -473,7 +473,7 @@ name|strlen
 argument_list|(
 name|pr
 operator|->
-name|pr_host
+name|pr_hostname
 argument_list|)
 expr_stmt|;
 if|#
@@ -508,7 +508,7 @@ name|ctxt
 argument_list|,
 name|pr
 operator|->
-name|pr_host
+name|pr_hostname
 argument_list|,
 name|hostnamelen
 argument_list|)
@@ -2677,7 +2677,7 @@ name|name
 operator|=
 name|pr
 operator|->
-name|pr_host
+name|pr_hostname
 expr_stmt|;
 name|namelen
 operator|=

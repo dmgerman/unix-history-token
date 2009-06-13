@@ -1388,7 +1388,7 @@ argument_list|(
 expr|struct
 name|prison
 argument_list|,
-name|pr_host
+name|pr_hostname
 argument_list|)
 operator|)
 argument_list|,
@@ -1430,7 +1430,7 @@ argument_list|(
 expr|struct
 name|prison
 argument_list|,
-name|pr_domain
+name|pr_domainname
 argument_list|)
 operator|)
 argument_list|,
@@ -1472,7 +1472,7 @@ argument_list|(
 expr|struct
 name|prison
 argument_list|,
-name|pr_uuid
+name|pr_hostuuid
 argument_list|)
 operator|)
 argument_list|,

@@ -504,7 +504,7 @@ name|pr_root
 decl_stmt|;
 comment|/* (c) vnode to rdir */
 name|char
-name|pr_host
+name|pr_hostname
 index|[
 name|MAXHOSTNAMELEN
 index|]
@@ -589,14 +589,14 @@ name|pr_enforce_statfs
 decl_stmt|;
 comment|/* (p) statfs permission */
 name|char
-name|pr_domain
+name|pr_domainname
 index|[
 name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 comment|/* (p) jail domainname */
 name|char
-name|pr_uuid
+name|pr_hostuuid
 index|[
 name|HOSTUUIDLEN
 index|]
