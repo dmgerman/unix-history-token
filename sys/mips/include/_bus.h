@@ -15,23 +15,6 @@ directive|define
 name|MIPS_INCLUDE__BUS_H
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TARGET_OCTEON
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"_bus_octeon.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_comment
 comment|/*  * Bus address and size types  */
 end_comment
@@ -69,11 +52,6 @@ name|u_long
 name|bus_space_handle_t
 typedef|;
 end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
