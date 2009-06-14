@@ -685,7 +685,7 @@ begin_define
 define|#
 directive|define
 name|SOPEN_MAX
-value|8
+value|64
 end_define
 
 begin_decl_stmt
