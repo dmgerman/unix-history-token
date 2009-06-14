@@ -58,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/ofw/openfirm.h>
+file|<dev/ofw/ofwvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/ofw/ofwvar.h>
+file|<dev/ofw/openfirm.h>
 end_include
 
 begin_include
@@ -151,11 +151,11 @@ parameter_list|)
 block|{
 name|ofw_def_t
 modifier|*
-modifier|*
-name|ofwpp
+name|ofwp
 decl_stmt|,
 modifier|*
-name|ofwp
+modifier|*
+name|ofwpp
 decl_stmt|;
 specifier|static
 name|int
@@ -163,7 +163,7 @@ name|curr_prio
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	* Try and locate the OFW kobj corresponding to the name 	*/
+comment|/* 	 * Try and locate the OFW kobj corresponding to the name. 	 */
 name|SET_FOREACH
 argument_list|(
 argument|ofwpp
@@ -221,7 +221,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Initialiser */
+comment|/* Initializer */
 end_comment
 
 begin_function
@@ -241,7 +241,7 @@ operator|=
 operator|&
 name|ofw_kernel_obj
 expr_stmt|;
-comment|/* 	 * Take care of compiling the selected class, and 	 * then statically initialize the OFW object 	 */
+comment|/* 	 * Take care of compiling the selected class, and 	 * then statically initialize the OFW object. 	 */
 name|kobj_class_compile_static
 argument_list|(
 name|ofw_def_impl
@@ -689,6 +689,7 @@ parameter_list|(
 name|phandle_t
 name|node
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|propname
@@ -718,7 +719,6 @@ argument_list|(
 name|node
 argument_list|)
 control|)
-block|{
 if|if
 condition|(
 operator|(
@@ -744,7 +744,6 @@ operator|(
 name|rv
 operator|)
 return|;
-block|}
 return|return
 operator|(
 operator|-
@@ -755,7 +754,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Store the value of a property of a package into newly allocated memory  * (using the M_OFWPROP malloc pool and M_WAITOK). elsz is the size of a  * single element, the number of elements is return in number.  */
+comment|/*  * Store the value of a property of a package into newly allocated memory  * (using the M_OFWPROP malloc pool and M_WAITOK).  elsz is the size of a  * single element, the number of elements is return in number.  */
 end_comment
 
 begin_function

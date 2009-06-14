@@ -733,7 +733,7 @@ operator|->
 name|opi_imapmsk
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Failure to get the mask is ignored; a full mask is used then. 		 * Barf on bad mask sizes, however. 		 */
+comment|/* 		 * Failure to get the mask is ignored; a full mask is used 		 * then.  We barf on bad mask sizes, however. 		 */
 if|if
 condition|(
 name|msksz
@@ -749,14 +749,12 @@ name|opi_addrc
 operator|+
 name|intrsz
 condition|)
-block|{
 name|panic
 argument_list|(
 literal|"ofw_bus_setup_iinfo: bad interrupt-map-mask "
 literal|"property!"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
@@ -896,7 +894,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Map an interrupt using the firmware reg, interrupt-map and  * interrupt-map-mask properties.  * The interrupt property to be mapped must be of size intrsz, and pointed to  * by intr. The regs property of the node for which the mapping is done must  * be passed as regs. This property is an array of register specifications;  * the size of the address part of such a specification must be passed as  * physsz. Only the first element of the property is used.  * imap and imapsz hold the interrupt mask and it's size.  * imapmsk is a pointer to the interrupt-map-mask property, which must have  * a size of physsz + intrsz; it may be NULL, in which case a full mask is  * assumed.  * maskbuf must point to a buffer of length physsz + intrsz.  * The interrupt is returned in result, which must point to a buffer of length  * rintrsz (which gives the expected size of the mapped interrupt).  * Returns 1 if a mapping was found, 0 otherwise.  */
+comment|/*  * Map an interrupt using the firmware reg, interrupt-map and  * interrupt-map-mask properties.  * The interrupt property to be mapped must be of size intrsz, and pointed to  * by intr.  The regs property of the node for which the mapping is done must  * be passed as regs. This property is an array of register specifications;  * the size of the address part of such a specification must be passed as  * physsz.  Only the first element of the property is used.  * imap and imapsz hold the interrupt mask and it's size.  * imapmsk is a pointer to the interrupt-map-mask property, which must have  * a size of physsz + intrsz; it may be NULL, in which case a full mask is  * assumed.  * maskbuf must point to a buffer of length physsz + intrsz.  * The interrupt is returned in result, which must point to a buffer of length  * rintrsz (which gives the expected size of the mapped interrupt).  * Returns 1 if a mapping was found, 0 otherwise.  */
 end_comment
 
 begin_function
@@ -943,31 +941,31 @@ block|{
 name|phandle_t
 name|parent
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|ref
 init|=
 name|maskbuf
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|uiintr
 init|=
 name|intr
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|uiregs
 init|=
 name|regs
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|uiimapmsk
 init|=
 name|imapmsk
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|mptr
 decl_stmt|;
@@ -1141,7 +1139,7 @@ argument_list|(
 name|pcell_t
 argument_list|)
 expr_stmt|;
-comment|/* Compute the map stride size */
+comment|/* Compute the map stride size. */
 name|tsz
 operator|=
 name|physsz
@@ -1166,7 +1164,7 @@ literal|"ofw_bus_search_intrmap: truncated map"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX: Apple hardware uses a second cell to set information 		 * on the interrupt trigger type. This information should 		 * be used somewhere to program the PIC. 		 */
+comment|/* 		 * XXX: Apple hardware uses a second cell to set information 		 * on the interrupt trigger type.  This information should 		 * be used somewhere to program the PIC. 		 */
 if|if
 condition|(
 name|bcmp

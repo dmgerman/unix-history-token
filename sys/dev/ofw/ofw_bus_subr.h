@@ -51,11 +51,11 @@ begin_struct
 struct|struct
 name|ofw_bus_iinfo
 block|{
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|opi_imap
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|opi_imapmsk
 decl_stmt|;
@@ -68,6 +68,10 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Generic implementation of ofw_bus_if.m methods and helper routines */
+end_comment
 
 begin_function_decl
 name|int
@@ -93,25 +97,45 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|ofw_bus_get_compat_t
+name|ofw_bus_gen_get_compat
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ofw_bus_get_model_t
+name|ofw_bus_gen_get_model
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ofw_bus_get_name_t
+name|ofw_bus_gen_get_name
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ofw_bus_get_node_t
+name|ofw_bus_gen_get_node
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ofw_bus_get_type_t
+name|ofw_bus_gen_get_type
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Helper method to report interesting OF properties in pnpinfo */
 end_comment
 
-begin_function_decl
-name|int
+begin_decl_stmt
+name|bus_child_pnpinfo_str_t
 name|ofw_bus_gen_child_pnpinfo_str
-parameter_list|(
-name|device_t
-parameter_list|,
-name|device_t
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Routines for processing firmware interrupt maps */
@@ -195,36 +219,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-name|ofw_bus_get_compat_t
-name|ofw_bus_gen_get_compat
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ofw_bus_get_model_t
-name|ofw_bus_gen_get_model
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ofw_bus_get_name_t
-name|ofw_bus_gen_get_name
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ofw_bus_get_node_t
-name|ofw_bus_gen_get_node
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ofw_bus_get_type_t
-name|ofw_bus_gen_get_type
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
