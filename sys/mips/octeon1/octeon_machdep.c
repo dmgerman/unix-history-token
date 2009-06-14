@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mips/octeon1/octeon_pcmap_regs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<mips/octeon1/octeonreg.h>
 end_include
 
@@ -937,6 +943,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__not_used__
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1150,6 +1162,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * octeon_wait_uart_flush  */
@@ -3041,7 +3058,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Bad cvmx_desc_ptr  0x%X\n"
+literal|"Bad cvmx_desc_ptr %p\n"
 argument_list|,
 name|cvmx_desc_ptr
 argument_list|)
@@ -3092,7 +3109,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Incompatible CVMX descriptor from bootloader: %d.%d  0x%X\n"
+literal|"Incompatible CVMX descriptor from bootloader: %d.%d %p\n"
 argument_list|,
 operator|(
 name|int
