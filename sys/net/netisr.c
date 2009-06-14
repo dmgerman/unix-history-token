@@ -570,6 +570,11 @@ modifier|*
 name|np_m2cpuid
 decl_stmt|;
 comment|/* Query CPU to process packet on. */
+name|netisr_drainedcpu_t
+modifier|*
+name|np_drainedcpu
+decl_stmt|;
+comment|/* Callback when drained a queue. */
 name|u_int
 name|np_qlimit
 decl_stmt|;
@@ -1220,6 +1225,17 @@ operator|=
 name|nhp
 operator|->
 name|nh_m2cpuid
+expr_stmt|;
+name|np
+index|[
+name|proto
+index|]
+operator|.
+name|np_drainedcpu
+operator|=
+name|nhp
+operator|->
+name|nh_drainedcpu
 expr_stmt|;
 if|if
 condition|(
@@ -2696,6 +2712,27 @@ name|local_npw
 operator|.
 name|nw_len
 operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|np
+index|[
+name|proto
+index|]
+operator|.
+name|np_drainedcpu
+condition|)
+name|np
+index|[
+name|proto
+index|]
+operator|.
+name|np_drainedcpu
+argument_list|(
+name|nwsp
+operator|->
+name|nws_cpu
 argument_list|)
 expr_stmt|;
 name|NWS_LOCK
