@@ -1253,7 +1253,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// isTemplateParameter - Determines whether this declartion is a
+comment|/// isTemplateParameter - Determines whether this declaration is a
 end_comment
 
 begin_comment
@@ -1263,6 +1263,22 @@ end_comment
 begin_expr_stmt
 name|bool
 name|isTemplateParameter
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// isTemplateParameter - Determines whether this declaration is a
+end_comment
+
+begin_comment
+comment|/// template parameter pack.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isTemplateParameterPack
 argument_list|()
 specifier|const
 expr_stmt|;

@@ -189,6 +189,8 @@ parameter_list|,
 name|DESC
 parameter_list|,
 name|GROUP
+parameter_list|,
+name|SFINAE
 parameter_list|)
 value|ENUM,
 include|#
@@ -991,6 +993,22 @@ name|unsigned
 name|DiagID
 parameter_list|)
 function_decl|;
+comment|/// \brief Determines whether the given built-in diagnostic ID is
+comment|/// for an error that is suppressed if it occurs during C++ template
+comment|/// argument deduction.
+comment|///
+comment|/// When an error is suppressed due to SFINAE, the template argument
+comment|/// deduction fails but no diagnostic is emitted. Certain classes of
+comment|/// errors, such as those errors that involve C++ access control,
+comment|/// are not SFINAE errors.
+specifier|static
+name|bool
+name|isBuiltinSFINAEDiag
+parameter_list|(
+name|unsigned
+name|DiagID
+parameter_list|)
+function_decl|;
 comment|/// getDiagnosticLevel - Based on the way the client configured the Diagnostic
 comment|/// object, classify the specified diagnostic ID into a Level, consumable by
 comment|/// the DiagnosticClient.
@@ -1255,7 +1273,10 @@ index|]
 decl_stmt|;
 comment|/// ProcessDiag - This is the method used to report a diagnostic that is
 comment|/// finally fully formed.
-name|void
+comment|///
+comment|/// \returns true if the diagnostic was emitted, false if it was
+comment|/// suppressed.
+name|bool
 name|ProcessDiag
 parameter_list|()
 function_decl|;
@@ -1372,11 +1393,50 @@ name|D
 operator|.
 name|NumCodeModificationHints
 block|;   }
+comment|/// \brief Simple enumeration value used to give a name to the
+comment|/// suppress-diagnostic constructor.
+expr|enum
+name|SuppressKind
+block|{
+name|Suppress
+block|}
+expr_stmt|;
+comment|/// \brief Create an empty DiagnosticBuilder object that represents
+comment|/// no actual diagnostic.
+name|explicit
+name|DiagnosticBuilder
+argument_list|(
+name|SuppressKind
+argument_list|)
+operator|:
+name|DiagObj
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|NumArgs
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|NumRanges
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|NumCodeModificationHints
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
 comment|/// \brief Force the diagnostic builder to emit the diagnostic now.
 comment|///
 comment|/// Once this function has been called, the DiagnosticBuilder object
 comment|/// should not be used again before it is destroyed.
-name|void
+comment|///
+comment|/// \returns true if a diagnostic was emitted, false if the
+comment|/// diagnostic was suppressed.
+name|bool
 name|Emit
 argument_list|()
 block|{
@@ -1388,7 +1448,9 @@ name|DiagObj
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+name|false
+return|;
 comment|// When emitting diagnostics, we set the final argument count into
 comment|// the Diagnostic object.
 name|DiagObj
@@ -1411,11 +1473,14 @@ name|NumCodeModificationHints
 expr_stmt|;
 comment|// Process the diagnostic, sending the accumulated information to the
 comment|// DiagnosticClient.
+name|bool
+name|Emitted
+init|=
 name|DiagObj
 operator|->
 name|ProcessDiag
 argument_list|()
-expr_stmt|;
+decl_stmt|;
 comment|// Clear out the current diagnostic object.
 name|DiagObj
 operator|->
@@ -1427,6 +1492,9 @@ name|DiagObj
 operator|=
 literal|0
 expr_stmt|;
+return|return
+name|Emitted
+return|;
 block|}
 comment|/// Destructor - The dtor emits the diagnostic if it hasn't already
 comment|/// been emitted.
@@ -1472,6 +1540,11 @@ operator|&&
 literal|"Too many arguments to diagnostic!"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|DiagObj
+condition|)
+block|{
 name|DiagObj
 operator|->
 name|DiagArgumentsKind
@@ -1493,6 +1566,7 @@ index|]
 operator|=
 name|S
 expr_stmt|;
+block|}
 block|}
 name|void
 name|AddTaggedVal
@@ -1518,6 +1592,11 @@ operator|&&
 literal|"Too many arguments to diagnostic!"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|DiagObj
+condition|)
+block|{
 name|DiagObj
 operator|->
 name|DiagArgumentsKind
@@ -1537,6 +1616,7 @@ index|]
 operator|=
 name|V
 expr_stmt|;
+block|}
 block|}
 name|void
 name|AddSourceRange
@@ -1572,6 +1652,10 @@ operator|&&
 literal|"Too many arguments to diagnostic!"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|DiagObj
+condition|)
 name|DiagObj
 operator|->
 name|DiagRanges
@@ -1605,6 +1689,10 @@ operator|&&
 literal|"Too many code modification hints!"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|DiagObj
+condition|)
 name|DiagObj
 operator|->
 name|CodeModificationHints

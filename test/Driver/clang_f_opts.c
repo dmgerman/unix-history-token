@@ -16,7 +16,7 @@ comment|// RUN: grep -F '"-fpascal-strings"' %t&&
 end_comment
 
 begin_comment
-comment|// RUN: clang -### -S -x c /dev/null -fblocks -fbuiltin -fmath-errno -fcommon -fpascal-strings -fno-blocks -fno-builtin -fno-math-errno -fno-common -fno-pascal-strings %s 2> %t&&
+comment|// RUN: clang -### -S -x c /dev/null -fblocks -fbuiltin -fmath-errno -fcommon -fpascal-strings -fno-blocks -fno-builtin -fno-math-errno -fno-common -fno-pascal-strings -fno-show-source-location %s 2> %t&&
 end_comment
 
 begin_comment
@@ -33,6 +33,10 @@ end_comment
 
 begin_comment
 comment|// RUN: grep -F '"--fmath-errno=0"' %t&&
+end_comment
+
+begin_comment
+comment|// RUN: grep -F '"-fno-show-source-location"' %t&&
 end_comment
 
 begin_comment

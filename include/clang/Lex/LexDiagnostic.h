@@ -71,6 +71,8 @@ parameter_list|,
 name|DESC
 parameter_list|,
 name|GROUP
+parameter_list|,
+name|SFINAE
 parameter_list|)
 value|ENUM,
 define|#

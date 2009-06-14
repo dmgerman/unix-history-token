@@ -672,5 +672,68 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+name|struct
+name|s3
+name|p
+index|[
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// Code from postgresql.
+end_comment
+
+begin_comment
+comment|// Current cast logic of region store mistakenly leaves the final result region
+end_comment
+
+begin_comment
+comment|// an ElementRegion of type 'char'. Then load a nonloc::SymbolVal from it and
+end_comment
+
+begin_comment
+comment|// assigns to 'a'.
+end_comment
+
+begin_function
+name|void
+name|f16
+parameter_list|(
+name|struct
+name|s3
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|struct
+name|s3
+name|a
+init|=
+operator|*
+operator|(
+operator|(
+expr|struct
+name|s3
+operator|*
+operator|)
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|p
+index|[
+literal|0
+index|]
+operator|)
+operator|)
+decl_stmt|;
+block|}
+end_function
+
 end_unit
 

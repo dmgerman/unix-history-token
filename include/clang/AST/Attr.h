@@ -94,7 +94,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// Defined in ASTContext.cpp
+comment|// Defined in ASTContext.h
 end_comment
 
 begin_decl_stmt
@@ -116,6 +116,40 @@ name|size_t
 name|Alignment
 operator|=
 literal|16
+argument_list|)
+name|throw
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// It is good practice to pair new/delete operators.  Also, MSVC gives many
+end_comment
+
+begin_comment
+comment|// warnings if a matching delete overload is not declared, even though the
+end_comment
+
+begin_comment
+comment|// throw() spec guarantees it will not be implicitly called.
+end_comment
+
+begin_decl_stmt
+name|void
+name|operator
+name|delete
+argument_list|(
+name|void
+operator|*
+name|Ptr
+argument_list|,
+name|clang
+operator|::
+name|ASTContext
+operator|&
+name|C
+argument_list|,
+name|size_t
 argument_list|)
 name|throw
 argument_list|()

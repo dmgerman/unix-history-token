@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_AST_BUILTINS_H
+name|LLVM_CLANG_BASIC_BUILTINS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_AST_BUILTINS_H
+name|LLVM_CLANG_BASIC_BUILTINS_H
 end_define
 
 begin_include
@@ -69,17 +69,20 @@ directive|include
 file|<cstring>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|SmallVectorImpl
+expr_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -121,7 +124,7 @@ parameter_list|)
 value|BI##ID,
 include|#
 directive|include
-file|"clang/AST/Builtins.def"
+file|"clang/Basic/Builtins.def"
 name|FirstTSBuiltin
 block|}
 enum|;
@@ -239,33 +242,19 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
-comment|/// \brief Load all of the target builtins. This should be called
-comment|/// prior to initializing the builtin identifiers.
-name|void
-name|InitializeTargetBuiltins
-argument_list|(
-specifier|const
-name|TargetInfo
-operator|&
-name|Target
-argument_list|)
-expr_stmt|;
 comment|/// InitializeBuiltins - Mark the identifiers for all the builtins with their
 comment|/// appropriate builtin ID # and mark any non-portable builtin identifiers as
 comment|/// such.
 name|void
 name|InitializeBuiltins
-parameter_list|(
-name|IdentifierTable
-modifier|&
-name|Table
-parameter_list|,
-name|bool
-name|NoBuiltins
-init|=
-name|false
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|IdentifierTable&Table
+argument_list|,
+argument|const TargetInfo&Target
+argument_list|,
+argument|bool NoBuiltins = false
+argument_list|)
+expr_stmt|;
 comment|/// \brief Popular the vector with the names of all of the builtins.
 name|void
 name|GetBuiltinNames
@@ -304,6 +293,26 @@ name|ID
 argument_list|)
 operator|.
 name|Name
+return|;
+block|}
+comment|/// GetTypeString - Get the type descriptor string for the specified builtin.
+specifier|const
+name|char
+modifier|*
+name|GetTypeString
+argument_list|(
+name|unsigned
+name|ID
+argument_list|)
+decl|const
+block|{
+return|return
+name|GetRecord
+argument_list|(
+name|ID
+argument_list|)
+operator|.
+name|Type
 return|;
 block|}
 comment|/// isConst - Return true if this function has no side effects and doesn't
@@ -503,33 +512,6 @@ operator|!=
 literal|0
 return|;
 block|}
-comment|/// GetBuiltinType - Return the type for the specified builtin.
-enum|enum
-name|GetBuiltinTypeError
-block|{
-name|GE_None
-block|,
-comment|//< No error
-name|GE_Missing_FILE
-comment|//< Missing the FILE type from<stdio.h>
-block|}
-enum|;
-name|QualType
-name|GetBuiltinType
-argument_list|(
-name|unsigned
-name|ID
-argument_list|,
-name|ASTContext
-operator|&
-name|Context
-argument_list|,
-name|GetBuiltinTypeError
-operator|&
-name|Error
-argument_list|)
-decl|const
-decl_stmt|;
 name|private
 label|:
 specifier|const

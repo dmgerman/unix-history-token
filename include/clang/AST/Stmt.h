@@ -4225,6 +4225,10 @@ block|;
 name|SourceLocation
 name|WhileLoc
 block|;
+name|SourceLocation
+name|RParenLoc
+block|;
+comment|// Location of final ')' in do stmt condition.
 name|public
 operator|:
 name|DoStmt
@@ -4236,6 +4240,8 @@ argument_list|,
 argument|SourceLocation DL
 argument_list|,
 argument|SourceLocation WL
+argument_list|,
+argument|SourceLocation RP
 argument_list|)
 operator|:
 name|Stmt
@@ -4250,7 +4256,12 @@ argument_list|)
 block|,
 name|WhileLoc
 argument_list|(
-argument|WL
+name|WL
+argument_list|)
+block|,
+name|RParenLoc
+argument_list|(
+argument|RP
 argument_list|)
 block|{
 name|SubExprs
@@ -4273,14 +4284,6 @@ name|BODY
 index|]
 operator|=
 name|body
-block|;
-name|DoLoc
-operator|=
-name|DL
-block|;
-name|WhileLoc
-operator|=
-name|WL
 block|;   }
 comment|/// \brief Build an empty do-while statement.
 name|explicit
@@ -4433,6 +4436,25 @@ name|WhileLoc
 operator|=
 name|L
 block|; }
+name|SourceLocation
+name|getRParenLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RParenLoc
+return|;
+block|}
+name|void
+name|setRParenLoc
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|RParenLoc
+operator|=
+name|L
+block|; }
 name|virtual
 name|SourceRange
 name|getSourceRange
@@ -4444,13 +4466,7 @@ name|SourceRange
 argument_list|(
 name|DoLoc
 argument_list|,
-name|SubExprs
-index|[
-name|BODY
-index|]
-operator|->
-name|getLocEnd
-argument_list|()
+name|RParenLoc
 argument_list|)
 return|;
 block|}

@@ -77,6 +77,12 @@ directive|include
 file|"llvm/ADT/FoldingSet.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/PointerUnion.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -105,6 +111,23 @@ decl_stmt|;
 name|class
 name|TemplateTemplateParmDecl
 decl_stmt|;
+comment|/// \brief Stores a template parameter of any kind.
+typedef|typedef
+name|llvm
+operator|::
+name|PointerUnion3
+operator|<
+name|TemplateTypeParmDecl
+operator|*
+operator|,
+name|NonTypeTemplateParmDecl
+operator|*
+operator|,
+name|TemplateTemplateParmDecl
+operator|*
+operator|>
+name|TemplateParameter
+expr_stmt|;
 comment|/// TemplateParameterList - Stores a list of template parameters for a
 comment|/// TemplateDecl and its derived classes.
 name|class
@@ -252,6 +275,32 @@ return|return
 name|NumParams
 return|;
 block|}
+name|Decl
+modifier|*
+name|getParam
+parameter_list|(
+name|unsigned
+name|Idx
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|Idx
+operator|<
+name|size
+argument_list|()
+operator|&&
+literal|"Template parameter index out-of-range"
+argument_list|)
+expr_stmt|;
+return|return
+name|begin
+argument_list|()
+index|[
+name|Idx
+index|]
+return|;
+block|}
 specifier|const
 name|Decl
 modifier|*
@@ -283,7 +332,7 @@ block|}
 comment|/// \btief Returns the minimum number of arguments needed to form a
 comment|/// template specialization. This may be fewer than the number of
 comment|/// template parameters, if some of the parameters have default
-comment|/// arguments.
+comment|/// arguments or if there is a parameter pack.
 name|unsigned
 name|getMinRequiredArguments
 argument_list|()
@@ -782,6 +831,12 @@ name|InheritedDefault
 operator|:
 literal|1
 block|;
+comment|/// \brief Whether this is a parameter pack.
+name|bool
+name|ParameterPack
+operator|:
+literal|1
+block|;
 comment|/// \brief The location of the default argument, if any.
 name|SourceLocation
 name|DefaultArgumentLoc
@@ -801,6 +856,8 @@ argument_list|,
 argument|bool Typename
 argument_list|,
 argument|QualType Type
+argument_list|,
+argument|bool ParameterPack
 argument_list|)
 operator|:
 name|TypeDecl
@@ -822,6 +879,11 @@ block|,
 name|InheritedDefault
 argument_list|(
 name|false
+argument_list|)
+block|,
+name|ParameterPack
+argument_list|(
+name|ParameterPack
 argument_list|)
 block|,
 name|DefaultArgument
@@ -854,6 +916,8 @@ argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
 argument|bool Typename
+argument_list|,
+argument|bool ParameterPack
 argument_list|)
 block|;
 comment|/// \brief Whether this template type parameter was declared with
@@ -939,6 +1003,16 @@ name|InheritedDefault
 operator|=
 name|Inherited
 block|;   }
+comment|/// \brief Returns whether this is a parameter pack.
+name|bool
+name|isParameterPack
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ParameterPack
+return|;
+block|}
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static
 name|bool
@@ -2062,6 +2136,7 @@ begin_decl_stmt
 name|class
 name|TemplateArgumentListBuilder
 block|{
+comment|/// Args - contains the template arguments.
 name|llvm
 operator|::
 name|SmallVector
@@ -2072,10 +2147,36 @@ literal|16
 operator|>
 name|Args
 expr_stmt|;
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|unsigned
+operator|,
+literal|32
+operator|>
+name|Indices
+expr_stmt|;
 name|ASTContext
 modifier|&
 name|Context
 decl_stmt|;
+comment|/// isAddingFromParameterPack - Returns whether we're adding arguments from
+comment|/// a parameter pack.
+name|bool
+name|isAddingFromParameterPack
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Indices
+operator|.
+name|size
+argument_list|()
+operator|%
+literal|2
+return|;
+block|}
 name|public
 label|:
 name|TemplateArgumentListBuilder
@@ -2090,17 +2191,27 @@ argument_list|(
 argument|Context
 argument_list|)
 block|{ }
-comment|// FIXME: Should use the  index array size.
 name|size_t
 name|size
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+operator|!
+name|isAddingFromParameterPack
+argument_list|()
+operator|&&
+literal|"Size is not valid when adding from a parameter pack"
+argument_list|)
+block|;
 return|return
-name|Args
+name|Indices
 operator|.
 name|size
 argument_list|()
+operator|/
+literal|2
 return|;
 block|}
 name|size_t
@@ -2124,6 +2235,30 @@ modifier|&
 name|Arg
 parameter_list|)
 function_decl|;
+comment|/// BeginParameterPack - Start adding arguments from a parameter pack.
+name|void
+name|BeginParameterPack
+parameter_list|()
+function_decl|;
+comment|/// EndParameterPack - Finish adding arguments from a parameter pack.
+name|void
+name|EndParameterPack
+parameter_list|()
+function_decl|;
+specifier|const
+name|TemplateArgument
+operator|*
+name|getFlatArgumentList
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Args
+operator|.
+name|data
+argument_list|()
+return|;
+block|}
 name|TemplateArgument
 modifier|*
 name|getFlatArgumentList
@@ -2625,6 +2760,13 @@ name|unsigned
 name|NumTemplateArgs
 argument_list|)
 block|{
+name|ID
+operator|.
+name|AddInteger
+argument_list|(
+name|NumTemplateArgs
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|unsigned

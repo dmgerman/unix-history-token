@@ -4857,11 +4857,26 @@ define|\
 value|do { \   __m128 tmp3, tmp2, tmp1, tmp0; \   tmp0 = _mm_unpacklo_ps((row0), (row1)); \   tmp2 = _mm_unpacklo_ps((row2), (row3)); \   tmp1 = _mm_unpackhi_ps((row0), (row1)); \   tmp3 = _mm_unpackhi_ps((row2), (row3)); \   (row0) = _mm_movelh_ps(tmp0, tmp2); \   (row1) = _mm_movehl_ps(tmp2, tmp0); \   (row2) = _mm_movelh_ps(tmp1, tmp3); \   (row3) = _mm_movelh_ps(tmp3, tmp1); \ } while (0)
 end_define
 
+begin_comment
+comment|/* Ugly hack for backwards-compatibility (compatible with gcc) */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__SSE2__
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<emmintrin.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

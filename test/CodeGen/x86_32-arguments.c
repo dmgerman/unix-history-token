@@ -832,8 +832,47 @@ argument_list|(
 name|void
 argument_list|)
 block|{}
-comment|// RUN: true
+comment|// RUN: grep 'define void @f39(.struct.s39. byval align 16 .x)' %t&&
+decl|typedef
+name|int
+name|v39
+name|__attribute
+argument_list|(
+operator|(
+name|vector_size
+argument_list|(
+literal|16
+argument_list|)
+operator|)
+argument_list|)
+struct|;
 end_struct
+
+begin_struct
+struct|struct
+name|s39
+block|{
+name|v39
+name|x
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|void
+name|f39
+parameter_list|(
+name|struct
+name|s39
+name|x
+parameter_list|)
+block|{}
+end_function
+
+begin_comment
+comment|// RUN: true
+end_comment
 
 end_unit
 

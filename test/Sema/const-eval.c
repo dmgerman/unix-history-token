@@ -681,5 +681,28 @@ literal|1
 argument_list|)
 end_macro
 
+begin_function
+name|void
+name|foo
+parameter_list|(
+name|void
+parameter_list|)
+block|{}
+end_function
+
+begin_macro
+name|EVAL_EXPR
+argument_list|(
+literal|34
+argument_list|,
+argument|(foo == (void *)
+literal|0
+argument|) ? -
+literal|1
+argument|:
+literal|1
+argument_list|)
+end_macro
+
 end_unit
 

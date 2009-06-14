@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Builtins.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/Diagnostic.h"
 end_include
 
@@ -258,6 +264,16 @@ modifier|*
 name|Ident__VA_ARGS__
 decl_stmt|;
 comment|// _Pragma, __VA_ARGS__
+name|IdentifierInfo
+modifier|*
+name|Ident__has_feature
+decl_stmt|;
+comment|// __has_feature
+name|IdentifierInfo
+modifier|*
+name|Ident__has_builtin
+decl_stmt|;
+comment|// __has_builtin
 name|SourceLocation
 name|DATELoc
 decl_stmt|,
@@ -314,6 +330,12 @@ comment|/// the lifetime fo the preprocessor.
 name|SelectorTable
 name|Selectors
 decl_stmt|;
+comment|/// BuiltinInfo - Information about builtins.
+name|Builtin
+operator|::
+name|Context
+name|BuiltinInfo
+expr_stmt|;
 comment|/// PragmaHandlers - This tracks all of the pragmas that the client registered
 comment|/// with this preprocessor.
 name|PragmaNamespace
@@ -717,6 +739,17 @@ parameter_list|()
 block|{
 return|return
 name|Selectors
+return|;
+block|}
+name|Builtin
+operator|::
+name|Context
+operator|&
+name|getBuiltinInfo
+argument_list|()
+block|{
+return|return
+name|BuiltinInfo
 return|;
 block|}
 name|llvm
@@ -2180,16 +2213,6 @@ comment|/// identifier table.
 name|void
 name|RegisterBuiltinMacros
 parameter_list|()
-function_decl|;
-name|IdentifierInfo
-modifier|*
-name|RegisterBuiltinMacro
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|Name
-parameter_list|)
 function_decl|;
 comment|/// HandleMacroExpandedIdentifier - If an identifier token is read that is to
 comment|/// be expanded as a macro, handle it and return the next token as 'Tok'.  If

@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/Builtins.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/AST/Decl.h"
 end_include
 
@@ -111,12 +105,6 @@ begin_include
 include|#
 directive|include
 file|"clang/AST/Type.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Basic/SourceLocation.h"
 end_include
 
 begin_include
@@ -221,6 +209,13 @@ decl_stmt|;
 name|class
 name|ObjCIvarDecl
 decl_stmt|;
+name|namespace
+name|Builtin
+block|{
+name|class
+name|Context
+decl_stmt|;
+block|}
 comment|/// ASTContext - This class holds long-lived AST nodes (such as types and
 comment|/// decls) that can be referred to throughout the semantic analysis of a file.
 name|class
@@ -579,6 +574,12 @@ name|SelectorTable
 modifier|&
 name|Selectors
 decl_stmt|;
+name|Builtin
+operator|::
+name|Context
+operator|&
+name|BuiltinInfo
+expr_stmt|;
 name|DeclarationNameTable
 name|DeclarationNames
 decl_stmt|;
@@ -708,11 +709,6 @@ return|return
 name|TUDecl
 return|;
 block|}
-name|Builtin
-operator|::
-name|Context
-name|BuiltinInfo
-expr_stmt|;
 comment|// Builtin Types.
 name|QualType
 name|VoidTy
@@ -791,33 +787,18 @@ argument|IdentifierTable&idents
 argument_list|,
 argument|SelectorTable&sels
 argument_list|,
+argument|Builtin::Context&builtins
+argument_list|,
 argument|bool FreeMemory = true
 argument_list|,
 argument|unsigned size_reserve=
 literal|0
-argument_list|,
-argument|bool InitializeBuiltins = true
 argument_list|)
 empty_stmt|;
 operator|~
 name|ASTContext
 argument_list|()
 expr_stmt|;
-comment|/// \brief Initialize builtins.
-comment|///
-comment|/// Typically, this routine will be called automatically by the
-comment|/// constructor. However, in certain cases (e.g., when there is a
-comment|/// PCH file to be loaded), the constructor does not perform
-comment|/// initialization for builtins. This routine can be called to
-comment|/// perform the initialization.
-name|void
-name|InitializeBuiltins
-parameter_list|(
-name|IdentifierTable
-modifier|&
-name|idents
-parameter_list|)
-function_decl|;
 comment|/// \brief Attach an external AST source to the AST context.
 comment|///
 comment|/// The external AST source provides the ability to load parts of
@@ -1655,6 +1636,28 @@ specifier|const
 name|IdentifierInfo
 modifier|*
 name|Name
+parameter_list|)
+function_decl|;
+enum|enum
+name|GetBuiltinTypeError
+block|{
+name|GE_None
+block|,
+comment|//< No error
+name|GE_Missing_FILE
+comment|//< Missing the FILE type from<stdio.h>
+block|}
+enum|;
+comment|/// GetBuiltinType - Return the type for the specified builtin.
+name|QualType
+name|GetBuiltinType
+parameter_list|(
+name|unsigned
+name|ID
+parameter_list|,
+name|GetBuiltinTypeError
+modifier|&
+name|Error
 parameter_list|)
 function_decl|;
 name|private

@@ -2134,6 +2134,36 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// isInExternCSystemHeader - Returns if a SourceLocation is in an "extern C"
+end_comment
+
+begin_comment
+comment|/// system header.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isInExternCSystemHeader
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|)
+decl|const
+block|{
+return|return
+name|getFileCharacteristic
+argument_list|(
+name|Loc
+argument_list|)
+operator|==
+name|SrcMgr
+operator|::
+name|C_ExternCSystem
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
 end_comment
 

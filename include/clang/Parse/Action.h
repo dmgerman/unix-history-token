@@ -2346,8 +2346,14 @@ parameter_list|,
 name|SourceLocation
 name|WhileLoc
 parameter_list|,
+name|SourceLocation
+name|CondLParen
+parameter_list|,
 name|ExprArg
 name|Cond
+parameter_list|,
+name|SourceLocation
+name|CondRParen
 parameter_list|)
 block|{
 return|return
@@ -4061,6 +4067,9 @@ name|param
 parameter_list|,
 name|SourceLocation
 name|EqualLoc
+parameter_list|,
+name|SourceLocation
+name|ArgLoc
 parameter_list|)
 block|{ }
 end_function
@@ -5045,19 +5054,23 @@ comment|/// the keyword "typename" was used to declare the type parameter
 end_comment
 
 begin_comment
-comment|/// (otherwise, "class" was used), and KeyLoc is the location of the
+comment|/// (otherwise, "class" was used), ellipsis specifies whether this is a
 end_comment
 
 begin_comment
-comment|/// "class" or "typename" keyword. ParamName is the name of the
+comment|/// C++0x parameter pack, EllipsisLoc specifies the start of the ellipsis,
 end_comment
 
 begin_comment
-comment|/// parameter (NULL indicates an unnamed template parameter) and
+comment|/// and KeyLoc is the location of the "class" or "typename" keyword.
 end_comment
 
 begin_comment
-comment|/// ParamNameLoc is the location of the parameter name (if any).
+comment|//  ParamName is the name of the parameter (NULL indicates an unnamed template
+end_comment
+
+begin_comment
+comment|//  parameter) and ParamNameLoc is the location of the parameter name (if any)
 end_comment
 
 begin_comment
@@ -5091,6 +5104,12 @@ name|S
 parameter_list|,
 name|bool
 name|Typename
+parameter_list|,
+name|bool
+name|Ellipsis
+parameter_list|,
+name|SourceLocation
+name|EllipsisLoc
 parameter_list|,
 name|SourceLocation
 name|KeyLoc

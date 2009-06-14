@@ -673,6 +673,10 @@ comment|/// unit.
 name|bool
 name|CompleteTranslationUnit
 decl_stmt|;
+comment|/// \brief The number of SFINAE diagnostics that have been trapped.
+name|unsigned
+name|NumSFINAEErrors
+decl_stmt|;
 typedef|typedef
 name|llvm
 operator|::
@@ -817,6 +821,26 @@ argument_list|(
 argument|DiagID
 argument_list|)
 block|{ }
+name|explicit
+name|SemaDiagnosticBuilder
+argument_list|(
+name|Sema
+operator|&
+name|SemaRef
+argument_list|)
+operator|:
+name|DiagnosticBuilder
+argument_list|(
+name|DiagnosticBuilder
+operator|::
+name|Suppress
+argument_list|)
+block|,
+name|SemaRef
+argument_list|(
+argument|SemaRef
+argument_list|)
+block|{ }
 operator|~
 name|SemaDiagnosticBuilder
 argument_list|()
@@ -833,6 +857,86 @@ name|unsigned
 name|DiagID
 parameter_list|)
 block|{
+if|if
+condition|(
+name|isSFINAEContext
+argument_list|()
+operator|&&
+name|Diagnostic
+operator|::
+name|isBuiltinSFINAEDiag
+argument_list|(
+name|DiagID
+argument_list|)
+condition|)
+block|{
+comment|// If we encountered an error during template argument
+comment|// deduction, and that error is one of the SFINAE errors,
+comment|// suppress the diagnostic.
+name|bool
+name|Fatal
+init|=
+name|false
+decl_stmt|;
+switch|switch
+condition|(
+name|Diags
+operator|.
+name|getDiagnosticLevel
+argument_list|(
+name|DiagID
+argument_list|)
+condition|)
+block|{
+case|case
+name|Diagnostic
+operator|::
+name|Ignored
+case|:
+case|case
+name|Diagnostic
+operator|::
+name|Note
+case|:
+case|case
+name|Diagnostic
+operator|::
+name|Warning
+case|:
+break|break;
+case|case
+name|Diagnostic
+operator|::
+name|Error
+case|:
+operator|++
+name|NumSFINAEErrors
+expr_stmt|;
+break|break;
+case|case
+name|Diagnostic
+operator|::
+name|Fatal
+case|:
+name|Fatal
+operator|=
+name|true
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+operator|!
+name|Fatal
+condition|)
+return|return
+name|SemaDiagnosticBuilder
+argument_list|(
+operator|*
+name|this
+argument_list|)
+return|;
+block|}
 name|DiagnosticBuilder
 name|DB
 init|=
@@ -1117,6 +1221,41 @@ name|NumParamTypes
 parameter_list|,
 name|bool
 name|Variadic
+parameter_list|,
+name|unsigned
+name|Quals
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|DeclarationName
+name|Entity
+parameter_list|)
+function_decl|;
+name|QualType
+name|BuildMemberPointerType
+parameter_list|(
+name|QualType
+name|T
+parameter_list|,
+name|QualType
+name|Class
+parameter_list|,
+name|unsigned
+name|Quals
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|DeclarationName
+name|Entity
+parameter_list|)
+function_decl|;
+name|QualType
+name|BuildBlockPointerType
+parameter_list|(
+name|QualType
+name|T
 parameter_list|,
 name|unsigned
 name|Quals
@@ -1535,6 +1674,9 @@ name|param
 parameter_list|,
 name|SourceLocation
 name|EqualLoc
+parameter_list|,
+name|SourceLocation
+name|ArgLoc
 parameter_list|)
 function_decl|;
 name|virtual
@@ -1545,6 +1687,19 @@ name|DeclPtrTy
 name|param
 parameter_list|)
 function_decl|;
+comment|// Contains the locations of the beginning of unparsed default
+comment|// argument locations.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|ParmVarDecl
+operator|*
+operator|,
+name|SourceLocation
+operator|>
+name|UnparsedDefaultArgLocs
+expr_stmt|;
 name|virtual
 name|void
 name|AddInitializerToDecl
@@ -5096,8 +5251,14 @@ parameter_list|,
 name|SourceLocation
 name|WhileLoc
 parameter_list|,
+name|SourceLocation
+name|CondLParen
+parameter_list|,
 name|ExprArg
 name|Cond
+parameter_list|,
+name|SourceLocation
+name|CondRParen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -8661,6 +8822,12 @@ parameter_list|,
 name|bool
 name|Typename
 parameter_list|,
+name|bool
+name|Ellipsis
+parameter_list|,
+name|SourceLocation
+name|EllipsisLoc
+parameter_list|,
 name|SourceLocation
 name|KeyLoc
 parameter_list|,
@@ -8988,7 +9155,30 @@ name|SourceRange
 name|ScopeSpecifierRange
 parameter_list|,
 name|bool
+name|PartialSpecialization
+parameter_list|,
+name|bool
 name|ExplicitInstantiation
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|CheckClassTemplatePartialSpecializationArgs
+parameter_list|(
+name|TemplateParameterList
+modifier|*
+name|TemplateParams
+parameter_list|,
+specifier|const
+name|TemplateArgumentListBuilder
+modifier|&
+name|TemplateArgs
+parameter_list|,
+name|bool
+modifier|&
+name|MirrorsPrimaryTemplate
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -9165,6 +9355,26 @@ end_function_decl
 
 begin_function_decl
 name|bool
+name|CheckTemplateTypeArgument
+parameter_list|(
+name|TemplateTypeParmDecl
+modifier|*
+name|Param
+parameter_list|,
+specifier|const
+name|TemplateArgument
+modifier|&
+name|Arg
+parameter_list|,
+name|TemplateArgumentListBuilder
+modifier|&
+name|Converted
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
 name|CheckTemplateArgument
 parameter_list|(
 name|TemplateTypeParmDecl
@@ -9228,11 +9438,9 @@ modifier|*
 modifier|&
 name|Arg
 parameter_list|,
-name|TemplateArgumentListBuilder
-modifier|*
+name|TemplateArgument
+modifier|&
 name|Converted
-init|=
-literal|0
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -9422,9 +9630,235 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_comment
+comment|/// \brief Describes the result of template argument deduction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The TemplateDeductionResult enumeration describes the result of
+end_comment
+
+begin_comment
+comment|/// template argument deduction, as returned from
+end_comment
+
+begin_comment
+comment|/// DeduceTemplateArguments(). The separate TemplateDeductionInfo
+end_comment
+
+begin_comment
+comment|/// structure provides additional information about the results of
+end_comment
+
+begin_comment
+comment|/// template argument deduction, e.g., the deduced template argument
+end_comment
+
+begin_comment
+comment|/// list (if successful) or the specific template parameters or
+end_comment
+
+begin_comment
+comment|/// deduced arguments that were involved in the failure.
+end_comment
+
+begin_enum
+enum|enum
+name|TemplateDeductionResult
+block|{
+comment|/// \brief Template argument deduction was successful.
+name|TDK_Success
+init|=
+literal|0
+block|,
+comment|/// \brief Template argument deduction exceeded the maximum template
+comment|/// instantiation depth (which has already been diagnosed).
+name|TDK_InstantiationDepth
+block|,
+comment|/// \brief Template argument deduction did not deduce a value
+comment|/// for every template parameter.
+name|TDK_Incomplete
+block|,
+comment|/// \brief Template argument deduction produced inconsistent
+comment|/// deduced values for the given template parameter.
+name|TDK_Inconsistent
+block|,
+comment|/// \brief Template argument deduction failed due to inconsistent
+comment|/// cv-qualifiers on a template parameter type that would
+comment|/// otherwise be deduced, e.g., we tried to deduce T in "const T"
+comment|/// but were given a non-const "X".
+name|TDK_InconsistentQuals
+block|,
+comment|/// \brief Substitution of the deduced template argument values
+comment|/// resulted in an error.
+name|TDK_SubstitutionFailure
+block|,
+comment|/// \brief Substitution of the deduced template argument values
+comment|/// into a non-deduced context produced a type or value that
+comment|/// produces a type that does not match the original template
+comment|/// arguments provided.
+name|TDK_NonDeducedMismatch
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/// \brief Provides information about an attempted template argument
+end_comment
+
+begin_comment
+comment|/// deduction, whose success or failure was described by a
+end_comment
+
+begin_comment
+comment|/// TemplateDeductionResult value.
+end_comment
+
+begin_decl_stmt
+name|class
+name|TemplateDeductionInfo
+block|{
+comment|/// \brief The context in which the template arguments are stored.
+name|ASTContext
+modifier|&
+name|Context
+decl_stmt|;
+comment|/// \brief The deduced template argument list.
+comment|///
 name|TemplateArgumentList
 modifier|*
+name|Deduced
+decl_stmt|;
+comment|// do not implement these
+name|TemplateDeductionInfo
+argument_list|(
+specifier|const
+name|TemplateDeductionInfo
+operator|&
+argument_list|)
+expr_stmt|;
+name|TemplateDeductionInfo
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|TemplateDeductionInfo
+operator|&
+operator|)
+decl_stmt|;
+name|public
+label|:
+name|TemplateDeductionInfo
+argument_list|(
+name|ASTContext
+operator|&
+name|Context
+argument_list|)
+operator|:
+name|Context
+argument_list|(
+name|Context
+argument_list|)
+operator|,
+name|Deduced
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
+operator|~
+name|TemplateDeductionInfo
+argument_list|()
+block|{
+comment|// FIXME: if (Deduced) Deduced->Destroy(Context);
+block|}
+comment|/// \brief Take ownership of the deduced template argument list.
+name|TemplateArgumentList
+operator|*
+name|take
+argument_list|()
+block|{
+name|TemplateArgumentList
+operator|*
+name|Result
+operator|=
+name|Deduced
+block|;
+name|Deduced
+operator|=
+literal|0
+block|;
+return|return
+name|Result
+return|;
+block|}
+comment|/// \brief Provide a new template argument list that contains the
+comment|/// results of template argument deduction.
+name|void
+name|reset
+parameter_list|(
+name|TemplateArgumentList
+modifier|*
+name|NewDeduced
+parameter_list|)
+block|{
+comment|// FIXME: if (Deduced) Deduced->Destroy(Context);
+name|Deduced
+operator|=
+name|NewDeduced
+expr_stmt|;
+block|}
+comment|/// \brief The template parameter to which a template argument
+comment|/// deduction failure refers.
+comment|///
+comment|/// Depending on the result of template argument deduction, this
+comment|/// template parameter may have different meanings:
+comment|///
+comment|///   TDK_Incomplete: this is the first template parameter whose
+comment|///   corresponding template argument was not deduced.
+comment|///
+comment|///   TDK_Inconsistent: this is the template parameter for which
+comment|///   two different template argument values were deduced.
+name|TemplateParameter
+name|Param
+decl_stmt|;
+comment|/// \brief The first template argument to which the template
+comment|/// argument deduction failure refers.
+comment|///
+comment|/// Depending on the result of the template argument deduction,
+comment|/// this template argument may have different meanings:
+comment|///
+comment|///   TDK_Inconsistent: this argument is the first value deduced
+comment|///   for the corresponding template parameter.
+comment|///
+comment|///   TDK_SubstitutionFailure: this argument is the template
+comment|///   argument we were instantiating when we encountered an error.
+comment|///
+comment|///   TDK_NonDeducedMismatch: this is the template argument
+comment|///   provided in the source code.
+name|TemplateArgument
+name|FirstArg
+decl_stmt|;
+comment|/// \brief The second template argument to which the template
+comment|/// argument deduction failure refers.
+comment|///
+comment|/// FIXME: Finish documenting this.
+name|TemplateArgument
+name|SecondArg
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|TemplateDeductionResult
 name|DeduceTemplateArguments
 parameter_list|(
 name|ClassTemplatePartialSpecializationDecl
@@ -9435,9 +9869,34 @@ specifier|const
 name|TemplateArgumentList
 modifier|&
 name|TemplateArgs
+parameter_list|,
+name|TemplateDeductionInfo
+modifier|&
+name|Info
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|void
+name|MarkDeducedTemplateParameters
+argument_list|(
+specifier|const
+name|TemplateArgumentList
+operator|&
+name|TemplateArgs
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|bool
+operator|>
+operator|&
+name|Deduced
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|//===--------------------------------------------------------------------===//
@@ -9483,7 +9942,16 @@ comment|/// We are instantiating a default argument for a template
 comment|/// parameter. The Entity is the template, and
 comment|/// TemplateArgs/NumTemplateArguments provides the template
 comment|/// arguments as specified.
+comment|/// FIXME: Use a TemplateArgumentList
 name|DefaultTemplateArgumentInstantiation
+block|,
+comment|/// We are performing template argument deduction for a class
+comment|/// template partial specialization. The Entity is the class
+comment|/// template partial specialization, and
+comment|/// TemplateArgs/NumTemplateArgs provides the deduced template
+comment|/// arguments.
+comment|/// FIXME: Use a TemplateArgumentList
+name|PartialSpecDeductionInstantiation
 block|}
 name|Kind
 enum|;
@@ -9569,6 +10037,9 @@ name|true
 return|;
 case|case
 name|DefaultTemplateArgumentInstantiation
+case|:
+case|case
+name|PartialSpecDeductionInstantiation
 case|:
 return|return
 name|X
@@ -9761,6 +10232,24 @@ argument_list|,
 argument|SourceRange InstantiationRange = SourceRange()
 argument_list|)
 empty_stmt|;
+comment|/// \brief Note that we are instantiating as part of template
+comment|/// argument deduction for a class template partial
+comment|/// specialization.
+name|InstantiatingTemplate
+argument_list|(
+argument|Sema&SemaRef
+argument_list|,
+argument|SourceLocation PointOfInstantiation
+argument_list|,
+argument|ClassTemplatePartialSpecializationDecl *PartialSpec
+argument_list|,
+argument|const TemplateArgument *TemplateArgs
+argument_list|,
+argument|unsigned NumTemplateArgs
+argument_list|,
+argument|SourceRange InstantiationRange = SourceRange()
+argument_list|)
+empty_stmt|;
 comment|/// \brief Note that we have finished instantiating this template.
 name|void
 name|Clear
@@ -9832,6 +10321,111 @@ name|PrintInstantiationStack
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// \brief Determines whether we are currently in a context where
+end_comment
+
+begin_comment
+comment|/// template argument substitution failures are not considered
+end_comment
+
+begin_comment
+comment|/// errors.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// When this routine returns true, the emission of most diagnostics
+end_comment
+
+begin_comment
+comment|/// will be suppressed and there will be no local error recovery.
+end_comment
+
+begin_function
+name|bool
+name|isSFINAEContext
+parameter_list|()
+function|const;
+end_function
+
+begin_comment
+comment|/// \brief RAII class used to determine whether SFINAE has
+end_comment
+
+begin_comment
+comment|/// trapped any errors that occur during template argument
+end_comment
+
+begin_comment
+comment|/// deduction.
+end_comment
+
+begin_decl_stmt
+name|class
+name|SFINAETrap
+block|{
+name|Sema
+modifier|&
+name|SemaRef
+decl_stmt|;
+name|unsigned
+name|PrevSFINAEErrors
+decl_stmt|;
+name|public
+label|:
+name|explicit
+name|SFINAETrap
+argument_list|(
+name|Sema
+operator|&
+name|SemaRef
+argument_list|)
+operator|:
+name|SemaRef
+argument_list|(
+name|SemaRef
+argument_list|)
+operator|,
+name|PrevSFINAEErrors
+argument_list|(
+argument|SemaRef.NumSFINAEErrors
+argument_list|)
+block|{ }
+operator|~
+name|SFINAETrap
+argument_list|()
+block|{
+name|SemaRef
+operator|.
+name|NumSFINAEErrors
+operator|=
+name|PrevSFINAEErrors
+block|; }
+comment|/// \brief Determine whether any SFINAE errors have been trapped.
+name|bool
+name|hasErrorOccurred
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SemaRef
+operator|.
+name|NumSFINAEErrors
+operator|>
+name|PrevSFINAEErrors
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/// \brief A stack-allocated class that identifies which local
@@ -10312,6 +10906,21 @@ name|Name
 parameter_list|,
 name|SourceLocation
 name|Loc
+parameter_list|,
+specifier|const
+name|TemplateArgumentList
+modifier|&
+name|TemplateArgs
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|TemplateArgument
+name|Instantiate
+parameter_list|(
+name|TemplateArgument
+name|Arg
 parameter_list|,
 specifier|const
 name|TemplateArgumentList

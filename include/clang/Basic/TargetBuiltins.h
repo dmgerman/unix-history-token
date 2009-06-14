@@ -34,19 +34,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_AST_TARGET_BUILTINS_H
+name|LLVM_CLANG_BASIC_TARGET_BUILTINS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_AST_TARGET_BUILTINS_H
+name|LLVM_CLANG_BASIC_TARGET_BUILTINS_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"clang/AST/Builtins.h"
+file|"clang/Basic/Builtins.h"
 end_include
 
 begin_undef
@@ -88,7 +88,7 @@ parameter_list|)
 value|BI##ID,
 include|#
 directive|include
-file|"X86Builtins.def"
+file|"clang/Basic/BuiltinsX86.def"
 name|LastTSBuiltin
 block|}
 enum|;
@@ -122,7 +122,7 @@ parameter_list|)
 value|BI##ID,
 include|#
 directive|include
-file|"PPCBuiltins.def"
+file|"clang/Basic/BuiltinsPPC.def"
 name|LastTSBuiltin
 block|}
 enum|;

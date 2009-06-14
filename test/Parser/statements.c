@@ -200,6 +200,14 @@ literal|0
 condition|)
 empty_stmt|;
 do|}
+name|int
+name|test7
+parameter_list|()
+block|{
+return|return
+literal|4
+comment|// expected-error {{expected ';' after return statement}}
+block|}
 end_function
 
 end_unit
