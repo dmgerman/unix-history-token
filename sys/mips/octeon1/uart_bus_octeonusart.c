@@ -109,14 +109,10 @@ directive|include
 file|<dev/uart/uart_cpu.h>
 end_include
 
-begin_comment
-comment|/*  * XXXMIPS:  */
-end_comment
-
 begin_include
 include|#
 directive|include
-file|<mips/mips4k/octeon32/octeonreg.h>
+file|<mips/octeon1/octeonreg.h>
 end_include
 
 begin_include

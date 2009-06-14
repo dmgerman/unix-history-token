@@ -76,13 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/mips4k/octeon32/octeonreg.h>
+file|<mips/octeon1/octeonreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/mips4k/octeon32/obiovar.h>
+file|<mips/octeon1/obiovar.h>
 end_include
 
 begin_function_decl
