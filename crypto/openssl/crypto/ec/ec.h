@@ -2311,6 +2311,10 @@ name|EC_F_EC_PRE_COMP_DUP
 value|207
 define|#
 directive|define
+name|EC_F_EC_PRE_COMP_NEW
+value|196
+define|#
+directive|define
 name|EC_F_EC_WNAF_MUL
 value|187
 define|#

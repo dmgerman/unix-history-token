@@ -4,7 +4,7 @@ comment|/* pcy_data.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project 2004.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2004.  */
 end_comment
 
 begin_comment
@@ -129,6 +129,27 @@ condition|)
 return|return
 name|NULL
 return|;
+if|if
+condition|(
+name|id
+condition|)
+block|{
+name|id
+operator|=
+name|OBJ_dup
+argument_list|(
+name|id
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|id
+condition|)
+return|return
+name|NULL
+return|;
+block|}
 name|ret
 operator|=
 name|OPENSSL_malloc
@@ -165,6 +186,15 @@ block|{
 name|OPENSSL_free
 argument_list|(
 name|ret
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|id
+condition|)
+name|ASN1_OBJECT_free
+argument_list|(
+name|id
 argument_list|)
 expr_stmt|;
 return|return

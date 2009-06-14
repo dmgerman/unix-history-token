@@ -587,6 +587,9 @@ argument_list|,
 name|CRYPTO_LOCK_X509
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sk_X509_delete_ptr
 argument_list|(
 name|sktmp
@@ -766,6 +769,9 @@ name|x
 operator|=
 name|xtmp
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sk_X509_set
 argument_list|(
 name|ctx
@@ -1557,6 +1563,10 @@ init|=
 literal|0
 decl_stmt|,
 name|must_be_ca
+decl_stmt|,
+name|plen
+init|=
+literal|0
 decl_stmt|;
 name|X509
 modifier|*
@@ -2019,13 +2029,22 @@ name|end
 goto|;
 block|}
 block|}
-comment|/* Check pathlen */
+comment|/* Check pathlen if not self issued */
 if|if
 condition|(
 operator|(
 name|i
 operator|>
 literal|1
+operator|)
+operator|&&
+operator|!
+operator|(
+name|x
+operator|->
+name|ex_flags
+operator|&
+name|EXFLAG_SI
 operator|)
 operator|&&
 operator|(
@@ -2038,7 +2057,7 @@ literal|1
 operator|)
 operator|&&
 operator|(
-name|i
+name|plen
 operator|>
 operator|(
 name|x
@@ -2088,6 +2107,21 @@ goto|goto
 name|end
 goto|;
 block|}
+comment|/* Increment path length if not self issued */
+if|if
+condition|(
+operator|!
+operator|(
+name|x
+operator|->
+name|ex_flags
+operator|&
+name|EXFLAG_SI
+operator|)
+condition|)
+name|plen
+operator|++
+expr_stmt|;
 comment|/* If this certificate is a proxy certificate, the next 		   certificate must be another proxy certificate or a EE 		   certificate.  If not, the next certificate must be a 		   CA certificate.  */
 if|if
 condition|(

@@ -3086,6 +3086,17 @@ operator|=
 name|_inchar
 argument_list|()
 expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+name|i
+operator|=
+name|_getch
+argument_list|()
+expr_stmt|;
 else|#
 directive|else
 name|i

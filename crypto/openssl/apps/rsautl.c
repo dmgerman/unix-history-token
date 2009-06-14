@@ -4,7 +4,7 @@ comment|/* rsautl.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project 2000.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2000.  */
 end_comment
 
 begin_comment
@@ -362,6 +362,7 @@ name|badarg
 operator|=
 literal|1
 expr_stmt|;
+else|else
 name|infile
 operator|=
 operator|*
@@ -395,6 +396,7 @@ name|badarg
 operator|=
 literal|1
 expr_stmt|;
+else|else
 name|outfile
 operator|=
 operator|*
@@ -428,6 +430,7 @@ name|badarg
 operator|=
 literal|1
 expr_stmt|;
+else|else
 name|keyfile
 operator|=
 operator|*
@@ -461,6 +464,7 @@ name|badarg
 operator|=
 literal|1
 expr_stmt|;
+else|else
 name|passargin
 operator|=
 operator|*
@@ -495,6 +499,7 @@ name|badarg
 operator|=
 literal|1
 expr_stmt|;
+else|else
 name|keyform
 operator|=
 name|str2fmt
@@ -534,6 +539,7 @@ name|badarg
 operator|=
 literal|1
 expr_stmt|;
+else|else
 name|engine
 operator|=
 operator|*

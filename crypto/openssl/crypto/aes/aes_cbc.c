@@ -53,6 +53,16 @@ directive|include
 file|"aes_locl.h"
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_FIPS_AES_ASM
+argument_list|)
+end_if
+
 begin_function
 name|void
 name|AES_cbc_encrypt
@@ -562,6 +572,11 @@ block|}
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -4,7 +4,7 @@ comment|/* crypto/engine/e_chil.c -*- mode: C; c-file-style: "eay" -*- */
 end_comment
 
 begin_comment
-comment|/* Written by Richard Levitte (richard@levitte.org), Geoff Thorpe  * (geoff@geoffthorpe.net) and Dr Stephen N Henson (shenson@bigfoot.com)  * for the OpenSSL project 2000.  */
+comment|/* Written by Richard Levitte (richard@levitte.org), Geoff Thorpe  * (geoff@geoffthorpe.net) and Dr Stephen N Henson (steve@openssl.org)  * for the OpenSSL project 2000.  */
 end_comment
 
 begin_comment
@@ -723,7 +723,7 @@ name|HWCRHK_CMD_FORK_CHECK
 block|,
 literal|"FORK_CHECK"
 block|,
-literal|"Turns fork() checking on or off (boolean)"
+literal|"Turns fork() checking on (non-zero) or off (zero)"
 block|,
 name|ENGINE_CMD_FLAG_NUMERIC
 block|}
@@ -733,7 +733,7 @@ name|HWCRHK_CMD_THREAD_LOCKING
 block|,
 literal|"THREAD_LOCKING"
 block|,
-literal|"Turns thread-safe locking on or off (boolean)"
+literal|"Turns thread-safe locking on (zero) or off (non-zero)"
 block|,
 name|ENGINE_CMD_FLAG_NUMERIC
 block|}
@@ -2360,33 +2360,6 @@ name|mutex_destroy
 operator|=
 name|hwcrhk_mutex_destroy
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|CRYPTO_get_locking_callback
-argument_list|()
-operator|!=
-name|NULL
-condition|)
-block|{
-name|HWCRHKerr
-argument_list|(
-name|HWCRHK_F_HWCRHK_INIT
-argument_list|,
-name|HWCRHK_R_LOCKING_MISSING
-argument_list|)
-expr_stmt|;
-name|ERR_add_error_data
-argument_list|(
-literal|1
-argument_list|,
-literal|"You HAVE to add dynamic locking callbacks via CRYPTO_set_dynlock_{create,lock,destroy}_callback()"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|err
-goto|;
 block|}
 block|}
 comment|/* Try and get a context - if not, we may have a DSO but no 	 * accelerator! */

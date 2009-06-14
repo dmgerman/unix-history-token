@@ -115,6 +115,12 @@ directive|include
 file|<openssl/sha.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_FIPS
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|int
@@ -397,11 +403,16 @@ literal|64
 operator|*
 literal|64
 expr_stmt|;
+comment|/* NB: seed_len == 0 is special case: copy generated seed to  	 * seed_in if it is not NULL.  	 */
 if|if
 condition|(
 name|seed_len
+operator|&&
+operator|(
+name|seed_len
 operator|<
 literal|20
+operator|)
 condition|)
 name|seed_in
 operator|=
@@ -433,6 +444,7 @@ operator|==
 literal|20
 operator|)
 condition|)
+block|{
 name|memcpy
 argument_list|(
 name|seed
@@ -442,6 +454,12 @@ argument_list|,
 name|seed_len
 argument_list|)
 expr_stmt|;
+comment|/* set seed_in to NULL to avoid it being copied back */
+name|seed_in
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -1421,17 +1439,9 @@ goto|;
 block|}
 if|if
 condition|(
-operator|(
-name|m
-operator|>
-literal|1
-operator|)
-operator|&&
-operator|(
 name|seed_in
 operator|!=
 name|NULL
-operator|)
 condition|)
 name|memcpy
 argument_list|(
@@ -1497,6 +1507,11 @@ name|ok
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

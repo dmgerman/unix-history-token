@@ -469,6 +469,9 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -611,6 +614,9 @@ argument_list|,
 literal|" ."
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -753,6 +759,9 @@ argument_list|,
 literal|"."
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -854,6 +863,9 @@ argument_list|,
 literal|"."
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -955,6 +967,9 @@ argument_list|,
 literal|"."
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
