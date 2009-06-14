@@ -137,6 +137,12 @@ directive|include
 file|"driveid.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<mips/octeon1/octeon_pcmap_regs.h>
+end_include
+
 begin_comment
 comment|/* ATA Commands */
 end_comment
@@ -2326,9 +2332,7 @@ operator|!
 name|octeon_board_real
 argument_list|()
 condition|)
-return|return
-literal|1
-return|;
+return|return;
 name|base_addr
 operator|=
 operator|(
