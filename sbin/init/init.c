@@ -6668,6 +6668,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Also revoke the TTY here.  Because runshutdown() may reopen 	 * the TTY whose getty we're killing here, there is no guarantee 	 * runshutdown() will perform the initial open() call, causing 	 * the terminal attributes to be misconfigured. 	 */
 for|for
 control|(
 name|sp
@@ -6696,6 +6697,13 @@ operator|->
 name|se_process
 argument_list|,
 name|SIGHUP
+argument_list|)
+expr_stmt|;
+name|revoke
+argument_list|(
+name|sp
+operator|->
+name|se_device
 argument_list|)
 expr_stmt|;
 block|}
@@ -6955,6 +6963,11 @@ name|sigaction
 operator|*
 operator|)
 literal|0
+argument_list|)
+expr_stmt|;
+name|revoke
+argument_list|(
+name|_PATH_CONSOLE
 argument_list|)
 expr_stmt|;
 if|if
