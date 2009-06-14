@@ -297,6 +297,10 @@ argument|std::string FunctName
 argument_list|)
 block|;
 name|void
+name|EmitRemainingAutos
+argument_list|()
+block|;
+name|void
 name|EmitRomData
 argument_list|(
 name|Module

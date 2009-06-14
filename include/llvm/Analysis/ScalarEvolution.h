@@ -1438,6 +1438,20 @@ name|Ty
 argument_list|)
 block|;
 name|SCEVHandle
+name|getAnyExtendExpr
+argument_list|(
+specifier|const
+name|SCEVHandle
+operator|&
+name|Op
+argument_list|,
+specifier|const
+name|Type
+operator|*
+name|Ty
+argument_list|)
+block|;
+name|SCEVHandle
 name|getAddExpr
 argument_list|(
 name|std
@@ -1820,6 +1834,24 @@ comment|/// the input value to the specified type.  If the type must be extended
 comment|/// it is sign extended.  The conversion must not be narrowing.
 name|SCEVHandle
 name|getNoopOrSignExtend
+argument_list|(
+specifier|const
+name|SCEVHandle
+operator|&
+name|V
+argument_list|,
+specifier|const
+name|Type
+operator|*
+name|Ty
+argument_list|)
+block|;
+comment|/// getNoopOrAnyExtend - Return a SCEV corresponding to a conversion of
+comment|/// the input value to the specified type. If the type must be extended,
+comment|/// it is extended with unspecified bits. The conversion must not be
+comment|/// narrowing.
+name|SCEVHandle
+name|getNoopOrAnyExtend
 argument_list|(
 specifier|const
 name|SCEVHandle

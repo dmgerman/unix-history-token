@@ -74,6 +74,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/OutputBuffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetAsmInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetELFWriterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ELF.h"
 end_include
 
@@ -94,6 +112,15 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|BinaryObject
+decl_stmt|;
+name|class
+name|ConstantStruct
+decl_stmt|;
+name|class
+name|ELFCodeEmitter
+decl_stmt|;
+name|class
 name|GlobalVariable
 decl_stmt|;
 name|class
@@ -101,9 +128,6 @@ name|Mangler
 decl_stmt|;
 name|class
 name|MachineCodeEmitter
-decl_stmt|;
-name|class
-name|ELFCodeEmitter
 decl_stmt|;
 name|class
 name|raw_ostream
@@ -180,6 +204,12 @@ name|TargetMachine
 modifier|&
 name|TM
 decl_stmt|;
+comment|/// Target Elf Writer description.
+specifier|const
+name|TargetELFWriterInfo
+modifier|*
+name|TEW
+decl_stmt|;
 comment|/// Mang - The object used to perform name mangling for this module.
 name|Mangler
 modifier|*
@@ -190,6 +220,13 @@ comment|/// code for functions to the .o file.
 name|ELFCodeEmitter
 modifier|*
 name|MCE
+decl_stmt|;
+comment|/// TAI - Target Asm Info, provide information about section names for
+comment|/// globals and other target specific stuff.
+specifier|const
+name|TargetAsmInfo
+modifier|*
+name|TAI
 decl_stmt|;
 comment|//===------------------------------------------------------------------===//
 comment|// Properties inferred automatically from the target machine.
@@ -231,15 +268,8 @@ parameter_list|)
 function_decl|;
 name|private
 label|:
-comment|// The buffer we accumulate the file header into.  Note that this should be
-comment|// changed into something much more efficient later (and the bitcode writer
-comment|// as well!).
-name|DataBuffer
-name|FileHeader
-decl_stmt|;
-comment|/// ElfHdr - Hold information about the ELF Header
-name|ELFHeader
-modifier|*
+comment|// Blob containing the Elf header
+name|BinaryObject
 name|ElfHdr
 decl_stmt|;
 comment|/// SectionList - This is the list of sections that we have emitted to the
@@ -292,6 +322,11 @@ name|unsigned
 name|Flags
 operator|=
 literal|0
+argument_list|,
+name|unsigned
+name|Align
+operator|=
+literal|0
 argument_list|)
 block|{
 name|ELFSection
@@ -316,7 +351,14 @@ name|SectionList
 operator|.
 name|push_back
 argument_list|(
+name|ELFSection
+argument_list|(
 name|Name
+argument_list|,
+name|isLittleEndian
+argument_list|,
+name|is64Bit
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|SN
@@ -354,6 +396,12 @@ name|ELFSection
 operator|::
 name|SHN_UNDEF
 expr_stmt|;
+name|SN
+operator|->
+name|Align
+operator|=
+name|Align
+expr_stmt|;
 return|return
 operator|*
 name|SN
@@ -380,6 +428,64 @@ operator||
 name|ELFSection
 operator|::
 name|SHF_ALLOC
+argument_list|)
+return|;
+block|}
+name|ELFSection
+modifier|&
+name|getNonExecStackSection
+parameter_list|()
+block|{
+return|return
+name|getSection
+argument_list|(
+literal|".note.GNU-stack"
+argument_list|,
+name|ELFSection
+operator|::
+name|SHT_PROGBITS
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+return|;
+block|}
+name|ELFSection
+modifier|&
+name|getSymbolTableSection
+parameter_list|()
+block|{
+return|return
+name|getSection
+argument_list|(
+literal|".symtab"
+argument_list|,
+name|ELFSection
+operator|::
+name|SHT_SYMTAB
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+name|ELFSection
+modifier|&
+name|getStringTableSection
+parameter_list|()
+block|{
+return|return
+name|getSection
+argument_list|(
+literal|".strtab"
+argument_list|,
+name|ELFSection
+operator|::
+name|SHT_STRTAB
+argument_list|,
+literal|0
+argument_list|,
+literal|1
 argument_list|)
 return|;
 block|}
@@ -431,7 +537,7 @@ name|SHF_ALLOC
 argument_list|)
 return|;
 block|}
-comment|/// SymbolTable - This is the list of symbols we have emitted to the file.
+comment|/// SymbolList - This is the list of symbols we have emitted to the file.
 comment|/// This actually gets rearranged before emission to the file (to put the
 comment|/// local symbols first in the list).
 name|std
@@ -440,11 +546,11 @@ name|vector
 operator|<
 name|ELFSym
 operator|>
-name|SymbolTable
+name|SymbolList
 expr_stmt|;
-comment|/// PendingSyms - This is a list of externally defined symbols that we have
-comment|/// been asked to emit, but have not seen a reference to.  When a reference
-comment|/// is seen, the symbol will move from this list to the SymbolTable.
+comment|/// PendingGlobals - List of externally defined symbols that we have been
+comment|/// asked to emit, but have not seen a reference to.  When a reference
+comment|/// is seen, the symbol will move from this list to the SymbolList.
 name|SetVector
 operator|<
 name|GlobalValue
@@ -479,15 +585,66 @@ name|GV
 parameter_list|)
 function_decl|;
 name|void
-name|EmitSymbolTable
-parameter_list|()
+name|EmitGlobalConstant
+parameter_list|(
+specifier|const
+name|Constant
+modifier|*
+name|C
+parameter_list|,
+name|ELFSection
+modifier|&
+name|GblS
+parameter_list|)
+function_decl|;
+name|void
+name|EmitGlobalConstantStruct
+parameter_list|(
+specifier|const
+name|ConstantStruct
+modifier|*
+name|CVS
+parameter_list|,
+name|ELFSection
+modifier|&
+name|GblS
+parameter_list|)
 function_decl|;
 name|void
 name|EmitRelocations
 parameter_list|()
 function_decl|;
 name|void
+name|EmitSectionHeader
+parameter_list|(
+name|BinaryObject
+modifier|&
+name|SHdrTab
+parameter_list|,
+specifier|const
+name|ELFSection
+modifier|&
+name|SHdr
+parameter_list|)
+function_decl|;
+name|void
 name|EmitSectionTableStringTable
+parameter_list|()
+function_decl|;
+name|void
+name|EmitSymbol
+parameter_list|(
+name|BinaryObject
+modifier|&
+name|SymbolTable
+parameter_list|,
+name|ELFSym
+modifier|&
+name|Sym
+parameter_list|)
+function_decl|;
+name|void
+name|EmitSymbolTable
 parameter_list|()
 function_decl|;
 name|void

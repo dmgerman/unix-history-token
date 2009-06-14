@@ -79,13 +79,23 @@ name|public
 operator|:
 name|X86ELFWriterInfo
 argument_list|(
-argument|bool is64Bit
+name|TargetMachine
+operator|&
+name|TM
 argument_list|)
 block|;
 name|virtual
 operator|~
 name|X86ELFWriterInfo
 argument_list|()
+block|;
+name|virtual
+name|unsigned
+name|getFunctionAlignment
+argument_list|(
+argument|const Function *F
+argument_list|)
+specifier|const
 block|;   }
 decl_stmt|;
 block|}

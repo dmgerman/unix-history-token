@@ -304,7 +304,8 @@ name|StructRet
 operator||
 name|NoCapture
 decl_stmt|;
-comment|/// @brief Attributes that only apply to function.
+comment|/// @brief Attributes that may be applied to the function itself.  These cannot
+comment|/// be used on return values or function parameters.
 specifier|const
 name|Attributes
 name|FunctionOnly
@@ -730,7 +731,7 @@ return|return
 name|getAttributes
 argument_list|(
 operator|~
-literal|0
+literal|0U
 argument_list|)
 return|;
 block|}

@@ -474,13 +474,6 @@ return|return
 name|Attributes
 return|;
 block|}
-comment|/// PurgeAggregateValues - If there are any aggregate values at the end of the
-comment|/// value list, remove them and return the count of the remaining values.  If
-comment|/// there are none, return -1.
-name|int
-name|PurgeAggregateValues
-parameter_list|()
-function_decl|;
 comment|/// incorporateFunction/purgeFunction - If you'd like to deal with a function,
 comment|/// use these two methods to get its data into the ValueEnumerator!
 comment|///

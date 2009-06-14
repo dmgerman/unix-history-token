@@ -3538,6 +3538,22 @@ argument_list|)
 specifier|const
 block|; }
 block|;
+comment|/// resolveTypes - Find a common type that T1 and T2 convert to.
+comment|/// Return 0 if no such type exists.
+comment|///
+name|RecTy
+operator|*
+name|resolveTypes
+argument_list|(
+name|RecTy
+operator|*
+name|T1
+argument_list|,
+name|RecTy
+operator|*
+name|T2
+argument_list|)
+block|;
 comment|//===----------------------------------------------------------------------===//
 comment|//  Initializer Classes
 comment|//===----------------------------------------------------------------------===//
@@ -4189,7 +4205,7 @@ name|class
 name|IntInit
 operator|:
 name|public
-name|Init
+name|TypedInit
 block|{
 name|int64_t
 name|Value
@@ -4202,6 +4218,11 @@ argument_list|(
 argument|int64_t V
 argument_list|)
 operator|:
+name|TypedInit
+argument_list|(
+argument|new IntRecTy
+argument_list|)
+block|,
 name|Value
 argument_list|(
 argument|V
@@ -4256,7 +4277,61 @@ name|string
 name|getAsString
 argument_list|()
 specifier|const
-block|; }
+block|;
+comment|/// resolveBitReference - This method is used to implement
+comment|/// VarBitInit::resolveReferences.  If the bit is able to be resolved, we
+comment|/// simply return the resolved value, otherwise we return null.
+comment|///
+name|virtual
+name|Init
+operator|*
+name|resolveBitReference
+argument_list|(
+argument|Record&R
+argument_list|,
+argument|const RecordVal *RV
+argument_list|,
+argument|unsigned Bit
+argument_list|)
+block|{
+name|assert
+argument_list|(
+literal|0
+operator|&&
+literal|"Illegal bit reference off int"
+argument_list|)
+block|;
+return|return
+literal|0
+return|;
+block|}
+comment|/// resolveListElementReference - This method is used to implement
+comment|/// VarListElementInit::resolveReferences.  If the list element is resolvable
+comment|/// now, we return the resolved value, otherwise we return null.
+name|virtual
+name|Init
+operator|*
+name|resolveListElementReference
+argument_list|(
+argument|Record&R
+argument_list|,
+argument|const RecordVal *RV
+argument_list|,
+argument|unsigned Elt
+argument_list|)
+block|{
+name|assert
+argument_list|(
+literal|0
+operator|&&
+literal|"Illegal element reference off int"
+argument_list|)
+block|;
+return|return
+literal|0
+return|;
+block|}
+expr|}
 block|;
 comment|/// StringInit - "foo" - Represent an initialization by a string value.
 comment|///
@@ -4479,7 +4554,7 @@ name|class
 name|ListInit
 operator|:
 name|public
-name|Init
+name|TypedInit
 block|{
 name|std
 operator|::
@@ -4519,7 +4594,24 @@ expr_stmt|;
 name|explicit
 name|ListInit
 argument_list|(
-argument|std::vector<Init*>&Vs
+name|std
+operator|::
+name|vector
+operator|<
+name|Init
+operator|*
+operator|>
+operator|&
+name|Vs
+argument_list|,
+name|RecTy
+operator|*
+name|EltTy
+argument_list|)
+operator|:
+name|TypedInit
+argument_list|(
+argument|new ListRecTy(EltTy)
 argument_list|)
 block|{
 name|Values
@@ -4535,8 +4627,15 @@ argument_list|(
 argument|iterator Start
 argument_list|,
 argument|iterator End
+argument_list|,
+argument|RecTy *EltTy
 argument_list|)
 operator|:
+name|TypedInit
+argument_list|(
+argument|new ListRecTy(EltTy)
+argument_list|)
+block|,
 name|Values
 argument_list|(
 argument|Start
@@ -4727,7 +4826,48 @@ name|empty
 argument_list|()
 return|;
 block|}
-expr|}
+comment|/// resolveBitReference - This method is used to implement
+comment|/// VarBitInit::resolveReferences.  If the bit is able to be resolved, we
+comment|/// simply return the resolved value, otherwise we return null.
+comment|///
+name|virtual
+name|Init
+operator|*
+name|resolveBitReference
+argument_list|(
+argument|Record&R
+argument_list|,
+argument|const RecordVal *RV
+argument_list|,
+argument|unsigned Bit
+argument_list|)
+block|{
+name|assert
+argument_list|(
+literal|0
+operator|&&
+literal|"Illegal bit reference off list"
+argument_list|)
+block|;
+return|return
+literal|0
+return|;
+block|}
+comment|/// resolveListElementReference - This method is used to implement
+comment|/// VarListElementInit::resolveReferences.  If the list element is resolvable
+comment|/// now, we return the resolved value, otherwise we return null.
+name|virtual
+name|Init
+operator|*
+name|resolveListElementReference
+argument_list|(
+argument|Record&R
+argument_list|,
+argument|const RecordVal *RV
+argument_list|,
+argument|unsigned Elt
+argument_list|)
+block|; }
 block|;
 comment|/// OpInit - Base class for operators
 comment|///

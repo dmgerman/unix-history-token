@@ -713,11 +713,9 @@ name|runJITOnFunction
 parameter_list|(
 name|Function
 modifier|*
-name|F
 parameter_list|,
 name|MachineCodeInfo
 modifier|*
-name|MCI
 init|=
 literal|0
 parameter_list|)

@@ -270,7 +270,7 @@ comment|///
 name|void
 name|emitWordLE
 argument_list|(
-argument|unsigned W
+argument|uint32_t W
 argument_list|)
 block|{
 if|if
@@ -349,7 +349,7 @@ comment|///
 name|void
 name|emitWordBE
 argument_list|(
-argument|unsigned W
+argument|uint32_t W
 argument_list|)
 block|{
 if|if
@@ -760,7 +760,7 @@ comment|/// written to the output stream.
 name|void
 name|emitULEB128Bytes
 argument_list|(
-argument|unsigned Value
+argument|uint64_t Value
 argument_list|)
 block|{
 do|do
@@ -798,7 +798,7 @@ empty_stmt|;
 do|}
 comment|/// emitSLEB128Bytes - This callback is invoked when a SLEB128 needs to be
 comment|/// written to the output stream.
-do|void emitSLEB128Bytes(int32_t Value
+do|void emitSLEB128Bytes(int64_t Value
 block|)
 block|{
 name|int32_t
@@ -928,7 +928,7 @@ comment|/// emitInt32 - Emit a int32 directive.
 name|void
 name|emitInt32
 argument_list|(
-argument|int32_t Value
+argument|uint32_t Value
 argument_list|)
 block|{
 if|if

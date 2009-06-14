@@ -887,6 +887,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
+name|llvm
+operator|::
+name|createPartialInliningPass
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|new
 name|llvm
 operator|::

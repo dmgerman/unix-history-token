@@ -152,6 +152,13 @@ specifier|extern
 name|bool
 name|UseSoftFloat
 decl_stmt|;
+comment|/// FloatABIType - This setting is set by -float-abi=xxx option is specfied
+comment|/// on the command line. This setting may either be Default, Soft, or Hard.
+comment|/// Default selects the target's default behavior. Soft selects the ABI for
+comment|/// UseSoftFloat, but does not inidcate that FP hardware may not be used.
+comment|/// Such a combination is unfortunately popular (e.g. arm-apple-darwin).
+comment|/// Hard presumes that the normal FP ABI is used.
+extern|extern FloatABI::ABIType FloatABIType;
 comment|/// NoZerosInBSS - By default some codegens place zero-initialized data to
 comment|/// .bss section. This flag disables such behaviour (necessary, e.g. for
 comment|/// crt*.o compiling).

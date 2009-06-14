@@ -199,6 +199,20 @@ name|Aggressive
 block|}
 enum|;
 block|}
+name|namespace
+name|FloatABI
+block|{
+enum|enum
+name|ABIType
+block|{
+name|Default
+block|,
+name|Soft
+block|,
+name|Hard
+block|}
+enum|;
+block|}
 comment|//===----------------------------------------------------------------------===//
 comment|///
 comment|/// TargetMachine - Primary interface to the complete machine description for
@@ -231,12 +245,7 @@ label|:
 comment|// Can only create subclasses.
 name|TargetMachine
 argument_list|()
-operator|:
-name|AsmInfo
-argument_list|(
-literal|0
-argument_list|)
-block|{ }
+expr_stmt|;
 comment|/// getSubtargetImpl - virtual method implemented by subclasses that returns
 comment|/// a reference to that target's TargetSubtarget-derived member variable.
 name|virtual

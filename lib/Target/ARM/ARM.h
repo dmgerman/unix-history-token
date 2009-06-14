@@ -463,7 +463,12 @@ function_decl|;
 name|FunctionPass
 modifier|*
 name|createARMLoadStoreOptimizationPass
-parameter_list|()
+parameter_list|(
+name|bool
+name|PreAlloc
+init|=
+name|false
+parameter_list|)
 function_decl|;
 name|FunctionPass
 modifier|*

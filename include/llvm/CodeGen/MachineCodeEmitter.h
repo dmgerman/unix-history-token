@@ -275,7 +275,7 @@ comment|///
 name|void
 name|emitWordLE
 parameter_list|(
-name|unsigned
+name|uint32_t
 name|W
 parameter_list|)
 block|{
@@ -355,7 +355,7 @@ comment|///
 name|void
 name|emitWordBE
 parameter_list|(
-name|unsigned
+name|uint32_t
 name|W
 parameter_list|)
 block|{
@@ -770,7 +770,7 @@ comment|/// written to the output stream.
 name|void
 name|emitULEB128Bytes
 parameter_list|(
-name|unsigned
+name|uint64_t
 name|Value
 parameter_list|)
 block|{
@@ -812,11 +812,11 @@ comment|/// written to the output stream.
 name|void
 name|emitSLEB128Bytes
 parameter_list|(
-name|int32_t
+name|uint64_t
 name|Value
 parameter_list|)
 block|{
-name|int32_t
+name|uint64_t
 name|Sign
 init|=
 name|Value

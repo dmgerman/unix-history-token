@@ -423,6 +423,14 @@ modifier|*
 name|createMergeFunctionsPass
 parameter_list|()
 function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|/// createPartialInliningPass - This pass inlines parts of functions.
+comment|///
+name|ModulePass
+modifier|*
+name|createPartialInliningPass
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 
