@@ -394,11 +394,10 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|admsw_shutdown
 parameter_list|(
-name|void
-modifier|*
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2871,12 +2870,11 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|admsw_shutdown
 parameter_list|(
-name|void
-modifier|*
-name|arg
+name|device_t
+name|dev
 parameter_list|)
 block|{
 name|struct
@@ -2884,7 +2882,15 @@ name|admsw_softc
 modifier|*
 name|sc
 init|=
-name|arg
+operator|(
+expr|struct
+name|admsw_softc
+operator|*
+operator|)
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
 decl_stmt|;
 name|int
 name|i
@@ -2914,6 +2920,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
