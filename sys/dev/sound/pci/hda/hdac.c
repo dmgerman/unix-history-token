@@ -88,7 +88,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20090608_0134"
+value|"20090614_0135"
 end_define
 
 begin_expr_stmt
@@ -8576,14 +8576,14 @@ name|bus_size_t
 name|size
 parameter_list|)
 block|{
+name|bus_addr_t
+name|lowaddr
+decl_stmt|;
 name|bus_size_t
 name|roundsz
 decl_stmt|;
 name|int
 name|result
-decl_stmt|;
-name|int
-name|lowaddr
 decl_stmt|;
 name|roundsz
 operator|=
