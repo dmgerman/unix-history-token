@@ -109,6 +109,10 @@ directive|include
 file|<dev/uart/uart_cpu.h>
 end_include
 
+begin_comment
+comment|/*  * XXXMIPS:  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -120,6 +124,14 @@ include|#
 directive|include
 file|"uart_if.h"
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|uart_class
+name|uart_oct16550_class
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -220,7 +232,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_extern
-extern|extern SLIST_HEAD(uart_devinfo_list
+extern|extern  SLIST_HEAD(uart_devinfo_list
 operator|,
 extern|uart_devinfo
 end_extern
