@@ -53,6 +53,50 @@ name|LOCORE
 end_ifndef
 
 begin_comment
+comment|/* XXXimp: From Cavium's include/pcpu.h, need to port that over */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OCTEON_SMP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|OCTEON_CORE_ID
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pcpu
+modifier|*
+name|cpuid_to_pcpu
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|OCTEON_CORE_ID
+value|(mips_rd_coreid())
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Utility inlines& macros  */
 end_comment
 
