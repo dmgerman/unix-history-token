@@ -249,11 +249,15 @@ directive|include
 file|"octeon_rgmx.h"
 end_include
 
+begin_comment
+comment|/* The "battleship" boards have 8 ports */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|OCTEON_RGMX_NUM_PORTS_MAX
-value|4
+value|8
 end_define
 
 begin_define
