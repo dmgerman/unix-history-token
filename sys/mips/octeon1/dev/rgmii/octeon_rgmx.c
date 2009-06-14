@@ -722,6 +722,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG_RGMX_DUMP
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -736,12 +742,38 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|octeon_dump_pow_stats
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__not_used__
+end_ifdef
+
+begin_function_decl
+specifier|static
+name|void
 name|rgmx_timer_periodic
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -2598,16 +2630,6 @@ name|RGMX_MAX_PAK_RECEIVE
 value|5000000
 end_define
 
-begin_function_decl
-specifier|static
-name|void
-name|octeon_dump_pow_stats
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2648,16 +2670,10 @@ name|int
 name|pending
 parameter_list|)
 block|{
-name|NET_LOCK_GIANT
-argument_list|()
-expr_stmt|;
 name|octeon_rx_loop
 argument_list|(
 name|NULL
 argument_list|)
-expr_stmt|;
-name|NET_UNLOCK_GIANT
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -4641,6 +4657,12 @@ name|OCTEON_RGMX_FLUSH_PENDING_MBUFS_MAX
 value|1000
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__not_used__
+end_ifdef
+
 begin_comment
 comment|/*  * octeon_rgmx_output_flush  *  * Drop all packets queued at ifnet layer.  */
 end_comment
@@ -4723,6 +4745,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * octeon_rgmx_output_start  *  * Start output on interface.  */
@@ -7154,6 +7181,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG_RGMX_DUMP
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -7164,6 +7197,17 @@ name|port
 parameter_list|)
 block|{  }
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__not_used__
+end_ifdef
 
 begin_function
 specifier|static
@@ -7373,6 +7417,17 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG_RGMX_DUMP
+end_ifdef
 
 begin_function
 specifier|static
@@ -7750,6 +7805,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ------------------------------------------------------------------- *  *                      octeon_line_status_loop()                      *  * ------------------------------------------------------------------- */
@@ -8686,6 +8746,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__not_used__
+end_ifdef
+
 begin_comment
 comment|/*  * octeon_rgmx_free_intr  *  * We have 4 child and one parent device.  * It's tricky and unexpected that anyone will detach the device that is built'in on  * the chip.  * We will not support  detachment for now. But keep adding good code that will be used  * someday.  */
 end_comment
@@ -8770,6 +8836,11 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
