@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mips/octeon1/octeon_pcmap_regs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"octeon_fau.h"
 end_include
 
@@ -573,7 +579,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n Port #%d  Pkts %d   Bytes %lld  DoorBell %lld"
+literal|"\n Port #%lld  Pkts %ld   Bytes %lld  DoorBell %lld"
 argument_list|,
 name|port
 argument_list|,
@@ -747,7 +753,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n Total Queues: 0..%d  Ports GMX0 %d   GMX1 %d  CRC 0x%llX"
+literal|"\n Total Queues: 0..%d  Ports GMX0 %d   GMX1 %d  CRC 0x%X"
 argument_list|,
 name|queue_max
 operator|-
@@ -884,6 +890,9 @@ name|bits
 operator|.
 name|index
 argument_list|,
+operator|(
+name|uint64_t
+operator|)
 name|octeon_pko_queue_cfg
 operator|.
 name|bits
@@ -945,7 +954,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n Port #%d  Packets %d   Bytes %lld  DoorBell %lld"
+literal|"\n Port #%d  Packets %ld   Bytes %lld  DoorBell %lld"
 argument_list|,
 name|port
 argument_list|,
@@ -1027,7 +1036,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n%% Error: octeon_pko_config_port: Invalid port %llu"
+literal|"\n%% Error: octeon_pko_config_port: Invalid port %u"
 argument_list|,
 name|port
 argument_list|)

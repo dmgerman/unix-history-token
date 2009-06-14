@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mips/octeon1/octeon_pcmap_regs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"octeon_fpa.h"
 end_include
 

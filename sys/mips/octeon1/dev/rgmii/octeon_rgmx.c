@@ -210,6 +210,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mips/octeon1/octeon_pcmap_regs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"octeon_fau.h"
 end_include
 
@@ -7267,7 +7273,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" port %u  sc 0x%X not in sync with index: %u\n"
+literal|" port %u  sc %p not in sync with index: %u\n"
 argument_list|,
 name|port
 argument_list|,
@@ -7289,7 +7295,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" port %u  sc 0x%X port-> %u  not in sync with index: %u\n"
+literal|" port %u  sc %p port-> %u  not in sync with index: %u\n"
 argument_list|,
 name|port
 argument_list|,
@@ -7319,7 +7325,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" port %u  sc 0x%X . Bad ifp 0x%X\n"
+literal|" port %u  sc %p . Bad ifp %p\n"
 argument_list|,
 name|port
 argument_list|,

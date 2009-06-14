@@ -1437,7 +1437,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"WQE Result: 0x%llX  No-work %llX   Addr %llX  Ptr: %llX\n"
+literal|"WQE Result: 0x%llX  No-work %X   Addr %llX  Ptr: %p\n"
 argument_list|,
 name|result
 operator|.
@@ -1449,6 +1449,9 @@ name|s_work
 operator|.
 name|no_work
 argument_list|,
+operator|(
+name|uint64_t
+operator|)
 name|result
 operator|.
 name|s_work
