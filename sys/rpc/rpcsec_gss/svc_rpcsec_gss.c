@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -67,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
 end_include
 
 begin_include
@@ -315,7 +327,8 @@ begin_struct
 struct|struct
 name|svc_rpc_gss_clientid
 block|{
-name|uint32_t
+name|unsigned
+name|long
 name|ci_hostid
 decl_stmt|;
 name|uint32_t
@@ -2201,6 +2214,10 @@ name|svc_rpc_gss_client_list
 modifier|*
 name|list
 decl_stmt|;
+name|unsigned
+name|long
+name|hostid
+decl_stmt|;
 name|rpc_gss_log_debug
 argument_list|(
 literal|"in svc_rpc_gss_find_client(%d)"
@@ -2208,6 +2225,16 @@ argument_list|,
 name|id
 operator|->
 name|ci_id
+argument_list|)
+expr_stmt|;
+name|getcredhostid
+argument_list|(
+name|curthread
+operator|->
+name|td_ucred
+argument_list|,
+operator|&
+name|hostid
 argument_list|)
 expr_stmt|;
 if|if
@@ -2337,6 +2364,10 @@ name|svc_rpc_gss_client_list
 modifier|*
 name|list
 decl_stmt|;
+name|unsigned
+name|long
+name|hostid
+decl_stmt|;
 name|rpc_gss_log_debug
 argument_list|(
 literal|"in svc_rpc_gss_create_client()"
@@ -2384,6 +2415,16 @@ operator|->
 name|cl_lock
 argument_list|,
 literal|"GSS-client"
+argument_list|)
+expr_stmt|;
+name|getcredhostid
+argument_list|(
+name|curthread
+operator|->
+name|td_ucred
+argument_list|,
+operator|&
+name|hostid
 argument_list|)
 expr_stmt|;
 name|client
