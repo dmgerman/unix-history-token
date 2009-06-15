@@ -6714,10 +6714,20 @@ operator|->
 name|s_ttyvp
 operator|!=
 name|NULL
+operator|&&
+name|tp
+operator|->
+name|t_session
+operator|->
+name|s_ttyvp
+operator|->
+name|v_type
+operator|!=
+name|VBAD
 operator|)
 condition|)
 block|{
-comment|/* 			 * There is already a relation between a TTY and 			 * a session, or the caller is not the session 			 * leader. 			 * 			 * Allow the TTY to be stolen when the vnode is 			 * NULL, but the reference to the TTY is still 			 * active. 			 */
+comment|/* 			 * There is already a relation between a TTY and 			 * a session, or the caller is not the session 			 * leader. 			 * 			 * Allow the TTY to be stolen when the vnode is 			 * invalid, but the reference to the TTY is 			 * still active.  This allows immediate reuse of 			 * TTYs of which the session leader has been 			 * killed or the TTY revoked. 			 */
 name|sx_xunlock
 argument_list|(
 operator|&

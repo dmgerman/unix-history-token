@@ -1016,6 +1016,12 @@ condition|(
 name|ttyvp
 operator|!=
 name|NULL
+operator|&&
+name|ttyvp
+operator|->
+name|v_type
+operator|!=
+name|VBAD
 condition|)
 block|{
 comment|/* 			 * Controlling process. 			 * Signal foreground pgrp and revoke access to 			 * controlling terminal. 			 * 			 * There is no need to drain the terminal here, 			 * because this will be done on revocation. 			 */
