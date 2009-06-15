@@ -133,7 +133,7 @@ condition|(
 name|disk
 operator|->
 name|bios_hd
-operator|>
+operator|>=
 literal|256
 condition|)
 name|sane
