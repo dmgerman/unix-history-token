@@ -1138,9 +1138,9 @@ literal|0
 expr_stmt|;
 name|CURVNET_SET
 argument_list|(
-name|TD_TO_VNET
+name|CRED_TO_VNET
 argument_list|(
-name|curthread
+name|cred
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -1438,9 +1438,9 @@ name|so
 operator|=
 name|soalloc
 argument_list|(
-name|TD_TO_VNET
+name|CRED_TO_VNET
 argument_list|(
-name|td
+name|cred
 argument_list|)
 argument_list|)
 expr_stmt|;
