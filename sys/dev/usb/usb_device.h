@@ -932,7 +932,7 @@ end_function_decl
 begin_function_decl
 name|void
 modifier|*
-name|usb2_find_descriptor
+name|usbd_find_descriptor
 parameter_list|(
 name|struct
 name|usb_device

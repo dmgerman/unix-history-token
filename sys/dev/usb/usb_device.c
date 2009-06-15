@@ -7600,13 +7600,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_find_descriptor  *  * This function will lookup the first descriptor that matches the  * criteria given by the arguments "type" and "subtype". Descriptors  * will only be searched within the interface having the index  * "iface_index".  If the "id" argument points to an USB descriptor,  * it will be skipped before the search is started. This allows  * searching for multiple descriptors using the same criteria. Else  * the search is started after the interface descriptor.  *  * Return values:  *   NULL: End of descriptors  *   Else: A descriptor matching the criteria  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_find_descriptor  *  * This function will lookup the first descriptor that matches the  * criteria given by the arguments "type" and "subtype". Descriptors  * will only be searched within the interface having the index  * "iface_index".  If the "id" argument points to an USB descriptor,  * it will be skipped before the search is started. This allows  * searching for multiple descriptors using the same criteria. Else  * the search is started after the interface descriptor.  *  * Return values:  *   NULL: End of descriptors  *   Else: A descriptor matching the criteria  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
 modifier|*
-name|usb2_find_descriptor
+name|usbd_find_descriptor
 parameter_list|(
 name|struct
 name|usb_device

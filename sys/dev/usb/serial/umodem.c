@@ -1209,7 +1209,7 @@ condition|)
 block|{
 name|cud
 operator|=
-name|usb2_find_descriptor
+name|usbd_find_descriptor
 argument_list|(
 name|uaa
 operator|->
@@ -3300,7 +3300,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|usb2_find_descriptor
+name|usbd_find_descriptor
 argument_list|(
 name|uaa
 operator|->

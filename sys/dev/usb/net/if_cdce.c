@@ -1221,7 +1221,7 @@ goto|;
 block|}
 name|ud
 operator|=
-name|usb2_find_descriptor
+name|usbd_find_descriptor
 argument_list|(
 name|uaa
 operator|->
@@ -1486,7 +1486,7 @@ block|}
 block|}
 name|ued
 operator|=
-name|usb2_find_descriptor
+name|usbd_find_descriptor
 argument_list|(
 name|uaa
 operator|->
