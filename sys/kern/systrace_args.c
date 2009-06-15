@@ -16654,6 +16654,35 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
+comment|/* closefrom */
+case|case
+literal|509
+case|:
+block|{
+name|struct
+name|closefrom_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|lowfd
+expr_stmt|;
+comment|/* int */
+operator|*
+name|n_args
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
 default|default:
 operator|*
 name|n_args
@@ -28500,6 +28529,28 @@ break|break;
 comment|/* jail_remove */
 case|case
 literal|508
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* closefrom */
+case|case
+literal|509
 case|:
 switch|switch
 condition|(
