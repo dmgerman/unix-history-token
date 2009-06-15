@@ -36,12 +36,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -3174,13 +3168,6 @@ operator|->
 name|not_eligible_heap
 operator|)
 decl_stmt|;
-name|int64_t
-name|p_numbytes
-init|=
-name|p
-operator|->
-name|numbytes
-decl_stmt|;
 name|DUMMYNET_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -3196,8 +3183,9 @@ operator|==
 literal|0
 condition|)
 comment|/* tx clock is simulated */
-comment|/* 		 * Since result may not fit into p->numbytes (32bit) we 		 * are using 64bit var here. 		 */
-name|p_numbytes
+name|p
+operator|->
+name|numbytes
 operator|+=
 operator|(
 name|curr_time
@@ -3253,7 +3241,9 @@ block|}
 comment|/* 	 * While we have backlogged traffic AND credit, we need to do 	 * something on the queue. 	 */
 while|while
 condition|(
-name|p_numbytes
+name|p
+operator|->
+name|numbytes
 operator|>=
 literal|0
 operator|&&
@@ -3346,7 +3336,9 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Remove queue from heap. */
-name|p_numbytes
+name|p
+operator|->
+name|numbytes
 operator|-=
 name|len_scaled
 expr_stmt|;
@@ -3595,7 +3587,9 @@ literal|'\0'
 condition|)
 block|{
 comment|/* Tx clock is from a real thing */
-name|p_numbytes
+name|p
+operator|->
+name|numbytes
 operator|=
 operator|-
 literal|1
@@ -3618,7 +3612,9 @@ name|elements
 operator|==
 literal|0
 operator|&&
-name|p_numbytes
+name|p
+operator|->
+name|numbytes
 operator|>=
 literal|0
 operator|&&
@@ -3719,7 +3715,9 @@ index|]
 operator|==
 literal|0
 operator|&&
-name|p_numbytes
+name|p
+operator|->
+name|numbytes
 operator|<
 literal|0
 condition|)
@@ -3748,7 +3746,9 @@ name|bandwidth
 operator|-
 literal|1
 operator|-
-name|p_numbytes
+name|p
+operator|->
+name|numbytes
 operator|)
 operator|/
 name|p
@@ -3790,39 +3790,6 @@ argument_list|)
 expr_stmt|;
 comment|/* 		 * XXX Should check errors on heap_insert, and drain the whole 		 * queue on error hoping next time we are luckier. 		 */
 block|}
-comment|/* Fit (adjust if necessary) 64bit result into 32bit variable. */
-if|if
-condition|(
-name|p_numbytes
-operator|>
-name|INT_MAX
-condition|)
-name|p
-operator|->
-name|numbytes
-operator|=
-name|INT_MAX
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|p_numbytes
-operator|<
-name|INT_MIN
-condition|)
-name|p
-operator|->
-name|numbytes
-operator|=
-name|INT_MIN
-expr_stmt|;
-else|else
-name|p
-operator|->
-name|numbytes
-operator|=
-name|p_numbytes
-expr_stmt|;
 comment|/* 	 * If the delay line was empty call transmit_event() now. 	 * Otherwise, the scheduler will take care of it. 	 */
 if|if
 condition|(
