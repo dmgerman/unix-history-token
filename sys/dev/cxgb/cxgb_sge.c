@@ -8647,7 +8647,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|ifq_detach
+name|ifq_delete
 argument_list|(
 name|q
 operator|->
@@ -11485,7 +11485,7 @@ goto|goto
 name|err
 goto|;
 block|}
-name|ifq_attach
+name|ifq_init
 argument_list|(
 name|q
 operator|->

@@ -2679,6 +2679,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|ifq_init
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_snd
+argument_list|,
+name|ifp
+argument_list|)
+expr_stmt|;
 name|refcount_init
 argument_list|(
 operator|&
@@ -2876,7 +2886,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|ifq_detach
+name|ifq_delete
 argument_list|(
 operator|&
 name|ifp
@@ -3041,7 +3051,7 @@ end_function
 
 begin_function
 name|void
-name|ifq_attach
+name|ifq_init
 parameter_list|(
 name|struct
 name|ifaltq
@@ -3119,7 +3129,7 @@ end_function
 
 begin_function
 name|void
-name|ifq_detach
+name|ifq_delete
 parameter_list|(
 name|struct
 name|ifaltq
@@ -3422,16 +3432,6 @@ name|if_index
 argument_list|)
 expr_stmt|;
 block|}
-name|ifq_attach
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_snd
-argument_list|,
-name|ifp
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Create a Link Level name for this device. 		 */
 name|namelen
 operator|=

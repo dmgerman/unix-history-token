@@ -3273,7 +3273,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ifq_attach
+name|ifq_init
 parameter_list|(
 name|struct
 name|ifaltq
@@ -3289,7 +3289,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ifq_detach
+name|ifq_delete
 parameter_list|(
 name|struct
 name|ifaltq
