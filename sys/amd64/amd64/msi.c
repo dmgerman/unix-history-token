@@ -854,6 +854,24 @@ operator|==
 name|apic_id
 condition|)
 return|return;
+if|if
+condition|(
+name|old_vector
+operator|&&
+operator|!
+name|msi
+operator|->
+name|msi_msix
+operator|&&
+name|msi
+operator|->
+name|msi_first
+operator|->
+name|msi_count
+operator|>
+literal|1
+condition|)
+return|return;
 comment|/* Allocate IDT vector on this cpu. */
 name|vector
 operator|=
