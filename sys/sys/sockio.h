@@ -713,6 +713,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIOCSIFVNET
+value|_IOWR('i', 90, struct ifreq)
+end_define
+
+begin_comment
+comment|/* move IF jail/vnet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSIFRVNET
+value|_IOWR('i', 91, struct ifreq)
+end_define
+
+begin_comment
+comment|/* reclaim vnet IF */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SIOCSPVIMAGE
 value|_IOW('i', 101, struct vi_req)
 end_define

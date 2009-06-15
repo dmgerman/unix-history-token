@@ -27,6 +27,23 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/jail.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Interim userspace API. */
 end_comment
@@ -188,6 +205,12 @@ end_endif
 
 begin_struct_decl
 struct_decl|struct
+name|vimage
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|vprocg
 struct_decl|;
 end_struct_decl
@@ -213,6 +236,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|kld_sym_lookup
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|thread
 struct_decl|;
 end_struct_decl
 
@@ -695,15 +724,20 @@ name|int
 name|vi_if_move
 parameter_list|(
 name|struct
-name|vi_req
+name|thread
 modifier|*
 parameter_list|,
 name|struct
 name|ifnet
 modifier|*
 parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
 name|struct
-name|vimage
+name|vi_req
 modifier|*
 parameter_list|)
 function_decl|;
@@ -795,6 +829,28 @@ name|void
 modifier|*
 parameter_list|,
 name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|vnet
+modifier|*
+name|vnet_alloc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vnet_destroy
+parameter_list|(
+name|struct
+name|vnet
 modifier|*
 parameter_list|)
 function_decl|;
@@ -996,6 +1052,7 @@ name|u_int
 name|vi_id
 decl_stmt|;
 comment|/* ID num */
+specifier|volatile
 name|u_int
 name|vi_ucredrefc
 decl_stmt|;
@@ -1041,10 +1098,6 @@ comment|/* all vnets list */
 name|u_int
 name|vnet_magic_n
 decl_stmt|;
-name|u_int
-name|vnet_id
-decl_stmt|;
-comment|/* ID num */
 name|u_int
 name|ifcnt
 decl_stmt|;
@@ -1586,7 +1639,7 @@ name|IS_DEFAULT_VNET
 parameter_list|(
 name|arg
 parameter_list|)
-value|((arg)->vnet_id == 0)
+value|((arg) == vnet0)
 end_define
 
 begin_else
@@ -1628,6 +1681,17 @@ end_ifdef
 begin_define
 define|#
 directive|define
+name|CRED_TO_VNET
+parameter_list|(
+name|cr
+parameter_list|)
+define|\
+value|(IS_DEFAULT_VIMAGE((cr)->cr_vimage) ? (cr)->cr_prison->pr_vnet	\ 	    : (cr)->cr_vimage->v_net)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TD_TO_VIMAGE
 parameter_list|(
 name|td
@@ -1642,7 +1706,7 @@ name|TD_TO_VNET
 parameter_list|(
 name|td
 parameter_list|)
-value|(td)->td_ucred->cr_vimage->v_net
+value|CRED_TO_VNET((td)->td_ucred)
 end_define
 
 begin_define
@@ -1672,7 +1736,7 @@ name|P_TO_VNET
 parameter_list|(
 name|p
 parameter_list|)
-value|(p)->p_ucred->cr_vimage->v_net
+value|CRED_TO_VNET((p)->p_ucred)
 end_define
 
 begin_define
@@ -1693,6 +1757,16 @@ end_else
 begin_comment
 comment|/* !VIMAGE */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CRED_TO_VNET
+parameter_list|(
+name|cr
+parameter_list|)
+value|NULL
+end_define
 
 begin_define
 define|#

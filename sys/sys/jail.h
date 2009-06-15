@@ -607,6 +607,12 @@ name|long
 name|pr_hostid
 decl_stmt|;
 comment|/* (p) jail hostid */
+name|struct
+name|vnet
+modifier|*
+name|pr_vnet
+decl_stmt|;
+comment|/* (c) network stack */
 block|}
 struct|;
 end_struct
@@ -672,6 +678,17 @@ end_define
 
 begin_comment
 comment|/* Virtualize IPv6 addresses */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PR_VNET
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* Virtual network stack */
 end_comment
 
 begin_comment
