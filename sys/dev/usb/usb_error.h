@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_USB2_ERROR_H_
+name|_USB_ERROR_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_USB2_ERROR_H_
+name|_USB_ERROR_H_
 end_define
 
 begin_enum
@@ -122,7 +122,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _USB2_ERROR_H_ */
+comment|/* _USB_ERROR_H_ */
 end_comment
 
 end_unit

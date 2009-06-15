@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_USB2_DEFS_H_
+name|_USB_DEFS_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_USB2_DEFS_H_
+name|_USB_DEFS_H_
 end_define
 
 begin_comment
@@ -197,7 +197,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _USB2_DEFS_H_ */
+comment|/* _USB_DEFS_H_ */
 end_comment
 
 end_unit
