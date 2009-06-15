@@ -14816,6 +14816,10 @@ case|case
 name|WRITE_12
 case|:
 default|default:
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"%s: Unsupported ATAPI command 0x%02x"
