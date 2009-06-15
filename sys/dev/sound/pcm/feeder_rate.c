@@ -2929,7 +2929,7 @@ if|#
 directive|if
 name|Z_DRIFT_SHIFT
 operator|>=
-literal|8
+literal|12
 end_if
 
 begin_define
@@ -2943,8 +2943,8 @@ begin_elif
 elif|#
 directive|elif
 name|Z_DRIFT_SHIFT
-operator|==
-literal|7
+operator|>=
+literal|8
 end_elif
 
 begin_define
@@ -2958,22 +2958,7 @@ begin_elif
 elif|#
 directive|elif
 name|Z_DRIFT_SHIFT
-operator|==
-literal|6
-end_elif
-
-begin_define
-define|#
-directive|define
-name|Z_COEFF_INTERP_HERMITE
-value|1
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|Z_DRIFT_SHIFT
-operator|==
+operator|>=
 literal|5
 end_elif
 
