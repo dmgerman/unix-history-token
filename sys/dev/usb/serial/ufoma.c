@@ -1545,7 +1545,7 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|usb2_cv_init
+name|cv_init
 argument_list|(
 operator|&
 name|sc
@@ -2165,7 +2165,7 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-name|usb2_cv_destroy
+name|cv_destroy
 argument_list|(
 operator|&
 name|sc
@@ -2363,7 +2363,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|usb2_cv_timedwait
+name|cv_timedwait
 argument_list|(
 operator|&
 name|sc
@@ -2477,7 +2477,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|usb2_cv_timedwait
+name|cv_timedwait
 argument_list|(
 operator|&
 name|sc
@@ -3134,7 +3134,7 @@ literal|"Mode change failed!\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|usb2_cv_signal
+name|cv_signal
 argument_list|(
 operator|&
 name|sc

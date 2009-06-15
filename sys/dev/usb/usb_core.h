@@ -55,28 +55,6 @@ comment|/* Default USB configuration */
 end_comment
 
 begin_comment
-comment|/*  * The following macro defines if the code shall use cv_xxx() instead  * of msleep() and wakeup().  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|USB_HAVE_CONDVAR
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|USB_HAVE_CONDVAR
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * The following macro defines if the code shall support  * /dev/usb/x.y.z.  */
 end_comment
 

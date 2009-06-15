@@ -1711,7 +1711,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|usb2_cv_broadcast
+name|cv_broadcast
 argument_list|(
 name|uptag
 operator|->
@@ -1979,7 +1979,7 @@ operator|==
 name|EINPROGRESS
 condition|)
 block|{
-name|usb2_cv_wait
+name|cv_wait
 argument_list|(
 name|uptag
 operator|->
@@ -2271,7 +2271,7 @@ operator|==
 name|EINPROGRESS
 condition|)
 block|{
-name|usb2_cv_wait
+name|cv_wait
 argument_list|(
 name|uptag
 operator|->
@@ -2889,7 +2889,7 @@ comment|/* something is corrupt */
 return|return;
 block|}
 comment|/* initialise condition variable */
-name|usb2_cv_init
+name|cv_init
 argument_list|(
 name|udpt
 operator|->
@@ -3037,7 +3037,7 @@ name|utag_max
 condition|)
 block|{
 comment|/* destroy the condition variable */
-name|usb2_cv_destroy
+name|cv_destroy
 argument_list|(
 name|udpt
 operator|->

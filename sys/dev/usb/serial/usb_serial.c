@@ -1287,7 +1287,7 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-name|usb2_cv_init
+name|cv_init
 argument_list|(
 operator|&
 name|sc
@@ -1407,7 +1407,7 @@ name|sc_ttyfreed
 operator|==
 literal|0
 condition|)
-name|usb2_cv_wait
+name|cv_wait
 argument_list|(
 operator|&
 name|sc
@@ -1470,7 +1470,7 @@ name|sc_mtx
 argument_list|)
 expr_stmt|;
 block|}
-name|usb2_cv_destroy
+name|cv_destroy
 argument_list|(
 operator|&
 name|sc
@@ -4664,7 +4664,7 @@ name|sc_ttyfreed
 operator|=
 literal|1
 expr_stmt|;
-name|usb2_cv_signal
+name|cv_signal
 argument_list|(
 operator|&
 name|sc

@@ -261,7 +261,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|usb2_cv_signal
+name|cv_signal
 argument_list|(
 name|xfer
 operator|->
@@ -1494,7 +1494,7 @@ name|xfer
 argument_list|)
 condition|)
 block|{
-name|usb2_cv_wait
+name|cv_wait
 argument_list|(
 name|udev
 operator|->

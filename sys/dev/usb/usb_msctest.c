@@ -770,7 +770,7 @@ name|status_try
 operator|=
 literal|1
 expr_stmt|;
-name|usb2_cv_signal
+name|cv_signal
 argument_list|(
 operator|&
 name|sc
@@ -1887,7 +1887,7 @@ index|]
 argument_list|)
 condition|)
 block|{
-name|usb2_cv_wait
+name|cv_wait
 argument_list|(
 operator|&
 name|sc
@@ -2110,7 +2110,7 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|usb2_cv_init
+name|cv_init
 argument_list|(
 operator|&
 name|sc
@@ -2473,7 +2473,7 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
-name|usb2_cv_destroy
+name|cv_destroy
 argument_list|(
 operator|&
 name|sc

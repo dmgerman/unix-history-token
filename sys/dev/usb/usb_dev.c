@@ -1213,7 +1213,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|usb2_cv_signal
+name|cv_signal
 argument_list|(
 name|cpd
 operator|->
@@ -1389,7 +1389,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|usb2_cv_signal
+name|cv_signal
 argument_list|(
 operator|&
 name|crd
@@ -1428,7 +1428,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|usb2_cv_signal
+name|cv_signal
 argument_list|(
 operator|&
 name|crd
@@ -1467,7 +1467,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|usb2_cv_signal
+name|cv_signal
 argument_list|(
 name|cpd
 operator|->
@@ -1532,7 +1532,7 @@ condition|(
 name|f
 condition|)
 block|{
-name|usb2_cv_init
+name|cv_init
 argument_list|(
 operator|&
 name|f
@@ -1542,7 +1542,7 @@ argument_list|,
 literal|"FIFO-IO"
 argument_list|)
 expr_stmt|;
-name|usb2_cv_init
+name|cv_init
 argument_list|(
 operator|&
 name|f
@@ -2592,7 +2592,7 @@ name|flag_sleeping
 operator|=
 literal|0
 expr_stmt|;
-name|usb2_cv_broadcast
+name|cv_broadcast
 argument_list|(
 operator|&
 name|f
@@ -2615,7 +2615,7 @@ name|usb2_ref_lock
 argument_list|)
 expr_stmt|;
 comment|/* wait for sync */
-name|usb2_cv_wait
+name|cv_wait
 argument_list|(
 operator|&
 name|f
@@ -2641,7 +2641,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|usb2_cv_destroy
+name|cv_destroy
 argument_list|(
 operator|&
 name|f
@@ -2649,7 +2649,7 @@ operator|->
 name|cv_io
 argument_list|)
 expr_stmt|;
-name|usb2_cv_destroy
+name|cv_destroy
 argument_list|(
 operator|&
 name|f
@@ -3297,7 +3297,7 @@ literal|1
 expr_stmt|;
 name|err
 operator|=
-name|usb2_cv_wait_sig
+name|cv_wait_sig
 argument_list|(
 operator|&
 name|f
@@ -6175,7 +6175,7 @@ literal|1
 expr_stmt|;
 name|err
 operator|=
-name|usb2_cv_wait_sig
+name|cv_wait_sig
 argument_list|(
 operator|&
 name|f
@@ -6231,7 +6231,7 @@ name|flag_sleeping
 operator|=
 literal|0
 expr_stmt|;
-name|usb2_cv_broadcast
+name|cv_broadcast
 argument_list|(
 operator|&
 name|f

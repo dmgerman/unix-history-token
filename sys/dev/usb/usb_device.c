@@ -5246,7 +5246,7 @@ operator|+
 name|depth
 argument_list|)
 expr_stmt|;
-name|usb2_cv_init
+name|cv_init
 argument_list|(
 name|udev
 operator|->
@@ -5255,7 +5255,7 @@ argument_list|,
 literal|"WCTRL"
 argument_list|)
 expr_stmt|;
-name|usb2_cv_init
+name|cv_init
 argument_list|(
 name|udev
 operator|->
@@ -7324,7 +7324,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|usb2_cv_wait
+name|cv_wait
 argument_list|(
 name|udev
 operator|->
@@ -7465,14 +7465,14 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|usb2_cv_destroy
+name|cv_destroy
 argument_list|(
 name|udev
 operator|->
 name|default_cv
 argument_list|)
 expr_stmt|;
-name|usb2_cv_destroy
+name|cv_destroy
 argument_list|(
 name|udev
 operator|->

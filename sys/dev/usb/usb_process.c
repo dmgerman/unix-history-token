@@ -416,7 +416,7 @@ name|up_dsleep
 operator|=
 literal|0
 expr_stmt|;
-name|usb2_cv_broadcast
+name|cv_broadcast
 argument_list|(
 operator|&
 name|up
@@ -431,7 +431,7 @@ name|up_msleep
 operator|=
 literal|1
 expr_stmt|;
-name|usb2_cv_wait
+name|cv_wait
 argument_list|(
 operator|&
 name|up
@@ -450,7 +450,7 @@ name|up_ptr
 operator|=
 name|NULL
 expr_stmt|;
-name|usb2_cv_signal
+name|cv_signal
 argument_list|(
 operator|&
 name|up
@@ -520,7 +520,7 @@ operator|->
 name|up_qhead
 argument_list|)
 expr_stmt|;
-name|usb2_cv_init
+name|cv_init
 argument_list|(
 operator|&
 name|up
@@ -530,7 +530,7 @@ argument_list|,
 literal|"wmsg"
 argument_list|)
 expr_stmt|;
-name|usb2_cv_init
+name|cv_init
 argument_list|(
 operator|&
 name|up
@@ -624,7 +624,7 @@ argument_list|(
 name|up
 argument_list|)
 expr_stmt|;
-name|usb2_cv_destroy
+name|cv_destroy
 argument_list|(
 operator|&
 name|up
@@ -632,7 +632,7 @@ operator|->
 name|up_cv
 argument_list|)
 expr_stmt|;
-name|usb2_cv_destroy
+name|cv_destroy
 argument_list|(
 operator|&
 name|up
@@ -935,7 +935,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* save "cv_signal()" calls */
-name|usb2_cv_signal
+name|cv_signal
 argument_list|(
 operator|&
 name|up
@@ -1148,7 +1148,7 @@ name|up_dsleep
 operator|=
 literal|1
 expr_stmt|;
-name|usb2_cv_wait
+name|cv_wait
 argument_list|(
 operator|&
 name|up
@@ -1252,7 +1252,7 @@ name|up_csleep
 operator|=
 literal|0
 expr_stmt|;
-name|usb2_cv_signal
+name|cv_signal
 argument_list|(
 operator|&
 name|up
@@ -1282,7 +1282,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|usb2_cv_wait
+name|cv_wait
 argument_list|(
 operator|&
 name|up
@@ -1309,7 +1309,7 @@ name|up_dsleep
 operator|=
 literal|0
 expr_stmt|;
-name|usb2_cv_broadcast
+name|cv_broadcast
 argument_list|(
 operator|&
 name|up

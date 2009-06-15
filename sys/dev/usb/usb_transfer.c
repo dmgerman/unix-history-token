@@ -3003,7 +3003,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_cv_init
+name|cv_init
 argument_list|(
 operator|&
 name|info
@@ -4311,7 +4311,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|usb2_cv_destroy
+name|cv_destroy
 argument_list|(
 operator|&
 name|info
@@ -6336,7 +6336,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* 		 * Wait until the current outstanding USB 		 * transfer is complete ! 		 */
-name|usb2_cv_wait
+name|cv_wait
 argument_list|(
 operator|&
 name|xfer
@@ -7005,7 +7005,7 @@ name|draining
 operator|=
 literal|0
 expr_stmt|;
-name|usb2_cv_broadcast
+name|cv_broadcast
 argument_list|(
 operator|&
 name|info
