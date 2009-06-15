@@ -6696,7 +6696,7 @@ name|p
 operator|->
 name|p_session
 operator|->
-name|s_ttyvp
+name|s_ttyp
 operator|!=
 name|NULL
 operator|||
