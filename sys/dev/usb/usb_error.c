@@ -214,14 +214,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_errstr  *  * This function converts an USB error code into a string.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_errstr  *  * This function converts an USB error code into a string.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|const
 name|char
 modifier|*
-name|usb2_errstr
+name|usbd_errstr
 parameter_list|(
 name|usb_error_t
 name|err

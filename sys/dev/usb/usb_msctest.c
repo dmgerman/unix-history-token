@@ -33,7 +33,7 @@ begin_define
 define|#
 directive|define
 name|USB_DEBUG_VAR
-value|usb2_debug
+value|usb_debug
 end_define
 
 begin_include
@@ -801,7 +801,7 @@ name|state
 operator|=
 name|xfer_index
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -842,7 +842,7 @@ name|priv_sc
 decl_stmt|;
 if|if
 condition|(
-name|usb2_clear_stall_callback
+name|usbd_clear_stall_callback
 argument_list|(
 name|xfer
 argument_list|,
@@ -1110,7 +1110,7 @@ operator|->
 name|cbw
 argument_list|)
 expr_stmt|;
-name|usb2_set_frame_data
+name|usbd_set_frame_data
 argument_list|(
 name|xfer
 argument_list|,
@@ -1122,7 +1122,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -1288,7 +1288,7 @@ index|]
 operator|=
 name|max_bulk
 expr_stmt|;
-name|usb2_set_frame_data
+name|usbd_set_frame_data
 argument_list|(
 name|xfer
 argument_list|,
@@ -1299,7 +1299,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -1508,7 +1508,7 @@ index|]
 operator|=
 name|max_bulk
 expr_stmt|;
-name|usb2_set_frame_data
+name|usbd_set_frame_data
 argument_list|(
 name|xfer
 argument_list|,
@@ -1519,7 +1519,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -1687,7 +1687,7 @@ operator|->
 name|csw
 argument_list|)
 expr_stmt|;
-name|usb2_set_frame_data
+name|usbd_set_frame_data
 argument_list|(
 name|xfer
 argument_list|,
@@ -1699,7 +1699,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -1712,7 +1712,7 @@ literal|0
 argument_list|,
 literal|"Failed to read CSW: %s, try %d\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|xfer
 operator|->
@@ -1860,7 +1860,7 @@ name|cmd_len
 operator|=
 name|cmd_len
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -1874,7 +1874,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|usb2_transfer_pending
+name|usbd_transfer_pending
 argument_list|(
 name|sc
 operator|->
@@ -1912,12 +1912,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_test_autoinstall  *  * Return values:  * 0: This interface is an auto install disk (CD-ROM)  * Else: Not an auto install disk.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_test_autoinstall  *  * Return values:  * 0: This interface is an auto install disk (CD-ROM)  * Else: Not an auto install disk.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_test_autoinstall
+name|usb_test_autoinstall
 parameter_list|(
 name|struct
 name|usb_device
@@ -1970,7 +1970,7 @@ return|;
 block|}
 name|iface
 operator|=
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|udev
 argument_list|,
@@ -2122,7 +2122,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|udev
 argument_list|,
@@ -2396,7 +2396,7 @@ argument_list|,
 literal|"Eject CD command "
 literal|"status: %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -2425,7 +2425,7 @@ operator|--
 name|timeout
 condition|)
 block|{
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -2456,7 +2456,7 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->

@@ -149,7 +149,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* prototypes from "usb2_hid.c" */
+comment|/* prototypes from "usb_hid.c" */
 end_comment
 
 begin_function_decl
@@ -321,7 +321,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_get_hid_desc
+name|usbd_req_get_hid_desc
 parameter_list|(
 name|struct
 name|usb_device

@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|USB_DEBUG_VAR
-value|usb2_debug
+value|usb_debug
 end_define
 
 begin_include
@@ -170,7 +170,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|void
-name|usb2_init_endpoint
+name|usb_init_endpoint
 parameter_list|(
 name|struct
 name|usb_device
@@ -192,7 +192,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_unconfigure
+name|usb_unconfigure
 parameter_list|(
 name|struct
 name|usb_device
@@ -206,7 +206,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_detach_device
+name|usb_detach_device
 parameter_list|(
 name|struct
 name|usb_device
@@ -222,7 +222,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_detach_device_sub
+name|usb_detach_device_sub
 parameter_list|(
 name|struct
 name|usb_device
@@ -239,7 +239,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|uint8_t
-name|usb2_probe_and_attach_sub
+name|usb_probe_and_attach_sub
 parameter_list|(
 name|struct
 name|usb_device
@@ -255,7 +255,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_init_attach_arg
+name|usb_init_attach_arg
 parameter_list|(
 name|struct
 name|usb_device
@@ -271,7 +271,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_suspend_resume_sub
+name|usb_suspend_resume_sub
 parameter_list|(
 name|struct
 name|usb_device
@@ -287,7 +287,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_clear_stall_proc
+name|usbd_clear_stall_proc
 parameter_list|(
 name|struct
 name|usb_proc_msg
@@ -299,7 +299,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_config_parse
+name|usb_config_parse
 parameter_list|(
 name|struct
 name|usb_device
@@ -315,7 +315,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_set_device_strings
+name|usbd_set_device_strings
 parameter_list|(
 name|struct
 name|usb_device
@@ -333,7 +333,7 @@ end_if
 begin_function_decl
 specifier|static
 name|void
-name|usb2_notify_addq
+name|usb_notify_addq
 parameter_list|(
 specifier|const
 name|char
@@ -350,7 +350,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_fifo_free_wrap
+name|usb_fifo_free_wrap
 parameter_list|(
 name|struct
 name|usb_device
@@ -368,7 +368,7 @@ specifier|static
 name|struct
 name|cdev
 modifier|*
-name|usb2_make_dev
+name|usb_make_dev
 parameter_list|(
 name|struct
 name|usb_device
@@ -384,7 +384,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_cdev_create
+name|usb_cdev_create
 parameter_list|(
 name|struct
 name|usb_device
@@ -396,7 +396,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_cdev_free
+name|usb_cdev_free
 parameter_list|(
 name|struct
 name|usb_device
@@ -408,7 +408,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_cdev_cleanup
+name|usb_cdev_cleanup
 parameter_list|(
 name|void
 modifier|*
@@ -427,7 +427,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|usb2_template
+name|usb_template
 init|=
 literal|0
 decl_stmt|;
@@ -445,7 +445,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|usb2_template
+name|usb_template
 argument_list|,
 literal|0
 argument_list|,
@@ -502,7 +502,7 @@ begin_function
 specifier|const
 name|char
 modifier|*
-name|usb2_statestr
+name|usb_statestr
 parameter_list|(
 name|enum
 name|usb_dev_state
@@ -529,14 +529,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_get_ep_by_addr  *  * This function searches for an USB ep by endpoint address and  * direction.  *  * Returns:  * NULL: Failure  * Else: Success  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_get_ep_by_addr  *  * This function searches for an USB ep by endpoint address and  * direction.  *  * Returns:  * NULL: Failure  * Else: Success  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|struct
 name|usb_endpoint
 modifier|*
-name|usb2_get_ep_by_addr
+name|usbd_get_ep_by_addr
 parameter_list|(
 name|struct
 name|usb_device
@@ -686,14 +686,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_get_endpoint  *  * This function searches for an USB endpoint based on the information  * given by the passed "struct usb_config" pointer.  *  * Return values:  * NULL: No match.  * Else: Pointer to "struct usb_endpoint".  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_get_endpoint  *  * This function searches for an USB endpoint based on the information  * given by the passed "struct usb_config" pointer.  *  * Return values:  * NULL: No match.  * Else: Pointer to "struct usb_endpoint".  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|struct
 name|usb_endpoint
 modifier|*
-name|usb2_get_endpoint
+name|usbd_get_endpoint
 parameter_list|(
 name|struct
 name|usb_device
@@ -1164,12 +1164,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_interface_count  *  * This function stores the number of USB interfaces excluding  * alternate settings, which the USB config descriptor reports into  * the unsigned 8-bit integer pointed to by "count".  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_interface_count  *  * This function stores the number of USB interfaces excluding  * alternate settings, which the USB config descriptor reports into  * the unsigned 8-bit integer pointed to by "count".  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_interface_count
+name|usb_interface_count
 parameter_list|(
 name|struct
 name|usb_device
@@ -1217,13 +1217,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_init_endpoint  *  * This function will initialise the USB endpoint structure pointed to by  * the "endpoint" argument. The structure pointed to by "endpoint" must be  * zeroed before calling this function.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_init_endpoint  *  * This function will initialise the USB endpoint structure pointed to by  * the "endpoint" argument. The structure pointed to by "endpoint" must be  * zeroed before calling this function.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_init_endpoint
+name|usb_init_endpoint
 parameter_list|(
 name|struct
 name|usb_device
@@ -1300,7 +1300,7 @@ operator|.
 name|command
 operator|=
 operator|&
-name|usb2_pipe_start
+name|usbd_pipe_start
 expr_stmt|;
 comment|/* the pipe is not supported by the hardware */
 if|if
@@ -1352,14 +1352,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*-----------------------------------------------------------------------*  *	usb2_endpoint_foreach  *  * This function will iterate all the USB endpoints except the control  * endpoint. This function is NULL safe.  *  * Return values:  * NULL: End of USB endpoints  * Else: Pointer to next USB endpoint  *------------------------------------------------------------------------*/
+comment|/*-----------------------------------------------------------------------*  *	usb_endpoint_foreach  *  * This function will iterate all the USB endpoints except the control  * endpoint. This function is NULL safe.  *  * Return values:  * NULL: End of USB endpoints  * Else: Pointer to next USB endpoint  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|struct
 name|usb_endpoint
 modifier|*
-name|usb2_endpoint_foreach
+name|usb_endpoint_foreach
 parameter_list|(
 name|struct
 name|usb_device
@@ -1448,13 +1448,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_unconfigure  *  * This function will free all USB interfaces and USB endpoints belonging  * to an USB device.  *  * Flag values, see "USB_UNCFG_FLAG_XXX".  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_unconfigure  *  * This function will free all USB interfaces and USB endpoints belonging  * to an USB device.  *  * Flag values, see "USB_UNCFG_FLAG_XXX".  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_unconfigure
+name|usb_unconfigure
 parameter_list|(
 name|struct
 name|usb_device
@@ -1503,7 +1503,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* detach all interface drivers */
-name|usb2_detach_device
+name|usb_detach_device
 argument_list|(
 name|udev
 argument_list|,
@@ -1516,7 +1516,7 @@ if|#
 directive|if
 name|USB_HAVE_UGEN
 comment|/* free all FIFOs except control endpoint FIFOs */
-name|usb2_fifo_free_wrap
+name|usb_fifo_free_wrap
 argument_list|(
 name|udev
 argument_list|,
@@ -1526,7 +1526,7 @@ name|flag
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Free all cdev's, if any. 	 */
-name|usb2_cdev_free
+name|usb_cdev_free
 argument_list|(
 name|udev
 argument_list|)
@@ -1558,7 +1558,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|usb2_config_parse
+name|usb_config_parse
 argument_list|(
 name|udev
 argument_list|,
@@ -1635,12 +1635,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_set_config_index  *  * This function selects configuration by index, independent of the  * actual configuration number. This function should not be used by  * USB drivers.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_set_config_index  *  * This function selects configuration by index, independent of the  * actual configuration number. This function should not be used by  * USB drivers.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_set_config_index
+name|usbd_set_config_index
 parameter_list|(
 name|struct
 name|usb_device
@@ -1720,7 +1720,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|usb2_unconfigure
+name|usb_unconfigure
 argument_list|(
 name|udev
 argument_list|,
@@ -1734,10 +1734,10 @@ operator|==
 name|USB_UNCONFIG_INDEX
 condition|)
 block|{
-comment|/* 		 * Leave unallocated when unconfiguring the 		 * device. "usb2_unconfigure()" will also reset 		 * the current config number and index. 		 */
+comment|/* 		 * Leave unallocated when unconfiguring the 		 * device. "usb_unconfigure()" will also reset 		 * the current config number and index. 		 */
 name|err
 operator|=
-name|usb2_req_set_config
+name|usbd_req_set_config
 argument_list|(
 name|udev
 argument_list|,
@@ -1754,7 +1754,7 @@ name|state
 operator|==
 name|USB_STATE_CONFIGURED
 condition|)
-name|usb2_set_device_state
+name|usb_set_device_state
 argument_list|(
 name|udev
 argument_list|,
@@ -1780,7 +1780,7 @@ block|{
 comment|/* save some memory */
 name|err
 operator|=
-name|usb2_req_get_descriptor_ptr
+name|usbd_req_get_descriptor_ptr
 argument_list|(
 name|udev
 argument_list|,
@@ -1802,7 +1802,7 @@ block|{
 comment|/* normal request */
 name|err
 operator|=
-name|usb2_req_get_config_desc_full
+name|usbd_req_get_config_desc_full
 argument_list|(
 name|udev
 argument_list|,
@@ -1881,7 +1881,7 @@ block|{
 comment|/* Must ask device. */
 name|err
 operator|=
-name|usb2_req_get_device_status
+name|usbd_req_get_device_status
 argument_list|(
 name|udev
 argument_list|,
@@ -1903,7 +1903,7 @@ argument_list|,
 literal|"could not read "
 literal|"device status: %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -2078,7 +2078,7 @@ name|curr_config_index
 operator|=
 name|index
 expr_stmt|;
-name|usb2_set_device_state
+name|usb_set_device_state
 argument_list|(
 name|udev
 argument_list|,
@@ -2088,7 +2088,7 @@ expr_stmt|;
 comment|/* Set the actual configuration value. */
 name|err
 operator|=
-name|usb2_req_set_config
+name|usbd_req_set_config
 argument_list|(
 name|udev
 argument_list|,
@@ -2110,7 +2110,7 @@ goto|;
 block|}
 name|err
 operator|=
-name|usb2_config_parse
+name|usb_config_parse
 argument_list|(
 name|udev
 argument_list|,
@@ -2130,7 +2130,7 @@ goto|;
 block|}
 name|err
 operator|=
-name|usb2_config_parse
+name|usb_config_parse
 argument_list|(
 name|udev
 argument_list|,
@@ -2152,7 +2152,7 @@ if|#
 directive|if
 name|USB_HAVE_UGEN
 comment|/* create device nodes for each endpoint */
-name|usb2_cdev_create
+name|usb_cdev_create
 argument_list|(
 name|udev
 argument_list|)
@@ -2165,7 +2165,7 @@ name|DPRINTF
 argument_list|(
 literal|"error=%s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -2176,7 +2176,7 @@ condition|(
 name|err
 condition|)
 block|{
-name|usb2_unconfigure
+name|usb_unconfigure
 argument_list|(
 name|udev
 argument_list|,
@@ -2208,12 +2208,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_config_parse  *  * This function will allocate and free USB interfaces and USB endpoints,  * parse the USB configuration structure and initialise the USB endpoints  * and interfaces. If "iface_index" is not equal to  * "USB_IFACE_INDEX_ANY" then the "cmd" parameter is the  * alternate_setting to be selected for the given interface. Else the  * "cmd" parameter is defined by "USB_CFG_XXX". "iface_index" can be  * "USB_IFACE_INDEX_ANY" or a valid USB interface index. This function  * is typically called when setting the configuration or when setting  * an alternate interface.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_config_parse  *  * This function will allocate and free USB interfaces and USB endpoints,  * parse the USB configuration structure and initialise the USB endpoints  * and interfaces. If "iface_index" is not equal to  * "USB_IFACE_INDEX_ANY" then the "cmd" parameter is the  * alternate_setting to be selected for the given interface. Else the  * "cmd" parameter is defined by "USB_CFG_XXX". "iface_index" can be  * "USB_IFACE_INDEX_ANY" or a valid USB interface index. This function  * is typically called when setting the configuration or when setting  * an alternate interface.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_config_parse
+name|usb_config_parse
 parameter_list|(
 name|struct
 name|usb_device
@@ -2453,7 +2453,7 @@ condition|(
 operator|(
 name|id
 operator|=
-name|usb2_idesc_foreach
+name|usb_idesc_foreach
 argument_list|(
 name|udev
 operator|->
@@ -2621,7 +2621,7 @@ condition|(
 operator|(
 name|ed
 operator|=
-name|usb2_edesc_foreach
+name|usb_edesc_foreach
 argument_list|(
 name|udev
 operator|->
@@ -2653,7 +2653,7 @@ condition|(
 name|do_init
 condition|)
 block|{
-name|usb2_init_endpoint
+name|usb_init_endpoint
 argument_list|(
 name|udev
 argument_list|,
@@ -2955,12 +2955,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_set_alt_interface_index  *  * This function will select an alternate interface index for the  * given interface index. The interface should not be in use when this  * function is called. That means there should not be any open USB  * transfers. Else an error is returned. If the alternate setting is  * already set this function will simply return success. This function  * is called in Host mode and Device mode!  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_set_alt_interface_index  *  * This function will select an alternate interface index for the  * given interface index. The interface should not be in use when this  * function is called. That means there should not be any open USB  * transfers. Else an error is returned. If the alternate setting is  * already set this function will simply return success. This function  * is called in Host mode and Device mode!  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_set_alt_interface_index
+name|usbd_set_alt_interface_index
 parameter_list|(
 name|struct
 name|usb_device
@@ -2979,7 +2979,7 @@ name|usb_interface
 modifier|*
 name|iface
 init|=
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|udev
 argument_list|,
@@ -3052,7 +3052,7 @@ operator|==
 name|USB_MODE_DEVICE
 condition|)
 block|{
-name|usb2_detach_device
+name|usb_detach_device
 argument_list|(
 name|udev
 argument_list|,
@@ -3087,7 +3087,7 @@ if|#
 directive|if
 name|USB_HAVE_UGEN
 comment|/* 	 * Free all generic FIFOs for this interface, except control 	 * endpoint FIFOs: 	 */
-name|usb2_fifo_free_wrap
+name|usb_fifo_free_wrap
 argument_list|(
 name|udev
 argument_list|,
@@ -3100,7 +3100,7 @@ endif|#
 directive|endif
 name|err
 operator|=
-name|usb2_config_parse
+name|usb_config_parse
 argument_list|(
 name|udev
 argument_list|,
@@ -3120,7 +3120,7 @@ goto|;
 block|}
 name|err
 operator|=
-name|usb2_req_set_alt_interface_no
+name|usbd_req_set_alt_interface_no
 argument_list|(
 name|udev
 argument_list|,
@@ -3161,12 +3161,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_set_endpoint_stall  *  * This function is used to make a BULK or INTERRUPT endpoint  * send STALL tokens.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_set_endpoint_stall  *  * This function is used to make a BULK or INTERRUPT endpoint  * send STALL tokens.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_set_endpoint_stall
+name|usbd_set_endpoint_stall
 parameter_list|(
 name|struct
 name|usb_device
@@ -3388,7 +3388,7 @@ name|ep
 argument_list|)
 expr_stmt|;
 comment|/* start up the current or next transfer, if any */
-name|usb2_command_wrapper
+name|usb_command_wrapper
 argument_list|(
 operator|&
 name|ep
@@ -3419,12 +3419,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_reset_iface_endpoints - used in USB device side mode  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_reset_iface_endpoints - used in USB device side mode  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_reset_iface_endpoints
+name|usb_reset_iface_endpoints
 parameter_list|(
 name|struct
 name|usb_device
@@ -3499,7 +3499,7 @@ block|}
 comment|/* simulate a clear stall from the peer */
 name|err
 operator|=
-name|usb2_set_endpoint_stall
+name|usbd_set_endpoint_stall
 argument_list|(
 name|udev
 argument_list|,
@@ -3525,13 +3525,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_detach_device_sub  *  * This function will try to detach an USB device. If it fails a panic  * will result.  *  * Flag values, see "USB_UNCFG_FLAG_XXX".  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_detach_device_sub  *  * This function will try to detach an USB device. If it fails a panic  * will result.  *  * Flag values, see "USB_UNCFG_FLAG_XXX".  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_detach_device_sub
+name|usb_detach_device_sub
 parameter_list|(
 name|struct
 name|usb_device
@@ -3690,12 +3690,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_detach_device  *  * The following function will detach the matching interfaces.  * This function is NULL safe.  *  * Flag values, see "USB_UNCFG_FLAG_XXX".  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_detach_device  *  * The following function will detach the matching interfaces.  * This function is NULL safe.  *  * Flag values, see "USB_UNCFG_FLAG_XXX".  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_detach_device
+name|usb_detach_device
 parameter_list|(
 name|struct
 name|usb_device
@@ -3791,7 +3791,7 @@ control|)
 block|{
 name|iface
 operator|=
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|udev
 argument_list|,
@@ -3808,7 +3808,7 @@ block|{
 comment|/* looks like the end of the USB interfaces */
 break|break;
 block|}
-name|usb2_detach_device_sub
+name|usb_detach_device_sub
 argument_list|(
 name|udev
 argument_list|,
@@ -3825,13 +3825,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_probe_and_attach_sub  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_probe_and_attach_sub  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|uint8_t
-name|usb2_probe_and_attach_sub
+name|usb_probe_and_attach_sub
 parameter_list|(
 name|struct
 name|usb_device
@@ -4095,12 +4095,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_set_parent_iface  *  * Using this function will lock the alternate interface setting on an  * interface. It is typically used for multi interface drivers. In USB  * device side mode it is assumed that the alternate interfaces all  * have the same endpoint descriptors. The default parent index value  * is "USB_IFACE_INDEX_ANY". Then the alternate setting value is not  * locked.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_set_parent_iface  *  * Using this function will lock the alternate interface setting on an  * interface. It is typically used for multi interface drivers. In USB  * device side mode it is assumed that the alternate interfaces all  * have the same endpoint descriptors. The default parent index value  * is "USB_IFACE_INDEX_ANY". Then the alternate setting value is not  * locked.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_set_parent_iface
+name|usbd_set_parent_iface
 parameter_list|(
 name|struct
 name|usb_device
@@ -4121,7 +4121,7 @@ name|iface
 decl_stmt|;
 name|iface
 operator|=
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|udev
 argument_list|,
@@ -4146,7 +4146,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_init_attach_arg
+name|usb_init_attach_arg
 parameter_list|(
 name|struct
 name|usb_device
@@ -4299,12 +4299,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_probe_and_attach  *  * This function is called from "uhub_explore_sub()",  * "usb2_handle_set_config()" and "usb2_handle_request()".  *  * Returns:  *    0: Success  * Else: A control transfer failed  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_probe_and_attach  *  * This function is called from "uhub_explore_sub()",  * "usb_handle_set_config()" and "usb_handle_request()".  *  * Returns:  *    0: Success  * Else: A control transfer failed  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_probe_and_attach
+name|usb_probe_and_attach
 parameter_list|(
 name|struct
 name|usb_device
@@ -4400,7 +4400,7 @@ name|done
 goto|;
 block|}
 comment|/* setup USB attach arguments */
-name|usb2_init_attach_arg
+name|usb_init_attach_arg
 argument_list|(
 name|udev
 argument_list|,
@@ -4452,7 +4452,7 @@ control|)
 block|{
 name|iface
 operator|=
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|udev
 argument_list|,
@@ -4599,7 +4599,7 @@ expr_stmt|;
 comment|/* try specific interface drivers first */
 if|if
 condition|(
-name|usb2_probe_and_attach_sub
+name|usb_probe_and_attach_sub
 argument_list|(
 name|udev
 argument_list|,
@@ -4619,7 +4619,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|usb2_probe_and_attach_sub
+name|usb_probe_and_attach_sub
 argument_list|(
 name|udev
 argument_list|,
@@ -4688,13 +4688,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_suspend_resume_sub  *  * This function is called when the suspend or resume methods should  * be executed on an USB device.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_suspend_resume_sub  *  * This function is called when the suspend or resume methods should  * be executed on an USB device.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_suspend_resume_sub
+name|usb_suspend_resume_sub
 parameter_list|(
 name|struct
 name|usb_device
@@ -4777,12 +4777,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_suspend_resume  *  * The following function will suspend or resume the USB device.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_suspend_resume  *  * The following function will suspend or resume the USB device.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_suspend_resume
+name|usb_suspend_resume
 parameter_list|(
 name|struct
 name|usb_device
@@ -4902,7 +4902,7 @@ control|)
 block|{
 name|iface
 operator|=
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|udev
 argument_list|,
@@ -4919,7 +4919,7 @@ block|{
 comment|/* looks like the end of the USB interfaces */
 break|break;
 block|}
-name|usb2_suspend_resume_sub
+name|usb_suspend_resume_sub
 argument_list|(
 name|udev
 argument_list|,
@@ -4940,13 +4940,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *      usb2_clear_stall_proc  *  * This function performs generic USB clear stall operations.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *      usbd_clear_stall_proc  *  * This function performs generic USB clear stall operations.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_clear_stall_proc
+name|usbd_clear_stall_proc
 parameter_list|(
 name|struct
 name|usb_proc_msg
@@ -4990,7 +4990,7 @@ name|default_mtx
 argument_list|)
 expr_stmt|;
 comment|/* Start clear stall callback */
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|udev
 operator|->
@@ -5019,14 +5019,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_alloc_device  *  * This function allocates a new USB device. This function is called  * when a new device has been put in the powered state, but not yet in  * the addressed state. Get initial descriptor, set the address, get  * full descriptor and get strings.  *  * Return values:  *    0: Failure  * Else: Success  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_alloc_device  *  * This function allocates a new USB device. This function is called  * when a new device has been put in the powered state, but not yet in  * the addressed state. Get initial descriptor, set the address, get  * full descriptor and get strings.  *  * Return values:  *    0: Failure  * Else: Success  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|struct
 name|usb_device
 modifier|*
-name|usb2_alloc_device
+name|usb_alloc_device
 parameter_list|(
 name|device_t
 name|parent_dev
@@ -5293,7 +5293,7 @@ operator|.
 name|pm_callback
 operator|=
 operator|&
-name|usb2_clear_stall_proc
+name|usbd_clear_stall_proc
 expr_stmt|;
 name|udev
 operator|->
@@ -5318,7 +5318,7 @@ operator|.
 name|pm_callback
 operator|=
 operator|&
-name|usb2_clear_stall_proc
+name|usbd_clear_stall_proc
 expr_stmt|;
 name|udev
 operator|->
@@ -5384,7 +5384,7 @@ name|usb_ticks_t
 operator|)
 name|ticks
 expr_stmt|;
-name|usb2_set_device_state
+name|usb_set_device_state
 argument_list|(
 name|udev
 argument_list|,
@@ -5564,7 +5564,7 @@ name|parent_hub
 expr_stmt|;
 block|}
 comment|/* init the default endpoint */
-name|usb2_init_endpoint
+name|usb_init_endpoint
 argument_list|(
 name|udev
 argument_list|,
@@ -5631,7 +5631,7 @@ name|udev
 operator|->
 name|default_dev
 operator|=
-name|usb2_make_dev
+name|usb_make_dev
 argument_list|(
 name|udev
 argument_list|,
@@ -5669,7 +5669,7 @@ condition|)
 block|{
 name|err
 operator|=
-name|usb2_req_set_address
+name|usbd_req_set_address
 argument_list|(
 name|udev
 argument_list|,
@@ -5702,7 +5702,7 @@ name|udev
 operator|->
 name|address
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -5710,7 +5710,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* allow device time to set new address */
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 name|NULL
 argument_list|,
@@ -5749,12 +5749,12 @@ comment|/* Setup USB descriptors */
 name|err
 operator|=
 call|(
-name|usb2_temp_setup_by_index_p
+name|usb_temp_setup_by_index_p
 call|)
 argument_list|(
 name|udev
 argument_list|,
-name|usb2_template
+name|usb_template
 argument_list|)
 expr_stmt|;
 if|if
@@ -5775,17 +5775,17 @@ name|done
 goto|;
 block|}
 block|}
-name|usb2_set_device_state
+name|usb_set_device_state
 argument_list|(
 name|udev
 argument_list|,
 name|USB_STATE_ADDRESSED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Get the first 8 bytes of the device descriptor ! 	 * 	 * NOTE: "usb2_do_request" will check the device descriptor 	 * next time we do a request to see if the maximum packet size 	 * changed! The 8 first bytes of the device descriptor 	 * contains the maximum packet size to use on control endpoint 	 * 0. If this value is different from "USB_MAX_IPACKET" a new 	 * USB control request will be setup! 	 */
+comment|/* 	 * Get the first 8 bytes of the device descriptor ! 	 * 	 * NOTE: "usbd_do_request" will check the device descriptor 	 * next time we do a request to see if the maximum packet size 	 * changed! The 8 first bytes of the device descriptor 	 * contains the maximum packet size to use on control endpoint 	 * 0. If this value is different from "USB_MAX_IPACKET" a new 	 * USB control request will be setup! 	 */
 name|err
 operator|=
-name|usb2_req_get_desc
+name|usbd_req_get_desc
 argument_list|(
 name|udev
 argument_list|,
@@ -5827,7 +5827,7 @@ name|udev
 operator|->
 name|address
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -5836,7 +5836,7 @@ expr_stmt|;
 comment|/* XXX try to re-enumerate the device */
 name|err
 operator|=
-name|usb2_req_re_enumerate
+name|usbd_req_re_enumerate
 argument_list|(
 name|udev
 argument_list|,
@@ -5909,7 +5909,7 @@ expr_stmt|;
 comment|/* get the full device descriptor */
 name|err
 operator|=
-name|usb2_req_get_device_desc
+name|usbd_req_get_device_desc
 argument_list|(
 name|udev
 argument_list|,
@@ -5940,7 +5940,7 @@ name|done
 goto|;
 block|}
 comment|/* 	 * Setup temporary USB attach args so that we can figure out some 	 * basic quirks for this device. 	 */
-name|usb2_init_attach_arg
+name|usb_init_attach_arg
 argument_list|(
 name|udev
 argument_list|,
@@ -5950,7 +5950,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|usb2_test_quirk
+name|usb_test_quirk
 argument_list|(
 operator|&
 name|uaa
@@ -5970,7 +5970,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|usb2_test_quirk
+name|usb_test_quirk
 argument_list|(
 operator|&
 name|uaa
@@ -6042,7 +6042,7 @@ block|{
 comment|/* read out the language ID string */
 name|err
 operator|=
-name|usb2_req_get_string_desc
+name|usbd_req_get_string_desc
 argument_list|(
 name|udev
 argument_list|,
@@ -6115,7 +6115,7 @@ operator|=
 name|USB_MIN_POWER
 expr_stmt|;
 comment|/* fetch the vendor and product strings from the device */
-name|usb2_set_device_strings
+name|usbd_set_device_strings
 argument_list|(
 name|udev
 argument_list|)
@@ -6145,7 +6145,7 @@ decl_stmt|;
 comment|/* 		 * Most USB devices should attach to config index 0 by 		 * default 		 */
 if|if
 condition|(
-name|usb2_test_quirk
+name|usb_test_quirk
 argument_list|(
 operator|&
 name|uaa
@@ -6166,7 +6166,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|usb2_test_quirk
+name|usb_test_quirk
 argument_list|(
 operator|&
 name|uaa
@@ -6187,7 +6187,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|usb2_test_quirk
+name|usb_test_quirk
 argument_list|(
 operator|&
 name|uaa
@@ -6208,7 +6208,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|usb2_test_quirk
+name|usb_test_quirk
 argument_list|(
 operator|&
 name|uaa
@@ -6229,7 +6229,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|usb2_test_quirk
+name|usb_test_quirk
 argument_list|(
 operator|&
 name|uaa
@@ -6270,7 +6270,7 @@ expr_stmt|;
 comment|/* get the USB device configured */
 name|err
 operator|=
-name|usb2_set_config_index
+name|usbd_set_config_index
 argument_list|(
 name|udev
 argument_list|,
@@ -6306,7 +6306,7 @@ expr_stmt|;
 comment|/* XXX try to re-enumerate the device */
 name|err
 operator|=
-name|usb2_req_re_enumerate
+name|usbd_req_re_enumerate
 argument_list|(
 name|udev
 argument_list|,
@@ -6333,7 +6333,7 @@ literal|"addr %u (ignored)\n"
 argument_list|,
 name|config_index
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -6391,7 +6391,7 @@ literal|2
 operator|)
 operator|&&
 operator|(
-name|usb2_get_no_descriptors
+name|usbd_get_no_descriptors
 argument_list|(
 name|udev
 operator|->
@@ -6429,7 +6429,7 @@ block|{
 comment|/* 				 * Try to figure out if we have an 				 * auto-install disk there: 				 */
 if|if
 condition|(
-name|usb2_test_autoinstall
+name|usb_test_autoinstall
 argument_list|(
 name|udev
 argument_list|,
@@ -6461,7 +6461,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|usb2_test_huawei_autoinst_p
+name|usb_test_huawei_autoinst_p
 argument_list|(
 name|udev
 argument_list|,
@@ -6510,7 +6510,7 @@ name|parent_hub
 argument_list|)
 expr_stmt|;
 comment|/* register our device - we are ready */
-name|usb2_bus_port_set_device
+name|usb_bus_port_set_device
 argument_list|(
 name|bus
 argument_list|,
@@ -6539,7 +6539,7 @@ name|udev
 operator|->
 name|ugen_symlink
 operator|=
-name|usb2_alloc_symlink
+name|usb_alloc_symlink
 argument_list|(
 name|udev
 operator|->
@@ -6569,7 +6569,7 @@ name|bdev
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|usb2_notify_addq
+name|usb_notify_addq
 argument_list|(
 literal|"+"
 argument_list|,
@@ -6586,7 +6586,7 @@ name|err
 condition|)
 block|{
 comment|/* free device  */
-name|usb2_free_device
+name|usb_free_device
 argument_list|(
 name|udev
 argument_list|,
@@ -6619,7 +6619,7 @@ specifier|static
 name|struct
 name|cdev
 modifier|*
-name|usb2_make_dev
+name|usb_make_dev
 parameter_list|(
 name|struct
 name|usb_device
@@ -6727,7 +6727,7 @@ operator|=
 name|make_dev
 argument_list|(
 operator|&
-name|usb2_devsw
+name|usb_devsw
 argument_list|,
 literal|0
 argument_list|,
@@ -6764,7 +6764,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_cdev_create
+name|usb_cdev_create
 parameter_list|(
 name|struct
 name|usb_device
@@ -6837,7 +6837,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|usb2_get_mode
+name|usbd_get_mode
 argument_list|(
 name|udev
 argument_list|)
@@ -6881,7 +6881,7 @@ expr_stmt|;
 comment|/* 	 * Collect all used endpoint numbers instead of just 	 * generating 16 static endpoints. 	 */
 name|cd
 operator|=
-name|usb2_get_config_descriptor
+name|usbd_get_config_descriptor
 argument_list|(
 name|udev
 argument_list|)
@@ -6891,7 +6891,7 @@ condition|(
 operator|(
 name|desc
 operator|=
-name|usb2_desc_foreach
+name|usb_desc_foreach
 argument_list|(
 name|cd
 argument_list|,
@@ -7023,7 +7023,7 @@ continue|continue;
 comment|/* no IN or OUT endpoint */
 name|dev
 operator|=
-name|usb2_make_dev
+name|usb_make_dev
 argument_list|(
 name|udev
 argument_list|,
@@ -7057,7 +7057,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_cdev_free
+name|usb_cdev_free
 parameter_list|(
 name|struct
 name|usb_device
@@ -7115,7 +7115,7 @@ name|pd
 operator|->
 name|cdev
 argument_list|,
-name|usb2_cdev_cleanup
+name|usb_cdev_cleanup
 argument_list|,
 name|pd
 argument_list|)
@@ -7140,7 +7140,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_cdev_cleanup
+name|usb_cdev_cleanup
 parameter_list|(
 name|void
 modifier|*
@@ -7163,12 +7163,12 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_free_device  *  * This function is NULL safe and will free an USB device.  *  * Flag values, see "USB_UNCFG_FLAG_XXX".  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_free_device  *  * This function is NULL safe and will free an USB device.  *  * Flag values, see "USB_UNCFG_FLAG_XXX".  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_free_device
+name|usb_free_device
 parameter_list|(
 name|struct
 name|usb_device
@@ -7211,7 +7211,7 @@ name|udev
 operator|->
 name|bus
 expr_stmt|;
-name|usb2_set_device_state
+name|usb_set_device_state
 argument_list|(
 name|udev
 argument_list|,
@@ -7221,7 +7221,7 @@ expr_stmt|;
 if|#
 directive|if
 name|USB_HAVE_UGEN
-name|usb2_notify_addq
+name|usb_notify_addq
 argument_list|(
 literal|"-"
 argument_list|,
@@ -7256,7 +7256,7 @@ operator|->
 name|ugen_symlink
 condition|)
 block|{
-name|usb2_free_symlink
+name|usb_free_symlink
 argument_list|(
 name|udev
 operator|->
@@ -7273,7 +7273,7 @@ block|}
 endif|#
 directive|endif
 comment|/* 	 * Unregister our device first which will prevent any further 	 * references: 	 */
-name|usb2_bus_port_set_device
+name|usb_bus_port_set_device
 argument_list|(
 name|bus
 argument_list|,
@@ -7307,7 +7307,7 @@ comment|/* wait for all pending references to go away: */
 name|mtx_lock
 argument_list|(
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 name|udev
@@ -7333,14 +7333,14 @@ operator|+
 literal|1
 argument_list|,
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 block|}
 name|mtx_unlock
 argument_list|(
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 name|destroy_dev_sched_cb
@@ -7349,7 +7349,7 @@ name|udev
 operator|->
 name|default_dev
 argument_list|,
-name|usb2_cdev_cleanup
+name|usb_cdev_cleanup
 argument_list|,
 name|udev
 operator|->
@@ -7372,7 +7372,7 @@ name|USB_MODE_DEVICE
 condition|)
 block|{
 comment|/* stop receiving any control transfers (Device Side Mode) */
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|udev
 operator|->
@@ -7383,7 +7383,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* the following will get the device unconfigured in software */
-name|usb2_unconfigure
+name|usb_unconfigure
 argument_list|(
 name|udev
 argument_list|,
@@ -7391,7 +7391,7 @@ name|flag
 argument_list|)
 expr_stmt|;
 comment|/* unsetup any leftover default USB transfers */
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|udev
 operator|->
@@ -7402,7 +7402,7 @@ argument_list|)
 expr_stmt|;
 comment|/* template unsetup, if any */
 call|(
-name|usb2_temp_unsetup_p
+name|usb_temp_unsetup_p
 call|)
 argument_list|(
 name|udev
@@ -7416,7 +7416,7 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-name|usb2_proc_mwait
+name|usb_proc_mwait
 argument_list|(
 operator|&
 name|udev
@@ -7549,14 +7549,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_get_iface  *  * This function is the safe way to get the USB interface structure  * pointer by interface index.  *  * Return values:  *   NULL: Interface not present.  *   Else: Pointer to USB interface structure.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_get_iface  *  * This function is the safe way to get the USB interface structure  * pointer by interface index.  *  * Return values:  *   NULL: Interface not present.  *   Else: Pointer to USB interface structure.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|struct
 name|usb_interface
 modifier|*
-name|usb2_get_iface
+name|usbd_get_iface
 parameter_list|(
 name|struct
 name|usb_device
@@ -7650,7 +7650,7 @@ name|iface
 decl_stmt|;
 name|cd
 operator|=
-name|usb2_get_config_descriptor
+name|usbd_get_config_descriptor
 argument_list|(
 name|udev
 argument_list|)
@@ -7677,7 +7677,7 @@ condition|)
 block|{
 name|iface
 operator|=
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|udev
 argument_list|,
@@ -7699,7 +7699,7 @@ return|;
 block|}
 name|id
 operator|=
-name|usb2_get_interface_descriptor
+name|usbd_get_interface_descriptor
 argument_list|(
 name|iface
 argument_list|)
@@ -7731,7 +7731,7 @@ condition|(
 operator|(
 name|desc
 operator|=
-name|usb2_desc_foreach
+name|usb_desc_foreach
 argument_list|(
 name|cd
 argument_list|,
@@ -7794,12 +7794,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_devinfo  *  * This function will dump information from the device descriptor  * belonging to the USB device pointed to by "udev", to the string  * pointed to by "dst_ptr" having a maximum length of "dst_len" bytes  * including the terminating zero.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_devinfo  *  * This function will dump information from the device descriptor  * belonging to the USB device pointed to by "udev", to the string  * pointed to by "dst_ptr" having a maximum length of "dst_len" bytes  * including the terminating zero.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_devinfo
+name|usb_devinfo
 parameter_list|(
 name|struct
 name|usb_device
@@ -8028,7 +8028,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|usb2_set_device_strings
+name|usbd_set_device_strings
 parameter_list|(
 name|struct
 name|usb_device
@@ -8098,7 +8098,7 @@ name|temp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|usb2_req_get_string_any
+name|usbd_req_get_string_any
 argument_list|(
 name|udev
 argument_list|,
@@ -8140,7 +8140,7 @@ name|temp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|usb2_req_get_string_any
+name|usbd_req_get_string_any
 argument_list|(
 name|udev
 argument_list|,
@@ -8160,7 +8160,7 @@ operator|.
 name|iManufacturer
 argument_list|)
 expr_stmt|;
-name|usb2_trim_spaces
+name|usb_trim_spaces
 argument_list|(
 name|temp
 argument_list|)
@@ -8196,7 +8196,7 @@ name|temp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|usb2_req_get_string_any
+name|usbd_req_get_string_any
 argument_list|(
 name|udev
 argument_list|,
@@ -8216,7 +8216,7 @@ operator|.
 name|iProduct
 argument_list|)
 expr_stmt|;
-name|usb2_trim_spaces
+name|usb_trim_spaces
 argument_list|(
 name|temp
 argument_list|)
@@ -8454,7 +8454,7 @@ end_comment
 begin_function
 name|enum
 name|usb_hc_mode
-name|usb2_get_mode
+name|usbd_get_mode
 parameter_list|(
 name|struct
 name|usb_device
@@ -8481,7 +8481,7 @@ end_comment
 begin_function
 name|enum
 name|usb_dev_speed
-name|usb2_get_speed
+name|usbd_get_speed
 parameter_list|(
 name|struct
 name|usb_device
@@ -8501,7 +8501,7 @@ end_function
 
 begin_function
 name|uint32_t
-name|usb2_get_isoc_fps
+name|usbd_get_isoc_fps
 parameter_list|(
 name|struct
 name|usb_device
@@ -8543,7 +8543,7 @@ begin_function
 name|struct
 name|usb_device_descriptor
 modifier|*
-name|usb2_get_device_descriptor
+name|usbd_get_device_descriptor
 parameter_list|(
 name|struct
 name|usb_device
@@ -8578,7 +8578,7 @@ begin_function
 name|struct
 name|usb_config_descriptor
 modifier|*
-name|usb2_get_config_descriptor
+name|usbd_get_config_descriptor
 parameter_list|(
 name|struct
 name|usb_device
@@ -8609,12 +8609,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_test_quirk - test a device for a given quirk  *  * Return values:  * 0: The USB device does not have the given quirk.  * Else: The USB device has the given quirk.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_test_quirk - test a device for a given quirk  *  * Return values:  * 0: The USB device does not have the given quirk.  * Else: The USB device has the given quirk.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|uint8_t
-name|usb2_test_quirk
+name|usb_test_quirk
 parameter_list|(
 specifier|const
 name|struct
@@ -8632,7 +8632,7 @@ decl_stmt|;
 name|found
 operator|=
 call|(
-name|usb2_test_quirk_p
+name|usb_test_quirk_p
 call|)
 argument_list|(
 operator|&
@@ -8655,7 +8655,7 @@ begin_function
 name|struct
 name|usb_interface_descriptor
 modifier|*
-name|usb2_get_interface_descriptor
+name|usbd_get_interface_descriptor
 parameter_list|(
 name|struct
 name|usb_interface
@@ -8687,7 +8687,7 @@ end_function
 
 begin_function
 name|uint8_t
-name|usb2_get_interface_altindex
+name|usbd_get_interface_altindex
 parameter_list|(
 name|struct
 name|usb_interface
@@ -8707,7 +8707,7 @@ end_function
 
 begin_function
 name|uint8_t
-name|usb2_get_bus_index
+name|usbd_get_bus_index
 parameter_list|(
 name|struct
 name|usb_device
@@ -8735,7 +8735,7 @@ end_function
 
 begin_function
 name|uint8_t
-name|usb2_get_device_index
+name|usbd_get_device_index
 parameter_list|(
 name|struct
 name|usb_device
@@ -8760,13 +8760,13 @@ name|USB_HAVE_UGEN
 end_if
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_notify_addq  *  * This function will generate events for dev.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_notify_addq  *  * This function will generate events for dev.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_notify_addq
+name|usb_notify_addq
 parameter_list|(
 specifier|const
 name|char
@@ -8932,13 +8932,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_fifo_free_wrap  *  * This function will free the FIFOs.  *  * Description of "flag" argument: If the USB_UNCFG_FLAG_FREE_EP0 flag  * is set and "iface_index" is set to "USB_IFACE_INDEX_ANY", we free  * all FIFOs. If the USB_UNCFG_FLAG_FREE_EP0 flag is not set and  * "iface_index" is set to "USB_IFACE_INDEX_ANY", we free all non  * control endpoint FIFOs. If "iface_index" is not set to  * "USB_IFACE_INDEX_ANY" the flag has no effect.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_fifo_free_wrap  *  * This function will free the FIFOs.  *  * Description of "flag" argument: If the USB_UNCFG_FLAG_FREE_EP0 flag  * is set and "iface_index" is set to "USB_IFACE_INDEX_ANY", we free  * all FIFOs. If the USB_UNCFG_FLAG_FREE_EP0 flag is not set and  * "iface_index" is set to "USB_IFACE_INDEX_ANY", we free all non  * control endpoint FIFOs. If "iface_index" is not set to  * "USB_IFACE_INDEX_ANY" the flag has no effect.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_fifo_free_wrap
+name|usb_fifo_free_wrap
 parameter_list|(
 name|struct
 name|usb_device
@@ -9010,7 +9010,7 @@ operator|->
 name|methods
 operator|!=
 operator|&
-name|usb2_ugen_methods
+name|usb_ugen_methods
 condition|)
 block|{
 comment|/* 				 * Don't free any non-generic FIFOs in 				 * this case. 				 */
@@ -9055,7 +9055,7 @@ operator|->
 name|methods
 operator|==
 operator|&
-name|usb2_ugen_methods
+name|usb_ugen_methods
 operator|)
 operator|&&
 operator|(
@@ -9094,7 +9094,7 @@ comment|/* no need to free this FIFO */
 continue|continue;
 block|}
 comment|/* free this FIFO */
-name|usb2_fifo_free
+name|usb_fifo_free
 argument_list|(
 name|f
 argument_list|)
@@ -9109,12 +9109,12 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_peer_can_wakeup  *  * Return values:  * 0: Peer cannot do resume signalling.  * Else: Peer can do resume signalling.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_peer_can_wakeup  *  * Return values:  * 0: Peer cannot do resume signalling.  * Else: Peer can do resume signalling.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|uint8_t
-name|usb2_peer_can_wakeup
+name|usb_peer_can_wakeup
 parameter_list|(
 name|struct
 name|usb_device
@@ -9174,7 +9174,7 @@ end_function
 
 begin_function
 name|void
-name|usb2_set_device_state
+name|usb_set_device_state
 parameter_list|(
 name|struct
 name|usb_device
@@ -9203,14 +9203,14 @@ literal|"udev %p state %s -> %s\n"
 argument_list|,
 name|udev
 argument_list|,
-name|usb2_statestr
+name|usb_statestr
 argument_list|(
 name|udev
 operator|->
 name|state
 argument_list|)
 argument_list|,
-name|usb2_statestr
+name|usb_statestr
 argument_list|(
 name|state
 argument_list|)
@@ -9227,7 +9227,7 @@ end_function
 
 begin_function
 name|uint8_t
-name|usb2_device_attached
+name|usbd_device_attached
 parameter_list|(
 name|struct
 name|usb_device

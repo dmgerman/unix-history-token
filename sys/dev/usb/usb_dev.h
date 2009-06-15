@@ -599,13 +599,13 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|cdevsw
-name|usb2_devsw
+name|usb_devsw
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
 name|int
-name|usb2_fifo_wait
+name|usb_fifo_wait
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -617,7 +617,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_fifo_signal
+name|usb_fifo_signal
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -629,7 +629,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|usb2_fifo_alloc_buffer
+name|usb_fifo_alloc_buffer
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -647,7 +647,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_fifo_free_buffer
+name|usb_fifo_free_buffer
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -659,7 +659,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|usb2_fifo_attach
+name|usb_fifo_attach
 parameter_list|(
 name|struct
 name|usb_device
@@ -708,7 +708,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_fifo_detach
+name|usb_fifo_detach
 parameter_list|(
 name|struct
 name|usb_fifo_sc
@@ -720,7 +720,7 @@ end_function_decl
 
 begin_function_decl
 name|uint32_t
-name|usb2_fifo_put_bytes_max
+name|usb_fifo_put_bytes_max
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -732,7 +732,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_fifo_put_data
+name|usb_fifo_put_data
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -758,7 +758,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_fifo_put_data_linear
+name|usb_fifo_put_data_linear
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -780,7 +780,7 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
-name|usb2_fifo_put_data_buffer
+name|usb_fifo_put_data_buffer
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -799,7 +799,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_fifo_put_data_error
+name|usb_fifo_put_data_error
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -811,7 +811,7 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
-name|usb2_fifo_get_data
+name|usb_fifo_get_data
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -841,7 +841,7 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
-name|usb2_fifo_get_data_linear
+name|usb_fifo_get_data_linear
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -867,7 +867,7 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
-name|usb2_fifo_get_data_buffer
+name|usb_fifo_get_data_buffer
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -888,7 +888,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_fifo_get_data_error
+name|usb_fifo_get_data_error
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -900,7 +900,7 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
-name|usb2_fifo_opened
+name|usb_fifo_opened
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -912,7 +912,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_fifo_free
+name|usb_fifo_free
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -924,7 +924,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_fifo_reset
+name|usb_fifo_reset
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -936,7 +936,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_fifo_wakeup
+name|usb_fifo_wakeup
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -950,7 +950,7 @@ begin_function_decl
 name|struct
 name|usb_symlink
 modifier|*
-name|usb2_alloc_symlink
+name|usb_alloc_symlink
 parameter_list|(
 specifier|const
 name|char
@@ -962,7 +962,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_free_symlink
+name|usb_free_symlink
 parameter_list|(
 name|struct
 name|usb_symlink
@@ -974,7 +974,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|usb2_read_symlink
+name|usb_read_symlink
 parameter_list|(
 name|uint8_t
 modifier|*
@@ -991,7 +991,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_fifo_set_close_zlp
+name|usb_fifo_set_close_zlp
 parameter_list|(
 name|struct
 name|usb_fifo

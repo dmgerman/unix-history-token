@@ -2818,7 +2818,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|usb2_test_quirk
+name|usb_test_quirk
 argument_list|(
 name|uaa
 argument_list|,
@@ -2908,7 +2908,7 @@ name|device
 expr_stmt|;
 if|if
 condition|(
-name|usb2_test_quirk
+name|usb_test_quirk
 argument_list|(
 name|uaa
 argument_list|,
@@ -2923,7 +2923,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|usb2_test_quirk
+name|usb_test_quirk
 argument_list|(
 name|uaa
 argument_list|,
@@ -2938,7 +2938,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|usb2_test_quirk
+name|usb_test_quirk
 argument_list|(
 name|uaa
 argument_list|,
@@ -2953,7 +2953,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|usb2_test_quirk
+name|usb_test_quirk
 argument_list|(
 name|uaa
 argument_list|,
@@ -2971,14 +2971,14 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|device_set_usb2_desc
+name|device_set_usb_desc
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
 name|id
 operator|=
-name|usb2_get_interface_descriptor
+name|usbd_get_interface_descriptor
 argument_list|(
 name|uaa
 operator|->
@@ -3612,7 +3612,7 @@ argument_list|,
 literal|"Waiting for sound application to exit!\n"
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 name|NULL
 argument_list|,
@@ -3853,7 +3853,7 @@ name|usb_config_descriptor
 modifier|*
 name|cd
 init|=
-name|usb2_get_config_descriptor
+name|usbd_get_config_descriptor
 argument_list|(
 name|udev
 argument_list|)
@@ -3923,7 +3923,7 @@ condition|(
 operator|(
 name|desc
 operator|=
-name|usb2_desc_foreach
+name|usb_desc_foreach
 argument_list|(
 name|cd
 argument_list|,
@@ -4055,7 +4055,7 @@ operator|==
 literal|0
 operator|)
 operator|&&
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|udev
 argument_list|,
@@ -4816,7 +4816,7 @@ operator|==
 literal|0
 operator|)
 operator|&&
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|udev
 argument_list|,
@@ -5098,7 +5098,7 @@ decl_stmt|;
 name|uint16_t
 name|fps
 init|=
-name|usb2_get_isoc_fps
+name|usbd_get_isoc_fps
 argument_list|(
 name|udev
 argument_list|)
@@ -5596,7 +5596,7 @@ operator|=
 name|total
 expr_stmt|;
 block|}
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -5646,7 +5646,7 @@ name|start
 expr_stmt|;
 block|}
 block|}
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -5895,7 +5895,7 @@ name|n
 index|]
 expr_stmt|;
 block|}
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -6042,7 +6042,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -6418,7 +6418,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_set_alt_interface_index
+name|usbd_set_alt_interface_index
 argument_list|(
 name|sc
 operator|->
@@ -6438,7 +6438,7 @@ name|DPRINTF
 argument_list|(
 literal|"setting of alternate index failed: %s!\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -6448,7 +6448,7 @@ goto|goto
 name|error
 goto|;
 block|}
-name|usb2_set_parent_iface
+name|usbd_set_parent_iface
 argument_list|(
 name|sc
 operator|->
@@ -6499,7 +6499,7 @@ block|}
 block|}
 if|if
 condition|(
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|sc
 operator|->
@@ -6590,7 +6590,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|ch
 operator|->
@@ -7136,7 +7136,7 @@ literal|0
 index|]
 condition|)
 block|{
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|ch
 operator|->
@@ -7157,7 +7157,7 @@ literal|1
 index|]
 condition|)
 block|{
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|ch
 operator|->
@@ -7198,7 +7198,7 @@ directive|error
 literal|"please update code"
 endif|#
 directive|endif
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|ch
 operator|->
@@ -7208,7 +7208,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|ch
 operator|->
@@ -12906,7 +12906,7 @@ name|usb_config_descriptor
 modifier|*
 name|cd
 init|=
-name|usb2_get_config_descriptor
+name|usbd_get_config_descriptor
 argument_list|(
 name|udev
 argument_list|)
@@ -12944,7 +12944,7 @@ name|i
 decl_stmt|;
 name|desc
 operator|=
-name|usb2_desc_foreach
+name|usb_desc_foreach
 argument_list|(
 name|cd
 argument_list|,
@@ -13118,7 +13118,7 @@ condition|(
 operator|(
 name|desc
 operator|=
-name|usb2_desc_foreach
+name|usb_desc_foreach
 argument_list|(
 name|cd
 argument_list|,
@@ -14111,7 +14111,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|udev
 argument_list|,
@@ -14133,7 +14133,7 @@ name|DPRINTF
 argument_list|(
 literal|"err=%s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -14510,7 +14510,7 @@ operator|&
 literal|0xFF
 expr_stmt|;
 block|}
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -14527,7 +14527,7 @@ name|req
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -14578,7 +14578,7 @@ literal|2
 else|:
 literal|1
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -14621,7 +14621,7 @@ name|DPRINTF
 argument_list|(
 literal|"error=%s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|xfer
 operator|->
@@ -14754,7 +14754,7 @@ literal|16
 expr_stmt|;
 return|return
 operator|(
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|udev
 argument_list|,
@@ -15020,7 +15020,7 @@ operator|=
 name|val
 expr_stmt|;
 comment|/* start the transfer, if not already started */
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -15196,7 +15196,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|sc
 operator|->
@@ -15310,7 +15310,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
@@ -15686,7 +15686,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|usb2_clear_stall_callback
+name|usbd_clear_stall_callback
 argument_list|(
 name|xfer
 argument_list|,
@@ -15706,7 +15706,7 @@ operator|&=
 operator|~
 name|UMIDI_FLAG_READ_STALL
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|xfer_other
 argument_list|)
@@ -15802,7 +15802,7 @@ operator|>=
 literal|4
 condition|)
 block|{
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -15865,7 +15865,7 @@ operator|->
 name|read_open
 condition|)
 block|{
-name|usb2_fifo_put_data
+name|usb_fifo_put_data
 argument_list|(
 name|sub
 operator|->
@@ -15922,7 +15922,7 @@ operator|&
 name|UMIDI_FLAG_READ_STALL
 condition|)
 block|{
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|chan
 operator|->
@@ -15945,7 +15945,7 @@ name|xfer
 operator|->
 name|max_data_length
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -15958,7 +15958,7 @@ name|DPRINTF
 argument_list|(
 literal|"error=%s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|xfer
 operator|->
@@ -15982,7 +15982,7 @@ name|flags
 operator||=
 name|UMIDI_FLAG_READ_STALL
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|chan
 operator|->
@@ -16032,7 +16032,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|usb2_clear_stall_callback
+name|usbd_clear_stall_callback
 argument_list|(
 name|xfer
 argument_list|,
@@ -16052,7 +16052,7 @@ operator|&=
 operator|~
 name|UMIDI_FLAG_WRITE_STALL
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|xfer_other
 argument_list|)
@@ -16879,7 +16879,7 @@ operator|&
 name|UMIDI_FLAG_WRITE_STALL
 condition|)
 block|{
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|chan
 operator|->
@@ -16931,7 +16931,7 @@ operator|->
 name|write_open
 condition|)
 block|{
-name|usb2_fifo_get_data
+name|usb_fifo_get_data
 argument_list|(
 name|sub
 operator|->
@@ -16969,7 +16969,7 @@ condition|(
 name|actlen
 condition|)
 block|{
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -17041,7 +17041,7 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -17136,7 +17136,7 @@ index|]
 operator|=
 name|total_length
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -17149,7 +17149,7 @@ name|DPRINTF
 argument_list|(
 literal|"error=%s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|xfer
 operator|->
@@ -17173,7 +17173,7 @@ name|flags
 operator||=
 name|UMIDI_FLAG_WRITE_STALL
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|chan
 operator|->
@@ -17316,7 +17316,7 @@ name|fifo
 operator|->
 name|priv_sc0
 decl_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|chan
 operator|->
@@ -17412,7 +17412,7 @@ name|fifo
 operator|->
 name|priv_sc0
 decl_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|chan
 operator|->
@@ -17483,7 +17483,7 @@ argument_list|(
 literal|"(stopping write transfer)\n"
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|chan
 operator|->
@@ -17493,7 +17493,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|chan
 operator|->
@@ -17549,7 +17549,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|usb2_fifo_alloc_buffer
+name|usb_fifo_alloc_buffer
 argument_list|(
 name|fifo
 argument_list|,
@@ -17604,7 +17604,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|usb2_fifo_alloc_buffer
+name|usb_fifo_alloc_buffer
 argument_list|(
 name|fifo
 argument_list|,
@@ -17694,7 +17694,7 @@ operator|&
 name|FREAD
 condition|)
 block|{
-name|usb2_fifo_free_buffer
+name|usb_fifo_free_buffer
 argument_list|(
 name|fifo
 argument_list|)
@@ -17707,7 +17707,7 @@ operator|&
 name|FWRITE
 condition|)
 block|{
-name|usb2_fifo_free_buffer
+name|usb_fifo_free_buffer
 argument_list|(
 name|fifo
 argument_list|)
@@ -17913,7 +17913,7 @@ name|n
 decl_stmt|;
 if|if
 condition|(
-name|usb2_set_alt_interface_index
+name|usbd_set_alt_interface_index
 argument_list|(
 name|sc
 operator|->
@@ -17938,7 +17938,7 @@ goto|goto
 name|detach
 goto|;
 block|}
-name|usb2_set_parent_iface
+name|usbd_set_parent_iface
 argument_list|(
 name|sc
 operator|->
@@ -17955,7 +17955,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|uaa
 operator|->
@@ -17991,7 +17991,7 @@ name|DPRINTF
 argument_list|(
 literal|"error=%s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
@@ -18055,7 +18055,7 @@ index|]
 expr_stmt|;
 name|error
 operator|=
-name|usb2_fifo_attach
+name|usb_fifo_attach
 argument_list|(
 name|sc
 operator|->
@@ -18117,7 +18117,7 @@ operator||=
 name|UMIDI_FLAG_READ_STALL
 expr_stmt|;
 comment|/* 	 * NOTE: at least one device will not work properly unless 	 * the BULK pipe is open all the time. 	 */
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|chan
 operator|->
@@ -18198,7 +18198,7 @@ name|n
 operator|++
 control|)
 block|{
-name|usb2_fifo_detach
+name|usb_fifo_detach
 argument_list|(
 operator|&
 name|chan
@@ -18220,7 +18220,7 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|chan
 operator|->
@@ -18230,7 +18230,7 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|chan
 operator|->
@@ -18248,7 +18248,7 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|chan
 operator|->

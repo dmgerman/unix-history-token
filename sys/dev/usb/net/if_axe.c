@@ -1213,7 +1213,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_ether_do_request
+name|uether_do_request
 argument_list|(
 operator|&
 name|sc
@@ -1582,7 +1582,7 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|=
-name|usb2_ether_getifp
+name|uether_getifp
 argument_list|(
 operator|&
 name|sc
@@ -2017,7 +2017,7 @@ name|axe_softc
 modifier|*
 name|sc
 init|=
-name|usb2_ether_getsc
+name|uether_getsc
 argument_list|(
 name|ue
 argument_list|)
@@ -2027,7 +2027,7 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-name|usb2_ether_getifp
+name|uether_getifp
 argument_list|(
 name|ue
 argument_list|)
@@ -2434,7 +2434,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|usb2_ether_pause
+name|uether_pause
 argument_list|(
 operator|&
 name|sc
@@ -2470,7 +2470,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|usb2_ether_pause
+name|uether_pause
 argument_list|(
 operator|&
 name|sc
@@ -2495,7 +2495,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|usb2_ether_pause
+name|uether_pause
 argument_list|(
 operator|&
 name|sc
@@ -2520,7 +2520,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|usb2_ether_pause
+name|uether_pause
 argument_list|(
 operator|&
 name|sc
@@ -2548,7 +2548,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|usb2_ether_pause
+name|uether_pause
 argument_list|(
 operator|&
 name|sc
@@ -2573,7 +2573,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|usb2_ether_pause
+name|uether_pause
 argument_list|(
 operator|&
 name|sc
@@ -2600,7 +2600,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|usb2_ether_pause
+name|uether_pause
 argument_list|(
 operator|&
 name|sc
@@ -2627,7 +2627,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|usb2_ether_pause
+name|uether_pause
 argument_list|(
 operator|&
 name|sc
@@ -2653,7 +2653,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|usb2_ether_pause
+name|uether_pause
 argument_list|(
 operator|&
 name|sc
@@ -2705,7 +2705,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|usb2_ether_pause
+name|uether_pause
 argument_list|(
 operator|&
 name|sc
@@ -2740,7 +2740,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|usb2_ether_pause
+name|uether_pause
 argument_list|(
 operator|&
 name|sc
@@ -2766,7 +2766,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|usb2_ether_pause
+name|uether_pause
 argument_list|(
 operator|&
 name|sc
@@ -2794,7 +2794,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|usb2_ether_pause
+name|uether_pause
 argument_list|(
 operator|&
 name|sc
@@ -2853,7 +2853,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|usb2_ether_pause
+name|uether_pause
 argument_list|(
 operator|&
 name|sc
@@ -2882,7 +2882,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-name|usb2_ether_pause
+name|uether_pause
 argument_list|(
 operator|&
 name|sc
@@ -2931,7 +2931,7 @@ name|err
 decl_stmt|;
 name|cd
 operator|=
-name|usb2_get_config_descriptor
+name|usbd_get_config_descriptor
 argument_list|(
 name|sc
 operator|->
@@ -2942,7 +2942,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_req_set_config
+name|usbd_req_set_config
 argument_list|(
 name|sc
 operator|->
@@ -2970,7 +2970,7 @@ literal|"reset failed (ignored)\n"
 argument_list|)
 expr_stmt|;
 comment|/* Wait a little while for the chip to get its brains in order. */
-name|usb2_ether_pause
+name|uether_pause
 argument_list|(
 operator|&
 name|sc
@@ -3001,7 +3001,7 @@ name|axe_softc
 modifier|*
 name|sc
 init|=
-name|usb2_ether_getsc
+name|uether_getsc
 argument_list|(
 name|ue
 argument_list|)
@@ -3269,7 +3269,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|usb2_lookup_id_by_uaa
+name|usbd_lookup_id_by_uaa
 argument_list|(
 name|axe_devs
 argument_list|,
@@ -3343,7 +3343,7 @@ argument_list|(
 name|uaa
 argument_list|)
 expr_stmt|;
-name|device_set_usb2_desc
+name|device_set_usb_desc
 argument_list|(
 name|dev
 argument_list|)
@@ -3371,7 +3371,7 @@ name|AXE_IFACE_IDX
 expr_stmt|;
 name|error
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|uaa
 operator|->
@@ -3450,7 +3450,7 @@ name|axe_ue_methods
 expr_stmt|;
 name|error
 operator|=
-name|usb2_ether_ifattach
+name|uether_ifattach
 argument_list|(
 name|ue
 argument_list|)
@@ -3522,7 +3522,7 @@ name|sc
 operator|->
 name|sc_ue
 decl_stmt|;
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
@@ -3531,7 +3531,7 @@ argument_list|,
 name|AXE_N_TRANSFER
 argument_list|)
 expr_stmt|;
-name|usb2_ether_ifdetach
+name|uether_ifdetach
 argument_list|(
 name|ue
 argument_list|)
@@ -3590,7 +3590,7 @@ name|xfer
 operator|->
 name|max_data_length
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -3681,7 +3681,7 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-name|usb2_ether_getifp
+name|uether_getifp
 argument_list|(
 name|ue
 argument_list|)
@@ -3747,7 +3747,7 @@ block|{
 comment|/* too little data */
 break|break;
 block|}
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -3843,7 +3843,7 @@ expr_stmt|;
 block|}
 name|error
 operator|=
-name|usb2_ether_rxbuf
+name|uether_rxbuf
 argument_list|(
 name|ue
 argument_list|,
@@ -3919,12 +3919,12 @@ name|xfer
 operator|->
 name|max_data_length
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-name|usb2_ether_rxflush
+name|uether_rxflush
 argument_list|(
 name|ue
 argument_list|)
@@ -3936,7 +3936,7 @@ name|DPRINTF
 argument_list|(
 literal|"bulk read error, %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|xfer
 operator|->
@@ -4033,7 +4033,7 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-name|usb2_ether_getifp
+name|uether_getifp
 argument_list|(
 operator|&
 name|sc
@@ -4185,7 +4185,7 @@ name|hdr
 operator|.
 name|len
 expr_stmt|;
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -4211,7 +4211,7 @@ argument_list|)
 expr_stmt|;
 comment|/* 				 * NOTE: Some drivers force a short packet 				 * by appending a dummy header with zero 				 * length at then end of the USB transfer. 				 * This driver uses the 				 * USB_FORCE_SHORT_XFER flag instead. 				 */
 block|}
-name|usb2_m_copy_in
+name|usbd_m_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -4299,7 +4299,7 @@ index|]
 operator|=
 name|pos
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -4313,7 +4313,7 @@ literal|11
 argument_list|,
 literal|"transfer error, %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|xfer
 operator|->
@@ -4369,7 +4369,7 @@ name|axe_softc
 modifier|*
 name|sc
 init|=
-name|usb2_ether_getsc
+name|uether_getsc
 argument_list|(
 name|ue
 argument_list|)
@@ -4453,13 +4453,13 @@ name|axe_softc
 modifier|*
 name|sc
 init|=
-name|usb2_ether_getsc
+name|uether_getsc
 argument_list|(
 name|ue
 argument_list|)
 decl_stmt|;
 comment|/* 	 * start the USB transfers, if not already started: 	 */
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -4469,7 +4469,7 @@ name|AXE_INTR_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -4479,7 +4479,7 @@ name|AXE_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -4508,7 +4508,7 @@ name|axe_softc
 modifier|*
 name|sc
 init|=
-name|usb2_ether_getsc
+name|uether_getsc
 argument_list|(
 name|ue
 argument_list|)
@@ -4518,7 +4518,7 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-name|usb2_ether_getifp
+name|uether_getifp
 argument_list|(
 name|ue
 argument_list|)
@@ -4744,7 +4744,7 @@ argument_list|(
 name|ue
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_set_stall
+name|usbd_transfer_set_stall
 argument_list|(
 name|sc
 operator|->
@@ -4784,7 +4784,7 @@ name|axe_softc
 modifier|*
 name|sc
 init|=
-name|usb2_ether_getsc
+name|uether_getsc
 argument_list|(
 name|ue
 argument_list|)
@@ -4794,7 +4794,7 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-name|usb2_ether_getifp
+name|uether_getifp
 argument_list|(
 name|ue
 argument_list|)
@@ -4882,7 +4882,7 @@ name|axe_softc
 modifier|*
 name|sc
 init|=
-name|usb2_ether_getsc
+name|uether_getsc
 argument_list|(
 name|ue
 argument_list|)
@@ -4892,7 +4892,7 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-name|usb2_ether_getifp
+name|uether_getifp
 argument_list|(
 name|ue
 argument_list|)
@@ -4919,7 +4919,7 @@ operator|~
 name|AXE_FLAG_LINK
 expr_stmt|;
 comment|/* 	 * stop all the transfers, if not already stopped: 	 */
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -4929,7 +4929,7 @@ name|AXE_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -4939,7 +4939,7 @@ name|AXE_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->

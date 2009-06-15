@@ -38,12 +38,12 @@ decl_stmt|;
 name|struct
 name|usb_mbuf
 modifier|*
-name|usb2_nextpkt
+name|usb_nextpkt
 decl_stmt|;
 name|struct
 name|usb_mbuf
 modifier|*
-name|usb2_next
+name|usb_next
 decl_stmt|;
 name|usb_size_t
 name|cur_data_len
@@ -102,7 +102,7 @@ name|ifq
 parameter_list|,
 name|m
 parameter_list|)
-value|do {		\     (m)->usb2_nextpkt = NULL;			\     if ((ifq)->ifq_tail == NULL)		\         (ifq)->ifq_head = (m);			\     else					\         (ifq)->ifq_tail->usb2_nextpkt = (m);	\     (ifq)->ifq_tail = (m);			\     (ifq)->ifq_len++;				\   } while (0)
+value|do {		\     (m)->usb_nextpkt = NULL;			\     if ((ifq)->ifq_tail == NULL)		\         (ifq)->ifq_head = (m);			\     else					\         (ifq)->ifq_tail->usb_nextpkt = (m);	\     (ifq)->ifq_tail = (m);			\     (ifq)->ifq_len++;				\   } while (0)
 end_define
 
 begin_define
@@ -114,7 +114,7 @@ name|ifq
 parameter_list|,
 name|m
 parameter_list|)
-value|do {				\     (m) = (ifq)->ifq_head;					\     if (m) {							\         if (((ifq)->ifq_head = (m)->usb2_nextpkt) == NULL) {	\ 	     (ifq)->ifq_tail = NULL;				\ 	}							\ 	(m)->usb2_nextpkt = NULL;				\ 	(ifq)->ifq_len--;					\     }								\   } while (0)
+value|do {				\     (m) = (ifq)->ifq_head;					\     if (m) {							\         if (((ifq)->ifq_head = (m)->usb_nextpkt) == NULL) {	\ 	     (ifq)->ifq_tail = NULL;				\ 	}							\ 	(m)->usb_nextpkt = NULL;				\ 	(ifq)->ifq_len--;					\     }								\   } while (0)
 end_define
 
 begin_define
@@ -126,7 +126,7 @@ name|ifq
 parameter_list|,
 name|m
 parameter_list|)
-value|do {		\       (m)->usb2_nextpkt = (ifq)->ifq_head;	\       if ((ifq)->ifq_tail == NULL) {		\ 	  (ifq)->ifq_tail = (m);		\       }						\       (ifq)->ifq_head = (m);			\       (ifq)->ifq_len++;				\   } while (0)
+value|do {		\       (m)->usb_nextpkt = (ifq)->ifq_head;	\       if ((ifq)->ifq_tail == NULL) {		\ 	  (ifq)->ifq_tail = (m);		\       }						\       (ifq)->ifq_head = (m);			\       (ifq)->ifq_len++;				\   } while (0)
 end_define
 
 begin_define
@@ -178,7 +178,7 @@ end_comment
 begin_function_decl
 name|void
 modifier|*
-name|usb2_alloc_mbufs
+name|usb_alloc_mbufs
 parameter_list|(
 name|struct
 name|malloc_type

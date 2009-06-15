@@ -476,7 +476,7 @@ parameter_list|,
 name|data
 parameter_list|)
 define|\
-value|usb2_do_request_flags((sc)->sc_udev,&(sc)->sc_mtx, req, data, 0, NULL, 5000)
+value|usbd_do_request_flags((sc)->sc_udev,&(sc)->sc_mtx, req, data, 0, NULL, 5000)
 end_define
 
 begin_decl_stmt
@@ -2255,7 +2255,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|usb2_lookup_id_by_uaa
+name|usbd_lookup_id_by_uaa
 argument_list|(
 name|zyd_devs
 argument_list|,
@@ -2349,7 +2349,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-name|device_set_usb2_desc
+name|device_set_usb_desc
 argument_list|(
 name|dev
 argument_list|)
@@ -2410,7 +2410,7 @@ name|ZYD_IFACE_INDEX
 expr_stmt|;
 name|error
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|uaa
 operator|->
@@ -2447,7 +2447,7 @@ argument_list|,
 literal|"could not allocate USB transfers, "
 literal|"err=%s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
@@ -2844,7 +2844,7 @@ modifier|*
 name|ic
 decl_stmt|;
 comment|/* stop all USB transfers */
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
@@ -3808,7 +3808,7 @@ block|{
 case|case
 name|USB_ST_TRANSFERRED
 case|:
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -4196,7 +4196,7 @@ name|xfer
 operator|->
 name|max_data_length
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -4212,7 +4212,7 @@ name|ZYD_DEBUG_CMD
 argument_list|,
 literal|"error = %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|xfer
 operator|->
@@ -4355,7 +4355,7 @@ operator|&
 name|ZYD_CMD_FLAG_SENT
 condition|)
 continue|continue;
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -4395,7 +4395,7 @@ name|flags
 operator||=
 name|ZYD_CMD_FLAG_SENT
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -4413,7 +4413,7 @@ name|ZYD_DEBUG_ANY
 argument_list|,
 literal|"error = %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|xfer
 operator|->
@@ -4600,7 +4600,7 @@ argument_list|,
 name|rq
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -4610,7 +4610,7 @@ name|ZYD_INTR_RD
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -11501,7 +11501,7 @@ name|sc_dev
 argument_list|,
 literal|"could not read EEPROM: %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
@@ -12843,7 +12843,7 @@ operator|++
 expr_stmt|;
 return|return;
 block|}
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -12860,7 +12860,7 @@ name|plcp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -13050,7 +13050,7 @@ name|m_len
 operator|=
 name|rlen
 expr_stmt|;
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -13307,7 +13307,7 @@ block|{
 case|case
 name|USB_ST_TRANSFERRED
 case|:
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -13482,7 +13482,7 @@ name|xfer
 operator|->
 name|max_data_length
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -13623,7 +13623,7 @@ name|ZYD_DEBUG_ANY
 argument_list|,
 literal|"frame error: %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|xfer
 operator|->
@@ -13967,7 +13967,7 @@ operator|=
 name|ZYD_MAX_TXBUFSZ
 expr_stmt|;
 block|}
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -13983,7 +13983,7 @@ argument_list|,
 name|ZYD_TX_DESC_SIZE
 argument_list|)
 expr_stmt|;
-name|usb2_m_copy_in
+name|usbd_m_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -14071,7 +14071,7 @@ name|priv_fifo
 operator|=
 name|data
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -14088,7 +14088,7 @@ name|ZYD_DEBUG_ANY
 argument_list|,
 literal|"transfer error, %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|xfer
 operator|->
@@ -14897,7 +14897,7 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -15502,7 +15502,7 @@ block|}
 comment|/* reset device */
 name|cd
 operator|=
-name|usb2_get_config_descriptor
+name|usbd_get_config_descriptor
 argument_list|(
 name|sc
 operator|->
@@ -15511,7 +15511,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|usb2_req_set_config
+name|usbd_req_set_config
 argument_list|(
 name|sc
 operator|->
@@ -15880,7 +15880,7 @@ name|if_drv_flags
 operator||=
 name|IFF_DRV_RUNNING
 expr_stmt|;
-name|usb2_transfer_set_stall
+name|usbd_transfer_set_stall
 argument_list|(
 name|sc
 operator|->
@@ -15890,7 +15890,7 @@ name|ZYD_BULK_WR
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -15900,7 +15900,7 @@ name|ZYD_BULK_RD
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -16036,7 +16036,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_drain
+name|usbd_transfer_drain
 argument_list|(
 name|sc
 operator|->
@@ -16046,7 +16046,7 @@ name|ZYD_BULK_WR
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_drain
+name|usbd_transfer_drain
 argument_list|(
 name|sc
 operator|->

@@ -55,7 +55,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|usb2_debug
+name|usb_debug
 init|=
 literal|0
 decl_stmt|;
@@ -91,7 +91,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|usb2_debug
+name|usb_debug
 argument_list|,
 literal|0
 argument_list|,
@@ -101,12 +101,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_dump_iface  *  * This function dumps information about an USB interface.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_dump_iface  *  * This function dumps information about an USB interface.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_dump_iface
+name|usb_dump_iface
 parameter_list|(
 name|struct
 name|usb_interface
@@ -116,7 +116,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"usb2_dump_iface: iface=%p\n"
+literal|"usb_dump_iface: iface=%p\n"
 argument_list|,
 name|iface
 argument_list|)
@@ -149,12 +149,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_dump_device  *  * This function dumps information about an USB device.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_dump_device  *  * This function dumps information about an USB device.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_dump_device
+name|usb_dump_device
 parameter_list|(
 name|struct
 name|usb_device
@@ -164,7 +164,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"usb2_dump_device: dev=%p\n"
+literal|"usb_dump_device: dev=%p\n"
 argument_list|,
 name|udev
 argument_list|)
@@ -223,12 +223,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_dump_queue  *  * This function dumps the USB transfer that are queued up on an USB endpoint.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_dump_queue  *  * This function dumps the USB transfer that are queued up on an USB endpoint.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_dump_queue
+name|usb_dump_queue
 parameter_list|(
 name|struct
 name|usb_endpoint
@@ -243,7 +243,7 @@ name|xfer
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"usb2_dump_queue: endpoint=%p xfer: "
+literal|"usb_dump_queue: endpoint=%p xfer: "
 argument_list|,
 name|ep
 argument_list|)
@@ -274,12 +274,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_dump_endpoint  *  * This function dumps information about an USB endpoint.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_dump_endpoint  *  * This function dumps information about an USB endpoint.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_dump_endpoint
+name|usb_dump_endpoint
 parameter_list|(
 name|struct
 name|usb_endpoint
@@ -294,7 +294,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"usb2_dump_endpoint: endpoint=%p"
+literal|"usb_dump_endpoint: endpoint=%p"
 argument_list|,
 name|ep
 argument_list|)
@@ -340,7 +340,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|usb2_dump_queue
+name|usb_dump_queue
 argument_list|(
 name|ep
 argument_list|)
@@ -350,7 +350,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"usb2_dump_endpoint: endpoint=NULL\n"
+literal|"usb_dump_endpoint: endpoint=NULL\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -358,12 +358,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_dump_xfer  *  * This function dumps information about an USB transfer.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_dump_xfer  *  * This function dumps information about an USB transfer.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_dump_xfer
+name|usb_dump_xfer
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -378,7 +378,7 @@ name|udev
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"usb2_dump_xfer: xfer=%p\n"
+literal|"usb_dump_xfer: xfer=%p\n"
 argument_list|,
 name|xfer
 argument_list|)

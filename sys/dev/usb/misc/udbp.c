@@ -1221,7 +1221,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|device_set_usb2_desc
+name|device_set_usb_desc
 argument_list|(
 name|dev
 argument_list|)
@@ -1265,7 +1265,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|uaa
 operator|->
@@ -1303,7 +1303,7 @@ name|DPRINTF
 argument_list|(
 literal|"error=%s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
@@ -1497,7 +1497,7 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* free USB transfers, if any */
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
@@ -1661,7 +1661,7 @@ name|xfer
 operator|->
 name|actlen
 expr_stmt|;
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -1733,7 +1733,7 @@ operator|&
 name|UDBP_FLAG_READ_STALL
 condition|)
 block|{
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -1756,7 +1756,7 @@ name|xfer
 operator|->
 name|max_data_length
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -1780,7 +1780,7 @@ name|sc_flags
 operator||=
 name|UDBP_FLAG_READ_STALL
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -1830,7 +1830,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|usb2_clear_stall_callback
+name|usbd_clear_stall_callback
 argument_list|(
 name|xfer
 argument_list|,
@@ -1850,7 +1850,7 @@ operator|&=
 operator|~
 name|UDBP_FLAG_READ_STALL
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|xfer_other
 argument_list|)
@@ -1992,7 +1992,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* start USB bulk-in transfer, if not already started */
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -2066,7 +2066,7 @@ operator|&
 name|UDBP_FLAG_WRITE_STALL
 condition|)
 block|{
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -2155,7 +2155,7 @@ operator|=
 name|MCLBYTES
 expr_stmt|;
 block|}
-name|usb2_m_copy_in
+name|usbd_m_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -2204,7 +2204,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -2228,7 +2228,7 @@ name|sc_flags
 operator||=
 name|UDBP_FLAG_WRITE_STALL
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -2278,7 +2278,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|usb2_clear_stall_callback
+name|usbd_clear_stall_callback
 argument_list|(
 name|xfer
 argument_list|,
@@ -2298,7 +2298,7 @@ operator|&=
 operator|~
 name|UDBP_FLAG_WRITE_STALL
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|xfer_other
 argument_list|)
@@ -2839,7 +2839,7 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* 		 * start bulk-out transfer, if not already started: 		 */
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -3084,7 +3084,7 @@ name|UDBP_FLAG_WRITE_STALL
 operator|)
 expr_stmt|;
 comment|/* start bulk-in transfer */
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -3095,7 +3095,7 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* start bulk-out transfer */
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -3184,7 +3184,7 @@ block|}
 else|else
 block|{
 comment|/* stop bulk-in transfer */
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -3194,7 +3194,7 @@ name|UDBP_T_RD_CS
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -3205,7 +3205,7 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* stop bulk-out transfer */
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -3215,7 +3215,7 @@ name|UDBP_T_WR_CS
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->

@@ -1033,7 +1033,7 @@ argument_list|)
 decl_stmt|;
 return|return
 operator|(
-name|usb2_lookup_id_by_uaa
+name|usbd_lookup_id_by_uaa
 argument_list|(
 name|cdce_devs
 argument_list|,
@@ -1151,7 +1151,7 @@ argument_list|(
 name|uaa
 argument_list|)
 expr_stmt|;
-name|device_set_usb2_desc
+name|device_set_usb_desc
 argument_list|(
 name|dev
 argument_list|)
@@ -1304,7 +1304,7 @@ control|)
 block|{
 name|iface
 operator|=
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|uaa
 operator|->
@@ -1320,7 +1320,7 @@ condition|)
 block|{
 name|id
 operator|=
-name|usb2_get_interface_descriptor
+name|usbd_get_interface_descriptor
 argument_list|(
 name|iface
 argument_list|)
@@ -1362,7 +1362,7 @@ name|info
 operator|.
 name|bIfaceIndex
 expr_stmt|;
-name|usb2_set_parent_iface
+name|usbd_set_parent_iface
 argument_list|(
 name|uaa
 operator|->
@@ -1413,7 +1413,7 @@ control|)
 block|{
 name|error
 operator|=
-name|usb2_set_alt_interface_index
+name|usbd_set_alt_interface_index
 argument_list|(
 name|uaa
 operator|->
@@ -1448,7 +1448,7 @@ goto|;
 block|}
 name|error
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|uaa
 operator|->
@@ -1543,7 +1543,7 @@ else|else
 block|{
 name|error
 operator|=
-name|usb2_req_get_string_any
+name|usbd_req_get_string_any
 argument_list|(
 name|uaa
 operator|->
@@ -1792,7 +1792,7 @@ name|cdce_ue_methods
 expr_stmt|;
 name|error
 operator|=
-name|usb2_ether_ifattach
+name|uether_ifattach
 argument_list|(
 name|ue
 argument_list|)
@@ -1865,7 +1865,7 @@ operator|->
 name|sc_ue
 decl_stmt|;
 comment|/* stop all USB transfers first */
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
@@ -1874,7 +1874,7 @@ argument_list|,
 name|CDCE_N_TRANSFER
 argument_list|)
 expr_stmt|;
-name|usb2_ether_ifdetach
+name|uether_ifdetach
 argument_list|(
 name|ue
 argument_list|)
@@ -1911,13 +1911,13 @@ name|cdce_softc
 modifier|*
 name|sc
 init|=
-name|usb2_ether_getsc
+name|uether_getsc
 argument_list|(
 name|ue
 argument_list|)
 decl_stmt|;
 comment|/* 	 * Start the USB transfers, if not already started: 	 */
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -1927,7 +1927,7 @@ name|CDCE_BULK_TX
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -2027,7 +2027,7 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-name|usb2_ether_getifp
+name|uether_getifp
 argument_list|(
 operator|&
 name|sc
@@ -2286,7 +2286,7 @@ name|m
 operator|->
 name|m_len
 expr_stmt|;
-name|usb2_set_frame_data
+name|usbd_set_frame_data
 argument_list|(
 name|xfer
 argument_list|,
@@ -2319,7 +2319,7 @@ name|nframes
 operator|=
 name|x
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -2334,7 +2334,7 @@ literal|11
 argument_list|,
 literal|"transfer error, %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|xfer
 operator|->
@@ -2496,7 +2496,7 @@ name|cdce_softc
 modifier|*
 name|sc
 init|=
-name|usb2_ether_getsc
+name|uether_getsc
 argument_list|(
 name|ue
 argument_list|)
@@ -2506,7 +2506,7 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-name|usb2_ether_getifp
+name|uether_getifp
 argument_list|(
 name|ue
 argument_list|)
@@ -2525,7 +2525,7 @@ operator||=
 name|IFF_DRV_RUNNING
 expr_stmt|;
 comment|/* start interrupt transfer */
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -2535,7 +2535,7 @@ name|CDCE_INTR_RX
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -2546,7 +2546,7 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* stall data write direction, which depends on USB mode */
-name|usb2_transfer_set_stall
+name|usbd_transfer_set_stall
 argument_list|(
 name|sc
 operator|->
@@ -2581,7 +2581,7 @@ name|cdce_softc
 modifier|*
 name|sc
 init|=
-name|usb2_ether_getsc
+name|uether_getsc
 argument_list|(
 name|ue
 argument_list|)
@@ -2591,7 +2591,7 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-name|usb2_ether_getifp
+name|uether_getifp
 argument_list|(
 name|ue
 argument_list|)
@@ -2611,7 +2611,7 @@ operator|~
 name|IFF_DRV_RUNNING
 expr_stmt|;
 comment|/* 	 * stop all the transfers, if not already stopped: 	 */
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -2621,7 +2621,7 @@ name|CDCE_BULK_RX
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -2631,7 +2631,7 @@ name|CDCE_BULK_TX
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -2641,7 +2641,7 @@ name|CDCE_INTR_RX
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -2875,7 +2875,7 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* queue up mbuf */
-name|usb2_ether_rxmbuf
+name|uether_rxmbuf
 argument_list|(
 operator|&
 name|sc
@@ -2926,7 +2926,7 @@ condition|)
 block|{
 name|m
 operator|=
-name|usb2_ether_newbuf
+name|uether_newbuf
 argument_list|()
 expr_stmt|;
 if|if
@@ -2960,7 +2960,7 @@ name|x
 index|]
 expr_stmt|;
 block|}
-name|usb2_set_frame_data
+name|usbd_set_frame_data
 argument_list|(
 name|xfer
 argument_list|,
@@ -2990,13 +2990,13 @@ name|nframes
 operator|=
 name|x
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
 comment|/* flush any received frames */
-name|usb2_ether_rxflush
+name|uether_rxflush
 argument_list|(
 operator|&
 name|sc
@@ -3011,7 +3011,7 @@ name|DPRINTF
 argument_list|(
 literal|"error = %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|xfer
 operator|->
@@ -3045,7 +3045,7 @@ name|nframes
 operator|=
 literal|0
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -3118,7 +3118,7 @@ name|xfer
 operator|->
 name|max_data_length
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -3195,7 +3195,7 @@ label|:
 if|#
 directive|if
 literal|0
-block|xfer->frlengths[0] = XXX; 		usb2_start_hardware(xfer);
+block|xfer->frlengths[0] = XXX; 		usbd_transfer_submit(xfer);
 endif|#
 directive|endif
 break|break;

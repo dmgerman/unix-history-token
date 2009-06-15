@@ -1341,7 +1341,7 @@ end_function_decl
 begin_function_decl
 name|void
 modifier|*
-name|usb_get_intfdata
+name|usbd_get_intfdata
 parameter_list|(
 name|struct
 name|usb_interface

@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|USB_DEBUG_VAR
-value|usb2_debug
+value|usb_debug
 end_define
 
 begin_include
@@ -1057,7 +1057,7 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|device_set_usb2_desc
+name|device_set_usb_desc
 argument_list|(
 name|dev
 argument_list|)
@@ -1454,7 +1454,7 @@ empty_stmt|;
 comment|/* indent fix */
 switch|switch
 condition|(
-name|usb2_get_speed
+name|usbd_get_speed
 argument_list|(
 name|dev
 argument_list|)
@@ -1585,7 +1585,7 @@ operator|=
 operator|-
 name|EINPROGRESS
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|uhe
 operator|->
@@ -1595,7 +1595,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|uhe
 operator|->
@@ -1681,7 +1681,7 @@ if|if
 condition|(
 name|xfer
 operator|&&
-name|usb2_transfer_pending
+name|usbd_transfer_pending
 argument_list|(
 name|xfer
 argument_list|)
@@ -1710,7 +1710,7 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_drain
+name|usbd_transfer_drain
 argument_list|(
 name|xfer
 argument_list|)
@@ -1724,13 +1724,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
 block|}
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|xfer
 argument_list|)
@@ -2048,7 +2048,7 @@ operator|)
 expr_stmt|;
 name|ep
 operator|=
-name|usb2_get_endpoint
+name|usbd_get_endpoint
 argument_list|(
 name|dev
 argument_list|,
@@ -2071,7 +2071,7 @@ operator|-
 name|EINVAL
 operator|)
 return|;
-name|usb2_clear_data_toggle
+name|usbd_clear_data_toggle
 argument_list|(
 name|dev
 argument_list|,
@@ -2423,7 +2423,7 @@ block|{
 comment|/* 		 * The FreeBSD USB stack supports standard control 		 * transfers on control endpoint zero: 		 */
 name|err
 operator|=
-name|usb2_do_request_flags
+name|usbd_do_request_flags
 argument_list|(
 name|dev
 argument_list|,
@@ -2727,7 +2727,7 @@ expr_stmt|;
 name|err
 operator|=
 operator|-
-name|usb2_set_alt_interface_index
+name|usbd_set_alt_interface_index
 argument_list|(
 name|dev
 argument_list|,
@@ -2829,7 +2829,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|uhe
 operator|->
@@ -2989,7 +2989,7 @@ expr_stmt|;
 comment|/* Allocate and setup two generic FreeBSD USB transfers */
 if|if
 condition|(
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|dev
 argument_list|,
@@ -3135,7 +3135,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|dev
 argument_list|,
@@ -3198,7 +3198,7 @@ name|usb_config_descriptor
 modifier|*
 name|cd
 init|=
-name|usb2_get_config_descriptor
+name|usbd_get_config_descriptor
 argument_list|(
 name|udev
 argument_list|)
@@ -3303,7 +3303,7 @@ condition|(
 operator|(
 name|desc
 operator|=
-name|usb2_desc_foreach
+name|usb_desc_foreach
 argument_list|(
 name|cd
 argument_list|,
@@ -4313,13 +4313,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb_get_intfdata  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_get_intfdata  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
 modifier|*
-name|usb_get_intfdata
+name|usbd_get_intfdata
 parameter_list|(
 name|struct
 name|usb_interface
@@ -4379,7 +4379,7 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-name|usb2_needs_explore_all
+name|usb_needs_explore_all
 argument_list|()
 expr_stmt|;
 block|}
@@ -5071,7 +5071,7 @@ operator|.
 name|ext_buffer
 condition|)
 block|{
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -5384,7 +5384,7 @@ operator|.
 name|ext_buffer
 condition|)
 block|{
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -5474,7 +5474,7 @@ name|ext_buffer
 condition|)
 block|{
 comment|/* set virtual address to load */
-name|usb2_set_frame_data
+name|usbd_set_frame_data
 argument_list|(
 name|xfer
 argument_list|,
@@ -5516,7 +5516,7 @@ name|urb
 operator|->
 name|number_of_packets
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -5734,7 +5734,7 @@ operator|)
 condition|)
 block|{
 comment|/* copy in data with regard to the URB */
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -5954,7 +5954,7 @@ operator|.
 name|ext_buffer
 condition|)
 block|{
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -5973,7 +5973,7 @@ block|}
 else|else
 block|{
 comment|/* set virtual address to load */
-name|usb2_set_frame_data
+name|usbd_set_frame_data
 argument_list|(
 name|xfer
 argument_list|,
@@ -6148,7 +6148,7 @@ name|ext_buffer
 condition|)
 block|{
 comment|/* set virtual address to load */
-name|usb2_set_frame_data
+name|usbd_set_frame_data
 argument_list|(
 name|xfer
 argument_list|,
@@ -6170,7 +6170,7 @@ name|bsd_isread
 condition|)
 block|{
 comment|/* copy out data with regard to the URB */
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -6239,7 +6239,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)

@@ -7104,7 +7104,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|usb2_lookup_id_by_uaa
+name|usbd_lookup_id_by_uaa
 argument_list|(
 name|urtw_devs
 argument_list|,
@@ -7187,7 +7187,7 @@ decl_stmt|;
 name|usb_error_t
 name|error
 decl_stmt|;
-name|device_set_usb2_desc
+name|device_set_usb_desc
 argument_list|(
 name|dev
 argument_list|)
@@ -7251,7 +7251,7 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|usb2_callout_init_mtx
+name|usb_callout_init_mtx
 argument_list|(
 operator|&
 name|sc
@@ -7321,7 +7321,7 @@ expr_stmt|;
 block|}
 name|error
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|uaa
 operator|->
@@ -7358,7 +7358,7 @@ argument_list|,
 literal|"could not allocate USB transfers, "
 literal|"err=%s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
@@ -7797,7 +7797,7 @@ argument_list|)
 expr_stmt|;
 name|fail1
 label|:
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
@@ -7893,7 +7893,7 @@ operator|->
 name|sc_led_task
 argument_list|)
 expr_stmt|;
-name|usb2_callout_drain
+name|usb_callout_drain
 argument_list|(
 operator|&
 name|sc
@@ -7909,7 +7909,7 @@ operator|->
 name|sc_watchdog_ch
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
@@ -9241,7 +9241,7 @@ argument_list|,
 literal|0x1fff
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -10140,7 +10140,7 @@ name|i
 operator|++
 control|)
 block|{
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -10221,7 +10221,7 @@ name|i
 operator|++
 control|)
 block|{
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -10410,7 +10410,7 @@ condition|)
 block|{
 name|err
 operator|=
-name|usb2_do_request_flags
+name|usbd_do_request_flags
 argument_list|(
 name|sc
 operator|->
@@ -10448,13 +10448,13 @@ name|URTW_DEBUG_INIT
 argument_list|,
 literal|"Control request failed, %s (retrying)\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -10821,13 +10821,13 @@ name|sc_dev
 argument_list|,
 literal|"failed to stop (%s)\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|usb2_callout_stop
+name|usb_callout_stop
 argument_list|(
 operator|&
 name|sc
@@ -10943,7 +10943,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -12132,7 +12132,7 @@ condition|)
 goto|goto
 name|fail
 goto|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -13101,7 +13101,7 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|xfer
 argument_list|)
@@ -13241,7 +13241,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|usb2_callout_stop
+name|usb_callout_stop
 argument_list|(
 operator|&
 name|sc
@@ -16740,7 +16740,7 @@ condition|)
 goto|goto
 name|fail
 goto|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -16786,7 +16786,7 @@ operator|.
 name|val
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -16797,7 +16797,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -16816,7 +16816,7 @@ argument_list|,
 name|URTW_8225_ADDR_2_DATA_MAGIC1
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -16835,7 +16835,7 @@ argument_list|,
 name|URTW_8225_ADDR_2_DATA_MAGIC2
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -16941,7 +16941,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -16965,7 +16965,7 @@ operator|+
 literal|0x80
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -17012,7 +17012,7 @@ operator|.
 name|val
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -17075,7 +17075,7 @@ operator|.
 name|val
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -17120,7 +17120,7 @@ argument_list|,
 literal|0x9b
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -17139,7 +17139,7 @@ argument_list|,
 literal|0x90
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -17258,7 +17258,7 @@ argument_list|,
 name|ant
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -17457,7 +17457,7 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -17702,7 +17702,7 @@ argument_list|,
 literal|0x80
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -17903,7 +17903,7 @@ argument_list|,
 name|d84
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -18215,7 +18215,7 @@ name|chan
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -18605,7 +18605,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -18739,7 +18739,7 @@ name|idx
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -19071,7 +19071,7 @@ condition|)
 goto|goto
 name|fail
 goto|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -19118,7 +19118,7 @@ name|val
 argument_list|)
 expr_stmt|;
 block|}
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -19216,7 +19216,7 @@ argument_list|,
 name|URTW_8225_ADDR_2_DATA_MAGIC1
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -19235,7 +19235,7 @@ argument_list|,
 name|URTW_8225_ADDR_2_DATA_MAGIC2
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -19302,7 +19302,7 @@ argument_list|,
 name|URTW_8225_ADDR_2_DATA_MAGIC1
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -19321,7 +19321,7 @@ argument_list|,
 name|URTW_8225_ADDR_2_DATA_MAGIC2
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -19371,7 +19371,7 @@ literal|"RF calibration failed\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -19677,7 +19677,7 @@ name|chan
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -20540,7 +20540,7 @@ name|cck_pwrlvl
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -20660,7 +20660,7 @@ name|ofdm_pwrlvl
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -20720,7 +20720,7 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -20746,7 +20746,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -20772,7 +20772,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -20791,7 +20791,7 @@ argument_list|,
 literal|0x17
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -20864,7 +20864,7 @@ argument_list|,
 name|URTW_RF_PINS_MAGIC5
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -21463,7 +21463,7 @@ name|chan
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -21865,7 +21865,7 @@ operator|<<
 literal|1
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -22082,7 +22082,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -22630,7 +22630,7 @@ condition|)
 goto|goto
 name|fail
 goto|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -22700,7 +22700,7 @@ condition|)
 goto|goto
 name|fail
 goto|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -22739,7 +22739,7 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -22795,7 +22795,7 @@ condition|)
 goto|goto
 name|fail
 goto|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -23084,7 +23084,7 @@ name|URTW_LED_OFF
 else|:
 name|URTW_LED_ON
 expr_stmt|;
-name|usb2_callout_reset
+name|usb_callout_reset
 argument_list|(
 operator|&
 name|sc
@@ -23109,7 +23109,7 @@ argument_list|,
 name|URTW_LED_GPIO
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -23690,7 +23690,7 @@ block|{
 case|case
 name|URTW_LED_BLINK_NORMAL
 case|:
-name|usb2_callout_reset
+name|usb_callout_reset
 argument_list|(
 operator|&
 name|sc
@@ -23742,7 +23742,7 @@ decl_stmt|;
 name|usb_error_t
 name|error
 decl_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 operator|(
 name|sc
@@ -25210,7 +25210,7 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-name|usb2_set_frame_data
+name|usbd_set_frame_data
 argument_list|(
 name|xfer
 argument_list|,
@@ -25232,7 +25232,7 @@ name|xfer
 operator|->
 name|max_data_length
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -25692,7 +25692,7 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-name|usb2_set_frame_data
+name|usbd_set_frame_data
 argument_list|(
 name|xfer
 argument_list|,
@@ -25714,7 +25714,7 @@ name|data
 operator|->
 name|buflen
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)

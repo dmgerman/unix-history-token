@@ -666,7 +666,7 @@ name|UT_WRITE_CLASS_OTHER
 expr_stmt|;
 if|if
 condition|(
-name|usb2_do_request_flags
+name|usbd_do_request_flags
 argument_list|(
 name|sc
 operator|->
@@ -701,7 +701,7 @@ name|UT_WRITE_CLASS_INTERFACE
 expr_stmt|;
 if|if
 condition|(
-name|usb2_do_request_flags
+name|usbd_do_request_flags
 argument_list|(
 name|sc
 operator|->
@@ -824,7 +824,7 @@ name|tr_setup
 label|:
 if|if
 condition|(
-name|usb2_fifo_get_data
+name|usb_fifo_get_data
 argument_list|(
 name|f
 argument_list|,
@@ -854,7 +854,7 @@ index|]
 operator|=
 name|actlen
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -1010,7 +1010,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|usb2_fifo_put_data
+name|usb_fifo_put_data
 argument_list|(
 name|f
 argument_list|,
@@ -1034,7 +1034,7 @@ name|tr_setup
 label|:
 if|if
 condition|(
-name|usb2_fifo_put_bytes_max
+name|usb_fifo_put_bytes_max
 argument_list|(
 name|f
 argument_list|)
@@ -1053,7 +1053,7 @@ name|xfer
 operator|->
 name|max_data_length
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -1143,7 +1143,7 @@ block|{
 case|case
 name|USB_ST_TRANSFERRED
 case|:
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -1300,7 +1300,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -1344,7 +1344,7 @@ name|nframes
 operator|=
 literal|2
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -1356,7 +1356,7 @@ name|DPRINTF
 argument_list|(
 literal|"error=%s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|xfer
 operator|->
@@ -1559,7 +1559,7 @@ name|fifo
 operator|->
 name|priv_sc0
 decl_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -1592,7 +1592,7 @@ name|fifo
 operator|->
 name|priv_sc0
 decl_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -1625,7 +1625,7 @@ name|fifo
 operator|->
 name|priv_sc0
 decl_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -1658,7 +1658,7 @@ name|fifo
 operator|->
 name|priv_sc0
 decl_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -1777,7 +1777,7 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_set_stall
+name|usbd_transfer_set_stall
 argument_list|(
 name|sc
 operator|->
@@ -1797,7 +1797,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|usb2_fifo_alloc_buffer
+name|usb_fifo_alloc_buffer
 argument_list|(
 name|fifo
 argument_list|,
@@ -1847,7 +1847,7 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_set_stall
+name|usbd_transfer_set_stall
 argument_list|(
 name|sc
 operator|->
@@ -1867,7 +1867,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|usb2_fifo_alloc_buffer
+name|usb_fifo_alloc_buffer
 argument_list|(
 name|fifo
 argument_list|,
@@ -1970,7 +1970,7 @@ name|FWRITE
 operator|)
 condition|)
 block|{
-name|usb2_fifo_free_buffer
+name|usb_fifo_free_buffer
 argument_list|(
 name|fifo
 argument_list|)
@@ -2198,7 +2198,7 @@ name|uaa
 operator|->
 name|device
 expr_stmt|;
-name|device_set_usb2_desc
+name|device_set_usb_desc
 argument_list|(
 name|dev
 argument_list|)
@@ -2219,7 +2219,7 @@ operator||
 name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
-name|usb2_callout_init_mtx
+name|usb_callout_init_mtx
 argument_list|(
 operator|&
 name|sc
@@ -2237,7 +2237,7 @@ expr_stmt|;
 comment|/* search through all the descriptors looking for bidir mode */
 name|id
 operator|=
-name|usb2_get_interface_descriptor
+name|usbd_get_interface_descriptor
 argument_list|(
 name|uaa
 operator|->
@@ -2346,9 +2346,9 @@ operator|(
 name|void
 operator|*
 operator|)
-name|usb2_desc_foreach
+name|usb_desc_foreach
 argument_list|(
-name|usb2_get_config_descriptor
+name|usbd_get_config_descriptor
 argument_list|(
 name|uaa
 operator|->
@@ -2383,7 +2383,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|usb2_set_alt_interface_index
+name|usbd_set_alt_interface_index
 argument_list|(
 name|uaa
 operator|->
@@ -2404,7 +2404,7 @@ argument_list|(
 literal|"could not set alternate "
 literal|"config, error=%s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
@@ -2425,7 +2425,7 @@ name|bInterfaceNumber
 expr_stmt|;
 name|error
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|uaa
 operator|->
@@ -2459,7 +2459,7 @@ name|DPRINTF
 argument_list|(
 literal|"error=%s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
@@ -2482,14 +2482,14 @@ if|#
 directive|if
 literal|0
 comment|/*  * This code is disabled because for some mysterious reason it causes  * printing not to work.  But only sometimes, and mostly with  * UHCI and less often with OHCI.  *sigh*  */
-block|{ 		struct usb_config_descriptor *cd = usb2_get_config_descriptor(dev); 		struct usb_device_request req; 		int len, alen;  		req.bmRequestType = UT_READ_CLASS_INTERFACE; 		req.bRequest = UR_GET_DEVICE_ID; 		USETW(req.wValue, cd->bConfigurationValue); 		USETW2(req.wIndex, id->bInterfaceNumber, id->bAlternateSetting); 		USETW(req.wLength, sizeof devinfo - 1); 		error = usb2_do_request_flags(dev,&req, devinfo, USB_SHORT_XFER_OK,&alen, USB_DEFAULT_TIMEOUT); 		if (error) { 			device_printf(sc->sc_dev, "cannot get device id\n"); 		} else if (alen<= 2) { 			device_printf(sc->sc_dev, "empty device id, no " 			    "printer connected?\n"); 		} else {
+block|{ 		struct usb_config_descriptor *cd = usbd_get_config_descriptor(dev); 		struct usb_device_request req; 		int len, alen;  		req.bmRequestType = UT_READ_CLASS_INTERFACE; 		req.bRequest = UR_GET_DEVICE_ID; 		USETW(req.wValue, cd->bConfigurationValue); 		USETW2(req.wIndex, id->bInterfaceNumber, id->bAlternateSetting); 		USETW(req.wLength, sizeof devinfo - 1); 		error = usbd_do_request_flags(dev,&req, devinfo, USB_SHORT_XFER_OK,&alen, USB_DEFAULT_TIMEOUT); 		if (error) { 			device_printf(sc->sc_dev, "cannot get device id\n"); 		} else if (alen<= 2) { 			device_printf(sc->sc_dev, "empty device id, no " 			    "printer connected?\n"); 		} else {
 comment|/* devinfo now contains an IEEE-1284 device ID */
 block|len = ((devinfo[0]& 0xff)<< 8) | (devinfo[1]& 0xff); 			if (len> sizeof devinfo - 3) 				len = sizeof devinfo - 3; 			devinfo[len] = 0; 			printf("%s: device id<", device_get_nameunit(sc->sc_dev)); 			ieee1284_print_id(devinfo + 2); 			printf(">\n"); 		} 	}
 endif|#
 directive|endif
 name|error
 operator|=
-name|usb2_fifo_attach
+name|usb_fifo_attach
 argument_list|(
 name|uaa
 operator|->
@@ -2540,7 +2540,7 @@ goto|;
 block|}
 name|error
 operator|=
-name|usb2_fifo_attach
+name|usb_fifo_attach
 argument_list|(
 name|uaa
 operator|->
@@ -2657,7 +2657,7 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|usb2_fifo_detach
+name|usb_fifo_detach
 argument_list|(
 operator|&
 name|sc
@@ -2665,7 +2665,7 @@ operator|->
 name|sc_fifo
 argument_list|)
 expr_stmt|;
-name|usb2_fifo_detach
+name|usb_fifo_detach
 argument_list|(
 operator|&
 name|sc
@@ -2681,7 +2681,7 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-name|usb2_callout_stop
+name|usb_callout_stop
 argument_list|(
 operator|&
 name|sc
@@ -2697,7 +2697,7 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
@@ -2706,7 +2706,7 @@ argument_list|,
 name|ULPT_N_TRANSFER
 argument_list|)
 expr_stmt|;
-name|usb2_callout_drain
+name|usb_callout_drain
 argument_list|(
 operator|&
 name|sc
@@ -2787,7 +2787,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -2797,7 +2797,7 @@ name|ULPT_INTR_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_callout_reset
+name|usb_callout_reset
 argument_list|(
 operator|&
 name|sc

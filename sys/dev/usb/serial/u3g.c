@@ -572,25 +572,25 @@ name|u3g_callback
 init|=
 block|{
 operator|.
-name|usb2_com_start_read
+name|ucom_start_read
 operator|=
 operator|&
 name|u3g_start_read
 block|,
 operator|.
-name|usb2_com_stop_read
+name|ucom_stop_read
 operator|=
 operator|&
 name|u3g_stop_read
 block|,
 operator|.
-name|usb2_com_start_write
+name|ucom_start_write
 operator|=
 operator|&
 name|u3g_start_write
 block|,
 operator|.
-name|usb2_com_stop_write
+name|ucom_stop_write
 operator|=
 operator|&
 name|u3g_stop_write
@@ -1327,7 +1327,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|usb2_do_request_flags
+name|usbd_do_request_flags
 argument_list|(
 name|udev
 argument_list|,
@@ -1415,7 +1415,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|usb2_do_request_flags
+name|usbd_do_request_flags
 argument_list|(
 name|udev
 argument_list|,
@@ -1952,7 +1952,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|usb2_req_set_alt_interface_no
+name|usbd_req_set_alt_interface_no
 argument_list|(
 name|udev
 argument_list|,
@@ -2055,7 +2055,7 @@ continue|continue;
 block|}
 name|err
 operator|=
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|udev
 argument_list|,
@@ -2098,7 +2098,7 @@ continue|continue;
 block|}
 name|err
 operator|=
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|udev
 argument_list|,
@@ -2169,7 +2169,7 @@ block|{
 comment|/* Calling the lookup function will also set the driver info! */
 return|return
 operator|(
-name|usb2_lookup_id_by_uaa
+name|usbd_lookup_id_by_uaa
 argument_list|(
 name|u3g_devs
 argument_list|,
@@ -2233,7 +2233,7 @@ return|;
 block|}
 name|iface
 operator|=
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|udev
 argument_list|,
@@ -2332,7 +2332,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|usb2_test_autoinstall
+name|usb_test_autoinstall
 argument_list|(
 name|udev
 argument_list|,
@@ -2402,7 +2402,7 @@ case|case
 name|MOD_LOAD
 case|:
 comment|/* register our autoinstall handler */
-name|usb2_test_huawei_autoinst_p
+name|usb_test_huawei_autoinst_p
 operator|=
 operator|&
 name|u3g_test_huawei_autoinst
@@ -2411,7 +2411,7 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
-name|usb2_test_huawei_unload
+name|usb_test_huawei_unload
 argument_list|(
 name|NULL
 argument_list|)
@@ -2626,7 +2626,7 @@ index|[
 name|n
 index|]
 expr_stmt|;
-name|device_set_usb2_desc
+name|device_set_usb_desc
 argument_list|(
 name|dev
 argument_list|)
@@ -2678,7 +2678,7 @@ control|)
 block|{
 name|iface
 operator|=
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|uaa
 operator|->
@@ -2696,7 +2696,7 @@ condition|)
 break|break;
 name|id
 operator|=
-name|usb2_get_interface_descriptor
+name|usbd_get_interface_descriptor
 argument_list|(
 name|iface
 argument_list|)
@@ -2714,7 +2714,7 @@ operator|!=
 name|UICLASS_VENDOR
 condition|)
 continue|continue;
-name|usb2_set_parent_iface
+name|usbd_set_parent_iface
 argument_list|(
 name|uaa
 operator|->
@@ -2806,7 +2806,7 @@ expr_stmt|;
 comment|/* try to allocate a set of BULK endpoints */
 name|error
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|uaa
 operator|->
@@ -2864,7 +2864,7 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_set_stall
+name|usbd_transfer_set_stall
 argument_list|(
 name|sc
 operator|->
@@ -2877,7 +2877,7 @@ name|U3G_BULK_WR
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_set_stall
+name|usbd_transfer_set_stall
 argument_list|(
 name|sc
 operator|->
@@ -2939,7 +2939,7 @@ name|nports
 expr_stmt|;
 name|error
 operator|=
-name|usb2_com_attach
+name|ucom_attach
 argument_list|(
 operator|&
 name|sc
@@ -2972,7 +2972,7 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
-literal|"usb2_com_attach failed\n"
+literal|"ucom_attach failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3048,7 +3048,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* NOTE: It is not dangerous to detach more ports than attached! */
-name|usb2_com_detach
+name|ucom_detach
 argument_list|(
 operator|&
 name|sc
@@ -3075,7 +3075,7 @@ condition|;
 name|m
 operator|++
 control|)
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
@@ -3124,7 +3124,7 @@ operator|->
 name|sc_parent
 decl_stmt|;
 comment|/* start read endpoint */
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -3164,7 +3164,7 @@ operator|->
 name|sc_parent
 decl_stmt|;
 comment|/* stop read endpoint */
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -3203,7 +3203,7 @@ name|ucom
 operator|->
 name|sc_parent
 decl_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -3242,7 +3242,7 @@ name|ucom
 operator|->
 name|sc_parent
 decl_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -3302,7 +3302,7 @@ name|tr_setup
 label|:
 if|if
 condition|(
-name|usb2_com_get_data
+name|ucom_get_data
 argument_list|(
 name|ucom
 argument_list|,
@@ -3328,7 +3328,7 @@ index|]
 operator|=
 name|actlen
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -3396,7 +3396,7 @@ block|{
 case|case
 name|USB_ST_TRANSFERRED
 case|:
-name|usb2_com_put_data
+name|ucom_put_data
 argument_list|(
 name|ucom
 argument_list|,
@@ -3427,7 +3427,7 @@ name|xfer
 operator|->
 name|max_data_length
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)

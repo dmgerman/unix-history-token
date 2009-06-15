@@ -20,7 +20,7 @@ file|<dev/usb/usb_lookup.h>
 end_include
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_lookup_id_by_info  *  * This functions takes an array of "struct usb_device_id" and tries  * to match the entries with the information in "struct usb_lookup_info".  *  * NOTE: The "sizeof_id" parameter must be a multiple of the  * usb_device_id structure size. Else the behaviour of this function  * is undefined.  *  * Return values:  * NULL: No match found.  * Else: Pointer to matching entry.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_lookup_id_by_info  *  * This functions takes an array of "struct usb_device_id" and tries  * to match the entries with the information in "struct usbd_lookup_info".  *  * NOTE: The "sizeof_id" parameter must be a multiple of the  * usb_device_id structure size. Else the behaviour of this function  * is undefined.  *  * Return values:  * NULL: No match found.  * Else: Pointer to matching entry.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -28,7 +28,7 @@ specifier|const
 name|struct
 name|usb_device_id
 modifier|*
-name|usb2_lookup_id_by_info
+name|usbd_lookup_id_by_info
 parameter_list|(
 specifier|const
 name|struct
@@ -41,7 +41,7 @@ name|sizeof_id
 parameter_list|,
 specifier|const
 name|struct
-name|usb_lookup_info
+name|usbd_lookup_info
 modifier|*
 name|info
 parameter_list|)
@@ -365,12 +365,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_lookup_id_by_uaa - factored out code  *  * Return values:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_lookup_id_by_uaa - factored out code  *  * Return values:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|int
-name|usb2_lookup_id_by_uaa
+name|usbd_lookup_id_by_uaa
 parameter_list|(
 specifier|const
 name|struct
@@ -389,7 +389,7 @@ parameter_list|)
 block|{
 name|id
 operator|=
-name|usb2_lookup_id_by_info
+name|usbd_lookup_id_by_info
 argument_list|(
 name|id
 argument_list|,

@@ -308,7 +308,7 @@ specifier|const
 name|struct
 name|usb_device_id
 modifier|*
-name|usb2_lookup_id_by_info
+name|usbd_lookup_id_by_info
 parameter_list|(
 specifier|const
 name|struct
@@ -321,7 +321,7 @@ name|sizeof_id
 parameter_list|,
 specifier|const
 name|struct
-name|usb_lookup_info
+name|usbd_lookup_info
 modifier|*
 name|info
 parameter_list|)
@@ -330,7 +330,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|usb2_lookup_id_by_uaa
+name|usbd_lookup_id_by_uaa
 parameter_list|(
 specifier|const
 name|struct

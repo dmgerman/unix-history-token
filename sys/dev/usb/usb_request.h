@@ -27,7 +27,7 @@ end_struct_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_do_request_flags
+name|usbd_do_request_flags
 parameter_list|(
 name|struct
 name|usb_device
@@ -63,7 +63,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_do_request_proc
+name|usbd_do_request_proc
 parameter_list|(
 name|struct
 name|usb_device
@@ -99,7 +99,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_clear_hub_feature
+name|usbd_req_clear_hub_feature
 parameter_list|(
 name|struct
 name|usb_device
@@ -119,7 +119,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_clear_port_feature
+name|usbd_req_clear_port_feature
 parameter_list|(
 name|struct
 name|usb_device
@@ -142,7 +142,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_get_alt_interface_no
+name|usbd_req_get_alt_interface_no
 parameter_list|(
 name|struct
 name|usb_device
@@ -166,7 +166,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_get_config
+name|usbd_req_get_config
 parameter_list|(
 name|struct
 name|usb_device
@@ -187,7 +187,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_get_descriptor_ptr
+name|usbd_req_get_descriptor_ptr
 parameter_list|(
 name|struct
 name|usb_device
@@ -208,7 +208,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_get_config_desc
+name|usbd_req_get_config_desc
 parameter_list|(
 name|struct
 name|usb_device
@@ -233,7 +233,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_get_config_desc_full
+name|usbd_req_get_config_desc_full
 parameter_list|(
 name|struct
 name|usb_device
@@ -264,7 +264,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_get_desc
+name|usbd_req_get_desc
 parameter_list|(
 name|struct
 name|usb_device
@@ -307,7 +307,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_get_device_desc
+name|usbd_req_get_device_desc
 parameter_list|(
 name|struct
 name|usb_device
@@ -329,7 +329,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_get_device_status
+name|usbd_req_get_device_status
 parameter_list|(
 name|struct
 name|usb_device
@@ -351,7 +351,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_get_hub_descriptor
+name|usbd_req_get_hub_descriptor
 parameter_list|(
 name|struct
 name|usb_device
@@ -376,7 +376,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_get_hub_status
+name|usbd_req_get_hub_status
 parameter_list|(
 name|struct
 name|usb_device
@@ -398,7 +398,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_get_port_status
+name|usbd_req_get_port_status
 parameter_list|(
 name|struct
 name|usb_device
@@ -423,7 +423,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_get_report
+name|usbd_req_get_report
 parameter_list|(
 name|struct
 name|usb_device
@@ -456,7 +456,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_get_report_descriptor
+name|usbd_req_get_report_descriptor
 parameter_list|(
 name|struct
 name|usb_device
@@ -483,7 +483,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_get_string_any
+name|usbd_req_get_string_any
 parameter_list|(
 name|struct
 name|usb_device
@@ -510,7 +510,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_get_string_desc
+name|usbd_req_get_string_desc
 parameter_list|(
 name|struct
 name|usb_device
@@ -540,7 +540,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_reset_port
+name|usbd_req_reset_port
 parameter_list|(
 name|struct
 name|usb_device
@@ -560,7 +560,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_set_address
+name|usbd_req_set_address
 parameter_list|(
 name|struct
 name|usb_device
@@ -580,7 +580,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_set_alt_interface_no
+name|usbd_req_set_alt_interface_no
 parameter_list|(
 name|struct
 name|usb_device
@@ -603,7 +603,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_set_config
+name|usbd_req_set_config
 parameter_list|(
 name|struct
 name|usb_device
@@ -623,7 +623,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_set_hub_feature
+name|usbd_req_set_hub_feature
 parameter_list|(
 name|struct
 name|usb_device
@@ -643,7 +643,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_set_idle
+name|usbd_req_set_idle
 parameter_list|(
 name|struct
 name|usb_device
@@ -669,7 +669,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_set_port_feature
+name|usbd_req_set_port_feature
 parameter_list|(
 name|struct
 name|usb_device
@@ -692,7 +692,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_set_protocol
+name|usbd_req_set_protocol
 parameter_list|(
 name|struct
 name|usb_device
@@ -715,7 +715,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_set_report
+name|usbd_req_set_report
 parameter_list|(
 name|struct
 name|usb_device
@@ -748,7 +748,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_re_enumerate
+name|usbd_req_re_enumerate
 parameter_list|(
 name|struct
 name|usb_device
@@ -765,7 +765,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_clear_device_feature
+name|usbd_req_clear_device_feature
 parameter_list|(
 name|struct
 name|usb_device
@@ -785,7 +785,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_req_set_device_feature
+name|usbd_req_set_device_feature
 parameter_list|(
 name|struct
 name|usb_device
@@ -806,7 +806,7 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|usb2_do_request
+name|usbd_do_request
 parameter_list|(
 name|u
 parameter_list|,
@@ -817,7 +817,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|usb2_do_request_flags(u,m,r,d,0,NULL,USB_DEFAULT_TIMEOUT)
+value|usbd_do_request_flags(u,m,r,d,0,NULL,USB_DEFAULT_TIMEOUT)
 end_define
 
 begin_endif

@@ -23,7 +23,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|usb_fifo_methods
-name|usb2_ugen_methods
+name|usb_ugen_methods
 decl_stmt|;
 end_decl_stmt
 

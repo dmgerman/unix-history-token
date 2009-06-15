@@ -786,7 +786,7 @@ condition|)
 goto|goto
 name|tr_setup
 goto|;
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -1361,7 +1361,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|usb2_callout_reset
+name|usb_callout_reset
 argument_list|(
 operator|&
 name|sc
@@ -1381,7 +1381,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|usb2_callout_stop
+name|usb_callout_stop
 argument_list|(
 operator|&
 name|sc
@@ -1414,7 +1414,7 @@ label|:
 comment|/* check if we can put more data into the FIFO */
 if|if
 condition|(
-name|usb2_fifo_put_bytes_max
+name|usb_fifo_put_bytes_max
 argument_list|(
 name|sc
 operator|->
@@ -1440,7 +1440,7 @@ name|xfer
 operator|->
 name|max_data_length
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -1631,7 +1631,7 @@ operator|)
 return|;
 name|error
 operator|=
-name|usb2_req_get_hid_desc
+name|usbd_req_get_hid_desc
 argument_list|(
 name|uaa
 operator|->
@@ -2344,7 +2344,7 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|device_set_usb2_desc
+name|device_set_usb_desc
 argument_list|(
 name|dev
 argument_list|)
@@ -2365,7 +2365,7 @@ operator||
 name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
-name|usb2_callout_init_mtx
+name|usb_callout_init_mtx
 argument_list|(
 operator|&
 name|sc
@@ -2383,7 +2383,7 @@ expr_stmt|;
 comment|/*          * Force the report (non-boot) protocol.          *          * Mice without boot protocol support may choose not to implement          * Set_Protocol at all; Ignore any error.          */
 name|err
 operator|=
-name|usb2_req_set_protocol
+name|usbd_req_set_protocol
 argument_list|(
 name|uaa
 operator|->
@@ -2402,7 +2402,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|uaa
 operator|->
@@ -2440,7 +2440,7 @@ name|DPRINTF
 argument_list|(
 literal|"error=%s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -2452,7 +2452,7 @@ goto|;
 block|}
 name|err
 operator|=
-name|usb2_req_get_hid_desc
+name|usbd_req_get_hid_desc
 argument_list|(
 name|uaa
 operator|->
@@ -2510,7 +2510,7 @@ expr_stmt|;
 comment|/* 	 * The Microsoft Wireless Notebook Optical Mouse seems to be in worse 	 * shape than the Wireless Intellimouse 2.0, as its X, Y, wheel, and 	 * all of its other button positions are all off. It also reports that 	 * it has two addional buttons and a tilt wheel. 	 */
 if|if
 condition|(
-name|usb2_test_quirk
+name|usb_test_quirk
 argument_list|(
 name|uaa
 argument_list|,
@@ -2654,7 +2654,7 @@ block|}
 block|}
 if|if
 condition|(
-name|usb2_test_quirk
+name|usb_test_quirk
 argument_list|(
 name|uaa
 argument_list|,
@@ -3061,7 +3061,7 @@ name|MOUSE_MSC_SYNC
 expr_stmt|;
 name|err
 operator|=
-name|usb2_fifo_attach
+name|usb_fifo_attach
 argument_list|(
 name|uaa
 operator|->
@@ -3172,7 +3172,7 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|usb2_fifo_detach
+name|usb_fifo_detach
 argument_list|(
 operator|&
 name|sc
@@ -3180,7 +3180,7 @@ operator|->
 name|sc_fifo
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
@@ -3189,7 +3189,7 @@ argument_list|,
 name|UMS_N_TRANSFER
 argument_list|)
 expr_stmt|;
-name|usb2_callout_drain
+name|usb_callout_drain
 argument_list|(
 operator|&
 name|sc
@@ -3233,7 +3233,7 @@ name|fifo
 operator|->
 name|priv_sc0
 decl_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -3266,7 +3266,7 @@ name|fifo
 operator|->
 name|priv_sc0
 decl_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -3276,7 +3276,7 @@ name|UMS_INTR_DT
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_callout_stop
+name|usb_callout_stop
 argument_list|(
 operator|&
 name|sc
@@ -3564,7 +3564,7 @@ name|MOUSE_SYS_EXTBUTTONS
 operator|)
 expr_stmt|;
 block|}
-name|usb2_fifo_put_data_linear
+name|usb_fifo_put_data_linear
 argument_list|(
 name|sc
 operator|->
@@ -3610,7 +3610,7 @@ name|sc
 parameter_list|)
 block|{
 comment|/* reset read queue */
-name|usb2_fifo_reset
+name|usb_fifo_reset
 argument_list|(
 name|sc
 operator|->
@@ -3714,7 +3714,7 @@ expr_stmt|;
 comment|/* sc->sc_status.dt = 0; */
 if|if
 condition|(
-name|usb2_fifo_alloc_buffer
+name|usb_fifo_alloc_buffer
 argument_list|(
 name|fifo
 argument_list|,
@@ -3760,7 +3760,7 @@ operator|&
 name|FREAD
 condition|)
 block|{
-name|usb2_fifo_free_buffer
+name|usb_fifo_free_buffer
 argument_list|(
 name|fifo
 argument_list|)

@@ -233,7 +233,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|usb2_temp_get_string_desc_t
+name|usb_temp_get_string_desc_t
 name|eth_get_string_desc
 decl_stmt|;
 end_decl_stmt
@@ -819,7 +819,7 @@ begin_decl_stmt
 specifier|const
 name|struct
 name|usb_temp_device_desc
-name|usb2_template_cdce
+name|usb_template_cdce
 init|=
 block|{
 operator|.

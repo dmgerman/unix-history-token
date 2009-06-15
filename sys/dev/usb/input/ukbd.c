@@ -1634,7 +1634,7 @@ literal|0
 condition|)
 block|{
 comment|/* start transfer, if not already started */
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -1670,7 +1670,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|usb2_do_poll
+name|usbd_do_poll
 argument_list|(
 name|sc
 operator|->
@@ -2407,7 +2407,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|usb2_callout_reset
+name|usb_callout_reset
 argument_list|(
 operator|&
 name|sc
@@ -2611,7 +2611,7 @@ literal|0
 condition|)
 block|{
 comment|/* check and remove HID ID byte */
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -2702,7 +2702,7 @@ name|sc_ndata
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -2993,7 +2993,7 @@ name|xfer
 operator|->
 name|max_data_length
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -3014,7 +3014,7 @@ name|DPRINTF
 argument_list|(
 literal|"error=%s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|xfer
 operator|->
@@ -3227,7 +3227,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -3244,7 +3244,7 @@ name|req
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -3294,7 +3294,7 @@ name|nframes
 operator|=
 literal|2
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -3309,7 +3309,7 @@ literal|0
 argument_list|,
 literal|"error=%s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|xfer
 operator|->
@@ -3543,7 +3543,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|usb2_test_quirk
+name|usb_test_quirk
 argument_list|(
 name|uaa
 argument_list|,
@@ -3564,7 +3564,7 @@ return|;
 block|}
 name|error
 operator|=
-name|usb2_req_get_hid_desc
+name|usbd_req_get_hid_desc
 argument_list|(
 name|uaa
 operator|->
@@ -3615,7 +3615,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|usb2_test_quirk
+name|usb_test_quirk
 argument_list|(
 name|uaa
 argument_list|,
@@ -3751,7 +3751,7 @@ operator|*
 operator|)
 name|sc
 expr_stmt|;
-name|device_set_usb2_desc
+name|device_set_usb_desc
 argument_list|(
 name|dev
 argument_list|)
@@ -3798,7 +3798,7 @@ name|sc_mode
 operator|=
 name|K_XLATE
 expr_stmt|;
-name|usb2_callout_init_mtx
+name|usb_callout_init_mtx
 argument_list|(
 operator|&
 name|sc
@@ -3813,7 +3813,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|uaa
 operator|->
@@ -3849,7 +3849,7 @@ name|DPRINTF
 argument_list|(
 literal|"error=%s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -3939,7 +3939,7 @@ expr_stmt|;
 comment|/* figure out if there is an ID byte in the data */
 name|err
 operator|=
-name|usb2_req_get_hid_desc
+name|usbd_req_get_hid_desc
 argument_list|(
 name|uaa
 operator|->
@@ -4128,7 +4128,7 @@ block|}
 comment|/* ignore if SETIDLE fails, hence it is not crucial */
 name|err
 operator|=
-name|usb2_req_set_idle
+name|usbd_req_set_idle
 argument_list|(
 name|sc
 operator|->
@@ -4234,7 +4234,7 @@ name|Giant
 argument_list|)
 expr_stmt|;
 comment|/* start the keyboard */
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -4334,7 +4334,7 @@ name|sc_flags
 operator||=
 name|UKBD_FLAG_GONE
 expr_stmt|;
-name|usb2_callout_stop
+name|usb_callout_stop
 argument_list|(
 operator|&
 name|sc
@@ -4435,7 +4435,7 @@ name|kb_flags
 operator|=
 literal|0
 expr_stmt|;
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
@@ -4444,7 +4444,7 @@ argument_list|,
 name|UKBD_N_TRANSFER
 argument_list|)
 expr_stmt|;
-name|usb2_callout_drain
+name|usb_callout_drain
 argument_list|(
 operator|&
 name|sc
@@ -7199,7 +7199,7 @@ operator||=
 name|UKBD_FLAG_SET_LEDS
 expr_stmt|;
 comment|/* start transfer, if not already started */
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->

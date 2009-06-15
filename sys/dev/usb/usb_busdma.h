@@ -390,7 +390,7 @@ end_comment
 
 begin_function_decl
 name|int
-name|usb2_uiomove
+name|usb_uiomove
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -415,7 +415,7 @@ begin_function_decl
 name|struct
 name|usb_dma_tag
 modifier|*
-name|usb2_dma_tag_find
+name|usb_dma_tag_find
 parameter_list|(
 name|struct
 name|usb_dma_parent_tag
@@ -433,7 +433,7 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
-name|usb2_pc_alloc_mem
+name|usb_pc_alloc_mem
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -456,7 +456,7 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
-name|usb2_pc_dmamap_create
+name|usb_pc_dmamap_create
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -471,7 +471,7 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
-name|usb2_pc_load_mem
+name|usb_pc_load_mem
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -489,7 +489,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_bdma_done_event
+name|usb_bdma_done_event
 parameter_list|(
 name|struct
 name|usb_dma_parent_tag
@@ -501,7 +501,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_bdma_post_sync
+name|usb_bdma_post_sync
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -513,7 +513,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_bdma_pre_sync
+name|usb_bdma_pre_sync
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -525,7 +525,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_bdma_work_loop
+name|usb_bdma_work_loop
 parameter_list|(
 name|struct
 name|usb_xfer_queue
@@ -537,7 +537,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_bzero
+name|usbd_frame_zero
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -555,7 +555,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_copy_in
+name|usbd_copy_in
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -578,7 +578,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|usb2_copy_in_user
+name|usbd_copy_in_user
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -601,7 +601,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_copy_out
+name|usbd_copy_out
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -623,7 +623,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|usb2_copy_out_user
+name|usbd_copy_out_user
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -645,7 +645,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_dma_tag_setup
+name|usb_dma_tag_setup
 parameter_list|(
 name|struct
 name|usb_dma_parent_tag
@@ -680,7 +680,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_dma_tag_unsetup
+name|usb_dma_tag_unsetup
 parameter_list|(
 name|struct
 name|usb_dma_parent_tag
@@ -692,7 +692,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_get_page
+name|usbd_get_page
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -712,7 +712,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_m_copy_in
+name|usbd_m_copy_in
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -738,7 +738,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -750,7 +750,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_pc_cpu_invalidate
+name|usb_pc_cpu_invalidate
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -762,7 +762,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_pc_dmamap_destroy
+name|usb_pc_dmamap_destroy
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -774,7 +774,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_pc_free_mem
+name|usb_pc_free_mem
 parameter_list|(
 name|struct
 name|usb_page_cache

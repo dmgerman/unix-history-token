@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2006-2008 Hans Petter Selasky. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * usb2_dev.c - An abstraction layer for creating devices under /dev/...  */
+comment|/*-  * Copyright (c) 2006-2008 Hans Petter Selasky. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * usb_dev.c - An abstraction layer for creating devices under /dev/...  */
 end_comment
 
 begin_include
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|USB_DEBUG_VAR
-value|usb2_fifo_debug
+value|usb_fifo_debug
 end_define
 
 begin_include
@@ -149,7 +149,7 @@ end_if
 begin_decl_stmt
 specifier|static
 name|int
-name|usb2_fifo_debug
+name|usb_fifo_debug
 init|=
 literal|0
 decl_stmt|;
@@ -185,7 +185,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|usb2_fifo_debug
+name|usb_fifo_debug
 argument_list|,
 literal|0
 argument_list|,
@@ -262,7 +262,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|int
-name|usb2_fifo_open
+name|usb_fifo_open
 parameter_list|(
 name|struct
 name|usb_cdev_privdata
@@ -280,7 +280,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_fifo_close
+name|usb_fifo_close
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -294,7 +294,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_dev_init
+name|usb_dev_init
 parameter_list|(
 name|void
 modifier|*
@@ -305,7 +305,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_dev_init_post
+name|usb_dev_init_post
 parameter_list|(
 name|void
 modifier|*
@@ -316,7 +316,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_dev_uninit
+name|usb_dev_uninit
 parameter_list|(
 name|void
 modifier|*
@@ -327,7 +327,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|usb2_fifo_uiomove
+name|usb_fifo_uiomove
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -348,7 +348,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_fifo_check_methods
+name|usb_fifo_check_methods
 parameter_list|(
 name|struct
 name|usb_fifo_methods
@@ -362,7 +362,7 @@ specifier|static
 name|struct
 name|usb_fifo
 modifier|*
-name|usb2_fifo_alloc
+name|usb_fifo_alloc
 parameter_list|(
 name|void
 parameter_list|)
@@ -374,7 +374,7 @@ specifier|static
 name|struct
 name|usb_endpoint
 modifier|*
-name|usb2_dev_get_ep
+name|usb_dev_get_ep
 parameter_list|(
 name|struct
 name|usb_device
@@ -390,7 +390,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_loc_fill
+name|usb_loc_fill
 parameter_list|(
 name|struct
 name|usb_fs_privdata
@@ -406,7 +406,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_close
+name|usb_close
 parameter_list|(
 name|void
 modifier|*
@@ -417,7 +417,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|usb_error_t
-name|usb2_ref_device
+name|usb_ref_device
 parameter_list|(
 name|struct
 name|usb_cdev_privdata
@@ -435,7 +435,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|usb_error_t
-name|usb2_usb_ref_device
+name|usb_usb_ref_device
 parameter_list|(
 name|struct
 name|usb_cdev_privdata
@@ -451,7 +451,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_unref_device
+name|usb_unref_device
 parameter_list|(
 name|struct
 name|usb_cdev_privdata
@@ -467,70 +467,70 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|d_open_t
-name|usb2_open
+name|usb_open
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_ioctl_t
-name|usb2_ioctl
+name|usb_ioctl
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_read_t
-name|usb2_read
+name|usb_read
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_write_t
-name|usb2_write
+name|usb_write
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_poll_t
-name|usb2_poll
+name|usb_poll
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_ioctl_t
-name|usb2_static_ioctl
+name|usb_static_ioctl
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|usb_fifo_open_t
-name|usb2_fifo_dummy_open
+name|usb_fifo_dummy_open
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|usb_fifo_close_t
-name|usb2_fifo_dummy_close
+name|usb_fifo_dummy_close
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|usb_fifo_ioctl_t
-name|usb2_fifo_dummy_ioctl
+name|usb_fifo_dummy_ioctl
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|usb_fifo_cmd_t
-name|usb2_fifo_dummy_cmd
+name|usb_fifo_dummy_cmd
 decl_stmt|;
 end_decl_stmt
 
@@ -541,7 +541,7 @@ end_comment
 begin_decl_stmt
 name|struct
 name|cdevsw
-name|usb2_devsw
+name|usb_devsw
 init|=
 block|{
 operator|.
@@ -552,12 +552,12 @@ block|,
 operator|.
 name|d_open
 operator|=
-name|usb2_open
+name|usb_open
 block|,
 operator|.
 name|d_ioctl
 operator|=
-name|usb2_ioctl
+name|usb_ioctl
 block|,
 operator|.
 name|d_name
@@ -572,17 +572,17 @@ block|,
 operator|.
 name|d_read
 operator|=
-name|usb2_read
+name|usb_read
 block|,
 operator|.
 name|d_write
 operator|=
-name|usb2_write
+name|usb_write
 block|,
 operator|.
 name|d_poll
 operator|=
-name|usb2_poll
+name|usb_poll
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -592,7 +592,7 @@ specifier|static
 name|struct
 name|cdev
 modifier|*
-name|usb2_dev
+name|usb_dev
 init|=
 name|NULL
 decl_stmt|;
@@ -606,7 +606,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|cdevsw
-name|usb2_static_devsw
+name|usb_static_devsw
 init|=
 block|{
 operator|.
@@ -617,7 +617,7 @@ block|,
 operator|.
 name|d_ioctl
 operator|=
-name|usb2_static_ioctl
+name|usb_static_ioctl
 block|,
 operator|.
 name|d_name
@@ -634,7 +634,7 @@ argument_list|(
 argument_list|,
 argument|usb_symlink
 argument_list|)
-name|usb2_sym_head
+name|usb_sym_head
 expr_stmt|;
 end_expr_stmt
 
@@ -642,25 +642,25 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|sx
-name|usb2_sym_lock
+name|usb_sym_lock
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|struct
 name|mtx
-name|usb2_ref_lock
+name|usb_ref_lock
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_loc_fill  *  * This is used to fill out a usb_cdev_privdata structure based on the  * device's address as contained in usb_fs_privdata.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_loc_fill  *  * This is used to fill out a usb_cdev_privdata structure based on the  * device's address as contained in usb_fs_privdata.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_loc_fill
+name|usb_loc_fill
 parameter_list|(
 name|struct
 name|usb_fs_privdata
@@ -709,12 +709,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_ref_device  *  * This function is used to atomically refer an USB device by its  * device location. If this function returns success the USB device  * will not dissappear until the USB device is unreferenced.  *  * Return values:  *  0: Success, refcount incremented on the given USB device.  *  Else: Failure.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_ref_device  *  * This function is used to atomically refer an USB device by its  * device location. If this function returns success the USB device  * will not dissappear until the USB device is unreferenced.  *  * Return values:  *  0: Success, refcount incremented on the given USB device.  *  Else: Failure.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_ref_device
+name|usb_ref_device
 parameter_list|(
 name|struct
 name|usb_cdev_privdata
@@ -769,7 +769,7 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 name|cpd
@@ -778,7 +778,7 @@ name|bus
 operator|=
 name|devclass_get_softc
 argument_list|(
-name|usb2_devclass_ptr
+name|usb_devclass_ptr
 argument_list|,
 name|cpd
 operator|->
@@ -892,7 +892,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 comment|/* 		 * We need to grab the sx-lock before grabbing the 		 * FIFO refs to avoid deadlock at detach! 		 */
@@ -910,7 +910,7 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 comment|/*  		 * Set "is_uref" after grabbing the default SX lock 		 */
@@ -1156,7 +1156,7 @@ block|}
 name|mtx_unlock
 argument_list|(
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -1229,7 +1229,7 @@ block|}
 name|mtx_unlock
 argument_list|(
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 name|DPRINTFN
@@ -1248,13 +1248,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_usb_ref_device  *  * This function is used to upgrade an USB reference to include the  * USB device reference on a USB location.  *  * Return values:  *  0: Success, refcount incremented on the given USB device.  *  Else: Failure.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_usb_ref_device  *  * This function is used to upgrade an USB reference to include the  * USB device reference on a USB location.  *  * Return values:  *  0: Success, refcount incremented on the given USB device.  *  Else: Failure.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|usb_error_t
-name|usb2_usb_ref_device
+name|usb_usb_ref_device
 parameter_list|(
 name|struct
 name|usb_cdev_privdata
@@ -1281,7 +1281,7 @@ operator|)
 return|;
 comment|/* success */
 comment|/* 	 * To avoid deadlock at detach we need to drop the FIFO ref 	 * and re-acquire a new ref! 	 */
-name|usb2_unref_device
+name|usb_unref_device
 argument_list|(
 name|cpd
 argument_list|,
@@ -1290,7 +1290,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|usb2_ref_device
+name|usb_ref_device
 argument_list|(
 name|cpd
 argument_list|,
@@ -1305,12 +1305,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_unref_device  *  * This function will release the reference count by one unit for the  * given USB device.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_unref_device  *  * This function will release the reference count by one unit for the  * given USB device.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_unref_device
+name|usb_unref_device
 parameter_list|(
 name|struct
 name|usb_cdev_privdata
@@ -1365,7 +1365,7 @@ block|}
 name|mtx_lock
 argument_list|(
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -1489,7 +1489,7 @@ block|}
 name|mtx_unlock
 argument_list|(
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -1500,7 +1500,7 @@ specifier|static
 name|struct
 name|usb_fifo
 modifier|*
-name|usb2_fifo_alloc
+name|usb_fifo_alloc
 parameter_list|(
 name|void
 parameter_list|)
@@ -1568,13 +1568,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_fifo_create  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_fifo_create  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|usb2_fifo_create
+name|usb_fifo_create
 parameter_list|(
 name|struct
 name|usb_cdev_privdata
@@ -2043,7 +2043,7 @@ condition|)
 block|{
 name|ep
 operator|=
-name|usb2_dev_get_ep
+name|usb_dev_get_ep
 argument_list|(
 name|udev
 argument_list|,
@@ -2085,7 +2085,7 @@ return|;
 block|}
 name|f
 operator|=
-name|usb2_fifo_alloc
+name|usb_fifo_alloc
 argument_list|()
 expr_stmt|;
 if|if
@@ -2142,7 +2142,7 @@ operator|->
 name|methods
 operator|=
 operator|&
-name|usb2_ugen_methods
+name|usb_ugen_methods
 expr_stmt|;
 name|f
 operator|->
@@ -2161,7 +2161,7 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 name|udev
@@ -2178,7 +2178,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -2203,7 +2203,7 @@ condition|)
 block|{
 name|ep
 operator|=
-name|usb2_dev_get_ep
+name|usb_dev_get_ep
 argument_list|(
 name|udev
 argument_list|,
@@ -2245,7 +2245,7 @@ return|;
 block|}
 name|f
 operator|=
-name|usb2_fifo_alloc
+name|usb_fifo_alloc
 argument_list|()
 expr_stmt|;
 if|if
@@ -2302,7 +2302,7 @@ operator|->
 name|methods
 operator|=
 operator|&
-name|usb2_ugen_methods
+name|usb_ugen_methods
 expr_stmt|;
 name|f
 operator|->
@@ -2321,7 +2321,7 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 name|udev
@@ -2338,7 +2338,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -2407,7 +2407,7 @@ end_function
 
 begin_function
 name|void
-name|usb2_fifo_free
+name|usb_fifo_free
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -2453,7 +2453,7 @@ name|n
 index|]
 condition|)
 block|{
-name|usb2_free_symlink
+name|usb_free_symlink
 argument_list|(
 name|f
 operator|->
@@ -2477,7 +2477,7 @@ block|}
 name|mtx_lock
 argument_list|(
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 comment|/* delink ourselves to stop calls from userland */
@@ -2567,7 +2567,7 @@ block|{
 name|mtx_unlock
 argument_list|(
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 comment|/* avoid LOR */
@@ -2611,7 +2611,7 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 comment|/* wait for sync */
@@ -2623,18 +2623,18 @@ operator|->
 name|cv_drain
 argument_list|,
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 block|}
 name|mtx_unlock
 argument_list|(
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 comment|/* take care of closing the device here, if any */
-name|usb2_fifo_close
+name|usb_fifo_close
 argument_list|(
 name|f
 argument_list|,
@@ -2672,7 +2672,7 @@ specifier|static
 name|struct
 name|usb_endpoint
 modifier|*
-name|usb2_dev_get_ep
+name|usb_dev_get_ep
 parameter_list|(
 name|struct
 name|usb_device
@@ -2770,7 +2770,7 @@ block|}
 block|}
 name|ep
 operator|=
-name|usb2_get_ep_by_addr
+name|usbd_get_ep_by_addr
 argument_list|(
 name|udev
 argument_list|,
@@ -2820,13 +2820,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_fifo_open  *  * Returns:  * 0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_fifo_open  *  * Returns:  * 0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|usb2_fifo_open
+name|usb_fifo_open
 parameter_list|(
 name|struct
 name|usb_cdev_privdata
@@ -3005,7 +3005,7 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 comment|/* flag the fifo as opened to prevent others */
@@ -3018,11 +3018,11 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 comment|/* reset queue */
-name|usb2_fifo_reset
+name|usb_fifo_reset
 argument_list|(
 name|f
 argument_list|)
@@ -3045,12 +3045,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_fifo_reset  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_fifo_reset  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_fifo_reset
+name|usb_fifo_reset
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -3112,13 +3112,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_fifo_close  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_fifo_close  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_fifo_close
+name|usb_fifo_close
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -3405,13 +3405,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_open - cdev callback  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_open - cdev callback  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|usb2_open
+name|usb_open
 parameter_list|(
 name|struct
 name|cdev
@@ -3563,7 +3563,7 @@ name|pd
 operator|->
 name|ep_addr
 expr_stmt|;
-name|usb2_loc_fill
+name|usb_loc_fill
 argument_list|(
 name|pd
 argument_list|,
@@ -3572,7 +3572,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_ref_device
+name|usb_ref_device
 argument_list|(
 name|cpd
 argument_list|,
@@ -3617,7 +3617,7 @@ comment|/* access mode for open lifetime */
 comment|/* create FIFOs, if any */
 name|err
 operator|=
-name|usb2_fifo_create
+name|usb_fifo_create
 argument_list|(
 name|cpd
 argument_list|,
@@ -3638,7 +3638,7 @@ argument_list|,
 literal|"cannot create fifo\n"
 argument_list|)
 expr_stmt|;
-name|usb2_unref_device
+name|usb_unref_device
 argument_list|(
 name|cpd
 argument_list|,
@@ -3668,7 +3668,7 @@ condition|)
 block|{
 name|err
 operator|=
-name|usb2_fifo_open
+name|usb_fifo_open
 argument_list|(
 name|cpd
 argument_list|,
@@ -3691,7 +3691,7 @@ argument_list|,
 literal|"read open failed\n"
 argument_list|)
 expr_stmt|;
-name|usb2_unref_device
+name|usb_unref_device
 argument_list|(
 name|cpd
 argument_list|,
@@ -3722,7 +3722,7 @@ condition|)
 block|{
 name|err
 operator|=
-name|usb2_fifo_open
+name|usb_fifo_open
 argument_list|(
 name|cpd
 argument_list|,
@@ -3752,7 +3752,7 @@ operator|&
 name|FREAD
 condition|)
 block|{
-name|usb2_fifo_close
+name|usb_fifo_close
 argument_list|(
 name|refs
 operator|.
@@ -3762,7 +3762,7 @@ name|fflags
 argument_list|)
 expr_stmt|;
 block|}
-name|usb2_unref_device
+name|usb_unref_device
 argument_list|(
 name|cpd
 argument_list|,
@@ -3784,7 +3784,7 @@ operator|)
 return|;
 block|}
 block|}
-name|usb2_unref_device
+name|usb_unref_device
 argument_list|(
 name|cpd
 argument_list|,
@@ -3796,7 +3796,7 @@ name|devfs_set_cdevpriv
 argument_list|(
 name|cpd
 argument_list|,
-name|usb2_close
+name|usb_close
 argument_list|)
 expr_stmt|;
 return|return
@@ -3808,13 +3808,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_close - cdev callback  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_close - cdev callback  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_close
+name|usb_close
 parameter_list|(
 name|void
 modifier|*
@@ -3846,7 +3846,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_ref_device
+name|usb_ref_device
 argument_list|(
 name|cpd
 argument_list|,
@@ -3879,7 +3879,7 @@ operator|&
 name|FREAD
 condition|)
 block|{
-name|usb2_fifo_close
+name|usb_fifo_close
 argument_list|(
 name|refs
 operator|.
@@ -3900,7 +3900,7 @@ operator|&
 name|FWRITE
 condition|)
 block|{
-name|usb2_fifo_close
+name|usb_fifo_close
 argument_list|(
 name|refs
 operator|.
@@ -3912,7 +3912,7 @@ name|fflags
 argument_list|)
 expr_stmt|;
 block|}
-name|usb2_unref_device
+name|usb_unref_device
 argument_list|(
 name|cpd
 argument_list|,
@@ -3934,7 +3934,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_dev_init
+name|usb_dev_init
 parameter_list|(
 name|void
 modifier|*
@@ -3944,7 +3944,7 @@ block|{
 name|mtx_init
 argument_list|(
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|,
 literal|"USB ref mutex"
 argument_list|,
@@ -3956,7 +3956,7 @@ expr_stmt|;
 name|sx_init
 argument_list|(
 operator|&
-name|usb2_sym_lock
+name|usb_sym_lock
 argument_list|,
 literal|"USB sym mutex"
 argument_list|)
@@ -3964,14 +3964,14 @@ expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
-name|usb2_sym_head
+name|usb_sym_head
 argument_list|)
 expr_stmt|;
 comment|/* check the UGEN methods */
-name|usb2_fifo_check_methods
+name|usb_fifo_check_methods
 argument_list|(
 operator|&
-name|usb2_ugen_methods
+name|usb_ugen_methods
 argument_list|)
 expr_stmt|;
 block|}
@@ -3980,13 +3980,13 @@ end_function
 begin_expr_stmt
 name|SYSINIT
 argument_list|(
-name|usb2_dev_init
+name|usb_dev_init
 argument_list|,
 name|SI_SUB_KLD
 argument_list|,
 name|SI_ORDER_FIRST
 argument_list|,
-name|usb2_dev_init
+name|usb_dev_init
 argument_list|,
 name|NULL
 argument_list|)
@@ -3996,7 +3996,7 @@ end_expr_stmt
 begin_function
 specifier|static
 name|void
-name|usb2_dev_init_post
+name|usb_dev_init_post
 parameter_list|(
 name|void
 modifier|*
@@ -4004,12 +4004,12 @@ name|arg
 parameter_list|)
 block|{
 comment|/* 	 * Create /dev/usb - this is needed for usbconfig(8), which 	 * needs a well-known device name to access. 	 */
-name|usb2_dev
+name|usb_dev
 operator|=
 name|make_dev
 argument_list|(
 operator|&
-name|usb2_static_devsw
+name|usb_static_devsw
 argument_list|,
 literal|0
 argument_list|,
@@ -4024,7 +4024,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|usb2_dev
+name|usb_dev
 operator|==
 name|NULL
 condition|)
@@ -4043,13 +4043,13 @@ end_function
 begin_expr_stmt
 name|SYSINIT
 argument_list|(
-name|usb2_dev_init_post
+name|usb_dev_init_post
 argument_list|,
 name|SI_SUB_KICK_SCHEDULER
 argument_list|,
 name|SI_ORDER_FIRST
 argument_list|,
-name|usb2_dev_init_post
+name|usb_dev_init_post
 argument_list|,
 name|NULL
 argument_list|)
@@ -4059,7 +4059,7 @@ end_expr_stmt
 begin_function
 specifier|static
 name|void
-name|usb2_dev_uninit
+name|usb_dev_uninit
 parameter_list|(
 name|void
 modifier|*
@@ -4068,17 +4068,17 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|usb2_dev
+name|usb_dev
 operator|!=
 name|NULL
 condition|)
 block|{
 name|destroy_dev
 argument_list|(
-name|usb2_dev
+name|usb_dev
 argument_list|)
 expr_stmt|;
-name|usb2_dev
+name|usb_dev
 operator|=
 name|NULL
 expr_stmt|;
@@ -4086,13 +4086,13 @@ block|}
 name|mtx_destroy
 argument_list|(
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 name|sx_destroy
 argument_list|(
 operator|&
-name|usb2_sym_lock
+name|usb_sym_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -4101,13 +4101,13 @@ end_function
 begin_expr_stmt
 name|SYSUNINIT
 argument_list|(
-name|usb2_dev_uninit
+name|usb_dev_uninit
 argument_list|,
 name|SI_SUB_KICK_SCHEDULER
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|,
-name|usb2_dev_uninit
+name|usb_dev_uninit
 argument_list|,
 name|NULL
 argument_list|)
@@ -4117,7 +4117,7 @@ end_expr_stmt
 begin_function
 specifier|static
 name|int
-name|usb2_ioctl_f_sub
+name|usb_ioctl_f_sub
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -4284,13 +4284,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_ioctl - cdev callback  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_ioctl - cdev callback  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|usb2_ioctl
+name|usb_ioctl
 parameter_list|(
 name|struct
 name|cdev
@@ -4368,7 +4368,7 @@ return|;
 comment|/*  	 * Performance optimisation: We try to check for IOCTL's that 	 * don't need the USB reference first. Then we grab the USB 	 * reference if we need it! 	 */
 name|err
 operator|=
-name|usb2_ref_device
+name|usb_ref_device
 argument_list|(
 name|cpd
 argument_list|,
@@ -4421,7 +4421,7 @@ name|txfifo
 expr_stmt|;
 name|err
 operator|=
-name|usb2_ioctl_f_sub
+name|usb_ioctl_f_sub
 argument_list|(
 name|f
 argument_list|,
@@ -4448,7 +4448,7 @@ name|rxfifo
 expr_stmt|;
 name|err
 operator|=
-name|usb2_ioctl_f_sub
+name|usb_ioctl_f_sub
 argument_list|(
 name|f
 argument_list|,
@@ -4517,7 +4517,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|usb2_usb_ref_device
+name|usb_usb_ref_device
 argument_list|(
 name|cpd
 argument_list|,
@@ -4580,7 +4580,7 @@ expr_stmt|;
 block|}
 name|done
 label|:
-name|usb2_unref_device
+name|usb_unref_device
 argument_list|(
 name|cpd
 argument_list|,
@@ -4603,7 +4603,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|usb2_poll
+name|usb_poll
 parameter_list|(
 name|struct
 name|cdev
@@ -4658,7 +4658,7 @@ argument_list|)
 operator|!=
 literal|0
 operator|||
-name|usb2_ref_device
+name|usb_ref_device
 argument_list|(
 name|cpd
 argument_list|,
@@ -5045,7 +5045,7 @@ name|priv_mtx
 argument_list|)
 expr_stmt|;
 block|}
-name|usb2_unref_device
+name|usb_unref_device
 argument_list|(
 name|cpd
 argument_list|,
@@ -5064,7 +5064,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|usb2_read
+name|usb_read
 parameter_list|(
 name|struct
 name|cdev
@@ -5142,7 +5142,7 @@ operator|)
 return|;
 name|err
 operator|=
-name|usb2_ref_device
+name|usb_ref_device
 argument_list|(
 name|cpd
 argument_list|,
@@ -5184,7 +5184,7 @@ name|NULL
 condition|)
 block|{
 comment|/* should not happen */
-name|usb2_unref_device
+name|usb_unref_device
 argument_list|(
 name|cpd
 argument_list|,
@@ -5310,7 +5310,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_fifo_wait
+name|usb_fifo_wait
 argument_list|(
 name|f
 argument_list|)
@@ -5380,7 +5380,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_fifo_uiomove
+name|usb_fifo_uiomove
 argument_list|(
 name|f
 argument_list|,
@@ -5472,7 +5472,7 @@ operator|->
 name|priv_mtx
 argument_list|)
 expr_stmt|;
-name|usb2_unref_device
+name|usb_unref_device
 argument_list|(
 name|cpd
 argument_list|,
@@ -5491,7 +5491,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|usb2_write
+name|usb_write
 parameter_list|(
 name|struct
 name|cdev
@@ -5576,7 +5576,7 @@ operator|)
 return|;
 name|err
 operator|=
-name|usb2_ref_device
+name|usb_ref_device
 argument_list|(
 name|cpd
 argument_list|,
@@ -5618,7 +5618,7 @@ name|NULL
 condition|)
 block|{
 comment|/* should not happen */
-name|usb2_unref_device
+name|usb_unref_device
 argument_list|(
 name|cpd
 argument_list|,
@@ -5748,7 +5748,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_fifo_wait
+name|usb_fifo_wait
 argument_list|(
 name|f
 argument_list|)
@@ -5805,7 +5805,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_fifo_uiomove
+name|usb_fifo_uiomove
 argument_list|(
 name|f
 argument_list|,
@@ -5899,7 +5899,7 @@ operator|->
 name|priv_mtx
 argument_list|)
 expr_stmt|;
-name|usb2_unref_device
+name|usb_unref_device
 argument_list|(
 name|cpd
 argument_list|,
@@ -5917,7 +5917,7 @@ end_function
 
 begin_function
 name|int
-name|usb2_static_ioctl
+name|usb_static_ioctl
 parameter_list|(
 name|struct
 name|cdev
@@ -5974,7 +5974,7 @@ name|USB_READ_DIR
 case|:
 name|err
 operator|=
-name|usb2_read_symlink
+name|usb_read_symlink
 argument_list|(
 name|u
 operator|.
@@ -6010,7 +6010,7 @@ name|USB_DEV_QUIRK_REMOVE
 case|:
 name|err
 operator|=
-name|usb2_quirk_ioctl_p
+name|usb_quirk_ioctl_p
 argument_list|(
 name|cmd
 argument_list|,
@@ -6032,7 +6032,7 @@ operator|*
 operator|)
 name|data
 operator|=
-name|usb2_template
+name|usb_template
 expr_stmt|;
 break|break;
 case|case
@@ -6052,7 +6052,7 @@ condition|(
 name|err
 condition|)
 break|break;
-name|usb2_template
+name|usb_template
 operator|=
 operator|*
 operator|(
@@ -6074,7 +6074,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|usb2_fifo_uiomove
+name|usb_fifo_uiomove
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -6133,7 +6133,7 @@ end_function
 
 begin_function
 name|int
-name|usb2_fifo_wait
+name|usb_fifo_wait
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -6210,7 +6210,7 @@ end_function
 
 begin_function
 name|void
-name|usb2_fifo_signal
+name|usb_fifo_signal
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -6245,7 +6245,7 @@ end_function
 
 begin_function
 name|void
-name|usb2_fifo_wakeup
+name|usb_fifo_wakeup
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -6253,7 +6253,7 @@ modifier|*
 name|f
 parameter_list|)
 block|{
-name|usb2_fifo_signal
+name|usb_fifo_signal
 argument_list|(
 name|f
 argument_list|)
@@ -6319,7 +6319,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|usb2_fifo_dummy_open
+name|usb_fifo_dummy_open
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -6341,7 +6341,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_fifo_dummy_close
+name|usb_fifo_dummy_close
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -6359,7 +6359,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|usb2_fifo_dummy_ioctl
+name|usb_fifo_dummy_ioctl
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -6388,7 +6388,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_fifo_dummy_cmd
+name|usb_fifo_dummy_cmd
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -6409,7 +6409,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_fifo_check_methods
+name|usb_fifo_check_methods
 parameter_list|(
 name|struct
 name|usb_fifo_methods
@@ -6431,7 +6431,7 @@ operator|->
 name|f_open
 operator|=
 operator|&
-name|usb2_fifo_dummy_open
+name|usb_fifo_dummy_open
 expr_stmt|;
 if|if
 condition|(
@@ -6446,7 +6446,7 @@ operator|->
 name|f_close
 operator|=
 operator|&
-name|usb2_fifo_dummy_close
+name|usb_fifo_dummy_close
 expr_stmt|;
 if|if
 condition|(
@@ -6461,7 +6461,7 @@ operator|->
 name|f_ioctl
 operator|=
 operator|&
-name|usb2_fifo_dummy_ioctl
+name|usb_fifo_dummy_ioctl
 expr_stmt|;
 if|if
 condition|(
@@ -6476,7 +6476,7 @@ operator|->
 name|f_ioctl_post
 operator|=
 operator|&
-name|usb2_fifo_dummy_ioctl
+name|usb_fifo_dummy_ioctl
 expr_stmt|;
 if|if
 condition|(
@@ -6491,7 +6491,7 @@ operator|->
 name|f_start_read
 operator|=
 operator|&
-name|usb2_fifo_dummy_cmd
+name|usb_fifo_dummy_cmd
 expr_stmt|;
 if|if
 condition|(
@@ -6506,7 +6506,7 @@ operator|->
 name|f_stop_read
 operator|=
 operator|&
-name|usb2_fifo_dummy_cmd
+name|usb_fifo_dummy_cmd
 expr_stmt|;
 if|if
 condition|(
@@ -6521,7 +6521,7 @@ operator|->
 name|f_start_write
 operator|=
 operator|&
-name|usb2_fifo_dummy_cmd
+name|usb_fifo_dummy_cmd
 expr_stmt|;
 if|if
 condition|(
@@ -6536,18 +6536,18 @@ operator|->
 name|f_stop_write
 operator|=
 operator|&
-name|usb2_fifo_dummy_cmd
+name|usb_fifo_dummy_cmd
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_fifo_attach  *  * The following function will create a duplex FIFO.  *  * Return values:  * 0: Success.  * Else: Failure.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_fifo_attach  *  * The following function will create a duplex FIFO.  *  * Return values:  * 0: Success.  * Else: Failure.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|int
-name|usb2_fifo_attach
+name|usb_fifo_attach
 parameter_list|(
 name|struct
 name|usb_device
@@ -6646,7 +6646,7 @@ name|EINVAL
 operator|)
 return|;
 comment|/* check the methods */
-name|usb2_fifo_check_methods
+name|usb_fifo_check_methods
 argument_list|(
 name|pm
 argument_list|)
@@ -6727,12 +6727,12 @@ break|break;
 block|}
 name|f_tx
 operator|=
-name|usb2_fifo_alloc
+name|usb_fifo_alloc
 argument_list|()
 expr_stmt|;
 name|f_rx
 operator|=
-name|usb2_fifo_alloc
+name|usb_fifo_alloc
 argument_list|()
 expr_stmt|;
 if|if
@@ -6750,12 +6750,12 @@ name|NULL
 operator|)
 condition|)
 block|{
-name|usb2_fifo_free
+name|usb_fifo_free
 argument_list|(
 name|f_tx
 argument_list|)
 expr_stmt|;
-name|usb2_fifo_free
+name|usb_fifo_free
 argument_list|(
 name|f_rx
 argument_list|)
@@ -6878,7 +6878,7 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 name|udev
@@ -6906,7 +6906,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 for|for
@@ -7051,7 +7051,7 @@ operator|/
 literal|2
 index|]
 operator|=
-name|usb2_alloc_symlink
+name|usb_alloc_symlink
 argument_list|(
 name|devname
 argument_list|)
@@ -7068,7 +7068,7 @@ operator|/
 literal|2
 index|]
 operator|=
-name|usb2_alloc_symlink
+name|usb_alloc_symlink
 argument_list|(
 name|devname
 argument_list|)
@@ -7149,7 +7149,7 @@ operator|=
 name|make_dev
 argument_list|(
 operator|&
-name|usb2_devsw
+name|usb_devsw
 argument_list|,
 literal|0
 argument_list|,
@@ -7192,12 +7192,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_fifo_alloc_buffer  *  * Return values:  * 0: Success  * Else failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_fifo_alloc_buffer  *  * Return values:  * 0: Success  * Else failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|int
-name|usb2_fifo_alloc_buffer
+name|usb_fifo_alloc_buffer
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -7211,7 +7211,7 @@ name|uint16_t
 name|nbuf
 parameter_list|)
 block|{
-name|usb2_fifo_free_buffer
+name|usb_fifo_free_buffer
 argument_list|(
 name|f
 argument_list|)
@@ -7237,7 +7237,7 @@ name|f
 operator|->
 name|queue_data
 operator|=
-name|usb2_alloc_mbufs
+name|usb_alloc_mbufs
 argument_list|(
 name|M_USBDEV
 argument_list|,
@@ -7282,12 +7282,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_fifo_free_buffer  *  * This function will free the buffers associated with a FIFO. This  * function can be called multiple times in a row.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_fifo_free_buffer  *  * This function will free the buffers associated with a FIFO. This  * function can be called multiple times in a row.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_fifo_free_buffer
+name|usb_fifo_free_buffer
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -7356,7 +7356,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_fifo_cleanup
+name|usb_fifo_cleanup
 parameter_list|(
 name|void
 modifier|*
@@ -7375,7 +7375,7 @@ end_function
 
 begin_function
 name|void
-name|usb2_fifo_detach
+name|usb_fifo_detach
 parameter_list|(
 name|struct
 name|usb_fifo_sc
@@ -7392,7 +7392,7 @@ condition|)
 block|{
 return|return;
 block|}
-name|usb2_fifo_free
+name|usb_fifo_free
 argument_list|(
 name|f_sc
 operator|->
@@ -7402,7 +7402,7 @@ name|USB_FIFO_TX
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_fifo_free
+name|usb_fifo_free
 argument_list|(
 name|f_sc
 operator|->
@@ -7445,7 +7445,7 @@ name|f_sc
 operator|->
 name|dev
 argument_list|,
-name|usb2_fifo_cleanup
+name|usb_fifo_cleanup
 argument_list|,
 name|f_sc
 operator|->
@@ -7475,7 +7475,7 @@ end_function
 
 begin_function
 name|usb_size_t
-name|usb2_fifo_put_bytes_max
+name|usb_fifo_put_bytes_max
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -7529,12 +7529,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_fifo_put_data  *  * what:  *  0 - normal operation  *  1 - set last packet flag to enforce framing  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_fifo_put_data  *  * what:  *  0 - normal operation  *  1 - set last packet flag to enforce framing  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_fifo_put_data
+name|usb_fifo_put_data
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -7606,7 +7606,7 @@ operator|->
 name|cur_data_len
 argument_list|)
 expr_stmt|;
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|pc
 argument_list|,
@@ -7665,7 +7665,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|usb2_fifo_wakeup
+name|usb_fifo_wakeup
 argument_list|(
 name|f
 argument_list|)
@@ -7698,7 +7698,7 @@ end_function
 
 begin_function
 name|void
-name|usb2_fifo_put_data_linear
+name|usb_fifo_put_data_linear
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -7828,7 +7828,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|usb2_fifo_wakeup
+name|usb_fifo_wakeup
 argument_list|(
 name|f
 argument_list|)
@@ -7861,7 +7861,7 @@ end_function
 
 begin_function
 name|uint8_t
-name|usb2_fifo_put_data_buffer
+name|usb_fifo_put_data_buffer
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -7918,7 +7918,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|usb2_fifo_wakeup
+name|usb_fifo_wakeup
 argument_list|(
 name|f
 argument_list|)
@@ -7939,7 +7939,7 @@ end_function
 
 begin_function
 name|void
-name|usb2_fifo_put_data_error
+name|usb_fifo_put_data_error
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -7953,7 +7953,7 @@ name|flag_iserror
 operator|=
 literal|1
 expr_stmt|;
-name|usb2_fifo_wakeup
+name|usb_fifo_wakeup
 argument_list|(
 name|f
 argument_list|)
@@ -7962,12 +7962,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_fifo_get_data  *  * what:  *  0 - normal operation  *  1 - only get one "usb_mbuf"  *  * returns:  *  0 - no more data  *  1 - data in buffer  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_fifo_get_data  *  * what:  *  0 - normal operation  *  1 - only get one "usb_mbuf"  *  * returns:  *  0 - no more data  *  1 - data in buffer  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|uint8_t
-name|usb2_fifo_get_data
+name|usb_fifo_get_data
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -8048,7 +8048,7 @@ operator|->
 name|cur_data_len
 argument_list|)
 expr_stmt|;
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|pc
 argument_list|,
@@ -8115,7 +8115,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|usb2_fifo_wakeup
+name|usb_fifo_wakeup
 argument_list|(
 name|f
 argument_list|)
@@ -8190,7 +8190,7 @@ name|flag_flushing
 operator|=
 literal|0
 expr_stmt|;
-name|usb2_fifo_wakeup
+name|usb_fifo_wakeup
 argument_list|(
 name|f
 argument_list|)
@@ -8218,7 +8218,7 @@ end_function
 
 begin_function
 name|uint8_t
-name|usb2_fifo_get_data_linear
+name|usb_fifo_get_data_linear
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -8365,7 +8365,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|usb2_fifo_wakeup
+name|usb_fifo_wakeup
 argument_list|(
 name|f
 argument_list|)
@@ -8440,7 +8440,7 @@ name|flag_flushing
 operator|=
 literal|0
 expr_stmt|;
-name|usb2_fifo_wakeup
+name|usb_fifo_wakeup
 argument_list|(
 name|f
 argument_list|)
@@ -8468,7 +8468,7 @@ end_function
 
 begin_function
 name|uint8_t
-name|usb2_fifo_get_data_buffer
+name|usb_fifo_get_data_buffer
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -8535,7 +8535,7 @@ end_function
 
 begin_function
 name|void
-name|usb2_fifo_get_data_error
+name|usb_fifo_get_data_error
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -8549,7 +8549,7 @@ name|flag_iserror
 operator|=
 literal|1
 expr_stmt|;
-name|usb2_fifo_wakeup
+name|usb_fifo_wakeup
 argument_list|(
 name|f
 argument_list|)
@@ -8558,14 +8558,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_alloc_symlink  *  * Return values:  * NULL: Failure  * Else: Pointer to symlink entry  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_alloc_symlink  *  * Return values:  * NULL: Failure  * Else: Pointer to symlink entry  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|struct
 name|usb_symlink
 modifier|*
-name|usb2_alloc_symlink
+name|usb_alloc_symlink
 parameter_list|(
 specifier|const
 name|char
@@ -8664,13 +8664,13 @@ expr_stmt|;
 name|sx_xlock
 argument_list|(
 operator|&
-name|usb2_sym_lock
+name|usb_sym_lock
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
-name|usb2_sym_head
+name|usb_sym_head
 argument_list|,
 name|ps
 argument_list|,
@@ -8680,7 +8680,7 @@ expr_stmt|;
 name|sx_unlock
 argument_list|(
 operator|&
-name|usb2_sym_lock
+name|usb_sym_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -8692,12 +8692,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_free_symlink  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_free_symlink  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_free_symlink
+name|usb_free_symlink
 parameter_list|(
 name|struct
 name|usb_symlink
@@ -8717,13 +8717,13 @@ block|}
 name|sx_xlock
 argument_list|(
 operator|&
-name|usb2_sym_lock
+name|usb_sym_lock
 argument_list|)
 expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
-name|usb2_sym_head
+name|usb_sym_head
 argument_list|,
 name|ps
 argument_list|,
@@ -8733,7 +8733,7 @@ expr_stmt|;
 name|sx_unlock
 argument_list|(
 operator|&
-name|usb2_sym_lock
+name|usb_sym_lock
 argument_list|)
 expr_stmt|;
 name|free
@@ -8747,12 +8747,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_read_symlink  *  * Return value:  * 0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_read_symlink  *  * Return value:  * 0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|int
-name|usb2_read_symlink
+name|usb_read_symlink
 parameter_list|(
 name|uint8_t
 modifier|*
@@ -8789,14 +8789,14 @@ decl_stmt|;
 name|sx_xlock
 argument_list|(
 operator|&
-name|usb2_sym_lock
+name|usb_sym_lock
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ps
 argument_list|,
-argument|&usb2_sym_head
+argument|&usb_sym_head
 argument_list|,
 argument|sym_entry
 argument_list|)
@@ -9058,7 +9058,7 @@ block|}
 name|sx_unlock
 argument_list|(
 operator|&
-name|usb2_sym_lock
+name|usb_sym_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -9071,7 +9071,7 @@ end_function
 
 begin_function
 name|void
-name|usb2_fifo_set_close_zlp
+name|usb_fifo_set_close_zlp
 parameter_list|(
 name|struct
 name|usb_fifo

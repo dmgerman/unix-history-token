@@ -39,7 +39,7 @@ begin_define
 define|#
 directive|define
 name|USB_DEBUG_VAR
-value|usb2_debug
+value|usb_debug
 end_define
 
 begin_include
@@ -208,7 +208,7 @@ name|sc
 parameter_list|,
 name|i
 parameter_list|)
-value|usb2_transfer_start((sc)->sc_xfer[(i)])
+value|usbd_transfer_start((sc)->sc_xfer[(i)])
 end_define
 
 begin_comment
@@ -1216,7 +1216,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|usb2_lookup_id_by_uaa
+name|usbd_lookup_id_by_uaa
 argument_list|(
 name|ubt_ignore_devs
 argument_list|,
@@ -1237,7 +1237,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|usb2_lookup_id_by_uaa
+name|usbd_lookup_id_by_uaa
 argument_list|(
 name|ubt_devs
 argument_list|,
@@ -1322,7 +1322,7 @@ block|,
 literal|1
 block|}
 decl_stmt|;
-name|device_set_usb2_desc
+name|device_set_usb_desc
 argument_list|(
 name|dev
 argument_list|)
@@ -1534,9 +1534,9 @@ expr|struct
 name|usb_endpoint_descriptor
 operator|*
 operator|)
-name|usb2_desc_foreach
+name|usb_desc_foreach
 argument_list|(
-name|usb2_get_config_descriptor
+name|usbd_get_config_descriptor
 argument_list|(
 name|uaa
 operator|->
@@ -1664,7 +1664,7 @@ name|wMaxPacketSize
 operator|>
 literal|0
 operator|&&
-name|usb2_set_alt_interface_index
+name|usbd_set_alt_interface_index
 argument_list|(
 name|uaa
 operator|->
@@ -1694,7 +1694,7 @@ block|}
 comment|/* Setup transfers for both interfaces */
 if|if
 condition|(
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|uaa
 operator|->
@@ -1737,7 +1737,7 @@ name|i
 operator|=
 literal|1
 init|;
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|uaa
 operator|->
@@ -1751,7 +1751,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|usb2_set_parent_iface
+name|usbd_set_parent_iface
 argument_list|(
 name|uaa
 operator|->
@@ -1857,7 +1857,7 @@ name|sc_task
 argument_list|)
 expr_stmt|;
 comment|/* Free USB transfers, if any */
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
@@ -2093,7 +2093,7 @@ name|wLength
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -2110,7 +2110,7 @@ name|req
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|usb2_m_copy_in
+name|usbd_m_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -2167,7 +2167,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -2190,7 +2190,7 @@ name|sc
 argument_list|,
 literal|"control transfer failed: %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|xfer
 operator|->
@@ -2361,7 +2361,7 @@ name|MCLBYTES
 operator|-
 literal|1
 expr_stmt|;
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -2571,7 +2571,7 @@ name|xfer
 operator|->
 name|max_data_length
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -2594,7 +2594,7 @@ name|sc
 argument_list|,
 literal|"interrupt transfer failed: %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|xfer
 operator|->
@@ -2772,7 +2772,7 @@ name|MCLBYTES
 operator|-
 literal|1
 expr_stmt|;
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -2985,7 +2985,7 @@ name|xfer
 operator|->
 name|max_data_length
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -3008,7 +3008,7 @@ name|sc
 argument_list|,
 literal|"bulk-in transfer failed: %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|xfer
 operator|->
@@ -3149,7 +3149,7 @@ break|break;
 comment|/* transfer completed */
 block|}
 comment|/* 		 * Copy ACL data frame back to a linear USB transfer buffer 		 * and schedule transfer 		 */
-name|usb2_m_copy_in
+name|usbd_m_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -3199,7 +3199,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -3222,7 +3222,7 @@ name|sc
 argument_list|,
 literal|"bulk-out transfer failed: %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|xfer
 operator|->
@@ -3355,7 +3355,7 @@ name|xfer
 operator|->
 name|max_frame_size
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -3620,7 +3620,7 @@ name|want
 operator|-
 name|got
 expr_stmt|;
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -3909,7 +3909,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|usb2_m_copy_in
+name|usbd_m_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -4029,7 +4029,7 @@ name|n
 index|]
 expr_stmt|;
 block|}
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -4322,7 +4322,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Stop all USB transfers synchronously. 	 * Stop interface #0 and #1 transfers at the same time and in the 	 * same loop. usb2_transfer_drain() will do appropriate locking. 	 */
+comment|/* 	 * Stop all USB transfers synchronously. 	 * Stop interface #0 and #1 transfers at the same time and in the 	 * same loop. usbd_transfer_drain() will do appropriate locking. 	 */
 if|if
 condition|(
 name|task_flags
@@ -4342,7 +4342,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|usb2_transfer_drain
+name|usbd_transfer_drain
 argument_list|(
 name|sc
 operator|->

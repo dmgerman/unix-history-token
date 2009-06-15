@@ -55,7 +55,7 @@ begin_function_decl
 name|struct
 name|usb_descriptor
 modifier|*
-name|usb2_desc_foreach
+name|usb_desc_foreach
 parameter_list|(
 name|struct
 name|usb_config_descriptor
@@ -74,7 +74,7 @@ begin_function_decl
 name|struct
 name|usb_interface_descriptor
 modifier|*
-name|usb2_idesc_foreach
+name|usb_idesc_foreach
 parameter_list|(
 name|struct
 name|usb_config_descriptor
@@ -93,7 +93,7 @@ begin_function_decl
 name|struct
 name|usb_endpoint_descriptor
 modifier|*
-name|usb2_edesc_foreach
+name|usb_edesc_foreach
 parameter_list|(
 name|struct
 name|usb_config_descriptor
@@ -110,7 +110,7 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
-name|usb2_get_no_descriptors
+name|usbd_get_no_descriptors
 parameter_list|(
 name|struct
 name|usb_config_descriptor
@@ -125,7 +125,7 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
-name|usb2_get_no_alts
+name|usbd_get_no_alts
 parameter_list|(
 name|struct
 name|usb_config_descriptor

@@ -20,13 +20,13 @@ file|<dev/usb/usb_mbuf.h>
 end_include
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *      usb2_alloc_mbufs - allocate mbufs to an usbd interface queue  *  * Returns:  *   A pointer that should be passed to "free()" when the buffer(s)  *   should be released.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *      usb_alloc_mbufs - allocate mbufs to an usbd interface queue  *  * Returns:  *   A pointer that should be passed to "free()" when the buffer(s)  *   should be released.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
 modifier|*
-name|usb2_alloc_mbufs
+name|usb_alloc_mbufs
 parameter_list|(
 name|struct
 name|malloc_type

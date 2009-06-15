@@ -40,7 +40,7 @@ value|0
 end_define
 
 begin_comment
-comment|/*  * Note that while the ADMtek technically has four endpoints, the control  * endpoint (endpoint 0) is regarded as special by the USB code and drivers  * don't have direct access to it (we access it using usb2_do_request()  * when reading/writing registers.  Consequently, our endpoint indexes  * don't match those in the ADMtek Pegasus manual: we consider the RX data  * endpoint to be index 0 and work up from there.  */
+comment|/*  * Note that while the ADMtek technically has four endpoints, the control  * endpoint (endpoint 0) is regarded as special by the USB code and drivers  * don't have direct access to it (we access it using usbd_do_request()  * when reading/writing registers.  Consequently, our endpoint indexes  * don't match those in the ADMtek Pegasus manual: we consider the RX data  * endpoint to be index 0 and work up from there.  */
 end_comment
 
 begin_enum
@@ -787,7 +787,7 @@ name|GET_MII
 parameter_list|(
 name|sc
 parameter_list|)
-value|usb2_ether_getmii(&(sc)->sc_ue)
+value|uether_getmii(&(sc)->sc_ue)
 end_define
 
 begin_struct

@@ -49,7 +49,7 @@ begin_define
 define|#
 directive|define
 name|USB_DEBUG_VAR
-value|usb2_debug
+value|usb_debug
 end_define
 
 begin_include
@@ -2790,7 +2790,7 @@ condition|(
 operator|(
 name|desc
 operator|=
-name|usb2_desc_foreach
+name|usb_desc_foreach
 argument_list|(
 name|cd
 argument_list|,
@@ -2850,12 +2850,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_get_hid_desc  *  * This function will read out an USB report descriptor from the USB  * device.  *  * Return values:  * NULL: Failure.  * Else: Success. The pointer should eventually be passed to free().  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_get_hid_desc  *  * This function will read out an USB report descriptor from the USB  * device.  *  * Return values:  * NULL: Failure.  * Else: Success. The pointer should eventually be passed to free().  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_get_hid_desc
+name|usbd_req_get_hid_desc
 parameter_list|(
 name|struct
 name|usb_device
@@ -2890,7 +2890,7 @@ name|usb_interface
 modifier|*
 name|iface
 init|=
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|udev
 argument_list|,
@@ -2932,7 +2932,7 @@ name|hid
 operator|=
 name|hid_get_descriptor_from_usb
 argument_list|(
-name|usb2_get_config_descriptor
+name|usbd_get_config_descriptor
 argument_list|(
 name|udev
 argument_list|)
@@ -3033,7 +3033,7 @@ return|;
 block|}
 name|err
 operator|=
-name|usb2_req_get_report_descriptor
+name|usbd_req_get_report_descriptor
 argument_list|(
 name|udev
 argument_list|,

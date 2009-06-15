@@ -2854,7 +2854,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|usb2_lookup_id_by_uaa
+name|usbd_lookup_id_by_uaa
 argument_list|(
 name|ural_devs
 argument_list|,
@@ -2917,7 +2917,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|device_set_usb2_desc
+name|device_set_usb_desc
 argument_list|(
 name|self
 argument_list|)
@@ -2959,7 +2959,7 @@ name|RAL_IFACE_INDEX
 expr_stmt|;
 name|error
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|uaa
 operator|->
@@ -2996,7 +2996,7 @@ argument_list|,
 literal|"could not allocate USB transfers, "
 literal|"err=%s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
@@ -3418,7 +3418,7 @@ modifier|*
 name|ic
 decl_stmt|;
 comment|/* stop all USB transfers */
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
@@ -3517,7 +3517,7 @@ condition|)
 block|{
 name|err
 operator|=
-name|usb2_do_request_flags
+name|usbd_do_request_flags
 argument_list|(
 name|sc
 operator|->
@@ -3553,7 +3553,7 @@ literal|1
 argument_list|,
 literal|"Control request failed, %s (retrying)\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -3734,7 +3734,7 @@ name|iv_newstate
 operator|=
 name|ural_newstate
 expr_stmt|;
-name|usb2_callout_init_mtx
+name|usb_callout_init_mtx
 argument_list|(
 operator|&
 name|uvp
@@ -3832,7 +3832,7 @@ name|vap
 operator|->
 name|iv_ic
 decl_stmt|;
-name|usb2_callout_drain
+name|usb_callout_drain
 argument_list|(
 operator|&
 name|uvp
@@ -4279,7 +4279,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|usb2_callout_stop
+name|usb_callout_stop
 argument_list|(
 operator|&
 name|uvp
@@ -4764,7 +4764,7 @@ name|RAL_TX_DESC_SIZE
 operator|)
 expr_stmt|;
 block|}
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -4780,7 +4780,7 @@ argument_list|,
 name|RAL_TX_DESC_SIZE
 argument_list|)
 expr_stmt|;
-name|usb2_m_copy_in
+name|usbd_m_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -4917,7 +4917,7 @@ name|priv_fifo
 operator|=
 name|data
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -4932,7 +4932,7 @@ literal|11
 argument_list|,
 literal|"transfer error, %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|xfer
 operator|->
@@ -5149,7 +5149,7 @@ operator|-=
 name|RAL_RX_DESC_SIZE
 expr_stmt|;
 comment|/* rx descriptor is located at the end */
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -5251,7 +5251,7 @@ goto|goto
 name|tr_setup
 goto|;
 block|}
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -5394,7 +5394,7 @@ name|xfer
 operator|->
 name|max_data_length
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -6092,7 +6092,7 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -6440,7 +6440,7 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -6781,7 +6781,7 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -7065,7 +7065,7 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -7528,7 +7528,7 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -7963,7 +7963,7 @@ name|sc_dev
 argument_list|,
 literal|"could not set test mode: %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
@@ -8067,7 +8067,7 @@ name|sc_dev
 argument_list|,
 literal|"could not read EEPROM: %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
@@ -8171,7 +8171,7 @@ name|sc_dev
 argument_list|,
 literal|"could not read MAC register: %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
@@ -8284,7 +8284,7 @@ name|sc_dev
 argument_list|,
 literal|"could not read MAC register: %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
@@ -8384,7 +8384,7 @@ name|sc_dev
 argument_list|,
 literal|"could not write MAC register: %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
@@ -8488,7 +8488,7 @@ name|sc_dev
 argument_list|,
 literal|"could not write MAC register: %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
@@ -11670,7 +11670,7 @@ name|if_drv_flags
 operator||=
 name|IFF_DRV_RUNNING
 expr_stmt|;
-name|usb2_transfer_set_stall
+name|usbd_transfer_set_stall
 argument_list|(
 name|sc
 operator|->
@@ -11680,7 +11680,7 @@ name|URAL_BULK_WR
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -11815,7 +11815,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_drain
+name|usbd_transfer_drain
 argument_list|(
 name|sc
 operator|->
@@ -11825,7 +11825,7 @@ name|URAL_BULK_WR
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_drain
+name|usbd_transfer_drain
 argument_list|(
 name|sc
 operator|->
@@ -12173,7 +12173,7 @@ argument_list|,
 name|ni
 argument_list|)
 expr_stmt|;
-name|usb2_callout_reset
+name|usb_callout_reset
 argument_list|(
 operator|&
 name|uvp
@@ -12411,7 +12411,7 @@ operator|+=
 name|fail
 expr_stmt|;
 comment|/* count TX retry-fail as Tx errors */
-name|usb2_callout_reset
+name|usb_callout_reset
 argument_list|(
 operator|&
 name|uvp
@@ -12447,7 +12447,7 @@ name|int
 name|timeout
 parameter_list|)
 block|{
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc

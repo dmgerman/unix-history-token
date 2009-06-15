@@ -184,7 +184,7 @@ end_comment
 
 begin_function_decl
 name|uint8_t
-name|usb2_proc_is_gone
+name|usb_proc_is_gone
 parameter_list|(
 name|struct
 name|usb_process
@@ -196,7 +196,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|usb2_proc_create
+name|usb_proc_create
 parameter_list|(
 name|struct
 name|usb_process
@@ -221,7 +221,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_proc_drain
+name|usb_proc_drain
 parameter_list|(
 name|struct
 name|usb_process
@@ -233,7 +233,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_proc_mwait
+name|usb_proc_mwait
 parameter_list|(
 name|struct
 name|usb_process
@@ -253,7 +253,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_proc_free
+name|usb_proc_free
 parameter_list|(
 name|struct
 name|usb_process
@@ -266,7 +266,7 @@ end_function_decl
 begin_function_decl
 name|void
 modifier|*
-name|usb2_proc_msignal
+name|usb_proc_msignal
 parameter_list|(
 name|struct
 name|usb_process

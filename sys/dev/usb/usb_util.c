@@ -171,12 +171,12 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	device_set_usb2_desc  *  * This function can be called at probe or attach to set the USB  * device supplied textual description for the given device.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	device_set_usb_desc  *  * This function can be called at probe or attach to set the USB  * device supplied textual description for the given device.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|device_set_usb2_desc
+name|device_set_usb_desc
 parameter_list|(
 name|device_t
 name|dev
@@ -308,7 +308,7 @@ block|{
 comment|/* try to get the interface string ! */
 name|err
 operator|=
-name|usb2_req_get_string_any
+name|usbd_req_get_string_any
 argument_list|(
 name|udev
 argument_list|,
@@ -339,7 +339,7 @@ name|err
 condition|)
 block|{
 comment|/* use default description */
-name|usb2_devinfo
+name|usb_devinfo
 argument_list|(
 name|udev
 argument_list|,
@@ -385,12 +385,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	 usb2_pause_mtx - factored out code  *  * This function will delay the code by the passed number of system  * ticks. The passed mutex "mtx" will be dropped while waiting, if  * "mtx" is not NULL.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	 usb_pause_mtx - factored out code  *  * This function will delay the code by the passed number of system  * ticks. The passed mutex "mtx" will be dropped while waiting, if  * "mtx" is not NULL.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_pause_mtx
+name|usb_pause_mtx
 parameter_list|(
 name|struct
 name|mtx
@@ -479,12 +479,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_printBCD  *  * This function will print the version number "bcd" to the string  * pointed to by "p" having a maximum length of "p_len" bytes  * including the terminating zero.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_printbcd  *  * This function will print the version number "bcd" to the string  * pointed to by "p" having a maximum length of "p_len" bytes  * including the terminating zero.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_printBCD
+name|usb_printbcd
 parameter_list|(
 name|char
 modifier|*
@@ -523,12 +523,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_trim_spaces  *  * This function removes spaces at the beginning and the end of the string  * pointed to by the "p" argument.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_trim_spaces  *  * This function removes spaces at the beginning and the end of the string  * pointed to by the "p" argument.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_trim_spaces
+name|usb_trim_spaces
 parameter_list|(
 name|char
 modifier|*
@@ -602,12 +602,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_make_str_desc - convert an ASCII string into a UNICODE string  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_make_str_desc - convert an ASCII string into a UNICODE string  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|uint8_t
-name|usb2_make_str_desc
+name|usb_make_str_desc
 parameter_list|(
 name|void
 modifier|*

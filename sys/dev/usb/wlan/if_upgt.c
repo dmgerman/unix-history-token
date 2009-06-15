@@ -1511,7 +1511,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|usb2_lookup_id_by_uaa
+name|usbd_lookup_id_by_uaa
 argument_list|(
 name|upgt_devs_2
 argument_list|,
@@ -1601,7 +1601,7 @@ name|upgt_debug
 expr_stmt|;
 endif|#
 directive|endif
-name|device_set_usb2_desc
+name|device_set_usb_desc
 argument_list|(
 name|dev
 argument_list|)
@@ -1676,7 +1676,7 @@ name|fail2
 goto|;
 name|error
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|uaa
 operator|->
@@ -1713,7 +1713,7 @@ argument_list|,
 literal|"could not allocate USB transfers, "
 literal|"err=%s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
@@ -2186,7 +2186,7 @@ argument_list|)
 expr_stmt|;
 name|fail4
 label|:
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
@@ -3437,7 +3437,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -6894,7 +6894,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -8875,7 +8875,7 @@ name|data_cmd
 argument_list|)
 expr_stmt|;
 comment|/* waiting 'OK' response.  */
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -9930,7 +9930,7 @@ argument_list|,
 name|st_tx_pending
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -10033,7 +10033,7 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -10385,7 +10385,7 @@ operator|->
 name|sc_watchdog_ch
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
@@ -10583,7 +10583,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -11804,7 +11804,7 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-name|usb2_set_frame_data
+name|usbd_set_frame_data
 argument_list|(
 name|xfer
 argument_list|,
@@ -11826,7 +11826,7 @@ name|xfer
 operator|->
 name|max_data_length
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -12186,7 +12186,7 @@ argument_list|,
 name|st_tx_active
 argument_list|)
 expr_stmt|;
-name|usb2_set_frame_data
+name|usbd_set_frame_data
 argument_list|(
 name|xfer
 argument_list|,
@@ -12208,7 +12208,7 @@ name|data
 operator|->
 name|buflen
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)

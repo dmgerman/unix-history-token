@@ -528,43 +528,43 @@ name|ubser_callback
 init|=
 block|{
 operator|.
-name|usb2_com_cfg_set_break
+name|ucom_cfg_set_break
 operator|=
 operator|&
 name|ubser_cfg_set_break
 block|,
 operator|.
-name|usb2_com_cfg_get_status
+name|ucom_cfg_get_status
 operator|=
 operator|&
 name|ubser_cfg_get_status
 block|,
 operator|.
-name|usb2_com_pre_param
+name|ucom_pre_param
 operator|=
 operator|&
 name|ubser_pre_param
 block|,
 operator|.
-name|usb2_com_start_read
+name|ucom_start_read
 operator|=
 operator|&
 name|ubser_start_read
 block|,
 operator|.
-name|usb2_com_stop_read
+name|ucom_stop_read
 operator|=
 operator|&
 name|ubser_stop_read
 block|,
 operator|.
-name|usb2_com_start_write
+name|ucom_start_write
 operator|=
 operator|&
 name|ubser_start_write
 block|,
 operator|.
-name|usb2_com_stop_write
+name|ucom_stop_write
 operator|=
 operator|&
 name|ubser_stop_write
@@ -818,7 +818,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|device_set_usb2_desc
+name|device_set_usb_desc
 argument_list|(
 name|dev
 argument_list|)
@@ -939,7 +939,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|usb2_do_request_flags
+name|usbd_do_request_flags
 argument_list|(
 name|uaa
 operator|->
@@ -982,7 +982,7 @@ argument_list|,
 literal|"failed to get number "
 literal|"of serial ports: %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
@@ -1019,7 +1019,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|uaa
 operator|->
@@ -1119,7 +1119,7 @@ expr_stmt|;
 block|}
 name|error
 operator|=
-name|usb2_com_attach
+name|ucom_attach
 argument_list|(
 operator|&
 name|sc
@@ -1162,7 +1162,7 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_set_stall
+name|usbd_transfer_set_stall
 argument_list|(
 name|sc
 operator|->
@@ -1172,7 +1172,7 @@ name|UBSER_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_set_stall
+name|usbd_transfer_set_stall
 argument_list|(
 name|sc
 operator|->
@@ -1182,7 +1182,7 @@ name|UBSER_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -1246,7 +1246,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|usb2_com_detach
+name|ucom_detach
 argument_list|(
 operator|&
 name|sc
@@ -1262,7 +1262,7 @@ operator|->
 name|sc_numser
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
@@ -1506,7 +1506,7 @@ do|do
 block|{
 if|if
 condition|(
-name|usb2_com_get_data
+name|ucom_get_data
 argument_list|(
 name|sc
 operator|->
@@ -1542,7 +1542,7 @@ name|sc
 operator|->
 name|sc_curr_tx_unit
 expr_stmt|;
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -1566,7 +1566,7 @@ name|actlen
 operator|+
 literal|1
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -1679,7 +1679,7 @@ goto|goto
 name|tr_setup
 goto|;
 block|}
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -1713,7 +1713,7 @@ goto|goto
 name|tr_setup
 goto|;
 block|}
-name|usb2_com_put_data
+name|ucom_put_data
 argument_list|(
 name|sc
 operator|->
@@ -1753,7 +1753,7 @@ name|xfer
 operator|->
 name|max_data_length
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -1891,7 +1891,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_com_cfg_do_request
+name|ucom_cfg_do_request
 argument_list|(
 name|sc
 operator|->
@@ -1920,7 +1920,7 @@ literal|0
 argument_list|,
 literal|"send break failed, error=%s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -1984,7 +1984,7 @@ name|ucom
 operator|->
 name|sc_parent
 decl_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -2017,7 +2017,7 @@ name|ucom
 operator|->
 name|sc_parent
 decl_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -2050,7 +2050,7 @@ name|ucom
 operator|->
 name|sc_parent
 decl_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -2083,7 +2083,7 @@ name|ucom
 operator|->
 name|sc_parent
 decl_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->

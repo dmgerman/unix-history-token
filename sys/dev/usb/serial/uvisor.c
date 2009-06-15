@@ -710,37 +710,37 @@ name|uvisor_callback
 init|=
 block|{
 operator|.
-name|usb2_com_cfg_open
+name|ucom_cfg_open
 operator|=
 operator|&
 name|uvisor_cfg_open
 block|,
 operator|.
-name|usb2_com_cfg_close
+name|ucom_cfg_close
 operator|=
 operator|&
 name|uvisor_cfg_close
 block|,
 operator|.
-name|usb2_com_start_read
+name|ucom_start_read
 operator|=
 operator|&
 name|uvisor_start_read
 block|,
 operator|.
-name|usb2_com_stop_read
+name|ucom_stop_read
 operator|=
 operator|&
 name|uvisor_stop_read
 block|,
 operator|.
-name|usb2_com_start_write
+name|ucom_start_write
 operator|=
 operator|&
 name|uvisor_start_write
 block|,
 operator|.
-name|usb2_com_stop_write
+name|ucom_stop_write
 operator|=
 operator|&
 name|uvisor_stop_write
@@ -1218,7 +1218,7 @@ return|;
 block|}
 return|return
 operator|(
-name|usb2_lookup_id_by_uaa
+name|usbd_lookup_id_by_uaa
 argument_list|(
 name|uvisor_devs
 argument_list|,
@@ -1292,7 +1292,7 @@ name|uvisor_config_copy
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|device_set_usb2_desc
+name|device_set_usb_desc
 argument_list|(
 name|dev
 argument_list|)
@@ -1367,7 +1367,7 @@ name|DPRINTF
 argument_list|(
 literal|"init failed, error=%s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
@@ -1379,7 +1379,7 @@ goto|;
 block|}
 name|error
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|uaa
 operator|->
@@ -1429,7 +1429,7 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_set_stall
+name|usbd_transfer_set_stall
 argument_list|(
 name|sc
 operator|->
@@ -1439,7 +1439,7 @@ name|UVISOR_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_set_stall
+name|usbd_transfer_set_stall
 argument_list|(
 name|sc
 operator|->
@@ -1459,7 +1459,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|usb2_com_attach
+name|ucom_attach
 argument_list|(
 operator|&
 name|sc
@@ -1491,7 +1491,7 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
-literal|"usb2_com_attach failed\n"
+literal|"ucom_attach failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1544,7 +1544,7 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|usb2_com_detach
+name|ucom_detach
 argument_list|(
 operator|&
 name|sc
@@ -1559,7 +1559,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
@@ -1689,7 +1689,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_do_request_flags
+name|usbd_do_request_flags
 argument_list|(
 name|udev
 argument_list|,
@@ -1908,7 +1908,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_do_request_flags
+name|usbd_do_request_flags
 argument_list|(
 name|udev
 argument_list|,
@@ -2049,7 +2049,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|req.bmRequestType = UT_READ_VENDOR_ENDPOINT; 		req.bRequest = UVISOR_GET_PALM_INFORMATION; 		USETW(req.wValue, 0); 		USETW(req.wIndex, 0); 		USETW(req.wLength, UVISOR_GET_PALM_INFORMATION_LEN); 		err = usb2_do_request(udev,&req, buffer); 		if (err) { 			goto done; 		}
+block|req.bmRequestType = UT_READ_VENDOR_ENDPOINT; 		req.bRequest = UVISOR_GET_PALM_INFORMATION; 		USETW(req.wValue, 0); 		USETW(req.wIndex, 0); 		USETW(req.wLength, UVISOR_GET_PALM_INFORMATION_LEN); 		err = usbd_do_request(udev,&req, buffer); 		if (err) { 			goto done; 		}
 endif|#
 directive|endif
 block|}
@@ -2109,7 +2109,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|udev
 argument_list|,
@@ -2177,7 +2177,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|udev
 argument_list|,
@@ -2248,7 +2248,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|udev
 argument_list|,
@@ -2385,7 +2385,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_com_cfg_do_request
+name|ucom_cfg_do_request
 argument_list|(
 name|sc
 operator|->
@@ -2417,7 +2417,7 @@ literal|0
 argument_list|,
 literal|"close notification failed, error=%s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -2447,7 +2447,7 @@ name|ucom
 operator|->
 name|sc_parent
 decl_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -2480,7 +2480,7 @@ name|ucom
 operator|->
 name|sc_parent
 decl_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -2513,7 +2513,7 @@ name|ucom
 operator|->
 name|sc_parent
 decl_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -2546,7 +2546,7 @@ name|ucom
 operator|->
 name|sc_parent
 decl_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -2600,7 +2600,7 @@ name|tr_setup
 label|:
 if|if
 condition|(
-name|usb2_com_get_data
+name|ucom_get_data
 argument_list|(
 operator|&
 name|sc
@@ -2629,7 +2629,7 @@ index|]
 operator|=
 name|actlen
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -2696,7 +2696,7 @@ block|{
 case|case
 name|USB_ST_TRANSFERRED
 case|:
-name|usb2_com_put_data
+name|ucom_put_data
 argument_list|(
 operator|&
 name|sc
@@ -2730,7 +2730,7 @@ name|xfer
 operator|->
 name|max_data_length
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)

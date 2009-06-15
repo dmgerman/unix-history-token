@@ -21,7 +21,7 @@ end_define
 
 begin_function_decl
 name|usb_error_t
-name|usb2_test_autoinstall
+name|usb_test_autoinstall
 parameter_list|(
 name|struct
 name|usb_device

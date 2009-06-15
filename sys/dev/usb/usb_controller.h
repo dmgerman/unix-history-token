@@ -580,7 +580,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|usb2_bus_mem_flush_all
+name|usb_bus_mem_flush_all
 parameter_list|(
 name|struct
 name|usb_bus
@@ -596,7 +596,7 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
-name|usb2_bus_mem_alloc_all
+name|usb_bus_mem_alloc_all
 parameter_list|(
 name|struct
 name|usb_bus
@@ -615,7 +615,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_bus_mem_free_all
+name|usb_bus_mem_free_all
 parameter_list|(
 name|struct
 name|usb_bus
@@ -631,7 +631,7 @@ end_function_decl
 
 begin_function_decl
 name|uint16_t
-name|usb2_isoc_time_expand
+name|usb_isoc_time_expand
 parameter_list|(
 name|struct
 name|usb_bus
@@ -646,7 +646,7 @@ end_function_decl
 
 begin_function_decl
 name|uint16_t
-name|usb2_fs_isoc_schedule_isoc_time_expand
+name|usbd_fs_isoc_schedule_isoc_time_expand
 parameter_list|(
 name|struct
 name|usb_device
@@ -673,7 +673,7 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
-name|usb2_fs_isoc_schedule_alloc
+name|usbd_fs_isoc_schedule_alloc
 parameter_list|(
 name|struct
 name|usb_fs_isoc_schedule

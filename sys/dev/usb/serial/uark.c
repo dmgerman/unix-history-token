@@ -45,7 +45,7 @@ begin_define
 define|#
 directive|define
 name|USB_DEBUG_VAR
-value|usb2_debug
+value|usb_debug
 end_define
 
 begin_include
@@ -523,49 +523,49 @@ name|uark_callback
 init|=
 block|{
 operator|.
-name|usb2_com_cfg_get_status
+name|ucom_cfg_get_status
 operator|=
 operator|&
 name|uark_cfg_get_status
 block|,
 operator|.
-name|usb2_com_cfg_set_break
+name|ucom_cfg_set_break
 operator|=
 operator|&
 name|uark_cfg_set_break
 block|,
 operator|.
-name|usb2_com_cfg_param
+name|ucom_cfg_param
 operator|=
 operator|&
 name|uark_cfg_param
 block|,
 operator|.
-name|usb2_com_pre_param
+name|ucom_pre_param
 operator|=
 operator|&
 name|uark_pre_param
 block|,
 operator|.
-name|usb2_com_start_read
+name|ucom_start_read
 operator|=
 operator|&
 name|uark_start_read
 block|,
 operator|.
-name|usb2_com_stop_read
+name|ucom_stop_read
 operator|=
 operator|&
 name|uark_stop_read
 block|,
 operator|.
-name|usb2_com_start_write
+name|ucom_start_write
 operator|=
 operator|&
 name|uark_start_write
 block|,
 operator|.
-name|usb2_com_stop_write
+name|ucom_stop_write
 operator|=
 operator|&
 name|uark_stop_write
@@ -789,7 +789,7 @@ return|;
 block|}
 return|return
 operator|(
-name|usb2_lookup_id_by_uaa
+name|usbd_lookup_id_by_uaa
 argument_list|(
 name|uark_devs
 argument_list|,
@@ -840,7 +840,7 @@ decl_stmt|;
 name|uint8_t
 name|iface_index
 decl_stmt|;
-name|device_set_usb2_desc
+name|device_set_usb_desc
 argument_list|(
 name|dev
 argument_list|)
@@ -873,7 +873,7 @@ name|UARK_IFACE_INDEX
 expr_stmt|;
 name|error
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|uaa
 operator|->
@@ -924,7 +924,7 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_set_stall
+name|usbd_transfer_set_stall
 argument_list|(
 name|sc
 operator|->
@@ -934,7 +934,7 @@ name|UARK_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_set_stall
+name|usbd_transfer_set_stall
 argument_list|(
 name|sc
 operator|->
@@ -954,7 +954,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|usb2_com_attach
+name|ucom_attach
 argument_list|(
 operator|&
 name|sc
@@ -986,7 +986,7 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
-literal|"usb2_com_attach failed\n"
+literal|"ucom_attach failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1034,7 +1034,7 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|usb2_com_detach
+name|ucom_detach
 argument_list|(
 operator|&
 name|sc
@@ -1049,7 +1049,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
@@ -1115,7 +1115,7 @@ name|tr_setup
 label|:
 if|if
 condition|(
-name|usb2_com_get_data
+name|ucom_get_data
 argument_list|(
 operator|&
 name|sc
@@ -1144,7 +1144,7 @@ index|]
 operator|=
 name|actlen
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -1211,7 +1211,7 @@ block|{
 case|case
 name|USB_ST_TRANSFERRED
 case|:
-name|usb2_com_put_data
+name|ucom_put_data
 argument_list|(
 operator|&
 name|sc
@@ -1245,7 +1245,7 @@ name|xfer
 operator|->
 name|max_data_length
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -1300,7 +1300,7 @@ name|ucom
 operator|->
 name|sc_parent
 decl_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -1333,7 +1333,7 @@ name|ucom
 operator|->
 name|sc_parent
 decl_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -1366,7 +1366,7 @@ name|ucom
 operator|->
 name|sc_parent
 decl_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -1399,7 +1399,7 @@ name|ucom
 operator|->
 name|sc_parent
 decl_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -1830,7 +1830,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_com_cfg_do_request
+name|ucom_cfg_do_request
 argument_list|(
 name|sc
 operator|->
@@ -1863,7 +1863,7 @@ argument_list|,
 literal|"device request failed, err=%s "
 literal|"(ignored)\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)

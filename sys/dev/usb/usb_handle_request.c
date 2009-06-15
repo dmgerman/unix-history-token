@@ -29,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|USB_DEBUG_VAR
-value|usb2_debug
+value|usb_debug
 end_define
 
 begin_include
@@ -99,7 +99,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|uint8_t
-name|usb2_handle_get_stall
+name|usb_handle_get_stall
 parameter_list|(
 name|struct
 name|usb_device
@@ -113,7 +113,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|usb_error_t
-name|usb2_handle_remote_wakeup
+name|usb_handle_remote_wakeup
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -127,7 +127,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|usb_error_t
-name|usb2_handle_request
+name|usb_handle_request
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -139,7 +139,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|usb_error_t
-name|usb2_handle_set_config
+name|usb_handle_set_config
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -153,7 +153,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|usb_error_t
-name|usb2_handle_set_stall
+name|usb_handle_set_stall
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -169,7 +169,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|usb_error_t
-name|usb2_handle_iface_request
+name|usb_handle_iface_request
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -193,12 +193,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_handle_request_callback  *  * This function is the USB callback for generic USB Device control  * transfers.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_handle_request_callback  *  * This function is the USB callback for generic USB Device control  * transfers.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_handle_request_callback
+name|usb_handle_request_callback
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -227,7 +227,7 @@ case|:
 comment|/* handle the request */
 name|err
 operator|=
-name|usb2_handle_request
+name|usb_handle_request
 argument_list|(
 name|xfer
 argument_list|)
@@ -245,7 +245,7 @@ name|USB_ERR_BAD_CONTEXT
 condition|)
 block|{
 comment|/* we need to re-setup the control transfer */
-name|usb2_needs_explore
+name|usb_needs_explore
 argument_list|(
 name|xfer
 operator|->
@@ -262,7 +262,7 @@ goto|goto
 name|tr_restart
 goto|;
 block|}
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -284,7 +284,7 @@ block|{
 comment|/* handle the request */
 name|err
 operator|=
-name|usb2_handle_request
+name|usb_handle_request
 argument_list|(
 name|xfer
 argument_list|)
@@ -354,7 +354,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* cancel previous transfer, if any */
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -363,13 +363,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_handle_set_config  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_handle_set_config  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|usb_error_t
-name|usb2_handle_set_config
+name|usb_handle_set_config
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -439,7 +439,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|usb2_set_config_index
+name|usbd_set_config_index
 argument_list|(
 name|udev
 argument_list|,
@@ -464,7 +464,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|usb2_probe_and_attach
+name|usb_probe_and_attach
 argument_list|(
 name|udev
 argument_list|,
@@ -517,13 +517,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_handle_iface_request  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_handle_iface_request  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|usb_error_t
-name|usb2_handle_iface_request
+name|usb_handle_iface_request
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -640,7 +640,7 @@ name|tr_repeat
 label|:
 name|iface
 operator|=
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|udev
 argument_list|,
@@ -730,7 +730,7 @@ expr_stmt|;
 block|}
 name|iface_parent
 operator|=
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|udev
 argument_list|,
@@ -965,7 +965,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|usb2_reset_iface_endpoints
+name|usb_reset_iface_endpoints
 argument_list|(
 name|udev
 argument_list|,
@@ -981,7 +981,7 @@ name|DPRINTF
 argument_list|(
 literal|"alt setting failed %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
@@ -996,7 +996,7 @@ block|}
 comment|/*  			 * Doing the alternate setting will detach the 			 * interface aswell: 			 */
 name|error
 operator|=
-name|usb2_set_alt_interface_index
+name|usbd_set_alt_interface_index
 argument_list|(
 name|udev
 argument_list|,
@@ -1019,7 +1019,7 @@ name|DPRINTF
 argument_list|(
 literal|"alt setting failed %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
@@ -1031,7 +1031,7 @@ goto|;
 block|}
 name|error
 operator|=
-name|usb2_probe_and_attach
+name|usb_probe_and_attach
 argument_list|(
 name|udev
 argument_list|,
@@ -1155,13 +1155,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_handle_stall  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_handle_stall  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|usb_error_t
-name|usb2_handle_set_stall
+name|usb_handle_set_stall
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -1196,11 +1196,11 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_set_endpoint_stall
+name|usbd_set_endpoint_stall
 argument_list|(
 name|udev
 argument_list|,
-name|usb2_get_ep_by_addr
+name|usbd_get_ep_by_addr
 argument_list|(
 name|udev
 argument_list|,
@@ -1224,13 +1224,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_handle_get_stall  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_handle_get_stall  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|uint8_t
-name|usb2_handle_get_stall
+name|usb_handle_get_stall
 parameter_list|(
 name|struct
 name|usb_device
@@ -1251,7 +1251,7 @@ name|halted
 decl_stmt|;
 name|ep
 operator|=
-name|usb2_get_ep_by_addr
+name|usbd_get_ep_by_addr
 argument_list|(
 name|udev
 argument_list|,
@@ -1301,13 +1301,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_handle_remote_wakeup  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_handle_remote_wakeup  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|usb_error_t
-name|usb2_handle_remote_wakeup
+name|usb_handle_remote_wakeup
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -1378,7 +1378,7 @@ name|bus
 argument_list|)
 expr_stmt|;
 comment|/* In case we are out of sync, update the power state. */
-name|usb2_bus_power_update
+name|usb_bus_power_update
 argument_list|(
 name|udev
 operator|->
@@ -1395,13 +1395,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_handle_request  *  * Internal state sequence:  *  * USB_HR_NOT_COMPLETE -> USB_HR_COMPLETE_OK v USB_HR_COMPLETE_ERR  *  * Returns:  * 0: Ready to start hardware  * Else: Stall current transfer, if any  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_handle_request  *  * Internal state sequence:  *  * USB_HR_NOT_COMPLETE -> USB_HR_COMPLETE_OK v USB_HR_COMPLETE_ERR  *  * Returns:  * 0: Ready to start hardware  * Else: Stall current transfer, if any  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|usb_error_t
-name|usb2_handle_request
+name|usb_handle_request
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -1543,7 +1543,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|usb2_set_frame_offset
+name|usbd_set_frame_offset
 argument_list|(
 name|xfer
 argument_list|,
@@ -1552,7 +1552,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|usb2_set_frame_offset
+name|usbd_set_frame_offset
 argument_list|(
 name|xfer
 argument_list|,
@@ -1565,7 +1565,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* get the current request, if any */
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -1896,7 +1896,7 @@ default|default:
 comment|/* we use "USB_ADD_BYTES" to de-const the src_zcopy */
 name|err
 operator|=
-name|usb2_handle_iface_request
+name|usb_handle_iface_request
 argument_list|(
 name|xfer
 argument_list|,
@@ -1951,7 +1951,7 @@ label|:
 name|err
 operator|=
 call|(
-name|usb2_temp_get_desc_p
+name|usb_temp_get_desc_p
 call|)
 argument_list|(
 name|udev
@@ -2159,7 +2159,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|usb2_handle_set_config
+name|usb_handle_set_config
 argument_list|(
 name|xfer
 argument_list|,
@@ -2191,7 +2191,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|usb2_handle_set_stall
+name|usb_handle_set_stall
 argument_list|(
 name|xfer
 argument_list|,
@@ -2225,7 +2225,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|usb2_handle_remote_wakeup
+name|usb_handle_remote_wakeup
 argument_list|(
 name|xfer
 argument_list|,
@@ -2252,7 +2252,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|usb2_handle_set_stall
+name|usb_handle_set_stall
 argument_list|(
 name|xfer
 argument_list|,
@@ -2286,7 +2286,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|usb2_handle_remote_wakeup
+name|usb_handle_remote_wakeup
 argument_list|(
 name|xfer
 argument_list|,
@@ -2318,7 +2318,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|usb2_handle_get_stall
+name|usb_handle_get_stall
 argument_list|(
 name|udev
 argument_list|,
@@ -2488,7 +2488,7 @@ argument_list|,
 name|off
 argument_list|)
 expr_stmt|;
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -2506,7 +2506,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|usb2_set_frame_data
+name|usbd_set_frame_data
 argument_list|(
 name|xfer
 argument_list|,

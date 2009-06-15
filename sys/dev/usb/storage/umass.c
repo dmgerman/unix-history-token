@@ -5173,7 +5173,7 @@ expr_stmt|;
 comment|/* Check for a standards compliant device */
 name|id
 operator|=
-name|usb2_get_interface_descriptor
+name|usbd_get_interface_descriptor
 argument_list|(
 name|iface
 argument_list|)
@@ -5811,7 +5811,7 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|device_set_usb2_desc
+name|device_set_usb_desc
 argument_list|(
 name|dev
 argument_list|)
@@ -5838,7 +5838,7 @@ expr_stmt|;
 comment|/* get interface index */
 name|id
 operator|=
-name|usb2_get_interface_descriptor
+name|usbd_get_interface_descriptor
 argument_list|(
 name|uaa
 operator|->
@@ -6019,7 +6019,7 @@ condition|)
 block|{
 name|err
 operator|=
-name|usb2_set_alt_interface_index
+name|usbd_set_alt_interface_index
 argument_list|(
 name|uaa
 operator|->
@@ -6066,7 +6066,7 @@ condition|)
 block|{
 name|err
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|uaa
 operator|->
@@ -6119,7 +6119,7 @@ condition|)
 block|{
 name|err
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|uaa
 operator|->
@@ -6189,7 +6189,7 @@ argument_list|,
 literal|"could not setup required "
 literal|"transfers, %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -6324,7 +6324,7 @@ operator|=
 name|TEST_UNIT_READY
 expr_stmt|;
 comment|/* 	 * some devices need a delay after that the configuration value is 	 * set to function properly: 	 */
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 name|NULL
 argument_list|,
@@ -6414,7 +6414,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 comment|/* teardown our statemachine */
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
@@ -6558,7 +6558,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|sc
 operator|->
@@ -6641,7 +6641,7 @@ name|sc_last_xfer_index
 operator|=
 name|xfer_index
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -6684,7 +6684,7 @@ literal|"resetting device\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * stop the last transfer, if not already stopped: 	 */
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -6830,7 +6830,7 @@ argument_list|,
 literal|"transfer error, %s -> "
 literal|"reset\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|xfer
 operator|->
@@ -6958,7 +6958,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -6993,7 +6993,7 @@ name|nframes
 operator|=
 literal|1
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -7109,7 +7109,7 @@ name|USB_ST_SETUP
 case|:
 if|if
 condition|(
-name|usb2_clear_stall_callback
+name|usbd_clear_stall_callback
 argument_list|(
 name|xfer
 argument_list|,
@@ -7440,7 +7440,7 @@ name|cbw
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -7475,7 +7475,7 @@ operator|->
 name|cbw
 argument_list|)
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -7542,7 +7542,7 @@ operator|.
 name|ext_buffer
 condition|)
 block|{
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -7701,7 +7701,7 @@ operator|.
 name|ext_buffer
 condition|)
 block|{
-name|usb2_set_frame_data
+name|usbd_set_frame_data
 argument_list|(
 name|xfer
 argument_list|,
@@ -7715,7 +7715,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -7953,7 +7953,7 @@ operator|.
 name|ext_buffer
 condition|)
 block|{
-name|usb2_set_frame_data
+name|usbd_set_frame_data
 argument_list|(
 name|xfer
 argument_list|,
@@ -7969,7 +7969,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -7987,7 +7987,7 @@ name|max_bulk
 argument_list|)
 expr_stmt|;
 block|}
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -8131,7 +8131,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -8597,7 +8597,7 @@ name|xfer
 operator|->
 name|max_data_length
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -8614,7 +8614,7 @@ name|UDMASS_BBB
 argument_list|,
 literal|"Failed to read CSW: %s, try %d\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|xfer
 operator|->
@@ -8800,7 +8800,7 @@ name|sc_last_xfer_index
 index|]
 condition|)
 block|{
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -8908,7 +8908,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|sc
 operator|->
@@ -8941,7 +8941,7 @@ name|sc
 operator|->
 name|sc_name
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -9202,7 +9202,7 @@ operator|=
 literal|0xff
 expr_stmt|;
 block|}
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -9219,7 +9219,7 @@ name|req
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -9267,7 +9267,7 @@ name|nframes
 operator|=
 literal|2
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -9449,7 +9449,7 @@ name|USB_ST_SETUP
 case|:
 if|if
 condition|(
-name|usb2_clear_stall_callback
+name|usbd_clear_stall_callback
 argument_list|(
 name|xfer
 argument_list|,
@@ -9638,7 +9638,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -9655,7 +9655,7 @@ name|req
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -9740,7 +9740,7 @@ name|cmd_len
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -9807,7 +9807,7 @@ operator|.
 name|ext_buffer
 condition|)
 block|{
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -9955,7 +9955,7 @@ operator|.
 name|ext_buffer
 condition|)
 block|{
-name|usb2_set_frame_data
+name|usbd_set_frame_data
 argument_list|(
 name|xfer
 argument_list|,
@@ -9978,7 +9978,7 @@ index|]
 operator|=
 name|max_bulk
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -10218,7 +10218,7 @@ operator|.
 name|ext_buffer
 condition|)
 block|{
-name|usb2_set_frame_data
+name|usbd_set_frame_data
 argument_list|(
 name|xfer
 argument_list|,
@@ -10234,7 +10234,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -10261,7 +10261,7 @@ index|]
 operator|=
 name|max_bulk
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -10401,7 +10401,7 @@ goto|goto
 name|tr_setup
 goto|;
 block|}
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -10678,7 +10678,7 @@ name|xfer
 operator|->
 name|max_data_length
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -10694,7 +10694,7 @@ name|UDMASS_CBI
 argument_list|,
 literal|"Failed to read CSW: %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|xfer
 operator|->
@@ -12416,7 +12416,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|usb2_get_speed
+name|usbd_get_speed
 argument_list|(
 name|sc
 operator|->
@@ -12878,7 +12878,7 @@ argument_list|,
 literal|"CAM poll\n"
 argument_list|)
 expr_stmt|;
-name|usb2_do_poll
+name|usbd_do_poll
 argument_list|(
 name|sc
 operator|->

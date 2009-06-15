@@ -490,7 +490,7 @@ expr_stmt|;
 comment|/* get all DMA memory */
 if|if
 condition|(
-name|usb2_bus_mem_alloc_all
+name|usb_bus_mem_alloc_all
 argument_list|(
 operator|&
 name|sc
@@ -966,7 +966,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|usb2_bus_mem_free_all
+name|usb_bus_mem_free_all
 argument_list|(
 operator|&
 name|sc

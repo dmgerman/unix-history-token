@@ -1422,7 +1422,7 @@ block|}
 comment|/* Check for a standards compliant device */
 name|id
 operator|=
-name|usb2_get_interface_descriptor
+name|usbd_get_interface_descriptor
 argument_list|(
 name|uaa
 operator|->
@@ -1616,7 +1616,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|device_set_usb2_desc
+name|device_set_usb_desc
 argument_list|(
 name|dev
 argument_list|)
@@ -1642,7 +1642,7 @@ expr_stmt|;
 comment|/* get interface index */
 name|id
 operator|=
-name|usb2_get_interface_descriptor
+name|usbd_get_interface_descriptor
 argument_list|(
 name|uaa
 operator|->
@@ -1678,7 +1678,7 @@ name|bInterfaceNumber
 expr_stmt|;
 name|err
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|uaa
 operator|->
@@ -1719,7 +1719,7 @@ argument_list|,
 literal|"could not setup required "
 literal|"transfers, %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -1795,7 +1795,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 comment|/* teardown our statemachine */
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
@@ -1905,7 +1905,7 @@ name|sc_last_xfer_index
 operator|=
 name|xfer_index
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -1930,7 +1930,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -1950,7 +1950,7 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_drain
+name|usbd_transfer_drain
 argument_list|(
 name|sc
 operator|->
@@ -2579,7 +2579,7 @@ operator|->
 name|sc_cbw
 argument_list|)
 expr_stmt|;
-name|usb2_set_frame_data
+name|usbd_set_frame_data
 argument_list|(
 name|xfer
 argument_list|,
@@ -2591,7 +2591,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -2887,7 +2887,7 @@ index|]
 operator|=
 name|max_bulk
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -3112,7 +3112,7 @@ index|]
 operator|=
 name|max_bulk
 expr_stmt|;
-name|usb2_set_frame_data
+name|usbd_set_frame_data
 argument_list|(
 name|xfer
 argument_list|,
@@ -3125,7 +3125,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -3389,7 +3389,7 @@ index|]
 operator|=
 name|max_bulk
 expr_stmt|;
-name|usb2_set_frame_data
+name|usbd_set_frame_data
 argument_list|(
 name|xfer
 argument_list|,
@@ -3402,7 +3402,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -3575,7 +3575,7 @@ operator|->
 name|sc_csw
 argument_list|)
 expr_stmt|;
-name|usb2_set_frame_data
+name|usbd_set_frame_data
 argument_list|(
 name|xfer
 argument_list|,
@@ -3587,7 +3587,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)

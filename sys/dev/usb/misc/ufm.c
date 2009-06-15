@@ -51,7 +51,7 @@ begin_define
 define|#
 directive|define
 name|USB_DEBUG_VAR
-value|usb2_debug
+value|usb_debug
 end_define
 
 begin_include
@@ -590,14 +590,14 @@ operator||
 name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
-name|device_set_usb2_desc
+name|device_set_usb_desc
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|usb2_fifo_attach
+name|usb_fifo_attach
 argument_list|(
 name|uaa
 operator|->
@@ -689,7 +689,7 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|usb2_fifo_detach
+name|usb_fifo_detach
 argument_list|(
 operator|&
 name|sc
@@ -838,7 +838,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|sc
 operator|->
@@ -1230,7 +1230,7 @@ name|uint8_t
 name|ret
 decl_stmt|;
 comment|/* 	 * Note, there's a 240ms settle time before the status 	 * will be valid, so sleep that amount. 	 */
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 name|NULL
 argument_list|,

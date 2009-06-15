@@ -922,7 +922,7 @@ argument_list|)
 expr_stmt|;
 comment|/* wait 8 milliseconds */
 comment|/* Wait for reset to complete. */
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -1135,7 +1135,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* copy data into real buffer */
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|td
 operator|->
@@ -1555,7 +1555,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 name|td
 operator|->
@@ -1830,7 +1830,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 name|td
 operator|->
@@ -2825,7 +2825,7 @@ name|xfer
 operator|->
 name|sumlen
 argument_list|,
-name|usb2_get_speed
+name|usbd_get_speed
 argument_list|(
 name|xfer
 operator|->
@@ -3487,7 +3487,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* put transfer on interrupt queue */
-name|usb2_transfer_enqueue
+name|usbd_transfer_enqueue
 argument_list|(
 operator|&
 name|xfer
@@ -3511,7 +3511,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|usb2_transfer_timeout_ms
+name|usbd_transfer_timeout_ms
 argument_list|(
 name|xfer
 argument_list|,
@@ -4050,7 +4050,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* dequeue transfer and start next transfer */
-name|usb2_transfer_done
+name|usbd_transfer_done
 argument_list|(
 name|xfer
 argument_list|,
@@ -4635,7 +4635,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* wait a little for things to stabilise */
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -5365,7 +5365,7 @@ name|xfer
 operator|->
 name|isoc_time_complete
 operator|=
-name|usb2_isoc_time_expand
+name|usb_isoc_time_expand
 argument_list|(
 operator|&
 name|sc
@@ -7380,7 +7380,7 @@ name|hc_max_frame_size
 operator|=
 literal|0x400
 expr_stmt|;
-name|usb2_transfer_setup_sub
+name|usbd_transfer_setup_sub
 argument_list|(
 name|parm
 argument_list|)
@@ -7431,7 +7431,7 @@ literal|1
 comment|/* SYNC */
 expr_stmt|;
 block|}
-comment|/* 	 * check if "usb2_transfer_setup_sub" set an error 	 */
+comment|/* 	 * check if "usbd_transfer_setup_sub" set an error 	 */
 if|if
 condition|(
 name|parm

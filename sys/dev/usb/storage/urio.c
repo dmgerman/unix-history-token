@@ -915,7 +915,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|device_set_usb2_desc
+name|device_set_usb_desc
 argument_list|(
 name|dev
 argument_list|)
@@ -967,7 +967,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|uaa
 operator|->
@@ -1005,7 +1005,7 @@ name|DPRINTF
 argument_list|(
 literal|"error=%s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
@@ -1017,7 +1017,7 @@ goto|;
 block|}
 name|error
 operator|=
-name|usb2_fifo_attach
+name|usb_fifo_attach
 argument_list|(
 name|uaa
 operator|->
@@ -1151,7 +1151,7 @@ operator|&
 name|URIO_FLAG_WRITE_STALL
 condition|)
 block|{
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -1165,7 +1165,7 @@ return|return;
 block|}
 if|if
 condition|(
-name|usb2_fifo_get_data
+name|usb_fifo_get_data
 argument_list|(
 name|f
 argument_list|,
@@ -1195,7 +1195,7 @@ index|]
 operator|=
 name|actlen
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -1220,7 +1220,7 @@ name|sc_flags
 operator||=
 name|URIO_FLAG_WRITE_STALL
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -1270,7 +1270,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|usb2_clear_stall_callback
+name|usbd_clear_stall_callback
 argument_list|(
 name|xfer
 argument_list|,
@@ -1290,7 +1290,7 @@ operator|&=
 operator|~
 name|URIO_FLAG_WRITE_STALL
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|xfer_other
 argument_list|)
@@ -1344,7 +1344,7 @@ block|{
 case|case
 name|USB_ST_TRANSFERRED
 case|:
-name|usb2_fifo_put_data
+name|usb_fifo_put_data
 argument_list|(
 name|f
 argument_list|,
@@ -1373,7 +1373,7 @@ operator|&
 name|URIO_FLAG_READ_STALL
 condition|)
 block|{
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -1387,7 +1387,7 @@ return|return;
 block|}
 if|if
 condition|(
-name|usb2_fifo_put_bytes_max
+name|usb_fifo_put_bytes_max
 argument_list|(
 name|f
 argument_list|)
@@ -1406,7 +1406,7 @@ name|xfer
 operator|->
 name|max_data_length
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -1431,7 +1431,7 @@ name|sc_flags
 operator||=
 name|URIO_FLAG_READ_STALL
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -1481,7 +1481,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|usb2_clear_stall_callback
+name|usbd_clear_stall_callback
 argument_list|(
 name|xfer
 argument_list|,
@@ -1501,7 +1501,7 @@ operator|&=
 operator|~
 name|URIO_FLAG_READ_STALL
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|xfer_other
 argument_list|)
@@ -1530,7 +1530,7 @@ name|fifo
 operator|->
 name|priv_sc0
 decl_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -1563,7 +1563,7 @@ name|fifo
 operator|->
 name|priv_sc0
 decl_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -1573,7 +1573,7 @@ name|URIO_T_RD_CS
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -1606,7 +1606,7 @@ name|fifo
 operator|->
 name|priv_sc0
 decl_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -1639,7 +1639,7 @@ name|fifo
 operator|->
 name|priv_sc0
 decl_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -1649,7 +1649,7 @@ name|URIO_T_WR_CS
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -1742,7 +1742,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|usb2_fifo_alloc_buffer
+name|usb_fifo_alloc_buffer
 argument_list|(
 name|fifo
 argument_list|,
@@ -1782,7 +1782,7 @@ name|URIO_FLAG_WRITE_STALL
 expr_stmt|;
 if|if
 condition|(
-name|usb2_fifo_alloc_buffer
+name|usb_fifo_alloc_buffer
 argument_list|(
 name|fifo
 argument_list|,
@@ -1840,7 +1840,7 @@ name|FWRITE
 operator|)
 condition|)
 block|{
-name|usb2_fifo_free_buffer
+name|usb_fifo_free_buffer
 argument_list|(
 name|fifo
 argument_list|)
@@ -2104,7 +2104,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|usb2_fifo_detach
+name|usb_fifo_detach
 argument_list|(
 operator|&
 name|sc
@@ -2112,7 +2112,7 @@ operator|->
 name|sc_fifo
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->

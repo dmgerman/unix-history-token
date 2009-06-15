@@ -31,7 +31,7 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
-name|usb2_make_str_desc
+name|usb_make_str_desc
 parameter_list|(
 name|void
 modifier|*
@@ -50,7 +50,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|device_set_usb2_desc
+name|device_set_usb_desc
 parameter_list|(
 name|device_t
 name|dev
@@ -60,7 +60,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_pause_mtx
+name|usb_pause_mtx
 parameter_list|(
 name|struct
 name|mtx
@@ -75,7 +75,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_printBCD
+name|usb_printbcd
 parameter_list|(
 name|char
 modifier|*
@@ -92,7 +92,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_trim_spaces
+name|usb_trim_spaces
 parameter_list|(
 name|char
 modifier|*

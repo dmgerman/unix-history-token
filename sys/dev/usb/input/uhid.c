@@ -562,7 +562,7 @@ operator|->
 name|sc_isize
 condition|)
 block|{
-name|usb2_fifo_put_data
+name|usb_fifo_put_data
 argument_list|(
 name|sc
 operator|->
@@ -608,7 +608,7 @@ name|re_submit
 label|:
 if|if
 condition|(
-name|usb2_fifo_put_bytes_max
+name|usb_fifo_put_bytes_max
 argument_list|(
 name|sc
 operator|->
@@ -634,7 +634,7 @@ name|sc
 operator|->
 name|sc_isize
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -883,7 +883,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|usb2_fifo_get_data
+name|usb_fifo_get_data
 argument_list|(
 name|sc
 operator|->
@@ -920,7 +920,7 @@ goto|goto
 name|tr_error
 goto|;
 block|}
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -958,7 +958,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|usb2_fifo_get_data
+name|usb_fifo_get_data
 argument_list|(
 name|sc
 operator|->
@@ -1013,7 +1013,7 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -1066,7 +1066,7 @@ literal|2
 else|:
 literal|1
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -1077,7 +1077,7 @@ default|default:
 name|tr_error
 label|:
 comment|/* bomb out */
-name|usb2_fifo_get_data_error
+name|usb_fifo_get_data_error
 argument_list|(
 name|sc
 operator|->
@@ -1129,7 +1129,7 @@ block|{
 case|case
 name|USB_ST_TRANSFERRED
 case|:
-name|usb2_fifo_put_data
+name|usb_fifo_put_data
 argument_list|(
 name|sc
 operator|->
@@ -1162,7 +1162,7 @@ name|USB_ST_SETUP
 case|:
 if|if
 condition|(
-name|usb2_fifo_put_bytes_max
+name|usb_fifo_put_bytes_max
 argument_list|(
 name|sc
 operator|->
@@ -1197,7 +1197,7 @@ operator|->
 name|sc_isize
 argument_list|)
 expr_stmt|;
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -1252,7 +1252,7 @@ literal|2
 else|:
 literal|1
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -1262,7 +1262,7 @@ return|return;
 default|default:
 comment|/* Error */
 comment|/* bomb out */
-name|usb2_fifo_put_data_error
+name|usb_fifo_put_data_error
 argument_list|(
 name|sc
 operator|->
@@ -1461,7 +1461,7 @@ operator|&
 name|UHID_FLAG_IMMED
 condition|)
 block|{
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -1474,7 +1474,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -1508,7 +1508,7 @@ name|fifo
 operator|->
 name|priv_sc0
 decl_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -1518,7 +1518,7 @@ name|UHID_CTRL_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -1551,7 +1551,7 @@ name|fifo
 operator|->
 name|priv_sc0
 decl_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -1584,7 +1584,7 @@ name|fifo
 operator|->
 name|priv_sc0
 decl_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -1673,7 +1673,7 @@ expr_stmt|;
 block|}
 name|err
 operator|=
-name|usb2_req_get_report
+name|usbd_req_get_report
 argument_list|(
 name|sc
 operator|->
@@ -1853,7 +1853,7 @@ block|}
 block|}
 name|err
 operator|=
-name|usb2_req_set_report
+name|usbd_req_set_report
 argument_list|(
 name|sc
 operator|->
@@ -1951,7 +1951,7 @@ name|UHID_FLAG_IMMED
 expr_stmt|;
 if|if
 condition|(
-name|usb2_fifo_alloc_buffer
+name|usb_fifo_alloc_buffer
 argument_list|(
 name|fifo
 argument_list|,
@@ -1981,7 +1981,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|usb2_fifo_alloc_buffer
+name|usb_fifo_alloc_buffer
 argument_list|(
 name|fifo
 argument_list|,
@@ -2035,7 +2035,7 @@ name|FWRITE
 operator|)
 condition|)
 block|{
-name|usb2_fifo_free_buffer
+name|usb_fifo_free_buffer
 argument_list|(
 name|fifo
 argument_list|)
@@ -2623,7 +2623,7 @@ block|}
 block|}
 if|if
 condition|(
-name|usb2_test_quirk
+name|usb_test_quirk
 argument_list|(
 name|uaa
 argument_list|,
@@ -2696,7 +2696,7 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|device_set_usb2_desc
+name|device_set_usb_desc
 argument_list|(
 name|dev
 argument_list|)
@@ -2747,7 +2747,7 @@ name|bIfaceIndex
 expr_stmt|;
 name|error
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|uaa
 operator|->
@@ -2785,7 +2785,7 @@ name|DPRINTF
 argument_list|(
 literal|"error=%s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
@@ -2873,7 +2873,7 @@ decl_stmt|;
 comment|/* 			 * The Graphire3 needs 0x0202 to be written to 			 * feature report ID 2 before it'll start 			 * returning digitizer data. 			 */
 name|error
 operator|=
-name|usb2_req_set_report
+name|usbd_req_set_report
 argument_list|(
 name|uaa
 operator|->
@@ -2908,7 +2908,7 @@ name|DPRINTF
 argument_list|(
 literal|"set report failed, error=%s (ignored)\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
@@ -3016,7 +3016,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|usb2_req_get_hid_desc
+name|usbd_req_get_hid_desc
 argument_list|(
 name|uaa
 operator|->
@@ -3062,7 +3062,7 @@ block|}
 block|}
 name|error
 operator|=
-name|usb2_req_set_idle
+name|usbd_req_set_idle
 argument_list|(
 name|uaa
 operator|->
@@ -3090,7 +3090,7 @@ name|DPRINTF
 argument_list|(
 literal|"set idle failed, error=%s (ignored)\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
@@ -3243,7 +3243,7 @@ expr_stmt|;
 block|}
 name|error
 operator|=
-name|usb2_fifo_attach
+name|usb_fifo_attach
 argument_list|(
 name|uaa
 operator|->
@@ -3332,7 +3332,7 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|usb2_fifo_detach
+name|usb_fifo_detach
 argument_list|(
 operator|&
 name|sc
@@ -3340,7 +3340,7 @@ operator|->
 name|sc_fifo
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->

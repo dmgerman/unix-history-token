@@ -2115,7 +2115,7 @@ block|{
 comment|/* 		 * The NDIS driver is not allowed to change the 		 * config! There is only one choice! 		 */
 name|cdp
 operator|=
-name|usb2_get_config_descriptor
+name|usbd_get_config_descriptor
 argument_list|(
 name|sc
 operator|->
@@ -2213,7 +2213,7 @@ argument_list|)
 expr_stmt|;
 name|status
 operator|=
-name|usb2_req_get_desc
+name|usbd_req_get_desc
 argument_list|(
 name|sc
 operator|->
@@ -2459,7 +2459,7 @@ control|)
 block|{
 name|ret
 operator|=
-name|usb2_set_alt_interface_index
+name|usbd_set_alt_interface_index
 argument_list|(
 name|udev
 argument_list|,
@@ -2489,7 +2489,7 @@ name|dev
 argument_list|,
 literal|"setting alternate interface failed: %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|ret
 argument_list|)
@@ -2511,7 +2511,7 @@ init|;
 operator|(
 name|ep
 operator|=
-name|usb2_endpoint_foreach
+name|usb_endpoint_foreach
 argument_list|(
 name|udev
 argument_list|,
@@ -2821,7 +2821,7 @@ argument_list|)
 expr_stmt|;
 name|status
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|sc
 operator|->
@@ -2859,7 +2859,7 @@ name|dev
 argument_list|,
 literal|"couldn't setup xfer: %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|status
 argument_list|)
@@ -3253,7 +3253,7 @@ literal|1
 expr_stmt|;
 name|status
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|sc
 operator|->
@@ -3292,7 +3292,7 @@ name|dev
 argument_list|,
 literal|"couldn't setup xfer: %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|status
 argument_list|)
@@ -3459,7 +3459,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|ne
 operator|->
@@ -3469,7 +3469,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|ne
 operator|->
@@ -3852,7 +3852,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|ne
 operator|->
@@ -3862,7 +3862,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|ne
 operator|->
@@ -4230,7 +4230,7 @@ name|ne_dirin
 operator|!=
 literal|0
 condition|)
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -4597,7 +4597,7 @@ argument_list|)
 operator|==
 name|UE_DIR_OUT
 condition|)
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -4627,7 +4627,7 @@ name|nframes
 operator|=
 literal|1
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -4675,7 +4675,7 @@ name|ndis_dev
 argument_list|,
 literal|"usb xfer warning (%s)\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|xfer
 operator|->
@@ -4829,7 +4829,7 @@ operator|&
 name|USBD_TRANSFER_DIRECTION_IN
 condition|)
 block|{
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -5169,7 +5169,7 @@ name|nx_urbactlen
 operator|=
 literal|0
 expr_stmt|;
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -5293,7 +5293,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -5331,7 +5331,7 @@ literal|2
 expr_stmt|;
 block|}
 block|}
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -5379,7 +5379,7 @@ name|ndis_dev
 argument_list|,
 literal|"usb xfer warning (%s)\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|xfer
 operator|->
@@ -6177,7 +6177,7 @@ condition|)
 goto|goto
 name|exit
 goto|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|ne
 operator|->
@@ -6227,7 +6227,7 @@ condition|)
 goto|goto
 name|exit
 goto|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|ne
 operator|->
@@ -6237,7 +6237,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|ne
 operator|->
@@ -6273,7 +6273,7 @@ name|sc
 operator|->
 name|ndisusb_dwrite_ep
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|ne
 operator|->
@@ -7179,7 +7179,7 @@ condition|(
 operator|(
 name|next
 operator|=
-name|usb2_desc_foreach
+name|usb_desc_foreach
 argument_list|(
 name|conf
 argument_list|,

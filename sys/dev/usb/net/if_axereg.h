@@ -751,7 +751,7 @@ name|GET_MII
 parameter_list|(
 name|sc
 parameter_list|)
-value|usb2_ether_getmii(&(sc)->sc_ue)
+value|uether_getmii(&(sc)->sc_ue)
 end_define
 
 begin_comment

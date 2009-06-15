@@ -31,7 +31,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb_lookup_info
+name|usbd_lookup_info
 struct_decl|;
 end_struct_decl
 
@@ -49,7 +49,7 @@ begin_typedef
 typedef|typedef
 name|usb_error_t
 function_decl|(
-name|usb2_temp_setup_by_index_t
+name|usb_temp_setup_by_index_t
 function_decl|)
 parameter_list|(
 name|struct
@@ -67,7 +67,7 @@ begin_typedef
 typedef|typedef
 name|usb_error_t
 function_decl|(
-name|usb2_test_huawei_autoinst_t
+name|usb_test_huawei_autoinst_t
 function_decl|)
 parameter_list|(
 name|struct
@@ -87,12 +87,12 @@ begin_typedef
 typedef|typedef
 name|uint8_t
 function_decl|(
-name|usb2_test_quirk_t
+name|usb_test_quirk_t
 function_decl|)
 parameter_list|(
 specifier|const
 name|struct
-name|usb_lookup_info
+name|usbd_lookup_info
 modifier|*
 name|info
 parameter_list|,
@@ -106,7 +106,7 @@ begin_typedef
 typedef|typedef
 name|int
 function_decl|(
-name|usb2_quirk_ioctl_t
+name|usb_quirk_ioctl_t
 function_decl|)
 parameter_list|(
 name|unsigned
@@ -131,7 +131,7 @@ begin_typedef
 typedef|typedef
 name|void
 function_decl|(
-name|usb2_temp_unsetup_t
+name|usb_temp_unsetup_t
 function_decl|)
 parameter_list|(
 name|struct
@@ -150,54 +150,54 @@ begin_decl_stmt
 specifier|extern
 name|usb_handle_req_t
 modifier|*
-name|usb2_temp_get_desc_p
+name|usb_temp_get_desc_p
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|usb2_temp_setup_by_index_t
+name|usb_temp_setup_by_index_t
 modifier|*
-name|usb2_temp_setup_by_index_p
+name|usb_temp_setup_by_index_p
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|usb2_temp_unsetup_t
+name|usb_temp_unsetup_t
 modifier|*
-name|usb2_temp_unsetup_p
+name|usb_temp_unsetup_p
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|usb2_test_quirk_t
+name|usb_test_quirk_t
 modifier|*
-name|usb2_test_quirk_p
+name|usb_test_quirk_p
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|usb2_test_huawei_autoinst_t
+name|usb_test_huawei_autoinst_t
 modifier|*
-name|usb2_test_huawei_autoinst_p
+name|usb_test_huawei_autoinst_p
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|usb2_quirk_ioctl_t
+name|usb_quirk_ioctl_t
 modifier|*
-name|usb2_quirk_ioctl_p
+name|usb_quirk_ioctl_p
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|devclass_t
-name|usb2_devclass_ptr
+name|usb_devclass_ptr
 decl_stmt|;
 end_decl_stmt
 
@@ -207,7 +207,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|usb2_test_huawei_unload
+name|usb_test_huawei_unload
 parameter_list|(
 name|void
 modifier|*
@@ -217,7 +217,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_temp_unload
+name|usb_temp_unload
 parameter_list|(
 name|void
 modifier|*
@@ -227,7 +227,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_quirk_unload
+name|usb_quirk_unload
 parameter_list|(
 name|void
 modifier|*
@@ -237,7 +237,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_bus_unload
+name|usb_bus_unload
 parameter_list|(
 name|void
 modifier|*
@@ -247,7 +247,7 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
-name|usb2_test_quirk
+name|usb_test_quirk
 parameter_list|(
 specifier|const
 name|struct

@@ -29,7 +29,7 @@ specifier|const
 name|void
 modifier|*
 function_decl|(
-name|usb2_temp_get_string_desc_t
+name|usb_temp_get_string_desc_t
 function_decl|)
 parameter_list|(
 name|uint16_t
@@ -47,7 +47,7 @@ specifier|const
 name|void
 modifier|*
 function_decl|(
-name|usb2_temp_get_vendor_desc_t
+name|usb_temp_get_vendor_desc_t
 function_decl|)
 parameter_list|(
 specifier|const
@@ -185,11 +185,11 @@ begin_struct
 struct|struct
 name|usb_temp_device_desc
 block|{
-name|usb2_temp_get_string_desc_t
+name|usb_temp_get_string_desc_t
 modifier|*
 name|getStringDesc
 decl_stmt|;
-name|usb2_temp_get_vendor_desc_t
+name|usb_temp_get_vendor_desc_t
 modifier|*
 name|getVendorDesc
 decl_stmt|;
@@ -264,7 +264,7 @@ specifier|extern
 specifier|const
 name|struct
 name|usb_temp_device_desc
-name|usb2_template_cdce
+name|usb_template_cdce
 decl_stmt|;
 end_decl_stmt
 
@@ -273,7 +273,7 @@ specifier|extern
 specifier|const
 name|struct
 name|usb_temp_device_desc
-name|usb2_template_msc
+name|usb_template_msc
 decl_stmt|;
 end_decl_stmt
 
@@ -286,7 +286,7 @@ specifier|extern
 specifier|const
 name|struct
 name|usb_temp_device_desc
-name|usb2_template_mtp
+name|usb_template_mtp
 decl_stmt|;
 end_decl_stmt
 

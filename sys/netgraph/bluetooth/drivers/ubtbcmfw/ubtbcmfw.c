@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|USB_DEBUG_VAR
-value|usb2_debug
+value|usb_debug
 end_define
 
 begin_include
@@ -680,7 +680,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|usb2_lookup_id_by_uaa
+name|usbd_lookup_id_by_uaa
 argument_list|(
 name|devs
 argument_list|,
@@ -747,7 +747,7 @@ name|uaa
 operator|->
 name|device
 expr_stmt|;
-name|device_set_usb2_desc
+name|device_set_usb_desc
 argument_list|(
 name|dev
 argument_list|)
@@ -774,7 +774,7 @@ name|UBTBCMFW_IFACE_IDX
 expr_stmt|;
 name|error
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|uaa
 operator|->
@@ -812,7 +812,7 @@ name|dev
 argument_list|,
 literal|"allocating USB transfers failed. %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
@@ -824,7 +824,7 @@ goto|;
 block|}
 name|error
 operator|=
-name|usb2_fifo_attach
+name|usb_fifo_attach
 argument_list|(
 name|uaa
 operator|->
@@ -880,7 +880,7 @@ name|dev
 argument_list|,
 literal|"could not attach fifo. %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
@@ -939,7 +939,7 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|usb2_fifo_detach
+name|usb_fifo_detach
 argument_list|(
 operator|&
 name|sc
@@ -947,7 +947,7 @@ operator|->
 name|sc_fifo
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
@@ -1035,7 +1035,7 @@ name|setup_next
 label|:
 if|if
 condition|(
-name|usb2_fifo_get_data
+name|usb_fifo_get_data
 argument_list|(
 name|f
 argument_list|,
@@ -1065,7 +1065,7 @@ index|]
 operator|=
 name|actlen
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -1154,7 +1154,7 @@ block|{
 case|case
 name|USB_ST_TRANSFERRED
 case|:
-name|usb2_fifo_put_data
+name|usb_fifo_put_data
 argument_list|(
 name|fifo
 argument_list|,
@@ -1179,7 +1179,7 @@ name|setup_next
 label|:
 if|if
 condition|(
-name|usb2_fifo_put_bytes_max
+name|usb_fifo_put_bytes_max
 argument_list|(
 name|fifo
 argument_list|)
@@ -1198,7 +1198,7 @@ name|xfer
 operator|->
 name|max_data_length
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -1262,7 +1262,7 @@ name|fifo
 operator|->
 name|priv_sc0
 decl_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -1303,7 +1303,7 @@ name|fifo
 operator|->
 name|priv_sc0
 decl_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -1344,7 +1344,7 @@ name|fifo
 operator|->
 name|priv_sc0
 decl_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -1385,7 +1385,7 @@ name|fifo
 operator|->
 name|priv_sc0
 decl_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|sc
 operator|->
@@ -1475,7 +1475,7 @@ return|;
 comment|/* should not happen */
 if|if
 condition|(
-name|usb2_fifo_alloc_buffer
+name|usb_fifo_alloc_buffer
 argument_list|(
 name|fifo
 argument_list|,
@@ -1533,7 +1533,7 @@ operator||
 name|FWRITE
 operator|)
 condition|)
-name|usb2_fifo_free_buffer
+name|usb_fifo_free_buffer
 argument_list|(
 name|fifo
 argument_list|)
@@ -1596,7 +1596,7 @@ name|memcpy
 argument_list|(
 name|data
 argument_list|,
-name|usb2_get_device_descriptor
+name|usbd_get_device_descriptor
 argument_list|(
 name|sc
 operator|->

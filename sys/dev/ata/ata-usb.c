@@ -1321,7 +1321,7 @@ return|;
 block|}
 name|id
 operator|=
-name|usb2_get_interface_descriptor
+name|usbd_get_interface_descriptor
 argument_list|(
 name|uaa
 operator|->
@@ -1478,7 +1478,7 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-name|device_set_usb2_desc
+name|device_set_usb_desc
 argument_list|(
 name|dev
 argument_list|)
@@ -1511,7 +1511,7 @@ name|sc
 operator|->
 name|usb2_speed
 operator|=
-name|usb2_get_speed
+name|usbd_get_speed
 argument_list|(
 name|uaa
 operator|->
@@ -1538,7 +1538,7 @@ argument_list|)
 expr_stmt|;
 name|id
 operator|=
-name|usb2_get_interface_descriptor
+name|usbd_get_interface_descriptor
 argument_list|(
 name|uaa
 operator|->
@@ -1697,7 +1697,7 @@ goto|;
 block|}
 name|err
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|uaa
 operator|->
@@ -1747,7 +1747,7 @@ argument_list|,
 literal|"could not setup required "
 literal|"transfers, %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -1805,7 +1805,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|uaa
 operator|->
@@ -1839,7 +1839,7 @@ name|dev
 argument_list|,
 literal|"get maxlun not supported %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -1999,7 +1999,7 @@ decl_stmt|,
 name|i
 decl_stmt|;
 comment|/* teardown our statemachine */
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
@@ -2120,7 +2120,7 @@ name|last_xfer_no
 operator|=
 name|xfer_no
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -2239,7 +2239,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -2274,7 +2274,7 @@ name|nframes
 operator|=
 literal|1
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -2390,7 +2390,7 @@ name|USB_ST_SETUP
 case|:
 if|if
 condition|(
-name|usb2_clear_stall_callback
+name|usbd_clear_stall_callback
 argument_list|(
 name|xfer
 argument_list|,
@@ -2650,7 +2650,7 @@ literal|12
 argument_list|)
 expr_stmt|;
 comment|/* XXX SOS */
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -2685,7 +2685,7 @@ operator|->
 name|cbw
 argument_list|)
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -2742,7 +2742,7 @@ block|{
 case|case
 name|USB_ST_TRANSFERRED
 case|:
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -2881,7 +2881,7 @@ index|]
 operator|=
 name|max_bulk
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -3083,7 +3083,7 @@ index|]
 operator|=
 name|max_bulk
 expr_stmt|;
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -3098,7 +3098,7 @@ argument_list|,
 name|max_bulk
 argument_list|)
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -3232,7 +3232,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -3643,7 +3643,7 @@ name|xfer
 operator|->
 name|max_data_length
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -3824,7 +3824,7 @@ argument_list|,
 literal|"transfer failed, %s, in state %d "
 literal|"-> BULK reset\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|xfer
 operator|->
@@ -4153,7 +4153,7 @@ name|ata_donecount
 operator|=
 literal|0
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->

@@ -47,7 +47,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* "usb2_parse_config()" commands */
+comment|/* "usb_parse_config()" commands */
 end_comment
 
 begin_define
@@ -72,7 +72,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* "usb2_unconfigure()" flags */
+comment|/* "usb_unconfigure()" flags */
 end_comment
 
 begin_define
@@ -510,7 +510,7 @@ decl_stmt|;
 name|struct
 name|usb_temp_data
 modifier|*
-name|usb2_template_ptr
+name|usb_template_ptr
 decl_stmt|;
 name|struct
 name|usb_endpoint
@@ -714,7 +714,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|usb2_template
+name|usb_template
 decl_stmt|;
 end_decl_stmt
 
@@ -726,7 +726,7 @@ begin_function_decl
 name|struct
 name|usb_device
 modifier|*
-name|usb2_alloc_device
+name|usb_alloc_device
 parameter_list|(
 name|device_t
 name|parent_dev
@@ -765,7 +765,7 @@ begin_function_decl
 name|struct
 name|usb_endpoint
 modifier|*
-name|usb2_get_endpoint
+name|usbd_get_endpoint
 parameter_list|(
 name|struct
 name|usb_device
@@ -788,7 +788,7 @@ begin_function_decl
 name|struct
 name|usb_endpoint
 modifier|*
-name|usb2_get_ep_by_addr
+name|usbd_get_ep_by_addr
 parameter_list|(
 name|struct
 name|usb_device
@@ -803,7 +803,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_interface_count
+name|usb_interface_count
 parameter_list|(
 name|struct
 name|usb_device
@@ -819,7 +819,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_probe_and_attach
+name|usb_probe_and_attach
 parameter_list|(
 name|struct
 name|usb_device
@@ -834,7 +834,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_reset_iface_endpoints
+name|usb_reset_iface_endpoints
 parameter_list|(
 name|struct
 name|usb_device
@@ -849,7 +849,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_set_config_index
+name|usbd_set_config_index
 parameter_list|(
 name|struct
 name|usb_device
@@ -864,7 +864,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_set_endpoint_stall
+name|usbd_set_endpoint_stall
 parameter_list|(
 name|struct
 name|usb_device
@@ -884,7 +884,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_suspend_resume
+name|usb_suspend_resume
 parameter_list|(
 name|struct
 name|usb_device
@@ -899,7 +899,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_devinfo
+name|usb_devinfo
 parameter_list|(
 name|struct
 name|usb_device
@@ -918,7 +918,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_free_device
+name|usb_free_device
 parameter_list|(
 name|struct
 name|usb_device
@@ -975,7 +975,7 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
-name|usb2_peer_can_wakeup
+name|usb_peer_can_wakeup
 parameter_list|(
 name|struct
 name|usb_device
@@ -989,7 +989,7 @@ begin_function_decl
 name|struct
 name|usb_endpoint
 modifier|*
-name|usb2_endpoint_foreach
+name|usb_endpoint_foreach
 parameter_list|(
 name|struct
 name|usb_device
@@ -1006,7 +1006,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_set_device_state
+name|usb_set_device_state
 parameter_list|(
 name|struct
 name|usb_device
