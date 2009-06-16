@@ -612,6 +612,11 @@ name|int
 name|mnt_gen
 decl_stmt|;
 comment|/* struct mount generation */
+name|struct
+name|lock
+name|mnt_explock
+decl_stmt|;
+comment|/* vfs_export walkers lock */
 block|}
 struct|;
 end_struct
