@@ -371,23 +371,23 @@ name|u_int
 name|t_maxopd
 decl_stmt|;
 comment|/* mss plus options */
-name|int
+name|u_int
 name|t_rcvtime
 decl_stmt|;
 comment|/* inactivity time */
-name|int
+name|u_int
 name|t_starttime
 decl_stmt|;
 comment|/* time connection was established */
-name|int
+name|u_int
 name|t_rtttime
 decl_stmt|;
-comment|/* round trip time */
+comment|/* RTT measurement start time */
 name|tcp_seq
 name|t_rtseq
 decl_stmt|;
 comment|/* sequence number being timed */
-name|int
+name|u_int
 name|t_bw_rtttime
 decl_stmt|;
 comment|/* used for bandwidth calculation */
@@ -461,7 +461,7 @@ name|u_int32_t
 name|ts_recent
 decl_stmt|;
 comment|/* timestamp echo data */
-name|int
+name|u_int
 name|ts_recent_age
 decl_stmt|;
 comment|/* when last updated */
@@ -485,7 +485,7 @@ name|tcp_seq
 name|snd_recover_prev
 decl_stmt|;
 comment|/* snd_recover prior to retransmit */
-name|int
+name|u_int
 name|t_badrxtwin
 decl_stmt|;
 comment|/* window for retransmit recovery */
@@ -1165,14 +1165,14 @@ modifier|*
 name|tw_cred
 decl_stmt|;
 comment|/* user credentials */
-name|u_long
+name|u_int32_t
 name|t_recent
 decl_stmt|;
 name|u_int32_t
 name|ts_offset
 decl_stmt|;
 comment|/* our timestamp offset */
-name|u_long
+name|u_int
 name|t_starttime
 decl_stmt|;
 name|int

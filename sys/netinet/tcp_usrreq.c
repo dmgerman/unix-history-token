@@ -8107,7 +8107,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"t_maxopd: %u   t_rcvtime: %d   t_startime: %d\n"
+literal|"t_maxopd: %u   t_rcvtime: %u   t_startime: %u\n"
 argument_list|,
 name|tp
 operator|->
@@ -8129,7 +8129,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"t_rttime: %d   t_rtsq: 0x%08x   t_bw_rtttime: %d\n"
+literal|"t_rttime: %u   t_rtsq: 0x%08x   t_bw_rtttime: %u\n"
 argument_list|,
 name|tp
 operator|->
@@ -8279,7 +8279,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"ts_recent: %u   ts_recent_age: %d\n"
+literal|"ts_recent: %u   ts_recent_age: %u\n"
 argument_list|,
 name|tp
 operator|->
@@ -8321,7 +8321,7 @@ expr_stmt|;
 name|db_printf
 argument_list|(
 literal|"snd_ssthresh_prev: %lu   snd_recover_prev: 0x%08x   "
-literal|"t_badrxtwin: %d\n"
+literal|"t_badrxtwin: %u\n"
 argument_list|,
 name|tp
 operator|->
