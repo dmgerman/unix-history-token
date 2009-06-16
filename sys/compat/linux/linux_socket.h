@@ -223,6 +223,31 @@ name|LINUX_SOCK_MAX
 value|LINUX_SOCK_SEQPACKET
 end_define
 
+begin_define
+define|#
+directive|define
+name|LINUX_SOCK_TYPE_MASK
+value|0xf
+end_define
+
+begin_comment
+comment|/* Flags for socket, socketpair, accept4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_SOCK_CLOEXEC
+value|LINUX_O_CLOEXEC
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_SOCK_NONBLOCK
+value|LINUX_O_NONBLOCK
+end_define
+
 begin_struct
 struct|struct
 name|l_ucred
