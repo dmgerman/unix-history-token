@@ -1663,7 +1663,7 @@ condition|)
 block|{
 name|teken_printf
 argument_list|(
-literal|"Got UTF-8 char %u\n"
+literal|"Got UTF-8 char %x\n"
 argument_list|,
 name|t
 operator|->
