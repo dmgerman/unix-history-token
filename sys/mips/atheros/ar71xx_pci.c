@@ -308,6 +308,14 @@ argument_list|(
 name|AR71XX_PCI_INTR_MASK
 argument_list|)
 expr_stmt|;
+comment|/* flush */
+name|reg
+operator|=
+name|ATH_READ_REG
+argument_list|(
+name|AR71XX_PCI_INTR_MASK
+argument_list|)
+expr_stmt|;
 name|ATH_WRITE_REG
 argument_list|(
 name|AR71XX_PCI_INTR_MASK
@@ -366,6 +374,14 @@ literal|1
 operator|<<
 name|irq
 operator|)
+argument_list|)
+expr_stmt|;
+comment|/* flush */
+name|reg
+operator|=
+name|ATH_READ_REG
+argument_list|(
+name|AR71XX_PCI_INTR_MASK
 argument_list|)
 expr_stmt|;
 block|}
@@ -1391,6 +1407,11 @@ argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
+name|ATH_READ_REG
+argument_list|(
+name|AR71XX_RST_RESET
+argument_list|)
+expr_stmt|;
 name|reset
 operator|&=
 operator|~
@@ -1410,6 +1431,11 @@ expr_stmt|;
 name|DELAY
 argument_list|(
 literal|1000
+argument_list|)
+expr_stmt|;
+name|ATH_READ_REG
+argument_list|(
+name|AR71XX_RST_RESET
 argument_list|)
 expr_stmt|;
 comment|/* Init PCI windows */
@@ -2211,6 +2237,8 @@ name|uint32_t
 name|reg
 decl_stmt|,
 name|irq
+decl_stmt|,
+name|mask
 decl_stmt|;
 name|reg
 operator|=
@@ -2218,6 +2246,18 @@ name|ATH_READ_REG
 argument_list|(
 name|AR71XX_PCI_INTR_STATUS
 argument_list|)
+expr_stmt|;
+name|mask
+operator|=
+name|ATH_READ_REG
+argument_list|(
+name|AR71XX_PCI_INTR_MASK
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Handle only unmasked interrupts 	 */
+name|reg
+operator|&=
+name|mask
 expr_stmt|;
 for|for
 control|(
