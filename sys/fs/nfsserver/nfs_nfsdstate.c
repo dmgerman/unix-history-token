@@ -17696,7 +17696,7 @@ name|off
 init|=
 literal|0
 decl_stmt|;
-name|size_t
+name|int
 name|aresid
 decl_stmt|,
 name|len
