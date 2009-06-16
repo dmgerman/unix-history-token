@@ -1658,11 +1658,7 @@ name|acct_cred
 argument_list|,
 name|NOCRED
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
 name|td
 argument_list|)
