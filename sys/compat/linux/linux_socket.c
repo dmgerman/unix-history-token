@@ -2196,6 +2196,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|retval_socket
+condition|)
+return|return
+operator|(
+name|retval_socket
+operator|)
+return|;
+if|if
+condition|(
 name|bsd_args
 operator|.
 name|type
@@ -2220,11 +2229,7 @@ name|bsd_args
 operator|.
 name|domain
 operator|==
-name|AF_INET
-operator|&&
-name|retval_socket
-operator|>=
-literal|0
+name|PF_INET
 condition|)
 block|{
 comment|/* It's a raw IP socket: set the IP_HDRINCL option. */
@@ -2274,10 +2279,6 @@ operator|.
 name|domain
 operator|==
 name|PF_INET6
-operator|&&
-name|retval_socket
-operator|>=
-literal|0
 ifndef|#
 directive|ifndef
 name|KLD_MODULE
