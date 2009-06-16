@@ -2387,7 +2387,7 @@ name|groups
 init|;
 name|g
 operator|!=
-name|g
+name|grp
 condition|;
 name|g
 operator|=
