@@ -508,18 +508,11 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
-name|printf
-argument_list|(
-literal|"NOT OK\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EFAULT
 operator|)
 return|;
-block|}
 continue|continue;
 block|}
 comment|/* minor device 1 is kernel memory */
