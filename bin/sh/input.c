@@ -433,6 +433,9 @@ name|basebuf
 block|; }
 name|RESET
 block|{
+name|popallfiles
+argument_list|()
+block|;
 if|if
 condition|(
 name|exception
@@ -446,13 +449,14 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* clear input buffer */
-name|popallfiles
-argument_list|()
-expr_stmt|;
+block|}
 end_expr_stmt
 
+begin_macro
+name|SHELLPROC
+end_macro
+
 begin_block
-unit|}  SHELLPROC
 block|{
 name|popallfiles
 argument_list|()
