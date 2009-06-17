@@ -1325,6 +1325,13 @@ name|config
 operator|->
 name|size
 expr_stmt|;
+if|if
+condition|(
+name|cpu_is_ixp42x
+argument_list|()
+condition|)
+block|{
+comment|/* NB: instruction/data memory sizes are NPE-dependent */
 name|sc
 operator|->
 name|insMemSize
@@ -1333,7 +1340,6 @@ name|config
 operator|->
 name|ins_memsize
 expr_stmt|;
-comment|/* size of instruction memory */
 name|sc
 operator|->
 name|dataMemSize
@@ -1342,7 +1348,22 @@ name|config
 operator|->
 name|data_memsize
 expr_stmt|;
-comment|/* size of data memory */
+block|}
+else|else
+block|{
+name|sc
+operator|->
+name|insMemSize
+operator|=
+name|IXP46X_NPEDL_INS_MEMSIZE_WORDS
+expr_stmt|;
+name|sc
+operator|->
+name|dataMemSize
+operator|=
+name|IXP46X_NPEDL_DATA_MEMSIZE_WORDS
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|bus_space_map
