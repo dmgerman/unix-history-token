@@ -309,7 +309,17 @@ name|NULL
 block|,
 literal|'W'
 block|}
-block|, }
+block|,
+block|{
+name|NULL
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|}
 decl_stmt|;
 end_decl_stmt
 
