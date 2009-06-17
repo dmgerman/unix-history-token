@@ -3619,13 +3619,6 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|IX_NPEDL_RESET_NPE_PARITY
-value|0x0800
-end_define
-
-begin_define
-define|#
-directive|define
 name|IX_NPEDL_PARITY_BIT_MASK
 value|0x3F00FFFF
 end_define
@@ -3636,6 +3629,27 @@ directive|define
 name|IX_NPEDL_CONFIG_CTRL_REG_MASK
 value|0x3F3FFFFF
 end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/*  * Reset the NPE and its coprocessor using the  * fuse bits in the feature control register.  */
+end_comment
+
+begin_comment
+unit|static void npe_reset(int npeid) { 	uint32_t mask = EXP_FCTRL_NPEA<< npeid; 	uint32_t v;  	v = ixp4xx_read_feature_bits(); 	ixp4xx_write_feature_bits(v&~ mask);
+comment|/* un-fuse and un-reset the NPE& coprocessor */
+end_comment
+
+begin_endif
+unit|ixp4xx_write_feature_bits(v | mask); }
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -3655,21 +3669,6 @@ parameter_list|(
 name|a
 parameter_list|)
 value|(sizeof(a) / sizeof(a[0]))
-name|struct
-name|ixp425_softc
-modifier|*
-name|sa
-init|=
-name|device_get_softc
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
-argument_list|)
-decl_stmt|;
 name|uint32_t
 name|ctxtReg
 decl_stmt|;
@@ -3679,9 +3678,6 @@ name|regAddr
 decl_stmt|;
 name|uint32_t
 name|regVal
-decl_stmt|;
-name|uint32_t
-name|resetNpeParity
 decl_stmt|;
 name|uint32_t
 name|ixNpeConfigCtrlRegVal
@@ -4150,105 +4146,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * WR IXA00055043 - Remove IMEM Parity Introduced by NPE Reset Operation 	 */
-comment|/* 	 * Reset the NPE and its coprocessor - to reset internal 	 * states and remove parity error.  Note this makes no 	 * sense based on the documentation.  The feature control 	 * register always reads back as 0 on the ixp425 and further 	 * the bit definition of NPEA/NPEB is off by 1 according to 	 * the Intel documention--so we're blindly following the 	 * Intel code w/o any real understanding. 	 */
-name|regVal
-operator|=
-name|EXP_BUS_READ_4
-argument_list|(
-name|sa
-argument_list|,
-name|EXP_FCTRL_OFFSET
-argument_list|)
-expr_stmt|;
-name|DPRINTFn
-argument_list|(
-literal|2
-argument_list|,
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: FCTRL 0x%x\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|regVal
-argument_list|)
-expr_stmt|;
-name|resetNpeParity
-operator|=
-name|IX_NPEDL_RESET_NPE_PARITY
-operator|<<
-operator|(
-literal|1
-operator|+
-name|device_get_unit
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
-operator|)
-expr_stmt|;
-name|DPRINTFn
-argument_list|(
-literal|2
-argument_list|,
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: FCTRL fuse parity, write 0x%x\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|regVal
-operator||
-name|resetNpeParity
-argument_list|)
-expr_stmt|;
-name|EXP_BUS_WRITE_4
-argument_list|(
-name|sa
-argument_list|,
-name|EXP_FCTRL_OFFSET
-argument_list|,
-name|regVal
-operator||
-name|resetNpeParity
-argument_list|)
-expr_stmt|;
-comment|/* un-fuse and un-reset the NPE& coprocessor */
-name|DPRINTFn
-argument_list|(
-literal|2
-argument_list|,
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: FCTRL unfuse parity, write 0x%x\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|regVal
-operator|&
-name|resetNpeParity
-argument_list|)
-expr_stmt|;
-name|EXP_BUS_WRITE_4
-argument_list|(
-name|sa
-argument_list|,
-name|EXP_FCTRL_OFFSET
-argument_list|,
-name|regVal
-operator|&
-operator|~
-name|resetNpeParity
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* 	 * WR IXA00055043 - Remove IMEM Parity Introduced by NPE Reset Operation 	 * XXX Removed because it breaks IXP435 operation; e.g. on Gateworks 	 * XXX 2358 boards reseting NPE-A after NPE-C is running causes both 	 * XXX npe's to stop working 	 */
+block|npe_reset(sc->sc_npeid);
+endif|#
+directive|endif
 comment|/* 	 * Call NpeMgr function to stop the NPE again after the Feature Control 	 * has unfused and Un-Reset the NPE and its associated Coprocessors. 	 */
 name|error
 operator|=
