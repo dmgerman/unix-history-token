@@ -1962,6 +1962,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|SVC_RELEASE
+argument_list|(
+name|xprt
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
