@@ -63,6 +63,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LK_EXCLUSIVE_SPINNERS
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
 name|LK_ALL_WAITERS
 define|\
 value|(LK_SHARED_WAITERS | LK_EXCLUSIVE_WAITERS)
@@ -73,7 +80,7 @@ define|#
 directive|define
 name|LK_FLAGMASK
 define|\
-value|(LK_SHARE | LK_ALL_WAITERS)
+value|(LK_SHARE | LK_ALL_WAITERS | LK_EXCLUSIVE_SPINNERS)
 end_define
 
 begin_define
@@ -90,7 +97,7 @@ begin_define
 define|#
 directive|define
 name|LK_SHARERS_SHIFT
-value|3
+value|4
 end_define
 
 begin_define
@@ -730,6 +737,13 @@ define|#
 directive|define
 name|LK_QUIET
 value|0x000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|LK_ADAPTIVE
+value|0x000040
 end_define
 
 begin_comment
