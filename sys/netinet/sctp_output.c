@@ -50206,26 +50206,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * EY - this is a never reneging receiver, that makes all gaps are 	 * nr-gaps, set the All bit 	 */
-if|if
-condition|(
-name|SCTP_BASE_SYSCTL
-argument_list|(
-name|sctp_do_drain
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|nr_sack
-operator|->
-name|ch
-operator|.
-name|chunk_flags
-operator||=
-name|SCTP_NR_SACK_ALL_BIT
-expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|SCTP_ASOCLOG_OF_TSNS
