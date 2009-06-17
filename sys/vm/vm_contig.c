@@ -813,6 +813,15 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+name|m
+index|[
+name|i
+index|]
+operator|.
+name|valid
+operator|=
+name|VM_PAGE_BITS_ALL
+expr_stmt|;
 name|tmp_addr
 operator|+=
 name|PAGE_SIZE
