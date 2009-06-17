@@ -282,6 +282,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ixp4xx_write_feature_bits
+parameter_list|(
+name|uint32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ixp425_md_route_interrupt
 parameter_list|(

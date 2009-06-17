@@ -245,6 +245,27 @@ block|}
 end_function
 
 begin_function
+name|void
+name|ixp4xx_write_feature_bits
+parameter_list|(
+name|uint32_t
+name|v
+parameter_list|)
+block|{
+name|IXPREG
+argument_list|(
+name|IXP425_EXP_VBASE
+operator|+
+name|EXP_FCTRL_OFFSET
+argument_list|)
+operator|=
+operator|~
+name|v
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|struct
 name|arm32_dma_range
 modifier|*
