@@ -2893,6 +2893,16 @@ operator|&
 name|VI_DOOMED
 condition|)
 block|{
+name|state
+operator|->
+name|ls_threads
+operator|--
+expr_stmt|;
+name|wakeup
+argument_list|(
+name|state
+argument_list|)
+expr_stmt|;
 name|VI_UNLOCK
 argument_list|(
 name|vp
