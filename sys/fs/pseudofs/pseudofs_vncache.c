@@ -1104,8 +1104,9 @@ comment|/*  * Purge the cache of dead entries  *  * This is extremely inefficien
 end_comment
 
 begin_function
+specifier|static
 name|void
-name|pfs_purge
+name|pfs_purge_locked
 parameter_list|(
 name|struct
 name|pfs_node
@@ -1123,10 +1124,12 @@ name|vnode
 modifier|*
 name|vnp
 decl_stmt|;
-name|mtx_lock
+name|mtx_assert
 argument_list|(
 operator|&
 name|pfs_vncache_mutex
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|pvd
@@ -1199,15 +1202,15 @@ argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
-name|vdrop
-argument_list|(
-name|vnp
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
 name|pfs_vncache_mutex
+argument_list|)
+expr_stmt|;
+name|vdrop
+argument_list|(
+name|vnp
 argument_list|)
 expr_stmt|;
 name|pvd
@@ -1225,6 +1228,30 @@ name|pvd_next
 expr_stmt|;
 block|}
 block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|pfs_purge
+parameter_list|(
+name|struct
+name|pfs_node
+modifier|*
+name|pn
+parameter_list|)
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|pfs_vncache_mutex
+argument_list|)
+expr_stmt|;
+name|pfs_purge_locked
+argument_list|(
+name|pn
+argument_list|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -1235,7 +1262,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free all vnodes associated with a defunct process  *  * XXXRW: It is unfortunate that pfs_exit() always acquires and releases two  * mutexes (one of which is Giant) for every process exit, even if procfs  * isn't mounted.  */
+comment|/*  * Free all vnodes associated with a defunct process  */
 end_comment
 
 begin_function
@@ -1268,12 +1295,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1318,17 +1339,11 @@ name|pvd_dead
 operator|=
 literal|1
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|pfs_vncache_mutex
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dead
 condition|)
-name|pfs_purge
+name|pfs_purge_locked
 argument_list|(
 name|NULL
 argument_list|)
@@ -1336,7 +1351,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|Giant
+name|pfs_vncache_mutex
 argument_list|)
 expr_stmt|;
 block|}
