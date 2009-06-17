@@ -27,23 +27,6 @@ directive|include
 file|<sys/queue.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/jail.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Interim userspace API. */
 end_comment
