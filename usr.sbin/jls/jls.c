@@ -669,7 +669,7 @@ argument_list|)
 expr_stmt|;
 name|add_param
 argument_list|(
-literal|"cpuset"
+literal|"cpuset.id"
 argument_list|,
 name|NULL
 argument_list|,
