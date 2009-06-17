@@ -5563,12 +5563,12 @@ if|if
 condition|(
 name|dos_heads
 operator|>
-literal|255
+literal|256
 condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"ERROR line %d: number of heads must be within (1-255)"
+literal|"ERROR line %d: number of heads must be within (1-256)"
 argument_list|,
 name|current_line_number
 argument_list|)
