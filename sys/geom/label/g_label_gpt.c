@@ -100,7 +100,7 @@ value|"gptid"
 end_define
 
 begin_comment
-comment|/* also defined in geom/part/g_part_gpt.c */
+comment|/* XXX: Also defined in geom/part/g_part_gpt.c */
 end_comment
 
 begin_struct
@@ -120,7 +120,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* shamelessly stolen from g_part_gpt.c */
+comment|/* XXX: Shamelessly stolen from g_part_gpt.c */
 end_comment
 
 begin_function
@@ -536,7 +536,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* We taste only partitions from GPART */
+comment|/* We taste only partitions handled by GPART */
 if|if
 condition|(
 name|strncmp
@@ -589,7 +589,7 @@ name|pp
 operator|->
 name|private
 expr_stmt|;
-comment|/* 	 * create sbuf with biggest possible size 	 * we need max. 4 bytes for every 2-byte utf16 char 	 */
+comment|/* 	 * Create sbuf with biggest possible size. 	 * We need max. 4 bytes for every 2-byte utf16 char. 	 */
 name|lbl
 operator|=
 name|sbuf_new
@@ -612,7 +612,7 @@ argument_list|,
 name|SBUF_FIXEDLEN
 argument_list|)
 expr_stmt|;
-comment|/* size ist the number of characters, not bytes */
+comment|/* Size is the number of characters, not bytes */
 name|sbuf_nprintf_utf16
 argument_list|(
 name|lbl
@@ -722,7 +722,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* we taste only partitions from GPART */
+comment|/* We taste only partitions handled by GPART */
 if|if
 condition|(
 name|strncmp
