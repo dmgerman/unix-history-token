@@ -5730,6 +5730,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CHIP_ID_YUKON_FE_P
+value|0xb8
+end_define
+
+begin_comment
+comment|/* Chip ID for YUKON-2 FE+ */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CHIP_REV_YU_XL_A0
 value|0
 end_define
@@ -5817,6 +5828,17 @@ directive|define
 name|CHIP_REV_YU_EC_U_A1
 value|2
 end_define
+
+begin_define
+define|#
+directive|define
+name|CHIP_REV_YU_FE_P_A0
+value|0
+end_define
+
+begin_comment
+comment|/* Chip Rev. for Yukon-2 FE+ A0 */
+end_comment
 
 begin_comment
 comment|/*	B2_Y2_CLK_GATE	 8 bit	Clock Gating (Yukon-2 only) */
@@ -13320,6 +13342,50 @@ end_define
 
 begin_comment
 comment|/* disable VLAN stripping */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GMF_RX_OVER_ON
+value|BIT_19
+end_define
+
+begin_comment
+comment|/* enable flushing on receive overrun */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GMF_RX_OVER_OFF
+value|BIT_18
+end_define
+
+begin_comment
+comment|/* disable flushing on receive overrun */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GMF_ASF_RX_OVER_ON
+value|BIT_17
+end_define
+
+begin_comment
+comment|/* enable flushing of ASF when overrun */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GMF_ASF_RX_OVER_OFF
+value|BIT_16
+end_define
+
+begin_comment
+comment|/* disable flushing of ASF when overrun */
 end_comment
 
 begin_define

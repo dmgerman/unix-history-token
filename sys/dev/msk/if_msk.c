@@ -600,6 +600,8 @@ block|,
 literal|"Yukon EC"
 block|,
 literal|"Yukon FE"
+block|,
+literal|"Yukon FE+"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -5854,6 +5856,9 @@ break|break;
 case|case
 name|CHIP_ID_YUKON_EC_U
 case|:
+case|case
+name|CHIP_ID_YUKON_FE_P
+case|:
 name|CSR_WRITE_2
 argument_list|(
 name|sc
@@ -8160,7 +8165,7 @@ name|sc
 operator|->
 name|msk_hw_id
 operator|>
-name|CHIP_ID_YUKON_FE
+name|CHIP_ID_YUKON_FE_P
 condition|)
 block|{
 name|device_printf
@@ -8508,6 +8513,25 @@ operator|->
 name|msk_pflags
 operator||=
 name|MSK_FLAG_FASTETHER
+expr_stmt|;
+break|break;
+case|case
+name|CHIP_ID_YUKON_FE_P
+case|:
+name|sc
+operator|->
+name|msk_clock
+operator|=
+literal|50
+expr_stmt|;
+comment|/* 50 Mhz */
+name|sc
+operator|->
+name|msk_pflags
+operator||=
+name|MSK_FLAG_FASTETHER
+operator||
+name|MSK_FLAG_DESCV2
 expr_stmt|;
 break|break;
 case|case
@@ -18045,6 +18069,9 @@ decl_stmt|;
 name|uint16_t
 name|gmac
 decl_stmt|;
+name|uint32_t
+name|reg
+decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -18515,6 +18542,24 @@ argument_list|,
 name|GMF_RST_CLR
 argument_list|)
 expr_stmt|;
+name|reg
+operator|=
+name|GMF_OPER_ON
+operator||
+name|GMF_RX_F_FL_ON
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|msk_hw_id
+operator|==
+name|CHIP_ID_YUKON_FE_P
+condition|)
+name|reg
+operator||=
+name|GMF_RX_OVER_ON
+expr_stmt|;
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -18528,9 +18573,7 @@ argument_list|,
 name|RX_GMF_CTRL_T
 argument_list|)
 argument_list|,
-name|GMF_OPER_ON
-operator||
-name|GMF_RX_F_FL_ON
+name|reg
 argument_list|)
 expr_stmt|;
 comment|/* Set receive filter. */
