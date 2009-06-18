@@ -5087,10 +5087,7 @@ for|for
 control|(
 name|len
 operator|=
-name|wcslen
-argument_list|(
-name|buf
-argument_list|)
+literal|2
 init|;
 name|len
 operator|>
@@ -5174,21 +5171,9 @@ index|[
 name|i
 index|]
 argument_list|,
-literal|L"  "
+literal|L" "
 argument_list|,
-literal|3
-operator|-
-name|wcswidth
-argument_list|(
-name|wds
-operator|->
-name|names
-index|[
-name|i
-index|]
-argument_list|,
-literal|2
-argument_list|)
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
