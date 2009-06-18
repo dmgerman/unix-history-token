@@ -1033,6 +1033,9 @@ operator|&&
 operator|(
 name|ticks
 operator|-
+operator|(
+name|int
+operator|)
 name|tp
 operator|->
 name|t_rcvtime
@@ -1306,6 +1309,9 @@ condition|(
 operator|(
 name|ticks
 operator|-
+operator|(
+name|int
+operator|)
 name|tp
 operator|->
 name|t_rcvtime
@@ -1692,6 +1698,9 @@ operator|(
 operator|(
 name|ticks
 operator|-
+operator|(
+name|int
+operator|)
 name|tp
 operator|->
 name|t_rcvtime
@@ -1702,6 +1711,9 @@ operator|||
 operator|(
 name|ticks
 operator|-
+operator|(
+name|int
+operator|)
 name|tp
 operator|->
 name|t_rcvtime

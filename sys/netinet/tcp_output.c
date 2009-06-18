@@ -713,6 +713,9 @@ operator|&&
 operator|(
 name|ticks
 operator|-
+operator|(
+name|int
+operator|)
 name|tp
 operator|->
 name|t_rcvtime
