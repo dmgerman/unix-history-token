@@ -3605,6 +3605,9 @@ operator|->
 name|dpr_lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|err
 operator|=
 name|dt_pid_create_pid_probes
@@ -3617,7 +3620,25 @@ name|pcb
 argument_list|,
 name|dpr
 argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 			 * Alert other retained enablings which may match 			 * against the newly created probes. 			 */
+operator|(
+name|void
+operator|)
+name|dt_ioctl
+argument_list|(
+name|dtp
+argument_list|,
+name|DTRACEIOC_ENABLE
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)

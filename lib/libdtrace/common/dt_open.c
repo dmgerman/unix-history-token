@@ -247,15 +247,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|DT_VERS_1_6_1
+value|DT_VERSION_NUMBER(1, 6, 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DT_VERS_LATEST
-value|DT_VERS_1_6
+value|DT_VERS_1_6_1
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_VERS_STRING
-value|"Sun D 1.6"
+value|"Sun D 1.6.1"
 end_define
 
 begin_decl_stmt
@@ -295,6 +302,9 @@ comment|/* D API 1.5 Solaris Express 7/07 */
 name|DT_VERS_1_6
 block|,
 comment|/* D API 1.6 */
+name|DT_VERS_1_6_1
+block|,
+comment|/* D API 1.6.1 */
 literal|0
 block|}
 decl_stmt|;
@@ -7871,6 +7881,19 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|dtp
+operator|->
+name|dt_procs
+operator|!=
+name|NULL
+condition|)
+name|dt_proc_hash_destroy
+argument_list|(
+name|dtp
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -8059,19 +8082,6 @@ argument_list|(
 name|dtp
 argument_list|,
 name|pvp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dtp
-operator|->
-name|dt_procs
-operator|!=
-name|NULL
-condition|)
-name|dt_proc_hash_destroy
-argument_list|(
-name|dtp
 argument_list|)
 expr_stmt|;
 if|if

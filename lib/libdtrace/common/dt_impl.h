@@ -666,6 +666,10 @@ name|uint_t
 name|dtld_start
 decl_stmt|;
 comment|/* starting time in tsort for lib */
+name|uint_t
+name|dtld_loaded
+decl_stmt|;
+comment|/* boolean: is this library loaded */
 name|dt_list_t
 name|dtld_dependencies
 decl_stmt|;

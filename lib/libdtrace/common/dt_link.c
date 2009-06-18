@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_pragma
@@ -4599,8 +4599,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|DT_OP_RET
+value|0xc3
+end_define
+
+begin_define
+define|#
+directive|define
 name|DT_OP_CALL
 value|0xe8
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_OP_JMP32
+value|0xe9
 end_define
 
 begin_define
@@ -4667,6 +4681,9 @@ operator|-
 literal|1
 operator|)
 decl_stmt|;
+name|uint8_t
+name|ret
+decl_stmt|;
 comment|/* 	 * On x86, the first byte of the instruction is the call opcode and 	 * the next four bytes are the 32-bit address; the relocation is for 	 * the address operand. We back up the offset to the first byte of 	 * the instruction. For is-enabled probes, we later advance the offset 	 * so that it hits the first nop in the instruction sequence. 	 */
 operator|(
 operator|*
@@ -4702,7 +4719,7 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* 	 * We may have already processed this object file in an earlier linker 	 * invocation. Check to see if the present instruction sequence matches 	 * the one we would install. For is-enabled probes, we advance the 	 * offset to the first nop instruction in the sequence. 	 */
+comment|/* 	 * We may have already processed this object file in an earlier linker 	 * invocation. Check to see if the present instruction sequence matches 	 * the one we would install. For is-enabled probes, we advance the 	 * offset to the first nop instruction in the sequence to match the 	 * text modification code below. 	 */
 if|if
 condition|(
 operator|!
@@ -4711,12 +4728,21 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|ip
 index|[
 literal|0
 index|]
 operator|==
 name|DT_OP_NOP
+operator|||
+name|ip
+index|[
+literal|0
+index|]
+operator|==
+name|DT_OP_RET
+operator|)
 operator|&&
 name|ip
 index|[
@@ -4785,12 +4811,21 @@ index|]
 operator|==
 name|DT_OP_XOR_EAX_1
 operator|&&
+operator|(
 name|ip
 index|[
 literal|3
 index|]
 operator|==
 name|DT_OP_NOP
+operator|||
+name|ip
+index|[
+literal|3
+index|]
+operator|==
+name|DT_OP_RET
+operator|)
 operator|&&
 name|ip
 index|[
@@ -4832,12 +4867,21 @@ index|]
 operator|==
 name|DT_OP_XOR_EAX_1
 operator|&&
+operator|(
 name|ip
 index|[
 literal|2
 index|]
 operator|==
 name|DT_OP_NOP
+operator|||
+name|ip
+index|[
+literal|2
+index|]
+operator|==
+name|DT_OP_RET
+operator|)
 operator|&&
 name|ip
 index|[
@@ -4868,7 +4912,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * We only expect a call instrution with a 32-bit displacement. 	 */
+comment|/* 	 * We expect either a call instrution with a 32-bit displacement or a 	 * jmp instruction with a 32-bit displacement acting as a tail-call. 	 */
 if|if
 condition|(
 name|ip
@@ -4877,11 +4921,19 @@ literal|0
 index|]
 operator|!=
 name|DT_OP_CALL
+operator|&&
+name|ip
+index|[
+literal|0
+index|]
+operator|!=
+name|DT_OP_JMP32
 condition|)
 block|{
 name|dt_dprintf
 argument_list|(
-literal|"found %x instead of a call instruction at %llx\n"
+literal|"found %x instead of a call or jmp instruction at "
+literal|"%llx\n"
 argument_list|,
 name|ip
 index|[
@@ -4903,6 +4955,21 @@ literal|1
 operator|)
 return|;
 block|}
+name|ret
+operator|=
+operator|(
+name|ip
+index|[
+literal|0
+index|]
+operator|==
+name|DT_OP_JMP32
+operator|)
+condition|?
+name|DT_OP_RET
+else|:
+name|DT_OP_NOP
+expr_stmt|;
 comment|/* 	 * Establish the instruction sequence -- all nops for probes, and an 	 * instruction to clear the return value register (%eax/%rax) followed 	 * by nops for is-enabled probes. For is-enabled probes, we advance 	 * the offset to the first nop. This isn't stricly necessary but makes 	 * for more readable disassembly when the probe is enabled. 	 */
 if|if
 condition|(
@@ -4915,7 +4982,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|DT_OP_NOP
+name|ret
 expr_stmt|;
 name|ip
 index|[
@@ -4982,7 +5049,7 @@ index|[
 literal|3
 index|]
 operator|=
-name|DT_OP_NOP
+name|ret
 expr_stmt|;
 name|ip
 index|[
@@ -5020,7 +5087,7 @@ index|[
 literal|2
 index|]
 operator|=
-name|DT_OP_NOP
+name|ret
 expr_stmt|;
 name|ip
 index|[

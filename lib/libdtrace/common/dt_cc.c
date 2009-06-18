@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_pragma
@@ -9646,6 +9646,13 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+name|dld
+operator|->
+name|dtld_loaded
+operator|=
+name|B_TRUE
+expr_stmt|;
 name|dt_program_destroy
 argument_list|(
 name|dtp
@@ -9653,6 +9660,7 @@ argument_list|,
 name|pgp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|dt_lib_depend_free
 argument_list|(
