@@ -882,6 +882,28 @@ begin_comment
 comment|/* 32 bit Our Register 5 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PCI_CFG_REG_0
+value|0x90
+end_define
+
+begin_comment
+comment|/* 32 bit Config Register 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_CFG_REG_1
+value|0x94
+end_define
+
+begin_comment
+comment|/* 32 bit Config Register 1 */
+end_comment
+
 begin_comment
 comment|/* PCI Express Capability */
 end_comment
@@ -1793,6 +1815,470 @@ end_define
 
 begin_comment
 comment|/* Enable Gate Root Core Clock */
+end_comment
+
+begin_comment
+comment|/* PCI_OUR_REG_5	32 bit	Our Register 5 (Yukon-ECU only) */
+end_comment
+
+begin_comment
+comment|/* Bit 31..27: for A3& later */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_CTL_DIV_CORE_CLK_ENA
+value|BIT_31
+end_define
+
+begin_comment
+comment|/* Divide Core Clock Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_CTL_SRESET_VMAIN_AV
+value|BIT_30
+end_define
+
+begin_comment
+comment|/* Soft Reset for Vmain_av De-Glitch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_CTL_BYPASS_VMAIN_AV
+value|BIT_29
+end_define
+
+begin_comment
+comment|/* Bypass En. for Vmain_av De-Glitch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_CTL_TIM_VMAIN_AV1
+value|BIT_28
+end_define
+
+begin_comment
+comment|/* Bit 28..27: Timer Vmain_av Mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_CTL_TIM_VMAIN_AV0
+value|BIT_27
+end_define
+
+begin_comment
+comment|/* Bit 28..27: Timer Vmain_av Mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_CTL_TIM_VMAIN_AV_MSK
+value|(BIT_28 | BIT_27)
+end_define
+
+begin_comment
+comment|/* Bit 26..16: Release Clock on Event */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_REL_PCIE_RST_DE_ASS
+value|BIT_26
+end_define
+
+begin_comment
+comment|/* PCIe Reset De-Asserted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_REL_GPHY_REC_PACKET
+value|BIT_25
+end_define
+
+begin_comment
+comment|/* GPHY Received Packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_REL_INT_FIFO_N_EMPTY
+value|BIT_24
+end_define
+
+begin_comment
+comment|/* Internal FIFO Not Empty */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_REL_MAIN_PWR_AVAIL
+value|BIT_23
+end_define
+
+begin_comment
+comment|/* Main Power Available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_REL_CLKRUN_REQ_REL
+value|BIT_22
+end_define
+
+begin_comment
+comment|/* CLKRUN Request Release */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_REL_PCIE_RESET_ASS
+value|BIT_21
+end_define
+
+begin_comment
+comment|/* PCIe Reset Asserted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_REL_PME_ASSERTED
+value|BIT_20
+end_define
+
+begin_comment
+comment|/* PME Asserted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_REL_PCIE_EXIT_L1_ST
+value|BIT_19
+end_define
+
+begin_comment
+comment|/* PCIe Exit L1 State */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_REL_LOADER_NOT_FIN
+value|BIT_18
+end_define
+
+begin_comment
+comment|/* EPROM Loader Not Finished */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_REL_PCIE_RX_EX_IDLE
+value|BIT_17
+end_define
+
+begin_comment
+comment|/* PCIe Rx Exit Electrical Idle State */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_REL_GPHY_LINK_UP
+value|BIT_16
+end_define
+
+begin_comment
+comment|/* GPHY Link Up */
+end_comment
+
+begin_comment
+comment|/* Bit 10.. 0: Mask for Gate Clock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_GAT_PCIE_RST_ASSERTED
+value|BIT_10
+end_define
+
+begin_comment
+comment|/* PCIe Reset Asserted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_GAT_GPHY_N_REC_PACKET
+value|BIT_9
+end_define
+
+begin_comment
+comment|/* GPHY Not Received Packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_GAT_INT_FIFO_EMPTY
+value|BIT_8
+end_define
+
+begin_comment
+comment|/* Internal FIFO Empty */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_GAT_MAIN_PWR_N_AVAIL
+value|BIT_7
+end_define
+
+begin_comment
+comment|/* Main Power Not Available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_GAT_CLKRUN_REQ_REL
+value|BIT_6
+end_define
+
+begin_comment
+comment|/* CLKRUN Not Requested */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_GAT_PCIE_RESET_ASS
+value|BIT_5
+end_define
+
+begin_comment
+comment|/* PCIe Reset Asserted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_GAT_PME_DE_ASSERTED
+value|BIT_4
+end_define
+
+begin_comment
+comment|/* PME De-Asserted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_GAT_PCIE_ENTER_L1_ST
+value|BIT_3
+end_define
+
+begin_comment
+comment|/* PCIe Enter L1 State */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_GAT_LOADER_FINISHED
+value|BIT_2
+end_define
+
+begin_comment
+comment|/* EPROM Loader Finished */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_GAT_PCIE_RX_EL_IDLE
+value|BIT_1
+end_define
+
+begin_comment
+comment|/* PCIe Rx Electrical Idle State */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_GAT_GPHY_LINK_DOWN
+value|BIT_0
+end_define
+
+begin_comment
+comment|/* GPHY Link Down */
+end_comment
+
+begin_comment
+comment|/* PCI_CFG_REG_1	32 bit	Config Register 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_CF1_DIS_REL_EVT_RST
+value|BIT_24
+end_define
+
+begin_comment
+comment|/* Dis. Rel. Event during PCIE reset */
+end_comment
+
+begin_comment
+comment|/* Bit 23..21: Release Clock on Event */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_CF1_REL_LDR_NOT_FIN
+value|BIT_23
+end_define
+
+begin_comment
+comment|/* EEPROM Loader Not Finished */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_CF1_REL_VMAIN_AVLBL
+value|BIT_22
+end_define
+
+begin_comment
+comment|/* Vmain available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_CF1_REL_PCIE_RESET
+value|BIT_21
+end_define
+
+begin_comment
+comment|/* PCI-E reset */
+end_comment
+
+begin_comment
+comment|/* Bit 20..18: Gate Clock on Event */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_CF1_GAT_LDR_NOT_FIN
+value|BIT_20
+end_define
+
+begin_comment
+comment|/* EEPROM Loader Finished */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_CF1_GAT_PCIE_RX_IDLE
+value|BIT_19
+end_define
+
+begin_comment
+comment|/* PCI-E Rx Electrical idle */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_CF1_GAT_PCIE_RESET
+value|BIT_18
+end_define
+
+begin_comment
+comment|/* PCI-E Reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_CF1_PRST_PHY_CLKREQ
+value|BIT_17
+end_define
+
+begin_comment
+comment|/* Enable PCI-E rst& PM2PHY gen. CLKREQ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_CF1_PCIE_RST_CLKREQ
+value|BIT_16
+end_define
+
+begin_comment
+comment|/* Enable PCI-E rst generate CLKREQ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_CF1_ENA_CFG_LDR_DONE
+value|BIT_8
+end_define
+
+begin_comment
+comment|/* Enable core level Config loader done */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_CF1_ENA_TXBMU_RD_IDLE
+value|BIT_1
+end_define
+
+begin_comment
+comment|/* Enable TX BMU Read  IDLE for ASPM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_CF1_ENA_TXBMU_WR_IDLE
+value|BIT_0
+end_define
+
+begin_comment
+comment|/* Enable TX BMU Write IDLE for ASPM */
 end_comment
 
 begin_comment
@@ -4085,6 +4571,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|B28_Y2_ASF_HCU_CCSR
+value|0x0e68
+end_define
+
+begin_comment
+comment|/* 32 bit ASF HCU CCSR (Yukon EX) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|B28_Y2_ASF_HOST_COM
 value|0x0e6c
 end_define
@@ -5736,6 +6233,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CHIP_ID_YUKON_EX
+value|0xb5
+end_define
+
+begin_comment
+comment|/* Chip ID for YUKON-2 Extreme */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CHIP_ID_YUKON_EC
 value|0xb6
 end_define
@@ -5866,6 +6374,28 @@ end_define
 
 begin_comment
 comment|/* Chip Rev. for Yukon-2 FE+ A0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIP_REV_YU_EX_A0
+value|1
+end_define
+
+begin_comment
+comment|/* Chip Rev. for Yukon-2 EX A0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIP_REV_YU_EX_B0
+value|2
+end_define
+
+begin_comment
+comment|/* Chip Rev. for Yukon-2 EX B0 */
 end_comment
 
 begin_comment
@@ -6343,6 +6873,105 @@ end_define
 
 begin_comment
 comment|/* Disable Config Reg WR */
+end_comment
+
+begin_comment
+comment|/*	B2_GP_IO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLB_GPIO_CLK_DEB_ENA
+value|BIT_31
+end_define
+
+begin_comment
+comment|/* Clock Debug Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLB_GPIO_CLK_DBG_MSK
+value|0x3c000000
+end_define
+
+begin_comment
+comment|/* Clock Debug */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLB_GPIO_INT_RST_D3_DIS
+value|BIT_15
+end_define
+
+begin_comment
+comment|/* Disable Internal Reset After D3 to D0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLB_GPIO_LED_PAD_SPEED_UP
+value|BIT_14
+end_define
+
+begin_comment
+comment|/* LED PAD Speed Up */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLB_GPIO_STAT_RACE_DIS
+value|BIT_13
+end_define
+
+begin_comment
+comment|/* Status Race Disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLB_GPIO_TEST_SEL_MSK
+value|0x00001800
+end_define
+
+begin_comment
+comment|/* Testmode Select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLB_GPIO_TEST_SEL_BASE
+value|BIT_11
+end_define
+
+begin_define
+define|#
+directive|define
+name|GLB_GPIO_RAND_ENA
+value|BIT_10
+end_define
+
+begin_comment
+comment|/* Random Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLB_GPIO_RAND_BIT_1
+value|BIT_9
+end_define
+
+begin_comment
+comment|/* Random Bit 1 */
 end_comment
 
 begin_comment
@@ -7265,8 +7894,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|F_TX_CHK_AUTO_OFF
+value|BIT_31
+end_define
+
+begin_comment
+comment|/* Tx checksum auto-calc Off(Yukon EX)*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_TX_CHK_AUTO_ON
+value|BIT_30
+end_define
+
+begin_comment
+comment|/* Tx checksum auto-calc On(Yukon EX)*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|F_ALM_FULL
-value|BIT_27
+value|BIT_28
 end_define
 
 begin_comment
@@ -13943,6 +14594,187 @@ comment|/* ASF system clock stopped */
 end_comment
 
 begin_comment
+comment|/* B28_Y2_ASF_HCU_CCSR	32bit CPU Control and Status Register (Yukon EX) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Y2_ASF_HCU_CCSR_SMBALERT_MONITOR
+value|BIT_27
+end_define
+
+begin_comment
+comment|/* SMBALERT pin monitor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Y2_ASF_HCU_CCSR_CPU_SLEEP
+value|BIT_26
+end_define
+
+begin_comment
+comment|/* CPU sleep status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Y2_ASF_HCU_CCSR_CS_TO
+value|BIT_25
+end_define
+
+begin_comment
+comment|/* Clock Stretching Timeout */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Y2_ASF_HCU_CCSR_WDOG
+value|BIT_24
+end_define
+
+begin_comment
+comment|/* Watchdog Reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Y2_ASF_HCU_CCSR_CLR_IRQ_HOST
+value|BIT_17
+end_define
+
+begin_comment
+comment|/* Clear IRQ_HOST */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Y2_ASF_HCU_CCSR_SET_IRQ_HCU
+value|BIT_16
+end_define
+
+begin_comment
+comment|/* Set IRQ_HCU */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Y2_ASF_HCU_CCSR_AHB_RST
+value|BIT_9
+end_define
+
+begin_comment
+comment|/* Reset AHB bridge */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Y2_ASF_HCU_CCSR_CPU_RST_MODE
+value|BIT_8
+end_define
+
+begin_comment
+comment|/* CPU Reset Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Y2_ASF_HCU_CCSR_SET_SYNC_CPU
+value|BIT_5
+end_define
+
+begin_define
+define|#
+directive|define
+name|Y2_ASF_HCU_CCSR_CPU_CLK_DIVIDE1
+value|BIT_4
+end_define
+
+begin_define
+define|#
+directive|define
+name|Y2_ASF_HCU_CCSR_CPU_CLK_DIVIDE0
+value|BIT_3
+end_define
+
+begin_define
+define|#
+directive|define
+name|Y2_ASF_HCU_CCSR_CPU_CLK_DIVIDE_MSK
+value|(BIT_4 | BIT_3)
+end_define
+
+begin_comment
+comment|/* CPU Clock Divide */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Y2_ASF_HCU_CCSR_CPU_CLK_DIVIDE_BASE
+value|BIT_3
+end_define
+
+begin_define
+define|#
+directive|define
+name|Y2_ASF_HCU_CCSR_OS_PRSNT
+value|BIT_2
+end_define
+
+begin_comment
+comment|/* ASF OS Present */
+end_comment
+
+begin_comment
+comment|/* Microcontroller State */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Y2_ASF_HCU_CCSR_UC_STATE_MSK
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|Y2_ASF_HCU_CCSR_UC_STATE_BASE
+value|BIT_0
+end_define
+
+begin_define
+define|#
+directive|define
+name|Y2_ASF_HCU_CCSR_ASF_RESET
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|Y2_ASF_HCU_CCSR_ASF_HALTED
+value|BIT_1
+end_define
+
+begin_define
+define|#
+directive|define
+name|Y2_ASF_HCU_CCSR_ASF_RUNNING
+value|BIT_0
+end_define
+
+begin_comment
 comment|/* B28_Y2_ASF_HOST_COM	32 bit	ASF Host Communication Reg */
 end_comment
 
@@ -14033,6 +14865,94 @@ end_comment
 
 begin_comment
 comment|/*	GMAC_CTRL	32 bit	GMAC Control Reg (YUKON only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GMC_SEC_RST
+value|BIT_15
+end_define
+
+begin_comment
+comment|/* MAC SEC RST */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GMC_SEC_RST_OFF
+value|BIT_14
+end_define
+
+begin_comment
+comment|/* MAC SEC RST Off */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GMC_BYP_MACSECRX_ON
+value|BIT_13
+end_define
+
+begin_comment
+comment|/* Bypass MAC SEC RX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GMC_BYP_MACSECRX_OFF
+value|BIT_12
+end_define
+
+begin_comment
+comment|/* Bypass MAC SEC RX Off */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GMC_BYP_MACSECTX_ON
+value|BIT_11
+end_define
+
+begin_comment
+comment|/* Bypass MAC SEC TX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GMC_BYP_MACSECTX_OFF
+value|BIT_10
+end_define
+
+begin_comment
+comment|/* Bypass MAC SEC TX Off */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GMC_BYP_RETR_ON
+value|BIT_9
+end_define
+
+begin_comment
+comment|/* Bypass MAC retransmit FIFO On */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GMC_BYP_RETR_OFF
+value|BIT_8
+end_define
+
+begin_comment
+comment|/* Bypass MAC retransmit FIFO Off */
 end_comment
 
 begin_define
@@ -16382,12 +17302,16 @@ name|MSK_FLAG_DESCV2
 value|0x0040
 define|#
 directive|define
-name|MSK_FLAG_NOHWVLAN
+name|MSK_FLAG_AUTOTX_CSUM
 value|0x0080
 define|#
 directive|define
-name|MSK_FLAG_NORXCHK
+name|MSK_FLAG_NOHWVLAN
 value|0x0100
+define|#
+directive|define
+name|MSK_FLAG_NORXCHK
+value|0x0200
 define|#
 directive|define
 name|MSK_FLAG_SUSPEND
