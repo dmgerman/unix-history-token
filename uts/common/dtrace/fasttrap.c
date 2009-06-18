@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_pragma
@@ -1203,7 +1203,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is called from cfork() via dtrace_fasttrap_fork(). The child  * process's address space is a (roughly) a copy of the parent process's so  * we have to remove all the instrumentation we had previously enabled in the  * parent.  */
+comment|/*  * This is called from cfork() via dtrace_fasttrap_fork(). The child  * process's address space is (roughly) a copy of the parent process's so  * we have to remove all the instrumentation we had previously enabled in the  * parent.  */
 end_comment
 
 begin_function
@@ -1378,6 +1378,18 @@ name|ASSERT
 argument_list|(
 name|ret
 operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 				 * The count of active providers can only be 				 * decremented (i.e. to zero) during exec, 				 * exit, and removal of a meta provider so it 				 * should be impossible to drop the count 				 * mid-fork. 				 */
+name|ASSERT
+argument_list|(
+name|tp
+operator|->
+name|ftt_proc
+operator|->
+name|ftpc_acount
+operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1655,6 +1667,7 @@ operator|->
 name|ftt_next
 control|)
 block|{
+comment|/* 		 * Note that it's safe to access the active count on the 		 * associated proc structure because we know that at least one 		 * provider (this one) will still be around throughout this 		 * operation. 		 */
 if|if
 condition|(
 name|tp
@@ -4083,6 +4096,17 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|ASSERT
+argument_list|(
+name|fprc
+operator|->
+name|ftpc_acount
+operator|<=
+name|fprc
+operator|->
+name|ftpc_rcount
+argument_list|)
+expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
@@ -4211,6 +4235,17 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|ASSERT
+argument_list|(
+name|fprc
+operator|->
+name|ftpc_acount
+operator|<=
+name|fprc
+operator|->
+name|ftpc_rcount
+argument_list|)
+expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
@@ -4310,6 +4345,17 @@ operator|->
 name|ftpc_rcount
 operator|!=
 literal|0
+argument_list|)
+expr_stmt|;
+name|ASSERT
+argument_list|(
+name|proc
+operator|->
+name|ftpc_acount
+operator|<=
+name|proc
+operator|->
+name|ftpc_rcount
 argument_list|)
 expr_stmt|;
 if|if
@@ -5050,6 +5096,44 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If this provider hasn't been retired, we need to explicitly drop the 	 * count of active providers on the associated process structure. 	 */
+if|if
+condition|(
+operator|!
+name|provider
+operator|->
+name|ftp_retired
+condition|)
+block|{
+name|atomic_add_64
+argument_list|(
+operator|&
+name|provider
+operator|->
+name|ftp_proc
+operator|->
+name|ftpc_acount
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|ASSERT
+argument_list|(
+name|provider
+operator|->
+name|ftp_proc
+operator|->
+name|ftpc_acount
+operator|<
+name|provider
+operator|->
+name|ftp_proc
+operator|->
+name|ftpc_rcount
+argument_list|)
+expr_stmt|;
+block|}
 name|fasttrap_proc_release
 argument_list|(
 name|provider
@@ -5316,6 +5400,21 @@ name|ftpc_acount
 argument_list|,
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|ASSERT
+argument_list|(
+name|fp
+operator|->
+name|ftp_proc
+operator|->
+name|ftpc_acount
+operator|<
+name|fp
+operator|->
+name|ftp_proc
+operator|->
+name|ftpc_rcount
 argument_list|)
 expr_stmt|;
 name|fp
@@ -7895,6 +7994,18 @@ operator|!=
 literal|0
 condition|)
 break|break;
+comment|/* 			 * The count of active providers can only be 			 * decremented (i.e. to zero) during exec, exit, and 			 * removal of a meta provider so it should be 			 * impossible to drop the count during this operation(). 			 */
+name|ASSERT
+argument_list|(
+name|tp
+operator|->
+name|ftt_proc
+operator|->
+name|ftpc_acount
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
 name|tp
 operator|=
 name|tp
