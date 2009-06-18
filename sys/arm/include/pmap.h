@@ -180,6 +180,10 @@ block|{
 name|int
 name|pvh_attrs
 decl_stmt|;
+name|vm_offset_t
+name|pv_kva
+decl_stmt|;
+comment|/* first kernel VA mapping */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -2123,6 +2127,17 @@ end_define
 
 begin_comment
 comment|/* mapping is used multiple times in userland */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PVF_UNMAN
+value|0x80
+end_define
+
+begin_comment
+comment|/* mapping is unmanaged */
 end_comment
 
 begin_function_decl

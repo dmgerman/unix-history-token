@@ -1985,16 +1985,11 @@ index|]
 operator|)
 return|;
 block|}
-name|panic
-argument_list|(
-literal|"vm_phys_paddr_to_vm_page: paddr %#jx is not in any segment"
-argument_list|,
+return|return
 operator|(
-name|uintmax_t
+name|NULL
 operator|)
-name|pa
-argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 
