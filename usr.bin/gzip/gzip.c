@@ -6141,8 +6141,6 @@ name|filetype
 name|method
 decl_stmt|;
 name|int
-name|rv
-decl_stmt|,
 name|fd
 decl_stmt|,
 name|ofd
@@ -6347,6 +6345,9 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* timestamp */
+name|int
+name|rv
+decl_stmt|;
 name|rv
 operator|=
 name|pread
@@ -9223,6 +9224,15 @@ name|out_tot
 operator|+=
 name|out
 expr_stmt|;
+else|#
+directive|else
+operator|(
+name|void
+operator|)
+operator|&
+name|ts
+expr_stmt|;
+comment|/* XXX */
 endif|#
 directive|endif
 name|printf
