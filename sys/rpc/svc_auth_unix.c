@@ -335,7 +335,7 @@ name|i
 operator|+
 literal|1
 operator|<
-name|NGROUPS
+name|XU_NGROUPS
 condition|)
 name|xcr
 operator|->
@@ -362,13 +362,13 @@ name|gid_len
 operator|+
 literal|1
 operator|>
-name|NGROUPS
+name|XU_NGROUPS
 condition|)
 name|xcr
 operator|->
 name|cr_ngroups
 operator|=
-name|NGROUPS
+name|XU_NGROUPS
 expr_stmt|;
 else|else
 name|xcr

@@ -13338,7 +13338,7 @@ decl_stmt|;
 name|gid_t
 name|groups
 index|[
-name|NGROUPS
+name|XU_NGROUPS
 operator|+
 literal|1
 index|]
@@ -13464,7 +13464,7 @@ name|pw_uid
 expr_stmt|;
 name|ngroups
 operator|=
-name|NGROUPS
+name|XU_NGROUPS
 operator|+
 literal|1
 expr_stmt|;
@@ -13615,7 +13615,7 @@ name|cr
 operator|->
 name|cr_ngroups
 operator|<
-name|NGROUPS
+name|XU_NGROUPS
 condition|)
 block|{
 name|name
@@ -13716,7 +13716,7 @@ name|cr
 operator|->
 name|cr_ngroups
 operator|==
-name|NGROUPS
+name|XU_NGROUPS
 condition|)
 name|syslog
 argument_list|(

@@ -153,7 +153,7 @@ begin_define
 define|#
 directive|define
 name|NGROUPS
-value|NGROUPS_MAX
+value|(NGROUPS_MAX+1)
 end_define
 
 begin_comment

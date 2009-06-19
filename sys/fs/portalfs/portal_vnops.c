@@ -1182,11 +1182,16 @@ name|pcred
 operator|.
 name|pcr_ngroups
 operator|=
+name|MIN
+argument_list|(
 name|ap
 operator|->
 name|a_cred
 operator|->
 name|cr_ngroups
+argument_list|,
+name|XU_NGROUPS
+argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
@@ -1200,7 +1205,9 @@ name|pcred
 operator|.
 name|pcr_groups
 argument_list|,
-name|NGROUPS
+name|pcred
+operator|.
+name|pcr_ngroups
 operator|*
 sizeof|sizeof
 argument_list|(

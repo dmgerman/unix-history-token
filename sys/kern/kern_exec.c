@@ -2539,6 +2539,15 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|oldcred
+operator|=
+name|crcopysafe
+argument_list|(
+name|p
+argument_list|,
+name|newcred
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sigacts_shared
@@ -2749,12 +2758,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Implement image setuid/setgid. 	 * 	 * Don't honor setuid/setgid if the filesystem prohibits it or if 	 * the process is being traced. 	 * 	 * XXXMAC: For the time being, use NOSUID to also prohibit 	 * transitions on the file system. 	 */
-name|oldcred
-operator|=
-name|p
-operator|->
-name|p_ucred
-expr_stmt|;
 name|credential_changing
 operator|=
 literal|0
@@ -2973,13 +2976,6 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Set the new credentials. 		 */
-name|crcopy
-argument_list|(
-name|newcred
-argument_list|,
-name|oldcred
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|attr
@@ -3115,13 +3111,6 @@ operator|->
 name|cr_gid
 condition|)
 block|{
-name|crcopy
-argument_list|(
-name|newcred
-argument_list|,
-name|oldcred
-argument_list|)
-expr_stmt|;
 name|change_svuid
 argument_list|(
 name|newcred

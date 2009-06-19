@@ -207,7 +207,7 @@ begin_define
 define|#
 directive|define
 name|KI_NSPARE_PTR
-value|7
+value|6
 end_define
 
 begin_ifdef
@@ -411,17 +411,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KI_NGROUPS
-value|16
-end_define
-
-begin_comment
-comment|/* number of groups in ki_groups */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LOGNAMELEN
 value|17
 end_define
@@ -569,13 +558,13 @@ name|short
 name|ki_spare_short2
 decl_stmt|;
 comment|/* unused (just here for alignment) */
-name|gid_t
-name|ki_groups
+name|uint32_t
+name|__was_ki_groups
 index|[
-name|KI_NGROUPS
+literal|16
 index|]
 decl_stmt|;
-comment|/* groups */
+comment|/* unused; left for bin compat */
 name|vm_size_t
 name|ki_size
 decl_stmt|;
@@ -796,6 +785,11 @@ modifier|*
 name|ki_udata
 decl_stmt|;
 comment|/* User convenience pointer */
+name|gid_t
+modifier|*
+name|ki_groups
+decl_stmt|;
+comment|/* groups */
 comment|/* 	 * When adding new variables, take space for pointers from the 	 * front of ki_spareptrs, and longs from the end of ki_sparelongs. 	 * That way the spare room from both arrays will remain contiguous. 	 */
 name|void
 modifier|*

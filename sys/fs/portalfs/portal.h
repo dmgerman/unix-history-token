@@ -39,7 +39,7 @@ comment|/* From ucred */
 name|gid_t
 name|pcr_groups
 index|[
-name|NGROUPS
+name|XU_NGROUPS
 index|]
 decl_stmt|;
 comment|/* From ucred */

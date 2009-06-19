@@ -63,17 +63,10 @@ name|uid_t
 name|cr_svuid
 decl_stmt|;
 comment|/* saved user id */
-name|short
+name|int
 name|cr_ngroups
 decl_stmt|;
 comment|/* number of groups */
-name|gid_t
-name|cr_groups
-index|[
-name|NGROUPS
-index|]
-decl_stmt|;
-comment|/* groups */
 name|gid_t
 name|cr_rgid
 decl_stmt|;
@@ -133,6 +126,15 @@ name|auditinfo_addr
 name|cr_audit
 decl_stmt|;
 comment|/* Audit properties. */
+name|gid_t
+modifier|*
+name|cr_groups
+decl_stmt|;
+comment|/* groups */
+name|int
+name|cr_agroups
+decl_stmt|;
+comment|/* Available groups */
 block|}
 struct|;
 end_struct
@@ -168,6 +170,13 @@ begin_comment
 comment|/* _KERNEL || _WANT_UCRED */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|XU_NGROUPS
+value|16
+end_define
+
 begin_comment
 comment|/*  * This is the external representation of struct ucred.  */
 end_comment
@@ -191,7 +200,7 @@ comment|/* number of groups */
 name|gid_t
 name|cr_groups
 index|[
-name|NGROUPS
+name|XU_NGROUPS
 index|]
 decl_stmt|;
 comment|/* groups */
@@ -227,6 +236,12 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_struct_decl
+struct_decl|struct
+name|proc
+struct_decl|;
+end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
@@ -349,6 +364,25 @@ begin_function_decl
 name|struct
 name|ucred
 modifier|*
+name|crcopysafe
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|cr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|ucred
+modifier|*
 name|crdup
 parameter_list|(
 name|struct
@@ -433,6 +467,25 @@ name|struct
 name|xucred
 modifier|*
 name|xcr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|crsetgroups
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cr
+parameter_list|,
+name|int
+name|n
+parameter_list|,
+name|gid_t
+modifier|*
+name|groups
 parameter_list|)
 function_decl|;
 end_function_decl

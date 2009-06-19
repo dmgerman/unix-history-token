@@ -10503,6 +10503,9 @@ decl_stmt|,
 modifier|*
 name|ucp
 decl_stmt|;
+name|gid_t
+name|ucred_group
+decl_stmt|;
 name|ucp
 operator|=
 name|cnp
@@ -10600,6 +10603,13 @@ operator|.
 name|cr_ngroups
 operator|=
 literal|1
+expr_stmt|;
+name|ucred
+operator|.
+name|cr_groups
+operator|=
+operator|&
+name|ucred_group
 expr_stmt|;
 name|ucred
 operator|.
