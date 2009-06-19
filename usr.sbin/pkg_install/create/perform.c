@@ -152,14 +152,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|home
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|pkg_perform
@@ -170,6 +162,12 @@ modifier|*
 name|pkgs
 parameter_list|)
 block|{
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|home
+decl_stmt|;
 name|char
 modifier|*
 name|pkg

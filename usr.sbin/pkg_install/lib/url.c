@@ -58,6 +58,7 @@ comment|/*  * Try and fetch a file by URL, returning the directory name for wher
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|fileGetURL
@@ -76,12 +77,14 @@ name|int
 name|keep_package
 parameter_list|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|rp
+decl_stmt|;
 name|char
 modifier|*
 name|cp
-decl_stmt|,
-modifier|*
-name|rp
 decl_stmt|,
 modifier|*
 name|tmp
