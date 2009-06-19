@@ -901,7 +901,7 @@ operator|*
 name|p
 operator|)
 operator|,
-literal|"=r"
+literal|"=&r"
 operator|(
 name|temp
 operator|)
