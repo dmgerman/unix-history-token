@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/priv.h>
 end_include
 
@@ -5306,8 +5312,6 @@ argument_list|(
 name|ip
 operator|->
 name|i_e2fs
-operator|->
-name|s_es
 argument_list|,
 name|EXT2_FEATURE_INCOMPAT_FILETYPE
 argument_list|)

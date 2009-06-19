@@ -892,6 +892,9 @@ operator|->
 name|i_number
 operator|<
 name|EXT2_FIRST_INO
+argument_list|(
+name|sb
+argument_list|)
 operator|||
 name|inode
 operator|->
@@ -1808,6 +1811,9 @@ condition|(
 name|j
 operator|<
 name|EXT2_FIRST_INO
+argument_list|(
+name|sb
+argument_list|)
 operator|||
 name|j
 operator|>
