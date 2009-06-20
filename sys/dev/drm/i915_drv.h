@@ -1332,7 +1332,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|u32
-name|gm45_get_vblank_counter
+name|g45_get_vblank_counter
 parameter_list|(
 name|struct
 name|drm_device
