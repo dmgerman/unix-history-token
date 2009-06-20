@@ -5353,7 +5353,9 @@ name|cr
 operator|->
 name|cr_ngroups
 argument_list|,
-name|XU_NGROUPS
+name|RPCAUTH_UNIXGIDS
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 for|for
