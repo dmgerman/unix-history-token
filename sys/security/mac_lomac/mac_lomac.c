@@ -7689,9 +7689,6 @@ case|case
 name|PRIV_TTY_EXCLUSIVE
 case|:
 case|case
-name|PRIV_TTY_PRISON
-case|:
-case|case
 name|PRIV_TTY_STI
 case|:
 case|case
