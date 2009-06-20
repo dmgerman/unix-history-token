@@ -5353,7 +5353,7 @@ name|cr
 operator|->
 name|cr_ngroups
 argument_list|,
-name|RPCAUTH_UNIXGIDS
+name|NFS_MAXGRPS
 operator|+
 literal|1
 argument_list|)

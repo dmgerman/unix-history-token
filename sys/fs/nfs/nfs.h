@@ -1882,7 +1882,7 @@ value|do { 					\ 		(b)->bits[0] = NFSATTRBIT_REFERRAL0;	 		\ 		(b)->bits[1] = N
 end_define
 
 begin_comment
-comment|/*  * Store uid, gid creds that were used when the stateid was acquired.  * The RPC layer allows RPCAUTH_UNIXGIDS + 1 groups to go out on the wire,  * so that's how many gets stored here.  */
+comment|/*  * Store uid, gid creds that were used when the stateid was acquired.  * The RPC layer allows NFS_MAXGRPS + 1 groups to go out on the wire,  * so that's how many gets stored here.  */
 end_comment
 
 begin_struct
@@ -1895,7 +1895,7 @@ decl_stmt|;
 name|gid_t
 name|nfsc_groups
 index|[
-name|RPCAUTH_UNIXGIDS
+name|NFS_MAXGRPS
 operator|+
 literal|1
 index|]
