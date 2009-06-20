@@ -120,7 +120,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*-  * Macros for type conversion:  * mtod(m, t)	-- Convert mbuf pointer to data pointer of correct type.  * dtom(x)	-- Convert data pointer within mbuf to mbuf pointer (XXX).  */
+comment|/*-  * Macro for type conversion: convert mbuf pointer to data pointer of correct  * type:  *  * mtod(m, t)	-- Convert mbuf pointer to data pointer of correct type.  */
 end_comment
 
 begin_define
@@ -133,16 +133,6 @@ parameter_list|,
 name|t
 parameter_list|)
 value|((t)((m)->m_data))
-end_define
-
-begin_define
-define|#
-directive|define
-name|dtom
-parameter_list|(
-name|x
-parameter_list|)
-value|((struct mbuf *)((intptr_t)(x)& ~(MSIZE-1)))
 end_define
 
 begin_comment
