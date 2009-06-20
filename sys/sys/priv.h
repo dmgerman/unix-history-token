@@ -971,17 +971,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRIV_TTY_PRISON
-value|254
-end_define
-
-begin_comment
-comment|/* Can open pts across jails. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PRIV_TTY_STI
 value|255
 end_define
