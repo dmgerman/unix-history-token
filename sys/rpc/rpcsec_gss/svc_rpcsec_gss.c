@@ -1850,9 +1850,6 @@ name|rpc_gss_ucred_t
 modifier|*
 name|uc
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 if|if
 condition|(
 name|req
