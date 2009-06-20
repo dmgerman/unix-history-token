@@ -143,6 +143,12 @@ directive|include
 file|<netipx/spx_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<security/mac/mac_framework.h>
+end_include
+
 begin_comment
 comment|/*  * SPX protocol implementation.  */
 end_comment
@@ -3874,6 +3880,18 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_socket_create_mbuf
+argument_list|(
+name|so
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|so
