@@ -855,12 +855,24 @@ name|ref_nodel
 range|:
 literal|1
 decl_stmt|;
-comment|/* refcount increased to prevent dlclose */
+comment|/* Refcount increased to prevent dlclose */
+name|bool
+name|init_scanned
+range|:
+literal|1
+decl_stmt|;
+comment|/* Object is already on init list. */
+name|bool
+name|on_fini_list
+range|:
+literal|1
+decl_stmt|;
+comment|/* Object is already on fini list. */
 name|struct
 name|link_map
 name|linkmap
 decl_stmt|;
-comment|/* for GDB and dlinfo() */
+comment|/* For GDB and dlinfo() */
 name|Objlist
 name|dldags
 decl_stmt|;
