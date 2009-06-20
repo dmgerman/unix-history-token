@@ -3518,6 +3518,9 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+goto|goto
+name|done
+goto|;
 block|}
 else|#
 directive|else
@@ -5872,6 +5875,8 @@ argument_list|(
 name|txq
 argument_list|,
 name|txsd
+operator|->
+name|map
 argument_list|,
 name|m
 argument_list|,
@@ -7119,6 +7124,8 @@ argument_list|(
 name|txq
 argument_list|,
 name|txsd
+operator|->
+name|map
 argument_list|,
 name|m0
 argument_list|,
@@ -7149,6 +7156,8 @@ argument_list|(
 name|txq
 argument_list|,
 name|txsd
+operator|->
+name|map
 argument_list|,
 operator|&
 name|m0

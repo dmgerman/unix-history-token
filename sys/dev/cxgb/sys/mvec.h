@@ -109,10 +109,8 @@ name|sge_txq
 modifier|*
 name|txq
 parameter_list|,
-name|struct
-name|tx_sw_desc
-modifier|*
-name|txsd
+name|bus_dmamap_t
+name|map
 parameter_list|,
 name|struct
 name|mbuf
@@ -168,8 +166,6 @@ name|txq
 operator|->
 name|entry_tag
 argument_list|,
-name|txsd
-operator|->
 name|map
 argument_list|,
 name|m
@@ -196,10 +192,8 @@ name|sge_txq
 modifier|*
 name|txq
 parameter_list|,
-name|struct
-name|tx_sw_desc
-modifier|*
-name|txsd
+name|bus_dmamap_t
+name|map
 parameter_list|,
 name|struct
 name|mbuf
@@ -227,10 +221,8 @@ name|sge_txq
 modifier|*
 name|txq
 parameter_list|,
-name|struct
-name|tx_sw_desc
-modifier|*
-name|txsd
+name|bus_dmamap_t
+name|map
 parameter_list|,
 name|struct
 name|mbuf
