@@ -394,6 +394,11 @@ modifier|*
 name|cb
 parameter_list|,
 name|struct
+name|mbuf
+modifier|*
+name|msi
+parameter_list|,
+name|struct
 name|spx
 modifier|*
 name|si
