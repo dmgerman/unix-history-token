@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fs/nfs/rpcv2.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fs/nfs/nfsproto.h>
 end_include
 
@@ -117,12 +123,6 @@ begin_include
 include|#
 directive|include
 file|<fs/nfs/nfs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fs/nfs/rpcv2.h>
 end_include
 
 begin_include
