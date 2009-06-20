@@ -1164,6 +1164,13 @@ operator|->
 name|dev_lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|map
+operator|==
+name|NULL
+condition|)
+return|return;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
