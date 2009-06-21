@@ -304,14 +304,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|const
 name|union
-name|ipx_host
-name|ipx_zerohost
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|const
-name|union
 name|ipx_net
 name|ipx_broadnet
 init|=
