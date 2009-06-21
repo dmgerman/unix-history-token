@@ -2584,16 +2584,11 @@ name|ifa_list
 value|ifa_link
 end_define
 
-begin_define
-define|#
-directive|define
-name|IFA_LOCK_INIT
-parameter_list|(
-name|ifa
-parameter_list|)
-define|\
-value|mtx_init(&(ifa)->ifa_mtx, "ifaddr", NULL, MTX_DEF)
-end_define
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_define
 define|#
@@ -2615,15 +2610,46 @@ parameter_list|)
 value|mtx_unlock(&(ifa)->ifa_mtx)
 end_define
 
-begin_define
-define|#
-directive|define
-name|IFA_DESTROY
+begin_function_decl
+name|void
+name|ifa_free
 parameter_list|(
+name|struct
+name|ifaddr
+modifier|*
 name|ifa
 parameter_list|)
-value|mtx_destroy(&(ifa)->ifa_mtx)
-end_define
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ifa_init
+parameter_list|(
+name|struct
+name|ifaddr
+modifier|*
+name|ifa
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ifa_ref
+parameter_list|(
+name|struct
+name|ifaddr
+modifier|*
+name|ifa
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * The prefix structure contains information about one prefix  * of an interface.  They are maintained by the different address families,  * are allocated and attached when a prefix or an address is set,  * and are linked together so all prefixes for an interface can be located.  */
@@ -2721,28 +2747,6 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|IFAFREE
-parameter_list|(
-name|ifa
-parameter_list|)
-define|\
-value|do {						\ 		IFA_LOCK(ifa);				\ 		KASSERT((ifa)->ifa_refcnt> 0,		\ 		    ("ifa %p !(ifa_refcnt> 0)", ifa));	\ 		if (--(ifa)->ifa_refcnt == 0) {		\ 			IFA_DESTROY(ifa);		\ 			free(ifa, M_IFADDR);		\ 		} else 					\ 			IFA_UNLOCK(ifa);		\ 	} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFAREF
-parameter_list|(
-name|ifa
-parameter_list|)
-define|\
-value|do {						\ 		IFA_LOCK(ifa);				\ 		++(ifa)->ifa_refcnt;			\ 		IFA_UNLOCK(ifa);			\ 	} while (0)
-end_define
 
 begin_decl_stmt
 specifier|extern

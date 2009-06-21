@@ -707,16 +707,10 @@ operator|*
 operator|)
 name|aa
 expr_stmt|;
-name|IFA_LOCK_INIT
+name|ifa_init
 argument_list|(
 name|ifa
 argument_list|)
-expr_stmt|;
-name|ifa
-operator|->
-name|ifa_refcnt
-operator|=
-literal|1
 expr_stmt|;
 comment|/* 			 * As the at_ifaddr contains the actual sockaddrs, 			 * and the ifaddr itself, link them al together 			 * correctly. 			 */
 name|ifa
@@ -1210,7 +1204,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * Now reclaim the reference. 		 */
-name|IFAFREE
+name|ifa_free
 argument_list|(
 name|ifa0
 argument_list|)

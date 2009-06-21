@@ -1700,7 +1700,7 @@ name|ia
 operator|->
 name|ia_ifa
 expr_stmt|;
-name|IFA_LOCK_INIT
+name|ifa_init
 argument_list|(
 name|ifa
 argument_list|)
@@ -1746,12 +1746,6 @@ operator|&
 name|ia
 operator|->
 name|ia_sockmask
-expr_stmt|;
-name|ifa
-operator|->
-name|ifa_refcnt
-operator|=
-literal|1
 expr_stmt|;
 name|ia
 operator|->
@@ -2868,7 +2862,7 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-name|IFAFREE
+name|ifa_free
 argument_list|(
 operator|&
 name|ia

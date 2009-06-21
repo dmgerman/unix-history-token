@@ -5347,7 +5347,7 @@ name|dad_ifa
 operator|=
 name|ifa
 expr_stmt|;
-name|IFAREF
+name|ifa_ref
 argument_list|(
 name|ifa
 argument_list|)
@@ -5505,7 +5505,7 @@ name|dp
 operator|=
 name|NULL
 expr_stmt|;
-name|IFAFREE
+name|ifa_free
 argument_list|(
 name|ifa
 argument_list|)
@@ -5739,7 +5739,7 @@ name|dp
 operator|=
 name|NULL
 expr_stmt|;
-name|IFAFREE
+name|ifa_free
 argument_list|(
 name|ifa
 argument_list|)
@@ -5904,7 +5904,7 @@ name|dp
 operator|=
 name|NULL
 expr_stmt|;
-name|IFAFREE
+name|ifa_free
 argument_list|(
 name|ifa
 argument_list|)
@@ -6222,7 +6222,7 @@ name|dp
 operator|=
 name|NULL
 expr_stmt|;
-name|IFAFREE
+name|ifa_free
 argument_list|(
 name|ifa
 argument_list|)

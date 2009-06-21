@@ -3527,7 +3527,7 @@ operator|&
 name|info
 argument_list|)
 expr_stmt|;
-name|IFAFREE
+name|ifa_free
 argument_list|(
 name|rt
 operator|->
@@ -3628,7 +3628,7 @@ operator|->
 name|rt_ifa
 condition|)
 block|{
-name|IFAREF
+name|ifa_ref
 argument_list|(
 name|info
 operator|.

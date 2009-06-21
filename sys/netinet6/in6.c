@@ -3107,6 +3107,14 @@ name|ia
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ifa_init
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 name|LIST_INIT
 argument_list|(
 operator|&
@@ -3116,14 +3124,6 @@ name|ia6_memberships
 argument_list|)
 expr_stmt|;
 comment|/* Initialize the address and masks, and put time stamp */
-name|IFA_LOCK_INIT
-argument_list|(
-operator|&
-name|ia
-operator|->
-name|ia_ifa
-argument_list|)
-expr_stmt|;
 name|ia
 operator|->
 name|ia_ifa
@@ -3271,14 +3271,6 @@ else|else
 name|V_in6_ifaddr
 operator|=
 name|ia
-expr_stmt|;
-name|ia
-operator|->
-name|ia_ifa
-operator|.
-name|ifa_refcnt
-operator|=
-literal|1
 expr_stmt|;
 name|IF_ADDR_LOCK
 argument_list|(
@@ -6032,7 +6024,7 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/* 	 * release another refcnt for the link from in6_ifaddr. 	 * Note that we should decrement the refcnt at least once for all *BSD. 	 */
-name|IFAFREE
+name|ifa_free
 argument_list|(
 operator|&
 name|oia

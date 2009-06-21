@@ -1900,7 +1900,7 @@ name|rt
 operator|->
 name|rt_ifa
 condition|)
-name|IFAFREE
+name|ifa_free
 argument_list|(
 name|rt
 operator|->
@@ -4587,7 +4587,7 @@ name|sa_len
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Note that we now have a reference to the ifa. 		 * This moved from below so that rnh->rnh_addaddr() can 		 * examine the ifa and  ifa->ifa_ifp if it so desires. 		 */
-name|IFAREF
+name|ifa_ref
 argument_list|(
 name|ifa
 argument_list|)
@@ -4642,7 +4642,7 @@ operator|->
 name|rt_ifa
 condition|)
 block|{
-name|IFAFREE
+name|ifa_free
 argument_list|(
 name|rt
 operator|->
@@ -4710,7 +4710,7 @@ name|rt
 operator|->
 name|rt_ifa
 condition|)
-name|IFAFREE
+name|ifa_free
 argument_list|(
 name|rt
 operator|->
@@ -5772,14 +5772,14 @@ name|sa_len
 argument_list|)
 condition|)
 block|{
-name|IFAFREE
+name|ifa_free
 argument_list|(
 name|rt
 operator|->
 name|rt_ifa
 argument_list|)
 expr_stmt|;
-name|IFAREF
+name|ifa_ref
 argument_list|(
 name|ifa
 argument_list|)

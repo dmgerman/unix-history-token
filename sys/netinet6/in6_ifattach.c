@@ -3506,7 +3506,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|IFAFREE
+name|ifa_free
 argument_list|(
 operator|&
 name|ia
@@ -3589,7 +3589,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|IFAFREE
+name|ifa_free
 argument_list|(
 operator|&
 name|oia
