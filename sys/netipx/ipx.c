@@ -1217,7 +1217,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* * Delete any previous route for an old address. */
+comment|/*  * Delete any previous route for an old address.  */
 end_comment
 
 begin_function
@@ -1302,7 +1302,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize an interface's internet address  * and routing table entry.  */
+comment|/*  * Initialize an interface's internet address and routing table entry.  */
 end_comment
 
 begin_function
@@ -1355,7 +1355,7 @@ operator|=
 operator|*
 name|sipx
 expr_stmt|;
-comment|/* 	 * The convention we shall adopt for naming is that 	 * a supplied address of zero means that "we don't care". 	 * Use the MAC address of the interface. If it is an 	 * interface without a MAC address, like a serial line, the 	 * address must be supplied. 	 * 	 * Give the interface a chance to initialize 	 * if this is its first address, 	 * and to validate the address if necessary. 	 */
+comment|/* 	 * The convention we shall adopt for naming is that a supplied 	 * address of zero means that "we don't care".  Use the MAC address 	 * of the interface.  If it is an interface without a MAC address, 	 * like a serial line, the address must be supplied. 	 * 	 * Give the interface a chance to initialize if this is its first 	 * address, and to validate the address if necessary. 	 */
 if|if
 condition|(
 name|ifp
