@@ -78,6 +78,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IER_BITS
+value|"\20\1ERXRDY\2ETXRDY\3ERLS\4EMSC"
+end_define
+
+begin_define
+define|#
+directive|define
 name|com_iir
 value|2
 end_define
@@ -152,6 +159,13 @@ end_define
 begin_comment
 comment|/* set if FIFOs are enabled */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IIR_BITS
+value|"\20\1NOPEND\2TXRDY\3RXRDY"
+end_define
 
 begin_define
 define|#
@@ -442,6 +456,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MCR_BITS
+value|"\20\1DTR\2RTS\3DRS\4IE\5LOOPBACK\10PRESCALE"
+end_define
+
+begin_define
+define|#
+directive|define
 name|com_lsr
 value|5
 end_define
@@ -537,6 +558,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LSR_BITS
+value|"\20\1RXRDY\2OE\3PE\4FE\5BI\6THRE\7TEMT\10RCV_FIFO"
+end_define
+
+begin_define
+define|#
+directive|define
 name|com_msr
 value|6
 end_define
@@ -606,6 +634,13 @@ define|#
 directive|define
 name|MSR_DCTS
 value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_BITS
+value|"\20\1DCTS\2DDSR\3TERI\4DDCD\5CTS\6DSR\7RI\10DCD"
 end_define
 
 begin_comment
@@ -816,6 +851,13 @@ define|#
 directive|define
 name|FIFO_RX_HIGH
 value|FCR_RX_HIGH
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCR_BITS
+value|"\20\1ENABLE\2RCV_RST\3XMT_RST\4DMA"
 end_define
 
 begin_comment
