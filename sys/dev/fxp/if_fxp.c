@@ -3360,7 +3360,7 @@ argument_list|,
 operator|&
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_txmtag
 argument_list|)
 expr_stmt|;
 if|if
@@ -3372,7 +3372,63 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not allocate dma tag\n"
+literal|"could not create TX DMA tag\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+name|error
+operator|=
+name|bus_dma_tag_create
+argument_list|(
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+name|BUS_SPACE_MAXADDR_32BIT
+argument_list|,
+name|BUS_SPACE_MAXADDR
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|MCLBYTES
+argument_list|,
+literal|1
+argument_list|,
+name|MCLBYTES
+argument_list|,
+literal|0
+argument_list|,
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|fxp_rxmtag
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"could not create RX DMA tag\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3436,7 +3492,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not allocate dma tag\n"
+literal|"could not create stats DMA tag\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3475,9 +3531,18 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"could not allocate stats DMA memory\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
+block|}
 name|error
 operator|=
 name|bus_dmamap_load
@@ -3519,7 +3584,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not map the stats buffer\n"
+literal|"could not load the stats DMA buffer\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3575,7 +3640,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not allocate dma tag\n"
+literal|"could not create TxCB DMA tag\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3616,9 +3681,18 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"could not allocate TxCB DMA memory\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
+block|}
 name|error
 operator|=
 name|bus_dmamap_load
@@ -3660,7 +3734,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not map DMA memory\n"
+literal|"could not load TxCB DMA buffer\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3724,7 +3798,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not allocate dma tag\n"
+literal|"could not create multicast setup DMA tag\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3750,6 +3824,8 @@ operator|->
 name|mcsp
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_ZERO
 argument_list|,
 operator|&
 name|sc
@@ -3761,9 +3837,18 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"could not allocate multicast setup DMA memory\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
+block|}
 name|error
 operator|=
 name|bus_dmamap_load
@@ -3805,7 +3890,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"can't map the multicast setup command\n"
+literal|"can't load the multicast setup DMA buffer\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3860,7 +3945,7 @@ name|bus_dmamap_create
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_txmtag
 argument_list|,
 literal|0
 argument_list|,
@@ -3896,7 +3981,7 @@ name|bus_dmamap_create
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_rxmtag
 argument_list|,
 literal|0
 argument_list|,
@@ -3969,7 +4054,7 @@ name|bus_dmamap_create
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_rxmtag
 argument_list|,
 literal|0
 argument_list|,
@@ -4818,7 +4903,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_rxmtag
 condition|)
 block|{
 for|for
@@ -4860,7 +4945,7 @@ name|bus_dmamap_sync
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_rxmtag
 argument_list|,
 name|rxp
 operator|->
@@ -4873,7 +4958,7 @@ name|bus_dmamap_unload
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_rxmtag
 argument_list|,
 name|rxp
 operator|->
@@ -4892,7 +4977,7 @@ name|bus_dmamap_destroy
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_rxmtag
 argument_list|,
 name|rxp
 operator|->
@@ -4904,13 +4989,28 @@ name|bus_dmamap_destroy
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_rxmtag
 argument_list|,
 name|sc
 operator|->
 name|spare_map
 argument_list|)
 expr_stmt|;
+name|bus_dma_tag_destroy
+argument_list|(
+name|sc
+operator|->
+name|fxp_rxmtag
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|fxp_txmtag
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -4950,7 +5050,7 @@ name|bus_dmamap_sync
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_txmtag
 argument_list|,
 name|txp
 operator|->
@@ -4963,7 +5063,7 @@ name|bus_dmamap_unload
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_txmtag
 argument_list|,
 name|txp
 operator|->
@@ -4982,7 +5082,7 @@ name|bus_dmamap_destroy
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_txmtag
 argument_list|,
 name|txp
 operator|->
@@ -4994,7 +5094,7 @@ name|bus_dma_tag_destroy
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_txmtag
 argument_list|)
 expr_stmt|;
 block|}
@@ -6512,6 +6612,8 @@ name|sc
 operator|->
 name|cbl_map
 argument_list|,
+name|BUS_DMASYNC_PREREAD
+operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
@@ -7230,7 +7332,7 @@ name|bus_dmamap_load_mbuf_sg
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_txmtag
 argument_list|,
 name|txp
 operator|->
@@ -7303,7 +7405,7 @@ name|bus_dmamap_load_mbuf_sg
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_txmtag
 argument_list|,
 name|txp
 operator|->
@@ -7398,7 +7500,7 @@ name|bus_dmamap_sync
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_txmtag
 argument_list|,
 name|txp
 operator|->
@@ -8191,7 +8293,9 @@ name|sc
 operator|->
 name|cbl_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
+name|BUS_DMASYNC_POSTREAD
+operator||
+name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
 for|for
@@ -8243,7 +8347,7 @@ name|bus_dmamap_sync
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_txmtag
 argument_list|,
 name|txp
 operator|->
@@ -8256,7 +8360,7 @@ name|bus_dmamap_unload
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_txmtag
 argument_list|,
 name|txp
 operator|->
@@ -8322,6 +8426,8 @@ name|sc
 operator|->
 name|cbl_map
 argument_list|,
+name|BUS_DMASYNC_PREREAD
+operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
@@ -9020,7 +9126,7 @@ name|bus_dmamap_sync
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_rxmtag
 argument_list|,
 name|rxp
 operator|->
@@ -9829,7 +9935,7 @@ name|bus_dmamap_sync
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_txmtag
 argument_list|,
 name|txp
 index|[
@@ -9845,7 +9951,7 @@ name|bus_dmamap_unload
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_txmtag
 argument_list|,
 name|txp
 index|[
@@ -9904,6 +10010,8 @@ name|sc
 operator|->
 name|cbl_map
 argument_list|,
+name|BUS_DMASYNC_PREREAD
+operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
@@ -11377,6 +11485,8 @@ name|sc
 operator|->
 name|cbl_map
 argument_list|,
+name|BUS_DMASYNC_PREREAD
+operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
@@ -11932,7 +12042,7 @@ name|bus_dmamap_load
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_rxmtag
 argument_list|,
 name|sc
 operator|->
@@ -11982,7 +12092,7 @@ name|bus_dmamap_unload
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_rxmtag
 argument_list|,
 name|rxp
 operator|->
@@ -12019,7 +12129,7 @@ name|bus_dmamap_sync
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_rxmtag
 argument_list|,
 name|rxp
 operator|->
@@ -12131,7 +12241,7 @@ name|bus_dmamap_sync
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_rxmtag
 argument_list|,
 name|p_rx
 operator|->
@@ -12299,7 +12409,7 @@ name|bus_dmamap_sync
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_rxmtag
 argument_list|,
 name|rxp
 operator|->
@@ -13731,6 +13841,8 @@ name|sc
 operator|->
 name|mcs_map
 argument_list|,
+name|BUS_DMASYNC_PREREAD
+operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
