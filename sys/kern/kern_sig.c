@@ -14100,7 +14100,7 @@ name|O_NOFOLLOW
 expr_stmt|;
 name|error
 operator|=
-name|vn_open
+name|vn_open_cred
 argument_list|(
 operator|&
 name|nd
@@ -14111,6 +14111,10 @@ argument_list|,
 name|S_IRUSR
 operator||
 name|S_IWUSR
+argument_list|,
+name|VN_OPEN_NOAUDIT
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)

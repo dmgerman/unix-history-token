@@ -2347,6 +2347,17 @@ file|"vnode_if.h"
 end_include
 
 begin_comment
+comment|/* vn_open_flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VN_OPEN_NOAUDIT
+value|0x00000001
+end_define
+
+begin_comment
 comment|/*  * Public vnode manipulation functions.  */
 end_comment
 
@@ -3232,6 +3243,9 @@ name|flagp
 parameter_list|,
 name|int
 name|cmode
+parameter_list|,
+name|u_int
+name|vn_open_flags
 parameter_list|,
 name|struct
 name|ucred

@@ -2699,7 +2699,7 @@ name|FREAD
 expr_stmt|;
 name|error
 operator|=
-name|vn_open
+name|vn_open_cred
 argument_list|(
 operator|&
 name|nd
@@ -2708,6 +2708,10 @@ operator|&
 name|flags
 argument_list|,
 literal|0
+argument_list|,
+name|VN_OPEN_NOAUDIT
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)

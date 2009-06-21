@@ -313,6 +313,8 @@ name|flags
 argument_list|,
 name|O_NOFOLLOW
 argument_list|,
+literal|0
+argument_list|,
 name|curthread
 operator|->
 name|td_ucred
