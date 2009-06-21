@@ -758,6 +758,7 @@ name|SCHED_STAT_INC
 parameter_list|(
 name|var
 parameter_list|)
+value|(void)0
 end_define
 
 begin_endif
