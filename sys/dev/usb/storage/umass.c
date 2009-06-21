@@ -2106,9 +2106,7 @@ name|USB_PRODUCT_MYSON_HEDEN_8813
 block|,
 name|RID_WILDCARD
 block|,
-name|UMASS_PROTO_SCSI
-operator||
-name|UMASS_PROTO_BBB
+name|UMASS_PROTO_DEFAULT
 block|,
 name|NO_SYNCHRONIZE_CACHE
 block|}
