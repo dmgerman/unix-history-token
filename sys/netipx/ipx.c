@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -45,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
 end_include
 
 begin_include
@@ -90,8 +102,15 @@ file|<netipx/ipx_var.h>
 end_include
 
 begin_comment
-comment|/*  * XXXRW: Requires synchronization.  */
+comment|/*  * The IPX-layer address list is protected by ipx_ifaddr_rw.  */
 end_comment
+
+begin_decl_stmt
+name|struct
+name|rwlock
+name|ipx_ifaddr_rw
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -1598,6 +1617,9 @@ name|dst
 operator|->
 name|x_net
 decl_stmt|;
+name|IPX_IFADDR_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|ia

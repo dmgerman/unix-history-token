@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -475,6 +481,9 @@ name|ipxrawpcb_list
 argument_list|)
 expr_stmt|;
 name|IPX_LIST_LOCK_INIT
+argument_list|()
+expr_stmt|;
+name|IPX_IFADDR_LOCK_INIT
 argument_list|()
 expr_stmt|;
 name|ipx_netmask
@@ -922,6 +931,9 @@ operator|)
 condition|)
 block|{
 comment|/* 			 * If it is a broadcast to the net where it was 			 * received from, treat it as ours. 			 */
+name|IPX_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|ia
@@ -967,9 +979,17 @@ operator|->
 name|ipx_dna
 argument_list|)
 condition|)
+block|{
+name|IPX_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 goto|goto
 name|ours
 goto|;
+block|}
+name|IPX_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 comment|/* 			 * Look to see if I need to eat this packet. 			 * Algorithm is to forward all young packets 			 * and prematurely age any packets which will 			 * by physically broadcasted. 			 * Any very old packets eaten without forwarding 			 * would die anyway. 			 * 			 * Suggestion of Bill Nesheim, Cornell U. 			 */
 if|if
 condition|(
@@ -992,6 +1012,9 @@ comment|/* 	 * Is this our packet? If not, forward. 	 */
 block|}
 else|else
 block|{
+name|IPX_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|ia
@@ -1050,6 +1073,9 @@ argument_list|)
 operator|)
 condition|)
 break|break;
+name|IPX_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|ia
@@ -1370,7 +1396,17 @@ name|struct
 name|ipx_ifaddr
 modifier|*
 name|ia
-init|=
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|IPX_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
+name|ia
+operator|=
 name|ipx_iaonnetof
 argument_list|(
 operator|&
@@ -1378,12 +1414,7 @@ name|ipx
 operator|->
 name|ipx_dna
 argument_list|)
-decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|ia
@@ -1407,6 +1438,9 @@ operator|=
 name|IPX_MAXHOPS
 expr_stmt|;
 block|}
+name|IPX_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(

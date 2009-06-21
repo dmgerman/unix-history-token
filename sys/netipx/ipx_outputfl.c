@@ -217,7 +217,12 @@ name|struct
 name|ipx_ifaddr
 modifier|*
 name|ia
-init|=
+decl_stmt|;
+name|IPX_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
+name|ia
+operator|=
 name|ipx_iaonnetof
 argument_list|(
 operator|&
@@ -225,7 +230,7 @@ name|ipx
 operator|->
 name|ipx_dna
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|ia
@@ -233,6 +238,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|IPX_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|ipxstat
 operator|.
 name|ipxs_noroute
@@ -251,6 +259,9 @@ operator|=
 name|ia
 operator|->
 name|ia_ifp
+expr_stmt|;
+name|IPX_IFADDR_RUNLOCK
+argument_list|()
 expr_stmt|;
 goto|goto
 name|gotif
@@ -699,6 +710,9 @@ goto|goto
 name|bad
 goto|;
 comment|/* 	 * Now see if we have already seen this. 	 */
+name|IPX_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|ia
@@ -774,9 +788,14 @@ operator|*
 name|nbnet
 argument_list|)
 condition|)
+block|{
+name|IPX_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 block|}
 comment|/* 	 * Don't route the packet if the interface where it come from 	 * does not have an IPX address. 	 */
 if|if
@@ -785,9 +804,14 @@ name|tia
 operator|==
 name|NULL
 condition|)
+block|{
+name|IPX_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 comment|/* 	 * Add our receiving interface to the list. 	 */
 name|nbnet
 operator|=
@@ -1057,6 +1081,9 @@ name|skip_this
 label|:
 empty_stmt|;
 block|}
+name|IPX_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|bad
 label|:
 name|m_freem
