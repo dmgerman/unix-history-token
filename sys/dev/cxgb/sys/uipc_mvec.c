@@ -336,6 +336,7 @@ name|entry_tag
 argument_list|,
 name|map
 argument_list|,
+operator|*
 name|m
 argument_list|,
 name|segs
