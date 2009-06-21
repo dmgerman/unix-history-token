@@ -1254,6 +1254,7 @@ name|oflags
 operator|=
 name|VPO_BUSY
 expr_stmt|;
+comment|/* Fictitious pages don't use "act_count". */
 name|m
 operator|->
 name|valid
