@@ -209,6 +209,7 @@ parameter_list|,
 name|arg
 modifier|...
 parameter_list|)
+value|(void)0
 end_define
 
 begin_endif
