@@ -301,6 +301,28 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|fxp_ident
+block|{
+name|uint16_t
+name|devid
+decl_stmt|;
+name|int16_t
+name|revid
+decl_stmt|;
+comment|/* -1 matches anything */
+name|uint8_t
+name|ich
+decl_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * NOTE: Elements are ordered for optimal cacheline behavior, and NOT  *	 for functional grouping.  */
 end_comment
@@ -335,6 +357,11 @@ modifier|*
 name|ih
 decl_stmt|;
 comment|/* interrupt handler cookie */
+name|struct
+name|fxp_ident
+modifier|*
+name|ident
+decl_stmt|;
 name|struct
 name|mtx
 name|sc_mtx
