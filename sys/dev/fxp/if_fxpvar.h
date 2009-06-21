@@ -648,6 +648,17 @@ begin_comment
 comment|/* WOL active */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FXP_FLAG_RXBUG
+value|0x8000
+end_define
+
+begin_comment
+comment|/* Rx lock-up bug */
+end_comment
+
 begin_comment
 comment|/* Macros to ease CSR access. */
 end_comment
