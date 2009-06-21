@@ -2700,6 +2700,11 @@ modifier|*
 modifier|*
 name|vp
 parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
 name|char
 modifier|*
 name|buf
