@@ -2616,7 +2616,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|int
+name|u_long
 name|command
 decl_stmt|;
 name|caddr_t

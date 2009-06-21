@@ -495,7 +495,7 @@ name|struct
 name|ifnet
 modifier|*
 parameter_list|,
-name|int
+name|u_long
 parameter_list|,
 name|caddr_t
 parameter_list|)

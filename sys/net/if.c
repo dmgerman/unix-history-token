@@ -10707,7 +10707,7 @@ expr_stmt|;
 else|#
 directive|else
 block|{
-name|int
+name|u_long
 name|ocmd
 init|=
 name|cmd
