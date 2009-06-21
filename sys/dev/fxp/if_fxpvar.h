@@ -392,10 +392,6 @@ name|int
 name|tx_queued
 decl_stmt|;
 comment|/* # of active TxCB's */
-name|int
-name|need_mcsetup
-decl_stmt|;
-comment|/* multicast filter needs programming */
 name|struct
 name|fxp_stats
 modifier|*
@@ -473,6 +469,9 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
+name|int
+name|if_flags
+decl_stmt|;
 name|uint8_t
 name|rfa_size
 decl_stmt|;
@@ -547,17 +546,6 @@ end_define
 
 begin_comment
 comment|/* enable long packet reception */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FXP_FLAG_ALL_MCAST
-value|0x0040
-end_define
-
-begin_comment
-comment|/* accept all multicast frames */
 end_comment
 
 begin_define
