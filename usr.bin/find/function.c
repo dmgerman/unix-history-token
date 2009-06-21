@@ -1792,7 +1792,7 @@ argument_list|()
 operator|==
 literal|0
 condition|)
-name|chflags
+name|lchflags
 argument_list|(
 name|entry
 operator|->

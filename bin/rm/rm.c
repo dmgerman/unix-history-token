@@ -913,7 +913,7 @@ name|SF_IMMUTABLE
 operator|)
 operator|)
 operator|&&
-name|chflags
+name|lchflags
 argument_list|(
 name|p
 operator|->
@@ -1017,7 +1017,7 @@ operator|)
 condition|)
 name|rval
 operator|=
-name|chflags
+name|lchflags
 argument_list|(
 name|p
 operator|->
@@ -1471,7 +1471,7 @@ operator|)
 condition|)
 name|rval
 operator|=
-name|chflags
+name|lchflags
 argument_list|(
 name|f
 argument_list|,
