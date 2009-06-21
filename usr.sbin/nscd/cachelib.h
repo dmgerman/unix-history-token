@@ -18,24 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"hashtable.h"
 end_include
 
@@ -184,15 +166,9 @@ begin_struct
 struct|struct
 name|common_cache_entry_params
 block|{
-comment|/* inherited fields */
-name|enum
-name|cache_entry_t
-name|entry_type
-decl_stmt|;
-comment|/* unique fields */
-name|char
-modifier|*
-name|entry_name
+name|struct
+name|cache_entry_params
+name|cep
 decl_stmt|;
 name|size_t
 name|cache_entries_size
@@ -227,14 +203,9 @@ begin_struct
 struct|struct
 name|mp_cache_entry_params
 block|{
-comment|/* inherited fields */
-name|enum
-name|cache_entry_t
-name|entry_type
-decl_stmt|;
-name|char
-modifier|*
-name|entry_name
+name|struct
+name|cache_entry_params
+name|cep
 decl_stmt|;
 comment|/* unique fields */
 name|size_t

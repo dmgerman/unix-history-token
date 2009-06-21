@@ -26,13 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<string.h>
 end_include
 
 begin_include
@@ -171,7 +171,9 @@ name|struct
 name|agent_table
 modifier|*
 name|init_agent_table
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|agent_table

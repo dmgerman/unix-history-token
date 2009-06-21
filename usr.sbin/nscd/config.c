@@ -20,6 +20,18 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<assert.h>
 end_include
 
@@ -27,6 +39,18 @@ begin_include
 include|#
 directive|include
 file|<math.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nsswitch.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pthread.h>
 end_include
 
 begin_include
@@ -867,6 +891,8 @@ name|retval
 operator|->
 name|positive_cache_params
 operator|.
+name|cep
+operator|.
 name|entry_name
 argument_list|,
 literal|"%s+"
@@ -880,6 +906,8 @@ name|retval
 operator|->
 name|positive_cache_params
 operator|.
+name|cep
+operator|.
 name|entry_name
 operator|!=
 name|NULL
@@ -891,6 +919,8 @@ operator|&
 name|retval
 operator|->
 name|negative_cache_params
+operator|.
+name|cep
 operator|.
 name|entry_name
 argument_list|,
@@ -905,6 +935,8 @@ name|retval
 operator|->
 name|negative_cache_params
 operator|.
+name|cep
+operator|.
 name|entry_name
 operator|!=
 name|NULL
@@ -916,6 +948,8 @@ operator|&
 name|retval
 operator|->
 name|mp_cache_params
+operator|.
+name|cep
 operator|.
 name|entry_name
 argument_list|,
@@ -929,6 +963,8 @@ argument_list|(
 name|retval
 operator|->
 name|mp_cache_params
+operator|.
+name|cep
 operator|.
 name|entry_name
 operator|!=
@@ -1007,6 +1043,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|positive_params
+operator|.
+name|cep
 operator|.
 name|entry_type
 operator|=
@@ -1145,6 +1183,8 @@ argument_list|)
 expr_stmt|;
 name|mp_params
 operator|.
+name|cep
+operator|.
 name|entry_type
 operator|=
 name|CET_MULTIPART
@@ -1263,6 +1303,8 @@ name|entry
 operator|->
 name|positive_cache_params
 operator|.
+name|cep
+operator|.
 name|entry_name
 argument_list|)
 expr_stmt|;
@@ -1272,6 +1314,8 @@ name|entry
 operator|->
 name|negative_cache_params
 operator|.
+name|cep
+operator|.
 name|entry_name
 argument_list|)
 expr_stmt|;
@@ -1280,6 +1324,8 @@ argument_list|(
 name|entry
 operator|->
 name|mp_cache_params
+operator|.
+name|cep
 operator|.
 name|entry_name
 argument_list|)
@@ -2653,6 +2699,7 @@ modifier|*
 name|config
 parameter_list|)
 block|{
+name|unsigned
 name|int
 name|i
 decl_stmt|;

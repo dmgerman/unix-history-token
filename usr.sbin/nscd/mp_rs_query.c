@@ -20,18 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -39,6 +27,18 @@ begin_include
 include|#
 directive|include
 file|<sys/event.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -56,6 +56,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<nsswitch.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -63,12 +75,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
 end_include
 
 begin_include
@@ -552,6 +558,13 @@ expr_stmt|;
 if|if
 condition|(
 name|result
+operator|<
+literal|0
+operator|||
+operator|(
+name|size_t
+operator|)
+name|result
 operator|!=
 name|qstate
 operator|->
@@ -791,6 +804,8 @@ name|config_entry
 operator|->
 name|mp_cache_params
 operator|.
+name|cep
+operator|.
 name|entry_name
 argument_list|)
 expr_stmt|;
@@ -837,6 +852,8 @@ operator|->
 name|config_entry
 operator|->
 name|mp_cache_params
+operator|.
+name|cep
 operator|.
 name|entry_name
 argument_list|)
@@ -1932,6 +1949,13 @@ expr_stmt|;
 if|if
 condition|(
 name|result
+operator|<
+literal|0
+operator|||
+operator|(
+name|size_t
+operator|)
+name|result
 operator|!=
 name|qstate
 operator|->
@@ -1976,6 +2000,13 @@ else|else
 block|{
 if|if
 condition|(
+name|result
+operator|<
+literal|0
+operator|||
+operator|(
+name|size_t
+operator|)
 name|result
 operator|!=
 name|qstate
@@ -2081,6 +2112,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|result
+operator|<
+literal|0
+operator|||
+operator|(
+name|size_t
+operator|)
 name|result
 operator|!=
 name|qstate

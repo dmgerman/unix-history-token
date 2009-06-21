@@ -762,6 +762,19 @@ block|}
 end_function
 
 begin_expr_stmt
+name|HASHTABLE_PROTOTYPE
+argument_list|(
+name|cache_ht_
+argument_list|,
+name|cache_ht_item_
+argument_list|,
+expr|struct
+name|cache_ht_item_data_
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|HASHTABLE_GENERATE
 argument_list|(
 name|cache_ht_
@@ -1462,6 +1475,7 @@ decl_stmt|;
 name|size_t
 name|entry_size
 decl_stmt|;
+name|unsigned
 name|int
 name|i
 decl_stmt|;
@@ -1971,13 +1985,6 @@ name|items
 argument_list|,
 operator|&
 name|ht_key
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|hash
-operator|>=
-literal|0
 argument_list|)
 expr_stmt|;
 name|assert
@@ -2818,6 +2825,8 @@ name|new_common_entry
 operator|->
 name|common_params
 operator|.
+name|cep
+operator|.
 name|entry_name
 operator|=
 operator|(
@@ -2837,6 +2846,8 @@ name|new_common_entry
 operator|->
 name|common_params
 operator|.
+name|cep
+operator|.
 name|entry_name
 operator|!=
 name|NULL
@@ -2847,6 +2858,8 @@ argument_list|(
 name|new_common_entry
 operator|->
 name|common_params
+operator|.
+name|cep
 operator|.
 name|entry_name
 argument_list|,
@@ -2864,6 +2877,8 @@ operator|=
 name|new_common_entry
 operator|->
 name|common_params
+operator|.
+name|cep
 operator|.
 name|entry_name
 expr_stmt|;
@@ -3094,6 +3109,8 @@ name|new_mp_entry
 operator|->
 name|mp_params
 operator|.
+name|cep
+operator|.
 name|entry_name
 operator|=
 operator|(
@@ -3113,6 +3130,8 @@ name|new_mp_entry
 operator|->
 name|mp_params
 operator|.
+name|cep
+operator|.
 name|entry_name
 operator|!=
 name|NULL
@@ -3123,6 +3142,8 @@ argument_list|(
 name|new_mp_entry
 operator|->
 name|mp_params
+operator|.
+name|cep
 operator|.
 name|entry_name
 argument_list|,
@@ -3140,6 +3161,8 @@ operator|=
 name|new_mp_entry
 operator|->
 name|mp_params
+operator|.
+name|cep
 operator|.
 name|entry_name
 expr_stmt|;
@@ -3559,13 +3582,6 @@ name|items
 argument_list|,
 operator|&
 name|item_data
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|hash
-operator|>=
-literal|0
 argument_list|)
 expr_stmt|;
 name|assert
@@ -4130,13 +4146,6 @@ name|items
 argument_list|,
 operator|&
 name|item_data
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|hash
-operator|>=
-literal|0
 argument_list|)
 expr_stmt|;
 name|assert

@@ -44,13 +44,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<string.h>
 end_include
 
 begin_include
@@ -109,7 +109,9 @@ specifier|static
 name|void
 modifier|*
 name|passwd_mp_init_func
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -998,7 +1000,9 @@ specifier|static
 name|void
 modifier|*
 name|passwd_mp_init_func
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|TRACE_IN
 argument_list|(
@@ -1150,7 +1154,9 @@ name|struct
 name|agent
 modifier|*
 name|init_passwd_agent
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|common_agent
@@ -1246,7 +1252,9 @@ name|struct
 name|agent
 modifier|*
 name|init_passwd_mp_agent
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|multipart_agent

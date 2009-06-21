@@ -20,7 +20,19 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -231,7 +243,9 @@ name|struct
 name|cache_policy_item_
 modifier|*
 name|cache_queue_policy_create_item
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -361,7 +375,9 @@ name|struct
 name|cache_policy_item_
 modifier|*
 name|cache_queue_policy_create_item
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|cache_queue_policy_item_
@@ -1106,7 +1122,9 @@ name|struct
 name|cache_policy_
 modifier|*
 name|init_cache_fifo_policy
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|cache_queue_policy_
@@ -1281,7 +1299,9 @@ name|struct
 name|cache_policy_
 modifier|*
 name|init_cache_lru_policy
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|cache_queue_policy_
@@ -2346,7 +2366,9 @@ name|struct
 name|cache_policy_
 modifier|*
 name|init_cache_lfu_policy
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i

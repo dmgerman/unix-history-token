@@ -26,19 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<nsswitch.h>
 end_include
 
 begin_include
@@ -50,7 +38,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<nsswitch.h>
 end_include
 
 begin_include
@@ -62,13 +50,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../debug.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"passwd.h"
+file|"group.h"
 end_include
 
 begin_function_decl
@@ -115,7 +109,9 @@ specifier|static
 name|void
 modifier|*
 name|group_mp_init_func
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -960,7 +956,9 @@ specifier|static
 name|void
 modifier|*
 name|group_mp_init_func
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|TRACE_IN
 argument_list|(
@@ -1112,7 +1110,9 @@ name|struct
 name|agent
 modifier|*
 name|init_group_agent
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|common_agent
@@ -1208,7 +1208,9 @@ name|struct
 name|agent
 modifier|*
 name|init_group_mp_agent
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|multipart_agent
