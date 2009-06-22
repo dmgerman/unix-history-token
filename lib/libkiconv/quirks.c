@@ -632,6 +632,18 @@ begin_comment
 comment|/* statically linked */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/iconv.h>
+end_include
+
 begin_function
 specifier|const
 name|char
@@ -642,9 +654,11 @@ specifier|const
 name|char
 modifier|*
 name|base
+name|__unused
 parameter_list|,
 name|int
 name|vendor
+name|__unused
 parameter_list|)
 block|{
 return|return
