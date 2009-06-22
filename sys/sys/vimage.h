@@ -462,6 +462,13 @@ name|VNET_MOD_MLD
 value|13
 end_define
 
+begin_define
+define|#
+directive|define
+name|VNET_MOD_RTABLE
+value|14
+end_define
+
 begin_comment
 comment|/* Stateless modules. */
 end_comment
@@ -536,12 +543,9 @@ name|VNET_MOD_ARP
 value|28
 end_define
 
-begin_define
-define|#
-directive|define
-name|VNET_MOD_RTABLE
-value|29
-end_define
+begin_comment
+comment|/*		29 */
+end_comment
 
 begin_define
 define|#
@@ -658,6 +662,13 @@ define|#
 directive|define
 name|V_MOD_vnet_ipsec
 value|VNET_MOD_IPSEC
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_MOD_vnet_rtable
+value|VNET_MOD_RTABLE
 end_define
 
 begin_define
