@@ -552,13 +552,13 @@ name|j
 decl_stmt|;
 name|db_printf
 argument_list|(
-literal|"GPOUTR %08x GPOER  %08x GPINR  %08x GPISR %08x\n"
+literal|"GPOUTR %08x GPINR  %08x GPOER  %08x GPISR %08x\n"
 argument_list|,
 name|gpoutr
 argument_list|,
-name|gpoer
-argument_list|,
 name|gpinr
+argument_list|,
+name|gpoer
 argument_list|,
 name|GPIO_CONF_READ_4
 argument_list|(
