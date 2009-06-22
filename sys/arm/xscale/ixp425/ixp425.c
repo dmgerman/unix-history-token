@@ -393,7 +393,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|__inline
-name|u_int32_t
+name|uint32_t
 name|ixp425_irq2gpio_bit
 parameter_list|(
 name|int
