@@ -5112,7 +5112,7 @@ block|}
 if|if
 condition|(
 name|length
-operator|>=
+operator|!=
 sizeof|sizeof
 argument_list|(
 operator|*
