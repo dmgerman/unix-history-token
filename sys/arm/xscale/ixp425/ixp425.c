@@ -2068,9 +2068,6 @@ operator|=
 name|IXP435_USB2_VBASE
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|CAMBRIA_GPS_VBASE
 block|{
 operator|.
 name|hwbase
@@ -2088,11 +2085,6 @@ operator|=
 name|CAMBRIA_GPS_VBASE
 block|}
 block|,
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|CAMBRIA_RS485_VBASE
 block|{
 operator|.
 name|hwbase
@@ -2109,10 +2101,7 @@ name|vbase
 operator|=
 name|CAMBRIA_RS485_VBASE
 block|}
-block|,
-endif|#
-directive|endif
-block|}
+block|, 	}
 decl_stmt|;
 name|int
 name|i
