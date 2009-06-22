@@ -11037,12 +11037,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|INET6
-name|DELAY
-argument_list|(
-literal|100
-argument_list|)
-expr_stmt|;
-comment|/* XXX: temporary workaround for fxp issue*/
 if|if
 condition|(
 name|ifp
