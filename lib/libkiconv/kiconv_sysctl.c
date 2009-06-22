@@ -58,9 +58,6 @@ block|{
 name|size_t
 name|size
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 if|if
 condition|(
 name|sysctlbyname
@@ -137,10 +134,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|error
-operator|=
-name|errno
-expr_stmt|;
 name|free
 argument_list|(
 name|drivers
@@ -232,9 +225,6 @@ decl_stmt|,
 modifier|*
 name|csip
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 if|if
 condition|(
 name|sysctlbyname
@@ -304,10 +294,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|error
-operator|=
-name|errno
-expr_stmt|;
 name|free
 argument_list|(
 name|csi
@@ -315,7 +301,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|error
+name|errno
 operator|)
 return|;
 block|}
