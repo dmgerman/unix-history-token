@@ -3658,6 +3658,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|m_mbuftouio
+parameter_list|(
+name|struct
+name|uio
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|m_move_pkthdr
 parameter_list|(
