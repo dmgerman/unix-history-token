@@ -2162,7 +2162,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|ifa_ifwithaddr
+name|ifa_ifwithaddr_check
 argument_list|(
 name|gateway
 argument_list|)

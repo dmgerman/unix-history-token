@@ -1709,7 +1709,7 @@ operator|)
 operator|==
 literal|0
 operator|&&
-name|ifa_ifwithaddr
+name|ifa_ifwithaddr_check
 argument_list|(
 operator|(
 expr|struct
@@ -1719,7 +1719,7 @@ operator|)
 name|sin
 argument_list|)
 operator|==
-name|NULL
+literal|0
 condition|)
 return|return
 operator|(

@@ -3392,6 +3392,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|ifa_ifwithaddr_check
+parameter_list|(
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|ifaddr
 modifier|*

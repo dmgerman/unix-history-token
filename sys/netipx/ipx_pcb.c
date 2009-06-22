@@ -320,7 +320,7 @@ expr_stmt|;
 comment|/* yech... */
 if|if
 condition|(
-name|ifa_ifwithaddr
+name|ifa_ifwithaddr_check
 argument_list|(
 operator|(
 expr|struct
@@ -330,7 +330,7 @@ operator|)
 name|sipx
 argument_list|)
 operator|==
-name|NULL
+literal|0
 condition|)
 return|return
 operator|(

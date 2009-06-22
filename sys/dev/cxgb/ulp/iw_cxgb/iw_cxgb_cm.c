@@ -7574,10 +7574,8 @@ name|remote_addr
 operator|.
 name|sin_port
 decl_stmt|;
-name|struct
-name|ifaddr
-modifier|*
-name|ifa
+name|int
+name|ifa_present
 decl_stmt|;
 name|cm_id
 operator|->
@@ -7587,9 +7585,9 @@ name|sin_port
 operator|=
 literal|0
 expr_stmt|;
-name|ifa
+name|ifa_present
 operator|=
-name|ifa_ifwithaddr
+name|ifa_ifwithaddr_check
 argument_list|(
 operator|(
 expr|struct
@@ -7612,9 +7610,7 @@ name|port
 expr_stmt|;
 return|return
 operator|(
-name|ifa
-operator|!=
-name|NULL
+name|ifa_present
 operator|)
 return|;
 block|}

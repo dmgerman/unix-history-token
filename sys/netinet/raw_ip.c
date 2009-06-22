@@ -3971,7 +3971,7 @@ operator|)
 operator|==
 literal|0
 operator|&&
-name|ifa_ifwithaddr
+name|ifa_ifwithaddr_check
 argument_list|(
 operator|(
 expr|struct
@@ -3981,7 +3981,7 @@ operator|)
 name|addr
 argument_list|)
 operator|==
-name|NULL
+literal|0
 operator|)
 condition|)
 return|return
