@@ -1260,6 +1260,7 @@ name|char
 modifier|*
 name|spool_buf
 parameter_list|,
+name|unsigned
 name|int
 name|len
 parameter_list|,
