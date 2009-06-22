@@ -5523,7 +5523,7 @@ end_expr_stmt
 
 begin_comment
 unit|};
-comment|// multi_arg - Modifier to set the number of additional values.
+comment|// multi_val - Modifier to set the number of additional values.
 end_comment
 
 begin_struct

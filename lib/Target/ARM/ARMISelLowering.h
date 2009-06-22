@@ -442,6 +442,16 @@ comment|///
 name|unsigned
 name|ARMPCLabelIndex
 block|;
+name|CCAssignFn
+operator|*
+name|CCAssignFnForNode
+argument_list|(
+argument|unsigned CC
+argument_list|,
+argument|bool Return
+argument_list|)
+specifier|const
+block|;
 name|SDValue
 name|LowerMemOpCallTo
 argument_list|(

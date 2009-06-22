@@ -145,8 +145,37 @@ name|createTargetAsmInfo
 argument_list|()
 specifier|const
 block|;
+comment|// To avoid having target depend on the asmprinter stuff libraries, asmprinter
+comment|// set this functions to ctor pointer at startup time if they are linked in.
+typedef|typedef
+name|FunctionPass
+modifier|*
+typedef|(
+modifier|*
+name|AsmPrinterCtorFn
+typedef|)
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|o
+parameter_list|,
+name|SPUTargetMachine
+modifier|&
+name|tm
+parameter_list|,
+typedef|CodeGenOpt::
+name|Level
+name|OptLevel
+typedef|,
+name|bool
+name|verbose
+typedef|);
+specifier|static
+name|AsmPrinterCtorFn
+name|AsmPrinterCtor
+decl_stmt|;
 name|public
-operator|:
+label|:
 name|SPUTargetMachine
 argument_list|(
 specifier|const
@@ -161,7 +190,7 @@ name|string
 operator|&
 name|FS
 argument_list|)
-block|;
+expr_stmt|;
 comment|/// Return the subtarget implementation object
 name|virtual
 specifier|const
@@ -205,9 +234,9 @@ block|}
 comment|/*!     \note Cell SPU does not support JIT today. It could support JIT at some     point.    */
 name|virtual
 name|TargetJITInfo
-operator|*
+modifier|*
 name|getJITInfo
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|NULL
@@ -218,13 +247,13 @@ comment|/*!     Module matching function called by TargetMachineRegistry().    *
 specifier|static
 name|unsigned
 name|getModuleMatchQuality
-argument_list|(
+parameter_list|(
 specifier|const
 name|Module
-operator|&
+modifier|&
 name|M
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|virtual
 name|SPUTargetLowering
 operator|*
@@ -289,29 +318,59 @@ name|virtual
 name|bool
 name|addInstSelector
 argument_list|(
-argument|PassManagerBase&PM
+name|PassManagerBase
+operator|&
+name|PM
 argument_list|,
-argument|CodeGenOpt::Level OptLevel
+name|CodeGenOpt
+operator|::
+name|Level
+name|OptLevel
 argument_list|)
-block|;
+decl_stmt|;
 name|virtual
 name|bool
 name|addAssemblyEmitter
 argument_list|(
-argument|PassManagerBase&PM
+name|PassManagerBase
+operator|&
+name|PM
 argument_list|,
-argument|CodeGenOpt::Level OptLevel
+name|CodeGenOpt
+operator|::
+name|Level
+name|OptLevel
 argument_list|,
-argument|bool Verbose
+name|bool
+name|Verbose
 argument_list|,
-argument|raw_ostream&Out
+name|raw_ostream
+operator|&
+name|Out
 argument_list|)
-block|; }
 decl_stmt|;
+specifier|static
+name|void
+name|registerAsmPrinter
+parameter_list|(
+name|AsmPrinterCtorFn
+name|F
+parameter_list|)
+block|{
+name|AsmPrinterCtor
+operator|=
+name|F
+expr_stmt|;
+block|}
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// end namespace llvm
 end_comment
 

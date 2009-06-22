@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"TGSourceMgr.h"
+file|"llvm/Support/SourceMgr.h"
 end_include
 
 begin_include
@@ -122,7 +122,7 @@ name|Init
 modifier|*
 name|Value
 decl_stmt|;
-name|TGLoc
+name|SMLoc
 name|Loc
 decl_stmt|;
 name|LetRecord
@@ -133,7 +133,7 @@ argument|const std::vector<unsigned>&B
 argument_list|,
 argument|Init *V
 argument_list|,
-argument|TGLoc L
+argument|SMLoc L
 argument_list|)
 block|:
 name|Name
@@ -200,7 +200,7 @@ name|public
 label|:
 name|TGParser
 argument_list|(
-name|TGSourceMgr
+name|SourceMgr
 operator|&
 name|SrcMgr
 argument_list|)
@@ -215,19 +215,6 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
-name|void
-name|setIncludeDirs
-argument_list|(
-argument|const std::vector<std::string>&D
-argument_list|)
-block|{
-name|Lex
-operator|.
-name|setIncludeDirs
-argument_list|(
-name|D
-argument_list|)
-block|;}
 comment|/// ParseFile - Main entrypoint for parsing a tblgen file.  These parser
 comment|/// routines return true on error, or false on success.
 name|bool
@@ -237,7 +224,7 @@ expr_stmt|;
 name|bool
 name|Error
 argument_list|(
-name|TGLoc
+name|SMLoc
 name|L
 argument_list|,
 specifier|const
@@ -296,7 +283,7 @@ name|Record
 modifier|*
 name|TheRec
 parameter_list|,
-name|TGLoc
+name|SMLoc
 name|Loc
 parameter_list|,
 specifier|const
@@ -312,7 +299,7 @@ name|Record
 operator|*
 name|TheRec
 argument_list|,
-name|TGLoc
+name|SMLoc
 name|Loc
 argument_list|,
 specifier|const
@@ -499,7 +486,7 @@ name|string
 operator|&
 name|Name
 argument_list|,
-name|TGLoc
+name|SMLoc
 name|NameLoc
 argument_list|)
 decl_stmt|;

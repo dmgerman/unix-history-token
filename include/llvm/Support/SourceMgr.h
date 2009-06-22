@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- TGSourceMgr.h - Manager for Source Buffers& Diagnostics -*- C++ -*-===//
+comment|//===- SourceMgr.h - Manager for Source Buffers& Diagnostics ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -36,7 +36,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file declares the TGSourceMgr class.
+comment|// This file declares the SourceMgr class.  This class is used as a simple
+end_comment
+
+begin_comment
+comment|// substrate for diagnostics, #include handling, and other low level things for
+end_comment
+
+begin_comment
+comment|// simple parsers.
 end_comment
 
 begin_comment
@@ -50,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|TGSOURCEMGR_H
+name|SUPPORT_SOURCEMGR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|TGSOURCEMGR_H
+name|SUPPORT_SOURCEMGR_H
 end_define
 
 begin_include
@@ -85,10 +93,10 @@ name|class
 name|MemoryBuffer
 decl_stmt|;
 name|class
-name|TGSourceMgr
+name|SourceMgr
 decl_stmt|;
 name|class
-name|TGLoc
+name|SMLoc
 block|{
 specifier|const
 name|char
@@ -97,7 +105,7 @@ name|Ptr
 decl_stmt|;
 name|public
 label|:
-name|TGLoc
+name|SMLoc
 argument_list|()
 operator|:
 name|Ptr
@@ -105,10 +113,10 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
-name|TGLoc
+name|SMLoc
 argument_list|(
 specifier|const
-name|TGLoc
+name|SMLoc
 operator|&
 name|RHS
 argument_list|)
@@ -123,7 +131,7 @@ name|operator
 operator|==
 operator|(
 specifier|const
-name|TGLoc
+name|SMLoc
 operator|&
 name|RHS
 operator|)
@@ -142,7 +150,7 @@ name|operator
 operator|!=
 operator|(
 specifier|const
-name|TGLoc
+name|SMLoc
 operator|&
 name|RHS
 operator|)
@@ -168,7 +176,7 @@ name|Ptr
 return|;
 block|}
 specifier|static
-name|TGLoc
+name|SMLoc
 name|getFromPointer
 parameter_list|(
 specifier|const
@@ -177,7 +185,7 @@ modifier|*
 name|Ptr
 parameter_list|)
 block|{
-name|TGLoc
+name|SMLoc
 name|L
 decl_stmt|;
 name|L
@@ -192,10 +200,10 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// TGSourceMgr - This owns the files read by tblgen, handles include stacks,
+comment|/// SourceMgr - This owns the files read by tblgen, handles include stacks,
 comment|/// and handles printing of diagnostics.
 name|class
-name|TGSourceMgr
+name|SourceMgr
 block|{
 struct|struct
 name|SrcBuffer
@@ -207,7 +215,7 @@ name|Buffer
 decl_stmt|;
 comment|/// IncludeLoc - This is the location of the parent include, or null if at
 comment|/// the top level.
-name|TGLoc
+name|SMLoc
 name|IncludeLoc
 decl_stmt|;
 block|}
@@ -221,10 +229,22 @@ name|SrcBuffer
 operator|>
 name|Buffers
 expr_stmt|;
-name|TGSourceMgr
+comment|// IncludeDirectories - This is the list of directories we should search for
+comment|// include files in.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|IncludeDirectories
+expr_stmt|;
+name|SourceMgr
 argument_list|(
 specifier|const
-name|TGSourceMgr
+name|SourceMgr
 operator|&
 argument_list|)
 expr_stmt|;
@@ -234,20 +254,41 @@ name|operator
 init|=
 operator|(
 specifier|const
-name|TGSourceMgr
+name|SourceMgr
 operator|&
 operator|)
 decl_stmt|;
 comment|// DO NOT IMPLEMENT
 name|public
 label|:
-name|TGSourceMgr
+name|SourceMgr
 argument_list|()
 block|{}
 operator|~
-name|TGSourceMgr
+name|SourceMgr
 argument_list|()
 expr_stmt|;
+name|void
+name|setIncludeDirs
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|Dirs
+argument_list|)
+block|{
+name|IncludeDirectories
+operator|=
+name|Dirs
+expr_stmt|;
+block|}
 specifier|const
 name|SrcBuffer
 modifier|&
@@ -308,7 +349,7 @@ operator|.
 name|Buffer
 return|;
 block|}
-name|TGLoc
+name|SMLoc
 name|getParentIncludeLoc
 argument_list|(
 name|unsigned
@@ -344,7 +385,7 @@ name|MemoryBuffer
 modifier|*
 name|F
 parameter_list|,
-name|TGLoc
+name|SMLoc
 name|IncludeLoc
 parameter_list|)
 block|{
@@ -379,12 +420,29 @@ operator|-
 literal|1
 return|;
 block|}
+comment|/// AddIncludeFile - Search for a file with the specified name in the current
+comment|/// directory or in one of the IncludeDirs.  If no file is found, this returns
+comment|/// ~0, otherwise it returns the buffer ID of the stacked file.
+name|unsigned
+name|AddIncludeFile
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Filename
+argument_list|,
+name|SMLoc
+name|IncludeLoc
+argument_list|)
+decl_stmt|;
 comment|/// FindBufferContainingLoc - Return the ID of the buffer containing the
 comment|/// specified location, returning -1 if not found.
 name|int
 name|FindBufferContainingLoc
 argument_list|(
-name|TGLoc
+name|SMLoc
 name|Loc
 argument_list|)
 decl|const
@@ -394,7 +452,7 @@ comment|/// specified file.  This is not a fast method.
 name|unsigned
 name|FindLineNumber
 argument_list|(
-name|TGLoc
+name|SMLoc
 name|Loc
 argument_list|,
 name|int
@@ -405,13 +463,13 @@ literal|1
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// PrintError - Emit an error message about the specified location with the
+comment|/// PrintMessage - Emit a message about the specified location with the
 comment|/// specified string.
 name|void
-name|PrintError
+name|PrintMessage
 argument_list|(
-name|TGLoc
-name|ErrorLoc
+name|SMLoc
+name|Loc
 argument_list|,
 specifier|const
 name|std
@@ -427,7 +485,7 @@ label|:
 name|void
 name|PrintIncludeStack
 argument_list|(
-name|TGLoc
+name|SMLoc
 name|IncludeLoc
 argument_list|)
 decl|const

@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/System/Atomic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/GraphTraits.h"
 end_include
 
@@ -242,7 +248,9 @@ comment|/// has no AbstractTypeUsers, the type is deleted.  This is only sensica
 comment|/// derived types.
 comment|///
 name|mutable
-name|unsigned
+name|sys
+operator|::
+name|cas_flag
 name|RefCount
 block|;
 specifier|const
@@ -735,11 +743,31 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// getScalarSizeInBits - If this is a vector type, return the
+end_comment
+
+begin_comment
+comment|/// getPrimitiveSizeInBits value for the element type. Otherwise return the
+end_comment
+
+begin_comment
+comment|/// getPrimitiveSizeInBits value for this type.
+end_comment
+
+begin_expr_stmt
+name|unsigned
+name|getScalarSizeInBits
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// getFPMantissaWidth - Return the width of the mantissa of this type.  This
 end_comment
 
 begin_comment
-comment|/// is only valid on scalar floating point types.  If the FP type does not
+comment|/// is only valid on floating point types.  If the FP type does not
 end_comment
 
 begin_comment
@@ -751,83 +779,10 @@ name|int
 name|getFPMantissaWidth
 argument_list|()
 specifier|const
-block|{
-name|assert
-argument_list|(
-name|isFloatingPoint
-argument_list|()
-operator|&&
-literal|"Not a floating point type!"
-argument_list|)
-block|;
-if|if
-condition|(
-name|ID
-operator|==
-name|FloatTyID
-condition|)
-return|return
-literal|24
-return|;
-end_expr_stmt
-
-begin_if
-if|if
-condition|(
-name|ID
-operator|==
-name|DoubleTyID
-condition|)
-return|return
-literal|53
-return|;
-end_if
-
-begin_if
-if|if
-condition|(
-name|ID
-operator|==
-name|X86_FP80TyID
-condition|)
-return|return
-literal|64
-return|;
-end_if
-
-begin_if
-if|if
-condition|(
-name|ID
-operator|==
-name|FP128TyID
-condition|)
-return|return
-literal|113
-return|;
-end_if
-
-begin_expr_stmt
-name|assert
-argument_list|(
-name|ID
-operator|==
-name|PPC_FP128TyID
-operator|&&
-literal|"unknown fp type"
-argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_return
-return|return
-operator|-
-literal|1
-return|;
-end_return
-
 begin_comment
-unit|}
 comment|/// getForwardedType - Return the type that this type has been resolved to if
 end_comment
 
@@ -844,7 +799,7 @@ comment|/// purpose clients.
 end_comment
 
 begin_expr_stmt
-unit|const
+specifier|const
 name|Type
 operator|*
 name|getForwardedType
@@ -886,6 +841,24 @@ unit|const
 name|Type
 operator|*
 name|getVAArgsPromotedType
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// getScalarType - If this is a vector type, return the element type,
+end_comment
+
+begin_comment
+comment|/// otherwise return this.
+end_comment
+
+begin_expr_stmt
+specifier|const
+name|Type
+operator|*
+name|getScalarType
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -1144,8 +1117,13 @@ operator|&&
 literal|"Cannot add a reference to a non-abstract type!"
 argument_list|)
 block|;
-operator|++
+name|sys
+operator|::
+name|AtomicIncrement
+argument_list|(
+operator|&
 name|RefCount
+argument_list|)
 block|;   }
 name|void
 name|dropRef
@@ -1169,10 +1147,22 @@ argument_list|)
 block|;
 comment|// If this is the last PATypeHolder using this object, and there are no
 comment|// PATypeHandles using it, the type is dead, delete it now.
+name|sys
+operator|::
+name|cas_flag
+name|OldCount
+operator|=
+name|sys
+operator|::
+name|AtomicDecrement
+argument_list|(
+operator|&
+name|RefCount
+argument_list|)
+block|;
 if|if
 condition|(
-operator|--
-name|RefCount
+name|OldCount
 operator|==
 literal|0
 operator|&&
@@ -1210,23 +1200,7 @@ operator|*
 name|U
 argument_list|)
 decl|const
-block|{
-name|assert
-argument_list|(
-name|isAbstract
-argument_list|()
-operator|&&
-literal|"addAbstractTypeUser: Current type not abstract!"
-argument_list|)
-expr_stmt|;
-name|AbstractTypeUsers
-operator|.
-name|push_back
-argument_list|(
-name|U
-argument_list|)
-expr_stmt|;
-block|}
+decl_stmt|;
 end_decl_stmt
 
 begin_comment

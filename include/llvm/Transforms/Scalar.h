@@ -267,10 +267,10 @@ comment|// be register references. A simple example of the transformation perfor
 comment|// this pass is:
 comment|//
 comment|//        FROM CODE                           TO CODE
-comment|//   %X = alloca int, uint 1                 ret int 42
-comment|//   store int 42, int *%X
-comment|//   %Y = load int* %X
-comment|//   ret int %Y
+comment|//   %X = alloca i32, i32 1                 ret i32 42
+comment|//   store i32 42, i32 *%X
+comment|//   %Y = load i32* %X
+comment|//   ret i32 %Y
 comment|//
 name|FunctionPass
 modifier|*

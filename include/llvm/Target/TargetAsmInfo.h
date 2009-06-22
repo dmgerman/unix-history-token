@@ -620,10 +620,6 @@ operator|::
 name|FlagsStringsMapType
 name|FlagsStrings
 expr_stmt|;
-name|void
-name|fillDefaultValues
-parameter_list|()
-function_decl|;
 name|protected
 label|:
 comment|/// TM - The current TargetMachine.
@@ -896,6 +892,11 @@ modifier|*
 name|StringConstantPrefix
 decl_stmt|;
 comment|// Defaults to ".str"
+comment|/// AllowQuotesInName - This is true if the assembler allows for complex
+comment|/// symbol names to be surrounded in quotes.  This defaults to false.
+name|bool
+name|AllowQuotesInName
+decl_stmt|;
 comment|//===--- Data Emission Directives -------------------------------------===//
 comment|/// ZeroDirective - this should be set to the directive used to get some
 comment|/// number of zero bytes emitted to the current section.  Common cases are
@@ -1248,12 +1249,6 @@ name|bool
 name|DwarfUsesInlineInfoSection
 decl_stmt|;
 comment|// Defaults to false.
-comment|/// SupportsMacInfo - true if the Dwarf output supports macro information
-comment|///
-name|bool
-name|SupportsMacInfoSection
-decl_stmt|;
-comment|// Defaults to true
 comment|/// NonLocalEHFrameLabel - If set, the EH_frame label needs to be non-local.
 comment|///
 name|bool
@@ -1370,12 +1365,12 @@ modifier|*
 name|DwarfRangesSection
 decl_stmt|;
 comment|// Defaults to ".debug_ranges".
-comment|/// DwarfMacInfoSection - Section directive for Dwarf info.
+comment|/// DwarfMacroInfoSection - Section directive for DWARF macro info.
 comment|///
 specifier|const
 name|char
 modifier|*
-name|DwarfMacInfoSection
+name|DwarfMacroInfoSection
 decl_stmt|;
 comment|// Defaults to ".debug_macinfo".
 comment|/// DwarfEHFrameSection - Section directive for Exception frames.
@@ -2145,6 +2140,15 @@ return|return
 name|StringConstantPrefix
 return|;
 block|}
+name|bool
+name|doesAllowQuotesInName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AllowQuotesInName
+return|;
+block|}
 specifier|const
 name|char
 operator|*
@@ -2549,15 +2553,6 @@ name|DwarfUsesInlineInfoSection
 return|;
 block|}
 name|bool
-name|doesSupportMacInfoSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SupportsMacInfoSection
-return|;
-block|}
-name|bool
 name|doesRequireNonLocalEHFrameLabel
 argument_list|()
 specifier|const
@@ -2721,12 +2716,12 @@ block|}
 specifier|const
 name|char
 operator|*
-name|getDwarfMacInfoSection
+name|getDwarfMacroInfoSection
 argument_list|()
 specifier|const
 block|{
 return|return
-name|DwarfMacInfoSection
+name|DwarfMacroInfoSection
 return|;
 block|}
 specifier|const

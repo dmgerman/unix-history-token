@@ -106,7 +106,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/DebugLoc.h"
+file|"llvm/Support/DebugLoc.h"
 end_include
 
 begin_include
@@ -343,7 +343,6 @@ return|;
 block|}
 comment|/// getDebugLoc - Returns the debug location id of this MachineInstr.
 comment|///
-specifier|const
 name|DebugLoc
 name|getDebugLoc
 argument_list|()

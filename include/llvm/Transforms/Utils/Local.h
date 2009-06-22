@@ -106,6 +106,25 @@ name|class
 name|SmallVectorImpl
 expr_stmt|;
 comment|//===----------------------------------------------------------------------===//
+comment|//  Local analysis.
+comment|//
+comment|/// isSafeToLoadUnconditionally - Return true if we know that executing a load
+comment|/// from this value cannot trap.  If it is not obviously safe to load from the
+comment|/// specified pointer, we do a quick local scan of the basic block containing
+comment|/// ScanFrom, to determine if the address is already accessed.
+name|bool
+name|isSafeToLoadUnconditionally
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|,
+name|Instruction
+modifier|*
+name|ScanFrom
+parameter_list|)
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
 comment|//  Local constant propagation.
 comment|//
 comment|/// ConstantFoldTerminator - If a terminator instruction is predicated on a

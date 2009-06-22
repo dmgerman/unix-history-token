@@ -120,6 +120,23 @@ comment|/// stack cleaning.
 name|X86_FastCall
 init|=
 literal|65
+block|,
+comment|/// ARM_APCS - ARM Procedure Calling Standard calling convention (obsolete,
+comment|/// but still used on some targets).
+name|ARM_APCS
+init|=
+literal|66
+block|,
+comment|/// ARM_AAPCS - ARM Architecture Procedure Calling Standard calling
+comment|/// convention (aka EABI). Soft float variant.
+name|ARM_AAPCS
+init|=
+literal|67
+block|,
+comment|/// ARM_AAPCS_VFP - Same as ARM_AAPCS, but uses hard floating point ABI.
+name|ARM_AAPCS_VFP
+init|=
+literal|68
 block|}
 enum|;
 block|}

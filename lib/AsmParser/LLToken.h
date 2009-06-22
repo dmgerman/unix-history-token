@@ -211,6 +211,12 @@ name|kw_x86_stdcallcc
 block|,
 name|kw_x86_fastcallcc
 block|,
+name|kw_arm_apcscc
+block|,
+name|kw_arm_aapcscc
+block|,
+name|kw_arm_aapcs_vfpcc
+block|,
 name|kw_signext
 block|,
 name|kw_zeroext

@@ -142,7 +142,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/DebugLoc.h"
+file|"llvm/Support/DebugLoc.h"
 end_include
 
 begin_include

@@ -242,6 +242,14 @@ expr_stmt|;
 block|}
 block|}
 name|void
+name|print_pcrel_imm
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|)
+block|;
+name|void
 name|printi8mem
 argument_list|(
 argument|const MachineInstr *MI

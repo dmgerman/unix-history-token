@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<iosfwd>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cassert>
 end_include
 
@@ -97,10 +91,10 @@ name|class
 name|MemoryBuffer
 decl_stmt|;
 name|class
-name|TGSourceMgr
+name|SourceMgr
 decl_stmt|;
 name|class
-name|TGLoc
+name|SMLoc
 decl_stmt|;
 name|namespace
 name|tgtok
@@ -228,7 +222,7 @@ comment|/// TGLexer - TableGen Lexer class.
 name|class
 name|TGLexer
 block|{
-name|TGSourceMgr
+name|SourceMgr
 modifier|&
 name|SrcMgr
 decl_stmt|;
@@ -268,23 +262,11 @@ comment|/// by the SourceMgr object.
 name|int
 name|CurBuffer
 decl_stmt|;
-comment|// IncludeDirectories - This is the list of directories we should search for
-comment|// include files in.
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-name|IncludeDirectories
-expr_stmt|;
 name|public
 label|:
 name|TGLexer
 argument_list|(
-name|TGSourceMgr
+name|SourceMgr
 operator|&
 name|SrcMgr
 argument_list|)
@@ -293,16 +275,6 @@ operator|~
 name|TGLexer
 argument_list|()
 block|{}
-name|void
-name|setIncludeDirs
-argument_list|(
-argument|const std::vector<std::string>&Dirs
-argument_list|)
-block|{
-name|IncludeDirectories
-operator|=
-name|Dirs
-block|;   }
 name|tgtok
 operator|::
 name|TokKind
@@ -391,7 +363,7 @@ return|return
 name|CurIntVal
 return|;
 block|}
-name|TGLoc
+name|SMLoc
 name|getLoc
 argument_list|()
 specifier|const
@@ -416,7 +388,7 @@ decl_stmt|;
 name|void
 name|PrintError
 argument_list|(
-name|TGLoc
+name|SMLoc
 name|Loc
 argument_list|,
 specifier|const

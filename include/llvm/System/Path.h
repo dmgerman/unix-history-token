@@ -755,6 +755,22 @@ name|isAbsolute
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// This function determines if the path name is absolute, as opposed to
+comment|/// relative.
+comment|/// @brief Determine if the path is absolute.
+specifier|static
+name|bool
+name|isAbsolute
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|NameStart
+parameter_list|,
+name|unsigned
+name|NameLen
+parameter_list|)
+function_decl|;
 comment|/// This function opens the file associated with the path name provided by
 comment|/// the Path object and reads its magic number. If the magic number at the
 comment|/// start of the file matches \p magic, true is returned. In all other

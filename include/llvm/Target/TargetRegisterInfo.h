@@ -2144,6 +2144,117 @@ return|return
 name|NULL
 return|;
 block|}
+comment|/// getAllocationOrder - Returns the register allocation order for a specified
+comment|/// register class in the form of a pair of TargetRegisterClass iterators.
+name|virtual
+name|std
+operator|::
+name|pair
+operator|<
+name|TargetRegisterClass
+operator|::
+name|iterator
+operator|,
+name|TargetRegisterClass
+operator|::
+name|iterator
+operator|>
+name|getAllocationOrder
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|unsigned HintType
+argument_list|,
+argument|unsigned HintReg
+argument_list|,
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|{
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|RC
+operator|->
+name|allocation_order_begin
+argument_list|(
+name|MF
+argument_list|)
+argument_list|,
+name|RC
+operator|->
+name|allocation_order_end
+argument_list|(
+name|MF
+argument_list|)
+argument_list|)
+return|;
+block|}
+comment|/// ResolveRegAllocHint - Resolves the specified register allocation hint
+comment|/// to a physical register. Returns the physical register if it is successful.
+name|virtual
+name|unsigned
+name|ResolveRegAllocHint
+argument_list|(
+name|unsigned
+name|Type
+argument_list|,
+name|unsigned
+name|Reg
+argument_list|,
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|Type
+operator|==
+literal|0
+operator|&&
+name|Reg
+operator|&&
+name|isPhysicalRegister
+argument_list|(
+name|Reg
+argument_list|)
+condition|)
+return|return
+name|Reg
+return|;
+return|return
+literal|0
+return|;
+block|}
+comment|/// UpdateRegAllocHint - A callback to allow target a chance to update
+comment|/// register allocation hints when a register is "changed" (e.g. coalesced)
+comment|/// to another register. e.g. On ARM, some virtual registers should target
+comment|/// register pairs, if one of pair is coalesced to another register, the
+comment|/// allocation hint of the other half of the pair should be changed to point
+comment|/// to the new register.
+name|virtual
+name|void
+name|UpdateRegAllocHint
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|,
+name|unsigned
+name|NewReg
+argument_list|,
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+block|{
+comment|// Do nothing.
+block|}
 comment|/// targetHandlesStackFrameRounding - Returns true if the target is
 comment|/// responsible for rounding up the stack frame (probably at emitPrologue
 comment|/// time).

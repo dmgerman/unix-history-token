@@ -140,6 +140,9 @@ block|;
 name|ARMTargetLowering
 name|TLInfo
 block|;
+name|InstrItineraryData
+name|InstrItins
+block|;
 name|Reloc
 operator|::
 name|Model
@@ -284,6 +287,17 @@ operator|(
 operator|&
 name|TLInfo
 operator|)
+return|;
+block|}
+name|virtual
+specifier|const
+name|InstrItineraryData
+name|getInstrItineraryData
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InstrItins
 return|;
 block|}
 specifier|static

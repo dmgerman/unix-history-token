@@ -199,6 +199,7 @@ name|Aggressive
 block|}
 enum|;
 block|}
+comment|// Possible float ABI settings. Used with FloatABIType in TargetOptions.h.
 name|namespace
 name|FloatABI
 block|{
@@ -207,9 +208,12 @@ name|ABIType
 block|{
 name|Default
 block|,
+comment|// Target-specific (either soft of hard depending on triple, etc).
 name|Soft
 block|,
+comment|// Soft float.
 name|Hard
+comment|// Hard float.
 block|}
 enum|;
 block|}

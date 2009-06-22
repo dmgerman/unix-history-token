@@ -330,6 +330,10 @@ name|FPROUND_F80_F64
 block|,
 name|FPROUND_PPCF128_F64
 block|,
+name|FPTOSINT_F32_I8
+block|,
+name|FPTOSINT_F32_I16
+block|,
 name|FPTOSINT_F32_I32
 block|,
 name|FPTOSINT_F32_I64
@@ -353,6 +357,10 @@ block|,
 name|FPTOSINT_PPCF128_I64
 block|,
 name|FPTOSINT_PPCF128_I128
+block|,
+name|FPTOUINT_F32_I8
+block|,
+name|FPTOUINT_F32_I16
 block|,
 name|FPTOUINT_F32_I32
 block|,

@@ -863,11 +863,11 @@ name|ImpLi
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// RemoveCopiesFromValNo - The specified value# is defined by an implicit
-comment|/// def and it is being removed. Turn all copies from this value# into
-comment|/// identity copies so they will be removed.
+comment|/// TurnCopiesFromValNoToImpDefs - The specified value# is defined by an
+comment|/// implicit_def and it is being removed. Turn all copies from this value#
+comment|/// into implicit_defs.
 name|void
-name|RemoveCopiesFromValNo
+name|TurnCopiesFromValNoToImpDefs
 parameter_list|(
 name|LiveInterval
 modifier|&

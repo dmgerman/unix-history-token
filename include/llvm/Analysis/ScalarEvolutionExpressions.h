@@ -131,11 +131,18 @@ argument_list|(
 name|ConstantInt
 operator|*
 name|v
+argument_list|,
+specifier|const
+name|ScalarEvolution
+operator|*
+name|p
 argument_list|)
 operator|:
 name|SCEV
 argument_list|(
 name|scConstant
+argument_list|,
+name|p
 argument_list|)
 block|,
 name|V
@@ -287,6 +294,8 @@ argument_list|,
 argument|const SCEVHandle&op
 argument_list|,
 argument|const Type *ty
+argument_list|,
+argument|const ScalarEvolution* p
 argument_list|)
 block|;
 name|virtual
@@ -434,6 +443,11 @@ specifier|const
 name|Type
 operator|*
 name|ty
+argument_list|,
+specifier|const
+name|ScalarEvolution
+operator|*
+name|p
 argument_list|)
 block|;
 name|virtual
@@ -553,6 +567,11 @@ specifier|const
 name|Type
 operator|*
 name|ty
+argument_list|,
+specifier|const
+name|ScalarEvolution
+operator|*
+name|p
 argument_list|)
 block|;
 name|virtual
@@ -672,6 +691,11 @@ specifier|const
 name|Type
 operator|*
 name|ty
+argument_list|,
+specifier|const
+name|ScalarEvolution
+operator|*
+name|p
 argument_list|)
 block|;
 name|virtual
@@ -778,11 +802,11 @@ name|SCEV
 block|{
 name|protected
 operator|:
-name|std
-operator|::
-name|vector
+name|SmallVector
 operator|<
 name|SCEVHandle
+block|,
+literal|8
 operator|>
 name|Operands
 block|;
@@ -790,17 +814,23 @@ name|SCEVNAryExpr
 argument_list|(
 argument|enum SCEVTypes T
 argument_list|,
-argument|const std::vector<SCEVHandle>&ops
+argument|const SmallVectorImpl<SCEVHandle>&ops
+argument_list|,
+argument|const ScalarEvolution* p
 argument_list|)
 operator|:
 name|SCEV
 argument_list|(
 name|T
+argument_list|,
+name|p
 argument_list|)
 block|,
 name|Operands
 argument_list|(
-argument|ops
+argument|ops.begin()
+argument_list|,
+argument|ops.end()
 argument_list|)
 block|{}
 name|virtual
@@ -854,9 +884,7 @@ index|]
 return|;
 block|}
 specifier|const
-name|std
-operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
 name|SCEVHandle
 operator|>
@@ -870,9 +898,7 @@ name|Operands
 return|;
 block|}
 typedef|typedef
-name|std
-operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
 name|SCEVHandle
 operator|>
@@ -1128,7 +1154,9 @@ name|SCEVCommutativeExpr
 argument_list|(
 argument|enum SCEVTypes T
 argument_list|,
-argument|const std::vector<SCEVHandle>&ops
+argument|const SmallVectorImpl<SCEVHandle>&ops
+argument_list|,
+argument|const ScalarEvolution* p
 argument_list|)
 operator|:
 name|SCEVNAryExpr
@@ -1136,6 +1164,8 @@ argument_list|(
 argument|T
 argument_list|,
 argument|ops
+argument_list|,
+argument|p
 argument_list|)
 block|{}
 operator|~
@@ -1243,14 +1273,17 @@ name|explicit
 name|SCEVAddExpr
 argument_list|(
 specifier|const
-name|std
-operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
 name|SCEVHandle
 operator|>
 operator|&
 name|ops
+argument_list|,
+specifier|const
+name|ScalarEvolution
+operator|*
+name|p
 argument_list|)
 operator|:
 name|SCEVCommutativeExpr
@@ -1258,6 +1291,8 @@ argument_list|(
 argument|scAddExpr
 argument_list|,
 argument|ops
+argument_list|,
+argument|p
 argument_list|)
 block|{     }
 name|public
@@ -1323,14 +1358,17 @@ name|explicit
 name|SCEVMulExpr
 argument_list|(
 specifier|const
-name|std
-operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
 name|SCEVHandle
 operator|>
 operator|&
 name|ops
+argument_list|,
+specifier|const
+name|ScalarEvolution
+operator|*
+name|p
 argument_list|)
 operator|:
 name|SCEVCommutativeExpr
@@ -1338,6 +1376,8 @@ argument_list|(
 argument|scMulExpr
 argument_list|,
 argument|ops
+argument_list|,
+argument|p
 argument_list|)
 block|{     }
 name|public
@@ -1415,11 +1455,18 @@ specifier|const
 name|SCEVHandle
 operator|&
 name|rhs
+argument_list|,
+specifier|const
+name|ScalarEvolution
+operator|*
+name|p
 argument_list|)
 operator|:
 name|SCEV
 argument_list|(
 name|scUDivExpr
+argument_list|,
+name|p
 argument_list|)
 block|,
 name|LHS
@@ -1656,9 +1703,7 @@ block|;
 name|SCEVAddRecExpr
 argument_list|(
 specifier|const
-name|std
-operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
 name|SCEVHandle
 operator|>
@@ -1669,6 +1714,11 @@ specifier|const
 name|Loop
 operator|*
 name|l
+argument_list|,
+specifier|const
+name|ScalarEvolution
+operator|*
+name|p
 argument_list|)
 operator|:
 name|SCEVNAryExpr
@@ -1676,6 +1726,8 @@ argument_list|(
 name|scAddRecExpr
 argument_list|,
 name|ops
+argument_list|,
+name|p
 argument_list|)
 block|,
 name|L
@@ -1777,11 +1829,11 @@ name|SE
 operator|.
 name|getAddRecExpr
 argument_list|(
-name|std
-operator|::
-name|vector
+name|SmallVector
 operator|<
 name|SCEVHandle
+argument_list|,
+literal|3
 operator|>
 operator|(
 name|op_begin
@@ -1952,14 +2004,17 @@ name|explicit
 name|SCEVSMaxExpr
 argument_list|(
 specifier|const
-name|std
-operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
 name|SCEVHandle
 operator|>
 operator|&
 name|ops
+argument_list|,
+specifier|const
+name|ScalarEvolution
+operator|*
+name|p
 argument_list|)
 operator|:
 name|SCEVCommutativeExpr
@@ -1967,6 +2022,8 @@ argument_list|(
 argument|scSMaxExpr
 argument_list|,
 argument|ops
+argument_list|,
+argument|p
 argument_list|)
 block|{     }
 name|public
@@ -2032,14 +2089,17 @@ name|explicit
 name|SCEVUMaxExpr
 argument_list|(
 specifier|const
-name|std
-operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
 name|SCEVHandle
 operator|>
 operator|&
 name|ops
+argument_list|,
+specifier|const
+name|ScalarEvolution
+operator|*
+name|p
 argument_list|)
 operator|:
 name|SCEVCommutativeExpr
@@ -2047,6 +2107,8 @@ argument_list|(
 argument|scUMaxExpr
 argument_list|,
 argument|ops
+argument_list|,
+argument|p
 argument_list|)
 block|{     }
 name|public
@@ -2120,11 +2182,18 @@ argument_list|(
 name|Value
 operator|*
 name|v
+argument_list|,
+specifier|const
+name|ScalarEvolution
+operator|*
+name|p
 argument_list|)
 operator|:
 name|SCEV
 argument_list|(
 name|scUnknown
+argument_list|,
+name|p
 argument_list|)
 block|,
 name|V

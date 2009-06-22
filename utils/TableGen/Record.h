@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"TGSourceMgr.h"
+file|"llvm/Support/SourceMgr.h"
 end_include
 
 begin_include
@@ -7150,7 +7150,7 @@ operator|::
 name|string
 name|Name
 block|;
-name|TGLoc
+name|SMLoc
 name|Loc
 block|;
 name|std
@@ -7187,7 +7187,7 @@ name|Record
 argument_list|(
 argument|const std::string&N
 argument_list|,
-argument|TGLoc loc
+argument|SMLoc loc
 argument_list|)
 operator|:
 name|Name
@@ -7229,7 +7229,7 @@ name|Name
 argument_list|)
 block|;
 comment|// Also updates RecordKeeper.
-name|TGLoc
+name|SMLoc
 name|getLoc
 argument_list|()
 specifier|const
@@ -7896,7 +7896,7 @@ name|MultiClass
 argument_list|(
 argument|const std::string&Name
 argument_list|,
-argument|TGLoc Loc
+argument|SMLoc Loc
 argument_list|)
 operator|:
 name|Rec
@@ -8379,7 +8379,7 @@ block|;
 name|class
 name|TGError
 block|{
-name|TGLoc
+name|SMLoc
 name|Loc
 block|;
 name|std
@@ -8391,7 +8391,7 @@ name|public
 operator|:
 name|TGError
 argument_list|(
-argument|TGLoc loc
+argument|SMLoc loc
 argument_list|,
 argument|const std::string&message
 argument_list|)
@@ -8406,7 +8406,7 @@ argument_list|(
 argument|message
 argument_list|)
 block|{}
-name|TGLoc
+name|SMLoc
 name|getLoc
 argument_list|()
 specifier|const
@@ -8456,7 +8456,7 @@ block|;
 name|void
 name|PrintError
 argument_list|(
-argument|TGLoc ErrorLoc
+argument|SMLoc ErrorLoc
 argument_list|,
 argument|const std::string&Msg
 argument_list|)

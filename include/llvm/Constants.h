@@ -366,13 +366,35 @@ name|false
 argument_list|)
 return|;
 block|}
-comment|/// Return a ConstantInt with the specified value for the specified type. The
-comment|/// value V will be canonicalized to an unsigned APInt. Accessing it with
-comment|/// either getSExtValue() or getZExtValue() will yield a correctly sized and
-comment|/// signed value for the type Ty.
+comment|/// Return a ConstantInt with the specified integer value for the specified
+comment|/// type. If the type is wider than 64 bits, the value will be zero-extended
+comment|/// to fit the type, unless isSigned is true, in which case the value will
+comment|/// be interpreted as a 64-bit signed integer and sign-extended to fit
+comment|/// the type.
 comment|/// @brief Get a ConstantInt for a specific value.
 specifier|static
 name|ConstantInt
+modifier|*
+name|get
+parameter_list|(
+specifier|const
+name|IntegerType
+modifier|*
+name|Ty
+parameter_list|,
+name|uint64_t
+name|V
+parameter_list|,
+name|bool
+name|isSigned
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// If Ty is a vector type, return a Constant with a splat of the given
+comment|/// value. Otherwise return a ConstantInt for the given value.
+specifier|static
+name|Constant
 modifier|*
 name|get
 parameter_list|(
@@ -397,6 +419,31 @@ comment|/// signed value for the type Ty.
 comment|/// @brief Get a ConstantInt for a specific signed value.
 specifier|static
 name|ConstantInt
+modifier|*
+name|getSigned
+parameter_list|(
+specifier|const
+name|IntegerType
+modifier|*
+name|Ty
+parameter_list|,
+name|int64_t
+name|V
+parameter_list|)
+block|{
+return|return
+name|get
+argument_list|(
+name|Ty
+argument_list|,
+name|V
+argument_list|,
+name|true
+argument_list|)
+return|;
+block|}
+specifier|static
+name|Constant
 modifier|*
 name|getSigned
 parameter_list|(
@@ -427,6 +474,24 @@ name|ConstantInt
 modifier|*
 name|get
 parameter_list|(
+specifier|const
+name|APInt
+modifier|&
+name|V
+parameter_list|)
+function_decl|;
+comment|/// If Ty is a vector type, return a Constant with a splat of the given
+comment|/// value. Otherwise return a ConstantInt for the given value.
+specifier|static
+name|Constant
+modifier|*
+name|get
+parameter_list|(
+specifier|const
+name|Type
+modifier|*
+name|Ty
+parameter_list|,
 specifier|const
 name|APInt
 modifier|&
@@ -841,11 +906,12 @@ operator|&
 name|V
 argument_list|)
 block|;
-comment|/// get() - This returns a constant fp for the specified value in the
-comment|/// specified type.  This should only be used for simple constant values like
-comment|/// 2.0/1.0 etc, that are known-valid both as double and as the target format.
+comment|/// get() - This returns a ConstantFP, or a vector containing a splat of a
+comment|/// ConstantFP, for the specified value in the specified type.  This should
+comment|/// only be used for simple constant values like 2.0/1.0 etc, that are
+comment|/// known-valid both as host double and as the target format.
 specifier|static
-name|ConstantFP
+name|Constant
 operator|*
 name|get
 argument_list|(

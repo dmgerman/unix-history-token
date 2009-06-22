@@ -135,8 +135,40 @@ name|createTargetAsmInfo
 argument_list|()
 specifier|const
 block|;
-name|public
+name|protected
 operator|:
+comment|// To avoid having target depend on the asmprinter stuff libraries,
+comment|// asmprinter set this functions to ctor pointer at startup time if they are
+comment|// linked in.
+typedef|typedef
+name|FunctionPass
+modifier|*
+typedef|(
+modifier|*
+name|AsmPrinterCtorFn
+typedef|)
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|o
+parameter_list|,
+name|MipsTargetMachine
+modifier|&
+name|tm
+parameter_list|,
+typedef|CodeGenOpt::
+name|Level
+name|OptLevel
+typedef|,
+name|bool
+name|verbose
+typedef|);
+specifier|static
+name|AsmPrinterCtorFn
+name|AsmPrinterCtor
+decl_stmt|;
+name|public
+label|:
 name|MipsTargetMachine
 argument_list|(
 argument|const Module&M
@@ -145,7 +177,20 @@ argument|const std::string&FS
 argument_list|,
 argument|bool isLittle
 argument_list|)
-block|;
+empty_stmt|;
+specifier|static
+name|void
+name|registerAsmPrinter
+parameter_list|(
+name|AsmPrinterCtorFn
+name|F
+parameter_list|)
+block|{
+name|AsmPrinterCtor
+operator|=
+name|F
+expr_stmt|;
+block|}
 name|virtual
 specifier|const
 name|MipsInstrInfo
@@ -236,48 +281,79 @@ block|}
 specifier|static
 name|unsigned
 name|getModuleMatchQuality
-argument_list|(
+parameter_list|(
 specifier|const
 name|Module
-operator|&
+modifier|&
 name|M
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|// Pass Pipeline Configuration
 name|virtual
 name|bool
 name|addInstSelector
 argument_list|(
-argument|PassManagerBase&PM
+name|PassManagerBase
+operator|&
+name|PM
 argument_list|,
-argument|CodeGenOpt::Level OptLevel
+name|CodeGenOpt
+operator|::
+name|Level
+name|OptLevel
 argument_list|)
-block|;
+decl_stmt|;
 name|virtual
 name|bool
 name|addPreEmitPass
 argument_list|(
-argument|PassManagerBase&PM
+name|PassManagerBase
+operator|&
+name|PM
 argument_list|,
-argument|CodeGenOpt::Level OptLevel
+name|CodeGenOpt
+operator|::
+name|Level
+name|OptLevel
 argument_list|)
-block|;
+decl_stmt|;
 name|virtual
 name|bool
 name|addAssemblyEmitter
 argument_list|(
-argument|PassManagerBase&PM
+name|PassManagerBase
+operator|&
+name|PM
 argument_list|,
-argument|CodeGenOpt::Level OptLevel
+name|CodeGenOpt
+operator|::
+name|Level
+name|OptLevel
 argument_list|,
-argument|bool Verbose
+name|bool
+name|Verbose
 argument_list|,
-argument|raw_ostream&Out
+name|raw_ostream
+operator|&
+name|Out
 argument_list|)
-block|;   }
 decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// MipselTargetMachine - Mipsel target machine.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|MipselTargetMachine
 range|:
@@ -312,10 +388,10 @@ name|M
 argument_list|)
 block|; }
 decl_stmt|;
-block|}
 end_decl_stmt
 
 begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

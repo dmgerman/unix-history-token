@@ -107,6 +107,8 @@ name|OSType
 block|{
 name|UnknownOS
 block|,
+name|AuroraUX
+block|,
 name|Darwin
 block|,
 name|DragonFly

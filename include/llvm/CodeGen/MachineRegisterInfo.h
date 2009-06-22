@@ -133,6 +133,28 @@ operator|>
 expr|>
 name|RegClass2VRegMap
 expr_stmt|;
+comment|/// RegAllocHints - This vector records register allocation hints for virtual
+comment|/// registers. For each virtual register, it keeps a register and hint type
+comment|/// pair making up the allocation hint. Hint type is target specific except
+comment|/// for the value 0 which means the second value of the pair is the preferred
+comment|/// register for allocation. For example, if the hint is<0, 1024>, it means
+comment|/// the allocator should prefer the physical register allocated to the virtual
+comment|/// register of the hint.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|unsigned
+operator|>
+expr|>
+name|RegAllocHints
+expr_stmt|;
 comment|/// PhysRegUseDefLists - This is an array of the head of the use/def list for
 comment|/// physical registers.
 name|MachineOperand
@@ -635,6 +657,99 @@ name|RC
 operator|->
 name|getID
 argument_list|()
+index|]
+return|;
+block|}
+comment|/// setRegAllocationHint - Specify a register allocation hint for the
+comment|/// specified virtual register.
+name|void
+name|setRegAllocationHint
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+name|unsigned
+name|Type
+parameter_list|,
+name|unsigned
+name|PrefReg
+parameter_list|)
+block|{
+name|Reg
+operator|-=
+name|TargetRegisterInfo
+operator|::
+name|FirstVirtualRegister
+expr_stmt|;
+name|assert
+argument_list|(
+name|Reg
+operator|<
+name|VRegInfo
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Invalid vreg!"
+argument_list|)
+expr_stmt|;
+name|RegAllocHints
+index|[
+name|Reg
+index|]
+operator|.
+name|first
+operator|=
+name|Type
+expr_stmt|;
+name|RegAllocHints
+index|[
+name|Reg
+index|]
+operator|.
+name|second
+operator|=
+name|PrefReg
+expr_stmt|;
+block|}
+comment|/// getRegAllocationHint - Return the register allocation hint for the
+comment|/// specified virtual register.
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|unsigned
+operator|>
+name|getRegAllocationHint
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+specifier|const
+block|{
+name|Reg
+operator|-=
+name|TargetRegisterInfo
+operator|::
+name|FirstVirtualRegister
+block|;
+name|assert
+argument_list|(
+name|Reg
+operator|<
+name|VRegInfo
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Invalid vreg!"
+argument_list|)
+block|;
+return|return
+name|RegAllocHints
+index|[
+name|Reg
 index|]
 return|;
 block|}

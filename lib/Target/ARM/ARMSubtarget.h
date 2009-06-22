@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Target/TargetInstrItineraries.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetSubtarget.h"
 end_include
 
@@ -137,10 +143,6 @@ comment|/// ThumbMode - Indicates supported Thumb version.
 name|ThumbTypeEnum
 name|ThumbMode
 block|;
-comment|/// UseThumbBacktraces - True if we use thumb style backtraces.
-name|bool
-name|UseThumbBacktraces
-block|;
 comment|/// IsR9Reserved - True if R9 is a not available as general purpose register.
 name|bool
 name|IsR9Reserved
@@ -155,6 +157,10 @@ name|std
 operator|::
 name|string
 name|CPUString
+block|;
+comment|/// Selected instruction itineraries (one entry per itinerary class.)
+name|InstrItineraryData
+name|InstrItins
 block|;
 name|public
 operator|:
@@ -379,7 +385,7 @@ name|IsThumb
 return|;
 block|}
 name|bool
-name|isThumb1
+name|isThumb1Only
 argument_list|()
 specifier|const
 block|{
@@ -394,7 +400,7 @@ operator|)
 return|;
 block|}
 name|bool
-name|isThumb2
+name|hasThumb2
 argument_list|()
 specifier|const
 block|{
@@ -406,15 +412,6 @@ name|ThumbMode
 operator|>=
 name|Thumb2
 operator|)
-return|;
-block|}
-name|bool
-name|useThumbBacktraces
-argument_list|()
-specifier|const
-block|{
-return|return
-name|UseThumbBacktraces
 return|;
 block|}
 name|bool
@@ -437,6 +434,19 @@ specifier|const
 block|{
 return|return
 name|CPUString
+return|;
+block|}
+comment|/// getInstrItins - Return the instruction itineraies based on subtarget
+comment|/// selection.
+specifier|const
+name|InstrItineraryData
+operator|&
+name|getInstrItineraryData
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InstrItins
 return|;
 block|}
 comment|/// getStackAlignment - Returns the minimum alignment known to hold of the

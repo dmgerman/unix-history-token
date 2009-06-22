@@ -379,6 +379,12 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+name|char
+modifier|*
+name|str
+init|=
+name|buffer
+decl_stmt|;
 if|if
 condition|(
 name|errnum
@@ -398,6 +404,21 @@ if|if
 condition|(
 name|errnum
 condition|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GLIBC__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_GNU_SOURCE
+argument_list|)
+comment|// glibc defines its own incompatible version of strerror_r
+comment|// which may not use the buffer supplied.
+name|str
+operator|=
 name|strerror_r
 argument_list|(
 name|errnum
@@ -409,6 +430,21 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|strerror_r
+argument_list|(
+name|errnum
+argument_list|,
+name|buffer
+argument_list|,
+name|MAXPATHLEN
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 elif|#
 directive|elif
 name|HAVE_STRERROR
@@ -464,7 +500,7 @@ name|prefix
 operator|+
 literal|": "
 operator|+
-name|buffer
+name|str
 expr_stmt|;
 return|return
 name|true

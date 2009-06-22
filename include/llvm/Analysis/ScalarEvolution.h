@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<iosfwd>
 end_include
 
@@ -139,6 +145,15 @@ decl_stmt|;
 name|class
 name|TargetData
 decl_stmt|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|DenseMapInfo
+operator|<
+name|SCEVHandle
+operator|>
+expr_stmt|;
 comment|/// SCEV - This class represents an analyzed expression in the program.  These
 comment|/// are reference-counted opaque objects that the client is not allowed to
 comment|/// do much with directly.
@@ -159,6 +174,13 @@ name|friend
 name|class
 name|SCEVHandle
 decl_stmt|;
+name|friend
+name|class
+name|DenseMapInfo
+operator|<
+name|SCEVHandle
+operator|>
+expr_stmt|;
 name|void
 name|addRef
 argument_list|()
@@ -183,6 +205,11 @@ name|delete
 name|this
 decl_stmt|;
 block|}
+specifier|const
+name|ScalarEvolution
+modifier|*
+name|parent
+decl_stmt|;
 name|SCEV
 argument_list|(
 specifier|const
@@ -214,6 +241,8 @@ name|explicit
 name|SCEV
 argument_list|(
 argument|unsigned SCEVTy
+argument_list|,
+argument|const ScalarEvolution* p
 argument_list|)
 block|:
 name|SCEVType
@@ -224,6 +253,11 @@ operator|,
 name|RefCount
 argument_list|(
 literal|0
+argument_list|)
+operator|,
+name|parent
+argument_list|(
+argument|p
 argument_list|)
 block|{}
 name|unsigned
@@ -465,7 +499,12 @@ name|public
 name|SCEV
 block|{
 name|SCEVCouldNotCompute
-argument_list|()
+argument_list|(
+specifier|const
+name|ScalarEvolution
+operator|*
+name|p
+argument_list|)
 block|;
 operator|~
 name|SCEVCouldNotCompute
@@ -850,6 +889,155 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|// Specialize DenseMapInfo for SCEVHandle so that SCEVHandle may be used
+end_comment
+
+begin_comment
+comment|// as a key in DenseMaps.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|DenseMapInfo
+operator|<
+name|SCEVHandle
+operator|>
+block|{
+specifier|static
+specifier|inline
+name|SCEVHandle
+name|getEmptyKey
+argument_list|()
+block|{
+specifier|static
+name|SCEVCouldNotCompute
+name|Empty
+argument_list|(
+literal|0
+argument_list|)
+block|;
+if|if
+condition|(
+name|Empty
+operator|.
+name|RefCount
+operator|==
+literal|0
+condition|)
+name|Empty
+operator|.
+name|addRef
+argument_list|()
+expr_stmt|;
+return|return
+operator|&
+name|Empty
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+specifier|static
+specifier|inline
+name|SCEVHandle
+name|getTombstoneKey
+parameter_list|()
+block|{
+specifier|static
+name|SCEVCouldNotCompute
+name|Tombstone
+argument_list|(
+literal|0
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|Tombstone
+operator|.
+name|RefCount
+operator|==
+literal|0
+condition|)
+name|Tombstone
+operator|.
+name|addRef
+argument_list|()
+expr_stmt|;
+return|return
+operator|&
+name|Tombstone
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|unsigned
+name|getHashValue
+parameter_list|(
+specifier|const
+name|SCEVHandle
+modifier|&
+name|Val
+parameter_list|)
+block|{
+return|return
+name|DenseMapInfo
+operator|<
+specifier|const
+name|SCEV
+operator|*
+operator|>
+operator|::
+name|getHashValue
+argument_list|(
+name|Val
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|bool
+name|isEqual
+parameter_list|(
+specifier|const
+name|SCEVHandle
+modifier|&
+name|LHS
+parameter_list|,
+specifier|const
+name|SCEVHandle
+modifier|&
+name|RHS
+parameter_list|)
+block|{
+return|return
+name|LHS
+operator|==
+name|RHS
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|bool
+name|isPod
+parameter_list|()
+block|{
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_comment
+unit|};
 comment|/// ScalarEvolution - This class is the main scalar evolution driver.  Because
 end_comment
 
@@ -1162,6 +1350,28 @@ operator|&
 name|NewVal
 argument_list|)
 block|;
+comment|/// getBECount - Subtract the end and start values and divide by the step,
+comment|/// rounding up, to get the number of times the backedge is executed. Return
+comment|/// CouldNotCompute if an intermediate computation overflows.
+name|SCEVHandle
+name|getBECount
+argument_list|(
+specifier|const
+name|SCEVHandle
+operator|&
+name|Start
+argument_list|,
+specifier|const
+name|SCEVHandle
+operator|&
+name|End
+argument_list|,
+specifier|const
+name|SCEVHandle
+operator|&
+name|Step
+argument_list|)
+block|;
 comment|/// getBackedgeTakenInfo - Return the BackedgeTakenInfo for the given
 comment|/// loop, lazily computing new values if the loop hasn't been analyzed
 comment|/// yet.
@@ -1185,6 +1395,71 @@ specifier|const
 name|Loop
 operator|*
 name|L
+argument_list|)
+block|;
+comment|/// ComputeBackedgeTakenCountFromExit - Compute the number of times the
+comment|/// backedge of the specified loop will execute if it exits via the
+comment|/// specified block.
+name|BackedgeTakenInfo
+name|ComputeBackedgeTakenCountFromExit
+argument_list|(
+specifier|const
+name|Loop
+operator|*
+name|L
+argument_list|,
+name|BasicBlock
+operator|*
+name|ExitingBlock
+argument_list|)
+block|;
+comment|/// ComputeBackedgeTakenCountFromExitCond - Compute the number of times the
+comment|/// backedge of the specified loop will execute if its exit condition
+comment|/// were a conditional branch of ExitCond, TBB, and FBB.
+name|BackedgeTakenInfo
+name|ComputeBackedgeTakenCountFromExitCond
+argument_list|(
+specifier|const
+name|Loop
+operator|*
+name|L
+argument_list|,
+name|Value
+operator|*
+name|ExitCond
+argument_list|,
+name|BasicBlock
+operator|*
+name|TBB
+argument_list|,
+name|BasicBlock
+operator|*
+name|FBB
+argument_list|)
+block|;
+comment|/// ComputeBackedgeTakenCountFromExitCondICmp - Compute the number of
+comment|/// times the backedge of the specified loop will execute if its exit
+comment|/// condition were a conditional branch of the ICmpInst ExitCond, TBB,
+comment|/// and FBB.
+name|BackedgeTakenInfo
+name|ComputeBackedgeTakenCountFromExitCondICmp
+argument_list|(
+specifier|const
+name|Loop
+operator|*
+name|L
+argument_list|,
+name|ICmpInst
+operator|*
+name|ExitCond
+argument_list|,
+name|BasicBlock
+operator|*
+name|TBB
+argument_list|,
+name|BasicBlock
+operator|*
+name|FBB
 argument_list|)
 block|;
 comment|/// ComputeLoadConstantCompareBackedgeTakenCount - Given an exit condition
@@ -1396,6 +1671,16 @@ name|Val
 argument_list|)
 block|;
 name|SCEVHandle
+name|getConstant
+argument_list|(
+argument|const Type *Ty
+argument_list|,
+argument|uint64_t V
+argument_list|,
+argument|bool isSigned = false
+argument_list|)
+block|;
+name|SCEVHandle
 name|getTruncateExpr
 argument_list|(
 specifier|const
@@ -1454,9 +1739,7 @@ block|;
 name|SCEVHandle
 name|getAddExpr
 argument_list|(
-name|std
-operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
 name|SCEVHandle
 operator|>
@@ -1472,11 +1755,11 @@ argument_list|,
 argument|const SCEVHandle&RHS
 argument_list|)
 block|{
-name|std
-operator|::
-name|vector
+name|SmallVector
 operator|<
 name|SCEVHandle
+block|,
+literal|2
 operator|>
 name|Ops
 block|;
@@ -1511,11 +1794,11 @@ argument_list|,
 argument|const SCEVHandle&Op2
 argument_list|)
 block|{
-name|std
-operator|::
-name|vector
+name|SmallVector
 operator|<
 name|SCEVHandle
+block|,
+literal|3
 operator|>
 name|Ops
 block|;
@@ -1550,9 +1833,7 @@ block|}
 name|SCEVHandle
 name|getMulExpr
 argument_list|(
-name|std
-operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
 name|SCEVHandle
 operator|>
@@ -1568,11 +1849,11 @@ argument_list|,
 argument|const SCEVHandle&RHS
 argument_list|)
 block|{
-name|std
-operator|::
-name|vector
+name|SmallVector
 operator|<
 name|SCEVHandle
+block|,
+literal|2
 operator|>
 name|Ops
 block|;
@@ -1633,9 +1914,7 @@ block|;
 name|SCEVHandle
 name|getAddRecExpr
 argument_list|(
-name|std
-operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
 name|SCEVHandle
 operator|>
@@ -1651,20 +1930,28 @@ block|;
 name|SCEVHandle
 name|getAddRecExpr
 argument_list|(
-argument|const std::vector<SCEVHandle>&Operands
+argument|const SmallVectorImpl<SCEVHandle>&Operands
 argument_list|,
 argument|const Loop *L
 argument_list|)
 block|{
-name|std
-operator|::
-name|vector
+name|SmallVector
 operator|<
 name|SCEVHandle
+block|,
+literal|4
 operator|>
 name|NewOp
 argument_list|(
 name|Operands
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|Operands
+operator|.
+name|end
+argument_list|()
 argument_list|)
 block|;
 return|return
@@ -1693,12 +1980,11 @@ block|;
 name|SCEVHandle
 name|getSMaxExpr
 argument_list|(
-name|std
-operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
 name|SCEVHandle
 operator|>
+operator|&
 name|Operands
 argument_list|)
 block|;
@@ -1719,13 +2005,40 @@ block|;
 name|SCEVHandle
 name|getUMaxExpr
 argument_list|(
-name|std
-operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
 name|SCEVHandle
 operator|>
+operator|&
 name|Operands
+argument_list|)
+block|;
+name|SCEVHandle
+name|getSMinExpr
+argument_list|(
+specifier|const
+name|SCEVHandle
+operator|&
+name|LHS
+argument_list|,
+specifier|const
+name|SCEVHandle
+operator|&
+name|RHS
+argument_list|)
+block|;
+name|SCEVHandle
+name|getUMinExpr
+argument_list|(
+specifier|const
+name|SCEVHandle
+operator|&
+name|LHS
+argument_list|,
+specifier|const
+name|SCEVHandle
+operator|&
+name|RHS
 argument_list|)
 block|;
 name|SCEVHandle
@@ -1891,6 +2204,23 @@ argument_list|,
 argument|const Type *Ty
 argument_list|)
 block|;
+comment|/// getUMaxFromMismatchedTypes - Promote the operands to the wider of
+comment|/// the types using zero-extension, and then perform a umax operation
+comment|/// with them.
+name|SCEVHandle
+name|getUMaxFromMismatchedTypes
+argument_list|(
+specifier|const
+name|SCEVHandle
+operator|&
+name|LHS
+argument_list|,
+specifier|const
+name|SCEVHandle
+operator|&
+name|RHS
+argument_list|)
+block|;
 comment|/// hasSCEV - Return true if the SCEV for this value has already been
 comment|/// computed.
 name|bool
@@ -2023,6 +2353,41 @@ specifier|const
 name|Loop
 operator|*
 name|L
+argument_list|)
+block|;
+comment|/// GetMinTrailingZeros - Determine the minimum number of zero bits that S is
+comment|/// guaranteed to end in (at every loop iteration).  It is, at the same time,
+comment|/// the minimum number of times S is divisible by 2.  For example, given {4,+,8}
+comment|/// it returns 2.  If S is guaranteed to be 0, it returns the bitwidth of S.
+name|uint32_t
+name|GetMinTrailingZeros
+argument_list|(
+specifier|const
+name|SCEVHandle
+operator|&
+name|S
+argument_list|)
+block|;
+comment|/// GetMinLeadingZeros - Determine the minimum number of zero bits that S is
+comment|/// guaranteed to begin with (at every loop iteration).
+name|uint32_t
+name|GetMinLeadingZeros
+argument_list|(
+specifier|const
+name|SCEVHandle
+operator|&
+name|S
+argument_list|)
+block|;
+comment|/// GetMinSignBits - Determine the minimum number of sign bits that S is
+comment|/// guaranteed to begin with.
+name|uint32_t
+name|GetMinSignBits
+argument_list|(
+specifier|const
+name|SCEVHandle
+operator|&
+name|S
 argument_list|)
 block|;
 name|virtual

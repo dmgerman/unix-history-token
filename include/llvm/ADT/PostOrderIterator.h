@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<set>
 end_include
 
@@ -172,9 +178,9 @@ operator|,
 name|class
 name|SetType
 operator|=
-name|std
+name|llvm
 operator|::
-name|set
+name|SmallPtrSet
 operator|<
 name|typename
 name|GraphTraits
@@ -184,6 +190,8 @@ operator|>
 operator|::
 name|NodeType
 operator|*
+operator|,
+literal|8
 operator|>
 operator|,
 name|bool

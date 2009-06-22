@@ -123,17 +123,24 @@ name|public
 label|:
 name|IVStrideUse
 argument_list|(
-argument|IVUsersOfOneStride *parent
+name|IVUsersOfOneStride
+operator|*
+name|parent
 argument_list|,
-argument|const SCEVHandle&offset
+specifier|const
+name|SCEVHandle
+operator|&
+name|offset
 argument_list|,
-argument|Instruction* U
+name|Instruction
+operator|*
+name|U
 argument_list|,
-argument|Value *O
-argument_list|,
-argument|bool issigned
+name|Value
+operator|*
+name|O
 argument_list|)
-block|:
+operator|:
 name|CallbackVH
 argument_list|(
 name|U
@@ -152,11 +159,6 @@ operator|,
 name|OperandValToReplace
 argument_list|(
 name|O
-argument_list|)
-operator|,
-name|IsSigned
-argument_list|(
-name|issigned
 argument_list|)
 operator|,
 name|IsUseOfPostIncrementedValue
@@ -211,8 +213,7 @@ return|;
 block|}
 comment|/// getOffset - Return the offset to add to a theoeretical induction
 comment|/// variable that starts at zero and counts up by the stride to compute
-comment|/// the value for the use. This always has the same type as the stride,
-comment|/// which may need to be casted to match the type of the use.
+comment|/// the value for the use. This always has the same type as the stride.
 name|SCEVHandle
 name|getOffset
 argument_list|()
@@ -262,20 +263,6 @@ operator|=
 name|Op
 expr_stmt|;
 block|}
-comment|/// isSigned - The stride (and thus also the Offset) of this use may be in
-comment|/// a narrower type than the use itself (OperandValToReplace->getType()).
-comment|/// When this is the case, isSigned() indicates whether the IV expression
-comment|/// should be signed-extended instead of zero-extended to fit the type of
-comment|/// the use.
-name|bool
-name|isSigned
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IsSigned
-return|;
-block|}
 comment|/// isUseOfPostIncrementedValue - True if this should use the
 comment|/// post-incremented version of this IV, not the preincremented version.
 comment|/// This can only be set in special cases, such as the terminating setcc
@@ -318,11 +305,6 @@ comment|/// OperandValToReplace - The Value of the operand in the user instructi
 comment|/// that this IVStrideUse is representing.
 name|WeakVH
 name|OperandValToReplace
-decl_stmt|;
-comment|/// IsSigned - Determines whether the replacement value is sign or
-comment|/// zero extended to the type of the use.
-name|bool
-name|IsSigned
 decl_stmt|;
 comment|/// IsUseOfPostIncrementedValue - True if this should use the
 comment|/// post-incremented version of this IV, not the preincremented version.
@@ -513,15 +495,13 @@ argument_list|,
 argument|Instruction *User
 argument_list|,
 argument|Value *Operand
-argument_list|,
-argument|bool isSigned
 argument_list|)
 block|{
 name|Users
 operator|.
 name|push_back
 argument_list|(
-argument|new IVStrideUse(this, Offset, User, Operand, isSigned)
+argument|new IVStrideUse(this, Offset, User, Operand)
 argument_list|)
 block|;   }
 block|}

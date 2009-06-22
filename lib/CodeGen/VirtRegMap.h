@@ -139,6 +139,9 @@ name|class
 name|MachineFunction
 decl_stmt|;
 name|class
+name|MachineRegisterInfo
+decl_stmt|;
+name|class
 name|TargetInstrInfo
 decl_stmt|;
 name|class
@@ -215,9 +218,13 @@ name|MI2VirtMapTy
 expr_stmt|;
 name|private
 operator|:
+name|MachineRegisterInfo
+operator|*
+name|MRI
+decl_stmt|;
 specifier|const
 name|TargetInstrInfo
-operator|*
+modifier|*
 name|TII
 decl_stmt|;
 specifier|const
@@ -694,6 +701,14 @@ name|grow
 argument_list|()
 expr_stmt|;
 block|}
+comment|/// @brief returns the register allocation preference.
+name|unsigned
+name|getRegAllocPref
+parameter_list|(
+name|unsigned
+name|virtReg
+parameter_list|)
+function_decl|;
 comment|/// @brief records virtReg is a split live interval from SReg.
 name|void
 name|setIsSplitFromReg
@@ -1896,11 +1911,6 @@ comment|/// have not been allocated to any virtual register.
 name|bool
 name|FindUnusedRegisters
 parameter_list|(
-specifier|const
-name|TargetRegisterInfo
-modifier|*
-name|TRI
-parameter_list|,
 name|LiveIntervals
 modifier|*
 name|LIs

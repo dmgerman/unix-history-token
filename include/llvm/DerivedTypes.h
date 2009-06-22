@@ -159,6 +159,17 @@ name|void
 name|dropAllTypeUses
 argument_list|()
 block|;
+comment|/// unlockedRefineAbstractTypeTo - Internal version of refineAbstractTypeTo
+comment|/// that performs no locking.  Only used for internal recursion.
+name|void
+name|unlockedRefineAbstractTypeTo
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|NewType
+argument_list|)
+block|;
 name|public
 operator|:
 comment|//===--------------------------------------------------------------------===//

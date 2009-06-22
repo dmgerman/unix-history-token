@@ -84,6 +84,22 @@ decl_stmt|;
 name|class
 name|Type
 decl_stmt|;
+comment|/// Register allocation hints.
+name|namespace
+name|ARMRI
+block|{
+enum|enum
+block|{
+name|RegPairOdd
+init|=
+literal|1
+block|,
+name|RegPairEven
+init|=
+literal|2
+block|}
+enum|;
+block|}
 name|struct
 name|ARMRegisterInfo
 range|:
@@ -99,12 +115,6 @@ specifier|const
 name|ARMSubtarget
 operator|&
 name|STI
-block|;
-name|private
-operator|:
-comment|/// FramePtr - ARM physical register used as frame ptr.
-name|unsigned
-name|FramePtr
 block|;
 name|public
 operator|:
@@ -166,15 +176,6 @@ argument_list|,
 argument|bool&isSPVFP
 argument_list|)
 block|;
-comment|/// getPointerRegClass - Return the register class to use to hold pointers.
-comment|/// This is used for addressing modes.
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|getPointerRegClass
-argument_list|()
-specifier|const
-block|;
 comment|/// Code Generation virtual methods...
 specifier|const
 name|TargetRegisterClass
@@ -222,6 +223,59 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|,
 argument|unsigned Reg
+argument_list|)
+specifier|const
+block|;
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|getPointerRegClass
+argument_list|()
+specifier|const
+block|;
+name|std
+operator|::
+name|pair
+operator|<
+name|TargetRegisterClass
+operator|::
+name|iterator
+block|,
+name|TargetRegisterClass
+operator|::
+name|iterator
+operator|>
+name|getAllocationOrder
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|unsigned HintType
+argument_list|,
+argument|unsigned HintReg
+argument_list|,
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|ResolveRegAllocHint
+argument_list|(
+argument|unsigned Type
+argument_list|,
+argument|unsigned Reg
+argument_list|,
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|void
+name|UpdateRegAllocHint
+argument_list|(
+argument|unsigned Reg
+argument_list|,
+argument|unsigned NewReg
+argument_list|,
+argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
@@ -332,7 +386,31 @@ argument_list|(
 argument|unsigned Reg
 argument_list|)
 specifier|const
-block|; }
+block|;
+name|private
+operator|:
+comment|/// FramePtr - ARM physical register used as frame ptr.
+name|unsigned
+name|FramePtr
+block|;
+name|unsigned
+name|getRegisterPairEven
+argument_list|(
+argument|unsigned Reg
+argument_list|,
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getRegisterPairOdd
+argument_list|(
+argument|unsigned Reg
+argument_list|,
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;  }
 decl_stmt|;
 block|}
 end_decl_stmt

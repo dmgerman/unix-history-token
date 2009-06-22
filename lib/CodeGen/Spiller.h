@@ -66,7 +66,13 @@ name|class
 name|MachineFunction
 decl_stmt|;
 name|class
+name|MachineInstr
+decl_stmt|;
+name|class
 name|VirtRegMap
+decl_stmt|;
+name|class
+name|VNInfo
 decl_stmt|;
 comment|/// Spiller interface.
 comment|///
@@ -84,6 +90,8 @@ argument_list|()
 operator|=
 literal|0
 expr_stmt|;
+comment|/// Spill the given live range. The method used will depend on the Spiller
+comment|/// implementation selected.
 name|virtual
 name|std
 operator|::
@@ -97,6 +105,28 @@ argument_list|(
 name|LiveInterval
 operator|*
 name|li
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+comment|/// Intra-block split.
+name|virtual
+name|std
+operator|::
+name|vector
+operator|<
+name|LiveInterval
+operator|*
+operator|>
+name|intraBlockSplit
+argument_list|(
+name|LiveInterval
+operator|*
+name|li
+argument_list|,
+name|VNInfo
+operator|*
+name|valno
 argument_list|)
 operator|=
 literal|0
