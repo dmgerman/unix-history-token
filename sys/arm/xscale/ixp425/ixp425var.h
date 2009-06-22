@@ -111,6 +111,24 @@ block|}
 struct|;
 end_struct
 
+begin_function_decl
+name|void
+name|ixp425_set_gpio
+parameter_list|(
+name|struct
+name|ixp425_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|pin
+parameter_list|,
+name|int
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_struct
 struct|struct
 name|ixppcib_softc
