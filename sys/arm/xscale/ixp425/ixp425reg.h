@@ -32,7 +32,7 @@ comment|/*  * Virtual memory map for the Intel IXP425/IXP435 integrated devices 
 end_comment
 
 begin_comment
-comment|/*  * FFFF FFFF ---------------------------  *  *           Global cache clean area  * FF00 0000 ---------------------------  *  * FE00 0000 ---------------------------  *           16M CFI Flash (on ext bus)  * FD00 0000 ---------------------------  *  * FC00 0000 ---------------------------  *           PCI Data (memory space)  * F800 0000 --------------------------- IXP425_PCI_MEM_VBASE  *  * F020 1000 ---------------------------  *           SDRAM/DDR Memory Controller  * F020 0000 --------------------------- IXP425_MCU_VBASE  *  *           EHCI USB 2 (IXP435)  * F001 D000 --------------------------- IXP435_USB2_VBASE  *           EHCI USB 1 (IXP435)  * F001 C000 --------------------------- IXP435_USB1_VBASE  *           Queue manager  * F001 8000 --------------------------- IXP425_QMGR_VBASE  *           PCI Configuration and Status  * F001 7000 --------------------------- IXP425_PCI_VBASE  *  *	     (NB: gap for future addition of EXP CS5-7)  * F001 4000 Expansion Bus Chip Select 4  * F001 3000 Expansion Bus Chip Select 3  * F001 2000 Expansion Bus Chip Select 2  * F001 1000 Expansion Bus Chip Select 1  *           Expansion Bus Configuration  * F001 0000 --------------------------- IXP425_EXP_VBASE  *  * F000 C000 MAC-A (IXP435)  * F000 B000 USB (option on IXP425)  * F000 A000 MAC-B (IXP425) | MAC-C (IXP435)  * F000 9000 MAC-A (IXP425)  * F000 8000 NPE-C  * F000 7000 NPE-B (IXP425)  * F000 6000 NPE-A  * F000 5000 Timers  * F000 4000 GPIO Controller  * F000 3000 Interrupt Controller  * F000 2000 Performance Monitor Controller (PMC)  * F000 1000 UART 1 (IXP425)  * F000 0000 UART 0  * F000 0000 --------------------------- IXP425_IO_VBASE  *  * 0000 0000 ---------------------------  *  */
+comment|/*  * FFFF FFFF ---------------------------  *  *           Global cache clean area  * FF00 0000 ---------------------------  *  * FE00 0000 ---------------------------  *           16M CFI Flash (on ext bus)  * FD00 0000 ---------------------------  *  * FC00 0000 ---------------------------  *           PCI Data (memory space)  * F800 0000 --------------------------- IXP425_PCI_MEM_VBASE  *  * F020 1000 ---------------------------  *           SDRAM/DDR Memory Controller  * F020 0000 --------------------------- IXP425_MCU_VBASE  *  * F001 F000 RS485 (Cambria)		 CAMBRIA_RS485_VBASE  * F001 E000 GPS (Cambria)		 CAMBRIA_GPS_VBASE  * F001 D000 EHCI USB 2 (IXP435)	 IXP435_USB2_VBASE  * F001 C000 EHCI USB 1 (IXP435)	 IXP435_USB1_VBASE  *           Queue manager  * F001 8000 --------------------------- IXP425_QMGR_VBASE  *           PCI Configuration and Status  * F001 7000 --------------------------- IXP425_PCI_VBASE  *  *	     (NB: gap for future addition of EXP CS5-7)  * F001 4000 Expansion Bus Chip Select 4  * F001 3000 Expansion Bus Chip Select 3  * F001 2000 Expansion Bus Chip Select 2  * F001 1000 Expansion Bus Chip Select 1  *           Expansion Bus Configuration  * F001 0000 --------------------------- IXP425_EXP_VBASE  *  * F000 C000 MAC-A (IXP435)  * F000 B000 USB (option on IXP425)  * F000 A000 MAC-B (IXP425) | MAC-C (IXP435)  * F000 9000 MAC-A (IXP425)  * F000 8000 NPE-C  * F000 7000 NPE-B (IXP425)  * F000 6000 NPE-A  * F000 5000 Timers  * F000 4000 GPIO Controller  * F000 3000 Interrupt Controller  * F000 2000 Performance Monitor Controller (PMC)  * F000 1000 UART 1 (IXP425)  * F000 0000 UART 0  * F000 0000 --------------------------- IXP425_IO_VBASE  *  * 0000 0000 ---------------------------  *  */
 end_comment
 
 begin_comment
@@ -3494,6 +3494,64 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IXP435_USB1_HWBASE
+value|0xCD000000UL
+end_define
+
+begin_comment
+comment|/* USB host controller 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXP435_USB1_VBASE
+value|0xF001C000UL
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXP435_USB1_SIZE
+value|0x1000
+end_define
+
+begin_comment
+comment|/* NB: only uses 0x300 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXP435_USB2_HWBASE
+value|0xCE000000UL
+end_define
+
+begin_comment
+comment|/* USB host controller 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXP435_USB2_VBASE
+value|0xF001D000UL
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXP435_USB2_SIZE
+value|0x1000
+end_define
+
+begin_comment
+comment|/* NB: only uses 0x300 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CAMBRIA_GPS_HWBASE
 value|0x53FC0000UL
 end_define
@@ -3505,8 +3563,15 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CAMBRIA_GPS_VBASE
+value|0xF001E000UL
+end_define
+
+begin_define
+define|#
+directive|define
 name|CAMBRIA_GPS_SIZE
-value|0x40000
+value|0x1000
 end_define
 
 begin_define
@@ -3523,9 +3588,20 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CAMBRIA_RS485_SIZE
-value|0x40000
+name|CAMBRIA_RS485_VBASE
+value|0xF001F000UL
 end_define
+
+begin_define
+define|#
+directive|define
+name|CAMBRIA_RS485_SIZE
+value|0x1000
+end_define
+
+begin_comment
+comment|/* NB: these are mapped on the fly, so no fixed virtual addresses */
+end_comment
 
 begin_define
 define|#
@@ -3580,64 +3656,6 @@ directive|define
 name|CAMBRIA_CFSEL0_SIZE
 value|0x40000
 end_define
-
-begin_define
-define|#
-directive|define
-name|IXP435_USB1_HWBASE
-value|0xcd000000UL
-end_define
-
-begin_comment
-comment|/* USB host controller 1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXP435_USB1_VBASE
-value|0xf001C000UL
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXP435_USB1_SIZE
-value|0x1000
-end_define
-
-begin_comment
-comment|/* NB: only uses 0x300 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXP435_USB2_HWBASE
-value|0xce000000UL
-end_define
-
-begin_comment
-comment|/* USB host controller 2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXP435_USB2_VBASE
-value|0xf001D000UL
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXP435_USB2_SIZE
-value|0x1000
-end_define
-
-begin_comment
-comment|/* NB: only uses 0x300 */
-end_comment
 
 begin_endif
 endif|#

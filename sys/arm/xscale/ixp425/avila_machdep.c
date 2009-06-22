@@ -693,28 +693,12 @@ block|,
 name|PTE_NOCACHE
 block|, }
 block|,
-comment|/* Expansion Bus */
 block|{
 name|IXP425_EXP_VBASE
 block|,
 name|IXP425_EXP_HWBASE
 block|,
 name|IXP425_EXP_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_NOCACHE
-block|, }
-block|,
-comment|/* CFI Flash on the Expansion Bus */
-block|{
-name|IXP425_EXP_BUS_CS0_VBASE
-block|,
-name|IXP425_EXP_BUS_CS0_HWBASE
-block|,
-name|IXP425_EXP_BUS_CS0_SIZE
 block|,
 name|VM_PROT_READ
 operator||
@@ -783,6 +767,21 @@ block|,
 name|PTE_NOCACHE
 block|, }
 block|,
+comment|/* CFI Flash on the Expansion Bus */
+block|{
+name|IXP425_EXP_BUS_CS0_VBASE
+block|,
+name|IXP425_EXP_BUS_CS0_HWBASE
+block|,
+name|IXP425_EXP_BUS_CS0_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, }
+block|,
 comment|/* USB1 Memory Space */
 block|{
 name|IXP435_USB1_VBASE
@@ -805,6 +804,36 @@ block|,
 name|IXP435_USB2_HWBASE
 block|,
 name|IXP435_USB2_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, }
+block|,
+comment|/* GPS Memory Space */
+block|{
+name|CAMBRIA_GPS_VBASE
+block|,
+name|CAMBRIA_GPS_HWBASE
+block|,
+name|CAMBRIA_GPS_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, }
+block|,
+comment|/* RS485 Memory Space */
+block|{
+name|CAMBRIA_RS485_VBASE
+block|,
+name|CAMBRIA_RS485_HWBASE
+block|,
+name|CAMBRIA_RS485_SIZE
 block|,
 name|VM_PROT_READ
 operator||
@@ -1898,7 +1927,7 @@ name|PHYSADDR
 operator|+
 name|PAGE_SIZE
 expr_stmt|;
-comment|/* 					 *XXX: Gross hack to get our 					 * pages in the vm_page_array 					 . */
+comment|/* 					 *XXX: Gross hack to get our 					 * pages in the vm_page_array. 					 */
 endif|#
 directive|endif
 name|phys_avail
