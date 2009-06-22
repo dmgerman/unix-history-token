@@ -223,6 +223,11 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* Show packet/byte count */
+name|int
+name|try_next
+init|=
+literal|0
+decl_stmt|;
 define|#
 directive|define
 name|WHITESP
@@ -1260,11 +1265,6 @@ operator|=
 name|p
 expr_stmt|;
 block|}
-name|int
-name|try_next
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
 name|co

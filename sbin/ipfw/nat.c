@@ -1588,6 +1588,7 @@ name|char
 modifier|*
 name|spool_buf
 parameter_list|,
+name|unsigned
 name|int
 name|len
 parameter_list|,
@@ -2438,6 +2439,7 @@ name|char
 modifier|*
 name|spool_buf
 parameter_list|,
+name|unsigned
 name|int
 name|len
 parameter_list|,
@@ -3962,6 +3964,7 @@ name|_ac
 init|=
 literal|3
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|_av
@@ -3979,6 +3982,15 @@ name|ipfw_show_nat
 argument_list|(
 name|_ac
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|_av
 argument_list|)
 expr_stmt|;

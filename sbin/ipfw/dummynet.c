@@ -1745,27 +1745,6 @@ argument_list|,
 name|prefix
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|co
-operator|.
-name|verbose
-condition|)
-name|printf
-argument_list|(
-literal|"   V %20llu\n"
-argument_list|,
-name|align_uint64
-argument_list|(
-operator|&
-name|p
-operator|->
-name|V
-argument_list|)
-operator|>>
-name|MY_M
-argument_list|)
-expr_stmt|;
 name|q
 operator|=
 operator|(
