@@ -1921,7 +1921,7 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|192
+value|156
 end_define
 
 begin_define
@@ -1960,7 +1960,7 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|104
+value|72
 end_define
 
 begin_define
@@ -2003,7 +2003,7 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|104
+value|72
 end_define
 
 begin_define
@@ -2042,7 +2042,7 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|192
+value|156
 end_define
 
 begin_define
@@ -2081,7 +2081,7 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|104
+value|72
 end_define
 
 begin_define
@@ -2120,7 +2120,7 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|104
+value|72
 end_define
 
 begin_define
@@ -2163,7 +2163,7 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|192
+value|156
 end_define
 
 begin_define
