@@ -248,6 +248,25 @@ name|ixp425_a4x_bs_tag
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|bus_space
+name|cambria_exp_bs_tag
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|void
+name|cambria_exp_bus_init
+parameter_list|(
+name|struct
+name|ixp425_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|void
 name|ixp425_io_bs_init
