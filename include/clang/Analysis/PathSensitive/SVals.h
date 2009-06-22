@@ -777,6 +777,7 @@ name|BasicValueFactory
 operator|&
 name|BasicVals
 argument_list|,
+specifier|const
 name|IntegerLiteral
 operator|*
 name|I
@@ -942,6 +943,7 @@ specifier|static
 name|Loc
 name|MakeVal
 argument_list|(
+specifier|const
 name|AddrLabelExpr
 operator|*
 name|E

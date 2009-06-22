@@ -1727,6 +1727,22 @@ block|}
 end_function
 
 begin_comment
+comment|/// getDefaultConstructor - Returns the default constructor for this class
+end_comment
+
+begin_function_decl
+name|CXXConstructorDecl
+modifier|*
+name|getDefaultConstructor
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// getDestructor - Returns the destructor decl for this class.
 end_comment
 
@@ -1931,19 +1947,6 @@ block|{
 return|return
 operator|!
 name|isStatic
-argument_list|()
-return|;
-block|}
-name|bool
-name|isOutOfLineDefinition
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getLexicalDeclContext
-argument_list|()
-operator|!=
-name|getDeclContext
 argument_list|()
 return|;
 block|}
@@ -2204,6 +2207,10 @@ end_comment
 
 begin_comment
 comment|/// };
+end_comment
+
+begin_comment
+comment|/// @endcode
 end_comment
 
 begin_decl_stmt
@@ -2532,6 +2539,13 @@ name|ImplicitlyDefined
 operator|:
 literal|1
 block|;
+comment|/// ImplicitMustBeDefined - Implicit constructor was used to create an
+comment|/// object of its class type. It must be defined.
+name|bool
+name|ImplicitMustBeDefined
+operator|:
+literal|1
+block|;
 comment|/// FIXME: Add support for base and member initializers.
 name|CXXConstructorDecl
 argument_list|(
@@ -2573,6 +2587,11 @@ name|isExplicit
 argument_list|)
 block|,
 name|ImplicitlyDefined
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|ImplicitMustBeDefined
 argument_list|(
 argument|false
 argument_list|)
@@ -2659,6 +2678,29 @@ name|ImplicitlyDefined
 operator|=
 name|ID
 block|;    }
+comment|/// isImplicitMustBeDefined - Whether a definition must be synthesized for
+comment|/// the implicit constructor.
+name|bool
+name|isImplicitMustBeDefined
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isImplicit
+argument_list|()
+operator|&&
+name|ImplicitMustBeDefined
+return|;
+block|}
+comment|/// setImplicitMustBeDefined - constructor must be implicitly defined.
+name|void
+name|setImplicitMustBeDefined
+argument_list|()
+block|{
+name|ImplicitMustBeDefined
+operator|=
+name|true
+block|;   }
 comment|/// isDefaultConstructor - Whether this constructor is a default
 comment|/// constructor (C++ [class.ctor]p5), which can be used to
 comment|/// default-initialize a class of this type.
@@ -3770,6 +3812,242 @@ name|bool
 name|classof
 argument_list|(
 argument|const NamespaceAliasDecl *D
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
+comment|/// UsingDecl - Represents a C++ using-declaration. For example:
+comment|///    using someNameSpace::someIdentifier;
+name|class
+name|UsingDecl
+operator|:
+name|public
+name|NamedDecl
+block|{
+comment|/// \brief The source range that covers the nested-name-specifier
+comment|/// preceding the declaration name.
+name|SourceRange
+name|NestedNameRange
+block|;
+comment|/// \brief The source location of the target declaration name.
+name|SourceLocation
+name|TargetNameLocation
+block|;
+comment|/// \brief The source location of the "using" location itself.
+name|SourceLocation
+name|UsingLocation
+block|;
+comment|/// \brief Target declaration.
+name|NamedDecl
+operator|*
+name|TargetDecl
+block|;
+comment|/// \brief Target declaration.
+name|NestedNameSpecifier
+operator|*
+name|TargetNestedNameDecl
+block|;
+comment|// Had 'typename' keyword.
+name|bool
+name|IsTypeName
+block|;
+name|UsingDecl
+argument_list|(
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation L
+argument_list|,
+argument|SourceRange NNR
+argument_list|,
+argument|SourceLocation TargetNL
+argument_list|,
+argument|SourceLocation UL
+argument_list|,
+argument|NamedDecl* Target
+argument_list|,
+argument|NestedNameSpecifier* TargetNNS
+argument_list|,
+argument|bool IsTypeNameArg
+argument_list|)
+operator|:
+name|NamedDecl
+argument_list|(
+name|Decl
+operator|::
+name|Using
+argument_list|,
+name|DC
+argument_list|,
+name|L
+argument_list|,
+name|Target
+operator|->
+name|getDeclName
+argument_list|()
+argument_list|)
+block|,
+name|NestedNameRange
+argument_list|(
+name|NNR
+argument_list|)
+block|,
+name|TargetNameLocation
+argument_list|(
+name|TargetNL
+argument_list|)
+block|,
+name|UsingLocation
+argument_list|(
+name|UL
+argument_list|)
+block|,
+name|TargetDecl
+argument_list|(
+name|Target
+argument_list|)
+block|,
+name|TargetNestedNameDecl
+argument_list|(
+name|TargetNNS
+argument_list|)
+block|,
+name|IsTypeName
+argument_list|(
+argument|IsTypeNameArg
+argument_list|)
+block|{
+name|this
+operator|->
+name|IdentifierNamespace
+operator|=
+name|TargetDecl
+operator|->
+name|getIdentifierNamespace
+argument_list|()
+block|;   }
+name|public
+operator|:
+comment|/// \brief Returns the source range that covers the nested-name-specifier
+comment|/// preceding the namespace name.
+name|SourceRange
+name|getNestedNameRange
+argument_list|()
+block|{
+return|return
+operator|(
+name|NestedNameRange
+operator|)
+return|;
+block|}
+comment|/// \brief Returns the source location of the target declaration name.
+name|SourceLocation
+name|getTargetNameLocation
+argument_list|()
+block|{
+return|return
+operator|(
+name|TargetNameLocation
+operator|)
+return|;
+block|}
+comment|/// \brief Returns the source location of the "using" location itself.
+name|SourceLocation
+name|getUsingLocation
+argument_list|()
+block|{
+return|return
+operator|(
+name|UsingLocation
+operator|)
+return|;
+block|}
+comment|/// \brief getTargetDecl - Returns target specified by using-decl.
+name|NamedDecl
+operator|*
+name|getTargetDecl
+argument_list|()
+block|{
+return|return
+operator|(
+name|TargetDecl
+operator|)
+return|;
+block|}
+comment|/// \brief Get target nested name declaration.
+name|NestedNameSpecifier
+operator|*
+name|getTargetNestedNameDecl
+argument_list|()
+block|{
+return|return
+operator|(
+name|TargetNestedNameDecl
+operator|)
+return|;
+block|}
+comment|/// isTypeName - Return true if using decl had 'typename'.
+name|bool
+name|isTypeName
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|IsTypeName
+operator|)
+return|;
+block|}
+specifier|static
+name|UsingDecl
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation L
+argument_list|,
+argument|SourceRange NNR
+argument_list|,
+argument|SourceLocation TargetNL
+argument_list|,
+argument|SourceLocation UL
+argument_list|,
+argument|NamedDecl* Target
+argument_list|,
+argument|NestedNameSpecifier* TargetNNS
+argument_list|,
+argument|bool IsTypeNameArg
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Decl *D
+argument_list|)
+block|{
+return|return
+name|D
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|Decl
+operator|::
+name|Using
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const UsingDecl *D
 argument_list|)
 block|{
 return|return

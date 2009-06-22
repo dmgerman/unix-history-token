@@ -136,10 +136,6 @@ name|ASTContext
 modifier|&
 name|Ctx
 parameter_list|,
-name|GRStateManager
-modifier|*
-name|VMgr
-parameter_list|,
 name|BugReporter
 modifier|&
 name|BR
@@ -152,10 +148,6 @@ parameter_list|(
 name|ASTContext
 modifier|&
 name|Ctx
-parameter_list|,
-name|GRStateManager
-modifier|*
-name|VMgr
 parameter_list|,
 name|BugReporter
 modifier|&

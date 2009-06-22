@@ -83,6 +83,12 @@ directive|include
 file|"llvm/ADT/PointerUnion.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<limits>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -1412,6 +1418,19 @@ operator|*
 name|Type
 block|;     }
 name|Integer
+block|;     struct
+block|{
+name|TemplateArgument
+operator|*
+name|Args
+block|;
+name|unsigned
+name|NumArgs
+block|;
+name|bool
+name|CopyArgs
+block|;     }
+name|Args
 block|;   }
 block|;
 comment|/// \brief Location of the beginning of this template argument.
@@ -1428,7 +1447,7 @@ name|Null
 operator|=
 literal|0
 block|,
-comment|/// The template argument is a type. It's value is stored in the
+comment|/// The template argument is a type. Its value is stored in the
 comment|/// TypeOrValue field.
 name|Type
 operator|=
@@ -1449,6 +1468,12 @@ comment|/// stored in an Expr*.
 name|Expression
 operator|=
 literal|4
+block|,
+comment|/// The template argument is actually a parameter pack. Arguments are stored
+comment|/// in the Args struct.
+name|Pack
+operator|=
+literal|5
 block|}
 name|Kind
 block|;
@@ -1580,6 +1605,18 @@ operator|*
 name|E
 argument_list|)
 block|;
+comment|/// \brief Construct a template argument pack.
+name|TemplateArgument
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|TemplateArgument *Args
+argument_list|,
+argument|unsigned NumArgs
+argument_list|,
+argument|bool CopyArgs
+argument_list|)
+block|;
 comment|/// \brief Copy constructor for a template argument.
 name|TemplateArgument
 argument_list|(
@@ -1627,6 +1664,69 @@ operator|.
 name|Type
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|Kind
+operator|==
+name|Pack
+condition|)
+block|{
+name|Args
+operator|.
+name|NumArgs
+operator|=
+name|Other
+operator|.
+name|Args
+operator|.
+name|NumArgs
+expr_stmt|;
+name|Args
+operator|.
+name|Args
+operator|=
+name|new
+name|TemplateArgument
+index|[
+name|Args
+operator|.
+name|NumArgs
+index|]
+expr_stmt|;
+for|for
+control|(
+name|unsigned
+name|I
+init|=
+literal|0
+init|;
+name|I
+operator|!=
+name|Args
+operator|.
+name|NumArgs
+condition|;
+operator|++
+name|I
+control|)
+name|Args
+operator|.
+name|Args
+index|[
+name|I
+index|]
+operator|=
+name|Other
+operator|.
+name|Args
+operator|.
+name|Args
+index|[
+name|I
+index|]
+expr_stmt|;
+block|}
 else|else
 name|TypeOrValue
 operator|=
@@ -1657,6 +1757,27 @@ name|using
 name|llvm
 operator|::
 name|APSInt
+block|;
+comment|// FIXME: Handle Packs
+name|assert
+argument_list|(
+name|Kind
+operator|!=
+name|Pack
+operator|&&
+literal|"FIXME: Handle packs"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|Other
+operator|.
+name|Kind
+operator|!=
+name|Pack
+operator|&&
+literal|"FIXME: Handle packs"
+argument_list|)
 block|;
 if|if
 condition|(
@@ -1793,6 +1914,23 @@ operator|~
 name|APSInt
 argument_list|()
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|Kind
+operator|==
+name|Pack
+operator|&&
+name|Args
+operator|.
+name|CopyArgs
+condition|)
+name|delete
+index|[]
+name|Args
+operator|.
+name|Args
+decl_stmt|;
 block|}
 comment|/// \brief Return the kind of stored template argument.
 name|ArgKind
@@ -2123,6 +2261,46 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|Pack
+case|:
+name|ID
+operator|.
+name|AddInteger
+argument_list|(
+name|Args
+operator|.
+name|NumArgs
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|unsigned
+name|I
+init|=
+literal|0
+init|;
+name|I
+operator|!=
+name|Args
+operator|.
+name|NumArgs
+condition|;
+operator|++
+name|I
+control|)
+name|Args
+operator|.
+name|Args
+index|[
+name|I
+index|]
+operator|.
+name|Profile
+argument_list|(
+name|ID
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_decl_stmt
@@ -2136,7 +2314,7 @@ begin_decl_stmt
 name|class
 name|TemplateArgumentListBuilder
 block|{
-comment|/// Args - contains the template arguments.
+comment|/// FlatArgs - contains the template arguments in flat form.
 name|llvm
 operator|::
 name|SmallVector
@@ -2145,21 +2323,24 @@ name|TemplateArgument
 operator|,
 literal|16
 operator|>
-name|Args
+name|FlatArgs
 expr_stmt|;
 name|llvm
 operator|::
 name|SmallVector
 operator|<
-name|unsigned
+name|TemplateArgument
 operator|,
-literal|32
+literal|16
 operator|>
-name|Indices
+name|StructuredArgs
 expr_stmt|;
 name|ASTContext
 modifier|&
 name|Context
+decl_stmt|;
+name|unsigned
+name|PackBeginIndex
 decl_stmt|;
 comment|/// isAddingFromParameterPack - Returns whether we're adding arguments from
 comment|/// a parameter pack.
@@ -2169,12 +2350,17 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Indices
-operator|.
-name|size
+name|PackBeginIndex
+operator|!=
+name|std
+operator|::
+name|numeric_limits
+operator|<
+name|unsigned
+operator|>
+operator|::
+name|max
 argument_list|()
-operator|%
-literal|2
 return|;
 block|}
 name|public
@@ -2188,11 +2374,16 @@ argument_list|)
 operator|:
 name|Context
 argument_list|(
-argument|Context
+name|Context
+argument_list|)
+operator|,
+name|PackBeginIndex
+argument_list|(
+argument|std::numeric_limits<unsigned>::max()
 argument_list|)
 block|{ }
 name|size_t
-name|size
+name|structuredSize
 argument_list|()
 specifier|const
 block|{
@@ -2206,12 +2397,10 @@ literal|"Size is not valid when adding from a parameter pack"
 argument_list|)
 block|;
 return|return
-name|Indices
+name|StructuredArgs
 operator|.
 name|size
 argument_list|()
-operator|/
-literal|2
 return|;
 block|}
 name|size_t
@@ -2220,7 +2409,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Args
+name|FlatArgs
 operator|.
 name|size
 argument_list|()
@@ -2253,7 +2442,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Args
+name|FlatArgs
 operator|.
 name|data
 argument_list|()
@@ -2265,7 +2454,7 @@ name|getFlatArgumentList
 parameter_list|()
 block|{
 return|return
-name|Args
+name|FlatArgs
 operator|.
 name|data
 argument_list|()
@@ -2368,48 +2557,6 @@ index|]
 return|;
 block|}
 comment|/// \brief Retrieve the template argument at a given index.
-name|TemplateArgument
-modifier|&
-name|get
-parameter_list|(
-name|unsigned
-name|Idx
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|Idx
-operator|<
-name|NumArguments
-operator|&&
-literal|"Invalid template argument index"
-argument_list|)
-expr_stmt|;
-return|return
-name|getFlatArgumentList
-argument_list|()
-index|[
-name|Idx
-index|]
-return|;
-block|}
-comment|/// \brief Retrieve the template argument at a given index.
-name|TemplateArgument
-modifier|&
-name|operator
-function|[]
-parameter_list|(
-name|unsigned
-name|Idx
-parameter_list|)
-block|{
-return|return
-name|get
-argument_list|(
-name|Idx
-argument_list|)
-return|;
-block|}
 specifier|const
 name|TemplateArgument
 modifier|&
@@ -2451,18 +2598,6 @@ name|NumArguments
 return|;
 block|}
 comment|/// \brief Retrieve the flattened template argument list.
-name|TemplateArgument
-modifier|*
-name|getFlatArgumentList
-parameter_list|()
-block|{
-return|return
-name|Arguments
-operator|.
-name|getPointer
-argument_list|()
-return|;
-block|}
 specifier|const
 name|TemplateArgument
 operator|*

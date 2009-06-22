@@ -111,17 +111,13 @@ parameter_list|(
 specifier|const
 name|GRState
 modifier|*
-name|St
+name|state
 parameter_list|,
 name|SVal
 name|Cond
 parameter_list|,
 name|bool
 name|Assumption
-parameter_list|,
-name|bool
-modifier|&
-name|isFeasible
 parameter_list|)
 init|=
 literal|0
@@ -135,7 +131,7 @@ parameter_list|(
 specifier|const
 name|GRState
 modifier|*
-name|St
+name|state
 parameter_list|,
 name|SVal
 name|Idx
@@ -145,10 +141,6 @@ name|UpperBound
 parameter_list|,
 name|bool
 name|Assumption
-parameter_list|,
-name|bool
-modifier|&
-name|isFeasible
 parameter_list|)
 init|=
 literal|0
@@ -161,7 +153,7 @@ name|APSInt
 operator|*
 name|getSymVal
 argument_list|(
-argument|const GRState* St
+argument|const GRState *state
 argument_list|,
 argument|SymbolRef sym
 argument_list|)
@@ -176,7 +168,7 @@ argument_list|(
 specifier|const
 name|GRState
 operator|*
-name|St
+name|state
 argument_list|,
 name|SymbolRef
 name|sym
@@ -201,7 +193,7 @@ parameter_list|(
 specifier|const
 name|GRState
 modifier|*
-name|St
+name|state
 parameter_list|,
 name|SymbolReaper
 modifier|&
@@ -217,7 +209,7 @@ argument_list|(
 specifier|const
 name|GRState
 operator|*
-name|St
+name|state
 argument_list|,
 name|std
 operator|::
@@ -245,7 +237,7 @@ parameter_list|(
 specifier|const
 name|GRState
 modifier|*
-name|St
+name|state
 parameter_list|)
 block|{}
 comment|/// canReasonAbout - Not all ConstraintManagers can accurately reason about

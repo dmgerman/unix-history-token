@@ -4006,7 +4006,7 @@ name|unsigned
 name|NumTemps
 block|;
 name|bool
-name|DestroyTemps
+name|ShouldDestroyTemps
 block|;
 name|CXXExprWithTemporaries
 argument_list|(
@@ -4016,7 +4016,7 @@ argument|CXXTemporary **Temps
 argument_list|,
 argument|unsigned NumTemps
 argument_list|,
-argument|bool DestroyTemps
+argument|bool ShouldDestroyTemps
 argument_list|)
 block|;
 operator|~
@@ -4038,7 +4038,7 @@ argument|CXXTemporary **Temps
 argument_list|,
 argument|unsigned NumTemps
 argument_list|,
-argument|bool DestroyTems
+argument|bool ShouldDestroyTemporaries
 argument_list|)
 block|;
 name|void
@@ -4104,6 +4104,15 @@ name|Temps
 index|[
 name|i
 index|]
+return|;
+block|}
+name|bool
+name|shouldDestroyTemporaries
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ShouldDestroyTemps
 return|;
 block|}
 name|void

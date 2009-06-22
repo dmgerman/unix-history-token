@@ -313,6 +313,56 @@ name|OldGreaterThanIsOperator
 block|;     }
 block|}
 struct|;
+comment|/// \brief RAII object that enters an unevaluated operand.
+name|class
+name|EnterUnevaluatedOperand
+block|{
+comment|/// \brief The action object.
+name|Action
+modifier|&
+name|Actions
+decl_stmt|;
+comment|/// \brief Whether we were previously within an unevaluated operand.
+name|bool
+name|PreviouslyInUnevaluatedOperand
+decl_stmt|;
+name|public
+label|:
+name|explicit
+name|EnterUnevaluatedOperand
+argument_list|(
+name|Action
+operator|&
+name|Actions
+argument_list|)
+operator|:
+name|Actions
+argument_list|(
+argument|Actions
+argument_list|)
+block|{
+name|PreviouslyInUnevaluatedOperand
+operator|=
+name|Actions
+operator|.
+name|setUnevaluatedOperand
+argument_list|(
+name|true
+argument_list|)
+block|;     }
+operator|~
+name|EnterUnevaluatedOperand
+argument_list|()
+block|{
+name|Actions
+operator|.
+name|setUnevaluatedOperand
+argument_list|(
+name|PreviouslyInUnevaluatedOperand
+argument_list|)
+block|;     }
+block|}
+empty_stmt|;
 name|public
 label|:
 name|Parser

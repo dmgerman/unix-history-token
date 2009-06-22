@@ -694,8 +694,8 @@ name|TYPE_OBJC_QUALIFIED_INTERFACE
 init|=
 literal|22
 block|,
-comment|/// \brief An ObjCQualifiedIdType record.
-name|TYPE_OBJC_QUALIFIED_ID
+comment|/// \brief An ObjCObjectPointerType record.
+name|TYPE_OBJC_OBJECT_POINTER
 init|=
 literal|23
 block|}

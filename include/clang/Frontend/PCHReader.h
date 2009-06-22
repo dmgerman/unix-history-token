@@ -229,6 +229,226 @@ decl_stmt|;
 name|class
 name|SwitchCase
 decl_stmt|;
+name|class
+name|PCHReader
+decl_stmt|;
+name|class
+name|HeaderFileInfo
+decl_stmt|;
+comment|/// \brief Abstract interface for callback invocations by the PCHReader.
+comment|///
+comment|/// While reading a PCH file, the PCHReader will call the methods of the
+comment|/// listener to pass on specific information. Some of the listener methods can
+comment|/// return true to indicate to the PCHReader that the information (and
+comment|/// consequently the PCH file) is invalid.
+name|class
+name|PCHReaderListener
+block|{
+name|public
+label|:
+name|virtual
+operator|~
+name|PCHReaderListener
+argument_list|()
+expr_stmt|;
+comment|/// \brief Receives the language options.
+comment|///
+comment|/// \returns true to indicate the options are invalid or false otherwise.
+name|virtual
+name|bool
+name|ReadLanguageOptions
+parameter_list|(
+specifier|const
+name|LangOptions
+modifier|&
+name|LangOpts
+parameter_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// \brief Receives the target triple.
+comment|///
+comment|/// \returns true to indicate the target triple is invalid or false otherwise.
+name|virtual
+name|bool
+name|ReadTargetTriple
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Triple
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// \brief Receives the contents of the predefines buffer.
+comment|///
+comment|/// \param PCHPredef The start of the predefines buffer in the PCH
+comment|/// file.
+comment|///
+comment|/// \param PCHPredefLen The length of the predefines buffer in the PCH
+comment|/// file.
+comment|///
+comment|/// \param PCHBufferID The FileID for the PCH predefines buffer.
+comment|///
+comment|/// \param SuggestedPredefines If necessary, additional definitions are added
+comment|/// here.
+comment|///
+comment|/// \returns true to indicate the predefines are invalid or false otherwise.
+name|virtual
+name|bool
+name|ReadPredefinesBuffer
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|PCHPredef
+argument_list|,
+name|unsigned
+name|PCHPredefLen
+argument_list|,
+name|FileID
+name|PCHBufferID
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|SuggestedPredefines
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// \brief Receives a HeaderFileInfo entry.
+name|virtual
+name|void
+name|ReadHeaderFileInfo
+parameter_list|(
+specifier|const
+name|HeaderFileInfo
+modifier|&
+name|HFI
+parameter_list|)
+block|{}
+comment|/// \brief Receives __COUNTER__ value.
+name|virtual
+name|void
+name|ReadCounter
+parameter_list|(
+name|unsigned
+name|Value
+parameter_list|)
+block|{}
+block|}
+empty_stmt|;
+comment|/// \brief PCHReaderListener implementation to validate the information of
+comment|/// the PCH file against an initialized Preprocessor.
+name|class
+name|PCHValidator
+range|:
+name|public
+name|PCHReaderListener
+block|{
+name|Preprocessor
+operator|&
+name|PP
+block|;
+name|PCHReader
+operator|&
+name|Reader
+block|;
+name|unsigned
+name|NumHeaderInfos
+block|;
+name|public
+operator|:
+name|PCHValidator
+argument_list|(
+name|Preprocessor
+operator|&
+name|PP
+argument_list|,
+name|PCHReader
+operator|&
+name|Reader
+argument_list|)
+operator|:
+name|PP
+argument_list|(
+name|PP
+argument_list|)
+block|,
+name|Reader
+argument_list|(
+name|Reader
+argument_list|)
+block|,
+name|NumHeaderInfos
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|virtual
+name|bool
+name|ReadLanguageOptions
+argument_list|(
+specifier|const
+name|LangOptions
+operator|&
+name|LangOpts
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|ReadTargetTriple
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Triple
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|ReadPredefinesBuffer
+argument_list|(
+argument|const char *PCHPredef
+argument_list|,
+argument|unsigned PCHPredefLen
+argument_list|,
+argument|FileID PCHBufferID
+argument_list|,
+argument|std::string&SuggestedPredefines
+argument_list|)
+block|;
+name|virtual
+name|void
+name|ReadHeaderFileInfo
+argument_list|(
+specifier|const
+name|HeaderFileInfo
+operator|&
+name|HFI
+argument_list|)
+block|;
+name|virtual
+name|void
+name|ReadCounter
+argument_list|(
+argument|unsigned Value
+argument_list|)
+block|; }
+decl_stmt|;
 comment|/// \brief Reads a precompiled head containing the contents of a
 comment|/// translation unit.
 comment|///
@@ -270,6 +490,27 @@ block|}
 enum|;
 name|private
 label|:
+comment|/// \ brief The receiver of some callbacks invoked by PCHReader.
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
+name|PCHReaderListener
+operator|>
+name|Listener
+expr_stmt|;
+name|SourceManager
+modifier|&
+name|SourceMgr
+decl_stmt|;
+name|FileManager
+modifier|&
+name|FileMgr
+decl_stmt|;
+name|Diagnostic
+modifier|&
+name|Diags
+decl_stmt|;
 comment|/// \brief The semantic analysis object that will be processing the
 comment|/// PCH file and the translation unit that uses it.
 name|Sema
@@ -278,7 +519,7 @@ name|SemaObj
 decl_stmt|;
 comment|/// \brief The preprocessor that will be loading the source file.
 name|Preprocessor
-modifier|&
+modifier|*
 name|PP
 decl_stmt|;
 comment|/// \brief The AST context into which we'll read the PCH file.
@@ -845,18 +1086,38 @@ literal|64
 operator|>
 name|RecordData
 expr_stmt|;
-name|explicit
+comment|/// \brief Load the PCH file and validate its contents against the given
+comment|/// Preprocessor.
 name|PCHReader
-parameter_list|(
+argument_list|(
 name|Preprocessor
-modifier|&
+operator|&
 name|PP
-parameter_list|,
+argument_list|,
 name|ASTContext
-modifier|*
+operator|*
 name|Context
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
+comment|/// \brief Load the PCH file without using any pre-initialized Preprocessor.
+comment|///
+comment|/// The necessary information to initialize a Preprocessor later can be
+comment|/// obtained by setting a PCHReaderListener.
+name|PCHReader
+argument_list|(
+name|SourceManager
+operator|&
+name|SourceMgr
+argument_list|,
+name|FileManager
+operator|&
+name|FileMgr
+argument_list|,
+name|Diagnostic
+operator|&
+name|Diags
+argument_list|)
+expr_stmt|;
 operator|~
 name|PCHReader
 argument_list|()
@@ -874,6 +1135,47 @@ operator|&
 name|FileName
 argument_list|)
 decl_stmt|;
+comment|/// \brief Set the PCH callbacks listener.
+name|void
+name|setListener
+parameter_list|(
+name|PCHReaderListener
+modifier|*
+name|listener
+parameter_list|)
+block|{
+name|Listener
+operator|.
+name|reset
+argument_list|(
+name|listener
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Set the Preprocessor to use.
+name|void
+name|setPreprocessor
+parameter_list|(
+name|Preprocessor
+modifier|&
+name|pp
+parameter_list|)
+block|{
+name|PP
+operator|=
+operator|&
+name|pp
+expr_stmt|;
+block|}
+comment|/// \brief Sets and initializes the given Context.
+name|void
+name|InitializeContext
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|)
+function_decl|;
 comment|/// \brief Retrieve the name of the original source file name
 specifier|const
 name|std

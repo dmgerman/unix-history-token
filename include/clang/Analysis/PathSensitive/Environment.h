@@ -118,24 +118,20 @@ name|LiveVariables
 decl_stmt|;
 name|class
 name|Environment
-range|:
-name|public
-name|llvm
-operator|::
-name|FoldingSetNode
 block|{
 name|private
-operator|:
+label|:
 name|friend
 name|class
 name|EnvironmentManager
-block|;
+decl_stmt|;
 comment|// Type definitions.
 typedef|typedef
 name|llvm
 operator|::
 name|ImmutableMap
 operator|<
+specifier|const
 name|Stmt
 operator|*
 operator|,
@@ -232,6 +228,7 @@ block|}
 name|SVal
 name|LookupSubExpr
 argument_list|(
+specifier|const
 name|Stmt
 operator|*
 name|E
@@ -269,6 +266,7 @@ block|}
 name|SVal
 name|LookupBlkExpr
 argument_list|(
+specifier|const
 name|Stmt
 operator|*
 name|E
@@ -300,6 +298,7 @@ block|}
 name|SVal
 name|LookupExpr
 argument_list|(
+specifier|const
 name|Stmt
 operator|*
 name|E
@@ -348,6 +347,7 @@ block|}
 name|SVal
 name|GetSVal
 argument_list|(
+specifier|const
 name|Stmt
 operator|*
 name|Ex
@@ -361,6 +361,7 @@ decl_stmt|;
 name|SVal
 name|GetBlkExprSVal
 argument_list|(
+specifier|const
 name|Stmt
 operator|*
 name|Ex
@@ -455,13 +456,7 @@ name|BlkExprBindings
 return|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
 name|class
 name|EnvironmentManager
 block|{
@@ -508,7 +503,7 @@ name|RemoveBlkExpr
 argument_list|(
 argument|const Environment& Env
 argument_list|,
-argument|Stmt* E
+argument|const Stmt* E
 argument_list|)
 block|{
 return|return
@@ -539,6 +534,7 @@ name|Environment
 modifier|&
 name|Env
 parameter_list|,
+specifier|const
 name|Stmt
 modifier|*
 name|E
@@ -572,6 +568,7 @@ name|Environment
 modifier|&
 name|Env
 parameter_list|,
+specifier|const
 name|Stmt
 modifier|*
 name|E
@@ -610,6 +607,7 @@ name|Environment
 modifier|&
 name|Env
 parameter_list|,
+specifier|const
 name|Stmt
 modifier|*
 name|E
@@ -693,6 +691,7 @@ name|Environment
 modifier|&
 name|Env
 parameter_list|,
+specifier|const
 name|Stmt
 modifier|*
 name|E
@@ -743,14 +742,11 @@ name|DRoots
 argument_list|)
 decl_stmt|;
 block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// end clang namespace
 end_comment
 

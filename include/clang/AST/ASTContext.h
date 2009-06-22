@@ -320,6 +320,15 @@ operator|*
 operator|>
 name|DependentSizedArrayTypes
 expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|DependentSizedExtVectorType
+operator|*
+operator|>
+name|DependentSizedExtVectorTypes
+expr_stmt|;
 name|llvm
 operator|::
 name|FoldingSet
@@ -388,9 +397,9 @@ name|llvm
 operator|::
 name|FoldingSet
 operator|<
-name|ObjCQualifiedIdType
+name|ObjCObjectPointerType
 operator|>
-name|ObjCQualifiedIdTypes
+name|ObjCObjectPointerTypes
 expr_stmt|;
 name|llvm
 operator|::
@@ -532,6 +541,23 @@ name|RecordDecl
 modifier|*
 name|ObjCFastEnumerationStateTypeDecl
 decl_stmt|;
+comment|/// \brief Keeps track of all declaration attributes.
+comment|///
+comment|/// Since so few decls have attrs, we keep them in a hash map instead of
+comment|/// wasting space in the Decl class.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|Decl
+operator|*
+operator|,
+name|Attr
+operator|*
+operator|>
+name|DeclAttrs
+expr_stmt|;
 name|TranslationUnitDecl
 modifier|*
 name|TUDecl
@@ -698,6 +724,43 @@ argument_list|,
 name|SourceMgr
 argument_list|)
 return|;
+block|}
+comment|/// \brief Retrieve the attributes for the given declaration.
+name|Attr
+modifier|*
+modifier|&
+name|getDeclAttrs
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+block|{
+return|return
+name|DeclAttrs
+index|[
+name|D
+index|]
+return|;
+block|}
+comment|/// \brief Erase the attributes corresponding to the given declaration.
+name|void
+name|eraseDeclAttrs
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+block|{
+name|DeclAttrs
+operator|.
+name|erase
+argument_list|(
+name|D
+argument_list|)
+expr_stmt|;
 block|}
 name|TranslationUnitDecl
 operator|*
@@ -1057,6 +1120,24 @@ name|unsigned
 name|NumElts
 parameter_list|)
 function_decl|;
+comment|/// getDependentSizedExtVectorType - Returns a non-unique reference to
+comment|/// the type for a dependently-sized vector of the specified element
+comment|/// type. FIXME: We will need these to be uniqued, or at least
+comment|/// comparable, at some point.
+name|QualType
+name|getDependentSizedExtVectorType
+parameter_list|(
+name|QualType
+name|VectorType
+parameter_list|,
+name|Expr
+modifier|*
+name|SizeExpr
+parameter_list|,
+name|SourceLocation
+name|AttrLoc
+parameter_list|)
+function_decl|;
 comment|/// getFunctionNoProtoType - Return a K&R style C function type like 'int()'.
 comment|///
 name|QualType
@@ -1155,6 +1236,9 @@ parameter_list|,
 name|unsigned
 name|Index
 parameter_list|,
+name|bool
+name|ParameterPack
+parameter_list|,
 name|IdentifierInfo
 modifier|*
 name|Name
@@ -1230,6 +1314,28 @@ name|Canon
 init|=
 name|QualType
 argument_list|()
+parameter_list|)
+function_decl|;
+comment|/// getObjCObjectPointerType - Return a ObjCObjectPointerType type for the
+comment|/// given interface decl and the conforming protocol list.
+name|QualType
+name|getObjCObjectPointerType
+parameter_list|(
+name|ObjCInterfaceDecl
+modifier|*
+name|Decl
+parameter_list|,
+name|ObjCProtocolDecl
+modifier|*
+modifier|*
+name|ProtocolList
+init|=
+literal|0
+parameter_list|,
+name|unsigned
+name|NumProtocols
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// getObjCQualifiedInterfaceType - Return a

@@ -183,6 +183,13 @@ comment|/// if SourceLineCache is non-null.
 name|unsigned
 name|NumLines
 decl_stmt|;
+comment|/// FirstFID - First FileID that was created for this ContentCache.
+comment|/// Represents the first source inclusion of the file associated with this
+comment|/// ContentCache.
+name|mutable
+name|FileID
+name|FirstFID
+decl_stmt|;
 comment|/// getBuffer - Returns the memory buffer for the associated content.
 specifier|const
 name|llvm
@@ -2295,6 +2302,41 @@ end_comment
 begin_comment
 comment|//===--------------------------------------------------------------------===//
 end_comment
+
+begin_comment
+comment|/// \brief Get the source location for the given file:line:col triplet.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// If the source file is included multiple times, the source location will
+end_comment
+
+begin_comment
+comment|/// be based upon the first inclusion.
+end_comment
+
+begin_decl_stmt
+name|SourceLocation
+name|getLocation
+argument_list|(
+specifier|const
+name|FileEntry
+operator|*
+name|SourceFile
+argument_list|,
+name|unsigned
+name|Line
+argument_list|,
+name|unsigned
+name|Col
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|// Iterators over FileInfos.

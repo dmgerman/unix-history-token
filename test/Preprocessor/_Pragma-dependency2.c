@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -E %s 2>&1 | grep 'file not found'
+comment|// RUN: clang-cc -E %s -verify
 end_comment
 
 begin_define
@@ -16,6 +16,10 @@ argument_list|(
 literal|"GCC dependency \"blahblabh\""
 argument_list|)
 end_macro
+
+begin_comment
+comment|// expected-error {{file not found}}
+end_comment
 
 end_unit
 

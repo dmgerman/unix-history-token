@@ -1617,6 +1617,12 @@ specifier|const
 expr_stmt|;
 comment|// Extended vector type.
 name|bool
+name|isObjCObjectPointerType
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|// Pointer to *any* ObjC object.
+name|bool
 name|isObjCInterfaceType
 argument_list|()
 specifier|const
@@ -1827,6 +1833,13 @@ specifier|const
 expr_stmt|;
 comment|// Extended vector type.
 specifier|const
+name|ObjCObjectPointerType
+operator|*
+name|getAsObjCObjectPointerType
+argument_list|()
+specifier|const
+expr_stmt|;
+specifier|const
 name|ObjCInterfaceType
 operator|*
 name|getAsObjCInterfaceType
@@ -1841,7 +1854,7 @@ argument_list|()
 specifier|const
 expr_stmt|;
 specifier|const
-name|ObjCQualifiedIdType
+name|ObjCObjectPointerType
 operator|*
 name|getAsObjCQualifiedIdType
 argument_list|()
@@ -4110,6 +4123,149 @@ argument_list|)
 block|;   }
 block|}
 block|;
+comment|/// DependentSizedExtVectorType - This type represent an extended vector type
+comment|/// where either the type or size is dependent. For example:
+comment|/// @code
+comment|/// template<typename T, int Size>
+comment|/// class vector {
+comment|///   typedef T __attribute__((ext_vector_type(Size))) type;
+comment|/// }
+comment|/// @endcode
+name|class
+name|DependentSizedExtVectorType
+operator|:
+name|public
+name|Type
+block|{
+name|Expr
+operator|*
+name|SizeExpr
+block|;
+comment|/// ElementType - The element type of the array.
+name|QualType
+name|ElementType
+block|;
+name|SourceLocation
+name|loc
+block|;
+name|DependentSizedExtVectorType
+argument_list|(
+argument|QualType ElementType
+argument_list|,
+argument|QualType can
+argument_list|,
+argument|Expr *SizeExpr
+argument_list|,
+argument|SourceLocation loc
+argument_list|)
+operator|:
+name|Type
+argument_list|(
+name|DependentSizedExtVector
+argument_list|,
+name|can
+argument_list|,
+name|true
+argument_list|)
+block|,
+name|SizeExpr
+argument_list|(
+name|SizeExpr
+argument_list|)
+block|,
+name|ElementType
+argument_list|(
+name|ElementType
+argument_list|)
+block|,
+name|loc
+argument_list|(
+argument|loc
+argument_list|)
+block|{}
+name|friend
+name|class
+name|ASTContext
+block|;
+name|virtual
+name|void
+name|Destroy
+argument_list|(
+name|ASTContext
+operator|&
+name|C
+argument_list|)
+block|;
+name|public
+operator|:
+specifier|const
+name|Expr
+operator|*
+name|getSizeExpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SizeExpr
+return|;
+block|}
+name|QualType
+name|getElementType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ElementType
+return|;
+block|}
+name|SourceLocation
+name|getAttributeLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|loc
+return|;
+block|}
+name|virtual
+name|void
+name|getAsStringInternal
+argument_list|(
+argument|std::string&InnerString
+argument_list|,
+argument|const PrintingPolicy&Policy
+argument_list|)
+specifier|const
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Type *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getTypeClass
+argument_list|()
+operator|==
+name|DependentSizedExtVector
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const DependentSizedExtVectorType *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
 comment|/// VectorType - GCC generic vector type. This type is created using
 comment|/// __attribute__((vector_size(n)), where "n" specifies the vector size in
 comment|/// bytes. Since the constructor takes the number of vector elements, the
@@ -6095,12 +6251,17 @@ block|{
 name|unsigned
 name|Depth
 operator|:
-literal|16
+literal|15
 block|;
 name|unsigned
 name|Index
 operator|:
 literal|16
+block|;
+name|unsigned
+name|ParameterPack
+operator|:
+literal|1
 block|;
 name|IdentifierInfo
 operator|*
@@ -6111,6 +6272,8 @@ argument_list|(
 argument|unsigned D
 argument_list|,
 argument|unsigned I
+argument_list|,
+argument|bool PP
 argument_list|,
 argument|IdentifierInfo *N
 argument_list|,
@@ -6137,6 +6300,11 @@ argument_list|(
 name|I
 argument_list|)
 block|,
+name|ParameterPack
+argument_list|(
+name|PP
+argument_list|)
+block|,
 name|Name
 argument_list|(
 argument|N
@@ -6147,6 +6315,8 @@ argument_list|(
 argument|unsigned D
 argument_list|,
 argument|unsigned I
+argument_list|,
+argument|bool PP
 argument_list|)
 operator|:
 name|Type
@@ -6172,6 +6342,11 @@ block|,
 name|Index
 argument_list|(
 name|I
+argument_list|)
+block|,
+name|ParameterPack
+argument_list|(
+name|PP
 argument_list|)
 block|,
 name|Name
@@ -6202,6 +6377,15 @@ specifier|const
 block|{
 return|return
 name|Index
+return|;
+block|}
+name|bool
+name|isParameterPack
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ParameterPack
 return|;
 block|}
 name|IdentifierInfo
@@ -6238,6 +6422,8 @@ name|Depth
 argument_list|,
 name|Index
 argument_list|,
+name|ParameterPack
+argument_list|,
 name|Name
 argument_list|)
 block|;   }
@@ -6250,6 +6436,8 @@ argument_list|,
 argument|unsigned Depth
 argument_list|,
 argument|unsigned Index
+argument_list|,
+argument|bool ParameterPack
 argument_list|,
 argument|IdentifierInfo *Name
 argument_list|)
@@ -6266,6 +6454,13 @@ operator|.
 name|AddInteger
 argument_list|(
 name|Index
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddBoolean
+argument_list|(
+name|ParameterPack
 argument_list|)
 block|;
 name|ID
@@ -6972,6 +7167,235 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// ObjCObjectPointerType - Used to represent 'id', 'Interface *', 'id<p>',
+comment|/// and 'Interface<p> *'.
+comment|///
+comment|/// Duplicate protocols are removed and protocol list is canonicalized to be in
+comment|/// alphabetical order.
+name|class
+name|ObjCObjectPointerType
+operator|:
+name|public
+name|Type
+block|,
+name|public
+name|llvm
+operator|::
+name|FoldingSetNode
+block|{
+name|ObjCInterfaceDecl
+operator|*
+name|Decl
+block|;
+comment|// List of protocols for this protocol conforming object type
+comment|// List is sorted on protocol name. No protocol is entered more than once.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|ObjCProtocolDecl
+operator|*
+block|,
+literal|8
+operator|>
+name|Protocols
+block|;
+name|ObjCObjectPointerType
+argument_list|(
+argument|ObjCInterfaceDecl *D
+argument_list|,
+argument|ObjCProtocolDecl **Protos
+argument_list|,
+argument|unsigned NumP
+argument_list|)
+operator|:
+name|Type
+argument_list|(
+name|ObjCObjectPointer
+argument_list|,
+name|QualType
+argument_list|()
+argument_list|,
+comment|/*Dependent=*/
+name|false
+argument_list|)
+block|,
+name|Decl
+argument_list|(
+name|D
+argument_list|)
+block|,
+name|Protocols
+argument_list|(
+argument|Protos
+argument_list|,
+argument|Protos+NumP
+argument_list|)
+block|{ }
+name|friend
+name|class
+name|ASTContext
+block|;
+comment|// ASTContext creates these.
+name|public
+operator|:
+name|ObjCInterfaceDecl
+operator|*
+name|getDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Decl
+return|;
+block|}
+comment|/// isObjCQualifiedIdType - true for "id<p>".
+name|bool
+name|isObjCQualifiedIdType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Decl
+operator|==
+literal|0
+operator|&&
+name|Protocols
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+comment|/// qual_iterator and friends: this provides access to the (potentially empty)
+comment|/// list of protocols qualifying this interface.
+typedef|typedef
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|ObjCProtocolDecl
+operator|*
+operator|,
+literal|8
+operator|>
+operator|::
+name|const_iterator
+name|qual_iterator
+expr_stmt|;
+name|qual_iterator
+name|qual_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Protocols
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|qual_iterator
+name|qual_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Protocols
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|bool
+name|qual_empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Protocols
+operator|.
+name|size
+argument_list|()
+operator|==
+literal|0
+return|;
+block|}
+comment|/// getNumProtocols - Return the number of qualifying protocols in this
+comment|/// interface type, or 0 if there are none.
+name|unsigned
+name|getNumProtocols
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Protocols
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+name|void
+name|Profile
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|)
+block|;
+specifier|static
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|,
+argument|const ObjCInterfaceDecl *Decl
+argument_list|,
+argument|ObjCProtocolDecl **protocols
+argument_list|,
+argument|unsigned NumProtocols
+argument_list|)
+block|;
+name|virtual
+name|void
+name|getAsStringInternal
+argument_list|(
+argument|std::string&InnerString
+argument_list|,
+argument|const PrintingPolicy&Policy
+argument_list|)
+specifier|const
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Type *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getTypeClass
+argument_list|()
+operator|==
+name|ObjCObjectPointer
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const ObjCObjectPointerType *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
 comment|/// ObjCInterfaceType - Interfaces are the core concept in Objective-C for
 comment|/// object oriented design.  They basically correspond to C++ classes.  There
 comment|/// are two kinds of interface types, normal interfaces like "NSString" and
@@ -7388,177 +7812,6 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// ObjCQualifiedIdType - to represent id<protocol-list>.
-comment|///
-comment|/// Duplicate protocols are removed and protocol list is canonicalized to be in
-comment|/// alphabetical order.
-name|class
-name|ObjCQualifiedIdType
-operator|:
-name|public
-name|Type
-block|,
-name|public
-name|llvm
-operator|::
-name|FoldingSetNode
-block|{
-comment|// List of protocols for this protocol conforming 'id' type
-comment|// List is sorted on protocol name. No protocol is enterred more than once.
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|ObjCProtocolDecl
-operator|*
-block|,
-literal|8
-operator|>
-name|Protocols
-block|;
-name|ObjCQualifiedIdType
-argument_list|(
-argument|ObjCProtocolDecl **Protos
-argument_list|,
-argument|unsigned NumP
-argument_list|)
-operator|:
-name|Type
-argument_list|(
-name|ObjCQualifiedId
-argument_list|,
-name|QualType
-argument_list|()
-comment|/*these are always canonical*/
-argument_list|,
-comment|/*Dependent=*/
-name|false
-argument_list|)
-block|,
-name|Protocols
-argument_list|(
-argument|Protos
-argument_list|,
-argument|Protos+NumP
-argument_list|)
-block|{ }
-name|friend
-name|class
-name|ASTContext
-block|;
-comment|// ASTContext creates these.
-name|public
-operator|:
-name|unsigned
-name|getNumProtocols
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Protocols
-operator|.
-name|size
-argument_list|()
-return|;
-block|}
-typedef|typedef
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|ObjCProtocolDecl
-operator|*
-operator|,
-literal|8
-operator|>
-operator|::
-name|const_iterator
-name|qual_iterator
-expr_stmt|;
-name|qual_iterator
-name|qual_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Protocols
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|qual_iterator
-name|qual_end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Protocols
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
-name|void
-name|Profile
-argument_list|(
-name|llvm
-operator|::
-name|FoldingSetNodeID
-operator|&
-name|ID
-argument_list|)
-block|;
-specifier|static
-name|void
-name|Profile
-argument_list|(
-argument|llvm::FoldingSetNodeID&ID
-argument_list|,
-argument|ObjCProtocolDecl **protocols
-argument_list|,
-argument|unsigned NumProtocols
-argument_list|)
-block|;
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Type *T
-argument_list|)
-block|{
-return|return
-name|T
-operator|->
-name|getTypeClass
-argument_list|()
-operator|==
-name|ObjCQualifiedId
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCQualifiedIdType *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-expr|}
-block|;
 comment|// Inline function definitions.
 comment|/// getUnqualifiedType - Return the type without any qualifiers.
 specifier|inline
@@ -8399,6 +8652,27 @@ specifier|inline
 name|bool
 name|Type
 operator|::
+name|isObjCObjectPointerType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isa
+operator|<
+name|ObjCObjectPointerType
+operator|>
+operator|(
+name|CanonicalType
+operator|.
+name|getUnqualifiedType
+argument_list|()
+operator|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
 name|isObjCInterfaceType
 argument_list|()
 specifier|const
@@ -8445,17 +8719,26 @@ name|isObjCQualifiedIdType
 argument_list|()
 specifier|const
 block|{
-return|return
-name|isa
-operator|<
-name|ObjCQualifiedIdType
-operator|>
-operator|(
-name|CanonicalType
-operator|.
-name|getUnqualifiedType
+if|if
+condition|(
+specifier|const
+name|ObjCObjectPointerType
+modifier|*
+name|OPT
+init|=
+name|getAsObjCObjectPointerType
 argument_list|()
-operator|)
+condition|)
+block|{
+return|return
+name|OPT
+operator|->
+name|isObjCQualifiedIdType
+argument_list|()
+return|;
+block|}
+return|return
+name|false
 return|;
 block|}
 specifier|inline

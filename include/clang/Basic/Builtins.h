@@ -230,31 +230,29 @@ decl_stmt|;
 name|public
 label|:
 name|Context
-argument_list|()
-operator|:
-name|TSRecords
 argument_list|(
-literal|0
+specifier|const
+name|TargetInfo
+operator|&
+name|Target
 argument_list|)
-operator|,
-name|NumTSRecords
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+expr_stmt|;
 comment|/// InitializeBuiltins - Mark the identifiers for all the builtins with their
 comment|/// appropriate builtin ID # and mark any non-portable builtin identifiers as
 comment|/// such.
 name|void
 name|InitializeBuiltins
-argument_list|(
-argument|IdentifierTable&Table
-argument_list|,
-argument|const TargetInfo&Target
-argument_list|,
-argument|bool NoBuiltins = false
-argument_list|)
-expr_stmt|;
+parameter_list|(
+name|IdentifierTable
+modifier|&
+name|Table
+parameter_list|,
+name|bool
+name|NoBuiltins
+init|=
+name|false
+parameter_list|)
+function_decl|;
 comment|/// \brief Popular the vector with the names of all of the builtins.
 name|void
 name|GetBuiltinNames

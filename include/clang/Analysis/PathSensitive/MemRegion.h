@@ -2448,6 +2448,10 @@ specifier|const
 name|MemRegion
 modifier|*
 name|superRegion
+parameter_list|,
+name|ASTContext
+modifier|&
+name|Ctx
 parameter_list|)
 function_decl|;
 comment|/// getFieldRegion - Retrieve or create the memory region associated with

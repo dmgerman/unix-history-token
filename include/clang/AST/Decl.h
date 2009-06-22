@@ -571,6 +571,7 @@ name|OrigNamespace
 operator|=
 name|ND
 block|; }
+name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -579,7 +580,8 @@ block|{
 return|return
 name|SourceRange
 argument_list|(
-name|LBracLoc
+name|getLocation
+argument_list|()
 argument_list|,
 name|RBracLoc
 argument_list|)
@@ -1070,6 +1072,12 @@ name|SClass
 operator|=
 name|SC
 block|; }
+name|virtual
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|;
 name|SourceLocation
 name|getTypeSpecStartLoc
 argument_list|()
@@ -2752,6 +2760,9 @@ comment|// Move to DeclGroup when it is implemented.
 name|SourceLocation
 name|TypeSpecStartLoc
 block|;
+name|SourceLocation
+name|EndRangeLoc
+block|;
 comment|/// \brief The template or declaration that this declaration
 comment|/// describes or was instantiated from, respectively.
 comment|///
@@ -2869,6 +2880,11 @@ argument_list|(
 name|TSSL
 argument_list|)
 block|,
+name|EndRangeLoc
+argument_list|(
+name|L
+argument_list|)
+block|,
 name|TemplateOrInstantiation
 argument_list|()
 block|{}
@@ -2912,6 +2928,42 @@ argument_list|,
 argument|SourceLocation TSStartLoc = SourceLocation()
 argument_list|)
 block|;
+name|virtual
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|getLocation
+argument_list|()
+argument_list|,
+name|EndRangeLoc
+argument_list|)
+return|;
+block|}
+name|void
+name|setLocEnd
+argument_list|(
+argument|SourceLocation E
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|getLocation
+argument_list|()
+operator|<=
+name|E
+operator|&&
+literal|"Invalid end location"
+argument_list|)
+block|;
+name|EndRangeLoc
+operator|=
+name|E
+block|;   }
 name|SourceLocation
 name|getTypeSpecStartLoc
 argument_list|()
@@ -2995,13 +3047,11 @@ block|}
 name|void
 name|setBody
 argument_list|(
-argument|Stmt *B
-argument_list|)
-block|{
-name|Body
-operator|=
+name|Stmt
+operator|*
 name|B
-block|; }
+argument_list|)
+block|;
 name|void
 name|setLazyBody
 argument_list|(
@@ -3429,7 +3479,9 @@ comment|/// when all of the inline declarations of the function are marked
 comment|/// gnu_inline.
 name|bool
 name|hasActiveGNUInlineAttribute
-argument_list|()
+argument_list|(
+argument|ASTContext&Context
+argument_list|)
 specifier|const
 block|;
 comment|/// \brief Determines whether this function is a GNU "extern
@@ -3437,7 +3489,9 @@ comment|/// inline", which is roughly the opposite of a C99 "extern inline"
 comment|/// function.
 name|bool
 name|isExternGNUInline
-argument_list|()
+argument_list|(
+argument|ASTContext&Context
+argument_list|)
 specifier|const
 block|;
 comment|/// isOverloadedOperator - Whether this function declaration

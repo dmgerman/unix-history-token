@@ -662,7 +662,7 @@ name|Expr
 block|{
 name|ObjCProtocolDecl
 operator|*
-name|Protocol
+name|TheProtocol
 block|;
 name|SourceLocation
 name|AtLoc
@@ -689,7 +689,7 @@ argument_list|,
 name|T
 argument_list|)
 block|,
-name|Protocol
+name|TheProtocol
 argument_list|(
 name|protocol
 argument_list|)
@@ -732,7 +732,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Protocol
+name|TheProtocol
 return|;
 block|}
 name|void
@@ -741,7 +741,7 @@ argument_list|(
 argument|ObjCProtocolDecl *P
 argument_list|)
 block|{
-name|Protocol
+name|TheProtocol
 operator|=
 name|P
 block|; }

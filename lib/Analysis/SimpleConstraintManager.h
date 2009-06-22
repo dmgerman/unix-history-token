@@ -81,31 +81,19 @@ range|:
 name|public
 name|ConstraintManager
 block|{
-name|protected
-operator|:
-name|GRStateManager
-operator|&
-name|StateMgr
-block|;
 name|public
 operator|:
 name|SimpleConstraintManager
-argument_list|(
-name|GRStateManager
-operator|&
-name|statemgr
-argument_list|)
-operator|:
-name|StateMgr
-argument_list|(
-argument|statemgr
-argument_list|)
+argument_list|()
 block|{}
 name|virtual
 operator|~
 name|SimpleConstraintManager
 argument_list|()
 block|;
+comment|//===------------------------------------------------------------------===//
+comment|// Common implementation for the interface provided by ConstraintManager.
+comment|//===------------------------------------------------------------------===//
 name|bool
 name|canReasonAbout
 argument_list|(
@@ -113,19 +101,16 @@ argument|SVal X
 argument_list|)
 specifier|const
 block|;
-name|virtual
 specifier|const
 name|GRState
 operator|*
 name|Assume
 argument_list|(
-argument|const GRState* St
+argument|const GRState *state
 argument_list|,
 argument|SVal Cond
 argument_list|,
 argument|bool Assumption
-argument_list|,
-argument|bool& isFeasible
 argument_list|)
 block|;
 specifier|const
@@ -133,27 +118,11 @@ name|GRState
 operator|*
 name|Assume
 argument_list|(
-argument|const GRState* St
+argument|const GRState *state
 argument_list|,
 argument|Loc Cond
 argument_list|,
 argument|bool Assumption
-argument_list|,
-argument|bool& isFeasible
-argument_list|)
-block|;
-specifier|const
-name|GRState
-operator|*
-name|AssumeAux
-argument_list|(
-argument|const GRState* St
-argument_list|,
-argument|Loc Cond
-argument_list|,
-argument|bool Assumption
-argument_list|,
-argument|bool& isFeasible
 argument_list|)
 block|;
 specifier|const
@@ -161,27 +130,11 @@ name|GRState
 operator|*
 name|Assume
 argument_list|(
-argument|const GRState* St
+argument|const GRState *state
 argument_list|,
 argument|NonLoc Cond
 argument_list|,
 argument|bool Assumption
-argument_list|,
-argument|bool& isFeasible
-argument_list|)
-block|;
-specifier|const
-name|GRState
-operator|*
-name|AssumeAux
-argument_list|(
-argument|const GRState* St
-argument_list|,
-argument|NonLoc Cond
-argument_list|,
-argument|bool Assumption
-argument_list|,
-argument|bool& isFeasible
 argument_list|)
 block|;
 specifier|const
@@ -189,28 +142,43 @@ name|GRState
 operator|*
 name|AssumeSymInt
 argument_list|(
-argument|const GRState* St
+argument|const GRState *state
 argument_list|,
 argument|bool Assumption
 argument_list|,
 argument|const SymIntExpr *SE
-argument_list|,
-argument|bool& isFeasible
 argument_list|)
 block|;
+specifier|const
+name|GRState
+operator|*
+name|AssumeInBound
+argument_list|(
+argument|const GRState *state
+argument_list|,
+argument|SVal Idx
+argument_list|,
+argument|SVal UpperBound
+argument_list|,
+argument|bool Assumption
+argument_list|)
+block|;
+name|protected
+operator|:
+comment|//===------------------------------------------------------------------===//
+comment|// Interface that subclasses must implement.
+comment|//===------------------------------------------------------------------===//
 name|virtual
 specifier|const
 name|GRState
 operator|*
 name|AssumeSymNE
 argument_list|(
-argument|const GRState* St
+argument|const GRState *state
 argument_list|,
 argument|SymbolRef sym
 argument_list|,
 argument|const llvm::APSInt& V
-argument_list|,
-argument|bool& isFeasible
 argument_list|)
 operator|=
 literal|0
@@ -221,13 +189,11 @@ name|GRState
 operator|*
 name|AssumeSymEQ
 argument_list|(
-argument|const GRState* St
+argument|const GRState *state
 argument_list|,
 argument|SymbolRef sym
 argument_list|,
 argument|const llvm::APSInt& V
-argument_list|,
-argument|bool& isFeasible
 argument_list|)
 operator|=
 literal|0
@@ -238,13 +204,11 @@ name|GRState
 operator|*
 name|AssumeSymLT
 argument_list|(
-argument|const GRState* St
+argument|const GRState *state
 argument_list|,
 argument|SymbolRef sym
 argument_list|,
 argument|const llvm::APSInt& V
-argument_list|,
-argument|bool& isFeasible
 argument_list|)
 operator|=
 literal|0
@@ -255,13 +219,11 @@ name|GRState
 operator|*
 name|AssumeSymGT
 argument_list|(
-argument|const GRState* St
+argument|const GRState *state
 argument_list|,
 argument|SymbolRef sym
 argument_list|,
 argument|const llvm::APSInt& V
-argument_list|,
-argument|bool& isFeasible
 argument_list|)
 operator|=
 literal|0
@@ -272,13 +234,11 @@ name|GRState
 operator|*
 name|AssumeSymLE
 argument_list|(
-argument|const GRState* St
+argument|const GRState *state
 argument_list|,
 argument|SymbolRef sym
 argument_list|,
 argument|const llvm::APSInt& V
-argument_list|,
-argument|bool& isFeasible
 argument_list|)
 operator|=
 literal|0
@@ -289,62 +249,44 @@ name|GRState
 operator|*
 name|AssumeSymGE
 argument_list|(
-argument|const GRState* St
+argument|const GRState *state
 argument_list|,
 argument|SymbolRef sym
 argument_list|,
 argument|const llvm::APSInt& V
-argument_list|,
-argument|bool& isFeasible
 argument_list|)
 operator|=
 literal|0
 block|;
+comment|//===------------------------------------------------------------------===//
+comment|// Internal implementation.
+comment|//===------------------------------------------------------------------===//
 specifier|const
 name|GRState
 operator|*
-name|AssumeInBound
+name|AssumeAux
 argument_list|(
-argument|const GRState* St
+argument|const GRState *state
 argument_list|,
-argument|SVal Idx
-argument_list|,
-argument|SVal UpperBound
+argument|Loc Cond
 argument_list|,
 argument|bool Assumption
-argument_list|,
-argument|bool& isFeasible
 argument_list|)
 block|;
-name|private
-operator|:
-name|BasicValueFactory
-operator|&
-name|getBasicVals
-argument_list|()
-block|{
-return|return
-name|StateMgr
-operator|.
-name|getBasicVals
-argument_list|()
-return|;
-block|}
-name|SymbolManager
-operator|&
-name|getSymbolManager
-argument_list|()
 specifier|const
-block|{
-return|return
-name|StateMgr
-operator|.
-name|getSymbolManager
-argument_list|()
-return|;
+name|GRState
+operator|*
+name|AssumeAux
+argument_list|(
+argument|const GRState *state
+argument_list|,
+argument|NonLoc Cond
+argument_list|,
+argument|bool Assumption
+argument_list|)
+block|; }
+decl_stmt|;
 block|}
-expr|}
-block|;  }
 end_decl_stmt
 
 begin_comment

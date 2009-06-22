@@ -379,6 +379,8 @@ argument_list|,
 argument|SourceRange&R1
 argument_list|,
 argument|SourceRange&R2
+argument_list|,
+argument|ASTContext&Context
 argument_list|)
 specifier|const
 block|;
@@ -10670,6 +10672,13 @@ name|Loc
 block|;
 name|bool
 name|IsByRef
+operator|:
+literal|1
+block|;
+name|bool
+name|ConstQualAdded
+operator|:
+literal|1
 block|;
 name|public
 operator|:
@@ -10682,6 +10691,8 @@ argument_list|,
 argument|SourceLocation l
 argument_list|,
 argument|bool ByRef
+argument_list|,
+argument|bool constAdded = false
 argument_list|)
 operator|:
 name|Expr
@@ -10703,7 +10714,12 @@ argument_list|)
 block|,
 name|IsByRef
 argument_list|(
-argument|ByRef
+name|ByRef
+argument_list|)
+block|,
+name|ConstQualAdded
+argument_list|(
+argument|constAdded
 argument_list|)
 block|{}
 comment|// \brief Build an empty reference to a declared variable in a
@@ -10801,6 +10817,25 @@ block|{
 name|IsByRef
 operator|=
 name|BR
+block|; }
+name|bool
+name|isConstQualAdded
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ConstQualAdded
+return|;
+block|}
+name|void
+name|setConstQualAdded
+argument_list|(
+argument|bool C
+argument_list|)
+block|{
+name|ConstQualAdded
+operator|=
+name|C
 block|; }
 specifier|static
 name|bool

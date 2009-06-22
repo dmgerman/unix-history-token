@@ -362,6 +362,12 @@ specifier|const
 name|MemRegion
 modifier|*
 name|R
+parameter_list|,
+name|QualType
+name|T
+init|=
+name|QualType
+argument_list|()
 parameter_list|)
 function_decl|;
 name|SVal

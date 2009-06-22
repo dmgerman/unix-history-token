@@ -8,7 +8,7 @@ comment|// (at least for a few key ones).
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-host-triple i386-apple-darwin9  -### --analyze -o /dev/null %s -msse 2> %t.log&&
+comment|// RUN: env MACOSX_DEPLOYMENT_TARGET=10.5 clang -ccc-host-triple i386-apple-darwin9  -### --analyze -o /dev/null %s -msse 2> %t.log&&
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ comment|// RUN: grep '"-target-feature" "+sse"' %t.log&&
 end_comment
 
 begin_comment
-comment|// RUN: grep '"-mmacosx-version-min=10.5.0"' %t.log
+comment|// RUN: grep '"-mmacosx-version-min=10.5"' %t.log
 end_comment
 
 end_unit

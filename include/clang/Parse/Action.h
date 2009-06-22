@@ -1106,6 +1106,64 @@ block|{   }
 end_function
 
 begin_comment
+comment|/// ActOnCXXEnterDeclInitializer - Invoked when we are about to parse an
+end_comment
+
+begin_comment
+comment|/// initializer for the declaration 'Dcl'.
+end_comment
+
+begin_comment
+comment|/// After this method is called, according to [C++ 3.4.1p13], if 'Dcl' is a
+end_comment
+
+begin_comment
+comment|/// static data member of class X, names should be looked up in the scope of
+end_comment
+
+begin_comment
+comment|/// class X.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|ActOnCXXEnterDeclInitializer
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|DeclPtrTy
+name|Dcl
+parameter_list|)
+block|{   }
+end_function
+
+begin_comment
+comment|/// ActOnCXXExitDeclInitializer - Invoked after we are finished parsing an
+end_comment
+
+begin_comment
+comment|/// initializer for the declaration 'Dcl'.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|ActOnCXXExitDeclInitializer
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|DeclPtrTy
+name|Dcl
+parameter_list|)
+block|{   }
+end_function
+
+begin_comment
 comment|/// ActOnDeclarator - This callback is invoked when a declarator is parsed and
 end_comment
 
@@ -2784,6 +2842,53 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
+comment|/// \brief Notifies the action when the parser is processing an unevaluated
+end_comment
+
+begin_comment
+comment|/// operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param UnevaluatedOperand true to indicate that the parser is processing
+end_comment
+
+begin_comment
+comment|/// an unevaluated operand, or false otherwise.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns whether the the action module was previously in an unevaluated
+end_comment
+
+begin_comment
+comment|/// operand.
+end_comment
+
+begin_function
+name|virtual
+name|bool
+name|setUnevaluatedOperand
+parameter_list|(
+name|bool
+name|UnevaluatedOperand
+parameter_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_comment
 comment|// Primary Expressions.
 end_comment
 
@@ -4019,6 +4124,44 @@ argument_list|()
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// ActOnUsingDirective - This is called when using-directive is parsed.
+end_comment
+
+begin_function_decl
+name|virtual
+name|DeclPtrTy
+name|ActOnUsingDeclaration
+parameter_list|(
+name|Scope
+modifier|*
+name|CurScope
+parameter_list|,
+name|SourceLocation
+name|UsingLoc
+parameter_list|,
+specifier|const
+name|CXXScopeSpec
+modifier|&
+name|SS
+parameter_list|,
+name|SourceLocation
+name|IdentLoc
+parameter_list|,
+name|IdentifierInfo
+modifier|*
+name|TargetName
+parameter_list|,
+name|AttributeList
+modifier|*
+name|AttrList
+parameter_list|,
+name|bool
+name|IsTypeName
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// ActOnParamDefaultArgument - Parse default argument for function parameter
