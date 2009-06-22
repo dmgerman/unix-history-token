@@ -269,14 +269,6 @@ name|VIMAGE_GLOBALS
 end_ifdef
 
 begin_decl_stmt
-specifier|static
-name|struct
-name|rtstat
-name|rtstat
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|radix_node_head
 modifier|*
@@ -286,6 +278,16 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|uma_zone_t
+name|rtzone
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Routing table UMA zone. */
+end_comment
+
+begin_decl_stmt
 name|int
 name|rttrash
 decl_stmt|;
@@ -294,6 +296,13 @@ end_decl_stmt
 begin_comment
 comment|/* routes not in table but not freed */
 end_comment
+
+begin_decl_stmt
+name|struct
+name|rtstat
+name|rtstat
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -434,28 +443,6 @@ name|p
 parameter_list|)
 value|((struct rtentry *)(p))
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|uma_zone_t
-name|rtzone
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Routing table UMA zone. */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
