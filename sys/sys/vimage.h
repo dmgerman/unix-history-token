@@ -543,9 +543,12 @@ name|VNET_MOD_ARP
 value|28
 end_define
 
-begin_comment
-comment|/*		29 */
-end_comment
+begin_define
+define|#
+directive|define
+name|VNET_MOD_FLOWTABLE
+value|29
+end_define
 
 begin_define
 define|#

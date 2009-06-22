@@ -632,7 +632,7 @@ if|if
 condition|(
 name|flowtable_lookup
 argument_list|(
-name|ip_ft
+name|V_ip_ft
 argument_list|,
 name|m
 argument_list|,

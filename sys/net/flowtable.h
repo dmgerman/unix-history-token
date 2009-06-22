@@ -49,6 +49,12 @@ name|flowtable
 struct_decl|;
 end_struct_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -57,6 +63,11 @@ modifier|*
 name|ip_ft
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|struct
