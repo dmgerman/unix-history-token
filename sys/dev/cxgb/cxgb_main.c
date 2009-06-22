@@ -10723,7 +10723,7 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * We don't want to call anything outside the driver while inside a 	 * begin-op/end-op block.  If it calls us back (eg.  ether_ioctl may 	 * call cxgb_init), which is cxgb_init), we may deadlock if the state is 	 * already marked busy. 	 * 	 * XXX: this probably opens a small race window with kldunload... 	 */
+comment|/* 	 * We don't want to call anything outside the driver while inside a 	 * begin-op/end-op block.  If it calls us back (eg.  ether_ioctl may 	 * call cxgb_init) we may deadlock if the state is already marked busy. 	 * 	 * XXX: this probably opens a small race window with kldunload... 	 */
 name|cxgb_end_op
 argument_list|(
 name|p
@@ -10741,17 +10741,16 @@ name|p
 argument_list|)
 condition|)
 block|{
-switch|switch
+if|if
 condition|(
 name|command
-condition|)
-block|{
-case|case
+operator|==
 name|SIOCSIFMEDIA
-case|:
-case|case
+operator|||
+name|command
+operator|==
 name|SIOCGIFMEDIA
-case|:
+condition|)
 name|error
 operator|=
 name|ifmedia_ioctl
@@ -10768,7 +10767,7 @@ argument_list|,
 name|command
 argument_list|)
 expr_stmt|;
-default|default:
+else|else
 name|error
 operator|=
 name|ether_ioctl
@@ -10780,7 +10779,6 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
