@@ -284,6 +284,8 @@ expr_stmt|;
 name|flags
 operator|=
 name|FREAD
+operator||
+name|O_NOFOLLOW
 expr_stmt|;
 name|NDINIT
 argument_list|(
@@ -311,7 +313,7 @@ argument_list|,
 operator|&
 name|flags
 argument_list|,
-name|O_NOFOLLOW
+literal|0
 argument_list|,
 literal|0
 argument_list|,
