@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Copyright (c) 1990, 1994 Regents of The University of Michigan.  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby granted,  * provided that the above copyright notice appears in all copies and  * that both that copyright notice and this permission notice appear  * in supporting documentation, and that the name of The University  * of Michigan not be used in advertising or publicity pertaining to  * distribution of the software without specific, written prior  * permission. This software is supplied as is without expressed or  * implied warranties of any kind.  *  * This product includes software developed by the University of  * California, Berkeley and its contributors.  *  *	Research Systems Unix Group  *	The University of Michigan  *	c/o Wesley Craig  *	535 W. William Street  *	Ann Arbor, Michigan  *	+1-313-764-2278  *	netatalk@umich.edu  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2004-2009 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Copyright (c) 1990, 1994 Regents of The University of Michigan.  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby granted,  * provided that the above copyright notice appears in all copies and  * that both that copyright notice and this permission notice appear  * in supporting documentation, and that the name of The University  * of Michigan not be used in advertising or publicity pertaining to  * distribution of the software without specific, written prior  * permission. This software is supplied as is without expressed or  * implied warranties of any kind.  *  * This product includes software developed by the University of  * California, Berkeley and its contributors.  *  *	Research Systems Unix Group  *	The University of Michigan  *	c/o Wesley Craig  *	535 W. William Street  *	Ann Arbor, Michigan  *	+1-313-764-2278  *	netatalk@umich.edu  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -580,6 +580,9 @@ operator|.
 name|dsh_sport
 expr_stmt|;
 comment|/*  		 * Make sure that we point to the phase1 ifaddr info and that 		 * it's valid for this packet. 		 */
+name|AT_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|aa
@@ -658,6 +661,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|AT_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -706,6 +712,9 @@ name|NULL
 operator|)
 condition|)
 block|{
+name|AT_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|ddpstat
 operator|.
 name|ddps_tooshort
@@ -833,6 +842,9 @@ operator|=
 name|ddpe
 operator|.
 name|deh_dport
+expr_stmt|;
+name|AT_IFADDR_RLOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1092,6 +1104,23 @@ break|break;
 block|}
 block|}
 block|}
+if|if
+condition|(
+name|aa
+operator|!=
+name|NULL
+condition|)
+name|ifa_ref
+argument_list|(
+operator|&
+name|aa
+operator|->
+name|aa_ifa
+argument_list|)
+expr_stmt|;
+name|AT_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Adjust the length, removing any padding that may have been added 	 * at a link layer.  We do this before we attempt to forward a 	 * packet, possibly on a different media. 	 */
 name|mlen
 operator|=
@@ -1113,12 +1142,9 @@ operator|.
 name|ddps_toosmall
 operator|++
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 if|if
 condition|(
@@ -1184,14 +1210,9 @@ name|ddp_forward
 operator|==
 literal|0
 condition|)
-block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
+goto|goto
+name|out
+goto|;
 comment|/*  		 * If the cached forwarding route is still valid, use it. 		 * 		 * XXXRW: Access to the cached route may not be properly 		 * synchronized for parallel input handling. 		 */
 if|if
 condition|(
@@ -1364,14 +1385,9 @@ operator|==
 name|DDP_MAXHOPS
 operator|)
 condition|)
-block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
+goto|goto
+name|out
+goto|;
 comment|/* 		 * A ddp router might use the same interface to forward the 		 * packet, which this would not effect.  Don't allow packets 		 * to cross from one interface to another however. 		 */
 if|if
 condition|(
@@ -1397,14 +1413,9 @@ name|ifp
 operator|)
 operator|)
 condition|)
-block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
+goto|goto
+name|out
+goto|;
 comment|/* 		 * Adjust the header.  If it was a short header then it would 		 * have not gotten here, so we can assume there is room to 		 * drop the header in. 		 * 		 * XXX what about promiscuous mode, etc... 		 */
 name|ddpe
 operator|.
@@ -1463,6 +1474,20 @@ operator|.
 name|ddps_forward
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|aa
+operator|!=
+name|NULL
+condition|)
+name|ifa_free
+argument_list|(
+operator|&
+name|aa
+operator|->
+name|aa_ifa
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * It was for us, and we have an ifaddr to use with it. 	 */
@@ -1514,12 +1539,9 @@ operator|.
 name|ddps_badsum
 operator|++
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 name|m_adj
 argument_list|(
@@ -1569,7 +1591,7 @@ operator|==
 name|NULL
 condition|)
 goto|goto
-name|out
+name|out_unlock
 goto|;
 ifdef|#
 directive|ifdef
@@ -1588,7 +1610,7 @@ operator|!=
 literal|0
 condition|)
 goto|goto
-name|out
+name|out_unlock
 goto|;
 endif|#
 directive|endif
@@ -1647,7 +1669,7 @@ name|ddps_nosockspace
 operator|++
 expr_stmt|;
 goto|goto
-name|out
+name|out_unlock
 goto|;
 block|}
 comment|/* 	 * And wake up whatever might be waiting for it 	 */
@@ -1662,10 +1684,26 @@ name|m
 operator|=
 name|NULL
 expr_stmt|;
-name|out
+name|out_unlock
 label|:
 name|DDP_LIST_SUNLOCK
 argument_list|()
+expr_stmt|;
+name|out
+label|:
+if|if
+condition|(
+name|aa
+operator|!=
+name|NULL
+condition|)
+name|ifa_free
+argument_list|(
+operator|&
+name|aa
+operator|->
+name|aa_ifa
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

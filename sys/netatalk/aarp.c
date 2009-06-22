@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004-2005 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Copyright (c) 1990,1991,1994 Regents of The University of Michigan.  * All Rights Reserved.  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby granted,  * provided that the above copyright notice appears in all copies and  * that both that copyright notice and this permission notice appear  * in supporting documentation, and that the name of The University  * of Michigan not be used in advertising or publicity pertaining to  * distribution of the software without specific, written prior  * permission. This software is supplied as is without expressed or  * implied warranties of any kind.  *  * This product includes software developed by the University of  * California, Berkeley and its contributors.  *  *	Research Systems Unix Group  *	The University of Michigan  *	c/o Wesley Craig  *	535 W. William Street  *	Ann Arbor, Michigan  *	+1-313-764-2278  *	netatalk@umich.edu  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2004-2009 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Copyright (c) 1990,1991,1994 Regents of The University of Michigan.  * All Rights Reserved.  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby granted,  * provided that the above copyright notice appears in all copies and  * that both that copyright notice and this permission notice appear  * in supporting documentation, and that the name of The University  * of Michigan not be used in advertising or publicity pertaining to  * distribution of the software without specific, written prior  * permission. This software is supplied as is without expressed or  * implied warranties of any kind.  *  * This product includes software developed by the University of  * California, Berkeley and its contributors.  *  *	Research Systems Unix Group  *	The University of Michigan  *	c/o Wesley Craig  *	535 W. William Street  *	Ann Arbor, Michigan  *	+1-313-764-2278  *	netatalk@umich.edu  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -445,6 +445,9 @@ name|sockaddr_at
 modifier|*
 name|sat2
 decl_stmt|;
+name|AT_IFADDR_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|aa
@@ -748,6 +751,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We need to check whether the output ethernet type should be phase 	 * 1 or 2.  We have the interface that we'll be sending the aarp out. 	 * We need to find an AppleTalk network on that interface with the 	 * same address as we're looking for.  If the net is phase 2, 	 * generate an 802.2 and SNAP header. 	 */
+name|AT_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -762,6 +768,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|AT_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -843,7 +852,12 @@ name|m
 operator|==
 name|NULL
 condition|)
+block|{
+name|AT_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return;
+block|}
 name|llc
 operator|=
 name|mtod
@@ -1051,6 +1065,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* NETATALKDEBUG */
+name|AT_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|sa
 operator|.
 name|sa_len
@@ -1118,6 +1135,9 @@ name|aarptab
 modifier|*
 name|aat
 decl_stmt|;
+name|AT_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|at_broadcast
@@ -1146,6 +1166,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|AT_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -1200,12 +1223,18 @@ name|if_addrlen
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|AT_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
 block|}
+name|AT_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|AARPTAB_LOCK
 argument_list|()
 expr_stmt|;
@@ -1673,6 +1702,9 @@ name|s_net
 operator|=
 name|net
 expr_stmt|;
+name|AT_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1688,6 +1720,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|AT_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -1695,6 +1730,17 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|ifa_ref
+argument_list|(
+operator|&
+name|aa
+operator|->
+name|aa_ifa
+argument_list|)
+expr_stmt|;
+name|AT_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|ea
@@ -1737,6 +1783,11 @@ block|}
 else|else
 block|{
 comment|/* 		 * Since we don't know the net, we just look for the first 		 * phase 1 address on the interface. 		 */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|aa
@@ -1804,6 +1855,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -1811,6 +1867,19 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|ifa_ref
+argument_list|(
+operator|&
+name|aa
+operator|->
+name|aa_ifa
+argument_list|)
+expr_stmt|;
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|tpa
 operator|.
 name|s_net
@@ -1914,6 +1983,14 @@ argument_list|(
 name|aa
 argument_list|)
 expr_stmt|;
+name|ifa_free
+argument_list|(
+operator|&
+name|aa
+operator|->
+name|aa_ifa
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -1930,6 +2007,14 @@ name|AARPOP_PROBE
 condition|)
 block|{
 comment|/* 			 * This is not a probe, and we're not probing.  This 			 * means that someone's saying they have the same 			 * source address as the one we're using.  Get upset. 			 */
+name|ifa_free
+argument_list|(
+operator|&
+name|aa
+operator|->
+name|aa_ifa
+argument_list|)
+expr_stmt|;
 name|log
 argument_list|(
 name|LOG_ERR
@@ -2019,6 +2104,14 @@ argument_list|)
 expr_stmt|;
 name|AARPTAB_UNLOCK
 argument_list|()
+expr_stmt|;
+name|ifa_free
+argument_list|(
+operator|&
+name|aa
+operator|->
+name|aa_ifa
+argument_list|)
 expr_stmt|;
 name|m_freem
 argument_list|(
@@ -2247,6 +2340,14 @@ name|AFA_PROBING
 operator|)
 condition|)
 block|{
+name|ifa_free
+argument_list|(
+operator|&
+name|aa
+operator|->
+name|aa_ifa
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -2383,7 +2484,17 @@ name|m
 operator|==
 name|NULL
 condition|)
+block|{
+name|ifa_free
+argument_list|(
+operator|&
+name|aa
+operator|->
+name|aa_ifa
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|llc
 operator|=
 name|mtod
@@ -2480,6 +2591,14 @@ operator|=
 name|htons
 argument_list|(
 name|ETHERTYPE_AARP
+argument_list|)
+expr_stmt|;
+name|ifa_free
+argument_list|(
+operator|&
+name|aa
+operator|->
+name|aa_ifa
 argument_list|)
 expr_stmt|;
 name|ea
@@ -2955,6 +3074,14 @@ argument_list|,
 name|ifp
 argument_list|)
 expr_stmt|;
+name|ifa_ref
+argument_list|(
+operator|&
+name|aa
+operator|->
+name|aa_ifa
+argument_list|)
+expr_stmt|;
 name|AARPTAB_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -2973,7 +3100,17 @@ name|m
 operator|==
 name|NULL
 condition|)
+block|{
+name|ifa_free
+argument_list|(
+operator|&
+name|aa
+operator|->
+name|aa_ifa
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 ifdef|#
 directive|ifdef
 name|MAC
@@ -3381,6 +3518,14 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* NETATALKDEBUG */
+name|ifa_free
+argument_list|(
+operator|&
+name|aa
+operator|->
+name|aa_ifa
+argument_list|)
+expr_stmt|;
 name|sa
 operator|.
 name|sa_len
