@@ -75,50 +75,6 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/* typedefs */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-name|usb_proc_callback_t
-function_decl|)
-parameter_list|(
-name|struct
-name|usb_proc_msg
-modifier|*
-name|hdr
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_comment
-comment|/*  * The following structure defines the USB process message header.  */
-end_comment
-
-begin_struct
-struct|struct
-name|usb_proc_msg
-block|{
-name|TAILQ_ENTRY
-argument_list|(
-argument|usb_proc_msg
-argument_list|)
-name|pm_qentry
-expr_stmt|;
-name|usb_proc_callback_t
-modifier|*
-name|pm_callback
-decl_stmt|;
-name|usb_size_t
-name|pm_num
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * The following structure defines the USB process.  */
 end_comment
 

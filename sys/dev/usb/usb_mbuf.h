@@ -65,34 +65,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * The following structure defines a minimum re-implementation of the  * ifqueue structure in the kernel.  */
-end_comment
-
-begin_struct
-struct|struct
-name|usb_ifqueue
-block|{
-name|struct
-name|usb_mbuf
-modifier|*
-name|ifq_head
-decl_stmt|;
-name|struct
-name|usb_mbuf
-modifier|*
-name|ifq_tail
-decl_stmt|;
-name|usb_size_t
-name|ifq_len
-decl_stmt|;
-name|usb_size_t
-name|ifq_maxlen
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define

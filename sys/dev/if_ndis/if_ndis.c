@@ -212,7 +212,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_core.h>
+file|<dev/usb/usbdi.h>
 end_include
 
 begin_include

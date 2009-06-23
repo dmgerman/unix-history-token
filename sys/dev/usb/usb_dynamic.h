@@ -245,22 +245,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|uint8_t
-name|usb_test_quirk
-parameter_list|(
-specifier|const
-name|struct
-name|usb_attach_arg
-modifier|*
-name|uaa
-parameter_list|,
-name|uint16_t
-name|quirk
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif

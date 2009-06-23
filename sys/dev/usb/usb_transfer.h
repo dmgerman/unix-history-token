@@ -427,22 +427,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|usbd_do_poll
-parameter_list|(
-name|struct
-name|usb_xfer
-modifier|*
-modifier|*
-name|ppxfer
-parameter_list|,
-name|uint16_t
-name|max
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|usb_callback_t
 name|usbd_do_request_callback

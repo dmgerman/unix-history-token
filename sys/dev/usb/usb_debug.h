@@ -24,18 +24,6 @@ name|_USB_DEBUG_H_
 end_define
 
 begin_comment
-comment|/* Declare parent SYSCTL USB node. */
-end_comment
-
-begin_expr_stmt
-name|SYSCTL_DECL
-argument_list|(
-name|_hw_usb
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Declare global USB debug variable. */
 end_comment
 
