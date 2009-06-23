@@ -1385,6 +1385,9 @@ literal|0
 operator|||
 name|inst
 operator|>
+operator|(
+name|int
+operator|)
 name|IFM_INST_MAX
 condition|)
 name|errx
@@ -3775,7 +3778,7 @@ parameter_list|(
 name|a
 parameter_list|)
 value|(sizeof(a) / sizeof(a[0]))
-name|int
+name|size_t
 name|i
 decl_stmt|;
 for|for

@@ -763,10 +763,19 @@ name|option
 name|clone_Copt
 init|=
 block|{
+operator|.
+name|opt
+operator|=
 literal|"C"
 block|,
+operator|.
+name|opt_usage
+operator|=
 literal|"[-C]"
 block|,
+operator|.
+name|cb
+operator|=
 name|clone_Copt_cb
 block|}
 decl_stmt|;
@@ -788,7 +797,7 @@ parameter_list|(
 name|a
 parameter_list|)
 value|(sizeof(a) / sizeof(a[0]))
-name|int
+name|size_t
 name|i
 decl_stmt|;
 for|for

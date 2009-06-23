@@ -641,6 +641,9 @@ name|sin_addr
 argument_list|,
 name|MIN
 argument_list|(
+operator|(
+name|size_t
+operator|)
 name|hp
 operator|->
 name|h_length

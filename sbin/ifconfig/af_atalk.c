@@ -905,7 +905,7 @@ parameter_list|(
 name|a
 parameter_list|)
 value|(sizeof(a) / sizeof(a[0]))
-name|int
+name|size_t
 name|i
 decl_stmt|;
 for|for
