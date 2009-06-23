@@ -3735,6 +3735,11 @@ name|ifa
 operator|->
 name|ifa_ifp
 expr_stmt|;
+name|ifa_free
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(

@@ -1085,6 +1085,11 @@ literal|1
 return|;
 name|found
 label|:
+name|IF_ADDR_LOCK_ASSERT
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|addr
 operator|=
 name|LLADDR
@@ -2214,6 +2219,14 @@ comment|/* NOTREACHED */
 block|}
 endif|#
 directive|endif
+name|ifa_free
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Make the link-local prefix (fe80::%link/64) as on-link. 	 * Since we'd like to manage prefixes separately from addresses, 	 * we make an ND6 prefix structure for the link-local prefix, 	 * and add it to the prefix list as a never-expire prefix. 	 * XXX: this change might affect some existing code base... 	 */
 name|bzero
 argument_list|(
@@ -3106,12 +3119,22 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|struct
+name|ifaddr
+modifier|*
+name|ifa
+decl_stmt|;
 name|in6
 operator|=
 name|in6addr_loopback
 expr_stmt|;
-if|if
-condition|(
+name|ifa
+operator|=
+operator|(
+expr|struct
+name|ifaddr
+operator|*
+operator|)
 name|in6ifa_ifpwithaddr
 argument_list|(
 name|ifp
@@ -3119,6 +3142,10 @@ argument_list|,
 operator|&
 name|in6
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifa
 operator|==
 name|NULL
 condition|)
@@ -3134,6 +3161,12 @@ literal|0
 condition|)
 return|return;
 block|}
+else|else
+name|ifa_free
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * assign a link-local address, if there's none. 	 */
 if|if
@@ -3182,6 +3215,15 @@ block|{
 comment|/* failed to assign linklocal address. bark? */
 block|}
 block|}
+else|else
+name|ifa_free
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef

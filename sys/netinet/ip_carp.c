@@ -6779,6 +6779,11 @@ operator|==
 name|MASTER
 condition|)
 block|{
+name|ifa_ref
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 name|IF_ADDR_UNLOCK
 argument_list|(
 name|SC2IFP

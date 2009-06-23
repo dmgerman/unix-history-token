@@ -1639,6 +1639,11 @@ argument_list|,
 name|macaddr
 argument_list|)
 expr_stmt|;
+name|ifa_free
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

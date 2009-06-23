@@ -581,7 +581,7 @@ block|{
 name|struct
 name|ifaddr
 modifier|*
-name|ia
+name|ifa
 decl_stmt|;
 name|sin6
 operator|->
@@ -593,7 +593,7 @@ comment|/* yech... */
 if|if
 condition|(
 operator|(
-name|ia
+name|ifa
 operator|=
 name|ifa_ifwithaddr
 argument_list|(
@@ -628,7 +628,9 @@ block|}
 comment|/* 			 * XXX: bind to an anycast address might accidentally 			 * cause sending a packet with anycast source address. 			 * We should allow to bind to a deprecated address, since 			 * the application dares to use it. 			 */
 if|if
 condition|(
-name|ia
+name|ifa
+operator|!=
+name|NULL
 operator|&&
 operator|(
 operator|(
@@ -636,7 +638,7 @@ expr|struct
 name|in6_ifaddr
 operator|*
 operator|)
-name|ia
+name|ifa
 operator|)
 operator|->
 name|ia6_flags
@@ -650,12 +652,28 @@ name|IN6_IFF_DETACHED
 operator|)
 condition|)
 block|{
+name|ifa_free
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EADDRNOTAVAIL
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|ifa
+operator|!=
+name|NULL
+condition|)
+name|ifa_free
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(

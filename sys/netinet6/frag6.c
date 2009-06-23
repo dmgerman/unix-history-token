@@ -655,12 +655,22 @@ operator|)
 operator|!=
 name|NULL
 condition|)
+block|{
 name|dstifp
 operator|=
 name|ia
 operator|->
 name|ia_ifp
 expr_stmt|;
+name|ifa_free
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
+block|}
 else|#
 directive|else
 comment|/* we are violating the spec, this is not the destination interface */

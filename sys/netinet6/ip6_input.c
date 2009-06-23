@@ -2693,6 +2693,14 @@ condition|)
 block|{
 comment|/* 				 * XXX maybe we should drop the packet here, 				 * as we could not provide enough information 				 * to the upper layers. 				 */
 block|}
+name|ifa_free
+argument_list|(
+operator|&
+name|ia6
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Process Hop-by-Hop options header if it's contained. 	 * m may be modified in ip6_hopopts_input(). 	 * If a JumboPayload option is included, plen will also be modified. 	 */
@@ -3344,7 +3352,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * set/grab in6_ifaddr correspond to IPv6 destination address.  * XXX backward compatibility wrapper  */
+comment|/*  * set/grab in6_ifaddr correspond to IPv6 destination address.  * XXX backward compatibility wrapper  *  * XXXRW: We should bump the refcount on ia6 before sticking it in the m_tag,  * and then bump it when the tag is copied, and release it when the tag is  * freed.  Unfortunately, m_tags don't support deep copies (yet), so instead  * we just bump the ia refcount when we receive it.  This should be fixed.  */
 end_comment
 
 begin_function
@@ -3411,6 +3419,11 @@ name|ip6aux
 modifier|*
 name|ip6a
 decl_stmt|;
+name|struct
+name|in6_ifaddr
+modifier|*
+name|ia
+decl_stmt|;
 name|ip6a
 operator|=
 name|ip6_findaux
@@ -3422,11 +3435,25 @@ if|if
 condition|(
 name|ip6a
 condition|)
-return|return
+block|{
+name|ia
+operator|=
 name|ip6a
 operator|->
 name|ip6a_dstia6
+expr_stmt|;
+name|ifa_ref
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
+return|return
+name|ia
 return|;
+block|}
 else|else
 return|return
 name|NULL

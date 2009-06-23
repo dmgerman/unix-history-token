@@ -3460,6 +3460,22 @@ operator|->
 name|rt_fibnum
 argument_list|)
 expr_stmt|;
+comment|/* 				 * XXXRW: Really we should release this 				 * reference later, but this maintains 				 * historical behavior. 				 */
+if|if
+condition|(
+name|info
+operator|.
+name|rti_ifa
+operator|!=
+name|NULL
+condition|)
+name|ifa_free
+argument_list|(
+name|info
+operator|.
+name|rti_ifa
+argument_list|)
+expr_stmt|;
 name|RADIX_NODE_HEAD_UNLOCK
 argument_list|(
 name|rnh

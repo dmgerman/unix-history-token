@@ -3283,6 +3283,14 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
+name|ifa_free
+argument_list|(
+operator|&
+name|ia6
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 block|}
 name|error
 operator|=

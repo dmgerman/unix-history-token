@@ -6948,6 +6948,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|ifa_free
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ret

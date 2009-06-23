@@ -967,10 +967,8 @@ expr|struct
 name|sockaddr
 operator|*
 operator|)
-operator|(
 operator|&
 name|srcsock
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -992,6 +990,20 @@ operator|)
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|ia6
+operator|!=
+name|NULL
+condition|)
+name|ifa_free
+argument_list|(
+operator|&
+name|ia6
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 operator|*
 name|errorp
 operator|=
@@ -1020,6 +1032,15 @@ operator|*
 name|ifpp
 operator|=
 name|ifp
+expr_stmt|;
+comment|/* 		 * XXXRW: This returns a pointer into a structure with no 		 * refcount.  in6_selectsrc() should return it to caller- 		 * provided memory using call-by-reference rather than 		 * returning pointers into other memory. 		 */
+name|ifa_free
+argument_list|(
+operator|&
+name|ia6
+operator|->
+name|ia_ifa
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
