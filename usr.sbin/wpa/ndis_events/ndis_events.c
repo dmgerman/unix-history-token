@@ -1199,8 +1199,6 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Usage: ndis_events [-a] [-d] [-v]\n"
-argument_list|,
-name|progname
 argument_list|)
 expr_stmt|;
 name|exit
