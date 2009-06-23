@@ -3636,7 +3636,7 @@ name|sc_isoc_in_buffer
 expr_stmt|;
 name|total
 operator|=
-name|usbd_xfer_get_framelen
+name|usbd_xfer_frame_len
 argument_list|(
 name|xfer
 argument_list|,
@@ -4240,7 +4240,7 @@ argument_list|)
 expr_stmt|;
 name|offset
 operator|-=
-name|usbd_xfer_get_framelen
+name|usbd_xfer_frame_len
 argument_list|(
 name|xfer
 argument_list|,

@@ -6526,7 +6526,7 @@ end_function
 
 begin_function
 name|usb_frlength_t
-name|usbd_xfer_get_frame_len
+name|usbd_xfer_frame_len
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -6626,7 +6626,7 @@ end_function
 
 begin_function
 name|void
-name|usbd_xfer_get_frame_data
+name|usbd_xfer_frame_data
 parameter_list|(
 name|struct
 name|usb_xfer

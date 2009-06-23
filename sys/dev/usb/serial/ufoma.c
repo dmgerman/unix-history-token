@@ -2673,7 +2673,7 @@ argument_list|)
 expr_stmt|;
 name|len
 operator|=
-name|usbd_xfer_get_frame_len
+name|usbd_xfer_frame_len
 argument_list|(
 name|xfer
 argument_list|,
