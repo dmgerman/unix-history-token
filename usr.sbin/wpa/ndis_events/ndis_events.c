@@ -302,7 +302,9 @@ begin_function_decl
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1300,9 +1302,7 @@ expr_stmt|;
 break|break;
 default|default:
 name|usage
-argument_list|(
-name|PROGNAME
-argument_list|)
+argument_list|()
 expr_stmt|;
 break|break;
 block|}
