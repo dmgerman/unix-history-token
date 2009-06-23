@@ -99,23 +99,6 @@ condition|)
 block|{
 name|DRM_ERROR
 argument_list|(
-literal|"dev: 0x%lx, dev_priv: 0x%lx\n"
-argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|dev
-argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|dev_priv
-argument_list|)
-expr_stmt|;
-name|DRM_ERROR
-argument_list|(
 literal|"DRM not initialized, aborting suspend.\n"
 argument_list|)
 expr_stmt|;
