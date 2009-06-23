@@ -306,7 +306,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|lf_free_lock
 parameter_list|(
 name|struct
@@ -1653,7 +1653,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|lf_free_lock
 parameter_list|(
 name|struct
@@ -1662,6 +1662,35 @@ modifier|*
 name|lock
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|lock
+operator|->
+name|lf_refs
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"lockf_entry negative ref count %p"
+operator|,
+name|lock
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|--
+name|lock
+operator|->
+name|lf_refs
+operator|>
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 	 * Adjust the lock_owner reference count and 	 * reclaim the entry if this is the last lock 	 * for that owner. 	 */
 name|struct
 name|lock_owner
@@ -1882,6 +1911,11 @@ argument_list|,
 name|M_LOCKF
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
@@ -2459,6 +2493,12 @@ name|lf_alloc_lock
 argument_list|(
 name|NULL
 argument_list|)
+expr_stmt|;
+name|lock
+operator|->
+name|lf_refs
+operator|=
+literal|1
 expr_stmt|;
 name|lock
 operator|->
@@ -5623,6 +5663,11 @@ goto|goto
 name|out
 goto|;
 block|}
+name|lock
+operator|->
+name|lf_refs
+operator|++
+expr_stmt|;
 name|error
 operator|=
 name|sx_sleep
@@ -5641,6 +5686,22 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lf_free_lock
+argument_list|(
+name|lock
+argument_list|)
+condition|)
+block|{
+name|error
+operator|=
+name|EINTR
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 comment|/* 		 * We may have been awakened by a signal and/or by a 		 * debugger continuing us (in which cases we must 		 * remove our lock graph edges) and/or by another 		 * process releasing a lock (in which case our edges 		 * have already been removed and we have been moved to 		 * the active list). We may also have been woken by 		 * lf_purgelocks which we report to the caller as 		 * EINTR. In that case, lf_purgelocks will have 		 * removed our lock graph edges. 		 * 		 * Note that it is possible to receive a signal after 		 * we were successfully woken (and moved to the active 		 * list) but before we resumed execution. In this 		 * case, our lf_outedges list will be clear. We 		 * pretend there was no error. 		 * 		 * Note also, if we have been sleeping long enough, we 		 * may now have incoming edges from some newer lock 		 * which is waiting behind us in the queue. 		 */
 if|if
 condition|(
@@ -6800,6 +6861,12 @@ sizeof|sizeof
 expr|*
 name|splitlock
 argument_list|)
+expr_stmt|;
+name|splitlock
+operator|->
+name|lf_refs
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(

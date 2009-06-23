@@ -160,6 +160,10 @@ name|lockf_edge_list
 name|lf_inedges
 decl_stmt|;
 comment|/* (s) list of out-edges */
+name|int
+name|lf_refs
+decl_stmt|;
+comment|/* (s) ref count */
 block|}
 struct|;
 end_struct
