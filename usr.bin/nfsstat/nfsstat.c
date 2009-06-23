@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -222,6 +223,9 @@ directive|define
 name|N_NFSSTAT
 value|0
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"nfsstats"
 block|}
 block|,
@@ -230,10 +234,18 @@ directive|define
 name|N_NFSRVSTAT
 value|1
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"nfsrvstats"
 block|}
 block|,
-literal|""
+block|{
+operator|.
+name|n_name
+operator|=
+name|NULL
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -811,6 +823,7 @@ comment|/*  * Read the nfs stats using sysctl(3) for live kernels, or kvm_read  
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|readstats
 parameter_list|(
