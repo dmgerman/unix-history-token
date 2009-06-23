@@ -323,6 +323,14 @@ literal|"\n"
 block|,
 literal|1
 block|}
+block|,
+block|{
+literal|"  swapuse%-4s          %8s"
+block|,
+literal|" kB\n"
+block|,
+literal|1024
+block|}
 block|}
 block|}
 block|,
@@ -434,6 +442,14 @@ block|,
 literal|";\n"
 block|,
 literal|1
+block|}
+block|,
+block|{
+literal|"ulimit%s -w %s"
+block|,
+literal|";\n"
+block|,
+literal|1024
 block|}
 block|}
 block|}
@@ -547,6 +563,14 @@ literal|";\n"
 block|,
 literal|1
 block|}
+block|,
+block|{
+literal|"limit%s swapuse %s"
+block|,
+literal|";\n"
+block|,
+literal|1024
+block|}
 block|}
 block|}
 block|,
@@ -658,6 +682,14 @@ block|,
 literal|";\n"
 block|,
 literal|1
+block|}
+block|,
+block|{
+literal|"ulimit%s -w %s"
+block|,
+literal|";\n"
+block|,
+literal|1024
 block|}
 block|}
 block|}
@@ -771,6 +803,14 @@ literal|";\n"
 block|,
 literal|1
 block|}
+block|,
+block|{
+literal|"limit%s swapuse %s"
+block|,
+literal|";\n"
+block|,
+literal|1024
+block|}
 block|}
 block|}
 block|,
@@ -882,6 +922,14 @@ block|,
 literal|";\n"
 block|,
 literal|1
+block|}
+block|,
+block|{
+literal|"ulimit%s -w %s"
+block|,
+literal|";\n"
+block|,
+literal|1024
 block|}
 block|}
 block|}
@@ -995,6 +1043,14 @@ literal|";\n"
 block|,
 literal|1
 block|}
+block|,
+block|{
+literal|"ulimit%s -w %s"
+block|,
+literal|";\n"
+block|,
+literal|1024
+block|}
 block|}
 block|}
 block|,
@@ -1106,6 +1162,14 @@ block|,
 literal|";\n"
 block|,
 literal|1
+block|}
+block|,
+block|{
+literal|"limit%s swapuse %s"
+block|,
+literal|";\n"
+block|,
+literal|1024
 block|}
 block|}
 block|}
@@ -1234,7 +1298,13 @@ literal|"pseudoterminals"
 block|,
 name|login_getcapnum
 block|}
-block|, }
+block|,
+block|{
+literal|"swapuse"
+block|,
+name|login_getcapsize
+block|}
+block|}
 struct|;
 end_struct
 
@@ -1246,7 +1316,7 @@ begin_define
 define|#
 directive|define
 name|RCS_STRING
-value|"tfdscmlunbvp"
+value|"tfdscmlunbvpw"
 end_define
 
 begin_function_decl
@@ -1531,7 +1601,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|":EeC:U:BSHab:c:d:f:l:m:n:s:t:u:v:p:"
+literal|":EeC:U:BSHab:c:d:f:l:m:n:s:t:u:v:p:w:"
 argument_list|)
 operator|)
 operator|!=
@@ -2805,7 +2875,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: limits [-C class|-U user] [-eaSHBE] [-bcdflmnstuvp [val]] [[name=val ...] cmd]\n"
+literal|"usage: limits [-C class|-U user] [-eaSHBE] [-bcdflmnstuvpw [val]] [[name=val ...] cmd]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3179,6 +3249,9 @@ name|RLIMIT_SBSIZE
 case|:
 case|case
 name|RLIMIT_VMEM
+case|:
+case|case
+name|RLIMIT_SWAP
 case|:
 name|errno
 operator|=
