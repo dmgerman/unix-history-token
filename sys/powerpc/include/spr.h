@@ -2624,7 +2624,7 @@ name|SPR_970MMCR0_PMC1SEL
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)<< 6)
+value|((x)<< 8)
 end_define
 
 begin_comment
