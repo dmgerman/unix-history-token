@@ -1099,8 +1099,7 @@ operator|>>=
 literal|1
 operator|,
 name|last
-operator|+=
-literal|1
+operator|++
 control|)
 block|{
 if|if
