@@ -121,6 +121,7 @@ file|<unistd.h>
 end_include
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -831,6 +832,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
