@@ -486,16 +486,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|atomic_set
-argument_list|(
-operator|&
-name|dev
-operator|->
-name|vbl_signal_pending
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|dev
 operator|->
 name|num_crtcs
@@ -564,19 +554,6 @@ name|i
 index|]
 operator|.
 name|queue
-argument_list|)
-expr_stmt|;
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|dev
-operator|->
-name|vblank
-index|[
-name|i
-index|]
-operator|.
-name|sigs
 argument_list|)
 expr_stmt|;
 name|atomic_set
@@ -2077,13 +2054,7 @@ operator|&
 name|_DRM_VBLANK_SIGNAL
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-comment|/* disabled */
-block|drm_vbl_sig_t *vbl_sig = malloc(sizeof(drm_vbl_sig_t), 		    DRM_MEM_DRIVER, M_NOWAIT | M_ZERO); 		if (vbl_sig == NULL) 			return ENOMEM;  		vbl_sig->sequence = vblwait->request.sequence; 		vbl_sig->signo = vblwait->request.signal; 		vbl_sig->pid = DRM_CURRENTPID;  		vblwait->reply.sequence = atomic_read(&dev->vbl_received); 		 		DRM_SPINLOCK(&dev->vbl_lock); 		TAILQ_INSERT_HEAD(&dev->vbl_sig_list, vbl_sig, link); 		DRM_SPINUNLOCK(&dev->vbl_lock); 		ret = 0;
-endif|#
-directive|endif
+comment|/* There have never been any consumers */
 name|ret
 operator|=
 name|EINVAL
@@ -2318,37 +2289,6 @@ end_function
 
 begin_function
 name|void
-name|drm_vbl_send_signals
-parameter_list|(
-name|struct
-name|drm_device
-modifier|*
-name|dev
-parameter_list|,
-name|int
-name|crtc
-parameter_list|)
-block|{ }
-end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* disabled */
-end_comment
-
-begin_endif
-unit|void drm_vbl_send_signals(struct drm_device *dev, int crtc ) { 	drm_vbl_sig_t *vbl_sig; 	unsigned int vbl_seq = atomic_read(&dev->vbl_received ); 	struct proc *p;  	vbl_sig = TAILQ_FIRST(&dev->vbl_sig_list); 	while (vbl_sig != NULL) { 		drm_vbl_sig_t *next = TAILQ_NEXT(vbl_sig, link);  		if ((vbl_seq - vbl_sig->sequence)<= (1<< 23)) { 			p = pfind(vbl_sig->pid); 			if (p != NULL) 				psignal(p, vbl_sig->signo);  			TAILQ_REMOVE(&dev->vbl_sig_list, vbl_sig, link); 			DRM_FREE(vbl_sig,sizeof(*vbl_sig)); 		} 		vbl_sig = next; 	} }
-endif|#
-directive|endif
-end_endif
-
-begin_function
-name|void
 name|drm_handle_vblank
 parameter_list|(
 name|struct
@@ -2384,13 +2324,6 @@ name|crtc
 index|]
 operator|.
 name|queue
-argument_list|)
-expr_stmt|;
-name|drm_vbl_send_signals
-argument_list|(
-name|dev
-argument_list|,
-name|crtc
 argument_list|)
 expr_stmt|;
 block|}

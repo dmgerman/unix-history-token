@@ -2229,42 +2229,6 @@ name|drm_local_map_t
 typedef|;
 end_typedef
 
-begin_expr_stmt
-name|TAILQ_HEAD
-argument_list|(
-name|drm_vbl_sig_list
-argument_list|,
-name|drm_vbl_sig
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|drm_vbl_sig
-block|{
-name|TAILQ_ENTRY
-argument_list|(
-argument|drm_vbl_sig
-argument_list|)
-name|link
-expr_stmt|;
-name|unsigned
-name|int
-name|sequence
-decl_stmt|;
-name|int
-name|signo
-decl_stmt|;
-name|int
-name|pid
-decl_stmt|;
-block|}
-name|drm_vbl_sig_t
-typedef|;
-end_typedef
-
 begin_struct
 struct|struct
 name|drm_vblank_info
@@ -2278,11 +2242,6 @@ name|count
 decl_stmt|;
 comment|/* number of VBLANK interrupts */
 comment|/* (driver must alloc the right number of counters) */
-name|struct
-name|drm_vbl_sig_list
-name|sigs
-decl_stmt|;
-comment|/* signal list to send on VBLANK */
 name|atomic_t
 name|refcount
 decl_stmt|;
@@ -3037,10 +2996,6 @@ comment|/* Last current context		   */
 name|int
 name|vblank_disable_allowed
 decl_stmt|;
-name|atomic_t
-name|vbl_signal_pending
-decl_stmt|;
-comment|/* number of signals pending on all crtcs */
 name|struct
 name|callout
 name|vblank_disable_timer
@@ -3963,21 +3918,6 @@ name|dev
 parameter_list|,
 name|int
 name|num_crtcs
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|drm_vbl_send_signals
-parameter_list|(
-name|struct
-name|drm_device
-modifier|*
-name|dev
-parameter_list|,
-name|int
-name|crtc
 parameter_list|)
 function_decl|;
 end_function_decl
