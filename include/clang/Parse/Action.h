@@ -2842,11 +2842,41 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/// \brief Notifies the action when the parser is processing an unevaluated
+comment|/// \brief Describes how the expressions currently being parsed are
 end_comment
 
 begin_comment
-comment|/// operand.
+comment|/// evaluated at run-time, if at all.
+end_comment
+
+begin_enum
+enum|enum
+name|ExpressionEvaluationContext
+block|{
+comment|/// \brief The current expression and its subexpressions occur within an
+comment|/// unevaluated operand (C++0x [expr]p8), such as a constant expression
+comment|/// or the subexpression of \c sizeof, where the type or the value of the
+comment|/// expression may be significant but no code will be generated to evaluate
+comment|/// the value of the expression at run time.
+name|Unevaluated
+block|,
+comment|/// \brief The current expression is potentially evaluated at run time,
+comment|/// which means that code may be generated to evaluate the value of the
+comment|/// expression at run time.
+name|PotentiallyEvaluated
+block|,
+comment|/// \brief The current expression may be potentially evaluated or it may
+comment|/// be unevaluated, but it is impossible to tell from the lexical context.
+comment|/// This evaluation context is used primary for the operand of the C++
+comment|/// \c typeid expression, whose argument is potentially evaluated only when
+comment|/// it is an lvalue of polymorphic class type (C++ [basic.def.odr]p2).
+name|PotentiallyPotentiallyEvaluated
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/// \brief The parser is entering a new expression evaluation context.
 end_comment
 
 begin_comment
@@ -2854,11 +2884,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param UnevaluatedOperand true to indicate that the parser is processing
-end_comment
-
-begin_comment
-comment|/// an unevaluated operand, or false otherwise.
+comment|/// \param NewContext is the new expression evaluation context.
 end_comment
 
 begin_comment
@@ -2866,26 +2892,64 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \returns whether the the action module was previously in an unevaluated
-end_comment
-
-begin_comment
-comment|/// operand.
+comment|/// \returns the previous expression evaluation context.
 end_comment
 
 begin_function
 name|virtual
-name|bool
-name|setUnevaluatedOperand
+name|ExpressionEvaluationContext
+name|PushExpressionEvaluationContext
 parameter_list|(
-name|bool
-name|UnevaluatedOperand
+name|ExpressionEvaluationContext
+name|NewContext
 parameter_list|)
 block|{
 return|return
-name|false
+name|PotentiallyEvaluated
 return|;
 block|}
+end_function
+
+begin_comment
+comment|/// \brief The parser is existing an expression evaluation context.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param OldContext the expression evaluation context that the parser is
+end_comment
+
+begin_comment
+comment|/// leaving.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param NewContext the expression evaluation context that the parser is
+end_comment
+
+begin_comment
+comment|/// returning to.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|PopExpressionEvaluationContext
+parameter_list|(
+name|ExpressionEvaluationContext
+name|OldContext
+parameter_list|,
+name|ExpressionEvaluationContext
+name|NewContext
+parameter_list|)
+block|{ }
 end_function
 
 begin_comment
@@ -7910,6 +7974,79 @@ specifier|const
 block|; }
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// \brief RAII object that enters a new expression evaluation context.
+end_comment
+
+begin_decl_stmt
+name|class
+name|EnterExpressionEvaluationContext
+block|{
+comment|/// \brief The action object.
+name|Action
+modifier|&
+name|Actions
+decl_stmt|;
+comment|/// \brief The previous expression evaluation context.
+name|Action
+operator|::
+name|ExpressionEvaluationContext
+name|PrevContext
+expr_stmt|;
+comment|/// \brief The current expression evaluation context.
+name|Action
+operator|::
+name|ExpressionEvaluationContext
+name|CurContext
+expr_stmt|;
+name|public
+label|:
+name|EnterExpressionEvaluationContext
+argument_list|(
+argument|Action&Actions
+argument_list|,
+argument|Action::ExpressionEvaluationContext NewContext
+argument_list|)
+block|:
+name|Actions
+argument_list|(
+name|Actions
+argument_list|)
+operator|,
+name|CurContext
+argument_list|(
+argument|NewContext
+argument_list|)
+block|{
+name|PrevContext
+operator|=
+name|Actions
+operator|.
+name|PushExpressionEvaluationContext
+argument_list|(
+name|NewContext
+argument_list|)
+block|;   }
+operator|~
+name|EnterExpressionEvaluationContext
+argument_list|()
+block|{
+name|Actions
+operator|.
+name|PopExpressionEvaluationContext
+argument_list|(
+name|CurContext
+argument_list|,
+name|PrevContext
+argument_list|)
+block|;   }
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 unit|}

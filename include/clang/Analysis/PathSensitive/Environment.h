@@ -111,7 +111,7 @@ name|class
 name|EnvironmentManager
 decl_stmt|;
 name|class
-name|BasicValueFactory
+name|ValueManager
 decl_stmt|;
 name|class
 name|LiveVariables
@@ -352,9 +352,9 @@ name|Stmt
 operator|*
 name|Ex
 argument_list|,
-name|BasicValueFactory
+name|ValueManager
 operator|&
-name|BasicVals
+name|ValMgr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -366,9 +366,9 @@ name|Stmt
 operator|*
 name|Ex
 argument_list|,
-name|BasicValueFactory
+name|ValueManager
 operator|&
-name|BasicVals
+name|ValMgr
 argument_list|)
 decl|const
 decl_stmt|;

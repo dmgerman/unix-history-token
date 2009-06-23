@@ -2323,8 +2323,7 @@ name|GetSVal
 argument_list|(
 name|Ex
 argument_list|,
-name|getBasicVals
-argument_list|()
+name|ValueMgr
 argument_list|)
 return|;
 block|}
@@ -2418,8 +2417,7 @@ name|GetBlkExprSVal
 argument_list|(
 name|Ex
 argument_list|,
-name|getBasicVals
-argument_list|()
+name|ValueMgr
 argument_list|)
 return|;
 block|}
@@ -2746,10 +2744,7 @@ operator|!
 name|R
 operator|->
 name|isBoundable
-argument_list|(
-name|getContext
 argument_list|()
-argument_list|)
 condition|)
 return|return
 name|UnknownVal

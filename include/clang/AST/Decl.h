@@ -2760,6 +2760,13 @@ comment|// Move to DeclGroup when it is implemented.
 name|SourceLocation
 name|TypeSpecStartLoc
 block|;
+comment|/// \brief End part of this FunctionDecl's source range.
+comment|///
+comment|/// We could compute the full range in getSourceRange(). However, when we're
+comment|/// dealing with a function definition deserialized from a PCH/AST file,
+comment|/// we can only compute the full range once the function body has been
+comment|/// de-serialized, so it's far better to have the (sometimes-redundant)
+comment|/// EndRangeLoc.
 name|SourceLocation
 name|EndRangeLoc
 block|;
@@ -2950,16 +2957,6 @@ argument_list|(
 argument|SourceLocation E
 argument_list|)
 block|{
-name|assert
-argument_list|(
-name|getLocation
-argument_list|()
-operator|<=
-name|E
-operator|&&
-literal|"Invalid end location"
-argument_list|)
-block|;
 name|EndRangeLoc
 operator|=
 name|E

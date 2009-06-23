@@ -113,6 +113,9 @@ name|class
 name|GRStateManager
 decl_stmt|;
 name|class
+name|ValueManager
+decl_stmt|;
+name|class
 name|SVal
 block|{
 name|public
@@ -733,103 +736,6 @@ argument|llvm::raw_ostream& Out
 argument_list|)
 specifier|const
 block|;
-comment|// Utility methods to create NonLocs.
-specifier|static
-name|NonLoc
-name|MakeIntVal
-argument_list|(
-argument|BasicValueFactory& BasicVals
-argument_list|,
-argument|uint64_t X
-argument_list|,
-argument|bool isUnsigned
-argument_list|)
-block|;
-specifier|static
-name|NonLoc
-name|MakeVal
-argument_list|(
-argument|BasicValueFactory& BasicVals
-argument_list|,
-argument|uint64_t X
-argument_list|,
-argument|unsigned BitWidth
-argument_list|,
-argument|bool isUnsigned
-argument_list|)
-block|;
-specifier|static
-name|NonLoc
-name|MakeVal
-argument_list|(
-argument|BasicValueFactory& BasicVals
-argument_list|,
-argument|uint64_t X
-argument_list|,
-argument|QualType T
-argument_list|)
-block|;
-specifier|static
-name|NonLoc
-name|MakeVal
-argument_list|(
-name|BasicValueFactory
-operator|&
-name|BasicVals
-argument_list|,
-specifier|const
-name|IntegerLiteral
-operator|*
-name|I
-argument_list|)
-block|;
-specifier|static
-name|NonLoc
-name|MakeVal
-argument_list|(
-argument|BasicValueFactory& BasicVals
-argument_list|,
-argument|const llvm::APInt& I
-argument_list|,
-argument|bool isUnsigned
-argument_list|)
-block|;
-specifier|static
-name|NonLoc
-name|MakeVal
-argument_list|(
-name|BasicValueFactory
-operator|&
-name|BasicVals
-argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|APSInt
-operator|&
-name|I
-argument_list|)
-block|;
-specifier|static
-name|NonLoc
-name|MakeIntTruthVal
-argument_list|(
-argument|BasicValueFactory& BasicVals
-argument_list|,
-argument|bool b
-argument_list|)
-block|;
-specifier|static
-name|NonLoc
-name|MakeCompoundVal
-argument_list|(
-argument|QualType T
-argument_list|,
-argument|llvm::ImmutableList<SVal> Vals
-argument_list|,
-argument|BasicValueFactory& BasicVals
-argument_list|)
-block|;
 comment|// Implement isa<T> support.
 specifier|static
 specifier|inline
@@ -929,35 +835,6 @@ operator|*
 name|this
 return|;
 block|}
-specifier|static
-name|Loc
-name|MakeVal
-argument_list|(
-specifier|const
-name|MemRegion
-operator|*
-name|R
-argument_list|)
-block|;
-specifier|static
-name|Loc
-name|MakeVal
-argument_list|(
-specifier|const
-name|AddrLabelExpr
-operator|*
-name|E
-argument_list|)
-block|;
-specifier|static
-name|Loc
-name|MakeNull
-argument_list|(
-name|BasicValueFactory
-operator|&
-name|BasicVals
-argument_list|)
-block|;
 comment|// Implement isa<T> support.
 specifier|static
 specifier|inline
@@ -1309,6 +1186,12 @@ operator|:
 name|public
 name|NonLoc
 block|{
+name|friend
+name|class
+name|clang
+operator|::
+name|ValueManager
+block|;
 name|LocAsInteger
 argument_list|(
 specifier|const
@@ -1481,17 +1364,7 @@ operator|==
 name|LocAsIntegerKind
 return|;
 block|}
-specifier|static
-name|LocAsInteger
-name|Make
-argument_list|(
-argument|BasicValueFactory& Vals
-argument_list|,
-argument|Loc V
-argument_list|,
-argument|unsigned Bits
-argument_list|)
-block|; }
+expr|}
 block|;
 name|class
 name|CompoundVal
@@ -1501,7 +1374,9 @@ name|NonLoc
 block|{
 name|friend
 name|class
-name|NonLoc
+name|clang
+operator|::
+name|ValueManager
 block|;
 name|CompoundVal
 argument_list|(

@@ -1605,18 +1605,6 @@ operator|*
 name|E
 argument_list|)
 block|;
-comment|/// \brief Construct a template argument pack.
-name|TemplateArgument
-argument_list|(
-argument|SourceLocation Loc
-argument_list|,
-argument|TemplateArgument *Args
-argument_list|,
-argument|unsigned NumArgs
-argument_list|,
-argument|bool CopyArgs
-argument_list|)
-block|;
 comment|/// \brief Copy constructor for a template argument.
 name|TemplateArgument
 argument_list|(
@@ -2172,6 +2160,27 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Construct a template argument pack.
+end_comment
+
+begin_function_decl
+name|void
+name|setArgumentPack
+parameter_list|(
+name|TemplateArgument
+modifier|*
+name|Args
+parameter_list|,
+name|unsigned
+name|NumArgs
+parameter_list|,
+name|bool
+name|CopyArgs
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Used to insert TemplateArguments into FoldingSets.
 end_comment
 
@@ -2314,156 +2323,181 @@ begin_decl_stmt
 name|class
 name|TemplateArgumentListBuilder
 block|{
-comment|/// FlatArgs - contains the template arguments in flat form.
-name|llvm
-operator|::
-name|SmallVector
-operator|<
 name|TemplateArgument
-operator|,
-literal|16
-operator|>
-name|FlatArgs
-expr_stmt|;
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|TemplateArgument
-operator|,
-literal|16
-operator|>
+modifier|*
 name|StructuredArgs
-expr_stmt|;
-name|ASTContext
-modifier|&
-name|Context
 decl_stmt|;
 name|unsigned
-name|PackBeginIndex
+name|MaxStructuredArgs
 decl_stmt|;
-comment|/// isAddingFromParameterPack - Returns whether we're adding arguments from
-comment|/// a parameter pack.
+name|unsigned
+name|NumStructuredArgs
+decl_stmt|;
+name|TemplateArgument
+modifier|*
+name|FlatArgs
+decl_stmt|;
+name|unsigned
+name|MaxFlatArgs
+decl_stmt|;
+name|unsigned
+name|NumFlatArgs
+decl_stmt|;
 name|bool
-name|isAddingFromParameterPack
-argument_list|()
-specifier|const
-block|{
-return|return
-name|PackBeginIndex
-operator|!=
-name|std
-operator|::
-name|numeric_limits
-operator|<
+name|AddingToPack
+decl_stmt|;
 name|unsigned
-operator|>
-operator|::
-name|max
-argument_list|()
-return|;
-block|}
+name|PackBeginIndex
+decl_stmt|;
 name|public
 label|:
 name|TemplateArgumentListBuilder
 argument_list|(
-name|ASTContext
-operator|&
-name|Context
+argument|const TemplateParameterList *Parameters
+argument_list|,
+argument|unsigned NumTemplateArgs
 argument_list|)
-operator|:
-name|Context
+block|:
+name|StructuredArgs
 argument_list|(
-name|Context
+literal|0
+argument_list|)
+operator|,
+name|MaxStructuredArgs
+argument_list|(
+name|Parameters
+operator|->
+name|size
+argument_list|()
+argument_list|)
+operator|,
+name|NumStructuredArgs
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|FlatArgs
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|MaxFlatArgs
+argument_list|(
+name|std
+operator|::
+name|max
+argument_list|(
+name|MaxStructuredArgs
+argument_list|,
+name|NumTemplateArgs
+argument_list|)
+argument_list|)
+operator|,
+name|NumFlatArgs
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|AddingToPack
+argument_list|(
+name|false
 argument_list|)
 operator|,
 name|PackBeginIndex
 argument_list|(
-argument|std::numeric_limits<unsigned>::max()
+literal|0
 argument_list|)
 block|{ }
-name|size_t
-name|structuredSize
-argument_list|()
-specifier|const
-block|{
-name|assert
+name|void
+name|Append
 argument_list|(
-operator|!
-name|isAddingFromParameterPack
-argument_list|()
-operator|&&
-literal|"Size is not valid when adding from a parameter pack"
+specifier|const
+name|TemplateArgument
+operator|&
+name|Arg
 argument_list|)
-block|;
-return|return
-name|StructuredArgs
-operator|.
-name|size
-argument_list|()
-return|;
-block|}
-name|size_t
+expr_stmt|;
+name|void
+name|BeginPack
+parameter_list|()
+function_decl|;
+name|void
+name|EndPack
+parameter_list|()
+function_decl|;
+name|void
+name|ReleaseArgs
+parameter_list|()
+function_decl|;
+name|unsigned
 name|flatSize
 argument_list|()
 specifier|const
 block|{
 return|return
-name|FlatArgs
-operator|.
-name|size
-argument_list|()
+name|NumFlatArgs
 return|;
 block|}
-name|void
-name|push_back
-parameter_list|(
-specifier|const
-name|TemplateArgument
-modifier|&
-name|Arg
-parameter_list|)
-function_decl|;
-comment|/// BeginParameterPack - Start adding arguments from a parameter pack.
-name|void
-name|BeginParameterPack
-parameter_list|()
-function_decl|;
-comment|/// EndParameterPack - Finish adding arguments from a parameter pack.
-name|void
-name|EndParameterPack
-parameter_list|()
-function_decl|;
 specifier|const
 name|TemplateArgument
 operator|*
-name|getFlatArgumentList
+name|getFlatArguments
 argument_list|()
 specifier|const
 block|{
 return|return
 name|FlatArgs
-operator|.
-name|data
-argument_list|()
 return|;
 block|}
-name|TemplateArgument
-modifier|*
-name|getFlatArgumentList
-parameter_list|()
+name|unsigned
+name|structuredSize
+argument_list|()
+specifier|const
 block|{
+comment|// If we don't have any structured args, just reuse the flat size.
+if|if
+condition|(
+operator|!
+name|StructuredArgs
+condition|)
 return|return
-name|FlatArgs
-operator|.
-name|data
+name|flatSize
 argument_list|()
 return|;
-block|}
+return|return
+name|NumStructuredArgs
+return|;
 block|}
 end_decl_stmt
 
+begin_expr_stmt
+specifier|const
+name|TemplateArgument
+operator|*
+name|getStructuredArguments
+argument_list|()
+specifier|const
+block|{
+comment|// If we don't have any structured args, just reuse the flat args.
+if|if
+condition|(
+operator|!
+name|StructuredArgs
+condition|)
+return|return
+name|getFlatArguments
+argument_list|()
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|StructuredArgs
+return|;
+end_return
+
 begin_empty_stmt
+unit|} }
 empty_stmt|;
 end_empty_stmt
 
@@ -2499,17 +2533,33 @@ name|llvm
 operator|::
 name|PointerIntPair
 operator|<
+specifier|const
 name|TemplateArgument
 operator|*
 operator|,
 literal|1
 operator|>
-name|Arguments
+name|FlatArguments
 expr_stmt|;
 comment|/// \brief The number of template arguments in this template
 comment|/// argument list.
 name|unsigned
-name|NumArguments
+name|NumFlatArguments
+decl_stmt|;
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+specifier|const
+name|TemplateArgument
+operator|*
+operator|,
+literal|1
+operator|>
+name|StructuredArguments
+expr_stmt|;
+name|unsigned
+name|NumStructuredArguments
 decl_stmt|;
 name|public
 label|:
@@ -2519,9 +2569,7 @@ argument|ASTContext&Context
 argument_list|,
 argument|TemplateArgumentListBuilder&Builder
 argument_list|,
-argument|bool CopyArgs
-argument_list|,
-argument|bool FlattenArgs
+argument|bool TakeArgs
 argument_list|)
 empty_stmt|;
 operator|~
@@ -2543,7 +2591,7 @@ name|assert
 argument_list|(
 name|Idx
 operator|<
-name|NumArguments
+name|NumFlatArguments
 operator|&&
 literal|"Invalid template argument index"
 argument_list|)
@@ -2583,7 +2631,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NumArguments
+name|NumFlatArguments
 return|;
 block|}
 comment|/// \brief Retrieve the number of template arguments in the
@@ -2594,7 +2642,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NumArguments
+name|NumFlatArguments
 return|;
 block|}
 comment|/// \brief Retrieve the flattened template argument list.
@@ -2606,7 +2654,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Arguments
+name|FlatArguments
 operator|.
 name|getPointer
 argument_list|()

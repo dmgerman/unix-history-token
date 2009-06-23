@@ -163,6 +163,21 @@ block|}
 name|f3
 argument_list|()
 block|{ }
+comment|// PR4423 - This shouldn't crash in codegen
+name|void
+name|f4
+argument_list|()
+block|{}
+name|void
+name|f5
+argument_list|()
+block|{
+name|f4
+argument_list|(
+literal|42
+argument_list|)
+expr_stmt|;
+block|}
 end_struct
 
 end_unit

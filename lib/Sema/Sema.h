@@ -150,7 +150,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<list>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<queue>
 end_include
 
 begin_include
@@ -672,13 +684,40 @@ comment|/// have been declared.
 name|bool
 name|GlobalNewDeleteDeclared
 decl_stmt|;
-comment|/// A flag that indicates when we are processing an unevaluated operand
-comment|/// (C++0x [expr]). C99 has the same notion of declarations being
-comment|/// "used" and C++03 has the notion of "potentially evaluated", but we
-comment|/// adopt the C++0x terminology since it is most precise.
-name|bool
-name|InUnevaluatedOperand
+comment|/// The current expression evaluation context.
+name|ExpressionEvaluationContext
+name|ExprEvalContext
 decl_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|SourceLocation
+operator|,
+name|Decl
+operator|*
+operator|>
+expr|>
+name|PotentiallyReferencedDecls
+expr_stmt|;
+comment|/// A stack of declarations, each element of which is a set of declarations
+comment|/// that will be marked as referenced if the corresponding potentially
+comment|/// potentially evaluated expression is potentially evaluated. Each element
+comment|/// in the stack corresponds to a PotentiallyPotentiallyEvaluated expression
+comment|/// evaluation context.
+name|std
+operator|::
+name|list
+operator|<
+name|PotentiallyReferencedDecls
+operator|>
+name|PotentiallyReferencedDeclStack
+expr_stmt|;
 comment|/// \brief Whether the code handled by Sema should be considered a
 comment|/// complete translation unit or not.
 comment|///
@@ -5791,29 +5830,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function
+begin_function_decl
 name|virtual
-name|bool
-name|setUnevaluatedOperand
+name|ExpressionEvaluationContext
+name|PushExpressionEvaluationContext
 parameter_list|(
-name|bool
-name|UnevaluatedOperand
+name|ExpressionEvaluationContext
+name|NewContext
 parameter_list|)
-block|{
-name|bool
-name|Result
-init|=
-name|InUnevaluatedOperand
-decl_stmt|;
-name|InUnevaluatedOperand
-operator|=
-name|UnevaluatedOperand
-expr_stmt|;
-return|return
-name|Result
-return|;
-block|}
-end_function
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
+name|PopExpressionEvaluationContext
+parameter_list|(
+name|ExpressionEvaluationContext
+name|OldContext
+parameter_list|,
+name|ExpressionEvaluationContext
+name|NewContext
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -7094,7 +7134,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// DefineImplicitDefaultConstructor - Checks for feasibilityt of
+comment|/// DefineImplicitDefaultConstructor - Checks for feasibility of
 end_comment
 
 begin_comment
@@ -7111,6 +7151,31 @@ parameter_list|,
 name|CXXConstructorDecl
 modifier|*
 name|Constructor
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// DefineImplicitCopyConstructor - Checks for feasibility of
+end_comment
+
+begin_comment
+comment|/// defining this constructor as the copy constructor.
+end_comment
+
+begin_function_decl
+name|void
+name|DefineImplicitCopyConstructor
+parameter_list|(
+name|SourceLocation
+name|CurrentLocation
+parameter_list|,
+name|CXXConstructorDecl
+modifier|*
+name|Constructor
+parameter_list|,
+name|unsigned
+name|TypeQuals
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -10936,6 +11001,79 @@ modifier|*
 name|CurrentInstantiationScope
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// \brief An entity for which implicit template instantiation is required.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The source location associated with the declaration is the first place in
+end_comment
+
+begin_comment
+comment|/// the source code where the declaration was "used". It is not necessarily
+end_comment
+
+begin_comment
+comment|/// the point of instantiation (which will be either before or after the
+end_comment
+
+begin_comment
+comment|/// namespace-scope declaration that triggered this implicit instantiation),
+end_comment
+
+begin_comment
+comment|/// However, it is the location that diagnostics should generally refer to,
+end_comment
+
+begin_comment
+comment|/// because users will need to know what code triggered the instantiation.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+name|ValueDecl
+operator|*
+operator|,
+name|SourceLocation
+operator|>
+name|PendingImplicitInstantiation
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|/// \brief The queue of implicit template instantiations that are required
+end_comment
+
+begin_comment
+comment|/// but have not yet been performed.
+end_comment
+
+begin_expr_stmt
+name|std
+operator|::
+name|queue
+operator|<
+name|PendingImplicitInstantiation
+operator|>
+name|PendingImplicitInstantiations
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
+name|void
+name|PerformPendingImplicitInstantiations
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|QualType

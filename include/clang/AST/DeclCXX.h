@@ -1003,6 +1003,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// getCopyConstructor - Returns the copy constructor for this class
+end_comment
+
+begin_decl_stmt
+name|CXXConstructorDecl
+modifier|*
+name|getCopyConstructor
+argument_list|(
+name|ASTContext
+operator|&
+name|Context
+argument_list|,
+name|unsigned
+name|TypeQuals
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// hasConstCopyAssignment - Determines whether this class has a
 end_comment
 
@@ -2539,13 +2559,6 @@ name|ImplicitlyDefined
 operator|:
 literal|1
 block|;
-comment|/// ImplicitMustBeDefined - Implicit constructor was used to create an
-comment|/// object of its class type. It must be defined.
-name|bool
-name|ImplicitMustBeDefined
-operator|:
-literal|1
-block|;
 comment|/// FIXME: Add support for base and member initializers.
 name|CXXConstructorDecl
 argument_list|(
@@ -2587,11 +2600,6 @@ name|isExplicit
 argument_list|)
 block|,
 name|ImplicitlyDefined
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|ImplicitMustBeDefined
 argument_list|(
 argument|false
 argument_list|)
@@ -2678,29 +2686,6 @@ name|ImplicitlyDefined
 operator|=
 name|ID
 block|;    }
-comment|/// isImplicitMustBeDefined - Whether a definition must be synthesized for
-comment|/// the implicit constructor.
-name|bool
-name|isImplicitMustBeDefined
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isImplicit
-argument_list|()
-operator|&&
-name|ImplicitMustBeDefined
-return|;
-block|}
-comment|/// setImplicitMustBeDefined - constructor must be implicitly defined.
-name|void
-name|setImplicitMustBeDefined
-argument_list|()
-block|{
-name|ImplicitMustBeDefined
-operator|=
-name|true
-block|;   }
 comment|/// isDefaultConstructor - Whether this constructor is a default
 comment|/// constructor (C++ [class.ctor]p5), which can be used to
 comment|/// default-initialize a class of this type.
