@@ -2210,8 +2210,6 @@ name|PCATCH
 argument_list|,
 literal|"vblwtq"
 argument_list|,
-literal|3
-operator|*
 name|DRM_HZ
 argument_list|)
 expr_stmt|;
