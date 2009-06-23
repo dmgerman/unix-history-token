@@ -1351,6 +1351,14 @@ operator|->
 name|t_bgwait
 argument_list|)
 expr_stmt|;
+name|cv_broadcast
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_dcdwait
+argument_list|)
+expr_stmt|;
 name|ttydev_leave
 argument_list|(
 name|tp
@@ -1860,7 +1868,7 @@ argument_list|,
 operator|&
 name|tp
 operator|->
-name|t_bgwait
+name|t_dcdwait
 argument_list|)
 expr_stmt|;
 if|if
@@ -1900,7 +1908,7 @@ argument_list|(
 operator|&
 name|tp
 operator|->
-name|t_bgwait
+name|t_dcdwait
 argument_list|)
 expr_stmt|;
 block|}
