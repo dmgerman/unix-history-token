@@ -222,6 +222,20 @@ return|return
 name|Relocations
 return|;
 block|}
+comment|/// hasRelocations - Return true if 'Relocations' is not empty
+name|bool
+name|hasRelocations
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|Relocations
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
 comment|/// emitByte - This callback is invoked when a byte needs to be
 comment|/// written to the data stream.
 specifier|inline

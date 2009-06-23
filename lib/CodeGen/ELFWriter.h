@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/OutputBuffer.h"
+file|"llvm/Support/Debug.h"
 end_include
 
 begin_include
@@ -268,7 +268,7 @@ parameter_list|)
 function_decl|;
 name|private
 label|:
-comment|// Blob containing the Elf header
+comment|/// Blob containing the Elf header
 name|BinaryObject
 name|ElfHdr
 decl_stmt|;
@@ -301,6 +301,41 @@ name|ELFSection
 operator|*
 operator|>
 name|SectionLookup
+expr_stmt|;
+comment|/// GblSymLookup - This is a mapping from global value to a symbol index
+comment|/// in the symbol table. This is useful since relocations symbol references
+comment|/// must be quickly mapped to a symbol table index
+name|std
+operator|::
+name|map
+operator|<
+specifier|const
+name|GlobalValue
+operator|*
+operator|,
+name|uint32_t
+operator|>
+name|GblSymLookup
+expr_stmt|;
+comment|/// SymbolList - This is the list of symbols emitted to the symbol table
+comment|/// Local symbols go to the front and Globals to the back.
+name|std
+operator|::
+name|list
+operator|<
+name|ELFSym
+operator|>
+name|SymbolList
+expr_stmt|;
+comment|/// PendingGlobals - List of externally defined symbols that we have been
+comment|/// asked to emit, but have not seen a reference to.  When a reference
+comment|/// is seen, the symbol will move from this list to the SymbolList.
+name|SetVector
+operator|<
+name|GlobalValue
+operator|*
+operator|>
+name|PendingGlobals
 expr_stmt|;
 comment|/// getSection - Return the section with the specified name, creating a new
 comment|/// section if one does not already exist.
@@ -347,13 +382,52 @@ return|return
 operator|*
 name|SN
 return|;
+comment|// Remove tab from section name prefix. This is necessary becase TAI
+comment|// sometimes return a section name prefixed with a "\t" char.
+name|std
+operator|::
+name|string
+name|SectionName
+argument_list|(
+name|Name
+argument_list|)
+expr_stmt|;
+name|size_t
+name|Pos
+init|=
+name|SectionName
+operator|.
+name|find
+argument_list|(
+literal|"\t"
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|Pos
+operator|!=
+name|std
+operator|::
+name|string
+operator|::
+name|npos
+condition|)
+name|SectionName
+operator|.
+name|erase
+argument_list|(
+name|Pos
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|SectionList
 operator|.
 name|push_back
 argument_list|(
 name|ELFSection
 argument_list|(
-name|Name
+name|SectionName
 argument_list|,
 name|isLittleEndian
 argument_list|,
@@ -407,6 +481,8 @@ operator|*
 name|SN
 return|;
 block|}
+comment|/// TODO: support mangled names here to emit the right .text section
+comment|/// for c++ object files.
 name|ELFSection
 modifier|&
 name|getTextSection
@@ -428,6 +504,76 @@ operator||
 name|ELFSection
 operator|::
 name|SHF_ALLOC
+argument_list|)
+return|;
+block|}
+comment|/// Return the relocation section of section 'S'. 'RelA' is true
+comment|/// if the relocation section contains entries with addends.
+name|ELFSection
+modifier|&
+name|getRelocSection
+argument_list|(
+name|std
+operator|::
+name|string
+name|SName
+argument_list|,
+name|bool
+name|RelA
+argument_list|)
+block|{
+name|std
+operator|::
+name|string
+name|RelSName
+argument_list|(
+literal|".rel"
+argument_list|)
+expr_stmt|;
+name|unsigned
+name|SHdrTy
+init|=
+name|RelA
+condition|?
+name|ELFSection
+operator|::
+name|SHT_RELA
+else|:
+name|ELFSection
+operator|::
+name|SHT_REL
+decl_stmt|;
+if|if
+condition|(
+name|RelA
+condition|)
+name|RelSName
+operator|.
+name|append
+argument_list|(
+literal|"a"
+argument_list|)
+expr_stmt|;
+name|RelSName
+operator|.
+name|append
+argument_list|(
+name|SName
+argument_list|)
+expr_stmt|;
+return|return
+name|getSection
+argument_list|(
+name|RelSName
+argument_list|,
+name|SHdrTy
+argument_list|,
+literal|0
+argument_list|,
+name|TEW
+operator|->
+name|getPrefELFAlignment
+argument_list|()
 argument_list|)
 return|;
 block|}
@@ -491,6 +637,26 @@ return|;
 block|}
 name|ELFSection
 modifier|&
+name|getSectionHeaderStringTableSection
+parameter_list|()
+block|{
+return|return
+name|getSection
+argument_list|(
+literal|".shstrtab"
+argument_list|,
+name|ELFSection
+operator|::
+name|SHT_STRTAB
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+return|;
+block|}
+name|ELFSection
+modifier|&
 name|getDataSection
 parameter_list|()
 block|{
@@ -510,6 +676,8 @@ operator||
 name|ELFSection
 operator|::
 name|SHF_ALLOC
+argument_list|,
+literal|4
 argument_list|)
 return|;
 block|}
@@ -534,30 +702,29 @@ operator||
 name|ELFSection
 operator|::
 name|SHF_ALLOC
+argument_list|,
+literal|4
 argument_list|)
 return|;
 block|}
-comment|/// SymbolList - This is the list of symbols we have emitted to the file.
-comment|/// This actually gets rearranged before emission to the file (to put the
-comment|/// local symbols first in the list).
-name|std
+name|ELFSection
+modifier|&
+name|getNullSection
+parameter_list|()
+block|{
+return|return
+name|getSection
+argument_list|(
+literal|""
+argument_list|,
+name|ELFSection
 operator|::
-name|vector
-operator|<
-name|ELFSym
-operator|>
-name|SymbolList
-expr_stmt|;
-comment|/// PendingGlobals - List of externally defined symbols that we have been
-comment|/// asked to emit, but have not seen a reference to.  When a reference
-comment|/// is seen, the symbol will move from this list to the SymbolList.
-name|SetVector
-operator|<
-name|GlobalValue
-operator|*
-operator|>
-name|PendingGlobals
-expr_stmt|;
+name|SHT_NULL
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
 comment|// As we complete the ELF file, we need to update fields in the ELF header
 comment|// (e.g. the location of the section table).  These members keep track of
 comment|// the offset in ELFHeader of these various pieces to update and other
@@ -577,8 +744,18 @@ comment|// e_shnum    in ELF header.
 name|private
 label|:
 name|void
-name|EmitGlobal
+name|EmitFunctionDeclaration
 parameter_list|(
+specifier|const
+name|Function
+modifier|*
+name|F
+parameter_list|)
+function_decl|;
+name|void
+name|EmitGlobalVar
+parameter_list|(
+specifier|const
 name|GlobalVariable
 modifier|*
 name|GV
@@ -610,9 +787,47 @@ modifier|&
 name|GblS
 parameter_list|)
 function_decl|;
+name|unsigned
+name|getGlobalELFLinkage
+parameter_list|(
+specifier|const
+name|GlobalVariable
+modifier|*
+name|GV
+parameter_list|)
+function_decl|;
+name|ELFSection
+modifier|&
+name|getGlobalSymELFSection
+parameter_list|(
+specifier|const
+name|GlobalVariable
+modifier|*
+name|GV
+parameter_list|,
+name|ELFSym
+modifier|&
+name|Sym
+parameter_list|)
+function_decl|;
 name|void
 name|EmitRelocations
 parameter_list|()
+function_decl|;
+name|void
+name|EmitRelocation
+parameter_list|(
+name|BinaryObject
+modifier|&
+name|RelSec
+parameter_list|,
+name|ELFRelocation
+modifier|&
+name|Rel
+parameter_list|,
+name|bool
+name|HasRelA
+parameter_list|)
 function_decl|;
 name|void
 name|EmitSectionHeader
@@ -645,6 +860,10 @@ parameter_list|)
 function_decl|;
 name|void
 name|EmitSymbolTable
+parameter_list|()
+function_decl|;
+name|void
+name|EmitStringTable
 parameter_list|()
 function_decl|;
 name|void

@@ -164,6 +164,17 @@ name|Res
 parameter_list|)
 function_decl|;
 name|bool
+name|ParseBinOpRHS
+parameter_list|(
+name|unsigned
+name|Precedence
+parameter_list|,
+name|int64_t
+modifier|&
+name|Res
+parameter_list|)
+function_decl|;
+name|bool
 name|ParseParenExpr
 parameter_list|(
 name|int64_t

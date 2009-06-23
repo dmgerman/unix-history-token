@@ -516,12 +516,23 @@ comment|/// turned into a real symbol table in the file.
 struct|struct
 name|ELFSym
 block|{
+comment|// The global value this corresponds to. Global symbols can be on of the
+comment|// 3 types : if this symbol has a zero initializer, it is common or should
+comment|// be placed in bss section otherwise it's a constant.
 specifier|const
 name|GlobalValue
 modifier|*
 name|GV
 decl_stmt|;
-comment|// The global value this corresponds to.
+name|bool
+name|IsCommon
+decl_stmt|;
+name|bool
+name|IsBss
+decl_stmt|;
+name|bool
+name|IsConstant
+decl_stmt|;
 comment|// ELF specific fields
 name|unsigned
 name|NameIdx
@@ -617,6 +628,21 @@ argument_list|(
 name|gv
 argument_list|)
 operator|,
+name|IsCommon
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsBss
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsConstant
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|NameIdx
 argument_list|(
 literal|0
@@ -639,7 +665,7 @@ argument_list|)
 operator|,
 name|Other
 argument_list|(
-literal|0
+name|STV_DEFAULT
 argument_list|)
 operator|,
 name|SectionIdx
@@ -701,8 +727,22 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|unsigned
+name|getBind
+argument_list|()
+block|{
+return|return
+operator|(
+name|Info
+operator|>>
+literal|4
+operator|)
+operator|&
+literal|0xf
+return|;
+block|}
 name|void
-name|SetBind
+name|setBind
 argument_list|(
 name|unsigned
 name|X
@@ -737,7 +777,7 @@ operator|)
 expr_stmt|;
 block|}
 name|void
-name|SetType
+name|setType
 argument_list|(
 name|unsigned
 name|X
@@ -767,6 +807,152 @@ operator||
 name|X
 expr_stmt|;
 block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/// ELFRelocation - This class contains all the information necessary to
+end_comment
+
+begin_comment
+comment|/// to generate any 32-bit or 64-bit ELF relocation entry.
+end_comment
+
+begin_decl_stmt
+name|class
+name|ELFRelocation
+block|{
+name|uint64_t
+name|r_offset
+decl_stmt|;
+comment|// offset in the section of the object this applies to
+name|uint32_t
+name|r_symidx
+decl_stmt|;
+comment|// symbol table index of the symbol to use
+name|uint32_t
+name|r_type
+decl_stmt|;
+comment|// machine specific relocation type
+name|int64_t
+name|r_add
+decl_stmt|;
+comment|// explicit relocation addend
+name|bool
+name|r_rela
+decl_stmt|;
+comment|// if true then the addend is part of the entry
+comment|// otherwise the addend is at the location specified
+comment|// by r_offset
+name|public
+label|:
+name|uint64_t
+name|getInfo
+argument_list|(
+name|bool
+name|is64Bit
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|is64Bit
+condition|)
+return|return
+operator|(
+operator|(
+name|uint64_t
+operator|)
+name|r_symidx
+operator|<<
+literal|32
+operator|)
+operator|+
+operator|(
+operator|(
+name|uint64_t
+operator|)
+name|r_type
+operator|&
+literal|0xFFFFFFFFL
+operator|)
+return|;
+else|else
+return|return
+operator|(
+name|r_symidx
+operator|<<
+literal|8
+operator|)
+operator|+
+operator|(
+name|r_type
+operator|&
+literal|0xFFL
+operator|)
+return|;
+block|}
+name|uint64_t
+name|getOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|r_offset
+return|;
+block|}
+name|int64_t
+name|getAddend
+argument_list|()
+specifier|const
+block|{
+return|return
+name|r_add
+return|;
+block|}
+name|ELFRelocation
+argument_list|(
+argument|uint64_t off
+argument_list|,
+argument|uint32_t sym
+argument_list|,
+argument|uint32_t type
+argument_list|,
+argument|bool rela = true
+argument_list|,
+argument|int64_t addend =
+literal|0
+argument_list|)
+block|:
+name|r_offset
+argument_list|(
+name|off
+argument_list|)
+operator|,
+name|r_symidx
+argument_list|(
+name|sym
+argument_list|)
+operator|,
+name|r_type
+argument_list|(
+name|type
+argument_list|)
+operator|,
+name|r_add
+argument_list|(
+name|addend
+argument_list|)
+operator|,
+name|r_rela
+argument_list|(
+argument|rela
+argument_list|)
+block|{}
 block|}
 end_decl_stmt
 

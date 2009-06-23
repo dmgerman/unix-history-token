@@ -200,8 +200,130 @@ name|EH_SJLJ_LONGJMP
 block|,
 comment|// SjLj exception handling longjmp
 name|THREAD_POINTER
+block|,
+name|VCEQ
+block|,
+comment|// Vector compare equal.
+name|VCGE
+block|,
+comment|// Vector compare greater than or equal.
+name|VCGEU
+block|,
+comment|// Vector compare unsigned greater than or equal.
+name|VCGT
+block|,
+comment|// Vector compare greater than.
+name|VCGTU
+block|,
+comment|// Vector compare unsigned greater than.
+name|VTST
+block|,
+comment|// Vector test bits.
+comment|// Vector shift by immediate:
+name|VSHL
+block|,
+comment|// ...left
+name|VSHRs
+block|,
+comment|// ...right (signed)
+name|VSHRu
+block|,
+comment|// ...right (unsigned)
+name|VSHLLs
+block|,
+comment|// ...left long (signed)
+name|VSHLLu
+block|,
+comment|// ...left long (unsigned)
+name|VSHLLi
+block|,
+comment|// ...left long (with maximum shift count)
+name|VSHRN
+block|,
+comment|// ...right narrow
+comment|// Vector rounding shift by immediate:
+name|VRSHRs
+block|,
+comment|// ...right (signed)
+name|VRSHRu
+block|,
+comment|// ...right (unsigned)
+name|VRSHRN
+block|,
+comment|// ...right narrow
+comment|// Vector saturating shift by immediate:
+name|VQSHLs
+block|,
+comment|// ...left (signed)
+name|VQSHLu
+block|,
+comment|// ...left (unsigned)
+name|VQSHLsu
+block|,
+comment|// ...left (signed to unsigned)
+name|VQSHRNs
+block|,
+comment|// ...right narrow (signed)
+name|VQSHRNu
+block|,
+comment|// ...right narrow (unsigned)
+name|VQSHRNsu
+block|,
+comment|// ...right narrow (signed to unsigned)
+comment|// Vector saturating rounding shift by immediate:
+name|VQRSHRNs
+block|,
+comment|// ...right narrow (signed)
+name|VQRSHRNu
+block|,
+comment|// ...right narrow (unsigned)
+name|VQRSHRNsu
+block|,
+comment|// ...right narrow (signed to unsigned)
+comment|// Vector shift and insert:
+name|VSLI
+block|,
+comment|// ...left
+name|VSRI
+block|,
+comment|// ...right
+comment|// Vector get lane (VMOV scalar to ARM core register)
+comment|// (These are used for 8- and 16-bit element types only.)
+name|VGETLANEu
+block|,
+comment|// zero-extend vector extract element
+name|VGETLANEs
+block|,
+comment|// sign-extend vector extract element
+comment|// Vector duplicate lane (128-bit result only; 64-bit is a shuffle)
+name|VDUPLANEQ
+comment|// splat a lane from a 64-bit vector to a 128-bit vector
 block|}
 enum|;
+block|}
+comment|/// Define some predicates that are used for node matching.
+name|namespace
+name|ARM
+block|{
+comment|/// getVMOVImm - If this is a build_vector of constants which can be
+comment|/// formed by using a VMOV instruction of the specified element size,
+comment|/// return the constant being splatted.  The ByteSize field indicates the
+comment|/// number of bytes of each element [1248].
+name|SDValue
+name|getVMOVImm
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|,
+name|unsigned
+name|ByteSize
+parameter_list|,
+name|SelectionDAG
+modifier|&
+name|DAG
+parameter_list|)
+function_decl|;
 block|}
 comment|//===--------------------------------------------------------------------===//
 comment|//  ARMTargetLowering - ARM Implementation of the TargetLowering interface
@@ -442,186 +564,349 @@ comment|///
 name|unsigned
 name|ARMPCLabelIndex
 block|;
-name|CCAssignFn
-operator|*
-name|CCAssignFnForNode
+name|void
+name|addTypeForNEON
 argument_list|(
-argument|unsigned CC
+argument|MVT VT
 argument_list|,
-argument|bool Return
+argument|MVT PromotedLdStVT
+argument_list|,
+argument|MVT PromotedBitwiseVT
 argument_list|)
-specifier|const
 block|;
+name|void
+name|addDRTypeForNEON
+argument_list|(
+argument|MVT VT
+argument_list|)
+block|;
+name|void
+name|addQRTypeForNEON
+argument_list|(
+argument|MVT VT
+argument_list|)
+block|;
+typedef|typedef
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
 name|SDValue
-name|LowerMemOpCallTo
+operator|>
+operator|,
+literal|8
+operator|>
+name|RegsToPassVector
+expr_stmt|;
+name|void
+name|PassF64ArgInRegs
 argument_list|(
 argument|CallSDNode *TheCall
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
-argument|const SDValue&StackPtr
-argument_list|,
-argument|const CCValAssign&VA
-argument_list|,
 argument|SDValue Chain
 argument_list|,
-argument|SDValue Arg
+argument|SDValue&Arg
+argument_list|,
+argument|RegsToPassVector&RegsToPass
+argument_list|,
+argument|CCValAssign&VA
+argument_list|,
+argument|CCValAssign&NextVA
+argument_list|,
+argument|SDValue&StackPtr
+argument_list|,
+argument|SmallVector<SDValue
+argument_list|,
+literal|8
+argument|>&MemOpChains
 argument_list|,
 argument|ISD::ArgFlagsTy Flags
 argument_list|)
-block|;
-name|SDNode
-operator|*
-name|LowerCallResult
+decl_stmt|;
+name|SDValue
+name|GetF64FormalArgument
+parameter_list|(
+name|CCValAssign
+modifier|&
+name|VA
+parameter_list|,
+name|CCValAssign
+modifier|&
+name|NextVA
+parameter_list|,
+name|SDValue
+modifier|&
+name|Root
+parameter_list|,
+name|SelectionDAG
+modifier|&
+name|DAG
+parameter_list|,
+name|DebugLoc
+name|dl
+parameter_list|)
+function_decl|;
+name|CCAssignFn
+modifier|*
+name|CCAssignFnForNode
 argument_list|(
-argument|SDValue Chain
+name|unsigned
+name|CC
 argument_list|,
-argument|SDValue InFlag
-argument_list|,
-argument|CallSDNode *TheCall
-argument_list|,
-argument|unsigned CallingConv
-argument_list|,
-argument|SelectionDAG&DAG
+name|bool
+name|Return
 argument_list|)
-block|;
+decl|const
+decl_stmt|;
+name|SDValue
+name|LowerMemOpCallTo
+argument_list|(
+name|CallSDNode
+operator|*
+name|TheCall
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+specifier|const
+name|SDValue
+operator|&
+name|StackPtr
+argument_list|,
+specifier|const
+name|CCValAssign
+operator|&
+name|VA
+argument_list|,
+name|SDValue
+name|Chain
+argument_list|,
+name|SDValue
+name|Arg
+argument_list|,
+name|ISD
+operator|::
+name|ArgFlagsTy
+name|Flags
+argument_list|)
+decl_stmt|;
+name|SDNode
+modifier|*
+name|LowerCallResult
+parameter_list|(
+name|SDValue
+name|Chain
+parameter_list|,
+name|SDValue
+name|InFlag
+parameter_list|,
+name|CallSDNode
+modifier|*
+name|TheCall
+parameter_list|,
+name|unsigned
+name|CallingConv
+parameter_list|,
+name|SelectionDAG
+modifier|&
+name|DAG
+parameter_list|)
+function_decl|;
 name|SDValue
 name|LowerCALL
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-block|;
+parameter_list|(
+name|SDValue
+name|Op
+parameter_list|,
+name|SelectionDAG
+modifier|&
+name|DAG
+parameter_list|)
+function_decl|;
 name|SDValue
 name|LowerINTRINSIC_WO_CHAIN
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-block|;
+parameter_list|(
+name|SDValue
+name|Op
+parameter_list|,
+name|SelectionDAG
+modifier|&
+name|DAG
+parameter_list|)
+function_decl|;
 name|SDValue
 name|LowerRET
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-block|;
+parameter_list|(
+name|SDValue
+name|Op
+parameter_list|,
+name|SelectionDAG
+modifier|&
+name|DAG
+parameter_list|)
+function_decl|;
 name|SDValue
 name|LowerGlobalAddressDarwin
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-block|;
+parameter_list|(
+name|SDValue
+name|Op
+parameter_list|,
+name|SelectionDAG
+modifier|&
+name|DAG
+parameter_list|)
+function_decl|;
 name|SDValue
 name|LowerGlobalAddressELF
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-block|;
+parameter_list|(
+name|SDValue
+name|Op
+parameter_list|,
+name|SelectionDAG
+modifier|&
+name|DAG
+parameter_list|)
+function_decl|;
 name|SDValue
 name|LowerGlobalTLSAddress
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-block|;
+parameter_list|(
+name|SDValue
+name|Op
+parameter_list|,
+name|SelectionDAG
+modifier|&
+name|DAG
+parameter_list|)
+function_decl|;
 name|SDValue
 name|LowerToTLSGeneralDynamicModel
-argument_list|(
+parameter_list|(
 name|GlobalAddressSDNode
-operator|*
+modifier|*
 name|GA
-argument_list|,
+parameter_list|,
 name|SelectionDAG
-operator|&
+modifier|&
 name|DAG
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|SDValue
 name|LowerToTLSExecModels
-argument_list|(
+parameter_list|(
 name|GlobalAddressSDNode
-operator|*
+modifier|*
 name|GA
-argument_list|,
+parameter_list|,
 name|SelectionDAG
-operator|&
+modifier|&
 name|DAG
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|SDValue
 name|LowerGLOBAL_OFFSET_TABLE
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-block|;
+parameter_list|(
+name|SDValue
+name|Op
+parameter_list|,
+name|SelectionDAG
+modifier|&
+name|DAG
+parameter_list|)
+function_decl|;
 name|SDValue
 name|LowerFORMAL_ARGUMENTS
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-block|;
+parameter_list|(
+name|SDValue
+name|Op
+parameter_list|,
+name|SelectionDAG
+modifier|&
+name|DAG
+parameter_list|)
+function_decl|;
 name|SDValue
 name|LowerBR_JT
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-block|;
+parameter_list|(
+name|SDValue
+name|Op
+parameter_list|,
+name|SelectionDAG
+modifier|&
+name|DAG
+parameter_list|)
+function_decl|;
 name|SDValue
 name|LowerFRAMEADDR
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-block|;
+parameter_list|(
+name|SDValue
+name|Op
+parameter_list|,
+name|SelectionDAG
+modifier|&
+name|DAG
+parameter_list|)
+function_decl|;
 name|SDValue
 name|EmitTargetCodeForMemcpy
-argument_list|(
-argument|SelectionDAG&DAG
-argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|SDValue Chain
-argument_list|,
-argument|SDValue Dst
-argument_list|,
-argument|SDValue Src
-argument_list|,
-argument|SDValue Size
-argument_list|,
-argument|unsigned Align
-argument_list|,
-argument|bool AlwaysInline
-argument_list|,
-argument|const Value *DstSV
-argument_list|,
-argument|uint64_t DstSVOff
-argument_list|,
-argument|const Value *SrcSV
-argument_list|,
-argument|uint64_t SrcSVOff
-argument_list|)
-block|;   }
-decl_stmt|;
+parameter_list|(
+name|SelectionDAG
+modifier|&
+name|DAG
+parameter_list|,
+name|DebugLoc
+name|dl
+parameter_list|,
+name|SDValue
+name|Chain
+parameter_list|,
+name|SDValue
+name|Dst
+parameter_list|,
+name|SDValue
+name|Src
+parameter_list|,
+name|SDValue
+name|Size
+parameter_list|,
+name|unsigned
+name|Align
+parameter_list|,
+name|bool
+name|AlwaysInline
+parameter_list|,
+specifier|const
+name|Value
+modifier|*
+name|DstSV
+parameter_list|,
+name|uint64_t
+name|DstSVOff
+parameter_list|,
+specifier|const
+name|Value
+modifier|*
+name|SrcSV
+parameter_list|,
+name|uint64_t
+name|SrcSVOff
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

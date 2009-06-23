@@ -573,6 +573,19 @@ name|TimersToPrint
 expr_stmt|;
 name|public
 label|:
+name|TimerGroup
+argument_list|()
+operator|:
+name|Name
+argument_list|(
+literal|"Miscellaneous Ungrouped Timers"
+argument_list|)
+operator|,
+name|NumTimers
+argument_list|(
+literal|0
+argument_list|)
+block|{}
 name|explicit
 name|TimerGroup
 argument_list|(
@@ -583,12 +596,12 @@ name|string
 operator|&
 name|name
 argument_list|)
-range|:
+operator|:
 name|Name
 argument_list|(
 name|name
 argument_list|)
-decl_stmt|,
+operator|,
 name|NumTimers
 argument_list|(
 literal|0

@@ -75,6 +75,52 @@ range|:
 name|public
 name|TargetELFWriterInfo
 block|{
+comment|// ELF Relocation types for X86
+block|enum
+name|X86RelocationType
+block|{
+name|R_386_NONE
+operator|=
+literal|0
+block|,
+name|R_386_32
+operator|=
+literal|1
+block|,
+name|R_386_PC32
+operator|=
+literal|2
+block|}
+block|;
+comment|// ELF Relocation types for X86_64
+block|enum
+name|X86_64RelocationType
+block|{
+name|R_X86_64_NONE
+operator|=
+literal|0
+block|,
+name|R_X86_64_64
+operator|=
+literal|1
+block|,
+name|R_X86_64_PC32
+operator|=
+literal|2
+block|,
+name|R_X86_64_32
+operator|=
+literal|10
+block|,
+name|R_X86_64_32S
+operator|=
+literal|11
+block|,
+name|R_X86_64_PC64
+operator|=
+literal|24
+block|}
+block|;
 name|public
 operator|:
 name|X86ELFWriterInfo
@@ -89,11 +135,50 @@ operator|~
 name|X86ELFWriterInfo
 argument_list|()
 block|;
+comment|/// getFunctionAlignment - Returns the alignment for function 'F', targets
+comment|/// with different alignment constraints should overload this method
 name|virtual
 name|unsigned
 name|getFunctionAlignment
 argument_list|(
 argument|const Function *F
+argument_list|)
+specifier|const
+block|;
+comment|/// getRelocationType - Returns the target specific ELF Relocation type.
+comment|/// 'MachineRelTy' contains the object code independent relocation type
+name|virtual
+name|unsigned
+name|getRelocationType
+argument_list|(
+argument|unsigned MachineRelTy
+argument_list|)
+specifier|const
+block|;
+comment|/// hasRelocationAddend - True if the target uses an addend in the
+comment|/// ELF relocation entry.
+name|virtual
+name|bool
+name|hasRelocationAddend
+argument_list|()
+specifier|const
+block|{
+return|return
+name|is64Bit
+operator|?
+name|true
+operator|:
+name|false
+return|;
+block|}
+comment|/// getAddendForRelTy - Gets the addend value for an ELF relocation entry
+comment|/// based on the target relocation type
+name|virtual
+name|long
+name|int
+name|getAddendForRelTy
+argument_list|(
+argument|unsigned RelTy
 argument_list|)
 specifier|const
 block|;   }

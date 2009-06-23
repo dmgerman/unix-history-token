@@ -300,7 +300,9 @@ decl_stmt|;
 name|ConstantRange
 name|getRange
 parameter_list|(
-name|SCEVHandle
+specifier|const
+name|SCEV
+modifier|*
 name|S
 parameter_list|,
 name|Loop
@@ -315,10 +317,14 @@ function_decl|;
 name|ConstantRange
 name|getRange
 parameter_list|(
-name|SCEVHandle
+specifier|const
+name|SCEV
+modifier|*
 name|S
 parameter_list|,
-name|SCEVHandle
+specifier|const
+name|SCEV
+modifier|*
 name|T
 parameter_list|,
 name|ScalarEvolution

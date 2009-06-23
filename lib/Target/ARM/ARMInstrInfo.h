@@ -365,6 +365,31 @@ literal|23
 operator|<<
 name|FormShift
 block|,
+comment|// NEON format
+name|NEONFrm
+init|=
+literal|24
+operator|<<
+name|FormShift
+block|,
+name|NEONGetLnFrm
+init|=
+literal|25
+operator|<<
+name|FormShift
+block|,
+name|NEONSetLnFrm
+init|=
+literal|26
+operator|<<
+name|FormShift
+block|,
+name|NEONDupFrm
+init|=
+literal|27
+operator|<<
+name|FormShift
+block|,
 comment|//===------------------------------------------------------------------===//
 comment|// Field shifts - such shifts are used to set field while generating
 comment|// machine instructions.

@@ -128,8 +128,8 @@ operator|*
 name|parent
 argument_list|,
 specifier|const
-name|SCEVHandle
-operator|&
+name|SCEV
+operator|*
 name|offset
 argument_list|,
 name|Instruction
@@ -214,7 +214,9 @@ block|}
 comment|/// getOffset - Return the offset to add to a theoeretical induction
 comment|/// variable that starts at zero and counts up by the stride to compute
 comment|/// the value for the use. This always has the same type as the stride.
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 name|getOffset
 argument_list|()
 specifier|const
@@ -227,7 +229,9 @@ comment|/// setOffset - Assign a new offset to this use.
 name|void
 name|setOffset
 parameter_list|(
-name|SCEVHandle
+specifier|const
+name|SCEV
+modifier|*
 name|Val
 parameter_list|)
 block|{
@@ -298,7 +302,9 @@ modifier|*
 name|Parent
 decl_stmt|;
 comment|/// Offset - The offset to add to the base induction expression.
-name|SCEVHandle
+specifier|const
+name|SCEV
+modifier|*
 name|Offset
 decl_stmt|;
 comment|/// OperandValToReplace - The Value of the operand in the user instruction
@@ -490,7 +496,7 @@ block|;
 name|void
 name|addUser
 argument_list|(
-argument|const SCEVHandle&Offset
+argument|const SCEV* Offset
 argument_list|,
 argument|Instruction *User
 argument_list|,
@@ -557,7 +563,9 @@ name|std
 operator|::
 name|map
 operator|<
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 block|,
 name|IVUsersOfOneStride
 operator|*
@@ -569,7 +577,9 @@ comment|/// We use this to iterate over the IVUsesByStride collection without be
 comment|/// dependent on random ordering of pointers in the process.
 name|SmallVector
 operator|<
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 block|,
 literal|16
 operator|>
@@ -626,7 +636,9 @@ argument_list|)
 block|;
 comment|/// getReplacementExpr - Return a SCEV expression which computes the
 comment|/// value of the OperandValToReplace of the given IVStrideUse.
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 name|getReplacementExpr
 argument_list|(
 argument|const IVStrideUse&U

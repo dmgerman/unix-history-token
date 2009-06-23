@@ -131,18 +131,11 @@ argument_list|(
 name|ConstantInt
 operator|*
 name|v
-argument_list|,
-specifier|const
-name|ScalarEvolution
-operator|*
-name|p
 argument_list|)
 operator|:
 name|SCEV
 argument_list|(
 name|scConstant
-argument_list|,
-name|p
 argument_list|)
 block|,
 name|V
@@ -150,11 +143,6 @@ argument_list|(
 argument|v
 argument_list|)
 block|{}
-name|virtual
-operator|~
-name|SCEVConstant
-argument_list|()
-block|;
 name|public
 operator|:
 name|ConstantInt
@@ -200,12 +188,14 @@ name|getType
 argument_list|()
 specifier|const
 block|;
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 name|replaceSymbolicValuesWithConcrete
 argument_list|(
-argument|const SCEVHandle&Sym
+argument|const SCEV* Sym
 argument_list|,
-argument|const SCEVHandle&Conc
+argument|const SCEV* Conc
 argument_list|,
 argument|ScalarEvolution&SE
 argument_list|)
@@ -279,7 +269,9 @@ name|SCEV
 block|{
 name|protected
 operator|:
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 name|Op
 block|;
 specifier|const
@@ -291,23 +283,16 @@ name|SCEVCastExpr
 argument_list|(
 argument|unsigned SCEVTy
 argument_list|,
-argument|const SCEVHandle&op
+argument|const SCEV* op
 argument_list|,
 argument|const Type *ty
-argument_list|,
-argument|const ScalarEvolution* p
 argument_list|)
-block|;
-name|virtual
-operator|~
-name|SCEVCastExpr
-argument_list|()
 block|;
 name|public
 operator|:
 specifier|const
-name|SCEVHandle
-operator|&
+name|SCEV
+operator|*
 name|getOperand
 argument_list|()
 specifier|const
@@ -435,40 +420,34 @@ block|;
 name|SCEVTruncateExpr
 argument_list|(
 specifier|const
-name|SCEVHandle
-operator|&
+name|SCEV
+operator|*
 name|op
 argument_list|,
 specifier|const
 name|Type
 operator|*
 name|ty
-argument_list|,
-specifier|const
-name|ScalarEvolution
-operator|*
-name|p
 argument_list|)
-block|;
-name|virtual
-operator|~
-name|SCEVTruncateExpr
-argument_list|()
 block|;
 name|public
 operator|:
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 name|replaceSymbolicValuesWithConcrete
 argument_list|(
-argument|const SCEVHandle&Sym
+argument|const SCEV* Sym
 argument_list|,
-argument|const SCEVHandle&Conc
+argument|const SCEV* Conc
 argument_list|,
 argument|ScalarEvolution&SE
 argument_list|)
 specifier|const
 block|{
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 name|H
 operator|=
 name|Op
@@ -559,40 +538,34 @@ block|;
 name|SCEVZeroExtendExpr
 argument_list|(
 specifier|const
-name|SCEVHandle
-operator|&
+name|SCEV
+operator|*
 name|op
 argument_list|,
 specifier|const
 name|Type
 operator|*
 name|ty
-argument_list|,
-specifier|const
-name|ScalarEvolution
-operator|*
-name|p
 argument_list|)
-block|;
-name|virtual
-operator|~
-name|SCEVZeroExtendExpr
-argument_list|()
 block|;
 name|public
 operator|:
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 name|replaceSymbolicValuesWithConcrete
 argument_list|(
-argument|const SCEVHandle&Sym
+argument|const SCEV* Sym
 argument_list|,
-argument|const SCEVHandle&Conc
+argument|const SCEV* Conc
 argument_list|,
 argument|ScalarEvolution&SE
 argument_list|)
 specifier|const
 block|{
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 name|H
 operator|=
 name|Op
@@ -683,40 +656,34 @@ block|;
 name|SCEVSignExtendExpr
 argument_list|(
 specifier|const
-name|SCEVHandle
-operator|&
+name|SCEV
+operator|*
 name|op
 argument_list|,
 specifier|const
 name|Type
 operator|*
 name|ty
-argument_list|,
-specifier|const
-name|ScalarEvolution
-operator|*
-name|p
 argument_list|)
-block|;
-name|virtual
-operator|~
-name|SCEVSignExtendExpr
-argument_list|()
 block|;
 name|public
 operator|:
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 name|replaceSymbolicValuesWithConcrete
 argument_list|(
-argument|const SCEVHandle&Sym
+argument|const SCEV* Sym
 argument_list|,
-argument|const SCEVHandle&Conc
+argument|const SCEV* Conc
 argument_list|,
 argument|ScalarEvolution&SE
 argument_list|)
 specifier|const
 block|{
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 name|H
 operator|=
 name|Op
@@ -804,7 +771,9 @@ name|protected
 operator|:
 name|SmallVector
 operator|<
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 block|,
 literal|8
 operator|>
@@ -814,16 +783,12 @@ name|SCEVNAryExpr
 argument_list|(
 argument|enum SCEVTypes T
 argument_list|,
-argument|const SmallVectorImpl<SCEVHandle>&ops
-argument_list|,
-argument|const ScalarEvolution* p
+argument|const SmallVectorImpl<const SCEV*>&ops
 argument_list|)
 operator|:
 name|SCEV
 argument_list|(
 name|T
-argument_list|,
-name|p
 argument_list|)
 block|,
 name|Operands
@@ -832,11 +797,6 @@ argument|ops.begin()
 argument_list|,
 argument|ops.end()
 argument_list|)
-block|{}
-name|virtual
-operator|~
-name|SCEVNAryExpr
-argument_list|()
 block|{}
 name|public
 operator|:
@@ -856,8 +816,8 @@ argument_list|()
 return|;
 block|}
 specifier|const
-name|SCEVHandle
-operator|&
+name|SCEV
+operator|*
 name|getOperand
 argument_list|(
 argument|unsigned i
@@ -886,7 +846,9 @@ block|}
 specifier|const
 name|SmallVectorImpl
 operator|<
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 operator|>
 operator|&
 name|getOperands
@@ -900,7 +862,9 @@ block|}
 typedef|typedef
 name|SmallVectorImpl
 operator|<
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 operator|>
 operator|::
 name|const_iterator
@@ -1154,9 +1118,7 @@ name|SCEVCommutativeExpr
 argument_list|(
 argument|enum SCEVTypes T
 argument_list|,
-argument|const SmallVectorImpl<SCEVHandle>&ops
-argument_list|,
-argument|const ScalarEvolution* p
+argument|const SmallVectorImpl<const SCEV*>&ops
 argument_list|)
 operator|:
 name|SCEVNAryExpr
@@ -1164,22 +1126,18 @@ argument_list|(
 argument|T
 argument_list|,
 argument|ops
-argument_list|,
-argument|p
 argument_list|)
 block|{}
-operator|~
-name|SCEVCommutativeExpr
-argument_list|()
-block|;
 name|public
 operator|:
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 name|replaceSymbolicValuesWithConcrete
 argument_list|(
-argument|const SCEVHandle&Sym
+argument|const SCEV* Sym
 argument_list|,
-argument|const SCEVHandle&Conc
+argument|const SCEV* Conc
 argument_list|,
 argument|ScalarEvolution&SE
 argument_list|)
@@ -1275,15 +1233,12 @@ argument_list|(
 specifier|const
 name|SmallVectorImpl
 operator|<
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 operator|>
 operator|&
 name|ops
-argument_list|,
-specifier|const
-name|ScalarEvolution
-operator|*
-name|p
 argument_list|)
 operator|:
 name|SCEVCommutativeExpr
@@ -1291,8 +1246,6 @@ argument_list|(
 argument|scAddExpr
 argument_list|,
 argument|ops
-argument_list|,
-argument|p
 argument_list|)
 block|{     }
 name|public
@@ -1360,15 +1313,12 @@ argument_list|(
 specifier|const
 name|SmallVectorImpl
 operator|<
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 operator|>
 operator|&
 name|ops
-argument_list|,
-specifier|const
-name|ScalarEvolution
-operator|*
-name|p
 argument_list|)
 operator|:
 name|SCEVCommutativeExpr
@@ -1376,8 +1326,6 @@ argument_list|(
 argument|scMulExpr
 argument_list|,
 argument|ops
-argument_list|,
-argument|p
 argument_list|)
 block|{     }
 name|public
@@ -1439,34 +1387,32 @@ name|friend
 name|class
 name|ScalarEvolution
 block|;
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 name|LHS
-block|,
+block|;
+specifier|const
+name|SCEV
+operator|*
 name|RHS
 block|;
 name|SCEVUDivExpr
 argument_list|(
 specifier|const
-name|SCEVHandle
-operator|&
+name|SCEV
+operator|*
 name|lhs
 argument_list|,
 specifier|const
-name|SCEVHandle
-operator|&
-name|rhs
-argument_list|,
-specifier|const
-name|ScalarEvolution
+name|SCEV
 operator|*
-name|p
+name|rhs
 argument_list|)
 operator|:
 name|SCEV
 argument_list|(
 name|scUDivExpr
-argument_list|,
-name|p
 argument_list|)
 block|,
 name|LHS
@@ -1479,16 +1425,11 @@ argument_list|(
 argument|rhs
 argument_list|)
 block|{}
-name|virtual
-operator|~
-name|SCEVUDivExpr
-argument_list|()
-block|;
 name|public
 operator|:
 specifier|const
-name|SCEVHandle
-operator|&
+name|SCEV
+operator|*
 name|getLHS
 argument_list|()
 specifier|const
@@ -1498,8 +1439,8 @@ name|LHS
 return|;
 block|}
 specifier|const
-name|SCEVHandle
-operator|&
+name|SCEV
+operator|*
 name|getRHS
 argument_list|()
 specifier|const
@@ -1556,18 +1497,22 @@ name|L
 argument_list|)
 return|;
 block|}
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 name|replaceSymbolicValuesWithConcrete
 argument_list|(
-argument|const SCEVHandle&Sym
+argument|const SCEV* Sym
 argument_list|,
-argument|const SCEVHandle&Conc
+argument|const SCEV* Conc
 argument_list|,
 argument|ScalarEvolution&SE
 argument_list|)
 specifier|const
 block|{
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 name|L
 operator|=
 name|LHS
@@ -1581,7 +1526,9 @@ argument_list|,
 name|SE
 argument_list|)
 block|;
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 name|R
 operator|=
 name|RHS
@@ -1705,7 +1652,9 @@ argument_list|(
 specifier|const
 name|SmallVectorImpl
 operator|<
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 operator|>
 operator|&
 name|ops
@@ -1714,11 +1663,6 @@ specifier|const
 name|Loop
 operator|*
 name|l
-argument_list|,
-specifier|const
-name|ScalarEvolution
-operator|*
-name|p
 argument_list|)
 operator|:
 name|SCEVNAryExpr
@@ -1726,8 +1670,6 @@ argument_list|(
 name|scAddRecExpr
 argument_list|,
 name|ops
-argument_list|,
-name|p
 argument_list|)
 block|,
 name|L
@@ -1772,15 +1714,11 @@ literal|"Operands of AddRec must be loop-invariant!"
 argument_list|)
 expr_stmt|;
 block|}
-operator|~
-name|SCEVAddRecExpr
-argument_list|()
-block|;
 name|public
 operator|:
 specifier|const
-name|SCEVHandle
-operator|&
+name|SCEV
+operator|*
 name|getStart
 argument_list|()
 specifier|const
@@ -1806,7 +1744,9 @@ block|}
 comment|/// getStepRecurrence - This method constructs and returns the recurrence
 comment|/// indicating how much this expression steps by.  If this is a polynomial
 comment|/// of degree N, it returns a chrec of degree N-1.
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 name|getStepRecurrence
 argument_list|(
 argument|ScalarEvolution&SE
@@ -1831,7 +1771,9 @@ name|getAddRecExpr
 argument_list|(
 name|SmallVector
 operator|<
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 argument_list|,
 literal|3
 operator|>
@@ -1912,10 +1854,12 @@ return|;
 block|}
 comment|/// evaluateAtIteration - Return the value of this chain of recurrences at
 comment|/// the specified iteration number.
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 name|evaluateAtIteration
 argument_list|(
-argument|SCEVHandle It
+argument|const SCEV* It
 argument_list|,
 argument|ScalarEvolution&SE
 argument_list|)
@@ -1927,7 +1871,9 @@ comment|/// looking at this is that it returns the first iteration number where 
 comment|/// value is not in the condition, thus computing the exit count.  If the
 comment|/// iteration count can't be computed, an instance of SCEVCouldNotCompute is
 comment|/// returned.
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 name|getNumIterationsInRange
 argument_list|(
 argument|ConstantRange Range
@@ -1936,12 +1882,14 @@ argument|ScalarEvolution&SE
 argument_list|)
 specifier|const
 block|;
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 name|replaceSymbolicValuesWithConcrete
 argument_list|(
-argument|const SCEVHandle&Sym
+argument|const SCEV* Sym
 argument_list|,
-argument|const SCEVHandle&Conc
+argument|const SCEV* Conc
 argument_list|,
 argument|ScalarEvolution&SE
 argument_list|)
@@ -2006,15 +1954,12 @@ argument_list|(
 specifier|const
 name|SmallVectorImpl
 operator|<
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 operator|>
 operator|&
 name|ops
-argument_list|,
-specifier|const
-name|ScalarEvolution
-operator|*
-name|p
 argument_list|)
 operator|:
 name|SCEVCommutativeExpr
@@ -2022,8 +1967,6 @@ argument_list|(
 argument|scSMaxExpr
 argument_list|,
 argument|ops
-argument_list|,
-argument|p
 argument_list|)
 block|{     }
 name|public
@@ -2091,15 +2034,12 @@ argument_list|(
 specifier|const
 name|SmallVectorImpl
 operator|<
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 operator|>
 operator|&
 name|ops
-argument_list|,
-specifier|const
-name|ScalarEvolution
-operator|*
-name|p
 argument_list|)
 operator|:
 name|SCEVCommutativeExpr
@@ -2107,8 +2047,6 @@ argument_list|(
 argument|scUMaxExpr
 argument_list|,
 argument|ops
-argument_list|,
-argument|p
 argument_list|)
 block|{     }
 name|public
@@ -2182,18 +2120,11 @@ argument_list|(
 name|Value
 operator|*
 name|v
-argument_list|,
-specifier|const
-name|ScalarEvolution
-operator|*
-name|p
 argument_list|)
 operator|:
 name|SCEV
 argument_list|(
 name|scUnknown
-argument_list|,
-name|p
 argument_list|)
 block|,
 name|V
@@ -2201,12 +2132,6 @@ argument_list|(
 argument|v
 argument_list|)
 block|{}
-name|protected
-operator|:
-operator|~
-name|SCEVUnknown
-argument_list|()
-block|;
 name|public
 operator|:
 name|Value
@@ -2240,12 +2165,14 @@ name|false
 return|;
 comment|// not computable
 block|}
-name|SCEVHandle
+specifier|const
+name|SCEV
+operator|*
 name|replaceSymbolicValuesWithConcrete
 argument_list|(
-argument|const SCEVHandle&Sym
+argument|const SCEV* Sym
 argument_list|,
-argument|const SCEVHandle&Conc
+argument|const SCEV* Conc
 argument_list|,
 argument|ScalarEvolution&SE
 argument_list|)

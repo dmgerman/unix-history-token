@@ -299,8 +299,10 @@ operator|:
 literal|16
 return|;
 block|}
+comment|/// getPrefELFAlignment - Returns the preferred alignment for ELF. This
+comment|/// is used to align some sections.
 name|unsigned
-name|getSymTabAlignment
+name|getPrefELFAlignment
 argument_list|()
 specifier|const
 block|{
@@ -310,6 +312,34 @@ operator|?
 literal|8
 operator|:
 literal|4
+return|;
+block|}
+comment|/// getRelocationEntrySize - Entry size used in the relocation section
+name|unsigned
+name|getRelocationEntrySize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|is64Bit
+operator|?
+operator|(
+name|hasRelocationAddend
+argument_list|()
+operator|?
+literal|24
+operator|:
+literal|16
+operator|)
+operator|:
+operator|(
+name|hasRelocationAddend
+argument_list|()
+operator|?
+literal|12
+operator|:
+literal|8
+operator|)
 return|;
 block|}
 comment|/// getFunctionAlignment - Returns the alignment for function 'F', targets
@@ -324,6 +354,43 @@ operator|*
 name|F
 argument_list|)
 decl|const
+decl_stmt|;
+comment|/// getRelocationType - Returns the target specific ELF Relocation type.
+comment|/// 'MachineRelTy' contains the object code independent relocation type
+name|virtual
+name|unsigned
+name|getRelocationType
+argument_list|(
+name|unsigned
+name|MachineRelTy
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+comment|/// hasRelocationAddend - True if the target uses an addend in the
+comment|/// ELF relocation entry.
+name|virtual
+name|bool
+name|hasRelocationAddend
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+comment|/// getAddendForRelTy - Gets the addend value for an ELF relocation entry
+comment|/// based on the target relocation type. If addend is not used returns 0.
+name|virtual
+name|long
+name|int
+name|getAddendForRelTy
+argument_list|(
+name|unsigned
+name|RelTy
+argument_list|)
+decl|const
+init|=
+literal|0
 decl_stmt|;
 block|}
 empty_stmt|;
