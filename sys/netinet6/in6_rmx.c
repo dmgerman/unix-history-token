@@ -112,12 +112,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/route.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/vnet.h>
 end_include
 
@@ -1564,18 +1558,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|void in6_rtqdrain(void) { 	INIT_VNET_NET(curvnet); 	struct radix_node_head *rnh; 	struct rtqk_arg arg;  	rnh = rt_tables_get_rnh(0, AF_INET6); 	if (rnh == NULL) 		panic("%s: rnh == NULL", __func__); 	arg.found = arg.killed = 0; 	arg.rnh = rnh; 	arg.nextstop = 0; 	arg.draining = 1; 	arg.updating = 0; 	RADIX_NODE_HEAD_LOCK(rnh); 	rnh->rnh_walktree(rnh, in6_rtqkill,&arg); 	RADIX_NODE_HEAD_UNLOCK(rnh); }
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Initialize our routing tree.  * XXX MRT When off == 0, we are being called from vfs_export.c  * so just set up their table and leave. (we know what the correct  * value should be so just use that).. FIX AFTER RELENG_7 is MFC'd  * see also comments in in_inithead() vfs_export.c and domain.h  */
