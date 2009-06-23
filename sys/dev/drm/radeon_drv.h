@@ -3279,13 +3279,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R500_SU_REG_DEST
-value|0x42c8
-end_define
-
-begin_define
-define|#
-directive|define
 name|R300_GB_TILE_CONFIG
 value|0x4018
 end_define

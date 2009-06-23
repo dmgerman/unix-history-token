@@ -2424,7 +2424,7 @@ argument_list|)
 expr_stmt|;
 name|RADEON_WRITE
 argument_list|(
-name|R500_SU_REG_DEST
+name|R300_SU_REG_DEST
 argument_list|,
 operator|(
 operator|(
