@@ -14114,7 +14114,7 @@ name|S_IWUSR
 argument_list|,
 name|VN_OPEN_NOAUDIT
 argument_list|,
-name|NULL
+name|cred
 argument_list|,
 name|NULL
 argument_list|)
