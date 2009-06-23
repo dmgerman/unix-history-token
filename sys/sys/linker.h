@@ -1185,6 +1185,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|Elf_Addr
+name|elf_relocaddr
+parameter_list|(
+name|linker_file_t
+name|_lf
+parameter_list|,
+name|Elf_Addr
+name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|const
 name|Elf_Sym
 modifier|*

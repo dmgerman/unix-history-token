@@ -568,6 +568,14 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+modifier|*
+name|dpcpu
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Hotwire a 0->4MB V==P mapping */
 end_comment
@@ -2501,6 +2509,13 @@ name|pcpu
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|dpcpu_init
+argument_list|(
+name|dpcpu
+argument_list|,
+name|myid
+argument_list|)
+expr_stmt|;
 name|pc
 operator|->
 name|pc_apic_id
@@ -3681,6 +3696,19 @@ argument_list|,
 name|KSTACK_PAGES
 operator|*
 name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+name|dpcpu
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|kmem_alloc
+argument_list|(
+name|kernel_map
+argument_list|,
+name|DPCPU_SIZE
 argument_list|)
 expr_stmt|;
 comment|/* setup a vector to our boot code */

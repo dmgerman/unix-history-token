@@ -890,6 +890,10 @@ name|struct
 name|pv_addr
 name|kernel_l1pt
 decl_stmt|;
+name|struct
+name|pv_addr
+name|dpcpu
+decl_stmt|;
 name|int
 name|loop
 decl_stmt|,
@@ -1110,6 +1114,29 @@ argument_list|(
 name|systempage
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Allocate dynamic per-cpu area. */
+name|valloc_pages
+argument_list|(
+name|dpcpu
+argument_list|,
+name|DPCPU_SIZE
+operator|/
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+name|dpcpu_init
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|dpcpu
+operator|.
+name|pv_va
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Allocate stacks for all modes */

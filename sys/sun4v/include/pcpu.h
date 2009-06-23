@@ -98,6 +98,14 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_decl_stmt
+specifier|extern
+name|void
+modifier|*
+name|dpcpu0
+decl_stmt|;
+end_decl_stmt
+
 begin_struct_decl
 struct_decl|struct
 name|pcpu

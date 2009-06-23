@@ -635,9 +635,14 @@ block|{
 comment|/* A + B */
 name|addr
 operator|=
+name|elf_relocaddr
+argument_list|(
+name|lf
+argument_list|,
 name|relocbase
 operator|+
 name|addend
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

@@ -505,6 +505,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+modifier|*
+name|dpcpu0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 name|pcpu0
 index|[
@@ -2223,6 +2230,13 @@ comment|/* 	 * Initialize the message buffer (after setting trap table). 	 */
 name|BVPRINTF
 argument_list|(
 literal|"initialize msgbuf\n"
+argument_list|)
+expr_stmt|;
+name|dpcpu_init
+argument_list|(
+name|dpcpu0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|msgbufinit

@@ -695,6 +695,10 @@ decl_stmt|;
 name|u_int64_t
 name|lid
 decl_stmt|;
+name|void
+modifier|*
+name|dpcpu
+decl_stmt|;
 comment|/* Ignore any processor numbers outside our range */
 if|if
 condition|(
@@ -788,6 +792,19 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+name|dpcpu
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|kmem_alloc
+argument_list|(
+name|kernel_map
+argument_list|,
+name|DPCPU_SIZE
+argument_list|)
+expr_stmt|;
 name|pcpu_init
 argument_list|(
 name|pc
@@ -799,6 +816,13 @@ argument_list|(
 operator|*
 name|pc
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|dpcpu_init
+argument_list|(
+name|dpcpu
+argument_list|,
+name|acpiid
 argument_list|)
 expr_stmt|;
 block|}

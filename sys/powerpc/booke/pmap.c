@@ -4647,6 +4647,10 @@ decl_stmt|;
 name|vm_paddr_t
 name|kstack0_phys
 decl_stmt|;
+name|void
+modifier|*
+name|dpcpu
+decl_stmt|;
 name|pte_t
 modifier|*
 name|pte
@@ -4729,6 +4733,26 @@ operator|=
 name|round_page
 argument_list|(
 name|data_end
+argument_list|)
+expr_stmt|;
+comment|/* Allocate the dynamic per-cpu area. */
+name|dpcpu
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|data_end
+expr_stmt|;
+name|data_end
+operator|+=
+name|DPCPU_SIZE
+expr_stmt|;
+name|dpcpu_init
+argument_list|(
+name|dpcpu
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Allocate space for ptbl_bufs. */

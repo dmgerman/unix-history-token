@@ -485,6 +485,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+modifier|*
+name|dpcpu0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 name|pcpu0
 index|[
@@ -1950,7 +1957,14 @@ name|delay_func
 operator|=
 name|delay_tick
 expr_stmt|;
-comment|/* 	 * Initialize the message buffer (after setting trap table). 	 */
+comment|/* 	 * Initialize the dynamic per-CPU area for the BSP and the message 	 * buffer (after setting the trap table). 	 */
+name|dpcpu_init
+argument_list|(
+name|dpcpu0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|msgbufinit
 argument_list|(
 name|msgbufp

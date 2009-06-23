@@ -568,7 +568,7 @@ literal|0
 comment|/* TBD  */
 block|if (rtype == R_386_RELATIVE) {
 comment|/* A + B */
-block|addr = relocbase + addend; 			if (*where != addr) 				*where = addr; 		} 		return (0);
+block|addr = elf_relocaddr(lf, relocbase + addend); 			if (*where != addr) 				*where = addr; 		} 		return (0);
 endif|#
 directive|endif
 block|}

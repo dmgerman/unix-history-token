@@ -368,7 +368,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Temporary holder for double fault stack */
+comment|/* Temporary variables for init_secondary()  */
 end_comment
 
 begin_decl_stmt
@@ -382,6 +382,13 @@ begin_decl_stmt
 name|char
 modifier|*
 name|nmi_stack
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+modifier|*
+name|dpcpu
 decl_stmt|;
 end_decl_stmt
 
@@ -2525,6 +2532,13 @@ name|pcpu
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|dpcpu_init
+argument_list|(
+name|dpcpu
+argument_list|,
+name|cpu
+argument_list|)
+expr_stmt|;
 name|pc
 operator|->
 name|pc_apic_id
@@ -3823,6 +3837,19 @@ argument_list|(
 name|kernel_map
 argument_list|,
 name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+name|dpcpu
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|kmem_alloc
+argument_list|(
+name|kernel_map
+argument_list|,
+name|DPCPU_SIZE
 argument_list|)
 expr_stmt|;
 name|bootSTK
