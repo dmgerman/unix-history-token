@@ -676,7 +676,7 @@ condition|)
 block|{
 name|pscnt
 operator|=
-name|psrate
+name|psratio
 expr_stmt|;
 ifdef|#
 directive|ifdef
