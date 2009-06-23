@@ -577,7 +577,7 @@ name|pr_sibling
 expr_stmt|;
 comment|/* (a) next in parent's list */
 name|int
-name|pr_prisoncount
+name|pr_childcount
 decl_stmt|;
 comment|/* (a) number of child jails */
 name|unsigned
@@ -613,6 +613,10 @@ modifier|*
 name|pr_vnet
 decl_stmt|;
 comment|/* (c) network stack */
+name|int
+name|pr_childmax
+decl_stmt|;
+comment|/* (p) maximum child jails */
 block|}
 struct|;
 end_struct
@@ -785,22 +789,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|PR_ALLOW_JAILS
+name|PR_ALLOW_SOCKET_AF
 value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
-name|PR_ALLOW_SOCKET_AF
-value|0x0080
-end_define
-
-begin_define
-define|#
-directive|define
 name|PR_ALLOW_ALL
-value|0x00ff
+value|0x007f
 end_define
 
 begin_comment
@@ -952,6 +949,27 @@ name|descend
 parameter_list|)
 define|\
 value|for ((cpr) = (ppr), (descend) = 1;				\ 	    ((cpr) = (((descend)&& !LIST_EMPTY(&(cpr)->pr_children))	\ 	      ? LIST_FIRST(&(cpr)->pr_children)				\ 	      : ((cpr) == (ppr)						\ 		 ? NULL							\ 		 : ((prison_unlock(cpr),				\ 		    (descend) = LIST_NEXT(cpr, pr_sibling) != NULL)	\ 		    ? LIST_NEXT(cpr, pr_sibling)			\ 		    : (cpr)->pr_parent))));)				\ 		if ((descend) ? (prison_lock(cpr), 0) : 1)		\ 			;						\ 		else
+end_define
+
+begin_comment
+comment|/*  * As above, but also keep track of the level descended to.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FOREACH_PRISON_DESCENDANT_LOCKED_LEVEL
+parameter_list|(
+name|ppr
+parameter_list|,
+name|cpr
+parameter_list|,
+name|descend
+parameter_list|,
+name|level
+parameter_list|)
+define|\
+value|for ((cpr) = (ppr), (descend) = 1, (level) = 0;			\ 	    ((cpr) = (((descend)&& !LIST_EMPTY(&(cpr)->pr_children))	\ 	      ? (level++, LIST_FIRST(&(cpr)->pr_children))		\ 	      : ((cpr) == (ppr)						\ 		 ? NULL							\ 		 : ((prison_unlock(cpr),				\ 		    (descend) = LIST_NEXT(cpr, pr_sibling) != NULL)	\ 		    ? LIST_NEXT(cpr, pr_sibling)			\ 		    : (level--, (cpr)->pr_parent)))));)			\ 		if ((descend) ? (prison_lock(cpr), 0) : 1)		\ 			;						\ 		else
 end_define
 
 begin_comment
