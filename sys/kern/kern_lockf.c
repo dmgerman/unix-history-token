@@ -5311,7 +5311,7 @@ operator||=
 name|PCATCH
 expr_stmt|;
 comment|/* 	 * Scan lock list for this file looking for locks that would block us. 	 */
-while|while
+if|if
 condition|(
 name|lf_getblock
 argument_list|(
