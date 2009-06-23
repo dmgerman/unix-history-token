@@ -302,10 +302,7 @@ begin_function_decl
 specifier|static
 name|void
 name|usage
-parameter_list|(
-name|char
-modifier|*
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -1186,13 +1183,7 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|(
-name|progname
-parameter_list|)
-name|char
-modifier|*
-name|progname
-decl_stmt|;
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
