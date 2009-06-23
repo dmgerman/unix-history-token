@@ -626,7 +626,7 @@ end_function
 
 begin_function
 name|u32
-name|gm45_get_vblank_counter
+name|g45_get_vblank_counter
 parameter_list|(
 name|struct
 name|drm_device
@@ -1970,13 +1970,6 @@ name|DRM_I915_VBLANK_PIPE_A
 operator||
 name|DRM_I915_VBLANK_PIPE_B
 expr_stmt|;
-name|dev
-operator|->
-name|max_vblank_count
-operator|=
-literal|0xffffff
-expr_stmt|;
-comment|/* only 24 bits of frame count */
 comment|/* Unmask the interrupts that we always want on. */
 name|dev_priv
 operator|->
