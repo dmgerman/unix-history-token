@@ -2472,7 +2472,6 @@ name|uio
 argument_list|)
 operator|)
 condition|)
-empty_stmt|;
 goto|goto
 name|out
 goto|;
