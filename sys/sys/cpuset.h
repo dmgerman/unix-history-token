@@ -165,6 +165,16 @@ parameter_list|)
 value|do {				\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		(p)->__bits[__i] = 0;			\ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CPU_FILL
+parameter_list|(
+name|p
+parameter_list|)
+value|do {				\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		(p)->__bits[__i] = -1;			\ } while (0)
+end_define
+
 begin_comment
 comment|/* Is p empty. */
 end_comment
