@@ -6738,7 +6738,7 @@ name|Obj_Entry
 name|objtmp
 decl_stmt|;
 comment|/* Temporary rtld object */
-comment|/*      * Conjure up an Obj_Entry structure for the dynamic linker.      *      * The "path" member can't be initialized yet because string constants      * cannot yet be acessed. Below we will set it correctly.      */
+comment|/*      * Conjure up an Obj_Entry structure for the dynamic linker.      *      * The "path" member can't be initialized yet because string constants      * cannot yet be accessed. Below we will set it correctly.      */
 name|memset
 argument_list|(
 operator|&
