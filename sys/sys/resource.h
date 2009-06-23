@@ -322,8 +322,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RLIM_NLIMITS
+name|RLIMIT_SWAP
 value|12
+end_define
+
+begin_comment
+comment|/* swap used */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RLIM_NLIMITS
+value|13
 end_define
 
 begin_comment
@@ -384,6 +395,8 @@ block|,
 literal|"vmem"
 block|,
 literal|"npts"
+block|,
+literal|"swap"
 block|, }
 decl_stmt|;
 end_decl_stmt

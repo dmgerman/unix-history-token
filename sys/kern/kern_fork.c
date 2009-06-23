@@ -956,6 +956,9 @@ name|vmspace
 modifier|*
 name|vm2
 decl_stmt|;
+name|vm_ooffset_t
+name|mem_charged
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1189,6 +1192,10 @@ operator|)
 return|;
 block|}
 comment|/* 	 * XXX 	 * We did have single-threading code here 	 * however it proved un-needed and caused problems 	 */
+name|mem_charged
+operator|=
+literal|0
+expr_stmt|;
 name|vm2
 operator|=
 name|NULL
@@ -1296,6 +1303,9 @@ argument_list|(
 name|p1
 operator|->
 name|p_vmspace
+argument_list|,
+operator|&
+name|mem_charged
 argument_list|)
 expr_stmt|;
 if|if
@@ -1313,7 +1323,35 @@ goto|goto
 name|fail1
 goto|;
 block|}
+if|if
+condition|(
+operator|!
+name|swap_reserve
+argument_list|(
+name|mem_charged
+argument_list|)
+condition|)
+block|{
+comment|/* 			 * The swap reservation failed. The accounting 			 * from the entries of the copied vm2 will be 			 * substracted in vmspace_free(), so force the 			 * reservation there. 			 */
+name|swap_reserve_force
+argument_list|(
+name|mem_charged
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENOMEM
+expr_stmt|;
+goto|goto
+name|fail1
+goto|;
 block|}
+block|}
+else|else
+name|vm2
+operator|=
+name|NULL
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC

@@ -175,6 +175,11 @@ name|prot
 parameter_list|,
 name|vm_ooffset_t
 name|foff
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|cred
 parameter_list|)
 block|{
 name|vm_object_t

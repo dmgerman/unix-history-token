@@ -164,6 +164,12 @@ name|vm_pindex_t
 name|lastr
 decl_stmt|;
 comment|/* last read */
+name|struct
+name|uidinfo
+modifier|*
+name|uip
+decl_stmt|;
+comment|/* tmp storage for creator ref */
 block|}
 struct|;
 end_struct
@@ -1104,6 +1110,20 @@ define|#
 directive|define
 name|MAP_STACK_GROWS_UP
 value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAP_ACC_CHARGED
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAP_ACC_NO_CHARGE
+value|0x8000
 end_define
 
 begin_comment

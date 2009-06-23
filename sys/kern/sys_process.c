@@ -155,6 +155,12 @@ directive|include
 file|<vm/vm_page.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm_param.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -786,6 +792,17 @@ condition|(
 name|error
 condition|)
 block|{
+if|if
+condition|(
+name|error
+operator|==
+name|KERN_RESOURCE_SHORTAGE
+condition|)
+name|error
+operator|=
+name|ENOMEM
+expr_stmt|;
+else|else
 name|error
 operator|=
 name|EFAULT

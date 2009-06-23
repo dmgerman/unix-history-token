@@ -118,6 +118,10 @@ parameter_list|,
 name|vm_prot_t
 parameter_list|,
 name|vm_ooffset_t
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -364,6 +368,11 @@ name|prot
 parameter_list|,
 name|vm_ooffset_t
 name|foff
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|cred
 parameter_list|)
 block|{
 name|struct

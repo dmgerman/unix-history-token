@@ -504,6 +504,9 @@ argument_list|,
 name|VM_PROT_DEFAULT
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
+comment|/* XXXKIB - tmpfs needs swap reservation */
 argument_list|)
 expr_stmt|;
 name|nnode

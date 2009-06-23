@@ -7783,6 +7783,12 @@ case|:
 case|case
 name|PRIV_VM_MUNLOCK
 case|:
+case|case
+name|PRIV_VM_SWAP_NOQUOTA
+case|:
+case|case
+name|PRIV_VM_SWAP_NORLIMIT
+case|:
 comment|/* 	 * Allow some but not all network privileges.  In general, dont allow 	 * reconfiguring the network stack, just normal use. 	 */
 case|case
 name|PRIV_NETATALK_RESERVEDPORT

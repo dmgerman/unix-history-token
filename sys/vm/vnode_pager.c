@@ -269,6 +269,11 @@ parameter_list|,
 name|vm_prot_t
 parameter_list|,
 name|vm_ooffset_t
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|cred
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -517,6 +522,10 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|td
+operator|->
+name|td_ucred
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Dereference the reference we just created.  This assumes 	 * that the object is associated with the vp. 	 */
@@ -678,6 +687,11 @@ name|prot
 parameter_list|,
 name|vm_ooffset_t
 name|offset
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|cred
 parameter_list|)
 block|{
 name|vm_object_t

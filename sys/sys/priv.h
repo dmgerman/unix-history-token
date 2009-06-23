@@ -1538,6 +1538,28 @@ begin_comment
 comment|/* Can munlock(), munlockall(). */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PRIV_VM_SWAP_NOQUOTA
+value|363
+end_define
+
+begin_comment
+comment|/* 					 * Can override the global 					 * swap reservation limits. 					 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_VM_SWAP_NORLIMIT
+value|364
+end_define
+
+begin_comment
+comment|/* 					 * Can override the per-uid 					 * swap reservation limits. 					 */
+end_comment
+
 begin_comment
 comment|/*  * Device file system privileges.  */
 end_comment

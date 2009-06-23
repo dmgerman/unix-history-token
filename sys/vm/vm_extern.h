@@ -364,6 +364,9 @@ parameter_list|(
 name|struct
 name|vmspace
 modifier|*
+parameter_list|,
+name|vm_ooffset_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
