@@ -973,6 +973,18 @@ operator|>=
 name|swi_nr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+operator|-
+name|ERESTART
+condition|)
+name|DRM_DEBUG
+argument_list|(
+literal|"restarting syscall"
+argument_list|)
+expr_stmt|;
 return|return
 name|ret
 return|;
