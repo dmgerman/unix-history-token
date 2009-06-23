@@ -315,11 +315,7 @@ argument_list|,
 name|gem_mii_statchg
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -411,6 +407,7 @@ modifier|*
 name|gpd_desc
 decl_stmt|;
 block|}
+decl|const
 name|gem_pci_devlist
 index|[]
 init|=
@@ -913,6 +910,28 @@ operator|->
 name|r_bushandle
 argument_list|)
 expr_stmt|;
+comment|/* Determine whether we're running at 66MHz. */
+if|if
+condition|(
+operator|(
+name|GEM_BANK2_READ_4
+argument_list|(
+name|sc
+argument_list|,
+name|GEM_PCI_BIF_CONFIG
+argument_list|)
+operator|&
+name|GEM_PCI_BIF_CNF_M66EN
+operator|)
+operator|!=
+literal|0
+condition|)
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|GEM_PCI66
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -935,7 +954,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* 	 * Dig out VPD (vital product data) and read NA (network address). 	 * The VPD of GEM resides in the PCI Expansion ROM (PCI FCode) and 	 * can't be accessed via the PCI capability pointer. 	 * ``Writing FCode 3.x Programs'' (newer ones, dated 1997 and later) 	 * chapter 2 describes the data structure. 	 */
+comment|/* 	 * Dig out VPD (vital product data) and read NA (network address). 	 * The VPD resides in the PCI Expansion ROM (PCI FCode) and can't 	 * be accessed via the PCI capability pointer. 	 * ``Writing FCode 3.x Programs'' (newer ones, dated 1997 and later) 	 * chapter 2 describes the data structure. 	 */
 define|#
 directive|define
 name|PCI_ROMHDR_SIZE
@@ -999,11 +1018,6 @@ parameter_list|)
 value|((x)& 0x7f)
 define|#
 directive|define
-name|PCI_VPDRES_TYPE_VPD
-value|0x10
-comment|/* large */
-define|#
-directive|define
 name|PCI_VPDRES_LARGE_LEN_LSB
 value|0x01
 define|#
@@ -1012,12 +1026,13 @@ name|PCI_VPDRES_LARGE_LEN_MSB
 value|0x02
 define|#
 directive|define
-name|PCI_VPDRES_LARGE_DATA
+name|PCI_VPDRES_LARGE_SIZE
 value|0x03
 define|#
 directive|define
-name|PCI_VPD_SIZE
-value|0x03
+name|PCI_VPDRES_TYPE_VPD
+value|0x10
+comment|/* large */
 define|#
 directive|define
 name|PCI_VPD_KEY0
@@ -1032,7 +1047,7 @@ name|PCI_VPD_LEN
 value|0x02
 define|#
 directive|define
-name|PCI_VPD_DATA
+name|PCI_VPD_SIZE
 value|0x03
 define|#
 directive|define
@@ -1204,6 +1219,7 @@ operator|!=
 name|PCI_VPDRES_TYPE_VPD
 operator|||
 operator|(
+operator|(
 name|GEM_ROM_READ_1
 argument_list|(
 name|sc
@@ -1214,6 +1230,7 @@ name|PCI_VPDRES_LARGE_LEN_LSB
 argument_list|)
 operator|<<
 literal|8
+operator|)
 operator||
 name|GEM_ROM_READ_1
 argument_list|(
@@ -1235,7 +1252,7 @@ name|sc
 argument_list|,
 name|j
 operator|+
-name|PCI_VPDRES_LARGE_DATA
+name|PCI_VPDRES_LARGE_SIZE
 operator|+
 name|PCI_VPD_KEY0
 argument_list|)
@@ -1249,7 +1266,7 @@ name|sc
 argument_list|,
 name|j
 operator|+
-name|PCI_VPDRES_LARGE_DATA
+name|PCI_VPDRES_LARGE_SIZE
 operator|+
 name|PCI_VPD_KEY1
 argument_list|)
@@ -1263,7 +1280,7 @@ name|sc
 argument_list|,
 name|j
 operator|+
-name|PCI_VPDRES_LARGE_DATA
+name|PCI_VPDRES_LARGE_SIZE
 operator|+
 name|PCI_VPD_LEN
 argument_list|)
@@ -1276,9 +1293,9 @@ name|sc
 argument_list|,
 name|j
 operator|+
-name|PCI_VPDRES_LARGE_DATA
+name|PCI_VPDRES_LARGE_SIZE
 operator|+
-name|PCI_VPD_DATA
+name|PCI_VPD_SIZE
 operator|+
 name|ETHER_ADDR_LEN
 argument_list|)
@@ -1310,9 +1327,9 @@ name|GEM_PCI_ROM_OFFSET
 operator|+
 name|j
 operator|+
-name|PCI_VPDRES_LARGE_DATA
+name|PCI_VPDRES_LARGE_SIZE
 operator|+
-name|PCI_VPD_DATA
+name|PCI_VPD_SIZE
 argument_list|,
 name|sc
 operator|->
@@ -1533,21 +1550,12 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|struct
-name|gem_softc
-modifier|*
-name|sc
-decl_stmt|;
-name|sc
-operator|=
+name|gem_suspend
+argument_list|(
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
-name|gem_suspend
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -1567,21 +1575,12 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|struct
-name|gem_softc
-modifier|*
-name|sc
-decl_stmt|;
-name|sc
-operator|=
+name|gem_resume
+argument_list|(
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
-name|gem_resume
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 return|return
