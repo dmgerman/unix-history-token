@@ -2985,8 +2985,6 @@ operator|->
 name|saveSWF1
 index|[
 name|i
-operator|+
-literal|7
 index|]
 argument_list|)
 expr_stmt|;
