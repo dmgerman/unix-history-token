@@ -915,7 +915,6 @@ name|uflag
 condition|)
 name|GET_USER_INFO
 expr_stmt|;
-comment|/* 	 * If the first argument (path) starts with a slash, and the third 	 * argument (IP address) starts with a digit, it is likely to be 	 * an old-style fixed-parameter command line. 	 */
 if|if
 condition|(
 name|jailname
