@@ -61,12 +61,10 @@ begin_function
 name|void
 name|cfree
 parameter_list|(
-name|p
-parameter_list|)
 name|void
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|)
 block|{
 name|free
 argument_list|(
