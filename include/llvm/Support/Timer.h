@@ -111,27 +111,27 @@ comment|///
 name|class
 name|Timer
 block|{
-name|double
+name|int64_t
 name|Elapsed
 decl_stmt|;
 comment|// Wall clock time elapsed in seconds
-name|double
+name|int64_t
 name|UserTime
 decl_stmt|;
 comment|// User time elapsed
-name|double
+name|int64_t
 name|SystemTime
 decl_stmt|;
 comment|// System time elapsed
-name|ssize_t
+name|int64_t
 name|MemUsed
 decl_stmt|;
 comment|// Memory allocated (in bytes)
-name|size_t
+name|int64_t
 name|PeakMem
 decl_stmt|;
 comment|// Peak memory used
-name|size_t
+name|int64_t
 name|PeakMemBase
 decl_stmt|;
 comment|// Temporary for peak calculation...
@@ -189,7 +189,7 @@ operator|~
 name|Timer
 argument_list|()
 expr_stmt|;
-name|double
+name|int64_t
 name|getProcessTime
 argument_list|()
 specifier|const
@@ -200,7 +200,7 @@ operator|+
 name|SystemTime
 return|;
 block|}
-name|double
+name|int64_t
 name|getWallTime
 argument_list|()
 specifier|const
@@ -209,7 +209,7 @@ return|return
 name|Elapsed
 return|;
 block|}
-name|ssize_t
+name|int64_t
 name|getMemUsed
 argument_list|()
 specifier|const
@@ -218,7 +218,7 @@ return|return
 name|MemUsed
 return|;
 block|}
-name|size_t
+name|int64_t
 name|getPeakMem
 argument_list|()
 specifier|const
@@ -573,19 +573,6 @@ name|TimersToPrint
 expr_stmt|;
 name|public
 label|:
-name|TimerGroup
-argument_list|()
-operator|:
-name|Name
-argument_list|(
-literal|"Miscellaneous Ungrouped Timers"
-argument_list|)
-operator|,
-name|NumTimers
-argument_list|(
-literal|0
-argument_list|)
-block|{}
 name|explicit
 name|TimerGroup
 argument_list|(
@@ -596,12 +583,12 @@ name|string
 operator|&
 name|name
 argument_list|)
-operator|:
+range|:
 name|Name
 argument_list|(
 name|name
 argument_list|)
-operator|,
+decl_stmt|,
 name|NumTimers
 argument_list|(
 literal|0

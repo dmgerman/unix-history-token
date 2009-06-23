@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCImm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -107,7 +113,9 @@ name|kImmediate
 block|,
 comment|///< Immediate operand.
 name|kMBBLabel
+block|,
 comment|///< Basic block label.
+name|kMCImm
 block|}
 enum|;
 name|unsigned
@@ -121,6 +129,9 @@ name|RegVal
 decl_stmt|;
 name|int64_t
 name|ImmVal
+decl_stmt|;
+name|MCImm
+name|MCImmVal
 decl_stmt|;
 struct|struct
 block|{
@@ -449,6 +460,18 @@ name|Operands
 index|[
 name|i
 index|]
+return|;
+block|}
+name|unsigned
+name|getNumOperands
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Operands
+operator|.
+name|size
+argument_list|()
 return|;
 block|}
 name|void

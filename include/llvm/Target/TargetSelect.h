@@ -154,24 +154,18 @@ directive|define
 name|DoInit2
 parameter_list|(
 name|TARG
-parameter_list|,
-name|MOD
 parameter_list|)
-value|llvm::Initialize ## TARG ## MOD()
+value|llvm::Initialize ## TARG ()
 define|#
 directive|define
 name|DoInit
 parameter_list|(
 name|T
-parameter_list|,
-name|M
 parameter_list|)
-value|DoInit2(T, M)
+value|DoInit2(T)
 name|DoInit
 argument_list|(
 name|LLVM_NATIVE_ARCH
-argument_list|,
-name|Target
 argument_list|)
 expr_stmt|;
 return|return

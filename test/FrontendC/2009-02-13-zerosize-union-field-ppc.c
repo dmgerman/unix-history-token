@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc %s -m32 -S -o - | grep {i32 1} | count 1
+comment|// RUN: %llvmgcc %s -m32 -S -o - | grep {i32 32} | count 3
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc %s -m32 -S -o - | grep {i32 4} | count 2
+comment|// XFAIL: *
 end_comment
 
 begin_comment
-comment|// XFAIL: powerpc
+comment|// XTARGET: powerpc
 end_comment
 
 begin_comment
