@@ -6017,7 +6017,13 @@ name|mxge_change_promisc
 argument_list|(
 name|sc
 argument_list|,
-literal|0
+name|sc
+operator|->
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_PROMISC
 argument_list|)
 expr_stmt|;
 name|mxge_change_pause
@@ -19979,7 +19985,7 @@ name|MXGEFW_RSS_HASH_TYPE_IPV4
 operator|||
 name|mxge_rss_hash_type
 operator|>
-name|MXGEFW_RSS_HASH_TYPE_SRC_PORT
+name|MXGEFW_RSS_HASH_TYPE_MAX
 condition|)
 block|{
 name|mxge_rss_hash_type
