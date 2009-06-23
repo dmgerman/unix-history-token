@@ -7562,12 +7562,6 @@ end_function
 begin_include
 include|#
 directive|include
-file|<net/route.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if_llatbl.h>
 end_include
 
