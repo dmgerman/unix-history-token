@@ -131,6 +131,18 @@ directive|include
 file|<dev/mxge/if_mxge_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_inet.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_comment
 comment|/* Assume len is a multiple of 4 */
 end_comment
@@ -1696,6 +1708,15 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_comment
 comment|/*   This file uses Myri10GE driver indentation.    Local Variables:   c-file-style:"linux"   tab-width:8   End: */

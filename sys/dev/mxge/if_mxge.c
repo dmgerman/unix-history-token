@@ -323,6 +323,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"opt_inet.h"
+end_include
+
 begin_comment
 comment|/* tunable params */
 end_comment
@@ -11535,6 +11541,9 @@ condition|)
 return|return
 literal|1
 return|;
+ifdef|#
+directive|ifdef
+name|INET
 name|c
 operator|=
 name|in_pseudo
@@ -11580,6 +11589,14 @@ name|ip_p
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|c
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 name|c
 operator|^=
 literal|0xffff
@@ -12576,11 +12593,6 @@ name|ss
 operator|->
 name|rx_done
 decl_stmt|;
-name|struct
-name|lro_entry
-modifier|*
-name|lro
-decl_stmt|;
 name|int
 name|limit
 init|=
@@ -12713,6 +12725,9 @@ argument_list|)
 condition|)
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|INET
 while|while
 condition|(
 operator|!
@@ -12725,8 +12740,11 @@ name|lro_active
 argument_list|)
 condition|)
 block|{
+name|struct
+name|lro_entry
+modifier|*
 name|lro
-operator|=
+init|=
 name|SLIST_FIRST
 argument_list|(
 operator|&
@@ -12734,7 +12752,7 @@ name|ss
 operator|->
 name|lro_active
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|SLIST_REMOVE_HEAD
 argument_list|(
 operator|&
@@ -12753,6 +12771,8 @@ name|lro
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -22727,9 +22747,18 @@ operator||
 name|IFCAP_TSO4
 operator||
 name|IFCAP_VLAN_MTU
-operator||
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
+name|ifp
+operator|->
+name|if_capabilities
+operator||=
 name|IFCAP_LRO
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|MXGE_NEW_VLAN_API
