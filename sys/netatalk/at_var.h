@@ -55,11 +55,12 @@ name|struct
 name|callout
 name|aa_callout
 decl_stmt|;
-name|struct
-name|at_ifaddr
-modifier|*
-name|aa_next
-decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|at_ifaddr
+argument_list|)
+name|aa_link
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -77,6 +78,16 @@ directive|define
 name|aa_dstaddr
 value|aa_broadaddr;
 end_define
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|at_ifaddrhead
+argument_list|,
+name|at_ifaddr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_struct
 struct|struct
@@ -169,9 +180,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|at_ifaddr
-modifier|*
-name|at_ifaddr_list
+name|at_ifaddrhead
+name|at_ifaddrhead
 decl_stmt|;
 end_decl_stmt
 

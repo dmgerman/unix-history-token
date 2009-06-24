@@ -1017,6 +1017,12 @@ block|{
 name|DDP_LIST_LOCK_INIT
 argument_list|()
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|at_ifaddrhead
+argument_list|)
+expr_stmt|;
 name|netisr_register
 argument_list|(
 operator|&
