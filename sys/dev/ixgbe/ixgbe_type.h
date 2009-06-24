@@ -138,6 +138,13 @@ name|IXGBE_DEV_ID_82599_SFP
 value|0x10FB
 end_define
 
+begin_define
+define|#
+directive|define
+name|IXGBE_DEV_ID_82599_XAUI_LOM
+value|0x10FC
+end_define
+
 begin_comment
 comment|/* General Registers */
 end_comment
@@ -1650,6 +1657,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_PFDTXGSWC
+value|0x08220
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_DTXMXSZRQ
 value|0x08100
 end_define
@@ -1731,6 +1745,17 @@ end_define
 
 begin_comment
 comment|/* VLAN EtherType */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_PFDTXGSWC_VT_LBEN
+value|0x1
+end_define
+
+begin_comment
+comment|/* Local L2 VT switch enable */
 end_comment
 
 begin_define
@@ -5134,62 +5159,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_PCIE_DIAG_0_82599
-value|0x11090
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_PCIE_DIAG_1_82599
-value|0x11094
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_PCIE_DIAG_2_82599
-value|0x11098
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_PCIE_DIAG_3_82599
-value|0x1109C
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_PCIE_DIAG_4_82599
-value|0x110A0
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_PCIE_DIAG_5_82599
-value|0x110A4
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_PCIE_DIAG_6_82599
-value|0x110A8
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_PCIE_DIAG_7_82599
-value|0x110C0
-end_define
-
-begin_define
-define|#
-directive|define
 name|IXGBE_INTRPT_CSR_82599
 value|0x110B0
 end_define
@@ -5770,6 +5739,118 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_RXWRPTR
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x03100 + ((_i) * 4))
+end_define
+
+begin_comment
+comment|/* 8 of these 3100-310C*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_RXUSED
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x03120 + ((_i) * 4))
+end_define
+
+begin_comment
+comment|/* 8 of these 3120-312C*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_RXRDPTR
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x03140 + ((_i) * 4))
+end_define
+
+begin_comment
+comment|/* 8 of these 3140-314C*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_RXRDWRPTR
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x03160 + ((_i) * 4))
+end_define
+
+begin_comment
+comment|/* 8 of these 3160-310C*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_TXWRPTR
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x0C100 + ((_i) * 4))
+end_define
+
+begin_comment
+comment|/* 8 of these C100-C10C*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_TXUSED
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x0C120 + ((_i) * 4))
+end_define
+
+begin_comment
+comment|/* 8 of these C120-C12C*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_TXRDPTR
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x0C140 + ((_i) * 4))
+end_define
+
+begin_comment
+comment|/* 8 of these C140-C14C*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_TXRDWRPTR
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x0C160 + ((_i) * 4))
+end_define
+
+begin_comment
+comment|/* 8 of these C160-C10C*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IXGBE_PCIEECCCTL0
 value|0x11100
 end_define
@@ -5793,6 +5874,20 @@ define|#
 directive|define
 name|IXGBE_TXDBUECC
 value|0x0CF70
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_RXDBUEST
+value|0x03F74
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_TXDBUEST
+value|0x0CF74
 end_define
 
 begin_define
@@ -8082,6 +8177,17 @@ name|IXGBE_VFRE_ENABLE_ALL
 value|0xFFFFFFFF
 end_define
 
+begin_define
+define|#
+directive|define
+name|IXGBE_VF_INIT_TIMEOUT
+value|200
+end_define
+
+begin_comment
+comment|/* Number of retries to clear RSTI */
+end_comment
+
 begin_comment
 comment|/* RDHMPN and TDHMPN bitmasks */
 end_comment
@@ -9931,6 +10037,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_VLVF_VLANID_MASK
+value|0x00000FFF
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_ETHERNET_IEEE_VLAN_TYPE
 value|0x8100
 end_define
@@ -10009,12 +10122,42 @@ name|IXGBE_ESDP_SDP0
 value|0x00000001
 end_define
 
+begin_comment
+comment|/* SDP0 Data Value */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IXGBE_ESDP_SDP1
 value|0x00000002
 end_define
+
+begin_comment
+comment|/* SDP1 Data Value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ESDP_SDP2
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* SDP2 Data Value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ESDP_SDP3
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* SDP3 Data Value */
+end_comment
 
 begin_define
 define|#
@@ -11194,6 +11337,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_SERIAL_NUMBER_MAC_ADDR
+value|0x11
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_PCIE_MSIX_82599_CAPS
 value|0x72
 end_define
@@ -11475,6 +11625,50 @@ end_endif
 begin_define
 define|#
 directive|define
+name|IXGBE_PCIE_CTRL2
+value|0x5
+end_define
+
+begin_comment
+comment|/* PCIe Control 2 Offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_PCIE_CTRL2_DUMMY_ENABLE
+value|0x8
+end_define
+
+begin_comment
+comment|/* Dummy Function Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_PCIE_CTRL2_LAN_DISABLE
+value|0x2
+end_define
+
+begin_comment
+comment|/* LAN PCI Disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_PCIE_CTRL2_DISABLE_SELECT
+value|0x1
+end_define
+
+begin_comment
+comment|/* LAN Disable Select */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IXGBE_SAN_MAC_ADDR_PORT0_OFFSET
 value|0x0
 end_define
@@ -11498,6 +11692,20 @@ define|#
 directive|define
 name|IXGBE_DEVICE_CAPS_FCOE_OFFLOADS
 value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FW_PASSTHROUGH_PATCH_CONFIG_PTR
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FW_PATCH_VERSION_4
+value|0x7
 end_define
 
 begin_comment
@@ -11787,6 +11995,17 @@ end_define
 
 begin_comment
 comment|/* Tx Desc. write-back flushing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_TXDCTL_WTHRESH_SHIFT
+value|16
+end_define
+
+begin_comment
+comment|/* shift to WTHRESH bits */
 end_comment
 
 begin_comment
@@ -13106,6 +13325,13 @@ name|IXGBE_PSRTYPE_IPV6HDR
 value|0x00000200
 end_define
 
+begin_define
+define|#
+directive|define
+name|IXGBE_PSRTYPE_L2HDR
+value|0x00001000
+end_define
+
 begin_comment
 comment|/* SRRCTL bit definitions */
 end_comment
@@ -13652,6 +13878,50 @@ value|IXGBE_RX_DESC_SPECIAL_PRI_SHIFT
 end_define
 
 begin_comment
+comment|/* SR-IOV specific macros */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MBVFICR_INDEX
+parameter_list|(
+name|vf_number
+parameter_list|)
+value|(vf_number>> 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MBVFICR
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x00710 + (_i * 4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_VFLRE
+parameter_list|(
+name|_i
+parameter_list|)
+value|(((_i& 1) ? 0x001C0 : 0x00600))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_VFLREC
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x00700 + (_i * 4))
+end_define
+
+begin_comment
 comment|/* Little Endian defines */
 end_comment
 
@@ -14075,6 +14345,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_FDIRCMD_CMD_MASK
+value|0x00000003
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_FDIRCMD_CMD_ADD_FLOW
 value|0x00000001
 end_define
@@ -14145,6 +14422,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_FDIRCMD_CLEARHT
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_FDIRCMD_DROP
 value|0x00000200
 end_define
@@ -14189,6 +14473,20 @@ define|#
 directive|define
 name|IXGBE_FDIRCMD_VT_POOL_SHIFT
 value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FDIR_INIT_DONE_POLL
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FDIRCMD_CMD_POLL
+value|10
 end_define
 
 begin_comment
@@ -15174,6 +15472,13 @@ define|#
 directive|define
 name|IXGBE_PHYSICAL_LAYER_10GBASE_KR
 value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_PHYSICAL_LAYER_10GBASE_XAUI
+value|0x1000
 end_define
 
 begin_comment
@@ -16281,6 +16586,32 @@ parameter_list|,
 name|u32
 parameter_list|)
 function_decl|;
+name|s32
+function_decl|(
+modifier|*
+name|acquire_swfw_sync
+function_decl|)
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+parameter_list|,
+name|u16
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|release_swfw_sync
+function_decl|)
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+parameter_list|,
+name|u16
+parameter_list|)
+function_decl|;
 comment|/* Link */
 name|s32
 function_decl|(
@@ -16925,6 +17256,9 @@ decl_stmt|;
 name|bool
 name|autoneg_succeeded
 decl_stmt|;
+name|bool
+name|autotry_restart
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -17220,17 +17554,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_NOT_IMPLEMENTED
-value|0x7FFFFFFF
+name|IXGBE_ERR_FDIR_REINIT_FAILED
+value|-23
 end_define
 
 begin_define
 define|#
 directive|define
-name|UNREFERENCED_PARAMETER
-parameter_list|(
-name|_p
-parameter_list|)
+name|IXGBE_ERR_EEPROM_VERSION
+value|-24
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_NOT_IMPLEMENTED
+value|0x7FFFFFFF
 end_define
 
 begin_endif

@@ -31,6 +31,25 @@ directive|include
 file|<sys/systm.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/buf_ring.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -265,22 +284,28 @@ directive|include
 file|<sys/pcpu.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IXGBE_TIMESYNC
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<sys/ioccom.h>
+file|<sys/smp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<machine/smp.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IXGBE_IEEE1588
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ieee1588.h>
 end_include
 
 begin_endif
@@ -641,6 +666,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_VFTA_SIZE
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_BR_SIZE
+value|4096
+end_define
+
+begin_define
+define|#
+directive|define
 name|CSUM_OFFLOAD
 value|7
 end_define
@@ -648,17 +687,6 @@ end_define
 begin_comment
 comment|/* Bits in csum flags */
 end_comment
-
-begin_comment
-comment|/* The number of MSIX messages the 82598 supports */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_MSGS
-value|18
-end_define
 
 begin_comment
 comment|/* For 6.X code compatibility */
@@ -769,17 +797,6 @@ directive|define
 name|IXGBE_CLEAN_ALL
 value|3
 end_define
-
-begin_comment
-comment|/* Used for auto RX queue configuration */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|mp_ncpus
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  *****************************************************************************  * vendor_info_array  *   * This array contains the list of Subvendor/Subdevice IDs on which the driver  * should load.  *   *****************************************************************************  */
@@ -912,9 +929,6 @@ name|u32
 name|msix
 decl_stmt|;
 name|u32
-name|eims
-decl_stmt|;
-name|u32
 name|watchdog_timer
 decl_stmt|;
 name|union
@@ -966,6 +980,28 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800000
+name|struct
+name|buf_ring
+modifier|*
+name|br
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* Interrupt resources */
+name|void
+modifier|*
+name|tag
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|res
+decl_stmt|;
 comment|/* Soft Stats */
 name|u32
 name|no_tx_desc_avail
@@ -1007,9 +1043,6 @@ name|u32
 name|msix
 decl_stmt|;
 name|u32
-name|eims
-decl_stmt|;
-name|u32
 name|payload
 decl_stmt|;
 name|struct
@@ -1033,6 +1066,12 @@ decl_stmt|;
 name|struct
 name|lro_ctrl
 name|lro
+decl_stmt|;
+name|bool
+name|lro_enabled
+decl_stmt|;
+name|bool
+name|hdr_split
 decl_stmt|;
 name|unsigned
 name|int
@@ -1075,6 +1114,16 @@ decl_stmt|;
 comment|/* Used for AIM calc */
 name|u32
 name|eitr_setting
+decl_stmt|;
+comment|/* Interrupt resources */
+name|void
+modifier|*
+name|tag
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|res
 decl_stmt|;
 comment|/* Soft stats */
 name|u64
@@ -1129,27 +1178,15 @@ name|resource
 modifier|*
 name|msix_mem
 decl_stmt|;
-comment|/* 	 * Interrupt resources: 	 */
+comment|/* 	 * Interrupt resources: this set is 	 * either used for legacy, or for Link 	 * when doing MSIX 	 */
 name|void
 modifier|*
 name|tag
-index|[
-name|IXGBE_MSGS
-index|]
 decl_stmt|;
 name|struct
 name|resource
 modifier|*
 name|res
-index|[
-name|IXGBE_MSGS
-index|]
-decl_stmt|;
-name|int
-name|rid
-index|[
-name|IXGBE_MSGS
-index|]
 decl_stmt|;
 name|struct
 name|ifmedia
@@ -1168,6 +1205,18 @@ decl_stmt|;
 name|struct
 name|mtx
 name|core_mtx
+decl_stmt|;
+name|eventhandler_tag
+name|vlan_attach
+decl_stmt|;
+name|eventhandler_tag
+name|vlan_detach
+decl_stmt|;
+name|u32
+name|num_vlans
+decl_stmt|;
+name|u16
+name|num_queues
 decl_stmt|;
 comment|/* Info about the board itself */
 name|u32
@@ -1240,9 +1289,6 @@ decl_stmt|;
 name|int
 name|num_tx_desc
 decl_stmt|;
-name|int
-name|num_tx_queues
-decl_stmt|;
 comment|/* 	 * Receive rings: 	 *	Allocated at run time, an array of rings. 	 */
 name|struct
 name|rx_ring
@@ -1252,10 +1298,7 @@ decl_stmt|;
 name|int
 name|num_rx_desc
 decl_stmt|;
-name|int
-name|num_rx_queues
-decl_stmt|;
-name|u32
+name|u64
 name|rx_mask
 decl_stmt|;
 name|u32
@@ -1263,15 +1306,23 @@ name|rx_process_limit
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|IXGBE_TIMESYNC
-name|u64
-name|last_stamp
+name|IXGBE_IEEE1588
+comment|/* IEEE 1588 precision time support */
+name|struct
+name|cyclecounter
+name|cycles
 decl_stmt|;
-name|u64
-name|last_sec
+name|struct
+name|nettimer
+name|clock
 decl_stmt|;
-name|u32
-name|last_ns
+name|struct
+name|nettime_compare
+name|compare
+decl_stmt|;
+name|struct
+name|hwtstamp_ctrl
+name|hwtstamp
 decl_stmt|;
 endif|#
 directive|endif
@@ -1320,12 +1371,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IXGBE_TIMESYNC
-end_ifdef
-
 begin_comment
 comment|/* Precision Time Sync (IEEE 1588) defines */
 end_comment
@@ -1361,81 +1406,6 @@ directive|define
 name|IXGBE_ADVTXD_TSTAMP
 value|0x00080000
 end_define
-
-begin_comment
-comment|/* TIMESYNC IOCTL defines */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_TIMESYNC_READTS
-value|_IOWR('i', 127, struct ixgbe_tsync_read)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_TIMESTAMP
-value|5
-end_define
-
-begin_comment
-comment|/* A unique return value */
-end_comment
-
-begin_comment
-comment|/* Used in the READTS IOCTL */
-end_comment
-
-begin_struct
-struct|struct
-name|ixgbe_tsync_read
-block|{
-name|int
-name|read_current_time
-decl_stmt|;
-name|struct
-name|timespec
-name|system_time
-decl_stmt|;
-name|u64
-name|network_time
-decl_stmt|;
-name|u64
-name|rx_stamp
-decl_stmt|;
-name|u64
-name|tx_stamp
-decl_stmt|;
-name|u16
-name|seqid
-decl_stmt|;
-name|unsigned
-name|char
-name|srcid
-index|[
-literal|6
-index|]
-decl_stmt|;
-name|int
-name|rx_valid
-decl_stmt|;
-name|int
-name|tx_valid
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IXGBE_TIMESYNC */
-end_comment
 
 begin_define
 define|#
