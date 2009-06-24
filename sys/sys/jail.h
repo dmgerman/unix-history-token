@@ -484,83 +484,6 @@ name|unsigned
 name|pr_flags
 decl_stmt|;
 comment|/* (p) PR_* flags */
-name|char
-name|pr_path
-index|[
-name|MAXPATHLEN
-index|]
-decl_stmt|;
-comment|/* (c) chroot path */
-name|struct
-name|cpuset
-modifier|*
-name|pr_cpuset
-decl_stmt|;
-comment|/* (p) cpuset */
-name|struct
-name|vnode
-modifier|*
-name|pr_root
-decl_stmt|;
-comment|/* (c) vnode to rdir */
-name|char
-name|pr_hostname
-index|[
-name|MAXHOSTNAMELEN
-index|]
-decl_stmt|;
-comment|/* (p) jail hostname */
-name|char
-name|pr_name
-index|[
-name|MAXHOSTNAMELEN
-index|]
-decl_stmt|;
-comment|/* (p) admin jail name */
-name|struct
-name|prison
-modifier|*
-name|pr_parent
-decl_stmt|;
-comment|/* (c) containing jail */
-name|int
-name|pr_securelevel
-decl_stmt|;
-comment|/* (p) securelevel */
-name|struct
-name|task
-name|pr_task
-decl_stmt|;
-comment|/* (d) destroy task */
-name|struct
-name|mtx
-name|pr_mtx
-decl_stmt|;
-name|struct
-name|osd
-name|pr_osd
-decl_stmt|;
-comment|/* (p) additional data */
-name|int
-name|pr_ip4s
-decl_stmt|;
-comment|/* (p) number of v4 IPs */
-name|struct
-name|in_addr
-modifier|*
-name|pr_ip4
-decl_stmt|;
-comment|/* (p) v4 IPs of jail */
-name|int
-name|pr_ip6s
-decl_stmt|;
-comment|/* (p) number of v6 IPs */
-name|struct
-name|in6_addr
-modifier|*
-name|pr_ip6
-decl_stmt|;
-comment|/* (p) v6 IPs of jail */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -576,18 +499,123 @@ argument_list|)
 name|pr_sibling
 expr_stmt|;
 comment|/* (a) next in parent's list */
+name|struct
+name|prison
+modifier|*
+name|pr_parent
+decl_stmt|;
+comment|/* (c) containing jail */
+name|struct
+name|mtx
+name|pr_mtx
+decl_stmt|;
+name|struct
+name|task
+name|pr_task
+decl_stmt|;
+comment|/* (d) destroy task */
+name|struct
+name|osd
+name|pr_osd
+decl_stmt|;
+comment|/* (p) additional data */
+name|struct
+name|cpuset
+modifier|*
+name|pr_cpuset
+decl_stmt|;
+comment|/* (p) cpuset */
+name|struct
+name|vnet
+modifier|*
+name|pr_vnet
+decl_stmt|;
+comment|/* (c) network stack */
+name|struct
+name|vnode
+modifier|*
+name|pr_root
+decl_stmt|;
+comment|/* (c) vnode to rdir */
+name|int
+name|pr_ip4s
+decl_stmt|;
+comment|/* (p) number of v4 IPs */
+name|int
+name|pr_ip6s
+decl_stmt|;
+comment|/* (p) number of v6 IPs */
+name|struct
+name|in_addr
+modifier|*
+name|pr_ip4
+decl_stmt|;
+comment|/* (p) v4 IPs of jail */
+name|struct
+name|in6_addr
+modifier|*
+name|pr_ip6
+decl_stmt|;
+comment|/* (p) v6 IPs of jail */
+name|void
+modifier|*
+name|pr_sparep
+index|[
+literal|4
+index|]
+decl_stmt|;
 name|int
 name|pr_childcount
 decl_stmt|;
 comment|/* (a) number of child jails */
+name|int
+name|pr_childmax
+decl_stmt|;
+comment|/* (p) maximum child jails */
 name|unsigned
 name|pr_allow
 decl_stmt|;
 comment|/* (p) PR_ALLOW_* flags */
 name|int
+name|pr_securelevel
+decl_stmt|;
+comment|/* (p) securelevel */
+name|int
 name|pr_enforce_statfs
 decl_stmt|;
 comment|/* (p) statfs permission */
+name|int
+name|pr_spare
+index|[
+literal|5
+index|]
+decl_stmt|;
+name|unsigned
+name|long
+name|pr_hostid
+decl_stmt|;
+comment|/* (p) jail hostid */
+name|char
+name|pr_name
+index|[
+name|MAXHOSTNAMELEN
+index|]
+decl_stmt|;
+comment|/* (p) admin jail name */
+name|char
+name|pr_path
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+comment|/* (c) chroot path */
+name|char
+name|pr_hostname
+index|[
+name|MAXHOSTNAMELEN
+index|]
+decl_stmt|;
+comment|/* (p) jail hostname */
 name|char
 name|pr_domainname
 index|[
@@ -602,21 +630,6 @@ name|HOSTUUIDLEN
 index|]
 decl_stmt|;
 comment|/* (p) jail hostuuid */
-name|unsigned
-name|long
-name|pr_hostid
-decl_stmt|;
-comment|/* (p) jail hostid */
-name|struct
-name|vnet
-modifier|*
-name|pr_vnet
-decl_stmt|;
-comment|/* (c) network stack */
-name|int
-name|pr_childmax
-decl_stmt|;
-comment|/* (p) maximum child jails */
 block|}
 struct|;
 end_struct
