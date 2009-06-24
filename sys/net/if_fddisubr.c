@@ -978,6 +978,14 @@ name|ETHERTYPE_AT
 argument_list|)
 expr_stmt|;
 block|}
+name|ifa_free
+argument_list|(
+operator|&
+name|aa
+operator|->
+name|aa_ifa
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 endif|#
