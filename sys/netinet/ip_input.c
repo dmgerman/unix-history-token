@@ -2885,6 +2885,10 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|ia
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 comment|/* RFC 3927 2.7: Do not forward datagrams for 169.254.0.0/16. */
 if|if
@@ -3130,7 +3134,23 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|ia
+operator|!=
+name|NULL
+condition|)
+name|ifa_free
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 endif|#
 directive|endif
 comment|/* IPSTEALTH */
@@ -5557,7 +5577,7 @@ decl_stmt|;
 name|struct
 name|in_ifaddr
 modifier|*
-name|ifa
+name|ia
 decl_stmt|;
 name|bzero
 argument_list|(
@@ -5627,7 +5647,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|ifa
+name|ia
 operator|=
 name|ifatoia
 argument_list|(
@@ -5641,7 +5661,7 @@ expr_stmt|;
 name|ifa_ref
 argument_list|(
 operator|&
-name|ifa
+name|ia
 operator|->
 name|ia_ifa
 argument_list|)
@@ -5655,7 +5675,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ifa
+name|ia
 operator|)
 return|;
 block|}
