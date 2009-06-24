@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: gzip.c,v 1.92 2008/07/21 14:19:22 lukem Exp $	*/
+comment|/*	$NetBSD: gzip.c,v 1.94 2009/04/12 10:31:14 lukem Exp $	*/
 end_comment
 
 begin_comment
@@ -6423,7 +6423,7 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* timestamp */
-name|int
+name|ssize_t
 name|rv
 decl_stmt|;
 name|rv
@@ -6446,13 +6446,15 @@ name|rv
 operator|>=
 literal|0
 operator|&&
-operator|(
-name|size_t
-operator|)
 name|rv
 operator|<
+call|(
+name|ssize_t
+call|)
+argument_list|(
 sizeof|sizeof
 name|ts
+argument_list|)
 condition|)
 goto|goto
 name|unexpected_EOF

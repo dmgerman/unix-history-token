@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: zuncompress.c,v 1.6 2005/11/22 09:05:30 mrg Exp $ */
+comment|/*	$NetBSD: zuncompress.c,v 1.7 2009/04/12 10:31:14 lukem Exp $ */
 end_comment
 
 begin_comment
@@ -526,6 +526,9 @@ name|tflag
 operator|==
 literal|0
 operator|&&
+operator|(
+name|off_t
+operator|)
 name|fwrite
 argument_list|(
 name|buf
@@ -537,9 +540,6 @@ argument_list|,
 name|out
 argument_list|)
 operator|!=
-operator|(
-name|size_t
-operator|)
 name|bin
 condition|)
 block|{
