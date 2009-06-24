@@ -2215,7 +2215,7 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"arm_ptovirt called to early ?"
+literal|"arm_ptovirt called too early ?"
 operator|)
 argument_list|)
 expr_stmt|;
