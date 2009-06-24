@@ -881,6 +881,16 @@ name|mediaSetCDROM
 block|}
 block|,
 block|{
+literal|" Media, USB"
+block|,
+literal|"Select USB installation media."
+block|,
+name|NULL
+block|,
+name|mediaSetUSB
+block|}
+block|,
+block|{
 literal|" Media, DOS"
 block|,
 literal|"Select DOS installation media."
@@ -2199,6 +2209,30 @@ block|,
 literal|"Choose a Floppy drive"
 block|,
 literal|"You have more than one floppy drive.  Please choose which drive\n"
+literal|"you would like to use."
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+block|{
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+block|;
+name|DMenu
+name|MenuMediaUSB
+operator|=
+block|{
+name|DMENU_NORMAL_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"Choose a USB drive"
+block|,
+literal|"You have more than one USB drive. Please choose which drive\n"
 literal|"you would like to use."
 block|,
 name|NULL
@@ -4662,6 +4696,16 @@ block|,
 name|NULL
 block|,
 name|mediaSetFloppy
+block|}
+block|,
+block|{
+literal|"9 USB"
+block|,
+literal|"Install from a USB drive"
+block|,
+name|NULL
+block|,
+name|mediaSetUSB
 block|}
 block|,
 block|{

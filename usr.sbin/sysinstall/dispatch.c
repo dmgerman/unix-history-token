@@ -388,6 +388,12 @@ name|mediaSetFloppy
 block|}
 block|,
 block|{
+literal|"mediaSetUSB"
+block|,
+name|mediaSetUSB
+block|}
+block|,
+block|{
 literal|"mediaSetDOS"
 block|,
 name|mediaSetDOS
@@ -2015,6 +2021,8 @@ block|,
 name|DEVICE_TYPE_DOS
 block|,
 name|DEVICE_TYPE_UFS
+block|,
+name|DEVICE_TYPE_USB
 block|}
 decl_stmt|;
 name|fprintf
