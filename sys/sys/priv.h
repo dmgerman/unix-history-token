@@ -1630,23 +1630,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRIV_NET_PPP
+name|_PRIV_NET_PPP
 value|392
 end_define
 
 begin_comment
-comment|/* Administer PPP. */
+comment|/* Removed. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PRIV_NET_SLIP
+name|_PRIV_NET_SLIP
 value|393
 end_define
 
 begin_comment
-comment|/* Administer SLIP. */
+comment|/* Removed. */
 end_comment
 
 begin_define
