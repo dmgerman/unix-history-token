@@ -14006,11 +14006,6 @@ name|fp
 operator|->
 name|f_vnode
 expr_stmt|;
-name|vref
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|DTYPE_KQUEUE
