@@ -505,6 +505,9 @@ name|vnet
 modifier|*
 name|new_vnet
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|vi_req
@@ -513,6 +516,10 @@ name|NULL
 condition|)
 block|{
 comment|/* SIOCSIFVIMAGE */
+name|pr
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Check for API / ABI version mismatch. */
 if|if
 condition|(
@@ -665,6 +672,11 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+name|prison_hold_locked
+argument_list|(
+name|pr
+argument_list|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -721,28 +733,34 @@ name|ifp
 operator|==
 name|NULL
 condition|)
+block|{
+name|prison_free
+argument_list|(
+name|pr
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* No-op if the target jail has the same vnet. */
+block|}
+block|}
+name|error
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|new_vnet
-operator|==
+operator|!=
 name|ifp
 operator|->
 name|if_vnet
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-comment|/* 	 * Check for naming clashes in target vnet.  Not locked so races 	 * are possible. 	 */
+block|{
+comment|/* 		 * Check for naming clashes in target vnet.  Not locked so races 		 * are possible. 		 */
 name|CURVNET_SET_QUIET
 argument_list|(
 name|new_vnet
@@ -764,11 +782,12 @@ name|t_ifp
 operator|!=
 name|NULL
 condition|)
-return|return
-operator|(
+name|error
+operator|=
 name|EEXIST
-operator|)
-return|;
+expr_stmt|;
+else|else
+block|{
 comment|/* Detach from curvnet and attach to new_vnet. */
 name|if_vmove
 argument_list|(
@@ -789,9 +808,22 @@ operator|->
 name|if_xname
 argument_list|)
 expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|pr
+operator|!=
+name|NULL
+condition|)
+name|prison_free
+argument_list|(
+name|pr
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
