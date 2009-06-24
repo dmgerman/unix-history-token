@@ -2582,25 +2582,17 @@ block|}
 comment|/* 	 * expire interface addresses. 	 * in the past the loop was inside prefix expiry processing. 	 * However, from a stricter speci-confrmance standpoint, we should 	 * rather separate address lifetimes and prefix lifetimes. 	 */
 name|addrloop
 label|:
-for|for
-control|(
-name|ia6
-operator|=
-name|V_in6_ifaddr
-init|;
-name|ia6
-condition|;
-name|ia6
-operator|=
-name|nia6
-control|)
+name|TAILQ_FOREACH_SAFE
+argument_list|(
+argument|ia6
+argument_list|,
+argument|&V_in6_ifaddrhead
+argument_list|,
+argument|ia_link
+argument_list|,
+argument|nia6
+argument_list|)
 block|{
-name|nia6
-operator|=
-name|ia6
-operator|->
-name|ia_next
-expr_stmt|;
 comment|/* check address lifetime */
 name|lt6
 operator|=
@@ -5115,26 +5107,17 @@ condition|)
 continue|continue;
 comment|/* XXX */
 comment|/* do we really have to remove addresses as well? */
-for|for
-control|(
-name|ia
-operator|=
-name|V_in6_ifaddr
-init|;
-name|ia
-condition|;
-name|ia
-operator|=
-name|ia_next
-control|)
+name|TAILQ_FOREACH_SAFE
+argument_list|(
+argument|ia
+argument_list|,
+argument|&V_in6_ifaddrhead
+argument_list|,
+argument|ia_link
+argument_list|,
+argument|ia_next
+argument_list|)
 block|{
-comment|/* ia might be removed.  keep the next ptr. */
-name|ia_next
-operator|=
-name|ia
-operator|->
-name|ia_next
-expr_stmt|;
 if|if
 condition|(
 operator|(

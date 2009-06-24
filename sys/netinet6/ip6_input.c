@@ -393,9 +393,8 @@ end_ifdef
 
 begin_decl_stmt
 name|struct
-name|in6_ifaddr
-modifier|*
-name|in6_ifaddr
+name|in6_ifaddrhead
+name|in6_ifaddrhead
 decl_stmt|;
 end_decl_stmt
 
@@ -908,6 +907,12 @@ comment|/* 40 1K datagrams */
 name|V_dad_init
 operator|=
 literal|0
+expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|V_in6_ifaddrhead
+argument_list|)
 expr_stmt|;
 name|scope6_init
 argument_list|()

@@ -343,8 +343,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|V_in6_ifaddr
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|V_in6_ifaddrhead
+argument_list|)
 condition|)
 comment|/* XXX broken! */
 return|return
@@ -1411,7 +1414,12 @@ operator|)
 return|;
 if|if
 condition|(
-name|V_in6_ifaddr
+operator|!
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|V_in6_ifaddrhead
+argument_list|)
 condition|)
 block|{
 comment|/* 		 * If the destination address is UNSPECIFIED addr, 		 * use the loopback addr, e.g ::1. 		 */

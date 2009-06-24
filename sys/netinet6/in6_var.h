@@ -187,12 +187,13 @@ name|u_int32_t
 name|ia_plen
 decl_stmt|;
 comment|/* prefix length */
-name|struct
-name|in6_ifaddr
-modifier|*
-name|ia_next
-decl_stmt|;
-comment|/* next in6 list of IP6 addresses */
+name|TAILQ_ENTRY
+argument_list|(
+argument|in6_ifaddr
+argument_list|)
+name|ia_link
+expr_stmt|;
+comment|/* list of IPv6 addresses */
 name|int
 name|ia6_flags
 decl_stmt|;
@@ -224,6 +225,20 @@ expr_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* List of in6_ifaddr's. */
+end_comment
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|in6_ifaddrhead
+argument_list|,
+name|in6_ifaddr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* control structure to manage address selection policy */
