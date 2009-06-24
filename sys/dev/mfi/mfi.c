@@ -1240,7 +1240,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|int32_t
+name|uint32_t
 name|fw_state
 decl_stmt|,
 name|cur_state
