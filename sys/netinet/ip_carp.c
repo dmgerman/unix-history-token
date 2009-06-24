@@ -9037,7 +9037,7 @@ literal|0
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
-argument|ia6
+argument|ia
 argument_list|,
 argument|&V_in6_ifaddrhead
 argument_list|,
