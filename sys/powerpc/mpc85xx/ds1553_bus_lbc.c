@@ -281,7 +281,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Real Time Clock"
+literal|"Dallas Semiconductor DS1553 RTC"
 argument_list|)
 expr_stmt|;
 return|return
