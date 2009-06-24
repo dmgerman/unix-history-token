@@ -393,28 +393,23 @@ value|(1<< 0)
 comment|/* reset persistent regs init'ed */
 define|#
 directive|define
-name|GEM_DYING
-value|(1<< 1)
-comment|/* detach initiated */
-define|#
-directive|define
 name|GEM_LINK
-value|(1<< 2)
+value|(1<< 1)
 comment|/* link is up */
 define|#
 directive|define
 name|GEM_PCI
-value|(1<< 3)
+value|(1<< 2)
 comment|/* PCI busses are little-endian */
 define|#
 directive|define
 name|GEM_PCI66
-value|(1<< 4)
+value|(1<< 3)
 comment|/* PCI bus runs at 66MHz */
 define|#
 directive|define
 name|GEM_SERDES
-value|(1<< 5)
+value|(1<< 4)
 comment|/* use the SERDES */
 comment|/* 	 * ring buffer DMA stuff 	 */
 name|bus_dmamap_t
