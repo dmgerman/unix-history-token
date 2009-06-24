@@ -2832,13 +2832,13 @@ name|addr
 argument_list|,
 name|size
 argument_list|,
-name|FALSE
+name|VMFS_NO_SPACE
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
-literal|0
+name|MAP_NOFAULT
 argument_list|)
 expr_stmt|;
 if|if
