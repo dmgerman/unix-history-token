@@ -402,6 +402,19 @@ name|callout
 name|sc_rx_ch
 decl_stmt|;
 comment|/* delayed RX callout */
+name|struct
+name|task
+name|sc_intr_task
+decl_stmt|;
+name|struct
+name|task
+name|sc_tx_task
+decl_stmt|;
+name|struct
+name|taskqueue
+modifier|*
+name|sc_tq
+decl_stmt|;
 name|u_int
 name|sc_wdog_timer
 decl_stmt|;
