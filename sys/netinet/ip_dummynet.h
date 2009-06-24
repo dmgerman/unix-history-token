@@ -327,7 +327,7 @@ name|random
 decl_stmt|;
 comment|/* random value (scaled) */
 name|dn_key
-name|q_time
+name|idle_time
 decl_stmt|;
 comment|/* start of queue idle time */
 comment|/* WF2Q+ support */
@@ -628,10 +628,18 @@ name|int64_t
 name|numbytes
 decl_stmt|;
 comment|/* bits I can transmit (more or less). */
+name|uint64_t
+name|burst
+decl_stmt|;
+comment|/* burst size, scaled: bits * hz */
 name|dn_key
 name|sched_time
 decl_stmt|;
 comment|/* time pipe was scheduled in ready_heap */
+name|dn_key
+name|idle_time
+decl_stmt|;
+comment|/* start of pipe idle time */
 comment|/*      * When the tx clock come from an interface (if_name[0] != '\0'), its name      * is stored below, whereas the ifp is filled when the rule is configured.      */
 name|char
 name|if_name
