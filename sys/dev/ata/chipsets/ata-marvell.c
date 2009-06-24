@@ -626,7 +626,9 @@ expr_stmt|;
 break|break;
 block|}
 return|return
-literal|0
+operator|(
+name|BUS_PROBE_DEFAULT
+operator|)
 return|;
 block|}
 end_function
