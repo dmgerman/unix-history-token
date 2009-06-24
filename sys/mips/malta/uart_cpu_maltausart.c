@@ -220,8 +220,9 @@ name|di
 operator|->
 name|baudrate
 operator|=
-literal|115200
+literal|0
 expr_stmt|;
+comment|/* retain the baudrate configured by YAMON */
 name|di
 operator|->
 name|databits
