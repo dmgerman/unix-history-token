@@ -8491,7 +8491,7 @@ name|ocount
 operator|-=
 name|reqout
 expr_stmt|;
-comment|/* 			 * Drift.. drift.. drift.. 			 * 			 * Notice that there are 2 methods of doing the drift 			 * operations: The former is much cleaner (in a sense 			 * sense of mathematical readings of my eyes), but 			 * slower due to integer division in z_gy2gx(). 			 * Nevertheless, both should give the same exact 			 * accurate drifting results, so the later is 			 * favourable. 			 */
+comment|/* 			 * Drift.. drift.. drift.. 			 * 			 * Notice that there are 2 methods of doing the drift 			 * operations: The former is much cleaner (in a sense 			 * of mathematical readings of my eyes), but slower 			 * due to integer division in z_gy2gx(). Nevertheless, 			 * both should give the same exact accurate drifting 			 * results, so the later is favourable. 			 */
 do|do
 block|{
 name|info
