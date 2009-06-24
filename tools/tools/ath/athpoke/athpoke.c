@@ -462,7 +462,6 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|else
 name|printf
 argument_list|(
 literal|"%s = %08x\n"
