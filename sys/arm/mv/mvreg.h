@@ -1976,6 +1976,430 @@ value|0x14
 end_define
 
 begin_comment
+comment|/*  * SATA  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SATA_CHAN_NUM
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|EDMA_REGISTERS_OFFSET
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|EDMA_REGISTERS_SIZE
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_EDMA_BASE
+parameter_list|(
+name|ch
+parameter_list|)
+value|(EDMA_REGISTERS_OFFSET + \     ((ch) * EDMA_REGISTERS_SIZE))
+end_define
+
+begin_comment
+comment|/* SATAHC registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SATA_CR
+value|0x000
+end_define
+
+begin_comment
+comment|/* Configuration Reg. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SATA_CR_NODMABS
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_CR_NOEDMABS
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_CR_NOPRDPBS
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_CR_COALDIS
+parameter_list|(
+name|ch
+parameter_list|)
+value|(1<< (24 + ch))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_ICR
+value|0x014
+end_define
+
+begin_comment
+comment|/* Interrupt Cause Reg. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SATA_ICR_DMADONE
+parameter_list|(
+name|ch
+parameter_list|)
+value|(1<< (ch))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_ICR_COAL
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_ICR_DEV
+parameter_list|(
+name|ch
+parameter_list|)
+value|(1<< (8 + ch))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_MICR
+value|0x020
+end_define
+
+begin_comment
+comment|/* Main Interrupt Cause Reg. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SATA_MICR_ERR
+parameter_list|(
+name|ch
+parameter_list|)
+value|(1<< (2 * ch))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_MICR_DONE
+parameter_list|(
+name|ch
+parameter_list|)
+value|(1<< ((2 * ch) + 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_MICR_DMADONE
+parameter_list|(
+name|ch
+parameter_list|)
+value|(1<< (4 + ch))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_MICR_COAL
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_MIMR
+value|0x024
+end_define
+
+begin_comment
+comment|/*  Main Interrupt Mask Reg. */
+end_comment
+
+begin_comment
+comment|/* Shadow registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SATA_SHADOWR_BASE
+parameter_list|(
+name|ch
+parameter_list|)
+value|(SATA_EDMA_BASE(ch) + 0x100)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_SHADOWR_CONTROL
+parameter_list|(
+name|ch
+parameter_list|)
+value|(SATA_EDMA_BASE(ch) + 0x120)
+end_define
+
+begin_comment
+comment|/* SATA registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SATA_SATA_SSTATUS
+parameter_list|(
+name|ch
+parameter_list|)
+value|(SATA_EDMA_BASE(ch) + 0x300)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_SATA_SERROR
+parameter_list|(
+name|ch
+parameter_list|)
+value|(SATA_EDMA_BASE(ch) + 0x304)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_SATA_SCONTROL
+parameter_list|(
+name|ch
+parameter_list|)
+value|(SATA_EDMA_BASE(ch) + 0x308)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_SATA_FISICR
+parameter_list|(
+name|ch
+parameter_list|)
+value|(SATA_EDMA_BASE(ch) + 0x364)
+end_define
+
+begin_comment
+comment|/* EDMA registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SATA_EDMA_CFG
+parameter_list|(
+name|ch
+parameter_list|)
+value|(SATA_EDMA_BASE(ch) + 0x000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_EDMA_CFG_QL128
+value|(1<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_EDMA_CFG_HQCACHE
+value|(1<< 22)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_EDMA_IECR
+parameter_list|(
+name|ch
+parameter_list|)
+value|(SATA_EDMA_BASE(ch) + 0x008)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_EDMA_IEMR
+parameter_list|(
+name|ch
+parameter_list|)
+value|(SATA_EDMA_BASE(ch) + 0x00C)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_EDMA_REQBAHR
+parameter_list|(
+name|ch
+parameter_list|)
+value|(SATA_EDMA_BASE(ch) + 0x010)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_EDMA_REQIPR
+parameter_list|(
+name|ch
+parameter_list|)
+value|(SATA_EDMA_BASE(ch) + 0x014)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_EDMA_REQOPR
+parameter_list|(
+name|ch
+parameter_list|)
+value|(SATA_EDMA_BASE(ch) + 0x018)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_EDMA_RESBAHR
+parameter_list|(
+name|ch
+parameter_list|)
+value|(SATA_EDMA_BASE(ch) + 0x01C)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_EDMA_RESIPR
+parameter_list|(
+name|ch
+parameter_list|)
+value|(SATA_EDMA_BASE(ch) + 0x020)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_EDMA_RESOPR
+parameter_list|(
+name|ch
+parameter_list|)
+value|(SATA_EDMA_BASE(ch) + 0x024)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_EDMA_CMD
+parameter_list|(
+name|ch
+parameter_list|)
+value|(SATA_EDMA_BASE(ch) + 0x028)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_EDMA_CMD_ENABLE
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_EDMA_CMD_DISABLE
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_EDMA_CMD_RESET
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_EDMA_STATUS
+parameter_list|(
+name|ch
+parameter_list|)
+value|(SATA_EDMA_BASE(ch) + 0x030)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SATA_EDMA_STATUS_IDLE
+value|(1<< 7)
+end_define
+
+begin_comment
+comment|/* Offset to extract input slot from REQIPR register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SATA_EDMA_REQIS_OFS
+value|5
+end_define
+
+begin_comment
+comment|/* Offset to extract input slot from RESOPR register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SATA_EDMA_RESOS_OFS
+value|3
+end_define
+
+begin_comment
 comment|/*  * GPIO  */
 end_comment
 
