@@ -15928,6 +15928,9 @@ name|cred
 operator|->
 name|cr_prison
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VIMAGE
 comment|/* Prisons with their own network stack are not limited. */
 if|if
 condition|(
@@ -15942,6 +15945,8 @@ operator|(
 literal|0
 operator|)
 return|;
+endif|#
+directive|endif
 name|error
 operator|=
 literal|0
