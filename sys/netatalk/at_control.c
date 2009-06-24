@@ -3441,17 +3441,14 @@ modifier|*
 name|mask
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
 if|#
 directive|if
 literal|0
 block|printf("aa_addsingleroute: %x.%x mask %x.%x ...\n", 	    ntohs(addr->s_net), addr->s_node, ntohs(mask->s_net), 	    mask->s_node);
 endif|#
 directive|endif
-name|error
-operator|=
+return|return
+operator|(
 name|aa_dosingleroute
 argument_list|(
 name|ifa
@@ -3464,21 +3461,6 @@ name|RTM_ADD
 argument_list|,
 name|RTF_UP
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-name|printf
-argument_list|(
-literal|"aa_addsingleroute: error %d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}
@@ -3505,11 +3487,8 @@ modifier|*
 name|mask
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 name|aa_dosingleroute
 argument_list|(
 name|ifa
@@ -3522,21 +3501,6 @@ name|RTM_DELETE
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-name|printf
-argument_list|(
-literal|"aa_delsingleroute: error %d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}
