@@ -2699,6 +2699,11 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 goto|goto
 name|match
 goto|;
