@@ -151,12 +151,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfs/rpcv2.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<nfs/nfsproto.h>
 end_include
 
@@ -307,7 +301,7 @@ decl_stmt|;
 name|char
 name|ml_host
 index|[
-name|RPCMNT_NAMELEN
+name|MNTNAMLEN
 operator|+
 literal|1
 index|]
@@ -315,7 +309,7 @@ decl_stmt|;
 name|char
 name|ml_dirp
 index|[
-name|RPCMNT_PATHLEN
+name|MNTPATHLEN
 operator|+
 literal|1
 index|]
@@ -2207,18 +2201,18 @@ argument_list|)
 expr_stmt|;
 name|rpcb_unset
 argument_list|(
-name|RPCPROG_MNT
+name|MOUNTPROG
 argument_list|,
-name|RPCMNT_VER1
+name|MOUNTVERS
 argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
 name|rpcb_unset
 argument_list|(
-name|RPCPROG_MNT
+name|MOUNTPROG
 argument_list|,
-name|RPCMNT_VER3
+name|MOUNTVERS3
 argument_list|,
 name|NULL
 argument_list|)
@@ -3449,9 +3443,9 @@ name|svc_reg
 argument_list|(
 name|transp
 argument_list|,
-name|RPCPROG_MNT
+name|MOUNTPROG
 argument_list|,
-name|RPCMNT_VER1
+name|MOUNTVERS
 argument_list|,
 name|mntsrv
 argument_list|,
@@ -3462,7 +3456,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"can't register %s RPCMNT_VER1 service"
+literal|"can't register %s MOUNTVERS service"
 argument_list|,
 name|nconf
 operator|->
@@ -3482,9 +3476,9 @@ name|svc_reg
 argument_list|(
 name|transp
 argument_list|,
-name|RPCPROG_MNT
+name|MOUNTPROG
 argument_list|,
-name|RPCMNT_VER3
+name|MOUNTVERS3
 argument_list|,
 name|mntsrv
 argument_list|,
@@ -3495,7 +3489,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"can't register %s RPCMNT_VER3 service"
+literal|"can't register %s MOUNTVERS3 service"
 argument_list|,
 name|nconf
 operator|->
@@ -3712,9 +3706,9 @@ name|ai_addrlen
 expr_stmt|;
 name|rpcb_set
 argument_list|(
-name|RPCPROG_MNT
+name|MOUNTPROG
 argument_list|,
-name|RPCMNT_VER1
+name|MOUNTVERS
 argument_list|,
 name|nconf
 argument_list|,
@@ -3724,9 +3718,9 @@ argument_list|)
 expr_stmt|;
 name|rpcb_set
 argument_list|(
-name|RPCPROG_MNT
+name|MOUNTPROG
 argument_list|,
-name|RPCMNT_VER3
+name|MOUNTVERS3
 argument_list|,
 name|nconf
 argument_list|,
@@ -3841,7 +3835,7 @@ decl_stmt|;
 name|char
 name|rpcpath
 index|[
-name|RPCMNT_PATHLEN
+name|MNTPATHLEN
 operator|+
 literal|1
 index|]
@@ -4019,7 +4013,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 case|case
-name|RPCMNT_MOUNT
+name|MOUNTPROC_MNT
 case|:
 if|if
 condition|(
@@ -4571,7 +4565,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 case|case
-name|RPCMNT_DUMP
+name|MOUNTPROC_DUMP
 case|:
 if|if
 condition|(
@@ -4614,7 +4608,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 case|case
-name|RPCMNT_UMOUNT
+name|MOUNTPROC_UMNT
 case|:
 if|if
 condition|(
@@ -4759,7 +4753,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 case|case
-name|RPCMNT_UMNTALL
+name|MOUNTPROC_UMNTALL
 case|:
 if|if
 condition|(
@@ -4845,7 +4839,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 case|case
-name|RPCMNT_EXPORT
+name|MOUNTPROC_EXPORT
 case|:
 if|if
 condition|(
@@ -4945,7 +4939,7 @@ argument_list|,
 operator|&
 name|dirp
 argument_list|,
-name|RPCMNT_PATHLEN
+name|MNTPATHLEN
 argument_list|)
 operator|)
 return|;
@@ -5281,7 +5275,7 @@ argument_list|,
 operator|&
 name|strp
 argument_list|,
-name|RPCMNT_NAMELEN
+name|MNTNAMLEN
 argument_list|)
 condition|)
 return|return
@@ -5309,7 +5303,7 @@ argument_list|,
 operator|&
 name|strp
 argument_list|,
-name|RPCMNT_PATHLEN
+name|MNTPATHLEN
 argument_list|)
 condition|)
 return|return
@@ -5669,7 +5663,7 @@ argument_list|,
 operator|&
 name|strp
 argument_list|,
-name|RPCMNT_PATHLEN
+name|MNTPATHLEN
 argument_list|)
 condition|)
 return|return
@@ -5739,7 +5733,7 @@ argument_list|,
 operator|&
 name|strp
 argument_list|,
-name|RPCMNT_PATHLEN
+name|MNTPATHLEN
 argument_list|)
 condition|)
 return|return
@@ -5840,7 +5834,7 @@ argument_list|,
 operator|&
 name|strp
 argument_list|,
-name|RPCMNT_NAMELEN
+name|MNTNAMLEN
 argument_list|)
 condition|)
 return|return
@@ -5895,7 +5889,7 @@ argument_list|,
 operator|&
 name|strp
 argument_list|,
-name|RPCMNT_NAMELEN
+name|MNTNAMLEN
 argument_list|)
 condition|)
 return|return
@@ -6317,7 +6311,7 @@ if|if
 condition|(
 name|len
 operator|>
-name|RPCMNT_NAMELEN
+name|MNTNAMLEN
 condition|)
 block|{
 name|getexp_err
@@ -13769,7 +13763,7 @@ begin_define
 define|#
 directive|define
 name|STRSIZ
-value|(RPCMNT_NAMELEN+RPCMNT_PATHLEN+50)
+value|(MNTNAMLEN+MNTPATHLEN+50)
 end_define
 
 begin_comment
@@ -13939,14 +13933,14 @@ name|ml_host
 argument_list|,
 name|host
 argument_list|,
-name|RPCMNT_NAMELEN
+name|MNTNAMLEN
 argument_list|)
 expr_stmt|;
 name|mlp
 operator|->
 name|ml_host
 index|[
-name|RPCMNT_NAMELEN
+name|MNTNAMLEN
 index|]
 operator|=
 literal|'\0'
@@ -13959,14 +13953,14 @@ name|ml_dirp
 argument_list|,
 name|dirp
 argument_list|,
-name|RPCMNT_PATHLEN
+name|MNTPATHLEN
 argument_list|)
 expr_stmt|;
 name|mlp
 operator|->
 name|ml_dirp
 index|[
-name|RPCMNT_PATHLEN
+name|MNTPATHLEN
 index|]
 operator|=
 literal|'\0'
@@ -14317,14 +14311,14 @@ name|ml_host
 argument_list|,
 name|hostp
 argument_list|,
-name|RPCMNT_NAMELEN
+name|MNTNAMLEN
 argument_list|)
 expr_stmt|;
 name|mlp
 operator|->
 name|ml_host
 index|[
-name|RPCMNT_NAMELEN
+name|MNTNAMLEN
 index|]
 operator|=
 literal|'\0'
@@ -14337,14 +14331,14 @@ name|ml_dirp
 argument_list|,
 name|dirp
 argument_list|,
-name|RPCMNT_PATHLEN
+name|MNTPATHLEN
 argument_list|)
 expr_stmt|;
 name|mlp
 operator|->
 name|ml_dirp
 index|[
-name|RPCMNT_PATHLEN
+name|MNTPATHLEN
 index|]
 operator|=
 literal|'\0'
@@ -15547,18 +15541,18 @@ argument_list|)
 expr_stmt|;
 name|rpcb_unset
 argument_list|(
-name|RPCPROG_MNT
+name|MOUNTPROG
 argument_list|,
-name|RPCMNT_VER1
+name|MOUNTVERS
 argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
 name|rpcb_unset
 argument_list|(
-name|RPCPROG_MNT
+name|MOUNTPROG
 argument_list|,
-name|RPCMNT_VER3
+name|MOUNTVERS3
 argument_list|,
 name|NULL
 argument_list|)

@@ -130,7 +130,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfs/rpcv2.h>
+file|<rpcsvc/mount.h>
 end_include
 
 begin_include
@@ -206,7 +206,7 @@ decl_stmt|;
 name|char
 name|ml_host
 index|[
-name|RPCMNT_NAMELEN
+name|MNTNAMLEN
 operator|+
 literal|1
 index|]
@@ -214,7 +214,7 @@ decl_stmt|;
 name|char
 name|ml_dirp
 index|[
-name|RPCMNT_PATHLEN
+name|MNTPATHLEN
 operator|+
 literal|1
 index|]
@@ -235,7 +235,7 @@ decl_stmt|;
 name|char
 name|gr_name
 index|[
-name|RPCMNT_NAMELEN
+name|MNTNAMLEN
 operator|+
 literal|1
 index|]
@@ -261,7 +261,7 @@ decl_stmt|;
 name|char
 name|ex_dirp
 index|[
-name|RPCMNT_PATHLEN
+name|MNTPATHLEN
 operator|+
 literal|1
 index|]
@@ -284,7 +284,7 @@ specifier|static
 name|struct
 name|exportslist
 modifier|*
-name|exports
+name|exportslist
 decl_stmt|;
 end_decl_stmt
 
@@ -335,7 +335,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|xdr_exports
+name|xdr_exportslist
 parameter_list|(
 name|XDR
 modifier|*
@@ -580,11 +580,11 @@ name|tcp_callrpc
 argument_list|(
 name|host
 argument_list|,
-name|RPCPROG_MNT
+name|MOUNTPROG
 argument_list|,
 name|mntvers
 argument_list|,
-name|RPCMNT_DUMP
+name|MOUNTPROC_DUMP
 argument_list|,
 operator|(
 name|xdrproc_t
@@ -642,11 +642,11 @@ name|tcp_callrpc
 argument_list|(
 name|host
 argument_list|,
-name|RPCPROG_MNT
+name|MOUNTPROG
 argument_list|,
 name|mntvers
 argument_list|,
-name|RPCMNT_EXPORT
+name|MOUNTPROC_EXPORT
 argument_list|,
 operator|(
 name|xdrproc_t
@@ -662,14 +662,14 @@ argument_list|,
 operator|(
 name|xdrproc_t
 operator|)
-name|xdr_exports
+name|xdr_exportslist
 argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
 operator|&
-name|exports
+name|exportslist
 argument_list|)
 operator|)
 operator|!=
@@ -757,7 +757,7 @@ argument_list|)
 expr_stmt|;
 name|exp
 operator|=
-name|exports
+name|exportslist
 expr_stmt|;
 while|while
 condition|(
@@ -1135,7 +1135,7 @@ argument_list|,
 operator|&
 name|strp
 argument_list|,
-name|RPCMNT_NAMELEN
+name|MNTNAMLEN
 argument_list|)
 condition|)
 return|return
@@ -1159,7 +1159,7 @@ argument_list|,
 operator|&
 name|strp
 argument_list|,
-name|RPCMNT_PATHLEN
+name|MNTPATHLEN
 argument_list|)
 condition|)
 return|return
@@ -1387,7 +1387,7 @@ end_comment
 
 begin_function
 name|int
-name|xdr_exports
+name|xdr_exportslist
 parameter_list|(
 name|xdrsp
 parameter_list|,
@@ -1510,7 +1510,7 @@ argument_list|,
 operator|&
 name|strp
 argument_list|,
-name|RPCMNT_PATHLEN
+name|MNTPATHLEN
 argument_list|)
 condition|)
 return|return
@@ -1582,7 +1582,7 @@ argument_list|,
 operator|&
 name|strp
 argument_list|,
-name|RPCMNT_NAMELEN
+name|MNTNAMLEN
 argument_list|)
 condition|)
 return|return

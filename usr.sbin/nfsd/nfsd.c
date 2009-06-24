@@ -124,6 +124,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<rpcsvc/nfs_prot.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
 end_include
 
@@ -131,18 +137,6 @@ begin_include
 include|#
 directive|include
 file|<arpa/inet.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<nfs/rpcv2.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<nfs/nfsproto.h>
 end_include
 
 begin_include
@@ -1249,7 +1243,7 @@ operator|(
 operator|!
 name|rpcb_set
 argument_list|(
-name|RPCPROG_NFS
+name|NFS_PROGRAM
 argument_list|,
 literal|2
 argument_list|,
@@ -1264,7 +1258,7 @@ operator|(
 operator|!
 name|rpcb_set
 argument_list|(
-name|RPCPROG_NFS
+name|NFS_PROGRAM
 argument_list|,
 literal|3
 argument_list|,
@@ -1409,7 +1403,7 @@ operator|(
 operator|!
 name|rpcb_set
 argument_list|(
-name|RPCPROG_NFS
+name|NFS_PROGRAM
 argument_list|,
 literal|2
 argument_list|,
@@ -1424,7 +1418,7 @@ operator|(
 operator|!
 name|rpcb_set
 argument_list|(
-name|RPCPROG_NFS
+name|NFS_PROGRAM
 argument_list|,
 literal|3
 argument_list|,
@@ -1567,7 +1561,7 @@ operator|(
 operator|!
 name|rpcb_set
 argument_list|(
-name|RPCPROG_NFS
+name|NFS_PROGRAM
 argument_list|,
 literal|2
 argument_list|,
@@ -1582,7 +1576,7 @@ operator|(
 operator|!
 name|rpcb_set
 argument_list|(
-name|RPCPROG_NFS
+name|NFS_PROGRAM
 argument_list|,
 literal|3
 argument_list|,
@@ -1727,7 +1721,7 @@ operator|(
 operator|!
 name|rpcb_set
 argument_list|(
-name|RPCPROG_NFS
+name|NFS_PROGRAM
 argument_list|,
 literal|2
 argument_list|,
@@ -1742,7 +1736,7 @@ operator|(
 operator|!
 name|rpcb_set
 argument_list|(
-name|RPCPROG_NFS
+name|NFS_PROGRAM
 argument_list|,
 literal|3
 argument_list|,
@@ -2514,7 +2508,7 @@ operator|(
 operator|!
 name|rpcb_set
 argument_list|(
-name|RPCPROG_NFS
+name|NFS_PROGRAM
 argument_list|,
 literal|2
 argument_list|,
@@ -2529,7 +2523,7 @@ operator|(
 operator|!
 name|rpcb_set
 argument_list|(
-name|RPCPROG_NFS
+name|NFS_PROGRAM
 argument_list|,
 literal|3
 argument_list|,
@@ -2934,7 +2928,7 @@ operator|(
 operator|!
 name|rpcb_set
 argument_list|(
-name|RPCPROG_NFS
+name|NFS_PROGRAM
 argument_list|,
 literal|2
 argument_list|,
@@ -2949,7 +2943,7 @@ operator|(
 operator|!
 name|rpcb_set
 argument_list|(
-name|RPCPROG_NFS
+name|NFS_PROGRAM
 argument_list|,
 literal|3
 argument_list|,
@@ -3340,7 +3334,7 @@ operator|(
 operator|!
 name|rpcb_set
 argument_list|(
-name|RPCPROG_NFS
+name|NFS_PROGRAM
 argument_list|,
 literal|2
 argument_list|,
@@ -3355,7 +3349,7 @@ operator|(
 operator|!
 name|rpcb_set
 argument_list|(
-name|RPCPROG_NFS
+name|NFS_PROGRAM
 argument_list|,
 literal|3
 argument_list|,
@@ -3794,7 +3788,7 @@ operator|(
 operator|!
 name|rpcb_set
 argument_list|(
-name|RPCPROG_NFS
+name|NFS_PROGRAM
 argument_list|,
 literal|2
 argument_list|,
@@ -3809,7 +3803,7 @@ operator|(
 operator|!
 name|rpcb_set
 argument_list|(
-name|RPCPROG_NFS
+name|NFS_PROGRAM
 argument_list|,
 literal|3
 argument_list|,
@@ -4617,7 +4611,7 @@ operator|(
 operator|!
 name|rpcb_unset
 argument_list|(
-name|RPCPROG_NFS
+name|NFS_PROGRAM
 argument_list|,
 literal|2
 argument_list|,
@@ -4629,7 +4623,7 @@ operator|(
 operator|!
 name|rpcb_unset
 argument_list|(
-name|RPCPROG_NFS
+name|NFS_PROGRAM
 argument_list|,
 literal|3
 argument_list|,
