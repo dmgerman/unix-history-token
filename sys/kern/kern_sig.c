@@ -345,7 +345,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|tdsigwakeup
 parameter_list|(
 name|struct
@@ -11423,6 +11423,8 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+name|wakeup_swapper
+operator|=
 name|tdsigwakeup
 argument_list|(
 name|td
@@ -11443,6 +11445,13 @@ name|PROC_SUNLOCK
 argument_list|(
 name|p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wakeup_swapper
+condition|)
+name|kick_proc0
+argument_list|()
 expr_stmt|;
 goto|goto
 name|out
@@ -11576,6 +11585,8 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+name|wakeup_swapper
+operator|=
 name|tdsigwakeup
 argument_list|(
 name|td
@@ -11602,6 +11613,13 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|wakeup_swapper
+condition|)
+name|kick_proc0
+argument_list|()
+expr_stmt|;
 name|out
 label|:
 comment|/* If we jump here, proc slock should not be owned. */
@@ -11626,7 +11644,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|tdsigwakeup
 parameter_list|(
 name|struct
@@ -11739,7 +11757,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 		 * If SIGCONT is default (or ignored) and process is 		 * asleep, we are finished; the process should not 		 * be awakened. 		 */
 if|if
 condition|(
@@ -11795,7 +11817,11 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 comment|/* 		 * Give low priority threads a better chance to run. 		 */
 if|if
@@ -11848,13 +11874,11 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-if|if
-condition|(
+return|return
+operator|(
 name|wakeup_swapper
-condition|)
-name|kick_proc0
-argument_list|()
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
