@@ -925,6 +925,9 @@ decl_stmt|;
 name|int
 name|rx_ring_size
 decl_stmt|;
+name|int
+name|dying
+decl_stmt|;
 name|mxge_dma_t
 name|dmabench_dma
 decl_stmt|;
