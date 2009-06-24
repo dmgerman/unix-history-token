@@ -82,13 +82,6 @@ end_include
 begin_decl_stmt
 specifier|extern
 name|uintptr_t
-name|kernelbase
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|uintptr_t
 name|dtrace_in_probe_addr
 decl_stmt|;
 end_decl_stmt
