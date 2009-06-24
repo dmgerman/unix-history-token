@@ -442,6 +442,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|mxge_initial_mtu
+init|=
+name|ETHERMTU_JUMBO
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|mxge_fw_unaligned
@@ -19921,6 +19930,14 @@ operator|&
 name|mxge_rss_hash_type
 argument_list|)
 expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"hw.mxge.initial_mtu"
+argument_list|,
+operator|&
+name|mxge_initial_mtu
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -19993,6 +20010,20 @@ operator|=
 name|MXGEFW_RSS_HASH_TYPE_SRC_PORT
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|mxge_initial_mtu
+operator|>
+name|ETHERMTU_JUMBO
+operator|||
+name|mxge_initial_mtu
+operator|<
+name|ETHER_MIN_LEN
+condition|)
+name|mxge_initial_mtu
+operator|=
+name|ETHERMTU_JUMBO
+expr_stmt|;
 block|}
 end_function
 
@@ -23023,20 +23054,19 @@ operator|->
 name|mac_addr
 argument_list|)
 expr_stmt|;
-comment|/* ether_ifattach sets mtu to 1500 */
+comment|/* ether_ifattach sets mtu to ETHERMTU */
 if|if
 condition|(
-name|ifp
-operator|->
-name|if_capabilities
-operator|&
-name|IFCAP_JUMBO_MTU
+name|mxge_initial_mtu
+operator|!=
+name|ETHERMTU
 condition|)
-name|ifp
-operator|->
-name|if_mtu
-operator|=
-literal|9000
+name|mxge_change_mtu
+argument_list|(
+name|sc
+argument_list|,
+name|mxge_initial_mtu
+argument_list|)
 expr_stmt|;
 name|mxge_add_sysctls
 argument_list|(
