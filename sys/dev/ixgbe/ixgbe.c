@@ -9809,9 +9809,15 @@ name|vector
 expr_stmt|;
 if|#
 directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
 comment|/* 		** Bind the msix vector, and thus the 		** ring to the corresponding cpu. 		*/
 name|intr_bind
 argument_list|(
@@ -10029,9 +10035,15 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
 comment|/* 		** Bind the msix vector, and thus the 		** ring to the corresponding cpu. 		*/
 name|intr_bind
 argument_list|(
