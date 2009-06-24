@@ -1717,6 +1717,18 @@ name|hw
 operator|->
 name|mac
 decl_stmt|;
+name|struct
+name|e1000_dev_spec_82541
+modifier|*
+name|dev_spec
+init|=
+operator|&
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|_82541
+decl_stmt|;
 name|u32
 name|i
 decl_stmt|,
@@ -1754,6 +1766,34 @@ argument_list|)
 expr_stmt|;
 comment|/* This is not fatal and we should not stop init due to this */
 block|}
+comment|/* Storing the Speed Power Down  value for later use */
+name|ret_val
+operator|=
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|read_reg
+argument_list|(
+name|hw
+argument_list|,
+name|IGP01E1000_GMII_FIFO
+argument_list|,
+operator|&
+name|dev_spec
+operator|->
+name|spd_default
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+goto|goto
+name|out
+goto|;
 comment|/* Disabling VLAN filtering */
 name|DEBUGOUT
 argument_list|(
@@ -1872,6 +1912,8 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
+name|out
+label|:
 return|return
 name|ret_val
 return|;

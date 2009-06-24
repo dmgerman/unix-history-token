@@ -534,6 +534,164 @@ begin_comment
 comment|/* Rx Flow Control Enable */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HV_LED_CONFIG
+value|PHY_REG(768, 30)
+end_define
+
+begin_comment
+comment|/* LED Configuration */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_MUX_DATA_CTRL
+value|PHY_REG(776, 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_MUX_DATA_CTRL_GEN_TO_MAC
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_MUX_DATA_CTRL_FORCE_SPEED
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_SCC_UPPER
+value|PHY_REG(778, 16)
+end_define
+
+begin_comment
+comment|/* Single Collision Count */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_SCC_LOWER
+value|PHY_REG(778, 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_ECOL_UPPER
+value|PHY_REG(778, 18)
+end_define
+
+begin_comment
+comment|/* Excessive Collision Count */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_ECOL_LOWER
+value|PHY_REG(778, 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_MCC_UPPER
+value|PHY_REG(778, 20)
+end_define
+
+begin_comment
+comment|/* Multiple Collision Count */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_MCC_LOWER
+value|PHY_REG(778, 21)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_LATECOL_UPPER
+value|PHY_REG(778, 23)
+end_define
+
+begin_comment
+comment|/* Late Collision Count */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_LATECOL_LOWER
+value|PHY_REG(778, 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_COLC_UPPER
+value|PHY_REG(778, 25)
+end_define
+
+begin_comment
+comment|/* Collision Count */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_COLC_LOWER
+value|PHY_REG(778, 26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_DC_UPPER
+value|PHY_REG(778, 27)
+end_define
+
+begin_comment
+comment|/* Defer Count */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_DC_LOWER
+value|PHY_REG(778, 28)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_TNCRS_UPPER
+value|PHY_REG(778, 29)
+end_define
+
+begin_comment
+comment|/* Transmit with no CRS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_TNCRS_LOWER
+value|PHY_REG(778, 30)
+end_define
+
 begin_comment
 comment|/*  * Additional interrupts need to be handled for ICH family:  *  DSW = The FW changed the status of the DISSW bit in FWSM  *  PHYINT = The LAN connected device generates an interrupt  *  EPRST = Manageability reset event  */
 end_comment
@@ -672,21 +830,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HANKSVILLE_HW
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|NO_PCH_A_SUPPORT
-argument_list|)
-end_if
-
 begin_function_decl
 name|s32
 name|e1000_hv_phy_powerdown_workaround_ich8lan
@@ -698,11 +841,6 @@ name|hw
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

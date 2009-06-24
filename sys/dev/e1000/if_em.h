@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2009, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -17,12 +17,6 @@ begin_define
 define|#
 directive|define
 name|_EM_H_DEFINED_
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFNET_BUF_RING
 end_define
 
 begin_comment
@@ -576,6 +570,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|EM_VFTA_SIZE
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
 name|EM_TSO_SIZE
 value|(65535 + sizeof(struct ether_vlan_header))
 end_define
@@ -677,12 +678,6 @@ name|EM_82547_PKT_THRESH
 value|0x3e0
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|EM_TIMESYNC
-end_ifdef
-
 begin_comment
 comment|/* Precision Time Sync (IEEE 1588) defines */
 end_comment
@@ -711,98 +706,6 @@ end_define
 begin_comment
 comment|/* UDP port for the protocol */
 end_comment
-
-begin_comment
-comment|/* TIMESYNC IOCTL defines */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EM_TIMESYNC_READTS
-value|_IOWR('i', 127, struct em_tsync_read)
-end_define
-
-begin_comment
-comment|/* Used in the READTS IOCTL */
-end_comment
-
-begin_struct
-struct|struct
-name|em_tsync_read
-block|{
-name|int
-name|read_current_time
-decl_stmt|;
-name|struct
-name|timespec
-name|system_time
-decl_stmt|;
-name|u64
-name|network_time
-decl_stmt|;
-name|u64
-name|rx_stamp
-decl_stmt|;
-name|u64
-name|tx_stamp
-decl_stmt|;
-name|u16
-name|seqid
-decl_stmt|;
-name|unsigned
-name|char
-name|srcid
-index|[
-literal|6
-index|]
-decl_stmt|;
-name|int
-name|rx_valid
-decl_stmt|;
-name|int
-name|tx_valid
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EM_TIMESYNC */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|adapter
-struct_decl|;
-end_struct_decl
-
-begin_struct
-struct|struct
-name|em_int_delay_info
-block|{
-name|struct
-name|adapter
-modifier|*
-name|adapter
-decl_stmt|;
-comment|/* Back-pointer to the adapter struct */
-name|int
-name|offset
-decl_stmt|;
-comment|/* Register offset to read/write */
-name|int
-name|value
-decl_stmt|;
-comment|/* Current value in usecs */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * Bus dma allocation structure used by  * e1000_dma_malloc and e1000_dma_free.  */
@@ -834,6 +737,34 @@ block|}
 struct|;
 end_struct
 
+begin_struct_decl
+struct_decl|struct
+name|adapter
+struct_decl|;
+end_struct_decl
+
+begin_struct
+struct|struct
+name|em_int_delay_info
+block|{
+name|struct
+name|adapter
+modifier|*
+name|adapter
+decl_stmt|;
+comment|/* Back-pointer to the adapter struct */
+name|int
+name|offset
+decl_stmt|;
+comment|/* Register offset to read/write */
+name|int
+name|value
+decl_stmt|;
+comment|/* Current value in usecs */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* Our adapter structure */
 end_comment
@@ -847,17 +778,13 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|IFNET_BUF_RING
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800000
 name|struct
 name|buf_ring
-modifier|*
-name|br
-decl_stmt|;
-else|#
-directive|else
-name|void
 modifier|*
 name|br
 decl_stmt|;
@@ -900,7 +827,7 @@ decl_stmt|;
 name|int
 name|io_rid
 decl_stmt|;
-comment|/* 82574 uses 3 int vectors */
+comment|/* 82574 may use 3 int vectors */
 name|struct
 name|resource
 modifier|*
@@ -987,12 +914,22 @@ modifier|*
 name|tq
 decl_stmt|;
 comment|/* private task queue */
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|700029
 name|eventhandler_tag
 name|vlan_attach
 decl_stmt|;
 name|eventhandler_tag
 name|vlan_detach
 decl_stmt|;
+name|u32
+name|num_vlans
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* Management and WOL features */
 name|int
 name|wol
@@ -1052,6 +989,9 @@ name|num_tx_desc_avail
 decl_stmt|;
 name|uint16_t
 name|num_tx_desc
+decl_stmt|;
+name|uint16_t
+name|last_hw_offload
 decl_stmt|;
 name|uint32_t
 name|txd_cmd
@@ -1189,20 +1129,6 @@ decl_stmt|;
 name|boolean_t
 name|in_detach
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|EM_TIMESYNC
-name|u64
-name|last_stamp
-decl_stmt|;
-name|u64
-name|last_sec
-decl_stmt|;
-name|u32
-name|last_ns
-decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|e1000_hw_stats
 name|stats
@@ -1469,113 +1395,6 @@ name|_sc
 parameter_list|)
 value|mtx_assert(&(_sc)->tx_mtx, MA_OWNED)
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IFNET_BUF_RING
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ADAPTER_RING_EMPTY
-parameter_list|(
-name|adapter
-parameter_list|)
-value|drbr_empty((adapter)->ifp, (adapter)->br)
-end_define
-
-begin_define
-define|#
-directive|define
-name|em_dequeue
-value|drbr_dequeue
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ADAPTER_RING_EMPTY
-parameter_list|(
-name|adapter
-parameter_list|)
-value|IFQ_DRV_IS_EMPTY(&((adapter)->ifp->if_snd))
-end_define
-
-begin_define
-define|#
-directive|define
-name|drbr_free
-parameter_list|(
-name|br
-parameter_list|,
-name|type
-parameter_list|)
-end_define
-
-begin_expr_stmt
-specifier|static
-name|__inline
-expr|struct
-name|mbuf
-operator|*
-name|em_dequeue
-argument_list|(
-argument|struct ifnet *ifp
-argument_list|,
-argument|struct buf_ring *br
-argument_list|)
-block|{     struct
-name|mbuf
-operator|*
-name|m
-block|;
-name|IFQ_DRV_DEQUEUE
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_snd
-argument_list|,
-name|m
-argument_list|)
-block|;
-return|return
-operator|(
-name|m
-operator|)
-return|;
-block|}
-end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BUF_RING_UNDEFINED
-end_ifdef
-
-begin_struct
-struct|struct
-name|buf_ring
-block|{ }
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

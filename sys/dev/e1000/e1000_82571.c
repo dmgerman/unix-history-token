@@ -8,7 +8,7 @@ comment|/*$FreeBSD$*/
 end_comment
 
 begin_comment
-comment|/*  * 82571EB Gigabit Ethernet Controller  * 82571EB Gigabit Ethernet Controller (Copper)  * 82571EB Gigabit Ethernet Controller (Fiber)  * 82571EB Dual Port Gigabit Mezzanine Adapter  * 82571EB Quad Port Gigabit Mezzanine Adapter  * 82571PT Gigabit PT Quad Port Server ExpressModule  * 82572EI Gigabit Ethernet Controller (Copper)  * 82572EI Gigabit Ethernet Controller (Fiber)  * 82572EI Gigabit Ethernet Controller  * 82573V Gigabit Ethernet Controller (Copper)  * 82573E Gigabit Ethernet Controller (Copper)  * 82573L Gigabit Ethernet Controller  * 82574L Gigabit Network Connection  * 82574L Gigabit Network Connection  */
+comment|/*  * 82571EB Gigabit Ethernet Controller  * 82571EB Gigabit Ethernet Controller (Copper)  * 82571EB Gigabit Ethernet Controller (Fiber)  * 82571EB Dual Port Gigabit Mezzanine Adapter  * 82571EB Quad Port Gigabit Mezzanine Adapter  * 82571PT Gigabit PT Quad Port Server ExpressModule  * 82572EI Gigabit Ethernet Controller (Copper)  * 82572EI Gigabit Ethernet Controller (Fiber)  * 82572EI Gigabit Ethernet Controller  * 82573V Gigabit Ethernet Controller (Copper)  * 82573E Gigabit Ethernet Controller (Copper)  * 82573L Gigabit Ethernet Controller  * 82574L Gigabit Network Connection  * 82574L Gigabit Network Connection  * 82583V Gigabit Network Connection  */
 end_comment
 
 begin_include
@@ -767,6 +767,9 @@ goto|;
 block|}
 break|break;
 case|case
+name|e1000_82583
+case|:
+case|case
 name|e1000_82574
 case|:
 name|phy
@@ -1023,6 +1026,9 @@ case|:
 case|case
 name|e1000_82574
 case|:
+case|case
+name|e1000_82583
+case|:
 if|if
 condition|(
 operator|(
@@ -1209,6 +1215,21 @@ name|ret_val
 init|=
 name|E1000_SUCCESS
 decl_stmt|;
+name|u32
+name|swsm
+init|=
+literal|0
+decl_stmt|;
+name|u32
+name|swsm2
+init|=
+literal|0
+decl_stmt|;
+name|bool
+name|force_clear_smbi
+init|=
+name|FALSE
+decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_init_mac_params_82571"
@@ -1338,6 +1359,9 @@ name|e1000_82573
 case|:
 case|case
 name|e1000_82574
+case|:
+case|case
+name|e1000_82583
 case|:
 name|mac
 operator|->
@@ -1469,6 +1493,9 @@ block|{
 case|case
 name|e1000_82574
 case|:
+case|case
+name|e1000_82583
+case|:
 name|mac
 operator|->
 name|ops
@@ -1583,6 +1610,9 @@ block|{
 case|case
 name|e1000_82574
 case|:
+case|case
+name|e1000_82583
+case|:
 name|mac
 operator|->
 name|ops
@@ -1640,6 +1670,124 @@ condition|?
 name|e1000_get_speed_and_duplex_copper_generic
 else|:
 name|e1000_get_speed_and_duplex_fiber_serdes_generic
+expr_stmt|;
+comment|/* 	 * Ensure that the inter-port SWSM.SMBI lock bit is clear before 	 * first NVM or PHY acess. This should be done for single-port 	 * devices, and for one port only on dual-port devices so that 	 * for those devices we can still use the SMBI lock to synchronize 	 * inter-port accesses to the PHY& NVM. 	 */
+switch|switch
+condition|(
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+condition|)
+block|{
+case|case
+name|e1000_82571
+case|:
+case|case
+name|e1000_82572
+case|:
+name|swsm2
+operator|=
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_SWSM2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|swsm2
+operator|&
+name|E1000_SWSM2_LOCK
+operator|)
+condition|)
+block|{
+comment|/* Only do this for the first interface on this card */
+name|E1000_WRITE_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_SWSM2
+argument_list|,
+name|swsm2
+operator||
+name|E1000_SWSM2_LOCK
+argument_list|)
+expr_stmt|;
+name|force_clear_smbi
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+else|else
+name|force_clear_smbi
+operator|=
+name|FALSE
+expr_stmt|;
+break|break;
+default|default:
+name|force_clear_smbi
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|force_clear_smbi
+condition|)
+block|{
+comment|/* Make sure SWSM.SMBI is clear */
+name|swsm
+operator|=
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_SWSM
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|swsm
+operator|&
+name|E1000_SWSM_SMBI
+condition|)
+block|{
+comment|/* This bit should not be set on a first interface, and 			 * indicates that the bootagent or EFI code has 			 * improperly left this bit enabled 			 */
+name|DEBUGOUT
+argument_list|(
+literal|"Please update your 82571 Bootagent\n"
+argument_list|)
+expr_stmt|;
+block|}
+name|E1000_WRITE_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_SWSM
+argument_list|,
+name|swsm
+operator|&
+operator|~
+name|E1000_SWSM_SMBI
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * Initialze device specific counter of SMBI acquisition 	 * timeouts. 	 */
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|_82571
+operator|.
+name|smb_counter
+operator|=
+literal|0
 expr_stmt|;
 name|out
 label|:
@@ -1778,6 +1926,9 @@ break|break;
 case|case
 name|e1000_82574
 case|:
+case|case
+name|e1000_82583
+case|:
 name|ret_val
 operator|=
 name|phy
@@ -1889,7 +2040,6 @@ comment|/**  *  e1000_get_hw_semaphore_82571 - Acquire hardware semaphore  *  @h
 end_comment
 
 begin_function
-specifier|static
 name|s32
 name|e1000_get_hw_semaphore_82571
 parameter_list|(
@@ -1908,7 +2058,18 @@ init|=
 name|E1000_SUCCESS
 decl_stmt|;
 name|s32
-name|timeout
+name|sw_timeout
+init|=
+name|hw
+operator|->
+name|nvm
+operator|.
+name|word_size
+operator|+
+literal|1
+decl_stmt|;
+name|s32
+name|fw_timeout
 init|=
 name|hw
 operator|->
@@ -1928,6 +2089,81 @@ argument_list|(
 literal|"e1000_get_hw_semaphore_82571"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If we have timedout 3 times on trying to acquire 	 * the inter-port SMBI semaphore, there is old code 	 * operating on the other port, and it is not 	 * releasing SMBI. Modify the number of times that 	 * we try for the semaphore to interwork with this 	 * older code. 	 */
+if|if
+condition|(
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|_82571
+operator|.
+name|smb_counter
+operator|>
+literal|2
+condition|)
+name|sw_timeout
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Get the SW semaphore */
+while|while
+condition|(
+name|i
+operator|<
+name|sw_timeout
+condition|)
+block|{
+name|swsm
+operator|=
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_SWSM
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|swsm
+operator|&
+name|E1000_SWSM_SMBI
+operator|)
+condition|)
+break|break;
+name|usec_delay
+argument_list|(
+literal|50
+argument_list|)
+expr_stmt|;
+name|i
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|i
+operator|==
+name|sw_timeout
+condition|)
+block|{
+name|DEBUGOUT
+argument_list|(
+literal|"Driver can't access device - SMBI bit is set.\n"
+argument_list|)
+expr_stmt|;
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|_82571
+operator|.
+name|smb_counter
+operator|++
+expr_stmt|;
+block|}
 comment|/* Get the FW semaphore. */
 for|for
 control|(
@@ -1937,7 +2173,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|timeout
+name|fw_timeout
 condition|;
 name|i
 operator|++
@@ -1986,11 +2222,11 @@ if|if
 condition|(
 name|i
 operator|==
-name|timeout
+name|fw_timeout
 condition|)
 block|{
 comment|/* Release semaphores */
-name|e1000_put_hw_semaphore_generic
+name|e1000_put_hw_semaphore_82571
 argument_list|(
 name|hw
 argument_list|)
@@ -2022,7 +2258,6 @@ comment|/**  *  e1000_put_hw_semaphore_82571 - Release hardware semaphore  *  @h
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|e1000_put_hw_semaphore_82571
 parameter_list|(
@@ -2037,7 +2272,7 @@ name|swsm
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
-literal|"e1000_put_hw_semaphore_82571"
+literal|"e1000_put_hw_semaphore_generic"
 argument_list|)
 expr_stmt|;
 name|swsm
@@ -2052,7 +2287,11 @@ expr_stmt|;
 name|swsm
 operator|&=
 operator|~
+operator|(
+name|E1000_SWSM_SMBI
+operator||
 name|E1000_SWSM_SWESMBI
+operator|)
 expr_stmt|;
 name|E1000_WRITE_REG
 argument_list|(
@@ -2114,6 +2353,9 @@ condition|)
 block|{
 case|case
 name|e1000_82574
+case|:
+case|case
+name|e1000_82583
 case|:
 case|case
 name|e1000_82573
@@ -2228,6 +2470,9 @@ name|e1000_82573
 case|:
 case|case
 name|e1000_82574
+case|:
+case|case
+name|e1000_82583
 case|:
 name|ret_val
 operator|=
@@ -3233,6 +3478,9 @@ case|case
 name|e1000_82574
 case|:
 case|case
+name|e1000_82583
+case|:
+case|case
 name|e1000_82573
 case|:
 name|extcnf_ctrl
@@ -3395,6 +3643,9 @@ condition|)
 block|{
 case|case
 name|e1000_82574
+case|:
+case|case
+name|e1000_82583
 case|:
 case|case
 name|e1000_82573
@@ -3676,6 +3927,9 @@ condition|)
 block|{
 case|case
 name|e1000_82574
+case|:
+case|case
+name|e1000_82583
 case|:
 case|case
 name|e1000_82573
@@ -4059,6 +4313,9 @@ case|case
 name|e1000_82574
 case|:
 case|case
+name|e1000_82583
+case|:
+case|case
 name|e1000_82573
 case|:
 name|reg
@@ -4104,6 +4361,9 @@ condition|)
 block|{
 case|case
 name|e1000_82574
+case|:
+case|case
+name|e1000_82583
 case|:
 case|case
 name|e1000_82573
@@ -4242,6 +4502,9 @@ block|{
 case|case
 name|e1000_82574
 case|:
+case|case
+name|e1000_82583
+case|:
 name|reg
 operator|=
 name|E1000_READ_REG
@@ -4348,6 +4611,9 @@ condition|)
 block|{
 case|case
 name|e1000_82574
+case|:
+case|case
+name|e1000_82583
 case|:
 case|case
 name|e1000_82573
@@ -4644,6 +4910,9 @@ case|case
 name|e1000_82574
 case|:
 case|case
+name|e1000_82583
+case|:
+case|case
 name|e1000_82573
 case|:
 if|if
@@ -4694,8 +4963,6 @@ parameter_list|)
 block|{
 name|u32
 name|ctrl
-decl_stmt|,
-name|led_ctrl
 decl_stmt|;
 name|s32
 name|ret_val
@@ -4767,37 +5034,6 @@ operator|=
 name|e1000_copper_link_setup_igp
 argument_list|(
 name|hw
-argument_list|)
-expr_stmt|;
-comment|/* Setup activity LED */
-name|led_ctrl
-operator|=
-name|E1000_READ_REG
-argument_list|(
-name|hw
-argument_list|,
-name|E1000_LEDCTL
-argument_list|)
-expr_stmt|;
-name|led_ctrl
-operator|&=
-name|IGP_ACTIVITY_LED_MASK
-expr_stmt|;
-name|led_ctrl
-operator||=
-operator|(
-name|IGP_ACTIVITY_LED_ENABLE
-operator||
-name|IGP_LED3_MODE
-operator|)
-expr_stmt|;
-name|E1000_WRITE_REG
-argument_list|(
-name|hw
-argument_list|,
-name|E1000_LEDCTL
-argument_list|,
-name|led_ctrl
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4890,7 +5126,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_check_for_serdes_link_82571 - Check for link (Serdes)  *  @hw: pointer to the HW structure  *  *  Checks for link up on the hardware.  If link is not up and we have  *  a signal, then we need to force link up.  **/
+comment|/**  *  e1000_check_for_serdes_link_82571 - Check for link (Serdes)  *  @hw: pointer to the HW structure  *  *  Reports the link state as up or down.  *  *  If autonegotiation is supported by the link partner, the link state is  *  determined by the result of autongotiation. This is the most likely case.  *  If autonegotiation is not supported by the link partner, and the link  *  has a valid signal, force the link up.  *  *  The link state is represented internally here by 4 states:  *  *  1) down  *  2) autoneg_progress  *  3) autoneg_complete (the link sucessfully autonegotiated)  *  4) forced_up (the link has been forced up, it did not autonegotiate)  *  **/
 end_comment
 
 begin_function
@@ -5003,6 +5239,12 @@ name|serdes_link_state
 operator|=
 name|e1000_serdes_link_autoneg_progress
 expr_stmt|;
+name|mac
+operator|->
+name|serdes_has_link
+operator|=
+name|FALSE
+expr_stmt|;
 name|DEBUGOUT
 argument_list|(
 literal|"AN_UP     -> AN_PROG\n"
@@ -5053,6 +5295,12 @@ name|serdes_link_state
 operator|=
 name|e1000_serdes_link_autoneg_progress
 expr_stmt|;
+name|mac
+operator|->
+name|serdes_has_link
+operator|=
+name|FALSE
+expr_stmt|;
 name|DEBUGOUT
 argument_list|(
 literal|"FORCED_UP -> AN_PROG\n"
@@ -5063,7 +5311,14 @@ break|break;
 case|case
 name|e1000_serdes_link_autoneg_progress
 case|:
-comment|/* 			 * If the LU bit is set in the STATUS register, 			 * autoneg has completed sucessfully. If not, 			 * try foring the link because the far end may be 			 * available but not capable of autonegotiation. 			 */
+if|if
+condition|(
+name|rxcw
+operator|&
+name|E1000_RXCW_C
+condition|)
+block|{
+comment|/* We received /C/ ordered sets, meaning the 				 * link partner has autonegotiated, and we can 				 * trust the Link Up (LU) status bit 				 */
 if|if
 condition|(
 name|status
@@ -5082,10 +5337,32 @@ argument_list|(
 literal|"AN_PROG   -> AN_UP\n"
 argument_list|)
 expr_stmt|;
+name|mac
+operator|->
+name|serdes_has_link
+operator|=
+name|TRUE
+expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 				 * Disable autoneg, force link up and 				 * full duplex, and change state to forced 				 */
+comment|/* Autoneg completed, but failed */
+name|mac
+operator|->
+name|serdes_link_state
+operator|=
+name|e1000_serdes_link_down
+expr_stmt|;
+name|DEBUGOUT
+argument_list|(
+literal|"AN_PROG   -> DOWN\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+comment|/* The link partner did not autoneg. 				 * Force link up and full duplex, and change 				 * state to forced. 				 */
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -5145,18 +5422,18 @@ name|serdes_link_state
 operator|=
 name|e1000_serdes_link_forced_up
 expr_stmt|;
-name|DEBUGOUT
-argument_list|(
-literal|"AN_PROG   -> FORCED_UP\n"
-argument_list|)
-expr_stmt|;
-block|}
 name|mac
 operator|->
 name|serdes_has_link
 operator|=
 name|TRUE
 expr_stmt|;
+name|DEBUGOUT
+argument_list|(
+literal|"AN_PROG   -> FORCED_UP\n"
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|e1000_serdes_link_down
@@ -5353,6 +5630,9 @@ condition|)
 block|{
 case|case
 name|e1000_82574
+case|:
+case|case
+name|e1000_82583
 case|:
 case|case
 name|e1000_82573
