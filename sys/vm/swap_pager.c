@@ -2234,6 +2234,10 @@ name|uidinfo
 modifier|*
 name|uip
 decl_stmt|;
+name|uip
+operator|=
+name|NULL
+expr_stmt|;
 name|pindex
 operator|=
 name|OFF_TO_IDX
