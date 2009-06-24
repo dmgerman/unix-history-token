@@ -25522,6 +25522,21 @@ operator|=
 name|pkt_len
 expr_stmt|;
 block|}
+else|#
+directive|else
+comment|/* Set the total packet length. */
+name|m0
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|=
+name|m0
+operator|->
+name|m_len
+operator|=
+name|pkt_len
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* Remove the trailing Ethernet FCS. */
