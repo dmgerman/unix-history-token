@@ -10965,7 +10965,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * remove a page rom the kernel pagetables  */
+comment|/*  * remove a page from the kernel pagetables  */
 end_comment
 
 begin_function
