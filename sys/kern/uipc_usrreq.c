@@ -3086,10 +3086,8 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|UNP_PCB_LOCK
-argument_list|(
-name|unp
-argument_list|)
+name|UNP_GLOBAL_RLOCK
+argument_list|()
 expr_stmt|;
 comment|/* 	 * XXX: It seems that this test always fails even when connection is 	 * established.  So, this else clause is added as workaround to 	 * return PF_LOCAL sockaddr. 	 */
 name|unp2
@@ -3125,9 +3123,7 @@ expr|struct
 name|sockaddr
 operator|*
 operator|)
-name|unp
-operator|->
-name|unp_conn
+name|unp2
 operator|->
 name|unp_addr
 expr_stmt|;
@@ -3175,10 +3171,8 @@ name|sa_len
 argument_list|)
 expr_stmt|;
 block|}
-name|UNP_PCB_UNLOCK
-argument_list|(
-name|unp
-argument_list|)
+name|UNP_GLOBAL_RUNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
