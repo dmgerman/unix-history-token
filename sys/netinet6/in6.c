@@ -3334,7 +3334,10 @@ operator|->
 name|ia_ifa
 argument_list|)
 expr_stmt|;
-comment|/* in6_if_addrhead */
+comment|/* in6_ifaddrhead */
+name|IN6_IFADDR_WLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -3344,6 +3347,9 @@ name|ia
 argument_list|,
 name|ia_link
 argument_list|)
+expr_stmt|;
+name|IN6_IFADDR_WUNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* update timestamp */
@@ -6028,6 +6034,9 @@ name|ia_ifa
 argument_list|)
 expr_stmt|;
 comment|/* if_addrhead */
+name|IN6_IFADDR_WLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -6037,6 +6046,9 @@ name|ia
 argument_list|,
 name|ia_link
 argument_list|)
+expr_stmt|;
+name|IN6_IFADDR_WUNLOCK
+argument_list|()
 expr_stmt|;
 name|ifa_free
 argument_list|(
@@ -8609,6 +8621,9 @@ condition|)
 return|return
 literal|1
 return|;
+name|IN6_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ia
@@ -8640,11 +8655,17 @@ name|sin6_addr
 argument_list|)
 condition|)
 block|{
+name|IN6_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 literal|1
 return|;
 block|}
 block|}
+name|IN6_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -8673,6 +8694,9 @@ name|in6_ifaddr
 modifier|*
 name|ia
 decl_stmt|;
+name|IN6_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ia
@@ -8709,14 +8733,22 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|IN6_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
 comment|/* true */
+block|}
 comment|/* XXX: do we still have to go thru the rest of the list? */
 block|}
+name|IN6_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -9392,6 +9424,14 @@ name|besta
 operator|)
 return|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|IN6_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -9507,10 +9547,8 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
-argument_list|(
-name|ifp
-argument_list|)
+name|IN6_IFADDR_RUNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -9521,10 +9559,8 @@ operator|)
 name|ifa
 return|;
 block|}
-name|IF_ADDR_UNLOCK
-argument_list|(
-name|ifp
-argument_list|)
+name|IN6_IFADDR_RUNLOCK
+argument_list|()
 expr_stmt|;
 comment|/* use the last-resort values, that are, deprecated addresses */
 if|if

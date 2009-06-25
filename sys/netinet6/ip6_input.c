@@ -483,6 +483,26 @@ end_endif
 
 begin_decl_stmt
 name|struct
+name|rwlock
+name|in6_ifaddr_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|RW_SYSINIT
+argument_list|(
+name|in6_ifaddr_lock
+argument_list|,
+operator|&
+name|in6_ifaddr_lock
+argument_list|,
+literal|"in6_ifaddr_lock"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|struct
 name|pfil_head
 name|inet6_pfil_hook
 decl_stmt|;

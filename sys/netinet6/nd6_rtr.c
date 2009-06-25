@@ -6048,7 +6048,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* 	 * Changes on the prefix status might affect address status as well. 	 * Make sure that all addresses derived from an attached prefix are 	 * attached, and that all addresses derived from a detached prefix are 	 * detached.  Note, however, that a manually configured address should 	 * always be attached. 	 * The precise detection logic is same as the one for prefixes. 	 */
+comment|/* 	 * Changes on the prefix status might affect address status as well. 	 * Make sure that all addresses derived from an attached prefix are 	 * attached, and that all addresses derived from a detached prefix are 	 * detached.  Note, however, that a manually configured address should 	 * always be attached. 	 * The precise detection logic is same as the one for prefixes. 	 * 	 * XXXRW: in6_ifaddrhead locking. 	 */
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -8263,6 +8263,9 @@ operator|)
 operator|)
 expr_stmt|;
 comment|/* 	 * in6_get_tmpifid() quite likely provided a unique interface ID. 	 * However, we may still have a chance to see collision, because 	 * there may be a time lag between generation of the ID and generation 	 * of the address.  So, we'll do one more sanity check. 	 */
+name|IN6_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ia
@@ -8300,6 +8303,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|IN6_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 comment|/* 				 * Give up.  Something strange should have 				 * happened. 				 */
 name|nd6log
 argument_list|(
@@ -8317,6 +8323,9 @@ name|EEXIST
 operator|)
 return|;
 block|}
+name|IN6_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|forcegen
 operator|=
 literal|1
@@ -8326,6 +8335,9 @@ name|again
 goto|;
 block|}
 block|}
+name|IN6_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 comment|/* 	 * The Valid Lifetime is the lower of the Valid Lifetime of the          * public address or TEMP_VALID_LIFETIME. 	 * The Preferred Lifetime is the lower of the Preferred Lifetime          * of the public address or TEMP_PREFERRED_LIFETIME -          * DESYNC_FACTOR. 	 */
 if|if
 condition|(

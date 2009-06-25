@@ -1208,6 +1208,9 @@ operator|(
 name|error
 operator|)
 return|;
+name|IN6_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ia
@@ -1967,11 +1970,16 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|IN6_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|EADDRNOTAVAIL
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|ifpp
@@ -1998,6 +2006,9 @@ operator|*
 name|srcp
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|IN6_IFADDR_RUNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(

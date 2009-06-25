@@ -2579,7 +2579,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * expire interface addresses. 	 * in the past the loop was inside prefix expiry processing. 	 * However, from a stricter speci-confrmance standpoint, we should 	 * rather separate address lifetimes and prefix lifetimes. 	 */
+comment|/* 	 * expire interface addresses. 	 * in the past the loop was inside prefix expiry processing. 	 * However, from a stricter speci-confrmance standpoint, we should 	 * rather separate address lifetimes and prefix lifetimes. 	 * 	 * XXXRW: in6_ifaddrhead locking. 	 */
 name|addrloop
 label|:
 name|TAILQ_FOREACH_SAFE
@@ -5107,6 +5107,7 @@ condition|)
 continue|continue;
 comment|/* XXX */
 comment|/* do we really have to remove addresses as well? */
+comment|/* XXXRW: in6_ifaddrhead locking. */
 name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|ia

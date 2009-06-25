@@ -18332,6 +18332,9 @@ literal|0
 block|struct in6_multi *in6m;
 endif|#
 directive|endif
+name|IN6_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ia
@@ -18368,17 +18371,25 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|IN6_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 literal|1
 return|;
+block|}
 if|#
 directive|if
 literal|0
 comment|/* 		 * XXX Multicast 		 * XXX why do we care about multlicast here while we don't care 		 * about IPv4 multicast?? 		 * XXX scope 		 */
-block|in6m = NULL; 		IN6_LOOKUP_MULTI(sin6->sin6_addr, ia->ia_ifp, in6m); 		if (in6m) 			return 1;
+block|in6m = NULL; 		IN6_LOOKUP_MULTI(sin6->sin6_addr, ia->ia_ifp, in6m); 		if (in6m) { 			IN6_IFADDR_RUNLOCK(); 			return 1; 		}
 endif|#
 directive|endif
 block|}
+name|IN6_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 comment|/* loopback, just for safety */
 if|if
 condition|(

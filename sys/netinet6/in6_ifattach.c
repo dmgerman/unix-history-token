@@ -3546,6 +3546,9 @@ name|ifa
 argument_list|)
 expr_stmt|;
 comment|/* if_addrhead */
+name|IN6_IFADDR_WLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -3555,6 +3558,9 @@ name|ia
 argument_list|,
 name|ia_link
 argument_list|)
+expr_stmt|;
+name|IN6_IFADDR_WUNLOCK
+argument_list|()
 expr_stmt|;
 name|ifa_free
 argument_list|(
