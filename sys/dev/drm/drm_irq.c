@@ -294,9 +294,6 @@ control|)
 block|{
 if|if
 condition|(
-name|atomic_read
-argument_list|(
-operator|&
 name|dev
 operator|->
 name|vblank
@@ -305,7 +302,6 @@ name|i
 index|]
 operator|.
 name|refcount
-argument_list|)
 operator|==
 literal|0
 operator|&&
