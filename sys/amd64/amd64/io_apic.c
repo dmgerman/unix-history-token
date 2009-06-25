@@ -1649,12 +1649,8 @@ name|ioapic_assign_cpu
 argument_list|(
 name|isrc
 argument_list|,
-name|pcpu_find
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|pc_apic_id
+name|intr_next_cpu
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|apic_enable_vector
