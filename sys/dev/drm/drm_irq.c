@@ -207,6 +207,17 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* Make sure that we are called with the lock held */
+name|mtx_assert
+argument_list|(
+operator|&
+name|dev
+operator|->
+name|vbl_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|callout_pending
@@ -424,6 +435,14 @@ operator|->
 name|vblank_disable_timer
 argument_list|)
 expr_stmt|;
+name|DRM_SPINLOCK
+argument_list|(
+operator|&
+name|dev
+operator|->
+name|vbl_lock
+argument_list|)
+expr_stmt|;
 name|vblank_disable_fn
 argument_list|(
 operator|(
@@ -431,6 +450,14 @@ name|void
 operator|*
 operator|)
 name|dev
+argument_list|)
+expr_stmt|;
+name|DRM_SPINUNLOCK
+argument_list|(
+operator|&
+name|dev
+operator|->
+name|vbl_lock
 argument_list|)
 expr_stmt|;
 name|free
