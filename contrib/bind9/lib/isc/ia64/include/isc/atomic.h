@@ -42,19 +42,30 @@ begin_comment
 comment|/*  * This routine atomically increments the value stored in 'p' by 'val', and  * returns the previous value.  *  * Open issue: can 'fetchadd' make the code faster for some particular values  * (e.g., 1 and -1)?  */
 end_comment
 
-begin_function
+begin_decl_stmt
 specifier|static
 specifier|inline
 name|isc_int32_t
+ifdef|#
+directive|ifdef
+name|__GNUC__
+name|__attribute__
+argument_list|(
+operator|(
+name|unused
+operator|)
+argument_list|)
+endif|#
+directive|endif
 name|isc_atomic_xadd
-parameter_list|(
+argument_list|(
 name|isc_int32_t
-modifier|*
+operator|*
 name|p
-parameter_list|,
+argument_list|,
 name|isc_int32_t
 name|val
-parameter_list|)
+argument_list|)
 block|{
 name|isc_int32_t
 name|prev
@@ -102,52 +113,74 @@ name|prev
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/*  * This routine atomically stores the value 'val' in 'p'.  */
 end_comment
 
-begin_function
+begin_decl_stmt
 specifier|static
 specifier|inline
 name|void
+ifdef|#
+directive|ifdef
+name|__GNUC__
+name|__attribute__
+argument_list|(
+operator|(
+name|unused
+operator|)
+argument_list|)
+endif|#
+directive|endif
 name|isc_atomic_store
-parameter_list|(
+argument_list|(
 name|isc_int32_t
-modifier|*
+operator|*
 name|p
-parameter_list|,
+argument_list|,
 name|isc_int32_t
 name|val
-parameter_list|)
+argument_list|)
 block|{
 asm|__asm__
 specifier|volatile
 asm|( 		"st4.rel %0=%1" 		: "=m" (*p) 		: "r" (val) 		: "memory" 		);
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/*  * This routine atomically replaces the value in 'p' with 'val', if the  * original value is equal to 'cmpval'.  The original value is returned in any  * case.  */
 end_comment
 
-begin_function
+begin_decl_stmt
 specifier|static
 specifier|inline
 name|isc_int32_t
+ifdef|#
+directive|ifdef
+name|__GNUC__
+name|__attribute__
+argument_list|(
+operator|(
+name|unused
+operator|)
+argument_list|)
+endif|#
+directive|endif
 name|isc_atomic_cmpxchg
-parameter_list|(
+argument_list|(
 name|isc_int32_t
-modifier|*
+operator|*
 name|p
-parameter_list|,
+argument_list|,
 name|isc_int32_t
 name|cmpval
-parameter_list|,
+argument_list|,
 name|isc_int32_t
 name|val
-parameter_list|)
+argument_list|)
 block|{
 name|isc_int32_t
 name|ret
@@ -161,7 +194,7 @@ name|ret
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_else
 else|#
