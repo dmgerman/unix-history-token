@@ -4480,7 +4480,7 @@ literal|7
 argument_list|,
 name|printf
 argument_list|(
-literal|"seq_read: unit %d, resid %d.\n"
+literal|"seq_read: unit %d, resid %zd.\n"
 argument_list|,
 name|scp
 operator|->
@@ -4695,7 +4695,7 @@ literal|6
 argument_list|,
 name|printf
 argument_list|(
-literal|"seq_read: ret %d, resid %d.\n"
+literal|"seq_read: ret %d, resid %zd.\n"
 argument_list|,
 name|retval
 argument_list|,
@@ -4763,7 +4763,7 @@ literal|7
 argument_list|,
 name|printf
 argument_list|(
-literal|"seq_write: unit %d, resid %d.\n"
+literal|"seq_write: unit %d, resid %zd.\n"
 argument_list|,
 name|scp
 operator|->
@@ -4954,7 +4954,7 @@ literal|8
 argument_list|,
 name|printf
 argument_list|(
-literal|"seqout: resid %d len %jd avail %jd\n"
+literal|"seqout: resid %zd len %jd avail %jd\n"
 argument_list|,
 name|uio
 operator|->
@@ -5354,7 +5354,7 @@ literal|6
 argument_list|,
 name|printf
 argument_list|(
-literal|"seq_write done: leftover buffer length %d retval %d\n"
+literal|"seq_write done: leftover buffer length %zd retval %d\n"
 argument_list|,
 name|uio
 operator|->

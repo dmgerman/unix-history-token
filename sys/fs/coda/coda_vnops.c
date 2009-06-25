@@ -1331,7 +1331,7 @@ argument_list|(
 argument|CODA_RDWR
 argument_list|,
 argument|myprintf((
-literal|"coda_rdwr(%d, %p, %d, %lld, %d)\n"
+literal|"coda_rdwr(%d, %p, %zd, %lld, %d)\n"
 argument|, 	    rw, (void *)uiop->uio_iov->iov_base, uiop->uio_resid, 	    (long long)uiop->uio_offset, uiop->uio_segflg));
 argument_list|)
 empty_stmt|;
@@ -5985,7 +5985,7 @@ argument_list|(
 argument|CODA_READDIR
 argument_list|,
 argument|myprintf((
-literal|"coda_readdir(%p, %d, %lld, %d)\n"
+literal|"coda_readdir(%p, %zd, %lld, %d)\n"
 argument|, 	    (void *)uiop->uio_iov->iov_base, uiop->uio_resid, 	    (long long)uiop->uio_offset, uiop->uio_segflg));
 argument_list|)
 empty_stmt|;

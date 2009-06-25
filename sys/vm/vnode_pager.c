@@ -4842,7 +4842,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"vnode_pager_putpages: residual I/O %d at %lu\n"
+literal|"vnode_pager_putpages: residual I/O %zd at %lu\n"
 argument_list|,
 name|auio
 operator|.

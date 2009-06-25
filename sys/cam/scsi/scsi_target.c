@@ -2687,7 +2687,7 @@ argument_list|,
 name|CAM_DEBUG_PERIPH
 argument_list|,
 operator|(
-literal|"write - uio_resid %d\n"
+literal|"write - uio_resid %zd\n"
 operator|,
 name|uio
 operator|->

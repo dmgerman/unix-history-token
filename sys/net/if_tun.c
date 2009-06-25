@@ -4573,7 +4573,7 @@ name|TUNDEBUG
 argument_list|(
 name|ifp
 argument_list|,
-literal|"len=%d!\n"
+literal|"len=%zd!\n"
 argument_list|,
 name|uio
 operator|->
