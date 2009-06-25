@@ -10249,6 +10249,8 @@ name|error
 decl_stmt|,
 name|is_sx_downgraded
 decl_stmt|,
+name|is_sx_locked
+decl_stmt|,
 name|op
 decl_stmt|;
 name|struct
@@ -10271,6 +10273,10 @@ expr_stmt|;
 name|is_sx_downgraded
 operator|=
 literal|0
+expr_stmt|;
+name|is_sx_locked
+operator|=
+literal|1
 expr_stmt|;
 name|c
 operator|=
@@ -10435,6 +10441,17 @@ name|pm_logfd
 operator|>=
 literal|0
 condition|)
+block|{
+name|sx_xunlock
+argument_list|(
+operator|&
+name|pmc_sx
+argument_list|)
+expr_stmt|;
+name|is_sx_locked
+operator|=
+literal|0
+expr_stmt|;
 name|error
 operator|=
 name|pmclog_configure_log
@@ -10448,6 +10465,7 @@ operator|.
 name|pm_logfd
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -14255,6 +14273,13 @@ break|break;
 block|}
 if|if
 condition|(
+name|is_sx_locked
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|is_sx_downgraded
 condition|)
 name|sx_sunlock
@@ -14270,6 +14295,7 @@ operator|&
 name|pmc_sx
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|error
