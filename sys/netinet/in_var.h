@@ -363,14 +363,6 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|IN_IFADDR_LOCK_INIT
-parameter_list|()
-value|rw_init(&in_ifaddr_lock, "in_ifaddr_lock")
-end_define
-
-begin_define
-define|#
-directive|define
 name|IN_IFADDR_LOCK_ASSERT
 parameter_list|()
 value|rw_assert(&in_ifaddr_lock, RA_LOCKED)

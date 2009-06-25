@@ -533,6 +533,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|RW_SYSINIT
+argument_list|(
+name|in_ifaddr_lock
+argument_list|,
+operator|&
+name|in_ifaddr_lock
+argument_list|,
+literal|"in_ifaddr_lock"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_V_INT
 argument_list|(
 name|V_NET
@@ -1554,9 +1567,6 @@ argument_list|,
 operator|&
 name|V_in_ifaddrhmask
 argument_list|)
-expr_stmt|;
-name|IN_IFADDR_LOCK_INIT
-argument_list|()
 expr_stmt|;
 comment|/* Initialize IP reassembly queue. */
 for|for
