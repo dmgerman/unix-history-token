@@ -1224,8 +1224,7 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
-name|unsigned
-name|int
+name|u_long
 name|cmd
 parameter_list|,
 name|void
@@ -1388,8 +1387,7 @@ parameter_list|,
 name|int
 name|ioflags
 parameter_list|,
-name|unsigned
-name|int
+name|u_long
 name|cmd
 parameter_list|,
 name|void
@@ -2417,8 +2415,7 @@ parameter_list|,
 name|int
 name|ioflags
 parameter_list|,
-name|unsigned
-name|int
+name|u_long
 name|cmd
 parameter_list|,
 name|void
@@ -4191,8 +4188,7 @@ parameter_list|,
 name|int
 name|ioflags
 parameter_list|,
-name|unsigned
-name|int
+name|u_long
 name|cmd
 parameter_list|,
 name|unsigned
