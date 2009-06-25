@@ -205,6 +205,12 @@ literal|"master.passwd.byname"
 block|}
 block|,
 block|{
+literal|"shadow"
+block|,
+literal|"shadow.byname"
+block|}
+block|,
+block|{
 literal|"group"
 block|,
 literal|"group.byname"
