@@ -1323,6 +1323,7 @@ name|ufs_dirhashmem
 operator|>
 name|ufs_dirhashmaxmem
 condition|)
+block|{
 if|if
 condition|(
 name|ufsdirhash_recycle
@@ -1338,6 +1339,11 @@ operator|-
 literal|1
 operator|)
 return|;
+comment|/* Recycled enough memory, so unlock the list. */
+name|DIRHASHLIST_UNLOCK
+argument_list|()
+expr_stmt|;
+block|}
 comment|/* Check if we can/should use dirhash. */
 if|if
 condition|(
