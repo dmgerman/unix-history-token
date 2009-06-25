@@ -319,8 +319,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|MV_TWSI_BASE
+name|MV_TWSI0_BASE
 value|(MV_BASE + 0x11000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_TWSI1_BASE
+value|(MV_BASE + 0x11100)
 end_define
 
 begin_define

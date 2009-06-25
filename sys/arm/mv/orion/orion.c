@@ -277,7 +277,7 @@ block|,
 block|{
 literal|"twsi"
 block|,
-name|MV_TWSI_BASE
+name|MV_TWSI0_BASE
 block|,
 name|MV_TWSI_SIZE
 block|,
