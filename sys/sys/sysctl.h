@@ -708,6 +708,15 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|sysctl_dpcpu_long
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|sysctl_dpcpu_quad
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
