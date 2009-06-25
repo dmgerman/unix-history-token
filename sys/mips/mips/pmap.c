@@ -3057,6 +3057,11 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|vm_offset_t
+name|origva
+init|=
+name|va
+decl_stmt|;
 for|for
 control|(
 name|i
@@ -3089,6 +3094,15 @@ operator|+=
 name|PAGE_SIZE
 expr_stmt|;
 block|}
+name|mips_dcache_wbinv_range_index
+argument_list|(
+name|origva
+argument_list|,
+name|PAGE_SIZE
+operator|*
+name|count
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3107,6 +3121,7 @@ name|int
 name|count
 parameter_list|)
 block|{
+comment|/* 	 * No need to wb/inv caches here,  	 *   pmap_kremove will do it for us 	 */
 while|while
 condition|(
 name|count
