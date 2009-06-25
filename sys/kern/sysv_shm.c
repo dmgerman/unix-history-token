@@ -4938,7 +4938,7 @@ name|td
 argument_list|,
 operator|(
 expr|struct
-name|shmctl_args
+name|freebsd7_shmctl_args
 operator|*
 operator|)
 name|uap
