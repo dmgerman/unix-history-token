@@ -2046,6 +2046,33 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*  * Always route interrupts to the current processor in the UP case.  */
+end_comment
+
+begin_function
+name|u_int
+name|intr_next_cpu
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|PCPU_GET
+argument_list|(
+name|apic_id
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif
