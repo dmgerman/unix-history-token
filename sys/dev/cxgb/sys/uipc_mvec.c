@@ -151,10 +151,8 @@ begin_function
 name|int
 name|busdma_map_sg_collapse
 parameter_list|(
-name|struct
-name|sge_txq
-modifier|*
-name|txq
+name|bus_dma_tag_t
+name|tag
 parameter_list|,
 name|bus_dmamap_t
 name|map
@@ -246,7 +244,7 @@ condition|)
 block|{
 name|busdma_map_mbuf_fast
 argument_list|(
-name|txq
+name|tag
 argument_list|,
 name|map
 argument_list|,
@@ -304,7 +302,7 @@ operator|++
 expr_stmt|;
 name|busdma_map_mbuf_fast
 argument_list|(
-name|txq
+name|tag
 argument_list|,
 name|map
 argument_list|,
@@ -330,9 +328,7 @@ name|err
 operator|=
 name|bus_dmamap_load_mbuf_sg
 argument_list|(
-name|txq
-operator|->
-name|entry_tag
+name|tag
 argument_list|,
 name|map
 argument_list|,
@@ -469,10 +465,8 @@ begin_function
 name|void
 name|busdma_map_sg_vec
 parameter_list|(
-name|struct
-name|sge_txq
-modifier|*
-name|txq
+name|bus_dma_tag_t
+name|tag
 parameter_list|,
 name|bus_dmamap_t
 name|map
@@ -518,7 +512,7 @@ name|m_nextpkt
 control|)
 name|busdma_map_mbuf_fast
 argument_list|(
-name|txq
+name|tag
 argument_list|,
 name|map
 argument_list|,

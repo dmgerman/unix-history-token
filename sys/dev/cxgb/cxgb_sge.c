@@ -5838,6 +5838,13 @@ name|pass
 init|=
 literal|0
 decl_stmt|;
+name|bus_dma_tag_t
+name|tag
+init|=
+name|txq
+operator|->
+name|entry_tag
+decl_stmt|;
 name|retry
 label|:
 name|err
@@ -5872,7 +5879,7 @@ if|if
 condition|(
 name|busdma_map_sg_collapse
 argument_list|(
-name|txq
+name|tag
 argument_list|,
 name|txsd
 operator|->
@@ -5899,9 +5906,7 @@ name|err
 operator|=
 name|bus_dmamap_load_mbuf_sg
 argument_list|(
-name|txq
-operator|->
-name|entry_tag
+name|tag
 argument_list|,
 name|txsd
 operator|->
@@ -6050,9 +6055,7 @@ name|__amd64__
 argument_list|)
 name|bus_dmamap_sync
 argument_list|(
-name|txq
-operator|->
-name|entry_tag
+name|tag
 argument_list|,
 name|txsd
 operator|->
@@ -7122,6 +7125,8 @@ block|{
 name|busdma_map_sg_vec
 argument_list|(
 name|txq
+operator|->
+name|entry_tag
 argument_list|,
 name|txsd
 operator|->
@@ -7154,6 +7159,8 @@ operator|=
 name|busdma_map_sg_collapse
 argument_list|(
 name|txq
+operator|->
+name|entry_tag
 argument_list|,
 name|txsd
 operator|->
