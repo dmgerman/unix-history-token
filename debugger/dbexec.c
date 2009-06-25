@@ -169,9 +169,6 @@ decl_stmt|;
 name|ACPI_HANDLE
 name|Handle
 decl_stmt|;
-name|ACPI_BUFFER
-name|Buffer
-decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
@@ -223,12 +220,6 @@ operator|)
 return|;
 block|}
 comment|/* Get the object info for number of method parameters */
-name|Buffer
-operator|.
-name|Length
-operator|=
-name|ACPI_ALLOCATE_LOCAL_BUFFER
-expr_stmt|;
 name|Status
 operator|=
 name|AcpiGetObjectInfo
@@ -236,7 +227,7 @@ argument_list|(
 name|Handle
 argument_list|,
 operator|&
-name|Buffer
+name|ObjInfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -264,12 +255,6 @@ operator|.
 name|Count
 operator|=
 literal|0
-expr_stmt|;
-name|ObjInfo
-operator|=
-name|Buffer
-operator|.
-name|Pointer
 expr_stmt|;
 if|if
 condition|(
@@ -492,9 +477,7 @@ block|}
 block|}
 name|ACPI_FREE
 argument_list|(
-name|Buffer
-operator|.
-name|Pointer
+name|ObjInfo
 argument_list|)
 expr_stmt|;
 comment|/* Prepare for a return object of arbitrary size */

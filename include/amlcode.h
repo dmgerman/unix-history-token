@@ -2072,6 +2072,8 @@ name|REGION_CMOS
 block|,
 name|REGION_PCI_BAR
 block|,
+name|REGION_IPMI
+block|,
 name|REGION_DATA_TABLE
 block|,
 comment|/* Internal use only */

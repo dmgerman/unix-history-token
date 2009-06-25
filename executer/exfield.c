@@ -87,6 +87,9 @@ name|void
 modifier|*
 name|Buffer
 decl_stmt|;
+name|UINT32
+name|Function
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
 name|ExReadDataFromField
@@ -193,15 +196,73 @@ operator|.
 name|SpaceId
 operator|==
 name|ACPI_ADR_SPACE_SMBUS
+operator|||
+name|ObjDesc
+operator|->
+name|Field
+operator|.
+name|RegionObj
+operator|->
+name|Region
+operator|.
+name|SpaceId
+operator|==
+name|ACPI_ADR_SPACE_IPMI
 operator|)
 condition|)
 block|{
-comment|/*          * This is an SMBus read.  We must create a buffer to hold the data          * and directly access the region handler.          */
+comment|/*          * This is an SMBus or IPMI read. We must create a buffer to hold          * the data and then directly access the region handler.          *          * Note: Smbus protocol value is passed in upper 16-bits of Function          */
+if|if
+condition|(
+name|ObjDesc
+operator|->
+name|Field
+operator|.
+name|RegionObj
+operator|->
+name|Region
+operator|.
+name|SpaceId
+operator|==
+name|ACPI_ADR_SPACE_SMBUS
+condition|)
+block|{
+name|Length
+operator|=
+name|ACPI_SMBUS_BUFFER_SIZE
+expr_stmt|;
+name|Function
+operator|=
+name|ACPI_READ
+operator||
+operator|(
+name|ObjDesc
+operator|->
+name|Field
+operator|.
+name|Attribute
+operator|<<
+literal|16
+operator|)
+expr_stmt|;
+block|}
+else|else
+comment|/* IPMI */
+block|{
+name|Length
+operator|=
+name|ACPI_IPMI_BUFFER_SIZE
+expr_stmt|;
+name|Function
+operator|=
+name|ACPI_READ
+expr_stmt|;
+block|}
 name|BufferDesc
 operator|=
 name|AcpiUtCreateBufferObject
 argument_list|(
-name|ACPI_SMBUS_BUFFER_SIZE
+name|Length
 argument_list|)
 expr_stmt|;
 if|if
@@ -226,7 +287,7 @@ operator|.
 name|FieldFlags
 argument_list|)
 expr_stmt|;
-comment|/*          * Perform the read.          * Note: Smbus protocol value is passed in upper 16-bits of Function          */
+comment|/* Call the region handler for the read */
 name|Status
 operator|=
 name|AcpiExAccessRegion
@@ -246,17 +307,7 @@ operator|.
 name|Pointer
 argument_list|)
 argument_list|,
-name|ACPI_READ
-operator||
-operator|(
-name|ObjDesc
-operator|->
-name|Field
-operator|.
-name|Attribute
-operator|<<
-literal|16
-operator|)
+name|Function
 argument_list|)
 expr_stmt|;
 name|AcpiExReleaseGlobalLock
@@ -520,6 +571,9 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|BufferDesc
 decl_stmt|;
+name|UINT32
+name|Function
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
 name|ExWriteDataToField
@@ -617,10 +671,22 @@ operator|.
 name|SpaceId
 operator|==
 name|ACPI_ADR_SPACE_SMBUS
+operator|||
+name|ObjDesc
+operator|->
+name|Field
+operator|.
+name|RegionObj
+operator|->
+name|Region
+operator|.
+name|SpaceId
+operator|==
+name|ACPI_ADR_SPACE_IPMI
 operator|)
 condition|)
 block|{
-comment|/*          * This is an SMBus write.  We will bypass the entire field mechanism          * and handoff the buffer directly to the handler.          *          * Source must be a buffer of sufficient size (ACPI_SMBUS_BUFFER_SIZE).          */
+comment|/*          * This is an SMBus or IPMI write. We will bypass the entire field          * mechanism and handoff the buffer directly to the handler. For          * these address spaces, the buffer is bi-directional; on a write,          * return data is returned in the same buffer.          *          * Source must be a buffer of sufficient size:          * ACPI_SMBUS_BUFFER_SIZE or ACPI_IPMI_BUFFER_SIZE.          *          * Note: SMBus protocol type is passed in upper 16-bits of Function          */
 if|if
 condition|(
 name|SourceDesc
@@ -637,7 +703,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"SMBus write requires Buffer, found type %s"
+literal|"SMBus or IPMI write requires Buffer, found type %s"
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
@@ -654,13 +720,59 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|ObjDesc
+operator|->
+name|Field
+operator|.
+name|RegionObj
+operator|->
+name|Region
+operator|.
+name|SpaceId
+operator|==
+name|ACPI_ADR_SPACE_SMBUS
+condition|)
+block|{
+name|Length
+operator|=
+name|ACPI_SMBUS_BUFFER_SIZE
+expr_stmt|;
+name|Function
+operator|=
+name|ACPI_WRITE
+operator||
+operator|(
+name|ObjDesc
+operator|->
+name|Field
+operator|.
+name|Attribute
+operator|<<
+literal|16
+operator|)
+expr_stmt|;
+block|}
+else|else
+comment|/* IPMI */
+block|{
+name|Length
+operator|=
+name|ACPI_IPMI_BUFFER_SIZE
+expr_stmt|;
+name|Function
+operator|=
+name|ACPI_WRITE
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|SourceDesc
 operator|->
 name|Buffer
 operator|.
 name|Length
 operator|<
-name|ACPI_SMBUS_BUFFER_SIZE
+name|Length
 condition|)
 block|{
 name|ACPI_ERROR
@@ -668,9 +780,9 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"SMBus write requires Buffer of length %X, found length %X"
+literal|"SMBus or IPMI write requires Buffer of length %X, found length %X"
 operator|,
-name|ACPI_SMBUS_BUFFER_SIZE
+name|Length
 operator|,
 name|SourceDesc
 operator|->
@@ -686,11 +798,12 @@ name|AE_AML_BUFFER_LIMIT
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Create the bi-directional buffer */
 name|BufferDesc
 operator|=
 name|AcpiUtCreateBufferObject
 argument_list|(
-name|ACPI_SMBUS_BUFFER_SIZE
+name|Length
 argument_list|)
 expr_stmt|;
 if|if
@@ -723,7 +836,7 @@ name|Buffer
 operator|.
 name|Pointer
 argument_list|,
-name|ACPI_SMBUS_BUFFER_SIZE
+name|Length
 argument_list|)
 expr_stmt|;
 comment|/* Lock entire transaction if requested */
@@ -736,7 +849,7 @@ operator|.
 name|FieldFlags
 argument_list|)
 expr_stmt|;
-comment|/*          * Perform the write (returns status and perhaps data in the          * same buffer)          * Note: SMBus protocol type is passed in upper 16-bits of Function.          */
+comment|/*          * Perform the write (returns status and perhaps data in the          * same buffer)          */
 name|Status
 operator|=
 name|AcpiExAccessRegion
@@ -751,17 +864,7 @@ operator|*
 operator|)
 name|Buffer
 argument_list|,
-name|ACPI_WRITE
-operator||
-operator|(
-name|ObjDesc
-operator|->
-name|Field
-operator|.
-name|Attribute
-operator|<<
-literal|16
-operator|)
+name|Function
 argument_list|)
 expr_stmt|;
 name|AcpiExReleaseGlobalLock

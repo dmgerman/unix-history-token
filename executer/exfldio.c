@@ -235,7 +235,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Exit now for SMBus address space, it has a non-linear address space      * and the request cannot be directly validated      */
+comment|/*      * Exit now for SMBus or IPMI address space, it has a non-linear address space      * and the request cannot be directly validated      */
 if|if
 condition|(
 name|RgnDesc
@@ -245,9 +245,17 @@ operator|.
 name|SpaceId
 operator|==
 name|ACPI_ADR_SPACE_SMBUS
+operator|||
+name|RgnDesc
+operator|->
+name|Region
+operator|.
+name|SpaceId
+operator|==
+name|ACPI_ADR_SPACE_IPMI
 condition|)
 block|{
-comment|/* SMBus has a non-linear address space */
+comment|/* SMBus or IPMI has a non-linear address space */
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK

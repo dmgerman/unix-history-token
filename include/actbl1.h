@@ -3038,7 +3038,7 @@ value|(1)
 end_define
 
 begin_comment
-comment|/* 9: Processor Local X2APIC (07/2008) */
+comment|/* 9: Processor Local X2APIC (ACPI 4.0) */
 end_comment
 
 begin_typedef
@@ -3070,7 +3070,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* 10: Local X2APIC NMI (07/2008) */
+comment|/* 10: Local X2APIC NMI (ACPI 4.0) */
 end_comment
 
 begin_typedef
@@ -3637,7 +3637,7 @@ comment|/* 02: Memory region is non-volatile */
 end_comment
 
 begin_comment
-comment|/* 2: Processor Local X2_APIC Affinity (07/2008) */
+comment|/* 2: Processor Local X2_APIC Affinity (ACPI 4.0) */
 end_comment
 
 begin_typedef
@@ -3660,6 +3660,12 @@ name|ApicId
 decl_stmt|;
 name|UINT32
 name|Flags
+decl_stmt|;
+name|UINT32
+name|ClockDomain
+decl_stmt|;
+name|UINT32
+name|Reserved2
 decl_stmt|;
 block|}
 name|ACPI_SRAT_X2APIC_CPU_AFFINITY

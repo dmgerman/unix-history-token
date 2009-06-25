@@ -1299,7 +1299,7 @@ argument_list|(
 name|FirmwareWakingVector
 argument_list|)
 block|,
-literal|"Firmware Waking Vector(32)"
+literal|"32 Firmware Waking Vector"
 block|}
 block|,
 block|{
@@ -1338,6 +1338,19 @@ literal|"S4BIOS Support Present"
 block|}
 block|,
 block|{
+name|ACPI_DMT_FLAG1
+block|,
+name|ACPI_FACS_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"64-bit Wake Supported (V2)"
+block|}
+block|,
+block|{
 name|ACPI_DMT_UINT64
 block|,
 name|ACPI_FACS_OFFSET
@@ -1345,7 +1358,7 @@ argument_list|(
 name|XFirmwareWakingVector
 argument_list|)
 block|,
-literal|"Firmware Waking Vector(64)"
+literal|"64 Firmware Waking Vector"
 block|}
 block|,
 block|{
@@ -1357,6 +1370,41 @@ name|Version
 argument_list|)
 block|,
 literal|"Version"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT24
+block|,
+name|ACPI_FACS_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_FACS_OFFSET
+argument_list|(
+name|OspmFlags
+argument_list|)
+block|,
+literal|"OspmFlags (decoded below)"
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG0
+block|,
+name|ACPI_FACS_FLAG_OFFSET
+argument_list|(
+name|OspmFlags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"64-bit Wake Env Required (V2)"
 block|}
 block|,
 block|{
@@ -6348,7 +6396,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 9: Processor Local X2_APIC (07/2008) */
+comment|/* 9: Processor Local X2_APIC (ACPI 4.0) */
 end_comment
 
 begin_decl_stmt
@@ -6426,7 +6474,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 10: Local X2_APIC NMI (07/2008) */
+comment|/* 10: Local X2_APIC NMI (ACPI 4.0) */
 end_comment
 
 begin_decl_stmt
@@ -7472,7 +7520,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 2: Processor Local X2_APIC Affinity (07/2008) */
+comment|/* 2: Processor Local X2_APIC Affinity (ACPI 4.0) */
 end_comment
 
 begin_decl_stmt
@@ -7536,6 +7584,28 @@ literal|0
 argument_list|)
 block|,
 literal|"Enabled"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_SRAT2_OFFSET
+argument_list|(
+name|ClockDomain
+argument_list|)
+block|,
+literal|"Clock Domain"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_SRAT2_OFFSET
+argument_list|(
+name|Reserved2
+argument_list|)
+block|,
+literal|"Reserved"
 block|}
 block|,
 block|{

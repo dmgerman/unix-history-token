@@ -397,7 +397,18 @@ comment|/* Version of this table (ACPI 2.0+) */
 name|UINT8
 name|Reserved
 index|[
-literal|31
+literal|3
+index|]
+decl_stmt|;
+comment|/* Reserved, must be zero */
+name|UINT32
+name|OspmFlags
+decl_stmt|;
+comment|/* Flags to be set by OSPM (ACPI 4.0) */
+name|UINT8
+name|Reserved1
+index|[
+literal|24
 index|]
 decl_stmt|;
 comment|/* Reserved, must be zero */
@@ -407,7 +418,33 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Flag macros */
+comment|/* GlobalLock flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_GLOCK_PENDING
+value|(1)
+end_define
+
+begin_comment
+comment|/* 00: Pending global lock ownership */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_GLOCK_OWNED
+value|(1<<1)
+end_define
+
+begin_comment
+comment|/* 01: Global lock is owned */
+end_comment
+
+begin_comment
+comment|/* Flags  */
 end_comment
 
 begin_define
@@ -421,30 +458,30 @@ begin_comment
 comment|/* 00: S4BIOS support is present */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ACPI_FACS_64BIT_WAKE
+value|(1<<1)
+end_define
+
 begin_comment
-comment|/* Global lock flags */
+comment|/* 01: 64-bit wake vector supported (ACPI 4.0) */
+end_comment
+
+begin_comment
+comment|/* OspmFlags */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_GLOCK_PENDING
-value|0x01
+name|ACPI_FACS_64BIT_ENVIRONMENT
+value|(1)
 end_define
 
 begin_comment
-comment|/* 00: Pending global lock ownership */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_GLOCK_OWNED
-value|0x02
-end_define
-
-begin_comment
-comment|/* 01: Global lock is owned */
+comment|/* 00: 64-bit wake environment is required (ACPI 4.0) */
 end_comment
 
 begin_comment

@@ -64,19 +64,14 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsCheckPackage
 parameter_list|(
-name|char
+name|ACPI_PREDEFINED_DATA
 modifier|*
-name|Pathname
+name|Data
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
 modifier|*
 name|ReturnObjectPtr
-parameter_list|,
-specifier|const
-name|ACPI_PREDEFINED_INFO
-modifier|*
-name|Predefined
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -86,9 +81,9 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsCheckPackageElements
 parameter_list|(
-name|char
+name|ACPI_PREDEFINED_DATA
 modifier|*
-name|Pathname
+name|Data
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -118,9 +113,9 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsCheckObjectType
 parameter_list|(
-name|char
+name|ACPI_PREDEFINED_DATA
 modifier|*
-name|Pathname
+name|Data
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -141,9 +136,9 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsCheckReference
 parameter_list|(
-name|char
+name|ACPI_PREDEFINED_DATA
 modifier|*
-name|Pathname
+name|Data
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -157,6 +152,10 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsRepairObject
 parameter_list|(
+name|ACPI_PREDEFINED_DATA
+modifier|*
+name|Data
+parameter_list|,
 name|UINT32
 name|ExpectedBtypes
 parameter_list|,
@@ -167,6 +166,21 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 modifier|*
 name|ReturnObjectPtr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|AcpiNsGetExpectedTypes
+parameter_list|(
+name|char
+modifier|*
+name|Buffer
+parameter_list|,
+name|UINT32
+name|ExpectedBtypes
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -197,15 +211,30 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Object is not a package element */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|ACPI_NOT_PACKAGE
+name|ACPI_NOT_PACKAGE_ELEMENT
 value|ACPI_UINT32_MAX
 end_define
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsCheckPredefinedNames  *  * PARAMETERS:  Node            - Namespace node for the method/object  *              ReturnObjectPtr - Pointer to the object returned from the  *                                evaluation of a method or object  *  * RETURN:      Status  *  * DESCRIPTION: Check an ACPI name for a match in the predefined name list.  *  ******************************************************************************/
+comment|/* Always emit warning message, not dependent on node flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_WARN_ALWAYS
+value|0
+end_define
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsCheckPredefinedNames  *  * PARAMETERS:  Node            - Namespace node for the method/object  *              UserParamCount  - Number of parameters actually passed  *              ReturnStatus    - Status from the object evaluation  *              ReturnObjectPtr - Pointer to the object returned from the  *                                evaluation of a method or object  *  * RETURN:      Status  *  * DESCRIPTION: Check an ACPI name for a match in the predefined name list.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -249,6 +278,10 @@ name|char
 modifier|*
 name|Pathname
 decl_stmt|;
+name|ACPI_PREDEFINED_DATA
+modifier|*
+name|Data
+decl_stmt|;
 comment|/* Match the name for this method/object against the predefined list */
 name|Predefined
 operator|=
@@ -257,7 +290,7 @@ argument_list|(
 name|Node
 argument_list|)
 expr_stmt|;
-comment|/* Get the full pathname to the object, for use in error messages */
+comment|/* Get the full pathname to the object, for use in warning messages */
 name|Pathname
 operator|=
 name|AcpiNsGetExternalPathname
@@ -298,10 +331,10 @@ name|Predefined
 condition|)
 block|{
 goto|goto
-name|Exit
+name|Cleanup
 goto|;
 block|}
-comment|/* If the method failed, we cannot validate the return object */
+comment|/*      * If the method failed or did not actually return an object, we cannot      * validate the return object      */
 if|if
 condition|(
 operator|(
@@ -318,30 +351,9 @@ operator|)
 condition|)
 block|{
 goto|goto
-name|Exit
+name|Cleanup
 goto|;
 block|}
-comment|/*      * Only validate the return value on the first successful evaluation of      * the method. This ensures that any warnings will only be emitted during      * the very first evaluation of the method/object.      */
-if|if
-condition|(
-name|Node
-operator|->
-name|Flags
-operator|&
-name|ANOBJ_EVALUATED
-condition|)
-block|{
-goto|goto
-name|Exit
-goto|;
-block|}
-comment|/* Mark the node as having been successfully evaluated */
-name|Node
-operator|->
-name|Flags
-operator||=
-name|ANOBJ_EVALUATED
-expr_stmt|;
 comment|/*      * If there is no return value, check if we require a return value for      * this predefined name. Either one return value is expected, or none,      * for both methods and other objects.      *      * Exit now if there is no return object. Warning if one was expected.      */
 if|if
 condition|(
@@ -373,14 +385,16 @@ operator|)
 operator|)
 condition|)
 block|{
-name|ACPI_ERROR
+name|ACPI_WARN_PREDEFINED
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%s: Missing expected return value"
-operator|,
 name|Pathname
+operator|,
+name|ACPI_WARN_ALWAYS
+operator|,
+literal|"Missing expected return value"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -390,10 +404,10 @@ name|AE_AML_NO_RETURN_VALUE
 expr_stmt|;
 block|}
 goto|goto
-name|Exit
+name|Cleanup
 goto|;
 block|}
-comment|/*      * We have a return value, but if one wasn't expected, just exit, this is      * not a problem      *      * For example, if the "Implicit Return" feature is enabled, methods will      * always return a value      */
+comment|/*      * We have a return value, but if one wasn't expected, just exit, this is      * not a problem. For example, if the "Implicit Return" feature is      * enabled, methods will always return a value.      */
 if|if
 condition|(
 operator|!
@@ -405,15 +419,56 @@ name|ExpectedBtypes
 condition|)
 block|{
 goto|goto
-name|Exit
+name|Cleanup
 goto|;
 block|}
+comment|/* Create the parameter data block for object validation */
+name|Data
+operator|=
+name|ACPI_ALLOCATE_ZEROED
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|ACPI_PREDEFINED_DATA
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Data
+condition|)
+block|{
+goto|goto
+name|Cleanup
+goto|;
+block|}
+name|Data
+operator|->
+name|Predefined
+operator|=
+name|Predefined
+expr_stmt|;
+name|Data
+operator|->
+name|NodeFlags
+operator|=
+name|Node
+operator|->
+name|Flags
+expr_stmt|;
+name|Data
+operator|->
+name|Pathname
+operator|=
+name|Pathname
+expr_stmt|;
 comment|/*      * Check that the type of the return object is what is expected for      * this predefined name      */
 name|Status
 operator|=
 name|AcpiNsCheckObjectType
 argument_list|(
-name|Pathname
+name|Data
 argument_list|,
 name|ReturnObjectPtr
 argument_list|,
@@ -423,7 +478,7 @@ name|Info
 operator|.
 name|ExpectedBtypes
 argument_list|,
-name|ACPI_NOT_PACKAGE
+name|ACPI_NOT_PACKAGE_ELEMENT
 argument_list|)
 expr_stmt|;
 if|if
@@ -435,7 +490,7 @@ argument_list|)
 condition|)
 block|{
 goto|goto
-name|Exit
+name|CheckValidationStatus
 goto|;
 block|}
 comment|/* For returned Package objects, check the type of all sub-objects */
@@ -454,15 +509,44 @@ name|Status
 operator|=
 name|AcpiNsCheckPackage
 argument_list|(
-name|Pathname
+name|Data
 argument_list|,
 name|ReturnObjectPtr
-argument_list|,
-name|Predefined
 argument_list|)
 expr_stmt|;
 block|}
-name|Exit
+name|CheckValidationStatus
+label|:
+comment|/*      * If the object validation failed or if we successfully repaired one      * or more objects, mark the parent node to suppress further warning      * messages during the next evaluation of the same method/object.      */
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+operator|||
+operator|(
+name|Data
+operator|->
+name|Flags
+operator|&
+name|ACPI_OBJECT_REPAIRED
+operator|)
+condition|)
+block|{
+name|Node
+operator|->
+name|Flags
+operator||=
+name|ANOBJ_EVALUATED
+expr_stmt|;
+block|}
+name|ACPI_FREE
+argument_list|(
+name|Data
+argument_list|)
+expr_stmt|;
+name|Cleanup
 label|:
 name|ACPI_FREE
 argument_list|(
@@ -536,14 +620,13 @@ operator|.
 name|ParamCount
 expr_stmt|;
 block|}
-comment|/* Argument count check for non-predefined methods/objects */
 if|if
 condition|(
 operator|!
 name|Predefined
 condition|)
 block|{
-comment|/*          * Warning if too few or too many arguments have been passed by the          * caller. An incorrect number of arguments may not cause the method          * to fail. However, the method will fail if there are too few          * arguments and the method attempts to use one of the missing ones.          */
+comment|/*          * Check the parameter count for non-predefined methods/objects.          *          * Warning if too few or too many arguments have been passed by the          * caller. An incorrect number of arguments may not cause the method          * to fail. However, the method will fail if there are too few          * arguments and the method attempts to use one of the missing ones.          */
 if|if
 condition|(
 name|UserParamCount
@@ -551,14 +634,16 @@ operator|<
 name|ParamCount
 condition|)
 block|{
-name|ACPI_WARNING
+name|ACPI_WARN_PREDEFINED
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%s: Insufficient arguments - needs %d, found %d"
-operator|,
 name|Pathname
+operator|,
+name|ACPI_WARN_ALWAYS
+operator|,
+literal|"Insufficient arguments - needs %u, found %u"
 operator|,
 name|ParamCount
 operator|,
@@ -575,14 +660,16 @@ operator|>
 name|ParamCount
 condition|)
 block|{
-name|ACPI_WARNING
+name|ACPI_WARN_PREDEFINED
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%s: Excess arguments - needs %d, found %d"
-operator|,
 name|Pathname
+operator|,
+name|ACPI_WARN_ALWAYS
+operator|,
+literal|"Excess arguments - needs %u, found %u"
 operator|,
 name|ParamCount
 operator|,
@@ -593,7 +680,7 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-comment|/* Allow two different legal argument counts (_SCP, etc.) */
+comment|/*      * Validate the user-supplied parameter count.      * Allow two different legal argument counts (_SCP, etc.)      */
 name|RequiredParamsCurrent
 operator|=
 name|Predefined
@@ -621,7 +708,6 @@ operator|!=
 name|ACPI_UINT32_MAX
 condition|)
 block|{
-comment|/* Validate the user-supplied parameter count */
 if|if
 condition|(
 operator|(
@@ -637,15 +723,17 @@ name|RequiredParamsOld
 operator|)
 condition|)
 block|{
-name|ACPI_WARNING
+name|ACPI_WARN_PREDEFINED
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%s: Parameter count mismatch - "
-literal|"caller passed %d, ACPI requires %d"
-operator|,
 name|Pathname
+operator|,
+name|ACPI_WARN_ALWAYS
+operator|,
+literal|"Parameter count mismatch - "
+literal|"caller passed %u, ACPI requires %u"
 operator|,
 name|UserParamCount
 operator|,
@@ -655,19 +743,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Only validate the argument count on the first successful evaluation of      * the method. This ensures that any warnings will only be emitted during      * the very first evaluation of the method/object.      */
-if|if
-condition|(
-name|Node
-operator|->
-name|Flags
-operator|&
-name|ANOBJ_EVALUATED
-condition|)
-block|{
-return|return;
-block|}
-comment|/*      * Check that the ASL-defined parameter count is what is expected for      * this predefined name.      */
+comment|/*      * Check that the ASL-defined parameter count is what is expected for      * this predefined name (parameter count as defined by the ACPI      * specification)      */
 if|if
 condition|(
 operator|(
@@ -683,14 +759,18 @@ name|RequiredParamsOld
 operator|)
 condition|)
 block|{
-name|ACPI_WARNING
+name|ACPI_WARN_PREDEFINED
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%s: Parameter count mismatch - ASL declared %d, ACPI requires %d"
-operator|,
 name|Pathname
+operator|,
+name|Node
+operator|->
+name|Flags
+operator|,
+literal|"Parameter count mismatch - ASL declared %u, ACPI requires %u"
 operator|,
 name|ParamCount
 operator|,
@@ -778,7 +858,6 @@ name|Name
 argument_list|)
 condition|)
 block|{
-comment|/* Return pointer to this table entry */
 return|return
 operator|(
 name|ThisName
@@ -810,11 +889,12 @@ operator|(
 name|NULL
 operator|)
 return|;
+comment|/* Not found */
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsCheckPackage  *  * PARAMETERS:  Pathname        - Full pathname to the node (for error msgs)  *              ReturnObjectPtr - Pointer to the object returned from the  *                                evaluation of a method or object  *              Predefined      - Pointer to entry in predefined name table  *  * RETURN:      Status  *  * DESCRIPTION: Check a returned package object for the correct count and  *              correct type of all sub-objects.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsCheckPackage  *  * PARAMETERS:  Data            - Pointer to validation data structure  *              ReturnObjectPtr - Pointer to the object returned from the  *                                evaluation of a method or object  *  * RETURN:      Status  *  * DESCRIPTION: Check a returned package object for the correct count and  *              correct type of all sub-objects.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -822,19 +902,14 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsCheckPackage
 parameter_list|(
-name|char
+name|ACPI_PREDEFINED_DATA
 modifier|*
-name|Pathname
+name|Data
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
 modifier|*
 name|ReturnObjectPtr
-parameter_list|,
-specifier|const
-name|ACPI_PREDEFINED_INFO
-modifier|*
-name|Predefined
 parameter_list|)
 block|{
 name|ACPI_OPERAND_OBJECT
@@ -886,6 +961,8 @@ expr_stmt|;
 comment|/* The package info for this name is in the next table entry */
 name|Package
 operator|=
+name|Data
+operator|->
 name|Predefined
 operator|+
 literal|1
@@ -897,6 +974,8 @@ name|ACPI_DB_NAMES
 operator|,
 literal|"%s Validating return Package of Type %X, Count %X\n"
 operator|,
+name|Data
+operator|->
 name|Pathname
 operator|,
 name|Package
@@ -937,14 +1016,20 @@ operator|!
 name|Count
 condition|)
 block|{
-name|ACPI_WARNING
+name|ACPI_WARN_PREDEFINED
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%s: Return Package has no elements (empty)"
-operator|,
+name|Data
+operator|->
 name|Pathname
+operator|,
+name|Data
+operator|->
+name|NodeFlags
+operator|,
+literal|"Return Package has no elements (empty)"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1001,15 +1086,21 @@ operator|>
 name|ExpectedCount
 condition|)
 block|{
-name|ACPI_WARNING
+name|ACPI_WARN_PREDEFINED
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%s: Return Package is larger than needed - "
-literal|"found %u, expected %u"
-operator|,
+name|Data
+operator|->
 name|Pathname
+operator|,
+name|Data
+operator|->
+name|NodeFlags
+operator|,
+literal|"Return Package is larger than needed - "
+literal|"found %u, expected %u"
 operator|,
 name|Count
 operator|,
@@ -1023,7 +1114,7 @@ name|Status
 operator|=
 name|AcpiNsCheckPackageElements
 argument_list|(
-name|Pathname
+name|Data
 argument_list|,
 name|Elements
 argument_list|,
@@ -1091,7 +1182,7 @@ name|Status
 operator|=
 name|AcpiNsCheckObjectType
 argument_list|(
-name|Pathname
+name|Data
 argument_list|,
 name|Elements
 argument_list|,
@@ -1177,7 +1268,7 @@ name|Status
 operator|=
 name|AcpiNsCheckObjectType
 argument_list|(
-name|Pathname
+name|Data
 argument_list|,
 name|Elements
 argument_list|,
@@ -1215,7 +1306,7 @@ name|Status
 operator|=
 name|AcpiNsCheckObjectType
 argument_list|(
-name|Pathname
+name|Data
 argument_list|,
 name|Elements
 argument_list|,
@@ -1256,7 +1347,7 @@ name|Status
 operator|=
 name|AcpiNsCheckObjectType
 argument_list|(
-name|Pathname
+name|Data
 argument_list|,
 name|Elements
 argument_list|,
@@ -1359,7 +1450,7 @@ name|Status
 operator|=
 name|AcpiNsCheckObjectType
 argument_list|(
-name|Pathname
+name|Data
 argument_list|,
 operator|&
 name|SubPackage
@@ -1441,7 +1532,7 @@ name|Status
 operator|=
 name|AcpiNsCheckPackageElements
 argument_list|(
-name|Pathname
+name|Data
 argument_list|,
 name|SubElements
 argument_list|,
@@ -1541,7 +1632,7 @@ name|Status
 operator|=
 name|AcpiNsCheckObjectType
 argument_list|(
-name|Pathname
+name|Data
 argument_list|,
 operator|&
 name|SubElements
@@ -1617,7 +1708,7 @@ name|Status
 operator|=
 name|AcpiNsCheckPackageElements
 argument_list|(
-name|Pathname
+name|Data
 argument_list|,
 name|SubElements
 argument_list|,
@@ -1663,7 +1754,7 @@ name|Status
 operator|=
 name|AcpiNsCheckObjectType
 argument_list|(
-name|Pathname
+name|Data
 argument_list|,
 name|SubElements
 argument_list|,
@@ -1729,7 +1820,7 @@ name|Status
 operator|=
 name|AcpiNsCheckPackageElements
 argument_list|(
-name|Pathname
+name|Data
 argument_list|,
 operator|(
 name|SubElements
@@ -1781,14 +1872,20 @@ block|}
 break|break;
 default|default:
 comment|/* Should not get here if predefined info table is correct */
-name|ACPI_WARNING
+name|ACPI_WARN_PREDEFINED
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%s: Invalid internal return type in table entry: %X"
-operator|,
+name|Data
+operator|->
 name|Pathname
+operator|,
+name|Data
+operator|->
+name|NodeFlags
+operator|,
+literal|"Invalid internal return type in table entry: %X"
 operator|,
 name|Package
 operator|->
@@ -1812,15 +1909,20 @@ return|;
 name|PackageTooSmall
 label|:
 comment|/* Error exit for the case with an incorrect package count */
-name|ACPI_WARNING
+name|ACPI_WARN_PREDEFINED
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%s: Return Package is too small - "
-literal|"found %u, expected %u"
-operator|,
+name|Data
+operator|->
 name|Pathname
+operator|,
+name|Data
+operator|->
+name|NodeFlags
+operator|,
+literal|"Return Package is too small - found %u, expected %u"
 operator|,
 name|Count
 operator|,
@@ -1837,7 +1939,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsCheckPackageElements  *  * PARAMETERS:  Pathname        - Full pathname to the node (for error msgs)  *              Elements        - Pointer to the package elements array  *              Type1           - Object type for first group  *              Count1          - Count for first group  *              Type2           - Object type for second group  *              Count2          - Count for second group  *              StartIndex      - Start of the first group of elements  *  * RETURN:      Status  *  * DESCRIPTION: Check that all elements of a package are of the correct object  *              type. Supports up to two groups of different object types.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsCheckPackageElements  *  * PARAMETERS:  Data            - Pointer to validation data structure  *              Elements        - Pointer to the package elements array  *              Type1           - Object type for first group  *              Count1          - Count for first group  *              Type2           - Object type for second group  *              Count2          - Count for second group  *              StartIndex      - Start of the first group of elements  *  * RETURN:      Status  *  * DESCRIPTION: Check that all elements of a package are of the correct object  *              type. Supports up to two groups of different object types.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1845,9 +1947,9 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsCheckPackageElements
 parameter_list|(
-name|char
+name|ACPI_PREDEFINED_DATA
 modifier|*
-name|Pathname
+name|Data
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1902,7 +2004,7 @@ name|Status
 operator|=
 name|AcpiNsCheckObjectType
 argument_list|(
-name|Pathname
+name|Data
 argument_list|,
 name|ThisElement
 argument_list|,
@@ -1949,7 +2051,7 @@ name|Status
 operator|=
 name|AcpiNsCheckObjectType
 argument_list|(
-name|Pathname
+name|Data
 argument_list|,
 name|ThisElement
 argument_list|,
@@ -1991,7 +2093,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsCheckObjectType  *  * PARAMETERS:  Pathname        - Full pathname to the node (for error msgs)  *              ReturnObjectPtr - Pointer to the object returned from the  *                                evaluation of a method or object  *              ExpectedBtypes  - Bitmap of expected return type(s)  *              PackageIndex    - Index of object within parent package (if  *                                applicable - ACPI_NOT_PACKAGE otherwise)  *  * RETURN:      Status  *  * DESCRIPTION: Check the type of the return object against the expected object  *              type(s). Use of Btype allows multiple expected object types.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsCheckObjectType  *  * PARAMETERS:  Data            - Pointer to validation data structure  *              ReturnObjectPtr - Pointer to the object returned from the  *                                evaluation of a method or object  *              ExpectedBtypes  - Bitmap of expected return type(s)  *              PackageIndex    - Index of object within parent package (if  *                                applicable - ACPI_NOT_PACKAGE_ELEMENT  *                                otherwise)  *  * RETURN:      Status  *  * DESCRIPTION: Check the type of the return object against the expected object  *              type(s). Use of Btype allows multiple expected object types.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1999,9 +2101,9 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsCheckObjectType
 parameter_list|(
-name|char
+name|ACPI_PREDEFINED_DATA
 modifier|*
-name|Pathname
+name|Data
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -2037,15 +2139,6 @@ literal|48
 index|]
 decl_stmt|;
 comment|/* Room for 5 types */
-name|UINT32
-name|ThisRtype
-decl_stmt|;
-name|UINT32
-name|i
-decl_stmt|;
-name|UINT32
-name|j
-decl_stmt|;
 comment|/*      * If we get a NULL ReturnObject here, it is a NULL package element,      * and this is always an error.      */
 if|if
 condition|(
@@ -2068,14 +2161,20 @@ operator|==
 name|ACPI_DESC_TYPE_NAMED
 condition|)
 block|{
-name|ACPI_WARNING
+name|ACPI_WARN_PREDEFINED
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%s: Invalid return type - Found a Namespace node [%4.4s] type %s"
-operator|,
+name|Data
+operator|->
 name|Pathname
+operator|,
+name|Data
+operator|->
+name|NodeFlags
+operator|,
+literal|"Invalid return type - Found a Namespace node [%4.4s] type %s"
 operator|,
 name|ReturnObject
 operator|->
@@ -2174,6 +2273,8 @@ name|Status
 operator|=
 name|AcpiNsRepairObject
 argument_list|(
+name|Data
+argument_list|,
 name|ExpectedBtypes
 argument_list|,
 name|PackageIndex
@@ -2191,9 +2292,10 @@ condition|)
 block|{
 return|return
 operator|(
-name|Status
+name|AE_OK
 operator|)
 return|;
+comment|/* Repair was successful */
 block|}
 goto|goto
 name|TypeErrorExit
@@ -2215,7 +2317,7 @@ name|Status
 operator|=
 name|AcpiNsCheckReference
 argument_list|(
-name|Pathname
+name|Data
 argument_list|,
 name|ReturnObject
 argument_list|)
@@ -2229,84 +2331,34 @@ return|;
 name|TypeErrorExit
 label|:
 comment|/* Create a string with all expected types for this predefined object */
-name|j
-operator|=
-literal|1
-expr_stmt|;
-name|TypeBuffer
-index|[
-literal|0
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|ThisRtype
-operator|=
-name|ACPI_RTYPE_INTEGER
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|ACPI_NUM_RTYPES
-condition|;
-name|i
-operator|++
-control|)
-block|{
-comment|/* If one of the expected types, concatenate the name of this type */
-if|if
-condition|(
-name|ExpectedBtypes
-operator|&
-name|ThisRtype
-condition|)
-block|{
-name|ACPI_STRCAT
+name|AcpiNsGetExpectedTypes
 argument_list|(
 name|TypeBuffer
 argument_list|,
-operator|&
-name|AcpiRtypeNames
-index|[
-name|i
-index|]
-index|[
-name|j
-index|]
+name|ExpectedBtypes
 argument_list|)
 expr_stmt|;
-name|j
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Use name separator from now on */
-block|}
-name|ThisRtype
-operator|<<=
-literal|1
-expr_stmt|;
-comment|/* Next Rtype */
-block|}
 if|if
 condition|(
 name|PackageIndex
 operator|==
-name|ACPI_NOT_PACKAGE
+name|ACPI_NOT_PACKAGE_ELEMENT
 condition|)
 block|{
-name|ACPI_WARNING
+name|ACPI_WARN_PREDEFINED
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%s: Return type mismatch - found %s, expected %s"
-operator|,
+name|Data
+operator|->
 name|Pathname
+operator|,
+name|Data
+operator|->
+name|NodeFlags
+operator|,
+literal|"Return type mismatch - found %s, expected %s"
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
@@ -2320,15 +2372,21 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ACPI_WARNING
+name|ACPI_WARN_PREDEFINED
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%s: Return Package type mismatch at index %u - "
-literal|"found %s, expected %s"
-operator|,
+name|Data
+operator|->
 name|Pathname
+operator|,
+name|Data
+operator|->
+name|NodeFlags
+operator|,
+literal|"Return Package type mismatch at index %u - "
+literal|"found %s, expected %s"
 operator|,
 name|PackageIndex
 operator|,
@@ -2351,7 +2409,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsCheckReference  *  * PARAMETERS:  Pathname        - Full pathname to the node (for error msgs)  *              ReturnObject    - Object returned from the evaluation of a  *                                method or object  *  * RETURN:      Status  *  * DESCRIPTION: Check a returned reference object for the correct reference  *              type. The only reference type that can be returned from a  *              predefined method is a named reference. All others are invalid.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsCheckReference  *  * PARAMETERS:  Data            - Pointer to validation data structure  *              ReturnObject    - Object returned from the evaluation of a  *                                method or object  *  * RETURN:      Status  *  * DESCRIPTION: Check a returned reference object for the correct reference  *              type. The only reference type that can be returned from a  *              predefined method is a named reference. All others are invalid.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2359,9 +2417,9 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsCheckReference
 parameter_list|(
-name|char
+name|ACPI_PREDEFINED_DATA
 modifier|*
-name|Pathname
+name|Data
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -2386,15 +2444,20 @@ name|AE_OK
 operator|)
 return|;
 block|}
-name|ACPI_WARNING
+name|ACPI_WARN_PREDEFINED
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%s: Return type mismatch - "
-literal|"unexpected reference object type [%s] %2.2X"
-operator|,
+name|Data
+operator|->
 name|Pathname
+operator|,
+name|Data
+operator|->
+name|NodeFlags
+operator|,
+literal|"Return type mismatch - unexpected reference object type [%s] %2.2X"
 operator|,
 name|AcpiUtGetReferenceName
 argument_list|(
@@ -2418,7 +2481,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsRepairObject  *  * PARAMETERS:  Pathname        - Full pathname to the node (for error msgs)  *              PackageIndex    - Used to determine if target is in a package  *              ReturnObjectPtr - Pointer to the object returned from the  *                                evaluation of a method or object  *  * RETURN:      Status. AE_OK if repair was successful.  *  * DESCRIPTION: Attempt to repair/convert a return object of a type that was  *              not expected.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsRepairObject  *  * PARAMETERS:  Data            - Pointer to validation data structure  *              ExpectedBtypes  - Object types expected  *              PackageIndex    - Index of object within parent package (if  *                                applicable - ACPI_NOT_PACKAGE_ELEMENT  *                                otherwise)  *              ReturnObjectPtr - Pointer to the object returned from the  *                                evaluation of a method or object  *  * RETURN:      Status. AE_OK if repair was successful.  *  * DESCRIPTION: Attempt to repair/convert a return object of a type that was  *              not expected.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2426,6 +2489,10 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsRepairObject
 parameter_list|(
+name|ACPI_PREDEFINED_DATA
+modifier|*
+name|Data
+parameter_list|,
 name|UINT32
 name|ExpectedBtypes
 parameter_list|,
@@ -2464,6 +2531,7 @@ block|{
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
+comment|/* Does the method/object legally return a string? */
 if|if
 condition|(
 operator|!
@@ -2551,7 +2619,86 @@ argument_list|,
 name|Length
 argument_list|)
 expr_stmt|;
-comment|/* Install the new return object */
+comment|/*          * If the original object is a package element, we need to:          * 1. Set the reference count of the new object to match the          *    reference count of the old object.          * 2. Decrement the reference count of the original object.          */
+if|if
+condition|(
+name|PackageIndex
+operator|!=
+name|ACPI_NOT_PACKAGE_ELEMENT
+condition|)
+block|{
+name|NewObject
+operator|->
+name|Common
+operator|.
+name|ReferenceCount
+operator|=
+name|ReturnObject
+operator|->
+name|Common
+operator|.
+name|ReferenceCount
+expr_stmt|;
+if|if
+condition|(
+name|ReturnObject
+operator|->
+name|Common
+operator|.
+name|ReferenceCount
+operator|>
+literal|1
+condition|)
+block|{
+name|ReturnObject
+operator|->
+name|Common
+operator|.
+name|ReferenceCount
+operator|--
+expr_stmt|;
+block|}
+name|ACPI_WARN_PREDEFINED
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+name|Data
+operator|->
+name|Pathname
+operator|,
+name|Data
+operator|->
+name|NodeFlags
+operator|,
+literal|"Converted Buffer to expected String at index %u"
+operator|,
+name|PackageIndex
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ACPI_WARN_PREDEFINED
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+name|Data
+operator|->
+name|Pathname
+operator|,
+name|Data
+operator|->
+name|NodeFlags
+operator|,
+literal|"Converted Buffer to expected String"
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Delete old object, install the new return object */
 name|AcpiUtRemoveReference
 argument_list|(
 name|ReturnObject
@@ -2562,25 +2709,12 @@ name|ReturnObjectPtr
 operator|=
 name|NewObject
 expr_stmt|;
-comment|/*          * If the object is a package element, we need to:          * 1. Decrement the reference count of the orignal object, it was          *    incremented when building the package          * 2. Increment the reference count of the new object, it will be          *    decremented when releasing the package          */
-if|if
-condition|(
-name|PackageIndex
-operator|!=
-name|ACPI_NOT_PACKAGE
-condition|)
-block|{
-name|AcpiUtRemoveReference
-argument_list|(
-name|ReturnObject
-argument_list|)
+name|Data
+operator|->
+name|Flags
+operator||=
+name|ACPI_OBJECT_REPAIRED
 expr_stmt|;
-name|AcpiUtAddReference
-argument_list|(
-name|NewObject
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|AE_OK
@@ -2594,6 +2728,98 @@ operator|(
 name|AE_AML_OPERAND_TYPE
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetExpectedTypes  *  * PARAMETERS:  Buffer          - Pointer to where the string is returned  *              ExpectedBtypes  - Bitmap of expected return type(s)  *  * RETURN:      Buffer is populated with type names.  *  * DESCRIPTION: Translate the expected types bitmap into a string of ascii  *              names of expected types, for use in warning messages.  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|AcpiNsGetExpectedTypes
+parameter_list|(
+name|char
+modifier|*
+name|Buffer
+parameter_list|,
+name|UINT32
+name|ExpectedBtypes
+parameter_list|)
+block|{
+name|UINT32
+name|ThisRtype
+decl_stmt|;
+name|UINT32
+name|i
+decl_stmt|;
+name|UINT32
+name|j
+decl_stmt|;
+name|j
+operator|=
+literal|1
+expr_stmt|;
+name|Buffer
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|ThisRtype
+operator|=
+name|ACPI_RTYPE_INTEGER
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ACPI_NUM_RTYPES
+condition|;
+name|i
+operator|++
+control|)
+block|{
+comment|/* If one of the expected types, concatenate the name of this type */
+if|if
+condition|(
+name|ExpectedBtypes
+operator|&
+name|ThisRtype
+condition|)
+block|{
+name|ACPI_STRCAT
+argument_list|(
+name|Buffer
+argument_list|,
+operator|&
+name|AcpiRtypeNames
+index|[
+name|i
+index|]
+index|[
+name|j
+index|]
+argument_list|)
+expr_stmt|;
+name|j
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Use name separator from now on */
+block|}
+name|ThisRtype
+operator|<<=
+literal|1
+expr_stmt|;
+comment|/* Next Rtype */
+block|}
 block|}
 end_function
 

@@ -376,6 +376,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|AcpiNsRemoveNode
+parameter_list|(
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|AcpiNsDeleteNamespaceSubtree
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
