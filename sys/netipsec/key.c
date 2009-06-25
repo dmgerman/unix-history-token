@@ -18188,6 +18188,9 @@ operator|*
 operator|)
 name|sa
 expr_stmt|;
+name|IN_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|ia
@@ -18244,11 +18247,17 @@ operator|.
 name|s_addr
 condition|)
 block|{
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 literal|1
 return|;
 block|}
 block|}
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 break|break;
 endif|#
 directive|endif

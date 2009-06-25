@@ -405,6 +405,9 @@ name|in_ifaddr
 modifier|*
 name|ia
 decl_stmt|;
+name|IN_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|V_subnetsarelocal
@@ -418,6 +421,7 @@ argument|&V_in_ifaddrhead
 argument_list|,
 argument|ia_link
 argument_list|)
+block|{
 if|if
 condition|(
 operator|(
@@ -432,11 +436,17 @@ name|ia
 operator|->
 name|ia_net
 condition|)
+block|{
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+block|}
+block|}
 block|}
 else|else
 block|{
@@ -448,6 +458,7 @@ argument|&V_in_ifaddrhead
 argument_list|,
 argument|ia_link
 argument_list|)
+block|{
 if|if
 condition|(
 operator|(
@@ -462,12 +473,21 @@ name|ia
 operator|->
 name|ia_subnet
 condition|)
+block|{
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
 block|}
+block|}
+block|}
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -499,6 +519,9 @@ name|in_ifaddr
 modifier|*
 name|ia
 decl_stmt|;
+name|IN_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|ia
@@ -523,12 +546,20 @@ name|in
 operator|.
 name|s_addr
 condition|)
+block|{
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
 block|}
+block|}
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1031,8 +1062,6 @@ decl_stmt|,
 name|iaIsNew
 decl_stmt|,
 name|maskIsNew
-decl_stmt|,
-name|s
 decl_stmt|;
 name|int
 name|iaIsFirst
@@ -1374,6 +1403,9 @@ operator|)
 operator|->
 name|sin_addr
 expr_stmt|;
+name|IN_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|iap
@@ -1442,6 +1474,9 @@ name|ia
 operator|->
 name|ia_ifa
 argument_list|)
+expr_stmt|;
+name|IN_IFADDR_RUNLOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1573,6 +1608,9 @@ name|in_ifaddr
 modifier|*
 name|oia
 decl_stmt|;
+name|IN_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|oia
@@ -1652,6 +1690,9 @@ name|oia
 operator|->
 name|ia_ifa
 argument_list|)
+expr_stmt|;
+name|IN_IFADDR_RUNLOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1903,9 +1944,7 @@ name|ifa
 argument_list|)
 expr_stmt|;
 comment|/* in_ifaddrhead */
-name|s
-operator|=
-name|splnet
+name|IN_IFADDR_WLOCK
 argument_list|()
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
@@ -1918,10 +1957,8 @@ argument_list|,
 name|ia_link
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|IN_IFADDR_WUNLOCK
+argument_list|()
 expr_stmt|;
 name|iaIsNew
 operator|=
@@ -2829,9 +2866,7 @@ name|ia_ifa
 argument_list|)
 expr_stmt|;
 comment|/* if_addrhead */
-name|s
-operator|=
-name|splnet
+name|IN_IFADDR_WLOCK
 argument_list|()
 expr_stmt|;
 name|TAILQ_REMOVE
@@ -2844,15 +2879,6 @@ argument_list|,
 name|ia_link
 argument_list|)
 expr_stmt|;
-name|ifa_free
-argument_list|(
-operator|&
-name|ia
-operator|->
-name|ia_ifa
-argument_list|)
-expr_stmt|;
-comment|/* in_ifaddrhead */
 if|if
 condition|(
 name|ia
@@ -2875,6 +2901,9 @@ name|ia
 argument_list|,
 name|ia_hash
 argument_list|)
+expr_stmt|;
+name|IN_IFADDR_WUNLOCK
+argument_list|()
 expr_stmt|;
 comment|/* 		 * If this is the last IPv4 address configured on this 		 * interface, leave the all-hosts group. 		 * No state-change report need be transmitted. 		 */
 name|if_ia
@@ -2954,11 +2983,19 @@ name|ia_ifa
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
+else|else
+name|IN_IFADDR_WUNLOCK
+argument_list|()
+expr_stmt|;
+name|ifa_free
 argument_list|(
-name|s
+operator|&
+name|ia
+operator|->
+name|ia_ifa
 argument_list|)
 expr_stmt|;
+comment|/* in_ifaddrhead */
 name|out
 label|:
 if|if
@@ -4002,6 +4039,10 @@ name|sin_family
 operator|==
 name|AF_INET
 condition|)
+block|{
+name|IN_IFADDR_WLOCK
+argument_list|()
+expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 name|INADDR_HASH
@@ -4020,6 +4061,10 @@ argument_list|,
 name|ia_hash
 argument_list|)
 expr_stmt|;
+name|IN_IFADDR_WUNLOCK
+argument_list|()
+expr_stmt|;
+block|}
 comment|/* 	 * Give the interface a chance to initialize 	 * if this is its first address, 	 * and to validate the address if necessary. 	 */
 if|if
 condition|(
@@ -4066,6 +4111,9 @@ name|ia_addr
 operator|=
 name|oldaddr
 expr_stmt|;
+name|IN_IFADDR_WLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|ia
@@ -4102,6 +4150,9 @@ name|ia
 argument_list|,
 name|ia_hash
 argument_list|)
+expr_stmt|;
+name|IN_IFADDR_WUNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -4717,6 +4768,9 @@ operator|.
 name|s_addr
 expr_stmt|;
 block|}
+name|IN_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ia
@@ -4830,12 +4884,21 @@ name|if_type
 operator|!=
 name|IFT_CARP
 condition|)
+block|{
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|EEXIST
 operator|)
 return|;
+block|}
 else|else
+block|{
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -4843,6 +4906,10 @@ operator|)
 return|;
 block|}
 block|}
+block|}
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 comment|/* 	 * No-one seem to have this prefix route, so we try to insert it. 	 */
 name|error
 operator|=
@@ -5182,6 +5249,9 @@ name|s_addr
 argument_list|)
 expr_stmt|;
 block|}
+name|IN_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ia
@@ -5269,6 +5339,9 @@ endif|#
 directive|endif
 condition|)
 block|{
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|rtinit
 argument_list|(
 operator|&
@@ -5337,6 +5410,9 @@ operator|)
 return|;
 block|}
 block|}
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 comment|/* 	 * remove all L2 entries on the given prefix 	 */
 name|bzero
 argument_list|(

@@ -525,6 +525,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|struct
+name|rwlock
+name|in_ifaddr_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_V_INT
 argument_list|(
@@ -1547,6 +1554,9 @@ argument_list|,
 operator|&
 name|V_in_ifaddrhmask
 argument_list|)
+expr_stmt|;
+name|IN_IFADDR_LOCK_INIT
+argument_list|()
 expr_stmt|;
 comment|/* Initialize IP reassembly queue. */
 for|for
@@ -2684,6 +2694,7 @@ literal|0
 operator|)
 expr_stmt|;
 comment|/* 	 * Check for exact addresses in the hash bucket. 	 */
+comment|/* IN_IFADDR_RLOCK(); */
 name|LIST_FOREACH
 argument_list|(
 argument|ia
@@ -2731,11 +2742,13 @@ operator|->
 name|ia_ifa
 argument_list|)
 expr_stmt|;
+comment|/* IN_IFADDR_RUNLOCK(); */
 goto|goto
 name|ours
 goto|;
 block|}
 block|}
+comment|/* IN_IFADDR_RUNLOCK(); */
 comment|/* 	 * Check for broadcast addresses. 	 * 	 * Only accept broadcast packets that arrive via the matching 	 * interface.  Reception of forwarded directed broadcasts would 	 * be handled via ip_forward() and ether_output() with the loopback 	 * into the stack for SIMPLEX interfaces handled by ether_output(). 	 */
 if|if
 condition|(

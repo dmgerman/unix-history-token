@@ -3237,6 +3237,9 @@ operator|->
 name|ip_src
 expr_stmt|;
 comment|/* 	 * Source selection for ICMP replies: 	 * 	 * If the incoming packet was addressed directly to one of our 	 * own addresses, use dst as the src for the reply. 	 */
+name|IN_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|ia
@@ -3271,11 +3274,17 @@ argument_list|)
 operator|->
 name|sin_addr
 expr_stmt|;
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 goto|goto
 name|match
 goto|;
 block|}
 block|}
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 comment|/* 	 * If the incoming packet was addressed to one of our broadcast 	 * addresses, use the first non-broadcast address which corresponds 	 * to the incoming interface. 	 */
 name|ifp
 operator|=

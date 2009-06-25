@@ -2795,6 +2795,9 @@ operator|-
 literal|1
 return|;
 comment|/* 	 * reject packets with broadcast 	 */
+name|IN_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|ia4
@@ -2848,11 +2851,19 @@ name|sin_addr
 operator|.
 name|s_addr
 condition|)
+block|{
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
 block|}
+block|}
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 comment|/* 	 * perform ingress filter 	 */
 if|if
 condition|(

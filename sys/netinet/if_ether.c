@@ -2429,6 +2429,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * For a bridge, we want to check the address irrespective 	 * of the receive interface. (This will change slightly 	 * when we have clusters of interfaces). 	 * If the interface does not match, but the recieving interface 	 * is part of carp, we call carp_iamatch to see if this is a 	 * request for the virtual host ip. 	 * XXX: This is really ugly! 	 */
+name|IN_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|ia
@@ -2480,6 +2483,9 @@ name|ia
 operator|->
 name|ia_ifa
 argument_list|)
+expr_stmt|;
+name|IN_IFADDR_RUNLOCK
+argument_list|()
 expr_stmt|;
 goto|goto
 name|match
@@ -2535,6 +2541,9 @@ name|ia
 operator|->
 name|ia_ifa
 argument_list|)
+expr_stmt|;
+name|IN_IFADDR_RUNLOCK
+argument_list|()
 expr_stmt|;
 goto|goto
 name|match
@@ -2593,6 +2602,9 @@ name|ia
 operator|->
 name|ia_ifa
 argument_list|)
+expr_stmt|;
+name|IN_IFADDR_RUNLOCK
+argument_list|()
 expr_stmt|;
 goto|goto
 name|match
@@ -2653,6 +2665,9 @@ name|ia
 operator|->
 name|ia_ifp
 expr_stmt|;
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 goto|goto
 name|match
 goto|;
@@ -2662,6 +2677,9 @@ block|}
 undef|#
 directive|undef
 name|BDG_MEMBER_MATCHES_ARP
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 comment|/* 	 * No match, use the first inet address on the receive interface 	 * as a dummy address for the rest of the function. 	 */
 name|IF_ADDR_LOCK
 argument_list|(
@@ -2714,6 +2732,9 @@ name|ifp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If bridging, fall back to using any inet address. 	 */
+name|IN_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2731,9 +2752,14 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 goto|goto
 name|drop
 goto|;
+block|}
 name|ifa_ref
 argument_list|(
 operator|&
@@ -2741,6 +2767,9 @@ name|ia
 operator|->
 name|ia_ifa
 argument_list|)
+expr_stmt|;
+name|IN_IFADDR_RUNLOCK
+argument_list|()
 expr_stmt|;
 name|match
 label|:

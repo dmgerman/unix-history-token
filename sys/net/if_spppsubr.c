@@ -24761,6 +24761,9 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
+name|IN_IFADDR_WLOCK
+argument_list|()
+expr_stmt|;
 name|LIST_REMOVE
 argument_list|(
 name|ia
@@ -24783,6 +24786,9 @@ name|ia
 argument_list|,
 name|ia_hash
 argument_list|)
+expr_stmt|;
+name|IN_IFADDR_WUNLOCK
+argument_list|()
 expr_stmt|;
 comment|/* add new route */
 name|error

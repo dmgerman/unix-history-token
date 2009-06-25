@@ -8241,6 +8241,9 @@ name|mifp
 operator|=
 name|NULL
 expr_stmt|;
+name|IN_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ia
@@ -8283,6 +8286,9 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 return|return

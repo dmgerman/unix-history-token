@@ -8332,6 +8332,9 @@ argument_list|(
 name|curvnet
 argument_list|)
 expr_stmt|;
+name|IN_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -8367,6 +8370,14 @@ operator|++
 operator|=
 name|create_verf
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 operator|*
 name|tl
 operator|=

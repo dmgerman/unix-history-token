@@ -1865,6 +1865,10 @@ literal|0
 return|;
 block|}
 comment|/* reject packets with broadcast on source */
+comment|/* XXXRW: should use hash lists? */
+name|IN_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ia4
@@ -1907,10 +1911,18 @@ name|sin_addr
 operator|.
 name|s_addr
 condition|)
+block|{
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 literal|0
 return|;
 block|}
+block|}
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 comment|/* ingress filters on outer source */
 if|if
 condition|(
