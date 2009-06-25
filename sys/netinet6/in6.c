@@ -3326,6 +3326,15 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|ifa_ref
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
+comment|/* in6_if_addrhead */
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -4725,19 +4734,19 @@ condition|(
 name|hostIsNew
 condition|)
 block|{
+name|in6_unlink_ifa
+argument_list|(
+name|ia
+argument_list|,
+name|ifp
+argument_list|)
+expr_stmt|;
 name|ifa_free
 argument_list|(
 operator|&
 name|ia
 operator|->
 name|ia_ifa
-argument_list|)
-expr_stmt|;
-name|in6_unlink_ifa
-argument_list|(
-name|ia
-argument_list|,
-name|ifp
 argument_list|)
 expr_stmt|;
 block|}
@@ -6029,6 +6038,15 @@ argument_list|,
 name|ia_link
 argument_list|)
 expr_stmt|;
+name|ifa_free
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
+comment|/* in6_ifaddrhead */
 comment|/* 	 * Release the reference to the base prefix.  There should be a 	 * positive reference. 	 */
 if|if
 condition|(
@@ -6084,15 +6102,6 @@ name|pfxlist_onlink_check
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* 	 * release another refcnt for the link from in6_ifaddr. 	 * Note that we should decrement the refcnt at least once for all *BSD. 	 */
-name|ifa_free
-argument_list|(
-operator|&
-name|ia
-operator|->
-name|ia_ifa
-argument_list|)
-expr_stmt|;
 name|splx
 argument_list|(
 name|s
