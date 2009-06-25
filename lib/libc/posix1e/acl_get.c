@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -285,6 +291,8 @@ name|fd
 argument_list|,
 name|_PC_ACL_NFS4
 argument_list|)
+operator|==
+literal|1
 condition|)
 return|return
 operator|(

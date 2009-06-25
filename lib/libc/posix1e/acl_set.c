@@ -352,6 +352,8 @@ name|fd
 argument_list|,
 name|_PC_ACL_NFS4
 argument_list|)
+operator|==
+literal|1
 condition|)
 return|return
 operator|(
