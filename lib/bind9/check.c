@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: check.c,v 1.95.12.3 2009/02/17 03:43:07 marka Exp $ */
+comment|/* $Id: check.c,v 1.95.12.4 2009/06/03 00:06:01 marka Exp $ */
 end_comment
 
 begin_comment
@@ -5692,6 +5692,8 @@ block|,
 name|HINTZONE
 operator||
 name|STUBZONE
+operator||
+name|DELEGATIONZONE
 block|}
 block|,
 block|{

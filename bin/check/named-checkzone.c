@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: named-checkzone.c,v 1.51.34.2 2009/02/16 23:47:15 tbox Exp $ */
+comment|/* $Id: named-checkzone.c,v 1.51.34.3 2009/05/29 02:17:43 marka Exp $ */
 end_comment
 
 begin_comment
@@ -489,16 +489,20 @@ name|prog_name
 operator|+=
 literal|3
 expr_stmt|;
+define|#
+directive|define
+name|PROGCMP
+parameter_list|(
+name|X
+parameter_list|)
+define|\
+value|(strcasecmp(prog_name, X) == 0 || strcasecmp(prog_name, X ".exe") == 0)
 if|if
 condition|(
-name|strcmp
+name|PROGCMP
 argument_list|(
-name|prog_name
-argument_list|,
 literal|"named-checkzone"
 argument_list|)
-operator|==
-literal|0
 condition|)
 name|progmode
 operator|=
@@ -507,14 +511,10 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|strcmp
+name|PROGCMP
 argument_list|(
-name|prog_name
-argument_list|,
 literal|"named-compilezone"
 argument_list|)
-operator|==
-literal|0
 condition|)
 name|progmode
 operator|=
