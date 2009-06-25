@@ -4565,10 +4565,6 @@ operator|->
 name|endoff
 condition|)
 block|{
-name|had_param_ch
-operator|=
-literal|1
-expr_stmt|;
 name|q
 operator|=
 name|p
@@ -4591,6 +4587,10 @@ name|inquotes
 condition|)
 block|{
 comment|/* Only NULs (should be from "$@") end args */
+name|had_param_ch
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -4623,15 +4623,15 @@ name|p
 argument_list|)
 condition|)
 block|{
+name|had_param_ch
+operator|=
+literal|1
+expr_stmt|;
 name|p
 operator|++
 expr_stmt|;
 continue|continue;
 block|}
-name|had_param_ch
-operator|=
-literal|0
-expr_stmt|;
 name|ifsspc
 operator|=
 name|strchr
@@ -4663,6 +4663,10 @@ name|p
 expr_stmt|;
 continue|continue;
 block|}
+name|had_param_ch
+operator|=
+literal|0
+expr_stmt|;
 block|}
 comment|/* Save this argument... */
 operator|*
