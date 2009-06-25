@@ -9808,6 +9808,14 @@ operator|=
 name|vector
 expr_stmt|;
 comment|/* 		** Bind the msix vector, and thus the 		** ring to the corresponding cpu. 		*/
+if|if
+condition|(
+name|adapter
+operator|->
+name|num_queues
+operator|>
+literal|1
+condition|)
 name|bus_bind_intr
 argument_list|(
 name|dev
@@ -10020,6 +10028,14 @@ name|vector
 argument_list|)
 expr_stmt|;
 comment|/* 		** Bind the msix vector, and thus the 		** ring to the corresponding cpu. 		*/
+if|if
+condition|(
+name|adapter
+operator|->
+name|num_queues
+operator|>
+literal|1
+condition|)
 name|bus_bind_intr
 argument_list|(
 name|dev
