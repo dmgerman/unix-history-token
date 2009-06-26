@@ -561,6 +561,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASMC_MBP4_TEMPS
+value|{ "TB0T", "Th0H", "Th1H", "Th2H", "Tm0P", \ 				  "TG0H", "TG0D", "TC0D", "TC0P", "Ts0P", \ 				  "TTF0", "TW0P", NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASMC_MBP4_TEMPNAMES
+value|{ "enclosure", "heatsink1", "heatsink2", \ 				  "heatsink3", "memory", "graphicssink", \ 				  "graphics", "cpu", "cpu2", "unknown1", \ 				  "unknown2", "wireless", }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASMC_MBP4_TEMPDESCS
+value|{ "Enclosure Bottomside", \ 				  "Main Heatsink 1", "Main Heatsink 2", \ 				  "Main Heatsink 3", \ 				  "Memory Controller", \ 				  "Graphics Chip Heatsink", \ 				  "Graphics Chip Diode", \ 				  "CPU Temperature Diode", "CPU Point 2", \ 				  "Unknown", "Unknown", \ 				  "Wireless Module", }
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASMC_MM_TEMPS
 value|{ "TN0P", "TN1P", NULL }
 end_define
