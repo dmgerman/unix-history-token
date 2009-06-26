@@ -945,6 +945,74 @@ define|if)	mtx_assert(&(if)->if_addr_mtx, MA_OWNED)
 end_define
 
 begin_comment
+comment|/*  * Function variations on locking macros intended to be used by loadable  * kernel modules in order to divorce them from the internals of address list  * locking.  */
+end_comment
+
+begin_function_decl
+name|void
+name|if_addr_rlock
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* if_addrhead */
+end_comment
+
+begin_function_decl
+name|void
+name|if_addr_runlock
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* if_addrhead */
+end_comment
+
+begin_function_decl
+name|void
+name|if_maddr_rlock
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* if_multiaddrs */
+end_comment
+
+begin_function_decl
+name|void
+name|if_maddr_runlock
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* if_multiaddrs */
+end_comment
+
+begin_comment
 comment|/*  * Output queues (ifp->if_snd) and slow device input queues (*ifp->if_slowq)  * are queues of messages stored on ifqueue structures  * (defined above).  Entries are added to and deleted from these structures  * by these macros, which should be called with ipl raised to splimp().  */
 end_comment
 
