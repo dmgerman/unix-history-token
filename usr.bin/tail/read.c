@@ -111,6 +111,11 @@ name|FILE
 modifier|*
 name|fp
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fn
+parameter_list|,
 name|off_t
 name|off
 parameter_list|)
@@ -218,7 +223,9 @@ argument_list|)
 condition|)
 block|{
 name|ierr
-argument_list|()
+argument_list|(
+name|fn
+argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
@@ -443,6 +450,11 @@ parameter_list|(
 name|FILE
 modifier|*
 name|fp
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fn
 parameter_list|,
 name|off_t
 name|off
@@ -731,7 +743,9 @@ argument_list|)
 condition|)
 block|{
 name|ierr
-argument_list|()
+argument_list|(
+name|fn
+argument_list|)
 expr_stmt|;
 name|rc
 operator|=

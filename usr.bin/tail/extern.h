@@ -117,6 +117,10 @@ parameter_list|(
 name|FILE
 modifier|*
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
 name|enum
 name|STYLE
 parameter_list|,
@@ -134,6 +138,10 @@ name|void
 name|reverse
 parameter_list|(
 name|FILE
+modifier|*
+parameter_list|,
+specifier|const
+name|char
 modifier|*
 parameter_list|,
 name|enum
@@ -155,6 +163,10 @@ parameter_list|(
 name|FILE
 modifier|*
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
 name|off_t
 parameter_list|)
 function_decl|;
@@ -167,6 +179,10 @@ parameter_list|(
 name|FILE
 modifier|*
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
 name|off_t
 parameter_list|)
 function_decl|;
@@ -176,7 +192,9 @@ begin_function_decl
 name|void
 name|ierr
 parameter_list|(
-name|void
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -232,15 +250,6 @@ decl_stmt|,
 name|rval
 decl_stmt|,
 name|no_files
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|fname
 decl_stmt|;
 end_decl_stmt
 

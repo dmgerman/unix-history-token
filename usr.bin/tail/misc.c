@@ -102,7 +102,12 @@ end_include
 begin_function
 name|void
 name|ierr
-parameter_list|()
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fname
+parameter_list|)
 block|{
 name|warn
 argument_list|(
