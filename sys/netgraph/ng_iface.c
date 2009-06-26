@@ -2774,7 +2774,7 @@ modifier|*
 name|ifa
 decl_stmt|;
 comment|/* Return the first configured IP address */
-name|IF_ADDR_LOCK
+name|if_addr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -2878,7 +2878,7 @@ name|sin_addr
 expr_stmt|;
 break|break;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_addr_runlock
 argument_list|(
 name|ifp
 argument_list|)

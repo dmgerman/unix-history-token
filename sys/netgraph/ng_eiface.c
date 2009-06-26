@@ -1684,7 +1684,7 @@ name|buflen
 operator|=
 literal|0
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|if_addr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -1724,7 +1724,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|IF_ADDR_UNLOCK
+name|if_addr_runlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -1802,7 +1802,7 @@ operator|-=
 name|len
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_addr_runlock
 argument_list|(
 name|ifp
 argument_list|)
