@@ -5140,7 +5140,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Walk the multicast list, and add each address */
-name|IF_ADDR_LOCK
+name|if_maddr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -5266,7 +5266,7 @@ name|err
 argument_list|)
 expr_stmt|;
 comment|/* abort, leaving multicast filtering off */
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -5274,7 +5274,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|ifp
 argument_list|)

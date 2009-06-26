@@ -2219,7 +2219,7 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|if_maddr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -2294,7 +2294,7 @@ index|]
 expr_stmt|;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|ifp
 argument_list|)

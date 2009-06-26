@@ -1966,7 +1966,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|if_maddr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -2028,12 +2028,12 @@ literal|7
 operator|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Write the hash to the hash register.  This card can also 	 * accept unicast packets as well as multicast packets using this 	 * register for easier bridging operations, but we don't take 	 * advantage of that.  Locks here are to avoid LOR with the 	 * IF_ADDR_LOCK, but might not be strictly necessary. 	 */
+comment|/* 	 * Write the hash to the hash register.  This card can also 	 * accept unicast packets as well as multicast packets using this 	 * register for easier bridging operations, but we don't take 	 * advantage of that.  Locks here are to avoid LOR with the 	 * if_maddr_rlock, but might not be strictly necessary. 	 */
 name|WR4
 argument_list|(
 name|sc

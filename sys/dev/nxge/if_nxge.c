@@ -9251,7 +9251,7 @@ name|_exit
 goto|;
 block|}
 comment|/* Updating address list */
-name|IF_ADDR_LOCK
+name|if_maddr_rlock
 argument_list|(
 name|ifnetp
 argument_list|)
@@ -9301,7 +9301,7 @@ operator|+=
 literal|1
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|ifnetp
 argument_list|)
@@ -9374,7 +9374,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Add new addresses */
-name|IF_ADDR_LOCK
+name|if_maddr_rlock
 argument_list|(
 name|ifnetp
 argument_list|)
@@ -9437,7 +9437,7 @@ operator|+=
 literal|1
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|ifnetp
 argument_list|)

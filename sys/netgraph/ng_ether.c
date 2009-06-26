@@ -2175,7 +2175,7 @@ name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Netgraph is only permitted to join groups once 			 * via the if_addmulti() KPI, because it cannot hold 			 * struct ifmultiaddr * between calls. It may also 			 * lose a race while we check if the membership 			 * already exists. 			 */
-name|IF_ADDR_LOCK
+name|if_maddr_rlock
 argument_list|(
 name|priv
 operator|->
@@ -2199,7 +2199,7 @@ operator|&
 name|sa_dl
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|priv
 operator|->

@@ -13504,21 +13504,11 @@ operator|)
 condition|)
 return|return;
 comment|/* 	 * XXX don't know how to set a device.  Lack of docs.  Just try to set 	 * IFF_ALLMULTI flag here. 	 */
-name|IF_ADDR_LOCK
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
 name|if_flags
 operator||=
 name|IFF_ALLMULTI
-expr_stmt|;
-name|IF_ADDR_UNLOCK
-argument_list|(
-name|ifp
-argument_list|)
 expr_stmt|;
 block|}
 end_function

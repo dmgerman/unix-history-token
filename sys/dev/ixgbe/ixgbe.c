@@ -8613,7 +8613,7 @@ argument_list|,
 name|fctrl
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|if_maddr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -8667,7 +8667,7 @@ name|mcnt
 operator|++
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|ifp
 argument_list|)
