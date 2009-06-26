@@ -2653,7 +2653,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET
-name|IF_ADDR_LOCK
+name|if_addr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -2753,7 +2753,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|if_addr_runlock
 argument_list|(
 name|ifp
 argument_list|)

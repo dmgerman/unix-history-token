@@ -1622,7 +1622,7 @@ name|struct
 name|in_addr
 name|in
 decl_stmt|;
-name|IF_ADDR_LOCK
+name|if_addr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -1724,7 +1724,7 @@ argument_list|(
 name|ia
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|if_addr_runlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -1738,7 +1738,7 @@ operator|)
 name|ia
 return|;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_addr_runlock
 argument_list|(
 name|ifp
 argument_list|)
