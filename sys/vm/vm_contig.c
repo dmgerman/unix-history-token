@@ -884,6 +884,8 @@ argument_list|,
 name|alignment
 argument_list|,
 name|boundary
+argument_list|,
+name|VM_CACHE_DEFAULT
 argument_list|)
 expr_stmt|;
 if|if
@@ -936,6 +938,9 @@ parameter_list|,
 name|unsigned
 name|long
 name|boundary
+parameter_list|,
+name|vm_cache_mode_t
+name|mode
 parameter_list|)
 block|{
 name|vm_offset_t
@@ -991,6 +996,8 @@ argument_list|,
 name|alignment
 argument_list|,
 name|boundary
+argument_list|,
+name|mode
 argument_list|)
 expr_stmt|;
 if|if

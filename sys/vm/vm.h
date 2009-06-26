@@ -15,6 +15,27 @@ directive|define
 name|VM_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/vm.h>
+end_include
+
+begin_comment
+comment|/*  * The exact set of cache control codes is machine dependent.  However, every  * machine is required to define VM_CACHE_DEFAULT.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|char
+name|vm_cache_mode_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* cache control codes */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|char
