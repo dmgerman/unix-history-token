@@ -375,7 +375,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|IF_ADDR_LOCK
+name|if_addr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -440,7 +440,7 @@ name|ip
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_addr_runlock
 argument_list|(
 name|ifp
 argument_list|)

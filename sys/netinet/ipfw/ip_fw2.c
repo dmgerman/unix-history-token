@@ -2221,7 +2221,7 @@ name|ifaddr
 modifier|*
 name|ia
 decl_stmt|;
-name|IF_ADDR_LOCK
+name|if_addr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -2274,7 +2274,7 @@ operator|.
 name|s_addr
 condition|)
 block|{
-name|IF_ADDR_UNLOCK
+name|if_addr_runlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -2287,7 +2287,7 @@ return|;
 comment|/* match */
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|if_addr_runlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -2666,7 +2666,7 @@ argument_list|,
 argument|if_link
 argument_list|)
 block|{
-name|IF_ADDR_LOCK
+name|if_addr_rlock
 argument_list|(
 name|mdc
 argument_list|)
@@ -2726,7 +2726,7 @@ name|copia
 argument_list|)
 condition|)
 block|{
-name|IF_ADDR_UNLOCK
+name|if_addr_runlock
 argument_list|(
 name|mdc
 argument_list|)
@@ -2737,7 +2737,7 @@ return|;
 block|}
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|if_addr_runlock
 argument_list|(
 name|mdc
 argument_list|)
