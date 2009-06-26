@@ -279,6 +279,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|USBD_CTRL_WRITE_BUFFER_SP
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
 name|USBD_CTRL_READ_BUFFER_SIZE
 define|\
 value|(sizeof(struct usb_device_request) + USBD_CTRL_READ_BUFFER_SP)
@@ -289,7 +296,7 @@ define|#
 directive|define
 name|USBD_CTRL_WRITE_BUFFER_SIZE
 define|\
-value|(sizeof(struct usb_device_request))
+value|(sizeof(struct usb_device_request) + USBD_CTRL_WRITE_BUFFER_SP)
 end_define
 
 begin_decl_stmt
@@ -5300,7 +5307,7 @@ name|nx
 operator|->
 name|nx_urblen
 operator|>
-literal|0
+name|USBD_CTRL_WRITE_BUFFER_SP
 condition|)
 name|device_printf
 argument_list|(
