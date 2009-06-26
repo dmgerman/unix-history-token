@@ -358,6 +358,7 @@ specifier|static
 name|int
 name|netisr_maxthreads
 init|=
+operator|-
 literal|1
 decl_stmt|;
 end_decl_stmt
@@ -1326,8 +1327,8 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
-name|MAXCPU
+operator|<=
+name|mp_maxid
 condition|;
 name|i
 operator|++
@@ -1488,8 +1489,8 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
-name|MAXCPU
+operator|<=
+name|mp_maxid
 condition|;
 name|i
 operator|++
@@ -1650,8 +1651,8 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
-name|MAXCPU
+operator|<=
+name|mp_maxid
 condition|;
 name|i
 operator|++
@@ -1940,8 +1941,8 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
-name|MAXCPU
+operator|<=
+name|mp_maxid
 condition|;
 name|i
 operator|++
@@ -2251,8 +2252,8 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
-name|MAXCPU
+operator|<=
+name|mp_maxid
 condition|;
 name|i
 operator|++
@@ -3249,8 +3250,8 @@ directive|endif
 name|KASSERT
 argument_list|(
 name|cpuid
-operator|<
-name|MAXCPU
+operator|<=
+name|mp_maxid
 argument_list|,
 operator|(
 literal|"%s: cpuid too big (%u, %u)"
@@ -3259,7 +3260,7 @@ name|__func__
 operator|,
 name|cpuid
 operator|,
-name|MAXCPU
+name|mp_maxid
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4260,34 +4261,29 @@ name|netisr_maxthreads
 operator|<
 literal|1
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"netisr2: forcing maxthreads to 1\n"
-argument_list|)
-expr_stmt|;
 name|netisr_maxthreads
 operator|=
 literal|1
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|netisr_maxthreads
 operator|>
-name|MAXCPU
+name|mp_ncpus
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"netisr2: forcing maxthreads to %d\n"
+literal|"netisr2: forcing maxthreads from %d to %d\n"
 argument_list|,
-name|MAXCPU
+name|netisr_maxthreads
+argument_list|,
+name|mp_ncpus
 argument_list|)
 expr_stmt|;
 name|netisr_maxthreads
 operator|=
-name|MAXCPU
+name|mp_ncpus
 expr_stmt|;
 block|}
 if|if
@@ -4299,7 +4295,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"netisr2: forcing defaultqlimit to %d\n"
+literal|"netisr2: forcing defaultqlimit from %d to %d\n"
+argument_list|,
+name|netisr_defaultqlimit
 argument_list|,
 name|netisr_maxqlimit
 argument_list|)
@@ -4520,8 +4518,8 @@ operator|=
 literal|0
 init|;
 name|cpuid
-operator|<
-name|MAXCPU
+operator|<=
+name|mp_maxid
 condition|;
 name|cpuid
 operator|++
