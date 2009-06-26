@@ -19309,17 +19309,27 @@ operator|->
 name|state
 operator|==
 name|IPSEC_SPSTATE_DEAD
+operator|&&
+name|sp
+operator|->
+name|refcnt
+operator|==
+literal|1
 condition|)
 block|{
-comment|/* NB: clean entries created by key_spdflush */
-name|SPTREE_UNLOCK
-argument_list|()
-expr_stmt|;
-name|KEY_FREESP
+comment|/* 				 * Ensure that we only decrease refcnt once, 				 * when we're the last consumer. 				 * Directly call SP_DELREF/key_delsp instead 				 * of KEY_FREESP to avoid unlocking/relocking 				 * SPTREE_LOCK before key_delsp: may refcnt 				 * be increased again during that time ? 				 * NB: also clean entries created by 				 * key_spdflush 				 */
+name|SP_DELREF
 argument_list|(
-operator|&
 name|sp
 argument_list|)
+expr_stmt|;
+name|key_delsp
+argument_list|(
+name|sp
+argument_list|)
+expr_stmt|;
+name|SPTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 goto|goto
 name|restart
@@ -19386,12 +19396,6 @@ argument_list|()
 expr_stmt|;
 name|key_spdexpire
 argument_list|(
-name|sp
-argument_list|)
-expr_stmt|;
-name|KEY_FREESP
-argument_list|(
-operator|&
 name|sp
 argument_list|)
 expr_stmt|;
