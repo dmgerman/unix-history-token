@@ -24431,7 +24431,7 @@ name|si
 operator|=
 literal|0
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|if_addr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -24554,7 +24554,7 @@ operator|.
 name|s_addr
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_addr_runlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -24637,7 +24637,7 @@ name|si
 operator|=
 literal|0
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|if_addr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -24689,7 +24689,7 @@ break|break;
 block|}
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|if_addr_runlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -24938,7 +24938,7 @@ name|si
 operator|=
 name|NULL
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|if_addr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -25133,7 +25133,7 @@ name|src
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|if_addr_runlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -25209,7 +25209,7 @@ name|sin6
 operator|=
 name|NULL
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|if_addr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -25267,7 +25267,7 @@ break|break;
 block|}
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|if_addr_runlock
 argument_list|(
 name|ifp
 argument_list|)
