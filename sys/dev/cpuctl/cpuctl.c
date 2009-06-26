@@ -1001,12 +1001,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Explicitly clear cpuid data to avoid returning stale 	 * info 	 */
-name|data
-operator|->
-name|data
-operator|=
-literal|0
-expr_stmt|;
 name|DPRINTF
 argument_list|(
 literal|"[cpuctl,%d]: operating on MSR %#0x for %d cpu\n"
@@ -1040,12 +1034,21 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
+if|if
+condition|(
 name|cmd
 operator|==
 name|CPUCTL_RDMSR
-condition|?
+condition|)
+block|{
+name|data
+operator|->
+name|data
+operator|=
+literal|0
+expr_stmt|;
+name|ret
+operator|=
 name|rdmsr_safe
 argument_list|(
 name|data
@@ -1057,7 +1060,12 @@ name|data
 operator|->
 name|data
 argument_list|)
-else|:
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ret
+operator|=
 name|wrmsr_safe
 argument_list|(
 name|data
@@ -1069,6 +1077,7 @@ operator|->
 name|data
 argument_list|)
 expr_stmt|;
+block|}
 name|restore_cpu
 argument_list|(
 name|oldcpu
@@ -1827,9 +1836,7 @@ argument_list|,
 operator|(
 name|uintptr_t
 operator|)
-name|args
-operator|->
-name|data
+name|ptr
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Serialize instruction flow. 	 */
