@@ -3463,6 +3463,9 @@ argument_list|,
 name|xfer
 argument_list|,
 name|ep
+argument_list|,
+operator|&
+name|do_stall
 argument_list|)
 expr_stmt|;
 block|}

@@ -4721,6 +4721,10 @@ name|struct
 name|usb_endpoint
 modifier|*
 name|ep
+parameter_list|,
+name|uint8_t
+modifier|*
+name|did_stall
 parameter_list|)
 block|{
 name|struct

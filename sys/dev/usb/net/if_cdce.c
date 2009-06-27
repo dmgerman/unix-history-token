@@ -3356,7 +3356,8 @@ name|uint16_t
 name|offset
 parameter_list|,
 name|uint8_t
-name|is_complete
+modifier|*
+name|pstate
 parameter_list|)
 block|{
 return|return

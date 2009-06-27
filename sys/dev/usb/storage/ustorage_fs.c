@@ -2083,7 +2083,8 @@ name|uint16_t
 name|offset
 parameter_list|,
 name|uint8_t
-name|is_complete
+modifier|*
+name|pstate
 parameter_list|)
 block|{
 name|struct
@@ -2103,6 +2104,12 @@ modifier|*
 name|req
 init|=
 name|preq
+decl_stmt|;
+name|uint8_t
+name|is_complete
+init|=
+operator|*
+name|pstate
 decl_stmt|;
 if|if
 condition|(

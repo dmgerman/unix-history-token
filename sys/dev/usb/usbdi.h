@@ -231,6 +231,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_MULTI_SHORT_OK
+value|0x0040
+end_define
+
+begin_comment
+comment|/* allow multiple short frames */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_MANUAL_STATUS
+value|0x0080
+end_define
+
+begin_comment
+comment|/* manual ctrl status */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_NO_TIMEOUT
 value|0
 end_define
@@ -2335,6 +2357,18 @@ name|xfer
 parameter_list|,
 name|int
 name|flag
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint16_t
+name|usbd_xfer_get_timestamp
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
 parameter_list|)
 function_decl|;
 end_function_decl
