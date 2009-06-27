@@ -4514,6 +4514,12 @@ name|halEnhancedPmSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
+name|pCap
+operator|->
+name|halBssidMatchSupport
+operator|=
+name|AH_TRUE
+expr_stmt|;
 if|if
 condition|(
 name|ath_hal_eepromGetFlag
