@@ -531,6 +531,18 @@ name|td2
 operator|->
 name|td_md
 operator|.
+name|md_tls
+operator|=
+name|td1
+operator|->
+name|td_md
+operator|.
+name|md_tls
+expr_stmt|;
+name|td2
+operator|->
+name|td_md
+operator|.
 name|md_saved_intr
 operator|=
 name|MIPS_SR_INT_IE
@@ -2036,7 +2048,14 @@ modifier|*
 name|tls_base
 parameter_list|)
 block|{
-comment|/* TBD */
+name|td
+operator|->
+name|td_md
+operator|.
+name|md_tls
+operator|=
+name|tls_base
+expr_stmt|;
 return|return
 operator|(
 literal|0

@@ -67,6 +67,11 @@ name|register_t
 name|mc_fpc_eir
 decl_stmt|;
 comment|/* fp exception instruction reg */
+name|void
+modifier|*
+name|mc_tls
+decl_stmt|;
+comment|/* pointer to TLS area */
 name|int
 name|__spare__
 index|[

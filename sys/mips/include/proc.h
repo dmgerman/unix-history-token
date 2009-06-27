@@ -68,6 +68,10 @@ comment|/* performance counter spill */
 name|vm_offset_t
 name|md_realstack
 decl_stmt|;
+name|void
+modifier|*
+name|md_tls
+decl_stmt|;
 block|}
 struct|;
 end_struct
