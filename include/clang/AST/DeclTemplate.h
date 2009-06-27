@@ -2144,6 +2144,110 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Iterator that traverses the elements of a template argument pack.
+end_comment
+
+begin_typedef
+typedef|typedef
+specifier|const
+name|TemplateArgument
+modifier|*
+name|pack_iterator
+typedef|;
+end_typedef
+
+begin_comment
+comment|/// \brief Iterator referencing the first argument of a template argument
+end_comment
+
+begin_comment
+comment|/// pack.
+end_comment
+
+begin_expr_stmt
+name|pack_iterator
+name|pack_begin
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Kind
+operator|==
+name|Pack
+argument_list|)
+block|;
+return|return
+name|Args
+operator|.
+name|Args
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Iterator referencing one past the last argument of a template
+end_comment
+
+begin_comment
+comment|/// argument pack.
+end_comment
+
+begin_expr_stmt
+name|pack_iterator
+name|pack_end
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Kind
+operator|==
+name|Pack
+argument_list|)
+block|;
+return|return
+name|Args
+operator|.
+name|Args
+operator|+
+name|Args
+operator|.
+name|NumArgs
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief The number of template arguments in the given template argument
+end_comment
+
+begin_comment
+comment|/// pack.
+end_comment
+
+begin_expr_stmt
+name|unsigned
+name|pack_size
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Kind
+operator|==
+name|Pack
+argument_list|)
+block|;
+return|return
+name|Args
+operator|.
+name|NumArgs
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the location where the template argument starts.
 end_comment
 
@@ -3389,7 +3493,24 @@ operator|&
 name|C
 argument_list|)
 block|; }
-block|;  }
+block|;
+comment|/// Implementation of inline functions that require the template declarations
+specifier|inline
+name|AnyFunctionDecl
+operator|::
+name|AnyFunctionDecl
+argument_list|(
+name|FunctionTemplateDecl
+operator|*
+name|FTD
+argument_list|)
+operator|:
+name|Function
+argument_list|(
+argument|FTD
+argument_list|)
+block|{ }
+block|}
 end_decl_stmt
 
 begin_comment

@@ -461,17 +461,6 @@ expr_stmt|;
 name|void
 name|print
 argument_list|(
-name|std
-operator|::
-name|ostream
-operator|&
-name|OS
-argument_list|)
-decl|const
-decl_stmt|;
-name|void
-name|print
-argument_list|(
 name|llvm
 operator|::
 name|raw_ostream
@@ -1110,9 +1099,9 @@ return|;
 block|}
 comment|// Transfer functions for binary/unary operations on ConcreteInts.
 name|SVal
-name|EvalBinOp
+name|evalBinOp
 argument_list|(
-argument|BasicValueFactory& BasicVals
+argument|ValueManager&ValMgr
 argument_list|,
 argument|BinaryOperator::Opcode Op
 argument_list|,
@@ -1121,18 +1110,16 @@ argument_list|)
 specifier|const
 block|;
 name|ConcreteInt
-name|EvalComplement
+name|evalComplement
 argument_list|(
-argument|BasicValueFactory& BasicVals
+argument|ValueManager&ValMgr
 argument_list|)
 specifier|const
 block|;
 name|ConcreteInt
-name|EvalMinus
+name|evalMinus
 argument_list|(
-argument|BasicValueFactory& BasicVals
-argument_list|,
-argument|UnaryOperator* U
+argument|ValueManager&ValMgr
 argument_list|)
 specifier|const
 block|;

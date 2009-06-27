@@ -838,6 +838,9 @@ decl_stmt|;
 name|QualType
 name|DependentTy
 decl_stmt|;
+name|QualType
+name|UndeducedAutoTy
+decl_stmt|;
 name|ASTContext
 argument_list|(
 argument|const LangOptions& LOpts
@@ -1385,6 +1388,15 @@ name|getTypeOfType
 parameter_list|(
 name|QualType
 name|t
+parameter_list|)
+function_decl|;
+comment|/// getDecltypeType - C++0x decltype.
+name|QualType
+name|getDecltypeType
+parameter_list|(
+name|Expr
+modifier|*
+name|e
 parameter_list|)
 function_decl|;
 comment|/// getTagDeclType - Return the unique reference to the type for the

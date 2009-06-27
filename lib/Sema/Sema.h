@@ -1482,18 +1482,24 @@ name|D
 parameter_list|)
 block|{
 return|return
-name|ActOnDeclarator
+name|HandleDeclarator
 argument_list|(
 name|S
 argument_list|,
 name|D
+argument_list|,
+name|MultiTemplateParamsArg
+argument_list|(
+operator|*
+name|this
+argument_list|)
 argument_list|,
 name|false
 argument_list|)
 return|;
 block|}
 name|DeclPtrTy
-name|ActOnDeclarator
+name|HandleDeclarator
 parameter_list|(
 name|Scope
 modifier|*
@@ -1502,6 +1508,9 @@ parameter_list|,
 name|Declarator
 modifier|&
 name|D
+parameter_list|,
+name|MultiTemplateParamsArg
+name|TemplateParameterLists
 parameter_list|,
 name|bool
 name|IsFunctionDefinition
@@ -1625,6 +1634,9 @@ parameter_list|,
 name|NamedDecl
 modifier|*
 name|PrevDecl
+parameter_list|,
+name|MultiTemplateParamsArg
+name|TemplateParamLists
 parameter_list|,
 name|bool
 name|IsFunctionDefinition
@@ -3054,6 +3066,36 @@ parameter_list|,
 name|Expr
 modifier|*
 name|Object
+parameter_list|,
+name|Expr
+modifier|*
+modifier|*
+name|Args
+parameter_list|,
+name|unsigned
+name|NumArgs
+parameter_list|,
+name|OverloadCandidateSet
+modifier|&
+name|CandidateSet
+parameter_list|,
+name|bool
+name|SuppressUserConversions
+init|=
+name|false
+parameter_list|,
+name|bool
+name|ForceRValue
+init|=
+name|false
+parameter_list|)
+function_decl|;
+name|void
+name|AddTemplateOverloadCandidate
+parameter_list|(
+name|FunctionTemplateDecl
+modifier|*
+name|FunctionTemplate
 parameter_list|,
 name|Expr
 modifier|*
@@ -4637,6 +4679,10 @@ parameter_list|,
 name|AssociatedClassSet
 modifier|&
 name|AssociatedClasses
+parameter_list|,
+name|bool
+modifier|&
+name|GlobalScope
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5980,8 +6026,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|DeclRefExpr
-modifier|*
+name|OwningExprResult
 name|BuildDeclRefExpr
 parameter_list|(
 name|NamedDecl
@@ -7053,6 +7098,9 @@ name|IdentifierInfo
 modifier|*
 name|TargetName
 parameter_list|,
+name|OverloadedOperatorKind
+name|Op
+parameter_list|,
 name|AttributeList
 modifier|*
 name|AttrList
@@ -7134,6 +7182,27 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// MarcDestructorReferenced - Prepare for calling destructor on the
+end_comment
+
+begin_comment
+comment|/// constructed decl.
+end_comment
+
+begin_function_decl
+name|void
+name|MarcDestructorReferenced
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|QualType
+name|DeclInitType
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// DefineImplicitDefaultConstructor - Checks for feasibility of
 end_comment
 
@@ -7151,6 +7220,28 @@ parameter_list|,
 name|CXXConstructorDecl
 modifier|*
 name|Constructor
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// DefineImplicitDestructor - Checks for feasibility of
+end_comment
+
+begin_comment
+comment|/// defining this destructor as the default destructor.
+end_comment
+
+begin_function_decl
+name|void
+name|DefineImplicitDestructor
+parameter_list|(
+name|SourceLocation
+name|CurrentLocation
+parameter_list|,
+name|CXXDestructorDecl
+modifier|*
+name|Destructor
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7176,6 +7267,52 @@ name|Constructor
 parameter_list|,
 name|unsigned
 name|TypeQuals
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// DefineImplicitOverloadedAssign - Checks for feasibility of
+end_comment
+
+begin_comment
+comment|/// defining implicit this overloaded assignment operator.
+end_comment
+
+begin_function_decl
+name|void
+name|DefineImplicitOverloadedAssign
+parameter_list|(
+name|SourceLocation
+name|CurrentLocation
+parameter_list|,
+name|CXXMethodDecl
+modifier|*
+name|MethodDecl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// getAssignOperatorMethod - Returns the default copy assignmment operator
+end_comment
+
+begin_comment
+comment|/// for the class.
+end_comment
+
+begin_function_decl
+name|CXXMethodDecl
+modifier|*
+name|getAssignOperatorMethod
+parameter_list|(
+name|ParmVarDecl
+modifier|*
+name|Decl
+parameter_list|,
+name|CXXRecordDecl
+modifier|*
+name|ClassDecl
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -9548,6 +9685,44 @@ end_function_decl
 
 begin_function_decl
 name|virtual
+name|DeclPtrTy
+name|ActOnTemplateDeclarator
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|MultiTemplateParamsArg
+name|TemplateParameterLists
+parameter_list|,
+name|Declarator
+modifier|&
+name|D
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|DeclPtrTy
+name|ActOnStartOfFunctionTemplateDef
+parameter_list|(
+name|Scope
+modifier|*
+name|FnBodyScope
+parameter_list|,
+name|MultiTemplateParamsArg
+name|TemplateParameterLists
+parameter_list|,
+name|Declarator
+modifier|&
+name|D
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
 name|DeclResult
 name|ActOnExplicitInstantiation
 parameter_list|(
@@ -10013,6 +10188,14 @@ comment|/// into a non-deduced context produced a type or value that
 comment|/// produces a type that does not match the original template
 comment|/// arguments provided.
 name|TDK_NonDeducedMismatch
+block|,
+comment|/// \brief When performing template argument deduction for a function
+comment|/// template, there were too many call arguments.
+name|TDK_TooManyArguments
+block|,
+comment|/// \brief When performing template argument deduction for a class
+comment|/// template, there were too few call arguments.
+name|TDK_TooFewArguments
 block|}
 enum|;
 end_enum
@@ -10180,6 +10363,34 @@ specifier|const
 name|TemplateArgumentList
 modifier|&
 name|TemplateArgs
+parameter_list|,
+name|TemplateDeductionInfo
+modifier|&
+name|Info
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|TemplateDeductionResult
+name|DeduceTemplateArguments
+parameter_list|(
+name|FunctionTemplateDecl
+modifier|*
+name|FunctionTemplate
+parameter_list|,
+name|Expr
+modifier|*
+modifier|*
+name|Args
+parameter_list|,
+name|unsigned
+name|NumArgs
+parameter_list|,
+name|FunctionDecl
+modifier|*
+modifier|&
+name|Specialization
 parameter_list|,
 name|TemplateDeductionInfo
 modifier|&
@@ -13557,6 +13768,42 @@ end_comment
 begin_function_decl
 name|bool
 name|CheckVectorCast
+parameter_list|(
+name|SourceRange
+name|R
+parameter_list|,
+name|QualType
+name|VectorTy
+parameter_list|,
+name|QualType
+name|Ty
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// CheckExtVectorCast - check type constraints for extended vectors.
+end_comment
+
+begin_comment
+comment|// Since vectors are an extension, there are no C standard reference for this.
+end_comment
+
+begin_comment
+comment|// We allow casting between vectors and integer datatypes of the same size,
+end_comment
+
+begin_comment
+comment|// or vectors and the element type of that vector.
+end_comment
+
+begin_comment
+comment|// returns true if the cast is invalid
+end_comment
+
+begin_function_decl
+name|bool
+name|CheckExtVectorCast
 parameter_list|(
 name|SourceRange
 name|R

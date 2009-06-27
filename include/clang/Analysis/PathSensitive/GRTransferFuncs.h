@@ -106,40 +106,6 @@ decl_stmt|;
 name|class
 name|GRTransferFuncs
 block|{
-name|friend
-name|class
-name|GRExprEngine
-decl_stmt|;
-name|protected
-label|:
-name|virtual
-name|SVal
-name|DetermEvalBinOpNN
-argument_list|(
-name|GRExprEngine
-operator|&
-name|Eng
-argument_list|,
-name|BinaryOperator
-operator|::
-name|Opcode
-name|Op
-argument_list|,
-name|NonLoc
-name|L
-argument_list|,
-name|NonLoc
-name|R
-argument_list|,
-name|QualType
-name|T
-argument_list|)
-block|{
-return|return
-name|UnknownVal
-argument_list|()
-return|;
-block|}
 name|public
 label|:
 name|GRTransferFuncs
@@ -164,305 +130,78 @@ argument_list|(
 argument|BugReporter& BR
 argument_list|)
 block|{}
-comment|// Casts.
-name|virtual
-name|SVal
-name|EvalCast
-argument_list|(
-argument|GRExprEngine& Engine
-argument_list|,
-argument|NonLoc V
-argument_list|,
-argument|QualType CastT
-argument_list|)
-operator|=
-literal|0
-expr_stmt|;
-name|virtual
-name|SVal
-name|EvalCast
-parameter_list|(
-name|GRExprEngine
-modifier|&
-name|Engine
-parameter_list|,
-name|Loc
-name|V
-parameter_list|,
-name|QualType
-name|CastT
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-comment|// Unary Operators.
-name|virtual
-name|SVal
-name|EvalMinus
-parameter_list|(
-name|GRExprEngine
-modifier|&
-name|Engine
-parameter_list|,
-name|UnaryOperator
-modifier|*
-name|U
-parameter_list|,
-name|NonLoc
-name|X
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-name|virtual
-name|SVal
-name|EvalComplement
-parameter_list|(
-name|GRExprEngine
-modifier|&
-name|Engine
-parameter_list|,
-name|NonLoc
-name|X
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-comment|// Binary Operators.
-comment|// FIXME: We're moving back towards using GREXprEngine directly.  No need
-comment|// for OStates
-name|virtual
-name|void
-name|EvalBinOpNN
-argument_list|(
-name|GRStateSet
-operator|&
-name|OStates
-argument_list|,
-name|GRExprEngine
-operator|&
-name|Eng
-argument_list|,
-specifier|const
-name|GRState
-operator|*
-name|St
-argument_list|,
-name|Expr
-operator|*
-name|Ex
-argument_list|,
-name|BinaryOperator
-operator|::
-name|Opcode
-name|Op
-argument_list|,
-name|NonLoc
-name|L
-argument_list|,
-name|NonLoc
-name|R
-argument_list|,
-name|QualType
-name|T
-argument_list|)
-decl_stmt|;
-name|virtual
-name|SVal
-name|EvalBinOp
-argument_list|(
-name|GRExprEngine
-operator|&
-name|Engine
-argument_list|,
-name|BinaryOperator
-operator|::
-name|Opcode
-name|Op
-argument_list|,
-name|Loc
-name|L
-argument_list|,
-name|Loc
-name|R
-argument_list|)
-init|=
-literal|0
-decl_stmt|;
-comment|// Pointer arithmetic.
-name|virtual
-name|SVal
-name|EvalBinOp
-argument_list|(
-name|GRExprEngine
-operator|&
-name|Engine
-argument_list|,
-specifier|const
-name|GRState
-operator|*
-name|state
-argument_list|,
-name|BinaryOperator
-operator|::
-name|Opcode
-name|Op
-argument_list|,
-name|Loc
-name|L
-argument_list|,
-name|NonLoc
-name|R
-argument_list|)
-init|=
-literal|0
-decl_stmt|;
 comment|// Calls.
 name|virtual
 name|void
 name|EvalCall
 argument_list|(
-name|ExplodedNodeSet
-operator|<
-name|GRState
-operator|>
-operator|&
-name|Dst
+argument|ExplodedNodeSet<GRState>& Dst
 argument_list|,
-name|GRExprEngine
-operator|&
-name|Engine
+argument|GRExprEngine& Engine
 argument_list|,
-name|GRStmtNodeBuilder
-operator|<
-name|GRState
-operator|>
-operator|&
-name|Builder
+argument|GRStmtNodeBuilder<GRState>& Builder
 argument_list|,
-name|CallExpr
-operator|*
-name|CE
+argument|CallExpr* CE
 argument_list|,
-name|SVal
-name|L
+argument|SVal L
 argument_list|,
-name|ExplodedNode
-operator|<
-name|GRState
-operator|>
-operator|*
-name|Pred
+argument|ExplodedNode<GRState>* Pred
 argument_list|)
 block|{}
 name|virtual
 name|void
 name|EvalObjCMessageExpr
 argument_list|(
-name|ExplodedNodeSet
-operator|<
-name|GRState
-operator|>
-operator|&
-name|Dst
+argument|ExplodedNodeSet<GRState>& Dst
 argument_list|,
-name|GRExprEngine
-operator|&
-name|Engine
+argument|GRExprEngine& Engine
 argument_list|,
-name|GRStmtNodeBuilder
-operator|<
-name|GRState
-operator|>
-operator|&
-name|Builder
+argument|GRStmtNodeBuilder<GRState>& Builder
 argument_list|,
-name|ObjCMessageExpr
-operator|*
-name|ME
+argument|ObjCMessageExpr* ME
 argument_list|,
-name|ExplodedNode
-operator|<
-name|GRState
-operator|>
-operator|*
-name|Pred
+argument|ExplodedNode<GRState>* Pred
 argument_list|)
 block|{}
 comment|// Stores.
 name|virtual
 name|void
 name|EvalBind
-parameter_list|(
-name|GRStmtNodeBuilderRef
-modifier|&
-name|B
-parameter_list|,
-name|SVal
-name|location
-parameter_list|,
-name|SVal
-name|val
-parameter_list|)
+argument_list|(
+argument|GRStmtNodeBuilderRef& B
+argument_list|,
+argument|SVal location
+argument_list|,
+argument|SVal val
+argument_list|)
 block|{}
 comment|// End-of-path and dead symbol notification.
 name|virtual
 name|void
 name|EvalEndPath
 argument_list|(
-name|GRExprEngine
-operator|&
-name|Engine
+argument|GRExprEngine& Engine
 argument_list|,
-name|GREndPathNodeBuilder
-operator|<
-name|GRState
-operator|>
-operator|&
-name|Builder
+argument|GREndPathNodeBuilder<GRState>& Builder
 argument_list|)
 block|{}
 name|virtual
 name|void
 name|EvalDeadSymbols
 argument_list|(
-name|ExplodedNodeSet
-operator|<
-name|GRState
-operator|>
-operator|&
-name|Dst
+argument|ExplodedNodeSet<GRState>& Dst
 argument_list|,
-name|GRExprEngine
-operator|&
-name|Engine
+argument|GRExprEngine& Engine
 argument_list|,
-name|GRStmtNodeBuilder
-operator|<
-name|GRState
-operator|>
-operator|&
-name|Builder
+argument|GRStmtNodeBuilder<GRState>& Builder
 argument_list|,
-name|ExplodedNode
-operator|<
-name|GRState
-operator|>
-operator|*
-name|Pred
+argument|ExplodedNode<GRState>* Pred
 argument_list|,
-name|Stmt
-operator|*
-name|S
+argument|Stmt* S
 argument_list|,
-specifier|const
-name|GRState
-operator|*
-name|state
+argument|const GRState* state
 argument_list|,
-name|SymbolReaper
-operator|&
-name|SymReaper
+argument|SymbolReaper& SymReaper
 argument_list|)
 block|{}
 comment|// Return statements.
@@ -470,54 +209,30 @@ name|virtual
 name|void
 name|EvalReturn
 argument_list|(
-name|ExplodedNodeSet
-operator|<
-name|GRState
-operator|>
-operator|&
-name|Dst
+argument|ExplodedNodeSet<GRState>& Dst
 argument_list|,
-name|GRExprEngine
-operator|&
-name|Engine
+argument|GRExprEngine& Engine
 argument_list|,
-name|GRStmtNodeBuilder
-operator|<
-name|GRState
-operator|>
-operator|&
-name|Builder
+argument|GRStmtNodeBuilder<GRState>& Builder
 argument_list|,
-name|ReturnStmt
-operator|*
-name|S
+argument|ReturnStmt* S
 argument_list|,
-name|ExplodedNode
-operator|<
-name|GRState
-operator|>
-operator|*
-name|Pred
+argument|ExplodedNode<GRState>* Pred
 argument_list|)
 block|{}
 comment|// Assumptions.
 name|virtual
 specifier|const
 name|GRState
-modifier|*
+operator|*
 name|EvalAssume
-parameter_list|(
-specifier|const
-name|GRState
-modifier|*
-name|state
-parameter_list|,
-name|SVal
-name|Cond
-parameter_list|,
-name|bool
-name|Assumption
-parameter_list|)
+argument_list|(
+argument|const GRState *state
+argument_list|,
+argument|SVal Cond
+argument_list|,
+argument|bool Assumption
+argument_list|)
 block|{
 return|return
 name|state

@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -analyze -std=gnu99 -checker-simple -verify %s&&
+comment|// RUN: clang-cc -analyze -std=gnu99 -checker-cfref -verify %s -analyzer-constraints=basic -analyzer-store=basic&&
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -analyze -std=gnu99 -checker-simple -verify %s   -analyzer-constraints=range&&
+comment|// RUN: clang-cc -analyze -std=gnu99 -checker-cfref -verify %s -analyzer-constraints=range -analyzer-store=basic&&
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -analyze -std=gnu99 -checker-simple -analyzer-store=region -analyzer-purge-dead=false -verify %s&&
+comment|// RUN: clang-cc -analyze -std=gnu99 -checker-cfref -analyzer-store=region -analyzer-constraints=range -analyzer-purge-dead=false -verify %s&&
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -analyze -std=gnu99 -checker-cfref -analyzer-store=region -verify %s
+comment|// RUN: clang-cc -analyze -std=gnu99 -checker-cfref -analyzer-store=region -analyzer-constraints=range -verify %s
 end_comment
 
 begin_include

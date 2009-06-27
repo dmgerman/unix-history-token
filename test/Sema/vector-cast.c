@@ -56,9 +56,9 @@ operator|)
 name|v1
 expr_stmt|;
 comment|// -expected-error {{invalid conversion between vector type \
-literal|'t1'
-name|and
 literal|'t2'
+name|and
+literal|'t1'
 name|of
 name|different
 name|size
@@ -80,9 +80,9 @@ comment|// -expected-error {{invalid conversion between vector type \
 end_comment
 
 begin_expr_stmt
-literal|'t2'
-name|and
 literal|'t1'
+name|and
+literal|'t2'
 name|of
 name|different
 name|size

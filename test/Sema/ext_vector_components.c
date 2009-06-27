@@ -42,6 +42,31 @@ name|float4
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|__attribute__
+argument_list|(
+argument|( ext_vector_type(
+literal|16
+argument|) )
+argument_list|)
+name|float
+name|float16
+typedef|;
+end_typedef
+
+begin_decl_stmt
+specifier|static
+name|float4
+name|vec4_0
+init|=
+operator|(
+name|float4
+operator|)
+literal|0.5f
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -63,6 +88,9 @@ name|vec4_2
 decl_stmt|,
 modifier|*
 name|vec4p
+decl_stmt|;
+name|float16
+name|vec16
 decl_stmt|;
 name|float
 name|f
@@ -97,6 +125,13 @@ operator|=
 name|vec4
 operator|.
 name|s01
+expr_stmt|;
+comment|// legal, shorten
+name|vec2
+operator|=
+name|vec4
+operator|.
+name|S01
 expr_stmt|;
 comment|// legal, shorten
 name|vec3
@@ -206,6 +241,22 @@ operator|.
 name|s06
 expr_stmt|;
 comment|// expected-error {{vector component access exceeds type 'float4'}}
+name|vec4
+operator|.
+name|x
+operator|=
+name|vec16
+operator|.
+name|sf
+expr_stmt|;
+name|vec4
+operator|.
+name|x
+operator|=
+name|vec16
+operator|.
+name|sF
+expr_stmt|;
 name|vec4p
 operator|->
 name|yz

@@ -211,9 +211,9 @@ name|GRState
 operator|*
 name|state
 argument_list|,
-name|std
+name|llvm
 operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|Out
 argument_list|,

@@ -493,17 +493,6 @@ operator|&
 name|Builder
 argument_list|)
 decl_stmt|;
-comment|/// createCompileUnit - Create a new unit for the given file.
-name|llvm
-operator|::
-name|DICompileUnit
-name|createCompileUnit
-argument_list|(
-argument|const char *FileName
-argument_list|,
-argument|bool isMain
-argument_list|)
-expr_stmt|;
 comment|/// getOrCreateCompileUnit - Get the compile unit from the cache or create a
 comment|/// new one if necessary.
 name|llvm

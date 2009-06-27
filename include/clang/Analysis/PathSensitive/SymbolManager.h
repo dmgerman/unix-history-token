@@ -1502,30 +1502,6 @@ operator|*
 name|SE
 operator|)
 block|; }
-name|namespace
-name|std
-block|{
-name|std
-operator|::
-name|ostream
-operator|&
-name|operator
-operator|<<
-operator|(
-name|std
-operator|::
-name|ostream
-operator|&
-name|Out
-expr|,
-specifier|const
-name|clang
-operator|::
-name|SymExpr
-operator|*
-name|SE
-operator|)
-block|; }
 end_decl_stmt
 
 begin_endif

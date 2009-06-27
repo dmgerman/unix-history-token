@@ -4217,6 +4217,9 @@ name|IdentifierInfo
 modifier|*
 name|TargetName
 parameter_list|,
+name|OverloadedOperatorKind
+name|Op
+parameter_list|,
 name|AttributeList
 modifier|*
 name|AttrList
@@ -6125,6 +6128,86 @@ parameter_list|)
 block|{
 return|return
 name|DeclResult
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Invoked when a declarator that has one or more template parameter
+end_comment
+
+begin_comment
+comment|/// lists has been parsed.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This action is similar to ActOnDeclarator(), except that the declaration
+end_comment
+
+begin_comment
+comment|/// being created somehow involves a template, e.g., it is a template
+end_comment
+
+begin_comment
+comment|/// declaration or specialization.
+end_comment
+
+begin_function
+name|virtual
+name|DeclPtrTy
+name|ActOnTemplateDeclarator
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|MultiTemplateParamsArg
+name|TemplateParameterLists
+parameter_list|,
+name|Declarator
+modifier|&
+name|D
+parameter_list|)
+block|{
+return|return
+name|DeclPtrTy
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Invoked when the parser is beginning to parse a function template
+end_comment
+
+begin_comment
+comment|/// or function template specialization definition.
+end_comment
+
+begin_function
+name|virtual
+name|DeclPtrTy
+name|ActOnStartOfFunctionTemplateDef
+parameter_list|(
+name|Scope
+modifier|*
+name|FnBodyScope
+parameter_list|,
+name|MultiTemplateParamsArg
+name|TemplateParameterLists
+parameter_list|,
+name|Declarator
+modifier|&
+name|D
+parameter_list|)
+block|{
+return|return
+name|DeclPtrTy
 argument_list|()
 return|;
 block|}

@@ -2306,7 +2306,11 @@ name|Overload
 block|,
 comment|// This represents the type of an overloaded function declaration.
 name|Dependent
+block|,
 comment|// This represents the type of a type-dependent expression.
+name|UndeducedAuto
+comment|// In C++0x, this represents the type of an auto variable
+comment|// that has not been deduced yet.
 block|}
 block|;
 name|private
@@ -4642,11 +4646,17 @@ return|return
 literal|9
 return|;
 case|case
+literal|'A'
+case|:
+case|case
 literal|'a'
 case|:
 return|return
 literal|10
 return|;
+case|case
+literal|'B'
+case|:
 case|case
 literal|'b'
 case|:
@@ -4654,11 +4664,17 @@ return|return
 literal|11
 return|;
 case|case
+literal|'C'
+case|:
+case|case
 literal|'c'
 case|:
 return|return
 literal|12
 return|;
+case|case
+literal|'D'
+case|:
 case|case
 literal|'d'
 case|:
@@ -4666,11 +4682,17 @@ return|return
 literal|13
 return|;
 case|case
+literal|'E'
+case|:
+case|case
 literal|'e'
 case|:
 return|return
 literal|14
 return|;
+case|case
+literal|'F'
+case|:
 case|case
 literal|'f'
 case|:
@@ -5825,6 +5847,80 @@ name|bool
 name|classof
 argument_list|(
 argument|const TypeOfType *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
+comment|/// DecltypeType (C++0x)
+name|class
+name|DecltypeType
+operator|:
+name|public
+name|Type
+block|{
+name|Expr
+operator|*
+name|E
+block|;
+name|DecltypeType
+argument_list|(
+argument|Expr *E
+argument_list|,
+argument|QualType can
+argument_list|)
+block|;
+name|friend
+name|class
+name|ASTContext
+block|;
+comment|// ASTContext creates these.
+name|public
+operator|:
+name|Expr
+operator|*
+name|getUnderlyingExpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|E
+return|;
+block|}
+name|virtual
+name|void
+name|getAsStringInternal
+argument_list|(
+argument|std::string&InnerString
+argument_list|,
+argument|const PrintingPolicy&Policy
+argument_list|)
+specifier|const
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Type *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getTypeClass
+argument_list|()
+operator|==
+name|Decltype
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const DecltypeType *
 argument_list|)
 block|{
 return|return

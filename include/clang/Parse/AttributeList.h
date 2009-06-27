@@ -276,6 +276,8 @@ name|AT_weak
 block|,
 name|AT_weak_import
 block|,
+name|AT_reqd_wg_size
+block|,
 name|IgnoredAttribute
 block|,
 name|UnknownAttribute

@@ -210,6 +210,12 @@ name|TST_typeofType
 block|,
 name|TST_typeofExpr
 block|,
+name|TST_decltype
+block|,
+comment|// C++0x decltype
+name|TST_auto
+block|,
+comment|// C++0x auto
 name|TST_error
 comment|// erroneous type
 block|}

@@ -144,11 +144,6 @@ parameter_list|)
 function_decl|;
 name|GRTransferFuncs
 modifier|*
-name|MakeGRSimpleValsTF
-parameter_list|()
-function_decl|;
-name|GRTransferFuncs
-modifier|*
 name|MakeCFRefCountTF
 parameter_list|(
 name|ASTContext

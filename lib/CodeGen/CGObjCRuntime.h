@@ -313,6 +313,26 @@ argument_list|()
 operator|=
 literal|0
 expr_stmt|;
+comment|/// Add metadata globals to the 'used' globals for final output.
+name|virtual
+name|void
+name|MergeMetadataGlobals
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|llvm
+operator|::
+name|Constant
+operator|*
+operator|>
+operator|&
+name|UsedArray
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
 comment|/// Get a selector for the specified name and type values. The
 comment|/// return value should have the LLVM type for pointer-to
 comment|/// ASTContext::getObjCSelType().

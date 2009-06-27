@@ -4,7 +4,7 @@ comment|// RUN: rm -rf %t&&
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc --html-diags=%t -checker-simple %s
+comment|// RUN: clang-cc --html-diags=%t -checker-cfref %s
 end_comment
 
 begin_function

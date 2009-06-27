@@ -102,6 +102,9 @@ decl_stmt|;
 name|class
 name|StringLiteral
 decl_stmt|;
+name|class
+name|TemplateArgumentList
+decl_stmt|;
 comment|/// TranslationUnitDecl - The top declaration context.
 name|class
 name|TranslationUnitDecl
@@ -396,6 +399,34 @@ name|hasLinkage
 argument_list|()
 specifier|const
 block|;
+comment|/// \brief Looks through UsingDecls and ObjCCompatibleAliasDecls for
+comment|/// the underlying named decl.
+name|NamedDecl
+operator|*
+name|getUnderlyingDecl
+argument_list|()
+block|;
+specifier|const
+name|NamedDecl
+operator|*
+name|getUnderlyingDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|NamedDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getUnderlyingDecl
+argument_list|()
+return|;
+block|}
 specifier|static
 name|bool
 name|classof
@@ -2689,10 +2720,25 @@ block|}
 block|;
 name|private
 operator|:
+comment|/// \brief Provides information about a function template specialization,
+comment|/// which is a FunctionDecl that has been explicitly specialization or
+comment|/// instantiated from a function template.
+expr|struct
+name|TemplateSpecializationInfo
+block|{
+name|FunctionTemplateDecl
+operator|*
+name|Template
+block|;
+specifier|const
+name|TemplateArgumentList
+operator|*
+name|TemplateArguments
+block|;   }
+block|;
 comment|/// ParamInfo - new[]'d array of pointers to VarDecls for the formal
 comment|/// parameters of this function.  This is null if a prototype or if there are
-comment|/// no formals.  TODO: we could allocate this space immediately after the
-comment|/// FunctionDecl object to save an allocation like FunctionType does.
+comment|/// no formals.
 name|ParmVarDecl
 operator|*
 operator|*
@@ -2778,17 +2824,24 @@ comment|/// declarations that describe a function template, this will be a
 comment|/// pointer to a FunctionTemplateDecl. For member functions
 comment|/// of class template specializations, this will be the
 comment|/// FunctionDecl from which the member function was instantiated.
+comment|/// For function template specializations, this will be a
+comment|/// FunctionTemplateSpecializationInfo, which contains information about
+comment|/// the template being specialized and the template arguments involved in
+comment|/// that specialization.
 name|llvm
 operator|::
-name|PointerUnion
+name|PointerUnion3
 operator|<
 name|FunctionTemplateDecl
 operator|*
 block|,
 name|FunctionDecl
 operator|*
+block|,
+name|TemplateSpecializationInfo
+operator|*
 operator|>
-name|TemplateOrInstantiation
+name|TemplateOrSpecialization
 block|;
 name|protected
 operator|:
@@ -2892,7 +2945,7 @@ argument_list|(
 name|L
 argument_list|)
 block|,
-name|TemplateOrInstantiation
+name|TemplateOrSpecialization
 argument_list|()
 block|{}
 name|virtual
@@ -3539,7 +3592,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|TemplateOrInstantiation
+name|TemplateOrSpecialization
 operator|.
 name|dyn_cast
 operator|<
@@ -3558,7 +3611,7 @@ argument_list|(
 argument|FunctionDecl *RD
 argument_list|)
 block|{
-name|TemplateOrInstantiation
+name|TemplateOrSpecialization
 operator|=
 name|RD
 block|;   }
@@ -3581,7 +3634,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|TemplateOrInstantiation
+name|TemplateOrSpecialization
 operator|.
 name|dyn_cast
 operator|<
@@ -3598,10 +3651,114 @@ argument_list|(
 argument|FunctionTemplateDecl *Template
 argument_list|)
 block|{
-name|TemplateOrInstantiation
+name|TemplateOrSpecialization
 operator|=
 name|Template
 block|;   }
+comment|/// \brief Retrieve the primary template that this function template
+comment|/// specialization either specializes or was instantiated from.
+comment|///
+comment|/// If this function declaration is not a function template specialization,
+comment|/// returns NULL.
+name|FunctionTemplateDecl
+operator|*
+name|getPrimaryTemplate
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|TemplateSpecializationInfo
+modifier|*
+name|Info
+init|=
+name|TemplateOrSpecialization
+operator|.
+name|dyn_cast
+operator|<
+name|TemplateSpecializationInfo
+operator|*
+operator|>
+operator|(
+operator|)
+condition|)
+block|{
+return|return
+name|Info
+operator|->
+name|Template
+return|;
+block|}
+return|return
+literal|0
+return|;
+block|}
+comment|/// \brief Retrieve the template arguments used to produce this function
+comment|/// template specialization from the primary template.
+comment|///
+comment|/// If this function declaration is not a function template specialization,
+comment|/// returns NULL.
+specifier|const
+name|TemplateArgumentList
+operator|*
+name|getTemplateSpecializationArgs
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|TemplateSpecializationInfo
+modifier|*
+name|Info
+init|=
+name|TemplateOrSpecialization
+operator|.
+name|dyn_cast
+operator|<
+name|TemplateSpecializationInfo
+operator|*
+operator|>
+operator|(
+operator|)
+condition|)
+block|{
+return|return
+name|Info
+operator|->
+name|TemplateArguments
+return|;
+block|}
+return|return
+literal|0
+return|;
+block|}
+comment|/// \brief Specify that this function declaration is actually a function
+comment|/// template specialization.
+comment|///
+comment|/// \param Context the AST context in which this function resides.
+comment|///
+comment|/// \param Template the function template that this function template
+comment|/// specialization specializes.
+comment|///
+comment|/// \param TemplateArgs the template arguments that produced this
+comment|/// function template specialization from the template.
+name|void
+name|setFunctionTemplateSpecialization
+argument_list|(
+name|ASTContext
+operator|&
+name|Context
+argument_list|,
+name|FunctionTemplateDecl
+operator|*
+name|Template
+argument_list|,
+specifier|const
+name|TemplateArgumentList
+operator|*
+name|TemplateArgs
+argument_list|)
+block|;
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static
 name|bool

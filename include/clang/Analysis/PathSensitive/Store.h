@@ -101,12 +101,6 @@ directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<iosfwd>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|clang
@@ -567,6 +561,9 @@ name|lhs
 argument_list|,
 name|NonLoc
 name|rhs
+argument_list|,
+name|QualType
+name|resultTy
 argument_list|)
 block|{
 return|return
@@ -718,9 +715,9 @@ argument_list|(
 name|Store
 name|store
 argument_list|,
-name|std
+name|llvm
 operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|Out
 argument_list|,

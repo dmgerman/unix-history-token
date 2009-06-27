@@ -191,6 +191,12 @@ range|:
 literal|1
 decl_stmt|;
 name|unsigned
+name|AltiVec
+range|:
+literal|1
+decl_stmt|;
+comment|// Support AltiVec-style vector initializers.
+name|unsigned
 name|Exceptions
 range|:
 literal|1
@@ -314,6 +320,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|// Whether char is a signed or unsigned type
+name|unsigned
+name|OpenCL
+range|:
+literal|1
+decl_stmt|;
+comment|// OpenCL C99 language extensions.
 name|private
 label|:
 name|unsigned
@@ -432,6 +444,12 @@ operator|=
 literal|1
 expr_stmt|;
 name|HeinousExtensions
+operator|=
+literal|0
+expr_stmt|;
+name|AltiVec
+operator|=
+name|OpenCL
 operator|=
 literal|0
 expr_stmt|;

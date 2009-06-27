@@ -996,6 +996,19 @@ name|NumLinearScans
 decl_stmt|,
 name|NumBinaryProbes
 decl_stmt|;
+comment|// Cache results for the isBeforeInTranslationUnit method.
+name|mutable
+name|FileID
+name|LastLFIDForBeforeTUCheck
+decl_stmt|;
+name|mutable
+name|FileID
+name|LastRFIDForBeforeTUCheck
+decl_stmt|;
+name|mutable
+name|bool
+name|LastResForBeforeTUCheck
+decl_stmt|;
 comment|// SourceManager doesn't support copy construction.
 name|explicit
 name|SourceManager
@@ -2333,6 +2346,32 @@ name|Line
 argument_list|,
 name|unsigned
 name|Col
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Determines the order of 2 source locations in the translation unit.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns true if LHS source location comes before RHS, false otherwise.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isBeforeInTranslationUnit
+argument_list|(
+name|SourceLocation
+name|LHS
+argument_list|,
+name|SourceLocation
+name|RHS
 argument_list|)
 decl|const
 decl_stmt|;

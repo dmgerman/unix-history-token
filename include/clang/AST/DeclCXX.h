@@ -96,6 +96,143 @@ decl_stmt|;
 name|class
 name|ClassTemplateSpecializationDecl
 decl_stmt|;
+comment|/// \brief Represents any kind of function declaration, whether it is a
+comment|/// concrete function or a function template.
+name|class
+name|AnyFunctionDecl
+block|{
+name|NamedDecl
+modifier|*
+name|Function
+decl_stmt|;
+name|public
+label|:
+name|AnyFunctionDecl
+argument_list|(
+name|FunctionDecl
+operator|*
+name|FD
+argument_list|)
+operator|:
+name|Function
+argument_list|(
+argument|FD
+argument_list|)
+block|{ }
+name|AnyFunctionDecl
+argument_list|(
+name|FunctionTemplateDecl
+operator|*
+name|FTD
+argument_list|)
+expr_stmt|;
+comment|/// \brief Implicily converts any function or function template into a
+comment|/// named declaration.
+name|operator
+name|NamedDecl
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+name|Function
+return|;
+block|}
+comment|/// \brief Retrieve the underlying function or function template.
+name|NamedDecl
+operator|*
+name|get
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Function
+return|;
+block|}
+block|}
+empty_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// end namespace clang
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+comment|/// Implement simplify_type for AnyFunctionDecl, so that we can dyn_cast from
+comment|/// AnyFunctionDecl to any function or function template declaration.
+name|template
+operator|<
+operator|>
+expr|struct
+name|simplify_type
+operator|<
+specifier|const
+operator|::
+name|clang
+operator|::
+name|AnyFunctionDecl
+operator|>
+block|{
+typedef|typedef
+operator|::
+name|clang
+operator|::
+name|NamedDecl
+operator|*
+name|SimpleType
+expr_stmt|;
+specifier|static
+name|SimpleType
+name|getSimplifiedValue
+argument_list|(
+argument|const ::clang::AnyFunctionDecl&Val
+argument_list|)
+block|{
+return|return
+name|Val
+return|;
+block|}
+block|}
+empty_stmt|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|simplify_type
+operator|<
+operator|::
+name|clang
+operator|::
+name|AnyFunctionDecl
+operator|>
+operator|:
+name|public
+name|simplify_type
+operator|<
+specifier|const
+operator|::
+name|clang
+operator|::
+name|AnyFunctionDecl
+operator|>
+block|{}
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|clang
+block|{
 comment|/// OverloadedFunctionDecl - An instance of this class represents a
 comment|/// set of overloaded functions. All of the functions have the same
 comment|/// name and occur within the same scope.
@@ -137,8 +274,7 @@ name|llvm
 operator|::
 name|SmallVector
 operator|<
-name|FunctionDecl
-operator|*
+name|AnyFunctionDecl
 block|,
 literal|4
 operator|>
@@ -157,8 +293,7 @@ name|llvm
 operator|::
 name|SmallVector
 operator|<
-name|FunctionDecl
-operator|*
+name|AnyFunctionDecl
 operator|,
 literal|4
 operator|>
@@ -171,8 +306,7 @@ name|llvm
 operator|::
 name|SmallVector
 operator|<
-name|FunctionDecl
-operator|*
+name|AnyFunctionDecl
 operator|,
 literal|4
 operator|>
@@ -268,6 +402,16 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// addOverload - Add an overloaded function template FTD to this set of
+comment|/// overloaded functions.
+name|void
+name|addOverload
+parameter_list|(
+name|FunctionTemplateDecl
+modifier|*
+name|FTD
+parameter_list|)
+function_decl|;
 name|function_iterator
 name|function_begin
 parameter_list|()
@@ -314,10 +458,10 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// getNumFunctions - the number of overloaded functions stored in
+comment|/// \brief Returns the number of overloaded functions stored in
 comment|/// this set.
 name|unsigned
-name|getNumFunctions
+name|size
 argument_list|()
 specifier|const
 block|{
@@ -325,85 +469,6 @@ return|return
 name|Functions
 operator|.
 name|size
-argument_list|()
-return|;
-block|}
-comment|/// getFunction - retrieve the ith function in the overload set.
-specifier|const
-name|FunctionDecl
-modifier|*
-name|getFunction
-argument_list|(
-name|unsigned
-name|i
-argument_list|)
-decl|const
-block|{
-name|assert
-argument_list|(
-name|i
-operator|<
-name|getNumFunctions
-argument_list|()
-operator|&&
-literal|"Illegal function #"
-argument_list|)
-expr_stmt|;
-return|return
-name|Functions
-index|[
-name|i
-index|]
-return|;
-block|}
-name|FunctionDecl
-modifier|*
-name|getFunction
-parameter_list|(
-name|unsigned
-name|i
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|i
-operator|<
-name|getNumFunctions
-argument_list|()
-operator|&&
-literal|"Illegal function #"
-argument_list|)
-expr_stmt|;
-return|return
-name|Functions
-index|[
-name|i
-index|]
-return|;
-block|}
-comment|// getDeclContext - Get the context of these overloaded functions.
-name|DeclContext
-modifier|*
-name|getDeclContext
-parameter_list|()
-block|{
-name|assert
-argument_list|(
-name|getNumFunctions
-argument_list|()
-operator|>
-literal|0
-operator|&&
-literal|"Context of an empty overload set"
-argument_list|)
-expr_stmt|;
-return|return
-name|getFunction
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|getDeclContext
 argument_list|()
 return|;
 block|}
@@ -1780,6 +1845,60 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// isLocalClass - If the class is a local class [class.local], returns
+end_comment
+
+begin_comment
+comment|/// the enclosing function declaration.
+end_comment
+
+begin_expr_stmt
+specifier|const
+name|FunctionDecl
+operator|*
+name|isLocalClass
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+init|=
+name|dyn_cast
+operator|<
+name|CXXRecordDecl
+operator|>
+operator|(
+name|getDeclContext
+argument_list|()
+operator|)
+condition|)
+return|return
+name|RD
+operator|->
+name|isLocalClass
+argument_list|()
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|dyn_cast
+operator|<
+name|FunctionDecl
+operator|>
+operator|(
+name|getDeclContext
+argument_list|()
+operator|)
+return|;
+end_return
+
+begin_comment
+unit|}
 comment|/// viewInheritance - Renders and displays an inheritance diagram
 end_comment
 
@@ -1791,15 +1910,16 @@ begin_comment
 comment|/// GraphViz.
 end_comment
 
-begin_decl_stmt
-name|void
+begin_macro
+unit|void
 name|viewInheritance
 argument_list|(
-name|ASTContext
-operator|&
-name|Context
+argument|ASTContext& Context
 argument_list|)
-decl|const
+end_macro
+
+begin_decl_stmt
+specifier|const
 decl_stmt|;
 end_decl_stmt
 
@@ -3923,9 +4043,7 @@ name|getNestedNameRange
 argument_list|()
 block|{
 return|return
-operator|(
 name|NestedNameRange
-operator|)
 return|;
 block|}
 comment|/// \brief Returns the source location of the target declaration name.
@@ -3934,9 +4052,7 @@ name|getTargetNameLocation
 argument_list|()
 block|{
 return|return
-operator|(
 name|TargetNameLocation
-operator|)
 return|;
 block|}
 comment|/// \brief Returns the source location of the "using" location itself.
@@ -3945,9 +4061,7 @@ name|getUsingLocation
 argument_list|()
 block|{
 return|return
-operator|(
 name|UsingLocation
-operator|)
 return|;
 block|}
 comment|/// \brief getTargetDecl - Returns target specified by using-decl.
@@ -3957,9 +4071,18 @@ name|getTargetDecl
 argument_list|()
 block|{
 return|return
-operator|(
 name|TargetDecl
-operator|)
+return|;
+block|}
+specifier|const
+name|NamedDecl
+operator|*
+name|getTargetDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetDecl
 return|;
 block|}
 comment|/// \brief Get target nested name declaration.
@@ -3969,9 +4092,7 @@ name|getTargetNestedNameDecl
 argument_list|()
 block|{
 return|return
-operator|(
 name|TargetNestedNameDecl
-operator|)
 return|;
 block|}
 comment|/// isTypeName - Return true if using decl had 'typename'.
@@ -3981,9 +4102,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
 name|IsTypeName
-operator|)
 return|;
 block|}
 specifier|static

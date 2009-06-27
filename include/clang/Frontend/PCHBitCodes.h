@@ -698,6 +698,11 @@ comment|/// \brief An ObjCObjectPointerType record.
 name|TYPE_OBJC_OBJECT_POINTER
 init|=
 literal|23
+block|,
+comment|/// \brief a DecltypeType record.
+name|TYPE_DECLTYPE
+init|=
+literal|24
 block|}
 enum|;
 comment|/// \brief The type IDs for special types constructed by semantic

@@ -1246,6 +1246,12 @@ name|isTemplateParameterPack
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Whether this declaration is a function or function template.
+name|bool
+name|isFunctionOrFunctionTemplate
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static
 name|bool
