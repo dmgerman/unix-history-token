@@ -643,10 +643,8 @@ ifdef|#
 directive|ifdef
 name|AUDIT
 comment|/* 	 * The Sun BSM exit token contains two components: an exit status as 	 * passed to exit(), and a return value to indicate what sort of exit 	 * it was.  The exit status is WEXITSTATUS(rv), but it's not clear 	 * what the return value is. 	 */
-name|AUDIT_ARG
+name|AUDIT_ARG_EXIT
 argument_list|(
-name|exit
-argument_list|,
 name|WEXITSTATUS
 argument_list|(
 name|rv
@@ -3017,10 +3015,8 @@ name|error
 decl_stmt|,
 name|nfound
 decl_stmt|;
-name|AUDIT_ARG
+name|AUDIT_ARG_PID
 argument_list|(
-name|pid
-argument_list|,
 name|pid
 argument_list|)
 expr_stmt|;

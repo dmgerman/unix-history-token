@@ -5182,10 +5182,8 @@ name|td_proc
 operator|->
 name|p_fd
 expr_stmt|;
-name|AUDIT_ARG
+name|AUDIT_ARG_FD
 argument_list|(
-name|fd
-argument_list|,
 name|uap
 operator|->
 name|lowfd
@@ -5539,10 +5537,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|AUDIT_ARG
+name|AUDIT_ARG_FD
 argument_list|(
-name|fd
-argument_list|,
 name|fd
 argument_list|)
 expr_stmt|;
@@ -5569,10 +5565,8 @@ operator|(
 name|error
 operator|)
 return|;
-name|AUDIT_ARG
+name|AUDIT_ARG_FILE
 argument_list|(
-name|file
-argument_list|,
 name|td
 operator|->
 name|td_proc

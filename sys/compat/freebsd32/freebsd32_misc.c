@@ -17559,10 +17559,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|AUDIT_ARG
+name|AUDIT_ARG_FFLAGS
 argument_list|(
-name|fflags
-argument_list|,
 name|uap
 operator|->
 name|flags

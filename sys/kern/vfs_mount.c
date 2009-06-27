@@ -1709,10 +1709,8 @@ decl_stmt|;
 name|u_int
 name|iovcnt
 decl_stmt|;
-name|AUDIT_ARG
+name|AUDIT_ARG_FFLAGS
 argument_list|(
-name|fflags
-argument_list|,
 name|uap
 operator|->
 name|flags
@@ -3726,10 +3724,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|AUDIT_ARG
+name|AUDIT_ARG_FFLAGS
 argument_list|(
-name|fflags
-argument_list|,
 name|uap
 operator|->
 name|flags
@@ -3787,10 +3783,8 @@ name|error
 operator|)
 return|;
 block|}
-name|AUDIT_ARG
+name|AUDIT_ARG_TEXT
 argument_list|(
-name|text
-argument_list|,
 name|fstype
 argument_list|)
 expr_stmt|;
@@ -5617,10 +5611,8 @@ name|error
 operator|)
 return|;
 block|}
-name|AUDIT_ARG
+name|AUDIT_ARG_UPATH
 argument_list|(
-name|upath
-argument_list|,
 name|td
 argument_list|,
 name|pathbuf

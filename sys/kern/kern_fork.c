@@ -587,10 +587,8 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|AUDIT_ARG
+name|AUDIT_ARG_FFLAGS
 argument_list|(
-name|fflags
-argument_list|,
 name|uap
 operator|->
 name|flags
@@ -1871,10 +1869,8 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|AUDIT_ARG
+name|AUDIT_ARG_PID
 argument_list|(
-name|pid
-argument_list|,
 name|p2
 operator|->
 name|p_pid

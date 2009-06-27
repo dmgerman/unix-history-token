@@ -1261,10 +1261,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|AUDIT_ARG
+name|AUDIT_ARG_ARGV
 argument_list|(
-name|argv
-argument_list|,
 name|args
 operator|->
 name|begin_argv
@@ -1282,10 +1280,8 @@ operator|->
 name|begin_argv
 argument_list|)
 expr_stmt|;
-name|AUDIT_ARG
+name|AUDIT_ARG_ENVV
 argument_list|(
-name|envv
-argument_list|,
 name|args
 operator|->
 name|begin_envv
@@ -1884,10 +1880,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|AUDIT_ARG
+name|AUDIT_ARG_FD
 argument_list|(
-name|fd
-argument_list|,
 name|args
 operator|->
 name|fd
@@ -1932,10 +1926,8 @@ operator||
 name|LK_RETRY
 argument_list|)
 expr_stmt|;
-name|AUDIT_ARG
+name|AUDIT_ARG_VNODE
 argument_list|(
-name|vnode
-argument_list|,
 name|binvp
 argument_list|,
 name|ARG_VNODE1
