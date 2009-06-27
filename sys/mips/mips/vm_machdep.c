@@ -1310,6 +1310,16 @@ name|register_t
 operator|)
 name|entry
 expr_stmt|;
+comment|/*  	 * MIPS ABI requires T9 to be the same as PC  	 * in subroutine entry point 	 */
+name|tf
+operator|->
+name|t9
+operator|=
+operator|(
+name|register_t
+operator|)
+name|entry
+expr_stmt|;
 name|tf
 operator|->
 name|a0
@@ -1319,6 +1329,7 @@ name|register_t
 operator|)
 name|arg
 expr_stmt|;
+comment|/* 	 * Keep interrupt mask 	 */
 name|tf
 operator|->
 name|sr
@@ -1326,6 +1337,15 @@ operator|=
 name|SR_KSU_USER
 operator||
 name|SR_EXL
+operator||
+operator|(
+name|SR_INT_MASK
+operator|&
+name|mips_rd_status
+argument_list|()
+operator|)
+operator||
+name|MIPS_SR_INT_IE
 expr_stmt|;
 ifdef|#
 directive|ifdef
