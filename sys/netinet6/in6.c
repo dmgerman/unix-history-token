@@ -3920,21 +3920,9 @@ name|error
 operator|)
 argument_list|)
 expr_stmt|;
-name|in6_purgeaddr
-argument_list|(
-operator|(
-expr|struct
-name|ifaddr
-operator|*
-operator|)
-name|ia
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|cleanup
+goto|;
 block|}
 name|LIST_INSERT_HEAD
 argument_list|(
@@ -6034,6 +6022,7 @@ name|ia_ifa
 argument_list|)
 expr_stmt|;
 comment|/* if_addrhead */
+comment|/* 	 * Defer the release of what might be the last reference to the 	 * in6_ifaddr so that it can't be freed before the remainder of the 	 * cleanup. 	 */
 name|IN6_IFADDR_WLOCK
 argument_list|()
 expr_stmt|;
@@ -6050,15 +6039,6 @@ expr_stmt|;
 name|IN6_IFADDR_WUNLOCK
 argument_list|()
 expr_stmt|;
-name|ifa_free
-argument_list|(
-operator|&
-name|ia
-operator|->
-name|ia_ifa
-argument_list|)
-expr_stmt|;
-comment|/* in6_ifaddrhead */
 comment|/* 	 * Release the reference to the base prefix.  There should be a 	 * positive reference. 	 */
 if|if
 condition|(
@@ -6114,6 +6094,15 @@ name|pfxlist_onlink_check
 argument_list|()
 expr_stmt|;
 block|}
+name|ifa_free
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
+comment|/* in6_ifaddrhead */
 name|splx
 argument_list|(
 name|s
