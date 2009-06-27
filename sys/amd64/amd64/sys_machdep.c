@@ -702,10 +702,8 @@ argument_list|)
 operator|)
 return|;
 comment|/* 	 * XXXKIB check that the BSM generation code knows to encode 	 * the op argument. 	 */
-name|AUDIT_ARG
+name|AUDIT_ARG_CMD
 argument_list|(
-name|cmd
-argument_list|,
 name|uap
 operator|->
 name|op
