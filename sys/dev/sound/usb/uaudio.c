@@ -17741,7 +17741,9 @@ block|}
 name|mtx_lock
 argument_list|(
 operator|&
-name|Giant
+name|chan
+operator|->
+name|mtx
 argument_list|)
 expr_stmt|;
 name|chan
@@ -17758,7 +17760,9 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|Giant
+name|chan
+operator|->
+name|mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -17795,7 +17799,9 @@ comment|/* clear stall first */
 name|mtx_lock
 argument_list|(
 operator|&
-name|Giant
+name|chan
+operator|->
+name|mtx
 argument_list|)
 expr_stmt|;
 name|chan
@@ -17825,7 +17831,9 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|Giant
+name|chan
+operator|->
+name|mtx
 argument_list|)
 expr_stmt|;
 block|}
