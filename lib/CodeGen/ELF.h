@@ -554,6 +554,10 @@ name|unsigned
 name|short
 name|SectionIdx
 decl_stmt|;
+comment|// Symbol index into the Symbol table
+name|unsigned
+name|SymTabIdx
+decl_stmt|;
 enum|enum
 block|{
 name|STB_LOCAL
@@ -670,7 +674,14 @@ argument_list|)
 operator|,
 name|SectionIdx
 argument_list|(
-argument|ELFSection::SHN_UNDEF
+name|ELFSection
+operator|::
+name|SHN_UNDEF
+argument_list|)
+operator|,
+name|SymTabIdx
+argument_list|(
+literal|0
 argument_list|)
 block|{
 if|if
@@ -737,6 +748,16 @@ name|Info
 operator|>>
 literal|4
 operator|)
+operator|&
+literal|0xf
+return|;
+block|}
+name|unsigned
+name|getType
+argument_list|()
+block|{
+return|return
+name|Info
 operator|&
 literal|0xf
 return|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/MC/MCImm.h - MCImm class ---------------------------*- C++ -*-===//
+comment|//===-- llvm/MC/MCValue.h - MCValue class -----------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -36,15 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file contains the declaration of the MCInst and MCOperand classes, which
-end_comment
-
-begin_comment
-comment|// is the basic representation used to represent low-level machine code
-end_comment
-
-begin_comment
-comment|// instructions.
+comment|// This file contains the declaration of the MCValue class.
 end_comment
 
 begin_comment
@@ -58,14 +50,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_MC_MCIMM_H
+name|LLVM_MC_MCVALUE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_MC_MCIMM_H
+name|LLVM_MC_MCVALUE_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
 
 begin_decl_stmt
 name|namespace
@@ -74,11 +72,14 @@ block|{
 name|class
 name|MCSymbol
 decl_stmt|;
-comment|/// MCImm - This represents an "assembler immediate".  In its most general form,
-comment|/// this can hold "SymbolA - SymbolB + imm64".  Not all targets supports
+comment|/// MCValue - This represents an "assembler immediate".  In its most general
+comment|/// form, this can hold "SymbolA - SymbolB + imm64".  Not all targets supports
 comment|/// relocations of this general form, but we need to represent this anyway.
+comment|///
+comment|/// Note that this class must remain a simple POD value class, because we need
+comment|/// it to live in unions etc.
 name|class
-name|MCImm
+name|MCValue
 block|{
 name|MCSymbol
 modifier|*
@@ -122,7 +123,7 @@ name|SymB
 return|;
 block|}
 specifier|static
-name|MCImm
+name|MCValue
 name|get
 parameter_list|(
 name|MCSymbol
@@ -141,7 +142,7 @@ init|=
 literal|0
 parameter_list|)
 block|{
-name|MCImm
+name|MCValue
 name|R
 decl_stmt|;
 name|R
@@ -167,14 +168,14 @@ name|R
 return|;
 block|}
 specifier|static
-name|MCImm
+name|MCValue
 name|get
 parameter_list|(
 name|int64_t
 name|Val
 parameter_list|)
 block|{
-name|MCImm
+name|MCValue
 name|R
 decl_stmt|;
 name|R

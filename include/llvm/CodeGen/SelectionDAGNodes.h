@@ -6074,20 +6074,25 @@ block|;
 name|int64_t
 name|Offset
 block|;
+name|unsigned
+name|char
+name|TargetFlags
+block|;
 name|friend
 name|class
 name|SelectionDAG
 block|;
 name|GlobalAddressSDNode
 argument_list|(
-argument|bool isTarget
+argument|unsigned Opc
 argument_list|,
 argument|const GlobalValue *GA
 argument_list|,
 argument|MVT VT
 argument_list|,
-argument|int64_t o =
-literal|0
+argument|int64_t o
+argument_list|,
+argument|unsigned char TargetFlags
 argument_list|)
 block|;
 name|public
@@ -6109,6 +6114,16 @@ specifier|const
 block|{
 return|return
 name|Offset
+return|;
+block|}
+name|unsigned
+name|char
+name|getTargetFlags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetFlags
 return|;
 block|}
 comment|// Return the address space this GlobalAddress belongs to.
@@ -6285,6 +6300,10 @@ block|{
 name|int
 name|JTI
 block|;
+name|unsigned
+name|char
+name|TargetFlags
+block|;
 name|friend
 name|class
 name|SelectionDAG
@@ -6296,6 +6315,8 @@ argument_list|,
 argument|MVT VT
 argument_list|,
 argument|bool isTarg
+argument_list|,
+argument|unsigned char TF
 argument_list|)
 operator|:
 name|SDNode
@@ -6323,7 +6344,12 @@ argument_list|)
 block|,
 name|JTI
 argument_list|(
-argument|jti
+name|jti
+argument_list|)
+block|,
+name|TargetFlags
+argument_list|(
+argument|TF
 argument_list|)
 block|{   }
 name|public
@@ -6335,6 +6361,16 @@ specifier|const
 block|{
 return|return
 name|JTI
+return|;
+block|}
+name|unsigned
+name|char
+name|getTargetFlags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetFlags
 return|;
 block|}
 specifier|static
@@ -6403,6 +6439,10 @@ name|unsigned
 name|Alignment
 block|;
 comment|// Minimum alignment requirement of CP (not log2 value).
+name|unsigned
+name|char
+name|TargetFlags
+block|;
 name|friend
 name|class
 name|SelectionDAG
@@ -6415,72 +6455,11 @@ argument|Constant *c
 argument_list|,
 argument|MVT VT
 argument_list|,
-argument|int o=
-literal|0
-argument_list|)
-operator|:
-name|SDNode
-argument_list|(
-name|isTarget
-condition|?
-name|ISD
-operator|::
-name|TargetConstantPool
-else|:
-name|ISD
-operator|::
-name|ConstantPool
-argument_list|,
-name|DebugLoc
-operator|::
-name|getUnknownLoc
-argument_list|()
-argument_list|,
-name|getSDVTList
-argument_list|(
-name|VT
-argument_list|)
-argument_list|)
-block|,
-name|Offset
-argument_list|(
-name|o
-argument_list|)
-block|,
-name|Alignment
-argument_list|(
-literal|0
-argument_list|)
-block|{
-name|assert
-argument_list|(
-operator|(
-name|int
-operator|)
-name|Offset
-operator|>=
-literal|0
-operator|&&
-literal|"Offset is too large"
-argument_list|)
-block|;
-name|Val
-operator|.
-name|ConstVal
-operator|=
-name|c
-block|;   }
-name|ConstantPoolSDNode
-argument_list|(
-argument|bool isTarget
-argument_list|,
-argument|Constant *c
-argument_list|,
-argument|MVT VT
-argument_list|,
 argument|int o
 argument_list|,
 argument|unsigned Align
+argument_list|,
+argument|unsigned char TF
 argument_list|)
 operator|:
 name|SDNode
@@ -6513,7 +6492,12 @@ argument_list|)
 block|,
 name|Alignment
 argument_list|(
-argument|Align
+name|Align
+argument_list|)
+block|,
+name|TargetFlags
+argument_list|(
+argument|TF
 argument_list|)
 block|{
 name|assert
@@ -6542,87 +6526,11 @@ argument|MachineConstantPoolValue *v
 argument_list|,
 argument|MVT VT
 argument_list|,
-argument|int o=
-literal|0
-argument_list|)
-operator|:
-name|SDNode
-argument_list|(
-name|isTarget
-condition|?
-name|ISD
-operator|::
-name|TargetConstantPool
-else|:
-name|ISD
-operator|::
-name|ConstantPool
-argument_list|,
-name|DebugLoc
-operator|::
-name|getUnknownLoc
-argument_list|()
-argument_list|,
-name|getSDVTList
-argument_list|(
-name|VT
-argument_list|)
-argument_list|)
-block|,
-name|Offset
-argument_list|(
-name|o
-argument_list|)
-block|,
-name|Alignment
-argument_list|(
-literal|0
-argument_list|)
-block|{
-name|assert
-argument_list|(
-operator|(
-name|int
-operator|)
-name|Offset
-operator|>=
-literal|0
-operator|&&
-literal|"Offset is too large"
-argument_list|)
-block|;
-name|Val
-operator|.
-name|MachineCPVal
-operator|=
-name|v
-block|;
-name|Offset
-operator||=
-literal|1
-operator|<<
-operator|(
-sizeof|sizeof
-argument_list|(
-name|unsigned
-argument_list|)
-operator|*
-name|CHAR_BIT
-operator|-
-literal|1
-operator|)
-block|;   }
-name|ConstantPoolSDNode
-argument_list|(
-argument|bool isTarget
-argument_list|,
-argument|MachineConstantPoolValue *v
-argument_list|,
-argument|MVT VT
-argument_list|,
 argument|int o
 argument_list|,
 argument|unsigned Align
+argument_list|,
+argument|unsigned char TF
 argument_list|)
 operator|:
 name|SDNode
@@ -6655,7 +6563,12 @@ argument_list|)
 block|,
 name|Alignment
 argument_list|(
-argument|Align
+name|Align
+argument_list|)
+block|,
+name|TargetFlags
+argument_list|(
+argument|TF
 argument_list|)
 block|{
 name|assert
@@ -6782,6 +6695,16 @@ specifier|const
 block|{
 return|return
 name|Alignment
+return|;
+block|}
+name|unsigned
+name|char
+name|getTargetFlags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetFlags
 return|;
 block|}
 specifier|const
@@ -7521,6 +7444,10 @@ name|char
 operator|*
 name|Symbol
 block|;
+name|unsigned
+name|char
+name|TargetFlags
+block|;
 name|friend
 name|class
 name|SelectionDAG
@@ -7530,6 +7457,8 @@ argument_list|(
 argument|bool isTarget
 argument_list|,
 argument|const char *Sym
+argument_list|,
+argument|unsigned char TF
 argument_list|,
 argument|MVT VT
 argument_list|)
@@ -7559,7 +7488,12 @@ argument_list|)
 block|,
 name|Symbol
 argument_list|(
-argument|Sym
+name|Sym
+argument_list|)
+block|,
+name|TargetFlags
+argument_list|(
+argument|TF
 argument_list|)
 block|{   }
 name|public
@@ -7573,6 +7507,16 @@ specifier|const
 block|{
 return|return
 name|Symbol
+return|;
+block|}
+name|unsigned
+name|char
+name|getTargetFlags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetFlags
 return|;
 block|}
 specifier|static

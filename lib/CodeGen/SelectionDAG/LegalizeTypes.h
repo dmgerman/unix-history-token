@@ -529,7 +529,9 @@ name|MVT
 operator|::
 name|LAST_VALUETYPE
 operator|<=
-literal|32
+name|MVT
+operator|::
+name|MAX_ALLOWED_VALUETYPE
 operator|&&
 literal|"Too many value types for ValueTypeActions to hold!"
 argument_list|)

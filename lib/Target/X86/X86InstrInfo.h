@@ -212,7 +212,109 @@ block|{
 enum|enum
 block|{
 comment|//===------------------------------------------------------------------===//
-comment|// Instruction types.  These are the standard/most common forms for X86
+comment|// X86 Specific MachineOperand flags.
+name|MO_NO_FLAG
+init|=
+literal|0
+block|,
+comment|/// MO_GOT_ABSOLUTE_ADDRESS - On a symbol operand, this represents a
+comment|/// relocation of:
+comment|///    SYMBOL_LABEL + [. - PICBASELABEL]
+name|MO_GOT_ABSOLUTE_ADDRESS
+init|=
+literal|1
+block|,
+comment|/// MO_PIC_BASE_OFFSET - On a symbol operand this indicates that the
+comment|/// immediate should get the value of the symbol minus the PIC base label:
+comment|///    SYMBOL_LABEL - PICBASELABEL
+name|MO_PIC_BASE_OFFSET
+init|=
+literal|2
+block|,
+comment|/// MO_GOT - On a symbol operand this indicates that the immediate is the
+comment|/// offset to the GOT entry for the symbol name from the base of the GOT.
+comment|///
+comment|/// See the X86-64 ELF ABI supplement for more details.
+comment|///    SYMBOL_LABEL @GOT
+name|MO_GOT
+init|=
+literal|3
+block|,
+comment|/// MO_GOTOFF - On a symbol operand this indicates that the immediate is
+comment|/// the offset to the location of the symbol name from the base of the GOT.
+comment|///
+comment|/// See the X86-64 ELF ABI supplement for more details.
+comment|///    SYMBOL_LABEL @GOTOFF
+name|MO_GOTOFF
+init|=
+literal|4
+block|,
+comment|/// MO_GOTPCREL - On a symbol operand this indicates that the immediate is
+comment|/// offset to the GOT entry for the symbol name from the current code
+comment|/// location.
+comment|///
+comment|/// See the X86-64 ELF ABI supplement for more details.
+comment|///    SYMBOL_LABEL @GOTPCREL
+name|MO_GOTPCREL
+init|=
+literal|5
+block|,
+comment|/// MO_PLT - On a symbol operand this indicates that the immediate is
+comment|/// offset to the PLT entry of symbol name from the current code location.
+comment|///
+comment|/// See the X86-64 ELF ABI supplement for more details.
+comment|///    SYMBOL_LABEL @PLT
+name|MO_PLT
+init|=
+literal|6
+block|,
+comment|/// MO_TLSGD - On a symbol operand this indicates that the immediate is
+comment|/// some TLS offset.
+comment|///
+comment|/// See 'ELF Handling for Thread-Local Storage' for more details.
+comment|///    SYMBOL_LABEL @TLSGD
+name|MO_TLSGD
+init|=
+literal|7
+block|,
+comment|/// MO_GOTTPOFF - On a symbol operand this indicates that the immediate is
+comment|/// some TLS offset.
+comment|///
+comment|/// See 'ELF Handling for Thread-Local Storage' for more details.
+comment|///    SYMBOL_LABEL @GOTTPOFF
+name|MO_GOTTPOFF
+init|=
+literal|8
+block|,
+comment|/// MO_INDNTPOFF - On a symbol operand this indicates that the immediate is
+comment|/// some TLS offset.
+comment|///
+comment|/// See 'ELF Handling for Thread-Local Storage' for more details.
+comment|///    SYMBOL_LABEL @INDNTPOFF
+name|MO_INDNTPOFF
+init|=
+literal|9
+block|,
+comment|/// MO_TPOFF - On a symbol operand this indicates that the immediate is
+comment|/// some TLS offset.
+comment|///
+comment|/// See 'ELF Handling for Thread-Local Storage' for more details.
+comment|///    SYMBOL_LABEL @TPOFF
+name|MO_TPOFF
+init|=
+literal|10
+block|,
+comment|/// MO_NTPOFF - On a symbol operand this indicates that the immediate is
+comment|/// some TLS offset.
+comment|///
+comment|/// See 'ELF Handling for Thread-Local Storage' for more details.
+comment|///    SYMBOL_LABEL @NTPOFF
+name|MO_NTPOFF
+init|=
+literal|11
+block|,
+comment|//===------------------------------------------------------------------===//
+comment|// Instruction encodings.  These are the standard/most common forms for X86
 comment|// instructions.
 comment|//
 comment|// PseudoFrm - This represents an instruction that is a pseudo instruction

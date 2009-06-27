@@ -972,7 +972,7 @@ block|}
 name|void
 name|initializeExecutionEngine
 parameter_list|()
-function_decl|;
+block|{ }
 name|void
 name|initializeExternalFunctions
 parameter_list|()

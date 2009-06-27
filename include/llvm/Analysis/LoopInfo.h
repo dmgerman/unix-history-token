@@ -1611,6 +1611,59 @@ end_if
 
 begin_comment
 unit|}     }   }
+comment|/// getUniqueExitBlock - If getUniqueExitBlocks would return exactly one
+end_comment
+
+begin_comment
+comment|/// block, return that block. Otherwise return null.
+end_comment
+
+begin_expr_stmt
+unit|BlockT
+operator|*
+name|getUniqueExitBlock
+argument_list|()
+specifier|const
+block|{
+name|SmallVector
+operator|<
+name|BlockT
+operator|*
+block|,
+literal|8
+operator|>
+name|UniqueExitBlocks
+block|;
+name|getUniqueExitBlocks
+argument_list|(
+name|UniqueExitBlocks
+argument_list|)
+block|;
+if|if
+condition|(
+name|UniqueExitBlocks
+operator|.
+name|size
+argument_list|()
+operator|==
+literal|1
+condition|)
+return|return
+name|UniqueExitBlocks
+index|[
+literal|0
+index|]
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+literal|0
+return|;
+end_return
+
+begin_comment
+unit|}
 comment|/// getLoopPreheader - If there is a preheader for this loop, return it.  A
 end_comment
 

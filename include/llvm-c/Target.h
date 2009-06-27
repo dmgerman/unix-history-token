@@ -21,6 +21,12 @@ directive|include
 file|"llvm-c/Core.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Config/config.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -56,6 +62,82 @@ name|LLVMStructLayout
 modifier|*
 name|LLVMStructLayoutRef
 typedef|;
+comment|/* Declare all of the target-initialization functions that are available. */
+define|#
+directive|define
+name|LLVM_TARGET
+parameter_list|(
+name|TargetName
+parameter_list|)
+value|void LLVMInitialize##TargetName##Target();
+include|#
+directive|include
+file|"llvm/Config/Targets.def"
+comment|/** LLVMInitializeAllTargets - The main program should call this function if it     wants to link in all available targets that LLVM is configured to     support. */
+specifier|static
+specifier|inline
+name|void
+name|LLVMInitializeAllTargets
+parameter_list|()
+block|{
+define|#
+directive|define
+name|LLVM_TARGET
+parameter_list|(
+name|TargetName
+parameter_list|)
+value|LLVMInitialize##TargetName##Target();
+include|#
+directive|include
+file|"llvm/Config/Targets.def"
+block|}
+comment|/** LLVMInitializeNativeTarget - The main program should call this function to     initialize the native target corresponding to the host.  This is useful      for JIT applications to ensure that the target gets linked in correctly. */
+specifier|static
+specifier|inline
+name|int
+name|LLVMInitializeNativeTarget
+parameter_list|()
+block|{
+comment|/* If we have a native target, initialize it to ensure it is linked in. */
+ifdef|#
+directive|ifdef
+name|LLVM_NATIVE_ARCH
+define|#
+directive|define
+name|DoInit2
+parameter_list|(
+name|TARG
+parameter_list|)
+value|LLVMInitialize ## TARG ()
+define|#
+directive|define
+name|DoInit
+parameter_list|(
+name|T
+parameter_list|)
+value|DoInit2(T)
+name|DoInit
+argument_list|(
+name|LLVM_NATIVE_ARCH
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+undef|#
+directive|undef
+name|DoInit
+undef|#
+directive|undef
+name|DoInit2
+else|#
+directive|else
+return|return
+literal|1
+return|;
+endif|#
+directive|endif
+block|}
 comment|/*===-- Target Data -------------------------------------------------------===*/
 comment|/** Creates target data from a target layout string.     See the constructor llvm::TargetData::TargetData. */
 name|LLVMTargetDataRef

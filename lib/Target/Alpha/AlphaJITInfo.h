@@ -65,6 +65,12 @@ directive|include
 file|"llvm/Target/TargetJITInfo.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<map>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -83,6 +89,27 @@ operator|:
 name|TargetMachine
 operator|&
 name|TM
+block|;
+comment|//because gpdist are paired and relative to the pc of the first inst,
+comment|//we need to have some state
+name|std
+operator|::
+name|map
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|void
+operator|*
+block|,
+name|int
+operator|>
+block|,
+name|void
+operator|*
+operator|>
+name|gpdistmap
 block|;
 name|public
 operator|:

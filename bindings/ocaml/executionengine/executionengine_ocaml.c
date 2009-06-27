@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm-c/Target.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"caml/alloc.h"
 end_include
 
@@ -44,6 +50,29 @@ include|#
 directive|include
 file|<assert.h>
 end_include
+
+begin_comment
+comment|/* Force the LLVM interpreter, JIT, and native target to be linked in. */
+end_comment
+
+begin_function
+name|void
+name|llvm_initialize
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|LLVMLinkInInterpreter
+argument_list|()
+expr_stmt|;
+name|LLVMLinkInJIT
+argument_list|()
+expr_stmt|;
+name|LLVMInitializeNativeTarget
+argument_list|()
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/* Can't use the recommended caml_named_value mechanism for backwards    compatibility reasons. This is largely equivalent. */

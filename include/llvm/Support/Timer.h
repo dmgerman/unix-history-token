@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/System/Mutex.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -111,27 +117,27 @@ comment|///
 name|class
 name|Timer
 block|{
-name|int64_t
+name|double
 name|Elapsed
 decl_stmt|;
 comment|// Wall clock time elapsed in seconds
-name|int64_t
+name|double
 name|UserTime
 decl_stmt|;
 comment|// User time elapsed
-name|int64_t
+name|double
 name|SystemTime
 decl_stmt|;
 comment|// System time elapsed
-name|int64_t
+name|ssize_t
 name|MemUsed
 decl_stmt|;
 comment|// Memory allocated (in bytes)
-name|int64_t
+name|size_t
 name|PeakMem
 decl_stmt|;
 comment|// Peak memory used
-name|int64_t
+name|size_t
 name|PeakMemBase
 decl_stmt|;
 comment|// Temporary for peak calculation...
@@ -150,6 +156,16 @@ modifier|*
 name|TG
 decl_stmt|;
 comment|// The TimerGroup this Timer is in.
+name|mutable
+name|sys
+operator|::
+name|SmartMutex
+operator|<
+name|true
+operator|>
+name|Lock
+expr_stmt|;
+comment|// Mutex for the contents of this Timer.
 name|public
 label|:
 name|explicit
@@ -189,7 +205,7 @@ operator|~
 name|Timer
 argument_list|()
 expr_stmt|;
-name|int64_t
+name|double
 name|getProcessTime
 argument_list|()
 specifier|const
@@ -200,7 +216,7 @@ operator|+
 name|SystemTime
 return|;
 block|}
-name|int64_t
+name|double
 name|getWallTime
 argument_list|()
 specifier|const
@@ -209,7 +225,7 @@ return|return
 name|Elapsed
 return|;
 block|}
-name|int64_t
+name|ssize_t
 name|getMemUsed
 argument_list|()
 specifier|const
@@ -218,7 +234,7 @@ return|return
 name|MemUsed
 return|;
 block|}
-name|int64_t
+name|size_t
 name|getPeakMem
 argument_list|()
 specifier|const
@@ -250,54 +266,90 @@ operator|&
 name|T
 operator|)
 block|{
+if|if
+condition|(
+operator|&
+name|T
+operator|<
+name|this
+condition|)
+block|{
+name|T
+operator|.
+name|Lock
+operator|.
+name|acquire
+argument_list|()
+expr_stmt|;
+name|Lock
+operator|.
+name|acquire
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
+name|Lock
+operator|.
+name|acquire
+argument_list|()
+expr_stmt|;
+name|T
+operator|.
+name|Lock
+operator|.
+name|acquire
+argument_list|()
+expr_stmt|;
+block|}
 name|Elapsed
 operator|=
 name|T
 operator|.
 name|Elapsed
-block|;
+expr_stmt|;
 name|UserTime
 operator|=
 name|T
 operator|.
 name|UserTime
-block|;
+decl_stmt|;
 name|SystemTime
 operator|=
 name|T
 operator|.
 name|SystemTime
-block|;
+expr_stmt|;
 name|MemUsed
 operator|=
 name|T
 operator|.
 name|MemUsed
-block|;
+expr_stmt|;
 name|PeakMem
 operator|=
 name|T
 operator|.
 name|PeakMem
-block|;
+expr_stmt|;
 name|PeakMemBase
 operator|=
 name|T
 operator|.
 name|PeakMemBase
-block|;
+expr_stmt|;
 name|Name
 operator|=
 name|T
 operator|.
 name|Name
-block|;
+expr_stmt|;
 name|Started
 operator|=
 name|T
 operator|.
 name|Started
-block|;
+expr_stmt|;
 name|assert
 argument_list|(
 name|TG
@@ -308,7 +360,43 @@ name|TG
 operator|&&
 literal|"Can only assign timers in the same TimerGroup!"
 argument_list|)
-block|;
+expr_stmt|;
+if|if
+condition|(
+operator|&
+name|T
+operator|<
+name|this
+condition|)
+block|{
+name|T
+operator|.
+name|Lock
+operator|.
+name|release
+argument_list|()
+expr_stmt|;
+name|Lock
+operator|.
+name|release
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
+name|Lock
+operator|.
+name|release
+argument_list|()
+expr_stmt|;
+name|T
+operator|.
+name|Lock
+operator|.
+name|release
+argument_list|()
+expr_stmt|;
+block|}
 return|return
 operator|*
 name|this
@@ -426,12 +514,33 @@ name|T
 parameter_list|)
 function_decl|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// The TimeRegion class is used as a helper class to call the startTimer() and
+end_comment
+
+begin_comment
 comment|/// stopTimer() methods of the Timer class.  When the object is constructed, it
+end_comment
+
+begin_comment
 comment|/// starts the timer specified as it's argument.  When it is destroyed, it stops
+end_comment
+
+begin_comment
 comment|/// the relevant timer.  This makes it easy to time a region of code.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|TimeRegion
 block|{
@@ -505,12 +614,33 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// NamedRegionTimer - This class is basically a combination of TimeRegion and
+end_comment
+
+begin_comment
 comment|/// Timer.  It allows you to declare a new timer, AND specify the region to
+end_comment
+
+begin_comment
 comment|/// time, all in one statement.  All timers with the same name are merged.  This
+end_comment
+
+begin_comment
 comment|/// is primarily used for debugging and for hunting performance problems.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|struct
 name|NamedRegionTimer
 range|:
@@ -547,11 +677,29 @@ name|GroupName
 argument_list|)
 block|; }
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// The TimerGroup class is used to group together related timers into a single
+end_comment
+
+begin_comment
 comment|/// report that is printed when the TimerGroup is destroyed.  It is illegal to
+end_comment
+
+begin_comment
 comment|/// destroy a TimerGroup object before all of the Timers in it are gone.  A
+end_comment
+
+begin_comment
 comment|/// TimerGroup can be specified for a newly created timer in its constructor.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|TimerGroup
 block|{
@@ -616,11 +764,7 @@ expr_stmt|;
 name|void
 name|addTimer
 parameter_list|()
-block|{
-operator|++
-name|NumTimers
-expr_stmt|;
-block|}
+function_decl|;
 name|void
 name|removeTimer
 parameter_list|()
@@ -633,26 +777,16 @@ name|Timer
 modifier|&
 name|T
 parameter_list|)
-block|{
-name|TimersToPrint
-operator|.
-name|push_back
-argument_list|(
-name|Timer
-argument_list|(
-name|true
-argument_list|,
-name|T
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-empty_stmt|;
+function_decl|;
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

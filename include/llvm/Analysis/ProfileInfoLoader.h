@@ -147,6 +147,9 @@ name|unsigned
 operator|>
 name|BBTrace
 expr_stmt|;
+name|bool
+name|Warned
+decl_stmt|;
 name|public
 label|:
 comment|// ProfileInfoLoader ctor - Read the specified profiling data file, exiting

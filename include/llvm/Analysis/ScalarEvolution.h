@@ -167,8 +167,8 @@ name|class
 name|SCEVUnknown
 decl_stmt|;
 comment|/// SCEV - This class represents an analyzed expression in the program.  These
-comment|/// are reference-counted opaque objects that the client is not allowed to
-comment|/// do much with directly.
+comment|/// are opaque objects that the client is not allowed to do much with
+comment|/// directly.
 comment|///
 name|class
 name|SCEV
@@ -280,6 +280,14 @@ comment|/// isOne - Return true if the expression is a constant one.
 comment|///
 name|bool
 name|isOne
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// isAllOnesValue - Return true if the expression is a constant
+comment|/// all-ones value.
+comment|///
+name|bool
+name|isAllOnesValue
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -1073,6 +1081,22 @@ operator|*
 name|BB
 argument_list|)
 block|;
+comment|/// isNecessaryCond - Test whether the given CondValue value is a condition
+comment|/// which is at least as strict as the one described by Pred, LHS, and RHS.
+name|bool
+name|isNecessaryCond
+argument_list|(
+argument|Value *Cond
+argument_list|,
+argument|ICmpInst::Predicate Pred
+argument_list|,
+argument|const SCEV *LHS
+argument_list|,
+argument|const SCEV *RHS
+argument_list|,
+argument|bool Inverse
+argument_list|)
+block|;
 comment|/// getConstantEvolutionLoopExitValue - If we know that the specified Phi is
 comment|/// in the header of its containing loop, we know the loop executes a
 comment|/// constant number of times, and the PHI node is just a recurrence
@@ -1788,7 +1812,7 @@ operator|*
 name|Ty
 argument_list|)
 block|;
-comment|/// getIntegerSCEV - Given an integer or FP type, create a constant for the
+comment|/// getIntegerSCEV - Given a SCEVable type, create a constant for the
 comment|/// specified signed integer value and return a SCEV for the constant.
 specifier|const
 name|SCEV
@@ -1980,10 +2004,11 @@ operator|*
 name|L
 argument_list|)
 block|;
-comment|/// GetMinTrailingZeros - Determine the minimum number of zero bits that S is
-comment|/// guaranteed to end in (at every loop iteration).  It is, at the same time,
-comment|/// the minimum number of times S is divisible by 2.  For example, given {4,+,8}
-comment|/// it returns 2.  If S is guaranteed to be 0, it returns the bitwidth of S.
+comment|/// GetMinTrailingZeros - Determine the minimum number of zero bits that S
+comment|/// is guaranteed to end in (at every loop iteration).  It is, at the same
+comment|/// time, the minimum number of times S is divisible by 2.  For example,
+comment|/// given {4,+,8} it returns 2.  If S is guaranteed to be 0, it returns the
+comment|/// bitwidth of S.
 name|uint32_t
 name|GetMinTrailingZeros
 argument_list|(

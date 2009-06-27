@@ -184,13 +184,25 @@ comment|///
 name|bool
 name|HasX86_64
 block|;
-comment|/// IsBTMemSlow - True if BT (bit test) of memory instructions are slow.
-name|bool
-name|IsBTMemSlow
-block|;
 comment|/// HasSSE4A - True if the processor supports SSE4A instructions.
 name|bool
 name|HasSSE4A
+block|;
+comment|/// HasAVX - Target has AVX instructions
+name|bool
+name|HasAVX
+block|;
+comment|/// HasFMA3 - Target has 3-operand fused multiply-add
+name|bool
+name|HasFMA3
+block|;
+comment|/// HasFMA4 - Target has 4-operand fused multiply-add
+name|bool
+name|HasFMA4
+block|;
+comment|/// IsBTMemSlow - True if BT (bit test) of memory instructions are slow.
+name|bool
+name|IsBTMemSlow
 block|;
 comment|/// DarwinVers - Nonzero if this is a darwin platform: the numeric
 comment|/// version of the platform, e.g. 8 = 10.4 (Tiger), 9 = 10.5 (Leopard), etc.
@@ -435,6 +447,34 @@ return|return
 name|X863DNowLevel
 operator|>=
 name|ThreeDNowA
+return|;
+block|}
+name|bool
+name|hasAVX
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasAVX
+argument_list|()
+return|;
+block|}
+name|bool
+name|hasFMA3
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasFMA3
+return|;
+block|}
+name|bool
+name|hasFMA4
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasFMA4
 return|;
 block|}
 name|bool

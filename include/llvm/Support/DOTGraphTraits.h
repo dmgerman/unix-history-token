@@ -159,6 +159,8 @@ argument_list|(
 argument|const void *Node
 argument_list|,
 argument|const GraphType& Graph
+argument_list|,
+argument|bool ShortNames
 argument_list|)
 block|{
 return|return

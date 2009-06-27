@@ -119,25 +119,28 @@ name|class
 name|GlobalValue
 decl_stmt|;
 name|class
-name|Module
-decl_stmt|;
-name|class
-name|ModuleProvider
-decl_stmt|;
-name|class
-name|TargetData
-decl_stmt|;
-name|class
-name|Type
-decl_stmt|;
-name|class
-name|MutexGuard
+name|JITEventListener
 decl_stmt|;
 name|class
 name|JITMemoryManager
 decl_stmt|;
 name|class
 name|MachineCodeInfo
+decl_stmt|;
+name|class
+name|Module
+decl_stmt|;
+name|class
+name|ModuleProvider
+decl_stmt|;
+name|class
+name|MutexGuard
+decl_stmt|;
+name|class
+name|TargetData
+decl_stmt|;
+name|class
+name|Type
 decl_stmt|;
 name|class
 name|ExecutionEngineState
@@ -823,6 +826,28 @@ name|GV
 argument_list|)
 return|;
 block|}
+comment|/// Registers a listener to be called back on various events within
+comment|/// the JIT.  See JITEventListener.h for more details.  Does not
+comment|/// take ownership of the argument.  The argument may be NULL, in
+comment|/// which case these functions do nothing.
+name|virtual
+name|void
+name|RegisterJITEventListener
+parameter_list|(
+name|JITEventListener
+modifier|*
+name|L
+parameter_list|)
+block|{}
+name|virtual
+name|void
+name|UnregisterJITEventListener
+parameter_list|(
+name|JITEventListener
+modifier|*
+name|L
+parameter_list|)
+block|{}
 comment|/// DisableLazyCompilation - If called, the JIT will abort if lazy compilation
 comment|/// is ever attempted.
 name|void

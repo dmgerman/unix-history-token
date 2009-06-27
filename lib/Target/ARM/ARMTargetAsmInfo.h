@@ -116,7 +116,7 @@ name|explicit
 name|ARMTargetAsmInfo
 argument_list|(
 specifier|const
-name|ARMTargetMachine
+name|ARMBaseTargetMachine
 operator|&
 name|TM
 argument_list|)
@@ -233,7 +233,7 @@ name|explicit
 name|ARMDarwinTargetAsmInfo
 argument_list|(
 specifier|const
-name|ARMTargetMachine
+name|ARMBaseTargetMachine
 operator|&
 name|TM
 argument_list|)
@@ -252,7 +252,7 @@ name|explicit
 name|ARMELFTargetAsmInfo
 argument_list|(
 specifier|const
-name|ARMTargetMachine
+name|ARMBaseTargetMachine
 operator|&
 name|TM
 argument_list|)

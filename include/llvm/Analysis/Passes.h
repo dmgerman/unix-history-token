@@ -74,6 +74,9 @@ name|class
 name|ImmutablePass
 decl_stmt|;
 name|class
+name|LoopPass
+decl_stmt|;
+name|class
 name|ModulePass
 decl_stmt|;
 name|class
@@ -221,6 +224,16 @@ comment|//
 name|FunctionPass
 modifier|*
 name|createLiveValuesPass
+parameter_list|()
+function_decl|;
+comment|//===--------------------------------------------------------------------===//
+comment|//
+comment|// createLoopDependenceAnalysisPass - This creates an instance of the
+comment|// LoopDependenceAnalysis pass.
+comment|//
+name|LoopPass
+modifier|*
+name|createLoopDependenceAnalysisPass
 parameter_list|()
 function_decl|;
 comment|// Minor pass prototypes, allowing us to expose them through bugpoint and

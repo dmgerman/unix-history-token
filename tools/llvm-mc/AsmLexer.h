@@ -135,6 +135,8 @@ name|Comma
 block|,
 name|Dollar
 block|,
+name|Equal
+block|,
 name|Pipe
 block|,
 name|Caret
@@ -169,6 +171,11 @@ name|MemoryBuffer
 modifier|*
 name|CurBuf
 decl_stmt|;
+comment|// A llvm::StringSet<>, which provides uniqued and null-terminated strings.
+name|void
+modifier|*
+name|TheStringSet
+decl_stmt|;
 comment|// Information about the current token.
 specifier|const
 name|char
@@ -180,11 +187,11 @@ operator|::
 name|TokKind
 name|CurKind
 expr_stmt|;
-name|std
-operator|::
-name|string
+specifier|const
+name|char
+modifier|*
 name|CurStrVal
-expr_stmt|;
+decl_stmt|;
 comment|// This is valid for Identifier.
 name|int64_t
 name|CurIntVal
@@ -194,6 +201,24 @@ comment|/// by the SourceMgr object.
 name|int
 name|CurBuffer
 decl_stmt|;
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|AsmLexer
+operator|&
+operator|)
+decl_stmt|;
+comment|// DO NOT IMPLEMENT
+name|AsmLexer
+argument_list|(
+specifier|const
+name|AsmLexer
+operator|&
+argument_list|)
+expr_stmt|;
+comment|// DO NOT IMPLEMENT
 name|public
 label|:
 name|AsmLexer
@@ -206,7 +231,7 @@ expr_stmt|;
 operator|~
 name|AsmLexer
 argument_list|()
-block|{}
+expr_stmt|;
 name|asmtok
 operator|::
 name|TokKind
@@ -264,10 +289,8 @@ name|K
 return|;
 block|}
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|char
+operator|*
 name|getCurStrVal
 argument_list|()
 specifier|const

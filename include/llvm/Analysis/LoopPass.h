@@ -149,19 +149,6 @@ argument_list|)
 operator|=
 literal|0
 block|;
-name|virtual
-name|bool
-name|runOnFunctionBody
-argument_list|(
-argument|Function&F
-argument_list|,
-argument|LPPassManager&LPM
-argument_list|)
-block|{
-return|return
-name|false
-return|;
-block|}
 comment|// Initialization and finalization hooks.
 name|virtual
 name|bool

@@ -217,6 +217,12 @@ name|getPrettyName
 argument_list|(
 argument|unsigned reg
 argument_list|)
+block|;
+name|private
+operator|:
+name|mutable
+name|int
+name|curgpdist
 block|; }
 decl_stmt|;
 block|}

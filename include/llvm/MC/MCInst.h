@@ -70,7 +70,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCImm.h"
+file|"llvm/MC/MCValue.h"
 end_include
 
 begin_include
@@ -115,7 +115,7 @@ comment|///< Immediate operand.
 name|kMBBLabel
 block|,
 comment|///< Basic block label.
-name|kMCImm
+name|kMCValue
 block|}
 enum|;
 name|unsigned
@@ -130,8 +130,8 @@ decl_stmt|;
 name|int64_t
 name|ImmVal
 decl_stmt|;
-name|MCImm
-name|MCImmVal
+name|MCValue
+name|MCValueVal
 decl_stmt|;
 struct|struct
 block|{

@@ -169,22 +169,6 @@ directive|include
 file|<map>
 end_include
 
-begin_comment
-comment|// TODO:
-end_comment
-
-begin_comment
-comment|//       - Finish renaming Spiller -> Rewriter
-end_comment
-
-begin_comment
-comment|//         - SimpleSpiller
-end_comment
-
-begin_comment
-comment|//         - LocalSpiller
-end_comment
-
 begin_decl_stmt
 name|namespace
 name|llvm

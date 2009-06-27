@@ -97,6 +97,26 @@ name|MachineRelocation
 operator|>
 name|Relocations
 block|;
+comment|/// CPLocations - This is a map of constant pool indices to offsets from the
+comment|/// start of the section for that constant pool index.
+name|std
+operator|::
+name|vector
+operator|<
+name|uintptr_t
+operator|>
+name|CPLocations
+block|;
+comment|/// CPSections - This is a map of constant pool indices to the MachOSection
+comment|/// containing the constant pool entry for that index.
+name|std
+operator|::
+name|vector
+operator|<
+name|unsigned
+operator|>
+name|CPSections
+block|;
 comment|/// MBBLocations - This vector is a mapping from MBB ID's to their address.
 comment|/// It is filled in by the StartMachineBasicBlock callback and queried by
 comment|/// the getMachineBasicBlockAddress callback.
@@ -266,13 +286,21 @@ decl|const
 block|{
 name|assert
 argument_list|(
-literal|0
+name|CPLocations
+operator|.
+name|size
+argument_list|()
+operator|>
+name|Index
 operator|&&
-literal|"CP not implementated yet!"
+literal|"CP not emitted!"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|CPLocations
+index|[
+name|Index
+index|]
 return|;
 block|}
 name|virtual
@@ -358,6 +386,16 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
+comment|/// emitConstantPool - For each constant pool entry, figure out which section
+comment|/// the constant should live in and emit the constant.
+name|void
+name|emitConstantPool
+parameter_list|(
+name|MachineConstantPool
+modifier|*
+name|MCP
+parameter_list|)
+function_decl|;
 name|virtual
 name|void
 name|setModuleInfo

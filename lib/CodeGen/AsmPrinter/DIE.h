@@ -483,6 +483,11 @@ name|CompileUnit
 operator|*
 name|AbstractCU
 block|;
+comment|// Private data for print()
+name|mutable
+name|unsigned
+name|IndentCount
+block|;
 name|public
 operator|:
 name|explicit
@@ -506,6 +511,11 @@ literal|0
 argument_list|)
 block|,
 name|Size
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|IndentCount
 argument_list|(
 literal|0
 argument_list|)

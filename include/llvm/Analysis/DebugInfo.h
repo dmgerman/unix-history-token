@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Dwarf.h"
 end_include
 
@@ -136,7 +142,7 @@ name|protected
 label|:
 name|GlobalVariable
 modifier|*
-name|GV
+name|DbgGV
 decl_stmt|;
 comment|/// DIDescriptor constructor.  If the specified GV is non-null, this checks
 comment|/// to make sure that the tag in the descriptor matches 'RequiredTag'.  If
@@ -235,7 +241,7 @@ name|explicit
 name|DIDescriptor
 argument_list|()
 operator|:
-name|GV
+name|DbgGV
 argument_list|(
 literal|0
 argument_list|)
@@ -245,12 +251,12 @@ name|DIDescriptor
 argument_list|(
 name|GlobalVariable
 operator|*
-name|gv
+name|GV
 argument_list|)
 operator|:
-name|GV
+name|DbgGV
 argument_list|(
-argument|gv
+argument|GV
 argument_list|)
 block|{}
 name|bool
@@ -259,7 +265,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|GV
+name|DbgGV
 operator|==
 literal|0
 return|;
@@ -271,7 +277,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|GV
+name|DbgGV
 return|;
 block|}
 name|unsigned
@@ -326,50 +332,10 @@ specifier|const
 expr_stmt|;
 block|}
 empty_stmt|;
-comment|/// DIAnchor - A wrapper for various anchor descriptors.
-name|class
-name|DIAnchor
-range|:
-name|public
-name|DIDescriptor
-block|{
-name|public
-operator|:
-name|explicit
-name|DIAnchor
-argument_list|(
-name|GlobalVariable
-operator|*
-name|GV
-operator|=
-literal|0
-argument_list|)
-operator|:
-name|DIDescriptor
-argument_list|(
-argument|GV
-argument_list|,
-argument|dwarf::DW_TAG_anchor
-argument_list|)
-block|{}
-name|unsigned
-name|getAnchorTag
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getUnsignedField
-argument_list|(
-literal|1
-argument_list|)
-return|;
-block|}
-expr|}
-block|;
 comment|/// DISubrange - This is used to represent ranges, for array bounds.
 name|class
 name|DISubrange
-operator|:
+range|:
 name|public
 name|DIDescriptor
 block|{
@@ -1102,7 +1068,7 @@ name|getTag
 argument_list|()
 argument_list|)
 condition|)
-name|GV
+name|DbgGV
 operator|=
 literal|0
 expr_stmt|;
@@ -1175,7 +1141,7 @@ name|getTag
 argument_list|()
 argument_list|)
 condition|)
-name|GV
+name|DbgGV
 operator|=
 literal|0
 expr_stmt|;
@@ -1473,6 +1439,92 @@ literal|8
 operator|)
 return|;
 block|}
+comment|/// getReturnTypeName - Subprogram return types are encoded either as
+comment|/// DIType or as DICompositeType.
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|getReturnTypeName
+argument_list|(
+argument|std::string&F
+argument_list|)
+specifier|const
+block|{
+name|DICompositeType
+name|DCT
+argument_list|(
+name|getFieldAs
+operator|<
+name|DICompositeType
+operator|>
+operator|(
+literal|8
+operator|)
+argument_list|)
+block|;
+if|if
+condition|(
+operator|!
+name|DCT
+operator|.
+name|isNull
+argument_list|()
+condition|)
+block|{
+name|DIArray
+name|A
+init|=
+name|DCT
+operator|.
+name|getTypeArray
+argument_list|()
+decl_stmt|;
+name|DIType
+name|T
+argument_list|(
+name|A
+operator|.
+name|getElement
+argument_list|(
+literal|0
+argument_list|)
+operator|.
+name|getGV
+argument_list|()
+argument_list|)
+decl_stmt|;
+return|return
+name|T
+operator|.
+name|getName
+argument_list|(
+name|F
+argument_list|)
+return|;
+block|}
+name|DIType
+name|T
+argument_list|(
+name|getFieldAs
+operator|<
+name|DIType
+operator|>
+operator|(
+literal|8
+operator|)
+argument_list|)
+decl_stmt|;
+return|return
+name|T
+operator|.
+name|getName
+argument_list|(
+name|F
+argument_list|)
+return|;
+block|}
 comment|/// Verify - Verify that a subprogram descriptor is well formed.
 name|bool
 name|Verify
@@ -1564,19 +1616,19 @@ name|DIVariable
 argument_list|(
 name|GlobalVariable
 operator|*
-name|gv
+name|GV
 operator|=
 literal|0
 argument_list|)
 operator|:
 name|DIDescriptor
 argument_list|(
-argument|gv
+argument|GV
 argument_list|)
 block|{
 if|if
 condition|(
-name|gv
+name|GV
 operator|&&
 operator|!
 name|isVariable
@@ -1585,7 +1637,7 @@ name|getTag
 argument_list|()
 argument_list|)
 condition|)
-name|GV
+name|DbgGV
 operator|=
 literal|0
 expr_stmt|;
@@ -1735,13 +1787,6 @@ operator|&
 name|M
 block|;
 comment|// Cached values for uniquing and faster lookups.
-name|DIAnchor
-name|CompileUnitAnchor
-block|,
-name|SubProgramAnchor
-block|,
-name|GlobalVariableAnchor
-block|;
 specifier|const
 name|Type
 operator|*
@@ -1816,24 +1861,6 @@ name|Module
 operator|&
 name|m
 argument_list|)
-block|;
-comment|/// GetOrCreateCompileUnitAnchor - Return the anchor for compile units,
-comment|/// creating a new one if there isn't already one in the module.
-name|DIAnchor
-name|GetOrCreateCompileUnitAnchor
-argument_list|()
-block|;
-comment|/// GetOrCreateSubprogramAnchor - Return the anchor for subprograms,
-comment|/// creating a new one if there isn't already one in the module.
-name|DIAnchor
-name|GetOrCreateSubprogramAnchor
-argument_list|()
-block|;
-comment|/// GetOrCreateGlobalVariableAnchor - Return the anchor for globals,
-comment|/// creating a new one if there isn't already one in the module.
-name|DIAnchor
-name|GetOrCreateGlobalVariableAnchor
-argument_list|()
 block|;
 comment|/// GetOrCreateArray - Create an descriptor for an array of descriptors.
 comment|/// This implicitly uniques the arrays created.
@@ -2117,14 +2144,6 @@ operator|&
 name|String
 argument_list|)
 block|;
-name|DIAnchor
-name|GetOrCreateAnchor
-argument_list|(
-argument|unsigned TAG
-argument_list|,
-argument|const char *Name
-argument_list|)
-block|;
 comment|/// getCastToEmpty - Return the descriptor as a Constant* with type '{}*'.
 name|Constant
 operator|*
@@ -2217,6 +2236,45 @@ operator|::
 name|string
 operator|&
 name|Dir
+argument_list|)
+block|;
+comment|/// CollectDebugInfoAnchors - Collect debugging information anchors.
+name|void
+name|CollectDebugInfoAnchors
+argument_list|(
+name|Module
+operator|&
+name|M
+argument_list|,
+name|SmallVector
+operator|<
+name|GlobalVariable
+operator|*
+argument_list|,
+literal|2
+operator|>
+operator|&
+name|CompileUnits
+argument_list|,
+name|SmallVector
+operator|<
+name|GlobalVariable
+operator|*
+argument_list|,
+literal|4
+operator|>
+operator|&
+name|GlobalVars
+argument_list|,
+name|SmallVector
+operator|<
+name|GlobalVariable
+operator|*
+argument_list|,
+literal|4
+operator|>
+operator|&
+name|Subprograms
 argument_list|)
 block|;  }
 end_decl_stmt

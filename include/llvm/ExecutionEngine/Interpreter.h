@@ -75,17 +75,14 @@ directive|include
 file|<cstdlib>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
-specifier|extern
+begin_extern
+extern|extern
+literal|"C"
 name|void
-name|LinkInInterpreter
+name|LLVMLinkInInterpreter
 parameter_list|()
 function_decl|;
-block|}
-end_decl_stmt
+end_extern
 
 begin_macro
 name|namespace
@@ -120,9 +117,7 @@ operator|-
 literal|1
 condition|)
 return|return;
-name|llvm
-operator|::
-name|LinkInInterpreter
+name|LLVMLinkInInterpreter
 argument_list|()
 expr_stmt|;
 block|}

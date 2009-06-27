@@ -499,15 +499,6 @@ operator|&
 name|JCE
 argument_list|)
 decl_stmt|;
-comment|/// symbolicAddressesAreRIPRel - Return true if symbolic addresses are
-comment|/// RIP-relative on this machine, taking into consideration the relocation
-comment|/// model and subtarget. RIP-relative addresses cannot have a separate
-comment|/// base or index register.
-name|bool
-name|symbolicAddressesAreRIPRel
-argument_list|()
-specifier|const
-expr_stmt|;
 block|}
 end_decl_stmt
 

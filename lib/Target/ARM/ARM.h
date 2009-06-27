@@ -80,7 +80,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|ARMTargetMachine
+name|ARMBaseTargetMachine
 decl_stmt|;
 name|class
 name|FunctionPass
@@ -395,7 +395,7 @@ name|FunctionPass
 modifier|*
 name|createARMISelDag
 parameter_list|(
-name|ARMTargetMachine
+name|ARMBaseTargetMachine
 modifier|&
 name|TM
 parameter_list|)
@@ -408,7 +408,7 @@ name|raw_ostream
 operator|&
 name|O
 argument_list|,
-name|ARMTargetMachine
+name|ARMBaseTargetMachine
 operator|&
 name|TM
 argument_list|,
@@ -425,7 +425,7 @@ name|FunctionPass
 modifier|*
 name|createARMCodeEmitterPass
 parameter_list|(
-name|ARMTargetMachine
+name|ARMBaseTargetMachine
 modifier|&
 name|TM
 parameter_list|,
@@ -438,7 +438,7 @@ name|FunctionPass
 modifier|*
 name|createARMCodeEmitterPass
 parameter_list|(
-name|ARMTargetMachine
+name|ARMBaseTargetMachine
 modifier|&
 name|TM
 parameter_list|,
@@ -451,7 +451,7 @@ name|FunctionPass
 modifier|*
 name|createARMJITCodeEmitterPass
 parameter_list|(
-name|ARMTargetMachine
+name|ARMBaseTargetMachine
 modifier|&
 name|TM
 parameter_list|,

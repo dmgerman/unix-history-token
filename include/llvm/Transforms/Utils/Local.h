@@ -275,25 +275,6 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
-comment|/// UserIsDebugInfo - Return true if U is a constant expr used by
-comment|/// llvm.dbg.variable or llvm.dbg.global_variable
-name|bool
-name|UserIsDebugInfo
-parameter_list|(
-name|User
-modifier|*
-name|U
-parameter_list|)
-function_decl|;
-comment|/// RemoveDbgInfoUser - Remove an User which is representing debug info.
-name|void
-name|RemoveDbgInfoUser
-parameter_list|(
-name|User
-modifier|*
-name|U
-parameter_list|)
-function_decl|;
 block|}
 end_decl_stmt
 

@@ -79,16 +79,19 @@ name|class
 name|Function
 decl_stmt|;
 name|class
-name|TargetMachine
-decl_stmt|;
-name|class
-name|TargetJITInfo
+name|JITEvent_EmittedFunctionDetails
 decl_stmt|;
 name|class
 name|MachineCodeEmitter
 decl_stmt|;
 name|class
 name|MachineCodeInfo
+decl_stmt|;
+name|class
+name|TargetJITInfo
+decl_stmt|;
+name|class
+name|TargetMachine
 decl_stmt|;
 name|class
 name|JITState
@@ -196,6 +199,15 @@ operator|*
 name|JCE
 block|;
 comment|// JCE object
+name|std
+operator|::
+name|vector
+operator|<
+name|JITEventListener
+operator|*
+operator|>
+name|EventListeners
+block|;
 name|JITState
 operator|*
 name|jitstate
@@ -480,6 +492,52 @@ operator|=
 literal|0
 argument_list|)
 block|;
+name|virtual
+name|void
+name|RegisterJITEventListener
+argument_list|(
+name|JITEventListener
+operator|*
+name|L
+argument_list|)
+block|;
+name|virtual
+name|void
+name|UnregisterJITEventListener
+argument_list|(
+name|JITEventListener
+operator|*
+name|L
+argument_list|)
+block|;
+comment|/// These functions correspond to the methods on JITEventListener.  They
+comment|/// iterate over the registered listeners and call the corresponding method on
+comment|/// each.
+name|void
+name|NotifyFunctionEmitted
+argument_list|(
+argument|const Function&F
+argument_list|,
+argument|void *Code
+argument_list|,
+argument|size_t Size
+argument_list|,
+argument|const JITEvent_EmittedFunctionDetails&Details
+argument_list|)
+block|;
+name|void
+name|NotifyFreeingMachineCode
+argument_list|(
+specifier|const
+name|Function
+operator|&
+name|F
+argument_list|,
+name|void
+operator|*
+name|OldPtr
+argument_list|)
+block|;
 name|private
 operator|:
 specifier|static
@@ -494,14 +552,6 @@ argument_list|,
 name|JITMemoryManager
 operator|*
 name|JMM
-argument_list|)
-block|;
-name|void
-name|registerMachineCodeInfo
-argument_list|(
-name|MachineCodeInfo
-operator|*
-name|MCI
 argument_list|)
 block|;
 name|void

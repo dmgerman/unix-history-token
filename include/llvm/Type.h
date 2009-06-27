@@ -248,7 +248,9 @@ comment|/// has no AbstractTypeUsers, the type is deleted.  This is only sensica
 comment|/// derived types.
 comment|///
 name|mutable
-name|int32_t
+name|sys
+operator|::
+name|cas_flag
 name|RefCount
 block|;
 specifier|const
@@ -1117,7 +1119,7 @@ argument_list|)
 block|;
 name|sys
 operator|::
-name|AtomicIncrement32
+name|AtomicIncrement
 argument_list|(
 operator|&
 name|RefCount
@@ -1145,12 +1147,14 @@ argument_list|)
 block|;
 comment|// If this is the last PATypeHolder using this object, and there are no
 comment|// PATypeHandles using it, the type is dead, delete it now.
-name|int32_t
-name|Count
+name|sys
+operator|::
+name|cas_flag
+name|OldCount
 operator|=
 name|sys
 operator|::
-name|AtomicDecrement32
+name|AtomicDecrement
 argument_list|(
 operator|&
 name|RefCount
@@ -1158,7 +1162,7 @@ argument_list|)
 block|;
 if|if
 condition|(
-name|Count
+name|OldCount
 operator|==
 literal|0
 operator|&&

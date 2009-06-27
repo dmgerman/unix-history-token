@@ -144,10 +144,21 @@ name|private
 label|:
 comment|/// OpKind - Specify what kind of operand this is.  This discriminates the
 comment|/// union.
-name|MachineOperandType
+name|unsigned
+name|char
 name|OpKind
-range|:
-literal|8
+decl_stmt|;
+comment|// MachineOperandType
+comment|/// SubReg - Subregister number, only valid for MO_Register.  A value of 0
+comment|/// indicates the MO_Register has no subReg.
+name|unsigned
+name|char
+name|SubReg
+decl_stmt|;
+comment|/// TargetFlags - This is a set of target-specific operand flags.
+name|unsigned
+name|char
+name|TargetFlags
 decl_stmt|;
 comment|/// IsDef/IsImp/IsKill/IsDead flags - These are only valid for MO_Register
 comment|/// operands.
@@ -186,12 +197,6 @@ name|bool
 name|IsEarlyClobber
 range|:
 literal|1
-decl_stmt|;
-comment|/// SubReg - Subregister number, only valid for MO_Register.  A value of 0
-comment|/// indicates the MO_Register has no subReg.
-name|unsigned
-name|char
-name|SubReg
 decl_stmt|;
 comment|/// ParentMI - This is the instruction that this operand is embedded into.
 comment|/// This is valid for all operand types, when the operand is in an instr.
@@ -285,7 +290,11 @@ name|ParentMI
 argument_list|(
 literal|0
 argument_list|)
-block|{}
+block|{
+name|TargetFlags
+operator|=
+literal|0
+block|;   }
 name|public
 operator|:
 name|MachineOperand
@@ -310,8 +319,47 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
+name|MachineOperandType
+operator|)
 name|OpKind
 return|;
+block|}
+name|unsigned
+name|char
+name|getTargetFlags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetFlags
+return|;
+block|}
+name|void
+name|setTargetFlags
+parameter_list|(
+name|unsigned
+name|char
+name|F
+parameter_list|)
+block|{
+name|TargetFlags
+operator|=
+name|F
+expr_stmt|;
+block|}
+name|void
+name|addTargetFlag
+parameter_list|(
+name|unsigned
+name|char
+name|F
+parameter_list|)
+block|{
+name|TargetFlags
+operator||=
+name|F
+expr_stmt|;
 block|}
 comment|/// getParent - Return the instruction that this operand belongs to.
 comment|///
@@ -1348,6 +1396,12 @@ parameter_list|(
 name|MachineBasicBlock
 modifier|*
 name|MBB
+parameter_list|,
+name|unsigned
+name|char
+name|TargetFlags
+init|=
+literal|0
 parameter_list|)
 block|{
 name|MachineOperand
@@ -1363,6 +1417,13 @@ operator|.
 name|setMBB
 argument_list|(
 name|MBB
+argument_list|)
+expr_stmt|;
+name|Op
+operator|.
+name|setTargetFlags
+argument_list|(
+name|TargetFlags
 argument_list|)
 expr_stmt|;
 return|return
@@ -1405,6 +1466,12 @@ name|Idx
 parameter_list|,
 name|int
 name|Offset
+parameter_list|,
+name|unsigned
+name|char
+name|TargetFlags
+init|=
+literal|0
 parameter_list|)
 block|{
 name|MachineOperand
@@ -1429,6 +1496,13 @@ argument_list|(
 name|Offset
 argument_list|)
 expr_stmt|;
+name|Op
+operator|.
+name|setTargetFlags
+argument_list|(
+name|TargetFlags
+argument_list|)
+expr_stmt|;
 return|return
 name|Op
 return|;
@@ -1439,6 +1513,12 @@ name|CreateJTI
 parameter_list|(
 name|unsigned
 name|Idx
+parameter_list|,
+name|unsigned
+name|char
+name|TargetFlags
+init|=
+literal|0
 parameter_list|)
 block|{
 name|MachineOperand
@@ -1456,6 +1536,13 @@ argument_list|(
 name|Idx
 argument_list|)
 expr_stmt|;
+name|Op
+operator|.
+name|setTargetFlags
+argument_list|(
+name|TargetFlags
+argument_list|)
+expr_stmt|;
 return|return
 name|Op
 return|;
@@ -1470,6 +1557,12 @@ name|GV
 parameter_list|,
 name|int64_t
 name|Offset
+parameter_list|,
+name|unsigned
+name|char
+name|TargetFlags
+init|=
+literal|0
 parameter_list|)
 block|{
 name|MachineOperand
@@ -1499,6 +1592,13 @@ argument_list|(
 name|Offset
 argument_list|)
 expr_stmt|;
+name|Op
+operator|.
+name|setTargetFlags
+argument_list|(
+name|TargetFlags
+argument_list|)
+expr_stmt|;
 return|return
 name|Op
 return|;
@@ -1514,6 +1614,12 @@ name|SymName
 parameter_list|,
 name|int64_t
 name|Offset
+init|=
+literal|0
+parameter_list|,
+name|unsigned
+name|char
+name|TargetFlags
 init|=
 literal|0
 parameter_list|)
@@ -1543,6 +1649,13 @@ operator|.
 name|setOffset
 argument_list|(
 name|Offset
+argument_list|)
+expr_stmt|;
+name|Op
+operator|.
+name|setTargetFlags
+argument_list|(
+name|TargetFlags
 argument_list|)
 expr_stmt|;
 return|return
@@ -1614,6 +1727,12 @@ operator|=
 name|MO
 operator|.
 name|Contents
+block|;
+name|TargetFlags
+operator|=
+name|MO
+operator|.
+name|TargetFlags
 block|;
 return|return
 operator|*

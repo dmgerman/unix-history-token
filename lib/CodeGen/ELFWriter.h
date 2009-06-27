@@ -507,6 +507,41 @@ name|SHF_ALLOC
 argument_list|)
 return|;
 block|}
+comment|/// Get a constant pool section based on the section name returned by TAI
+name|ELFSection
+modifier|&
+name|getConstantPoolSection
+argument_list|(
+name|std
+operator|::
+name|string
+name|SName
+argument_list|,
+name|unsigned
+name|Align
+argument_list|)
+block|{
+return|return
+name|getSection
+argument_list|(
+name|SName
+argument_list|,
+name|ELFSection
+operator|::
+name|SHT_PROGBITS
+argument_list|,
+name|ELFSection
+operator|::
+name|SHF_MERGE
+operator||
+name|ELFSection
+operator|::
+name|SHF_ALLOC
+argument_list|,
+name|Align
+argument_list|)
+return|;
+block|}
 comment|/// Return the relocation section of section 'S'. 'RelA' is true
 comment|/// if the relocation section contains entries with addends.
 name|ELFSection

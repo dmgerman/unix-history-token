@@ -132,6 +132,9 @@ name|class
 name|MachineConstantPoolValue
 decl_stmt|;
 name|class
+name|MachineModuleInfo
+decl_stmt|;
+name|class
 name|DwarfWriter
 decl_stmt|;
 name|class
@@ -192,24 +195,16 @@ name|GCMetadataPrinters
 decl_stmt|;
 name|protected
 label|:
-comment|/// DW -This is needed because printDeclare() has to insert
-comment|/// DbgVariable entries into the dwarf table. This is a short term hack
-comment|/// that ought be fixed soon.
+comment|/// MMI - If available, this is a pointer to the current MachineModuleInfo.
+name|MachineModuleInfo
+modifier|*
+name|MMI
+decl_stmt|;
+comment|/// DW - If available, this is a pointer to the current dwarf writer.
 name|DwarfWriter
 modifier|*
 name|DW
 decl_stmt|;
-comment|// Necessary for external weak linkage support
-name|std
-operator|::
-name|set
-operator|<
-specifier|const
-name|GlobalValue
-operator|*
-operator|>
-name|ExtWeakSymbols
-expr_stmt|;
 comment|/// OptLevel - Generating code at a specific optimization level.
 name|CodeGenOpt
 operator|::
@@ -285,6 +280,29 @@ comment|/// VerboseAsm - Emit comments in assembly output if this is true.
 comment|///
 name|bool
 name|VerboseAsm
+decl_stmt|;
+comment|/// Private state for PrintSpecial()
+comment|// Assign a unique ID to this machine instruction.
+name|mutable
+specifier|const
+name|MachineInstr
+modifier|*
+name|LastMI
+decl_stmt|;
+name|mutable
+specifier|const
+name|Function
+modifier|*
+name|LastFn
+decl_stmt|;
+name|mutable
+name|unsigned
+name|Counter
+decl_stmt|;
+comment|// Private state for processDebugLock()
+name|mutable
+name|DebugLocTuple
+name|PrevDLT
 decl_stmt|;
 name|protected
 label|:

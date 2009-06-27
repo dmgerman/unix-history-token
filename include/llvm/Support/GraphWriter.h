@@ -367,6 +367,9 @@ name|GraphType
 operator|&
 name|G
 block|;
+name|bool
+name|ShortNames
+block|;
 typedef|typedef
 name|DOTGraphTraits
 operator|<
@@ -406,18 +409,13 @@ name|public
 label|:
 name|GraphWriter
 argument_list|(
-name|std
-operator|::
-name|ostream
-operator|&
-name|o
+argument|std::ostream&o
 argument_list|,
-specifier|const
-name|GraphType
-operator|&
-name|g
+argument|const GraphType&g
+argument_list|,
+argument|bool SN
 argument_list|)
-operator|:
+block|:
 name|O
 argument_list|(
 name|o
@@ -425,7 +423,12 @@ argument_list|)
 operator|,
 name|G
 argument_list|(
-argument|g
+name|g
+argument_list|)
+operator|,
+name|ShortNames
+argument_list|(
+argument|SN
 argument_list|)
 block|{}
 name|void
@@ -737,6 +740,8 @@ argument_list|(
 name|Node
 argument_list|,
 name|G
+argument_list|,
+name|ShortNames
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -902,6 +907,8 @@ argument_list|(
 name|Node
 argument_list|,
 name|G
+argument_list|,
+name|ShortNames
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1488,6 +1495,8 @@ argument|std::ostream&O
 argument_list|,
 argument|const GraphType&G
 argument_list|,
+argument|bool ShortNames = false
+argument_list|,
 argument|const std::string&Name =
 literal|""
 argument_list|,
@@ -1505,6 +1514,8 @@ argument_list|(
 name|O
 argument_list|,
 name|G
+argument_list|,
+name|ShortNames
 argument_list|)
 block|;
 comment|// Output the header for the graph...
@@ -1560,6 +1571,8 @@ argument_list|(
 argument|const GraphType&G
 argument_list|,
 argument|const std::string& Name
+argument_list|,
+argument|bool ShortNames = false
 argument_list|,
 argument|const std::string& Title =
 literal|""
@@ -1687,6 +1700,8 @@ name|O
 argument_list|,
 name|G
 argument_list|,
+name|ShortNames
+argument_list|,
 name|Name
 argument_list|,
 name|Title
@@ -1748,6 +1763,8 @@ argument|const GraphType& G
 argument_list|,
 argument|const std::string& Name
 argument_list|,
+argument|bool ShortNames = false
+argument_list|,
 argument|const std::string& Title =
 literal|""
 argument_list|)
@@ -1762,6 +1779,8 @@ argument_list|(
 name|G
 argument_list|,
 name|Name
+argument_list|,
+name|ShortNames
 argument_list|,
 name|Title
 argument_list|)

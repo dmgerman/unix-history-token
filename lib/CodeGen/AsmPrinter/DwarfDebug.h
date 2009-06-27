@@ -1366,12 +1366,7 @@ operator|*
 name|GV
 argument_list|)
 block|;
-comment|/// ConstructCompileUnits - Create a compile unit DIEs.
 name|void
-name|ConstructCompileUnits
-argument_list|()
-block|;
-name|bool
 name|ConstructGlobalVariableDIE
 argument_list|(
 name|GlobalVariable
@@ -1379,26 +1374,13 @@ operator|*
 name|GV
 argument_list|)
 block|;
-comment|/// ConstructGlobalVariableDIEs - Create DIEs for each of the externally
-comment|/// visible global variables. Return true if at least one global DIE is
-comment|/// created.
-name|bool
-name|ConstructGlobalVariableDIEs
-argument_list|()
-block|;
-name|bool
+name|void
 name|ConstructSubprogram
 argument_list|(
 name|GlobalVariable
 operator|*
 name|GV
 argument_list|)
-block|;
-comment|/// ConstructSubprograms - Create DIEs for each of the externally visible
-comment|/// subprograms. Return true if at least one subprogram DIE is created.
-name|bool
-name|ConstructSubprograms
-argument_list|()
 block|;
 name|public
 operator|:
@@ -1437,30 +1419,20 @@ return|return
 name|shouldEmit
 return|;
 block|}
-comment|/// SetDebugInfo - Create global DIEs and emit initial debug info sections.
-comment|/// This is inovked by the target AsmPrinter.
-name|void
-name|SetDebugInfo
-argument_list|(
-name|MachineModuleInfo
-operator|*
-name|mmi
-argument_list|)
-block|;
 comment|/// BeginModule - Emit all Dwarf sections that should come prior to the
 comment|/// content.
 name|void
 name|BeginModule
 argument_list|(
-argument|Module *M
+name|Module
+operator|*
+name|M
+argument_list|,
+name|MachineModuleInfo
+operator|*
+name|MMI
 argument_list|)
-block|{
-name|this
-operator|->
-name|M
-operator|=
-name|M
-block|;   }
+block|;
 comment|/// EndModule - Emit all Dwarf sections that should come after the content.
 comment|///
 name|void

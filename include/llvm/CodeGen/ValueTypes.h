@@ -280,6 +280,14 @@ init|=
 literal|30
 block|,
 comment|// This always remains at the end of the list.
+comment|// This is the current maximum for LAST_VALUETYPE.
+comment|// Affects ValueTypeActions in TargetLowering.h.
+comment|// MVT::MAX_ALLOWED_VALUETYPE is used for asserts and to size bit vectors
+comment|// This value must be a multiple of 32.
+name|MAX_ALLOWED_VALUETYPE
+init|=
+literal|64
+block|,
 comment|// iPTRAny - An int value the size of the pointer of the current
 comment|// target to any address space. This must only be used internal to
 comment|// tblgen. Other than for overloading, we treat iPTRAny the same as iPTR.

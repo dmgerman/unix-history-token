@@ -113,9 +113,17 @@ name|std
 operator|::
 name|map
 operator|<
+name|std
+operator|::
+name|pair
+operator|<
 specifier|const
 name|SCEV
 operator|*
+operator|,
+name|Instruction
+operator|*
+operator|>
 operator|,
 name|AssertingVH
 operator|<
@@ -175,141 +183,25 @@ operator|.
 name|clear
 argument_list|()
 block|; }
-comment|/// isInsertedInstruction - Return true if the specified instruction was
-comment|/// inserted by the code rewriter.  If so, the client should not modify the
-comment|/// instruction.
-name|bool
-name|isInsertedInstruction
-argument_list|(
-argument|Instruction *I
-argument_list|)
-specifier|const
-block|{
-return|return
-name|InsertedValues
-operator|.
-name|count
-argument_list|(
-name|I
-argument_list|)
-return|;
-block|}
-comment|/// isInsertedExpression - Return true if the the code rewriter has a
-comment|/// Value* recorded for the given expression.
-name|bool
-name|isInsertedExpression
-argument_list|(
-specifier|const
-name|SCEV
-operator|*
-name|S
-argument_list|)
-decl|const
-block|{
-return|return
-name|InsertedExpressions
-operator|.
-name|count
-argument_list|(
-name|S
-argument_list|)
-return|;
-block|}
 comment|/// getOrInsertCanonicalInductionVariable - This method returns the
 comment|/// canonical induction variable of the specified type for the specified
 comment|/// loop (inserting one if there is none).  A canonical induction variable
 comment|/// starts at zero and steps by one on each iteration.
 name|Value
-modifier|*
+operator|*
 name|getOrInsertCanonicalInductionVariable
-parameter_list|(
+argument_list|(
 specifier|const
 name|Loop
-modifier|*
+operator|*
 name|L
-parameter_list|,
+argument_list|,
 specifier|const
 name|Type
-modifier|*
+operator|*
 name|Ty
-parameter_list|)
-function_decl|;
-comment|/// addInsertedValue - Remember the specified instruction as being the
-comment|/// canonical form for the specified SCEV.
-name|void
-name|addInsertedValue
-parameter_list|(
-name|Value
-modifier|*
-name|V
-parameter_list|,
-specifier|const
-name|SCEV
-modifier|*
-name|S
-parameter_list|)
-block|{
-name|InsertedExpressions
-index|[
-name|S
-index|]
-operator|=
-name|V
-expr_stmt|;
-name|InsertedValues
-operator|.
-name|insert
-argument_list|(
-name|V
 argument_list|)
 expr_stmt|;
-block|}
-name|void
-name|setInsertionPoint
-argument_list|(
-name|BasicBlock
-operator|::
-name|iterator
-name|NewIP
-argument_list|)
-block|{
-name|InsertPt
-operator|=
-name|NewIP
-expr_stmt|;
-block|}
-name|BasicBlock
-operator|::
-name|iterator
-name|getInsertionPoint
-argument_list|()
-specifier|const
-block|{
-return|return
-name|InsertPt
-return|;
-block|}
-comment|/// expandCodeFor - Insert code to directly compute the specified SCEV
-comment|/// expression into the program.  The inserted code is inserted into the
-comment|/// SCEVExpander's current insertion point. If a type is specified, the
-comment|/// result will be expanded to have that type, with a cast if necessary.
-name|Value
-modifier|*
-name|expandCodeFor
-parameter_list|(
-specifier|const
-name|SCEV
-modifier|*
-name|SH
-parameter_list|,
-specifier|const
-name|Type
-modifier|*
-name|Ty
-init|=
-literal|0
-parameter_list|)
-function_decl|;
 comment|/// expandCodeFor - Insert code to directly compute the specified SCEV
 comment|/// expression into the program.  The inserted code is inserted into the
 comment|/// specified block.
@@ -333,10 +225,9 @@ name|iterator
 name|IP
 argument_list|)
 block|{
-name|setInsertionPoint
-argument_list|(
+name|InsertPt
+operator|=
 name|IP
-argument_list|)
 expr_stmt|;
 return|return
 name|expandCodeFor
@@ -456,6 +347,48 @@ modifier|*
 name|S
 parameter_list|)
 function_decl|;
+comment|/// expandCodeFor - Insert code to directly compute the specified SCEV
+comment|/// expression into the program.  The inserted code is inserted into the
+comment|/// SCEVExpander's current insertion point. If a type is specified, the
+comment|/// result will be expanded to have that type, with a cast if necessary.
+name|Value
+modifier|*
+name|expandCodeFor
+parameter_list|(
+specifier|const
+name|SCEV
+modifier|*
+name|SH
+parameter_list|,
+specifier|const
+name|Type
+modifier|*
+name|Ty
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// isInsertedInstruction - Return true if the specified instruction was
+comment|/// inserted by the code rewriter.  If so, the client should not modify the
+comment|/// instruction.
+name|bool
+name|isInsertedInstruction
+argument_list|(
+name|Instruction
+operator|*
+name|I
+argument_list|)
+decl|const
+block|{
+return|return
+name|InsertedValues
+operator|.
+name|count
+argument_list|(
+name|I
+argument_list|)
+return|;
+block|}
 name|Value
 modifier|*
 name|visitConstant

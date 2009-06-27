@@ -73,9 +73,9 @@ directive|include
 file|"llvm/Config/config.h"
 end_include
 
-begin_decl_stmt
-name|namespace
-name|llvm
+begin_extern
+extern|extern
+literal|"C"
 block|{
 comment|// Declare all of the target-initialization functions that are available.
 define|#
@@ -84,22 +84,28 @@ name|LLVM_TARGET
 parameter_list|(
 name|TargetName
 parameter_list|)
-value|void Initialize##TargetName##Target();
+value|void LLVMInitialize##TargetName##Target();
 include|#
 directive|include
 file|"llvm/Config/Targets.def"
 comment|// Declare all of the available asm-printer initialization functions.
-comment|// Declare all of the target-initialization functions.
 define|#
 directive|define
 name|LLVM_ASM_PRINTER
 parameter_list|(
 name|TargetName
 parameter_list|)
-value|void Initialize##TargetName##AsmPrinter();
+value|void LLVMInitialize##TargetName##AsmPrinter();
 include|#
 directive|include
 file|"llvm/Config/AsmPrinters.def"
+block|}
+end_extern
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
 comment|/// InitializeAllTargets - The main program should call this function if it
 comment|/// wants to link in all available targets that LLVM is configured to support.
 specifier|inline
@@ -113,7 +119,7 @@ name|LLVM_TARGET
 parameter_list|(
 name|TargetName
 parameter_list|)
-value|llvm::Initialize##TargetName##Target();
+value|LLVMInitialize##TargetName##Target();
 include|#
 directive|include
 file|"llvm/Config/Targets.def"
@@ -132,7 +138,7 @@ name|LLVM_ASM_PRINTER
 parameter_list|(
 name|TargetName
 parameter_list|)
-value|Initialize##TargetName##AsmPrinter();
+value|LLVMInitialize##TargetName##AsmPrinter();
 include|#
 directive|include
 file|"llvm/Config/AsmPrinters.def"
@@ -155,7 +161,7 @@ name|DoInit2
 parameter_list|(
 name|TARG
 parameter_list|)
-value|llvm::Initialize ## TARG ()
+value|LLVMInitialize ## TARG ()
 define|#
 directive|define
 name|DoInit

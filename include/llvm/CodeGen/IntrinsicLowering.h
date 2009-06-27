@@ -94,6 +94,9 @@ name|TargetData
 modifier|&
 name|TD
 decl_stmt|;
+name|bool
+name|Warned
+decl_stmt|;
 name|public
 label|:
 name|explicit
@@ -107,7 +110,12 @@ argument_list|)
 operator|:
 name|TD
 argument_list|(
-argument|td
+name|td
+argument_list|)
+operator|,
+name|Warned
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 comment|/// AddPrototypes - This method, if called, causes all of the prototypes

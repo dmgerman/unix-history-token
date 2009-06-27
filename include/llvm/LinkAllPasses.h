@@ -483,6 +483,14 @@ name|void
 operator|)
 name|llvm
 operator|::
+name|createLoopDependenceAnalysisPass
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|llvm
+operator|::
 name|createLoopExtractorPass
 argument_list|()
 expr_stmt|;

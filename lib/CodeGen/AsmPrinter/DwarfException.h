@@ -462,31 +462,27 @@ operator|~
 name|DwarfException
 argument_list|()
 block|;
-comment|/// SetModuleInfo - Set machine module information when it's known that pass
-comment|/// manager has created it.  Set by the target AsmPrinter.
-name|void
-name|SetModuleInfo
-argument_list|(
-argument|MachineModuleInfo *mmi
-argument_list|)
-block|{
-name|MMI
-operator|=
-name|mmi
-block|;   }
 comment|/// BeginModule - Emit all exception information that should come prior to the
 comment|/// content.
 name|void
 name|BeginModule
 argument_list|(
-argument|Module *M
+argument|Module *m
+argument_list|,
+argument|MachineModuleInfo *mmi
 argument_list|)
 block|{
 name|this
 operator|->
 name|M
 operator|=
-name|M
+name|m
+block|;
+name|this
+operator|->
+name|MMI
+operator|=
+name|mmi
 block|;   }
 comment|/// EndModule - Emit all exception information that should come after the
 comment|/// content.

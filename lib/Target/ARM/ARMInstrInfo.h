@@ -476,7 +476,7 @@ block|}
 enum|;
 block|}
 name|class
-name|ARMInstrInfo
+name|ARMBaseInstrInfo
 range|:
 name|public
 name|TargetInstrInfoImpl
@@ -485,10 +485,11 @@ specifier|const
 name|ARMRegisterInfo
 name|RI
 block|;
-name|public
+name|protected
 operator|:
+comment|// Can be only subclassed.
 name|explicit
-name|ARMInstrInfo
+name|ARMBaseInstrInfo
 argument_list|(
 specifier|const
 name|ARMSubtarget
@@ -496,6 +497,8 @@ operator|&
 name|STI
 argument_list|)
 block|;
+name|public
+operator|:
 comment|/// getRegisterInfo - TargetInstrInfo is a superset of MRegister info.  As
 comment|/// such, whenever a client has an instance of instruction info, it should
 comment|/// always be able to get register info as well (through this method).
@@ -512,44 +515,6 @@ return|return
 name|RI
 return|;
 block|}
-comment|/// Return true if the instruction is a register to register move and return
-comment|/// the source and dest operands and their sub-register indices by reference.
-name|virtual
-name|bool
-name|isMoveInstr
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|,
-argument|unsigned&SrcReg
-argument_list|,
-argument|unsigned&DstReg
-argument_list|,
-argument|unsigned&SrcSubIdx
-argument_list|,
-argument|unsigned&DstSubIdx
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|unsigned
-name|isLoadFromStackSlot
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|int&FrameIndex
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|unsigned
-name|isStoreToStackSlot
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|int&FrameIndex
-argument_list|)
-specifier|const
-block|;
 name|void
 name|reMaterialize
 argument_list|(
@@ -615,150 +580,6 @@ argument|const SmallVectorImpl<MachineOperand>&Cond
 argument_list|)
 specifier|const
 block|;
-name|virtual
-name|bool
-name|copyRegToReg
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator I
-argument_list|,
-argument|unsigned DestReg
-argument_list|,
-argument|unsigned SrcReg
-argument_list|,
-argument|const TargetRegisterClass *DestRC
-argument_list|,
-argument|const TargetRegisterClass *SrcRC
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|void
-name|storeRegToStackSlot
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator MBBI
-argument_list|,
-argument|unsigned SrcReg
-argument_list|,
-argument|bool isKill
-argument_list|,
-argument|int FrameIndex
-argument_list|,
-argument|const TargetRegisterClass *RC
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|void
-name|storeRegToAddr
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|unsigned SrcReg
-argument_list|,
-argument|bool isKill
-argument_list|,
-argument|SmallVectorImpl<MachineOperand>&Addr
-argument_list|,
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|SmallVectorImpl<MachineInstr*>&NewMIs
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|void
-name|loadRegFromStackSlot
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator MBBI
-argument_list|,
-argument|unsigned DestReg
-argument_list|,
-argument|int FrameIndex
-argument_list|,
-argument|const TargetRegisterClass *RC
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|void
-name|loadRegFromAddr
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|unsigned DestReg
-argument_list|,
-argument|SmallVectorImpl<MachineOperand>&Addr
-argument_list|,
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|SmallVectorImpl<MachineInstr*>&NewMIs
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|bool
-name|spillCalleeSavedRegisters
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator MI
-argument_list|,
-argument|const std::vector<CalleeSavedInfo>&CSI
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|bool
-name|restoreCalleeSavedRegisters
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator MI
-argument_list|,
-argument|const std::vector<CalleeSavedInfo>&CSI
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|MachineInstr
-operator|*
-name|foldMemoryOperandImpl
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineInstr* MI
-argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
-argument_list|,
-argument|int FrameIndex
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|MachineInstr
-operator|*
-name|foldMemoryOperandImpl
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineInstr* MI
-argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
-argument_list|,
-argument|MachineInstr* LoadMI
-argument_list|)
-specifier|const
-block|{
-return|return
-literal|0
-return|;
-block|}
 name|virtual
 name|bool
 name|canFoldMemoryOperand
@@ -878,7 +699,183 @@ argument_list|)
 specifier|const
 block|; }
 decl_stmt|;
+name|class
+name|ARMInstrInfo
+range|:
+name|public
+name|ARMBaseInstrInfo
+block|{
+name|public
+operator|:
+name|explicit
+name|ARMInstrInfo
+argument_list|(
+specifier|const
+name|ARMSubtarget
+operator|&
+name|STI
+argument_list|)
+block|;
+comment|/// Return true if the instruction is a register to register move and return
+comment|/// the source and dest operands and their sub-register indices by reference.
+name|virtual
+name|bool
+name|isMoveInstr
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned&SrcReg
+argument_list|,
+argument|unsigned&DstReg
+argument_list|,
+argument|unsigned&SrcSubIdx
+argument_list|,
+argument|unsigned&DstSubIdx
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|unsigned
+name|isLoadFromStackSlot
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|int&FrameIndex
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|unsigned
+name|isStoreToStackSlot
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|int&FrameIndex
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|copyRegToReg
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|unsigned DestReg
+argument_list|,
+argument|unsigned SrcReg
+argument_list|,
+argument|const TargetRegisterClass *DestRC
+argument_list|,
+argument|const TargetRegisterClass *SrcRC
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|storeRegToStackSlot
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MBBI
+argument_list|,
+argument|unsigned SrcReg
+argument_list|,
+argument|bool isKill
+argument_list|,
+argument|int FrameIndex
+argument_list|,
+argument|const TargetRegisterClass *RC
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|storeRegToAddr
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|unsigned SrcReg
+argument_list|,
+argument|bool isKill
+argument_list|,
+argument|SmallVectorImpl<MachineOperand>&Addr
+argument_list|,
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|SmallVectorImpl<MachineInstr*>&NewMIs
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|loadRegFromStackSlot
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MBBI
+argument_list|,
+argument|unsigned DestReg
+argument_list|,
+argument|int FrameIndex
+argument_list|,
+argument|const TargetRegisterClass *RC
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|loadRegFromAddr
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|unsigned DestReg
+argument_list|,
+argument|SmallVectorImpl<MachineOperand>&Addr
+argument_list|,
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|SmallVectorImpl<MachineInstr*>&NewMIs
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|MachineInstr
+operator|*
+name|foldMemoryOperandImpl
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|MachineInstr* MI
+argument_list|,
+argument|const SmallVectorImpl<unsigned>&Ops
+argument_list|,
+argument|int FrameIndex
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|MachineInstr
+operator|*
+name|foldMemoryOperandImpl
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|MachineInstr* MI
+argument_list|,
+argument|const SmallVectorImpl<unsigned>&Ops
+argument_list|,
+argument|MachineInstr* LoadMI
+argument_list|)
+specifier|const
+block|{
+return|return
+literal|0
+return|;
 block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_endif

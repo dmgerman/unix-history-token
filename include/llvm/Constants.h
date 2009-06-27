@@ -3739,6 +3739,19 @@ operator|*
 name|StrEnd
 argument_list|)
 block|;
+specifier|static
+name|MDString
+operator|*
+name|get
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Str
+argument_list|)
+block|;
 comment|/// size() - The length of this string.
 comment|///
 name|intptr_t

@@ -793,8 +793,10 @@ name|CPI
 parameter_list|,
 name|unsigned
 name|GlobalBaseReg
-init|=
-literal|0
+parameter_list|,
+name|unsigned
+name|char
+name|OpFlags
 parameter_list|)
 block|{
 comment|//FIXME: factor this
@@ -819,6 +821,10 @@ operator|.
 name|addConstantPoolIndex
 argument_list|(
 name|CPI
+argument_list|,
+literal|0
+argument_list|,
+name|OpFlags
 argument_list|)
 operator|.
 name|addReg
