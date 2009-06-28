@@ -589,6 +589,29 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|ucom_bitmap_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|ucom_bitmap_mtx
+argument_list|,
+operator|&
+name|ucom_bitmap_mtx
+argument_list|,
+literal|"ucom bitmap"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|uint8_t
@@ -630,7 +653,7 @@ decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|Giant
+name|ucom_bitmap_mtx
 argument_list|)
 expr_stmt|;
 for|for
@@ -745,7 +768,7 @@ block|}
 name|mtx_unlock
 argument_list|(
 operator|&
-name|Giant
+name|ucom_bitmap_mtx
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Always set the variable pointed to by "p_root_unit" so that 	 * the compiler does not think that it is used uninitialised: 	 */
@@ -780,7 +803,7 @@ decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|Giant
+name|ucom_bitmap_mtx
 argument_list|)
 expr_stmt|;
 while|while
@@ -817,7 +840,7 @@ block|}
 name|mtx_unlock
 argument_list|(
 operator|&
-name|Giant
+name|ucom_bitmap_mtx
 argument_list|)
 expr_stmt|;
 block|}
