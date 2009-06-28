@@ -302,7 +302,7 @@ name|strcpy
 argument_list|(
 name|target
 argument_list|,
-literal|"/usr/share/doc/faq/index.html"
+literal|"/usr/local/share/doc/freebsd/faq/index.html"
 argument_list|)
 expr_stmt|;
 if|if
@@ -340,7 +340,7 @@ name|strcpy
 argument_list|(
 name|target
 argument_list|,
-literal|"/usr/share/doc/handbook/index.html"
+literal|"/usr/local/share/doc/freebsd/handbook/index.html"
 argument_list|)
 expr_stmt|;
 if|if
@@ -391,7 +391,7 @@ block|{
 name|msgConfirm
 argument_list|(
 literal|"Hmmmmm!  I can't seem to access the documentation you selected!\n"
-literal|"Have you loaded the base distribution?  Is your network connected?"
+literal|"Have you installed the english documentation?  Is your network connected?"
 argument_list|)
 expr_stmt|;
 return|return

@@ -374,6 +374,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VAR_DIST_DOC
+value|"distDoc"
+end_define
+
+begin_define
+define|#
+directive|define
 name|VAR_DEDICATE_DISK
 value|"dedicateDisk"
 end_define
@@ -2087,6 +2094,18 @@ begin_decl_stmt
 specifier|extern
 name|unsigned
 name|int
+name|DocDists
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Which Doc dists we want			*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|int
 name|SrcDists
 decl_stmt|;
 end_decl_stmt
@@ -2228,6 +2247,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* Final configuration menu			*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuDocInstall
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Documentation Installation menu		*/
 end_comment
 
 begin_decl_stmt
@@ -3919,6 +3949,30 @@ begin_function_decl
 specifier|extern
 name|int
 name|distSetKernel
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|distSetDoc
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|distSetDocMenu
 parameter_list|(
 name|dialogMenuItem
 modifier|*
