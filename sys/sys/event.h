@@ -648,6 +648,32 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Flags for knote call  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KNF_LISTLOCKED
+value|0x0001
+end_define
+
+begin_comment
+comment|/* knlist is locked */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KNF_NOKQLOCK
+value|0x0002
+end_define
+
+begin_comment
+comment|/* do not keep KQ_LOCK */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -657,9 +683,9 @@ name|list
 parameter_list|,
 name|hist
 parameter_list|,
-name|lock
+name|flags
 parameter_list|)
-value|knote(list, hist, lock)
+value|knote(list, hist, flags)
 end_define
 
 begin_define
@@ -671,7 +697,7 @@ name|list
 parameter_list|,
 name|hint
 parameter_list|)
-value|knote(list, hint, 1)
+value|knote(list, hint, KNF_LISTLOCKED)
 end_define
 
 begin_define
@@ -1008,7 +1034,7 @@ name|long
 name|hint
 parameter_list|,
 name|int
-name|islocked
+name|lockflags
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -559,7 +559,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|do {							\ 		if (!VN_KNLIST_EMPTY(vp))			\ 			KNOTE(&vp->v_pollinfo->vpi_selinfo.si_note, (b), (a)); \ 	} while (0)
+value|do {							\ 		if (!VN_KNLIST_EMPTY(vp))			\ 			KNOTE(&vp->v_pollinfo->vpi_selinfo.si_note, (b), \ 			    (a) | KNF_NOKQLOCK);		\ 	} while (0)
 end_define
 
 begin_define
@@ -571,7 +571,7 @@ name|vp
 parameter_list|,
 name|b
 parameter_list|)
-value|VN_KNOTE(vp, b, 1)
+value|VN_KNOTE(vp, b, KNF_LISTLOCKED)
 end_define
 
 begin_define
