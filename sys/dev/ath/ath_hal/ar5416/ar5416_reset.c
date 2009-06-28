@@ -739,7 +739,11 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-comment|// FAIL(HAL_EIO);
+name|FAIL
+argument_list|(
+name|HAL_EIO
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * Map public channel to private. 	 */
 name|ichan
