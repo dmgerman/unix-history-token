@@ -730,6 +730,24 @@ name|sb_cc
 expr_stmt|;
 break|break;
 case|case
+name|FIONWRITE
+case|:
+comment|/* Unlocked read. */
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|data
+operator|=
+name|so
+operator|->
+name|so_snd
+operator|.
+name|sb_cc
+expr_stmt|;
+break|break;
+case|case
 name|FIOSETOWN
 case|:
 name|error
