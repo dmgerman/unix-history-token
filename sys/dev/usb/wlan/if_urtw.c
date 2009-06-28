@@ -656,6 +656,17 @@ block|,
 block|{
 name|USB_VPI
 argument_list|(
+argument|USB_VENDOR_SITECOMEU
+argument_list|,
+literal|0x0028
+argument_list|,
+argument|URTW_REV_RTL8187B
+argument_list|)
+block|}
+block|,
+block|{
+name|USB_VPI
+argument_list|(
 argument|USB_VENDOR_SPHAIRON
 argument_list|,
 literal|0x0150
