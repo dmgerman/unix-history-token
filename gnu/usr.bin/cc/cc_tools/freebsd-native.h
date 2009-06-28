@@ -275,5 +275,16 @@ directive|define
 name|bsd4_4
 end_define
 
+begin_comment
+comment|/*  * Link in libssp_nonshared to get local hidden symbol for  * __stack_chk_fail_local into each binary that needs it.  * Linux does this with static part of their libc.so linker script, we reuse  * libssp_nonshared.a for the same purpose.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINK_SSP_SPEC
+value|"%{fstack-protector|fstack-protector-all:-lssp_nonshared}"
+end_define
+
 end_unit
 
