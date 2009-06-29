@@ -14260,7 +14260,7 @@ argument|static int em_rxeof(struct adapter *adapter, int count) { 	struct ifnet
 literal|0
 argument|, eop =
 literal|0
-argument|; 	u16 		len, desc_len, prev_len_adj; 	u32		i, rx_sent =
+argument|; 	u16 		len, desc_len, prev_len_adj; 	int		i, rx_sent =
 literal|0
 argument|; 	struct e1000_rx_desc   *current_desc;  	EM_RX_LOCK(adapter); 	i = adapter->next_rx_desc_to_check; 	current_desc =&adapter->rx_desc_base[i]; 	bus_dmamap_sync(adapter->rxdma.dma_tag, adapter->rxdma.dma_map, 	    BUS_DMASYNC_POSTREAD);  	if (!((current_desc->status)& E1000_RXD_STAT_DD)) { 		EM_RX_UNLOCK(adapter); 		return (rx_sent); 	}  	while ((current_desc->status& E1000_RXD_STAT_DD)&& 	    (count !=
 literal|0
