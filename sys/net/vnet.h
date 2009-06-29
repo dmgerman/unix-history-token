@@ -21,6 +21,12 @@ directive|include
 file|<net/if_var.h>
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|ifindex_entry
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|vnet_net
@@ -43,10 +49,6 @@ name|_ifg_head
 decl_stmt|;
 name|int
 name|_if_indexlim
-decl_stmt|;
-name|struct
-name|knlist
-name|_ifklist
 decl_stmt|;
 name|struct
 name|ifnet

@@ -347,11 +347,6 @@ name|if_addrhead
 decl_stmt|;
 comment|/* linked list of addresses per if */
 comment|/* 		 * if_addrhead is the list of all addresses associated to 		 * an interface. 		 * Some code in the kernel assumes that first element 		 * of the list has type AF_LINK, and contains sockaddr_dl 		 * addresses which store the link-level address and the name 		 * of the interface. 		 * However, access to the AF_LINK address through this 		 * field is deprecated. Use if_addr or ifaddr_byindex() instead. 		 */
-name|struct
-name|knlist
-name|if_klist
-decl_stmt|;
-comment|/* events attached to this if */
 name|int
 name|if_pcount
 decl_stmt|;
@@ -2873,24 +2868,6 @@ parameter_list|()
 value|rw_runlock(&ifnet_lock)
 end_define
 
-begin_struct
-struct|struct
-name|ifindex_entry
-block|{
-name|struct
-name|ifnet
-modifier|*
-name|ife_ifnet
-decl_stmt|;
-name|struct
-name|cdev
-modifier|*
-name|ife_dev
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/*  * Look up an ifnet given its index; the _ref variant also acquires a  * reference that must be freed using if_rele().  It is almost always a bug  * to call ifnet_byindex() instead if ifnet_byindex_ref().  */
 end_comment
@@ -2940,18 +2917,6 @@ name|struct
 name|ifaddr
 modifier|*
 name|ifaddr_byindex
-parameter_list|(
-name|u_short
-name|idx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|cdev
-modifier|*
-name|ifdev_byindex
 parameter_list|(
 name|u_short
 name|idx
