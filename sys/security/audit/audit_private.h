@@ -92,6 +92,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_AUDITGIDSET
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -262,10 +270,8 @@ struct|struct
 name|groupset
 block|{
 name|gid_t
+modifier|*
 name|gidset
-index|[
-name|NGROUPS
-index|]
 decl_stmt|;
 name|u_int
 name|gidset_size
