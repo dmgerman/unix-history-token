@@ -1571,9 +1571,8 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|struct
-name|in6_ifaddr
-modifier|*
-name|in6_ifaddr
+name|in6_ifaddrhead
+name|in6_ifaddrhead
 decl_stmt|;
 end_decl_stmt
 
