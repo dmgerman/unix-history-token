@@ -425,7 +425,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Error: FTP Unable to get %s: %s\n"
+literal|"Error: Unable to get %s: %s\n"
 argument_list|,
 name|fname
 argument_list|,
