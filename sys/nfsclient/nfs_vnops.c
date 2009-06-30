@@ -16594,8 +16594,6 @@ name|nfs_sigintr
 argument_list|(
 name|nmp
 argument_list|,
-name|NULL
-argument_list|,
 name|td
 argument_list|)
 condition|)
@@ -16713,8 +16711,6 @@ name|nfs_sigintr
 argument_list|(
 name|nmp
 argument_list|,
-name|NULL
-argument_list|,
 name|td
 argument_list|)
 condition|)
@@ -16789,8 +16785,6 @@ operator|=
 name|nfs_sigintr
 argument_list|(
 name|nmp
-argument_list|,
-name|NULL
 argument_list|,
 name|td
 argument_list|)
@@ -16920,8 +16914,6 @@ condition|(
 name|nfs_sigintr
 argument_list|(
 name|nmp
-argument_list|,
-name|NULL
 argument_list|,
 name|td
 argument_list|)

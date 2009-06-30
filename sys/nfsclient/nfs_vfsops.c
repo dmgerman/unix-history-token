@@ -4079,8 +4079,6 @@ condition|(
 name|nfs_connect
 argument_list|(
 name|nmp
-argument_list|,
-name|NULL
 argument_list|)
 condition|)
 block|{
@@ -7006,8 +7004,6 @@ operator|=
 name|nfs_connect
 argument_list|(
 name|nmp
-argument_list|,
-name|NULL
 argument_list|)
 operator|)
 condition|)

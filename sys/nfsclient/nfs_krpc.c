@@ -720,11 +720,6 @@ name|struct
 name|nfsmount
 modifier|*
 name|nmp
-parameter_list|,
-name|struct
-name|nfsreq
-modifier|*
-name|rep
 parameter_list|)
 block|{
 name|int
@@ -2078,8 +2073,6 @@ condition|)
 name|nfs_connect
 argument_list|(
 name|nmp
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|auth
@@ -3288,11 +3281,6 @@ name|struct
 name|nfsmount
 modifier|*
 name|nmp
-parameter_list|,
-name|struct
-name|nfsreq
-modifier|*
-name|rep
 parameter_list|,
 name|struct
 name|thread

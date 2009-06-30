@@ -684,16 +684,6 @@ define|\
 value|((e) != EINTR&& (e) != EIO&& \ 		(e) != ERESTART&& (e) != EWOULDBLOCK&& \ 		((s)& PR_CONNREQUIRED) == 0)
 end_define
 
-begin_comment
-comment|/*  * This is only needed to keep things working while we support  * compiling for both RPC implementations.  */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|nfsreq
-struct_decl|;
-end_struct_decl
-
 begin_struct_decl
 struct_decl|struct
 name|nfsmount
@@ -1311,10 +1301,6 @@ name|nfsmount
 modifier|*
 parameter_list|,
 name|struct
-name|nfsreq
-modifier|*
-parameter_list|,
-name|struct
 name|thread
 modifier|*
 parameter_list|)
@@ -1470,10 +1456,6 @@ name|nfs_connect
 parameter_list|(
 name|struct
 name|nfsmount
-modifier|*
-parameter_list|,
-name|struct
-name|nfsreq
 modifier|*
 parameter_list|)
 function_decl|;

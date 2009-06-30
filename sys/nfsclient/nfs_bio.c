@@ -2407,8 +2407,6 @@ name|nfs_sigintr
 argument_list|(
 name|nmp
 argument_list|,
-name|NULL
-argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
@@ -2584,8 +2582,6 @@ name|nfs_sigintr
 argument_list|(
 name|nmp
 argument_list|,
-name|NULL
-argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
@@ -2721,8 +2717,6 @@ operator|=
 name|nfs_sigintr
 argument_list|(
 name|nmp
-argument_list|,
-name|NULL
 argument_list|,
 name|td
 argument_list|)
@@ -2896,8 +2890,6 @@ name|nfs_sigintr
 argument_list|(
 name|nmp
 argument_list|,
-name|NULL
-argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
@@ -3055,8 +3047,6 @@ operator|=
 name|nfs_sigintr
 argument_list|(
 name|nmp
-argument_list|,
-name|NULL
 argument_list|,
 name|td
 argument_list|)
@@ -5217,8 +5207,6 @@ name|nfs_sigintr
 argument_list|(
 name|nmp
 argument_list|,
-name|NULL
-argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
@@ -5800,8 +5788,6 @@ name|nfs_sigintr
 argument_list|(
 name|nmp
 argument_list|,
-name|NULL
-argument_list|,
 name|td
 argument_list|)
 condition|)
@@ -6098,8 +6084,6 @@ name|nfs_sigintr
 argument_list|(
 name|nmp
 argument_list|,
-name|NULL
-argument_list|,
 name|td
 argument_list|)
 operator|)
@@ -6136,8 +6120,6 @@ operator|=
 name|nfs_sigintr
 argument_list|(
 name|nmp
-argument_list|,
-name|NULL
 argument_list|,
 name|td
 argument_list|)
@@ -6525,8 +6507,6 @@ operator|=
 name|nfs_sigintr
 argument_list|(
 name|nmp
-argument_list|,
-name|NULL
 argument_list|,
 name|td
 argument_list|)
