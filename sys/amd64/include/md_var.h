@@ -134,6 +134,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|u_int
+name|cpu_vendor_id
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 name|kstack
 index|[]

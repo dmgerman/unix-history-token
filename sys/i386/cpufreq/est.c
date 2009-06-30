@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cputypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -143,6 +149,24 @@ name|MSR_SS_ENABLE
 value|(1<<16)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CPU_VENDOR_CENTAUR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CPU_VENDOR_CENTAUR
+value|0x111d
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Frequency and MSR control values. */
 end_comment
@@ -177,9 +201,8 @@ typedef|typedef
 struct|struct
 block|{
 specifier|const
-name|char
-modifier|*
-name|vendor
+name|u_int
+name|vendor_id
 decl_stmt|;
 name|uint32_t
 name|id32
@@ -306,7 +329,7 @@ parameter_list|,
 name|bus_clk
 parameter_list|)
 define|\
-value|{ intel_id, ID32(zhi, vhi, zlo, vlo, bus_clk), tab }
+value|{ CPU_VENDOR_INTEL, ID32(zhi, vhi, zlo, vlo, bus_clk), tab }
 end_define
 
 begin_define
@@ -327,28 +350,8 @@ parameter_list|,
 name|bus_clk
 parameter_list|)
 define|\
-value|{ centaur_id, ID32(zhi, vhi, zlo, vlo, bus_clk), tab }
+value|{ CPU_VENDOR_CENTAUR, ID32(zhi, vhi, zlo, vlo, bus_clk), tab }
 end_define
-
-begin_decl_stmt
-specifier|const
-name|char
-name|intel_id
-index|[]
-init|=
-literal|"GenuineIntel"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|const
-name|char
-name|centaur_id
-index|[]
-init|=
-literal|"CentaurHauls"
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -6709,7 +6712,7 @@ literal|100
 argument_list|)
 block|,
 block|{
-name|NULL
+literal|0
 block|,
 literal|0
 block|,
@@ -7152,23 +7155,13 @@ operator|==
 literal|0
 operator|||
 operator|(
-name|strcmp
-argument_list|(
-name|cpu_vendor
-argument_list|,
-name|intel_id
-argument_list|)
+name|cpu_vendor_id
 operator|!=
-literal|0
+name|CPU_VENDOR_INTEL
 operator|&&
-name|strcmp
-argument_list|(
-name|cpu_vendor
-argument_list|,
-name|centaur_id
-argument_list|)
+name|cpu_vendor_id
 operator|!=
-literal|0
+name|CPU_VENDOR_CENTAUR
 operator|)
 condition|)
 return|return;
@@ -8073,16 +8066,11 @@ control|)
 block|{
 if|if
 condition|(
-name|strcmp
-argument_list|(
 name|p
 operator|->
-name|vendor
-argument_list|,
-name|cpu_vendor
-argument_list|)
+name|vendor_id
 operator|==
-literal|0
+name|cpu_vendor_id
 operator|&&
 name|p
 operator|->

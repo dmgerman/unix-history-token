@@ -78,6 +78,32 @@ begin_comment
 comment|/* AMD Sledgehammer */
 end_comment
 
+begin_comment
+comment|/*  * Vendors of processor.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_VENDOR_AMD
+value|0x1022
+end_define
+
+begin_comment
+comment|/* AMD */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_VENDOR_INTEL
+value|0x8086
+end_define
+
+begin_comment
+comment|/* Intel */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
