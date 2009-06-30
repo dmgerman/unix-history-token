@@ -2107,7 +2107,7 @@ operator|->
 name|bo_object
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX shouldn't this be += size for both, like in 		 * cluster_wbuild()? 		 * 		 * Don't inherit tbp->b_bufsize as it may be larger due to 		 * a non-page-aligned size.  Instead just aggregate using 		 * 'size'. 		 */
+comment|/* 		 * Don't inherit tbp->b_bufsize as it may be larger due to 		 * a non-page-aligned size.  Instead just aggregate using 		 * 'size'. 		 */
 if|if
 condition|(
 name|tbp
