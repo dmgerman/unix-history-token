@@ -3819,8 +3819,7 @@ name|sc
 operator|!=
 name|NULL
 condition|)
-break|break;
-block|}
+block|{
 name|sc
 operator|->
 name|sc_tp
@@ -3854,6 +3853,9 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
+block|}
 if|if
 condition|(
 name|sc
