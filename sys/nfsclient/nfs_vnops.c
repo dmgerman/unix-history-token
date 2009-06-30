@@ -186,12 +186,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfs/rpcv2.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<nfs/nfsproto.h>
 end_include
 
@@ -16927,12 +16921,7 @@ name|nfs_sigintr
 argument_list|(
 name|nmp
 argument_list|,
-operator|(
-expr|struct
-name|nfsreq
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
 name|td
 argument_list|)

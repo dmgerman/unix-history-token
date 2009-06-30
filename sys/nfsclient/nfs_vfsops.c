@@ -182,12 +182,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfs/rpcv2.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<nfs/nfsproto.h>
 end_include
 
@@ -673,12 +667,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NFS_LEGACYRPC
-end_ifndef
-
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
@@ -694,11 +682,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -3038,12 +3021,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NFS_LEGACYRPC
-end_ifndef
-
 begin_function
 specifier|static
 name|int
@@ -3123,11 +3100,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|void
@@ -3167,9 +3139,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|NFS_LEGACYRPC
 name|char
 modifier|*
 name|secname
@@ -3178,8 +3147,6 @@ name|char
 modifier|*
 name|principal
 decl_stmt|;
-endif|#
-directive|endif
 name|s
 operator|=
 name|splnet
@@ -4087,19 +4054,9 @@ name|proto
 expr_stmt|;
 if|if
 condition|(
-ifdef|#
-directive|ifdef
-name|NFS_LEGACYRPC
-name|nmp
-operator|->
-name|nm_so
-else|#
-directive|else
 name|nmp
 operator|->
 name|nm_client
-endif|#
-directive|endif
 operator|&&
 name|adjsock
 condition|)
@@ -4191,9 +4148,6 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|NFS_LEGACYRPC
 if|if
 condition|(
 name|vfs_getopt
@@ -4301,8 +4255,6 @@ name|nm_hostname
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 end_function
 

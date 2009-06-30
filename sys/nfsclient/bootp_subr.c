@@ -146,12 +146,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfs/rpcv2.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<nfs/nfsproto.h>
 end_include
 
@@ -8931,6 +8925,31 @@ decl_stmt|;
 name|int
 name|authver
 decl_stmt|;
+define|#
+directive|define
+name|RPCPROG_MNT
+value|100005
+define|#
+directive|define
+name|RPCMNT_VER1
+value|1
+define|#
+directive|define
+name|RPCMNT_VER3
+value|3
+define|#
+directive|define
+name|RPCMNT_MOUNT
+value|1
+define|#
+directive|define
+name|AUTH_SYS
+value|1
+comment|/* unix style (uid, gids) */
+define|#
+directive|define
+name|AUTH_UNIX
+value|AUTH_SYS
 comment|/* XXX honor v2/v3 flags in args->flags? */
 ifdef|#
 directive|ifdef
@@ -9244,7 +9263,7 @@ if|if
 condition|(
 name|authver
 operator|==
-name|RPCAUTH_UNIX
+name|AUTH_UNIX
 condition|)
 name|authunixok
 operator|=
