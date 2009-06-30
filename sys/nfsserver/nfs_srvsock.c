@@ -2308,6 +2308,11 @@ expr_stmt|;
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
+return|return
+operator|(
+name|SU_OK
+operator|)
+return|;
 block|}
 end_function
 

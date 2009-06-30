@@ -3806,7 +3806,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|nfs_clnt_match_xid
 parameter_list|(
 name|struct
@@ -4411,7 +4411,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|nfs_clnt_tcp_soupcall
 parameter_list|(
 name|struct
@@ -5099,7 +5099,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|nfs_clnt_udp_soupcall
 parameter_list|(
 name|struct
