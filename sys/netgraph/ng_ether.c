@@ -1494,6 +1494,11 @@ name|if_hwassist
 operator|=
 literal|0
 expr_stmt|;
+name|NG_HOOK_HI_STACK
+argument_list|(
+name|hook
+argument_list|)
+expr_stmt|;
 comment|/* OK */
 operator|*
 name|hookptr
