@@ -259,7 +259,7 @@ name|enum
 name|intr_polarity
 parameter_list|)
 function_decl|;
-name|void
+name|int
 function_decl|(
 modifier|*
 name|pic_assign_cpu
