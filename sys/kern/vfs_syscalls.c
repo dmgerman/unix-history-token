@@ -9631,6 +9631,13 @@ decl_stmt|;
 name|int
 name|vfslocked
 decl_stmt|;
+name|AUDIT_ARG_FD
+argument_list|(
+name|uap
+operator|->
+name|fd
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(

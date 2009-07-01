@@ -2851,9 +2851,6 @@ case|case
 name|AUE_KQUEUE
 case|:
 case|case
-name|AUE_LSEEK
-case|:
-case|case
 name|AUE_MODLOAD
 case|:
 case|case
@@ -3537,6 +3534,9 @@ name|AUE_GETDIRENTRIES
 case|:
 case|case
 name|AUE_GETDIRENTRIESATTR
+case|:
+case|case
+name|AUE_LSEEK
 case|:
 case|case
 name|AUE_POLL
