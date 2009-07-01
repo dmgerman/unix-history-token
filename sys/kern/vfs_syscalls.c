@@ -7856,7 +7856,7 @@ name|SAVENAME
 operator||
 name|MPSAFE
 operator||
-name|AUDITVNODE1
+name|AUDITVNODE2
 argument_list|,
 name|segflg
 argument_list|,
