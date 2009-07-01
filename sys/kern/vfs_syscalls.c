@@ -10599,6 +10599,11 @@ name|td
 operator|->
 name|td_ucred
 expr_stmt|;
+name|AUDIT_ARG_VALUE
+argument_list|(
+name|mode
+argument_list|)
+expr_stmt|;
 name|NDINIT_AT
 argument_list|(
 operator|&
