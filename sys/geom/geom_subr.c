@@ -4982,6 +4982,9 @@ name|g_provider
 modifier|*
 name|pp
 decl_stmt|;
+name|g_topology_assert
+argument_list|()
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|mp
