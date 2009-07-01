@@ -1377,6 +1377,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|AUDIT_ARG_SOCKET
+parameter_list|(
+name|sodomain
+parameter_list|,
+name|sotype
+parameter_list|,
+name|soprotocol
+parameter_list|)
+value|do {		\ 	if (AUDITING_TD(curthread))					\ 		audit_arg_socket((sodomain), (sotype), (soprotocol));	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AUDIT_ARG_SUID
 parameter_list|(
 name|suid
@@ -1704,6 +1718,19 @@ directive|define
 name|AUDIT_ARG_SGID
 parameter_list|(
 name|sgid
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIT_ARG_SOCKET
+parameter_list|(
+name|sodomain
+parameter_list|,
+name|sotype
+parameter_list|,
+name|soprotocol
 parameter_list|)
 end_define
 
