@@ -1641,8 +1641,8 @@ expr_stmt|;
 if|#
 directive|if
 name|__FreeBSD_version
-operator|>
-literal|700000
+operator|>=
+literal|700111
 if|if
 condition|(
 name|cxgb_use_16k_clusters
@@ -12354,8 +12354,8 @@ expr_stmt|;
 if|#
 directive|if
 name|__FreeBSD_version
-operator|>
-literal|800000
+operator|>=
+literal|700111
 if|if
 condition|(
 name|cxgb_use_16k_clusters
