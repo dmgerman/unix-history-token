@@ -2324,22 +2324,22 @@ argument_list|,
 name|PTE_PAGETABLE
 argument_list|)
 expr_stmt|;
-comment|/* Map allocated stacks and msgbuf */
+comment|/* Map allocated DPCPU, stacks and msgbuf */
 name|pmap_map_chunk
 argument_list|(
 name|l1pagetable
 argument_list|,
-name|irqstack
+name|dpcpu
 operator|.
 name|pv_va
 argument_list|,
-name|irqstack
+name|dpcpu
 operator|.
 name|pv_pa
 argument_list|,
 name|freemempos
 operator|-
-name|irqstack
+name|dpcpu
 operator|.
 name|pv_va
 argument_list|,

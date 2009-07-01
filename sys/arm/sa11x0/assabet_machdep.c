@@ -1249,6 +1249,28 @@ argument_list|,
 name|PTE_CACHE
 argument_list|)
 expr_stmt|;
+comment|/* Map the DPCPU pages */
+name|pmap_map_chunk
+argument_list|(
+name|l1pagetable
+argument_list|,
+name|dpcpu
+operator|.
+name|pv_va
+argument_list|,
+name|dpcpu
+operator|.
+name|pv_pa
+argument_list|,
+name|DPCPU_SIZE
+argument_list|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+argument_list|,
+name|PTE_CACHE
+argument_list|)
+expr_stmt|;
 comment|/* Map the stack pages */
 name|pmap_map_chunk
 argument_list|(
