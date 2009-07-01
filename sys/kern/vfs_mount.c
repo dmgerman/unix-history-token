@@ -5534,6 +5534,13 @@ name|id0
 decl_stmt|,
 name|id1
 decl_stmt|;
+name|AUDIT_ARG_VALUE
+argument_list|(
+name|uap
+operator|->
+name|flags
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|jailed
@@ -5611,15 +5618,6 @@ name|error
 operator|)
 return|;
 block|}
-name|AUDIT_ARG_UPATH
-argument_list|(
-name|td
-argument_list|,
-name|pathbuf
-argument_list|,
-name|ARG_UPATH1
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -5635,6 +5633,11 @@ operator|&
 name|MNT_BYFSID
 condition|)
 block|{
+name|AUDIT_ARG_TEXT
+argument_list|(
+name|pathbuf
+argument_list|)
+expr_stmt|;
 comment|/* Decode the filesystem ID. */
 if|if
 condition|(
@@ -5729,6 +5732,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|AUDIT_ARG_UPATH
+argument_list|(
+name|td
+argument_list|,
+name|pathbuf
+argument_list|,
+name|ARG_UPATH1
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
