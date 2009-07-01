@@ -3020,6 +3020,11 @@ argument_list|(
 name|pid
 argument_list|)
 expr_stmt|;
+name|AUDIT_ARG_VALUE
+argument_list|(
+name|options
+argument_list|)
+expr_stmt|;
 name|q
 operator|=
 name|td
