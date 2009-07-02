@@ -773,7 +773,7 @@ value|\ 	if (ARG_IS_VALID(kar, ARG_TEXT)) {				\ 		tok = au_to_text(ar->ar_arg_t
 end_define
 
 begin_comment
-comment|/*  * Not all pointer arguments to system calls are of interest, but in some  * cases they reflect delegation of rights, such as mmap(2) falled by  * minherit(2) before execve(2), so do the best we can.  */
+comment|/*  * Not all pointer arguments to system calls are of interest, but in some  * cases they reflect delegation of rights, such as mmap(2) followed by  * minherit(2) before execve(2), so do the best we can.  */
 end_comment
 
 begin_define
