@@ -5938,6 +5938,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|vfs_ref
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|vp
@@ -5961,6 +5966,11 @@ argument_list|,
 name|ltype
 operator||
 name|LK_RETRY
+argument_list|)
+expr_stmt|;
+name|vfs_rel
+argument_list|(
+name|mp
 argument_list|)
 expr_stmt|;
 if|if
