@@ -2732,6 +2732,9 @@ case|case
 name|AUE_PIPE
 case|:
 case|case
+name|AUE_POSIX_OPENPT
+case|:
+case|case
 name|AUE_PROFILE
 case|:
 case|case
