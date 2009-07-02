@@ -1222,13 +1222,6 @@ operator|->
 name|req
 argument_list|)
 expr_stmt|;
-name|AUDIT_ARG_ADDR
-argument_list|(
-name|uap
-operator|->
-name|addr
-argument_list|)
-expr_stmt|;
 name|AUDIT_ARG_VALUE
 argument_list|(
 name|uap
