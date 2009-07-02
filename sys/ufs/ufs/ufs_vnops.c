@@ -488,6 +488,13 @@ name|ufsfifo_kqfilter
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|vop_pathconf_t
+name|ufsfifo_pathconf
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * A virgin directory (no blushing please).  */
 end_comment
@@ -9821,6 +9828,64 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Return POSIX pathconf information applicable to fifos.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|ufsfifo_pathconf
+parameter_list|(
+name|ap
+parameter_list|)
+name|struct
+name|vop_pathconf_args
+comment|/* { 		struct vnode *a_vp; 		int a_name; 		int *a_retval; 	} */
+modifier|*
+name|ap
+decl_stmt|;
+block|{
+switch|switch
+condition|(
+name|ap
+operator|->
+name|a_name
+condition|)
+block|{
+case|case
+name|_PC_ACL_EXTENDED
+case|:
+case|case
+name|_PC_ACL_PATH_MAX
+case|:
+case|case
+name|_PC_MAC_PRESENT
+case|:
+return|return
+operator|(
+name|ufs_pathconf
+argument_list|(
+name|ap
+argument_list|)
+operator|)
+return|;
+default|default:
+return|return
+operator|(
+name|fifo_specops
+operator|.
+name|vop_pathconf
+argument_list|(
+name|ap
+argument_list|)
+operator|)
+return|;
+block|}
+comment|/* NOTREACHED */
+block|}
+end_function
+
+begin_comment
 comment|/*  * Return POSIX pathconf information applicable to ufs filesystems.  */
 end_comment
 
@@ -11619,6 +11684,11 @@ operator|.
 name|vop_markatime
 operator|=
 name|ufs_markatime
+block|,
+operator|.
+name|vop_pathconf
+operator|=
+name|ufsfifo_pathconf
 block|,
 operator|.
 name|vop_print
