@@ -237,6 +237,9 @@ parameter_list|,
 name|vm_map_entry_t
 parameter_list|,
 name|vm_map_entry_t
+parameter_list|,
+name|vm_ooffset_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

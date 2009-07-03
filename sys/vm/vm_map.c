@@ -11685,6 +11685,8 @@ argument_list|,
 name|dst_entry
 argument_list|,
 name|src_entry
+argument_list|,
+name|fork_charge
 argument_list|)
 expr_stmt|;
 block|}
@@ -12428,6 +12430,12 @@ operator|->
 name|object
 operator|.
 name|vm_object
+operator|=
+name|NULL
+expr_stmt|;
+name|new_entry
+operator|->
+name|uip
 operator|=
 name|NULL
 expr_stmt|;
