@@ -2763,6 +2763,28 @@ literal|0x9710
 block|,
 literal|0x9835
 block|,
+literal|0x1000
+block|,
+literal|2
+block|,
+literal|"NetMos NM9835 based 2-port serial"
+block|,
+name|DEFAULT_RCLK
+block|,
+name|PUC_PORT_2S
+block|,
+literal|0x10
+block|,
+literal|4
+block|,
+literal|0
+block|, 	}
+block|,
+block|{
+literal|0x9710
+block|,
+literal|0x9835
+block|,
 literal|0xffff
 block|,
 literal|0

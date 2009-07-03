@@ -88,8 +88,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_SFF_TRANSMISSION_MEDIA
-value|0x9
+name|IXGBE_SFF_CABLE_TECHNOLOGY
+value|0x8
 end_define
 
 begin_comment
@@ -99,8 +99,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IXGBE_SFF_TWIN_AX_CAPABLE
-value|0x80
+name|IXGBE_SFF_DA_PASSIVE_CABLE
+value|0x4
 end_define
 
 begin_define

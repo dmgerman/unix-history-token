@@ -1558,15 +1558,6 @@ comment|/* note that _rt is still valid */
 value|\ 	}							\ } while (0)
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|radix_node_head
-modifier|*
-name|rt_tables
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|struct
 name|radix_node_head

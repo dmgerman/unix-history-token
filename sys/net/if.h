@@ -1090,6 +1090,9 @@ name|short
 name|ifru_index
 decl_stmt|;
 name|int
+name|ifru_jid
+decl_stmt|;
+name|int
 name|ifru_metric
 decl_stmt|;
 name|int
@@ -1138,6 +1141,11 @@ directive|define
 name|ifr_flagshigh
 value|ifr_ifru.ifru_flags[1]
 comment|/* flags (high 16 bits) */
+define|#
+directive|define
+name|ifr_jid
+value|ifr_ifru.ifru_jid
+comment|/* jail/vnet */
 define|#
 directive|define
 name|ifr_metric

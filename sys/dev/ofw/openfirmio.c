@@ -260,7 +260,7 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-comment|/* Reject obvious bogus requests */
+comment|/* Reject obvious bogus requests. */
 if|if
 condition|(
 operator|(
@@ -485,7 +485,7 @@ operator|!=
 name|lastnode
 condition|)
 block|{
-comment|/* Not an easy one, must search for it */
+comment|/* Not an easy one, we must search for it. */
 name|ok
 operator|=
 name|openfirm_checkid
@@ -611,7 +611,7 @@ name|of_buflen
 operator|=
 name|len
 expr_stmt|;
-comment|/* -1 means no entry; 0 means no value */
+comment|/* -1 means no entry; 0 means no value. */
 if|if
 condition|(
 name|len
@@ -677,7 +677,7 @@ break|break;
 case|case
 name|OFIOCSET
 case|:
-comment|/* 		 * Note: Text string values for at least the /options node 		 * have to be null-terminated and the length parameter must 		 * include this terminating null. However, like OF_getprop(), 		 * OF_setprop() will return the actual length of the text 		 * string, i.e. omitting the terminating null. 		 */
+comment|/* 		 * Note: Text string values for at least the /options node 		 * have to be null-terminated and the length parameter must 		 * include this terminating null.  However, like OF_getprop(), 		 * OF_setprop() will return the actual length of the text 		 * string, i.e. omitting the terminating null. 		 */
 if|if
 condition|(
 operator|(

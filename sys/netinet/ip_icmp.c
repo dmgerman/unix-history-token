@@ -2494,7 +2494,7 @@ if|if
 condition|(
 name|ia
 operator|==
-literal|0
+name|NULL
 condition|)
 break|break;
 if|if
@@ -2503,9 +2503,19 @@ name|ia
 operator|->
 name|ia_ifp
 operator|==
-literal|0
+name|NULL
 condition|)
+block|{
+name|ifa_free
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 name|icp
 operator|->
 name|icmp_type
@@ -2598,6 +2608,14 @@ operator|->
 name|sin_addr
 expr_stmt|;
 block|}
+name|ifa_free
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 name|reflect
 label|:
 name|ip
@@ -3219,6 +3237,9 @@ operator|->
 name|ip_src
 expr_stmt|;
 comment|/* 	 * Source selection for ICMP replies: 	 * 	 * If the incoming packet was addressed directly to one of our 	 * own addresses, use dst as the src for the reply. 	 */
+name|IN_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|ia
@@ -3253,11 +3274,17 @@ argument_list|)
 operator|->
 name|sin_addr
 expr_stmt|;
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 goto|goto
 name|match
 goto|;
 block|}
 block|}
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 comment|/* 	 * If the incoming packet was addressed to one of our broadcast 	 * addresses, use the first non-broadcast address which corresponds 	 * to the incoming interface. 	 */
 name|ifp
 operator|=
@@ -3542,6 +3569,14 @@ name|ia
 argument_list|)
 operator|->
 name|sin_addr
+expr_stmt|;
+name|ifa_free
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
 expr_stmt|;
 name|match
 label|:

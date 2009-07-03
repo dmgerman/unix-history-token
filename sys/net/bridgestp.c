@@ -136,12 +136,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/route.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/vnet.h>
 end_include
 
@@ -209,6 +203,7 @@ parameter_list|,
 name|arg
 modifier|...
 parameter_list|)
+value|(void)0
 end_define
 
 begin_endif

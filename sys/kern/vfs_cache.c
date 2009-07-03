@@ -1230,6 +1230,11 @@ modifier|*
 modifier|*
 name|vp
 parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
 name|char
 modifier|*
 name|buf
@@ -5244,6 +5249,11 @@ modifier|*
 modifier|*
 name|vp
 parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
 name|char
 modifier|*
 name|buf
@@ -5264,6 +5274,8 @@ operator|=
 name|vn_vptocnp_locked
 argument_list|(
 name|vp
+argument_list|,
+name|cred
 argument_list|,
 name|buf
 argument_list|,
@@ -5306,6 +5318,11 @@ name|vnode
 modifier|*
 modifier|*
 name|vp
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|cred
 parameter_list|,
 name|char
 modifier|*
@@ -5530,6 +5547,8 @@ name|vp
 argument_list|,
 operator|&
 name|dvp
+argument_list|,
+name|cred
 argument_list|,
 name|buf
 argument_list|,
@@ -5780,6 +5799,10 @@ argument_list|(
 operator|&
 name|vp
 argument_list|,
+name|td
+operator|->
+name|td_ucred
+argument_list|,
 name|buf
 argument_list|,
 operator|&
@@ -5942,6 +5965,10 @@ name|vn_vptocnp_locked
 argument_list|(
 operator|&
 name|vp
+argument_list|,
+name|td
+operator|->
+name|td_ucred
 argument_list|,
 name|buf
 argument_list|,

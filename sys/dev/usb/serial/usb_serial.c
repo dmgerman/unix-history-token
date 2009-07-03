@@ -28,62 +28,146 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker_set.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/condvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/usb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_mfunc.h>
+file|<dev/usb/usbdi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_error.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/usb_cdc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/usb_ioctl.h>
+file|<dev/usb/usbdi_util.h>
 end_include
 
 begin_define
 define|#
 directive|define
 name|USB_DEBUG_VAR
-value|usb2_com_debug
+value|ucom_debug
 end_define
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_core.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb/usb_debug.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/usb_process.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/usb_request.h>
 end_include
 
 begin_include
@@ -95,7 +179,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_util.h>
+file|<dev/usb/usb_process.h>
 end_include
 
 begin_include
@@ -113,7 +197,7 @@ end_if
 begin_decl_stmt
 specifier|static
 name|int
-name|usb2_com_debug
+name|ucom_debug
 init|=
 literal|0
 decl_stmt|;
@@ -149,7 +233,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|usb2_com_debug
+name|ucom_debug
 argument_list|,
 literal|0
 argument_list|,
@@ -166,49 +250,49 @@ end_endif
 begin_decl_stmt
 specifier|static
 name|usb_proc_callback_t
-name|usb2_com_cfg_start_transfers
+name|ucom_cfg_start_transfers
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|usb_proc_callback_t
-name|usb2_com_cfg_open
+name|ucom_cfg_open
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|usb_proc_callback_t
-name|usb2_com_cfg_close
+name|ucom_cfg_close
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|usb_proc_callback_t
-name|usb2_com_cfg_line_state
+name|ucom_cfg_line_state
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|usb_proc_callback_t
-name|usb2_com_cfg_status_change
+name|ucom_cfg_status_change
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|usb_proc_callback_t
-name|usb2_com_cfg_param
+name|ucom_cfg_param
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
 specifier|static
 name|uint8_t
-name|usb2_com_units_alloc
+name|ucom_units_alloc
 parameter_list|(
 name|uint32_t
 parameter_list|,
@@ -221,7 +305,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_com_units_free
+name|ucom_units_free
 parameter_list|(
 name|uint32_t
 parameter_list|,
@@ -233,7 +317,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|usb2_com_attach_tty
+name|ucom_attach_tty
 parameter_list|(
 name|struct
 name|ucom_softc
@@ -247,7 +331,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_com_detach_tty
+name|ucom_detach_tty
 parameter_list|(
 name|struct
 name|ucom_softc
@@ -259,7 +343,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_com_queue_command
+name|ucom_queue_command
 parameter_list|(
 name|struct
 name|ucom_softc
@@ -289,7 +373,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_com_shutdown
+name|ucom_shutdown
 parameter_list|(
 name|struct
 name|ucom_softc
@@ -301,21 +385,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_com_break
-parameter_list|(
-name|struct
-name|ucom_softc
-modifier|*
-parameter_list|,
-name|uint8_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|usb2_com_dtr
+name|ucom_break
 parameter_list|(
 name|struct
 name|ucom_softc
@@ -329,7 +399,21 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_com_rts
+name|ucom_dtr
+parameter_list|(
+name|struct
+name|ucom_softc
+modifier|*
+parameter_list|,
+name|uint8_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ucom_rts
 parameter_list|(
 name|struct
 name|ucom_softc
@@ -343,49 +427,49 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|tsw_open_t
-name|usb2_com_open
+name|ucom_open
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|tsw_close_t
-name|usb2_com_close
+name|ucom_close
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|tsw_ioctl_t
-name|usb2_com_ioctl
+name|ucom_ioctl
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|tsw_modem_t
-name|usb2_com_modem
+name|ucom_modem
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|tsw_param_t
-name|usb2_com_param
+name|ucom_param
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|tsw_outwakeup_t
-name|usb2_com_outwakeup
+name|ucom_outwakeup
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|tsw_free_t
-name|usb2_com_free
+name|ucom_free
 decl_stmt|;
 end_decl_stmt
 
@@ -393,7 +477,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|ttydevsw
-name|usb2_com_class
+name|ucom_class
 init|=
 block|{
 operator|.
@@ -406,37 +490,37 @@ block|,
 operator|.
 name|tsw_open
 operator|=
-name|usb2_com_open
+name|ucom_open
 block|,
 operator|.
 name|tsw_close
 operator|=
-name|usb2_com_close
+name|ucom_close
 block|,
 operator|.
 name|tsw_outwakeup
 operator|=
-name|usb2_com_outwakeup
+name|ucom_outwakeup
 block|,
 operator|.
 name|tsw_ioctl
 operator|=
-name|usb2_com_ioctl
+name|ucom_ioctl
 block|,
 operator|.
 name|tsw_param
 operator|=
-name|usb2_com_param
+name|ucom_param
 block|,
 operator|.
 name|tsw_modem
 operator|=
-name|usb2_com_modem
+name|ucom_modem
 block|,
 operator|.
 name|tsw_free
 operator|=
-name|usb2_com_free
+name|ucom_free
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -492,7 +576,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|uint8_t
-name|usb2_com_bitmap
+name|ucom_bitmap
 index|[
 operator|(
 name|UCOM_UNIT_MAX
@@ -505,10 +589,33 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|ucom_bitmap_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|ucom_bitmap_mtx
+argument_list|,
+operator|&
+name|ucom_bitmap_mtx
+argument_list|,
+literal|"ucom bitmap"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|uint8_t
-name|usb2_com_units_alloc
+name|ucom_units_alloc
 parameter_list|(
 name|uint32_t
 name|sub_units
@@ -546,7 +653,7 @@ decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|Giant
+name|ucom_bitmap_mtx
 argument_list|)
 expr_stmt|;
 for|for
@@ -587,7 +694,7 @@ name|o
 expr_stmt|;
 if|if
 condition|(
-name|usb2_com_bitmap
+name|ucom_bitmap
 index|[
 name|x
 operator|/
@@ -631,7 +738,7 @@ name|n
 operator|+
 name|o
 expr_stmt|;
-name|usb2_com_bitmap
+name|ucom_bitmap
 index|[
 name|x
 operator|/
@@ -661,7 +768,7 @@ block|}
 name|mtx_unlock
 argument_list|(
 operator|&
-name|Giant
+name|ucom_bitmap_mtx
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Always set the variable pointed to by "p_root_unit" so that 	 * the compiler does not think that it is used uninitialised: 	 */
@@ -681,7 +788,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_com_units_free
+name|ucom_units_free
 parameter_list|(
 name|uint32_t
 name|root_unit
@@ -696,7 +803,7 @@ decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|Giant
+name|ucom_bitmap_mtx
 argument_list|)
 expr_stmt|;
 while|while
@@ -711,7 +818,7 @@ name|root_unit
 operator|+
 name|sub_units
 expr_stmt|;
-name|usb2_com_bitmap
+name|ucom_bitmap
 index|[
 name|x
 operator|/
@@ -733,7 +840,7 @@ block|}
 name|mtx_unlock
 argument_list|(
 operator|&
-name|Giant
+name|ucom_bitmap_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -745,7 +852,7 @@ end_comment
 
 begin_function
 name|int
-name|usb2_com_attach
+name|ucom_attach
 parameter_list|(
 name|struct
 name|ucom_super_softc
@@ -823,7 +930,7 @@ block|}
 comment|/* XXX unit management does not really belong here */
 if|if
 condition|(
-name|usb2_com_units_alloc
+name|ucom_units_alloc
 argument_list|(
 name|sub_units
 argument_list|,
@@ -840,7 +947,7 @@ return|;
 block|}
 name|error
 operator|=
-name|usb2_proc_create
+name|usb_proc_create
 argument_list|(
 operator|&
 name|ssc
@@ -859,7 +966,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|usb2_com_units_free
+name|ucom_units_free
 argument_list|(
 name|root_unit
 argument_list|,
@@ -929,7 +1036,7 @@ name|callback
 expr_stmt|;
 name|error
 operator|=
-name|usb2_com_attach_tty
+name|ucom_attach_tty
 argument_list|(
 name|sc
 argument_list|,
@@ -941,7 +1048,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|usb2_com_detach
+name|ucom_detach
 argument_list|(
 name|ssc
 argument_list|,
@@ -952,7 +1059,7 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-name|usb2_com_units_free
+name|ucom_units_free
 argument_list|(
 name|root_unit
 operator|+
@@ -990,7 +1097,7 @@ end_comment
 
 begin_function
 name|void
-name|usb2_com_detach
+name|ucom_detach
 parameter_list|(
 name|struct
 name|ucom_super_softc
@@ -1009,7 +1116,7 @@ block|{
 name|uint32_t
 name|n
 decl_stmt|;
-name|usb2_proc_drain
+name|usb_proc_drain
 argument_list|(
 operator|&
 name|ssc
@@ -1043,12 +1150,12 @@ operator|&
 name|UCOM_FLAG_ATTACHED
 condition|)
 block|{
-name|usb2_com_detach_tty
+name|ucom_detach_tty
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|usb2_com_units_free
+name|ucom_units_free
 argument_list|(
 name|sc
 operator|->
@@ -1067,7 +1174,7 @@ name|UCOM_FLAG_ATTACHED
 expr_stmt|;
 block|}
 block|}
-name|usb2_proc_free
+name|usb_proc_free
 argument_list|(
 operator|&
 name|ssc
@@ -1081,7 +1188,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|usb2_com_attach_tty
+name|ucom_attach_tty
 parameter_list|(
 name|struct
 name|ucom_softc
@@ -1114,7 +1221,7 @@ operator|=
 name|tty_alloc_mutex
 argument_list|(
 operator|&
-name|usb2_com_class
+name|ucom_class
 argument_list|,
 name|sc
 argument_list|,
@@ -1164,14 +1271,14 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_tty_name
+name|ucom_tty_name
 condition|)
 block|{
 name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_tty_name
+name|ucom_tty_name
 argument_list|(
 name|sc
 argument_list|,
@@ -1287,14 +1394,14 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-name|usb2_cv_init
+name|cv_init
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_cv
 argument_list|,
-literal|"usb2_com"
+literal|"ucom"
 argument_list|)
 expr_stmt|;
 name|done
@@ -1310,7 +1417,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_com_detach_tty
+name|ucom_detach_tty
 parameter_list|(
 name|struct
 name|ucom_softc
@@ -1380,7 +1487,7 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|usb2_com_close
+name|ucom_close
 argument_list|(
 name|tp
 argument_list|)
@@ -1407,7 +1514,7 @@ name|sc_ttyfreed
 operator|==
 literal|0
 condition|)
-name|usb2_cv_wait
+name|cv_wait
 argument_list|(
 operator|&
 name|sc
@@ -1426,7 +1533,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_stop_read
+name|ucom_stop_read
 condition|)
 block|{
 call|(
@@ -1434,7 +1541,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_stop_read
+name|ucom_stop_read
 call|)
 argument_list|(
 name|sc
@@ -1447,7 +1554,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_stop_write
+name|ucom_stop_write
 condition|)
 block|{
 call|(
@@ -1455,7 +1562,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_stop_write
+name|ucom_stop_write
 call|)
 argument_list|(
 name|sc
@@ -1470,7 +1577,7 @@ name|sc_mtx
 argument_list|)
 expr_stmt|;
 block|}
-name|usb2_cv_destroy
+name|cv_destroy
 argument_list|(
 operator|&
 name|sc
@@ -1484,7 +1591,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_com_queue_command
+name|ucom_queue_command
 parameter_list|(
 name|struct
 name|ucom_softc
@@ -1536,7 +1643,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|usb2_proc_is_gone
+name|usb_proc_is_gone
 argument_list|(
 operator|&
 name|ssc
@@ -1561,7 +1668,7 @@ expr|struct
 name|ucom_param_task
 operator|*
 operator|)
-name|usb2_proc_msignal
+name|usb_proc_msignal
 argument_list|(
 operator|&
 name|ssc
@@ -1607,9 +1714,9 @@ if|if
 condition|(
 name|fn
 operator|==
-name|usb2_com_cfg_close
+name|ucom_cfg_close
 condition|)
-name|usb2_proc_mwait
+name|usb_proc_mwait
 argument_list|(
 operator|&
 name|ssc
@@ -1626,7 +1733,7 @@ if|if
 condition|(
 name|fn
 operator|==
-name|usb2_com_cfg_start_transfers
+name|ucom_cfg_start_transfers
 condition|)
 name|sc
 operator|->
@@ -1643,7 +1750,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_com_shutdown
+name|ucom_shutdown
 parameter_list|(
 name|struct
 name|ucom_softc
@@ -1686,7 +1793,7 @@ operator|&
 name|HUPCL
 condition|)
 block|{
-name|usb2_com_modem
+name|ucom_modem
 argument_list|(
 name|tp
 argument_list|,
@@ -1705,7 +1812,7 @@ end_comment
 
 begin_function
 name|uint8_t
-name|usb2_com_cfg_is_gone
+name|ucom_cfg_is_gone
 parameter_list|(
 name|struct
 name|ucom_softc
@@ -1724,7 +1831,7 @@ name|sc_super
 decl_stmt|;
 return|return
 operator|(
-name|usb2_proc_is_gone
+name|usb_proc_is_gone
 argument_list|(
 operator|&
 name|ssc
@@ -1739,7 +1846,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_com_cfg_start_transfers
+name|ucom_cfg_start_transfers
 parameter_list|(
 name|struct
 name|usb_proc_msg
@@ -1817,7 +1924,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_start_read
+name|ucom_start_read
 condition|)
 block|{
 call|(
@@ -1825,7 +1932,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_start_read
+name|ucom_start_read
 call|)
 argument_list|(
 name|sc
@@ -1838,7 +1945,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_start_write
+name|ucom_start_write
 condition|)
 block|{
 call|(
@@ -1846,7 +1953,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_start_write
+name|ucom_start_write
 call|)
 argument_list|(
 name|sc
@@ -1859,7 +1966,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_com_start_transfers
+name|ucom_start_transfers
 parameter_list|(
 name|struct
 name|ucom_softc
@@ -1888,7 +1995,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_start_read
+name|ucom_start_read
 condition|)
 block|{
 call|(
@@ -1896,7 +2003,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_start_read
+name|ucom_start_read
 call|)
 argument_list|(
 name|sc
@@ -1909,7 +2016,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_start_write
+name|ucom_start_write
 condition|)
 block|{
 call|(
@@ -1917,7 +2024,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_start_write
+name|ucom_start_write
 call|)
 argument_list|(
 name|sc
@@ -1930,7 +2037,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_com_cfg_open
+name|ucom_cfg_open
 parameter_list|(
 name|struct
 name|usb_proc_msg
@@ -1989,7 +2096,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_cfg_open
+name|ucom_cfg_open
 condition|)
 block|{
 call|(
@@ -1997,14 +2104,14 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_cfg_open
+name|ucom_cfg_open
 call|)
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
 comment|/* wait a little */
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 name|sc
 operator|->
@@ -2023,7 +2130,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|usb2_com_open
+name|ucom_open
 parameter_list|(
 name|struct
 name|tty
@@ -2097,7 +2204,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_pre_open
+name|ucom_pre_open
 condition|)
 block|{
 comment|/* 		 * give the lower layer a chance to disallow TTY open, for 		 * example if the device is not present: 		 */
@@ -2108,7 +2215,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_pre_open
+name|ucom_pre_open
 call|)
 argument_list|(
 name|sc
@@ -2177,11 +2284,11 @@ name|sc_pls_clr
 operator|=
 literal|0
 expr_stmt|;
-name|usb2_com_queue_command
+name|ucom_queue_command
 argument_list|(
 name|sc
 argument_list|,
-name|usb2_com_cfg_open
+name|ucom_cfg_open
 argument_list|,
 name|NULL
 argument_list|,
@@ -2207,11 +2314,11 @@ name|hdr
 argument_list|)
 expr_stmt|;
 comment|/* Queue transfer enable command last */
-name|usb2_com_queue_command
+name|ucom_queue_command
 argument_list|(
 name|sc
 argument_list|,
-name|usb2_com_cfg_start_transfers
+name|ucom_cfg_start_transfers
 argument_list|,
 name|NULL
 argument_list|,
@@ -2236,7 +2343,7 @@ operator|.
 name|hdr
 argument_list|)
 expr_stmt|;
-name|usb2_com_modem
+name|ucom_modem
 argument_list|(
 name|tp
 argument_list|,
@@ -2247,14 +2354,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|usb2_com_break
+name|ucom_break
 argument_list|(
 name|sc
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|usb2_com_status_change
+name|ucom_status_change
 argument_list|(
 name|sc
 argument_list|)
@@ -2270,7 +2377,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_com_cfg_close
+name|ucom_cfg_close
 parameter_list|(
 name|struct
 name|usb_proc_msg
@@ -2326,14 +2433,14 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_cfg_close
+name|ucom_cfg_close
 condition|)
 call|(
 name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_cfg_close
+name|ucom_cfg_close
 call|)
 argument_list|(
 name|sc
@@ -2350,7 +2457,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_com_close
+name|ucom_close
 parameter_list|(
 name|struct
 name|tty
@@ -2405,16 +2512,16 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|usb2_com_shutdown
+name|ucom_shutdown
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|usb2_com_queue_command
+name|ucom_queue_command
 argument_list|(
 name|sc
 argument_list|,
-name|usb2_com_cfg_close
+name|ucom_cfg_close
 argument_list|,
 name|NULL
 argument_list|,
@@ -2456,7 +2563,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_stop_read
+name|ucom_stop_read
 condition|)
 block|{
 call|(
@@ -2464,7 +2571,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_stop_read
+name|ucom_stop_read
 call|)
 argument_list|(
 name|sc
@@ -2477,7 +2584,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|usb2_com_ioctl
+name|ucom_ioctl
 parameter_list|(
 name|struct
 name|tty
@@ -2551,7 +2658,7 @@ block|{
 case|case
 name|TIOCSBRK
 case|:
-name|usb2_com_break
+name|ucom_break
 argument_list|(
 name|sc
 argument_list|,
@@ -2566,7 +2673,7 @@ break|break;
 case|case
 name|TIOCCBRK
 case|:
-name|usb2_com_break
+name|ucom_break
 argument_list|(
 name|sc
 argument_list|,
@@ -2585,7 +2692,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_ioctl
+name|ucom_ioctl
 condition|)
 block|{
 name|error
@@ -2595,7 +2702,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_ioctl
+name|ucom_ioctl
 call|)
 argument_list|(
 name|sc
@@ -2630,7 +2737,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|usb2_com_modem
+name|ucom_modem
 parameter_list|(
 name|struct
 name|tty
@@ -2861,7 +2968,7 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
-name|usb2_com_dtr
+name|ucom_dtr
 argument_list|(
 name|sc
 argument_list|,
@@ -2882,7 +2989,7 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
-name|usb2_com_rts
+name|ucom_rts
 argument_list|(
 name|sc
 argument_list|,
@@ -2900,7 +3007,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_com_cfg_line_state
+name|ucom_cfg_line_state
 parameter_list|(
 name|struct
 name|usb_proc_msg
@@ -2969,7 +3076,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_cfg_set_dtr
+name|ucom_cfg_set_dtr
 condition|)
 name|mask
 operator||=
@@ -2981,7 +3088,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_cfg_set_rts
+name|ucom_cfg_set_rts
 condition|)
 name|mask
 operator||=
@@ -2993,7 +3100,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_cfg_set_break
+name|ucom_cfg_set_break
 condition|)
 name|mask
 operator||=
@@ -3072,7 +3179,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_cfg_set_dtr
+name|ucom_cfg_set_dtr
 argument_list|(
 name|sc
 argument_list|,
@@ -3097,7 +3204,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_cfg_set_rts
+name|ucom_cfg_set_rts
 argument_list|(
 name|sc
 argument_list|,
@@ -3122,7 +3229,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_cfg_set_break
+name|ucom_cfg_set_break
 argument_list|(
 name|sc
 argument_list|,
@@ -3148,7 +3255,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_cfg_set_dtr
+name|ucom_cfg_set_dtr
 argument_list|(
 name|sc
 argument_list|,
@@ -3173,7 +3280,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_cfg_set_rts
+name|ucom_cfg_set_rts
 argument_list|(
 name|sc
 argument_list|,
@@ -3198,7 +3305,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_cfg_set_break
+name|ucom_cfg_set_break
 argument_list|(
 name|sc
 argument_list|,
@@ -3219,7 +3326,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_com_line_state
+name|ucom_line_state
 parameter_list|(
 name|struct
 name|ucom_softc
@@ -3292,11 +3399,11 @@ operator||=
 name|clear_bits
 expr_stmt|;
 comment|/* defer driver programming */
-name|usb2_com_queue_command
+name|ucom_queue_command
 argument_list|(
 name|sc
 argument_list|,
-name|usb2_com_cfg_line_state
+name|ucom_cfg_line_state
 argument_list|,
 name|NULL
 argument_list|,
@@ -3327,7 +3434,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_com_break
+name|ucom_break
 parameter_list|(
 name|struct
 name|ucom_softc
@@ -3349,7 +3456,7 @@ if|if
 condition|(
 name|onoff
 condition|)
-name|usb2_com_line_state
+name|ucom_line_state
 argument_list|(
 name|sc
 argument_list|,
@@ -3359,7 +3466,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 else|else
-name|usb2_com_line_state
+name|ucom_line_state
 argument_list|(
 name|sc
 argument_list|,
@@ -3374,7 +3481,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_com_dtr
+name|ucom_dtr
 parameter_list|(
 name|struct
 name|ucom_softc
@@ -3396,7 +3503,7 @@ if|if
 condition|(
 name|onoff
 condition|)
-name|usb2_com_line_state
+name|ucom_line_state
 argument_list|(
 name|sc
 argument_list|,
@@ -3406,7 +3513,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 else|else
-name|usb2_com_line_state
+name|ucom_line_state
 argument_list|(
 name|sc
 argument_list|,
@@ -3421,7 +3528,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_com_rts
+name|ucom_rts
 parameter_list|(
 name|struct
 name|ucom_softc
@@ -3443,7 +3550,7 @@ if|if
 condition|(
 name|onoff
 condition|)
-name|usb2_com_line_state
+name|ucom_line_state
 argument_list|(
 name|sc
 argument_list|,
@@ -3453,7 +3560,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 else|else
-name|usb2_com_line_state
+name|ucom_line_state
 argument_list|(
 name|sc
 argument_list|,
@@ -3468,7 +3575,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_com_cfg_status_change
+name|ucom_cfg_status_change
 parameter_list|(
 name|struct
 name|usb_proc_msg
@@ -3546,7 +3653,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_cfg_get_status
+name|ucom_cfg_get_status
 operator|==
 name|NULL
 condition|)
@@ -3567,7 +3674,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_cfg_get_status
+name|ucom_cfg_get_status
 call|)
 argument_list|(
 name|sc
@@ -3659,7 +3766,7 @@ end_function
 
 begin_function
 name|void
-name|usb2_com_status_change
+name|ucom_status_change
 parameter_list|(
 name|struct
 name|ucom_softc
@@ -3695,11 +3802,11 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|usb2_com_queue_command
+name|ucom_queue_command
 argument_list|(
 name|sc
 argument_list|,
-name|usb2_com_cfg_status_change
+name|ucom_cfg_status_change
 argument_list|,
 name|NULL
 argument_list|,
@@ -3730,7 +3837,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_com_cfg_param
+name|ucom_cfg_param
 parameter_list|(
 name|struct
 name|usb_proc_msg
@@ -3779,7 +3886,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_cfg_param
+name|ucom_cfg_param
 operator|==
 name|NULL
 condition|)
@@ -3791,7 +3898,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_cfg_param
+name|ucom_cfg_param
 call|)
 argument_list|(
 name|sc
@@ -3803,7 +3910,7 @@ name|termios_copy
 argument_list|)
 expr_stmt|;
 comment|/* wait a little */
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 name|sc
 operator|->
@@ -3820,7 +3927,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|usb2_com_param
+name|ucom_param
 parameter_list|(
 name|struct
 name|tty
@@ -3881,7 +3988,7 @@ block|{
 comment|/* XXX the TTY layer should call "open()" first! */
 name|error
 operator|=
-name|usb2_com_open
+name|ucom_open
 argument_list|(
 name|tp
 argument_list|)
@@ -3974,7 +4081,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_pre_param
+name|ucom_pre_param
 condition|)
 block|{
 comment|/* Let the lower layer verify the parameters */
@@ -3985,7 +4092,7 @@ name|sc
 operator|->
 name|sc_callback
 operator|->
-name|usb2_com_pre_param
+name|ucom_pre_param
 call|)
 argument_list|(
 name|sc
@@ -4019,11 +4126,11 @@ operator|~
 name|UCOM_FLAG_GP_DATA
 expr_stmt|;
 comment|/* Queue baud rate programming command first */
-name|usb2_com_queue_command
+name|ucom_queue_command
 argument_list|(
 name|sc
 argument_list|,
-name|usb2_com_cfg_param
+name|ucom_cfg_param
 argument_list|,
 name|t
 argument_list|,
@@ -4049,11 +4156,11 @@ name|hdr
 argument_list|)
 expr_stmt|;
 comment|/* Queue transfer enable command last */
-name|usb2_com_queue_command
+name|ucom_queue_command
 argument_list|(
 name|sc
 argument_list|,
-name|usb2_com_cfg_start_transfers
+name|ucom_cfg_start_transfers
 argument_list|,
 name|NULL
 argument_list|,
@@ -4111,7 +4218,7 @@ operator|&=
 operator|~
 name|UCOM_FLAG_RTS_IFLOW
 expr_stmt|;
-name|usb2_com_modem
+name|ucom_modem
 argument_list|(
 name|tp
 argument_list|,
@@ -4133,7 +4240,7 @@ condition|(
 name|opened
 condition|)
 block|{
-name|usb2_com_close
+name|ucom_close
 argument_list|(
 name|tp
 argument_list|)
@@ -4151,7 +4258,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_com_outwakeup
+name|ucom_outwakeup
 parameter_list|(
 name|struct
 name|tty
@@ -4200,7 +4307,7 @@ block|{
 comment|/* The higher layer is not ready */
 return|return;
 block|}
-name|usb2_com_start_transfers
+name|ucom_start_transfers
 argument_list|(
 name|sc
 argument_list|)
@@ -4209,12 +4316,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_com_get_data  *  * Return values:  * 0: No data is available.  * Else: Data is available.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	ucom_get_data  *  * Return values:  * 0: No data is available.  * Else: Data is available.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|uint8_t
-name|usb2_com_get_data
+name|ucom_get_data
 parameter_list|(
 name|struct
 name|ucom_softc
@@ -4307,7 +4414,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 name|pc
 argument_list|,
@@ -4415,7 +4522,7 @@ end_function
 
 begin_function
 name|void
-name|usb2_com_put_data
+name|ucom_put_data
 parameter_list|(
 name|struct
 name|ucom_softc
@@ -4488,7 +4595,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 name|pc
 argument_list|,
@@ -4637,7 +4744,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_com_free
+name|ucom_free
 parameter_list|(
 name|void
 modifier|*
@@ -4664,7 +4771,7 @@ name|sc_ttyfreed
 operator|=
 literal|1
 expr_stmt|;
-name|usb2_cv_signal
+name|cv_signal
 argument_list|(
 operator|&
 name|sc

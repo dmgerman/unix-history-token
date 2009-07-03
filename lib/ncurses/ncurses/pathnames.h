@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_DEF
-value|".termcap /usr/share/misc/termcap"
+value|".termcap /usr/share/misc/termcap /etc/termcap.small"
 end_define
 
 begin_define

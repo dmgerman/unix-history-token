@@ -746,13 +746,11 @@ if|if
 condition|(
 name|idle
 operator|&&
-operator|(
 name|ticks
 operator|-
 name|tp
 operator|->
 name|t_rcvtime
-operator|)
 operator|>=
 name|tp
 operator|->

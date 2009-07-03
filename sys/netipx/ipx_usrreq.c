@@ -137,6 +137,12 @@ directive|include
 file|<netipx/ipx_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<security/mac/mac_framework.h>
+end_include
+
 begin_comment
 comment|/*  * IPX protocol implementation.  */
 end_comment
@@ -785,6 +791,32 @@ name|ipx
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|MAC
+if|if
+condition|(
+name|mac_socket_check_deliver
+argument_list|(
+name|ipxp
+operator|->
+name|ipxp_socket
+argument_list|,
+name|m
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|sbappendaddr
@@ -2409,6 +2441,18 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Attempt to only acquire the necessary locks: if the socket is 	 * already connected, we don't need to hold the IPX list lock to be 	 * used by ipx_pcbconnect() and ipx_pcbdisconnect(), just the IPX 	 * pcb lock. 	 */
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_socket_create_mbuf
+argument_list|(
+name|so
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|nam

@@ -674,15 +674,18 @@ directive|ifdef
 name|SCHED_STATS
 end_ifdef
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|DPCPU_DECLARE
+argument_list|(
 name|long
+argument_list|,
 name|sched_switch_stats
 index|[
 name|SWT_COUNT
 index|]
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -696,7 +699,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_LONG(_kern_sched_stats, OID_AUTO, name, CTLFLAG_RD, ptr, 0, descr)
+value|static void name ## _add_proc(void *dummy __unused)			\ {									\ 									\ 	SYSCTL_ADD_PROC(NULL,						\ 	    SYSCTL_STATIC_CHILDREN(_kern_sched_stats), OID_AUTO,	\ 	    #name, CTLTYPE_LONG|CTLFLAG_RD|CTLFLAG_MPSAFE,		\ 	    ptr, 0, sysctl_dpcpu_long, "LU", descr);			\ }									\ SYSINIT(name, SI_SUB_RUN_SCHEDULER, SI_ORDER_ANY, name ## _add_proc, NULL);
 end_define
 
 begin_define
@@ -709,8 +712,12 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|unsigned long name;							\     SCHED_STAT_DEFINE_VAR(name,&name, descr)
+value|DPCPU_DEFINE(unsigned long, name);					\     SCHED_STAT_DEFINE_VAR(name,&DPCPU_NAME(name), descr)
 end_define
+
+begin_comment
+comment|/*  * Sched stats are always incremented in critical sections so no atomic  * is necesssary to increment them.  */
+end_comment
 
 begin_define
 define|#
@@ -719,7 +726,7 @@ name|SCHED_STAT_INC
 parameter_list|(
 name|var
 parameter_list|)
-value|atomic_add_long(&(var), 1)
+value|DPCPU_GET(var)++;
 end_define
 
 begin_else
@@ -758,6 +765,7 @@ name|SCHED_STAT_INC
 parameter_list|(
 name|var
 parameter_list|)
+value|(void)0
 end_define
 
 begin_endif

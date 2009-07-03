@@ -3079,6 +3079,10 @@ name|x
 init|=
 name|NULL
 decl_stmt|;
+name|ERR_clear_error
+argument_list|()
+expr_stmt|;
+comment|/* clear error stack for SSL_CTX_use_certificate() */
 name|in
 operator|=
 name|BIO_new

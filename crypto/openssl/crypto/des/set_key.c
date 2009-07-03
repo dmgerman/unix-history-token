@@ -17,6 +17,23 @@ directive|include
 file|"des_locl.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<openssl/fips.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 name|OPENSSL_IMPLEMENT_GLOBAL
 argument_list|(
@@ -680,6 +697,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|DES_cblock
 name|weak_keys
 index|[
@@ -2352,6 +2370,14 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+name|FIPS_selftest_check
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|c2l
 argument_list|(
 name|in

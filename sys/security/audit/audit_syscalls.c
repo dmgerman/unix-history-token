@@ -459,10 +459,8 @@ operator|(
 name|ENOSYS
 operator|)
 return|;
-name|AUDIT_ARG
+name|AUDIT_ARG_CMD
 argument_list|(
-name|cmd
-argument_list|,
 name|uap
 operator|->
 name|cmd
@@ -648,10 +646,8 @@ operator|(
 name|error
 operator|)
 return|;
-name|AUDIT_ARG
+name|AUDIT_ARG_AUDITON
 argument_list|(
-name|auditon
-argument_list|,
 operator|&
 name|udata
 argument_list|)

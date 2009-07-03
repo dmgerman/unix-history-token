@@ -348,11 +348,7 @@ name|bo
 operator|->
 name|bo_private
 expr_stmt|;
-name|G_VALID_CONSUMER
-argument_list|(
-name|cp
-argument_list|)
-expr_stmt|;
+comment|/* G_VALID_CONSUMER(cp); We likely lack topology lock */
 comment|/* 	 * If the the provider has orphaned us, just return EXIO. 	 */
 if|if
 condition|(

@@ -28,19 +28,127 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker_set.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/condvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/usb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_mfunc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/usb_error.h>
+file|<dev/usb/usbdi.h>
 end_include
 
 begin_define
@@ -664,7 +772,7 @@ name|i
 operator|++
 control|)
 block|{
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 name|NULL
 argument_list|,
@@ -854,7 +962,7 @@ name|i
 operator|++
 control|)
 block|{
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 name|NULL
 argument_list|,
@@ -953,7 +1061,7 @@ argument_list|(
 literal|"start\n"
 argument_list|)
 expr_stmt|;
-name|usb2_callout_init_mtx
+name|usb_callout_init_mtx
 argument_list|(
 operator|&
 name|sc
@@ -1211,7 +1319,7 @@ name|ehci_qh_t
 modifier|*
 name|qh
 decl_stmt|;
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 name|sc
 operator|->
@@ -1484,7 +1592,7 @@ name|ehci_itd_t
 modifier|*
 name|itd
 decl_stmt|;
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 name|sc
 operator|->
@@ -1580,7 +1688,7 @@ index|]
 operator|->
 name|qh_self
 expr_stmt|;
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 name|sc
 operator|->
@@ -1655,7 +1763,7 @@ operator|->
 name|sitd_self
 expr_stmt|;
 block|}
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 operator|&
 name|sc
@@ -1734,7 +1842,7 @@ operator|.
 name|physaddr
 argument_list|)
 expr_stmt|;
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 operator|&
 name|sc
@@ -1891,7 +1999,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* flush all cache into memory */
-name|usb2_bus_mem_flush_all
+name|usb_bus_mem_flush_all
 argument_list|(
 operator|&
 name|sc
@@ -2000,7 +2108,7 @@ name|i
 operator|++
 control|)
 block|{
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 name|NULL
 argument_list|,
@@ -2096,7 +2204,7 @@ operator|->
 name|sc_bus
 argument_list|)
 expr_stmt|;
-name|usb2_callout_stop
+name|usb_callout_stop
 argument_list|(
 operator|&
 name|sc
@@ -2138,7 +2246,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* XXX let stray task complete */
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 name|NULL
 argument_list|,
@@ -2147,7 +2255,7 @@ operator|/
 literal|20
 argument_list|)
 expr_stmt|;
-name|usb2_callout_drain
+name|usb_callout_drain
 argument_list|(
 operator|&
 name|sc
@@ -2322,7 +2430,7 @@ condition|)
 block|{
 break|break;
 block|}
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -2404,7 +2512,7 @@ condition|)
 block|{
 break|break;
 block|}
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -2489,7 +2597,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 operator|&
 name|sc
@@ -2515,7 +2623,7 @@ operator|.
 name|physaddr
 argument_list|)
 expr_stmt|;
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 operator|&
 name|sc
@@ -2634,7 +2742,7 @@ condition|(
 name|hcr
 condition|)
 block|{
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -2763,7 +2871,7 @@ condition|)
 block|{
 break|break;
 block|}
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -2805,7 +2913,7 @@ operator|->
 name|sc_bus
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 name|NULL
 argument_list|,
@@ -3662,7 +3770,7 @@ block|{
 name|uint8_t
 name|temp
 decl_stmt|;
-name|usb2_pc_cpu_invalidate
+name|usb_pc_cpu_invalidate
 argument_list|(
 name|sqtd
 operator|->
@@ -3814,7 +3922,7 @@ decl_stmt|;
 name|uint32_t
 name|endphub
 decl_stmt|;
-name|usb2_pc_cpu_invalidate
+name|usb_pc_cpu_invalidate
 argument_list|(
 name|qh
 operator|->
@@ -4039,7 +4147,7 @@ modifier|*
 name|sitd
 parameter_list|)
 block|{
-name|usb2_pc_cpu_invalidate
+name|usb_pc_cpu_invalidate
 argument_list|(
 name|sitd
 operator|->
@@ -4294,7 +4402,7 @@ modifier|*
 name|itd
 parameter_list|)
 block|{
-name|usb2_pc_cpu_invalidate
+name|usb_pc_cpu_invalidate
 argument_list|(
 name|itd
 operator|->
@@ -5048,7 +5156,7 @@ block|{
 return|return;
 block|}
 comment|/* put transfer on interrupt queue */
-name|usb2_transfer_enqueue
+name|usbd_transfer_enqueue
 argument_list|(
 operator|&
 name|xfer
@@ -5072,7 +5180,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|usb2_transfer_timeout_ms
+name|usbd_transfer_timeout_ms
 argument_list|(
 name|xfer
 argument_list|,
@@ -5149,7 +5257,7 @@ name|prev
 operator|=
 name|last
 expr_stmt|;
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|std
 operator|->
@@ -5171,7 +5279,7 @@ name|std
 operator|->
 name|sitd_self
 expr_stmt|;
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|last
 operator|->
@@ -5247,7 +5355,7 @@ name|prev
 operator|=
 name|last
 expr_stmt|;
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|std
 operator|->
@@ -5269,7 +5377,7 @@ name|std
 operator|->
 name|itd_self
 expr_stmt|;
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|last
 operator|->
@@ -5368,7 +5476,7 @@ name|prev
 operator|=
 name|last
 expr_stmt|;
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|sqh
 operator|->
@@ -5390,7 +5498,7 @@ name|sqh
 operator|->
 name|qh_self
 expr_stmt|;
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|last
 operator|->
@@ -5464,7 +5572,7 @@ name|std
 operator|->
 name|sitd_next
 expr_stmt|;
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|std
 operator|->
@@ -5490,7 +5598,7 @@ name|std
 operator|->
 name|prev
 expr_stmt|;
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|std
 operator|->
@@ -5577,7 +5685,7 @@ name|std
 operator|->
 name|itd_next
 expr_stmt|;
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|std
 operator|->
@@ -5603,7 +5711,7 @@ name|std
 operator|->
 name|prev
 expr_stmt|;
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|std
 operator|->
@@ -5698,7 +5806,7 @@ name|sqh
 operator|->
 name|qh_link
 expr_stmt|;
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|sqh
 operator|->
@@ -5724,7 +5832,7 @@ name|sqh
 operator|->
 name|prev
 expr_stmt|;
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|sqh
 operator|->
@@ -5756,7 +5864,7 @@ name|prev
 operator|=
 literal|0
 expr_stmt|;
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|sqh
 operator|->
@@ -5833,16 +5941,16 @@ operator|->
 name|nframes
 condition|)
 block|{
+name|usbd_xfer_set_frame_len
+argument_list|(
 name|xfer
-operator|->
-name|frlengths
-index|[
+argument_list|,
 name|xfer
 operator|->
 name|aframes
-index|]
-operator|=
+argument_list|,
 literal|0
+argument_list|)
 expr_stmt|;
 block|}
 while|while
@@ -5850,7 +5958,7 @@ condition|(
 literal|1
 condition|)
 block|{
-name|usb2_pc_cpu_invalidate
+name|usb_pc_cpu_invalidate
 argument_list|(
 name|td
 operator|->
@@ -6437,7 +6545,7 @@ name|xfer
 operator|->
 name|td_transfer_last
 expr_stmt|;
-name|usb2_pc_cpu_invalidate
+name|usb_pc_cpu_invalidate
 argument_list|(
 name|td
 operator|->
@@ -6462,7 +6570,7 @@ name|xfer
 operator|->
 name|td_transfer_first
 expr_stmt|;
-name|usb2_pc_cpu_invalidate
+name|usb_pc_cpu_invalidate
 argument_list|(
 name|td
 operator|->
@@ -6522,7 +6630,7 @@ name|xfer
 operator|->
 name|td_transfer_last
 expr_stmt|;
-name|usb2_pc_cpu_invalidate
+name|usb_pc_cpu_invalidate
 argument_list|(
 name|td
 operator|->
@@ -6594,7 +6702,7 @@ name|xfer
 operator|->
 name|td_transfer_first
 expr_stmt|;
-name|usb2_pc_cpu_invalidate
+name|usb_pc_cpu_invalidate
 argument_list|(
 name|td
 operator|->
@@ -6706,7 +6814,7 @@ condition|(
 literal|1
 condition|)
 block|{
-name|usb2_pc_cpu_invalidate
+name|usb_pc_cpu_invalidate
 argument_list|(
 name|td
 operator|->
@@ -7118,7 +7226,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* do not allow RHSC interrupts> 1 per second */
-name|usb2_callout_reset
+name|usb_callout_reset
 argument_list|(
 operator|&
 name|sc
@@ -7680,7 +7788,7 @@ operator|-=
 name|average
 expr_stmt|;
 comment|/* fill out buffer pointers */
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 name|temp
 operator|->
@@ -7738,7 +7846,7 @@ name|buf_offset
 operator|+=
 name|EHCI_PAGE_SIZE
 expr_stmt|;
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 name|temp
 operator|->
@@ -7791,7 +7899,7 @@ name|buf_offset
 operator|+=
 name|average
 expr_stmt|;
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 name|temp
 operator|->
@@ -7865,7 +7973,7 @@ name|alt_next
 operator|=
 name|td_alt_next
 expr_stmt|;
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|td
 operator|->
@@ -8023,7 +8131,7 @@ name|xfer
 operator|->
 name|sumlen
 argument_list|,
-name|usb2_get_speed
+name|usbd_get_speed
 argument_list|(
 name|xfer
 operator|->
@@ -8185,7 +8293,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|usb2_get_speed
+name|usbd_get_speed
 argument_list|(
 name|xfer
 operator|->
@@ -8736,7 +8844,7 @@ argument_list|,
 name|EHCI_QTD_IOC
 argument_list|)
 expr_stmt|;
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|td
 operator|->
@@ -8837,7 +8945,7 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|usb2_get_speed
+name|usbd_get_speed
 argument_list|(
 name|xfer
 operator|->
@@ -8879,7 +8987,7 @@ else|else
 block|{
 if|if
 condition|(
-name|usb2_get_speed
+name|usbd_get_speed
 argument_list|(
 name|xfer
 operator|->
@@ -8977,14 +9085,14 @@ name|EHCI_QH_SET_CMASK
 argument_list|(
 name|xfer
 operator|->
-name|usb2_cmask
+name|usb_cmask
 argument_list|)
 operator||
 name|EHCI_QH_SET_SMASK
 argument_list|(
 name|xfer
 operator|->
-name|usb2_smask
+name|usb_smask
 argument_list|)
 operator||
 name|EHCI_QH_SET_HUBA
@@ -9135,7 +9243,7 @@ argument_list|,
 name|EHCI_LINK_TERMINATE
 argument_list|)
 expr_stmt|;
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|qh
 operator|->
@@ -9477,7 +9585,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|usb2_pc_cpu_invalidate
+name|usb_pc_cpu_invalidate
 argument_list|(
 name|td
 operator|->
@@ -9725,7 +9833,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|usb2_pc_cpu_invalidate
+name|usb_pc_cpu_invalidate
 argument_list|(
 name|td
 operator|->
@@ -10069,7 +10177,7 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* dequeue transfer and start next transfer */
-name|usb2_transfer_done
+name|usbd_transfer_done
 argument_list|(
 name|xfer
 argument_list|,
@@ -10411,7 +10519,7 @@ decl_stmt|;
 comment|/* Allocate a microframe slot first: */
 name|slot
 operator|=
-name|usb2_intr_schedule_adjust
+name|usb_intr_schedule_adjust
 argument_list|(
 name|xfer
 operator|->
@@ -10428,7 +10536,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|usb2_get_speed
+name|usbd_get_speed
 argument_list|(
 name|xfer
 operator|->
@@ -10442,13 +10550,13 @@ condition|)
 block|{
 name|xfer
 operator|->
-name|usb2_uframe
+name|usb_uframe
 operator|=
 name|slot
 expr_stmt|;
 name|xfer
 operator|->
-name|usb2_smask
+name|usb_smask
 operator|=
 operator|(
 literal|1
@@ -10460,7 +10568,7 @@ literal|0xFF
 expr_stmt|;
 name|xfer
 operator|->
-name|usb2_cmask
+name|usb_cmask
 operator|=
 literal|0
 expr_stmt|;
@@ -10469,13 +10577,13 @@ else|else
 block|{
 name|xfer
 operator|->
-name|usb2_uframe
+name|usb_uframe
 operator|=
 name|slot
 expr_stmt|;
 name|xfer
 operator|->
-name|usb2_smask
+name|usb_smask
 operator|=
 operator|(
 literal|1
@@ -10487,7 +10595,7 @@ literal|0x3F
 expr_stmt|;
 name|xfer
 operator|->
-name|usb2_cmask
+name|usb_cmask
 operator|=
 operator|(
 operator|-
@@ -10633,7 +10741,7 @@ name|slot
 decl_stmt|;
 name|slot
 operator|=
-name|usb2_intr_schedule_adjust
+name|usb_intr_schedule_adjust
 argument_list|(
 name|xfer
 operator|->
@@ -10650,7 +10758,7 @@ operator|)
 argument_list|,
 name|xfer
 operator|->
-name|usb2_uframe
+name|usb_uframe
 argument_list|)
 expr_stmt|;
 name|sc
@@ -10924,7 +11032,7 @@ argument_list|,
 name|EHCI_LINK_TERMINATE
 argument_list|)
 expr_stmt|;
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|td
 operator|->
@@ -11189,7 +11297,7 @@ name|xfer
 operator|->
 name|isoc_time_complete
 operator|=
-name|usb2_fs_isoc_schedule_isoc_time_expand
+name|usbd_fs_isoc_schedule_isoc_time_expand
 argument_list|(
 name|xfer
 operator|->
@@ -11406,7 +11514,7 @@ block|}
 comment|/* 		 * We currently don't care if the ISOCHRONOUS schedule is 		 * full! 		 */
 name|error
 operator|=
-name|usb2_fs_isoc_schedule_alloc
+name|usbd_fs_isoc_schedule_alloc
 argument_list|(
 name|fss
 argument_list|,
@@ -11435,8 +11543,8 @@ operator|*
 name|plen
 condition|)
 block|{
-comment|/* 			 * only call "usb2_get_page()" when we have a 			 * non-zero length 			 */
-name|usb2_get_page
+comment|/* 			 * only call "usbd_get_page()" when we have a 			 * non-zero length 			 */
+name|usbd_get_page
 argument_list|(
 name|xfer
 operator|->
@@ -11470,7 +11578,7 @@ operator|*
 name|plen
 expr_stmt|;
 comment|/* 			 * NOTE: We need to subtract one from the offset so 			 * that we are on a valid page! 			 */
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 name|xfer
 operator|->
@@ -11727,7 +11835,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|td
 operator|->
@@ -12112,7 +12220,7 @@ operator|&
 literal|3
 argument_list|)
 expr_stmt|;
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|td
 operator|->
@@ -12375,7 +12483,7 @@ name|xfer
 operator|->
 name|isoc_time_complete
 operator|=
-name|usb2_isoc_time_expand
+name|usb_isoc_time_expand
 argument_list|(
 operator|&
 name|sc
@@ -12683,7 +12791,7 @@ operator|=
 name|buf_offset
 expr_stmt|;
 comment|/* get first page offset */
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 name|xfer
 operator|->
@@ -12797,7 +12905,7 @@ name|buf_offset
 condition|)
 block|{
 comment|/* 						 * We subtract one so that 						 * we don't go off the last 						 * page! 						 */
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 name|xfer
 operator|->
@@ -12814,7 +12922,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 name|xfer
 operator|->
@@ -12930,7 +13038,7 @@ name|EHCI_ITD_IOC
 argument_list|)
 expr_stmt|;
 block|}
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|td
 operator|->
@@ -13842,7 +13950,7 @@ break|break;
 block|}
 name|len
 operator|=
-name|usb2_make_str_desc
+name|usb_make_str_desc
 argument_list|(
 name|sc
 operator|->
@@ -14208,7 +14316,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* wait 20ms for resume sequence to complete */
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -14246,7 +14354,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 4ms settle time */
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -15077,7 +15185,7 @@ name|EHCI_PS_PR
 argument_list|)
 expr_stmt|;
 comment|/* Wait for reset to complete. */
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -15114,7 +15222,7 @@ name|v
 argument_list|)
 expr_stmt|;
 comment|/* Wait for HC to complete reset. */
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -15471,7 +15579,7 @@ name|bdma_enable
 operator|=
 literal|1
 expr_stmt|;
-name|usb2_transfer_setup_sub
+name|usbd_transfer_setup_sub
 argument_list|(
 name|parm
 argument_list|)
@@ -15543,7 +15651,7 @@ name|bdma_enable
 operator|=
 literal|1
 expr_stmt|;
-name|usb2_transfer_setup_sub
+name|usbd_transfer_setup_sub
 argument_list|(
 name|parm
 argument_list|)
@@ -15662,7 +15770,7 @@ name|bdma_enable
 operator|=
 literal|1
 expr_stmt|;
-name|usb2_transfer_setup_sub
+name|usbd_transfer_setup_sub
 argument_list|(
 name|parm
 argument_list|)
@@ -15731,7 +15839,7 @@ name|bdma_enable
 operator|=
 literal|1
 expr_stmt|;
-name|usb2_transfer_setup_sub
+name|usbd_transfer_setup_sub
 argument_list|(
 name|parm
 argument_list|)
@@ -15780,7 +15888,7 @@ name|bdma_enable
 operator|=
 literal|1
 expr_stmt|;
-name|usb2_transfer_setup_sub
+name|usbd_transfer_setup_sub
 argument_list|(
 name|parm
 argument_list|)
@@ -15818,7 +15926,7 @@ name|hc_max_frame_size
 operator|=
 literal|0x400
 expr_stmt|;
-name|usb2_transfer_setup_sub
+name|usbd_transfer_setup_sub
 argument_list|(
 name|parm
 argument_list|)
@@ -15842,7 +15950,7 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|usb2_transfer_setup_sub_malloc
+name|usbd_transfer_setup_sub_malloc
 argument_list|(
 name|parm
 argument_list|,
@@ -15893,7 +16001,7 @@ name|ehci_itd_t
 modifier|*
 name|td
 decl_stmt|;
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 name|pc
 operator|+
@@ -15945,7 +16053,7 @@ name|last_obj
 operator|=
 name|td
 expr_stmt|;
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|pc
 operator|+
@@ -15956,7 +16064,7 @@ block|}
 block|}
 if|if
 condition|(
-name|usb2_transfer_setup_sub_malloc
+name|usbd_transfer_setup_sub_malloc
 argument_list|(
 name|parm
 argument_list|,
@@ -16007,7 +16115,7 @@ name|ehci_sitd_t
 modifier|*
 name|td
 decl_stmt|;
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 name|pc
 operator|+
@@ -16059,7 +16167,7 @@ name|last_obj
 operator|=
 name|td
 expr_stmt|;
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|pc
 operator|+
@@ -16070,7 +16178,7 @@ block|}
 block|}
 if|if
 condition|(
-name|usb2_transfer_setup_sub_malloc
+name|usbd_transfer_setup_sub_malloc
 argument_list|(
 name|parm
 argument_list|,
@@ -16121,7 +16229,7 @@ name|ehci_qtd_t
 modifier|*
 name|qtd
 decl_stmt|;
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 name|pc
 operator|+
@@ -16171,7 +16279,7 @@ name|last_obj
 operator|=
 name|qtd
 expr_stmt|;
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|pc
 operator|+
@@ -16199,7 +16307,7 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|usb2_transfer_setup_sub_malloc
+name|usbd_transfer_setup_sub_malloc
 argument_list|(
 name|parm
 argument_list|,
@@ -16250,7 +16358,7 @@ name|ehci_qh_t
 modifier|*
 name|qh
 decl_stmt|;
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 name|pc
 operator|+
@@ -16302,7 +16410,7 @@ name|last_obj
 operator|=
 name|qh
 expr_stmt|;
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|pc
 operator|+

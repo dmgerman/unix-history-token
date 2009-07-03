@@ -188,6 +188,12 @@ end_endif
 
 begin_struct_decl
 struct_decl|struct
+name|vimage
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|vprocg
 struct_decl|;
 end_struct_decl
@@ -213,6 +219,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|kld_sym_lookup
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|thread
 struct_decl|;
 end_struct_decl
 
@@ -450,6 +462,13 @@ name|VNET_MOD_MLD
 value|13
 end_define
 
+begin_define
+define|#
+directive|define
+name|VNET_MOD_RTABLE
+value|14
+end_define
+
 begin_comment
 comment|/* Stateless modules. */
 end_comment
@@ -527,7 +546,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|VNET_MOD_RTABLE
+name|VNET_MOD_FLOWTABLE
 value|29
 end_define
 
@@ -651,6 +670,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|V_MOD_vnet_rtable
+value|VNET_MOD_RTABLE
+end_define
+
+begin_define
+define|#
+directive|define
 name|V_MOD_vprocg
 value|0
 end_define
@@ -695,15 +721,20 @@ name|int
 name|vi_if_move
 parameter_list|(
 name|struct
-name|vi_req
+name|thread
 modifier|*
 parameter_list|,
 name|struct
 name|ifnet
 modifier|*
 parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
 name|struct
-name|vimage
+name|vi_req
 modifier|*
 parameter_list|)
 function_decl|;
@@ -795,6 +826,28 @@ name|void
 modifier|*
 parameter_list|,
 name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|vnet
+modifier|*
+name|vnet_alloc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vnet_destroy
+parameter_list|(
+name|struct
+name|vnet
 modifier|*
 parameter_list|)
 function_decl|;
@@ -996,6 +1049,7 @@ name|u_int
 name|vi_id
 decl_stmt|;
 comment|/* ID num */
+specifier|volatile
 name|u_int
 name|vi_ucredrefc
 decl_stmt|;
@@ -1041,10 +1095,6 @@ comment|/* all vnets list */
 name|u_int
 name|vnet_magic_n
 decl_stmt|;
-name|u_int
-name|vnet_id
-decl_stmt|;
-comment|/* ID num */
 name|u_int
 name|ifcnt
 decl_stmt|;
@@ -1586,7 +1636,7 @@ name|IS_DEFAULT_VNET
 parameter_list|(
 name|arg
 parameter_list|)
-value|((arg)->vnet_id == 0)
+value|((arg) == vnet0)
 end_define
 
 begin_else
@@ -1628,6 +1678,17 @@ end_ifdef
 begin_define
 define|#
 directive|define
+name|CRED_TO_VNET
+parameter_list|(
+name|cr
+parameter_list|)
+define|\
+value|(IS_DEFAULT_VIMAGE((cr)->cr_vimage) ? (cr)->cr_prison->pr_vnet	\ 	    : (cr)->cr_vimage->v_net)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TD_TO_VIMAGE
 parameter_list|(
 name|td
@@ -1642,7 +1703,7 @@ name|TD_TO_VNET
 parameter_list|(
 name|td
 parameter_list|)
-value|(td)->td_ucred->cr_vimage->v_net
+value|CRED_TO_VNET((td)->td_ucred)
 end_define
 
 begin_define
@@ -1672,7 +1733,7 @@ name|P_TO_VNET
 parameter_list|(
 name|p
 parameter_list|)
-value|(p)->p_ucred->cr_vimage->v_net
+value|CRED_TO_VNET((p)->p_ucred)
 end_define
 
 begin_define
@@ -1693,6 +1754,16 @@ end_else
 begin_comment
 comment|/* !VIMAGE */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CRED_TO_VNET
+parameter_list|(
+name|cr
+parameter_list|)
+value|NULL
+end_define
 
 begin_define
 define|#
@@ -1853,7 +1924,7 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|192
+value|156
 end_define
 
 begin_define
@@ -1892,7 +1963,7 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|104
+value|72
 end_define
 
 begin_define
@@ -1935,7 +2006,7 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|104
+value|72
 end_define
 
 begin_define
@@ -1974,7 +2045,7 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|192
+value|156
 end_define
 
 begin_define
@@ -2013,7 +2084,7 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|104
+value|72
 end_define
 
 begin_define
@@ -2052,7 +2123,7 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|104
+value|72
 end_define
 
 begin_define
@@ -2095,7 +2166,7 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_vnet_net
-value|192
+value|156
 end_define
 
 begin_define

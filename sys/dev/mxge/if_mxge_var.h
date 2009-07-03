@@ -669,6 +669,12 @@ name|u_long
 name|opackets
 decl_stmt|;
 name|u_long
+name|obytes
+decl_stmt|;
+name|u_long
+name|omcasts
+decl_stmt|;
+name|u_long
 name|oerrors
 decl_stmt|;
 name|int
@@ -918,6 +924,9 @@ name|num_slices
 decl_stmt|;
 name|int
 name|rx_ring_size
+decl_stmt|;
+name|int
+name|dying
 decl_stmt|;
 name|mxge_dma_t
 name|dmabench_dma

@@ -141,6 +141,32 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|setDocAll
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|Dists
+operator||=
+name|DIST_DOC
+expr_stmt|;
+name|DocDists
+operator|=
+name|DIST_DOC_ALL
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+operator||
+name|DITEM_REDRAW
+return|;
+block|}
+end_function
+
 begin_define
 define|#
 directive|define
@@ -293,6 +319,13 @@ name|DIST_ALL
 operator|&&
 name|_IS_SET
 argument_list|(
+name|DocDists
+argument_list|,
+name|DIST_DOC_ALL
+argument_list|)
+operator|&&
+name|_IS_SET
+argument_list|(
 name|SrcDists
 argument_list|,
 name|DIST_SRC_ALL
@@ -336,6 +369,22 @@ parameter_list|)
 block|{
 return|return
 name|KernelDists
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|docFlagCheck
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|item
+parameter_list|)
+block|{
+return|return
+name|DocDists
 return|;
 block|}
 end_function
@@ -605,6 +654,16 @@ name|NULL
 block|,
 operator|&
 name|MenuDocumentation
+block|}
+block|,
+block|{
+literal|" Documentation Installation"
+block|,
+literal|"Installation of FreeBSD documentation set"
+block|,
+name|NULL
+block|,
+name|distSetDocMenu
 block|}
 block|,
 block|{
@@ -878,6 +937,16 @@ block|,
 name|NULL
 block|,
 name|mediaSetCDROM
+block|}
+block|,
+block|{
+literal|" Media, USB"
+block|,
+literal|"Select USB installation media."
+block|,
+name|NULL
+block|,
+name|mediaSetUSB
 block|}
 block|,
 block|{
@@ -1628,6 +1697,517 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* The FreeBSD documentation installation menu */
+end_comment
+
+begin_decl_stmt
+name|DMenu
+name|MenuDocInstall
+init|=
+block|{
+name|DMENU_CHECKLIST_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"FreeBSD Documentation Installation Menu"
+block|,
+literal|"This menu will allow you to install the whole documentation set\n"
+literal|"from the FreeBSD Documentation Project: Handbook, FAQ and articles.\n\n"
+literal|"Please select the language versions you wish to install.  At minimum,\n"
+literal|"you should install the English version, this is the original version\n"
+literal|"of the documentation."
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+block|{
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|checkTrue
+block|,
+name|dmenuExit
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|}
+block|,
+block|{
+literal|"All"
+block|,
+literal|"Select all below"
+block|,
+name|NULL
+block|,
+name|setDocAll
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|" bn"
+block|,
+literal|"Bengali Documentation"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|DocDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_DOC_BN
+block|}
+block|,
+block|{
+literal|" da"
+block|,
+literal|"Danish Documentation"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|DocDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_DOC_DA
+block|}
+block|,
+block|{
+literal|" de"
+block|,
+literal|"German Documentation"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|DocDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_DOC_DE
+block|}
+block|,
+block|{
+literal|" el"
+block|,
+literal|"Greek Documentation"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|DocDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_DOC_EL
+block|}
+block|,
+block|{
+literal|" en"
+block|,
+literal|"English Documentation (recommended)"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|DocDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_DOC_EN
+block|}
+block|,
+block|{
+literal|" es"
+block|,
+literal|"Spanish Documentation"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|DocDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_DOC_ES
+block|}
+block|,
+block|{
+literal|" fr"
+block|,
+literal|"French Documentation"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|DocDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_DOC_FR
+block|}
+block|,
+block|{
+literal|" hu"
+block|,
+literal|"Hungarian Documentation"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|DocDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_DOC_HU
+block|}
+block|,
+block|{
+literal|" it"
+block|,
+literal|"Italian Documentation"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|DocDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_DOC_IT
+block|}
+block|,
+block|{
+literal|" ja"
+block|,
+literal|"Japanese Documentation"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|DocDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_DOC_JA
+block|}
+block|,
+block|{
+literal|" mn"
+block|,
+literal|"Mongolian Documentation"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|DocDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_DOC_MN
+block|}
+block|,
+block|{
+literal|" nl"
+block|,
+literal|"Dutch Documentation"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|DocDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_DOC_NL
+block|}
+block|,
+block|{
+literal|" pl"
+block|,
+literal|"Polish Documentation"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|DocDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_DOC_PL
+block|}
+block|,
+block|{
+literal|" pt"
+block|,
+literal|"Portuguese Documentation"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|DocDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_DOC_PT
+block|}
+block|,
+block|{
+literal|" ru"
+block|,
+literal|"Russian Documentation"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|DocDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_DOC_RU
+block|}
+block|,
+block|{
+literal|" sr"
+block|,
+literal|"Serbian Documentation"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|DocDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_DOC_SR
+block|}
+block|,
+block|{
+literal|" tr"
+block|,
+literal|"Turkish Documentation"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|DocDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_DOC_TR
+block|}
+block|,
+block|{
+literal|" zh_cn"
+block|,
+literal|"Simplified Chinese Documentation"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|DocDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_DOC_ZH_CN
+block|}
+block|,
+block|{
+literal|" zh_tw"
+block|,
+literal|"Traditional Chinese Documentation"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|DocDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_DOC_ZH_TW
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2199,6 +2779,30 @@ block|,
 literal|"Choose a Floppy drive"
 block|,
 literal|"You have more than one floppy drive.  Please choose which drive\n"
+literal|"you would like to use."
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+block|{
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+block|;
+name|DMenu
+name|MenuMediaUSB
+operator|=
+block|{
+name|DMENU_NORMAL_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"Choose a USB drive"
+block|,
+literal|"You have more than one USB drive. Please choose which drive\n"
 literal|"you would like to use."
 block|,
 name|NULL
@@ -4665,6 +5269,16 @@ name|mediaSetFloppy
 block|}
 block|,
 block|{
+literal|"9 USB"
+block|,
+literal|"Install from a USB drive"
+block|,
+name|NULL
+block|,
+name|mediaSetUSB
+block|}
+block|,
+block|{
 literal|"X Options"
 block|,
 literal|"Go to the Options screen"
@@ -4968,7 +5582,17 @@ block|,
 block|{
 literal|" doc"
 block|,
-literal|"Miscellaneous FreeBSD online docs"
+literal|"FreeBSD Documentation set"
+block|,
+name|docFlagCheck
+block|,
+name|distSetDoc
+block|}
+block|,
+block|{
+literal|" docuser"
+block|,
+literal|"Miscellaneous userland docs"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -4985,7 +5609,7 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_DOC
+name|DIST_DOCUSERLAND
 block|}
 block|,
 block|{
@@ -6386,6 +7010,16 @@ block|,
 name|NULL
 block|,
 name|distExtractAll
+block|}
+block|,
+block|{
+literal|" Documentation installation"
+block|,
+literal|"Install FreeBSD Documentation set"
+block|,
+name|NULL
+block|,
+name|distSetDocMenu
 block|}
 block|,
 block|{

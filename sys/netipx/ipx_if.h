@@ -36,12 +36,13 @@ define|#
 directive|define
 name|ia_flags
 value|ia_ifa.ifa_flags
-name|struct
-name|ipx_ifaddr
-modifier|*
-name|ia_next
-decl_stmt|;
-comment|/* next in list of ipx addresses */
+name|TAILQ_ENTRY
+argument_list|(
+argument|ipx_ifaddr
+argument_list|)
+name|ia_link
+expr_stmt|;
+comment|/* list of IPv6 addresses */
 name|struct
 name|sockaddr_ipx
 name|ia_addr
@@ -91,6 +92,20 @@ value|ifra_broadaddr
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * List of ipx_ifaddr's.  */
+end_comment
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|ipx_ifaddrhead
+argument_list|,
+name|ipx_ifaddr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Given a pointer to an ipx_ifaddr (ifaddr),  * return a pointer to the addr as a sockadd_ipx.  */
@@ -174,11 +189,74 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|struct
-name|ipx_ifaddr
-modifier|*
-name|ipx_ifaddr
+name|rwlock
+name|ipx_ifaddr_rw
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ipx_ifaddrhead
+name|ipx_ifaddrhead
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|IPX_IFADDR_LOCK_INIT
+parameter_list|()
+value|rw_init(&ipx_ifaddr_rw, "ipx_ifaddr_rw")
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPX_IFADDR_LOCK_ASSERT
+parameter_list|()
+value|rw_assert(&ipx_ifaddr_rw, RA_LOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPX_IFADDR_RLOCK
+parameter_list|()
+value|rw_rlock(&ipx_ifaddr_rw)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPX_IFADDR_RUNLOCK
+parameter_list|()
+value|rw_runlock(&ipx_ifaddr_rw)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPX_IFADDR_WLOCK
+parameter_list|()
+value|rw_wlock(&ipx_ifaddr_rw)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPX_IFADDR_WUNLOCK
+parameter_list|()
+value|rw_wunlock(&ipx_ifaddr_rw)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPX_IFADDR_RLOCK_ASSERT
+parameter_list|()
+value|rw_assert(&ipx_ifaddr_rw, RA_WLOCKED)
+end_define
 
 begin_function_decl
 name|struct

@@ -28,7 +28,7 @@ file|<sys/callout.h>
 end_include
 
 begin_comment
-comment|/*  * Transmit descriptor list size.  This is arbitrary, but allocate  * enough descriptors for 64 pending transmissions and 16 segments  * per packet.  This limit is not actually enforced (packets with  * more segments can be sent, depending on the busdma backend); it  * is however used as an estimate for the TX window size.  */
+comment|/*  * Transmit descriptor ring size - this is arbitrary, but allocate  * enough descriptors for 64 pending transmissions and 16 segments  * per packet.  This limit is not actually enforced (packets with  * more segments can be sent, depending on the busdma backend); it  * is however used as an estimate for the TX window size.  */
 end_comment
 
 begin_define
@@ -77,7 +77,7 @@ value|((x + 1)& GEM_NTXDESC_MASK)
 end_define
 
 begin_comment
-comment|/*  * Receive descriptor list size.  We have one RX buffer per incoming  * packet, so this logic is a little simpler.  */
+comment|/*  * Receive descriptor ring size - we have one RX buffer per incoming  * packet, so this logic is a little simpler.  */
 end_comment
 
 begin_define
@@ -116,7 +116,7 @@ value|(hz / 50)
 end_define
 
 begin_comment
-comment|/*  * Control structures are DMA'd to the GEM chip.  We allocate them  * in a single clump that maps to a single DMA segment to make  * several things easier.  */
+comment|/*  * Control structures are DMA'd to the chip.  We allocate them  * in a single clump that maps to a single DMA segment to make  * several things easier.  */
 end_comment
 
 begin_struct
@@ -191,15 +191,15 @@ name|bus_dmamap_t
 name|txs_dmamap
 decl_stmt|;
 comment|/* our DMA map */
-name|int
+name|u_int
 name|txs_firstdesc
 decl_stmt|;
 comment|/* first descriptor in packet */
-name|int
+name|u_int
 name|txs_lastdesc
 decl_stmt|;
 comment|/* last descriptor in packet */
-name|int
+name|u_int
 name|txs_ndescs
 decl_stmt|;
 comment|/* number of descriptors */
@@ -295,7 +295,7 @@ name|callout
 name|sc_rx_ch
 decl_stmt|;
 comment|/* delayed RX callout */
-name|int
+name|u_int
 name|sc_wdog_timer
 decl_stmt|;
 comment|/* watchdog timer */
@@ -403,18 +403,15 @@ value|(1<< 2)
 comment|/* PCI busses are little-endian */
 define|#
 directive|define
-name|GEM_SERDES
+name|GEM_PCI66
 value|(1<< 3)
+comment|/* PCI bus runs at 66MHz */
+define|#
+directive|define
+name|GEM_SERDES
+value|(1<< 4)
 comment|/* use the SERDES */
 comment|/* 	 * ring buffer DMA stuff 	 */
-name|bus_dma_segment_t
-name|sc_cdseg
-decl_stmt|;
-comment|/* control data memory */
-name|int
-name|sc_cdnseg
-decl_stmt|;
-comment|/* number of segments */
 name|bus_dmamap_t
 name|sc_cddmamap
 decl_stmt|;
@@ -451,15 +448,15 @@ define|#
 directive|define
 name|sc_rxdescs
 value|sc_control_data->gcd_rxdescs
-name|int
+name|u_int
 name|sc_txfree
 decl_stmt|;
 comment|/* number of free TX descriptors */
-name|int
+name|u_int
 name|sc_txnext
 decl_stmt|;
 comment|/* next ready TX descriptor */
-name|int
+name|u_int
 name|sc_txwin
 decl_stmt|;
 comment|/* TX desc. since last TX intr. */
@@ -473,18 +470,18 @@ name|gem_txsq
 name|sc_txdirtyq
 decl_stmt|;
 comment|/* dirty TX descsofts */
-name|int
+name|u_int
 name|sc_rxptr
 decl_stmt|;
-comment|/* next ready RX desc./descsoft */
-name|int
+comment|/* next ready RX descriptor/state */
+name|u_int
 name|sc_rxfifosize
 decl_stmt|;
 comment|/* RX FIFO size (bytes) */
 name|int
 name|sc_ifflags
 decl_stmt|;
-name|int
+name|u_long
 name|sc_csum_features
 decl_stmt|;
 block|}
@@ -825,7 +822,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|do {									\ 	struct gem_rxsoft *__rxs =&sc->sc_rxsoft[(x)];			\ 	struct gem_desc *__rxd =&sc->sc_rxdescs[(x)];			\ 	struct mbuf *__m = __rxs->rxs_mbuf;				\ 									\ 	__m->m_data = __m->m_ext.ext_buf;				\ 	__rxd->gd_addr =						\ 	    GEM_DMA_WRITE((sc), __rxs->rxs_paddr);			\ 	__rxd->gd_flags =						\ 	    GEM_DMA_WRITE((sc),						\ 			(((__m->m_ext.ext_size)<< GEM_RD_BUFSHIFT)	\& GEM_RD_BUFSIZE) | GEM_RD_OWN);	\ } while (0)
+value|do {									\ 	struct gem_rxsoft *__rxs =&sc->sc_rxsoft[(x)];			\ 	struct gem_desc *__rxd =&sc->sc_rxdescs[(x)];			\ 	struct mbuf *__m = __rxs->rxs_mbuf;				\ 									\ 	__m->m_data = __m->m_ext.ext_buf;				\ 	__rxd->gd_addr =						\ 	    GEM_DMA_WRITE((sc), __rxs->rxs_paddr);			\ 	__rxd->gd_flags = GEM_DMA_WRITE((sc),				\ 	    (((__m->m_ext.ext_size)<< GEM_RD_BUFSHIFT)&		\ 	    GEM_RD_BUFSIZE) | GEM_RD_OWN);				\ } while (0)
 end_define
 
 begin_define
@@ -838,7 +835,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|do {									\ 	struct gem_rxsoft *__rxs =&sc->sc_rxsoft[(x)];			\ 	struct gem_desc *__rxd =&sc->sc_rxdescs[(x)];			\ 	struct mbuf *__m = __rxs->rxs_mbuf;				\ 									\ 	__rxd->gd_flags =						\ 	    GEM_DMA_WRITE((sc),						\ 			(((__m->m_ext.ext_size)<< GEM_RD_BUFSHIFT)	\& GEM_RD_BUFSIZE) | GEM_RD_OWN);	\ } while (0)
+value|do {									\ 	struct gem_rxsoft *__rxs =&sc->sc_rxsoft[(x)];			\ 	struct gem_desc *__rxd =&sc->sc_rxdescs[(x)];			\ 	struct mbuf *__m = __rxs->rxs_mbuf;				\ 									\ 	__rxd->gd_flags = GEM_DMA_WRITE((sc),				\ 	    (((__m->m_ext.ext_size)<< GEM_RD_BUFSHIFT)&		\ 	    GEM_RD_BUFSIZE) | GEM_RD_OWN);				\ } while (0)
 end_define
 
 begin_define

@@ -4,7 +4,7 @@ comment|/* asn_moid.c */
 end_comment
 
 begin_comment
-comment|/* Written by Stephen Henson (shenson@bigfoot.com) for the OpenSSL  * project 2001.  */
+comment|/* Written by Stephen Henson (steve@openssl.org) for the OpenSSL  * project 2001.  */
 end_comment
 
 begin_comment
@@ -447,8 +447,6 @@ index|[
 name|p
 operator|-
 name|ln
-operator|+
-literal|1
 index|]
 operator|=
 literal|0

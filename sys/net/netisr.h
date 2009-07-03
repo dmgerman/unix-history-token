@@ -197,6 +197,17 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|void
+name|netisr_drainedcpu_t
+parameter_list|(
+name|u_int
+name|cpuid
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_define
 define|#
 directive|define
@@ -259,6 +270,11 @@ modifier|*
 name|nh_m2cpuid
 decl_stmt|;
 comment|/* Query CPU to process mbuf on. */
+name|netisr_drainedcpu_t
+modifier|*
+name|nh_drainedcpu
+decl_stmt|;
+comment|/* Callback when drained a queue. */
 name|u_int
 name|nh_proto
 decl_stmt|;

@@ -160,6 +160,10 @@ parameter_list|,
 name|vm_prot_t
 parameter_list|,
 name|vm_ooffset_t
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -262,6 +266,11 @@ name|prot
 parameter_list|,
 name|vm_ooffset_t
 name|off
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|cred
 parameter_list|)
 block|{
 return|return
@@ -749,6 +758,11 @@ name|prot
 parameter_list|,
 name|vm_ooffset_t
 name|off
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|cred
 parameter_list|)
 block|{
 name|vm_object_t
@@ -786,6 +800,8 @@ argument_list|,
 name|prot
 argument_list|,
 name|off
+argument_list|,
+name|cred
 argument_list|)
 expr_stmt|;
 else|else

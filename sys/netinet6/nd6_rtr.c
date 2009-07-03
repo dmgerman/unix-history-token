@@ -2043,6 +2043,11 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+name|struct
+name|ifaddr
+modifier|*
+name|ifa
+decl_stmt|;
 name|bzero
 argument_list|(
 operator|(
@@ -2110,12 +2115,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|info
-operator|.
-name|rti_info
-index|[
-name|RTAX_IFP
-index|]
+name|ifa
 operator|=
 name|TAILQ_FIRST
 argument_list|(
@@ -2124,8 +2124,22 @@ name|ifp
 operator|->
 name|if_addrhead
 argument_list|)
+expr_stmt|;
+name|info
+operator|.
+name|rti_info
+index|[
+name|RTAX_IFP
+index|]
+operator|=
+name|ifa
 operator|->
 name|ifa_addr
+expr_stmt|;
+name|ifa_ref
+argument_list|(
+name|ifa
+argument_list|)
 expr_stmt|;
 name|IF_ADDR_UNLOCK
 argument_list|(
@@ -2146,6 +2160,11 @@ operator|->
 name|ifa_addr
 expr_stmt|;
 block|}
+else|else
+name|ifa
+operator|=
+name|NULL
+expr_stmt|;
 name|rt_missmsg
 argument_list|(
 name|cmd
@@ -2158,6 +2177,17 @@ operator|->
 name|rt_flags
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifa
+operator|!=
+name|NULL
+condition|)
+name|ifa_free
+argument_list|(
+name|ifa
 argument_list|)
 expr_stmt|;
 block|}
@@ -5345,6 +5375,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|ifa_free
+argument_list|(
+operator|&
+name|ia6
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 comment|/* 			 * A newly added address might affect the status 			 * of other addresses, so we check and update it. 			 * XXX: what if address duplication happens? 			 */
 name|pfxlist_onlink_check
 argument_list|()
@@ -6010,21 +6048,15 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* 	 * Changes on the prefix status might affect address status as well. 	 * Make sure that all addresses derived from an attached prefix are 	 * attached, and that all addresses derived from a detached prefix are 	 * detached.  Note, however, that a manually configured address should 	 * always be attached. 	 * The precise detection logic is same as the one for prefixes. 	 */
-for|for
-control|(
-name|ifa
-operator|=
-name|V_in6_ifaddr
-init|;
-name|ifa
-condition|;
-name|ifa
-operator|=
-name|ifa
-operator|->
-name|ia_next
-control|)
+comment|/* 	 * Changes on the prefix status might affect address status as well. 	 * Make sure that all addresses derived from an attached prefix are 	 * attached, and that all addresses derived from a detached prefix are 	 * detached.  Note, however, that a manually configured address should 	 * always be attached. 	 * The precise detection logic is same as the one for prefixes. 	 * 	 * XXXRW: in6_ifaddrhead locking. 	 */
+name|TAILQ_FOREACH
+argument_list|(
+argument|ifa
+argument_list|,
+argument|&V_in6_ifaddrhead
+argument_list|,
+argument|ia_link
+argument_list|)
 block|{
 if|if
 condition|(
@@ -6066,20 +6098,14 @@ condition|(
 name|ifa
 condition|)
 block|{
-for|for
-control|(
-name|ifa
-operator|=
-name|V_in6_ifaddr
-init|;
-name|ifa
-condition|;
-name|ifa
-operator|=
-name|ifa
-operator|->
-name|ia_next
-control|)
+name|TAILQ_FOREACH
+argument_list|(
+argument|ifa
+argument_list|,
+argument|&V_in6_ifaddrhead
+argument_list|,
+argument|ia_link
+argument_list|)
 block|{
 if|if
 condition|(
@@ -6163,20 +6189,14 @@ block|}
 block|}
 else|else
 block|{
-for|for
-control|(
-name|ifa
-operator|=
-name|V_in6_ifaddr
-init|;
-name|ifa
-condition|;
-name|ifa
-operator|=
-name|ifa
-operator|->
-name|ia_next
-control|)
+name|TAILQ_FOREACH
+argument_list|(
+argument|ifa
+argument_list|,
+argument|&V_in6_ifaddrhead
+argument_list|,
+argument|ia_link
+argument_list|)
 block|{
 if|if
 condition|(
@@ -6455,6 +6475,11 @@ name|NULL
 condition|)
 block|{
 comment|/* XXX: freebsd does not have ifa_ifwithaf */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -6476,6 +6501,22 @@ name|AF_INET6
 condition|)
 break|break;
 block|}
+if|if
+condition|(
+name|ifa
+operator|!=
+name|NULL
+condition|)
+name|ifa_ref
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* should we care about ia6_flags? */
 block|}
 if|if
@@ -6819,6 +6860,17 @@ name|rt
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ifa
+operator|!=
+name|NULL
+condition|)
+name|ifa_free
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -7412,6 +7464,11 @@ operator|!=
 name|plen0
 condition|)
 block|{
+name|ifa_free
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 name|nd6log
 argument_list|(
 operator|(
@@ -7703,6 +7760,11 @@ literal|3
 index|]
 operator|)
 expr_stmt|;
+name|ifa_free
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 comment|/* new prefix mask. */
 name|ifra
 operator|.
@@ -7776,8 +7838,13 @@ name|IN6_IFF_AUTOCONF
 expr_stmt|;
 comment|/* obey autoconf */
 comment|/* 	 * Make sure that we do not have this address already.  This should 	 * usually not happen, but we can still see this case, e.g., if we 	 * have manually configured the exact address to be configured. 	 */
-if|if
-condition|(
+name|ifa
+operator|=
+operator|(
+expr|struct
+name|ifaddr
+operator|*
+operator|)
 name|in6ifa_ifpwithaddr
 argument_list|(
 name|ifp
@@ -7789,10 +7856,19 @@ name|ifra_addr
 operator|.
 name|sin6_addr
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifa
 operator|!=
 name|NULL
 condition|)
 block|{
+name|ifa_free
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 comment|/* this should be rare enough to make an explicit log */
 name|log
 argument_list|(
@@ -7902,12 +7978,13 @@ operator|.
 name|sin6_addr
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXXRW: Assumption of non-NULLness here might not be true with 	 * fine-grained locking -- should we validate it?  Or just return 	 * earlier ifa rather than looking it up again? 	 */
 return|return
 operator|(
 name|ia
 operator|)
 return|;
-comment|/* this is always non-NULL */
+comment|/* this is always non-NULL  and referenced. */
 block|}
 end_function
 
@@ -8186,20 +8263,17 @@ operator|)
 operator|)
 expr_stmt|;
 comment|/* 	 * in6_get_tmpifid() quite likely provided a unique interface ID. 	 * However, we may still have a chance to see collision, because 	 * there may be a time lag between generation of the ID and generation 	 * of the address.  So, we'll do one more sanity check. 	 */
-for|for
-control|(
-name|ia
-operator|=
-name|V_in6_ifaddr
-init|;
-name|ia
-condition|;
-name|ia
-operator|=
-name|ia
-operator|->
-name|ia_next
-control|)
+name|IN6_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
+name|TAILQ_FOREACH
+argument_list|(
+argument|ia
+argument_list|,
+argument|&V_in6_ifaddrhead
+argument_list|,
+argument|ia_link
+argument_list|)
 block|{
 if|if
 condition|(
@@ -8229,6 +8303,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|IN6_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 comment|/* 				 * Give up.  Something strange should have 				 * happened. 				 */
 name|nd6log
 argument_list|(
@@ -8246,6 +8323,9 @@ name|EEXIST
 operator|)
 return|;
 block|}
+name|IN6_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|forcegen
 operator|=
 literal|1
@@ -8255,6 +8335,9 @@ name|again
 goto|;
 block|}
 block|}
+name|IN6_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 comment|/* 	 * The Valid Lifetime is the lower of the Valid Lifetime of the          * public address or TEMP_VALID_LIFETIME. 	 * The Preferred Lifetime is the lower of the Preferred Lifetime          * of the public address or TEMP_PREFERRED_LIFETIME -          * DESYNC_FACTOR. 	 */
 if|if
 condition|(
@@ -8502,6 +8585,14 @@ name|ia6_ndpr
 operator|->
 name|ndpr_refcnt
 operator|++
+expr_stmt|;
+name|ifa_free
+argument_list|(
+operator|&
+name|newia
+operator|->
+name|ia_ifa
+argument_list|)
 expr_stmt|;
 comment|/* 	 * A newly added address might affect the status of other addresses. 	 * XXX: when the temporary address is generated with a new public 	 * address, the onlink check is redundant.  However, it would be safe 	 * to do the check explicitly everywhere a new address is generated, 	 * and, in fact, we surely need the check when we create a new 	 * temporary address due to deprecation of an old temporary address. 	 */
 name|pfxlist_onlink_check

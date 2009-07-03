@@ -39,12 +39,6 @@ directive|include
 file|<sys/_rwlock.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/route.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef

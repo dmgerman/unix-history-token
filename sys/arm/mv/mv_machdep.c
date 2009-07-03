@@ -1630,6 +1630,10 @@ name|struct
 name|pv_addr
 name|kernel_l1pt
 decl_stmt|;
+name|struct
+name|pv_addr
+name|dpcpu
+decl_stmt|;
 name|vm_offset_t
 name|freemempos
 decl_stmt|,
@@ -2110,6 +2114,29 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Allocate dynamic per-cpu area. */
+name|valloc_pages
+argument_list|(
+name|dpcpu
+argument_list|,
+name|DPCPU_SIZE
+operator|/
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+name|dpcpu_init
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|dpcpu
+operator|.
+name|pv_va
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Allocate stacks for all modes */
 name|valloc_pages
 argument_list|(
@@ -2297,22 +2324,22 @@ argument_list|,
 name|PTE_PAGETABLE
 argument_list|)
 expr_stmt|;
-comment|/* Map allocated stacks and msgbuf */
+comment|/* Map allocated DPCPU, stacks and msgbuf */
 name|pmap_map_chunk
 argument_list|(
 name|l1pagetable
 argument_list|,
-name|irqstack
+name|dpcpu
 operator|.
 name|pv_va
 argument_list|,
-name|irqstack
+name|dpcpu
 operator|.
 name|pv_pa
 argument_list|,
 name|freemempos
 operator|-
-name|irqstack
+name|dpcpu
 operator|.
 name|pv_va
 argument_list|,

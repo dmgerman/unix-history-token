@@ -930,7 +930,7 @@ name|m_pkthdr
 operator|.
 name|rcvif
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|if_addr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -974,7 +974,7 @@ name|sin_addr
 expr_stmt|;
 break|break;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_addr_runlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -1787,6 +1787,11 @@ operator|=
 name|ifa
 operator|->
 name|ifa_ifp
+expr_stmt|;
+name|ifa_free
+argument_list|(
+name|ifa
+argument_list|)
 expr_stmt|;
 block|}
 ifdef|#

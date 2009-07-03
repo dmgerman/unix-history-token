@@ -14,13 +14,115 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_mfunc.h>
+file|<sys/stdint.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_error.h>
+file|<sys/stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker_set.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/condvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/priv.h>
 end_include
 
 begin_include
@@ -33,6 +135,12 @@ begin_include
 include|#
 directive|include
 file|<dev/usb/usb_ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/usb/usbdi.h>
 end_include
 
 begin_define
@@ -132,11 +240,11 @@ name|UHUB_N_TRANSFER
 value|1
 end_define
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -200,7 +308,7 @@ end_if
 begin_decl_stmt
 specifier|static
 name|int
-name|usb2_power_timeout
+name|usb_power_timeout
 init|=
 literal|30
 decl_stmt|;
@@ -222,7 +330,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|usb2_power_timeout
+name|usb_power_timeout
 argument_list|,
 literal|0
 argument_list|,
@@ -395,7 +503,7 @@ end_decl_stmt
 begin_function_decl
 specifier|static
 name|void
-name|usb2_dev_resume_peer
+name|usb_dev_resume_peer
 parameter_list|(
 name|struct
 name|usb_device
@@ -408,7 +516,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_dev_suspend_peer
+name|usb_dev_suspend_peer
 parameter_list|(
 name|struct
 name|usb_device
@@ -646,6 +754,9 @@ name|struct
 name|usb_xfer
 modifier|*
 name|xfer
+parameter_list|,
+name|usb_error_t
+name|error
 parameter_list|)
 block|{
 name|struct
@@ -653,9 +764,10 @@ name|uhub_softc
 modifier|*
 name|sc
 init|=
+name|usbd_xfer_softc
+argument_list|(
 name|xfer
-operator|->
-name|priv_sc
+argument_list|)
 decl_stmt|;
 switch|switch
 condition|(
@@ -676,7 +788,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * This is an indication that some port 		 * has changed status. Notify the bus 		 * event handler thread that we need 		 * to be explored again: 		 */
-name|usb2_needs_explore
+name|usb_needs_explore
 argument_list|(
 name|sc
 operator|->
@@ -690,18 +802,19 @@ expr_stmt|;
 case|case
 name|USB_ST_SETUP
 case|:
+name|usbd_xfer_set_frame_len
+argument_list|(
 name|xfer
-operator|->
-name|frlengths
-index|[
+argument_list|,
 literal|0
-index|]
-operator|=
+argument_list|,
+name|usbd_xfer_max_len
+argument_list|(
 name|xfer
-operator|->
-name|max_data_length
+argument_list|)
+argument_list|)
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -719,26 +832,24 @@ name|USB_ERR_CANCELLED
 condition|)
 block|{
 comment|/* 			 * Do a clear-stall. The "stall_pipe" flag 			 * will get cleared before next callback by 			 * the USB stack. 			 */
+name|usbd_xfer_set_stall
+argument_list|(
 name|xfer
-operator|->
-name|flags
-operator|.
-name|stall_pipe
-operator|=
-literal|1
+argument_list|)
 expr_stmt|;
+name|usbd_xfer_set_frame_len
+argument_list|(
 name|xfer
-operator|->
-name|frlengths
-index|[
+argument_list|,
 literal|0
-index|]
-operator|=
+argument_list|,
+name|usbd_xfer_max_len
+argument_list|(
 name|xfer
-operator|->
-name|max_data_length
+argument_list|)
+argument_list|)
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -807,7 +918,7 @@ expr_stmt|;
 comment|/* get device assosiated with the given port */
 name|child
 operator|=
-name|usb2_bus_port_get_device
+name|usb_bus_port_get_device
 argument_list|(
 name|bus
 argument_list|,
@@ -844,7 +955,7 @@ name|refcount
 expr_stmt|;
 name|err
 operator|=
-name|usb2_probe_and_attach
+name|usb_probe_and_attach
 argument_list|(
 name|child
 argument_list|,
@@ -873,7 +984,7 @@ operator|==
 name|USB_MODE_DEVICE
 condition|)
 block|{
-name|usb2_default_transfer_setup
+name|usbd_default_transfer_setup
 argument_list|(
 name|child
 argument_list|)
@@ -938,7 +1049,7 @@ name|err
 decl_stmt|;
 name|err
 operator|=
-name|usb2_req_get_port_status
+name|usbd_req_get_port_status
 argument_list|(
 name|sc
 operator|->
@@ -1001,7 +1112,7 @@ name|sc_st
 operator|.
 name|port_change
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -1080,7 +1191,7 @@ name|sc_udev
 expr_stmt|;
 name|child
 operator|=
-name|usb2_bus_port_get_device
+name|usb_bus_port_get_device
 argument_list|(
 name|udev
 operator|->
@@ -1102,7 +1213,7 @@ label|:
 comment|/* first clear the port connection change bit */
 name|err
 operator|=
-name|usb2_req_clear_port_feature
+name|usbd_req_clear_port_feature
 argument_list|(
 name|udev
 argument_list|,
@@ -1128,7 +1239,7 @@ condition|(
 name|child
 condition|)
 block|{
-name|usb2_free_device
+name|usb_free_device
 argument_list|(
 name|child
 argument_list|,
@@ -1247,7 +1358,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_req_clear_port_feature
+name|usbd_req_clear_port_feature
 argument_list|(
 name|sc
 operator|->
@@ -1263,7 +1374,7 @@ expr_stmt|;
 block|}
 comment|/* USB Host Mode */
 comment|/* wait for maximum device power up time */
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 name|NULL
 argument_list|,
@@ -1276,7 +1387,7 @@ expr_stmt|;
 comment|/* reset port, which implies enabling it */
 name|err
 operator|=
-name|usb2_req_reset_port
+name|usbd_req_reset_port
 argument_list|(
 name|udev
 argument_list|,
@@ -1299,7 +1410,7 @@ literal|"failed, error=%s\n"
 argument_list|,
 name|portno
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -1501,7 +1612,7 @@ expr_stmt|;
 comment|/* need to create a new child */
 name|child
 operator|=
-name|usb2_alloc_device
+name|usb_alloc_device
 argument_list|(
 name|sc
 operator|->
@@ -1561,7 +1672,7 @@ condition|(
 name|child
 condition|)
 block|{
-name|usb2_free_device
+name|usb_free_device
 argument_list|(
 name|child
 argument_list|,
@@ -1595,7 +1706,7 @@ condition|)
 block|{
 name|err
 operator|=
-name|usb2_req_clear_port_feature
+name|usbd_req_clear_port_feature
 argument_list|(
 name|sc
 operator|->
@@ -1622,7 +1733,7 @@ argument_list|,
 literal|"device problem (%s), "
 literal|"disabling port %d\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -1688,7 +1799,7 @@ name|sc_udev
 expr_stmt|;
 name|child
 operator|=
-name|usb2_bus_port_get_device
+name|usb_bus_port_get_device
 argument_list|(
 name|udev
 operator|->
@@ -1708,7 +1819,7 @@ expr_stmt|;
 comment|/* first clear the port suspend change bit */
 name|err
 operator|=
-name|usb2_req_clear_port_feature
+name|usbd_req_clear_port_feature
 argument_list|(
 name|udev
 argument_list|,
@@ -1801,7 +1912,7 @@ name|is_suspend
 operator|==
 literal|0
 condition|)
-name|usb2_dev_resume_peer
+name|usb_dev_resume_peer
 argument_list|(
 name|child
 argument_list|)
@@ -1817,7 +1928,7 @@ name|usb_mode
 operator|==
 name|USB_MODE_DEVICE
 condition|)
-name|usb2_dev_suspend_peer
+name|usb_dev_suspend_peer
 argument_list|(
 name|child
 argument_list|)
@@ -1862,7 +1973,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|usb2_needs_explore
+name|usb_needs_explore
 argument_list|(
 name|bus
 argument_list|,
@@ -2040,7 +2151,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_req_clear_port_feature
+name|usbd_req_clear_port_feature
 argument_list|(
 name|udev
 argument_list|,
@@ -2095,7 +2206,7 @@ condition|)
 block|{
 name|err
 operator|=
-name|usb2_req_clear_port_feature
+name|usbd_req_clear_port_feature
 argument_list|(
 name|udev
 argument_list|,
@@ -2472,7 +2583,7 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|device_set_usb2_desc
+name|device_set_usb_desc
 argument_list|(
 name|dev
 argument_list|)
@@ -2573,7 +2684,7 @@ expr_stmt|;
 comment|/* assuming that there is one port */
 name|err
 operator|=
-name|usb2_req_get_hub_descriptor
+name|usbd_req_get_hub_descriptor
 argument_list|(
 name|udev
 argument_list|,
@@ -2606,7 +2717,7 @@ block|{
 comment|/* get complete HUB descriptor */
 name|err
 operator|=
-name|usb2_req_get_hub_descriptor
+name|usbd_req_get_hub_descriptor
 argument_list|(
 name|udev
 argument_list|,
@@ -2631,7 +2742,7 @@ argument_list|,
 literal|"getting hub descriptor failed,"
 literal|"error=%s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -2733,7 +2844,7 @@ if|#
 directive|if
 name|USB_HAVE_TT_SUPPORT
 comment|/* init FULL-speed ISOCHRONOUS schedule */
-name|usb2_fs_isoc_schedule_init_all
+name|usbd_fs_isoc_schedule_init_all
 argument_list|(
 name|hub
 operator|->
@@ -2821,7 +2932,7 @@ block|{
 comment|/* normal HUB */
 name|err
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|udev
 argument_list|,
@@ -2855,7 +2966,7 @@ argument_list|,
 literal|"cannot setup interrupt transfer, "
 literal|"errstr=%s!\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -2866,7 +2977,7 @@ name|error
 goto|;
 block|}
 comment|/* wait with power off for a while */
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 name|NULL
 argument_list|,
@@ -2966,7 +3077,7 @@ block|{
 comment|/* turn the power on */
 name|err
 operator|=
-name|usb2_req_set_port_feature
+name|usbd_req_set_port_feature
 argument_list|(
 name|udev
 argument_list|,
@@ -2991,7 +3102,7 @@ literal|"port %d power on failed, %s\n"
 argument_list|,
 name|portno
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -3006,7 +3117,7 @@ name|portno
 argument_list|)
 expr_stmt|;
 comment|/* wait for stable power */
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 name|NULL
 argument_list|,
@@ -3072,7 +3183,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|sc
 operator|->
@@ -3094,7 +3205,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Enable automatic power save on all USB HUBs */
-name|usb2_set_power_mode
+name|usbd_set_power_mode
 argument_list|(
 name|udev
 argument_list|,
@@ -3108,7 +3219,7 @@ operator|)
 return|;
 name|error
 label|:
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
@@ -3228,7 +3339,7 @@ control|)
 block|{
 name|child
 operator|=
-name|usb2_bus_port_get_device
+name|usb_bus_port_get_device
 argument_list|(
 name|sc
 operator|->
@@ -3253,7 +3364,7 @@ block|{
 continue|continue;
 block|}
 comment|/* 		 * Subdevices are not freed, because the caller of 		 * uhub_detach() will do that. 		 */
-name|usb2_free_device
+name|usb_free_device
 argument_list|(
 name|child
 argument_list|,
@@ -3261,7 +3372,7 @@ name|USB_UNCFG_FLAG_FREE_EP0
 argument_list|)
 expr_stmt|;
 block|}
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
@@ -3352,7 +3463,7 @@ modifier|*
 name|driver
 parameter_list|)
 block|{
-name|usb2_needs_explore_all
+name|usb_needs_explore_all
 argument_list|()
 expr_stmt|;
 block|}
@@ -3437,7 +3548,7 @@ control|)
 block|{
 name|udev
 operator|=
-name|usb2_bus_port_get_device
+name|usb_bus_port_get_device
 argument_list|(
 name|hub
 operator|->
@@ -3476,7 +3587,7 @@ control|)
 block|{
 name|iface
 operator|=
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|udev
 argument_list|,
@@ -3761,7 +3872,7 @@ goto|;
 block|}
 name|iface
 operator|=
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|res
 operator|.
@@ -3890,13 +4001,13 @@ comment|/*  * The USB Transaction Translator:  * ===============================
 end_comment
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_intr_find_best_slot  *  * Return value:  *   The best Transaction Translation slot for an interrupt endpoint.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_intr_find_best_slot  *  * Return value:  *   The best Transaction Translation slot for an interrupt endpoint.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|uint8_t
-name|usb2_intr_find_best_slot
+name|usb_intr_find_best_slot
 parameter_list|(
 name|usb_size_t
 modifier|*
@@ -3973,12 +4084,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_intr_schedule_adjust  *  * This function will update the bandwith usage for the microframe  * having index "slot" by "len" bytes. "len" can be negative.  If the  * "slot" argument is greater or equal to "USB_HS_MICRO_FRAMES_MAX"  * the "slot" argument will be replaced by the slot having least used  * bandwidth.  *  * Returns:  *   The slot on which the bandwidth update was done.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_intr_schedule_adjust  *  * This function will update the bandwith usage for the microframe  * having index "slot" by "len" bytes. "len" can be negative.  If the  * "slot" argument is greater or equal to "USB_HS_MICRO_FRAMES_MAX"  * the "slot" argument will be replaced by the slot having least used  * bandwidth.  *  * Returns:  *   The slot on which the bandwidth update was done.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|uint8_t
-name|usb2_intr_schedule_adjust
+name|usb_intr_schedule_adjust
 parameter_list|(
 name|struct
 name|usb_device
@@ -4019,7 +4130,7 @@ argument_list|)
 expr_stmt|;
 name|speed
 operator|=
-name|usb2_get_speed
+name|usbd_get_speed
 argument_list|(
 name|udev
 argument_list|)
@@ -4065,7 +4176,7 @@ condition|)
 block|{
 name|slot
 operator|=
-name|usb2_intr_find_best_slot
+name|usb_intr_find_best_slot
 argument_list|(
 name|hub
 operator|->
@@ -4106,7 +4217,7 @@ condition|)
 block|{
 name|slot
 operator|=
-name|usb2_intr_find_best_slot
+name|usb_intr_find_best_slot
 argument_list|(
 name|bus
 operator|->
@@ -4138,7 +4249,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_fs_isoc_schedule_init_sub  *  * This function initialises an USB FULL speed isochronous schedule  * entry.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_fs_isoc_schedule_init_sub  *  * This function initialises an USB FULL speed isochronous schedule  * entry.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_if
@@ -4150,7 +4261,7 @@ end_if
 begin_function
 specifier|static
 name|void
-name|usb2_fs_isoc_schedule_init_sub
+name|usbd_fs_isoc_schedule_init_sub
 parameter_list|(
 name|struct
 name|usb_fs_isoc_schedule
@@ -4191,7 +4302,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_fs_isoc_schedule_init_all  *  * This function will reset the complete USB FULL speed isochronous  * bandwidth schedule.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_fs_isoc_schedule_init_all  *  * This function will reset the complete USB FULL speed isochronous  * bandwidth schedule.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_if
@@ -4202,7 +4313,7 @@ end_if
 
 begin_function
 name|void
-name|usb2_fs_isoc_schedule_init_all
+name|usbd_fs_isoc_schedule_init_all
 parameter_list|(
 name|struct
 name|usb_fs_isoc_schedule
@@ -4226,7 +4337,7 @@ operator|!=
 name|fss_end
 condition|)
 block|{
-name|usb2_fs_isoc_schedule_init_sub
+name|usbd_fs_isoc_schedule_init_sub
 argument_list|(
 name|fss
 argument_list|)
@@ -4244,12 +4355,12 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_isoc_time_expand  *  * This function will expand the time counter from 7-bit to 16-bit.  *  * Returns:  *   16-bit isochronous time counter.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_isoc_time_expand  *  * This function will expand the time counter from 7-bit to 16-bit.  *  * Returns:  *   16-bit isochronous time counter.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|uint16_t
-name|usb2_isoc_time_expand
+name|usb_isoc_time_expand
 parameter_list|(
 name|struct
 name|usb_bus
@@ -4334,7 +4445,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_fs_isoc_schedule_isoc_time_expand  *  * This function does multiple things. First of all it will expand the  * passed isochronous time, which is the return value. Then it will  * store where the current FULL speed isochronous schedule is  * positioned in time and where the end is. See "pp_start" and  * "pp_end" arguments.  *  * Returns:  *   Expanded version of "isoc_time".  *  * NOTE: This function depends on being called regularly with  * intervals less than "USB_ISOC_TIME_MAX".  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_fs_isoc_schedule_isoc_time_expand  *  * This function does multiple things. First of all it will expand the  * passed isochronous time, which is the return value. Then it will  * store where the current FULL speed isochronous schedule is  * positioned in time and where the end is. See "pp_start" and  * "pp_end" arguments.  *  * Returns:  *   Expanded version of "isoc_time".  *  * NOTE: This function depends on being called regularly with  * intervals less than "USB_ISOC_TIME_MAX".  *------------------------------------------------------------------------*/
 end_comment
 
 begin_if
@@ -4345,7 +4456,7 @@ end_if
 
 begin_function
 name|uint16_t
-name|usb2_fs_isoc_schedule_isoc_time_expand
+name|usbd_fs_isoc_schedule_isoc_time_expand
 parameter_list|(
 name|struct
 name|usb_device
@@ -4390,7 +4501,7 @@ name|hs_hub
 decl_stmt|;
 name|isoc_time
 operator|=
-name|usb2_isoc_time_expand
+name|usb_isoc_time_expand
 argument_list|(
 name|udev
 operator|->
@@ -4488,7 +4599,7 @@ name|fs_isoc_schedule
 expr_stmt|;
 continue|continue;
 block|}
-name|usb2_fs_isoc_schedule_init_sub
+name|usbd_fs_isoc_schedule_init_sub
 argument_list|(
 name|fss_a
 argument_list|)
@@ -4525,7 +4636,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_fs_isoc_schedule_alloc  *  * This function will allocate bandwidth for an isochronous FULL speed  * transaction in the FULL speed schedule. The microframe slot where  * the transaction should be started is stored in the byte pointed to  * by "pstart". The "len" argument specifies the length of the  * transaction in bytes.  *  * Returns:  *    0: Success  * Else: Error  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_fs_isoc_schedule_alloc  *  * This function will allocate bandwidth for an isochronous FULL speed  * transaction in the FULL speed schedule. The microframe slot where  * the transaction should be started is stored in the byte pointed to  * by "pstart". The "len" argument specifies the length of the  * transaction in bytes.  *  * Returns:  *    0: Success  * Else: Error  *------------------------------------------------------------------------*/
 end_comment
 
 begin_if
@@ -4536,7 +4647,7 @@ end_if
 
 begin_function
 name|uint8_t
-name|usb2_fs_isoc_schedule_alloc
+name|usbd_fs_isoc_schedule_alloc
 parameter_list|(
 name|struct
 name|usb_fs_isoc_schedule
@@ -4660,14 +4771,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_bus_port_get_device  *  * This function is NULL safe.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_bus_port_get_device  *  * This function is NULL safe.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|struct
 name|usb_device
 modifier|*
-name|usb2_bus_port_get_device
+name|usb_bus_port_get_device
 parameter_list|(
 name|struct
 name|usb_bus
@@ -4734,12 +4845,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_bus_port_set_device  *  * This function is NULL safe.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_bus_port_set_device  *  * This function is NULL safe.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_bus_port_set_device
+name|usb_bus_port_set_device
 parameter_list|(
 name|struct
 name|usb_bus
@@ -4818,7 +4929,7 @@ name|USB_HAVE_UGEN
 name|mtx_lock
 argument_list|(
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4838,7 +4949,7 @@ name|USB_HAVE_UGEN
 name|mtx_unlock
 argument_list|(
 operator|&
-name|usb2_ref_lock
+name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4862,12 +4973,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_needs_explore  *  * This functions is called when the USB event thread needs to run.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_needs_explore  *  * This functions is called when the USB event thread needs to run.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_needs_explore
+name|usb_needs_explore
 parameter_list|(
 name|struct
 name|usb_bus
@@ -4971,7 +5082,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|usb2_proc_msignal
+name|usb_proc_msignal
 argument_list|(
 operator|&
 name|bus
@@ -5013,12 +5124,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_needs_explore_all  *  * This function is called whenever a new driver is loaded and will  * cause that all USB busses are re-explored.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_needs_explore_all  *  * This function is called whenever a new driver is loaded and will  * cause that all USB busses are re-explored.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_needs_explore_all
+name|usb_needs_explore_all
 parameter_list|(
 name|void
 parameter_list|)
@@ -5046,7 +5157,7 @@ argument_list|)
 expr_stmt|;
 name|dc
 operator|=
-name|usb2_devclass_ptr
+name|usb_devclass_ptr
 expr_stmt|;
 if|if
 condition|(
@@ -5105,7 +5216,7 @@ condition|(
 name|bus
 condition|)
 block|{
-name|usb2_needs_explore
+name|usb_needs_explore
 argument_list|(
 name|bus
 argument_list|,
@@ -5122,7 +5233,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_bus_power_update  *  * This function will ensure that all USB devices on the given bus are  * properly suspended or resumed according to the device transfer  * state.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_bus_power_update  *  * This function will ensure that all USB devices on the given bus are  * properly suspended or resumed according to the device transfer  * state.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_if
@@ -5133,7 +5244,7 @@ end_if
 
 begin_function
 name|void
-name|usb2_bus_power_update
+name|usb_bus_power_update
 parameter_list|(
 name|struct
 name|usb_bus
@@ -5141,7 +5252,7 @@ modifier|*
 name|bus
 parameter_list|)
 block|{
-name|usb2_needs_explore
+name|usb_needs_explore
 argument_list|(
 name|bus
 argument_list|,
@@ -5158,7 +5269,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_transfer_power_ref  *  * This function will modify the power save reference counts and  * wakeup the USB device associated with the given USB transfer, if  * needed.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_transfer_power_ref  *  * This function will modify the power save reference counts and  * wakeup the USB device associated with the given USB transfer, if  * needed.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_if
@@ -5169,7 +5280,7 @@ end_if
 
 begin_function
 name|void
-name|usb2_transfer_power_ref
+name|usbd_transfer_power_ref
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -5386,7 +5497,7 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|usb2_peer_can_wakeup
+name|usb_peer_can_wakeup
 argument_list|(
 name|udev
 argument_list|)
@@ -5464,7 +5575,7 @@ argument_list|(
 literal|"update\n"
 argument_list|)
 expr_stmt|;
-name|usb2_bus_power_update
+name|usb_bus_power_update
 argument_list|(
 name|udev
 operator|->
@@ -5522,7 +5633,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_bus_powerd  *  * This function implements the USB power daemon and is called  * regularly from the USB explore thread.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_bus_powerd  *  * This function implements the USB power daemon and is called  * regularly from the USB explore thread.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_if
@@ -5533,7 +5644,7 @@ end_if
 
 begin_function
 name|void
-name|usb2_bus_powerd
+name|usb_bus_powerd
 parameter_list|(
 name|struct
 name|usb_bus
@@ -5569,7 +5680,7 @@ name|rem_wakeup
 decl_stmt|;
 name|limit
 operator|=
-name|usb2_power_timeout
+name|usb_power_timeout
 expr_stmt|;
 if|if
 condition|(
@@ -5650,7 +5761,7 @@ condition|)
 continue|continue;
 name|rem_wakeup
 operator|=
-name|usb2_peer_can_wakeup
+name|usb_peer_can_wakeup
 argument_list|(
 name|udev
 argument_list|)
@@ -5734,7 +5845,7 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
-name|usb2_dev_resume_peer
+name|usb_dev_resume_peer
 argument_list|(
 name|udev
 argument_list|)
@@ -5771,7 +5882,7 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
-name|usb2_dev_suspend_peer
+name|usb_dev_suspend_peer
 argument_list|(
 name|udev
 argument_list|)
@@ -6098,13 +6209,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_dev_resume_peer  *  * This function will resume an USB peer and do the required USB  * signalling to get an USB device out of the suspended state.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_dev_resume_peer  *  * This function will resume an USB peer and do the required USB  * signalling to get an USB device out of the suspended state.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_dev_resume_peer
+name|usb_dev_resume_peer
 parameter_list|(
 name|struct
 name|usb_device
@@ -6196,7 +6307,7 @@ operator|->
 name|bus
 expr_stmt|;
 comment|/* resume parent hub first */
-name|usb2_dev_resume_peer
+name|usb_dev_resume_peer
 argument_list|(
 name|udev
 operator|->
@@ -6206,7 +6317,7 @@ expr_stmt|;
 comment|/* resume current port (Valid in Host and Device Mode) */
 name|err
 operator|=
-name|usb2_req_clear_port_feature
+name|usbd_req_clear_port_feature
 argument_list|(
 name|udev
 operator|->
@@ -6236,7 +6347,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* resume settle time */
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 name|NULL
 argument_list|,
@@ -6416,7 +6527,7 @@ expr_stmt|;
 comment|/* notify all sub-devices about resume */
 name|err
 operator|=
-name|usb2_suspend_resume
+name|usb_suspend_resume
 argument_list|(
 name|udev
 argument_list|,
@@ -6435,7 +6546,7 @@ expr_stmt|;
 comment|/* check if peer has wakeup capability */
 if|if
 condition|(
-name|usb2_peer_can_wakeup
+name|usb_peer_can_wakeup
 argument_list|(
 name|udev
 argument_list|)
@@ -6444,7 +6555,7 @@ block|{
 comment|/* clear remote wakeup */
 name|err
 operator|=
-name|usb2_req_clear_device_feature
+name|usbd_req_clear_device_feature
 argument_list|(
 name|udev
 argument_list|,
@@ -6465,7 +6576,7 @@ argument_list|,
 literal|"Clearing device "
 literal|"remote wakeup failed: %s!\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -6478,13 +6589,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_dev_suspend_peer  *  * This function will suspend an USB peer and do the required USB  * signalling to get an USB device into the suspended state.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_dev_suspend_peer  *  * This function will suspend an USB peer and do the required USB  * signalling to get an USB device into the suspended state.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_dev_suspend_peer
+name|usb_dev_suspend_peer
 parameter_list|(
 name|struct
 name|usb_device
@@ -6578,7 +6689,7 @@ control|)
 block|{
 name|child
 operator|=
-name|usb2_bus_port_get_device
+name|usb_bus_port_get_device
 argument_list|(
 name|udev
 operator|->
@@ -6635,7 +6746,7 @@ expr_stmt|;
 comment|/* notify all sub-devices about suspend */
 name|err
 operator|=
-name|usb2_suspend_resume
+name|usb_suspend_resume
 argument_list|(
 name|udev
 argument_list|,
@@ -6653,7 +6764,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|usb2_peer_can_wakeup
+name|usb_peer_can_wakeup
 argument_list|(
 name|udev
 argument_list|)
@@ -6662,7 +6773,7 @@ block|{
 comment|/* allow device to do remote wakeup */
 name|err
 operator|=
-name|usb2_req_set_device_feature
+name|usbd_req_set_device_feature
 argument_list|(
 name|udev
 argument_list|,
@@ -6742,14 +6853,14 @@ expr_stmt|;
 comment|/* do DMA delay */
 name|temp
 operator|=
-name|usb2_get_dma_delay
+name|usbd_get_dma_delay
 argument_list|(
 name|udev
 operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 name|NULL
 argument_list|,
@@ -6763,7 +6874,7 @@ block|}
 comment|/* suspend current port */
 name|err
 operator|=
-name|usb2_req_set_port_feature
+name|usbd_req_set_port_feature
 argument_list|(
 name|udev
 operator|->
@@ -6805,12 +6916,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_set_power_mode  *  * This function will set the power mode, see USB_POWER_MODE_XXX for a  * USB device.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_set_power_mode  *  * This function will set the power mode, see USB_POWER_MODE_XXX for a  * USB device.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_set_power_mode
+name|usbd_set_power_mode
 parameter_list|(
 name|struct
 name|usb_device
@@ -6852,7 +6963,7 @@ comment|/* update copy of power mode */
 if|#
 directive|if
 name|USB_HAVE_POWERD
-name|usb2_bus_power_update
+name|usb_bus_power_update
 argument_list|(
 name|udev
 operator|->

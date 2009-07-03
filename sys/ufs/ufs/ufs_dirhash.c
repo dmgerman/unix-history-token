@@ -1323,6 +1323,7 @@ name|ufs_dirhashmem
 operator|>
 name|ufs_dirhashmaxmem
 condition|)
+block|{
 if|if
 condition|(
 name|ufsdirhash_recycle
@@ -1338,6 +1339,11 @@ operator|-
 literal|1
 operator|)
 return|;
+comment|/* Recycled enough memory, so unlock the list. */
+name|DIRHASHLIST_UNLOCK
+argument_list|()
+expr_stmt|;
+block|}
 comment|/* Check if we can/should use dirhash. */
 if|if
 condition|(
@@ -5326,14 +5332,11 @@ name|dh_memreq
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Unlock everything, free the detached memory. */
+comment|/* Unlock dirhash and free the detached memory. */
 name|ufsdirhash_release
 argument_list|(
 name|dh
 argument_list|)
-expr_stmt|;
-name|DIRHASHLIST_UNLOCK
-argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -5371,9 +5374,6 @@ name|M_DIRHASH
 argument_list|)
 expr_stmt|;
 comment|/* Account for the returned memory. */
-name|DIRHASHLIST_LOCK
-argument_list|()
-expr_stmt|;
 name|ufs_dirhashmem
 operator|-=
 name|mem
@@ -5511,6 +5511,9 @@ name|struct
 name|dirhash
 modifier|*
 name|dh
+decl_stmt|,
+modifier|*
+name|dh_temp
 decl_stmt|;
 name|int
 name|memfreed
@@ -5532,29 +5535,16 @@ name|DIRHASHLIST_LOCK
 argument_list|()
 expr_stmt|;
 comment|/*  	 * Delete dirhashes not used for more than ufs_dirhashreclaimage  	 * seconds. If we can't get a lock on the dirhash, it will be skipped. 	 */
-for|for
-control|(
-name|dh
-operator|=
-name|TAILQ_FIRST
+name|TAILQ_FOREACH_SAFE
 argument_list|(
-operator|&
-name|ufsdirhash_list
-argument_list|)
-init|;
-name|dh
-operator|!=
-name|NULL
-condition|;
-name|dh
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|dh
+argument|dh
 argument_list|,
-name|dh_list
+argument|&ufsdirhash_list
+argument_list|,
+argument|dh_list
+argument_list|,
+argument|dh_temp
 argument_list|)
-control|)
 block|{
 if|if
 condition|(
@@ -5594,33 +5584,23 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*  	 * If not enough memory was freed, keep deleting hashes from the head  	 * of the dirhash list. The ones closest to the head should be the  	 * oldest.  	 */
-for|for
-control|(
-name|dh
-operator|=
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|ufsdirhash_list
-argument_list|)
-init|;
+if|if
+condition|(
 name|memfreed
 operator|<
 name|memwanted
-operator|&&
-name|dh
-operator|!=
-name|NULL
-condition|;
-name|dh
-operator|=
-name|TAILQ_NEXT
+condition|)
+block|{
+name|TAILQ_FOREACH_SAFE
 argument_list|(
-name|dh
+argument|dh
 argument_list|,
-name|dh_list
+argument|&ufsdirhash_list
+argument_list|,
+argument|dh_list
+argument_list|,
+argument|dh_temp
 argument_list|)
-control|)
 block|{
 if|if
 condition|(
@@ -5641,6 +5621,14 @@ argument_list|(
 name|dh
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|memfreed
+operator|>=
+name|memwanted
+condition|)
+break|break;
+block|}
 block|}
 name|DIRHASHLIST_UNLOCK
 argument_list|()

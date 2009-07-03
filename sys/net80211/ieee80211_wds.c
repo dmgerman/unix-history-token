@@ -1111,7 +1111,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|m
+name|mcopy
 operator|==
 name|NULL
 condition|)

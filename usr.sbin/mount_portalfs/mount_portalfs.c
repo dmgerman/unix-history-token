@@ -182,6 +182,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|volatile
 name|sig_atomic_t
 name|readcf
 decl_stmt|;

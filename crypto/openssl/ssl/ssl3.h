@@ -1188,6 +1188,22 @@ define|#
 directive|define
 name|SSL3_ST_CR_FINISHED_B
 value|(0x1D1|SSL_ST_CONNECT)
+define|#
+directive|define
+name|SSL3_ST_CR_SESSION_TICKET_A
+value|(0x1E0|SSL_ST_CONNECT)
+define|#
+directive|define
+name|SSL3_ST_CR_SESSION_TICKET_B
+value|(0x1E1|SSL_ST_CONNECT)
+define|#
+directive|define
+name|SSL3_ST_CR_CERT_STATUS_A
+value|(0x1F0|SSL_ST_CONNECT)
+define|#
+directive|define
+name|SSL3_ST_CR_CERT_STATUS_B
+value|(0x1F1|SSL_ST_CONNECT)
 comment|/* server */
 comment|/* extra state */
 define|#
@@ -1329,6 +1345,22 @@ name|SSL3_ST_SW_FINISHED_B
 value|(0x1E1|SSL_ST_ACCEPT)
 define|#
 directive|define
+name|SSL3_ST_SW_SESSION_TICKET_A
+value|(0x1F0|SSL_ST_ACCEPT)
+define|#
+directive|define
+name|SSL3_ST_SW_SESSION_TICKET_B
+value|(0x1F1|SSL_ST_ACCEPT)
+define|#
+directive|define
+name|SSL3_ST_SW_CERT_STATUS_A
+value|(0x200|SSL_ST_ACCEPT)
+define|#
+directive|define
+name|SSL3_ST_SW_CERT_STATUS_B
+value|(0x201|SSL_ST_ACCEPT)
+define|#
+directive|define
 name|SSL3_MT_HELLO_REQUEST
 value|0
 define|#
@@ -1339,6 +1371,10 @@ define|#
 directive|define
 name|SSL3_MT_SERVER_HELLO
 value|2
+define|#
+directive|define
+name|SSL3_MT_NEWSESSION_TICKET
+value|4
 define|#
 directive|define
 name|SSL3_MT_CERTIFICATE
@@ -1367,6 +1403,10 @@ define|#
 directive|define
 name|SSL3_MT_FINISHED
 value|20
+define|#
+directive|define
+name|SSL3_MT_CERTIFICATE_STATUS
+value|22
 define|#
 directive|define
 name|DTLS1_MT_HELLO_VERIFY_REQUEST

@@ -10,19 +10,115 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_mfunc.h>
+file|<sys/stdint.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_error.h>
+file|<sys/stddef.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_endian.h>
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker_set.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/condvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/priv.h>
 end_include
 
 begin_include
@@ -34,31 +130,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_core.h>
+file|<dev/usb/usbdi.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<dev/usb/usb_process.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/usb_busdma.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/usb_request.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/usb_util.h>
 end_include
 
 begin_include
@@ -259,7 +337,7 @@ end_comment
 
 begin_function
 name|uint8_t
-name|usb2_ether_pause
+name|uether_pause
 parameter_list|(
 name|struct
 name|usb_ether
@@ -273,7 +351,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|usb2_proc_is_gone
+name|usb_proc_is_gone
 argument_list|(
 operator|&
 name|ue
@@ -289,7 +367,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 name|ue
 operator|->
@@ -345,7 +423,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|usb2_proc_is_gone
+name|usb_proc_is_gone
 argument_list|(
 operator|&
 name|ue
@@ -365,7 +443,7 @@ expr|struct
 name|usb_ether_cfg_task
 operator|*
 operator|)
-name|usb2_proc_msignal
+name|usb_proc_msignal
 argument_list|(
 operator|&
 name|ue
@@ -407,7 +485,7 @@ operator|==
 name|ue_stop_task
 operator|)
 condition|)
-name|usb2_proc_mwait
+name|usb_proc_mwait
 argument_list|(
 operator|&
 name|ue
@@ -426,7 +504,7 @@ begin_function
 name|struct
 name|ifnet
 modifier|*
-name|usb2_ether_getifp
+name|uether_getifp
 parameter_list|(
 name|struct
 name|usb_ether
@@ -448,7 +526,7 @@ begin_function
 name|struct
 name|mii_data
 modifier|*
-name|usb2_ether_getmii
+name|uether_getmii
 parameter_list|(
 name|struct
 name|usb_ether
@@ -472,7 +550,7 @@ end_function
 begin_function
 name|void
 modifier|*
-name|usb2_ether_getsc
+name|uether_getsc
 parameter_list|(
 name|struct
 name|usb_ether
@@ -537,7 +615,7 @@ end_function
 
 begin_function
 name|int
-name|usb2_ether_ifattach
+name|uether_ifattach
 parameter_list|(
 name|struct
 name|usb_ether
@@ -590,7 +668,7 @@ operator|)
 return|;
 name|error
 operator|=
-name|usb2_proc_create
+name|usb_proc_create
 argument_list|(
 operator|&
 name|ue
@@ -748,7 +826,7 @@ argument_list|(
 name|ueunit
 argument_list|)
 expr_stmt|;
-name|usb2_callout_init_mtx
+name|usb_callout_init_mtx
 argument_list|(
 operator|&
 name|ue
@@ -855,7 +933,7 @@ name|ifp
 operator|->
 name|if_ioctl
 operator|=
-name|usb2_ether_ioctl
+name|uether_ioctl
 expr_stmt|;
 name|ifp
 operator|->
@@ -1125,7 +1203,7 @@ end_function
 
 begin_function
 name|void
-name|usb2_ether_ifdetach
+name|uether_ifdetach
 parameter_list|(
 name|struct
 name|usb_ether
@@ -1139,7 +1217,7 @@ modifier|*
 name|ifp
 decl_stmt|;
 comment|/* wait for any post attach or other command to complete */
-name|usb2_proc_drain
+name|usb_proc_drain
 argument_list|(
 operator|&
 name|ue
@@ -1180,7 +1258,7 @@ name|ue
 argument_list|)
 expr_stmt|;
 comment|/* drain any callouts */
-name|usb2_callout_drain
+name|usb_callout_drain
 argument_list|(
 operator|&
 name|ue
@@ -1256,7 +1334,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* free taskqueue, if any */
-name|usb2_proc_free
+name|usb_proc_free
 argument_list|(
 operator|&
 name|ue
@@ -1269,7 +1347,7 @@ end_function
 
 begin_function
 name|uint8_t
-name|usb2_ether_is_gone
+name|uether_is_gone
 parameter_list|(
 name|struct
 name|usb_ether
@@ -1279,7 +1357,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|usb2_proc_is_gone
+name|usb_proc_is_gone
 argument_list|(
 operator|&
 name|ue
@@ -1428,7 +1506,7 @@ name|ue_tick
 operator|!=
 name|NULL
 condition|)
-name|usb2_callout_reset
+name|usb_callout_reset
 argument_list|(
 operator|&
 name|ue
@@ -1484,7 +1562,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|usb2_callout_stop
+name|usb_callout_stop
 argument_list|(
 operator|&
 name|ue
@@ -1832,7 +1910,7 @@ operator|.
 name|hdr
 argument_list|)
 expr_stmt|;
-name|usb2_callout_reset
+name|usb_callout_reset
 argument_list|(
 operator|&
 name|ue
@@ -1917,7 +1995,7 @@ end_function
 
 begin_function
 name|int
-name|usb2_ether_ioctl
+name|uether_ioctl
 parameter_list|(
 name|struct
 name|ifnet
@@ -2207,7 +2285,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|usb2_ether_modevent
+name|uether_modevent
 parameter_list|(
 name|module_t
 name|mod
@@ -2262,12 +2340,12 @@ end_function
 begin_decl_stmt
 specifier|static
 name|moduledata_t
-name|usb2_ether_mod
+name|uether_mod
 init|=
 block|{
 literal|"uether"
 block|,
-name|usb2_ether_modevent
+name|uether_modevent
 block|,
 literal|0
 block|}
@@ -2278,7 +2356,7 @@ begin_function
 name|struct
 name|mbuf
 modifier|*
-name|usb2_ether_newbuf
+name|uether_newbuf
 parameter_list|(
 name|void
 parameter_list|)
@@ -2339,7 +2417,7 @@ end_function
 
 begin_function
 name|int
-name|usb2_ether_rxmbuf
+name|uether_rxmbuf
 parameter_list|(
 name|struct
 name|usb_ether
@@ -2419,7 +2497,7 @@ end_function
 
 begin_function
 name|int
-name|usb2_ether_rxbuf
+name|uether_rxbuf
 parameter_list|(
 name|struct
 name|usb_ether
@@ -2480,7 +2558,7 @@ operator|)
 return|;
 name|m
 operator|=
-name|usb2_ether_newbuf
+name|uether_newbuf
 argument_list|()
 expr_stmt|;
 if|if
@@ -2501,7 +2579,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|pc
 argument_list|,
@@ -2565,7 +2643,7 @@ end_function
 
 begin_function
 name|void
-name|usb2_ether_rxflush
+name|uether_rxflush
 parameter_list|(
 name|struct
 name|usb_ether
@@ -2646,7 +2724,7 @@ name|DECLARE_MODULE
 argument_list|(
 name|uether
 argument_list|,
-name|usb2_ether_mod
+name|uether_mod
 argument_list|,
 name|SI_SUB_PSEUDO
 argument_list|,

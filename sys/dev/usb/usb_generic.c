@@ -10,7 +10,127 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_mfunc.h>
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker_set.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/condvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/fcntl.h>
 end_include
 
 begin_include
@@ -28,7 +148,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_error.h>
+file|<dev/usb/usbdi.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/usb/usbdi_util.h>
 end_include
 
 begin_define
@@ -47,13 +173,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_mbuf.h>
+file|<dev/usb/usb_dev.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_dev.h>
+file|<dev/usb/usb_mbuf.h>
 end_include
 
 begin_include
@@ -393,7 +519,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|usb2_gen_fill_deviceinfo
+name|usb_gen_fill_deviceinfo
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -472,7 +598,7 @@ end_comment
 begin_decl_stmt
 name|struct
 name|usb_fifo_methods
-name|usb2_ugen_methods
+name|usb_ugen_methods
 init|=
 block|{
 operator|.
@@ -526,11 +652,11 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -614,9 +740,10 @@ name|usb_endpoint
 modifier|*
 name|ep
 init|=
+name|usb_fifo_softc
+argument_list|(
 name|f
-operator|->
-name|priv_sc0
+argument_list|)
 decl_stmt|;
 name|struct
 name|usb_device
@@ -644,10 +771,10 @@ operator|->
 name|priv_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * "usb2_transfer_setup()" can sleep so one needs to make a wrapper, 	 * exiting the mutex and checking things 	 */
+comment|/* 	 * "usbd_transfer_setup()" can sleep so one needs to make a wrapper, 	 * exiting the mutex and checking things 	 */
 name|error
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|udev
 argument_list|,
@@ -692,7 +819,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|usb2_fifo_alloc_buffer
+name|usb_fifo_alloc_buffer
 argument_list|(
 name|f
 argument_list|,
@@ -713,7 +840,7 @@ else|else
 block|{
 name|error
 operator|=
-name|usb2_fifo_alloc_buffer
+name|usb_fifo_alloc_buffer
 argument_list|(
 name|f
 argument_list|,
@@ -744,7 +871,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|f
 operator|->
@@ -789,9 +916,10 @@ name|usb_endpoint
 modifier|*
 name|ep
 init|=
+name|usb_fifo_softc
+argument_list|(
 name|f
-operator|->
-name|priv_sc0
+argument_list|)
 decl_stmt|;
 name|struct
 name|usb_endpoint_descriptor
@@ -823,7 +951,7 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|usb2_get_speed
+name|usbd_get_speed
 argument_list|(
 name|f
 operator|->
@@ -954,7 +1082,7 @@ operator|->
 name|priv_mtx
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|f
 operator|->
@@ -964,7 +1092,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|f
 operator|->
@@ -981,7 +1109,7 @@ operator|->
 name|priv_mtx
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|f
 operator|->
@@ -990,7 +1118,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-name|usb2_fifo_free_buffer
+name|usb_fifo_free_buffer
 argument_list|(
 name|f
 argument_list|)
@@ -1038,9 +1166,10 @@ name|usb_endpoint
 modifier|*
 name|ep
 init|=
+name|usb_fifo_softc
+argument_list|(
 name|f
-operator|->
-name|priv_sc0
+argument_list|)
 decl_stmt|;
 name|struct
 name|usb_endpoint_descriptor
@@ -1461,9 +1590,10 @@ name|usb_endpoint
 modifier|*
 name|ep
 init|=
+name|usb_fifo_softc
+argument_list|(
 name|f
-operator|->
-name|priv_sc0
+argument_list|)
 decl_stmt|;
 name|struct
 name|usb_endpoint_descriptor
@@ -1882,14 +2012,14 @@ argument_list|)
 condition|)
 block|{
 comment|/* signal error */
-name|usb2_fifo_put_data_error
+name|usb_fifo_put_data_error
 argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
 block|}
 comment|/* start transfers */
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|f
 operator|->
@@ -1899,7 +2029,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|f
 operator|->
@@ -1933,14 +2063,14 @@ argument_list|)
 condition|)
 block|{
 comment|/* signal error */
-name|usb2_fifo_get_data_error
+name|usb_fifo_get_data_error
 argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
 block|}
 comment|/* start transfers */
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|f
 operator|->
@@ -1950,7 +2080,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|f
 operator|->
@@ -1975,7 +2105,7 @@ name|f
 parameter_list|)
 block|{
 comment|/* stop transfers */
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|f
 operator|->
@@ -1985,7 +2115,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|f
 operator|->
@@ -2007,6 +2137,9 @@ name|struct
 name|usb_xfer
 modifier|*
 name|xfer
+parameter_list|,
+name|usb_error_t
+name|error
 parameter_list|)
 block|{
 name|struct
@@ -2014,9 +2147,10 @@ name|usb_fifo
 modifier|*
 name|f
 init|=
+name|usbd_xfer_softc
+argument_list|(
 name|xfer
-operator|->
-name|priv_sc
+argument_list|)
 decl_stmt|;
 name|struct
 name|usb_mbuf
@@ -2101,7 +2235,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|usb2_fifo_put_data
+name|usb_fifo_put_data
 argument_list|(
 name|f
 argument_list|,
@@ -2128,7 +2262,7 @@ operator|->
 name|flag_stall
 condition|)
 block|{
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|f
 operator|->
@@ -2155,18 +2289,19 @@ condition|(
 name|m
 condition|)
 block|{
+name|usbd_xfer_set_frame_len
+argument_list|(
 name|xfer
-operator|->
-name|frlengths
-index|[
+argument_list|,
 literal|0
-index|]
-operator|=
+argument_list|,
+name|usbd_xfer_max_len
+argument_list|(
 name|xfer
-operator|->
-name|max_data_length
+argument_list|)
+argument_list|)
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -2185,7 +2320,7 @@ name|USB_ERR_CANCELLED
 condition|)
 block|{
 comment|/* send a zero length packet to userland */
-name|usb2_fifo_put_data
+name|usb_fifo_put_data
 argument_list|(
 name|f
 argument_list|,
@@ -2212,7 +2347,7 @@ name|fifo_zlp
 operator|=
 literal|0
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|f
 operator|->
@@ -2237,6 +2372,9 @@ name|struct
 name|usb_xfer
 modifier|*
 name|xfer
+parameter_list|,
+name|usb_error_t
+name|error
 parameter_list|)
 block|{
 name|struct
@@ -2244,9 +2382,10 @@ name|usb_fifo
 modifier|*
 name|f
 init|=
+name|usbd_xfer_softc
+argument_list|(
 name|xfer
-operator|->
-name|priv_sc
+argument_list|)
 decl_stmt|;
 name|usb_frlength_t
 name|actlen
@@ -2288,7 +2427,7 @@ operator|->
 name|flag_stall
 condition|)
 block|{
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|f
 operator|->
@@ -2303,7 +2442,7 @@ block|}
 comment|/* 		 * Write data, setup and perform hardware transfer. 		 */
 if|if
 condition|(
-name|usb2_fifo_get_data
+name|usb_fifo_get_data
 argument_list|(
 name|f
 argument_list|,
@@ -2324,16 +2463,16 @@ literal|0
 argument_list|)
 condition|)
 block|{
+name|usbd_xfer_set_frame_len
+argument_list|(
 name|xfer
-operator|->
-name|frlengths
-index|[
+argument_list|,
 literal|0
-index|]
-operator|=
+argument_list|,
 name|actlen
+argument_list|)
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -2357,7 +2496,7 @@ name|flag_stall
 operator|=
 literal|1
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|f
 operator|->
@@ -2382,6 +2521,9 @@ name|struct
 name|usb_xfer
 modifier|*
 name|xfer
+parameter_list|,
+name|usb_error_t
+name|error
 parameter_list|)
 block|{
 name|struct
@@ -2389,9 +2531,10 @@ name|usb_fifo
 modifier|*
 name|f
 init|=
+name|usbd_xfer_softc
+argument_list|(
 name|xfer
-operator|->
-name|priv_sc
+argument_list|)
 decl_stmt|;
 name|struct
 name|usb_xfer
@@ -2419,7 +2562,7 @@ return|return;
 block|}
 if|if
 condition|(
-name|usb2_clear_stall_callback
+name|usbd_clear_stall_callback
 argument_list|(
 name|xfer
 argument_list|,
@@ -2442,7 +2585,7 @@ name|flag_stall
 operator|=
 literal|0
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|xfer_other
 argument_list|)
@@ -2460,6 +2603,9 @@ name|struct
 name|usb_xfer
 modifier|*
 name|xfer
+parameter_list|,
+name|usb_error_t
+name|error
 parameter_list|)
 block|{
 name|struct
@@ -2467,9 +2613,10 @@ name|usb_fifo
 modifier|*
 name|f
 init|=
+name|usbd_xfer_softc
+argument_list|(
 name|xfer
-operator|->
-name|priv_sc
+argument_list|)
 decl_stmt|;
 name|struct
 name|usb_xfer
@@ -2497,7 +2644,7 @@ return|return;
 block|}
 if|if
 condition|(
-name|usb2_clear_stall_callback
+name|usbd_clear_stall_callback
 argument_list|(
 name|xfer
 argument_list|,
@@ -2520,7 +2667,7 @@ name|flag_stall
 operator|=
 literal|0
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|xfer_other
 argument_list|)
@@ -2538,6 +2685,9 @@ name|struct
 name|usb_xfer
 modifier|*
 name|xfer
+parameter_list|,
+name|usb_error_t
+name|error
 parameter_list|)
 block|{
 name|struct
@@ -2545,9 +2695,10 @@ name|usb_fifo
 modifier|*
 name|f
 init|=
+name|usbd_xfer_softc
+argument_list|(
 name|xfer
-operator|->
-name|priv_sc
+argument_list|)
 decl_stmt|;
 name|usb_frlength_t
 name|offset
@@ -2612,7 +2763,7 @@ name|n
 operator|++
 control|)
 block|{
-name|usb2_fifo_put_data
+name|usb_fifo_put_data
 argument_list|(
 name|f
 argument_list|,
@@ -2661,19 +2812,19 @@ operator|++
 control|)
 block|{
 comment|/* setup size for next transfer */
+name|usbd_xfer_set_frame_len
+argument_list|(
 name|xfer
-operator|->
-name|frlengths
-index|[
+argument_list|,
 name|n
-index|]
-operator|=
+argument_list|,
 name|xfer
 operator|->
 name|max_frame_size
+argument_list|)
 expr_stmt|;
 block|}
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -2708,6 +2859,9 @@ name|struct
 name|usb_xfer
 modifier|*
 name|xfer
+parameter_list|,
+name|usb_error_t
+name|error
 parameter_list|)
 block|{
 name|struct
@@ -2715,9 +2869,10 @@ name|usb_fifo
 modifier|*
 name|f
 init|=
+name|usbd_xfer_softc
+argument_list|(
 name|xfer
-operator|->
-name|priv_sc
+argument_list|)
 decl_stmt|;
 name|usb_frlength_t
 name|actlen
@@ -2781,7 +2936,7 @@ control|)
 block|{
 if|if
 condition|(
-name|usb2_fifo_get_data
+name|usb_fifo_get_data
 argument_list|(
 name|f
 argument_list|,
@@ -2802,14 +2957,14 @@ literal|1
 argument_list|)
 condition|)
 block|{
+name|usbd_xfer_set_frame_len
+argument_list|(
 name|xfer
-operator|->
-name|frlengths
-index|[
+argument_list|,
 name|n
-index|]
-operator|=
+argument_list|,
 name|actlen
+argument_list|)
 expr_stmt|;
 name|offset
 operator|+=
@@ -2835,17 +2990,17 @@ operator|++
 control|)
 block|{
 comment|/* fill in zero frames */
+name|usbd_xfer_set_frame_len
+argument_list|(
 name|xfer
-operator|->
-name|frlengths
-index|[
+argument_list|,
 name|n
-index|]
-operator|=
+argument_list|,
 literal|0
+argument_list|)
 expr_stmt|;
 block|}
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -2954,7 +3109,7 @@ block|}
 comment|/* change setting - will free generic FIFOs, if any */
 if|if
 condition|(
-name|usb2_set_config_index
+name|usbd_set_config_index
 argument_list|(
 name|f
 operator|->
@@ -2973,7 +3128,7 @@ block|}
 comment|/* probe and attach */
 if|if
 condition|(
-name|usb2_probe_and_attach
+name|usb_probe_and_attach
 argument_list|(
 name|f
 operator|->
@@ -3067,7 +3222,7 @@ block|}
 comment|/* change setting - will free generic FIFOs, if any */
 if|if
 condition|(
-name|usb2_set_alt_interface_index
+name|usbd_set_alt_interface_index
 argument_list|(
 name|f
 operator|->
@@ -3088,7 +3243,7 @@ block|}
 comment|/* probe and attach */
 if|if
 condition|(
-name|usb2_probe_and_attach
+name|usb_probe_and_attach
 argument_list|(
 name|f
 operator|->
@@ -3201,7 +3356,7 @@ condition|)
 block|{
 name|cdesc
 operator|=
-name|usb2_get_config_descriptor
+name|usbd_get_config_descriptor
 argument_list|(
 name|udev
 argument_list|)
@@ -3228,7 +3383,7 @@ else|else
 block|{
 if|if
 condition|(
-name|usb2_req_get_config_desc_full
+name|usbd_req_get_config_desc_full
 argument_list|(
 name|udev
 argument_list|,
@@ -3393,7 +3548,7 @@ name|error
 decl_stmt|;
 if|if
 condition|(
-name|usb2_req_get_string_desc
+name|usbd_req_get_string_desc
 argument_list|(
 name|f
 operator|->
@@ -3598,7 +3753,7 @@ return|;
 block|}
 name|iface
 operator|=
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|udev
 argument_list|,
@@ -3767,13 +3922,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_gen_fill_deviceinfo  *  * This function dumps information about an USB device to the  * structure pointed to by the "di" argument.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_gen_fill_deviceinfo  *  * This function dumps information about an USB device to the  * structure pointed to by the "di" argument.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|usb2_gen_fill_deviceinfo
+name|usb_gen_fill_deviceinfo
 parameter_list|(
 name|struct
 name|usb_fifo
@@ -3898,7 +4053,7 @@ name|udi_product
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|usb2_printBCD
+name|usb_printbcd
 argument_list|(
 name|di
 operator|->
@@ -4222,7 +4377,7 @@ condition|)
 block|{
 name|ep
 operator|=
-name|usb2_get_ep_by_addr
+name|usbd_get_ep_by_addr
 argument_list|(
 name|udev
 argument_list|,
@@ -4269,7 +4424,7 @@ name|UF_ENDPOINT_HALT
 operator|)
 condition|)
 block|{
-name|usb2_clear_data_toggle
+name|usbd_clear_data_toggle
 argument_list|(
 name|udev
 argument_list|,
@@ -4370,7 +4525,7 @@ block|}
 comment|/* do the USB request */
 name|error
 operator|=
-name|usb2_do_request_flags
+name|usbd_do_request_flags
 argument_list|(
 name|f
 operator|->
@@ -4506,7 +4661,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|usb2_req_re_enumerate
+name|usbd_req_re_enumerate
 argument_list|(
 name|udev
 argument_list|,
@@ -4587,7 +4742,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|f
 operator|->
@@ -4631,7 +4786,7 @@ name|flag_iscomplete
 operator|=
 literal|0
 expr_stmt|;
-name|usb2_fifo_free_buffer
+name|usb_fifo_free_buffer
 argument_list|(
 name|f
 argument_list|)
@@ -4816,7 +4971,7 @@ name|flag_iscomplete
 operator|=
 literal|1
 expr_stmt|;
-name|usb2_fifo_wakeup
+name|usb_fifo_wakeup
 argument_list|(
 name|f
 argument_list|)
@@ -4925,7 +5080,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|usb2_transfer_pending
+name|usbd_transfer_pending
 argument_list|(
 name|xfer
 argument_list|)
@@ -5052,7 +5207,7 @@ operator|)
 return|;
 block|}
 comment|/* reset first frame */
-name|usb2_set_frame_offset
+name|usbd_xfer_set_frame_offset
 argument_list|(
 name|xfer
 argument_list|,
@@ -5112,7 +5267,7 @@ block|}
 if|if
 condition|(
 name|length
-operator|>=
+operator|!=
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -5182,14 +5337,14 @@ goto|goto
 name|complete
 goto|;
 block|}
+name|usbd_xfer_set_frame_len
+argument_list|(
 name|xfer
-operator|->
-name|frlengths
-index|[
+argument_list|,
 literal|0
-index|]
-operator|=
+argument_list|,
 name|length
+argument_list|)
 expr_stmt|;
 comment|/* Host mode only ! */
 if|if
@@ -5268,9 +5423,10 @@ expr_stmt|;
 block|}
 name|rem
 operator|=
+name|usbd_xfer_max_len
+argument_list|(
 name|xfer
-operator|->
-name|max_data_length
+argument_list|)
 expr_stmt|;
 name|xfer
 operator|->
@@ -5387,13 +5543,10 @@ name|flags
 operator|&
 name|USB_FS_FLAG_CLEAR_STALL
 condition|)
+name|usbd_xfer_set_stall
+argument_list|(
 name|xfer
-operator|->
-name|flags
-operator|.
-name|stall_pipe
-operator|=
-literal|1
+argument_list|)
 expr_stmt|;
 else|else
 name|xfer
@@ -5443,14 +5596,14 @@ condition|)
 block|{
 break|break;
 block|}
+name|usbd_xfer_set_frame_len
+argument_list|(
 name|xfer
-operator|->
-name|frlengths
-index|[
+argument_list|,
 name|n
-index|]
-operator|=
+argument_list|,
 name|length
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -5540,7 +5693,7 @@ block|}
 else|else
 block|{
 comment|/* set current frame offset */
-name|usb2_set_frame_offset
+name|usbd_xfer_set_frame_offset
 argument_list|(
 name|xfer
 argument_list|,
@@ -5729,7 +5882,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|usb2_transfer_pending
+name|usbd_transfer_pending
 argument_list|(
 name|xfer
 argument_list|)
@@ -5925,9 +6078,10 @@ block|}
 comment|/* Update lengths and copy out data */
 name|rem
 operator|=
+name|usbd_xfer_max_len
+argument_list|(
 name|xfer
-operator|->
-name|max_data_length
+argument_list|)
 expr_stmt|;
 name|offset
 operator|=
@@ -6626,7 +6780,7 @@ operator|->
 name|priv_mtx
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|f
 operator|->
@@ -6677,7 +6831,7 @@ operator|->
 name|priv_mtx
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|f
 operator|->
@@ -6803,7 +6957,7 @@ break|break;
 block|}
 name|ep
 operator|=
-name|usb2_get_ep_by_addr
+name|usbd_get_ep_by_addr
 argument_list|(
 name|f
 operator|->
@@ -7102,7 +7256,7 @@ block|}
 block|}
 name|error
 operator|=
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|f
 operator|->
@@ -7258,7 +7412,7 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|f
 operator|->
@@ -7346,7 +7500,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|usb2_transfer_pending
+name|usbd_transfer_pending
 argument_list|(
 name|f
 operator|->
@@ -7448,7 +7602,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|f
 operator|->
@@ -7469,7 +7623,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|usb2_clear_data_toggle
+name|usbd_clear_data_toggle
 argument_list|(
 name|f
 operator|->
@@ -7887,7 +8041,7 @@ name|iface
 decl_stmt|;
 name|iface
 operator|=
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|f
 operator|->
@@ -7957,9 +8111,10 @@ name|ep
 decl_stmt|;
 name|ep
 operator|=
+name|usb_fifo_softc
+argument_list|(
 name|f
-operator|->
-name|priv_sc0
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -8119,7 +8274,7 @@ block|}
 comment|/* clear port enable */
 name|err
 operator|=
-name|usb2_req_clear_port_feature
+name|usbd_req_clear_port_feature
 argument_list|(
 name|udev
 operator|->
@@ -8147,7 +8302,7 @@ name|USB_POWER_MODE_RESUME
 case|:
 name|err
 operator|=
-name|usb2_req_clear_port_feature
+name|usbd_req_clear_port_feature
 argument_list|(
 name|udev
 operator|->
@@ -8172,7 +8327,7 @@ name|USB_POWER_MODE_SUSPEND
 case|:
 name|err
 operator|=
-name|usb2_req_set_port_feature
+name|usbd_req_set_port_feature
 argument_list|(
 name|udev
 operator|->
@@ -8235,7 +8390,7 @@ operator|)
 return|;
 block|}
 comment|/* set new power mode */
-name|usb2_set_power_mode
+name|usbd_set_power_mode
 argument_list|(
 name|udev
 argument_list|,
@@ -8424,7 +8579,7 @@ name|set
 condition|)
 name|err
 operator|=
-name|usb2_req_set_port_feature
+name|usbd_req_set_port_feature
 argument_list|(
 name|udev
 argument_list|,
@@ -8438,7 +8593,7 @@ expr_stmt|;
 else|else
 name|err
 operator|=
-name|usb2_req_clear_port_feature
+name|usbd_req_clear_port_feature
 argument_list|(
 name|udev
 argument_list|,
@@ -9133,7 +9288,7 @@ block|{
 case|case
 name|USB_DISCOVER
 case|:
-name|usb2_needs_explore_all
+name|usb_needs_explore_all
 argument_list|()
 expr_stmt|;
 break|break;
@@ -9156,7 +9311,7 @@ name|EPERM
 expr_stmt|;
 break|break;
 block|}
-name|usb2_debug
+name|usb_debug
 operator|=
 operator|*
 operator|(
@@ -9222,7 +9377,7 @@ name|USB_GET_ALTINTERFACE
 case|:
 name|iface
 operator|=
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|f
 operator|->
@@ -9307,7 +9462,7 @@ name|USB_GET_DEVICE_DESC
 case|:
 name|dtemp
 operator|=
-name|usb2_get_device_descriptor
+name|usbd_get_device_descriptor
 argument_list|(
 name|f
 operator|->
@@ -9340,7 +9495,7 @@ name|USB_GET_CONFIG_DESC
 case|:
 name|ctemp
 operator|=
-name|usb2_get_config_descriptor
+name|usbd_get_config_descriptor
 argument_list|(
 name|f
 operator|->
@@ -9447,7 +9602,7 @@ name|USB_GET_DEVICEINFO
 case|:
 name|error
 operator|=
-name|usb2_gen_fill_deviceinfo
+name|usb_gen_fill_deviceinfo
 argument_list|(
 name|f
 argument_list|,
@@ -9762,7 +9917,7 @@ break|break;
 block|}
 name|error
 operator|=
-name|usb2_fifo_alloc_buffer
+name|usb_fifo_alloc_buffer
 argument_list|(
 name|f
 argument_list|,
@@ -9820,7 +9975,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|usb2_fifo_free_buffer
+name|usb_fifo_free_buffer
 argument_list|(
 name|f
 argument_list|)
@@ -9936,6 +10091,9 @@ name|struct
 name|usb_xfer
 modifier|*
 name|xfer
+parameter_list|,
+name|usb_error_t
+name|error
 parameter_list|)
 block|{
 empty_stmt|;
@@ -9969,7 +10127,7 @@ block|{
 case|case
 name|USB_ST_SETUP
 case|:
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)

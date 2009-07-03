@@ -80,9 +80,8 @@ struct|struct
 name|vnet_inet6
 block|{
 name|struct
-name|in6_ifaddr
-modifier|*
-name|_in6_ifaddr
+name|in6_ifaddrhead
+name|_in6_ifaddrhead
 decl_stmt|;
 name|u_int
 name|_frag6_nfragpackets
@@ -576,8 +575,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|V_in6_ifaddr
-value|VNET_INET6(in6_ifaddr)
+name|V_in6_ifaddrhead
+value|VNET_INET6(in6_ifaddrhead)
 end_define
 
 begin_define

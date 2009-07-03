@@ -2558,6 +2558,14 @@ operator|(
 name|EACCES
 operator|)
 return|;
+case|case
+name|KERN_RESOURCE_SHORTAGE
+case|:
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 block|}
 return|return
 operator|(
@@ -4867,6 +4875,10 @@ argument_list|,
 name|prot
 argument_list|,
 name|foff
+argument_list|,
+name|td
+operator|->
+name|td_ucred
 argument_list|)
 expr_stmt|;
 if|if
@@ -5176,6 +5188,10 @@ name|prot
 argument_list|,
 operator|*
 name|foff
+argument_list|,
+name|td
+operator|->
+name|td_ucred
 argument_list|)
 expr_stmt|;
 if|if

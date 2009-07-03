@@ -789,9 +789,14 @@ comment|/* word32 B + A */
 operator|*
 name|where
 operator|=
+name|elf_relocaddr
+argument_list|(
+name|lf
+argument_list|,
 name|relocbase
 operator|+
 name|addend
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:

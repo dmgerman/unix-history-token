@@ -705,17 +705,6 @@ begin_comment
 comment|/* physical address of "Idle" state directory */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_comment
 comment|/*  * virtual address to page table entry and  * to physical address.  * Note: these work recursively, thus vtopte of a pte will give  * the corresponding pde that in turn maps it.  */
 end_comment
@@ -1558,47 +1547,16 @@ name|pt_entry_t
 name|pte
 parameter_list|)
 block|{
-name|pt_entry_t
-name|r
-decl_stmt|;
-asm|__asm __volatile(
-literal|"xchgl %0,%1"
-operator|:
-literal|"=m"
-operator|(
-operator|*
-name|ptep
-operator|)
-operator|,
-literal|"=r"
-operator|(
-name|r
-operator|)
-operator|:
-literal|"1"
+asm|__asm volatile("xchgl %0, %1" : "+m" (*ptep), "+r" (pte));
+return|return
 operator|(
 name|pte
 operator|)
-operator|,
-literal|"m"
-operator|(
-operator|*
-name|ptep
-operator|)
-block|)
-function|;
+return|;
+block|}
 end_function
 
-begin_return
-return|return
-operator|(
-name|r
-operator|)
-return|;
-end_return
-
 begin_define
-unit|}
 define|#
 directive|define
 name|pte_load_clear
@@ -1609,7 +1567,7 @@ value|atomic_readandclear_int(pte)
 end_define
 
 begin_function
-unit|static
+specifier|static
 name|__inline
 name|void
 name|pte_store
@@ -1959,51 +1917,6 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|NPPROVMTRR
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|PPRO_VMTRRphysBase0
-value|0x200
-end_define
-
-begin_define
-define|#
-directive|define
-name|PPRO_VMTRRphysMask0
-value|0x201
-end_define
-
-begin_struct
-struct|struct
-name|ppro_vmtrr
-block|{
-name|u_int64_t
-name|base
-decl_stmt|,
-name|mask
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|ppro_vmtrr
-name|PPro_vmtrr
-index|[
-name|NPPROVMTRR
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

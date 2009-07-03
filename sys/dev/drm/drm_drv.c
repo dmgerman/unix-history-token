@@ -1524,6 +1524,13 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dev
+operator|->
+name|irqr
+condition|)
+block|{
 name|bus_release_resource
 argument_list|(
 name|dev
@@ -1560,6 +1567,7 @@ argument_list|(
 literal|"MSI released\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 literal|0

@@ -106,7 +106,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfs/rpcv2.h>
+file|<rpcsvc/mount.h>
 end_include
 
 begin_include
@@ -1856,9 +1856,9 @@ name|clnt_create
 argument_list|(
 name|hostp
 argument_list|,
-name|RPCPROG_MNT
+name|MOUNTPROG
 argument_list|,
-name|RPCMNT_VER1
+name|MOUNTVERS
 argument_list|,
 literal|"udp"
 argument_list|)
@@ -1878,7 +1878,7 @@ name|hostp
 argument_list|,
 name|clnt_spcreateerror
 argument_list|(
-literal|"RPCPROG_MNT"
+literal|"MOUNTPROG"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1913,7 +1913,7 @@ name|clnt_call
 argument_list|(
 name|clp
 argument_list|,
-name|RPCMNT_UMOUNT
+name|MOUNTPROC_UMNT
 argument_list|,
 operator|(
 name|xdrproc_t
@@ -2946,7 +2946,7 @@ argument_list|,
 operator|&
 name|dirp
 argument_list|,
-name|RPCMNT_PATHLEN
+name|MNTPATHLEN
 argument_list|)
 operator|)
 return|;

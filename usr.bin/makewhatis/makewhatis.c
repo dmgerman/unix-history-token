@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -4743,9 +4749,17 @@ name|lang_locale
 argument_list|,
 literal|"%.*s%s"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|ptrdiff_t
+argument_list|)
+argument_list|(
 name|sep
 operator|-
 name|locale
+argument_list|)
 argument_list|,
 name|locale
 argument_list|,

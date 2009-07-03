@@ -4467,7 +4467,7 @@ condition|)
 block|{
 name|TAPDEBUG
 argument_list|(
-literal|"%s invalid packet len = %d, minor = %#x\n"
+literal|"%s invalid packet len = %zd, minor = %#x\n"
 argument_list|,
 name|ifp
 operator|->

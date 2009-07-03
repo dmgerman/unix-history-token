@@ -15,12 +15,6 @@ directive|define
 name|__NSCD_PROTOCOL_H__
 end_define
 
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
 begin_comment
 comment|/* maximum buffer size to receive - larger buffers are not allowed */
 end_comment
@@ -431,6 +425,7 @@ name|cache_mp_read_session_read_response
 name|c_mp_rs_read_response
 decl_stmt|;
 block|}
+comment|/* anonymous */
 union|;
 name|enum
 name|comm_element_t
@@ -441,7 +436,6 @@ struct|;
 end_struct
 
 begin_function_decl
-specifier|extern
 name|void
 name|init_comm_element
 parameter_list|(
@@ -457,7 +451,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|finalize_comm_element
 parameter_list|(
@@ -473,7 +466,6 @@ comment|/*  * For each type of data, there is three functions (init/finalize/get
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|init_cache_write_request
 parameter_list|(
@@ -485,7 +477,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|finalize_cache_write_request
 parameter_list|(
@@ -497,7 +488,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|cache_write_request
 modifier|*
@@ -511,7 +501,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|init_cache_write_response
 parameter_list|(
@@ -523,7 +512,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|finalize_cache_write_response
 parameter_list|(
@@ -535,7 +523,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|cache_write_response
 modifier|*
@@ -549,7 +536,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|init_cache_read_request
 parameter_list|(
@@ -561,7 +547,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|finalize_cache_read_request
 parameter_list|(
@@ -573,7 +558,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|cache_read_request
 modifier|*
@@ -587,7 +571,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|init_cache_read_response
 parameter_list|(
@@ -599,7 +582,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|finalize_cache_read_response
 parameter_list|(
@@ -611,7 +593,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|cache_read_response
 modifier|*
@@ -625,7 +606,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|init_cache_transform_request
 parameter_list|(
@@ -637,7 +617,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|finalize_cache_transform_request
 parameter_list|(
@@ -649,7 +628,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|cache_transform_request
 modifier|*
@@ -663,7 +641,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|init_cache_transform_response
 parameter_list|(
@@ -675,7 +652,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|finalize_cache_transform_response
 parameter_list|(
@@ -687,7 +663,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|cache_transform_response
 modifier|*
@@ -701,7 +676,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|init_cache_mp_write_session_request
 parameter_list|(
@@ -713,7 +687,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|finalize_cache_mp_write_session_request
 parameter_list|(
@@ -725,7 +698,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|cache_mp_write_session_request
 modifier|*
@@ -739,7 +711,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|init_cache_mp_write_session_response
 parameter_list|(
@@ -751,7 +722,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|finalize_cache_mp_write_session_response
 parameter_list|(
@@ -763,7 +733,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|cache_mp_write_session_response
 modifier|*
@@ -777,7 +746,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|init_cache_mp_write_session_write_request
 parameter_list|(
@@ -789,7 +757,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|finalize_cache_mp_write_session_write_request
 parameter_list|(
@@ -801,7 +768,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|cache_mp_write_session_write_request
 modifier|*
@@ -815,7 +781,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|init_cache_mp_write_session_write_response
 parameter_list|(
@@ -827,7 +792,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|finalize_cache_mp_write_session_write_response
 parameter_list|(
@@ -839,7 +803,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|cache_mp_write_session_write_response
 modifier|*
@@ -853,7 +816,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|init_cache_mp_read_session_request
 parameter_list|(
@@ -865,7 +827,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|finalize_cache_mp_read_session_request
 parameter_list|(
@@ -877,7 +838,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|cache_mp_read_session_request
 modifier|*
@@ -891,7 +851,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|init_cache_mp_read_session_response
 parameter_list|(
@@ -903,7 +862,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|finalize_cache_mp_read_session_response
 parameter_list|(
@@ -915,7 +873,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|cache_mp_read_session_response
 modifier|*
@@ -929,7 +886,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|init_cache_mp_read_session_read_response
 parameter_list|(
@@ -941,7 +897,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|finalize_cache_mp_read_session_read_response
 parameter_list|(
@@ -953,7 +908,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|cache_mp_read_session_read_response
 modifier|*

@@ -360,6 +360,15 @@ name|EX_DATAERR
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|string
+argument_list|)
+operator|>
+literal|0
+condition|)
 name|printf
 argument_list|(
 literal|"%s\n"

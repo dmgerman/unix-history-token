@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_USB2_HUB_H_
+name|_USB_HUB_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_USB2_HUB_H_
+name|_USB_HUB_H_
 end_define
 
 begin_comment
@@ -143,7 +143,7 @@ end_comment
 
 begin_function_decl
 name|uint8_t
-name|usb2_intr_schedule_adjust
+name|usb_intr_schedule_adjust
 parameter_list|(
 name|struct
 name|usb_device
@@ -161,7 +161,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_fs_isoc_schedule_init_all
+name|usbd_fs_isoc_schedule_init_all
 parameter_list|(
 name|struct
 name|usb_fs_isoc_schedule
@@ -173,7 +173,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_bus_port_set_device
+name|usb_bus_port_set_device
 parameter_list|(
 name|struct
 name|usb_bus
@@ -200,7 +200,7 @@ begin_function_decl
 name|struct
 name|usb_device
 modifier|*
-name|usb2_bus_port_get_device
+name|usb_bus_port_get_device
 parameter_list|(
 name|struct
 name|usb_bus
@@ -217,7 +217,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_needs_explore
+name|usb_needs_explore
 parameter_list|(
 name|struct
 name|usb_bus
@@ -232,7 +232,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_needs_explore_all
+name|usb_needs_explore_all
 parameter_list|(
 name|void
 parameter_list|)
@@ -241,7 +241,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_bus_power_update
+name|usb_bus_power_update
 parameter_list|(
 name|struct
 name|usb_bus
@@ -253,7 +253,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_bus_powerd
+name|usb_bus_powerd
 parameter_list|(
 name|struct
 name|usb_bus
@@ -286,7 +286,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _USB2_HUB_H_ */
+comment|/* _USB_HUB_H_ */
 end_comment
 
 end_unit

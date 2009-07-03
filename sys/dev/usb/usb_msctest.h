@@ -10,18 +10,18 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_USB2_MSCTEST_H_
+name|_USB_MSCTEST_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_USB2_MSCTEST_H_
+name|_USB_MSCTEST_H_
 end_define
 
 begin_function_decl
 name|usb_error_t
-name|usb2_test_autoinstall
+name|usb_test_autoinstall
 parameter_list|(
 name|struct
 name|usb_device
@@ -43,7 +43,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _USB2_MSCTEST_H_ */
+comment|/* _USB_MSCTEST_H_ */
 end_comment
 
 end_unit

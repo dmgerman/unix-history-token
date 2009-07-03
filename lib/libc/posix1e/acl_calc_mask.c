@@ -53,6 +53,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"acl_support.h"
+end_include
+
 begin_comment
 comment|/*  * acl_calc_mask() (23.4.2): calculate and set the permissions  * associated with the ACL_MASK ACL entry.  If the ACL already  * contains an ACL_MASK entry, its permissions shall be  * overwritten; if not, one shall be added.  */
 end_comment
@@ -84,6 +90,37 @@ name|mask_mode
 decl_stmt|,
 name|mask_num
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|_acl_brand_may_be
+argument_list|(
+operator|*
+name|acl_p
+argument_list|,
+name|ACL_BRAND_POSIX
+argument_list|)
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+name|_acl_brand_as
+argument_list|(
+operator|*
+name|acl_p
+argument_list|,
+name|ACL_BRAND_POSIX
+argument_list|)
+expr_stmt|;
 comment|/* 	 * (23.4.2.4) requires acl_p to point to a pointer to a valid ACL. 	 * Since one of the primary reasons to use this function would be 	 * to calculate the appropriate mask to obtain a valid ACL, we only 	 * perform sanity checks here and validate the ACL prior to 	 * returning. 	 */
 if|if
 condition|(

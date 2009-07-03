@@ -684,6 +684,10 @@ decl_stmt|,
 name|halMbssidAggrSupport
 range|:
 literal|1
+decl_stmt|,
+name|halBssidMatchSupport
+range|:
+literal|1
 decl_stmt|;
 name|uint32_t
 name|halWirelessModes

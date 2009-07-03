@@ -1226,6 +1226,11 @@ name|xprt
 operator|->
 name|xp_pool
 decl_stmt|;
+name|SVC_ACQUIRE
+argument_list|(
+name|xprt
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&

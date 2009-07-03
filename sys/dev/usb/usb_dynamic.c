@@ -10,19 +10,127 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_mfunc.h>
+file|<sys/stdint.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_error.h>
+file|<sys/stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker_set.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/condvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/priv.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<dev/usb/usb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/usb/usbdi.h>
 end_include
 
 begin_include
@@ -56,42 +164,42 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|usb_handle_req_t
-name|usb2_temp_get_desc_w
+name|usb_temp_get_desc_w
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_temp_setup_by_index_t
-name|usb2_temp_setup_by_index_w
+name|usb_temp_setup_by_index_t
+name|usb_temp_setup_by_index_w
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_temp_unsetup_t
-name|usb2_temp_unsetup_w
+name|usb_temp_unsetup_t
+name|usb_temp_unsetup_w
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_test_quirk_t
-name|usb2_test_quirk_w
+name|usb_test_quirk_t
+name|usb_test_quirk_w
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_test_huawei_autoinst_t
-name|usb2_test_huawei_autoinst_w
+name|usb_test_huawei_autoinst_t
+name|usb_test_huawei_autoinst_w
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|usb2_quirk_ioctl_t
-name|usb2_quirk_ioctl_w
+name|usb_quirk_ioctl_t
+name|usb_quirk_ioctl_w
 decl_stmt|;
 end_decl_stmt
 
@@ -102,66 +210,66 @@ end_comment
 begin_decl_stmt
 name|usb_handle_req_t
 modifier|*
-name|usb2_temp_get_desc_p
+name|usb_temp_get_desc_p
 init|=
 operator|&
-name|usb2_temp_get_desc_w
+name|usb_temp_get_desc_w
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|usb2_temp_setup_by_index_t
+name|usb_temp_setup_by_index_t
 modifier|*
-name|usb2_temp_setup_by_index_p
+name|usb_temp_setup_by_index_p
 init|=
 operator|&
-name|usb2_temp_setup_by_index_w
+name|usb_temp_setup_by_index_w
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|usb2_temp_unsetup_t
+name|usb_temp_unsetup_t
 modifier|*
-name|usb2_temp_unsetup_p
+name|usb_temp_unsetup_p
 init|=
 operator|&
-name|usb2_temp_unsetup_w
+name|usb_temp_unsetup_w
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|usb2_test_quirk_t
+name|usb_test_quirk_t
 modifier|*
-name|usb2_test_quirk_p
+name|usb_test_quirk_p
 init|=
 operator|&
-name|usb2_test_quirk_w
+name|usb_test_quirk_w
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|usb2_test_huawei_autoinst_t
+name|usb_test_huawei_autoinst_t
 modifier|*
-name|usb2_test_huawei_autoinst_p
+name|usb_test_huawei_autoinst_p
 init|=
 operator|&
-name|usb2_test_huawei_autoinst_w
+name|usb_test_huawei_autoinst_w
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|usb2_quirk_ioctl_t
+name|usb_quirk_ioctl_t
 modifier|*
-name|usb2_quirk_ioctl_p
+name|usb_quirk_ioctl_p
 init|=
 operator|&
-name|usb2_quirk_ioctl_w
+name|usb_quirk_ioctl_w
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|devclass_t
-name|usb2_devclass_ptr
+name|usb_devclass_ptr
 init|=
 name|NULL
 decl_stmt|;
@@ -170,7 +278,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|usb_error_t
-name|usb2_temp_setup_by_index_w
+name|usb_temp_setup_by_index_w
 parameter_list|(
 name|struct
 name|usb_device
@@ -192,11 +300,11 @@ end_function
 begin_function
 specifier|static
 name|uint8_t
-name|usb2_test_quirk_w
+name|usb_test_quirk_w
 parameter_list|(
 specifier|const
 name|struct
-name|usb_lookup_info
+name|usbd_lookup_info
 modifier|*
 name|info
 parameter_list|,
@@ -216,7 +324,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|usb2_quirk_ioctl_w
+name|usb_quirk_ioctl_w
 parameter_list|(
 name|unsigned
 name|long
@@ -245,7 +353,7 @@ end_function
 begin_function
 specifier|static
 name|usb_error_t
-name|usb2_temp_get_desc_w
+name|usb_temp_get_desc_w
 parameter_list|(
 name|struct
 name|usb_device
@@ -280,7 +388,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_temp_unsetup_w
+name|usb_temp_unsetup_w
 parameter_list|(
 name|struct
 name|usb_device
@@ -292,21 +400,21 @@ if|if
 condition|(
 name|udev
 operator|->
-name|usb2_template_ptr
+name|usb_template_ptr
 condition|)
 block|{
 name|free
 argument_list|(
 name|udev
 operator|->
-name|usb2_template_ptr
+name|usb_template_ptr
 argument_list|,
 name|M_USB
 argument_list|)
 expr_stmt|;
 name|udev
 operator|->
-name|usb2_template_ptr
+name|usb_template_ptr
 operator|=
 name|NULL
 expr_stmt|;
@@ -316,8 +424,8 @@ end_function
 
 begin_function
 specifier|static
-name|uint8_t
-name|usb2_test_huawei_autoinst_w
+name|usb_error_t
+name|usb_test_huawei_autoinst_w
 parameter_list|(
 name|struct
 name|usb_device
@@ -340,7 +448,7 @@ end_function
 
 begin_function
 name|void
-name|usb2_quirk_unload
+name|usb_quirk_unload
 parameter_list|(
 name|void
 modifier|*
@@ -348,15 +456,15 @@ name|arg
 parameter_list|)
 block|{
 comment|/* reset function pointers */
-name|usb2_test_quirk_p
+name|usb_test_quirk_p
 operator|=
 operator|&
-name|usb2_test_quirk_w
+name|usb_test_quirk_w
 expr_stmt|;
-name|usb2_quirk_ioctl_p
+name|usb_quirk_ioctl_p
 operator|=
 operator|&
-name|usb2_quirk_ioctl_w
+name|usb_quirk_ioctl_w
 expr_stmt|;
 comment|/* wait for CPU to exit the loaded functions, if any */
 comment|/* XXX this is a tradeoff */
@@ -372,7 +480,7 @@ end_function
 
 begin_function
 name|void
-name|usb2_temp_unload
+name|usb_temp_unload
 parameter_list|(
 name|void
 modifier|*
@@ -380,20 +488,20 @@ name|arg
 parameter_list|)
 block|{
 comment|/* reset function pointers */
-name|usb2_temp_get_desc_p
+name|usb_temp_get_desc_p
 operator|=
 operator|&
-name|usb2_temp_get_desc_w
+name|usb_temp_get_desc_w
 expr_stmt|;
-name|usb2_temp_setup_by_index_p
+name|usb_temp_setup_by_index_p
 operator|=
 operator|&
-name|usb2_temp_setup_by_index_w
+name|usb_temp_setup_by_index_w
 expr_stmt|;
-name|usb2_temp_unsetup_p
+name|usb_temp_unsetup_p
 operator|=
 operator|&
-name|usb2_temp_unsetup_w
+name|usb_temp_unsetup_w
 expr_stmt|;
 comment|/* wait for CPU to exit the loaded functions, if any */
 comment|/* XXX this is a tradeoff */
@@ -409,7 +517,7 @@ end_function
 
 begin_function
 name|void
-name|usb2_bus_unload
+name|usb_bus_unload
 parameter_list|(
 name|void
 modifier|*
@@ -417,7 +525,7 @@ name|arg
 parameter_list|)
 block|{
 comment|/* reset function pointers */
-name|usb2_devclass_ptr
+name|usb_devclass_ptr
 operator|=
 name|NULL
 expr_stmt|;
@@ -435,7 +543,7 @@ end_function
 
 begin_function
 name|void
-name|usb2_test_huawei_unload
+name|usb_test_huawei_unload
 parameter_list|(
 name|void
 modifier|*
@@ -443,10 +551,10 @@ name|arg
 parameter_list|)
 block|{
 comment|/* reset function pointers */
-name|usb2_test_huawei_autoinst_p
+name|usb_test_huawei_autoinst_p
 operator|=
 operator|&
-name|usb2_test_huawei_autoinst_w
+name|usb_test_huawei_autoinst_w
 expr_stmt|;
 comment|/* wait for CPU to exit the loaded functions, if any */
 comment|/* XXX this is a tradeoff */

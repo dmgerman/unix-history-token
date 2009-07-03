@@ -114,8 +114,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|unsigned
-name|int
+name|u_long
 parameter_list|,
 name|void
 modifier|*

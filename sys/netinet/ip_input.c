@@ -525,6 +525,26 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|struct
+name|rwlock
+name|in_ifaddr_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|RW_SYSINIT
+argument_list|(
+name|in_ifaddr_lock
+argument_list|,
+operator|&
+name|in_ifaddr_lock
+argument_list|,
+literal|"in_ifaddr_lock"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_expr_stmt
 name|SYSCTL_V_INT
 argument_list|(
@@ -989,25 +1009,37 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FLOWTABLE
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|int
 name|ip_output_flowtable_size
-init|=
-literal|2048
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"net.inet.ip.output_flowtable_size"
-argument_list|,
-operator|&
-name|ip_output_flowtable_size
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+name|struct
+name|flowtable
+modifier|*
+name|ip_ft
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_V_INT
@@ -1033,6 +1065,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1049,14 +1086,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-name|struct
-name|flowtable
-modifier|*
-name|ip_ft
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -1600,6 +1629,32 @@ expr_stmt|;
 name|maxnipq_update
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FLOWTABLE
+name|V_ip_output_flowtable_size
+operator|=
+literal|2048
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"net.inet.ip.output_flowtable_size"
+argument_list|,
+operator|&
+name|V_ip_output_flowtable_size
+argument_list|)
+expr_stmt|;
+name|V_ip_ft
+operator|=
+name|flowtable_alloc
+argument_list|(
+name|V_ip_output_flowtable_size
+argument_list|,
+name|FL_PCPU
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Skip initialization of globals for non-default instances. */
 if|if
 condition|(
@@ -1803,15 +1858,6 @@ name|netisr_register
 argument_list|(
 operator|&
 name|ip_nh
-argument_list|)
-expr_stmt|;
-name|ip_ft
-operator|=
-name|flowtable_alloc
-argument_list|(
-name|ip_output_flowtable_size
-argument_list|,
-name|FL_PCPU
 argument_list|)
 expr_stmt|;
 block|}
@@ -2658,6 +2704,7 @@ literal|0
 operator|)
 expr_stmt|;
 comment|/* 	 * Check for exact addresses in the hash bucket. 	 */
+comment|/* IN_IFADDR_RLOCK(); */
 name|LIST_FOREACH
 argument_list|(
 argument|ia
@@ -2696,10 +2743,22 @@ operator|==
 name|ifp
 operator|)
 condition|)
+block|{
+name|ifa_ref
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
+comment|/* IN_IFADDR_RUNLOCK(); */
 goto|goto
 name|ours
 goto|;
 block|}
+block|}
+comment|/* IN_IFADDR_RUNLOCK(); */
 comment|/* 	 * Check for broadcast addresses. 	 * 	 * Only accept broadcast packets that arrive via the matching 	 * interface.  Reception of forwarded directed broadcasts would 	 * be handled via ip_forward() and ether_output() with the loopback 	 * into the stack for SIMPLEX interfaces handled by ether_output(). 	 */
 if|if
 condition|(
@@ -2767,6 +2826,11 @@ operator|.
 name|s_addr
 condition|)
 block|{
+name|ifa_ref
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 name|IF_ADDR_UNLOCK
 argument_list|(
 name|ifp
@@ -2791,6 +2855,11 @@ operator|.
 name|s_addr
 condition|)
 block|{
+name|ifa_ref
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 name|IF_ADDR_UNLOCK
 argument_list|(
 name|ifp
@@ -2817,6 +2886,11 @@ operator|==
 name|INADDR_ANY
 condition|)
 block|{
+name|ifa_ref
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 name|IF_ADDR_UNLOCK
 argument_list|(
 name|ifp
@@ -2833,6 +2907,10 @@ name|IF_ADDR_UNLOCK
 argument_list|(
 name|ifp
 argument_list|)
+expr_stmt|;
+name|ia
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 comment|/* RFC 3927 2.7: Do not forward datagrams for 169.254.0.0/16. */
@@ -3079,7 +3157,23 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|ia
+operator|!=
+name|NULL
+condition|)
+name|ifa_free
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 endif|#
 directive|endif
 comment|/* IPSTEALTH */
@@ -3109,6 +3203,14 @@ operator|->
 name|m_pkthdr
 operator|.
 name|len
+expr_stmt|;
+name|ifa_free
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Attempt reassembly; if it succeeds, proceed. 	 * ip_reass() will return a different mbuf. 	 */
@@ -5469,7 +5571,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given address of next destination (final or next hop),  * return internet address info of interface to be used to get there.  */
+comment|/*  * Given address of next destination (final or next hop), return (referenced)  * internet address info of interface to be used to get there.  */
 end_comment
 
 begin_function
@@ -5498,7 +5600,7 @@ decl_stmt|;
 name|struct
 name|in_ifaddr
 modifier|*
-name|ifa
+name|ia
 decl_stmt|;
 name|bzero
 argument_list|(
@@ -5568,7 +5670,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|ifa
+name|ia
 operator|=
 name|ifatoia
 argument_list|(
@@ -5577,6 +5679,14 @@ operator|.
 name|ro_rt
 operator|->
 name|rt_ifa
+argument_list|)
+expr_stmt|;
+name|ifa_ref
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
 argument_list|)
 expr_stmt|;
 name|RTFREE
@@ -5588,7 +5698,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ifa
+name|ia
 operator|)
 return|;
 block|}
@@ -6290,6 +6400,20 @@ argument_list|(
 name|mcopy
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ia
+operator|!=
+name|NULL
+condition|)
+name|ifa_free
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 block|}
@@ -6299,7 +6423,23 @@ name|mcopy
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|ia
+operator|!=
+name|NULL
+condition|)
+name|ifa_free
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 switch|switch
 condition|(
 name|error
@@ -6439,6 +6579,20 @@ argument_list|(
 name|mcopy
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ia
+operator|!=
+name|NULL
+condition|)
+name|ifa_free
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 else|else
@@ -6462,8 +6616,36 @@ argument_list|(
 name|mcopy
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ia
+operator|!=
+name|NULL
+condition|)
+name|ifa_free
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|ia
+operator|!=
+name|NULL
+condition|)
+name|ifa_free
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 name|icmp_error
 argument_list|(
 name|mcopy

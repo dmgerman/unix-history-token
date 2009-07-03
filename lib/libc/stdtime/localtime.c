@@ -7673,12 +7673,6 @@ name|tm
 modifier|*
 name|result
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|gmt_is_set
-condition|)
-block|{
 name|_MUTEX_LOCK
 argument_list|(
 operator|&
@@ -7733,7 +7727,6 @@ operator|&
 name|gmt_mutex
 argument_list|)
 expr_stmt|;
-block|}
 name|result
 operator|=
 name|timesub

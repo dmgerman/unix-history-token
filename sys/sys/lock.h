@@ -1450,6 +1450,7 @@ name|lock
 parameter_list|,
 name|type
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -1459,6 +1460,7 @@ name|WITNESS_DESTROY
 parameter_list|(
 name|lock
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -1488,6 +1490,7 @@ name|line
 parameter_list|,
 name|interlock
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -1503,6 +1506,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -1518,6 +1522,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -1533,6 +1538,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -1548,6 +1554,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -1579,6 +1586,7 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -1588,6 +1596,7 @@ name|WITNESS_SAVE_DECL
 parameter_list|(
 name|n
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -1599,6 +1608,7 @@ name|lock
 parameter_list|,
 name|n
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -1610,6 +1620,7 @@ name|lock
 parameter_list|,
 name|n
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -1619,6 +1630,7 @@ name|WITNESS_NORELEASE
 parameter_list|(
 name|lock
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -1628,6 +1640,7 @@ name|WITNESS_RELEASEOK
 parameter_list|(
 name|lock
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define

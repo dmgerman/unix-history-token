@@ -14,26 +14,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_USB2_DEBUG_H_
+name|_USB_DEBUG_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_USB2_DEBUG_H_
+name|_USB_DEBUG_H_
 end_define
-
-begin_comment
-comment|/* Declare parent SYSCTL USB node. */
-end_comment
-
-begin_expr_stmt
-name|SYSCTL_DECL
-argument_list|(
-name|_hw_usb
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* Declare global USB debug variable. */
@@ -42,7 +30,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|usb2_debug
+name|usb_debug
 decl_stmt|;
 end_decl_stmt
 
@@ -151,7 +139,7 @@ end_struct_decl
 
 begin_function_decl
 name|void
-name|usb2_dump_iface
+name|usb_dump_iface
 parameter_list|(
 name|struct
 name|usb_interface
@@ -163,7 +151,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_dump_device
+name|usb_dump_device
 parameter_list|(
 name|struct
 name|usb_device
@@ -175,7 +163,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_dump_queue
+name|usb_dump_queue
 parameter_list|(
 name|struct
 name|usb_endpoint
@@ -187,7 +175,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_dump_endpoint
+name|usb_dump_endpoint
 parameter_list|(
 name|struct
 name|usb_endpoint
@@ -199,7 +187,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_dump_xfer
+name|usb_dump_xfer
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -215,7 +203,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _USB2_DEBUG_H_ */
+comment|/* _USB_DEBUG_H_ */
 end_comment
 
 end_unit

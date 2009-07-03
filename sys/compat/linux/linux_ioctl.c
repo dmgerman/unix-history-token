@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kbio.h>
 end_include
 
@@ -207,12 +213,6 @@ begin_include
 include|#
 directive|include
 file|<net/if_types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/route.h>
 end_include
 
 begin_include
@@ -11239,6 +11239,11 @@ name|ifnet
 modifier|*
 name|ifname_linux_to_bsd
 parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -11253,7 +11258,7 @@ name|INIT_VNET_NET
 argument_list|(
 name|TD_TO_VNET
 argument_list|(
-name|curthread
+name|td
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -12698,6 +12703,8 @@ name|ifp
 operator|=
 name|ifname_linux_to_bsd
 argument_list|(
+name|td
+argument_list|,
 name|lifname
 argument_list|,
 name|ifname

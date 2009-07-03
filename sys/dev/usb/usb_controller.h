@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_USB2_CONTROLLER_H_
+name|_USB_CONTROLLER_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_USB2_CONTROLLER_H_
+name|_USB_CONTROLLER_H_
 end_define
 
 begin_comment
@@ -311,6 +311,10 @@ name|struct
 name|usb_endpoint
 modifier|*
 name|ep
+parameter_list|,
+name|uint8_t
+modifier|*
+name|did_stall
 parameter_list|)
 function_decl|;
 name|void
@@ -343,22 +347,50 @@ struct|struct
 name|usb_pipe_methods
 block|{
 comment|/* Mandatory USB Device and Host mode callbacks: */
-name|usb_callback_t
+name|void
+function_decl|(
 modifier|*
 name|open
-decl_stmt|;
-name|usb_callback_t
+function_decl|)
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
 modifier|*
 name|close
-decl_stmt|;
-name|usb_callback_t
+function_decl|)
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
 modifier|*
 name|enter
-decl_stmt|;
-name|usb_callback_t
+function_decl|)
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
 modifier|*
 name|start
-decl_stmt|;
+function_decl|)
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* Optional */
 name|void
 modifier|*
@@ -580,7 +612,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|usb2_bus_mem_flush_all
+name|usb_bus_mem_flush_all
 parameter_list|(
 name|struct
 name|usb_bus
@@ -596,7 +628,7 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
-name|usb2_bus_mem_alloc_all
+name|usb_bus_mem_alloc_all
 parameter_list|(
 name|struct
 name|usb_bus
@@ -615,7 +647,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_bus_mem_free_all
+name|usb_bus_mem_free_all
 parameter_list|(
 name|struct
 name|usb_bus
@@ -631,7 +663,7 @@ end_function_decl
 
 begin_function_decl
 name|uint16_t
-name|usb2_isoc_time_expand
+name|usb_isoc_time_expand
 parameter_list|(
 name|struct
 name|usb_bus
@@ -646,7 +678,7 @@ end_function_decl
 
 begin_function_decl
 name|uint16_t
-name|usb2_fs_isoc_schedule_isoc_time_expand
+name|usbd_fs_isoc_schedule_isoc_time_expand
 parameter_list|(
 name|struct
 name|usb_device
@@ -673,7 +705,7 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
-name|usb2_fs_isoc_schedule_alloc
+name|usbd_fs_isoc_schedule_alloc
 parameter_list|(
 name|struct
 name|usb_fs_isoc_schedule
@@ -696,7 +728,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _USB2_CONTROLLER_H_ */
+comment|/* _USB_CONTROLLER_H_ */
 end_comment
 
 end_unit

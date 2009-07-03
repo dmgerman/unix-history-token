@@ -3210,7 +3210,7 @@ name|UNI_DEBUG_DEFINE
 parameter_list|(
 name|D
 parameter_list|)
-value|[UNI_FAC_##D] #D,
+value|[UNI_FAC_##D] = #D,
 name|UNI_DEBUG_FACILITIES
 undef|#
 directive|undef

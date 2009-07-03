@@ -548,13 +548,6 @@ begin_comment
 comment|/* Number of KVA ptbls. */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|int
-name|pagedaemon_waken
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * If user pmap is processed with mmu_booke_remove and the resident count  * drops to 0, there are no more pages to remove, so we need not continue.  */
 end_comment
@@ -1301,6 +1294,8 @@ specifier|static
 name|void
 name|mmu_booke_copy
 parameter_list|(
+name|mmu_t
+parameter_list|,
 name|pmap_t
 parameter_list|,
 name|pmap_t
@@ -3636,30 +3631,13 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|pv_entry_count
 operator|>
 name|pv_entry_high_water
-operator|)
-operator|&&
-operator|(
-name|pagedaemon_waken
-operator|==
-literal|0
-operator|)
 condition|)
-block|{
-name|pagedaemon_waken
-operator|=
-literal|1
+name|pagedaemon_wakeup
+argument_list|()
 expr_stmt|;
-name|wakeup
-argument_list|(
-operator|&
-name|vm_pages_needed
-argument_list|)
-expr_stmt|;
-block|}
 name|pv
 operator|=
 name|uma_zalloc
@@ -4669,6 +4647,10 @@ decl_stmt|;
 name|vm_paddr_t
 name|kstack0_phys
 decl_stmt|;
+name|void
+modifier|*
+name|dpcpu
+decl_stmt|;
 name|pte_t
 modifier|*
 name|pte
@@ -4751,6 +4733,26 @@ operator|=
 name|round_page
 argument_list|(
 name|data_end
+argument_list|)
+expr_stmt|;
+comment|/* Allocate the dynamic per-cpu area. */
+name|dpcpu
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|data_end
+expr_stmt|;
+name|data_end
+operator|+=
+name|DPCPU_SIZE
+expr_stmt|;
+name|dpcpu_init
+argument_list|(
+name|dpcpu
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Allocate space for ptbl_bufs. */
@@ -8408,6 +8410,9 @@ specifier|static
 name|void
 name|mmu_booke_copy
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|pmap_t
 name|dst_pmap
 parameter_list|,

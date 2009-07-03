@@ -147,7 +147,7 @@ name|off_t
 name|uio_offset
 decl_stmt|;
 comment|/* offset in target object */
-name|int
+name|ssize_t
 name|uio_resid
 decl_stmt|;
 comment|/* remaining bytes to process */

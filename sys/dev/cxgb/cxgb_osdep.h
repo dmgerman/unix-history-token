@@ -51,16 +51,16 @@ directive|include
 file|<dev/mii/mii.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<common/cxgb_version.h>
-end_include
+begin_define
+define|#
+directive|define
+name|CONFIG_CHELSIO_T3_CORE
+end_define
 
 begin_include
 include|#
 directive|include
-file|<cxgb_config.h>
+file|<common/cxgb_version.h>
 end_include
 
 begin_ifndef
@@ -438,16 +438,16 @@ directive|define
 name|LRO_SUPPORTED
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
 name|TOE_SUPPORTED
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -766,15 +766,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TX_START_MIN_DESC
-value|(TX_MAX_DESC<< 2)
-end_define
-
-begin_define
-define|#
-directive|define
 name|TX_START_MAX_DESC
-value|(TX_MAX_DESC<< 3)
+value|(TX_MAX_DESC<< 2)
 end_define
 
 begin_comment
@@ -828,21 +821,6 @@ name|__amd64__
 argument_list|)
 end_if
 
-begin_define
-define|#
-directive|define
-name|smp_mb
-parameter_list|()
-value|mb()
-end_define
-
-begin_define
-define|#
-directive|define
-name|L1_CACHE_BYTES
-value|128
-end_define
-
 begin_function
 specifier|static
 name|__inline
@@ -857,6 +835,21 @@ block|{
 asm|__asm volatile("prefetcht0 %0" :: "m" (*(unsigned long *)x));
 block|}
 end_function
+
+begin_define
+define|#
+directive|define
+name|smp_mb
+parameter_list|()
+value|mb()
+end_define
+
+begin_define
+define|#
+directive|define
+name|L1_CACHE_BYTES
+value|128
+end_define
 
 begin_function_decl
 specifier|extern
@@ -882,10 +875,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|/* !i386&& !amd64 */
-end_comment
 
 begin_define
 define|#

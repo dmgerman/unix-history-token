@@ -591,6 +591,10 @@ define|#
 directive|define
 name|G_GEOM_WITHER
 value|1
+define|#
+directive|define
+name|G_GEOM_VOLATILE_BIO
+value|2
 block|}
 struct|;
 end_struct

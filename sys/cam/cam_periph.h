@@ -627,7 +627,7 @@ name|cam_periph
 modifier|*
 name|periph
 parameter_list|,
-name|int
+name|u_long
 name|cmd
 parameter_list|,
 name|caddr_t

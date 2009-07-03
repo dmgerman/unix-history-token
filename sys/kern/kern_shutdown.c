@@ -2729,7 +2729,7 @@ name|hostname
 argument_list|,
 name|prison0
 operator|.
-name|pr_host
+name|pr_hostname
 argument_list|,
 sizeof|sizeof
 argument_list|(

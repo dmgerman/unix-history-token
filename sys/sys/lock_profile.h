@@ -200,6 +200,7 @@ name|lock_profile_release_lock
 parameter_list|(
 name|lo
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -213,6 +214,7 @@ name|contested
 parameter_list|,
 name|waittime
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -230,6 +232,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -239,6 +242,7 @@ name|lock_profile_thread_exit
 parameter_list|(
 name|td
 parameter_list|)
+value|(void)0
 end_define
 
 begin_endif

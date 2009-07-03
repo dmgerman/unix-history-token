@@ -1191,7 +1191,7 @@ modifier|*
 name|mrt_ioctl
 function_decl|)
 parameter_list|(
-name|int
+name|u_long
 parameter_list|,
 name|caddr_t
 parameter_list|,

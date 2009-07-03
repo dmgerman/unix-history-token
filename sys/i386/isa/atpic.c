@@ -693,7 +693,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|atpic_assign_cpu
 parameter_list|(
 name|struct
@@ -1761,7 +1761,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|atpic_assign_cpu
 parameter_list|(
 name|struct

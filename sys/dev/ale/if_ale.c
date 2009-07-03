@@ -3386,6 +3386,14 @@ name|ifp
 operator|->
 name|if_capabilities
 expr_stmt|;
+comment|/* 	 * Even though controllers supported by ale(3) have Rx checksum 	 * offload bug the workaround for fragmented frames seemed to 	 * work so far. However it seems Rx checksum offload does not 	 * work under certain conditions. So disable Rx checksum offload 	 * until I find more clue about it but allow users to override it. 	 */
+name|ifp
+operator|->
+name|if_capenable
+operator|&=
+operator|~
+name|IFCAP_RXCSUM
+expr_stmt|;
 comment|/* Tell the upper layer(s) we support long frames. */
 name|ifp
 operator|->
@@ -16137,7 +16145,7 @@ name|mchash
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|if_maddr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -16201,7 +16209,7 @@ literal|0x1f
 operator|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|ifp
 argument_list|)

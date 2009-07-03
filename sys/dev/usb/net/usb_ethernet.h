@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_USB2_ETHERNET_H_
+name|_USB_ETHERNET_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_USB2_ETHERNET_H_
+name|_USB_ETHERNET_H_
 end_define
 
 begin_include
@@ -276,7 +276,7 @@ name|usb_device
 modifier|*
 name|ue_udev
 decl_stmt|;
-comment|/* used by usb2_ether_do_request() */
+comment|/* used by uether_do_request() */
 name|device_t
 name|ue_dev
 decl_stmt|;
@@ -351,7 +351,7 @@ end_struct
 begin_define
 define|#
 directive|define
-name|usb2_ether_do_request
+name|uether_do_request
 parameter_list|(
 name|ue
 parameter_list|,
@@ -362,12 +362,12 @@ parameter_list|,
 name|timo
 parameter_list|)
 define|\
-value|usb2_do_request_proc((ue)->ue_udev,&(ue)->ue_tq,req,data,0,NULL,timo)
+value|usbd_do_request_proc((ue)->ue_udev,&(ue)->ue_tq,req,data,0,NULL,timo)
 end_define
 
 begin_function_decl
 name|uint8_t
-name|usb2_ether_pause
+name|uether_pause
 parameter_list|(
 name|struct
 name|usb_ether
@@ -383,7 +383,7 @@ begin_function_decl
 name|struct
 name|ifnet
 modifier|*
-name|usb2_ether_getifp
+name|uether_getifp
 parameter_list|(
 name|struct
 name|usb_ether
@@ -396,7 +396,7 @@ begin_function_decl
 name|struct
 name|mii_data
 modifier|*
-name|usb2_ether_getmii
+name|uether_getmii
 parameter_list|(
 name|struct
 name|usb_ether
@@ -408,7 +408,7 @@ end_function_decl
 begin_function_decl
 name|void
 modifier|*
-name|usb2_ether_getsc
+name|uether_getsc
 parameter_list|(
 name|struct
 name|usb_ether
@@ -419,7 +419,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|usb2_ether_ifattach
+name|uether_ifattach
 parameter_list|(
 name|struct
 name|usb_ether
@@ -430,7 +430,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_ether_ifdetach
+name|uether_ifdetach
 parameter_list|(
 name|struct
 name|usb_ether
@@ -441,7 +441,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|usb2_ether_ioctl
+name|uether_ioctl
 parameter_list|(
 name|struct
 name|ifnet
@@ -458,7 +458,7 @@ begin_function_decl
 name|struct
 name|mbuf
 modifier|*
-name|usb2_ether_newbuf
+name|uether_newbuf
 parameter_list|(
 name|void
 parameter_list|)
@@ -467,7 +467,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|usb2_ether_rxmbuf
+name|uether_rxmbuf
 parameter_list|(
 name|struct
 name|usb_ether
@@ -485,7 +485,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|usb2_ether_rxbuf
+name|uether_rxbuf
 parameter_list|(
 name|struct
 name|usb_ether
@@ -506,7 +506,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_ether_rxflush
+name|uether_rxflush
 parameter_list|(
 name|struct
 name|usb_ether
@@ -517,7 +517,7 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
-name|usb2_ether_is_gone
+name|uether_is_gone
 parameter_list|(
 name|struct
 name|usb_ether
@@ -532,7 +532,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _USB2_ETHERNET_H_ */
+comment|/* _USB_ETHERNET_H_ */
 end_comment
 
 end_unit

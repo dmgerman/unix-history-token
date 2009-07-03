@@ -367,8 +367,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|MACREQ_A2HRIC_BIT_TX_ACK
+value|0x00008000
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISR_SRC_BITS
-value|((MACREG_A2HRIC_BIT_RX_RDY)   | \                              (MACREG_A2HRIC_BIT_TX_DONE)  | \                              (MACREG_A2HRIC_BIT_OPC_DONE) | \                              (MACREG_A2HRIC_BIT_MAC_EVENT)| \                              (MACREG_A2HRIC_BIT_MIC_ERROR)| \                              (MACREG_A2HRIC_BIT_ICV_ERROR)| \                              (MACREG_A2HRIC_BIT_RADAR_DETECT)| \                              (MACREG_A2HRIC_BIT_CHAN_SWITCH)| \                              (MACREG_A2HRIC_BIT_TX_WATCHDOG)| \                              (MACREG_A2HRIC_BIT_QUEUE_EMPTY)| \                              (MACREG_A2HRIC_BIT_BA_WATCHDOG))
+value|((MACREG_A2HRIC_BIT_RX_RDY)   | \                              (MACREG_A2HRIC_BIT_TX_DONE)  | \                              (MACREG_A2HRIC_BIT_OPC_DONE) | \                              (MACREG_A2HRIC_BIT_MAC_EVENT)| \                              (MACREG_A2HRIC_BIT_MIC_ERROR)| \                              (MACREG_A2HRIC_BIT_ICV_ERROR)| \                              (MACREG_A2HRIC_BIT_RADAR_DETECT)| \                              (MACREG_A2HRIC_BIT_CHAN_SWITCH)| \                              (MACREG_A2HRIC_BIT_TX_WATCHDOG)| \                              (MACREG_A2HRIC_BIT_QUEUE_EMPTY)| \                              (MACREG_A2HRIC_BIT_BA_WATCHDOG)| \ 			     (MACREQ_A2HRIC_BIT_TX_ACK))
 end_define
 
 begin_define
@@ -461,16 +468,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|NUM_ACK_EVENT_QUEUE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|TOTAL_TX_QUEUES
 define|\
-value|(NUM_EDCA_QUEUES + NUM_HCCA_QUEUES + NUM_BA_QUEUES + NUM_MGMT_QUEUES)
+value|(NUM_EDCA_QUEUES + NUM_HCCA_QUEUES + NUM_BA_QUEUES + NUM_MGMT_QUEUES + NUM_ACK_EVENT_QUEUE)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAX_TXWCB_QUEUES
-value|TOTAL_TX_QUEUES
+value|TOTAL_TX_QUEUES - NUM_ACK_EVENT_QUEUE
 end_define
 
 begin_define
@@ -767,6 +781,9 @@ directive|define
 name|EAGLE_TXD_DONT_AGGR
 value|0x0200
 comment|/* don't aggregate frame */
+name|uint32_t
+name|ack_wcb_addr
+decl_stmt|;
 block|}
 name|__packed
 struct|;
@@ -812,6 +829,13 @@ name|uint8_t
 name|nf
 decl_stmt|;
 comment|/* Noise floor */
+name|uint8_t
+name|rsvd3
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Reserved - To make word aligned */
 block|}
 name|__packed
 struct|;
@@ -1301,6 +1325,27 @@ define|#
 directive|define
 name|HostCmd_CMD_GET_SEQNO
 value|0x1143
+end_define
+
+begin_define
+define|#
+directive|define
+name|HostCmd_CMD_DWDS_ENABLE
+value|0x1144
+end_define
+
+begin_define
+define|#
+directive|define
+name|HostCmd_CMD_AMPDU_RETRY_RATEDROP_MODE
+value|0x1145
+end_define
+
+begin_define
+define|#
+directive|define
+name|HostCmd_CMD_CFEND_ENABLE
+value|0x1146
 end_define
 
 begin_comment
@@ -1973,12 +2018,11 @@ name|ulFwAwakeCookie
 decl_stmt|;
 name|u_int32_t
 name|WcbBase1
-decl_stmt|;
-name|u_int32_t
-name|WcbBase2
-decl_stmt|;
-name|u_int32_t
-name|WcbBase3
+index|[
+name|TOTAL_TX_QUEUES
+operator|-
+literal|1
+index|]
 decl_stmt|;
 block|}
 name|__packed
@@ -3559,6 +3603,9 @@ decl_stmt|;
 name|uint8_t
 name|isQosSta
 decl_stmt|;
+name|uint32_t
+name|FwStaPtr
+decl_stmt|;
 block|}
 name|__packed
 name|HostCmd_FW_SET_NEW_STN
@@ -4595,6 +4642,13 @@ comment|/** 0 or 1**/
 name|uint16_t
 name|StartSeqNo
 decl_stmt|;
+comment|// proxy sta MAC Address
+name|uint8_t
+name|StaSrcMacAddr
+index|[
+literal|6
+index|]
+decl_stmt|;
 block|}
 name|__packed
 name|BASTREAM_CREATE_STREAM
@@ -5008,6 +5062,65 @@ decl_stmt|;
 block|}
 name|__packed
 name|HostCmd_GET_SEQNO
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|FWCmdHdr
+name|CmdHdr
+decl_stmt|;
+name|uint32_t
+name|Enable
+decl_stmt|;
+comment|//0 -- Disbale. or 1 -- Enable.
+block|}
+name|__packed
+name|HostCmd_DWDS_ENABLE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|FWCmdHdr
+name|CmdHdr
+decl_stmt|;
+name|uint16_t
+name|Action
+decl_stmt|;
+comment|/* 0: Get. 1:Set */
+name|uint32_t
+name|Option
+decl_stmt|;
+comment|/* 0: default. 1:Aggressive */
+name|uint32_t
+name|Threshold
+decl_stmt|;
+comment|/* Range 0-200, default 8 */
+block|}
+name|__packed
+name|HostCmd_FW_AMPDU_RETRY_RATEDROP_MODE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|FWCmdHdr
+name|CmdHdr
+decl_stmt|;
+name|uint32_t
+name|Enable
+decl_stmt|;
+comment|/* 0 -- Disable. or 1 -- Enable */
+block|}
+name|__packed
+name|HostCmd_CFEND_ENABLE
 typedef|;
 end_typedef
 

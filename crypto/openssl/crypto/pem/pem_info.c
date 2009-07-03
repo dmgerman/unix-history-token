@@ -892,13 +892,7 @@ name|EVP_PKEY_DSA
 expr_stmt|;
 name|pp
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
-operator|(
 name|xi
 operator|->
 name|x_pkey
@@ -908,7 +902,6 @@ operator|->
 name|pkey
 operator|.
 name|dsa
-operator|)
 expr_stmt|;
 if|if
 condition|(

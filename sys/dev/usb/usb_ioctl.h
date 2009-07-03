@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_USB2_IOCTL_H_
+name|_USB_IOCTL_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_USB2_IOCTL_H_
+name|_USB_IOCTL_H_
 end_define
 
 begin_include
@@ -91,21 +91,6 @@ decl_stmt|;
 name|uint16_t
 name|ucr_flags
 decl_stmt|;
-define|#
-directive|define
-name|USB_SHORT_XFER_OK
-value|0x0004
-comment|/* allow short reads */
-define|#
-directive|define
-name|USB_DELAY_STATUS_STAGE
-value|0x0010
-comment|/* insert delay before STATUS stage */
-define|#
-directive|define
-name|USB_USER_DATA_PTR
-value|0x0020
-comment|/* internal flag */
 name|uint16_t
 name|ucr_actlen
 decl_stmt|;
@@ -414,7 +399,7 @@ define|#
 directive|define
 name|USB_FS_TIMEOUT_NONE
 value|0
-name|uint8_t
+name|int
 name|status
 decl_stmt|;
 comment|/* see USB_ERR_XXX */
@@ -1036,7 +1021,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _USB2_IOCTL_H_ */
+comment|/* _USB_IOCTL_H_ */
 end_comment
 
 end_unit

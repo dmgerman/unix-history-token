@@ -157,16 +157,27 @@ begin_comment
 comment|/* max bytes in a file name */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NGROUPS_MAX
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|NGROUPS_MAX
-value|16
+value|1023
 end_define
 
 begin_comment
 comment|/* max supplemental group id's */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#

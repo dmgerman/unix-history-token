@@ -842,6 +842,17 @@ begin_comment
 comment|/* Can manipulate cpusets. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PRIV_SCHED_CPUSET_INTR
+value|207
+end_define
+
+begin_comment
+comment|/* Can adjust IRQ to CPU binding. */
+end_comment
+
 begin_comment
 comment|/*  * POSIX semaphore privileges.  */
 end_comment
@@ -971,12 +982,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRIV_TTY_PRISON
+name|_PRIV_TTY_PRISON
 value|254
 end_define
 
 begin_comment
-comment|/* Can open pts across jails. */
+comment|/* Removed. */
 end_comment
 
 begin_define
@@ -1538,6 +1549,28 @@ begin_comment
 comment|/* Can munlock(), munlockall(). */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PRIV_VM_SWAP_NOQUOTA
+value|363
+end_define
+
+begin_comment
+comment|/* 					 * Can override the global 					 * swap reservation limits. 					 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_VM_SWAP_NORLIMIT
+value|364
+end_define
+
+begin_comment
+comment|/* 					 * Can override the per-uid 					 * swap reservation limits. 					 */
+end_comment
+
 begin_comment
 comment|/*  * Device file system privileges.  */
 end_comment
@@ -1608,23 +1641,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRIV_NET_PPP
+name|_PRIV_NET_PPP
 value|392
 end_define
 
 begin_comment
-comment|/* Administer PPP. */
+comment|/* Removed. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PRIV_NET_SLIP
+name|_PRIV_NET_SLIP
 value|393
 end_define
 
 begin_comment
-comment|/* Administer SLIP. */
+comment|/* Removed. */
 end_comment
 
 begin_define
@@ -1878,6 +1911,17 @@ end_define
 
 begin_comment
 comment|/* Administer gif interface. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_NET_SETIFVNET
+value|417
+end_define
+
+begin_comment
+comment|/* Move interface to vnet. */
 end_comment
 
 begin_comment

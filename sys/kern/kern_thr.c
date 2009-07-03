@@ -1607,10 +1607,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|AUDIT_ARG
+name|AUDIT_ARG_SIGNUM
 argument_list|(
-name|signum
-argument_list|,
 name|uap
 operator|->
 name|sig
@@ -1664,10 +1662,8 @@ name|ESRCH
 operator|)
 return|;
 block|}
-name|AUDIT_ARG
+name|AUDIT_ARG_PROCESS
 argument_list|(
-name|process
-argument_list|,
 name|p
 argument_list|)
 expr_stmt|;

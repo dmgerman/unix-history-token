@@ -10,13 +10,115 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_mfunc.h>
+file|<sys/stdint.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_error.h>
+file|<sys/stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker_set.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/condvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/priv.h>
 end_include
 
 begin_include
@@ -25,11 +127,23 @@ directive|include
 file|<dev/usb/usb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/usb/usbdi.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/usb/usbdi_util.h>
+end_include
+
 begin_define
 define|#
 directive|define
 name|USB_DEBUG_VAR
-value|usb2_debug
+value|usb_debug
 end_define
 
 begin_include
@@ -95,7 +209,7 @@ end_if
 begin_function_decl
 specifier|static
 name|void
-name|usb2_dma_tag_create
+name|usb_dma_tag_create
 parameter_list|(
 name|struct
 name|usb_dma_tag
@@ -111,7 +225,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_dma_tag_destroy
+name|usb_dma_tag_destroy
 parameter_list|(
 name|struct
 name|usb_dma_tag
@@ -123,7 +237,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_dma_lock_cb
+name|usb_dma_lock_cb
 parameter_list|(
 name|void
 modifier|*
@@ -136,7 +250,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_pc_alloc_mem_cb
+name|usb_pc_alloc_mem_cb
 parameter_list|(
 name|void
 modifier|*
@@ -154,7 +268,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_pc_load_mem_cb
+name|usb_pc_load_mem_cb
 parameter_list|(
 name|void
 modifier|*
@@ -172,7 +286,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_pc_common_mem_cb
+name|usb_pc_common_mem_cb
 parameter_list|(
 name|void
 modifier|*
@@ -195,12 +309,12 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *  usb2_get_page - lookup DMA-able memory for the given offset  *  * NOTE: Only call this function when the "page_cache" structure has  * been properly initialized !  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *  usbd_get_page - lookup DMA-able memory for the given offset  *  * NOTE: Only call this function when the "page_cache" structure has  * been properly initialized !  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_get_page
+name|usbd_get_page
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -390,12 +504,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *  usb2_copy_in - copy directly to DMA-able memory  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *  usbd_copy_in - copy directly to DMA-able memory  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_copy_in
+name|usbd_copy_in
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -425,7 +539,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 name|cache
 argument_list|,
@@ -492,7 +606,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *  usb2_copy_in_user - copy directly to DMA-able memory from userland  *  * Return values:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *  usbd_copy_in_user - copy directly to DMA-able memory from userland  *  * Return values:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_if
@@ -503,7 +617,7 @@ end_if
 
 begin_function
 name|int
-name|usb2_copy_in_user
+name|usbd_copy_in_user
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -536,7 +650,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 name|cache
 argument_list|,
@@ -625,7 +739,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *  usb2_m_copy_in - copy a mbuf chain directly into DMA-able memory  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *  usbd_m_copy_in - copy a mbuf chain directly into DMA-able memory  *------------------------------------------------------------------------*/
 end_comment
 
 begin_if
@@ -636,7 +750,7 @@ end_if
 
 begin_struct
 struct|struct
-name|usb2_m_copy_in_arg
+name|usb_m_copy_in_arg
 block|{
 name|struct
 name|usb_page_cache
@@ -653,7 +767,7 @@ end_struct
 begin_function
 specifier|static
 name|int
-name|usb2_m_copy_in_cb
+name|usbd_m_copy_in_cb
 parameter_list|(
 name|void
 modifier|*
@@ -669,13 +783,13 @@ parameter_list|)
 block|{
 specifier|register
 name|struct
-name|usb2_m_copy_in_arg
+name|usb_m_copy_in_arg
 modifier|*
 name|ua
 init|=
 name|arg
 decl_stmt|;
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|ua
 operator|->
@@ -706,7 +820,7 @@ end_function
 
 begin_function
 name|void
-name|usb2_m_copy_in
+name|usbd_m_copy_in
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -729,7 +843,7 @@ name|src_len
 parameter_list|)
 block|{
 name|struct
-name|usb2_m_copy_in_arg
+name|usb_m_copy_in_arg
 name|arg
 init|=
 block|{
@@ -752,7 +866,7 @@ argument_list|,
 name|src_len
 argument_list|,
 operator|&
-name|usb2_m_copy_in_cb
+name|usbd_m_copy_in_cb
 argument_list|,
 operator|&
 name|arg
@@ -767,7 +881,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *  usb2_uiomove - factored out code  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *  usb_uiomove - factored out code  *------------------------------------------------------------------------*/
 end_comment
 
 begin_if
@@ -778,7 +892,7 @@ end_if
 
 begin_function
 name|int
-name|usb2_uiomove
+name|usb_uiomove
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -813,7 +927,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 name|pc
 argument_list|,
@@ -889,12 +1003,12 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *  usb2_copy_out - copy directly from DMA-able memory  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *  usbd_copy_out - copy directly from DMA-able memory  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_copy_out
+name|usbd_copy_out
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -923,7 +1037,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 name|cache
 argument_list|,
@@ -990,7 +1104,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *  usb2_copy_out_user - copy directly from DMA-able memory to userland  *  * Return values:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *  usbd_copy_out_user - copy directly from DMA-able memory to userland  *  * Return values:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_if
@@ -1001,7 +1115,7 @@ end_if
 
 begin_function
 name|int
-name|usb2_copy_out_user
+name|usbd_copy_out_user
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -1033,7 +1147,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 name|cache
 argument_list|,
@@ -1122,12 +1236,12 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *  usb2_bzero - zero DMA-able memory  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *  usbd_frame_zero - zero DMA-able memory  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_bzero
+name|usbd_frame_zero
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -1152,7 +1266,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 name|cache
 argument_list|,
@@ -1212,13 +1326,13 @@ name|USB_HAVE_BUSDMA
 end_if
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_dma_lock_cb - dummy callback  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_dma_lock_cb - dummy callback  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_dma_lock_cb
+name|usb_dma_lock_cb
 parameter_list|(
 name|void
 modifier|*
@@ -1233,13 +1347,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_dma_tag_create - allocate a DMA tag  *  * NOTE: If the "align" parameter has a value of 1 the DMA-tag will  * allow multi-segment mappings. Else all mappings are single-segment.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_dma_tag_create - allocate a DMA tag  *  * NOTE: If the "align" parameter has a value of 1 the DMA-tag will  * allow multi-segment mappings. Else all mappings are single-segment.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_dma_tag_create
+name|usb_dma_tag_create
 parameter_list|(
 name|struct
 name|usb_dma_tag
@@ -1337,7 +1451,7 @@ name|BUS_DMA_KEEP_PG_OFFSET
 argument_list|,
 comment|/* lockfn    */
 operator|&
-name|usb2_dma_lock_cb
+name|usb_dma_lock_cb
 argument_list|,
 comment|/* lockarg   */
 name|NULL
@@ -1362,13 +1476,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_dma_tag_free - free a DMA tag  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_dma_tag_free - free a DMA tag  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_dma_tag_destroy
+name|usb_dma_tag_destroy
 parameter_list|(
 name|struct
 name|usb_dma_tag
@@ -1387,13 +1501,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_pc_alloc_mem_cb - BUS-DMA callback function  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_pc_alloc_mem_cb - BUS-DMA callback function  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_pc_alloc_mem_cb
+name|usb_pc_alloc_mem_cb
 parameter_list|(
 name|void
 modifier|*
@@ -1410,7 +1524,7 @@ name|int
 name|error
 parameter_list|)
 block|{
-name|usb2_pc_common_mem_cb
+name|usb_pc_common_mem_cb
 argument_list|(
 name|arg
 argument_list|,
@@ -1427,13 +1541,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_pc_load_mem_cb - BUS-DMA callback function  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_pc_load_mem_cb - BUS-DMA callback function  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_pc_load_mem_cb
+name|usb_pc_load_mem_cb
 parameter_list|(
 name|void
 modifier|*
@@ -1450,7 +1564,7 @@ name|int
 name|error
 parameter_list|)
 block|{
-name|usb2_pc_common_mem_cb
+name|usb_pc_common_mem_cb
 argument_list|(
 name|arg
 argument_list|,
@@ -1467,13 +1581,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_pc_common_mem_cb - BUS-DMA callback function  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_pc_common_mem_cb - BUS-DMA callback function  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_pc_common_mem_cb
+name|usb_pc_common_mem_cb
 parameter_list|(
 name|void
 modifier|*
@@ -1582,13 +1696,9 @@ expr_stmt|;
 name|nseg
 operator|--
 expr_stmt|;
-if|#
-directive|if
-operator|(
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-operator|!=
-literal|0
-operator|)
 if|if
 condition|(
 name|rem
@@ -1711,7 +1821,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|usb2_cv_broadcast
+name|cv_broadcast
 argument_list|(
 name|uptag
 operator|->
@@ -1735,12 +1845,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_pc_alloc_mem - allocate DMA'able memory  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_pc_alloc_mem - allocate DMA'able memory  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|uint8_t
-name|usb2_pc_alloc_mem
+name|usb_pc_alloc_mem
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -1842,7 +1952,7 @@ block|}
 comment|/* get the correct DMA tag */
 name|utag
 operator|=
-name|usb2_dma_tag_find
+name|usb_dma_tag_find
 argument_list|(
 name|uptag
 argument_list|,
@@ -1961,7 +2071,7 @@ argument_list|,
 name|size
 argument_list|,
 operator|&
-name|usb2_pc_alloc_mem_cb
+name|usb_pc_alloc_mem_cb
 argument_list|,
 name|pc
 argument_list|,
@@ -1979,7 +2089,7 @@ operator|==
 name|EINPROGRESS
 condition|)
 block|{
-name|usb2_cv_wait
+name|cv_wait
 argument_list|(
 name|uptag
 operator|->
@@ -2033,7 +2143,7 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|pc
 argument_list|)
@@ -2091,12 +2201,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_pc_free_mem - free DMA memory  *  * This function is NULL safe.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_pc_free_mem - free DMA memory  *  * This function is NULL safe.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_pc_free_mem
+name|usb_pc_free_mem
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -2150,12 +2260,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_pc_load_mem - load virtual memory into DMA  *  * Return values:  * 0: Success  * Else: Error  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_pc_load_mem - load virtual memory into DMA  *  * Return values:  * 0: Success  * Else: Error  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|uint8_t
-name|usb2_pc_load_mem
+name|usb_pc_load_mem
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -2257,7 +2367,7 @@ argument_list|,
 name|size
 argument_list|,
 operator|&
-name|usb2_pc_alloc_mem_cb
+name|usb_pc_alloc_mem_cb
 argument_list|,
 name|pc
 argument_list|,
@@ -2271,7 +2381,7 @@ operator|==
 name|EINPROGRESS
 condition|)
 block|{
-name|usb2_cv_wait
+name|cv_wait
 argument_list|(
 name|uptag
 operator|->
@@ -2337,7 +2447,7 @@ argument_list|,
 name|size
 argument_list|,
 operator|&
-name|usb2_pc_load_mem_cb
+name|usb_pc_load_mem_cb
 argument_list|,
 name|pc
 argument_list|,
@@ -2388,12 +2498,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_pc_cpu_invalidate - invalidate CPU cache  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_pc_cpu_invalidate - invalidate CPU cache  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_pc_cpu_invalidate
+name|usb_pc_cpu_invalidate
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -2434,12 +2544,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_pc_cpu_flush - flush CPU cache  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_pc_cpu_flush - flush CPU cache  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -2480,12 +2590,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_pc_dmamap_create - create a DMA map  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_pc_dmamap_create - create a DMA map  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|uint8_t
-name|usb2_pc_dmamap_create
+name|usb_pc_dmamap_create
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -2530,7 +2640,7 @@ goto|;
 block|}
 name|utag
 operator|=
-name|usb2_dma_tag_find
+name|usb_dma_tag_find
 argument_list|(
 name|pc
 operator|->
@@ -2608,12 +2718,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_pc_dmamap_destroy  *  * This function is NULL safe.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_pc_dmamap_destroy  *  * This function is NULL safe.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_pc_dmamap_destroy
+name|usb_pc_dmamap_destroy
 parameter_list|(
 name|struct
 name|usb_page_cache
@@ -2658,14 +2768,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_dma_tag_find - factored out code  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_dma_tag_find - factored out code  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|struct
 name|usb_dma_tag
 modifier|*
-name|usb2_dma_tag_find
+name|usb_dma_tag_find
 parameter_list|(
 name|struct
 name|usb_dma_parent_tag
@@ -2736,7 +2846,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|usb2_dma_tag_create
+name|usb_dma_tag_create
 argument_list|(
 name|udt
 argument_list|,
@@ -2816,12 +2926,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_dma_tag_setup - initialise USB DMA tags  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_dma_tag_setup - initialise USB DMA tags  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_dma_tag_setup
+name|usb_dma_tag_setup
 parameter_list|(
 name|struct
 name|usb_dma_parent_tag
@@ -2889,7 +2999,7 @@ comment|/* something is corrupt */
 return|return;
 block|}
 comment|/* initialise condition variable */
-name|usb2_cv_init
+name|cv_init
 argument_list|(
 name|udpt
 operator|->
@@ -2966,12 +3076,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_bus_tag_unsetup - factored out code  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_bus_tag_unsetup - factored out code  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_dma_tag_unsetup
+name|usb_dma_tag_unsetup
 parameter_list|(
 name|struct
 name|usb_dma_parent_tag
@@ -3013,7 +3123,7 @@ name|align
 condition|)
 block|{
 comment|/* destroy the USB DMA tag */
-name|usb2_dma_tag_destroy
+name|usb_dma_tag_destroy
 argument_list|(
 name|udt
 argument_list|)
@@ -3037,7 +3147,7 @@ name|utag_max
 condition|)
 block|{
 comment|/* destroy the condition variable */
-name|usb2_cv_destroy
+name|cv_destroy
 argument_list|(
 name|udpt
 operator|->
@@ -3049,12 +3159,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_bdma_work_loop  *  * This function handles loading of virtual buffers into DMA and is  * only called when "dma_refcount" is zero.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_bdma_work_loop  *  * This function handles loading of virtual buffers into DMA and is  * only called when "dma_refcount" is zero.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_bdma_work_loop
+name|usb_bdma_work_loop
 parameter_list|(
 name|struct
 name|usb_xfer_queue
@@ -3111,7 +3221,7 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_done
+name|usbd_transfer_done
 argument_list|(
 name|xfer
 argument_list|,
@@ -3393,7 +3503,7 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_done
+name|usbd_transfer_done
 argument_list|(
 name|xfer
 argument_list|,
@@ -3430,7 +3540,7 @@ literal|0
 condition|)
 block|{
 comment|/* special case */
-name|usb2_pc_load_mem
+name|usb_pc_load_mem
 argument_list|(
 name|xfer
 operator|->
@@ -3453,7 +3563,7 @@ name|info
 operator|->
 name|dma_currframe
 expr_stmt|;
-name|usb2_pc_load_mem
+name|usb_pc_load_mem
 argument_list|(
 name|xfer
 operator|->
@@ -3481,13 +3591,13 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* go ahead */
-name|usb2_bdma_pre_sync
+name|usb_bdma_pre_sync
 argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
 comment|/* start loading next USB transfer, if any */
-name|usb2_command_wrapper
+name|usb_command_wrapper
 argument_list|(
 name|pq
 argument_list|,
@@ -3495,7 +3605,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* finally start the hardware */
-name|usb2_pipe_enter
+name|usbd_pipe_enter
 argument_list|(
 name|xfer
 argument_list|)
@@ -3504,12 +3614,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_bdma_done_event  *  * This function is called when the BUS-DMA has loaded virtual memory  * into DMA, if any.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_bdma_done_event  *  * This function is called when the BUS-DMA has loaded virtual memory  * into DMA, if any.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_bdma_done_event
+name|usb_bdma_done_event
 parameter_list|(
 name|struct
 name|usb_dma_parent_tag
@@ -3548,7 +3658,7 @@ operator|->
 name|dma_error
 expr_stmt|;
 comment|/* enter workloop again */
-name|usb2_command_wrapper
+name|usb_command_wrapper
 argument_list|(
 operator|&
 name|info
@@ -3566,12 +3676,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_bdma_pre_sync  *  * This function handles DMA synchronisation that must be done before  * an USB transfer is started.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_bdma_pre_sync  *  * This function handles DMA synchronisation that must be done before  * an USB transfer is started.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_bdma_pre_sync
+name|usb_bdma_pre_sync
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -3631,7 +3741,7 @@ operator|->
 name|isread
 condition|)
 block|{
-name|usb2_pc_cpu_invalidate
+name|usb_pc_cpu_invalidate
 argument_list|(
 name|pc
 argument_list|)
@@ -3639,7 +3749,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|pc
 argument_list|)
@@ -3653,12 +3763,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_bdma_post_sync  *  * This function handles DMA synchronisation that must be done after  * an USB transfer is complete.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_bdma_post_sync  *  * This function handles DMA synchronisation that must be done after  * an USB transfer is complete.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_bdma_post_sync
+name|usb_bdma_post_sync
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -3718,7 +3828,7 @@ operator|->
 name|isread
 condition|)
 block|{
-name|usb2_pc_cpu_invalidate
+name|usb_pc_cpu_invalidate
 argument_list|(
 name|pc
 argument_list|)

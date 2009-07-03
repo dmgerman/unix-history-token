@@ -7775,6 +7775,14 @@ argument_list|)
 operator|->
 name|sin_addr
 expr_stmt|;
+name|ifa_free
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -8233,6 +8241,9 @@ name|mifp
 operator|=
 name|NULL
 expr_stmt|;
+name|IN_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ia
@@ -8275,6 +8286,9 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 return|return

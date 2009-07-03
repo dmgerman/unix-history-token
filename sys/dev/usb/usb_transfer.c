@@ -10,13 +10,115 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_mfunc.h>
+file|<sys/stdint.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_error.h>
+file|<sys/stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker_set.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/condvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/priv.h>
 end_include
 
 begin_include
@@ -25,11 +127,23 @@ directive|include
 file|<dev/usb/usb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/usb/usbdi.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/usb/usbdi_util.h>
+end_include
+
 begin_define
 define|#
 directive|define
 name|USB_DEBUG_VAR
-value|usb2_debug
+value|usb_debug
 end_define
 
 begin_include
@@ -88,7 +202,7 @@ end_include
 
 begin_struct
 struct|struct
-name|usb2_std_packet_size
+name|usb_std_packet_size
 block|{
 struct|struct
 block|{
@@ -116,7 +230,7 @@ end_struct
 begin_decl_stmt
 specifier|static
 name|usb_callback_t
-name|usb2_request_callback
+name|usb_request_callback
 decl_stmt|;
 end_decl_stmt
 
@@ -125,7 +239,7 @@ specifier|static
 specifier|const
 name|struct
 name|usb_config
-name|usb2_control_ep_cfg
+name|usb_control_ep_cfg
 index|[
 name|USB_DEFAULT_XFER_MAX
 index|]
@@ -173,7 +287,7 @@ operator|.
 name|callback
 operator|=
 operator|&
-name|usb2_request_callback
+name|usb_request_callback
 block|,
 operator|.
 name|usb_mode
@@ -218,7 +332,7 @@ operator|.
 name|callback
 operator|=
 operator|&
-name|usb2_do_clear_stall_callback
+name|usb_do_clear_stall_callback
 block|,
 operator|.
 name|timeout
@@ -248,7 +362,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|void
-name|usb2_update_max_frame_size
+name|usbd_update_max_frame_size
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -260,7 +374,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_transfer_unsetup_sub
+name|usbd_transfer_unsetup_sub
 parameter_list|(
 name|struct
 name|usb_xfer_root
@@ -274,7 +388,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_control_transfer_init
+name|usbd_control_transfer_init
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -285,8 +399,8 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|uint8_t
-name|usb2_start_hardware_sub
+name|int
+name|usbd_setup_ctrl_transfer
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -298,7 +412,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_callback_proc
+name|usb_callback_proc
 parameter_list|(
 name|struct
 name|usb_proc_msg
@@ -310,7 +424,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_callback_ss_done_defer
+name|usbd_callback_ss_done_defer
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -322,7 +436,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_callback_wrapper
+name|usbd_callback_wrapper
 parameter_list|(
 name|struct
 name|usb_xfer_queue
@@ -334,7 +448,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_dma_delay_done_cb
+name|usb_dma_delay_done_cb
 parameter_list|(
 name|void
 modifier|*
@@ -345,7 +459,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_transfer_start_cb
+name|usbd_transfer_start_cb
 parameter_list|(
 name|void
 modifier|*
@@ -356,7 +470,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|uint8_t
-name|usb2_callback_wrapper_sub
+name|usbd_callback_wrapper_sub
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -368,10 +482,10 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_get_std_packet_size
+name|usbd_get_std_packet_size
 parameter_list|(
 name|struct
-name|usb2_std_packet_size
+name|usb_std_packet_size
 modifier|*
 name|ptr
 parameter_list|,
@@ -386,18 +500,21 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_request_callback  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_request_callback  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_request_callback
+name|usb_request_callback
 parameter_list|(
 name|struct
 name|usb_xfer
 modifier|*
 name|xfer
+parameter_list|,
+name|usb_error_t
+name|error
 parameter_list|)
 block|{
 if|if
@@ -410,28 +527,32 @@ name|usb_mode
 operator|==
 name|USB_MODE_DEVICE
 condition|)
-name|usb2_handle_request_callback
+name|usb_handle_request_callback
 argument_list|(
 name|xfer
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 else|else
-name|usb2_do_request_callback
+name|usbd_do_request_callback
 argument_list|(
 name|xfer
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_update_max_frame_size  *  * This function updates the maximum frame size, hence high speed USB  * can transfer multiple consecutive packets.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_update_max_frame_size  *  * This function updates the maximum frame size, hence high speed USB  * can transfer multiple consecutive packets.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_update_max_frame_size
+name|usbd_update_max_frame_size
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -496,12 +617,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_get_dma_delay  *  * The following function is called when we need to  * synchronize with DMA hardware.  *  * Returns:  *    0: no DMA delay required  * Else: milliseconds of DMA delay  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_get_dma_delay  *  * The following function is called when we need to  * synchronize with DMA hardware.  *  * Returns:  *    0: no DMA delay required  * Else: milliseconds of DMA delay  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_timeout_t
-name|usb2_get_dma_delay
+name|usbd_get_dma_delay
 parameter_list|(
 name|struct
 name|usb_bus
@@ -556,7 +677,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_transfer_setup_sub_malloc  *  * This function will allocate one or more DMA'able memory chunks  * according to "size", "align" and "count" arguments. "ppc" is  * pointed to a linear array of USB page caches afterwards.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_transfer_setup_sub_malloc  *  * This function will allocate one or more DMA'able memory chunks  * according to "size", "align" and "count" arguments. "ppc" is  * pointed to a linear array of USB page caches afterwards.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_if
@@ -567,7 +688,7 @@ end_if
 
 begin_function
 name|uint8_t
-name|usb2_transfer_setup_sub_malloc
+name|usbd_transfer_setup_sub_malloc
 parameter_list|(
 name|struct
 name|usb_setup_params
@@ -900,7 +1021,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|usb2_pc_alloc_mem
+name|usb_pc_alloc_mem
 argument_list|(
 name|parm
 operator|->
@@ -967,7 +1088,7 @@ block|{
 comment|/* Load sub-chunk into DMA */
 if|if
 condition|(
-name|usb2_pc_dmamap_create
+name|usb_pc_dmamap_create
 argument_list|(
 name|pc
 argument_list|,
@@ -1012,7 +1133,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|usb2_pc_load_mem
+name|usb_pc_load_mem
 argument_list|(
 name|pc
 argument_list|,
@@ -1076,12 +1197,12 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_transfer_setup_sub - transfer setup subroutine  *  * This function must be called from the "xfer_setup" callback of the  * USB Host or Device controller driver when setting up an USB  * transfer. This function will setup correct packet sizes, buffer  * sizes, flags and more, that are stored in the "usb_xfer"  * structure.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_transfer_setup_sub - transfer setup subroutine  *  * This function must be called from the "xfer_setup" callback of the  * USB Host or Device controller driver when setting up an USB  * transfer. This function will setup correct packet sizes, buffer  * sizes, flags and more, that are stored in the "usb_xfer"  * structure.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_transfer_setup_sub
+name|usbd_transfer_setup_sub
 parameter_list|(
 name|struct
 name|usb_setup_params
@@ -1125,7 +1246,7 @@ modifier|*
 name|edesc
 decl_stmt|;
 name|struct
-name|usb2_std_packet_size
+name|usb_std_packet_size
 name|std_size
 decl_stmt|;
 name|usb_frcount_t
@@ -1370,7 +1491,7 @@ name|hc_max_packet_size
 expr_stmt|;
 block|}
 comment|/* filter "wMaxPacketSize" according to standard sizes */
-name|usb2_get_std_packet_size
+name|usbd_get_std_packet_size
 argument_list|(
 operator|&
 name|std_size
@@ -1545,7 +1666,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* compute "max_frame_size" */
-name|usb2_update_max_frame_size
+name|usbd_update_max_frame_size
 argument_list|(
 name|xfer
 argument_list|)
@@ -1859,7 +1980,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* automatic setup length */
-name|usb2_update_max_frame_size
+name|usbd_update_max_frame_size
 argument_list|(
 name|xfer
 argument_list|)
@@ -2175,6 +2296,15 @@ name|xfer_page_cache_ptr
 operator|+=
 name|n_frbuffers
 expr_stmt|;
+comment|/* initialize max frame count */
+name|xfer
+operator|->
+name|max_frame_count
+operator|=
+name|xfer
+operator|->
+name|nframes
+expr_stmt|;
 comment|/* 	 * check if we need to setup 	 * a local buffer: 	 */
 if|if
 condition|(
@@ -2237,7 +2367,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_set_frame_offset
+name|usbd_xfer_set_frame_offset
 argument_list|(
 name|xfer
 argument_list|,
@@ -2261,7 +2391,7 @@ literal|1
 operator|)
 condition|)
 block|{
-name|usb2_set_frame_offset
+name|usbd_xfer_set_frame_offset
 argument_list|(
 name|xfer
 argument_list|,
@@ -2430,15 +2560,6 @@ goto|goto
 name|done
 goto|;
 block|}
-comment|/* initialize max frame count */
-name|xfer
-operator|->
-name|max_frame_count
-operator|=
-name|xfer
-operator|->
-name|nframes
-expr_stmt|;
 comment|/* initialize frame buffers */
 if|if
 condition|(
@@ -2499,7 +2620,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|usb2_pc_dmamap_create
+name|usb_pc_dmamap_create
 argument_list|(
 name|xfer
 operator|->
@@ -2579,12 +2700,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_transfer_setup - setup an array of USB transfers  *  * NOTE: You must always call "usb2_transfer_unsetup" after calling  * "usb2_transfer_setup" if success was returned.  *  * The idea is that the USB device driver should pre-allocate all its  * transfers by one call to this function.  *  * Return values:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_transfer_setup - setup an array of USB transfers  *  * NOTE: You must always call "usbd_transfer_unsetup" after calling  * "usbd_transfer_setup" if success was returned.  *  * The idea is that the USB device driver should pre-allocate all its  * transfers by one call to this function.  *  * Return values:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 parameter_list|(
 name|struct
 name|usb_device
@@ -2694,7 +2815,7 @@ name|WARN_SLEEPOK
 argument_list|,
 name|NULL
 argument_list|,
-literal|"usb2_transfer_setup can sleep!"
+literal|"usbd_transfer_setup can sleep!"
 argument_list|)
 expr_stmt|;
 comment|/* do some checking first */
@@ -2866,7 +2987,7 @@ name|parm
 operator|.
 name|speed
 operator|=
-name|usb2_get_speed
+name|usbd_get_speed
 argument_list|(
 name|udev
 argument_list|)
@@ -3003,7 +3124,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|usb2_cv_init
+name|cv_init
 argument_list|(
 operator|&
 name|info
@@ -3022,7 +3143,7 @@ expr_stmt|;
 if|#
 directive|if
 name|USB_HAVE_BUSDMA
-name|usb2_dma_tag_setup
+name|usb_dma_tag_setup
 argument_list|(
 operator|&
 name|info
@@ -3047,7 +3168,7 @@ argument_list|,
 name|xfer_mtx
 argument_list|,
 operator|&
-name|usb2_bdma_done_event
+name|usb_bdma_done_event
 argument_list|,
 literal|32
 argument_list|,
@@ -3089,7 +3210,7 @@ operator|.
 name|command
 operator|=
 operator|&
-name|usb2_callback_wrapper
+name|usbd_callback_wrapper
 expr_stmt|;
 if|#
 directive|if
@@ -3111,7 +3232,7 @@ operator|.
 name|command
 operator|=
 operator|&
-name|usb2_bdma_work_loop
+name|usb_bdma_work_loop
 expr_stmt|;
 endif|#
 directive|endif
@@ -3127,7 +3248,7 @@ operator|.
 name|pm_callback
 operator|=
 operator|&
-name|usb2_callback_proc
+name|usb_callback_proc
 expr_stmt|;
 name|info
 operator|->
@@ -3152,7 +3273,7 @@ operator|.
 name|pm_callback
 operator|=
 operator|&
-name|usb2_callback_proc
+name|usb_callback_proc
 expr_stmt|;
 name|info
 operator|->
@@ -3170,7 +3291,7 @@ if|if
 condition|(
 name|setup_start
 operator|==
-name|usb2_control_ep_cfg
+name|usb_control_ep_cfg
 condition|)
 name|info
 operator|->
@@ -3282,7 +3403,7 @@ block|}
 comment|/* see if there is a matching endpoint */
 name|ep
 operator|=
-name|usb2_get_endpoint
+name|usbd_get_endpoint
 argument_list|(
 name|udev
 argument_list|,
@@ -3428,7 +3549,7 @@ name|xroot
 operator|=
 name|info
 expr_stmt|;
-name|usb2_callout_init_mtx
+name|usb_callout_init_mtx
 argument_list|(
 operator|&
 name|xfer
@@ -4107,7 +4228,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * "usb2_transfer_unsetup_sub" will unlock 			 * the bus mutex before returning ! 			 */
+comment|/* 			 * "usbd_transfer_unsetup_sub" will unlock 			 * the bus mutex before returning ! 			 */
 name|USB_BUS_LOCK
 argument_list|(
 name|info
@@ -4116,7 +4237,7 @@ name|bus
 argument_list|)
 expr_stmt|;
 comment|/* something went wrong */
-name|usb2_transfer_unsetup_sub
+name|usbd_transfer_unsetup_sub
 argument_list|(
 name|info
 argument_list|,
@@ -4132,7 +4253,7 @@ operator|.
 name|err
 condition|)
 block|{
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|ppxfer
 argument_list|,
@@ -4151,13 +4272,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_transfer_unsetup_sub - factored out code  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_transfer_unsetup_sub - factored out code  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_transfer_unsetup_sub
+name|usbd_transfer_unsetup_sub
 parameter_list|(
 name|struct
 name|usb_xfer_root
@@ -4193,14 +4314,14 @@ name|temp
 decl_stmt|;
 name|temp
 operator|=
-name|usb2_get_dma_delay
+name|usbd_get_dma_delay
 argument_list|(
 name|info
 operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|info
@@ -4217,7 +4338,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* make sure that our done messages are not queued anywhere */
-name|usb2_proc_mwait
+name|usb_proc_mwait
 argument_list|(
 name|info
 operator|->
@@ -4266,7 +4387,7 @@ operator|->
 name|dma_page_cache_end
 condition|)
 block|{
-name|usb2_pc_free_mem
+name|usb_pc_free_mem
 argument_list|(
 name|pc
 argument_list|)
@@ -4291,7 +4412,7 @@ operator|->
 name|xfer_page_cache_end
 condition|)
 block|{
-name|usb2_pc_dmamap_destroy
+name|usb_pc_dmamap_destroy
 argument_list|(
 name|pc
 argument_list|)
@@ -4301,7 +4422,7 @@ operator|++
 expr_stmt|;
 block|}
 comment|/* free all DMA tags */
-name|usb2_dma_tag_unsetup
+name|usb_dma_tag_unsetup
 argument_list|(
 operator|&
 name|info
@@ -4311,7 +4432,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|usb2_cv_destroy
+name|cv_destroy
 argument_list|(
 operator|&
 name|info
@@ -4333,12 +4454,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_transfer_unsetup - unsetup/free an array of USB transfers  *  * NOTE: All USB transfers in progress will get called back passing  * the error code "USB_ERR_CANCELLED" before this function  * returns.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_transfer_unsetup - unsetup/free an array of USB transfers  *  * NOTE: All USB transfers in progress will get called back passing  * the error code "USB_ERR_CANCELLED" before this function  * returns.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -4373,7 +4494,7 @@ name|WARN_SLEEPOK
 argument_list|,
 name|NULL
 argument_list|,
-literal|"usb2_transfer_unsetup can sleep!"
+literal|"usbd_transfer_unsetup can sleep!"
 argument_list|)
 expr_stmt|;
 while|while
@@ -4414,7 +4535,7 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-comment|/* 		 * HINT: when you start/stop a transfer, it might be a 		 * good idea to directly use the "pxfer[]" structure: 		 * 		 * usb2_transfer_start(sc->pxfer[0]); 		 * usb2_transfer_stop(sc->pxfer[0]); 		 * 		 * That way, if your code has many parts that will not 		 * stop running under the same lock, in other words 		 * "xfer_mtx", the usb2_transfer_start and 		 * usb2_transfer_stop functions will simply return 		 * when they detect a NULL pointer argument. 		 * 		 * To avoid any races we clear the "pxfer[]" pointer 		 * while holding the private mutex of the driver: 		 */
+comment|/* 		 * HINT: when you start/stop a transfer, it might be a 		 * good idea to directly use the "pxfer[]" structure: 		 * 		 * usbd_transfer_start(sc->pxfer[0]); 		 * usbd_transfer_stop(sc->pxfer[0]); 		 * 		 * That way, if your code has many parts that will not 		 * stop running under the same lock, in other words 		 * "xfer_mtx", the usbd_transfer_start and 		 * usbd_transfer_stop functions will simply return 		 * when they detect a NULL pointer argument. 		 * 		 * To avoid any races we clear the "pxfer[]" pointer 		 * while holding the private mutex of the driver: 		 */
 name|pxfer
 index|[
 name|n_setup
@@ -4434,7 +4555,7 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_drain
+name|usbd_transfer_drain
 argument_list|(
 name|xfer
 argument_list|)
@@ -4464,7 +4585,7 @@ operator|->
 name|refcount
 operator|--
 expr_stmt|;
-name|usb2_callout_drain
+name|usb_callout_drain
 argument_list|(
 operator|&
 name|xfer
@@ -4507,7 +4628,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|usb2_transfer_unsetup_sub
+name|usbd_transfer_unsetup_sub
 argument_list|(
 name|info
 argument_list|,
@@ -4530,13 +4651,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_control_transfer_init - factored out code  *  * In USB Device Mode we have to wait for the SETUP packet which  * containst the "struct usb_device_request" structure, before we can  * transfer any data. In USB Host Mode we already have the SETUP  * packet at the moment the USB transfer is started. This leads us to  * having to setup the USB transfer at two different places in  * time. This function just contains factored out control transfer  * initialisation code, so that we don't duplicate the code.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_control_transfer_init - factored out code  *  * In USB Device Mode we have to wait for the SETUP packet which  * containst the "struct usb_device_request" structure, before we can  * transfer any data. In USB Host Mode we already have the SETUP  * packet at the moment the USB transfer is started. This leads us to  * having to setup the USB transfer at two different places in  * time. This function just contains factored out control transfer  * initialisation code, so that we don't duplicate the code.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_control_transfer_init
+name|usbd_control_transfer_init
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -4549,7 +4670,7 @@ name|usb_device_request
 name|req
 decl_stmt|;
 comment|/* copy out the USB request header */
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -4612,13 +4733,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_start_hardware_sub  *  * This function handles initialisation of control transfers. Control  * transfers are special in that regard that they can both transmit  * and receive data.  *  * Return values:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_setup_ctrl_transfer  *  * This function handles initialisation of control transfers. Control  * transfers are special in that regard that they can both transmit  * and receive data.  *  * Return values:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
-name|uint8_t
-name|usb2_start_hardware_sub
+name|int
+name|usbd_setup_ctrl_transfer
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -4745,7 +4866,7 @@ operator|==
 name|USB_MODE_DEVICE
 condition|)
 block|{
-name|usb2_control_transfer_init
+name|usbd_control_transfer_init
 argument_list|(
 name|xfer
 argument_list|)
@@ -4835,7 +4956,7 @@ goto|goto
 name|error
 goto|;
 block|}
-comment|/* 			 * Set a dummy "control_rem" value.  This 			 * variable will be overwritten later by a 			 * call to "usb2_control_transfer_init()" ! 			 */
+comment|/* 			 * Set a dummy "control_rem" value.  This 			 * variable will be overwritten later by a 			 * call to "usbd_control_transfer_init()" ! 			 */
 name|xfer
 operator|->
 name|flags_int
@@ -4848,7 +4969,7 @@ block|}
 else|else
 block|{
 comment|/* setup "endpoint" and "control_rem" */
-name|usb2_control_transfer_init
+name|usbd_control_transfer_init
 argument_list|(
 name|xfer
 argument_list|)
@@ -5069,12 +5190,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_start_hardware - start USB hardware for the given transfer  *  * This function should only be called from the USB callback.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_transfer_submit - start USB hardware for the given transfer  *  * This function should only be called from the USB callback.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_start_hardware
+name|usbd_transfer_submit
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -5146,7 +5267,7 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
-name|usb2_dump_endpoint
+name|usb_dump_endpoint
 argument_list|(
 name|xfer
 operator|->
@@ -5236,7 +5357,7 @@ if|#
 directive|if
 name|USB_HAVE_POWERD
 comment|/* increment power reference */
-name|usb2_transfer_power_ref
+name|usbd_transfer_power_ref
 argument_list|(
 name|xfer
 argument_list|,
@@ -5258,7 +5379,7 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_dequeue
+name|usbd_transfer_dequeue
 argument_list|(
 name|xfer
 argument_list|)
@@ -5354,7 +5475,7 @@ name|bus
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Must return cancelled error code else 		 * device drivers can hang. 		 */
-name|usb2_transfer_done
+name|usbd_transfer_done
 argument_list|(
 name|xfer
 argument_list|,
@@ -5410,7 +5531,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* start the transfer */
-name|usb2_command_wrapper
+name|usb_command_wrapper
 argument_list|(
 operator|&
 name|xfer
@@ -5434,7 +5555,7 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_done
+name|usbd_transfer_done
 argument_list|(
 name|xfer
 argument_list|,
@@ -5496,7 +5617,7 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_done
+name|usbd_transfer_done
 argument_list|(
 name|xfer
 argument_list|,
@@ -5540,7 +5661,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|usb2_start_hardware_sub
+name|usbd_setup_ctrl_transfer
 argument_list|(
 name|xfer
 argument_list|)
@@ -5551,7 +5672,7 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_done
+name|usbd_transfer_done
 argument_list|(
 name|xfer
 argument_list|,
@@ -5655,7 +5776,7 @@ name|bdma_enable
 condition|)
 block|{
 comment|/* insert the USB transfer last in the BUS-DMA queue */
-name|usb2_command_wrapper
+name|usb_command_wrapper
 argument_list|(
 operator|&
 name|xfer
@@ -5672,7 +5793,7 @@ block|}
 endif|#
 directive|endif
 comment|/* 	 * Enter the USB transfer into the Host Controller or 	 * Device Controller schedule: 	 */
-name|usb2_pipe_enter
+name|usbd_pipe_enter
 argument_list|(
 name|xfer
 argument_list|)
@@ -5681,12 +5802,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_pipe_enter - factored out code  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_pipe_enter - factored out code  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_pipe_enter
+name|usbd_pipe_enter
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -5755,7 +5876,7 @@ name|error
 condition|)
 block|{
 comment|/* some error has happened */
-name|usb2_transfer_done
+name|usbd_transfer_done
 argument_list|(
 name|xfer
 argument_list|,
@@ -5774,7 +5895,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* start the transfer */
-name|usb2_command_wrapper
+name|usb_command_wrapper
 argument_list|(
 operator|&
 name|ep
@@ -5797,12 +5918,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_transfer_start - start an USB transfer  *  * NOTE: Calling this function more than one time will only  *       result in a single transfer start, until the USB transfer  *       completes.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_transfer_start - start an USB transfer  *  * NOTE: Calling this function more than one time will only  *       result in a single transfer start, until the USB transfer  *       completes.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_transfer_start
+name|usbd_transfer_start
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -5869,7 +5990,7 @@ name|bus
 argument_list|)
 expr_stmt|;
 comment|/* call the USB transfer callback */
-name|usb2_callback_ss_done_defer
+name|usbd_callback_ss_done_defer
 argument_list|(
 name|xfer
 argument_list|)
@@ -5887,12 +6008,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_transfer_stop - stop an USB transfer  *  * NOTE: Calling this function more than one time will only  *       result in a single transfer stop.  * NOTE: When this function returns it is not safe to free nor  *       reuse any DMA buffers. See "usb2_transfer_drain()".  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_transfer_stop - stop an USB transfer  *  * NOTE: Calling this function more than one time will only  *       result in a single transfer stop.  * NOTE: When this function returns it is not safe to free nor  *       reuse any DMA buffers. See "usbd_transfer_drain()".  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -6061,7 +6182,7 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Any additional DMA delay is done by 		 * "usb2_transfer_unsetup()". 		 */
+comment|/* 		 * Any additional DMA delay is done by 		 * "usbd_transfer_unsetup()". 		 */
 comment|/* 		 * Special case. Check if we need to restart a blocked 		 * endpoint. 		 */
 name|ep
 operator|=
@@ -6081,7 +6202,7 @@ operator|==
 name|xfer
 condition|)
 block|{
-name|usb2_command_wrapper
+name|usb_command_wrapper
 argument_list|(
 operator|&
 name|ep
@@ -6106,12 +6227,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_transfer_pending  *  * This function will check if an USB transfer is pending which is a  * little bit complicated!  * Return values:  * 0: Not pending  * 1: Pending: The USB transfer will receive a callback in the future.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_transfer_pending  *  * This function will check if an USB transfer is pending which is a  * little bit complicated!  * Return values:  * 0: Not pending  * 1: Pending: The USB transfer will receive a callback in the future.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|uint8_t
-name|usb2_transfer_pending
+name|usbd_transfer_pending
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -6255,12 +6376,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_transfer_drain  *  * This function will stop the USB transfer and wait for any  * additional BUS-DMA and HW-DMA operations to complete. Buffers that  * are loaded into DMA can safely be freed or reused after that this  * function has returned.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_transfer_drain  *  * This function will stop the USB transfer and wait for any  * additional BUS-DMA and HW-DMA operations to complete. Buffers that  * are loaded into DMA can safely be freed or reused after that this  * function has returned.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_transfer_drain
+name|usbd_transfer_drain
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -6276,7 +6397,7 @@ name|WARN_SLEEPOK
 argument_list|,
 name|NULL
 argument_list|,
-literal|"usb2_transfer_drain can sleep!"
+literal|"usbd_transfer_drain can sleep!"
 argument_list|)
 expr_stmt|;
 if|if
@@ -6314,14 +6435,14 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|usb2_transfer_pending
+name|usbd_transfer_pending
 argument_list|(
 name|xfer
 argument_list|)
@@ -6336,7 +6457,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* 		 * Wait until the current outstanding USB 		 * transfer is complete ! 		 */
-name|usb2_cv_wait
+name|cv_wait
 argument_list|(
 operator|&
 name|xfer
@@ -6361,27 +6482,124 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_set_frame_data  *  * This function sets the pointer of the buffer that should  * loaded directly into DMA for the given USB frame. Passing "ptr"  * equal to NULL while the corresponding "frlength" is greater  * than zero gives undefined results!  *------------------------------------------------------------------------*/
-end_comment
-
 begin_function
-name|void
-name|usb2_set_frame_data
+name|struct
+name|usb_page_cache
+modifier|*
+name|usbd_xfer_get_frame
 parameter_list|(
 name|struct
 name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
-name|void
+name|usb_frcount_t
+name|frindex
+parameter_list|)
+block|{
+name|KASSERT
+argument_list|(
+name|frindex
+operator|<
+name|xfer
+operator|->
+name|max_frame_count
+argument_list|,
+operator|(
+literal|"frame index overflow"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|&
+name|xfer
+operator|->
+name|frbuffers
+index|[
+name|frindex
+index|]
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|usb_frlength_t
+name|usbd_xfer_frame_len
+parameter_list|(
+name|struct
+name|usb_xfer
 modifier|*
-name|ptr
+name|xfer
 parameter_list|,
 name|usb_frcount_t
 name|frindex
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|frindex
+operator|<
+name|xfer
+operator|->
+name|max_frame_count
+argument_list|,
+operator|(
+literal|"frame index overflow"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|xfer
+operator|->
+name|frlengths
+index|[
+name|frindex
+index|]
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*------------------------------------------------------------------------*  *	usbd_xfer_set_frame_data  *  * This function sets the pointer of the buffer that should  * loaded directly into DMA for the given USB frame. Passing "ptr"  * equal to NULL while the corresponding "frlength" is greater  * than zero gives undefined results!  *------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+name|void
+name|usbd_xfer_set_frame_data
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|,
+name|usb_frcount_t
+name|frindex
+parameter_list|,
+name|void
+modifier|*
+name|ptr
+parameter_list|,
+name|usb_frlength_t
+name|len
+parameter_list|)
+block|{
+name|KASSERT
+argument_list|(
+name|frindex
+operator|<
+name|xfer
+operator|->
+name|max_frame_count
+argument_list|,
+operator|(
+literal|"frame index overflow"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* set virtual address to load and length */
 name|xfer
 operator|->
@@ -6394,16 +6612,178 @@ name|buffer
 operator|=
 name|ptr
 expr_stmt|;
+name|usbd_xfer_set_frame_len
+argument_list|(
+name|xfer
+argument_list|,
+name|frindex
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|usbd_xfer_frame_data
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|,
+name|usb_frcount_t
+name|frindex
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|ptr
+parameter_list|,
+name|int
+modifier|*
+name|len
+parameter_list|)
+block|{
+name|KASSERT
+argument_list|(
+name|frindex
+operator|<
+name|xfer
+operator|->
+name|max_frame_count
+argument_list|,
+operator|(
+literal|"frame index overflow"
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ptr
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|ptr
+operator|=
+name|xfer
+operator|->
+name|frbuffers
+index|[
+name|frindex
+index|]
+operator|.
+name|buffer
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|len
+operator|=
+name|xfer
+operator|->
+name|frlengths
+index|[
+name|frindex
+index|]
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|usbd_xfer_status
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|,
+name|int
+modifier|*
+name|actlen
+parameter_list|,
+name|int
+modifier|*
+name|sumlen
+parameter_list|,
+name|int
+modifier|*
+name|aframes
+parameter_list|,
+name|int
+modifier|*
+name|nframes
+parameter_list|)
+block|{
+if|if
+condition|(
+name|actlen
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|actlen
+operator|=
+name|xfer
+operator|->
+name|actlen
+expr_stmt|;
+if|if
+condition|(
+name|sumlen
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|sumlen
+operator|=
+name|xfer
+operator|->
+name|sumlen
+expr_stmt|;
+if|if
+condition|(
+name|aframes
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|aframes
+operator|=
+name|xfer
+operator|->
+name|aframes
+expr_stmt|;
+if|if
+condition|(
+name|nframes
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|nframes
+operator|=
+name|xfer
+operator|->
+name|nframes
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_set_frame_offset  *  * This function sets the frame data buffer offset relative to the beginning  * of the USB DMA buffer allocated for this USB transfer.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_xfer_set_frame_offset  *  * This function sets the frame data buffer offset relative to the beginning  * of the USB DMA buffer allocated for this USB transfer.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_set_frame_offset
+name|usbd_xfer_set_frame_offset
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -6417,7 +6797,7 @@ name|usb_frcount_t
 name|frindex
 parameter_list|)
 block|{
-name|USB_ASSERT
+name|KASSERT
 argument_list|(
 operator|!
 name|xfer
@@ -6429,6 +6809,19 @@ argument_list|,
 operator|(
 literal|"Cannot offset data frame "
 literal|"when the USB buffer is external!\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|frindex
+operator|<
+name|xfer
+operator|->
+name|max_frame_count
+argument_list|,
+operator|(
+literal|"frame index overflow"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6454,14 +6847,181 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|usbd_xfer_set_interval
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|,
+name|int
+name|i
+parameter_list|)
+block|{
+name|xfer
+operator|->
+name|interval
+operator|=
+name|i
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|usbd_xfer_set_timeout
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|,
+name|int
+name|t
+parameter_list|)
+block|{
+name|xfer
+operator|->
+name|timeout
+operator|=
+name|t
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|usbd_xfer_set_frames
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|,
+name|usb_frcount_t
+name|n
+parameter_list|)
+block|{
+name|xfer
+operator|->
+name|nframes
+operator|=
+name|n
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|usb_frcount_t
+name|usbd_xfer_max_frames
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|)
+block|{
+return|return
+operator|(
+name|xfer
+operator|->
+name|max_frame_count
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|usb_frlength_t
+name|usbd_xfer_max_len
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|)
+block|{
+return|return
+operator|(
+name|xfer
+operator|->
+name|max_data_length
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|usb_frlength_t
+name|usbd_xfer_max_framelen
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|)
+block|{
+return|return
+operator|(
+name|xfer
+operator|->
+name|max_frame_size
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|usbd_xfer_set_frame_len
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|,
+name|usb_frcount_t
+name|frindex
+parameter_list|,
+name|usb_frlength_t
+name|len
+parameter_list|)
+block|{
+name|KASSERT
+argument_list|(
+name|frindex
+operator|<
+name|xfer
+operator|->
+name|max_frame_count
+argument_list|,
+operator|(
+literal|"frame index overflow"
+operator|)
+argument_list|)
+expr_stmt|;
+name|xfer
+operator|->
+name|frlengths
+index|[
+name|frindex
+index|]
+operator|=
+name|len
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_callback_proc - factored out code  *  * This function performs USB callbacks.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_callback_proc - factored out code  *  * This function performs USB callbacks.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_callback_proc
+name|usb_callback_proc
 parameter_list|(
 name|struct
 name|usb_proc_msg
@@ -6513,7 +7073,7 @@ name|bus
 argument_list|)
 expr_stmt|;
 comment|/* Continue where we lost track */
-name|usb2_command_wrapper
+name|usb_command_wrapper
 argument_list|(
 operator|&
 name|info
@@ -6538,13 +7098,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_callback_ss_done_defer  *  * This function will defer the start, stop and done callback to the  * correct thread.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_callback_ss_done_defer  *  * This function will defer the start, stop and done callback to the  * correct thread.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_callback_ss_done_defer
+name|usbd_callback_ss_done_defer
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -6591,7 +7151,7 @@ operator|!=
 name|xfer
 condition|)
 block|{
-name|usb2_transfer_enqueue
+name|usbd_transfer_enqueue
 argument_list|(
 name|pq
 argument_list|,
@@ -6610,7 +7170,7 @@ block|{
 comment|/* 	         * We have to postpone the callback due to the fact we 	         * will have a Lock Order Reversal, LOR, if we try to 	         * proceed ! 	         */
 if|if
 condition|(
-name|usb2_proc_msignal
+name|usb_proc_msignal
 argument_list|(
 name|info
 operator|->
@@ -6652,13 +7212,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_callback_wrapper  *  * This is a wrapper for USB callbacks. This wrapper does some  * auto-magic things like figuring out if we can call the callback  * directly from the current context or if we need to wakeup the  * interrupt process.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_callback_wrapper  *  * This is a wrapper for USB callbacks. This wrapper does some  * auto-magic things like figuring out if we can call the callback  * directly from the current context or if we need to wakeup the  * interrupt process.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_callback_wrapper
+name|usbd_callback_wrapper
 parameter_list|(
 name|struct
 name|usb_xfer_queue
@@ -6715,7 +7275,7 @@ expr_stmt|;
 comment|/* 	         * We have to postpone the callback due to the fact we 	         * will have a Lock Order Reversal, LOR, if we try to 	         * proceed ! 	         */
 if|if
 condition|(
-name|usb2_proc_msignal
+name|usb_proc_msignal
 argument_list|(
 name|info
 operator|->
@@ -6789,7 +7349,7 @@ condition|)
 block|{
 name|xfer
 operator|->
-name|usb2_state
+name|usb_state
 operator|=
 name|USB_ST_SETUP
 expr_stmt|;
@@ -6820,7 +7380,7 @@ else|else
 block|{
 if|if
 condition|(
-name|usb2_callback_wrapper_sub
+name|usbd_callback_wrapper_sub
 argument_list|(
 name|xfer
 argument_list|)
@@ -6842,7 +7402,7 @@ if|#
 directive|if
 name|USB_HAVE_POWERD
 comment|/* decrement power reference */
-name|usb2_transfer_power_ref
+name|usbd_transfer_power_ref
 argument_list|(
 name|xfer
 argument_list|,
@@ -6869,7 +7429,7 @@ condition|)
 block|{
 name|xfer
 operator|->
-name|usb2_state
+name|usb_state
 operator|=
 name|USB_ST_ERROR
 expr_stmt|;
@@ -6879,7 +7439,7 @@ block|{
 comment|/* set transferred state */
 name|xfer
 operator|->
-name|usb2_state
+name|usb_state
 operator|=
 name|USB_ST_TRANSFERRED
 expr_stmt|;
@@ -6905,7 +7465,7 @@ name|bdma_no_post_sync
 operator|)
 condition|)
 block|{
-name|usb2_bdma_post_sync
+name|usb_bdma_post_sync
 argument_list|(
 name|xfer
 argument_list|)
@@ -6923,6 +7483,10 @@ name|callback
 call|)
 argument_list|(
 name|xfer
+argument_list|,
+name|xfer
+operator|->
+name|error
 argument_list|)
 expr_stmt|;
 comment|/* pickup the USB mutex again */
@@ -6956,14 +7520,14 @@ operator|&&
 operator|(
 name|xfer
 operator|->
-name|usb2_state
+name|usb_state
 operator|==
 name|USB_ST_ERROR
 operator|)
 condition|)
 block|{
 comment|/* try to loop, but not recursivly */
-name|usb2_command_wrapper
+name|usb_command_wrapper
 argument_list|(
 operator|&
 name|info
@@ -6996,7 +7560,7 @@ name|transferring
 operator|)
 condition|)
 block|{
-comment|/* "usb2_transfer_drain()" is waiting for end of transfer */
+comment|/* "usbd_transfer_drain()" is waiting for end of transfer */
 name|xfer
 operator|->
 name|flags_int
@@ -7005,7 +7569,7 @@ name|draining
 operator|=
 literal|0
 expr_stmt|;
-name|usb2_cv_broadcast
+name|cv_broadcast
 argument_list|(
 operator|&
 name|info
@@ -7015,7 +7579,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* do the next callback, if any */
-name|usb2_command_wrapper
+name|usb_command_wrapper
 argument_list|(
 operator|&
 name|info
@@ -7033,13 +7597,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_dma_delay_done_cb  *  * This function is called when the DMA delay has been exectuded, and  * will make sure that the callback is called to complete the USB  * transfer. This code path is ususally only used when there is an USB  * error like USB_ERR_CANCELLED.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_dma_delay_done_cb  *  * This function is called when the DMA delay has been exectuded, and  * will make sure that the callback is called to complete the USB  * transfer. This code path is ususally only used when there is an USB  * error like USB_ERR_CANCELLED.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_dma_delay_done_cb
+name|usb_dma_delay_done_cb
 parameter_list|(
 name|void
 modifier|*
@@ -7074,7 +7638,7 @@ name|xfer
 argument_list|)
 expr_stmt|;
 comment|/* queue callback for execution, again */
-name|usb2_transfer_done
+name|usbd_transfer_done
 argument_list|(
 name|xfer
 argument_list|,
@@ -7085,12 +7649,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_transfer_dequeue  *  *  - This function is used to remove an USB transfer from a USB  *  transfer queue.  *  *  - This function can be called multiple times in a row.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_transfer_dequeue  *  *  - This function is used to remove an USB transfer from a USB  *  transfer queue.  *  *  - This function can be called multiple times in a row.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_transfer_dequeue
+name|usbd_transfer_dequeue
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -7137,12 +7701,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_transfer_enqueue  *  *  - This function is used to insert an USB transfer into a USB *  *  transfer queue.  *  *  - This function can be called multiple times in a row.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_transfer_enqueue  *  *  - This function is used to insert an USB transfer into a USB *  *  transfer queue.  *  *  - This function can be called multiple times in a row.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_transfer_enqueue
+name|usbd_transfer_enqueue
 parameter_list|(
 name|struct
 name|usb_xfer_queue
@@ -7188,12 +7752,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_transfer_done  *  *  - This function is used to remove an USB transfer from the busdma,  *  pipe or interrupt queue.  *  *  - This function is used to queue the USB transfer on the done  *  queue.  *  *  - This function is used to stop any USB transfer timeouts.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_transfer_done  *  *  - This function is used to remove an USB transfer from the busdma,  *  pipe or interrupt queue.  *  *  - This function is used to queue the USB transfer on the done  *  queue.  *  *  - This function is used to stop any USB transfer timeouts.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_transfer_done
+name|usbd_transfer_done
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -7219,7 +7783,7 @@ name|DPRINTF
 argument_list|(
 literal|"err=%s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|error
 argument_list|)
@@ -7260,7 +7824,7 @@ name|error
 expr_stmt|;
 block|}
 comment|/* stop any callouts */
-name|usb2_callout_stop
+name|usb_callout_stop
 argument_list|(
 operator|&
 name|xfer
@@ -7269,7 +7833,7 @@ name|timeout_handle
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we are waiting on a queue, just remove the USB transfer 	 * from the queue, if any. We should have the required locks 	 * locked to do the remove when this function is called. 	 */
-name|usb2_transfer_dequeue
+name|usbd_transfer_dequeue
 argument_list|(
 name|xfer
 argument_list|)
@@ -7314,7 +7878,7 @@ name|xfer
 condition|)
 block|{
 comment|/* start the next BUS-DMA load, if any */
-name|usb2_command_wrapper
+name|usb_command_wrapper
 argument_list|(
 name|pq
 argument_list|,
@@ -7382,7 +7946,7 @@ operator|++
 expr_stmt|;
 block|}
 comment|/* call the USB transfer callback */
-name|usb2_callback_ss_done_defer
+name|usbd_callback_ss_done_defer
 argument_list|(
 name|xfer
 argument_list|)
@@ -7391,13 +7955,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_transfer_start_cb  *  * This function is called to start the USB transfer when  * "xfer->interval" is greater than zero, and and the endpoint type is  * BULK or CONTROL.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_transfer_start_cb  *  * This function is called to start the USB transfer when  * "xfer->interval" is greater than zero, and and the endpoint type is  * BULK or CONTROL.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_transfer_start_cb
+name|usbd_transfer_start_cb
 parameter_list|(
 name|void
 modifier|*
@@ -7465,7 +8029,7 @@ name|error
 condition|)
 block|{
 comment|/* some error has happened */
-name|usb2_transfer_done
+name|usbd_transfer_done
 argument_list|(
 name|xfer
 argument_list|,
@@ -7477,12 +8041,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_transfer_set_stall  *  * This function is used to set the stall flag outside the  * callback. This function is NULL safe.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_xfer_set_stall  *  * This function is used to set the stall flag outside the  * callback. This function is NULL safe.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_transfer_set_stall
+name|usbd_xfer_set_stall
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -7537,13 +8101,35 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|int
+name|usbd_xfer_is_stalled
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|)
+block|{
+return|return
+operator|(
+name|xfer
+operator|->
+name|endpoint
+operator|->
+name|is_stalled
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_transfer_clear_stall  *  * This function is used to clear the stall flag outside the  * callback. This function is NULL safe.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_transfer_clear_stall  *  * This function is used to clear the stall flag outside the  * callback. This function is NULL safe.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_transfer_clear_stall
+name|usbd_transfer_clear_stall
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -7599,12 +8185,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_pipe_start  *  * This function is used to add an USB transfer to the pipe transfer list.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_pipe_start  *  * This function is used to add an USB transfer to the pipe transfer list.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_pipe_start
+name|usbd_pipe_start
 parameter_list|(
 name|struct
 name|usb_xfer_queue
@@ -7715,6 +8301,9 @@ name|usb_xfer_root
 modifier|*
 name|info
 decl_stmt|;
+name|uint8_t
+name|did_stall
+decl_stmt|;
 name|info
 operator|=
 name|xfer
@@ -7727,9 +8316,7 @@ name|info
 operator|->
 name|udev
 expr_stmt|;
-name|ep
-operator|->
-name|is_stalled
+name|did_stall
 operator|=
 literal|1
 expr_stmt|;
@@ -7759,6 +8346,9 @@ argument_list|,
 name|NULL
 argument_list|,
 name|ep
+argument_list|,
+operator|&
+name|did_stall
 argument_list|)
 expr_stmt|;
 block|}
@@ -7784,9 +8374,7 @@ index|]
 operator|->
 name|xroot
 expr_stmt|;
-if|if
-condition|(
-name|usb2_proc_msignal
+name|usb_proc_msignal
 argument_list|(
 operator|&
 name|info
@@ -7811,10 +8399,7 @@ index|[
 literal|1
 index|]
 argument_list|)
-condition|)
-block|{
-comment|/* ignore */
-block|}
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -7827,8 +8412,21 @@ literal|"No stall handler!\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * We get started again when the stall is cleared! 			 */
+comment|/* 			 * Check if we should stall. Some USB hardware 			 * handles set- and clear-stall in hardware. 			 */
+if|if
+condition|(
+name|did_stall
+condition|)
+block|{
+comment|/* 				 * The transfer will be continued when 				 * the clear-stall control endpoint 				 * message is received. 				 */
+name|ep
+operator|->
+name|is_stalled
+operator|=
+literal|1
+expr_stmt|;
 return|return;
+block|}
 block|}
 block|}
 comment|/* Set or clear stall complete - special case */
@@ -7848,7 +8446,7 @@ name|aframes
 operator|=
 literal|0
 expr_stmt|;
-name|usb2_transfer_done
+name|usbd_transfer_done
 argument_list|(
 name|xfer
 argument_list|,
@@ -7895,12 +8493,12 @@ name|UE_CONTROL
 operator|)
 condition|)
 block|{
-name|usb2_transfer_timeout_ms
+name|usbd_transfer_timeout_ms
 argument_list|(
 name|xfer
 argument_list|,
 operator|&
-name|usb2_transfer_start_cb
+name|usbd_transfer_start_cb
 argument_list|,
 name|xfer
 operator|->
@@ -7944,7 +8542,7 @@ name|error
 condition|)
 block|{
 comment|/* some error has happened */
-name|usb2_transfer_done
+name|usbd_transfer_done
 argument_list|(
 name|xfer
 argument_list|,
@@ -7956,12 +8554,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_transfer_timeout_ms  *  * This function is used to setup a timeout on the given USB  * transfer. If the timeout has been deferred the callback given by  * "cb" will get called after "ms" milliseconds.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_transfer_timeout_ms  *  * This function is used to setup a timeout on the given USB  * transfer. If the timeout has been deferred the callback given by  * "cb" will get called after "ms" milliseconds.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_transfer_timeout_ms
+name|usbd_transfer_timeout_ms
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -7995,7 +8593,7 @@ name|MA_OWNED
 argument_list|)
 expr_stmt|;
 comment|/* defer delay */
-name|usb2_callout_reset
+name|usb_callout_reset
 argument_list|(
 operator|&
 name|xfer
@@ -8016,13 +8614,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_callback_wrapper_sub  *  *  - This function will update variables in an USB transfer after  *  that the USB transfer is complete.  *  *  - This function is used to start the next USB transfer on the  *  ep transfer queue, if any.  *  * NOTE: In some special cases the USB transfer will not be removed from  * the pipe queue, but remain first. To enforce USB transfer removal call  * this function passing the error code "USB_ERR_CANCELLED".  *  * Return values:  * 0: Success.  * Else: The callback has been deferred.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_callback_wrapper_sub  *  *  - This function will update variables in an USB transfer after  *  that the USB transfer is complete.  *  *  - This function is used to start the next USB transfer on the  *  ep transfer queue, if any.  *  * NOTE: In some special cases the USB transfer will not be removed from  * the pipe queue, but remain first. To enforce USB transfer removal call  * this function passing the error code "USB_ERR_CANCELLED".  *  * Return values:  * 0: Success.  * Else: The callback has been deferred.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|uint8_t
-name|usb2_callback_wrapper_sub
+name|usbd_callback_wrapper_sub
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -8165,7 +8763,7 @@ literal|0
 expr_stmt|;
 name|temp
 operator|=
-name|usb2_get_dma_delay
+name|usbd_get_dma_delay
 argument_list|(
 name|xfer
 operator|->
@@ -8202,12 +8800,12 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_timeout_ms
+name|usbd_transfer_timeout_ms
 argument_list|(
 name|xfer
 argument_list|,
 operator|&
-name|usb2_dma_delay_done_cb
+name|usb_dma_delay_done_cb
 argument_list|,
 name|temp
 argument_list|)
@@ -8329,14 +8927,14 @@ name|x
 operator|++
 control|)
 block|{
+name|usbd_xfer_set_frame_len
+argument_list|(
 name|xfer
-operator|->
-name|frlengths
-index|[
+argument_list|,
 name|x
-index|]
-operator|=
+argument_list|,
 literal|0
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* check actual length */
@@ -8392,7 +8990,7 @@ block|}
 block|}
 name|DPRINTFN
 argument_list|(
-literal|6
+literal|1
 argument_list|,
 literal|"xfer=%p endpoint=%p sts=%d alen=%d, slen=%d, afrm=%d, nfrm=%d\n"
 argument_list|,
@@ -8605,7 +9203,7 @@ operator|==
 name|xfer
 condition|)
 block|{
-name|usb2_command_wrapper
+name|usb_command_wrapper
 argument_list|(
 operator|&
 name|ep
@@ -8670,12 +9268,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_command_wrapper  *  * This function is used to execute commands non-recursivly on an USB  * transfer.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_command_wrapper  *  * This function is used to execute commands non-recursivly on an USB  * transfer.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_command_wrapper
+name|usb_command_wrapper
 parameter_list|(
 name|struct
 name|usb_xfer_queue
@@ -8703,7 +9301,7 @@ operator|!=
 name|xfer
 condition|)
 block|{
-name|usb2_transfer_enqueue
+name|usbd_transfer_enqueue
 argument_list|(
 name|pq
 argument_list|,
@@ -8884,12 +9482,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_default_transfer_setup  *  * This function is used to setup the default USB control endpoint  * transfer.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_default_transfer_setup  *  * This function is used to setup the default USB control endpoint  * transfer.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_default_transfer_setup
+name|usbd_default_transfer_setup
 parameter_list|(
 name|struct
 name|usb_device
@@ -8987,7 +9585,7 @@ name|no_resetup
 condition|)
 block|{
 comment|/* 				 * NOTE: checking "xfer->address" and 				 * starting the USB transfer must be 				 * atomic! 				 */
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|xfer
 argument_list|)
@@ -9032,7 +9630,7 @@ operator|.
 name|bMaxPacketSize
 expr_stmt|;
 comment|/* 	 * Unsetup any existing USB transfer: 	 */
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|udev
 operator|->
@@ -9048,7 +9646,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|usb2_transfer_setup
+name|usbd_transfer_setup
 argument_list|(
 name|udev
 argument_list|,
@@ -9059,7 +9657,7 @@ name|udev
 operator|->
 name|default_xfer
 argument_list|,
-name|usb2_control_ep_cfg
+name|usb_control_ep_cfg
 argument_list|,
 name|USB_DEFAULT_XFER_MAX
 argument_list|,
@@ -9090,12 +9688,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_clear_data_toggle - factored out code  *  * NOTE: the intention of this function is not to reset the hardware  * data toggle.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_clear_data_toggle - factored out code  *  * NOTE: the intention of this function is not to reset the hardware  * data toggle.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_clear_data_toggle
+name|usbd_clear_data_toggle
 parameter_list|(
 name|struct
 name|usb_device
@@ -9143,12 +9741,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_clear_stall_callback - factored out clear stall callback  *  * Input parameters:  *  xfer1: Clear Stall Control Transfer  *  xfer2: Stalled USB Transfer  *  * This function is NULL safe.  *  * Return values:  *   0: In progress  *   Else: Finished  *  * Clear stall config example:  *  * static const struct usb_config my_clearstall =  {  *	.type = UE_CONTROL,  *	.endpoint = 0,  *	.direction = UE_DIR_ANY,  *	.interval = 50, //50 milliseconds  *	.bufsize = sizeof(struct usb_device_request),  *	.timeout = 1000, //1.000 seconds  *	.callback =&my_clear_stall_callback, // **  *	.usb_mode = USB_MODE_HOST,  * };  *  * ** "my_clear_stall_callback" calls "usb2_clear_stall_callback"  * passing the correct parameters.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_clear_stall_callback - factored out clear stall callback  *  * Input parameters:  *  xfer1: Clear Stall Control Transfer  *  xfer2: Stalled USB Transfer  *  * This function is NULL safe.  *  * Return values:  *   0: In progress  *   Else: Finished  *  * Clear stall config example:  *  * static const struct usb_config my_clearstall =  {  *	.type = UE_CONTROL,  *	.endpoint = 0,  *	.direction = UE_DIR_ANY,  *	.interval = 50, //50 milliseconds  *	.bufsize = sizeof(struct usb_device_request),  *	.timeout = 1000, //1.000 seconds  *	.callback =&my_clear_stall_callback, // **  *	.usb_mode = USB_MODE_HOST,  * };  *  * ** "my_clear_stall_callback" calls "usbd_clear_stall_callback"  * passing the correct parameters.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|uint8_t
-name|usb2_clear_stall_callback
+name|usbd_clear_stall_callback
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -9210,7 +9808,7 @@ case|case
 name|USB_ST_SETUP
 case|:
 comment|/* 		 * pre-clear the data toggle to DATA0 ("umass.c" and 		 * "ata-usb.c" depends on this) 		 */
-name|usb2_clear_data_toggle
+name|usbd_clear_data_toggle
 argument_list|(
 name|xfer2
 operator|->
@@ -9278,9 +9876,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 		 * "usb2_transfer_setup_sub()" will ensure that 		 * we have sufficient room in the buffer for 		 * the request structure! 		 */
+comment|/* 		 * "usbd_transfer_setup_sub()" will ensure that 		 * we have sufficient room in the buffer for 		 * the request structure! 		 */
 comment|/* copy in the transfer */
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer1
 operator|->
@@ -9316,7 +9914,7 @@ name|nframes
 operator|=
 literal|1
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer1
 argument_list|)
@@ -9360,7 +9958,7 @@ end_function
 
 begin_function
 name|void
-name|usb2_do_poll
+name|usbd_transfer_poll
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -9391,7 +9989,7 @@ literal|1
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"usb2_do_poll: USB polling is "
+literal|"usbd_transfer_poll: USB polling is "
 literal|"not supported!\n"
 argument_list|)
 expr_stmt|;
@@ -9402,10 +10000,10 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_get_std_packet_size
+name|usbd_get_std_packet_size
 parameter_list|(
 name|struct
-name|usb2_std_packet_size
+name|usb_std_packet_size
 modifier|*
 name|ptr
 parameter_list|,
@@ -9763,6 +10361,255 @@ expr_stmt|;
 block|}
 break|break;
 block|}
+block|}
+end_function
+
+begin_function
+name|void
+modifier|*
+name|usbd_xfer_softc
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|)
+block|{
+return|return
+operator|(
+name|xfer
+operator|->
+name|priv_sc
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+modifier|*
+name|usbd_xfer_get_priv
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|)
+block|{
+return|return
+operator|(
+name|xfer
+operator|->
+name|priv_fifo
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|usbd_xfer_set_priv
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|,
+name|void
+modifier|*
+name|ptr
+parameter_list|)
+block|{
+name|xfer
+operator|->
+name|priv_fifo
+operator|=
+name|ptr
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|uint8_t
+name|usbd_xfer_state
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|)
+block|{
+return|return
+operator|(
+name|xfer
+operator|->
+name|usb_state
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|usbd_xfer_set_flag
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|,
+name|int
+name|flag
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|flag
+condition|)
+block|{
+case|case
+name|USB_FORCE_SHORT_XFER
+case|:
+name|xfer
+operator|->
+name|flags
+operator|.
+name|force_short_xfer
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|USB_SHORT_XFER_OK
+case|:
+name|xfer
+operator|->
+name|flags
+operator|.
+name|short_xfer_ok
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|USB_MULTI_SHORT_OK
+case|:
+name|xfer
+operator|->
+name|flags
+operator|.
+name|short_frames_ok
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|USB_MANUAL_STATUS
+case|:
+name|xfer
+operator|->
+name|flags
+operator|.
+name|manual_status
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|usbd_xfer_clr_flag
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|,
+name|int
+name|flag
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|flag
+condition|)
+block|{
+case|case
+name|USB_FORCE_SHORT_XFER
+case|:
+name|xfer
+operator|->
+name|flags
+operator|.
+name|force_short_xfer
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+name|USB_SHORT_XFER_OK
+case|:
+name|xfer
+operator|->
+name|flags
+operator|.
+name|short_xfer_ok
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+name|USB_MULTI_SHORT_OK
+case|:
+name|xfer
+operator|->
+name|flags
+operator|.
+name|short_frames_ok
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+name|USB_MANUAL_STATUS
+case|:
+name|xfer
+operator|->
+name|flags
+operator|.
+name|manual_status
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * The following function returns in milliseconds when the isochronous  * transfer was completed by the hardware. The returned value wraps  * around 65536 milliseconds.  */
+end_comment
+
+begin_function
+name|uint16_t
+name|usbd_xfer_get_timestamp
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|)
+block|{
+return|return
+operator|(
+name|xfer
+operator|->
+name|isoc_time_complete
+operator|)
+return|;
 block|}
 end_function
 

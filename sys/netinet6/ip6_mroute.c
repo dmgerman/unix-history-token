@@ -178,12 +178,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/route.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/vnet.h>
 end_include
 
@@ -1323,7 +1317,7 @@ begin_function_decl
 name|int
 name|X_mrt6_ioctl
 parameter_list|(
-name|int
+name|u_long
 parameter_list|,
 name|caddr_t
 parameter_list|)
@@ -1769,7 +1763,7 @@ begin_function
 name|int
 name|X_mrt6_ioctl
 parameter_list|(
-name|int
+name|u_long
 name|cmd
 parameter_list|,
 name|caddr_t

@@ -16,7 +16,6 @@ name|__NSCD_MP_WS_QUERY_H__
 end_define
 
 begin_function_decl
-specifier|extern
 name|int
 name|on_mp_write_session_request_read1
 parameter_list|(
@@ -28,7 +27,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|cache_entry
 name|register_new_mp_cache_entry
 parameter_list|(

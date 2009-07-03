@@ -693,28 +693,12 @@ block|,
 name|PTE_NOCACHE
 block|, }
 block|,
-comment|/* Expansion Bus */
 block|{
 name|IXP425_EXP_VBASE
 block|,
 name|IXP425_EXP_HWBASE
 block|,
 name|IXP425_EXP_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_NOCACHE
-block|, }
-block|,
-comment|/* CFI Flash on the Expansion Bus */
-block|{
-name|IXP425_EXP_BUS_CS0_VBASE
-block|,
-name|IXP425_EXP_BUS_CS0_HWBASE
-block|,
-name|IXP425_EXP_BUS_CS0_SIZE
 block|,
 name|VM_PROT_READ
 operator||
@@ -783,6 +767,21 @@ block|,
 name|PTE_NOCACHE
 block|, }
 block|,
+comment|/* CFI Flash on the Expansion Bus */
+block|{
+name|IXP425_EXP_BUS_CS0_VBASE
+block|,
+name|IXP425_EXP_BUS_CS0_HWBASE
+block|,
+name|IXP425_EXP_BUS_CS0_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, }
+block|,
 comment|/* USB1 Memory Space */
 block|{
 name|IXP435_USB1_VBASE
@@ -805,6 +804,36 @@ block|,
 name|IXP435_USB2_HWBASE
 block|,
 name|IXP435_USB2_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, }
+block|,
+comment|/* GPS Memory Space */
+block|{
+name|CAMBRIA_GPS_VBASE
+block|,
+name|CAMBRIA_GPS_HWBASE
+block|,
+name|CAMBRIA_GPS_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, }
+block|,
+comment|/* RS485 Memory Space */
+block|{
+name|CAMBRIA_RS485_VBASE
+block|,
+name|CAMBRIA_RS485_HWBASE
+block|,
+name|CAMBRIA_RS485_SIZE
 block|,
 name|VM_PROT_READ
 operator||
@@ -860,6 +889,10 @@ value|next_chunk2(a,PAGE_SIZE)
 name|struct
 name|pv_addr
 name|kernel_l1pt
+decl_stmt|;
+name|struct
+name|pv_addr
+name|dpcpu
 decl_stmt|;
 name|int
 name|loop
@@ -1081,6 +1114,29 @@ argument_list|(
 name|systempage
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Allocate dynamic per-cpu area. */
+name|valloc_pages
+argument_list|(
+name|dpcpu
+argument_list|,
+name|DPCPU_SIZE
+operator|/
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+name|dpcpu_init
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|dpcpu
+operator|.
+name|pv_va
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Allocate stacks for all modes */
@@ -1898,7 +1954,7 @@ name|PHYSADDR
 operator|+
 name|PAGE_SIZE
 expr_stmt|;
-comment|/* 					 *XXX: Gross hack to get our 					 * pages in the vm_page_array 					 . */
+comment|/* 					 *XXX: Gross hack to get our 					 * pages in the vm_page_array. 					 */
 endif|#
 directive|endif
 name|phys_avail

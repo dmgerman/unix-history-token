@@ -3375,13 +3375,11 @@ operator|&
 name|icu_lock
 argument_list|)
 expr_stmt|;
-name|panic
-argument_list|(
-literal|"Couldn't find an APIC vector for IRQ %u"
-argument_list|,
-name|irq
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

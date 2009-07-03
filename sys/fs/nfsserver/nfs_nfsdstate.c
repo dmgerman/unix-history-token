@@ -16704,17 +16704,6 @@ name|clp
 operator|->
 name|lc_gid
 expr_stmt|;
-name|cred
-operator|->
-name|cr_groups
-index|[
-literal|0
-index|]
-operator|=
-name|clp
-operator|->
-name|lc_gid
-expr_stmt|;
 name|callback
 operator|=
 name|clp
@@ -17696,7 +17685,7 @@ name|off
 init|=
 literal|0
 decl_stmt|;
-name|size_t
+name|int
 name|aresid
 decl_stmt|,
 name|len

@@ -3886,7 +3886,7 @@ name|hw
 argument_list|,
 name|prison0
 operator|.
-name|pr_host
+name|pr_hostname
 argument_list|)
 expr_stmt|;
 name|mtx_unlock

@@ -360,8 +360,6 @@ name|int
 name|interactive
 init|=
 literal|1
-decl_stmt|,
-name|fdopts
 decl_stmt|;
 specifier|const
 name|char
@@ -651,32 +649,6 @@ argument_list|,
 literal|"not a floppy disk: %s"
 argument_list|,
 name|device
-argument_list|)
-expr_stmt|;
-name|fdopts
-operator|=
-name|FDOPT_NOERRLOG
-expr_stmt|;
-if|if
-condition|(
-name|ioctl
-argument_list|(
-name|fd
-argument_list|,
-name|FD_SOPTS
-argument_list|,
-operator|&
-name|fdopts
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"ioctl(FD_SOPTS, FDOPT_NOERRLOG)"
 argument_list|)
 expr_stmt|;
 name|bpt

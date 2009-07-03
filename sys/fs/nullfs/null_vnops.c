@@ -2302,6 +2302,15 @@ decl_stmt|,
 modifier|*
 name|ldvp
 decl_stmt|;
+name|struct
+name|ucred
+modifier|*
+name|cred
+init|=
+name|ap
+operator|->
+name|a_cred
+decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -2360,6 +2369,8 @@ name|vn_vptocnp
 argument_list|(
 operator|&
 name|ldvp
+argument_list|,
+name|cred
 argument_list|,
 name|ap
 operator|->

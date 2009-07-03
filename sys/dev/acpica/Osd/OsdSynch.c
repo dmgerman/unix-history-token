@@ -1948,6 +1948,7 @@ name|am
 operator|==
 name|NULL
 condition|)
+block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -1957,6 +1958,9 @@ literal|"cannot release null mutex\n"
 operator|)
 argument_list|)
 expr_stmt|;
+name|return_VOID
+expr_stmt|;
+block|}
 name|mtx_lock
 argument_list|(
 operator|&

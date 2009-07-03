@@ -11306,7 +11306,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|if_maddr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -11429,7 +11429,7 @@ operator|)
 operator|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -22713,9 +22713,9 @@ if|if
 condition|(
 name|ts
 operator|->
-name|ts_rate
-operator|&
-name|HAL_TXSTAT_ALTRATE
+name|ts_finaltsi
+operator|!=
+literal|0
 condition|)
 name|sc
 operator|->

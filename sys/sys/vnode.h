@@ -559,7 +559,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|do {							\ 		if (!VN_KNLIST_EMPTY(vp))			\ 			KNOTE(&vp->v_pollinfo->vpi_selinfo.si_note, (b), (a)); \ 	} while (0)
+value|do {							\ 		if (!VN_KNLIST_EMPTY(vp))			\ 			KNOTE(&vp->v_pollinfo->vpi_selinfo.si_note, (b), \ 			    (a) | KNF_NOKQLOCK);		\ 	} while (0)
 end_define
 
 begin_define
@@ -571,7 +571,7 @@ name|vp
 parameter_list|,
 name|b
 parameter_list|)
-value|VN_KNOTE(vp, b, 1)
+value|VN_KNOTE(vp, b, KNF_LISTLOCKED)
 end_define
 
 begin_define
@@ -1140,7 +1140,7 @@ comment|/* permission to write/append */
 end_comment
 
 begin_comment
-comment|/*  * VEXPLICIT_DENY makes VOP_ACCESS(9) return EPERM or EACCES only  * if permission was denied explicitly, by a "deny" rule in NFS4 ACL,  * and 0 otherwise.  This never happens with ordinary unix access rights  * or POSIX.1e ACLs.  Obviously, VEXPLICIT_DENY must be OR-ed with  * some other V* constant.  */
+comment|/*  * VEXPLICIT_DENY makes VOP_ACCESSX(9) return EPERM or EACCES only  * if permission was denied explicitly, by a "deny" rule in NFSv4 ACL,  * and 0 otherwise.  This never happens with ordinary unix access rights  * or POSIX.1e ACLs.  Obviously, VEXPLICIT_DENY must be OR-ed with  * some other V* constant.  */
 end_comment
 
 begin_define
@@ -2347,6 +2347,17 @@ file|"vnode_if.h"
 end_include
 
 begin_comment
+comment|/* vn_open_flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VN_OPEN_NOAUDIT
+value|0x00000001
+end_define
+
+begin_comment
 comment|/*  * Public vnode manipulation functions.  */
 end_comment
 
@@ -2688,6 +2699,11 @@ name|vnode
 modifier|*
 modifier|*
 name|vp
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|cred
 parameter_list|,
 name|char
 modifier|*
@@ -3232,6 +3248,9 @@ name|flagp
 parameter_list|,
 name|int
 name|cmode
+parameter_list|,
+name|u_int
+name|vn_open_flags
 parameter_list|,
 name|struct
 name|ucred

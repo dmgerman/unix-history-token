@@ -1882,7 +1882,7 @@ value|do { 					\ 		(b)->bits[0] = NFSATTRBIT_REFERRAL0;	 		\ 		(b)->bits[1] = N
 end_define
 
 begin_comment
-comment|/*  * Store uid, gid creds that handle maps to.  * Since some BSDen define cr_gid as cr_groups[0], I'll just keep them  * all in nfsc_groups[NGROUPS + 1].  */
+comment|/*  * Store uid, gid creds that were used when the stateid was acquired.  * The RPC layer allows NFS_MAXGRPS + 1 groups to go out on the wire,  * so that's how many gets stored here.  */
 end_comment
 
 begin_struct
@@ -1895,7 +1895,7 @@ decl_stmt|;
 name|gid_t
 name|nfsc_groups
 index|[
-name|NGROUPS
+name|NFS_MAXGRPS
 operator|+
 literal|1
 index|]

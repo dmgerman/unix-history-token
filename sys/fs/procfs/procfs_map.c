@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/resourcevar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sbuf.h>
 end_include
 
@@ -182,6 +188,11 @@ name|fullpath
 decl_stmt|,
 modifier|*
 name|freepath
+decl_stmt|;
+name|struct
+name|uidinfo
+modifier|*
+name|uip
 decl_stmt|;
 name|int
 name|error
@@ -444,6 +455,28 @@ operator|->
 name|resident_page_count
 expr_stmt|;
 block|}
+name|uip
+operator|=
+operator|(
+name|entry
+operator|->
+name|uip
+operator|)
+condition|?
+name|entry
+operator|->
+name|uip
+else|:
+operator|(
+name|obj
+condition|?
+name|obj
+operator|->
+name|uip
+else|:
+name|NULL
+operator|)
+expr_stmt|;
 name|resident
 operator|=
 literal|0
@@ -708,14 +741,14 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 		 * format: 		 *  start, end, resident, private resident, cow, access, type. 		 */
+comment|/* 		 * format: 		 *  start, end, resident, private resident, cow, access, type, 		 *         charged, charged uid. 		 */
 name|error
 operator|=
 name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"0x%lx 0x%lx %d %d %p %s%s%s %d %d 0x%x %s %s %s %s\n"
+literal|"0x%lx 0x%lx %d %d %p %s%s%s %d %d 0x%x %s %s %s %s %s %d\n"
 argument_list|,
 operator|(
 name|u_long
@@ -806,6 +839,21 @@ argument_list|,
 name|type
 argument_list|,
 name|fullpath
+argument_list|,
+name|uip
+condition|?
+literal|"CH"
+else|:
+literal|"NCH"
+argument_list|,
+name|uip
+condition|?
+name|uip
+operator|->
+name|ui_uid
+else|:
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if

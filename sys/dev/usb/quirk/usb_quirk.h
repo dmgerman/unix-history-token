@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_USB2_QUIRK_H_
+name|_USB_QUIRK_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_USB2_QUIRK_H_
+name|_USB_QUIRK_H_
 end_define
 
 begin_comment
@@ -103,13 +103,29 @@ block|}
 enum|;
 end_enum
 
+begin_function_decl
+name|uint8_t
+name|usb_test_quirk
+parameter_list|(
+specifier|const
+name|struct
+name|usb_attach_arg
+modifier|*
+name|uaa
+parameter_list|,
+name|uint16_t
+name|quirk
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* _USB2_QUIRK_H_ */
+comment|/* _USB_QUIRK_H_ */
 end_comment
 
 end_unit

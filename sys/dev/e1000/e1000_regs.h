@@ -275,6 +275,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_SVCR
+value|0x000F0
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SVT
+value|0x000F4
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_RCTL
 value|0x00100
 end_define
@@ -3538,6 +3552,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_SWSM2
+value|0x05B58
+end_define
+
+begin_comment
+comment|/* Driver-only SW semaphore (not used by BOOT agents) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_DCA_ID
 value|0x05B70
 end_define
@@ -4195,6 +4220,20 @@ end_define
 
 begin_comment
 comment|/* 5-tuple Queue Fltr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TTQF
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x059E0 + (4 * (_n)))
+end_define
+
+begin_comment
+comment|/* 2-tuple Queue Fltr */
 end_comment
 
 begin_define

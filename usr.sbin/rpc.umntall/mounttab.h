@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|STRSIZ
-value|(RPCMNT_NAMELEN+RPCMNT_PATHLEN+100)
+value|(MNTNAMLEN+MNTPATHLEN+100)
 end_define
 
 begin_define
@@ -31,13 +31,13 @@ decl_stmt|;
 name|char
 name|mtab_host
 index|[
-name|RPCMNT_NAMELEN
+name|MNTNAMLEN
 index|]
 decl_stmt|;
 name|char
 name|mtab_dirp
 index|[
-name|RPCMNT_PATHLEN
+name|MNTPATHLEN
 index|]
 decl_stmt|;
 name|struct

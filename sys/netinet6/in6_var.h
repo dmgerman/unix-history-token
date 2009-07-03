@@ -187,12 +187,13 @@ name|u_int32_t
 name|ia_plen
 decl_stmt|;
 comment|/* prefix length */
-name|struct
-name|in6_ifaddr
-modifier|*
-name|ia_next
-decl_stmt|;
-comment|/* next in6 list of IP6 addresses */
+name|TAILQ_ENTRY
+argument_list|(
+argument|in6_ifaddr
+argument_list|)
+name|ia_link
+expr_stmt|;
+comment|/* list of IPv6 addresses */
 name|int
 name|ia6_flags
 decl_stmt|;
@@ -224,6 +225,20 @@ expr_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* List of in6_ifaddr's. */
+end_comment
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|in6_ifaddrhead
+argument_list|,
+name|in6_ifaddr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* control structure to manage address selection policy */
@@ -1556,9 +1571,8 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|struct
-name|in6_ifaddr
-modifier|*
-name|in6_ifaddr
+name|in6_ifaddrhead
+name|in6_ifaddrhead
 decl_stmt|;
 end_decl_stmt
 
@@ -1586,6 +1600,70 @@ end_endif
 begin_comment
 comment|/* VIMAGE_GLOBALS */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|rwlock
+name|in6_ifaddr_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|IN6_IFADDR_LOCK_ASSERT
+parameter_list|(	)
+value|rw_assert(&in6_ifaddr_lock, RA_LOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN6_IFADDR_RLOCK
+parameter_list|()
+value|rw_rlock(&in6_ifaddr_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN6_IFADDR_RLOCK_ASSERT
+parameter_list|()
+value|rw_assert(&in6_ifaddr_lock, RA_RLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN6_IFADDR_RUNLOCK
+parameter_list|()
+value|rw_runlock(&in6_ifaddr_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN6_IFADDR_WLOCK
+parameter_list|()
+value|rw_wlock(&in6_ifaddr_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN6_IFADDR_WLOCK_ASSERT
+parameter_list|()
+value|rw_assert(&in6_ifaddr_lock, RA_WLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN6_IFADDR_WUNLOCK
+parameter_list|()
+value|rw_wunlock(&in6_ifaddr_lock)
+end_define
 
 begin_define
 define|#
@@ -1617,29 +1695,6 @@ name|inet6ctlerrmap
 index|[]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * Macro for finding the internet address structure (in6_ifaddr) corresponding  * to a given interface (ifnet structure).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IFP_TO_IA6
-parameter_list|(
-name|ifp
-parameter_list|,
-name|ia
-parameter_list|)
-define|\
-comment|/* struct ifnet *ifp; */
-define|\
-comment|/* struct in6_ifaddr *ia; */
-define|\
-value|do {									\ 	struct ifaddr *ifa;						\ 	IF_ADDR_LOCK_ASSERT(ifp);					\ 	TAILQ_FOREACH(ifa,&(ifp)->if_addrhead, ifa_link) {		\ 		if (ifa->ifa_addr->sa_family == AF_INET6)		\ 			break;						\ 	}								\ 	(ia) = (struct in6_ifaddr *)ifa;				\ } while (
-comment|/*CONSTCOND*/
-value|0)
-end_define
 
 begin_endif
 endif|#

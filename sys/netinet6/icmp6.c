@@ -2848,7 +2848,7 @@ name|strlen
 argument_list|(
 name|pr
 operator|->
-name|pr_host
+name|pr_hostname
 argument_list|)
 expr_stmt|;
 if|if
@@ -2931,11 +2931,12 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+comment|/* meaningless TTL */
 name|bcopy
 argument_list|(
 name|pr
 operator|->
-name|pr_host
+name|pr_hostname
 argument_list|,
 name|p
 operator|+
@@ -2944,7 +2945,6 @@ argument_list|,
 name|maxhlen
 argument_list|)
 expr_stmt|;
-comment|/* meaningless TTL */
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -5235,6 +5235,14 @@ name|ICMP6_NODEINFO_TMPADDROK
 operator|)
 condition|)
 block|{
+name|ifa_free
+argument_list|(
+operator|&
+name|ia6
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 name|nd6log
 argument_list|(
 operator|(
@@ -5253,6 +5261,14 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|ifa_free
+argument_list|(
+operator|&
+name|ia6
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* validate query Subject field. */
 name|qtype
@@ -5484,13 +5500,13 @@ name|ni6_nametodns
 argument_list|(
 name|pr
 operator|->
-name|pr_host
+name|pr_hostname
 argument_list|,
 name|strlen
 argument_list|(
 name|pr
 operator|->
-name|pr_host
+name|pr_hostname
 argument_list|)
 argument_list|,
 literal|0
@@ -6065,13 +6081,13 @@ name|ni6_nametodns
 argument_list|(
 name|pr
 operator|->
-name|pr_host
+name|pr_hostname
 argument_list|,
 name|strlen
 argument_list|(
 name|pr
 operator|->
-name|pr_host
+name|pr_hostname
 argument_list|)
 argument_list|,
 name|oldfqdn
@@ -8782,6 +8798,8 @@ name|struct
 name|in6_ifaddr
 modifier|*
 name|ia
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|plen
@@ -8802,8 +8820,10 @@ name|struct
 name|in6_addr
 name|origdst
 decl_stmt|,
-modifier|*
 name|src
+decl_stmt|,
+modifier|*
+name|srcp
 init|=
 name|NULL
 decl_stmt|;
@@ -9150,7 +9170,7 @@ name|IN6_IFF_NOTREADY
 operator|)
 operator|)
 condition|)
-name|src
+name|srcp
 operator|=
 operator|&
 name|ia
@@ -9234,7 +9254,7 @@ operator|)
 operator|)
 condition|)
 block|{
-name|src
+name|srcp
 operator|=
 operator|&
 name|ia
@@ -9248,7 +9268,7 @@ block|}
 block|}
 if|if
 condition|(
-name|src
+name|srcp
 operator|==
 name|NULL
 condition|)
@@ -9311,7 +9331,7 @@ name|ro
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|src
+name|e
 operator|=
 name|in6_selectsrc
 argument_list|(
@@ -9331,7 +9351,7 @@ operator|&
 name|outif
 argument_list|,
 operator|&
-name|e
+name|src
 argument_list|)
 expr_stmt|;
 if|if
@@ -9350,9 +9370,7 @@ expr_stmt|;
 comment|/* XXX: we could use this */
 if|if
 condition|(
-name|src
-operator|==
-name|NULL
+name|e
 condition|)
 block|{
 name|char
@@ -9387,13 +9405,18 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|srcp
+operator|=
+operator|&
+name|src
+expr_stmt|;
 block|}
 name|ip6
 operator|->
 name|ip6_src
 operator|=
 operator|*
-name|src
+name|srcp
 expr_stmt|;
 name|ip6
 operator|->
@@ -9537,9 +9560,37 @@ argument_list|,
 name|code
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ia
+operator|!=
+name|NULL
+condition|)
+name|ifa_free
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 return|return;
 name|bad
 label|:
+if|if
+condition|(
+name|ia
+operator|!=
+name|NULL
+condition|)
+name|ifa_free
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -11203,6 +11254,15 @@ operator|->
 name|ia_addr
 operator|.
 name|sin6_addr
+expr_stmt|;
+comment|/* XXXRW: reference released prematurely. */
+name|ifa_free
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* get ip6 linklocal address for the router. */

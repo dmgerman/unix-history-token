@@ -189,12 +189,6 @@ directive|include
 file|<vm/uma.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/mutex.h>
-end_include
-
 begin_comment
 comment|/*  * System initialization  */
 end_comment
@@ -1313,15 +1307,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|p
 operator|->
 name|dirty
-operator|&
-name|p
-operator|->
-name|valid
-operator|)
 operator|==
 literal|0
 operator|||
@@ -1445,15 +1433,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|p
 operator|->
 name|dirty
-operator|&
-name|p
-operator|->
-name|valid
-operator|)
 operator|==
 literal|0
 operator|||

@@ -409,6 +409,15 @@ name|u_int64_t
 name|tdb_cryptoid
 decl_stmt|;
 comment|/* crypto session id */
+comment|/* 	 * NAT-Traversal. 	 */
+name|u_int16_t
+name|natt_type
+decl_stmt|;
+comment|/* IKE/ESP-marker in output. */
+name|u_int16_t
+name|natt_esp_frag_len
+decl_stmt|;
+comment|/* MTU for payload fragmentation. */
 block|}
 struct|;
 end_struct

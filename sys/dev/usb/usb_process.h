@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_USB2_PROCESS_H_
+name|_USB_PROCESS_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_USB2_PROCESS_H_
+name|_USB_PROCESS_H_
 end_define
 
 begin_include
@@ -73,50 +73,6 @@ struct_decl|struct
 name|usb_proc_msg
 struct_decl|;
 end_struct_decl
-
-begin_comment
-comment|/* typedefs */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-name|usb_proc_callback_t
-function_decl|)
-parameter_list|(
-name|struct
-name|usb_proc_msg
-modifier|*
-name|hdr
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_comment
-comment|/*  * The following structure defines the USB process message header.  */
-end_comment
-
-begin_struct
-struct|struct
-name|usb_proc_msg
-block|{
-name|TAILQ_ENTRY
-argument_list|(
-argument|usb_proc_msg
-argument_list|)
-name|pm_qentry
-expr_stmt|;
-name|usb_proc_callback_t
-modifier|*
-name|pm_callback
-decl_stmt|;
-name|usb_size_t
-name|pm_num
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * The following structure defines the USB process.  */
@@ -184,7 +140,7 @@ end_comment
 
 begin_function_decl
 name|uint8_t
-name|usb2_proc_is_gone
+name|usb_proc_is_gone
 parameter_list|(
 name|struct
 name|usb_process
@@ -196,7 +152,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|usb2_proc_create
+name|usb_proc_create
 parameter_list|(
 name|struct
 name|usb_process
@@ -221,7 +177,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_proc_drain
+name|usb_proc_drain
 parameter_list|(
 name|struct
 name|usb_process
@@ -233,7 +189,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_proc_mwait
+name|usb_proc_mwait
 parameter_list|(
 name|struct
 name|usb_process
@@ -253,7 +209,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_proc_free
+name|usb_proc_free
 parameter_list|(
 name|struct
 name|usb_process
@@ -266,7 +222,7 @@ end_function_decl
 begin_function_decl
 name|void
 modifier|*
-name|usb2_proc_msignal
+name|usb_proc_msignal
 parameter_list|(
 name|struct
 name|usb_process
@@ -290,7 +246,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _USB2_PROCESS_H_ */
+comment|/* _USB_PROCESS_H_ */
 end_comment
 
 end_unit

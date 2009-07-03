@@ -256,6 +256,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fs/fifofs/fifo.h>
 end_include
 
@@ -2614,7 +2620,7 @@ parameter_list|,
 name|p
 parameter_list|)
 define|\
-value|vn_rdwr((r), (v), (b), (l), (o), (s), (i), (c), NULL, (int *)(a), (p))
+value|vn_rdwr((r), (v), (b), (l), (o), (s), (i), (c), NULL, (a), (p))
 end_define
 
 begin_comment

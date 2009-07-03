@@ -978,6 +978,14 @@ name|ETHERTYPE_AT
 argument_list|)
 expr_stmt|;
 block|}
+name|ifa_free
+argument_list|(
+operator|&
+name|aa
+operator|->
+name|aa_ifa
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 endif|#
@@ -2616,7 +2624,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|int
+name|u_long
 name|command
 decl_stmt|;
 name|caddr_t

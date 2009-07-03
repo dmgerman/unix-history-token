@@ -259,7 +259,7 @@ name|enum
 name|intr_polarity
 parameter_list|)
 function_decl|;
-name|void
+name|int
 function_decl|(
 modifier|*
 name|pic_assign_cpu
@@ -511,6 +511,15 @@ name|struct
 name|trapframe
 modifier|*
 name|frame
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
+name|intr_next_cpu
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

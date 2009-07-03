@@ -209,7 +209,7 @@ name|param
 parameter_list|,
 name|func
 parameter_list|)
-value|{ name, param, { .c_func = func } }
+value|{ name, param, { .c_func = func }, 0, NULL }
 end_define
 
 begin_define
@@ -221,7 +221,7 @@ name|name
 parameter_list|,
 name|func
 parameter_list|)
-value|{ name, NEXTARG, { .c_func = func } }
+value|{ name, NEXTARG, { .c_func = func }, 0, NULL }
 end_define
 
 begin_define
@@ -233,7 +233,7 @@ name|name
 parameter_list|,
 name|func
 parameter_list|)
-value|{ name, OPTARG, { .c_func = func } }
+value|{ name, OPTARG, { .c_func = func }, 0, NULL }
 end_define
 
 begin_define
@@ -245,7 +245,7 @@ name|name
 parameter_list|,
 name|func
 parameter_list|)
-value|{ name, NEXTARG2, { .c_func2 = func } }
+value|{ name, NEXTARG2, { .c_func2 = func }, 0, NULL }
 end_define
 
 begin_define
@@ -259,7 +259,7 @@ name|param
 parameter_list|,
 name|func
 parameter_list|)
-value|{ name, param, { .c_func = func }, 1 }
+value|{ name, param, { .c_func = func }, 1, NULL }
 end_define
 
 begin_define
@@ -271,7 +271,7 @@ name|name
 parameter_list|,
 name|func
 parameter_list|)
-value|{ name, NEXTARG, { .c_func = func }, 1 }
+value|{ name, NEXTARG, { .c_func = func }, 1, NULL }
 end_define
 
 begin_struct_decl

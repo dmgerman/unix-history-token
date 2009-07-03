@@ -88,7 +88,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20090608_0134"
+value|"20090624_0136"
 end_define
 
 begin_expr_stmt
@@ -2175,6 +2175,13 @@ name|HDAC_NO_MSI
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|HDAC_NO_64BIT
+value|2
+end_define
+
 begin_struct
 specifier|static
 specifier|const
@@ -2344,7 +2351,7 @@ name|HDA_NVIDIA_MCP78_1
 block|,
 literal|"NVidia MCP78"
 block|,
-literal|0
+name|HDAC_NO_64BIT
 block|}
 block|,
 block|{
@@ -2352,7 +2359,7 @@ name|HDA_NVIDIA_MCP78_2
 block|,
 literal|"NVidia MCP78"
 block|,
-literal|0
+name|HDAC_NO_64BIT
 block|}
 block|,
 block|{
@@ -2360,7 +2367,7 @@ name|HDA_NVIDIA_MCP78_3
 block|,
 literal|"NVidia MCP78"
 block|,
-literal|0
+name|HDAC_NO_64BIT
 block|}
 block|,
 block|{
@@ -2368,7 +2375,7 @@ name|HDA_NVIDIA_MCP78_4
 block|,
 literal|"NVidia MCP78"
 block|,
-literal|0
+name|HDAC_NO_64BIT
 block|}
 block|,
 block|{
@@ -8582,9 +8589,6 @@ decl_stmt|;
 name|int
 name|result
 decl_stmt|;
-name|int
-name|lowaddr
-decl_stmt|;
 name|roundsz
 operator|=
 name|roundup2
@@ -8593,18 +8597,6 @@ name|size
 argument_list|,
 name|HDAC_DMA_ALIGNMENT
 argument_list|)
-expr_stmt|;
-name|lowaddr
-operator|=
-operator|(
-name|sc
-operator|->
-name|support_64bit
-operator|)
-condition|?
-name|BUS_SPACE_MAXADDR
-else|:
-name|BUS_SPACE_MAXADDR_32BIT
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -8622,7 +8614,12 @@ name|result
 operator|=
 name|bus_dma_tag_create
 argument_list|(
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
 argument_list|,
 comment|/* parent */
 name|HDAC_DMA_ALIGNMENT
@@ -8631,7 +8628,15 @@ comment|/* alignment */
 literal|0
 argument_list|,
 comment|/* boundary */
-name|lowaddr
+operator|(
+name|sc
+operator|->
+name|support_64bit
+operator|)
+condition|?
+name|BUS_SPACE_MAXADDR
+else|:
+name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
 comment|/* lowaddr */
 name|BUS_SPACE_MAXADDR
@@ -20934,94 +20939,6 @@ name|polling
 operator|=
 literal|0
 expr_stmt|;
-name|result
-operator|=
-name|bus_dma_tag_create
-argument_list|(
-name|NULL
-argument_list|,
-comment|/* parent */
-name|HDAC_DMA_ALIGNMENT
-argument_list|,
-comment|/* alignment */
-literal|0
-argument_list|,
-comment|/* boundary */
-name|BUS_SPACE_MAXADDR_32BIT
-argument_list|,
-comment|/* lowaddr */
-name|BUS_SPACE_MAXADDR
-argument_list|,
-comment|/* highaddr */
-name|NULL
-argument_list|,
-comment|/* filtfunc */
-name|NULL
-argument_list|,
-comment|/* fistfuncarg */
-name|HDA_BUFSZ_MAX
-argument_list|,
-comment|/* maxsize */
-literal|1
-argument_list|,
-comment|/* nsegments */
-name|HDA_BUFSZ_MAX
-argument_list|,
-comment|/* maxsegsz */
-literal|0
-argument_list|,
-comment|/* flags */
-name|NULL
-argument_list|,
-comment|/* lockfunc */
-name|NULL
-argument_list|,
-comment|/* lockfuncarg */
-operator|&
-name|sc
-operator|->
-name|chan_dmat
-argument_list|)
-expr_stmt|;
-comment|/* dmat */
-if|if
-condition|(
-name|result
-operator|!=
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"%s: bus_dma_tag_create failed (%x)\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|result
-argument_list|)
-expr_stmt|;
-name|snd_mtxfree
-argument_list|(
-name|sc
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|sc
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 name|sc
 operator|->
 name|hdabus
@@ -21488,6 +21405,29 @@ condition|)
 goto|goto
 name|hdac_attach_fail
 goto|;
+if|if
+condition|(
+name|devid
+operator|>=
+literal|0
+operator|&&
+operator|(
+name|hdac_devices
+index|[
+name|devid
+index|]
+operator|.
+name|flags
+operator|&
+name|HDAC_NO_64BIT
+operator|)
+condition|)
+name|sc
+operator|->
+name|support_64bit
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Allocate CORB and RIRB dma memory */
 name|result
 operator|=
@@ -21550,6 +21490,91 @@ condition|)
 goto|goto
 name|hdac_attach_fail
 goto|;
+name|result
+operator|=
+name|bus_dma_tag_create
+argument_list|(
+name|bus_get_dma_tag
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+argument_list|,
+comment|/* parent */
+name|HDAC_DMA_ALIGNMENT
+argument_list|,
+comment|/* alignment */
+literal|0
+argument_list|,
+comment|/* boundary */
+operator|(
+name|sc
+operator|->
+name|support_64bit
+operator|)
+condition|?
+name|BUS_SPACE_MAXADDR
+else|:
+name|BUS_SPACE_MAXADDR_32BIT
+argument_list|,
+comment|/* lowaddr */
+name|BUS_SPACE_MAXADDR
+argument_list|,
+comment|/* highaddr */
+name|NULL
+argument_list|,
+comment|/* filtfunc */
+name|NULL
+argument_list|,
+comment|/* fistfuncarg */
+name|HDA_BUFSZ_MAX
+argument_list|,
+comment|/* maxsize */
+literal|1
+argument_list|,
+comment|/* nsegments */
+name|HDA_BUFSZ_MAX
+argument_list|,
+comment|/* maxsegsz */
+literal|0
+argument_list|,
+comment|/* flags */
+name|NULL
+argument_list|,
+comment|/* lockfunc */
+name|NULL
+argument_list|,
+comment|/* lockfuncarg */
+operator|&
+name|sc
+operator|->
+name|chan_dmat
+argument_list|)
+expr_stmt|;
+comment|/* dmat */
+if|if
+condition|(
+name|result
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"%s: bus_dma_tag_create failed (%x)\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|result
+argument_list|)
+expr_stmt|;
+goto|goto
+name|hdac_attach_fail
+goto|;
+block|}
 comment|/* Quiesce everything */
 name|HDA_BOOTHVERBOSE
 argument_list|(

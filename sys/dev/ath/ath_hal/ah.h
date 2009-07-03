@@ -343,6 +343,11 @@ init|=
 literal|37
 block|,
 comment|/* bitmask of supported interrupts */
+name|HAL_CAP_BSSIDMATCH
+init|=
+literal|38
+block|,
+comment|/* hardware has disable bssid match */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;
@@ -773,6 +778,11 @@ init|=
 literal|0x00000400
 block|,
 comment|/* Allow compressed BAR */
+name|HAL_RX_FILTER_BSSID
+init|=
+literal|0x00000800
+block|,
+comment|/* Disable BSSID match */
 block|}
 name|HAL_RX_FILTER
 typedef|;

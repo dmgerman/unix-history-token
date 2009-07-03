@@ -3551,7 +3551,7 @@ literal|5
 argument_list|,
 name|printf
 argument_list|(
-literal|"midiout: resid %d len %jd avail %jd\n"
+literal|"midiout: resid %zd len %jd avail %jd\n"
 argument_list|,
 name|uio
 operator|->

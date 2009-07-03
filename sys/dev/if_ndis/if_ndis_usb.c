@@ -122,7 +122,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_core.h>
+file|<dev/usb/usbdi.h>
 end_include
 
 begin_include
@@ -905,7 +905,7 @@ operator|&
 name|NDISUSB_STATUS_SETUP_EP
 condition|)
 block|{
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
@@ -916,7 +916,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
@@ -952,7 +952,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|usb2_transfer_unsetup
+name|usbd_transfer_unsetup
 argument_list|(
 name|ne
 operator|->

@@ -1224,8 +1224,7 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
-name|unsigned
-name|int
+name|u_long
 name|cmd
 parameter_list|,
 name|void
@@ -1388,8 +1387,7 @@ parameter_list|,
 name|int
 name|ioflags
 parameter_list|,
-name|unsigned
-name|int
+name|u_long
 name|cmd
 parameter_list|,
 name|void
@@ -1422,7 +1420,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"xfs_ioctl: bdp %p flags 0x%x cmd 0x%x basecmd 0x%x arg %p\n"
+literal|"xfs_ioctl: bdp %p flags 0x%x cmd 0x%lx basecmd 0x%lx arg %p\n"
 argument_list|,
 name|bdp
 argument_list|,
@@ -2417,8 +2415,7 @@ parameter_list|,
 name|int
 name|ioflags
 parameter_list|,
-name|unsigned
-name|int
+name|u_long
 name|cmd
 parameter_list|,
 name|void
@@ -4191,8 +4188,7 @@ parameter_list|,
 name|int
 name|ioflags
 parameter_list|,
-name|unsigned
-name|int
+name|u_long
 name|cmd
 parameter_list|,
 name|unsigned

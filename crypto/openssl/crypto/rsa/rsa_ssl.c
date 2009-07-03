@@ -406,11 +406,12 @@ control|(
 name|k
 operator|=
 operator|-
-literal|8
+literal|9
 init|;
 name|k
 operator|<
-literal|0
+operator|-
+literal|1
 condition|;
 name|k
 operator|++

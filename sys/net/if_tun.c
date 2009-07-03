@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mbuf.h>
 end_include
 
@@ -1138,9 +1144,9 @@ literal|0
 expr_stmt|;
 name|CURVNET_SET
 argument_list|(
-name|TD_TO_VNET
+name|CRED_TO_VNET
 argument_list|(
-name|curthread
+name|cred
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2647,7 +2653,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET
-name|IF_ADDR_LOCK
+name|if_addr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -2747,7 +2753,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|if_addr_runlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -4567,7 +4573,7 @@ name|TUNDEBUG
 argument_list|(
 name|ifp
 argument_list|,
-literal|"len=%d!\n"
+literal|"len=%zd!\n"
 argument_list|,
 name|uio
 operator|->

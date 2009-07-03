@@ -215,24 +215,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NGROUPS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NGROUPS
-value|16
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Convert network-name into unix credential  */
 end_comment
@@ -407,7 +389,7 @@ literal|0
 init|;
 name|gidlen
 operator|<
-name|NGROUPS
+name|NGRPS
 condition|;
 name|gidlen
 operator|++
@@ -690,7 +672,7 @@ decl_stmt|;
 name|gid_t
 name|groups
 index|[
-name|NGROUPS
+name|NGRPS
 index|]
 decl_stmt|;
 block|{
@@ -762,7 +744,7 @@ if|if
 condition|(
 name|ngroups
 operator|==
-name|NGROUPS
+name|NGRPS
 condition|)
 block|{
 ifdef|#

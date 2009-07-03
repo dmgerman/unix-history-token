@@ -1501,6 +1501,10 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|SVCXPRT
+modifier|*
+name|new_xprt
+decl_stmt|;
 comment|/* 	 * The socket upcall calls xprt_active() which will eventually 	 * cause the server to call us here. We attempt to accept a 	 * connection from the socket and turn it into a new 	 * transport. If the accept fails, we have drained all pending 	 * connections so we call xprt_inactive(). 	 */
 name|sx_xlock
 argument_list|(
@@ -1699,10 +1703,9 @@ name|FALSE
 operator|)
 return|;
 block|}
-comment|/* 	 * svc_vc_create_conn will call xprt_register - we don't need 	 * to do anything with the new connection. 	 */
-if|if
-condition|(
-operator|!
+comment|/* 	 * svc_vc_create_conn will call xprt_register - we don't need 	 * to do anything with the new connection except derefence it. 	 */
+name|new_xprt
+operator|=
 name|svc_vc_create_conn
 argument_list|(
 name|xprt
@@ -1713,12 +1716,27 @@ name|so
 argument_list|,
 name|sa
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|new_xprt
 condition|)
+block|{
 name|soclose
 argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|SVC_RELEASE
+argument_list|(
+name|new_xprt
+argument_list|)
+expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|sa

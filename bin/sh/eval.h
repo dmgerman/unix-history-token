@@ -67,6 +67,43 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* flags in argument to evaltree/evalstring */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EV_EXIT
+value|01
+end_define
+
+begin_comment
+comment|/* exit after evaluating tree */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EV_TESTED
+value|02
+end_define
+
+begin_comment
+comment|/* exit status is checked; ignore -e flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EV_BACKCMD
+value|04
+end_define
+
+begin_comment
+comment|/* command executing within back quotes */
+end_comment
+
 begin_function_decl
 name|int
 name|evalcmd

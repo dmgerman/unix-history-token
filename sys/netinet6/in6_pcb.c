@@ -343,8 +343,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|V_in6_ifaddr
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|V_in6_ifaddrhead
+argument_list|)
 condition|)
 comment|/* XXX broken! */
 return|return
@@ -581,7 +584,7 @@ block|{
 name|struct
 name|ifaddr
 modifier|*
-name|ia
+name|ifa
 decl_stmt|;
 name|sin6
 operator|->
@@ -593,7 +596,7 @@ comment|/* yech... */
 if|if
 condition|(
 operator|(
-name|ia
+name|ifa
 operator|=
 name|ifa_ifwithaddr
 argument_list|(
@@ -628,7 +631,9 @@ block|}
 comment|/* 			 * XXX: bind to an anycast address might accidentally 			 * cause sending a packet with anycast source address. 			 * We should allow to bind to a deprecated address, since 			 * the application dares to use it. 			 */
 if|if
 condition|(
-name|ia
+name|ifa
+operator|!=
+name|NULL
 operator|&&
 operator|(
 operator|(
@@ -636,7 +641,7 @@ expr|struct
 name|in6_ifaddr
 operator|*
 operator|)
-name|ia
+name|ifa
 operator|)
 operator|->
 name|ia6_flags
@@ -650,12 +655,28 @@ name|IN6_IFF_DETACHED
 operator|)
 condition|)
 block|{
+name|ifa_free
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EADDRNOTAVAIL
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|ifa
+operator|!=
+name|NULL
+condition|)
+name|ifa_free
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1257,7 +1278,6 @@ parameter_list|,
 name|struct
 name|in6_addr
 modifier|*
-modifier|*
 name|plocal_addr6
 parameter_list|)
 block|{
@@ -1297,6 +1317,10 @@ name|int
 name|scope_ambiguous
 init|=
 literal|0
+decl_stmt|;
+name|struct
+name|in6_addr
+name|in6a
 decl_stmt|;
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
@@ -1390,7 +1414,12 @@ operator|)
 return|;
 if|if
 condition|(
-name|V_in6_ifaddr
+operator|!
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|V_in6_ifaddrhead
+argument_list|)
 condition|)
 block|{
 comment|/* 		 * If the destination address is UNSPECIFIED addr, 		 * use the loopback addr, e.g ::1. 		 */
@@ -1436,9 +1465,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * XXX: in6_selectsrc might replace the bound local address 	 * with the address specified by setsockopt(IPV6_PKTINFO). 	 * Is it the intended behavior? 	 */
-operator|*
-name|plocal_addr6
+name|error
 operator|=
 name|in6_selectsrc
 argument_list|(
@@ -1460,9 +1487,18 @@ operator|&
 name|ifp
 argument_list|,
 operator|&
-name|error
+name|in6a
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 if|if
 condition|(
 name|ifp
@@ -1494,30 +1530,12 @@ name|error
 operator|)
 return|;
 block|}
-if|if
-condition|(
+comment|/* 	 * Do not update this earlier, in case we return with an error. 	 * 	 * XXX: this in6_selectsrc result might replace the bound local 	 * aaddress with the address specified by setsockopt(IPV6_PKTINFO). 	 * Is it the intended behavior? 	 */
 operator|*
 name|plocal_addr6
-operator|==
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
-name|error
 operator|=
-name|EADDRNOTAVAIL
+name|in6a
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
 comment|/* 	 * Don't do pcblookup call here; return interface in 	 * plocal_addr6 	 * and exit to caller, that will do the lookup. 	 */
 return|return
 operator|(
@@ -1552,11 +1570,6 @@ modifier|*
 name|cred
 parameter_list|)
 block|{
-name|struct
-name|in6_addr
-modifier|*
-name|addr6
-decl_stmt|;
 specifier|register
 name|struct
 name|sockaddr_in6
@@ -1569,6 +1582,10 @@ name|sockaddr_in6
 operator|*
 operator|)
 name|nam
+decl_stmt|;
+name|struct
+name|in6_addr
+name|addr6
 decl_stmt|;
 name|int
 name|error
@@ -1634,6 +1651,7 @@ operator|->
 name|in6p_laddr
 argument_list|)
 condition|?
+operator|&
 name|addr6
 else|:
 operator|&
@@ -1709,7 +1727,6 @@ name|inp
 operator|->
 name|in6p_laddr
 operator|=
-operator|*
 name|addr6
 expr_stmt|;
 block|}

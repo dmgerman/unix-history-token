@@ -1230,6 +1230,7 @@ name|ddprintf
 parameter_list|(
 name|a
 parameter_list|)
+value|(void)0
 end_define
 
 begin_endif
@@ -1249,6 +1250,7 @@ name|dprintf
 parameter_list|(
 name|a
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -1258,6 +1260,7 @@ name|ddprintf
 parameter_list|(
 name|a
 parameter_list|)
+value|(void)0
 end_define
 
 begin_endif

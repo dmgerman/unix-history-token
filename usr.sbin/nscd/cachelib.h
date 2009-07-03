@@ -18,24 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"hashtable.h"
 end_include
 
@@ -184,15 +166,9 @@ begin_struct
 struct|struct
 name|common_cache_entry_params
 block|{
-comment|/* inherited fields */
-name|enum
-name|cache_entry_t
-name|entry_type
-decl_stmt|;
-comment|/* unique fields */
-name|char
-modifier|*
-name|entry_name
+name|struct
+name|cache_entry_params
+name|cep
 decl_stmt|;
 name|size_t
 name|cache_entries_size
@@ -227,14 +203,9 @@ begin_struct
 struct|struct
 name|mp_cache_entry_params
 block|{
-comment|/* inherited fields */
-name|enum
-name|cache_entry_t
-name|entry_type
-decl_stmt|;
-name|char
-modifier|*
-name|entry_name
+name|struct
+name|cache_entry_params
+name|cep
 decl_stmt|;
 comment|/* unique fields */
 name|size_t
@@ -620,7 +591,6 @@ comment|/* cache initialization/destruction routines */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|cache
 name|init_cache
 parameter_list|(
@@ -633,7 +603,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|destroy_cache
 parameter_list|(
@@ -647,7 +616,6 @@ comment|/* cache entries manipulation routines */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|register_cache_entry
 parameter_list|(
@@ -662,7 +630,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|unregister_cache_entry
 parameter_list|(
@@ -676,7 +643,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|cache_entry
 name|find_cache_entry
 parameter_list|(
@@ -694,7 +660,6 @@ comment|/* read/write operations used on common entries */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|cache_read
 parameter_list|(
@@ -716,7 +681,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|cache_write
 parameter_list|(
@@ -742,7 +706,6 @@ comment|/* read/write operations used on multipart entries */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|cache_mp_write_session
 name|open_cache_mp_write_session
 parameter_list|(
@@ -752,7 +715,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|cache_mp_write
 parameter_list|(
@@ -767,7 +729,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|abandon_cache_mp_write_session
 parameter_list|(
@@ -777,7 +738,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|close_cache_mp_write_session
 parameter_list|(
@@ -787,7 +747,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|cache_mp_read_session
 name|open_cache_mp_read_session
 parameter_list|(
@@ -797,7 +756,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|cache_mp_read
 parameter_list|(
@@ -813,7 +771,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|close_cache_mp_read_session
 parameter_list|(
@@ -827,7 +784,6 @@ comment|/* transformation routines */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|transform_cache_entry
 parameter_list|(
@@ -840,7 +796,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|transform_cache_entry_part
 parameter_list|(

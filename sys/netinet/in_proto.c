@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -441,7 +447,7 @@ block|,
 operator|.
 name|pr_ctloutput
 operator|=
-name|ip_ctloutput
+name|udp_ctloutput
 block|,
 operator|.
 name|pr_init

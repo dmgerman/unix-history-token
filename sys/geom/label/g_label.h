@@ -181,6 +181,24 @@ name|g_label_ntfs
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|g_label_desc
+name|g_label_gpt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|g_label_desc
+name|g_label_gpt_uuid
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

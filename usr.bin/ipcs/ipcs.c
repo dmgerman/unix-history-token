@@ -2266,7 +2266,9 @@ literal|" %12zu"
 argument_list|,
 name|kshmptr
 operator|->
-name|shm_bsegsz
+name|u
+operator|.
+name|shm_segsz
 argument_list|)
 expr_stmt|;
 if|if

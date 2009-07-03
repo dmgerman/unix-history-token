@@ -2147,6 +2147,19 @@ expr_stmt|;
 return|return
 name|HAL_OK
 return|;
+case|case
+name|HAL_CAP_BSSIDMATCH
+case|:
+comment|/* hardware has disable bssid match */
+return|return
+name|pCap
+operator|->
+name|halBssidMatchSupport
+condition|?
+name|HAL_OK
+else|:
+name|HAL_ENOTSUPP
+return|;
 default|default:
 return|return
 name|HAL_EINVAL

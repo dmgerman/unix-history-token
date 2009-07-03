@@ -516,7 +516,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|ioapic_assign_cpu
 parameter_list|(
 name|struct
@@ -1454,7 +1454,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ioapic_assign_cpu
 parameter_list|(
 name|struct
@@ -1532,7 +1532,11 @@ name|apic_id
 operator|==
 name|old_id
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 	 * Allocate an APIC vector for this interrupt pin.  Once 	 * we have a vector we program the interrupt pin. 	 */
 name|intpin
 operator|->
@@ -1553,6 +1557,19 @@ operator|->
 name|io_irq
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|intpin
+operator|->
+name|io_vector
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ENOSPC
+operator|)
+return|;
 if|if
 condition|(
 name|bootverbose
@@ -1611,6 +1628,11 @@ operator|->
 name|io_irq
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1645,16 +1667,25 @@ name|io_vector
 operator|==
 literal|0
 condition|)
+if|if
+condition|(
 name|ioapic_assign_cpu
 argument_list|(
 name|isrc
 argument_list|,
-name|pcpu_find
-argument_list|(
-literal|0
+name|intr_next_cpu
+argument_list|()
 argument_list|)
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"Couldn't find an APIC vector for IRQ %d"
+argument_list|,
+name|intpin
 operator|->
-name|pc_apic_id
+name|io_irq
 argument_list|)
 expr_stmt|;
 name|apic_enable_vector

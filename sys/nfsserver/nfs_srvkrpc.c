@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -229,12 +235,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfs/rpcv2.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<nfs/nfsproto.h>
 end_include
 
@@ -267,12 +267,6 @@ include|#
 directive|include
 file|<security/mac/mac_framework.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NFS_LEGACYRPC
-end_ifndef
 
 begin_expr_stmt
 specifier|static
@@ -1956,6 +1950,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|SVC_RELEASE
+argument_list|(
+name|xprt
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -2388,15 +2387,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !NFS_LEGACYRPC */
-end_comment
 
 end_unit
 

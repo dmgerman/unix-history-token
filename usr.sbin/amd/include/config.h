@@ -2456,12 +2456,9 @@ begin_comment
 comment|/* Define to 1 if you have the<nfs/rpcv2.h> header file. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_NFS_RPCV2_H
-value|1
-end_define
+begin_comment
+comment|/* #define HAVE_NFS_RPCV2_H 1 */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `nis_domain_of' function. */

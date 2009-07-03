@@ -19015,6 +19015,8 @@ name|flags
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 name|ap
 operator|->
 name|a_cred
@@ -19607,6 +19609,8 @@ operator|&
 name|flags
 argument_list|,
 literal|0600
+argument_list|,
+literal|0
 argument_list|,
 name|ap
 operator|->

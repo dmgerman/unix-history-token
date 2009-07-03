@@ -192,7 +192,7 @@ name|nopts
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|ifr
@@ -491,7 +491,7 @@ parameter_list|(
 name|a
 parameter_list|)
 value|(sizeof(a) / sizeof(a[0]))
-name|int
+name|size_t
 name|i
 decl_stmt|;
 for|for

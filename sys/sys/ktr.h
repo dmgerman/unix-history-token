@@ -788,6 +788,7 @@ name|m
 parameter_list|,
 name|d
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -801,6 +802,7 @@ name|d
 parameter_list|,
 name|p1
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -816,6 +818,7 @@ name|p1
 parameter_list|,
 name|p2
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -833,6 +836,7 @@ name|p2
 parameter_list|,
 name|p3
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -852,6 +856,7 @@ name|p3
 parameter_list|,
 name|p4
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -873,6 +878,7 @@ name|p4
 parameter_list|,
 name|p5
 parameter_list|)
+value|(void)0
 end_define
 
 begin_define
@@ -896,6 +902,7 @@ name|p5
 parameter_list|,
 name|p6
 parameter_list|)
+value|(void)0
 end_define
 
 begin_endif

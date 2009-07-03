@@ -1092,7 +1092,7 @@ operator|!
 operator|(
 name|cflag
 operator|&
-name|X509_FLAG_NO_ATTRIBUTES
+name|X509_FLAG_NO_EXTENSIONS
 operator|)
 condition|)
 block|{
@@ -1220,7 +1220,7 @@ name|bp
 argument_list|,
 name|ex
 argument_list|,
-literal|0
+name|cflag
 argument_list|,
 literal|16
 argument_list|)

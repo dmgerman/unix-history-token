@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Driver for the National Semiconductor DP83891 and DP83861  * 10/100/1000 PHYs.  * Datasheet available at: http://www.national.com/ds/DP/DP83861.pdf  *  * The DP83891 is the older NatSemi gigE PHY which isn't being sold  * anymore. The DP83861 is its replacement, which is an 'enhanced'  * firmware driven component. The major difference between the  * two is that the 83891 can't generate interrupts, while the  * 83861 can. (I think it wasn't originally designed to do this, but  * it can now thanks to firmware updates.) The 83861 also allows  * access to its internal RAM via indirect register access.  */
+comment|/*  * Driver for the National Semiconductor DP83861, DP83865 and DP83891  * 10/100/1000 PHYs.  * Datasheet available at: http://www.national.com/ds/DP/DP83861.pdf  * and at: http://www.national.com/ds/DP/DP83865.pdf  *  * The DP83891 is the older NS GigE PHY which isn't being sold  * anymore.  The DP83861 is its replacement, which is an 'enhanced'  * firmware driven component.  The major difference between the  * two is that the DP83891 can't generate interrupts, while the  * 83861 can (probably it wasn't originally designed to do this, but  * it can now thanks to firmware updates).  The DP83861 also allows  * access to its internal RAM via indirect register access.  The  * DP83865 is an ultra low power version of the DP83861 and DP83891.  */
 end_comment
 
 begin_include
@@ -258,6 +258,13 @@ name|MII_PHY_DESC
 argument_list|(
 name|NATSEMI
 argument_list|,
+name|DP83865
+argument_list|)
+block|,
+name|MII_PHY_DESC
+argument_list|(
+name|NATSEMI
+argument_list|,
 name|DP83891
 argument_list|)
 block|,
@@ -416,6 +423,12 @@ operator|->
 name|mii_instance
 operator|++
 expr_stmt|;
+name|mii_phy_reset
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* 	 * NB: the PHY has the 10baseT BMSR bits hard-wired to 0, 	 * even though it supports 10baseT. 	 */
 name|sc
 operator|->
 name|mii_capabilities
@@ -904,6 +917,7 @@ name|mii_media_status
 operator|=
 literal|0
 expr_stmt|;
+return|return;
 block|}
 if|if
 condition|(
@@ -916,6 +930,13 @@ operator|->
 name|mii_media_active
 operator||=
 name|IFM_FDX
+expr_stmt|;
+else|else
+name|mii
+operator|->
+name|mii_media_active
+operator||=
+name|IFM_HDX
 expr_stmt|;
 block|}
 else|else

@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_USB2_DEVICE_H_
+name|_USB_DEVICE_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_USB2_DEVICE_H_
+name|_USB_DEVICE_H_
 end_define
 
 begin_struct_decl
@@ -47,7 +47,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* "usb2_parse_config()" commands */
+comment|/* "usb_parse_config()" commands */
 end_comment
 
 begin_define
@@ -72,7 +72,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* "usb2_unconfigure()" flags */
+comment|/* "usb_unconfigure()" flags */
 end_comment
 
 begin_define
@@ -206,121 +206,6 @@ name|__aligned
 argument_list|(
 name|USB_HOST_ALIGN
 argument_list|)
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * The following structure defines an USB endpoint  * USB endpoint.  */
-end_comment
-
-begin_struct
-struct|struct
-name|usb_endpoint
-block|{
-name|struct
-name|usb_xfer_queue
-name|endpoint_q
-decl_stmt|;
-comment|/* queue of USB transfers */
-name|struct
-name|usb_endpoint_descriptor
-modifier|*
-name|edesc
-decl_stmt|;
-name|struct
-name|usb_pipe_methods
-modifier|*
-name|methods
-decl_stmt|;
-comment|/* set by HC driver */
-name|uint16_t
-name|isoc_next
-decl_stmt|;
-name|uint16_t
-name|refcount
-decl_stmt|;
-name|uint8_t
-name|toggle_next
-range|:
-literal|1
-decl_stmt|;
-comment|/* next data toggle value */
-name|uint8_t
-name|is_stalled
-range|:
-literal|1
-decl_stmt|;
-comment|/* set if endpoint is stalled */
-name|uint8_t
-name|is_synced
-range|:
-literal|1
-decl_stmt|;
-comment|/* set if we a synchronised */
-name|uint8_t
-name|unused
-range|:
-literal|5
-decl_stmt|;
-name|uint8_t
-name|iface_index
-decl_stmt|;
-comment|/* not used by "default endpoint" */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * The following structure defines an USB interface.  */
-end_comment
-
-begin_struct
-struct|struct
-name|usb_interface
-block|{
-name|struct
-name|usb_interface_descriptor
-modifier|*
-name|idesc
-decl_stmt|;
-name|device_t
-name|subdev
-decl_stmt|;
-name|uint8_t
-name|alt_index
-decl_stmt|;
-name|uint8_t
-name|parent_iface_index
-decl_stmt|;
-comment|/* Linux compat */
-name|struct
-name|usb_host_interface
-modifier|*
-name|altsetting
-decl_stmt|;
-name|struct
-name|usb_host_interface
-modifier|*
-name|cur_altsetting
-decl_stmt|;
-name|struct
-name|usb_device
-modifier|*
-name|linux_udev
-decl_stmt|;
-name|void
-modifier|*
-name|bsd_priv_sc
-decl_stmt|;
-comment|/* device specific information */
-name|uint8_t
-name|num_altsetting
-decl_stmt|;
-comment|/* number of alternate settings */
-name|uint8_t
-name|bsd_iface_index
-decl_stmt|;
-block|}
 struct|;
 end_struct
 
@@ -510,7 +395,7 @@ decl_stmt|;
 name|struct
 name|usb_temp_data
 modifier|*
-name|usb2_template_ptr
+name|usb_template_ptr
 decl_stmt|;
 name|struct
 name|usb_endpoint
@@ -714,7 +599,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|usb2_template
+name|usb_template
 decl_stmt|;
 end_decl_stmt
 
@@ -723,10 +608,23 @@ comment|/* function prototypes */
 end_comment
 
 begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|usb_statestr
+parameter_list|(
+name|enum
+name|usb_dev_state
+name|state
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|usb_device
 modifier|*
-name|usb2_alloc_device
+name|usb_alloc_device
 parameter_list|(
 name|device_t
 name|parent_dev
@@ -762,64 +660,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|usb_endpoint
-modifier|*
-name|usb2_get_endpoint
-parameter_list|(
-name|struct
-name|usb_device
-modifier|*
-name|udev
-parameter_list|,
-name|uint8_t
-name|iface_index
-parameter_list|,
-specifier|const
-name|struct
-name|usb_config
-modifier|*
-name|setup
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|usb_endpoint
-modifier|*
-name|usb2_get_ep_by_addr
-parameter_list|(
-name|struct
-name|usb_device
-modifier|*
-name|udev
-parameter_list|,
-name|uint8_t
-name|ea_val
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|usb_error_t
-name|usb2_interface_count
-parameter_list|(
-name|struct
-name|usb_device
-modifier|*
-name|udev
-parameter_list|,
-name|uint8_t
-modifier|*
-name|count
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|usb_error_t
-name|usb2_probe_and_attach
+name|usb_probe_and_attach
 parameter_list|(
 name|struct
 name|usb_device
@@ -834,7 +676,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_reset_iface_endpoints
+name|usb_reset_iface_endpoints
 parameter_list|(
 name|struct
 name|usb_device
@@ -849,7 +691,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_set_config_index
+name|usbd_set_config_index
 parameter_list|(
 name|struct
 name|usb_device
@@ -864,7 +706,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_set_endpoint_stall
+name|usbd_set_endpoint_stall
 parameter_list|(
 name|struct
 name|usb_device
@@ -884,7 +726,7 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
-name|usb2_suspend_resume
+name|usb_suspend_resume
 parameter_list|(
 name|struct
 name|usb_device
@@ -899,7 +741,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_devinfo
+name|usb_devinfo
 parameter_list|(
 name|struct
 name|usb_device
@@ -918,45 +760,13 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_free_device
+name|usb_free_device
 parameter_list|(
 name|struct
 name|usb_device
 modifier|*
 parameter_list|,
 name|uint8_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-modifier|*
-name|usb2_find_descriptor
-parameter_list|(
-name|struct
-name|usb_device
-modifier|*
-name|udev
-parameter_list|,
-name|void
-modifier|*
-name|id
-parameter_list|,
-name|uint8_t
-name|iface_index
-parameter_list|,
-name|uint8_t
-name|type
-parameter_list|,
-name|uint8_t
-name|type_mask
-parameter_list|,
-name|uint8_t
-name|subtype
-parameter_list|,
-name|uint8_t
-name|subtype_mask
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -975,7 +785,7 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
-name|usb2_peer_can_wakeup
+name|usb_peer_can_wakeup
 parameter_list|(
 name|struct
 name|usb_device
@@ -989,7 +799,7 @@ begin_function_decl
 name|struct
 name|usb_endpoint
 modifier|*
-name|usb2_endpoint_foreach
+name|usb_endpoint_foreach
 parameter_list|(
 name|struct
 name|usb_device
@@ -1006,7 +816,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_set_device_state
+name|usb_set_device_state
 parameter_list|(
 name|struct
 name|usb_device
@@ -1026,7 +836,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _USB2_DEVICE_H_ */
+comment|/* _USB_DEVICE_H_ */
 end_comment
 
 end_unit

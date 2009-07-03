@@ -271,6 +271,8 @@ name|TOK_DELAY
 block|,
 name|TOK_PIPE_PROFILE
 block|,
+name|TOK_BURST
+block|,
 name|TOK_RED
 block|,
 name|TOK_GRED

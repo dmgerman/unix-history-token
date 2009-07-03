@@ -96,7 +96,9 @@ function_decl|(
 modifier|*
 name|mp_init_func
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 name|int
 function_decl|(
@@ -147,17 +149,17 @@ struct|;
 end_struct
 
 begin_function_decl
-specifier|extern
 name|struct
 name|agent_table
 modifier|*
 name|init_agent_table
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|register_agent
 parameter_list|(
@@ -173,7 +175,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|agent
 modifier|*
@@ -194,7 +195,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|destroy_agent_table
 parameter_list|(

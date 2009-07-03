@@ -10,36 +10,144 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker_set.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/condvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/usb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_mfunc.h>
+file|<dev/usb/usbdi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_core.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/usb_parse.h>
+file|<dev/usb/usbdi_util.h>
 end_include
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_desc_foreach  *  * This function is the safe way to iterate across the USB config  * descriptor. It contains several checks against invalid  * descriptors. If the "desc" argument passed to this function is  * "NULL" the first descriptor, if any, will be returned.  *  * Return values:  *   NULL: End of descriptors  *   Else: Next descriptor after "desc"  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_desc_foreach  *  * This function is the safe way to iterate across the USB config  * descriptor. It contains several checks against invalid  * descriptors. If the "desc" argument passed to this function is  * "NULL" the first descriptor, if any, will be returned.  *  * Return values:  *   NULL: End of descriptors  *   Else: Next descriptor after "desc"  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|struct
 name|usb_descriptor
 modifier|*
-name|usb2_desc_foreach
+name|usb_desc_foreach
 parameter_list|(
 name|struct
 name|usb_config_descriptor
@@ -211,14 +319,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_idesc_foreach  *  * This function will iterate the interface descriptors in the config  * descriptor. The parse state structure should be zeroed before  * calling this function the first time.  *  * Return values:  *   NULL: End of descriptors  *   Else: A valid interface descriptor  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_idesc_foreach  *  * This function will iterate the interface descriptors in the config  * descriptor. The parse state structure should be zeroed before  * calling this function the first time.  *  * Return values:  *   NULL: End of descriptors  *   Else: A valid interface descriptor  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|struct
 name|usb_interface_descriptor
 modifier|*
-name|usb2_idesc_foreach
+name|usb_idesc_foreach
 parameter_list|(
 name|struct
 name|usb_config_descriptor
@@ -268,7 +376,7 @@ expr|struct
 name|usb_interface_descriptor
 operator|*
 operator|)
-name|usb2_desc_foreach
+name|usb_desc_foreach
 argument_list|(
 name|cd
 argument_list|,
@@ -395,14 +503,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_edesc_foreach  *  * This function will iterate all the endpoint descriptors within an  * interface descriptor. Starting value for the "ped" argument should  * be a valid interface descriptor.  *  * Return values:  *   NULL: End of descriptors  *   Else: A valid endpoint descriptor  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_edesc_foreach  *  * This function will iterate all the endpoint descriptors within an  * interface descriptor. Starting value for the "ped" argument should  * be a valid interface descriptor.  *  * Return values:  *   NULL: End of descriptors  *   Else: A valid endpoint descriptor  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|struct
 name|usb_endpoint_descriptor
 modifier|*
-name|usb2_edesc_foreach
+name|usb_edesc_foreach
 parameter_list|(
 name|struct
 name|usb_config_descriptor
@@ -436,7 +544,7 @@ condition|(
 operator|(
 name|desc
 operator|=
-name|usb2_desc_foreach
+name|usb_desc_foreach
 argument_list|(
 name|cd
 argument_list|,
@@ -502,12 +610,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_get_no_descriptors  *  * This function will count the total number of descriptors in the  * configuration descriptor of type "type".  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_get_no_descriptors  *  * This function will count the total number of descriptors in the  * configuration descriptor of type "type".  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|uint8_t
-name|usb2_get_no_descriptors
+name|usbd_get_no_descriptors
 parameter_list|(
 name|struct
 name|usb_config_descriptor
@@ -535,7 +643,7 @@ condition|(
 operator|(
 name|desc
 operator|=
-name|usb2_desc_foreach
+name|usb_desc_foreach
 argument_list|(
 name|cd
 argument_list|,
@@ -575,12 +683,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_get_no_alts  *  * Return value:  *   Number of alternate settings for the given interface descriptor pointer.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_get_no_alts  *  * Return value:  *   Number of alternate settings for the given interface descriptor pointer.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|uint8_t
-name|usb2_get_no_alts
+name|usbd_get_no_alts
 parameter_list|(
 name|struct
 name|usb_config_descriptor
@@ -626,7 +734,7 @@ condition|(
 operator|(
 name|desc
 operator|=
-name|usb2_desc_foreach
+name|usb_desc_foreach
 argument_list|(
 name|cd
 argument_list|,

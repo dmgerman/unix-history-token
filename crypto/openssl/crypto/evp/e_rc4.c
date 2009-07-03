@@ -43,6 +43,12 @@ directive|include
 file|<openssl/rc4.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"evp_locl.h"
+end_include
+
 begin_comment
 comment|/* FIXME: surely this is available elsewhere? */
 end_comment

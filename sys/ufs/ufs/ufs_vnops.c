@@ -488,6 +488,13 @@ name|ufsfifo_kqfilter
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|vop_pathconf_t
+name|ufsfifo_pathconf
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * A virgin directory (no blushing please).  */
 end_comment
@@ -8629,18 +8636,9 @@ name|cn_cred
 argument_list|,
 name|NOCRED
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
-operator|(
-expr|struct
-name|thread
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -9830,6 +9828,64 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Return POSIX pathconf information applicable to fifos.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|ufsfifo_pathconf
+parameter_list|(
+name|ap
+parameter_list|)
+name|struct
+name|vop_pathconf_args
+comment|/* { 		struct vnode *a_vp; 		int a_name; 		int *a_retval; 	} */
+modifier|*
+name|ap
+decl_stmt|;
+block|{
+switch|switch
+condition|(
+name|ap
+operator|->
+name|a_name
+condition|)
+block|{
+case|case
+name|_PC_ACL_EXTENDED
+case|:
+case|case
+name|_PC_ACL_PATH_MAX
+case|:
+case|case
+name|_PC_MAC_PRESENT
+case|:
+return|return
+operator|(
+name|ufs_pathconf
+argument_list|(
+name|ap
+argument_list|)
+operator|)
+return|;
+default|default:
+return|return
+operator|(
+name|fifo_specops
+operator|.
+name|vop_pathconf
+argument_list|(
+name|ap
+argument_list|)
+operator|)
+return|;
+block|}
+comment|/* NOTREACHED */
+block|}
+end_function
+
+begin_comment
 comment|/*  * Return POSIX pathconf information applicable to ufs filesystems.  */
 end_comment
 
@@ -10512,6 +10568,9 @@ decl_stmt|,
 modifier|*
 name|ucp
 decl_stmt|;
+name|gid_t
+name|ucred_group
+decl_stmt|;
 name|ucp
 operator|=
 name|cnp
@@ -10609,6 +10668,13 @@ operator|.
 name|cr_ngroups
 operator|=
 literal|1
+expr_stmt|;
+name|ucred
+operator|.
+name|cr_groups
+operator|=
+operator|&
+name|ucred_group
 expr_stmt|;
 name|ucred
 operator|.
@@ -11618,6 +11684,11 @@ operator|.
 name|vop_markatime
 operator|=
 name|ufs_markatime
+block|,
+operator|.
+name|vop_pathconf
+operator|=
+name|ufsfifo_pathconf
 block|,
 operator|.
 name|vop_print

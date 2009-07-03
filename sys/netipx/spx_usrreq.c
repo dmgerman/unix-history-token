@@ -143,6 +143,12 @@ directive|include
 file|<netipx/spx_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<security/mac/mac_framework.h>
+end_include
+
 begin_comment
 comment|/*  * SPX protocol implementation.  */
 end_comment
@@ -1052,6 +1058,25 @@ literal|"spx_input: so == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+if|if
+condition|(
+name|mac_socket_check_deliver
+argument_list|(
+name|so
+argument_list|,
+name|m
+argument_list|)
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|drop
+goto|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|so
@@ -1706,6 +1731,8 @@ condition|(
 name|spx_reass
 argument_list|(
 name|cb
+argument_list|,
+name|m
 argument_list|,
 name|si
 argument_list|)
@@ -3874,6 +3901,18 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_socket_create_mbuf
+argument_list|(
+name|so
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|so

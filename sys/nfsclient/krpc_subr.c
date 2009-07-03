@@ -84,7 +84,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfs/rpcv2.h>
+file|<rpc/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rpc/auth.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rpc/rpc_msg.h>
 end_include
 
 begin_include
@@ -1040,7 +1052,7 @@ name|authtype
 operator|=
 name|txdr_unsigned
 argument_list|(
-name|RPCAUTH_UNIX
+name|AUTH_UNIX
 argument_list|)
 expr_stmt|;
 name|call
@@ -1367,7 +1379,7 @@ name|rp_direction
 operator|!=
 name|txdr_unsigned
 argument_list|(
-name|RPC_REPLY
+name|REPLY
 argument_list|)
 condition|)
 continue|continue;
@@ -1438,7 +1450,7 @@ if|if
 condition|(
 name|error
 operator|==
-name|RPC_PROGMISMATCH
+name|PROG_MISMATCH
 condition|)
 block|{
 name|error

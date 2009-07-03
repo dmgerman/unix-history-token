@@ -2845,12 +2845,8 @@ block|{
 name|PFS_TRACE
 argument_list|(
 operator|(
-literal|"%lu resid"
+literal|"%zd resid"
 operator|,
-operator|(
-name|unsigned
-name|long
-operator|)
 name|uio
 operator|->
 name|uio_resid
@@ -2875,12 +2871,8 @@ expr_stmt|;
 name|PFS_TRACE
 argument_list|(
 operator|(
-literal|"%lu resid"
+literal|"%zd resid"
 operator|,
-operator|(
-name|unsigned
-name|long
-operator|)
 name|uio
 operator|->
 name|uio_resid

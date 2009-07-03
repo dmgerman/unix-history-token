@@ -10,20 +10,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_USB2_GENERIC_H_
+name|_USB_GENERIC_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_USB2_GENERIC_H_
+name|_USB_GENERIC_H_
 end_define
 
 begin_decl_stmt
 specifier|extern
 name|struct
 name|usb_fifo_methods
-name|usb2_ugen_methods
+name|usb_ugen_methods
 decl_stmt|;
 end_decl_stmt
 
@@ -50,7 +50,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _USB2_GENERIC_H_ */
+comment|/* _USB_GENERIC_H_ */
 end_comment
 
 end_unit

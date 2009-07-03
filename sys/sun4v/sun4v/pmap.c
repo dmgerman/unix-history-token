@@ -3899,6 +3899,21 @@ operator|*
 name|MAXCPU
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Allocate and map the dynamic per-CPU area for the BSP. 	 */
+name|dpcpu0
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|TLB_PHYS_TO_DIRECT
+argument_list|(
+name|pmap_bootstrap_alloc
+argument_list|(
+name|DPCPU_SIZE
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Allocate and map the message buffer. 	 */
 name|msgbuf_phys
 operator|=
@@ -6371,6 +6386,8 @@ literal|1UL
 operator|<<
 literal|34
 operator|)
+argument_list|,
+name|VM_CACHE_DEFAULT
 argument_list|)
 expr_stmt|;
 if|if

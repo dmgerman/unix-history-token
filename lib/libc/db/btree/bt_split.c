@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_split.c	8.9 (Berkeley) 7/26/94"
+literal|"@(#)bt_split.c	8.10 (Berkeley) 1/9/95"
 decl_stmt|;
 end_decl_stmt
 

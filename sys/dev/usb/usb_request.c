@@ -10,19 +10,133 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_mfunc.h>
+file|<sys/stdint.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_error.h>
+file|<sys/stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker_set.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/condvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/priv.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<dev/usb/usb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/usb/usbdi.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/usb/usbdi_util.h>
 end_include
 
 begin_include
@@ -41,7 +155,7 @@ begin_define
 define|#
 directive|define
 name|USB_DEBUG_VAR
-value|usb2_debug
+value|usb_debug
 end_define
 
 begin_include
@@ -125,7 +239,7 @@ end_if
 begin_decl_stmt
 specifier|static
 name|int
-name|usb2_pr_poll_delay
+name|usb_pr_poll_delay
 init|=
 name|USB_PORT_RESET_DELAY
 decl_stmt|;
@@ -134,7 +248,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|usb2_pr_recovery_delay
+name|usb_pr_recovery_delay
 init|=
 name|USB_PORT_RESET_RECOVERY
 decl_stmt|;
@@ -143,7 +257,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|usb2_ss_delay
+name|usb_ss_delay
 init|=
 literal|0
 decl_stmt|;
@@ -161,7 +275,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|usb2_pr_poll_delay
+name|usb_pr_poll_delay
 argument_list|,
 literal|0
 argument_list|,
@@ -182,7 +296,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|usb2_pr_recovery_delay
+name|usb_pr_recovery_delay
 argument_list|,
 literal|0
 argument_list|,
@@ -203,7 +317,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|usb2_ss_delay
+name|usb_ss_delay
 argument_list|,
 literal|0
 argument_list|,
@@ -218,17 +332,20 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_do_request_callback  *  * This function is the USB callback for generic USB Host control  * transfers.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_do_request_callback  *  * This function is the USB callback for generic USB Host control  * transfers.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_do_request_callback
+name|usbd_do_request_callback
 parameter_list|(
 name|struct
 name|usb_xfer
 modifier|*
 name|xfer
+parameter_list|,
+name|usb_error_t
+name|error
 parameter_list|)
 block|{
 empty_stmt|;
@@ -254,14 +371,14 @@ block|{
 case|case
 name|USB_ST_SETUP
 case|:
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|usb2_cv_signal
+name|cv_signal
 argument_list|(
 name|xfer
 operator|->
@@ -278,17 +395,20 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_do_clear_stall_callback  *  * This function is the USB callback for generic clear stall requests.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_do_clear_stall_callback  *  * This function is the USB callback for generic clear stall requests.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_do_clear_stall_callback
+name|usb_do_clear_stall_callback
 parameter_list|(
 name|struct
 name|usb_xfer
 modifier|*
 name|xfer
+parameter_list|,
+name|usb_error_t
+name|error
 parameter_list|)
 block|{
 name|struct
@@ -407,7 +527,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* start up the current or next transfer, if any */
-name|usb2_command_wrapper
+name|usb_command_wrapper
 argument_list|(
 operator|&
 name|ep
@@ -522,7 +642,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* copy in the transfer */
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -540,16 +660,16 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* set length */
+name|usbd_xfer_set_frame_len
+argument_list|(
 name|xfer
-operator|->
-name|frlengths
-index|[
+argument_list|,
 literal|0
-index|]
-operator|=
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|req
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|xfer
@@ -565,7 +685,7 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-name|usb2_start_hardware
+name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
@@ -625,7 +745,7 @@ begin_function
 specifier|static
 name|usb_handle_req_t
 modifier|*
-name|usb2_get_hr_func
+name|usbd_get_hr_func
 parameter_list|(
 name|struct
 name|usb_device
@@ -646,7 +766,7 @@ name|USB_MODE_DEVICE
 condition|)
 return|return
 operator|(
-name|usb2_temp_get_desc_p
+name|usb_temp_get_desc_p
 operator|)
 return|;
 elseif|else
@@ -679,12 +799,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_do_request_flags and usb2_do_request  *  * Description of arguments passed to these functions:  *  * "udev" - this is the "usb_device" structure pointer on which the  * request should be performed. It is possible to call this function  * in both Host Side mode and Device Side mode.  *  * "mtx" - if this argument is non-NULL the mutex pointed to by it  * will get dropped and picked up during the execution of this  * function, hence this function sometimes needs to sleep. If this  * argument is NULL it has no effect.  *  * "req" - this argument must always be non-NULL and points to an  * 8-byte structure holding the USB request to be done. The USB  * request structure has a bit telling the direction of the USB  * request, if it is a read or a write.  *  * "data" - if the "wLength" part of the structure pointed to by "req"  * is non-zero this argument must point to a valid kernel buffer which  * can hold at least "wLength" bytes. If "wLength" is zero "data" can  * be NULL.  *  * "flags" - here is a list of valid flags:  *  *  o USB_SHORT_XFER_OK: allows the data transfer to be shorter than  *  specified  *  *  o USB_DELAY_STATUS_STAGE: allows the status stage to be performed  *  at a later point in time. This is tunable by the "hw.usb.ss_delay"  *  sysctl. This flag is mostly useful for debugging.  *  *  o USB_USER_DATA_PTR: treat the "data" pointer like a userland  *  pointer.  *  * "actlen" - if non-NULL the actual transfer length will be stored in  * the 16-bit unsigned integer pointed to by "actlen". This  * information is mostly useful when the "USB_SHORT_XFER_OK" flag is  * used.  *  * "timeout" - gives the timeout for the control transfer in  * milliseconds. A "timeout" value less than 50 milliseconds is  * treated like a 50 millisecond timeout. A "timeout" value greater  * than 30 seconds is treated like a 30 second timeout. This USB stack  * does not allow control requests without a timeout.  *  * NOTE: This function is thread safe. All calls to  * "usb2_do_request_flags" will be serialised by the use of an  * internal "sx_lock".  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_do_request_flags and usbd_do_request  *  * Description of arguments passed to these functions:  *  * "udev" - this is the "usb_device" structure pointer on which the  * request should be performed. It is possible to call this function  * in both Host Side mode and Device Side mode.  *  * "mtx" - if this argument is non-NULL the mutex pointed to by it  * will get dropped and picked up during the execution of this  * function, hence this function sometimes needs to sleep. If this  * argument is NULL it has no effect.  *  * "req" - this argument must always be non-NULL and points to an  * 8-byte structure holding the USB request to be done. The USB  * request structure has a bit telling the direction of the USB  * request, if it is a read or a write.  *  * "data" - if the "wLength" part of the structure pointed to by "req"  * is non-zero this argument must point to a valid kernel buffer which  * can hold at least "wLength" bytes. If "wLength" is zero "data" can  * be NULL.  *  * "flags" - here is a list of valid flags:  *  *  o USB_SHORT_XFER_OK: allows the data transfer to be shorter than  *  specified  *  *  o USB_DELAY_STATUS_STAGE: allows the status stage to be performed  *  at a later point in time. This is tunable by the "hw.usb.ss_delay"  *  sysctl. This flag is mostly useful for debugging.  *  *  o USB_USER_DATA_PTR: treat the "data" pointer like a userland  *  pointer.  *  * "actlen" - if non-NULL the actual transfer length will be stored in  * the 16-bit unsigned integer pointed to by "actlen". This  * information is mostly useful when the "USB_SHORT_XFER_OK" flag is  * used.  *  * "timeout" - gives the timeout for the control transfer in  * milliseconds. A "timeout" value less than 50 milliseconds is  * treated like a 50 millisecond timeout. A "timeout" value greater  * than 30 seconds is treated like a 30 second timeout. This USB stack  * does not allow control requests without a timeout.  *  * NOTE: This function is thread safe. All calls to  * "usbd_do_request_flags" will be serialised by the use of an  * internal "sx_lock".  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_do_request_flags
+name|usbd_do_request_flags
 parameter_list|(
 name|struct
 name|usb_device
@@ -933,7 +1053,7 @@ argument_list|)
 expr_stmt|;
 name|hr_func
 operator|=
-name|usb2_get_hr_func
+name|usbd_get_hr_func
 argument_list|(
 name|udev
 argument_list|)
@@ -1129,7 +1249,7 @@ goto|;
 comment|/* success */
 block|}
 comment|/* 	 * Setup a new USB transfer or use the existing one, if any: 	 */
-name|usb2_default_transfer_setup
+name|usbd_default_transfer_setup
 argument_list|(
 name|udev
 argument_list|)
@@ -1227,7 +1347,7 @@ argument_list|(
 name|timeout
 argument_list|)
 expr_stmt|;
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -1244,17 +1364,17 @@ name|req
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|usbd_xfer_set_frame_len
+argument_list|(
 name|xfer
-operator|->
-name|frlengths
-index|[
+argument_list|,
 literal|0
-index|]
-operator|=
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
 name|req
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|xfer
@@ -1283,19 +1403,20 @@ condition|)
 block|{
 name|temp
 operator|=
+name|usbd_xfer_max_len
+argument_list|(
 name|xfer
-operator|->
-name|max_data_length
+argument_list|)
 expr_stmt|;
 block|}
+name|usbd_xfer_set_frame_len
+argument_list|(
 name|xfer
-operator|->
-name|frlengths
-index|[
+argument_list|,
 literal|1
-index|]
-operator|=
+argument_list|,
 name|temp
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1333,7 +1454,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_copy_in_user
+name|usbd_copy_in_user
 argument_list|(
 name|xfer
 operator|->
@@ -1368,7 +1489,7 @@ block|}
 else|else
 endif|#
 directive|endif
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|xfer
 operator|->
@@ -1422,7 +1543,7 @@ name|temp
 decl_stmt|;
 name|temp
 operator|=
-name|usb2_ss_delay
+name|usb_ss_delay
 expr_stmt|;
 if|if
 condition|(
@@ -1443,7 +1564,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 name|xfer
 operator|->
@@ -1481,20 +1602,20 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|usb2_transfer_start
+name|usbd_transfer_start
 argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|usb2_transfer_pending
+name|usbd_transfer_pending
 argument_list|(
 name|xfer
 argument_list|)
 condition|)
 block|{
-name|usb2_cv_wait
+name|cv_wait
 argument_list|(
 name|udev
 operator|->
@@ -1606,7 +1727,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_copy_out_user
+name|usbd_copy_out_user
 argument_list|(
 name|xfer
 operator|->
@@ -1641,7 +1762,7 @@ block|}
 else|else
 endif|#
 directive|endif
-name|usb2_copy_out
+name|usbd_copy_out
 argument_list|(
 name|xfer
 operator|->
@@ -1659,14 +1780,14 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 		 * Clear "frlengths[0]" so that we don't send the setup 		 * packet again: 		 */
+name|usbd_xfer_set_frame_len
+argument_list|(
 name|xfer
-operator|->
-name|frlengths
-index|[
+argument_list|,
 literal|0
-index|]
-operator|=
+argument_list|,
 literal|0
+argument_list|)
 expr_stmt|;
 comment|/* update length and data pointer */
 name|length
@@ -1735,7 +1856,7 @@ name|err
 condition|)
 block|{
 comment|/* 		 * Make sure that the control endpoint is no longer 		 * blocked in case of a non-transfer related error: 		 */
-name|usb2_transfer_stop
+name|usbd_transfer_stop
 argument_list|(
 name|xfer
 argument_list|)
@@ -1778,12 +1899,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_do_request_proc - factored out code  *  * This function is factored out code. It does basically the same like  * usb2_do_request_flags, except it will check the status of the  * passed process argument before doing the USB request. If the  * process is draining the USB_ERR_IOERROR code will be returned. It  * is assumed that the mutex associated with the process is locked  * when calling this function.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_do_request_proc - factored out code  *  * This function is factored out code. It does basically the same like  * usbd_do_request_flags, except it will check the status of the  * passed process argument before doing the USB request. If the  * process is draining the USB_ERR_IOERROR code will be returned. It  * is assumed that the mutex associated with the process is locked  * when calling this function.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_do_request_proc
+name|usbd_do_request_proc
 parameter_list|(
 name|struct
 name|usb_device
@@ -1834,7 +1955,7 @@ expr_stmt|;
 comment|/* check if the device is being detached */
 if|if
 condition|(
-name|usb2_proc_is_gone
+name|usb_proc_is_gone
 argument_list|(
 name|pproc
 argument_list|)
@@ -1851,7 +1972,7 @@ block|}
 comment|/* forward the USB request */
 name|err
 operator|=
-name|usb2_do_request_flags
+name|usbd_do_request_flags
 argument_list|(
 name|udev
 argument_list|,
@@ -1945,12 +2066,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_reset_port  *  * This function will instruct an USB HUB to perform a reset sequence  * on the specified port number.  *  * Returns:  *    0: Success. The USB device should now be at address zero.  * Else: Failure. No USB device is present and the USB port should be  *       disabled.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_reset_port  *  * This function will instruct an USB HUB to perform a reset sequence  * on the specified port number.  *  * Returns:  *    0: Success. The USB device should now be at address zero.  * Else: Failure. No USB device is present and the USB port should be  *       disabled.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_reset_port
+name|usbd_req_reset_port
 parameter_list|(
 name|struct
 name|usb_device
@@ -1989,7 +2110,7 @@ endif|#
 directive|endif
 name|err
 operator|=
-name|usb2_req_set_port_feature
+name|usbd_req_set_port_feature
 argument_list|(
 name|udev
 argument_list|,
@@ -2015,7 +2136,7 @@ name|USB_DEBUG
 comment|/* range check input parameters */
 name|pr_poll_delay
 operator|=
-name|usb2_pr_poll_delay
+name|usb_pr_poll_delay
 expr_stmt|;
 if|if
 condition|(
@@ -2044,7 +2165,7 @@ expr_stmt|;
 block|}
 name|pr_recovery_delay
 operator|=
-name|usb2_pr_recovery_delay
+name|usb_pr_recovery_delay
 expr_stmt|;
 if|if
 condition|(
@@ -2073,7 +2194,7 @@ if|#
 directive|if
 name|USB_DEBUG
 comment|/* wait for the device to recover from reset */
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 name|mtx
 argument_list|,
@@ -2090,7 +2211,7 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* wait for the device to recover from reset */
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 name|mtx
 argument_list|,
@@ -2108,7 +2229,7 @@ endif|#
 directive|endif
 name|err
 operator|=
-name|usb2_req_get_port_status
+name|usbd_req_get_port_status
 argument_list|(
 name|udev
 argument_list|,
@@ -2182,7 +2303,7 @@ block|}
 comment|/* clear port reset first */
 name|err
 operator|=
-name|usb2_req_clear_port_feature
+name|usbd_req_clear_port_feature
 argument_list|(
 name|udev
 argument_list|,
@@ -2222,7 +2343,7 @@ if|#
 directive|if
 name|USB_DEBUG
 comment|/* wait for the device to recover from reset */
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 name|mtx
 argument_list|,
@@ -2235,7 +2356,7 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* wait for the device to recover from reset */
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 name|mtx
 argument_list|,
@@ -2257,7 +2378,7 @@ literal|"port %d reset returning error=%s\n"
 argument_list|,
 name|port
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -2272,12 +2393,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_get_desc  *  * This function can be used to retrieve USB descriptors. It contains  * some additional logic like zeroing of missing descriptor bytes and  * retrying an USB descriptor in case of failure. The "min_len"  * argument specifies the minimum descriptor length. The "max_len"  * argument specifies the maximum descriptor length. If the real  * descriptor length is less than the minimum length the missing  * byte(s) will be zeroed. The type field, the second byte of the USB  * descriptor, will get forced to the correct type. If the "actlen"  * pointer is non-NULL, the actual length of the transfer will get  * stored in the 16-bit unsigned integer which it is pointing to. The  * first byte of the descriptor will not get updated. If the "actlen"  * pointer is NULL the first byte of the descriptor will get updated  * to reflect the actual length instead. If "min_len" is not equal to  * "max_len" then this function will try to retrive the beginning of  * the descriptor and base the maximum length on the first byte of the  * descriptor.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_get_desc  *  * This function can be used to retrieve USB descriptors. It contains  * some additional logic like zeroing of missing descriptor bytes and  * retrying an USB descriptor in case of failure. The "min_len"  * argument specifies the minimum descriptor length. The "max_len"  * argument specifies the maximum descriptor length. If the real  * descriptor length is less than the minimum length the missing  * byte(s) will be zeroed. The type field, the second byte of the USB  * descriptor, will get forced to the correct type. If the "actlen"  * pointer is non-NULL, the actual length of the transfer will get  * stored in the 16-bit unsigned integer which it is pointing to. The  * first byte of the descriptor will not get updated. If the "actlen"  * pointer is NULL the first byte of the descriptor will get updated  * to reflect the actual length instead. If "min_len" is not equal to  * "max_len" then this function will try to retrive the beginning of  * the descriptor and base the maximum length on the first byte of the  * descriptor.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_get_desc
+name|usbd_req_get_desc
 parameter_list|(
 name|struct
 name|usb_device
@@ -2413,7 +2534,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_do_request_flags
+name|usbd_do_request_flags
 argument_list|(
 name|udev
 argument_list|,
@@ -2449,7 +2570,7 @@ block|}
 name|retries
 operator|--
 expr_stmt|;
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 name|mtx
 argument_list|,
@@ -2586,12 +2707,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_get_string_any  *  * This function will return the string given by "string_index"  * using the first language ID. The maximum length "len" includes  * the terminating zero. The "len" argument should be twice as  * big pluss 2 bytes, compared with the actual maximum string length !  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_get_string_any  *  * This function will return the string given by "string_index"  * using the first language ID. The maximum length "len" includes  * the terminating zero. The "len" argument should be twice as  * big pluss 2 bytes, compared with the actual maximum string length !  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_get_string_any
+name|usbd_req_get_string_any
 parameter_list|(
 name|struct
 name|usb_device
@@ -2696,7 +2817,7 @@ return|;
 block|}
 name|err
 operator|=
-name|usb2_req_get_string_desc
+name|usbd_req_get_string_desc
 argument_list|(
 name|udev
 argument_list|,
@@ -2955,12 +3076,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_get_string_desc  *  * If you don't know the language ID, consider using  * "usb2_req_get_string_any()".  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_get_string_desc  *  * If you don't know the language ID, consider using  * "usbd_req_get_string_any()".  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_get_string_desc
+name|usbd_req_get_string_desc
 parameter_list|(
 name|struct
 name|usb_device
@@ -2988,7 +3109,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|usb2_req_get_desc
+name|usbd_req_get_desc
 argument_list|(
 name|udev
 argument_list|,
@@ -3016,12 +3137,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_get_config_desc_ptr  *  * This function is used in device side mode to retrieve the pointer  * to the generated config descriptor. This saves allocating space for  * an additional config descriptor when setting the configuration.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_get_config_desc_ptr  *  * This function is used in device side mode to retrieve the pointer  * to the generated config descriptor. This saves allocating space for  * an additional config descriptor when setting the configuration.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_get_descriptor_ptr
+name|usbd_req_get_descriptor_ptr
 parameter_list|(
 name|struct
 name|usb_device
@@ -3106,7 +3227,7 @@ literal|0
 expr_stmt|;
 name|hr_func
 operator|=
-name|usb2_get_hr_func
+name|usbd_get_hr_func
 argument_list|(
 name|udev
 argument_list|)
@@ -3196,12 +3317,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_get_config_desc  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_get_config_desc  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_get_config_desc
+name|usbd_req_get_config_desc
 parameter_list|(
 name|struct
 name|usb_device
@@ -3236,7 +3357,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usb2_req_get_desc
+name|usbd_req_get_desc
 argument_list|(
 name|udev
 argument_list|,
@@ -3309,12 +3430,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_get_config_desc_full  *  * This function gets the complete USB configuration descriptor and  * ensures that "wTotalLength" is correct.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_get_config_desc_full  *  * This function gets the complete USB configuration descriptor and  * ensures that "wTotalLength" is correct.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_get_config_desc_full
+name|usbd_req_get_config_desc_full
 parameter_list|(
 name|struct
 name|usb_device
@@ -3372,7 +3493,7 @@ name|NULL
 expr_stmt|;
 name|err
 operator|=
-name|usb2_req_get_config_desc
+name|usbd_req_get_config_desc
 argument_list|(
 name|udev
 argument_list|,
@@ -3449,7 +3570,7 @@ return|;
 block|}
 name|err
 operator|=
-name|usb2_req_get_desc
+name|usbd_req_get_desc
 argument_list|(
 name|udev
 argument_list|,
@@ -3515,12 +3636,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_get_device_desc  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_get_device_desc  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_get_device_desc
+name|usbd_req_get_device_desc
 parameter_list|(
 name|struct
 name|usb_device
@@ -3547,7 +3668,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|usb2_req_get_desc
+name|usbd_req_get_desc
 argument_list|(
 name|udev
 argument_list|,
@@ -3583,12 +3704,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_get_alt_interface_no  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_get_alt_interface_no  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_get_alt_interface_no
+name|usbd_req_get_alt_interface_no
 parameter_list|(
 name|struct
 name|usb_device
@@ -3613,7 +3734,7 @@ name|usb_interface
 modifier|*
 name|iface
 init|=
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|udev
 argument_list|,
@@ -3701,7 +3822,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|udev
 argument_list|,
@@ -3718,12 +3839,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_set_alt_interface_no  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_set_alt_interface_no  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_set_alt_interface_no
+name|usbd_req_set_alt_interface_no
 parameter_list|(
 name|struct
 name|usb_device
@@ -3747,7 +3868,7 @@ name|usb_interface
 modifier|*
 name|iface
 init|=
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|udev
 argument_list|,
@@ -3844,7 +3965,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|udev
 argument_list|,
@@ -3861,12 +3982,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_get_device_status  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_get_device_status  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_get_device_status
+name|usbd_req_get_device_status
 parameter_list|(
 name|struct
 name|usb_device
@@ -3933,7 +4054,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|udev
 argument_list|,
@@ -3950,12 +4071,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_get_hub_descriptor  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_get_hub_descriptor  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_get_hub_descriptor
+name|usbd_req_get_hub_descriptor
 parameter_list|(
 name|struct
 name|usb_device
@@ -4040,7 +4161,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|udev
 argument_list|,
@@ -4057,12 +4178,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_get_hub_status  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_get_hub_status  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_get_hub_status
+name|usbd_req_get_hub_status
 parameter_list|(
 name|struct
 name|usb_device
@@ -4129,7 +4250,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|udev
 argument_list|,
@@ -4146,12 +4267,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_set_address  *  * This function is used to set the address for an USB device. After  * port reset the USB device will respond at address zero.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_set_address  *  * This function is used to set the address for an USB device. After  * port reset the USB device will respond at address zero.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_set_address
+name|usbd_req_set_address
 parameter_list|(
 name|struct
 name|usb_device
@@ -4222,7 +4343,7 @@ expr_stmt|;
 comment|/* Setting the address should not take more than 1 second ! */
 return|return
 operator|(
-name|usb2_do_request_flags
+name|usbd_do_request_flags
 argument_list|(
 name|udev
 argument_list|,
@@ -4245,12 +4366,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_get_port_status  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_get_port_status  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_get_port_status
+name|usbd_req_get_port_status
 parameter_list|(
 name|struct
 name|usb_device
@@ -4327,7 +4448,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|udev
 argument_list|,
@@ -4344,12 +4465,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_clear_hub_feature  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_clear_hub_feature  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_clear_hub_feature
+name|usbd_req_clear_hub_feature
 parameter_list|(
 name|struct
 name|usb_device
@@ -4410,7 +4531,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|udev
 argument_list|,
@@ -4427,12 +4548,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_set_hub_feature  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_set_hub_feature  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_set_hub_feature
+name|usbd_req_set_hub_feature
 parameter_list|(
 name|struct
 name|usb_device
@@ -4493,7 +4614,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|udev
 argument_list|,
@@ -4510,12 +4631,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_clear_port_feature  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_clear_port_feature  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_clear_port_feature
+name|usbd_req_clear_port_feature
 parameter_list|(
 name|struct
 name|usb_device
@@ -4588,7 +4709,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|udev
 argument_list|,
@@ -4605,12 +4726,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_set_port_feature  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_set_port_feature  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_set_port_feature
+name|usbd_req_set_port_feature
 parameter_list|(
 name|struct
 name|usb_device
@@ -4683,7 +4804,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|udev
 argument_list|,
@@ -4700,12 +4821,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_set_protocol  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_set_protocol  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_set_protocol
+name|usbd_req_set_protocol
 parameter_list|(
 name|struct
 name|usb_device
@@ -4729,7 +4850,7 @@ name|usb_interface
 modifier|*
 name|iface
 init|=
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|udev
 argument_list|,
@@ -4834,7 +4955,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|udev
 argument_list|,
@@ -4851,12 +4972,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_set_report  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_set_report  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_set_report
+name|usbd_req_set_report
 parameter_list|(
 name|struct
 name|usb_device
@@ -4890,7 +5011,7 @@ name|usb_interface
 modifier|*
 name|iface
 init|=
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|udev
 argument_list|,
@@ -4989,7 +5110,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|udev
 argument_list|,
@@ -5006,12 +5127,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_get_report  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_get_report  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_get_report
+name|usbd_req_get_report
 parameter_list|(
 name|struct
 name|usb_device
@@ -5045,7 +5166,7 @@ name|usb_interface
 modifier|*
 name|iface
 init|=
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|udev
 argument_list|,
@@ -5150,7 +5271,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|udev
 argument_list|,
@@ -5167,12 +5288,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_set_idle  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_set_idle  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_set_idle
+name|usbd_req_set_idle
 parameter_list|(
 name|struct
 name|usb_device
@@ -5199,7 +5320,7 @@ name|usb_interface
 modifier|*
 name|iface
 init|=
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|udev
 argument_list|,
@@ -5300,7 +5421,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|udev
 argument_list|,
@@ -5317,12 +5438,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_get_report_descriptor  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_get_report_descriptor  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_get_report_descriptor
+name|usbd_req_get_report_descriptor
 parameter_list|(
 name|struct
 name|usb_device
@@ -5350,7 +5471,7 @@ name|usb_interface
 modifier|*
 name|iface
 init|=
-name|usb2_get_iface
+name|usbd_get_iface
 argument_list|(
 name|udev
 argument_list|,
@@ -5441,7 +5562,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|udev
 argument_list|,
@@ -5458,12 +5579,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_set_config  *  * This function is used to select the current configuration number in  * both USB device side mode and USB host side mode. When setting the  * configuration the function of the interfaces can change.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_set_config  *  * This function is used to select the current configuration number in  * both USB device side mode and USB host side mode. When setting the  * configuration the function of the interfaces can change.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_set_config
+name|usbd_req_set_config
 parameter_list|(
 name|struct
 name|usb_device
@@ -5541,7 +5662,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|udev
 argument_list|,
@@ -5558,12 +5679,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_get_config  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_get_config  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_get_config
+name|usbd_req_get_config
 parameter_list|(
 name|struct
 name|usb_device
@@ -5625,7 +5746,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|udev
 argument_list|,
@@ -5642,12 +5763,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_re_enumerate  *  * NOTE: After this function returns the hardware is in the  * unconfigured state! The application is responsible for setting a  * new configuration.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_re_enumerate  *  * NOTE: After this function returns the hardware is in the  * unconfigured state! The application is responsible for setting a  * new configuration.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_re_enumerate
+name|usbd_req_re_enumerate
 parameter_list|(
 name|struct
 name|usb_device
@@ -5722,7 +5843,7 @@ name|retry
 label|:
 name|err
 operator|=
-name|usb2_req_reset_port
+name|usbd_req_reset_port
 argument_list|(
 name|parent_hub
 argument_list|,
@@ -5746,7 +5867,7 @@ literal|"addr=%d, port reset failed, %s\n"
 argument_list|,
 name|old_addr
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -5775,7 +5896,7 @@ expr_stmt|;
 comment|/* 	 * Restore device address: 	 */
 name|err
 operator|=
-name|usb2_req_set_address
+name|usbd_req_set_address
 argument_list|(
 name|udev
 argument_list|,
@@ -5798,7 +5919,7 @@ literal|"addr=%d, set address failed! (%s, ignored)\n"
 argument_list|,
 name|old_addr
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -5813,7 +5934,7 @@ operator|=
 name|old_addr
 expr_stmt|;
 comment|/* allow device time to set new address */
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 name|mtx
 argument_list|,
@@ -5826,7 +5947,7 @@ expr_stmt|;
 comment|/* get the device descriptor */
 name|err
 operator|=
-name|usb2_req_get_desc
+name|usbd_req_get_desc
 argument_list|(
 name|udev
 argument_list|,
@@ -5868,7 +5989,7 @@ name|udev
 operator|->
 name|address
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -5881,7 +6002,7 @@ block|}
 comment|/* get the full device descriptor */
 name|err
 operator|=
-name|usb2_req_get_device_desc
+name|usbd_req_get_device_desc
 argument_list|(
 name|udev
 argument_list|,
@@ -5907,7 +6028,7 @@ literal|"descriptor failed, %s!\n"
 argument_list|,
 name|old_addr
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -5927,7 +6048,7 @@ name|do_retry
 condition|)
 block|{
 comment|/* give the USB firmware some time to load */
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 name|mtx
 argument_list|,
@@ -5962,12 +6083,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_clear_device_feature  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_clear_device_feature  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_clear_device_feature
+name|usbd_req_clear_device_feature
 parameter_list|(
 name|struct
 name|usb_device
@@ -6028,7 +6149,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|udev
 argument_list|,
@@ -6045,12 +6166,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_set_device_feature  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_req_set_device_feature  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|usb_error_t
-name|usb2_req_set_device_feature
+name|usbd_req_set_device_feature
 parameter_list|(
 name|struct
 name|usb_device
@@ -6111,7 +6232,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|usb2_do_request
+name|usbd_do_request
 argument_list|(
 name|udev
 argument_list|,

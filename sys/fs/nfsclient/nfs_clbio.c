@@ -839,7 +839,9 @@ literal|"nfs_getpages: called with non-merged cache vnode??\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|VM_PAGER_ERROR
+operator|)
 return|;
 block|}
 if|if
@@ -891,7 +893,9 @@ literal|"nfs_getpages: called on non-cacheable vnode??\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|VM_PAGER_ERROR
+operator|)
 return|;
 block|}
 else|else
@@ -976,17 +980,6 @@ name|count
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If the requested page is partially valid, just return it and 	 * allow the pager to zero-out the blanks.  Partially valid pages 	 * can only occur at the file EOF. 	 */
-block|{
-name|vm_page_t
-name|m
-init|=
-name|pages
-index|[
-name|ap
-operator|->
-name|a_reqpage
-index|]
-decl_stmt|;
 name|VM_OBJECT_LOCK
 argument_list|(
 name|object
@@ -994,7 +987,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|m
+name|pages
+index|[
+name|ap
+operator|->
+name|a_reqpage
+index|]
 operator|->
 name|valid
 operator|!=
@@ -1054,7 +1052,6 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * We use only the kva address for the buffer, but this is extremely 	 * convienient and fast. 	 */
 name|bp
 operator|=
@@ -1259,7 +1256,9 @@ name|object
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|VM_PAGER_ERROR
+operator|)
 return|;
 block|}
 comment|/* 	 * Calculate the number of bytes read and validate only that number 	 * of bytes.  Note that due to pending writes, size may be 0.  This 	 * does not mean that the remaining data is invalid! 	 */
@@ -1455,7 +1454,9 @@ name|object
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

@@ -423,6 +423,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|UNREFERENCED_PARAMETER
+parameter_list|(
+name|_p
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_HTONL
 value|htonl
 end_define

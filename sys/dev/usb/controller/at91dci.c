@@ -32,19 +32,127 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker_set.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/condvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/usb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_mfunc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/usb_error.h>
+file|<dev/usb/usbdi.h>
 end_include
 
 begin_define
@@ -142,11 +250,11 @@ define|\
 value|AT9100_DCI_BUS2SC(USB_DMATAG_TO_XROOT((pc)->tag_parent)->bus)
 end_define
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -950,7 +1058,7 @@ argument_list|)
 expr_stmt|;
 comment|/* wait 8 milliseconds */
 comment|/* Wait for reset to complete. */
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -1200,7 +1308,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* copy data into real buffer */
-name|usb2_copy_in
+name|usbd_copy_in
 argument_list|(
 name|td
 operator|->
@@ -1687,7 +1795,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 name|td
 operator|->
@@ -2080,7 +2188,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|usb2_get_page
+name|usbd_get_page
 argument_list|(
 name|td
 operator|->
@@ -3306,7 +3414,7 @@ name|xfer
 operator|->
 name|sumlen
 argument_list|,
-name|usb2_get_speed
+name|usbd_get_speed
 argument_list|(
 name|xfer
 operator|->
@@ -4019,7 +4127,7 @@ name|ep_no
 argument_list|)
 expr_stmt|;
 comment|/* put transfer on interrupt queue */
-name|usb2_transfer_enqueue
+name|usbd_transfer_enqueue
 argument_list|(
 operator|&
 name|xfer
@@ -4043,7 +4151,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|usb2_transfer_timeout_ms
+name|usbd_transfer_timeout_ms
 argument_list|(
 name|xfer
 argument_list|,
@@ -4584,7 +4692,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* dequeue transfer and start next transfer */
-name|usb2_transfer_done
+name|usbd_transfer_done
 argument_list|(
 name|xfer
 argument_list|,
@@ -4613,6 +4721,10 @@ name|struct
 name|usb_endpoint
 modifier|*
 name|ep
+parameter_list|,
+name|uint8_t
+modifier|*
+name|did_stall
 parameter_list|)
 block|{
 name|struct
@@ -5237,7 +5349,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* wait a little for things to stabilise */
-name|usb2_pause_mtx
+name|usb_pause_mtx
 argument_list|(
 operator|&
 name|sc
@@ -6075,7 +6187,7 @@ name|xfer
 operator|->
 name|isoc_time_complete
 operator|=
-name|usb2_isoc_time_expand
+name|usb_isoc_time_expand
 argument_list|(
 operator|&
 name|sc
@@ -7967,7 +8079,7 @@ name|hc_max_frame_size
 operator|=
 literal|0x500
 expr_stmt|;
-name|usb2_transfer_setup_sub
+name|usbd_transfer_setup_sub
 argument_list|(
 name|parm
 argument_list|)
@@ -8069,7 +8181,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * check if "usb2_transfer_setup_sub" set an error 	 */
+comment|/* 	 * check if "usbd_transfer_setup_sub" set an error 	 */
 if|if
 condition|(
 name|parm

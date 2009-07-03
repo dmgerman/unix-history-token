@@ -43,6 +43,69 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*   * User-settable options (used with setsockopt).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UDP_ENCAP
+value|0x01
+end_define
+
+begin_comment
+comment|/*  * UDP Encapsulation of IPsec Packets options.  */
+end_comment
+
+begin_comment
+comment|/* Encapsulation types. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UDP_ENCAP_ESPINUDP_NON_IKE
+value|1
+end_define
+
+begin_comment
+comment|/* draft-ietf-ipsec-nat-t-ike-00/01 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UDP_ENCAP_ESPINUDP
+value|2
+end_define
+
+begin_comment
+comment|/* draft-ietf-ipsec-udp-encaps-02+ */
+end_comment
+
+begin_comment
+comment|/* Default ESP in UDP encapsulation port. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UDP_ENCAP_ESPINUDP_PORT
+value|500
+end_define
+
+begin_comment
+comment|/* Maximum UDP fragment size for ESP over UDP. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UDP_ENCAP_ESPINUDP_MAXFRAGLEN
+value|552
+end_define
+
 begin_endif
 endif|#
 directive|endif

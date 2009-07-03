@@ -4034,11 +4034,9 @@ operator|<
 name|AR_SREV_VERSION_VENICE
 operator|)
 expr_stmt|;
-comment|/* h/w phy counters first appeared in Hainan */
-name|pCap
-operator|->
-name|halHwPhyCounterSupport
-operator|=
+comment|/* enable features that first appeared in Hainan */
+if|if
+condition|(
 operator|(
 name|AH_PRIVATE
 argument_list|(
@@ -4067,7 +4065,23 @@ operator|->
 name|ah_macVersion
 operator|>
 name|AR_SREV_VERSION_VENICE
+condition|)
+block|{
+comment|/* h/w phy counters */
+name|pCap
+operator|->
+name|halHwPhyCounterSupport
+operator|=
+name|AH_TRUE
 expr_stmt|;
+comment|/* bssid match disable */
+name|pCap
+operator|->
+name|halBssidMatchSupport
+operator|=
+name|AH_TRUE
+expr_stmt|;
+block|}
 name|pCap
 operator|->
 name|halTstampPrecision

@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -550,7 +556,12 @@ parameter_list|)
 block|{
 name|INIT_VNET_INET
 argument_list|(
-name|curvnet
+name|TD_TO_VNET
+argument_list|(
+name|req
+operator|->
+name|td
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|int
@@ -658,7 +669,12 @@ parameter_list|)
 block|{
 name|INIT_VNET_INET
 argument_list|(
-name|curvnet
+name|TD_TO_VNET
+argument_list|(
+name|req
+operator|->
+name|td
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|int

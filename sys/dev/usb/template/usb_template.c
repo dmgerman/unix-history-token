@@ -14,7 +14,139 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker_set.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/condvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/usb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/usb/usbdi.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/usb/usbdi_util.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"usbdevs.h"
 end_include
 
 begin_include
@@ -26,26 +158,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_mfunc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/usb_error.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|USB_DEBUG_VAR
-value|usb2_debug
-end_define
-
-begin_include
-include|#
-directive|include
 file|<dev/usb/usb_core.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/usb/usb_dynamic.h>
 end_include
 
 begin_include
@@ -63,25 +182,20 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_debug.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/usb_parse.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb/usb_device.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|USB_DEBUG_VAR
+value|usb_debug
+end_define
+
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_dynamic.h>
+file|<dev/usb/usb_debug.h>
 end_include
 
 begin_include
@@ -135,7 +249,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|void
-name|usb2_make_raw_desc
+name|usb_make_raw_desc
 parameter_list|(
 name|struct
 name|usb_temp_setup
@@ -151,7 +265,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_make_endpoint_desc
+name|usb_make_endpoint_desc
 parameter_list|(
 name|struct
 name|usb_temp_setup
@@ -168,7 +282,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_make_interface_desc
+name|usb_make_interface_desc
 parameter_list|(
 name|struct
 name|usb_temp_setup
@@ -185,7 +299,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_make_config_desc
+name|usb_make_config_desc
 parameter_list|(
 name|struct
 name|usb_temp_setup
@@ -202,7 +316,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_make_device_desc
+name|usb_make_device_desc
 parameter_list|(
 name|struct
 name|usb_temp_setup
@@ -219,7 +333,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|uint8_t
-name|usb2_hw_ep_match
+name|usb_hw_ep_match
 parameter_list|(
 specifier|const
 name|struct
@@ -236,7 +350,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|uint8_t
-name|usb2_hw_ep_find_match
+name|usb_hw_ep_find_match
 parameter_list|(
 name|struct
 name|usb_hw_ep_scratch
@@ -254,7 +368,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|uint8_t
-name|usb2_hw_ep_get_needs
+name|usb_hw_ep_get_needs
 parameter_list|(
 name|struct
 name|usb_hw_ep_scratch
@@ -270,7 +384,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|usb_error_t
-name|usb2_hw_ep_resolve
+name|usb_hw_ep_resolve
 parameter_list|(
 name|struct
 name|usb_device
@@ -289,7 +403,7 @@ specifier|const
 name|struct
 name|usb_temp_device_desc
 modifier|*
-name|usb2_temp_get_tdd
+name|usb_temp_get_tdd
 parameter_list|(
 name|struct
 name|usb_device
@@ -302,7 +416,7 @@ begin_function_decl
 specifier|static
 name|void
 modifier|*
-name|usb2_temp_get_device_desc
+name|usb_temp_get_device_desc
 parameter_list|(
 name|struct
 name|usb_device
@@ -315,7 +429,7 @@ begin_function_decl
 specifier|static
 name|void
 modifier|*
-name|usb2_temp_get_qualifier_desc
+name|usb_temp_get_qualifier_desc
 parameter_list|(
 name|struct
 name|usb_device
@@ -328,7 +442,7 @@ begin_function_decl
 specifier|static
 name|void
 modifier|*
-name|usb2_temp_get_config_desc
+name|usb_temp_get_config_desc
 parameter_list|(
 name|struct
 name|usb_device
@@ -347,7 +461,7 @@ specifier|static
 specifier|const
 name|void
 modifier|*
-name|usb2_temp_get_string_desc
+name|usb_temp_get_string_desc
 parameter_list|(
 name|struct
 name|usb_device
@@ -365,7 +479,7 @@ specifier|static
 specifier|const
 name|void
 modifier|*
-name|usb2_temp_get_vendor_desc
+name|usb_temp_get_vendor_desc
 parameter_list|(
 name|struct
 name|usb_device
@@ -384,7 +498,7 @@ specifier|static
 specifier|const
 name|void
 modifier|*
-name|usb2_temp_get_hub_desc
+name|usb_temp_get_hub_desc
 parameter_list|(
 name|struct
 name|usb_device
@@ -396,7 +510,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|usb_error_t
-name|usb2_temp_get_desc
+name|usb_temp_get_desc
 parameter_list|(
 name|struct
 name|usb_device
@@ -437,7 +551,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_temp_unsetup
+name|usb_temp_unsetup
 parameter_list|(
 name|struct
 name|usb_device
@@ -449,7 +563,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|usb_error_t
-name|usb2_temp_setup_by_index
+name|usb_temp_setup_by_index
 parameter_list|(
 name|struct
 name|usb_device
@@ -464,7 +578,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_temp_init
+name|usb_temp_init
 parameter_list|(
 name|void
 modifier|*
@@ -473,13 +587,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_make_raw_desc  *  * This function will insert a raw USB descriptor into the generated  * USB configuration.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_make_raw_desc  *  * This function will insert a raw USB descriptor into the generated  * USB configuration.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_make_raw_desc
+name|usb_make_raw_desc
 parameter_list|(
 name|struct
 name|usb_temp_setup
@@ -620,13 +734,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_make_endpoint_desc  *  * This function will generate an USB endpoint descriptor from the  * given USB template endpoint descriptor, which will be inserted into  * the USB configuration.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_make_endpoint_desc  *  * This function will generate an USB endpoint descriptor from the  * given USB template endpoint descriptor, which will be inserted into  * the USB configuration.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_make_endpoint_desc
+name|usb_make_endpoint_desc
 parameter_list|(
 name|struct
 name|usb_temp_setup
@@ -704,7 +818,7 @@ operator|*
 name|rd
 condition|)
 block|{
-name|usb2_make_raw_desc
+name|usb_make_raw_desc
 argument_list|(
 name|temp
 argument_list|,
@@ -999,13 +1113,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_make_interface_desc  *  * This function will generate an USB interface descriptor from the  * given USB template interface descriptor, which will be inserted  * into the USB configuration.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_make_interface_desc  *  * This function will generate an USB interface descriptor from the  * given USB template interface descriptor, which will be inserted  * into the USB configuration.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_make_interface_desc
+name|usb_make_interface_desc
 parameter_list|(
 name|struct
 name|usb_temp_setup
@@ -1105,7 +1219,7 @@ operator|*
 name|rd
 condition|)
 block|{
-name|usb2_make_raw_desc
+name|usb_make_raw_desc
 argument_list|(
 name|temp
 argument_list|,
@@ -1143,7 +1257,7 @@ operator|*
 name|ted
 condition|)
 block|{
-name|usb2_make_endpoint_desc
+name|usb_make_endpoint_desc
 argument_list|(
 name|temp
 argument_list|,
@@ -1252,13 +1366,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_make_config_desc  *  * This function will generate an USB config descriptor from the given  * USB template config descriptor, which will be inserted into the USB  * configuration.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_make_config_desc  *  * This function will generate an USB config descriptor from the given  * USB template config descriptor, which will be inserted into the USB  * configuration.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_make_config_desc
+name|usb_make_config_desc
 parameter_list|(
 name|struct
 name|usb_temp_setup
@@ -1337,7 +1451,7 @@ operator|*
 name|tid
 condition|)
 block|{
-name|usb2_make_interface_desc
+name|usb_make_interface_desc
 argument_list|(
 name|temp
 argument_list|,
@@ -1484,13 +1598,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_make_device_desc  *  * This function will generate an USB device descriptor from the  * given USB template device descriptor.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_make_device_desc  *  * This function will generate an USB device descriptor from the  * given USB template device descriptor.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_make_device_desc
+name|usb_make_device_desc
 parameter_list|(
 name|struct
 name|usb_temp_setup
@@ -1560,7 +1674,7 @@ operator|*
 name|tcd
 condition|)
 block|{
-name|usb2_make_config_desc
+name|usb_make_config_desc
 argument_list|(
 name|temp
 argument_list|,
@@ -1930,13 +2044,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_hw_ep_match  *  * Return values:  *    0: The endpoint profile does not match the criterias  * Else: The endpoint profile matches the criterias  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_hw_ep_match  *  * Return values:  *    0: The endpoint profile does not match the criterias  * Else: The endpoint profile matches the criterias  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|uint8_t
-name|usb2_hw_ep_match
+name|usb_hw_ep_match
 parameter_list|(
 specifier|const
 name|struct
@@ -2042,13 +2156,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_hw_ep_find_match  *  * This function is used to find the best matching endpoint profile  * for and endpoint belonging to an USB descriptor.  *  * Return values:  *    0: Success. Got a match.  * Else: Failure. No match.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_hw_ep_find_match  *  * This function is used to find the best matching endpoint profile  * for and endpoint belonging to an USB descriptor.  *  * Return values:  *    0: Success. Got a match.  * Else: Failure. No match.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|uint8_t
-name|usb2_hw_ep_find_match
+name|usb_hw_ep_find_match
 parameter_list|(
 name|struct
 name|usb_hw_ep_scratch
@@ -2307,7 +2421,7 @@ comment|/* check if HW endpoint matches */
 if|if
 condition|(
 operator|!
-name|usb2_hw_ep_match
+name|usb_hw_ep_match
 argument_list|(
 name|pf
 argument_list|,
@@ -2496,13 +2610,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_hw_ep_get_needs  *  * This function will figure out the type and number of endpoints  * which are needed for an USB configuration.  *  * Return values:  *    0: Success.  * Else: Failure.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_hw_ep_get_needs  *  * This function will figure out the type and number of endpoints  * which are needed for an USB configuration.  *  * Return values:  *    0: Success.  * Else: Failure.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|uint8_t
-name|usb2_hw_ep_get_needs
+name|usb_hw_ep_get_needs
 parameter_list|(
 name|struct
 name|usb_hw_ep_scratch
@@ -2602,7 +2716,7 @@ name|NULL
 expr_stmt|;
 name|speed
 operator|=
-name|usb2_get_speed
+name|usbd_get_speed
 argument_list|(
 name|ues
 operator|->
@@ -2616,7 +2730,7 @@ condition|(
 operator|(
 name|desc
 operator|=
-name|usb2_desc_foreach
+name|usb_desc_foreach
 argument_list|(
 name|ues
 operator|->
@@ -3218,13 +3332,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_hw_ep_resolve  *  * This function will try to resolve endpoint requirements by the  * given endpoint profiles that the USB hardware reports.  *  * Return values:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_hw_ep_resolve  *  * This function will try to resolve endpoint requirements by the  * given endpoint profiles that the USB hardware reports.  *  * Return values:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|usb_error_t
-name|usb2_hw_ep_resolve
+name|usb_hw_ep_resolve
 parameter_list|(
 name|struct
 name|usb_device
@@ -3370,7 +3484,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|usb2_hw_ep_match
+name|usb_hw_ep_match
 argument_list|(
 name|pf
 argument_list|,
@@ -3588,7 +3702,7 @@ expr_stmt|;
 comment|/* Get all the endpoints we need */
 if|if
 condition|(
-name|usb2_hw_ep_get_needs
+name|usb_hw_ep_get_needs
 argument_list|(
 name|ues
 argument_list|,
@@ -3597,7 +3711,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator|||
-name|usb2_hw_ep_get_needs
+name|usb_hw_ep_get_needs
 argument_list|(
 name|ues
 argument_list|,
@@ -3606,7 +3720,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator|||
-name|usb2_hw_ep_get_needs
+name|usb_hw_ep_get_needs
 argument_list|(
 name|ues
 argument_list|,
@@ -3615,7 +3729,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator|||
-name|usb2_hw_ep_get_needs
+name|usb_hw_ep_get_needs
 argument_list|(
 name|ues
 argument_list|,
@@ -3670,7 +3784,7 @@ block|{
 comment|/* 		         * First try to use a simplex endpoint. 		         * Then try to use a duplex endpoint. 		         */
 if|if
 condition|(
-name|usb2_hw_ep_find_match
+name|usb_hw_ep_find_match
 argument_list|(
 name|ues
 argument_list|,
@@ -3679,7 +3793,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator|&&
-name|usb2_hw_ep_find_match
+name|usb_hw_ep_find_match
 argument_list|(
 name|ues
 argument_list|,
@@ -3715,7 +3829,7 @@ expr_stmt|;
 comment|/* Update all endpoint addresses */
 if|if
 condition|(
-name|usb2_hw_ep_get_needs
+name|usb_hw_ep_get_needs
 argument_list|(
 name|ues
 argument_list|,
@@ -3724,7 +3838,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator|||
-name|usb2_hw_ep_get_needs
+name|usb_hw_ep_get_needs
 argument_list|(
 name|ues
 argument_list|,
@@ -3733,7 +3847,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator|||
-name|usb2_hw_ep_get_needs
+name|usb_hw_ep_get_needs
 argument_list|(
 name|ues
 argument_list|,
@@ -3742,7 +3856,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator|||
-name|usb2_hw_ep_get_needs
+name|usb_hw_ep_get_needs
 argument_list|(
 name|ues
 argument_list|,
@@ -3775,7 +3889,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_temp_get_tdd  *  * Returns:  *  NULL: No USB template device descriptor found.  *  Else: Pointer to the USB template device descriptor.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_temp_get_tdd  *  * Returns:  *  NULL: No USB template device descriptor found.  *  Else: Pointer to the USB template device descriptor.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -3784,7 +3898,7 @@ specifier|const
 name|struct
 name|usb_temp_device_desc
 modifier|*
-name|usb2_temp_get_tdd
+name|usb_temp_get_tdd
 parameter_list|(
 name|struct
 name|usb_device
@@ -3796,7 +3910,7 @@ if|if
 condition|(
 name|udev
 operator|->
-name|usb2_template_ptr
+name|usb_template_ptr
 operator|==
 name|NULL
 condition|)
@@ -3811,7 +3925,7 @@ return|return
 operator|(
 name|udev
 operator|->
-name|usb2_template_ptr
+name|usb_template_ptr
 operator|->
 name|tdd
 operator|)
@@ -3820,14 +3934,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_temp_get_device_desc  *  * Returns:  *  NULL: No USB device descriptor found.  *  Else: Pointer to USB device descriptor.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_temp_get_device_desc  *  * Returns:  *  NULL: No USB device descriptor found.  *  Else: Pointer to USB device descriptor.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
 modifier|*
-name|usb2_temp_get_device_desc
+name|usb_temp_get_device_desc
 parameter_list|(
 name|struct
 name|usb_device
@@ -3844,7 +3958,7 @@ if|if
 condition|(
 name|udev
 operator|->
-name|usb2_template_ptr
+name|usb_template_ptr
 operator|==
 name|NULL
 condition|)
@@ -3860,7 +3974,7 @@ operator|=
 operator|&
 name|udev
 operator|->
-name|usb2_template_ptr
+name|usb_template_ptr
 operator|->
 name|udd
 expr_stmt|;
@@ -3889,14 +4003,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_temp_get_qualifier_desc  *  * Returns:  *  NULL: No USB device_qualifier descriptor found.  *  Else: Pointer to USB device_qualifier descriptor.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_temp_get_qualifier_desc  *  * Returns:  *  NULL: No USB device_qualifier descriptor found.  *  Else: Pointer to USB device_qualifier descriptor.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
 modifier|*
-name|usb2_temp_get_qualifier_desc
+name|usb_temp_get_qualifier_desc
 parameter_list|(
 name|struct
 name|usb_device
@@ -3913,7 +4027,7 @@ if|if
 condition|(
 name|udev
 operator|->
-name|usb2_template_ptr
+name|usb_template_ptr
 operator|==
 name|NULL
 condition|)
@@ -3929,7 +4043,7 @@ operator|=
 operator|&
 name|udev
 operator|->
-name|usb2_template_ptr
+name|usb_template_ptr
 operator|->
 name|udq
 expr_stmt|;
@@ -3958,14 +4072,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_temp_get_config_desc  *  * Returns:  *  NULL: No USB config descriptor found.  *  Else: Pointer to USB config descriptor having index "index".  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_temp_get_config_desc  *  * Returns:  *  NULL: No USB config descriptor found.  *  Else: Pointer to USB config descriptor having index "index".  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
 modifier|*
-name|usb2_temp_get_config_desc
+name|usb_temp_get_config_desc
 parameter_list|(
 name|struct
 name|usb_device
@@ -3997,7 +4111,7 @@ if|if
 condition|(
 name|udev
 operator|->
-name|usb2_template_ptr
+name|usb_template_ptr
 operator|==
 name|NULL
 condition|)
@@ -4013,7 +4127,7 @@ operator|=
 operator|&
 name|udev
 operator|->
-name|usb2_template_ptr
+name|usb_template_ptr
 operator|->
 name|udd
 expr_stmt|;
@@ -4026,7 +4140,7 @@ operator|)
 operator|(
 name|udev
 operator|->
-name|usb2_template_ptr
+name|usb_template_ptr
 operator|+
 literal|1
 operator|)
@@ -4113,7 +4227,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_temp_get_vendor_desc  *  * Returns:  *  NULL: No vendor descriptor found.  *  Else: Pointer to a vendor descriptor.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_temp_get_vendor_desc  *  * Returns:  *  NULL: No vendor descriptor found.  *  Else: Pointer to a vendor descriptor.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -4121,7 +4235,7 @@ specifier|static
 specifier|const
 name|void
 modifier|*
-name|usb2_temp_get_vendor_desc
+name|usb_temp_get_vendor_desc
 parameter_list|(
 name|struct
 name|usb_device
@@ -4143,7 +4257,7 @@ name|tdd
 decl_stmt|;
 name|tdd
 operator|=
-name|usb2_temp_get_tdd
+name|usb_temp_get_tdd
 argument_list|(
 name|udev
 argument_list|)
@@ -4192,7 +4306,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_temp_get_string_desc  *  * Returns:  *  NULL: No string descriptor found.  *  Else: Pointer to a string descriptor.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_temp_get_string_desc  *  * Returns:  *  NULL: No string descriptor found.  *  Else: Pointer to a string descriptor.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -4200,7 +4314,7 @@ specifier|static
 specifier|const
 name|void
 modifier|*
-name|usb2_temp_get_string_desc
+name|usb_temp_get_string_desc
 parameter_list|(
 name|struct
 name|usb_device
@@ -4222,7 +4336,7 @@ name|tdd
 decl_stmt|;
 name|tdd
 operator|=
-name|usb2_temp_get_tdd
+name|usb_temp_get_tdd
 argument_list|(
 name|udev
 argument_list|)
@@ -4273,7 +4387,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_temp_get_hub_desc  *  * Returns:  *  NULL: No USB HUB descriptor found.  *  Else: Pointer to a USB HUB descriptor.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_temp_get_hub_desc  *  * Returns:  *  NULL: No USB HUB descriptor found.  *  Else: Pointer to a USB HUB descriptor.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -4281,7 +4395,7 @@ specifier|static
 specifier|const
 name|void
 modifier|*
-name|usb2_temp_get_hub_desc
+name|usb_temp_get_hub_desc
 parameter_list|(
 name|struct
 name|usb_device
@@ -4299,13 +4413,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_temp_get_desc  *  * This function is a demultiplexer for local USB device side control  * endpoint requests.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_temp_get_desc  *  * This function is a demultiplexer for local USB device side control  * endpoint requests.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|usb_error_t
-name|usb2_temp_get_desc
+name|usb_temp_get_desc
 parameter_list|(
 name|struct
 name|usb_device
@@ -4403,7 +4517,7 @@ name|UT_READ_VENDOR_OTHER
 case|:
 name|buf
 operator|=
-name|usb2_temp_get_vendor_desc
+name|usb_temp_get_vendor_desc
 argument_list|(
 name|udev
 argument_list|,
@@ -4449,7 +4563,7 @@ goto|;
 block|}
 name|buf
 operator|=
-name|usb2_temp_get_device_desc
+name|usb_temp_get_device_desc
 argument_list|(
 name|udev
 argument_list|)
@@ -4489,7 +4603,7 @@ goto|;
 block|}
 name|buf
 operator|=
-name|usb2_temp_get_qualifier_desc
+name|usb_temp_get_qualifier_desc
 argument_list|(
 name|udev
 argument_list|)
@@ -4518,7 +4632,7 @@ name|UDESC_CONFIG
 case|:
 name|buf
 operator|=
-name|usb2_temp_get_config_desc
+name|usb_temp_get_config_desc
 argument_list|(
 name|udev
 argument_list|,
@@ -4541,7 +4655,7 @@ name|UDESC_STRING
 case|:
 name|buf
 operator|=
-name|usb2_temp_get_string_desc
+name|usb_temp_get_string_desc
 argument_list|(
 name|udev
 argument_list|,
@@ -4589,7 +4703,7 @@ goto|;
 block|}
 name|buf
 operator|=
-name|usb2_temp_get_hub_desc
+name|usb_temp_get_hub_desc
 argument_list|(
 name|udev
 argument_list|)
@@ -4752,7 +4866,7 @@ operator|.
 name|self_powered
 expr_stmt|;
 comment|/* first pass */
-name|usb2_make_device_desc
+name|usb_make_device_desc
 argument_list|(
 name|uts
 argument_list|,
@@ -4832,7 +4946,7 @@ name|size
 operator|=
 literal|0
 expr_stmt|;
-name|usb2_make_device_desc
+name|usb_make_device_desc
 argument_list|(
 name|uts
 argument_list|,
@@ -4842,7 +4956,7 @@ expr_stmt|;
 comment|/* 	 * Store a pointer to our descriptors: 	 */
 name|udev
 operator|->
-name|usb2_template_ptr
+name|usb_template_ptr
 operator|=
 name|uts
 operator|->
@@ -4863,7 +4977,7 @@ block|}
 comment|/* 	 * Resolve all endpoint addresses ! 	 */
 name|buf
 operator|=
-name|usb2_temp_get_device_desc
+name|usb_temp_get_device_desc
 argument_list|(
 name|udev
 argument_list|)
@@ -4872,7 +4986,7 @@ name|uts
 operator|->
 name|err
 operator|=
-name|usb2_hw_ep_resolve
+name|usb_hw_ep_resolve
 argument_list|(
 name|udev
 argument_list|,
@@ -4893,7 +5007,7 @@ argument_list|,
 literal|"Could not resolve endpoints for "
 literal|"Device Descriptor, error = %s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|uts
 operator|->
@@ -4918,7 +5032,7 @@ control|)
 block|{
 name|buf
 operator|=
-name|usb2_temp_get_config_desc
+name|usb_temp_get_config_desc
 argument_list|(
 name|udev
 argument_list|,
@@ -4940,7 +5054,7 @@ name|uts
 operator|->
 name|err
 operator|=
-name|usb2_hw_ep_resolve
+name|usb_hw_ep_resolve
 argument_list|(
 name|udev
 argument_list|,
@@ -4963,7 +5077,7 @@ literal|"Config Descriptor %u, error = %s\n"
 argument_list|,
 name|n
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|uts
 operator|->
@@ -4985,7 +5099,7 @@ operator|)
 return|;
 name|error
 label|:
-name|usb2_temp_unsetup
+name|usb_temp_unsetup
 argument_list|(
 name|udev
 argument_list|)
@@ -5001,13 +5115,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_temp_unsetup  *  * This function frees any memory associated with the currently  * setup template, if any.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_temp_unsetup  *  * This function frees any memory associated with the currently  * setup template, if any.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_temp_unsetup
+name|usb_temp_unsetup
 parameter_list|(
 name|struct
 name|usb_device
@@ -5019,21 +5133,21 @@ if|if
 condition|(
 name|udev
 operator|->
-name|usb2_template_ptr
+name|usb_template_ptr
 condition|)
 block|{
 name|free
 argument_list|(
 name|udev
 operator|->
-name|usb2_template_ptr
+name|usb_template_ptr
 argument_list|,
 name|M_USB
 argument_list|)
 expr_stmt|;
 name|udev
 operator|->
-name|usb2_template_ptr
+name|usb_template_ptr
 operator|=
 name|NULL
 expr_stmt|;
@@ -5044,7 +5158,7 @@ end_function
 begin_function
 specifier|static
 name|usb_error_t
-name|usb2_temp_setup_by_index
+name|usb_temp_setup_by_index
 parameter_list|(
 name|struct
 name|usb_device
@@ -5073,7 +5187,7 @@ argument_list|(
 name|udev
 argument_list|,
 operator|&
-name|usb2_template_msc
+name|usb_template_msc
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5087,7 +5201,7 @@ argument_list|(
 name|udev
 argument_list|,
 operator|&
-name|usb2_template_cdce
+name|usb_template_cdce
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5101,7 +5215,7 @@ argument_list|(
 name|udev
 argument_list|,
 operator|&
-name|usb2_template_mtp
+name|usb_template_mtp
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5123,7 +5237,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_temp_init
+name|usb_temp_init
 parameter_list|(
 name|void
 modifier|*
@@ -5131,20 +5245,20 @@ name|arg
 parameter_list|)
 block|{
 comment|/* register our functions */
-name|usb2_temp_get_desc_p
+name|usb_temp_get_desc_p
 operator|=
 operator|&
-name|usb2_temp_get_desc
+name|usb_temp_get_desc
 expr_stmt|;
-name|usb2_temp_setup_by_index_p
+name|usb_temp_setup_by_index_p
 operator|=
 operator|&
-name|usb2_temp_setup_by_index
+name|usb_temp_setup_by_index
 expr_stmt|;
-name|usb2_temp_unsetup_p
+name|usb_temp_unsetup_p
 operator|=
 operator|&
-name|usb2_temp_unsetup
+name|usb_temp_unsetup
 expr_stmt|;
 block|}
 end_function
@@ -5152,13 +5266,13 @@ end_function
 begin_expr_stmt
 name|SYSINIT
 argument_list|(
-name|usb2_temp_init
+name|usb_temp_init
 argument_list|,
 name|SI_SUB_LOCK
 argument_list|,
 name|SI_ORDER_FIRST
 argument_list|,
-name|usb2_temp_init
+name|usb_temp_init
 argument_list|,
 name|NULL
 argument_list|)
@@ -5168,13 +5282,13 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSUNINIT
 argument_list|(
-name|usb2_temp_unload
+name|usb_temp_unload
 argument_list|,
 name|SI_SUB_LOCK
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|,
-name|usb2_temp_unload
+name|usb_temp_unload
 argument_list|,
 name|NULL
 argument_list|)

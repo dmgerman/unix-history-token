@@ -11165,6 +11165,12 @@ name|softc
 operator|=
 name|sc
 expr_stmt|;
+name|gp
+operator|->
+name|flags
+operator||=
+name|G_GEOM_VOLATILE_BIO
+expr_stmt|;
 name|sc
 operator|->
 name|sc_geom

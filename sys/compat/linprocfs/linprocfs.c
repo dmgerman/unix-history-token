@@ -218,12 +218,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/route.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/vnet.h>
 end_include
 
@@ -4989,7 +4983,7 @@ name|INIT_VNET_NET
 argument_list|(
 name|TD_TO_VNET
 argument_list|(
-name|curthread
+name|td
 argument_list|)
 argument_list|)
 expr_stmt|;

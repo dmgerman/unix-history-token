@@ -14,13 +14,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_OPENFIRM_H_
+name|_DEV_OPENFIRM_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_OPENFIRM_H_
+name|_DEV_OPENFIRM_H_
 end_define
 
 begin_include
@@ -81,7 +81,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Open Firmware interface initialization. OF_install installs the named  * interface as the Open Firmware access mechanism, OF_init initializes it.  */
+comment|/*  * Open Firmware interface initialization.  OF_install installs the named  * interface as the Open Firmware access mechanism, OF_init initializes it.  */
 end_comment
 
 begin_function_decl
@@ -157,6 +157,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|name
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -168,6 +169,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -252,6 +254,7 @@ parameter_list|(
 name|phandle_t
 name|node
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|propname
@@ -607,7 +610,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _OPENFIRM_H_ */
+comment|/* _DEV_OPENFIRM_H_ */
 end_comment
 
 end_unit

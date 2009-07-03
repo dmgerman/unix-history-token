@@ -18,12 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<search.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
 end_include
 
@@ -36,6 +30,7 @@ end_define
 
 begin_typedef
 typedef|typedef
+name|unsigned
 name|int
 name|hashtable_index_t
 typedef|;
@@ -84,6 +79,7 @@ name|HASHTABLE_ENTRIES_COUNT
 parameter_list|(
 name|table
 parameter_list|)
+define|\
 value|((table)->entries_size)
 end_define
 
@@ -105,7 +101,7 @@ parameter_list|,
 name|_entries_size
 parameter_list|)
 define|\
-value|do {								\ 		hashtable_index_t var;					\ 		(table)->entries = (void *)calloc(1,			\ 			sizeof(*(table)->entries) * (_entries_size));	\ 		(table)->entries_size = (_entries_size);		\ 		for (var = 0; var< HASHTABLE_ENTRIES_COUNT(table); ++var) {\ 			(table)->entries[var].field.capacity = 		\ 				HASHTABLE_INITIAL_ENTRIES_CAPACITY;	\ 			(table)->entries[var].field.size = 0;		\ 			(table)->entries[var].field.values = (type *)malloc(\ 				sizeof(type) * 				\ 		    		HASHTABLE_INITIAL_ENTRIES_CAPACITY);	\ 			assert((table)->entries[var].field.values != NULL);\ 		}							\ 	} while (0)
+value|do {								\ 		hashtable_index_t var;					\ 		(table)->entries = calloc(1,				\ 			sizeof(*(table)->entries) * (_entries_size));	\ 		(table)->entries_size = (_entries_size);		\ 		for (var = 0; var< HASHTABLE_ENTRIES_COUNT(table); ++var) {\ 			(table)->entries[var].field.capacity = 		\ 				HASHTABLE_INITIAL_ENTRIES_CAPACITY;	\ 			(table)->entries[var].field.size = 0;		\ 			(table)->entries[var].field.values = malloc(	\ 				sizeof(type) *				\ 				HASHTABLE_INITIAL_ENTRIES_CAPACITY);	\ 			assert((table)->entries[var].field.values != NULL);\ 		}							\ 	} while (0)
 end_define
 
 begin_comment
@@ -134,6 +130,7 @@ name|table
 parameter_list|,
 name|hash
 parameter_list|)
+define|\
 value|(&((table)->entries[hash]))
 end_define
 
@@ -224,7 +221,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|(entry)->field.capacity *= 2;					\ 	(entry)->field.values = (type *)realloc((entry)->field.values, 	\ 		(entry)->field.capacity * sizeof(type));
+value|do {								\ 		(entry)->field.capacity *= 2;				\ 		(entry)->field.values = realloc((entry)->field.values,	\ 			 (entry)->field.capacity * sizeof(type));	\ 	} while (0)
 end_define
 
 begin_define
@@ -239,7 +236,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|(entry)->field.capacity /= 2;					\ 	(entry)->field.values = (type *)realloc((entry)->field.values, 	\ 		(entry)->field.capacity * sizeof(type));
+value|do {								\ 		(entry)->field.capacity /= 2;				\ 		(entry)->field.values = realloc((entry)->field.values,	\ 			(entry)->field.capacity * sizeof(type));	\ 	} while (0)
 end_define
 
 begin_comment

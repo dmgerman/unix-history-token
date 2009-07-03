@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -7125,7 +7131,7 @@ name|CURVNET_SET
 argument_list|(
 name|TD_TO_VNET
 argument_list|(
-name|curthread
+name|td
 argument_list|)
 argument_list|)
 expr_stmt|;

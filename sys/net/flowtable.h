@@ -49,6 +49,12 @@ name|flowtable
 struct_decl|;
 end_struct_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -58,20 +64,10 @@ name|ip_ft
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|flowtable
-modifier|*
-name|ip_forward_ft
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FLOWTABLE
-end_ifdef
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|struct
@@ -89,7 +85,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Given a flow table, look up the L3 and L2 information and  * return it in the route  *  */
+comment|/*  * Given a flow table, look up the L3 and L2 information and  * return it in the route.  *  */
 end_comment
 
 begin_function_decl
@@ -114,71 +110,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-specifier|static
-name|__inline
-expr|struct
-name|flowtable
-operator|*
-name|flowtable_alloc
-argument_list|(
-argument|int nentry
-argument_list|,
-argument|int flags
-argument_list|)
-block|{
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-specifier|static
-name|__inline
-name|int
-name|flowtable_lookup
-parameter_list|(
-name|struct
-name|flowtable
-modifier|*
-name|ft
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|,
-name|struct
-name|route
-modifier|*
-name|ro
-parameter_list|)
-block|{
-return|return
-operator|(
-name|ENOTSUP
-operator|)
-return|;
-block|}
-end_function
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#

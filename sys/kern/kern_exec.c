@@ -1261,10 +1261,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|AUDIT_ARG
+name|AUDIT_ARG_ARGV
 argument_list|(
-name|argv
-argument_list|,
 name|args
 operator|->
 name|begin_argv
@@ -1282,10 +1280,8 @@ operator|->
 name|begin_argv
 argument_list|)
 expr_stmt|;
-name|AUDIT_ARG
+name|AUDIT_ARG_ENVV
 argument_list|(
-name|envv
-argument_list|,
 name|args
 operator|->
 name|begin_envv
@@ -1884,10 +1880,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|AUDIT_ARG
+name|AUDIT_ARG_FD
 argument_list|(
-name|fd
-argument_list|,
 name|args
 operator|->
 name|fd
@@ -1932,10 +1926,8 @@ operator||
 name|LK_RETRY
 argument_list|)
 expr_stmt|;
-name|AUDIT_ARG
+name|AUDIT_ARG_VNODE
 argument_list|(
-name|vnode
-argument_list|,
 name|binvp
 argument_list|,
 name|ARG_VNODE1
@@ -2539,6 +2531,15 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|oldcred
+operator|=
+name|crcopysafe
+argument_list|(
+name|p
+argument_list|,
+name|newcred
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sigacts_shared
@@ -2749,12 +2750,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Implement image setuid/setgid. 	 * 	 * Don't honor setuid/setgid if the filesystem prohibits it or if 	 * the process is being traced. 	 * 	 * XXXMAC: For the time being, use NOSUID to also prohibit 	 * transitions on the file system. 	 */
-name|oldcred
-operator|=
-name|p
-operator|->
-name|p_ucred
-expr_stmt|;
 name|credential_changing
 operator|=
 literal|0
@@ -2973,13 +2968,6 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Set the new credentials. 		 */
-name|crcopy
-argument_list|(
-name|newcred
-argument_list|,
-name|oldcred
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|attr
@@ -3115,13 +3103,6 @@ operator|->
 name|cr_gid
 condition|)
 block|{
-name|crcopy
-argument_list|(
-name|newcred
-argument_list|,
-name|oldcred
-argument_list|)
-expr_stmt|;
 name|change_svuid
 argument_list|(
 name|newcred

@@ -281,6 +281,11 @@ decl_stmt|;
 comment|/* (t) Output wait queue. */
 name|struct
 name|cv
+name|t_outserwait
+decl_stmt|;
+comment|/* (t) Serial output wait queue. */
+name|struct
+name|cv
 name|t_bgwait
 decl_stmt|;
 comment|/* (t) Background wait queue. */

@@ -384,20 +384,6 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|pq_l2size
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|pq_l2nways
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|printcpuinfo

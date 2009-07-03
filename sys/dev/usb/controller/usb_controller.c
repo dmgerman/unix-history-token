@@ -10,13 +10,115 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_mfunc.h>
+file|<sys/stdint.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_error.h>
+file|<sys/stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker_set.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/condvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/priv.h>
 end_include
 
 begin_include
@@ -25,11 +127,17 @@ directive|include
 file|<dev/usb/usb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/usb/usbdi.h>
+end_include
+
 begin_define
 define|#
 directive|define
 name|USB_DEBUG_VAR
-value|usb2_ctrl_debug
+value|usb_ctrl_debug
 end_define
 
 begin_include
@@ -93,28 +201,28 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|device_probe_t
-name|usb2_probe
+name|usb_probe
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|device_attach_t
-name|usb2_attach
+name|usb_attach
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|device_detach_t
-name|usb2_detach
+name|usb_detach
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
 specifier|static
 name|void
-name|usb2_attach_sub
+name|usb_attach_sub
 parameter_list|(
 name|device_t
 parameter_list|,
@@ -128,7 +236,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usb2_post_init
+name|usb_post_init
 parameter_list|(
 name|void
 modifier|*
@@ -140,16 +248,16 @@ begin_comment
 comment|/* static variables */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
 name|int
-name|usb2_ctrl_debug
+name|usb_ctrl_debug
 init|=
 literal|0
 decl_stmt|;
@@ -185,7 +293,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|usb2_ctrl_debug
+name|usb_ctrl_debug
 argument_list|,
 literal|0
 argument_list|,
@@ -202,7 +310,7 @@ end_endif
 begin_decl_stmt
 specifier|static
 name|uint8_t
-name|usb2_post_init_called
+name|usb_post_init_called
 init|=
 literal|0
 decl_stmt|;
@@ -211,14 +319,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|devclass_t
-name|usb2_devclass
+name|usb_devclass
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|usb2_methods
+name|usb_methods
 index|[]
 init|=
 block|{
@@ -226,21 +334,21 @@ name|DEVMETHOD
 argument_list|(
 name|device_probe
 argument_list|,
-name|usb2_probe
+name|usb_probe
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|usb2_attach
+name|usb_attach
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_detach
 argument_list|,
-name|usb2_detach
+name|usb_detach
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -276,7 +384,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|driver_t
-name|usb2_driver
+name|usb_driver
 init|=
 block|{
 operator|.
@@ -287,7 +395,7 @@ block|,
 operator|.
 name|methods
 operator|=
-name|usb2_methods
+name|usb_methods
 block|,
 operator|.
 name|size
@@ -304,9 +412,9 @@ name|usbus
 argument_list|,
 name|ohci
 argument_list|,
-name|usb2_driver
+name|usb_driver
 argument_list|,
-name|usb2_devclass
+name|usb_devclass
 argument_list|,
 literal|0
 argument_list|,
@@ -322,9 +430,9 @@ name|usbus
 argument_list|,
 name|uhci
 argument_list|,
-name|usb2_driver
+name|usb_driver
 argument_list|,
-name|usb2_devclass
+name|usb_devclass
 argument_list|,
 literal|0
 argument_list|,
@@ -340,9 +448,9 @@ name|usbus
 argument_list|,
 name|ehci
 argument_list|,
-name|usb2_driver
+name|usb_driver
 argument_list|,
-name|usb2_devclass
+name|usb_devclass
 argument_list|,
 literal|0
 argument_list|,
@@ -358,9 +466,9 @@ name|usbus
 argument_list|,
 name|at91_udp
 argument_list|,
-name|usb2_driver
+name|usb_driver
 argument_list|,
-name|usb2_devclass
+name|usb_devclass
 argument_list|,
 literal|0
 argument_list|,
@@ -376,9 +484,9 @@ name|usbus
 argument_list|,
 name|uss820
 argument_list|,
-name|usb2_driver
+name|usb_driver
 argument_list|,
-name|usb2_devclass
+name|usb_devclass
 argument_list|,
 literal|0
 argument_list|,
@@ -388,13 +496,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_probe  *  * This function is called from "{ehci,ohci,uhci}_pci_attach()".  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_probe  *  * This function is called from "{ehci,ohci,uhci}_pci_attach()".  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|usb2_probe
+name|usb_probe
 parameter_list|(
 name|device_t
 name|dev
@@ -414,13 +522,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_attach  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_attach  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|usb2_attach
+name|usb_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -476,7 +584,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|usb2_post_init_called
+name|usb_post_init_called
 condition|)
 block|{
 name|mtx_lock
@@ -485,7 +593,7 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-name|usb2_attach_sub
+name|usb_attach_sub
 argument_list|(
 name|dev
 argument_list|,
@@ -498,7 +606,7 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-name|usb2_needs_explore
+name|usb_needs_explore
 argument_list|(
 name|bus
 argument_list|,
@@ -516,13 +624,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_detach  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_detach  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|usb2_detach
+name|usb_detach
 parameter_list|(
 name|device_t
 name|dev
@@ -558,7 +666,7 @@ operator|)
 return|;
 block|}
 comment|/* Stop power watchdog */
-name|usb2_callout_drain
+name|usb_callout_drain
 argument_list|(
 operator|&
 name|bus
@@ -597,7 +705,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|usb2_proc_msignal
+name|usb_proc_msignal
 argument_list|(
 operator|&
 name|bus
@@ -625,7 +733,7 @@ block|{
 comment|/* ignore */
 block|}
 comment|/* Wait for detach to complete */
-name|usb2_proc_mwait
+name|usb_proc_mwait
 argument_list|(
 operator|&
 name|bus
@@ -655,7 +763,7 @@ name|bus
 argument_list|)
 expr_stmt|;
 comment|/* Get rid of USB callback processes */
-name|usb2_proc_free
+name|usb_proc_free
 argument_list|(
 operator|&
 name|bus
@@ -663,7 +771,7 @@ operator|->
 name|giant_callback_proc
 argument_list|)
 expr_stmt|;
-name|usb2_proc_free
+name|usb_proc_free
 argument_list|(
 operator|&
 name|bus
@@ -672,7 +780,7 @@ name|non_giant_callback_proc
 argument_list|)
 expr_stmt|;
 comment|/* Get rid of USB explore process */
-name|usb2_proc_free
+name|usb_proc_free
 argument_list|(
 operator|&
 name|bus
@@ -681,7 +789,7 @@ name|explore_proc
 argument_list|)
 expr_stmt|;
 comment|/* Get rid of control transfer process */
-name|usb2_proc_free
+name|usb_proc_free
 argument_list|(
 operator|&
 name|bus
@@ -698,13 +806,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_bus_explore  *  * This function is used to explore the device tree from the root.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_bus_explore  *  * This function is used to explore the device tree from the root.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_bus_explore
+name|usb_bus_explore
 parameter_list|(
 name|struct
 name|usb_proc_msg
@@ -801,7 +909,7 @@ name|Giant
 argument_list|)
 expr_stmt|;
 comment|/* 		 * First update the USB power state! 		 */
-name|usb2_bus_powerd
+name|usb_bus_powerd
 argument_list|(
 name|bus
 argument_list|)
@@ -857,13 +965,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_bus_detach  *  * This function is used to detach the device tree from the root.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_bus_detach  *  * This function is used to detach the device tree from the root.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_bus_detach
+name|usb_bus_detach
 parameter_list|(
 name|struct
 name|usb_proc_msg
@@ -938,7 +1046,7 @@ name|dev
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Free USB Root device, but not any sub-devices, hence they 	 * are freed by the caller of this function: 	 */
-name|usb2_free_device
+name|usb_free_device
 argument_list|(
 name|udev
 argument_list|,
@@ -969,7 +1077,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_power_wdog
+name|usb_power_wdog
 parameter_list|(
 name|void
 modifier|*
@@ -990,7 +1098,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|usb2_callout_reset
+name|usb_callout_reset
 argument_list|(
 operator|&
 name|bus
@@ -1001,7 +1109,7 @@ literal|4
 operator|*
 name|hz
 argument_list|,
-name|usb2_power_wdog
+name|usb_power_wdog
 argument_list|,
 name|arg
 argument_list|)
@@ -1011,7 +1119,7 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
-name|usb2_bus_power_update
+name|usb_bus_power_update
 argument_list|(
 name|bus
 argument_list|)
@@ -1025,13 +1133,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_bus_attach  *  * This function attaches USB in context of the explore thread.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_bus_attach  *  * This function attaches USB in context of the explore thread.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_bus_attach
+name|usb_bus_attach
 parameter_list|(
 name|struct
 name|usb_proc_msg
@@ -1224,7 +1332,7 @@ block|}
 comment|/* Allocate the Root USB device */
 name|child
 operator|=
-name|usb2_alloc_device
+name|usb_alloc_device
 argument_list|(
 name|bus
 operator|->
@@ -1252,7 +1360,7 @@ condition|)
 block|{
 name|err
 operator|=
-name|usb2_probe_and_attach
+name|usb_probe_and_attach
 argument_list|(
 name|child
 argument_list|,
@@ -1330,7 +1438,7 @@ name|bdev
 argument_list|,
 literal|"Root HUB problem, error=%s\n"
 argument_list|,
-name|usb2_errstr
+name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
@@ -1346,7 +1454,7 @@ name|bus
 argument_list|)
 expr_stmt|;
 comment|/* start watchdog */
-name|usb2_power_wdog
+name|usb_power_wdog
 argument_list|(
 name|bus
 argument_list|)
@@ -1355,13 +1463,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_attach_sub  *  * This function creates a thread which runs the USB attach code. It  * is factored out, hence it can be called at two different places in  * time. During bootup this function is called from  * "usb2_post_init". During hot-plug it is called directly from the  * "usb2_attach()" method.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_attach_sub  *  * This function creates a thread which runs the USB attach code. It  * is factored out, hence it can be called at two different places in  * time. During bootup this function is called from  * "usb_post_init". During hot-plug it is called directly from the  * "usb_attach()" method.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_attach_sub
+name|usb_attach_sub
 parameter_list|(
 name|device_t
 name|dev
@@ -1395,7 +1503,7 @@ operator|.
 name|pm_callback
 operator|=
 operator|&
-name|usb2_bus_explore
+name|usb_bus_explore
 expr_stmt|;
 name|bus
 operator|->
@@ -1420,7 +1528,7 @@ operator|.
 name|pm_callback
 operator|=
 operator|&
-name|usb2_bus_explore
+name|usb_bus_explore
 expr_stmt|;
 name|bus
 operator|->
@@ -1445,7 +1553,7 @@ operator|.
 name|pm_callback
 operator|=
 operator|&
-name|usb2_bus_detach
+name|usb_bus_detach
 expr_stmt|;
 name|bus
 operator|->
@@ -1470,7 +1578,7 @@ operator|.
 name|pm_callback
 operator|=
 operator|&
-name|usb2_bus_detach
+name|usb_bus_detach
 expr_stmt|;
 name|bus
 operator|->
@@ -1495,7 +1603,7 @@ operator|.
 name|pm_callback
 operator|=
 operator|&
-name|usb2_bus_attach
+name|usb_bus_attach
 expr_stmt|;
 name|bus
 operator|->
@@ -1520,7 +1628,7 @@ operator|.
 name|pm_callback
 operator|=
 operator|&
-name|usb2_bus_attach
+name|usb_bus_attach
 expr_stmt|;
 name|bus
 operator|->
@@ -1536,7 +1644,7 @@ expr_stmt|;
 comment|/* Create USB explore and callback processes */
 if|if
 condition|(
-name|usb2_proc_create
+name|usb_proc_create
 argument_list|(
 operator|&
 name|bus
@@ -1564,7 +1672,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|usb2_proc_create
+name|usb_proc_create
 argument_list|(
 operator|&
 name|bus
@@ -1592,7 +1700,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|usb2_proc_create
+name|usb_proc_create
 argument_list|(
 operator|&
 name|bus
@@ -1620,7 +1728,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|usb2_proc_create
+name|usb_proc_create
 argument_list|(
 operator|&
 name|bus
@@ -1655,7 +1763,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|usb2_proc_msignal
+name|usb_proc_msignal
 argument_list|(
 operator|&
 name|bus
@@ -1692,13 +1800,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_post_init  *  * This function is called to attach all USB busses that were found  * during bootup.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_post_init  *  * This function is called to attach all USB busses that were found  * during bootup.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_post_init
+name|usb_post_init
 parameter_list|(
 name|void
 modifier|*
@@ -1728,7 +1836,7 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-name|usb2_devclass_ptr
+name|usb_devclass_ptr
 operator|=
 name|devclass_find
 argument_list|(
@@ -1737,7 +1845,7 @@ argument_list|)
 expr_stmt|;
 name|dc
 operator|=
-name|usb2_devclass_ptr
+name|usb_devclass_ptr
 expr_stmt|;
 if|if
 condition|(
@@ -1804,7 +1912,7 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-name|usb2_attach_sub
+name|usb_attach_sub
 argument_list|(
 name|dev
 argument_list|,
@@ -1831,12 +1939,12 @@ literal|"no devclass\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|usb2_post_init_called
+name|usb_post_init_called
 operator|=
 literal|1
 expr_stmt|;
 comment|/* explore all USB busses in parallell */
-name|usb2_needs_explore_all
+name|usb_needs_explore_all
 argument_list|()
 expr_stmt|;
 name|mtx_unlock
@@ -1851,13 +1959,13 @@ end_function
 begin_expr_stmt
 name|SYSINIT
 argument_list|(
-name|usb2_post_init
+name|usb_post_init
 argument_list|,
 name|SI_SUB_KICK_SCHEDULER
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|,
-name|usb2_post_init
+name|usb_post_init
 argument_list|,
 name|NULL
 argument_list|)
@@ -1867,13 +1975,13 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSUNINIT
 argument_list|(
-name|usb2_bus_unload
+name|usb_bus_unload
 argument_list|,
 name|SI_SUB_KLD
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|,
-name|usb2_bus_unload
+name|usb_bus_unload
 argument_list|,
 name|NULL
 argument_list|)
@@ -1881,7 +1989,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_bus_mem_flush_all_cb  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_bus_mem_flush_all_cb  *------------------------------------------------------------------------*/
 end_comment
 
 begin_if
@@ -1893,7 +2001,7 @@ end_if
 begin_function
 specifier|static
 name|void
-name|usb2_bus_mem_flush_all_cb
+name|usb_bus_mem_flush_all_cb
 parameter_list|(
 name|struct
 name|usb_bus
@@ -1917,7 +2025,7 @@ name|usb_size_t
 name|align
 parameter_list|)
 block|{
-name|usb2_pc_cpu_flush
+name|usb_pc_cpu_flush
 argument_list|(
 name|pc
 argument_list|)
@@ -1931,7 +2039,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_bus_mem_flush_all - factored out code  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_bus_mem_flush_all - factored out code  *------------------------------------------------------------------------*/
 end_comment
 
 begin_if
@@ -1942,7 +2050,7 @@ end_if
 
 begin_function
 name|void
-name|usb2_bus_mem_flush_all
+name|usb_bus_mem_flush_all
 parameter_list|(
 name|struct
 name|usb_bus
@@ -1964,7 +2072,7 @@ argument_list|(
 name|bus
 argument_list|,
 operator|&
-name|usb2_bus_mem_flush_all_cb
+name|usb_bus_mem_flush_all_cb
 argument_list|)
 expr_stmt|;
 block|}
@@ -1977,7 +2085,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_bus_mem_alloc_all_cb  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_bus_mem_alloc_all_cb  *------------------------------------------------------------------------*/
 end_comment
 
 begin_if
@@ -1989,7 +2097,7 @@ end_if
 begin_function
 specifier|static
 name|void
-name|usb2_bus_mem_alloc_all_cb
+name|usb_bus_mem_alloc_all_cb
 parameter_list|(
 name|struct
 name|usb_bus
@@ -2024,7 +2132,7 @@ name|dma_parent_tag
 expr_stmt|;
 if|if
 condition|(
-name|usb2_pc_alloc_mem
+name|usb_pc_alloc_mem
 argument_list|(
 name|pc
 argument_list|,
@@ -2052,12 +2160,12 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_bus_mem_alloc_all - factored out code  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_bus_mem_alloc_all - factored out code  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|uint8_t
-name|usb2_bus_mem_alloc_all
+name|usb_bus_mem_alloc_all
 parameter_list|(
 name|struct
 name|usb_bus
@@ -2099,7 +2207,7 @@ operator||
 name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
-name|usb2_callout_init_mtx
+name|usb_callout_init_mtx
 argument_list|(
 operator|&
 name|bus
@@ -2127,7 +2235,7 @@ expr_stmt|;
 if|#
 directive|if
 name|USB_HAVE_BUSDMA
-name|usb2_dma_tag_setup
+name|usb_dma_tag_setup
 argument_list|(
 name|bus
 operator|->
@@ -2209,7 +2317,7 @@ argument_list|(
 name|bus
 argument_list|,
 operator|&
-name|usb2_bus_mem_alloc_all_cb
+name|usb_bus_mem_alloc_all_cb
 argument_list|)
 expr_stmt|;
 block|}
@@ -2222,7 +2330,7 @@ operator|->
 name|alloc_failed
 condition|)
 block|{
-name|usb2_bus_mem_free_all
+name|usb_bus_mem_free_all
 argument_list|(
 name|bus
 argument_list|,
@@ -2241,7 +2349,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_bus_mem_free_all_cb  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_bus_mem_free_all_cb  *------------------------------------------------------------------------*/
 end_comment
 
 begin_if
@@ -2253,7 +2361,7 @@ end_if
 begin_function
 specifier|static
 name|void
-name|usb2_bus_mem_free_all_cb
+name|usb_bus_mem_free_all_cb
 parameter_list|(
 name|struct
 name|usb_bus
@@ -2277,7 +2385,7 @@ name|usb_size_t
 name|align
 parameter_list|)
 block|{
-name|usb2_pc_free_mem
+name|usb_pc_free_mem
 argument_list|(
 name|pc
 argument_list|)
@@ -2291,12 +2399,12 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_bus_mem_free_all - factored out code  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_bus_mem_free_all - factored out code  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_bus_mem_free_all
+name|usb_bus_mem_free_all
 parameter_list|(
 name|struct
 name|usb_bus
@@ -2321,11 +2429,11 @@ argument_list|(
 name|bus
 argument_list|,
 operator|&
-name|usb2_bus_mem_free_all_cb
+name|usb_bus_mem_free_all_cb
 argument_list|)
 expr_stmt|;
 block|}
-name|usb2_dma_tag_unsetup
+name|usb_dma_tag_unsetup
 argument_list|(
 name|bus
 operator|->

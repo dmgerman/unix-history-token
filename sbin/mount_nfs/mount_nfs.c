@@ -129,13 +129,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfs/rpcv2.h>
+file|<rpcsvc/nfs_prot.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<nfs/nfsproto.h>
+file|<rpcsvc/mount.h>
 end_include
 
 begin_include
@@ -314,7 +314,7 @@ decl_stmt|;
 name|u_char
 name|nfh
 index|[
-name|NFSX_V3FHMAX
+name|NFS3_FHSIZE
 index|]
 decl_stmt|;
 block|}
@@ -5287,7 +5287,7 @@ condition|(
 operator|!
 name|rpcb_getaddr
 argument_list|(
-name|RPCPROG_NFS
+name|NFS_PROGRAM
 argument_list|,
 name|nfsvers
 argument_list|,
@@ -5371,7 +5371,7 @@ argument_list|,
 operator|&
 name|nfs_nb
 argument_list|,
-name|RPCPROG_NFS
+name|NFS_PROGRAM
 argument_list|,
 name|nfsvers
 argument_list|,
@@ -5732,7 +5732,7 @@ name|TRYRET_SUCCESS
 operator|)
 return|;
 block|}
-comment|/* Send the RPCMNT_MOUNT RPC to get the root filehandle. */
+comment|/* Send the MOUNTPROC_MNT RPC to get the root filehandle. */
 name|try
 operator|.
 name|tv_sec
@@ -5751,7 +5751,7 @@ name|clnt_tp_create
 argument_list|(
 name|hostp
 argument_list|,
-name|RPCPROG_MNT
+name|MOUNTPROG
 argument_list|,
 name|mntvers
 argument_list|,
@@ -5827,7 +5827,7 @@ name|clnt_call
 argument_list|(
 name|clp
 argument_list|,
-name|RPCMNT_MOUNT
+name|MOUNTPROC_MNT
 argument_list|,
 operator|(
 name|xdrproc_t
@@ -6464,7 +6464,7 @@ argument_list|,
 operator|&
 name|dirp
 argument_list|,
-name|RPCMNT_PATHLEN
+name|MNTPATHLEN
 argument_list|)
 operator|)
 return|;
@@ -6540,7 +6540,7 @@ name|np
 operator|->
 name|fhsize
 operator|=
-name|NFSX_V2FH
+name|NFS_FHSIZE
 expr_stmt|;
 return|return
 operator|(
@@ -6555,7 +6555,7 @@ name|np
 operator|->
 name|nfh
 argument_list|,
-name|NFSX_V2FH
+name|NFS_FHSIZE
 argument_list|)
 operator|)
 return|;
@@ -6592,7 +6592,7 @@ name|np
 operator|->
 name|fhsize
 operator|>
-name|NFSX_V3FHMAX
+name|NFS3_FHSIZE
 condition|)
 return|return
 operator|(

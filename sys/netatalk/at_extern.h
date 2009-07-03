@@ -240,6 +240,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|at_ifaddr
+modifier|*
+name|at_ifawithnet_locked
+parameter_list|(
+name|struct
+name|sockaddr_at
+modifier|*
+name|sat
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|at_inithead
 parameter_list|(

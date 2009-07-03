@@ -562,6 +562,9 @@ name|sin
 operator|->
 name|sin_port
 decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
 name|sin
 operator|->
 name|sin_port
@@ -591,7 +594,8 @@ operator|(
 name|EADDRNOTAVAIL
 operator|)
 return|;
-return|return
+name|ret
+operator|=
 name|rdma_copy_addr
 argument_list|(
 name|dev_addr
@@ -602,6 +606,16 @@ name|ifa_ifp
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+name|ifa_free
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
 return|;
 block|}
 end_function

@@ -10,6 +10,120 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker_set.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/condvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/usb.h>
 end_include
 
@@ -22,7 +136,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_mfunc.h>
+file|<dev/usb/usbdi.h>
 end_include
 
 begin_include
@@ -35,20 +149,8 @@ begin_define
 define|#
 directive|define
 name|USB_DEBUG_VAR
-value|usb2_debug
+value|usb_debug
 end_define
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/usb_core.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/usb_lookup.h>
-end_include
 
 begin_include
 include|#
@@ -133,7 +235,7 @@ end_define
 
 begin_struct
 struct|struct
-name|usb2_quirk_entry
+name|usb_quirk_entry
 block|{
 name|uint16_t
 name|vid
@@ -161,15 +263,15 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|mtx
-name|usb2_quirk_mtx
+name|usb_quirk_mtx
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|struct
-name|usb2_quirk_entry
-name|usb2_quirks
+name|usb_quirk_entry
+name|usb_quirks
 index|[
 name|USB_DEV_QUIRKS_MAX
 index|]
@@ -959,7 +1061,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_quirkstr  *  * This function converts an USB quirk code into a string.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_quirkstr  *  * This function converts an USB quirk code into a string.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -967,7 +1069,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
-name|usb2_quirkstr
+name|usb_quirkstr
 parameter_list|(
 name|uint16_t
 name|quirk
@@ -993,17 +1095,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_test_quirk_by_info  *  * Returns:  * 0: Quirk not found  * Else: Quirk found  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_test_quirk_by_info  *  * Returns:  * 0: Quirk not found  * Else: Quirk found  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|uint8_t
-name|usb2_test_quirk_by_info
+name|usb_test_quirk_by_info
 parameter_list|(
 specifier|const
 name|struct
-name|usb_lookup_info
+name|usbd_lookup_info
 modifier|*
 name|info
 parameter_list|,
@@ -1033,7 +1135,7 @@ block|}
 name|mtx_lock
 argument_list|(
 operator|&
-name|usb2_quirk_mtx
+name|usb_quirk_mtx
 argument_list|)
 expr_stmt|;
 for|for
@@ -1054,7 +1156,7 @@ comment|/* see if quirk information does not match */
 if|if
 condition|(
 operator|(
-name|usb2_quirks
+name|usb_quirks
 index|[
 name|x
 index|]
@@ -1067,7 +1169,7 @@ name|idVendor
 operator|)
 operator|||
 operator|(
-name|usb2_quirks
+name|usb_quirks
 index|[
 name|x
 index|]
@@ -1080,7 +1182,7 @@ name|idProduct
 operator|)
 operator|||
 operator|(
-name|usb2_quirks
+name|usb_quirks
 index|[
 name|x
 index|]
@@ -1093,7 +1195,7 @@ name|bcdDevice
 operator|)
 operator|||
 operator|(
-name|usb2_quirks
+name|usb_quirks
 index|[
 name|x
 index|]
@@ -1125,7 +1227,7 @@ control|)
 block|{
 if|if
 condition|(
-name|usb2_quirks
+name|usb_quirks
 index|[
 name|x
 index|]
@@ -1141,14 +1243,14 @@ block|{
 name|mtx_unlock
 argument_list|(
 operator|&
-name|usb2_quirk_mtx
+name|usb_quirk_mtx
 argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
 literal|"Found quirk '%s'.\n"
 argument_list|,
-name|usb2_quirkstr
+name|usb_quirkstr
 argument_list|(
 name|quirk
 argument_list|)
@@ -1167,7 +1269,7 @@ block|}
 name|mtx_unlock
 argument_list|(
 operator|&
-name|usb2_quirk_mtx
+name|usb_quirk_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -1181,9 +1283,9 @@ end_function
 begin_function
 specifier|static
 name|struct
-name|usb2_quirk_entry
+name|usb_quirk_entry
 modifier|*
-name|usb2_quirk_get_entry
+name|usb_quirk_get_entry
 parameter_list|(
 name|uint16_t
 name|vid
@@ -1207,7 +1309,7 @@ decl_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
-name|usb2_quirk_mtx
+name|usb_quirk_mtx
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -1230,7 +1332,7 @@ block|{
 comment|/* all zero - special case */
 return|return
 operator|(
-name|usb2_quirks
+name|usb_quirks
 operator|+
 name|USB_DEV_QUIRKS_MAX
 operator|-
@@ -1257,7 +1359,7 @@ comment|/* see if quirk information does not match */
 if|if
 condition|(
 operator|(
-name|usb2_quirks
+name|usb_quirks
 index|[
 name|x
 index|]
@@ -1268,7 +1370,7 @@ name|vid
 operator|)
 operator|||
 operator|(
-name|usb2_quirks
+name|usb_quirks
 index|[
 name|x
 index|]
@@ -1279,7 +1381,7 @@ name|pid
 operator|)
 operator|||
 operator|(
-name|usb2_quirks
+name|usb_quirks
 index|[
 name|x
 index|]
@@ -1290,7 +1392,7 @@ name|lo_rev
 operator|)
 operator|||
 operator|(
-name|usb2_quirks
+name|usb_quirks
 index|[
 name|x
 index|]
@@ -1305,7 +1407,7 @@ continue|continue;
 block|}
 return|return
 operator|(
-name|usb2_quirks
+name|usb_quirks
 operator|+
 name|x
 operator|)
@@ -1344,28 +1446,28 @@ comment|/* see if quirk information does not match */
 if|if
 condition|(
 operator|(
-name|usb2_quirks
+name|usb_quirks
 index|[
 name|x
 index|]
 operator|.
 name|vid
 operator||
-name|usb2_quirks
+name|usb_quirks
 index|[
 name|x
 index|]
 operator|.
 name|pid
 operator||
-name|usb2_quirks
+name|usb_quirks
 index|[
 name|x
 index|]
 operator|.
 name|lo_rev
 operator||
-name|usb2_quirks
+name|usb_quirks
 index|[
 name|x
 index|]
@@ -1378,7 +1480,7 @@ condition|)
 block|{
 continue|continue;
 block|}
-name|usb2_quirks
+name|usb_quirks
 index|[
 name|x
 index|]
@@ -1387,7 +1489,7 @@ name|vid
 operator|=
 name|vid
 expr_stmt|;
-name|usb2_quirks
+name|usb_quirks
 index|[
 name|x
 index|]
@@ -1396,7 +1498,7 @@ name|pid
 operator|=
 name|pid
 expr_stmt|;
-name|usb2_quirks
+name|usb_quirks
 index|[
 name|x
 index|]
@@ -1405,7 +1507,7 @@ name|lo_rev
 operator|=
 name|lo_rev
 expr_stmt|;
-name|usb2_quirks
+name|usb_quirks
 index|[
 name|x
 index|]
@@ -1416,7 +1518,7 @@ name|hi_rev
 expr_stmt|;
 return|return
 operator|(
-name|usb2_quirks
+name|usb_quirks
 operator|+
 name|x
 operator|)
@@ -1432,13 +1534,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_quirk_ioctl - handle quirk IOCTLs  *  * Returns:  * 0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_quirk_ioctl - handle quirk IOCTLs  *  * Returns:  * 0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|usb2_quirk_ioctl
+name|usb_quirk_ioctl
 parameter_list|(
 name|unsigned
 name|long
@@ -1462,7 +1564,7 @@ modifier|*
 name|pgq
 decl_stmt|;
 name|struct
-name|usb2_quirk_entry
+name|usb_quirk_entry
 modifier|*
 name|pqe
 decl_stmt|;
@@ -1523,7 +1625,7 @@ block|}
 name|mtx_lock
 argument_list|(
 operator|&
-name|usb2_quirk_mtx
+name|usb_quirk_mtx
 argument_list|)
 expr_stmt|;
 comment|/* copy out data */
@@ -1531,7 +1633,7 @@ name|pgq
 operator|->
 name|vid
 operator|=
-name|usb2_quirks
+name|usb_quirks
 index|[
 name|y
 index|]
@@ -1542,7 +1644,7 @@ name|pgq
 operator|->
 name|pid
 operator|=
-name|usb2_quirks
+name|usb_quirks
 index|[
 name|y
 index|]
@@ -1553,7 +1655,7 @@ name|pgq
 operator|->
 name|bcdDeviceLow
 operator|=
-name|usb2_quirks
+name|usb_quirks
 index|[
 name|y
 index|]
@@ -1564,7 +1666,7 @@ name|pgq
 operator|->
 name|bcdDeviceHigh
 operator|=
-name|usb2_quirks
+name|usb_quirks
 index|[
 name|y
 index|]
@@ -1577,9 +1679,9 @@ name|pgq
 operator|->
 name|quirkname
 argument_list|,
-name|usb2_quirkstr
+name|usb_quirkstr
 argument_list|(
-name|usb2_quirks
+name|usb_quirks
 index|[
 name|y
 index|]
@@ -1601,7 +1703,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|usb2_quirk_mtx
+name|usb_quirk_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -1646,7 +1748,7 @@ name|pgq
 operator|->
 name|quirkname
 argument_list|,
-name|usb2_quirkstr
+name|usb_quirkstr
 argument_list|(
 name|x
 argument_list|)
@@ -1720,7 +1822,7 @@ name|pgq
 operator|->
 name|quirkname
 argument_list|,
-name|usb2_quirkstr
+name|usb_quirkstr
 argument_list|(
 name|y
 argument_list|)
@@ -1761,12 +1863,12 @@ block|}
 name|mtx_lock
 argument_list|(
 operator|&
-name|usb2_quirk_mtx
+name|usb_quirk_mtx
 argument_list|)
 expr_stmt|;
 name|pqe
 operator|=
-name|usb2_quirk_get_entry
+name|usb_quirk_get_entry
 argument_list|(
 name|pgq
 operator|->
@@ -1828,7 +1930,7 @@ block|}
 name|mtx_unlock
 argument_list|(
 operator|&
-name|usb2_quirk_mtx
+name|usb_quirk_mtx
 argument_list|)
 expr_stmt|;
 if|if
@@ -1905,7 +2007,7 @@ name|pgq
 operator|->
 name|quirkname
 argument_list|,
-name|usb2_quirkstr
+name|usb_quirkstr
 argument_list|(
 name|y
 argument_list|)
@@ -1946,12 +2048,12 @@ block|}
 name|mtx_lock
 argument_list|(
 operator|&
-name|usb2_quirk_mtx
+name|usb_quirk_mtx
 argument_list|)
 expr_stmt|;
 name|pqe
 operator|=
-name|usb2_quirk_get_entry
+name|usb_quirk_get_entry
 argument_list|(
 name|pgq
 operator|->
@@ -2020,7 +2122,7 @@ block|{
 name|mtx_unlock
 argument_list|(
 operator|&
-name|usb2_quirk_mtx
+name|usb_quirk_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -2082,7 +2184,7 @@ block|}
 name|mtx_unlock
 argument_list|(
 operator|&
-name|usb2_quirk_mtx
+name|usb_quirk_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -2105,7 +2207,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_quirk_init
+name|usb_quirk_init
 parameter_list|(
 name|void
 modifier|*
@@ -2116,7 +2218,7 @@ comment|/* initialize mutex */
 name|mtx_init
 argument_list|(
 operator|&
-name|usb2_quirk_mtx
+name|usb_quirk_mtx
 argument_list|,
 literal|"USB quirk"
 argument_list|,
@@ -2126,15 +2228,15 @@ name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/* register our function */
-name|usb2_test_quirk_p
+name|usb_test_quirk_p
 operator|=
 operator|&
-name|usb2_test_quirk_by_info
+name|usb_test_quirk_by_info
 expr_stmt|;
-name|usb2_quirk_ioctl_p
+name|usb_quirk_ioctl_p
 operator|=
 operator|&
-name|usb2_quirk_ioctl
+name|usb_quirk_ioctl
 expr_stmt|;
 block|}
 end_function
@@ -2142,14 +2244,14 @@ end_function
 begin_function
 specifier|static
 name|void
-name|usb2_quirk_uninit
+name|usb_quirk_uninit
 parameter_list|(
 name|void
 modifier|*
 name|arg
 parameter_list|)
 block|{
-name|usb2_quirk_unload
+name|usb_quirk_unload
 argument_list|(
 name|arg
 argument_list|)
@@ -2158,7 +2260,7 @@ comment|/* destroy mutex */
 name|mtx_destroy
 argument_list|(
 operator|&
-name|usb2_quirk_mtx
+name|usb_quirk_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -2167,13 +2269,13 @@ end_function
 begin_expr_stmt
 name|SYSINIT
 argument_list|(
-name|usb2_quirk_init
+name|usb_quirk_init
 argument_list|,
 name|SI_SUB_LOCK
 argument_list|,
 name|SI_ORDER_FIRST
 argument_list|,
-name|usb2_quirk_init
+name|usb_quirk_init
 argument_list|,
 name|NULL
 argument_list|)
@@ -2183,13 +2285,13 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSUNINIT
 argument_list|(
-name|usb2_quirk_uninit
+name|usb_quirk_uninit
 argument_list|,
 name|SI_SUB_LOCK
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|,
-name|usb2_quirk_uninit
+name|usb_quirk_uninit
 argument_list|,
 name|NULL
 argument_list|)

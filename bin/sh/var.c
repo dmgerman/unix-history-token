@@ -824,7 +824,7 @@ decl_stmt|;
 name|struct
 name|jmploc
 modifier|*
-specifier|volatile
+specifier|const
 name|savehandler
 init|=
 name|handler
@@ -834,18 +834,6 @@ name|err
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__GNUC__
-comment|/* Avoid longjmp clobbering */
-operator|(
-name|void
-operator|)
-operator|&
-name|err
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|setjmp

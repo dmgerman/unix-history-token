@@ -938,9 +938,14 @@ condition|)
 operator|*
 name|where
 operator|=
+name|elf_relocaddr
+argument_list|(
+name|lf
+argument_list|,
 name|relocbase
 operator|+
 name|addend
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

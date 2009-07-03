@@ -1761,10 +1761,13 @@ name|printf
 argument_list|(
 name|hflag
 condition|?
-literal|"{ sec = %'ld, usec = %'ld } "
+literal|"{ sec = %'jd, usec = %'ld } "
 else|:
-literal|"{ sec = %ld, usec = %ld } "
+literal|"{ sec = %jd, usec = %ld } "
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|tv
 operator|->
 name|tv_sec

@@ -3639,7 +3639,6 @@ name|expand
 operator|!=
 name|EXPAND_DEFAULT
 condition|)
-empty_stmt|;
 name|lprintf
 argument_list|(
 literal|1

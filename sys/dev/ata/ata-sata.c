@@ -122,25 +122,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/pci/pcivar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/pci/pcireg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/ata/ata-all.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/ata/ata-pci.h>
 end_include
 
 begin_include

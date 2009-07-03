@@ -1157,7 +1157,7 @@ specifier|static
 name|int
 name|X_mrt_ioctl
 parameter_list|(
-name|int
+name|u_long
 parameter_list|,
 name|caddr_t
 parameter_list|,
@@ -2369,7 +2369,7 @@ specifier|static
 name|int
 name|X_mrt_ioctl
 parameter_list|(
-name|int
+name|u_long
 name|cmd
 parameter_list|,
 name|caddr_t
@@ -3734,6 +3734,11 @@ operator|=
 name|ifa
 operator|->
 name|ifa_ifp
+expr_stmt|;
+name|ifa_free
+argument_list|(
+name|ifa
+argument_list|)
 expr_stmt|;
 block|}
 if|if

@@ -311,67 +311,6 @@ value|0x400;
 end_define
 
 begin_comment
-comment|/* Code compatilbility between 6 and 7 */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ETHER_BPF_MTAP
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ETHER_BPF_MTAP
-value|BPF_MTAP
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|700000
-end_if
-
-begin_define
-define|#
-directive|define
-name|CSUM_TSO
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFCAP_TSO4
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILTER_STRAY
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILTER_HANDLED
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * TDBA/RDBA should be aligned on 16 byte boundary. But TDLEN/RDLEN should be  * multiple of 128 bytes. So we align TDBA/RDBA on 128 byte boundary. This will  * also optimize cache line size effect. H/W supports up to cache line size 128.  */
 end_comment
 
@@ -562,6 +501,24 @@ end_define
 begin_define
 define|#
 directive|define
+name|IGB_VFTA_SIZE
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_BR_SIZE
+value|4096
+end_define
+
+begin_comment
+comment|/* ring buf size */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IGB_TSO_SIZE
 value|(65535 + sizeof(struct ether_vlan_header))
 end_define
@@ -691,12 +648,6 @@ name|IGB_LINK_ITR
 value|2000
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IGB_TIMESYNC
-end_ifdef
-
 begin_comment
 comment|/* Precision Time Sync (IEEE 1588) defines */
 end_comment
@@ -725,113 +676,6 @@ end_define
 begin_comment
 comment|/* UDP port for the protocol */
 end_comment
-
-begin_comment
-comment|/* TIMESYNC IOCTL defines */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IGB_TIMESYNC_READTS
-value|_IOWR('i', 127, struct igb_tsync_read)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGB_TIMESTAMP
-value|5
-end_define
-
-begin_comment
-comment|/* A unique return value */
-end_comment
-
-begin_comment
-comment|/* Used in the READTS IOCTL */
-end_comment
-
-begin_struct
-struct|struct
-name|igb_tsync_read
-block|{
-name|int
-name|read_current_time
-decl_stmt|;
-name|struct
-name|timespec
-name|system_time
-decl_stmt|;
-name|u64
-name|network_time
-decl_stmt|;
-name|u64
-name|rx_stamp
-decl_stmt|;
-name|u64
-name|tx_stamp
-decl_stmt|;
-name|u16
-name|seqid
-decl_stmt|;
-name|unsigned
-name|char
-name|srcid
-index|[
-literal|6
-index|]
-decl_stmt|;
-name|int
-name|rx_valid
-decl_stmt|;
-name|int
-name|tx_valid
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IGB_TIMESYNC */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|adapter
-struct_decl|;
-end_struct_decl
-
-begin_comment
-comment|/* forward reference */
-end_comment
-
-begin_struct
-struct|struct
-name|igb_int_delay_info
-block|{
-name|struct
-name|adapter
-modifier|*
-name|adapter
-decl_stmt|;
-comment|/* Back-pointer to the adapter struct */
-name|int
-name|offset
-decl_stmt|;
-comment|/* Register offset to read/write */
-name|int
-name|value
-decl_stmt|;
-comment|/* Current value in usecs */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * Bus dma allocation structure used by  * e1000_dma_malloc and e1000_dma_free.  */
@@ -927,10 +771,31 @@ name|igb_tx_buffer
 modifier|*
 name|tx_buffers
 decl_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800000
+name|struct
+name|buf_ring
+modifier|*
+name|br
+decl_stmt|;
+endif|#
+directive|endif
 name|bus_dma_tag_t
 name|txtag
 decl_stmt|;
 comment|/* dma tag for tx */
+name|struct
+name|resource
+modifier|*
+name|res
+decl_stmt|;
+name|void
+modifier|*
+name|tag
+decl_stmt|;
 name|u32
 name|watchdog_timer
 decl_stmt|;
@@ -985,6 +850,12 @@ name|struct
 name|lro_ctrl
 name|lro
 decl_stmt|;
+name|bool
+name|lro_enabled
+decl_stmt|;
+name|bool
+name|hdr_split
+decl_stmt|;
 name|struct
 name|task
 name|rx_task
@@ -1034,6 +905,15 @@ name|bytes
 decl_stmt|;
 name|u32
 name|eitr_setting
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|res
+decl_stmt|;
+name|void
+modifier|*
+name|tag
 decl_stmt|;
 comment|/* Soft stats */
 name|u64
@@ -1089,22 +969,10 @@ name|struct
 name|resource
 modifier|*
 name|res
-index|[
-name|IGB_MSIX_VEC
-index|]
 decl_stmt|;
 name|void
 modifier|*
 name|tag
-index|[
-name|IGB_MSIX_VEC
-index|]
-decl_stmt|;
-name|int
-name|rid
-index|[
-name|IGB_MSIX_VEC
-index|]
 decl_stmt|;
 name|u32
 name|eims_mask
@@ -1160,11 +1028,17 @@ modifier|*
 name|tq
 decl_stmt|;
 comment|/* private task queue */
+name|u16
+name|num_queues
+decl_stmt|;
 name|eventhandler_tag
 name|vlan_attach
 decl_stmt|;
 name|eventhandler_tag
 name|vlan_detach
+decl_stmt|;
+name|u32
+name|num_vlans
 decl_stmt|;
 comment|/* Management and WOL features */
 name|int
@@ -1195,9 +1069,6 @@ decl_stmt|;
 name|u16
 name|num_tx_desc
 decl_stmt|;
-name|u16
-name|num_tx_queues
-decl_stmt|;
 name|u32
 name|txd_cmd
 decl_stmt|;
@@ -1212,9 +1083,6 @@ name|rx_hdr_split
 decl_stmt|;
 name|u16
 name|num_rx_desc
-decl_stmt|;
-name|u16
-name|num_rx_queues
 decl_stmt|;
 name|int
 name|rx_process_limit
@@ -1263,15 +1131,23 @@ name|in_detach
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|IGB_TIMESYNC
-name|u64
-name|last_stamp
+name|IGB_IEEE1588
+comment|/* IEEE 1588 precision time support */
+name|struct
+name|cyclecounter
+name|cycles
 decl_stmt|;
-name|u64
-name|last_sec
+name|struct
+name|nettimer
+name|clock
 decl_stmt|;
-name|u32
-name|last_ns
+name|struct
+name|nettime_compare
+name|compare
+decl_stmt|;
+name|struct
+name|hwtstamp_ctrl
+name|hwtstamp
 decl_stmt|;
 endif|#
 directive|endif
@@ -1421,6 +1297,16 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|mtx_lock(&(_sc)->tx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_TX_TRYLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_trylock(&(_sc)->tx_mtx)
 end_define
 
 begin_define

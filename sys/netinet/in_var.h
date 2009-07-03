@@ -352,6 +352,70 @@ define|\
 value|(&V_in_ifaddrhashtbl[INADDR_HASHVAL(x)& V_in_ifaddrhmask])
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|rwlock
+name|in_ifaddr_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|IN_IFADDR_LOCK_ASSERT
+parameter_list|()
+value|rw_assert(&in_ifaddr_lock, RA_LOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_IFADDR_RLOCK
+parameter_list|()
+value|rw_rlock(&in_ifaddr_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_IFADDR_RLOCK_ASSERT
+parameter_list|()
+value|rw_assert(&in_ifaddr_lock, RA_RLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_IFADDR_RUNLOCK
+parameter_list|()
+value|rw_runlock(&in_ifaddr_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_IFADDR_WLOCK
+parameter_list|()
+value|rw_wlock(&in_ifaddr_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_IFADDR_WLOCK_ASSERT
+parameter_list|()
+value|rw_assert(&in_ifaddr_lock, RA_WLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_IFADDR_WUNLOCK
+parameter_list|()
+value|rw_wunlock(&in_ifaddr_lock)
+end_define
+
 begin_comment
 comment|/*  * Macro for finding the internet address structure (in_ifaddr)  * corresponding to one of our IP addresses (in_addr).  */
 end_comment
@@ -412,7 +476,7 @@ comment|/* struct ifnet *ifp; */
 define|\
 comment|/* struct in_ifaddr *ia; */
 define|\
-value|{ \ 	for ((ia) = TAILQ_FIRST(&V_in_ifaddrhead); \ 	    (ia) != NULL&& (ia)->ia_ifp != (ifp); \ 	    (ia) = TAILQ_NEXT((ia), ia_link)) \ 		continue; \ }
+value|{									\ 	for ((ia) = TAILQ_FIRST(&V_in_ifaddrhead);			\ 	    (ia) != NULL&& (ia)->ia_ifp != (ifp);			\ 	    (ia) = TAILQ_NEXT((ia), ia_link))				\ 		continue;						\ 	if ((ia) != NULL)						\ 		ifa_ref(&(ia)->ia_ifa);					\ }
 end_define
 
 begin_endif

@@ -6682,7 +6682,7 @@ condition|)
 block|{
 name|sz
 operator|=
-literal|100
+literal|400
 operator|*
 name|ONE_MEG
 expr_stmt|;
