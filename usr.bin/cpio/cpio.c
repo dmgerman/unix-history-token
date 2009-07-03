@@ -2687,7 +2687,7 @@ name|st_gid
 operator|=
 name|cpio
 operator|->
-name|uid_override
+name|gid_override
 expr_stmt|;
 name|archive_entry_copy_stat
 argument_list|(
