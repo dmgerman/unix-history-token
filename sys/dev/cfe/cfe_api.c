@@ -602,7 +602,7 @@ name|xiocb
 operator|.
 name|xiocb_fcode
 operator|=
-name|CFE_CMD_ENV_SET
+name|CFE_CMD_ENV_ENUM
 expr_stmt|;
 name|xiocb
 operator|.
