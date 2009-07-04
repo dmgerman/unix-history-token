@@ -328,7 +328,7 @@ name|QualType
 name|T
 parameter_list|)
 function_decl|;
-comment|/// GetRegionValueSymbolVal - make a unique symbol for value of R.
+comment|/// getRegionValueSymbolVal - make a unique symbol for value of R.
 name|SVal
 name|getRegionValueSymbolVal
 parameter_list|(
@@ -344,6 +344,37 @@ name|QualType
 argument_list|()
 parameter_list|)
 function_decl|;
+name|SVal
+name|getRegionValueSymbolValOrUnknown
+parameter_list|(
+specifier|const
+name|MemRegion
+modifier|*
+name|R
+parameter_list|,
+name|QualType
+name|T
+parameter_list|)
+block|{
+return|return
+name|SymMgr
+operator|.
+name|canSymbolicate
+argument_list|(
+name|T
+argument_list|)
+condition|?
+name|getRegionValueSymbolVal
+argument_list|(
+name|R
+argument_list|,
+name|T
+argument_list|)
+else|:
+name|UnknownVal
+argument_list|()
+return|;
+block|}
 name|SVal
 name|getConjuredSymbolVal
 parameter_list|(

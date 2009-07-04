@@ -414,7 +414,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// RUN: grep 'define i[0-9]* @t19() nounwind {' %t&&
+comment|// RUN: grep 'define i[0-9]* @t19()' %t&&
 end_comment
 
 begin_function_decl

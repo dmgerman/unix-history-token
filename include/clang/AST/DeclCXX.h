@@ -105,8 +105,20 @@ name|NamedDecl
 modifier|*
 name|Function
 decl_stmt|;
+name|AnyFunctionDecl
+argument_list|(
+name|NamedDecl
+operator|*
+name|ND
+argument_list|)
+operator|:
+name|Function
+argument_list|(
+argument|ND
+argument_list|)
+block|{ }
 name|public
-label|:
+operator|:
 name|AnyFunctionDecl
 argument_list|(
 name|FunctionDecl
@@ -148,6 +160,22 @@ specifier|const
 block|{
 return|return
 name|Function
+return|;
+block|}
+specifier|static
+name|AnyFunctionDecl
+name|getFromNamedDecl
+parameter_list|(
+name|NamedDecl
+modifier|*
+name|ND
+parameter_list|)
+block|{
+return|return
+name|AnyFunctionDecl
+argument_list|(
+name|ND
+argument_list|)
 return|;
 block|}
 block|}
@@ -221,6 +249,78 @@ operator|::
 name|AnyFunctionDecl
 operator|>
 block|{}
+expr_stmt|;
+comment|// Provide PointerLikeTypeTraits for non-cvr pointers.
+name|template
+operator|<
+operator|>
+name|class
+name|PointerLikeTypeTraits
+operator|<
+operator|::
+name|clang
+operator|::
+name|AnyFunctionDecl
+operator|>
+block|{
+name|public
+operator|:
+specifier|static
+specifier|inline
+name|void
+operator|*
+name|getAsVoidPointer
+argument_list|(
+argument|::clang::AnyFunctionDecl F
+argument_list|)
+block|{
+return|return
+name|F
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
+specifier|static
+specifier|inline
+operator|::
+name|clang
+operator|::
+name|AnyFunctionDecl
+name|getFromVoidPointer
+argument_list|(
+argument|void *P
+argument_list|)
+block|{
+return|return
+operator|::
+name|clang
+operator|::
+name|AnyFunctionDecl
+operator|::
+name|getFromNamedDecl
+argument_list|(
+name|static_cast
+operator|<
+operator|::
+name|clang
+operator|::
+name|NamedDecl
+operator|*
+operator|>
+operator|(
+name|P
+operator|)
+argument_list|)
+return|;
+block|}
+expr|enum
+block|{
+name|NumLowBitsAvailable
+operator|=
+literal|2
+block|}
+block|;   }
 expr_stmt|;
 block|}
 end_decl_stmt
@@ -331,85 +431,13 @@ name|DeclarationName
 name|N
 parameter_list|)
 function_decl|;
-comment|/// addOverload - Add an overloaded function FD to this set of
-comment|/// overloaded functions.
+comment|/// \brief Add a new overloaded function or function template to the set
+comment|/// of overloaded function templates.
 name|void
 name|addOverload
 parameter_list|(
-name|FunctionDecl
-modifier|*
-name|FD
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-operator|(
-name|FD
-operator|->
-name|getDeclName
-argument_list|()
-operator|==
-name|getDeclName
-argument_list|()
-operator|||
-name|isa
-operator|<
-name|CXXConversionDecl
-operator|>
-operator|(
-name|FD
-operator|)
-operator|||
-name|isa
-operator|<
-name|CXXConstructorDecl
-operator|>
-operator|(
-name|FD
-operator|)
-operator|)
-operator|&&
-literal|"Overloaded functions must have the same name"
-argument_list|)
-expr_stmt|;
-name|Functions
-operator|.
-name|push_back
-argument_list|(
-name|FD
-argument_list|)
-expr_stmt|;
-comment|// An overloaded function declaration always has the location of
-comment|// the most-recently-added function declaration.
-if|if
-condition|(
-name|FD
-operator|->
-name|getLocation
-argument_list|()
-operator|.
-name|isValid
-argument_list|()
-condition|)
-name|this
-operator|->
-name|setLocation
-argument_list|(
-name|FD
-operator|->
-name|getLocation
-argument_list|()
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// addOverload - Add an overloaded function template FTD to this set of
-comment|/// overloaded functions.
-name|void
-name|addOverload
-parameter_list|(
-name|FunctionTemplateDecl
-modifier|*
-name|FTD
+name|AnyFunctionDecl
+name|F
 parameter_list|)
 function_decl|;
 name|function_iterator
@@ -956,6 +984,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|virtual
+name|void
+name|Destroy
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/// setBases - Sets the base classes of this struct or class.
 end_comment
@@ -964,6 +1004,10 @@ begin_function_decl
 name|void
 name|setBases
 parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
 name|CXXBaseSpecifier
 specifier|const
 modifier|*
@@ -2373,6 +2417,10 @@ decl_stmt|;
 name|unsigned
 name|NumArgs
 decl_stmt|;
+comment|/// IdLoc - Location of the id in ctor-initializer list.
+name|SourceLocation
+name|IdLoc
+decl_stmt|;
 name|public
 label|:
 comment|/// CXXBaseOrMemberInitializer - Creates a new base-class initializer.
@@ -2389,6 +2437,9 @@ name|Args
 parameter_list|,
 name|unsigned
 name|NumArgs
+parameter_list|,
+name|SourceLocation
+name|L
 parameter_list|)
 function_decl|;
 comment|/// CXXBaseOrMemberInitializer - Creates a new member initializer.
@@ -2406,6 +2457,9 @@ name|Args
 parameter_list|,
 name|unsigned
 name|NumArgs
+parameter_list|,
+name|SourceLocation
+name|L
 parameter_list|)
 function_decl|;
 comment|/// ~CXXBaseOrMemberInitializer - Destroy the base or member initializer.
@@ -2430,6 +2484,25 @@ specifier|const
 modifier|*
 name|arg_const_iterator
 typedef|;
+comment|/// getBaseOrMember - get the generic 'member' representing either the field
+comment|/// or a base class.
+name|void
+operator|*
+name|getBaseOrMember
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|void
+operator|*
+operator|>
+operator|(
+name|BaseOrMember
+operator|)
+return|;
+block|}
 comment|/// isBaseInitializer - Returns true when this initializer is
 comment|/// initializing a base class.
 name|bool
@@ -2559,6 +2632,15 @@ return|return
 literal|0
 return|;
 block|}
+name|SourceLocation
+name|getSourceLocation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IdLoc
+return|;
+block|}
 comment|/// begin() - Retrieve an iterator to the first initializer argument.
 name|arg_iterator
 name|begin
@@ -2679,7 +2761,17 @@ name|ImplicitlyDefined
 operator|:
 literal|1
 block|;
-comment|/// FIXME: Add support for base and member initializers.
+comment|/// Support for base and member initializers.
+comment|/// BaseOrMemberInitializers - The arguments used to initialize the base
+comment|/// or member.
+name|CXXBaseOrMemberInitializer
+operator|*
+operator|*
+name|BaseOrMemberInitializers
+block|;
+name|unsigned
+name|NumBaseOrMemberInitializers
+block|;
 name|CXXConstructorDecl
 argument_list|(
 argument|CXXRecordDecl *RD
@@ -2721,7 +2813,17 @@ argument_list|)
 block|,
 name|ImplicitlyDefined
 argument_list|(
-argument|false
+name|false
+argument_list|)
+block|,
+name|BaseOrMemberInitializers
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|NumBaseOrMemberInitializers
+argument_list|(
+literal|0
 argument_list|)
 block|{
 name|setImplicit
@@ -2729,6 +2831,15 @@ argument_list|(
 name|isImplicitlyDeclared
 argument_list|)
 block|;   }
+name|virtual
+name|void
+name|Destroy
+argument_list|(
+name|ASTContext
+operator|&
+name|C
+argument_list|)
+block|;
 name|public
 operator|:
 specifier|static
@@ -2779,7 +2890,8 @@ argument_list|(
 name|isThisDeclarationADefinition
 argument_list|()
 operator|&&
-literal|"Can only get the implicit-definition flag once the constructor has been defined"
+literal|"Can only get the implicit-definition flag once the "
+literal|"constructor has been defined"
 argument_list|)
 block|;
 return|return
@@ -2799,57 +2911,253 @@ argument_list|(
 name|isThisDeclarationADefinition
 argument_list|()
 operator|&&
-literal|"Can only set the implicit-definition flag once the constructor has been defined"
+literal|"Can only set the implicit-definition flag once the constructor "
+literal|"has been defined"
 argument_list|)
 block|;
 name|ImplicitlyDefined
 operator|=
 name|ID
 block|;    }
+comment|/// init_iterator - Iterates through the member/base initializer list.
+typedef|typedef
+name|CXXBaseOrMemberInitializer
+modifier|*
+modifier|*
+name|init_iterator
+typedef|;
+end_decl_stmt
+
+begin_comment
+comment|/// init_const_iterator - Iterates through the memberbase initializer list.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|CXXBaseOrMemberInitializer
+modifier|*
+specifier|const
+modifier|*
+name|init_const_iterator
+typedef|;
+end_typedef
+
+begin_comment
+comment|/// begin() - Retrieve an iterator to the first initializer.
+end_comment
+
+begin_function
+name|init_iterator
+name|begin
+parameter_list|()
+block|{
+return|return
+name|BaseOrMemberInitializers
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// begin() - Retrieve an iterator to the first initializer.
+end_comment
+
+begin_expr_stmt
+name|init_const_iterator
+name|begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BaseOrMemberInitializers
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// end() - Retrieve an iterator past the last initializer.
+end_comment
+
+begin_function
+name|init_iterator
+name|end
+parameter_list|()
+block|{
+return|return
+name|BaseOrMemberInitializers
+operator|+
+name|NumBaseOrMemberInitializers
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// end() - Retrieve an iterator past the last initializer.
+end_comment
+
+begin_expr_stmt
+name|init_const_iterator
+name|end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BaseOrMemberInitializers
+operator|+
+name|NumBaseOrMemberInitializers
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// getNumArgs - Determine the number of arguments used to
+end_comment
+
+begin_comment
+comment|/// initialize the member or base.
+end_comment
+
+begin_expr_stmt
+name|unsigned
+name|getNumBaseOrMemberInitializers
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumBaseOrMemberInitializers
+return|;
+block|}
+end_expr_stmt
+
+begin_function_decl
+name|void
+name|setBaseOrMemberInitializers
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|CXXBaseOrMemberInitializer
+modifier|*
+modifier|*
+name|Initializers
+parameter_list|,
+name|unsigned
+name|NumInitializers
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// isDefaultConstructor - Whether this constructor is a default
+end_comment
+
+begin_comment
 comment|/// constructor (C++ [class.ctor]p5), which can be used to
+end_comment
+
+begin_comment
 comment|/// default-initialize a class of this type.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isDefaultConstructor
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// isCopyConstructor - Whether this constructor is a copy
+end_comment
+
+begin_comment
 comment|/// constructor (C++ [class.copy]p2, which can be used to copy the
+end_comment
+
+begin_comment
 comment|/// class. @p TypeQuals will be set to the qualifiers on the
+end_comment
+
+begin_comment
 comment|/// argument type. For example, @p TypeQuals would be set to @c
+end_comment
+
+begin_comment
 comment|/// QualType::Const for the following copy constructor:
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// @code
+end_comment
+
+begin_comment
 comment|/// class X {
+end_comment
+
+begin_comment
 comment|/// public:
+end_comment
+
+begin_comment
 comment|///   X(const X&);
+end_comment
+
+begin_comment
 comment|/// };
+end_comment
+
+begin_comment
 comment|/// @endcode
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isCopyConstructor
 argument_list|(
-argument|ASTContext&Context
+name|ASTContext
+operator|&
+name|Context
 argument_list|,
-argument|unsigned&TypeQuals
+name|unsigned
+operator|&
+name|TypeQuals
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// isCopyConstructor - Whether this constructor is a copy
+end_comment
+
+begin_comment
 comment|/// constructor (C++ [class.copy]p2, which can be used to copy the
+end_comment
+
+begin_comment
 comment|/// class.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isCopyConstructor
 argument_list|(
-argument|ASTContext&Context
+name|ASTContext
+operator|&
+name|Context
 argument_list|)
-specifier|const
+decl|const
 block|{
 name|unsigned
 name|TypeQuals
-operator|=
+init|=
 literal|0
-block|;
+decl_stmt|;
 return|return
 name|isCopyConstructor
 argument_list|(
@@ -2859,21 +3167,42 @@ name|TypeQuals
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// isConvertingConstructor - Whether this constructor is a
+end_comment
+
+begin_comment
 comment|/// converting constructor (C++ [class.conv.ctor]), which can be
+end_comment
+
+begin_comment
 comment|/// used for user-defined conversions.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isConvertingConstructor
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// Implement isa/cast/dyncast/etc.
+end_comment
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Decl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|D
@@ -2884,31 +3213,66 @@ operator|==
 name|CXXConstructor
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const CXXConstructorDecl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|CXXConstructorDecl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
-expr|}
-block|;
+end_function
+
+begin_comment
+unit|};
 comment|/// CXXDestructorDecl - Represents a C++ destructor within a
+end_comment
+
+begin_comment
 comment|/// class. For example:
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// @code
+end_comment
+
+begin_comment
 comment|/// class X {
+end_comment
+
+begin_comment
 comment|/// public:
+end_comment
+
+begin_comment
 comment|///   ~X(); // represented by a CXXDestructorDecl.
+end_comment
+
+begin_comment
 comment|/// };
+end_comment
+
+begin_comment
 comment|/// @endcode
+end_comment
+
+begin_decl_stmt
 name|class
 name|CXXDestructorDecl
-operator|:
+range|:
 name|public
 name|CXXMethodDecl
 block|{

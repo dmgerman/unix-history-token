@@ -131,6 +131,12 @@ directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -152,6 +158,9 @@ name|PragmaNamespace
 decl_stmt|;
 name|class
 name|PragmaHandler
+decl_stmt|;
+name|class
+name|CommentHandler
 decl_stmt|;
 name|class
 name|ScratchBuffer
@@ -342,6 +351,17 @@ name|PragmaNamespace
 modifier|*
 name|PragmaHandlers
 decl_stmt|;
+comment|/// \brief Tracks all of the comment handlers that the client registered
+comment|/// with this preprocessor.
+name|std
+operator|::
+name|vector
+operator|<
+name|CommentHandler
+operator|*
+operator|>
+name|CommentHandlers
+expr_stmt|;
 comment|/// CurLexer - This is the current top of the stack that we're lexing from if
 comment|/// not expanding a macro and we are lexing directly from source code.
 comment|///  Only one of CurLexer, CurPTHLexer, or CurTokenLexer will be non-null.
@@ -1101,6 +1121,26 @@ modifier|*
 name|Namespace
 parameter_list|,
 name|PragmaHandler
+modifier|*
+name|Handler
+parameter_list|)
+function_decl|;
+comment|/// \brief Add the specified comment handler to the preprocessor.
+name|void
+name|AddCommentHandler
+parameter_list|(
+name|CommentHandler
+modifier|*
+name|Handler
+parameter_list|)
+function_decl|;
+comment|/// \brief Remove the specified comment handler.
+comment|///
+comment|/// It is an error to remove a handler that has not been registered.
+name|void
+name|RemoveCommentHandler
+parameter_list|(
+name|CommentHandler
 modifier|*
 name|Handler
 parameter_list|)
@@ -2700,6 +2740,13 @@ modifier|&
 name|CommentTok
 parameter_list|)
 function_decl|;
+name|void
+name|HandleComment
+parameter_list|(
+name|SourceRange
+name|Comment
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 comment|/// PreprocessorFactory - A generic factory interface for lazily creating
@@ -2719,6 +2766,34 @@ name|Preprocessor
 modifier|*
 name|CreatePreprocessor
 parameter_list|()
+init|=
+literal|0
+function_decl|;
+block|}
+empty_stmt|;
+comment|/// \brief Abstract base class that describes a handler that will receive
+comment|/// source ranges for each of the comments encountered in the source file.
+name|class
+name|CommentHandler
+block|{
+name|public
+label|:
+name|virtual
+operator|~
+name|CommentHandler
+argument_list|()
+expr_stmt|;
+name|virtual
+name|void
+name|HandleComment
+parameter_list|(
+name|Preprocessor
+modifier|&
+name|PP
+parameter_list|,
+name|SourceRange
+name|Comment
+parameter_list|)
 init|=
 literal|0
 function_decl|;

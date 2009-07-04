@@ -3987,6 +3987,266 @@ name|child_end
 argument_list|()
 block|; }
 block|;
+comment|/// \brief An expression that refers to a C++ template-id, such as
+comment|/// @c isa<FunctionDecl>.
+name|class
+name|TemplateIdRefExpr
+operator|:
+name|public
+name|Expr
+block|{
+comment|/// \brief If this template-id was qualified-id, e.g., @c std::sort<int>,
+comment|/// this nested name specifier contains the @c std::.
+name|NestedNameSpecifier
+operator|*
+name|Qualifier
+block|;
+comment|/// \brief If this template-id was a qualified-id, e.g., @c std::sort<int>,
+comment|/// this covers the source code range of the @c std::.
+name|SourceRange
+name|QualifierRange
+block|;
+comment|/// \brief The actual template to which this template-id refers.
+name|TemplateName
+name|Template
+block|;
+comment|/// \brief The source location of the template name.
+name|SourceLocation
+name|TemplateNameLoc
+block|;
+comment|/// \brief The source location of the left angle bracket ('<');
+name|SourceLocation
+name|LAngleLoc
+block|;
+comment|/// \brief The source location of the right angle bracket ('>');
+name|SourceLocation
+name|RAngleLoc
+block|;
+comment|/// \brief The number of template arguments in TemplateArgs.
+name|unsigned
+name|NumTemplateArgs
+block|;
+name|TemplateIdRefExpr
+argument_list|(
+argument|QualType T
+argument_list|,
+argument|NestedNameSpecifier *Qualifier
+argument_list|,
+argument|SourceRange QualifierRange
+argument_list|,
+argument|TemplateName Template
+argument_list|,
+argument|SourceLocation TemplateNameLoc
+argument_list|,
+argument|SourceLocation LAngleLoc
+argument_list|,
+argument|const TemplateArgument *TemplateArgs
+argument_list|,
+argument|unsigned NumTemplateArgs
+argument_list|,
+argument|SourceLocation RAngleLoc
+argument_list|)
+block|;
+name|public
+operator|:
+specifier|static
+name|TemplateIdRefExpr
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|NestedNameSpecifier *Qualifier
+argument_list|,
+argument|SourceRange QualifierRange
+argument_list|,
+argument|TemplateName Template
+argument_list|,
+argument|SourceLocation TemplateNameLoc
+argument_list|,
+argument|SourceLocation LAngleLoc
+argument_list|,
+argument|const TemplateArgument *TemplateArgs
+argument_list|,
+argument|unsigned NumTemplateArgs
+argument_list|,
+argument|SourceLocation RAngleLoc
+argument_list|)
+block|;
+name|void
+name|Destroy
+argument_list|(
+name|ASTContext
+operator|&
+name|Context
+argument_list|)
+block|;
+comment|/// \brief Retrieve the nested name specifier used to qualify the name of
+comment|/// this template-id, e.g., the "std::sort" in @c std::sort<int>, or NULL
+comment|/// if this template-id was an unqualified-id.
+name|NestedNameSpecifier
+operator|*
+name|getQualifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Qualifier
+return|;
+block|}
+comment|/// \brief Retrieve the source range describing the nested name specifier
+comment|/// used to qualified the name of this template-id, if the name was qualified.
+name|SourceRange
+name|getQualifierRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|QualifierRange
+return|;
+block|}
+comment|/// \brief Retrieve the name of the template referenced, e.g., "sort" in
+comment|/// @c std::sort<int>;
+name|TemplateName
+name|getTemplateName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Template
+return|;
+block|}
+comment|/// \brief Retrieve the location of the name of the template referenced, e.g.,
+comment|/// the location of "sort" in @c std::sort<int>.
+name|SourceLocation
+name|getTemplateNameLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TemplateNameLoc
+return|;
+block|}
+comment|/// \brief Retrieve the location of the left angle bracket following the
+comment|/// template name ('<').
+name|SourceLocation
+name|getLAngleLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LAngleLoc
+return|;
+block|}
+comment|/// \brief Retrieve the template arguments provided as part of this
+comment|/// template-id.
+specifier|const
+name|TemplateArgument
+operator|*
+name|getTemplateArgs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|TemplateArgument
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+comment|/// \brief Retrieve the number of template arguments provided as part of this
+comment|/// template-id.
+name|unsigned
+name|getNumTemplateArgs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumTemplateArgs
+return|;
+block|}
+comment|/// \brief Retrieve the location of the right angle bracket following the
+comment|/// template arguments ('>').
+name|SourceLocation
+name|getRAngleLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RAngleLoc
+return|;
+block|}
+name|virtual
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|Qualifier
+operator|?
+name|QualifierRange
+operator|.
+name|getBegin
+argument_list|()
+operator|:
+name|TemplateNameLoc
+argument_list|,
+name|RAngleLoc
+argument_list|)
+return|;
+block|}
+comment|// Iterators
+name|virtual
+name|child_iterator
+name|child_begin
+argument_list|()
+block|;
+name|virtual
+name|child_iterator
+name|child_end
+argument_list|()
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|TemplateIdRefExprClass
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const TemplateIdRefExpr *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
 name|class
 name|CXXExprWithTemporaries
 operator|:

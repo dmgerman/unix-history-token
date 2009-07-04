@@ -1524,6 +1524,11 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|bool
+name|isVoidPointerType
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
 name|isReferenceType
 argument_list|()
 specifier|const
@@ -2359,7 +2364,7 @@ name|char
 operator|*
 name|getName
 argument_list|(
-argument|bool CPlusPlus
+argument|const LangOptions&LO
 argument_list|)
 specifier|const
 block|;

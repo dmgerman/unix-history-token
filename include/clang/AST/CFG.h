@@ -78,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/raw_ostream.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<list>
 end_include
 
@@ -98,6 +92,16 @@ include|#
 directive|include
 file|<cassert>
 end_include
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|class
+name|raw_ostream
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -117,6 +121,9 @@ name|PrinterHelper
 decl_stmt|;
 name|class
 name|BlockEdge
+decl_stmt|;
+name|class
+name|LangOptions
 decl_stmt|;
 comment|/// CFGBlock - Represents a single basic block in a source-level CFG.
 comment|///  It consists of:
@@ -900,6 +907,11 @@ specifier|const
 name|CFG
 operator|*
 name|cfg
+argument_list|,
+specifier|const
+name|LangOptions
+operator|&
+name|LO
 argument_list|)
 decl|const
 decl_stmt|;
@@ -916,6 +928,11 @@ specifier|const
 name|CFG
 operator|*
 name|cfg
+argument_list|,
+specifier|const
+name|LangOptions
+operator|&
+name|LO
 argument_list|)
 decl|const
 decl_stmt|;
@@ -927,6 +944,11 @@ operator|::
 name|raw_ostream
 operator|&
 name|OS
+argument_list|,
+specifier|const
+name|LangOptions
+operator|&
+name|LO
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1394,9 +1416,14 @@ comment|// CFG Debugging: Pretty-Printing and Visualization.
 comment|//===--------------------------------------------------------------------===//
 name|void
 name|viewCFG
-argument_list|()
+argument_list|(
 specifier|const
-expr_stmt|;
+name|LangOptions
+operator|&
+name|LO
+argument_list|)
+decl|const
+decl_stmt|;
 name|void
 name|print
 argument_list|(
@@ -1405,12 +1432,19 @@ operator|::
 name|raw_ostream
 operator|&
 name|OS
+argument_list|,
+specifier|const
+name|LangOptions
+operator|&
+name|LO
 argument_list|)
 decl|const
 decl_stmt|;
 name|void
 name|dump
-argument_list|()
+argument_list|(
+argument|const LangOptions&LO
+argument_list|)
 specifier|const
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//

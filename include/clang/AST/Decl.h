@@ -105,6 +105,9 @@ decl_stmt|;
 name|class
 name|TemplateArgumentList
 decl_stmt|;
+name|class
+name|FunctionTemplateSpecializationInfo
+decl_stmt|;
 comment|/// TranslationUnitDecl - The top declaration context.
 name|class
 name|TranslationUnitDecl
@@ -115,8 +118,17 @@ decl_stmt|,
 name|public
 name|DeclContext
 block|{
+name|ASTContext
+modifier|&
+name|Ctx
+decl_stmt|;
+name|explicit
 name|TranslationUnitDecl
-argument_list|()
+argument_list|(
+name|ASTContext
+operator|&
+name|ctx
+argument_list|)
 operator|:
 name|Decl
 argument_list|(
@@ -130,21 +142,36 @@ argument_list|)
 operator|,
 name|DeclContext
 argument_list|(
-argument|TranslationUnit
+name|TranslationUnit
+argument_list|)
+operator|,
+name|Ctx
+argument_list|(
+argument|ctx
 argument_list|)
 block|{}
 name|public
 operator|:
-specifier|static
-name|TranslationUnitDecl
-operator|*
-name|Create
-argument_list|(
 name|ASTContext
 operator|&
+name|getASTContext
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Ctx
+return|;
+block|}
+specifier|static
+name|TranslationUnitDecl
+modifier|*
+name|Create
+parameter_list|(
+name|ASTContext
+modifier|&
 name|C
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static
 name|bool
@@ -2720,22 +2747,6 @@ block|}
 block|;
 name|private
 operator|:
-comment|/// \brief Provides information about a function template specialization,
-comment|/// which is a FunctionDecl that has been explicitly specialization or
-comment|/// instantiated from a function template.
-expr|struct
-name|TemplateSpecializationInfo
-block|{
-name|FunctionTemplateDecl
-operator|*
-name|Template
-block|;
-specifier|const
-name|TemplateArgumentList
-operator|*
-name|TemplateArguments
-block|;   }
-block|;
 comment|/// ParamInfo - new[]'d array of pointers to VarDecls for the formal
 comment|/// parameters of this function.  This is null if a prototype or if there are
 comment|/// no formals.
@@ -2838,7 +2849,7 @@ block|,
 name|FunctionDecl
 operator|*
 block|,
-name|TemplateSpecializationInfo
+name|FunctionTemplateSpecializationInfo
 operator|*
 operator|>
 name|TemplateOrSpecialization
@@ -3042,8 +3053,6 @@ name|Stmt
 operator|*
 name|getBody
 argument_list|(
-argument|ASTContext&Context
-argument_list|,
 argument|const FunctionDecl *&Definition
 argument_list|)
 specifier|const
@@ -3052,9 +3061,7 @@ name|virtual
 name|Stmt
 operator|*
 name|getBody
-argument_list|(
-argument|ASTContext&Context
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 specifier|const
@@ -3065,8 +3072,6 @@ block|;
 return|return
 name|getBody
 argument_list|(
-name|Context
-argument_list|,
 name|Definition
 argument_list|)
 return|;
@@ -3283,13 +3288,11 @@ block|}
 name|void
 name|setPreviousDeclaration
 argument_list|(
-argument|FunctionDecl * PrevDecl
-argument_list|)
-block|{
-name|PreviousDeclaration
-operator|=
+name|FunctionDecl
+operator|*
 name|PrevDecl
-block|;   }
+argument_list|)
+block|;
 name|unsigned
 name|getBuiltinID
 argument_list|(
@@ -3665,34 +3668,7 @@ operator|*
 name|getPrimaryTemplate
 argument_list|()
 specifier|const
-block|{
-if|if
-condition|(
-name|TemplateSpecializationInfo
-modifier|*
-name|Info
-init|=
-name|TemplateOrSpecialization
-operator|.
-name|dyn_cast
-operator|<
-name|TemplateSpecializationInfo
-operator|*
-operator|>
-operator|(
-operator|)
-condition|)
-block|{
-return|return
-name|Info
-operator|->
-name|Template
-return|;
-block|}
-return|return
-literal|0
-return|;
-block|}
+block|;
 comment|/// \brief Retrieve the template arguments used to produce this function
 comment|/// template specialization from the primary template.
 comment|///
@@ -3704,34 +3680,7 @@ operator|*
 name|getTemplateSpecializationArgs
 argument_list|()
 specifier|const
-block|{
-if|if
-condition|(
-name|TemplateSpecializationInfo
-modifier|*
-name|Info
-init|=
-name|TemplateOrSpecialization
-operator|.
-name|dyn_cast
-operator|<
-name|TemplateSpecializationInfo
-operator|*
-operator|>
-operator|(
-operator|)
-condition|)
-block|{
-return|return
-name|Info
-operator|->
-name|TemplateArguments
-return|;
-block|}
-return|return
-literal|0
-return|;
-block|}
+block|;
 comment|/// \brief Specify that this function declaration is actually a function
 comment|/// template specialization.
 comment|///
@@ -3757,6 +3706,25 @@ specifier|const
 name|TemplateArgumentList
 operator|*
 name|TemplateArgs
+argument_list|,
+name|void
+operator|*
+name|InsertPos
+argument_list|)
+block|;
+comment|/// \brief Determine whether this is an explicit specialization of a
+comment|/// function template or a member function of a class template.
+name|bool
+name|isExplicitSpecialization
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief Note that this is an explicit specialization of a function template
+comment|/// or a member function of a class template.
+name|void
+name|setExplicitSpecialization
+argument_list|(
+argument|bool ES
 argument_list|)
 block|;
 comment|// Implement isa/cast/dyncast/etc.
@@ -4986,9 +4954,7 @@ name|enumerator_iterator
 expr_stmt|;
 name|enumerator_iterator
 name|enumerator_begin
-argument_list|(
-argument|ASTContext&Context
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -4997,17 +4963,13 @@ argument_list|(
 name|this
 operator|->
 name|decls_begin
-argument_list|(
-name|Context
-argument_list|)
+argument_list|()
 argument_list|)
 return|;
 block|}
 name|enumerator_iterator
 name|enumerator_end
-argument_list|(
-argument|ASTContext&Context
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -5016,9 +4978,7 @@ argument_list|(
 name|this
 operator|->
 name|decls_end
-argument_list|(
-name|Context
-argument_list|)
+argument_list|()
 argument_list|)
 return|;
 block|}
@@ -5283,35 +5243,27 @@ name|field_iterator
 expr_stmt|;
 name|field_iterator
 name|field_begin
-argument_list|(
-argument|ASTContext&Context
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
 name|field_iterator
 argument_list|(
 name|decls_begin
-argument_list|(
-name|Context
-argument_list|)
+argument_list|()
 argument_list|)
 return|;
 block|}
 name|field_iterator
 name|field_end
-argument_list|(
-argument|ASTContext&Context
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
 name|field_iterator
 argument_list|(
 name|decls_end
-argument_list|(
-name|Context
-argument_list|)
+argument_list|()
 argument_list|)
 return|;
 block|}
@@ -5319,21 +5271,15 @@ comment|// field_empty - Whether there are any fields (non-static data
 comment|// members) in this record.
 name|bool
 name|field_empty
-argument_list|(
-argument|ASTContext&Context
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
 name|field_begin
-argument_list|(
-name|Context
-argument_list|)
+argument_list|()
 operator|==
 name|field_end
-argument_list|(
-name|Context
-argument_list|)
+argument_list|()
 return|;
 block|}
 comment|/// completeDefinition - Notes that the definition of this type is
@@ -5626,7 +5572,7 @@ name|value
 block|; }
 name|CompoundStmt
 operator|*
-name|getBody
+name|getCompoundBody
 argument_list|()
 specifier|const
 block|{
@@ -5641,9 +5587,7 @@ block|}
 name|Stmt
 operator|*
 name|getBody
-argument_list|(
-argument|ASTContext&C
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return

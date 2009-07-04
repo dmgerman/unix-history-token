@@ -104,6 +104,9 @@ decl_stmt|;
 name|class
 name|Type
 decl_stmt|;
+name|class
+name|LangOptions
+decl_stmt|;
 comment|/// \brief Represents a C++ nested name specifier, such as
 comment|/// "::std::vector<int>::".
 comment|///
@@ -587,7 +590,12 @@ end_comment
 begin_function_decl
 name|void
 name|dump
-parameter_list|()
+parameter_list|(
+specifier|const
+name|LangOptions
+modifier|&
+name|LO
+parameter_list|)
 function_decl|;
 end_function_decl
 

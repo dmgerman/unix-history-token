@@ -293,6 +293,8 @@ decl_stmt|,
 name|IntPtrType
 decl_stmt|,
 name|WCharType
+decl_stmt|,
+name|Int64Type
 decl_stmt|;
 name|public
 label|:
@@ -360,6 +362,15 @@ specifier|const
 block|{
 return|return
 name|WCharType
+return|;
+block|}
+name|IntType
+name|getInt64Type
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Int64Type
 return|;
 block|}
 comment|/// getPointerWidth - Return the width of pointers on this target, for the

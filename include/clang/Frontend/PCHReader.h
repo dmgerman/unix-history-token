@@ -740,6 +740,15 @@ literal|16
 operator|>
 name|SelectorsLoaded
 expr_stmt|;
+comment|/// \brief A sorted array of source ranges containing comments.
+name|SourceRange
+modifier|*
+name|Comments
+decl_stmt|;
+comment|/// \brief The number of source ranges in the Comments array.
+name|unsigned
+name|NumComments
+decl_stmt|;
 comment|/// \brief The set of external definitions stored in the the PCH
 comment|/// file.
 name|llvm
@@ -1221,6 +1230,26 @@ return|return
 name|SuggestedPredefines
 return|;
 block|}
+comment|/// \brief Reads the source ranges that correspond to comments from
+comment|/// an external AST source.
+comment|///
+comment|/// \param Comments the contents of this vector will be
+comment|/// replaced with the sorted set of source ranges corresponding to
+comment|/// comments in the source code.
+name|virtual
+name|void
+name|ReadComments
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|SourceRange
+operator|>
+operator|&
+name|Comments
+argument_list|)
+decl_stmt|;
 comment|/// \brief Resolve a type ID into a type, potentially building a new
 comment|/// type.
 name|virtual

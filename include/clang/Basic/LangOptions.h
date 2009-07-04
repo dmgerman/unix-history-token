@@ -83,6 +83,12 @@ literal|1
 decl_stmt|;
 comment|// BCPL-style '//' comments.
 name|unsigned
+name|Bool
+range|:
+literal|1
+decl_stmt|;
+comment|// 'bool', 'true', 'false' keywords.
+name|unsigned
 name|DollarIdents
 range|:
 literal|1
@@ -333,15 +339,25 @@ name|GC
 range|:
 literal|2
 decl_stmt|;
-comment|// Objective-C Garbage Collection modes.  We declare
-comment|// this enum as unsigned because MSVC insists on making enums
-comment|// signed.  Set/Query this value using accessors.
+comment|// Objective-C Garbage Collection modes.  We
+comment|// declare this enum as unsigned because MSVC
+comment|// insists on making enums signed.  Set/Query
+comment|// this value using accessors.
 name|unsigned
 name|SymbolVisibility
 range|:
 literal|3
 decl_stmt|;
 comment|// Symbol's visibility.
+name|unsigned
+name|StackProtector
+range|:
+literal|2
+decl_stmt|;
+comment|// Whether stack protectors are on. We declare
+comment|// this enum as unsigned because MSVC insists
+comment|// on making enums signed.  Set/Query this
+comment|// value using accessors.
 comment|/// The user provided name for the "main file", if non-null. This is
 comment|/// useful in situations where the input file name does not match
 comment|/// the original input file, for example with -save-temps.
@@ -367,6 +383,16 @@ name|HybridGC
 block|}
 enum|;
 enum|enum
+name|StackProtectorMode
+block|{
+name|SSPOff
+block|,
+name|SSPOn
+block|,
+name|SSPReq
+block|}
+enum|;
+enum|enum
 name|VisibilityMode
 block|{
 name|Default
@@ -382,6 +408,8 @@ block|{
 name|Trigraphs
 operator|=
 name|BCPLComment
+operator|=
+name|Bool
 operator|=
 name|DollarIdents
 operator|=
@@ -450,6 +478,8 @@ expr_stmt|;
 name|AltiVec
 operator|=
 name|OpenCL
+operator|=
+name|StackProtector
 operator|=
 literal|0
 expr_stmt|;
@@ -556,6 +586,39 @@ operator|(
 name|unsigned
 operator|)
 name|m
+expr_stmt|;
+block|}
+name|StackProtectorMode
+name|getStackProtectorMode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|StackProtectorMode
+operator|>
+operator|(
+name|StackProtector
+operator|)
+return|;
+block|}
+name|void
+name|setStackProtectorMode
+parameter_list|(
+name|StackProtectorMode
+name|m
+parameter_list|)
+block|{
+name|StackProtector
+operator|=
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
+name|m
+operator|)
 expr_stmt|;
 block|}
 specifier|const

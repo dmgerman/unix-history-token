@@ -484,6 +484,14 @@ name|PP
 parameter_list|)
 function_decl|;
 name|void
+name|WriteComments
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|)
+function_decl|;
+name|void
 name|WriteType
 parameter_list|(
 specifier|const

@@ -458,6 +458,22 @@ name|C
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// ExecuteCompilation - Execute the compilation according to the command line
+comment|/// arguments and return an appropriate exit code.
+comment|///
+comment|/// This routine handles additional processing that must be done in addition
+comment|/// to just running the subprocesses, for example reporting errors, removing
+comment|/// temporary files, etc.
+name|int
+name|ExecuteCompilation
+argument_list|(
+specifier|const
+name|Compilation
+operator|&
+name|C
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// @}
 comment|/// @name Helper Methods
 comment|/// @{

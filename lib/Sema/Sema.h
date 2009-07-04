@@ -150,6 +150,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<deque>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<list>
 end_include
 
@@ -157,12 +163,6 @@ begin_include
 include|#
 directive|include
 file|<string>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<queue>
 end_include
 
 begin_include
@@ -325,6 +325,9 @@ name|ObjCPropertyDecl
 decl_stmt|;
 name|class
 name|ObjCContainerDecl
+decl_stmt|;
+name|class
+name|FunctionProtoType
 decl_stmt|;
 name|class
 name|BasePaths
@@ -1111,6 +1114,14 @@ operator|:
 name|FunctionSwitchStack
 return|;
 block|}
+name|virtual
+name|void
+name|ActOnComment
+parameter_list|(
+name|SourceRange
+name|Comment
+parameter_list|)
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Type Analysis / Processing: SemaType.cpp.
 comment|//
@@ -1335,6 +1346,26 @@ name|QualType
 name|T
 parameter_list|)
 function_decl|;
+name|bool
+name|CheckEquivalentExceptionSpec
+parameter_list|(
+specifier|const
+name|FunctionProtoType
+modifier|*
+name|Old
+parameter_list|,
+name|SourceLocation
+name|OldLoc
+parameter_list|,
+specifier|const
+name|FunctionProtoType
+modifier|*
+name|New
+parameter_list|,
+name|SourceLocation
+name|NewLoc
+parameter_list|)
+function_decl|;
 name|QualType
 name|ObjCGetTypeForMethodDefinition
 parameter_list|(
@@ -1408,6 +1439,22 @@ name|SS
 parameter_list|,
 name|QualType
 name|T
+parameter_list|)
+function_decl|;
+name|QualType
+name|BuildTypeofExprType
+parameter_list|(
+name|Expr
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
+name|QualType
+name|BuildDecltypeType
+parameter_list|(
+name|Expr
+modifier|*
+name|E
 parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
@@ -1926,7 +1973,6 @@ operator|<
 name|UnusedAttr
 operator|>
 operator|(
-name|Context
 operator|)
 condition|)
 name|Diag
@@ -2969,8 +3015,7 @@ name|llvm
 operator|::
 name|SmallPtrSet
 operator|<
-name|FunctionDecl
-operator|*
+name|AnyFunctionDecl
 operator|,
 literal|16
 operator|>
@@ -3096,6 +3141,17 @@ parameter_list|(
 name|FunctionTemplateDecl
 modifier|*
 name|FunctionTemplate
+parameter_list|,
+name|bool
+name|HasExplicitTemplateArgs
+parameter_list|,
+specifier|const
+name|TemplateArgument
+modifier|*
+name|ExplicitTemplateArgs
+parameter_list|,
+name|unsigned
+name|NumExplicitTemplateArgs
 parameter_list|,
 name|Expr
 modifier|*
@@ -3382,6 +3438,17 @@ name|Callee
 parameter_list|,
 name|DeclarationName
 name|UnqualifiedName
+parameter_list|,
+name|bool
+name|HasExplicitTemplateArgs
+parameter_list|,
+specifier|const
+name|TemplateArgument
+modifier|*
+name|ExplicitTemplateArgs
+parameter_list|,
+name|unsigned
+name|NumExplicitTemplateArgs
 parameter_list|,
 name|SourceLocation
 name|LParenLoc
@@ -6133,6 +6200,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|OwningExprResult
+name|BuildDeclarationNameExpr
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|NamedDecl
+modifier|*
+name|D
+parameter_list|,
+name|bool
+name|HasTrailingLParen
+parameter_list|,
+specifier|const
+name|CXXScopeSpec
+modifier|*
+name|SS
+parameter_list|,
+name|bool
+name|isAddressOfOperand
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|virtual
 name|OwningExprResult
@@ -7182,7 +7274,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// MarcDestructorReferenced - Prepare for calling destructor on the
+comment|/// MarkDestructorReferenced - Prepare for calling destructor on the
 end_comment
 
 begin_comment
@@ -7191,7 +7283,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|MarcDestructorReferenced
+name|MarkDestructorReferenced
 parameter_list|(
 name|SourceLocation
 name|Loc
@@ -8562,9 +8654,18 @@ name|Scope
 modifier|*
 name|S
 parameter_list|,
+specifier|const
+name|CXXScopeSpec
+modifier|&
+name|SS
+parameter_list|,
 name|IdentifierInfo
 modifier|*
 name|MemberOrBase
+parameter_list|,
+name|TypeTy
+modifier|*
+name|TemplateTypeTy
 parameter_list|,
 name|SourceLocation
 name|IdLoc
@@ -9561,6 +9662,60 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|OwningExprResult
+name|BuildTemplateIdExpr
+parameter_list|(
+name|TemplateName
+name|Template
+parameter_list|,
+name|SourceLocation
+name|TemplateNameLoc
+parameter_list|,
+name|SourceLocation
+name|LAngleLoc
+parameter_list|,
+specifier|const
+name|TemplateArgument
+modifier|*
+name|TemplateArgs
+parameter_list|,
+name|unsigned
+name|NumTemplateArgs
+parameter_list|,
+name|SourceLocation
+name|RAngleLoc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|OwningExprResult
+name|ActOnTemplateIdExpr
+parameter_list|(
+name|TemplateTy
+name|Template
+parameter_list|,
+name|SourceLocation
+name|TemplateNameLoc
+parameter_list|,
+name|SourceLocation
+name|LAngleLoc
+parameter_list|,
+name|ASTTemplateArgsPtr
+name|TemplateArgs
+parameter_list|,
+name|SourceLocation
+modifier|*
+name|TemplateArgLocs
+parameter_list|,
+name|SourceLocation
+name|RAngleLoc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|virtual
 name|TemplateTy
 name|ActOnDependentTemplateName
@@ -9831,6 +9986,9 @@ name|NumTemplateArgs
 parameter_list|,
 name|SourceLocation
 name|RAngleLoc
+parameter_list|,
+name|bool
+name|PartialTemplateArgs
 parameter_list|,
 name|TemplateArgumentListBuilder
 modifier|&
@@ -10196,6 +10354,10 @@ block|,
 comment|/// \brief When performing template argument deduction for a class
 comment|/// template, there were too few call arguments.
 name|TDK_TooFewArguments
+block|,
+comment|/// \brief The explicitly-specified template arguments were not valid
+comment|/// template arguments for the given template.
+name|TDK_InvalidExplicitArguments
 block|}
 enum|;
 end_enum
@@ -10379,6 +10541,17 @@ name|FunctionTemplateDecl
 modifier|*
 name|FunctionTemplate
 parameter_list|,
+name|bool
+name|HasExplicitTemplateArgs
+parameter_list|,
+specifier|const
+name|TemplateArgument
+modifier|*
+name|ExplicitTemplateArgs
+parameter_list|,
+name|unsigned
+name|NumExplicitTemplateArgs
+parameter_list|,
 name|Expr
 modifier|*
 modifier|*
@@ -10455,6 +10628,7 @@ name|ActiveTemplateInstantiation
 block|{
 comment|/// \brief The kind of template instantiation we are performing
 enum|enum
+name|InstantiationKind
 block|{
 comment|/// We are instantiating a template declaration. The entity is
 comment|/// the declaration we're instantiating (e.g., a CXXRecordDecl).
@@ -10467,13 +10641,16 @@ comment|/// arguments as specified.
 comment|/// FIXME: Use a TemplateArgumentList
 name|DefaultTemplateArgumentInstantiation
 block|,
-comment|/// We are performing template argument deduction for a class
-comment|/// template partial specialization. The Entity is the class
-comment|/// template partial specialization, and
-comment|/// TemplateArgs/NumTemplateArgs provides the deduced template
-comment|/// arguments.
-comment|/// FIXME: Use a TemplateArgumentList
-name|PartialSpecDeductionInstantiation
+comment|/// We are substituting explicit template arguments provided for
+comment|/// a function template. The entity is a FunctionTemplateDecl.
+name|ExplicitTemplateArgumentSubstitution
+block|,
+comment|/// We are substituting template argument determined as part of
+comment|/// template argument deduction for either a class template
+comment|/// partial specialization or a function template. The
+comment|/// Entity is either a ClassTemplatePartialSpecializationDecl or
+comment|/// a FunctionTemplateDecl.
+name|DeducedTemplateArgumentSubstitution
 block|}
 name|Kind
 enum|;
@@ -10561,7 +10738,10 @@ case|case
 name|DefaultTemplateArgumentInstantiation
 case|:
 case|case
-name|PartialSpecDeductionInstantiation
+name|ExplicitTemplateArgumentSubstitution
+case|:
+case|case
+name|DeducedTemplateArgumentSubstitution
 case|:
 return|return
 name|X
@@ -10750,6 +10930,25 @@ argument_list|,
 argument|const TemplateArgument *TemplateArgs
 argument_list|,
 argument|unsigned NumTemplateArgs
+argument_list|,
+argument|SourceRange InstantiationRange = SourceRange()
+argument_list|)
+empty_stmt|;
+comment|/// \brief Note that we are instantiating a default argument in a
+comment|/// template-id.
+name|InstantiatingTemplate
+argument_list|(
+argument|Sema&SemaRef
+argument_list|,
+argument|SourceLocation PointOfInstantiation
+argument_list|,
+argument|FunctionTemplateDecl *FunctionTemplate
+argument_list|,
+argument|const TemplateArgument *TemplateArgs
+argument_list|,
+argument|unsigned NumTemplateArgs
+argument_list|,
+argument|ActiveTemplateInstantiation::InstantiationKind Kind
 argument_list|,
 argument|SourceRange InstantiationRange = SourceRange()
 argument_list|)
@@ -11271,7 +11470,7 @@ end_comment
 begin_expr_stmt
 name|std
 operator|::
-name|queue
+name|deque
 operator|<
 name|PendingImplicitInstantiation
 operator|>
@@ -11535,6 +11734,11 @@ parameter_list|,
 name|FunctionDecl
 modifier|*
 name|Function
+parameter_list|,
+name|bool
+name|Recursive
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl

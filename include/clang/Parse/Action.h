@@ -667,6 +667,25 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Invoked for each comment in the source code, providing the source
+end_comment
+
+begin_comment
+comment|/// range that contains the comment.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|ActOnComment
+parameter_list|(
+name|SourceRange
+name|Comment
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
 end_comment
 
@@ -5137,9 +5156,18 @@ name|Scope
 modifier|*
 name|S
 parameter_list|,
+specifier|const
+name|CXXScopeSpec
+modifier|&
+name|SS
+parameter_list|,
 name|IdentifierInfo
 modifier|*
 name|MemberOrBase
+parameter_list|,
+name|TypeTy
+modifier|*
+name|TemplateTypeTy
 parameter_list|,
 name|SourceLocation
 name|IdLoc
@@ -5834,6 +5862,74 @@ end_function
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|/// \brief Form a reference to a template-id (that will refer to a function)
+end_comment
+
+begin_comment
+comment|/// from a template and a list of template arguments.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This action forms an expression that references the given template-id,
+end_comment
+
+begin_comment
+comment|/// possibly checking well-formedness of the template arguments. It does not
+end_comment
+
+begin_comment
+comment|/// imply the declaration of any entity.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Template  A template whose specialization results in a
+end_comment
+
+begin_comment
+comment|/// function or a dependent template.
+end_comment
+
+begin_function
+name|virtual
+name|OwningExprResult
+name|ActOnTemplateIdExpr
+parameter_list|(
+name|TemplateTy
+name|Template
+parameter_list|,
+name|SourceLocation
+name|TemplateNameLoc
+parameter_list|,
+name|SourceLocation
+name|LAngleLoc
+parameter_list|,
+name|ASTTemplateArgsPtr
+name|TemplateArgs
+parameter_list|,
+name|SourceLocation
+modifier|*
+name|TemplateArgLocs
+parameter_list|,
+name|SourceLocation
+name|RAngleLoc
+parameter_list|)
+block|{
+return|return
+name|ExprError
+argument_list|()
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/// \brief Form a dependent template name.

@@ -458,6 +458,13 @@ name|getAsSymbolicExpression
 argument_list|()
 specifier|const
 expr_stmt|;
+specifier|const
+name|MemRegion
+operator|*
+name|getAsRegion
+argument_list|()
+specifier|const
+expr_stmt|;
 name|void
 name|print
 argument_list|(

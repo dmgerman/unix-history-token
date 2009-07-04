@@ -12,11 +12,11 @@ comment|// RegionStore now has an infinite recursion with this test case.
 end_comment
 
 begin_comment
-comment|// NOWORK: clang-cc -analyze -checker-cfref -analyzer-store=region -analyzer-constraints=basic -verify %s&&
+comment|// RUN: clang-cc -analyze -checker-cfref -analyzer-store=region -analyzer-constraints=basic -verify %s&&
 end_comment
 
 begin_comment
-comment|// NOWORK: clang-cc -analyze -checker-cfref -analyzer-store=region -analyzer-constraints=range -verify %s
+comment|// RUN: clang-cc -analyze -checker-cfref -analyzer-store=region -analyzer-constraints=range -verify %s
 end_comment
 
 begin_struct
@@ -728,6 +728,109 @@ index|]
 operator|)
 operator|)
 decl_stmt|;
+block|}
+end_function
+
+begin_function_decl
+name|void
+name|inv
+parameter_list|(
+name|struct
+name|s1
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// Invalidate the struct field.
+end_comment
+
+begin_function
+name|void
+name|f17
+parameter_list|()
+block|{
+name|struct
+name|s1
+name|t
+decl_stmt|;
+name|int
+name|x
+decl_stmt|;
+name|inv
+argument_list|(
+operator|&
+name|t
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|t
+operator|.
+name|e
+operator|.
+name|d
+condition|)
+name|x
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_function_decl
+name|void
+name|read
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|f18
+parameter_list|()
+block|{
+name|char
+modifier|*
+name|q
+decl_stmt|;
+name|char
+modifier|*
+name|p
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+name|__builtin_alloca
+argument_list|(
+literal|10
+argument_list|)
+decl_stmt|;
+name|read
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|q
+operator|=
+name|p
+expr_stmt|;
+name|q
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|q
+condition|)
+block|{
+comment|// no-warning
+block|}
 block|}
 end_function
 

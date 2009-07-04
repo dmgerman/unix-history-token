@@ -105,11 +105,13 @@ name|class
 name|Compilation
 block|{
 comment|/// The driver we were created by.
+specifier|const
 name|Driver
 modifier|&
 name|TheDriver
 decl_stmt|;
 comment|/// The default tool chain.
+specifier|const
 name|ToolChain
 modifier|&
 name|DefaultToolChain
@@ -153,10 +155,12 @@ name|public
 label|:
 name|Compilation
 argument_list|(
+specifier|const
 name|Driver
 operator|&
 name|D
 argument_list|,
+specifier|const
 name|ToolChain
 operator|&
 name|DefaultToolChain
@@ -233,6 +237,39 @@ return|return
 name|Jobs
 return|;
 block|}
+specifier|const
+name|JobList
+operator|&
+name|getJobs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Jobs
+return|;
+block|}
+specifier|const
+name|ArgStringList
+operator|&
+name|getTempFiles
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TempFiles
+return|;
+block|}
+specifier|const
+name|ArgStringList
+operator|&
+name|getResultFiles
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ResultFiles
+return|;
+block|}
 comment|/// getArgsForToolChain - Return the derived argument list for the
 comment|/// tool chain \arg TC (or the default tool chain, if TC is not
 comment|/// specified).
@@ -297,15 +334,6 @@ return|return
 name|Name
 return|;
 block|}
-comment|/// Execute - Execute the compilation jobs and return an
-comment|/// appropriate exit code.
-name|int
-name|Execute
-argument_list|()
-specifier|const
-expr_stmt|;
-name|private
-label|:
 comment|/// CleanupFileList - Remove the files in the given list.
 comment|///
 comment|/// \param IssueErrors - Report failures as errors.
@@ -327,10 +355,10 @@ decl|const
 decl_stmt|;
 comment|/// PrintJob - Print one job in -### format.
 comment|///
-comment|/// OS - The stream to print on.
-comment|/// J - The job to print.
-comment|/// Terminator - A string to print at the end of the line.
-comment|/// Quote - Should separate arguments be quoted.
+comment|/// \param OS - The stream to print on.
+comment|/// \param J - The job to print.
+comment|/// \param Terminator - A string to print at the end of the line.
+comment|/// \param Quote - Should separate arguments be quoted.
 name|void
 name|PrintJob
 argument_list|(
@@ -357,6 +385,8 @@ decl|const
 decl_stmt|;
 comment|/// ExecuteCommand - Execute an actual command.
 comment|///
+comment|/// \param FailingCommand - For non-zero results, this will be set to the
+comment|/// Command which failed, if any.
 comment|/// \return The result code of the subprocess.
 name|int
 name|ExecuteCommand
@@ -365,11 +395,19 @@ specifier|const
 name|Command
 operator|&
 name|C
+argument_list|,
+specifier|const
+name|Command
+operator|*
+operator|&
+name|FailingCommand
 argument_list|)
 decl|const
 decl_stmt|;
 comment|/// ExecuteJob - Execute a single job.
 comment|///
+comment|/// \param FailingCommand - For non-zero results, this will be set to the
+comment|/// Command which failed.
 comment|/// \return The accumulated result code of the job.
 name|int
 name|ExecuteJob
@@ -378,6 +416,12 @@ specifier|const
 name|Job
 operator|&
 name|J
+argument_list|,
+specifier|const
+name|Command
+operator|*
+operator|&
+name|FailingCommand
 argument_list|)
 decl|const
 decl_stmt|;

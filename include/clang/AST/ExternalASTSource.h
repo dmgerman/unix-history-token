@@ -87,6 +87,12 @@ directive|include
 file|<cassert>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -165,6 +171,28 @@ operator|~
 name|ExternalASTSource
 argument_list|()
 expr_stmt|;
+comment|/// \brief Reads the source ranges that correspond to comments from
+comment|/// an external AST source.
+comment|///
+comment|/// \param Comments the contents of this vector will be
+comment|/// replaced with the sorted set of source ranges corresponding to
+comment|/// comments in the source code.
+name|virtual
+name|void
+name|ReadComments
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|SourceRange
+operator|>
+operator|&
+name|Comments
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
 comment|/// \brief Resolve a type ID into a type, potentially building a new
 comment|/// type.
 name|virtual

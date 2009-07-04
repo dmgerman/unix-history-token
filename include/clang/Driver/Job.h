@@ -192,6 +192,12 @@ range|:
 name|public
 name|Job
 block|{
+comment|/// Source - The action which caused the creation of this job.
+specifier|const
+name|Action
+operator|&
+name|Source
+block|;
 comment|/// The executable to run.
 specifier|const
 name|char
@@ -208,6 +214,11 @@ operator|:
 name|Command
 argument_list|(
 specifier|const
+name|Action
+operator|&
+name|_Source
+argument_list|,
+specifier|const
 name|char
 operator|*
 name|_Executable
@@ -218,6 +229,18 @@ operator|&
 name|_Arguments
 argument_list|)
 block|;
+comment|/// getSource - Return the Action which caused the creation of this job.
+specifier|const
+name|Action
+operator|&
+name|getSource
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Source
+return|;
+block|}
 specifier|const
 name|char
 operator|*

@@ -2194,17 +2194,61 @@ operator|<
 name|Destroyer
 operator|>
 block|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+comment|//  Last tested with Visual Studio 2008.
+comment|//  Visual C++ appears to have a bug where it does not recognise
+comment|//  the return value from ASTMultiMover<Destroyer>::opeator-> as
+comment|//  being a pointer to ASTMultiPtr.  However, the diagnostics
+comment|//  suggest it has the right name, simply that the pointer type
+comment|//  is not convertible to itself.
+comment|//  Either way, a classic C-style hard cast resolves any issue.
+specifier|static
+name|ASTMultiPtr
+operator|*
+name|hack
+argument_list|(
+argument|moving::ASTMultiMover<Destroyer>& source
+argument_list|)
+block|{
+return|return
+operator|(
+name|ASTMultiPtr
+operator|*
+operator|)
+name|source
+operator|.
+name|operator
+operator|->
+expr|(
+block|)
+block|; 	}
+endif|#
+directive|endif
 name|ASTMultiPtr
 argument_list|(
 name|ASTMultiPtr
 operator|&
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// DO NOT IMPLEMENT
+end_comment
+
+begin_comment
 comment|// Reference member prevents copy assignment.
+end_comment
+
+begin_function
 name|void
 name|destroy
-argument_list|()
+parameter_list|()
 block|{
 name|assert
 argument_list|(
@@ -2218,7 +2262,7 @@ operator|)
 operator|&&
 literal|"No nodes when count is not zero."
 argument_list|)
-block|;
+expr_stmt|;
 for|for
 control|(
 name|unsigned
@@ -2255,10 +2299,19 @@ operator|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_label
 name|public
-operator|:
+label|:
+end_label
+
+begin_if
 if|#
 directive|if
 operator|!
@@ -2266,7 +2319,13 @@ name|defined
 argument_list|(
 name|DISABLE_SMART_POINTERS
 argument_list|)
+end_if
+
+begin_macro
 name|explicit
+end_macro
+
+begin_expr_stmt
 name|ASTMultiPtr
 argument_list|(
 name|ActionBase
@@ -2324,6 +2383,42 @@ name|Destroyer
 operator|>
 name|mover
 argument_list|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+comment|//  Apply the visual C++ hack supplied above.
+comment|//  Last tested with Visual Studio 2008.
+operator|:
+name|Actions
+argument_list|(
+name|hack
+argument_list|(
+name|mover
+argument_list|)
+operator|->
+name|Actions
+argument_list|)
+operator|,
+name|Nodes
+argument_list|(
+name|hack
+argument_list|(
+name|mover
+argument_list|)
+operator|->
+name|Nodes
+argument_list|)
+operator|,
+name|Count
+argument_list|(
+argument|hack(mover)->Count
+argument_list|)
+block|{
+else|#
+directive|else
 operator|:
 name|Actions
 argument_list|(
@@ -2331,19 +2426,21 @@ name|mover
 operator|->
 name|Actions
 argument_list|)
-operator|,
+block|,
 name|Nodes
 argument_list|(
 name|mover
 operator|->
 name|Nodes
 argument_list|)
-operator|,
+block|,
 name|Count
 argument_list|(
 argument|mover->Count
 argument_list|)
 block|{
+endif|#
+directive|endif
 name|mover
 operator|.
 name|release
@@ -2363,7 +2460,7 @@ name|Nodes
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
 name|Count
 argument_list|(
 literal|0
@@ -2382,7 +2479,7 @@ name|Nodes
 argument_list|(
 name|nodes
 argument_list|)
-operator|,
+block|,
 name|Count
 argument_list|(
 argument|count
@@ -2400,7 +2497,7 @@ name|Nodes
 argument_list|(
 name|nodes
 argument_list|)
-operator|,
+block|,
 name|Count
 argument_list|(
 argument|count
@@ -2455,18 +2552,9 @@ operator|*
 name|this
 return|;
 block|}
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/// Access to the raw pointers.
-end_comment
-
-begin_expr_stmt
 name|void
 operator|*
 operator|*

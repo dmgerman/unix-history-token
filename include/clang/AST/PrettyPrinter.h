@@ -80,6 +80,9 @@ name|class
 name|TagDecl
 decl_stmt|;
 name|class
+name|LangOptions
+decl_stmt|;
+name|class
 name|PrinterHelper
 block|{
 name|public
@@ -115,16 +118,21 @@ name|PrintingPolicy
 block|{
 comment|/// \brief Create a default printing policy for C.
 name|PrintingPolicy
-argument_list|()
+argument_list|(
+specifier|const
+name|LangOptions
+operator|&
+name|LO
+argument_list|)
 operator|:
 name|Indentation
 argument_list|(
 literal|2
 argument_list|)
 operator|,
-name|CPlusPlus
+name|LangOpts
 argument_list|(
-name|false
+name|LO
 argument_list|)
 operator|,
 name|SuppressSpecifiers
@@ -153,12 +161,11 @@ name|Indentation
 operator|:
 literal|8
 expr_stmt|;
-comment|/// \brief Whether we're printing C++ code (otherwise, we're
-comment|/// printing C code).
-name|bool
-name|CPlusPlus
-range|:
-literal|1
+comment|/// \brief What language we're printing.
+specifier|const
+name|LangOptions
+modifier|&
+name|LangOpts
 decl_stmt|;
 comment|/// \brief Whether we should suppress printing of the actual specifiers for
 comment|/// the given type or declaration.

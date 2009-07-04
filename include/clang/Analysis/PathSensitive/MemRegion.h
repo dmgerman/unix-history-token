@@ -233,7 +233,6 @@ specifier|const
 block|;
 name|public
 operator|:
-comment|// virtual MemExtent getExtent(MemRegionManager& mrm) const = 0;
 name|virtual
 name|void
 name|Profile
@@ -273,6 +272,21 @@ argument_list|()
 specifier|const
 block|;
 name|bool
+name|hasParametersStorage
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|hasGlobalsStorage
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|hasGlobalsOrParametersStorage
+argument_list|()
+specifier|const
+block|;
+name|bool
 name|hasHeapStorage
 argument_list|()
 specifier|const
@@ -288,6 +302,11 @@ name|print
 argument_list|(
 argument|llvm::raw_ostream& os
 argument_list|)
+specifier|const
+block|;
+name|void
+name|printStdErr
+argument_list|()
 specifier|const
 block|;
 name|Kind
@@ -318,7 +337,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|true
+name|false
 return|;
 block|}
 specifier|static
@@ -381,7 +400,6 @@ return|;
 block|}
 name|public
 operator|:
-comment|//RegionExtent getExtent() const { return UndefinedExtent(); }
 name|void
 name|Profile
 argument_list|(
@@ -1188,6 +1206,15 @@ name|getType
 argument_list|()
 return|;
 block|}
+name|bool
+name|isBoundable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 name|void
 name|Profile
 argument_list|(
@@ -1461,6 +1488,19 @@ operator|->
 name|getType
 argument_list|()
 argument_list|)
+return|;
+block|}
+name|bool
+name|isBoundable
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|CL
+operator|->
+name|isFileScope
+argument_list|()
 return|;
 block|}
 name|void
@@ -2321,6 +2361,10 @@ name|stack
 decl_stmt|;
 name|MemSpaceRegion
 modifier|*
+name|stackArguments
+decl_stmt|;
+name|MemSpaceRegion
+modifier|*
 name|heap
 decl_stmt|;
 name|MemSpaceRegion
@@ -2366,6 +2410,11 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|stackArguments
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|heap
 argument_list|(
 literal|0
@@ -2401,6 +2450,13 @@ operator|*
 name|getStackRegion
 argument_list|()
 expr_stmt|;
+comment|/// getStackArgumentsRegion - Retrieve the memory region associated with
+comment|///  function/method arguments of the current stack frame.
+name|MemSpaceRegion
+modifier|*
+name|getStackArgumentsRegion
+parameter_list|()
+function_decl|;
 comment|/// getGlobalsRegion - Retrieve the memory region associated with
 comment|///  all global variables.
 name|MemSpaceRegion
@@ -3213,17 +3269,43 @@ argument_list|,
 argument|const VarDecl *d
 argument_list|)
 block|{
-return|return
+if|if
+condition|(
 name|d
 operator|->
 name|hasLocalStorage
 argument_list|()
-operator|?
+condition|)
+block|{
+return|return
+name|isa
+operator|<
+name|ParmVarDecl
+operator|>
+operator|(
+name|d
+operator|)
+operator|||
+name|isa
+operator|<
+name|ImplicitParamDecl
+operator|>
+operator|(
+name|d
+operator|)
+condition|?
+name|MRMgr
+operator|.
+name|getStackArgumentsRegion
+argument_list|()
+else|:
 name|MRMgr
 operator|.
 name|getStackRegion
 argument_list|()
-operator|:
+return|;
+block|}
+return|return
 name|MRMgr
 operator|.
 name|getGlobalsRegion

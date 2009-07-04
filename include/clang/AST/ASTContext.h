@@ -572,6 +572,11 @@ comment|///  this ASTContext object.
 name|LangOptions
 name|LangOpts
 decl_stmt|;
+comment|/// \brief Whether we have already loaded comment source ranges from an
+comment|/// external source.
+name|bool
+name|LoadedExternalComments
+decl_stmt|;
 comment|/// MallocAlloc/BumpAlloc - The allocator objects used to create AST objects.
 name|bool
 name|FreeMemory
@@ -585,6 +590,22 @@ name|llvm
 operator|::
 name|BumpPtrAllocator
 name|BumpAlloc
+expr_stmt|;
+comment|/// \brief Mapping from declarations to their comments, once we have
+comment|/// already looked up the comment associated with a given declaration.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|Decl
+operator|*
+operator|,
+name|std
+operator|::
+name|string
+operator|>
+name|DeclComments
 expr_stmt|;
 name|public
 label|:
@@ -621,6 +642,16 @@ name|clang
 operator|::
 name|PrintingPolicy
 name|PrintingPolicy
+expr_stmt|;
+comment|/// \brief Source ranges for all of the comments in the source file,
+comment|/// sorted in order of appearance in the translation unit.
+name|std
+operator|::
+name|vector
+operator|<
+name|SourceRange
+operator|>
+name|Comments
 expr_stmt|;
 name|SourceManager
 modifier|&
@@ -772,6 +803,17 @@ return|return
 name|TUDecl
 return|;
 block|}
+specifier|const
+name|char
+modifier|*
+name|getCommentForDecl
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
 comment|// Builtin Types.
 name|QualType
 name|VoidTy
@@ -1351,20 +1393,6 @@ name|ObjCInterfaceDecl
 modifier|*
 name|Decl
 parameter_list|,
-name|ObjCProtocolDecl
-modifier|*
-modifier|*
-name|ProtocolList
-parameter_list|,
-name|unsigned
-name|NumProtocols
-parameter_list|)
-function_decl|;
-comment|/// getObjCQualifiedIdType - Return an ObjCQualifiedIdType for a
-comment|/// given 'id' and conforming protocol list.
-name|QualType
-name|getObjCQualifiedIdType
-parameter_list|(
 name|ObjCProtocolDecl
 modifier|*
 modifier|*

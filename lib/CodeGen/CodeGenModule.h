@@ -1407,6 +1407,8 @@ block|,
 name|GVA_CXXInline
 block|,
 name|GVA_StrongExternal
+block|,
+name|GVA_TemplateInstantiation
 block|}
 enum|;
 name|private

@@ -474,6 +474,42 @@ expr|}
 block|;
 name|class
 name|VISIBILITY_HIDDEN
+name|OpenBSD
+operator|:
+name|public
+name|Generic_GCC
+block|{
+name|public
+operator|:
+name|OpenBSD
+argument_list|(
+specifier|const
+name|HostInfo
+operator|&
+name|Host
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|)
+block|;
+name|virtual
+name|Tool
+operator|&
+name|SelectTool
+argument_list|(
+argument|const Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|)
+specifier|const
+block|; }
+block|;
+name|class
+name|VISIBILITY_HIDDEN
 name|FreeBSD
 operator|:
 name|public

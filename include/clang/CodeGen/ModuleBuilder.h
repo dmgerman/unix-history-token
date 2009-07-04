@@ -76,6 +76,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|LLVMContext
+decl_stmt|;
+name|class
 name|Module
 decl_stmt|;
 block|}
@@ -142,6 +145,12 @@ specifier|const
 name|CompileOptions
 operator|&
 name|CO
+argument_list|,
+name|llvm
+operator|::
+name|LLVMContext
+operator|&
+name|C
 argument_list|)
 decl_stmt|;
 block|}

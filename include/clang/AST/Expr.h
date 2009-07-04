@@ -379,8 +379,6 @@ argument_list|,
 argument|SourceRange&R1
 argument_list|,
 argument|SourceRange&R2
-argument_list|,
-argument|ASTContext&Context
 argument_list|)
 specifier|const
 block|;
@@ -1656,7 +1654,7 @@ name|FloatingLiteral
 argument_list|(
 argument|const llvm::APFloat&V
 argument_list|,
-argument|bool* isexact
+argument|bool isexact
 argument_list|,
 argument|QualType Type
 argument_list|,
@@ -1677,7 +1675,6 @@ argument_list|)
 block|,
 name|IsExact
 argument_list|(
-operator|*
 name|isexact
 argument_list|)
 block|,
@@ -10541,32 +10538,6 @@ operator|*
 name|getBody
 argument_list|()
 block|;
-specifier|const
-name|Stmt
-operator|*
-name|getBody
-argument_list|(
-argument|ASTContext&C
-argument_list|)
-specifier|const
-block|{
-return|return
-name|getBody
-argument_list|()
-return|;
-block|}
-name|Stmt
-operator|*
-name|getBody
-argument_list|(
-argument|ASTContext&C
-argument_list|)
-block|{
-return|return
-name|getBody
-argument_list|()
-return|;
-block|}
 name|virtual
 name|SourceRange
 name|getSourceRange

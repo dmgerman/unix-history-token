@@ -84,6 +84,9 @@ block|{
 name|class
 name|Module
 decl_stmt|;
+name|class
+name|LLVMContext
+decl_stmt|;
 name|namespace
 name|sys
 block|{
@@ -255,6 +258,12 @@ operator|::
 name|raw_ostream
 operator|*
 name|OS
+argument_list|,
+name|llvm
+operator|::
+name|LLVMContext
+operator|&
+name|C
 argument_list|)
 decl_stmt|;
 comment|// HTML printer: uses the rewriter to convert source code to HTML with

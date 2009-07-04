@@ -357,6 +357,12 @@ comment|/// generate the precompiled header.
 name|ORIGINAL_FILE_NAME
 init|=
 literal|20
+block|,
+comment|/// \brief Record code for the sorted array of source ranges where
+comment|/// comments were encountered in the source code.
+name|COMMENT_RANGES
+init|=
+literal|21
 block|}
 enum|;
 comment|/// \brief Record types used within a source manager block.
