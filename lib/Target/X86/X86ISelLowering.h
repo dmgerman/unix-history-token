@@ -1177,6 +1177,15 @@ endif|#
 directive|endif
 argument_list|)
 block|;
+comment|/// getFunctionAlignment - Return the Log2 alignment of this function.
+name|virtual
+name|unsigned
+name|getFunctionAlignment
+argument_list|(
+argument|const Function *F
+argument_list|)
+specifier|const
+block|;
 name|private
 operator|:
 comment|/// Subtarget - Keep a pointer to the X86Subtarget around so that we can

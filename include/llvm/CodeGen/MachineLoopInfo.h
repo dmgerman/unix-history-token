@@ -287,7 +287,6 @@ name|LoopInfoBase
 operator|<
 name|MachineBasicBlock
 operator|>
-operator|*
 name|LI
 block|;
 name|friend
@@ -297,6 +296,24 @@ operator|<
 name|MachineBasicBlock
 operator|>
 block|;
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|MachineLoopInfo
+operator|&
+operator|)
+block|;
+comment|// do not implement
+name|MachineLoopInfo
+argument_list|(
+specifier|const
+name|MachineLoopInfo
+operator|&
+argument_list|)
+block|;
+comment|// do not implement
 name|LoopInfoBase
 operator|<
 name|MachineBasicBlock
@@ -306,7 +323,6 @@ name|getBase
 argument_list|()
 block|{
 return|return
-operator|*
 name|LI
 return|;
 block|}
@@ -324,37 +340,17 @@ name|MachineFunctionPass
 argument_list|(
 argument|&ID
 argument_list|)
-block|{
-name|LI
-operator|=
-name|new
-name|LoopInfoBase
-operator|<
-name|MachineBasicBlock
-operator|>
-operator|(
-operator|)
-block|;   }
-operator|~
-name|MachineLoopInfo
-argument_list|()
-block|{
-name|delete
-name|LI
-block|; }
+block|{}
 comment|/// iterator/begin/end - The interface to the top-level loops in the current
 comment|/// function.
 comment|///
 typedef|typedef
-name|std
-operator|::
-name|vector
+name|LoopInfoBase
 operator|<
-name|MachineLoop
-operator|*
+name|MachineBasicBlock
 operator|>
 operator|::
-name|const_iterator
+name|iterator
 name|iterator
 expr_stmt|;
 specifier|inline
@@ -365,7 +361,7 @@ specifier|const
 block|{
 return|return
 name|LI
-operator|->
+operator|.
 name|begin
 argument_list|()
 return|;
@@ -378,7 +374,7 @@ specifier|const
 block|{
 return|return
 name|LI
-operator|->
+operator|.
 name|end
 argument_list|()
 return|;
@@ -390,7 +386,7 @@ specifier|const
 block|{
 return|return
 name|LI
-operator|->
+operator|.
 name|empty
 argument_list|()
 return|;
@@ -409,7 +405,7 @@ specifier|const
 block|{
 return|return
 name|LI
-operator|->
+operator|.
 name|getLoopFor
 argument_list|(
 name|BB
@@ -434,7 +430,7 @@ specifier|const
 block|{
 return|return
 name|LI
-operator|->
+operator|.
 name|getLoopFor
 argument_list|(
 name|BB
@@ -453,7 +449,7 @@ specifier|const
 block|{
 return|return
 name|LI
-operator|->
+operator|.
 name|getLoopDepth
 argument_list|(
 name|BB
@@ -471,7 +467,7 @@ specifier|const
 block|{
 return|return
 name|LI
-operator|->
+operator|.
 name|isLoopHeader
 argument_list|(
 name|BB
@@ -495,7 +491,7 @@ name|releaseMemory
 parameter_list|()
 block|{
 name|LI
-operator|->
+operator|.
 name|releaseMemory
 argument_list|()
 expr_stmt|;
@@ -524,7 +520,7 @@ parameter_list|)
 block|{
 return|return
 name|LI
-operator|->
+operator|.
 name|removeLoop
 argument_list|(
 name|I
@@ -548,7 +544,7 @@ name|L
 parameter_list|)
 block|{
 name|LI
-operator|->
+operator|.
 name|changeLoopFor
 argument_list|(
 name|BB
@@ -573,7 +569,7 @@ name|NewLoop
 parameter_list|)
 block|{
 name|LI
-operator|->
+operator|.
 name|changeTopLevelLoop
 argument_list|(
 name|OldLoop
@@ -594,7 +590,7 @@ name|New
 parameter_list|)
 block|{
 name|LI
-operator|->
+operator|.
 name|addTopLevelLoop
 argument_list|(
 name|New
@@ -613,7 +609,7 @@ name|BB
 parameter_list|)
 block|{
 name|LI
-operator|->
+operator|.
 name|removeBlock
 argument_list|(
 name|BB
@@ -652,15 +648,9 @@ end_expr_stmt
 
 begin_typedef
 typedef|typedef
-name|std
+name|MachineLoopInfo
 operator|::
-name|vector
-operator|<
-name|MachineLoop
-operator|*
-operator|>
-operator|::
-name|const_iterator
+name|iterator
 name|ChildIteratorType
 expr_stmt|;
 end_typedef
@@ -743,15 +733,9 @@ end_expr_stmt
 
 begin_typedef
 typedef|typedef
-name|std
+name|MachineLoopInfo
 operator|::
-name|vector
-operator|<
-name|MachineLoop
-operator|*
-operator|>
-operator|::
-name|const_iterator
+name|iterator
 name|ChildIteratorType
 expr_stmt|;
 end_typedef

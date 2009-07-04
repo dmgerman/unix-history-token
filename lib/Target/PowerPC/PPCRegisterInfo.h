@@ -277,6 +277,13 @@ argument_list|)
 specifier|const
 block|;
 name|void
+name|processFunctionBeforeFrameFinalized
+argument_list|(
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|void
 name|emitPrologue
 argument_list|(
 argument|MachineFunction&MF

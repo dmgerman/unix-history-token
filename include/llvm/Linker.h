@@ -84,6 +84,9 @@ block|{
 name|class
 name|Module
 decl_stmt|;
+name|class
+name|LLVMContext
+decl_stmt|;
 comment|/// This class provides the core functionality of linking in LLVM. It retains a
 comment|/// Module object which is the composite of the modules and libraries linked
 comment|/// into it. The composite Module can be retrieved via the getModule() method.
@@ -165,6 +168,9 @@ comment|///< name of tool running linker
 argument|const std::string& modulename
 argument_list|,
 comment|///< name of linker's end-result module
+argument|LLVMContext& C
+argument_list|,
+comment|///< Context for global info
 argument|unsigned Flags =
 literal|0
 comment|///< ControlFlags (one or more |'d together)
@@ -636,6 +642,11 @@ comment|/// @name Data
 comment|/// @{
 name|private
 label|:
+name|LLVMContext
+modifier|&
+name|Context
+decl_stmt|;
+comment|///< The context for global information
 name|Module
 modifier|*
 name|Composite

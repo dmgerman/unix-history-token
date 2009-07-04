@@ -114,7 +114,7 @@ block|;
 name|void
 name|Enumeration
 argument_list|(
-argument|std::ostream&OS
+argument|raw_ostream&OS
 argument_list|,
 argument|const char *ClassName
 argument_list|,
@@ -124,9 +124,7 @@ block|;
 name|void
 name|FeatureKeyValues
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 argument_list|)
@@ -134,9 +132,7 @@ block|;
 name|void
 name|CPUKeyValues
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 argument_list|)
@@ -144,9 +140,7 @@ block|;
 name|unsigned
 name|CollectAllItinClasses
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 argument_list|,
@@ -185,7 +179,7 @@ block|;
 name|void
 name|EmitStageData
 argument_list|(
-argument|std::ostream&OS
+argument|raw_ostream&OS
 argument_list|,
 argument|unsigned NItinClasses
 argument_list|,
@@ -199,9 +193,7 @@ block|;
 name|void
 name|EmitProcessorData
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 argument_list|,
@@ -223,9 +215,7 @@ block|;
 name|void
 name|EmitProcessorLookup
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 argument_list|)
@@ -233,9 +223,7 @@ block|;
 name|void
 name|EmitData
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 argument_list|)
@@ -243,9 +231,7 @@ block|;
 name|void
 name|ParseFeaturesFunction
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 argument_list|)
@@ -273,9 +259,7 @@ comment|// run - Output the subtarget enumerations, returning true on failure.
 name|void
 name|run
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|o
 argument_list|)

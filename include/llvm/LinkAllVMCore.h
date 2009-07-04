@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/LLVMContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Module.h"
 end_include
 
@@ -220,6 +226,11 @@ operator|::
 name|Module
 argument_list|(
 literal|""
+argument_list|,
+name|llvm
+operator|::
+name|getGlobalContext
+argument_list|()
 argument_list|)
 expr_stmt|;
 operator|(

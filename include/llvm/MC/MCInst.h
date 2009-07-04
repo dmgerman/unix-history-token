@@ -116,6 +116,7 @@ name|kMBBLabel
 block|,
 comment|///< Basic block label.
 name|kMCValue
+comment|///< Relocatable immediate operand.
 block|}
 enum|;
 name|unsigned
@@ -167,6 +168,17 @@ operator|=
 name|RHS
 block|; }
 name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|!=
+name|kInvalid
+return|;
+block|}
+name|bool
 name|isReg
 argument_list|()
 specifier|const
@@ -197,6 +209,17 @@ return|return
 name|Kind
 operator|==
 name|kMBBLabel
+return|;
+block|}
+name|bool
+name|isMCValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|kMCValue
 return|;
 block|}
 comment|/// getReg - Returns the register number.
@@ -313,6 +336,47 @@ operator|.
 name|BlockNo
 return|;
 block|}
+specifier|const
+name|MCValue
+operator|&
+name|getMCValue
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isMCValue
+argument_list|()
+operator|&&
+literal|"This is not an MCValue"
+argument_list|)
+block|;
+return|return
+name|MCValueVal
+return|;
+block|}
+name|void
+name|setMCValue
+parameter_list|(
+specifier|const
+name|MCValue
+modifier|&
+name|Val
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|isMCValue
+argument_list|()
+operator|&&
+literal|"This is not an MCValue"
+argument_list|)
+expr_stmt|;
+name|MCValueVal
+operator|=
+name|Val
+expr_stmt|;
+block|}
 name|void
 name|MakeReg
 parameter_list|(
@@ -370,6 +434,24 @@ operator|.
 name|BlockNo
 operator|=
 name|MBB
+expr_stmt|;
+block|}
+name|void
+name|MakeMCValue
+parameter_list|(
+specifier|const
+name|MCValue
+modifier|&
+name|Val
+parameter_list|)
+block|{
+name|Kind
+operator|=
+name|kMCValue
+expr_stmt|;
+name|MCValueVal
+operator|=
+name|Val
 expr_stmt|;
 block|}
 block|}

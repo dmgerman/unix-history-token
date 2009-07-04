@@ -104,6 +104,9 @@ comment|// Used by ConstantVals.cpp
 name|class
 name|FunctionType
 decl_stmt|;
+name|class
+name|LLVMContext
+decl_stmt|;
 name|template
 operator|<
 operator|>
@@ -393,6 +396,12 @@ comment|/// @name Member Variables
 comment|/// @{
 name|private
 label|:
+name|LLVMContext
+modifier|&
+name|Context
+decl_stmt|;
+comment|///< The LLVMContext from which types and
+comment|///< constants are allocated.
 name|GlobalListType
 name|GlobalList
 decl_stmt|;
@@ -463,6 +472,10 @@ operator|::
 name|string
 operator|&
 name|ModuleID
+argument_list|,
+name|LLVMContext
+operator|&
+name|C
 argument_list|)
 decl_stmt|;
 comment|/// The module destructor. This will dropAllReferences.
@@ -535,6 +548,18 @@ name|getPointerSize
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Get the global data context.
+comment|/// @returns LLVMContext - a container for LLVM's global information
+name|LLVMContext
+operator|&
+name|getContext
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Context
+return|;
+block|}
 comment|/// Get any module-scope inline assembly blocks.
 comment|/// @returns a string containing the module-scope inline assembly blocks.
 specifier|const

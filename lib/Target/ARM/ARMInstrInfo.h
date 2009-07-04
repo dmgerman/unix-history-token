@@ -124,23 +124,49 @@ name|AddrMode5
 init|=
 literal|5
 block|,
-name|AddrModeT1
+name|AddrMode6
 init|=
 literal|6
 block|,
-name|AddrModeT2
+name|AddrModeT1_1
 init|=
 literal|7
 block|,
-name|AddrModeT4
+name|AddrModeT1_2
 init|=
 literal|8
 block|,
-name|AddrModeTs
+name|AddrModeT1_4
 init|=
 literal|9
 block|,
+name|AddrModeT1_s
+init|=
+literal|10
+block|,
 comment|// i8 * 4 for pc and sp relative data
+name|AddrModeT2_i12
+init|=
+literal|11
+block|,
+name|AddrModeT2_i8
+init|=
+literal|12
+block|,
+name|AddrModeT2_so
+init|=
+literal|13
+block|,
+name|AddrModeT2_pc
+init|=
+literal|14
+block|,
+comment|// +/- i12 for pc relative data
+name|AddrModeT2_i8s4
+init|=
+literal|15
+block|,
+comment|// i8 * 4
 comment|// Size* - Flags to keep track of the size of an instruction.
 name|SizeShift
 init|=
@@ -481,10 +507,6 @@ range|:
 name|public
 name|TargetInstrInfoImpl
 block|{
-specifier|const
-name|ARMRegisterInfo
-name|RI
-block|;
 name|protected
 operator|:
 comment|// Can be only subclassed.
@@ -499,35 +521,6 @@ argument_list|)
 block|;
 name|public
 operator|:
-comment|/// getRegisterInfo - TargetInstrInfo is a superset of MRegister info.  As
-comment|/// such, whenever a client has an instance of instruction info, it should
-comment|/// always be able to get register info as well (through this method).
-comment|///
-name|virtual
-specifier|const
-name|ARMRegisterInfo
-operator|&
-name|getRegisterInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-name|RI
-return|;
-block|}
-name|void
-name|reMaterialize
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator MI
-argument_list|,
-argument|unsigned DestReg
-argument_list|,
-argument|const MachineInstr *Orig
-argument_list|)
-specifier|const
-block|;
 name|virtual
 name|MachineInstr
 operator|*
@@ -540,6 +533,16 @@ argument_list|,
 argument|LiveVariables *LV
 argument_list|)
 specifier|const
+block|;
+name|virtual
+specifier|const
+name|ARMBaseRegisterInfo
+operator|&
+name|getRegisterInfo
+argument_list|()
+specifier|const
+operator|=
+literal|0
 block|;
 comment|// Branch analysis.
 name|virtual
@@ -577,16 +580,6 @@ argument_list|,
 argument|MachineBasicBlock *FBB
 argument_list|,
 argument|const SmallVectorImpl<MachineOperand>&Cond
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|bool
-name|canFoldMemoryOperand
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
 argument_list|)
 specifier|const
 block|;
@@ -697,24 +690,6 @@ argument_list|(
 argument|const MachineInstr* MI
 argument_list|)
 specifier|const
-block|; }
-decl_stmt|;
-name|class
-name|ARMInstrInfo
-range|:
-name|public
-name|ARMBaseInstrInfo
-block|{
-name|public
-operator|:
-name|explicit
-name|ARMInstrInfo
-argument_list|(
-specifier|const
-name|ARMSubtarget
-operator|&
-name|STI
-argument_list|)
 block|;
 comment|/// Return true if the instruction is a register to register move and return
 comment|/// the source and dest operands and their sub-register indices by reference.
@@ -841,6 +816,16 @@ argument_list|)
 specifier|const
 block|;
 name|virtual
+name|bool
+name|canFoldMemoryOperand
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|const SmallVectorImpl<unsigned>&Ops
+argument_list|)
+specifier|const
+block|;
+name|virtual
 name|MachineInstr
 operator|*
 name|foldMemoryOperandImpl
@@ -869,13 +854,58 @@ argument_list|,
 argument|MachineInstr* LoadMI
 argument_list|)
 specifier|const
+block|; }
+decl_stmt|;
+name|class
+name|ARMInstrInfo
+range|:
+name|public
+name|ARMBaseInstrInfo
+block|{
+name|ARMRegisterInfo
+name|RI
+block|;
+name|public
+operator|:
+name|explicit
+name|ARMInstrInfo
+argument_list|(
+specifier|const
+name|ARMSubtarget
+operator|&
+name|STI
+argument_list|)
+block|;
+comment|/// getRegisterInfo - TargetInstrInfo is a superset of MRegister info.  As
+comment|/// such, whenever a client has an instance of instruction info, it should
+comment|/// always be able to get register info as well (through this method).
+comment|///
+specifier|const
+name|ARMRegisterInfo
+operator|&
+name|getRegisterInfo
+argument_list|()
+specifier|const
 block|{
 return|return
-literal|0
+name|RI
 return|;
 block|}
-expr|}
-block|;  }
+name|void
+name|reMaterialize
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|unsigned DestReg
+argument_list|,
+argument|const MachineInstr *Orig
+argument_list|)
+specifier|const
+block|; }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_endif

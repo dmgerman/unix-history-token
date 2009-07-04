@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- ThumbInstrInfo.h - Thumb Instruction Information ----------*- C++ -*-===//
+comment|//===- Thumb1InstrInfo.h - Thumb-1 Instruction Information ----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file contains the ARM implementation of the TargetInstrInfo class.
+comment|// This file contains the Thumb-1 implementation of the TargetInstrInfo class.
 end_comment
 
 begin_comment
@@ -50,25 +50,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|THUMBINSTRUCTIONINFO_H
+name|THUMB1INSTRUCTIONINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|THUMBINSTRUCTIONINFO_H
+name|THUMB1INSTRUCTIONINFO_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetInstrInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ARMRegisterInfo.h"
 end_include
 
 begin_include
@@ -83,6 +77,12 @@ directive|include
 file|"ARMInstrInfo.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"Thumb1RegisterInfo.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -91,15 +91,18 @@ name|class
 name|ARMSubtarget
 decl_stmt|;
 name|class
-name|ThumbInstrInfo
+name|Thumb1InstrInfo
 range|:
 name|public
 name|ARMBaseInstrInfo
 block|{
+name|Thumb1RegisterInfo
+name|RI
+block|;
 name|public
 operator|:
 name|explicit
-name|ThumbInstrInfo
+name|Thumb1InstrInfo
 argument_list|(
 specifier|const
 name|ARMSubtarget
@@ -107,9 +110,43 @@ operator|&
 name|STI
 argument_list|)
 block|;
-comment|/// Return true if the instruction is a register to register move and return
-comment|/// the source and dest operands and their sub-register indices by reference.
-name|virtual
+comment|/// getRegisterInfo - TargetInstrInfo is a superset of MRegister info.  As
+comment|/// such, whenever a client has an instance of instruction info, it should
+comment|/// always be able to get register info as well (through this method).
+comment|///
+specifier|const
+name|Thumb1RegisterInfo
+operator|&
+name|getRegisterInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RI
+return|;
+block|}
+name|bool
+name|spillCalleeSavedRegisters
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|const std::vector<CalleeSavedInfo>&CSI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|restoreCalleeSavedRegisters
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|const std::vector<CalleeSavedInfo>&CSI
+argument_list|)
+specifier|const
+block|;
 name|bool
 name|isMoveInstr
 argument_list|(
@@ -125,7 +162,6 @@ argument|unsigned&DstSubIdx
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|unsigned
 name|isLoadFromStackSlot
 argument_list|(
@@ -135,7 +171,6 @@ argument|int&FrameIndex
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|unsigned
 name|isStoreToStackSlot
 argument_list|(
@@ -145,7 +180,6 @@ argument|int&FrameIndex
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|bool
 name|copyRegToReg
 argument_list|(
@@ -163,7 +197,6 @@ argument|const TargetRegisterClass *SrcRC
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|void
 name|storeRegToStackSlot
 argument_list|(
@@ -181,7 +214,6 @@ argument|const TargetRegisterClass *RC
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|void
 name|storeRegToAddr
 argument_list|(
@@ -199,7 +231,6 @@ argument|SmallVectorImpl<MachineInstr*>&NewMIs
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|void
 name|loadRegFromStackSlot
 argument_list|(
@@ -215,7 +246,6 @@ argument|const TargetRegisterClass *RC
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|void
 name|loadRegFromAddr
 argument_list|(
@@ -231,31 +261,29 @@ argument|SmallVectorImpl<MachineInstr*>&NewMIs
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|bool
-name|spillCalleeSavedRegisters
+name|canFoldMemoryOperand
 argument_list|(
-argument|MachineBasicBlock&MBB
+argument|const MachineInstr *MI
 argument_list|,
-argument|MachineBasicBlock::iterator MI
-argument_list|,
-argument|const std::vector<CalleeSavedInfo>&CSI
+argument|const SmallVectorImpl<unsigned>&Ops
 argument_list|)
 specifier|const
 block|;
-name|virtual
-name|bool
-name|restoreCalleeSavedRegisters
+name|MachineInstr
+operator|*
+name|foldMemoryOperandImpl
 argument_list|(
-argument|MachineBasicBlock&MBB
+argument|MachineFunction&MF
 argument_list|,
-argument|MachineBasicBlock::iterator MI
+argument|MachineInstr* MI
 argument_list|,
-argument|const std::vector<CalleeSavedInfo>&CSI
+argument|const SmallVectorImpl<unsigned>&Ops
+argument_list|,
+argument|int FrameIndex
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|MachineInstr
 operator|*
 name|foldMemoryOperandImpl
@@ -274,23 +302,8 @@ return|return
 literal|0
 return|;
 block|}
-name|virtual
-name|MachineInstr
-operator|*
-name|foldMemoryOperandImpl
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineInstr* MI
-argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
-argument_list|,
-argument|int FrameIndex
-argument_list|)
-specifier|const
+expr|}
 block|; }
-decl_stmt|;
-block|}
 end_decl_stmt
 
 begin_endif
@@ -299,7 +312,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// THUMBINSTRUCTIONINFO_H
+comment|// THUMB1INSTRUCTIONINFO_H
 end_comment
 
 end_unit

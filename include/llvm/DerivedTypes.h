@@ -475,6 +475,40 @@ argument|bool isVarArg
 comment|///< Whether this is a variable argument length function
 argument_list|)
 block|;
+comment|/// FunctionType::get - Create a FunctionType taking no parameters.
+comment|///
+specifier|static
+name|FunctionType
+operator|*
+name|get
+argument_list|(
+argument|const Type *Result
+argument_list|,
+comment|///< The result type
+argument|bool isVarArg
+comment|///< Whether this is a variable argument length function
+argument_list|)
+block|{
+return|return
+name|get
+argument_list|(
+name|Result
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|Type
+operator|*
+operator|>
+operator|(
+operator|)
+argument_list|,
+name|isVarArg
+argument_list|)
+return|;
+block|}
 comment|/// isValidReturnType - Return true if the specified type is valid as a return
 comment|/// type.
 specifier|static
@@ -828,6 +862,34 @@ argument_list|,
 argument|bool isPacked=false
 argument_list|)
 block|;
+comment|/// StructType::get - Create an empty structure type.
+comment|///
+specifier|static
+name|StructType
+operator|*
+name|get
+argument_list|(
+argument|bool isPacked=false
+argument_list|)
+block|{
+return|return
+name|get
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|Type
+operator|*
+operator|>
+operator|(
+operator|)
+argument_list|,
+name|isPacked
+argument_list|)
+return|;
+block|}
 comment|/// StructType::get - This static method is a convenience method for
 comment|/// creating structure types by specifying the elements as arguments.
 comment|/// Note that this method always returns a non-packed struct.  To get

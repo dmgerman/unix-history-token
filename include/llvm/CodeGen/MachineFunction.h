@@ -359,6 +359,10 @@ comment|// Tracks debug locations.
 name|DebugLocTracker
 name|DebugLocInfo
 decl_stmt|;
+comment|// The alignment of the function.
+name|unsigned
+name|Alignment
+decl_stmt|;
 name|public
 label|:
 name|MachineFunction
@@ -498,6 +502,31 @@ block|{
 return|return
 name|ConstantPool
 return|;
+block|}
+comment|/// getAlignment - Return the alignment (log2, not bytes) of the function.
+comment|///
+name|unsigned
+name|getAlignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Alignment
+return|;
+block|}
+comment|/// setAlignment - Set the alignment (log2, not bytes) of the function.
+comment|///
+name|void
+name|setAlignment
+parameter_list|(
+name|unsigned
+name|A
+parameter_list|)
+block|{
+name|Alignment
+operator|=
+name|A
+expr_stmt|;
 block|}
 comment|/// MachineFunctionInfo - Keep track of various per-function pieces of
 comment|/// information for backends that would like to do so.
@@ -1696,6 +1725,22 @@ name|DefaultDebugLoc
 operator|=
 name|DL
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// getDebugLocInfo - Get the debug info location tracker.
+end_comment
+
+begin_function
+name|DebugLocTracker
+modifier|&
+name|getDebugLocInfo
+parameter_list|()
+block|{
+return|return
+name|DebugLocInfo
+return|;
 block|}
 end_function
 

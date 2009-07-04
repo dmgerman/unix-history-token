@@ -150,10 +150,6 @@ range|:
 name|public
 name|TargetLowering
 block|{
-comment|// FrameIndex for return slot.
-name|int
-name|ReturnAddrIndex
-block|;
 name|public
 operator|:
 name|explicit
@@ -191,6 +187,15 @@ name|MVT
 name|getSetCCResultType
 argument_list|(
 argument|MVT VT
+argument_list|)
+specifier|const
+block|;
+comment|/// getFunctionAlignment - Return the Log2 alignment of this function.
+name|virtual
+name|unsigned
+name|getFunctionAlignment
+argument_list|(
+argument|const Function *F
 argument_list|)
 specifier|const
 block|;

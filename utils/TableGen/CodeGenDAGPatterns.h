@@ -1172,9 +1172,7 @@ decl_stmt|;
 name|void
 name|print
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 argument_list|)
@@ -1716,9 +1714,7 @@ decl_stmt|;
 name|void
 name|print
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 argument_list|)

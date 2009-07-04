@@ -339,10 +339,6 @@ name|int
 name|VarArgsFrameIndex
 block|;
 comment|// FrameIndex for start of varargs area.
-name|int
-name|ReturnAddrIndex
-block|;
-comment|// FrameIndex for return slot.
 name|SPUTargetMachine
 operator|&
 name|SPUTM
@@ -525,6 +521,15 @@ name|bool
 name|isOffsetFoldingLegal
 argument_list|(
 argument|const GlobalAddressSDNode *GA
+argument_list|)
+specifier|const
+block|;
+comment|/// getFunctionAlignment - Return the Log2 alignment of this function.
+name|virtual
+name|unsigned
+name|getFunctionAlignment
+argument_list|(
+argument|const Function *F
 argument_list|)
 specifier|const
 block|;   }

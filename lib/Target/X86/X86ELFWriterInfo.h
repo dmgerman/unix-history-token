@@ -135,16 +135,6 @@ operator|~
 name|X86ELFWriterInfo
 argument_list|()
 block|;
-comment|/// getFunctionAlignment - Returns the alignment for function 'F', targets
-comment|/// with different alignment constraints should overload this method
-name|virtual
-name|unsigned
-name|getFunctionAlignment
-argument_list|(
-argument|const Function *F
-argument_list|)
-specifier|const
-block|;
 comment|/// getRelocationType - Returns the target specific ELF Relocation type.
 comment|/// 'MachineRelTy' contains the object code independent relocation type
 name|virtual

@@ -44,6 +44,13 @@ block|{
 endif|#
 directive|endif
 comment|/* Opaque types. */
+comment|/**  * The top-level container for all LLVM global data.  See the LLVMContext class.  */
+typedef|typedef
+name|struct
+name|LLVMCtxt
+modifier|*
+name|LLVMContextRef
+typedef|;
 comment|/**  * The top-level container for all other LLVM Intermediate Representation (IR)  * objects. See the llvm::Module class.  */
 typedef|typedef
 name|struct
@@ -407,6 +414,22 @@ name|Message
 parameter_list|)
 function_decl|;
 comment|/*===-- Modules -----------------------------------------------------------===*/
+comment|/* Create and destroy contexts. */
+name|LLVMContextRef
+name|LLVMContextCreate
+parameter_list|()
+function_decl|;
+name|LLVMContextRef
+name|LLVMGetGlobalContext
+parameter_list|()
+function_decl|;
+name|void
+name|LLVMContextDispose
+parameter_list|(
+name|LLVMContextRef
+name|C
+parameter_list|)
+function_decl|;
 comment|/* Create and destroy modules. */
 comment|/** See llvm::Module::Module. */
 name|LLVMModuleRef
@@ -416,6 +439,18 @@ specifier|const
 name|char
 modifier|*
 name|ModuleID
+parameter_list|)
+function_decl|;
+name|LLVMModuleRef
+name|LLVMModuleCreateWithNameInContext
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|ModuleID
+parameter_list|,
+name|LLVMContextRef
+name|C
 parameter_list|)
 function_decl|;
 comment|/** See llvm::Module::~Module. */
@@ -3342,6 +3377,12 @@ argument_list|(
 argument|MemoryBuffer
 argument_list|,
 argument|LLVMMemoryBufferRef
+argument_list|)
+name|DEFINE_SIMPLE_CONVERSION_FUNCTIONS
+argument_list|(
+argument|LLVMContext
+argument_list|,
+argument|LLVMContextRef
 argument_list|)
 name|DEFINE_STDCXX_CONVERSION_FUNCTIONS
 argument_list|(

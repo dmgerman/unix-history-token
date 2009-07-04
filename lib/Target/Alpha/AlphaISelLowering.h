@@ -249,6 +249,8 @@ argument|bool isVarArg
 argument_list|,
 argument|bool isInreg
 argument_list|,
+argument|unsigned NumFixedArgs
+argument_list|,
 argument|unsigned CC
 argument_list|,
 argument|bool isTailCall
@@ -306,6 +308,15 @@ name|bool
 name|isOffsetFoldingLegal
 argument_list|(
 argument|const GlobalAddressSDNode *GA
+argument_list|)
+specifier|const
+block|;
+comment|/// getFunctionAlignment - Return the Log2 alignment of this function.
+name|virtual
+name|unsigned
+name|getFunctionAlignment
+argument_list|(
+argument|const Function *F
 argument_list|)
 specifier|const
 block|;

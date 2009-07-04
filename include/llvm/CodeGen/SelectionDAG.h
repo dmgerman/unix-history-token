@@ -78,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/FoldingSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
@@ -3102,6 +3096,9 @@ name|Operands
 parameter_list|,
 name|unsigned
 name|NumOperands
+parameter_list|,
+name|unsigned
+name|NumFixedArgs
 parameter_list|)
 function_decl|;
 comment|/// getLoad - Loads are not normal binary operators: their result type is not

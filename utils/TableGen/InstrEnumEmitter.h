@@ -101,9 +101,7 @@ comment|// run - Output the instruction set description, returning true on failu
 name|void
 name|run
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 argument_list|)

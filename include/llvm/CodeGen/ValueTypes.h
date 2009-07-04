@@ -197,91 +197,120 @@ init|=
 literal|15
 block|,
 comment|//  4 x i8
-name|v2i16
+name|v8i8
 init|=
 literal|16
 block|,
-comment|//  2 x i16
-name|v8i8
+comment|//  8 x i8
+name|v16i8
 init|=
 literal|17
 block|,
-comment|//  8 x i8
-name|v4i16
+comment|// 16 x i8
+name|v32i8
 init|=
 literal|18
 block|,
-comment|//  4 x i16
-name|v2i32
+comment|// 32 x i8
+name|v2i16
 init|=
 literal|19
 block|,
-comment|//  2 x i32
-name|v1i64
+comment|//  2 x i16
+name|v4i16
 init|=
 literal|20
 block|,
-comment|//  1 x i64
-name|v16i8
+comment|//  4 x i16
+name|v8i16
 init|=
 literal|21
 block|,
-comment|// 16 x i8
-name|v8i16
+comment|//  8 x i16
+name|v16i16
 init|=
 literal|22
 block|,
-comment|//  8 x i16
-name|v3i32
+comment|// 16 x i16
+name|v2i32
 init|=
 literal|23
+block|,
+comment|//  2 x i32
+name|v3i32
+init|=
+literal|24
 block|,
 comment|//  3 x i32
 name|v4i32
 init|=
-literal|24
-block|,
-comment|//  4 x i32
-name|v2i64
-init|=
 literal|25
 block|,
-comment|//  2 x i64
-name|v2f32
+comment|//  4 x i32
+name|v8i32
 init|=
 literal|26
+block|,
+comment|//  8 x i32
+name|v1i64
+init|=
+literal|27
+block|,
+comment|//  1 x i64
+name|v2i64
+init|=
+literal|28
+block|,
+comment|//  2 x i64
+name|v4i64
+init|=
+literal|29
+block|,
+comment|//  4 x i64
+name|v2f32
+init|=
+literal|30
 block|,
 comment|//  2 x f32
 name|v3f32
 init|=
-literal|27
+literal|31
 block|,
 comment|//  3 x f32
 name|v4f32
 init|=
-literal|28
+literal|32
 block|,
 comment|//  4 x f32
+name|v8f32
+init|=
+literal|33
+block|,
+comment|//  8 x f32
 name|v2f64
 init|=
-literal|29
+literal|34
 block|,
 comment|//  2 x f64
+name|v4f64
+init|=
+literal|35
+block|,
+comment|//  4 x f64
 name|FIRST_VECTOR_VALUETYPE
 init|=
 name|v2i8
 block|,
 name|LAST_VECTOR_VALUETYPE
 init|=
-name|v2f64
+name|v4f64
 block|,
 name|LAST_VALUETYPE
 init|=
-literal|30
+literal|36
 block|,
 comment|// This always remains at the end of the list.
 comment|// This is the current maximum for LAST_VALUETYPE.
-comment|// Affects ValueTypeActions in TargetLowering.h.
 comment|// MVT::MAX_ALLOWED_VALUETYPE is used for asserts and to size bit vectors
 comment|// This value must be a multiple of 32.
 name|MAX_ALLOWED_VALUETYPE
@@ -571,6 +600,15 @@ condition|)
 return|return
 name|v16i8
 return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|32
+condition|)
+return|return
+name|v32i8
+return|;
 break|break;
 case|case
 name|i16
@@ -601,6 +639,15 @@ literal|8
 condition|)
 return|return
 name|v8i16
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|16
+condition|)
+return|return
+name|v16i16
 return|;
 break|break;
 case|case
@@ -633,6 +680,15 @@ condition|)
 return|return
 name|v4i32
 return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|8
+condition|)
+return|return
+name|v8i32
+return|;
 break|break;
 case|case
 name|i64
@@ -654,6 +710,15 @@ literal|2
 condition|)
 return|return
 name|v2i64
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|4
+condition|)
+return|return
+name|v4i64
 return|;
 break|break;
 case|case
@@ -686,6 +751,15 @@ condition|)
 return|return
 name|v4f32
 return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|8
+condition|)
+return|return
+name|v8f32
+return|;
 break|break;
 case|case
 name|f64
@@ -698,6 +772,15 @@ literal|2
 condition|)
 return|return
 name|v2f64
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|4
+condition|)
+return|return
+name|v4f64
 return|;
 break|break;
 block|}
@@ -826,7 +909,7 @@ name|v2f32
 operator|&&
 name|V
 operator|<=
-name|v2f64
+name|v4f64
 operator|)
 operator|)
 operator|:
@@ -862,7 +945,7 @@ name|v2i8
 operator|&&
 name|V
 operator|<=
-name|v2i64
+name|v4i64
 operator|)
 operator|)
 operator|:
@@ -967,6 +1050,47 @@ name|v2f64
 operator|)
 operator|:
 name|isExtended128BitVector
+argument_list|()
+return|;
+block|}
+comment|/// is256BitVector - Return true if this is a 256-bit vector type.
+specifier|inline
+name|bool
+name|is256BitVector
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isSimple
+argument_list|()
+operator|?
+operator|(
+name|V
+operator|==
+name|v8f32
+operator|||
+name|V
+operator|==
+name|v4f64
+operator|||
+name|V
+operator|==
+name|v32i8
+operator|||
+name|V
+operator|==
+name|v16i16
+operator|||
+name|V
+operator|==
+name|v8i32
+operator|||
+name|V
+operator|==
+name|v4i64
+operator|)
+operator|:
+name|isExtended256BitVector
 argument_list|()
 return|;
 block|}
@@ -1170,6 +1294,9 @@ case|:
 case|case
 name|v16i8
 case|:
+case|case
+name|v32i8
+case|:
 return|return
 name|i8
 return|;
@@ -1181,6 +1308,9 @@ name|v4i16
 case|:
 case|case
 name|v8i16
+case|:
+case|case
+name|v16i16
 case|:
 return|return
 name|i16
@@ -1194,6 +1324,9 @@ case|:
 case|case
 name|v4i32
 case|:
+case|case
+name|v8i32
+case|:
 return|return
 name|i32
 return|;
@@ -1202,6 +1335,9 @@ name|v1i64
 case|:
 case|case
 name|v2i64
+case|:
+case|case
+name|v4i64
 case|:
 return|return
 name|i64
@@ -1215,11 +1351,17 @@ case|:
 case|case
 name|v4f32
 case|:
+case|case
+name|v8f32
+case|:
 return|return
 name|f32
 return|;
 case|case
 name|v2f64
+case|:
+case|case
+name|v4f64
 case|:
 return|return
 name|f64
@@ -1252,7 +1394,16 @@ name|getExtendedVectorNumElements
 argument_list|()
 return|;
 case|case
+name|v32i8
+case|:
+return|return
+literal|32
+return|;
+case|case
 name|v16i8
+case|:
+case|case
+name|v16i16
 case|:
 return|return
 literal|16
@@ -1262,6 +1413,12 @@ name|v8i8
 case|:
 case|case
 name|v8i16
+case|:
+case|case
+name|v8i32
+case|:
+case|case
+name|v8f32
 case|:
 return|return
 literal|8
@@ -1276,7 +1433,13 @@ case|case
 name|v4i32
 case|:
 case|case
+name|v4i64
+case|:
+case|case
 name|v4f32
+case|:
+case|case
+name|v4f64
 case|:
 return|return
 literal|4
@@ -1465,6 +1628,27 @@ name|v2f64
 case|:
 return|return
 literal|128
+return|;
+case|case
+name|v32i8
+case|:
+case|case
+name|v16i16
+case|:
+case|case
+name|v8i32
+case|:
+case|case
+name|v4i64
+case|:
+case|case
+name|v8f32
+case|:
+case|case
+name|v4f64
+case|:
+return|return
+literal|256
 return|;
 block|}
 block|}
@@ -1735,6 +1919,11 @@ specifier|const
 expr_stmt|;
 name|bool
 name|isExtended128BitVector
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|isExtended256BitVector
 argument_list|()
 specifier|const
 expr_stmt|;

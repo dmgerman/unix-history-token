@@ -114,6 +114,9 @@ name|class
 name|Instruction
 decl_stmt|;
 name|class
+name|LLVMContext
+decl_stmt|;
+name|class
 name|DebugCrashes
 decl_stmt|;
 name|class
@@ -132,6 +135,10 @@ decl_stmt|;
 name|class
 name|BugDriver
 block|{
+name|LLVMContext
+modifier|&
+name|Context
+decl_stmt|;
 specifier|const
 name|std
 operator|::
@@ -208,6 +215,8 @@ argument_list|,
 argument|unsigned timeout
 argument_list|,
 argument|unsigned memlimit
+argument_list|,
+argument|LLVMContext& ctxt
 argument_list|)
 empty_stmt|;
 specifier|const
@@ -221,6 +230,15 @@ specifier|const
 block|{
 return|return
 name|ToolName
+return|;
+block|}
+name|LLVMContext
+modifier|&
+name|getContext
+parameter_list|()
+block|{
+return|return
+name|Context
 return|;
 block|}
 comment|// Set up methods... these methods are used to copy information about the
@@ -948,6 +966,10 @@ operator|::
 name|string
 operator|&
 name|InputFilename
+argument_list|,
+name|LLVMContext
+operator|&
+name|ctxt
 argument_list|)
 decl_stmt|;
 comment|/// getPassesString - Turn a list of passes into a string which indicates the

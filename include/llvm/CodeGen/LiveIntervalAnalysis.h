@@ -1896,6 +1896,12 @@ name|PhysReg
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// processImplicitDefs - Process IMPLICIT_DEF instructions. Add isUndef
+comment|/// marker to implicit_def defs and their uses.
+name|void
+name|processImplicitDefs
+parameter_list|()
+function_decl|;
 comment|/// computeNumbering - Compute the index numbering.
 name|void
 name|computeNumbering

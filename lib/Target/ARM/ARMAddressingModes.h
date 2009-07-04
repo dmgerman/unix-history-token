@@ -1842,13 +1842,13 @@ comment|// This is used for coprocessor instructions, such as FP load/stores.
 comment|//
 comment|// addrmode5 := reg +/- imm8*4
 comment|//
-comment|// The first operand is always a Reg.  The third field encodes the operation
-comment|// in bit 8, the immediate in bits 0-7.
+comment|// The first operand is always a Reg.  The second operand encodes the
+comment|// operation in bit 8 and the immediate in bits 0-7.
 comment|//
-comment|// This can also be used for FP load/store multiple ops. The third field encodes
-comment|// writeback mode in bit 8, the number of registers (or 2 times the number of
-comment|// registers for DPR ops) in bits 0-7. In addition, bit 9-11 encodes one of the
-comment|// following two sub-modes:
+comment|// This is also used for FP load/store multiple ops. The second operand
+comment|// encodes the writeback mode in bit 8 and the number of registers (or 2
+comment|// times the number of registers for DPR ops) in bits 0-7. In addition,
+comment|// bits 9-11 encode one of the following two sub-modes:
 comment|//
 comment|//    IA - Increment after
 comment|//    DB - Decrement before
@@ -2025,6 +2025,52 @@ operator|)
 operator|&
 literal|1
 operator|)
+return|;
+block|}
+comment|//===--------------------------------------------------------------------===//
+comment|// Addressing Mode #6
+comment|//===--------------------------------------------------------------------===//
+comment|//
+comment|// This is used for NEON load / store instructions.
+comment|//
+comment|// addrmode6 := reg with optional writeback
+comment|//
+comment|// This is stored in three operands [regaddr, regupdate, opc].  The first is
+comment|// the address register.  The second register holds the value of a post-access
+comment|// increment for writeback or reg0 if no writeback or if the writeback
+comment|// increment is the size of the memory access.  The third operand encodes
+comment|// whether there is writeback to the address register.
+specifier|static
+specifier|inline
+name|unsigned
+name|getAM6Opc
+parameter_list|(
+name|bool
+name|WB
+init|=
+name|false
+parameter_list|)
+block|{
+return|return
+operator|(
+name|int
+operator|)
+name|WB
+return|;
+block|}
+specifier|static
+specifier|inline
+name|bool
+name|getAM6WBFlag
+parameter_list|(
+name|unsigned
+name|Mode
+parameter_list|)
+block|{
+return|return
+name|Mode
+operator|&
+literal|1
 return|;
 block|}
 block|}

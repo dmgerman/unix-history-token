@@ -148,9 +148,9 @@ comment|// Add with a PC operand and a PIC label.
 name|CMP
 block|,
 comment|// ARM compare instructions.
-name|CMPNZ
+name|CMPZ
 block|,
-comment|// ARM compare that uses only N or Z flags.
+comment|// ARM compare that sets only Z flag.
 name|CMPFP
 block|,
 comment|// ARM VFP compare instruction, sets FPSCR.
@@ -550,6 +550,15 @@ return|return
 name|Subtarget
 return|;
 block|}
+comment|/// getFunctionAlignment - Return the Log2 alignment of this function.
+name|virtual
+name|unsigned
+name|getFunctionAlignment
+argument_list|(
+argument|const Function *F
+argument_list|)
+specifier|const
+block|;
 name|private
 operator|:
 comment|/// Subtarget - Keep a pointer to the ARMSubtarget around so that we can

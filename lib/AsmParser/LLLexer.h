@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/SourceMgr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -94,7 +100,7 @@ name|class
 name|Type
 decl_stmt|;
 name|class
-name|ParseError
+name|SMDiagnostic
 decl_stmt|;
 name|class
 name|LLLexer
@@ -108,9 +114,13 @@ name|MemoryBuffer
 modifier|*
 name|CurBuf
 decl_stmt|;
-name|ParseError
+name|SMDiagnostic
 modifier|&
 name|ErrorInfo
+decl_stmt|;
+name|SourceMgr
+modifier|&
+name|SM
 decl_stmt|;
 comment|// Information about the current token.
 specifier|const
@@ -156,7 +166,11 @@ name|MemoryBuffer
 modifier|*
 name|StartBuf
 parameter_list|,
-name|ParseError
+name|SourceMgr
+modifier|&
+name|SM
+parameter_list|,
+name|SMDiagnostic
 modifier|&
 parameter_list|)
 function_decl|;
@@ -178,9 +192,7 @@ argument_list|()
 return|;
 block|}
 typedef|typedef
-specifier|const
-name|char
-modifier|*
+name|SMLoc
 name|LocTy
 typedef|;
 name|LocTy
@@ -189,7 +201,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|SMLoc
+operator|::
+name|getFromPointer
+argument_list|(
 name|TokStart
+argument_list|)
 return|;
 block|}
 name|lltok
@@ -287,7 +304,8 @@ block|{
 return|return
 name|Error
 argument_list|(
-name|CurPtr
+name|getLoc
+argument_list|()
 argument_list|,
 name|Msg
 argument_list|)

@@ -121,8 +121,6 @@ argument|X86TargetMachine&TM
 argument_list|,
 argument|const TargetAsmInfo *T
 argument_list|,
-argument|CodeGenOpt::Level OL
-argument_list|,
 argument|bool V
 argument_list|)
 operator|:
@@ -133,8 +131,6 @@ argument_list|,
 argument|TM
 argument_list|,
 argument|T
-argument_list|,
-argument|OL
 argument_list|,
 argument|V
 argument_list|)
@@ -345,6 +341,25 @@ name|OpNo
 argument_list|)
 block|;   }
 name|void
+name|printi256mem
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|)
+block|{
+name|O
+operator|<<
+literal|"YMMWORD PTR "
+block|;
+name|printMemReference
+argument_list|(
+name|MI
+argument_list|,
+name|OpNo
+argument_list|)
+block|;   }
+name|void
 name|printf32mem
 argument_list|(
 argument|const MachineInstr *MI
@@ -412,6 +427,25 @@ block|{
 name|O
 operator|<<
 literal|"XMMWORD PTR "
+block|;
+name|printMemReference
+argument_list|(
+name|MI
+argument_list|,
+name|OpNo
+argument_list|)
+block|;   }
+name|void
+name|printf256mem
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|)
+block|{
+name|O
+operator|<<
+literal|"YMMWORD PTR "
 block|;
 name|printMemReference
 argument_list|(

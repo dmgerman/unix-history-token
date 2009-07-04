@@ -131,6 +131,10 @@ name|class
 name|ArchiveMemberHeader
 decl_stmt|;
 comment|// Internal implementation class
+name|class
+name|LLVMContext
+decl_stmt|;
+comment|// Global data
 comment|/// This class is the main class manipulated by users of the Archive class. It
 comment|/// holds information about one member of the Archive. It is also the element
 comment|/// stored by the Archive's ilist, the Archive's main abstraction. Because of
@@ -896,7 +900,12 @@ operator|::
 name|Path
 operator|&
 name|Filename
+argument_list|,
 comment|///< Name of the archive to (eventually) create.
+name|LLVMContext
+operator|&
+name|C
+comment|///< Context to use for global information
 argument_list|)
 decl_stmt|;
 comment|/// Open an existing archive and load its contents in preparation for
@@ -918,6 +927,11 @@ operator|&
 name|filePath
 argument_list|,
 comment|///< The file path to open and load
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
+comment|///< The context to use for global information
 name|std
 operator|::
 name|string
@@ -955,6 +969,11 @@ operator|&
 name|Filename
 argument_list|,
 comment|///< Name of the archive file to open
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
+comment|///< The context to use for global info
 name|std
 operator|::
 name|string
@@ -1250,6 +1269,10 @@ operator|::
 name|Path
 operator|&
 name|filename
+argument_list|,
+name|LLVMContext
+operator|&
+name|C
 argument_list|)
 decl_stmt|;
 comment|/// @param data The symbol table data to be parsed
@@ -1507,6 +1530,11 @@ modifier|*
 name|foreignST
 decl_stmt|;
 comment|///< This holds the foreign symbol table.
+name|LLVMContext
+modifier|&
+name|Context
+decl_stmt|;
+comment|///< This holds global data.
 comment|/// @}
 comment|/// @name Hidden
 comment|/// @{

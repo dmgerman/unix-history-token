@@ -108,9 +108,7 @@ comment|// run - Output the isel, returning true on failure.
 name|void
 name|run
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 argument_list|)

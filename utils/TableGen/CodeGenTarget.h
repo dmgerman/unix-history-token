@@ -74,6 +74,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"CodeGenRegisters.h"
 end_include
 
@@ -87,12 +93,6 @@ begin_include
 include|#
 directive|include
 file|<algorithm>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<iosfwd>
 end_include
 
 begin_include

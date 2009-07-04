@@ -129,24 +129,19 @@ comment|///
 name|FunctionPass
 modifier|*
 name|createX86CodePrinterPass
-argument_list|(
+parameter_list|(
 name|raw_ostream
-operator|&
+modifier|&
 name|o
-argument_list|,
+parameter_list|,
 name|X86TargetMachine
-operator|&
+modifier|&
 name|tm
-argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-name|OptLevel
-argument_list|,
+parameter_list|,
 name|bool
 name|Verbose
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// createX86CodeEmitterPass - Return a pass that emits the collected X86 code
 comment|/// to the specified MCE object.
 name|FunctionPass

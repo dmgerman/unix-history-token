@@ -91,6 +91,9 @@ name|class
 name|BitstreamWriter
 decl_stmt|;
 name|class
+name|LLVMContext
+decl_stmt|;
+name|class
 name|raw_ostream
 decl_stmt|;
 comment|/// getBitcodeModuleProvider - Read the header of the specified bitcode buffer
@@ -105,6 +108,10 @@ argument_list|(
 name|MemoryBuffer
 operator|*
 name|Buffer
+argument_list|,
+name|LLVMContext
+operator|&
+name|Context
 argument_list|,
 name|std
 operator|::
@@ -125,6 +132,10 @@ argument_list|(
 name|MemoryBuffer
 operator|*
 name|Buffer
+argument_list|,
+name|LLVMContext
+operator|&
+name|Context
 argument_list|,
 name|std
 operator|::

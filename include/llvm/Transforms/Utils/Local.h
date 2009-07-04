@@ -74,6 +74,9 @@ name|class
 name|BasicBlock
 decl_stmt|;
 name|class
+name|BranchInst
+decl_stmt|;
+name|class
 name|Instruction
 decl_stmt|;
 name|class
@@ -208,6 +211,18 @@ parameter_list|(
 name|BasicBlock
 modifier|*
 name|BB
+parameter_list|)
+function_decl|;
+comment|/// FoldBranchToCommonDest - If this basic block is ONLY a setcc and a branch,
+comment|/// and if a predecessor branches to us and one of our successors, fold the
+comment|/// setcc into the predecessor and use logical operations to pick the right
+comment|/// destination.
+name|bool
+name|FoldBranchToCommonDest
+parameter_list|(
+name|BranchInst
+modifier|*
+name|BI
 parameter_list|)
 function_decl|;
 comment|/// DemoteRegToStack - This function takes a virtual register computed by an

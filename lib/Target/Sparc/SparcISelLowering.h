@@ -266,6 +266,15 @@ argument_list|(
 argument|const GlobalAddressSDNode *GA
 argument_list|)
 specifier|const
+block|;
+comment|/// getFunctionAlignment - Return the Log2 alignment of this function.
+name|virtual
+name|unsigned
+name|getFunctionAlignment
+argument_list|(
+argument|const Function *F
+argument_list|)
+specifier|const
 block|;   }
 decl_stmt|;
 block|}

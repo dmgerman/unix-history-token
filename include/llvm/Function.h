@@ -112,6 +112,9 @@ block|{
 name|class
 name|FunctionType
 decl_stmt|;
+name|class
+name|LLVMContext
+decl_stmt|;
 comment|// Traits for intrusive list of basic blocks...
 name|template
 operator|<
@@ -537,6 +540,13 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|// Return the FunctionType for me
+comment|/// getContext - Return a pointer to the LLVMContext associated with this
+comment|/// function, or NULL if this function is not bound to a context yet.
+name|LLVMContext
+modifier|*
+name|getContext
+parameter_list|()
+function_decl|;
 comment|/// isVarArg - Return true if this function takes a variable number of
 comment|/// arguments.
 name|bool

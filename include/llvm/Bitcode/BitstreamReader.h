@@ -1528,7 +1528,10 @@ operator|(
 name|Piece
 operator|&
 operator|(
-literal|1U
+name|uint64_t
+argument_list|(
+literal|1
+argument_list|)
 operator|<<
 operator|(
 name|NumBits
@@ -1586,7 +1589,10 @@ operator|(
 name|Piece
 operator|&
 operator|(
-literal|1U
+name|uint64_t
+argument_list|(
+literal|1
+argument_list|)
 operator|<<
 operator|(
 name|NumBits

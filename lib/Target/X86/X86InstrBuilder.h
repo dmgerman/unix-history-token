@@ -160,6 +160,9 @@ name|GlobalValue
 modifier|*
 name|GV
 decl_stmt|;
+name|unsigned
+name|GVOpFlags
+decl_stmt|;
 name|X86AddressMode
 argument_list|()
 operator|:
@@ -184,6 +187,11 @@ literal|0
 argument_list|)
 operator|,
 name|GV
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|GVOpFlags
 argument_list|(
 literal|0
 argument_list|)
@@ -575,6 +583,10 @@ argument_list|,
 name|AM
 operator|.
 name|Disp
+argument_list|,
+name|AM
+operator|.
+name|GVOpFlags
 argument_list|)
 return|;
 else|else

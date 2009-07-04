@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<llvm/ADT/SmallVector.h>
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include

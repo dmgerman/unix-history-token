@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<string>
+file|"llvm/Support/raw_ostream.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<iosfwd>
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -99,9 +99,7 @@ name|virtual
 name|void
 name|run
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 argument_list|)
@@ -123,9 +121,7 @@ name|string
 operator|&
 name|Desc
 argument_list|,
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 argument_list|)

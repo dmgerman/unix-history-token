@@ -110,7 +110,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ThumbInstrInfo.h"
+file|"Thumb1InstrInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"Thumb2InstrInfo.h"
 end_include
 
 begin_decl_stmt
@@ -155,10 +161,10 @@ comment|// set this functions to ctor pointer at startup time if they are linked
 typedef|typedef
 name|FunctionPass
 modifier|*
-typedef|(
+function_decl|(
 modifier|*
 name|AsmPrinterCtorFn
-typedef|)
+function_decl|)
 parameter_list|(
 name|raw_ostream
 modifier|&
@@ -168,13 +174,10 @@ name|ARMBaseTargetMachine
 modifier|&
 name|tm
 parameter_list|,
-typedef|CodeGenOpt::
-name|Level
-name|OptLevel
-typedef|,
 name|bool
 name|verbose
-typedef|);
+parameter_list|)
+function_decl|;
 specifier|static
 name|AsmPrinterCtorFn
 name|AsmPrinterCtor
@@ -556,6 +559,14 @@ comment|/// ThumbTargetMachine - Thumb target machine.
 end_comment
 
 begin_comment
+comment|/// Due to the way architectures are handled, this represents both
+end_comment
+
+begin_comment
+comment|///   Thumb-1 and Thumb-2.
+end_comment
+
+begin_comment
 comment|///
 end_comment
 
@@ -566,9 +577,11 @@ range|:
 name|public
 name|ARMBaseTargetMachine
 block|{
-name|ThumbInstrInfo
+name|ARMBaseInstrInfo
+operator|*
 name|InstrInfo
 block|;
+comment|// either Thumb1InstrInfo or Thumb2InstrInfo
 specifier|const
 name|TargetData
 name|DataLayout
@@ -594,9 +607,10 @@ operator|&
 name|FS
 argument_list|)
 block|;
+comment|/// returns either Thumb1RegisterInfo of Thumb2RegisterInfo
 name|virtual
 specifier|const
-name|ARMRegisterInfo
+name|ARMBaseRegisterInfo
 operator|*
 name|getRegisterInfo
 argument_list|()
@@ -605,7 +619,7 @@ block|{
 return|return
 operator|&
 name|InstrInfo
-operator|.
+operator|->
 name|getRegisterInfo
 argument_list|()
 return|;
@@ -629,16 +643,16 @@ name|TLInfo
 operator|)
 return|;
 block|}
+comment|/// returns either Thumb1InstrInfo or Thumb2InstrInfo
 name|virtual
 specifier|const
-name|ThumbInstrInfo
+name|ARMBaseInstrInfo
 operator|*
 name|getInstrInfo
 argument_list|()
 specifier|const
 block|{
 return|return
-operator|&
 name|InstrInfo
 return|;
 block|}

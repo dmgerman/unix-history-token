@@ -133,6 +133,9 @@ decl_stmt|;
 name|class
 name|LoopInfo
 decl_stmt|;
+name|class
+name|LLVMContext
+decl_stmt|;
 name|template
 operator|<
 name|class

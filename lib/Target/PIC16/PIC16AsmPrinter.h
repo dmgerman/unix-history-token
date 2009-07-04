@@ -149,8 +149,6 @@ argument|PIC16TargetMachine&TM
 argument_list|,
 argument|const TargetAsmInfo *T
 argument_list|,
-argument|CodeGenOpt::Level OL
-argument_list|,
 argument|bool V
 argument_list|)
 operator|:
@@ -161,8 +159,6 @@ argument_list|,
 name|TM
 argument_list|,
 name|T
-argument_list|,
-name|OL
 argument_list|,
 name|V
 argument_list|)

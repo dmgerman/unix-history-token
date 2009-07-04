@@ -81,6 +81,9 @@ decl_stmt|;
 name|class
 name|InferiorProcess
 decl_stmt|;
+name|class
+name|LLVMContext
+decl_stmt|;
 comment|/// Debugger class - This class implements the LLVM source-level debugger.
 comment|/// This allows clients to handle the user IO processing without having to
 comment|/// worry about how the debugger itself works.
@@ -291,6 +294,10 @@ operator|::
 name|string
 operator|&
 name|Path
+argument_list|,
+name|LLVMContext
+operator|&
+name|Context
 argument_list|)
 decl_stmt|;
 comment|/// unloadProgram - If a program is running, kill it, then unload all traces

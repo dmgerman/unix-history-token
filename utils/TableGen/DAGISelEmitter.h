@@ -121,9 +121,7 @@ comment|// run - Output the isel, returning true on failure.
 name|void
 name|run
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 argument_list|)
@@ -133,9 +131,7 @@ operator|:
 name|void
 name|EmitNodeTransforms
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 argument_list|)
@@ -143,9 +139,7 @@ block|;
 name|void
 name|EmitPredicateFunctions
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 argument_list|)
@@ -229,15 +223,13 @@ argument|std::string>>>>&Patterns
 argument_list|,
 argument|unsigned Indent
 argument_list|,
-argument|std::ostream&OS
+argument|raw_ostream&OS
 argument_list|)
 block|;
 name|void
 name|EmitInstructionSelector
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 argument_list|)

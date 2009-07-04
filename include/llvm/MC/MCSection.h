@@ -31,6 +31,22 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This file declares the MCSection class.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -53,6 +69,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+comment|/// MCSection - Instances of this class represent a uniqued identifier for a
+comment|/// section in the current translation unit.  The MCContext class uniques and
+comment|/// creates these.
 name|class
 name|MCSection
 block|{
@@ -61,8 +80,12 @@ operator|::
 name|string
 name|Name
 expr_stmt|;
-name|public
+name|private
 label|:
+name|friend
+name|class
+name|MCContext
+decl_stmt|;
 name|MCSection
 argument_list|(
 specifier|const
@@ -76,6 +99,26 @@ argument_list|(
 argument|_Name
 argument_list|)
 block|{}
+name|MCSection
+argument_list|(
+specifier|const
+name|MCSection
+operator|&
+argument_list|)
+expr_stmt|;
+comment|// DO NOT IMPLEMENT
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|MCSection
+operator|&
+operator|)
+decl_stmt|;
+comment|// DO NOT IMPLEMENT
+name|public
+label|:
 specifier|const
 name|std
 operator|::

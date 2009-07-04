@@ -170,9 +170,9 @@ comment|/// STD_32 - This is the STD instruction for use with "32-bit" registers
 name|STD_32
 block|,
 comment|/// CALL - A direct function call.
-name|CALL_Macho
+name|CALL_Darwin
 block|,
-name|CALL_ELF
+name|CALL_SVR4
 block|,
 comment|/// CHAIN,FLAG = MTCTR(VAL, CHAIN[, INFLAG]) - Directly corresponds to a
 comment|/// MTCTR instruction.
@@ -180,9 +180,9 @@ name|MTCTR
 block|,
 comment|/// CHAIN,FLAG = BCTRL(CHAIN, INFLAG) - Directly corresponds to a
 comment|/// BCTRL instruction.
-name|BCTRL_Macho
+name|BCTRL_Darwin
 block|,
-name|BCTRL_ELF
+name|BCTRL_SVR4
 block|,
 comment|/// Return with a flag operand, matched by 'blr'
 name|RET_FLAG
@@ -420,10 +420,6 @@ name|VarArgsNumFPR
 block|;
 comment|// Index of the first unused double
 comment|// register for parameter passing.
-name|int
-name|ReturnAddrIndex
-block|;
-comment|// FrameIndex for return slot.
 specifier|const
 name|PPCSubtarget
 operator|&
@@ -757,6 +753,31 @@ argument|const GlobalAddressSDNode *GA
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|MVT
+name|getOptimalMemOpType
+argument_list|(
+argument|uint64_t Size
+argument_list|,
+argument|unsigned Align
+argument_list|,
+argument|bool isSrcConst
+argument_list|,
+argument|bool isSrcStr
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+comment|/// getFunctionAlignment - Return the Log2 alignment of this function.
+name|virtual
+name|unsigned
+name|getFunctionAlignment
+argument_list|(
+argument|const Function *F
+argument_list|)
+specifier|const
+block|;
 name|private
 operator|:
 name|SDValue
@@ -785,6 +806,8 @@ argument_list|,
 argument|SDValue&LROpOut
 argument_list|,
 argument|SDValue&FPOpOut
+argument_list|,
+argument|bool isDarwinABI
 argument_list|,
 argument|DebugLoc dl
 argument_list|)
@@ -890,7 +913,7 @@ argument|const PPCSubtarget&Subtarget
 argument_list|)
 block|;
 name|SDValue
-name|LowerFORMAL_ARGUMENTS
+name|LowerFORMAL_ARGUMENTS_SVR4
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -908,7 +931,31 @@ argument|const PPCSubtarget&Subtarget
 argument_list|)
 block|;
 name|SDValue
-name|LowerCALL
+name|LowerFORMAL_ARGUMENTS_Darwin
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|int&VarArgsFrameIndex
+argument_list|,
+argument|const PPCSubtarget&Subtarget
+argument_list|)
+block|;
+name|SDValue
+name|LowerCALL_Darwin
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|const PPCSubtarget&Subtarget
+argument_list|,
+argument|TargetMachine&TM
+argument_list|)
+block|;
+name|SDValue
+name|LowerCALL_SVR4
 argument_list|(
 argument|SDValue Op
 argument_list|,

@@ -287,11 +287,10 @@ literal|8
 operator|>
 name|CompileUnits
 block|;
-comment|/// MainCU - Some platform prefers one compile unit per .o file. In such
-comment|/// cases, all dies are inserted in MainCU.
+comment|/// ModuleCU - All DIEs are inserted in ModuleCU.
 name|CompileUnit
 operator|*
-name|MainCU
+name|ModuleCU
 block|;
 comment|/// AbbreviationsSet - Used to uniquely define abbreviations.
 comment|///

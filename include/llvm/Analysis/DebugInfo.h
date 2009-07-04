@@ -132,6 +132,21 @@ struct_decl|;
 struct_decl|struct
 name|DbgDeclareInst
 struct_decl|;
+struct_decl|struct
+name|DbgFuncStartInst
+struct_decl|;
+struct_decl|struct
+name|DbgRegionStartInst
+struct_decl|;
+struct_decl|struct
+name|DbgRegionEndInst
+struct_decl|;
+name|class
+name|DebugLoc
+decl_stmt|;
+name|class
+name|DebugLocTracker
+decl_stmt|;
 name|class
 name|Instruction
 decl_stmt|;
@@ -2275,6 +2290,112 @@ literal|4
 operator|>
 operator|&
 name|Subprograms
+argument_list|)
+block|;
+comment|/// isValidDebugInfoIntrinsic - Return true if SPI is a valid debug
+comment|/// info intrinsic.
+name|bool
+name|isValidDebugInfoIntrinsic
+argument_list|(
+argument|DbgStopPointInst&SPI
+argument_list|,
+argument|CodeGenOpt::Level OptLev
+argument_list|)
+block|;
+comment|/// isValidDebugInfoIntrinsic - Return true if FSI is a valid debug
+comment|/// info intrinsic.
+name|bool
+name|isValidDebugInfoIntrinsic
+argument_list|(
+argument|DbgFuncStartInst&FSI
+argument_list|,
+argument|CodeGenOpt::Level OptLev
+argument_list|)
+block|;
+comment|/// isValidDebugInfoIntrinsic - Return true if RSI is a valid debug
+comment|/// info intrinsic.
+name|bool
+name|isValidDebugInfoIntrinsic
+argument_list|(
+argument|DbgRegionStartInst&RSI
+argument_list|,
+argument|CodeGenOpt::Level OptLev
+argument_list|)
+block|;
+comment|/// isValidDebugInfoIntrinsic - Return true if REI is a valid debug
+comment|/// info intrinsic.
+name|bool
+name|isValidDebugInfoIntrinsic
+argument_list|(
+argument|DbgRegionEndInst&REI
+argument_list|,
+argument|CodeGenOpt::Level OptLev
+argument_list|)
+block|;
+comment|/// isValidDebugInfoIntrinsic - Return true if DI is a valid debug
+comment|/// info intrinsic.
+name|bool
+name|isValidDebugInfoIntrinsic
+argument_list|(
+argument|DbgDeclareInst&DI
+argument_list|,
+argument|CodeGenOpt::Level OptLev
+argument_list|)
+block|;
+comment|/// ExtractDebugLocation - Extract debug location information
+comment|/// from llvm.dbg.stoppoint intrinsic.
+name|DebugLoc
+name|ExtractDebugLocation
+argument_list|(
+name|DbgStopPointInst
+operator|&
+name|SPI
+argument_list|,
+name|DebugLocTracker
+operator|&
+name|DebugLocInfo
+argument_list|)
+block|;
+comment|/// ExtractDebugLocation - Extract debug location information
+comment|/// from llvm.dbg.func_start intrinsic.
+name|DebugLoc
+name|ExtractDebugLocation
+argument_list|(
+name|DbgFuncStartInst
+operator|&
+name|FSI
+argument_list|,
+name|DebugLocTracker
+operator|&
+name|DebugLocInfo
+argument_list|)
+block|;
+comment|/// isInlinedFnStart - Return true if FSI is starting an inlined function.
+name|bool
+name|isInlinedFnStart
+argument_list|(
+name|DbgFuncStartInst
+operator|&
+name|FSI
+argument_list|,
+specifier|const
+name|Function
+operator|*
+name|CurrentFn
+argument_list|)
+block|;
+comment|/// isInlinedFnEnd - Return true if REI is ending an inlined function.
+name|bool
+name|isInlinedFnEnd
+argument_list|(
+name|DbgRegionEndInst
+operator|&
+name|REI
+argument_list|,
+specifier|const
+name|Function
+operator|*
+name|CurrentFn
 argument_list|)
 block|;  }
 end_decl_stmt

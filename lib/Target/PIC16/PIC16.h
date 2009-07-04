@@ -487,6 +487,10 @@ operator|&&
 literal|"Could not determine Symbol's tag"
 argument_list|)
 expr_stmt|;
+return|return
+name|PREFIX_SYMBOL
+return|;
+comment|// Silence warning when assertions are turned off.
 block|}
 comment|// addPrefix - add prefix symbol to a name if there isn't one already.
 specifier|inline
@@ -1377,29 +1381,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|FunctionPass
 modifier|*
 name|createPIC16CodePrinterPass
-argument_list|(
+parameter_list|(
 name|raw_ostream
-operator|&
+modifier|&
 name|OS
-argument_list|,
+parameter_list|,
 name|PIC16TargetMachine
-operator|&
+modifier|&
 name|TM
-argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-name|OptLevel
-argument_list|,
+parameter_list|,
 name|bool
 name|Verbose
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|// Banksel optimzer pass.

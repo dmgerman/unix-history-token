@@ -179,11 +179,6 @@ comment|/// available, unset means the register is currently being used.
 name|BitVector
 name|RegsAvailable
 decl_stmt|;
-comment|/// ImplicitDefed - If bit is set that means the register is defined by an
-comment|/// implicit_def instructions. That means it can be clobbered at will.
-name|BitVector
-name|ImplicitDefed
-decl_stmt|;
 comment|/// CurrDist - Distance from MBB entry to the current instruction MBBI.
 comment|///
 name|unsigned
@@ -376,21 +371,6 @@ name|Reg
 index|]
 return|;
 block|}
-name|bool
-name|isImplicitlyDefined
-argument_list|(
-name|unsigned
-name|Reg
-argument_list|)
-decl|const
-block|{
-return|return
-name|ImplicitDefed
-index|[
-name|Reg
-index|]
-return|;
-block|}
 comment|/// getRegsUsed - return all registers currently in use in used.
 name|void
 name|getRegsUsed
@@ -410,11 +390,6 @@ name|setUsed
 parameter_list|(
 name|unsigned
 name|Reg
-parameter_list|,
-name|bool
-name|ImpDef
-init|=
-name|false
 parameter_list|)
 function_decl|;
 name|void
@@ -423,28 +398,9 @@ parameter_list|(
 name|BitVector
 modifier|&
 name|Regs
-parameter_list|,
-name|bool
-name|ImpDef
-init|=
-name|false
 parameter_list|)
 block|{
 name|RegsAvailable
-operator|&=
-operator|~
-name|Regs
-expr_stmt|;
-if|if
-condition|(
-name|ImpDef
-condition|)
-name|ImplicitDefed
-operator||=
-name|Regs
-expr_stmt|;
-else|else
-name|ImplicitDefed
 operator|&=
 operator|~
 name|Regs
@@ -472,11 +428,6 @@ parameter_list|)
 block|{
 name|RegsAvailable
 operator||=
-name|Regs
-expr_stmt|;
-name|ImplicitDefed
-operator|&=
-operator|~
 name|Regs
 expr_stmt|;
 block|}

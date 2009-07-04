@@ -100,9 +100,7 @@ comment|// run - Output the asmwriter, returning true on failure.
 name|void
 name|run
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|o
 argument_list|)

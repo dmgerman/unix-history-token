@@ -36,15 +36,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file declares the SourceMgr class.  This class is used as a simple
+comment|// This file declares the SMLoc, SMDiagnostic and SourceMgr classes.  This
 end_comment
 
 begin_comment
-comment|// substrate for diagnostics, #include handling, and other low level things for
+comment|// provides a simple substrate for diagnostics, #include handling, and other low
 end_comment
 
 begin_comment
-comment|// simple parsers.
+comment|// level things for simple parsers.
 end_comment
 
 begin_comment
@@ -96,6 +96,12 @@ name|class
 name|SourceMgr
 decl_stmt|;
 name|class
+name|SMDiagnostic
+decl_stmt|;
+name|class
+name|raw_ostream
+decl_stmt|;
+name|class
 name|SMLoc
 block|{
 specifier|const
@@ -126,6 +132,17 @@ argument_list|(
 argument|RHS.Ptr
 argument_list|)
 block|{}
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Ptr
+operator|!=
+literal|0
+return|;
+block|}
 name|bool
 name|operator
 operator|==
@@ -200,8 +217,8 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// SourceMgr - This owns the files read by tblgen, handles include stacks,
-comment|/// and handles printing of diagnostics.
+comment|/// SourceMgr - This owns the files read by a parser, handles include stacks,
+comment|/// and handles diagnostic wrangling.
 name|class
 name|SourceMgr
 block|{
@@ -465,6 +482,9 @@ decl|const
 decl_stmt|;
 comment|/// PrintMessage - Emit a message about the specified location with the
 comment|/// specified string.
+comment|///
+comment|/// @param Type - If non-null, the kind of message (e.g., "error") which is
+comment|/// prefixed to the message.
 name|void
 name|PrintMessage
 argument_list|(
@@ -477,6 +497,36 @@ operator|::
 name|string
 operator|&
 name|Msg
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Type
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// GetMessage - Return an SMDiagnostic at the specified location with the
+comment|/// specified string.
+comment|///
+comment|/// @param Type - If non-null, the kind of message (e.g., "error") which is
+comment|/// prefixed to the message.
+name|SMDiagnostic
+name|GetMessage
+argument_list|(
+name|SMLoc
+name|Loc
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Msg
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Type
 argument_list|)
 decl|const
 decl_stmt|;
@@ -487,9 +537,154 @@ name|PrintIncludeStack
 argument_list|(
 name|SMLoc
 name|IncludeLoc
+argument_list|,
+name|raw_ostream
+operator|&
+name|OS
 argument_list|)
 decl|const
 decl_stmt|;
+block|}
+empty_stmt|;
+comment|/// SMDiagnostic - Instances of this class encapsulate one diagnostic report,
+comment|/// allowing printing to a raw_ostream as a caret diagnostic.
+name|class
+name|SMDiagnostic
+block|{
+name|std
+operator|::
+name|string
+name|Filename
+expr_stmt|;
+name|int
+name|LineNo
+decl_stmt|,
+name|ColumnNo
+decl_stmt|;
+name|std
+operator|::
+name|string
+name|Message
+operator|,
+name|LineContents
+expr_stmt|;
+name|public
+label|:
+name|SMDiagnostic
+argument_list|()
+operator|:
+name|LineNo
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|ColumnNo
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|SMDiagnostic
+argument_list|(
+argument|const std::string&FN
+argument_list|,
+argument|int Line
+argument_list|,
+argument|int Col
+argument_list|,
+argument|const std::string&Msg
+argument_list|,
+argument|const std::string&LineStr
+argument_list|)
+operator|:
+name|Filename
+argument_list|(
+name|FN
+argument_list|)
+operator|,
+name|LineNo
+argument_list|(
+name|Line
+argument_list|)
+operator|,
+name|ColumnNo
+argument_list|(
+name|Col
+argument_list|)
+operator|,
+name|Message
+argument_list|(
+name|Msg
+argument_list|)
+operator|,
+name|LineContents
+argument_list|(
+argument|LineStr
+argument_list|)
+block|{}
+name|SMDiagnostic
+argument_list|(
+argument|const SMDiagnostic&RHS
+argument_list|)
+block|{
+name|operator
+operator|=
+operator|(
+name|RHS
+operator|)
+block|;   }
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|SMDiagnostic
+operator|&
+name|E
+operator|)
+block|{
+name|Filename
+operator|=
+name|E
+operator|.
+name|Filename
+block|;
+name|LineNo
+operator|=
+name|E
+operator|.
+name|LineNo
+block|;
+name|ColumnNo
+operator|=
+name|E
+operator|.
+name|ColumnNo
+block|;
+name|Message
+operator|=
+name|E
+operator|.
+name|Message
+block|;
+name|LineContents
+operator|=
+name|E
+operator|.
+name|LineContents
+block|;   }
+name|void
+name|Print
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|ProgName
+argument_list|,
+name|raw_ostream
+operator|&
+name|S
+argument_list|)
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

@@ -405,10 +405,16 @@ literal|"Type query could never succeed on PointerUnion!"
 argument_list|)
 block|;
 return|return
+name|static_cast
+operator|<
+name|int
+operator|>
+operator|(
 name|Val
 operator|.
 name|getInt
 argument_list|()
+operator|)
 operator|==
 name|TyNo
 return|;

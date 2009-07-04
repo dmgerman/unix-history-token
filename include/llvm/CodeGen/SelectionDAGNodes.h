@@ -8388,6 +8388,9 @@ block|;
 name|bool
 name|IsTailCall
 block|;
+name|unsigned
+name|NumFixedArgs
+block|;
 comment|// We might eventually want a full-blown Attributes for the result; that
 comment|// will expand the size of the representation.  At the moment we only
 comment|// need Inreg.
@@ -8415,6 +8418,8 @@ argument_list|,
 argument|const SDValue *Operands
 argument_list|,
 argument|unsigned numOperands
+argument_list|,
+argument|unsigned numFixedArgs
 argument_list|)
 operator|:
 name|SDNode
@@ -8445,6 +8450,11 @@ block|,
 name|IsTailCall
 argument_list|(
 name|istailcall
+argument_list|)
+block|,
+name|NumFixedArgs
+argument_list|(
+name|numFixedArgs
 argument_list|)
 block|,
 name|Inreg
@@ -8540,6 +8550,25 @@ literal|2
 operator|)
 operator|/
 literal|2
+return|;
+block|}
+name|unsigned
+name|getNumFixedArgs
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|isVarArg
+argument_list|()
+condition|)
+return|return
+name|NumFixedArgs
+return|;
+else|else
+return|return
+name|getNumArgs
+argument_list|()
 return|;
 block|}
 name|SDValue
@@ -8882,9 +8911,9 @@ operator|==
 name|ISD
 operator|::
 name|LOAD
-condition|?
+operator|?
 literal|2
-else|:
+operator|:
 literal|3
 argument_list|)
 return|;

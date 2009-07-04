@@ -1110,7 +1110,11 @@ argument_list|)
 expr_stmt|;
 return|return
 name|MVT
-argument_list|()
+argument_list|(
+name|MVT
+operator|::
+name|Other
+argument_list|)
 return|;
 comment|// Not reached
 block|}
@@ -2604,7 +2608,11 @@ argument_list|)
 expr_stmt|;
 return|return
 name|MVT
-argument_list|()
+argument_list|(
+name|MVT
+operator|::
+name|Other
+argument_list|)
 return|;
 comment|// Not reached
 block|}
@@ -3112,6 +3120,19 @@ operator|*
 name|GA
 argument_list|)
 decl|const
+decl_stmt|;
+comment|/// getFunctionAlignment - Return the Log2 alignment of this function.
+name|virtual
+name|unsigned
+name|getFunctionAlignment
+argument_list|(
+specifier|const
+name|Function
+operator|*
+argument_list|)
+decl|const
+init|=
+literal|0
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// TargetLowering Optimization Methods
@@ -4768,6 +4789,8 @@ argument_list|,
 argument|bool isVarArg
 argument_list|,
 argument|bool isInreg
+argument_list|,
+argument|unsigned NumFixedArgs
 argument_list|,
 argument|unsigned CallingConv
 argument_list|,

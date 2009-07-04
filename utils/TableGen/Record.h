@@ -78,19 +78,22 @@ end_include
 begin_include
 include|#
 directive|include
-file|<map>
+file|"llvm/Support/raw_ostream.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ostream>
+file|<map>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|raw_ostream
+decl_stmt|;
 comment|// RecTy subclasses.
 name|class
 name|BitRecTy
@@ -205,9 +208,7 @@ expr_stmt|;
 name|void
 name|print
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 argument_list|)
@@ -629,16 +630,12 @@ block|}
 block|}
 struct|;
 specifier|inline
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|operator
 operator|<<
 operator|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 operator|,
@@ -3581,7 +3578,7 @@ comment|/// print - Print out this value.
 name|void
 name|print
 argument_list|(
-argument|std::ostream&OS
+argument|raw_ostream&OS
 argument_list|)
 specifier|const
 block|{
@@ -3602,7 +3599,7 @@ operator|=
 literal|0
 block|;
 comment|/// dump - Debugging method that may be called through a debugger, just
-comment|/// invokes print on cerr.
+comment|/// invokes print on stderr.
 name|void
 name|dump
 argument_list|()
@@ -3716,16 +3713,12 @@ block|}
 expr|}
 block|;
 specifier|inline
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|operator
 operator|<<
 operator|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 expr|,
@@ -4180,21 +4173,21 @@ comment|// it is not possible.
 name|bool
 name|printInHex
 argument_list|(
-argument|std::ostream&OS
+argument|raw_ostream&OS
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|printAsVariable
 argument_list|(
-argument|std::ostream&OS
+argument|raw_ostream&OS
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|printAsUnset
 argument_list|(
-argument|std::ostream&OS
+argument|raw_ostream&OS
 argument_list|)
 specifier|const
 block|; }
@@ -5166,6 +5159,19 @@ name|RecordVal
 operator|*
 name|RV
 argument_list|)
+block|;
+comment|/// getFieldType - This method is used to implement the FieldInit class.
+comment|/// Implementors of this method should return the type of the named field if
+comment|/// they are of record type.
+comment|///
+name|virtual
+name|RecTy
+operator|*
+name|getFieldType
+argument_list|(
+argument|const std::string&FieldName
+argument_list|)
+specifier|const
 block|;
 name|virtual
 name|std
@@ -7102,7 +7108,7 @@ block|;
 name|void
 name|print
 argument_list|(
-argument|std::ostream&OS
+argument|raw_ostream&OS
 argument_list|,
 argument|bool PrintSem = true
 argument_list|)
@@ -7110,16 +7116,12 @@ specifier|const
 block|; }
 block|;
 specifier|inline
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|operator
 operator|<<
 operator|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 expr|,
@@ -7849,16 +7851,12 @@ argument_list|)
 specifier|const
 block|; }
 block|;
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|operator
 operator|<<
 operator|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 expr|,
@@ -8430,16 +8428,12 @@ return|;
 block|}
 expr|}
 block|;
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|operator
 operator|<<
 operator|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 expr|,

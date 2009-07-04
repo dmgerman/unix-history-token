@@ -400,7 +400,7 @@ operator|)
 return|;
 block|}
 name|bool
-name|hasThumb2
+name|isThumb2
 argument_list|()
 specifier|const
 block|{
@@ -412,6 +412,17 @@ name|ThumbMode
 operator|>=
 name|Thumb2
 operator|)
+return|;
+block|}
+name|bool
+name|hasThumb2
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ThumbMode
+operator|>=
+name|Thumb2
 return|;
 block|}
 name|bool

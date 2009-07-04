@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Module.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Type.h"
 end_include
 
@@ -127,6 +133,10 @@ name|LocTy
 expr_stmt|;
 name|private
 label|:
+name|LLVMContext
+modifier|&
+name|Context
+decl_stmt|;
 name|LLLexer
 name|Lex
 decl_stmt|;
@@ -178,6 +188,18 @@ operator|<
 name|PATypeHolder
 operator|>
 name|NumberedTypes
+expr_stmt|;
+comment|/// MetadataCache - This map keeps track of parsed metadata constants.
+name|std
+operator|::
+name|map
+operator|<
+name|unsigned
+operator|,
+name|Constant
+operator|*
+operator|>
+name|MetadataCache
 expr_stmt|;
 struct|struct
 name|UpRefRecord
@@ -303,7 +325,11 @@ name|MemoryBuffer
 operator|*
 name|F
 argument_list|,
-name|ParseError
+name|SourceMgr
+operator|&
+name|SM
+argument_list|,
+name|SMDiagnostic
 operator|&
 name|Err
 argument_list|,
@@ -312,9 +338,19 @@ operator|*
 name|m
 argument_list|)
 operator|:
+name|Context
+argument_list|(
+name|m
+operator|->
+name|getContext
+argument_list|()
+argument_list|)
+operator|,
 name|Lex
 argument_list|(
 name|F
+argument_list|,
+name|SM
 argument_list|,
 name|Err
 argument_list|)
@@ -328,6 +364,15 @@ name|bool
 name|Run
 argument_list|()
 expr_stmt|;
+name|LLVMContext
+modifier|&
+name|getContext
+parameter_list|()
+block|{
+return|return
+name|Context
+return|;
+block|}
 name|private
 label|:
 name|bool
@@ -735,6 +780,10 @@ name|unsigned
 name|Visibility
 argument_list|)
 decl_stmt|;
+name|bool
+name|ParseStandaloneMetadata
+parameter_list|()
+function_decl|;
 comment|// Type Parsing.
 name|bool
 name|ParseType

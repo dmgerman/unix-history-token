@@ -342,19 +342,6 @@ literal|8
 operator|)
 return|;
 block|}
-comment|/// getFunctionAlignment - Returns the alignment for function 'F', targets
-comment|/// with different alignment constraints should overload this method
-name|virtual
-name|unsigned
-name|getFunctionAlignment
-argument_list|(
-specifier|const
-name|Function
-operator|*
-name|F
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// getRelocationType - Returns the target specific ELF Relocation type.
 comment|/// 'MachineRelTy' contains the object code independent relocation type
 name|virtual

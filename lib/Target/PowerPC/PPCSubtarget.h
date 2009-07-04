@@ -416,7 +416,7 @@ name|DarwinVers
 return|;
 block|}
 name|bool
-name|isMachoABI
+name|isDarwinABI
 argument_list|()
 specifier|const
 block|{
@@ -428,7 +428,7 @@ name|IsPPC64
 return|;
 block|}
 name|bool
-name|isELF32_ABI
+name|isSVR4ABI
 argument_list|()
 specifier|const
 block|{

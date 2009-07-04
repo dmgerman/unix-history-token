@@ -455,8 +455,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|hasAVX
-argument_list|()
+name|HasAVX
 return|;
 block|}
 name|bool

@@ -122,6 +122,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Module.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -185,6 +191,9 @@ name|AnalysisResolver
 decl_stmt|;
 name|class
 name|PMDataManager
+decl_stmt|;
+name|class
+name|LLVMContext
 decl_stmt|;
 comment|// AnalysisID - Use the PassInfo to identify a pass...
 typedef|typedef
@@ -257,6 +266,12 @@ operator|&
 argument_list|)
 expr_stmt|;
 comment|// DO NOT IMPLEMENT
+name|protected
+label|:
+name|LLVMContext
+modifier|*
+name|Context
+decl_stmt|;
 name|public
 label|:
 name|explicit
@@ -876,9 +891,17 @@ name|virtual
 name|bool
 name|doInitialization
 argument_list|(
-argument|Module&
+argument|Module&M
 argument_list|)
 block|{
+name|Context
+operator|=
+operator|&
+name|M
+operator|.
+name|getContext
+argument_list|()
+block|;
 return|return
 name|false
 return|;
@@ -1007,9 +1030,17 @@ name|virtual
 name|bool
 name|doInitialization
 argument_list|(
-argument|Module&
+argument|Module&M
 argument_list|)
 block|{
+name|Context
+operator|=
+operator|&
+name|M
+operator|.
+name|getContext
+argument_list|()
+block|;
 return|return
 name|false
 return|;

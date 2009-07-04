@@ -202,6 +202,8 @@ argument|bool isVarArg
 argument_list|,
 argument|bool isInreg
 argument_list|,
+argument|unsigned NumFixedArgs
+argument_list|,
 argument|unsigned CC
 argument_list|,
 argument|bool isTailCall
@@ -225,7 +227,16 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
-block|;        }
+block|;
+comment|/// getFunctionAlignment - Return the Log2 alignment of this function.
+name|virtual
+name|unsigned
+name|getFunctionAlignment
+argument_list|(
+argument|const Function *F
+argument_list|)
+specifier|const
+block|;   }
 decl_stmt|;
 block|}
 end_decl_stmt

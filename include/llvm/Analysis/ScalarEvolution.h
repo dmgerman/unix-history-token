@@ -114,6 +114,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/FoldingSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -142,41 +154,20 @@ decl_stmt|;
 name|class
 name|TargetData
 decl_stmt|;
-name|class
-name|SCEVConstant
-decl_stmt|;
-name|class
-name|SCEVTruncateExpr
-decl_stmt|;
-name|class
-name|SCEVZeroExtendExpr
-decl_stmt|;
-name|class
-name|SCEVCommutativeExpr
-decl_stmt|;
-name|class
-name|SCEVUDivExpr
-decl_stmt|;
-name|class
-name|SCEVSignExtendExpr
-decl_stmt|;
-name|class
-name|SCEVAddRecExpr
-decl_stmt|;
-name|class
-name|SCEVUnknown
-decl_stmt|;
 comment|/// SCEV - This class represents an analyzed expression in the program.  These
 comment|/// are opaque objects that the client is not allowed to do much with
 comment|/// directly.
 comment|///
 name|class
 name|SCEV
+range|:
+name|public
+name|FoldingSetNode
 block|{
 specifier|const
 name|unsigned
 name|SCEVType
-decl_stmt|;
+block|;
 comment|// The SCEV baseclass this node corresponds to
 name|SCEV
 argument_list|(
@@ -184,38 +175,48 @@ specifier|const
 name|SCEV
 operator|&
 argument_list|)
-expr_stmt|;
+block|;
 comment|// DO NOT IMPLEMENT
 name|void
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|SCEV
 operator|&
 operator|)
-decl_stmt|;
+block|;
 comment|// DO NOT IMPLEMENT
 name|protected
-label|:
+operator|:
 name|virtual
 operator|~
 name|SCEV
 argument_list|()
-expr_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|explicit
 name|SCEV
 argument_list|(
 argument|unsigned SCEVTy
 argument_list|)
-block|:
+operator|:
 name|SCEVType
 argument_list|(
 argument|SCEVTy
 argument_list|)
 block|{}
+name|virtual
+name|void
+name|Profile
+argument_list|(
+argument|FoldingSetNodeID&ID
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
 name|unsigned
 name|getSCEVType
 argument_list|()
@@ -231,15 +232,12 @@ name|virtual
 name|bool
 name|isLoopInvariant
 argument_list|(
-specifier|const
-name|Loop
-operator|*
-name|L
+argument|const Loop *L
 argument_list|)
-decl|const
-init|=
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+block|;
 comment|/// hasComputableLoopEvolution - Return true if this SCEV changes value in a
 comment|/// known way in the specified loop.  This property being true implies that
 comment|/// the value is variant in the loop AND that we can emit an expression to
@@ -248,15 +246,12 @@ name|virtual
 name|bool
 name|hasComputableLoopEvolution
 argument_list|(
-specifier|const
-name|Loop
-operator|*
-name|L
+argument|const Loop *L
 argument_list|)
-decl|const
-init|=
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+block|;
 comment|/// getType - Return the LLVM type of this SCEV expression.
 comment|///
 name|virtual
@@ -268,21 +263,21 @@ argument_list|()
 specifier|const
 operator|=
 literal|0
-expr_stmt|;
+block|;
 comment|/// isZero - Return true if the expression is a constant zero.
 comment|///
 name|bool
 name|isZero
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// isOne - Return true if the expression is a constant one.
 comment|///
 name|bool
 name|isOne
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// isAllOnesValue - Return true if the expression is a constant
 comment|/// all-ones value.
 comment|///
@@ -290,7 +285,7 @@ name|bool
 name|isAllOnesValue
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// replaceSymbolicValuesWithConcrete - If this SCEV internally references
 comment|/// the symbolic value "Sym", construct and return a new SCEV that produces
 comment|/// the same value, but which uses the concrete value Conc instead of the
@@ -299,45 +294,33 @@ comment|/// returns itself.
 name|virtual
 specifier|const
 name|SCEV
-modifier|*
+operator|*
 name|replaceSymbolicValuesWithConcrete
 argument_list|(
-specifier|const
-name|SCEV
-operator|*
-name|Sym
+argument|const SCEV* Sym
 argument_list|,
-specifier|const
-name|SCEV
-operator|*
-name|Conc
+argument|const SCEV* Conc
 argument_list|,
-name|ScalarEvolution
-operator|&
-name|SE
+argument|ScalarEvolution&SE
 argument_list|)
-decl|const
-init|=
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+block|;
 comment|/// dominates - Return true if elements that makes up this SCEV dominates
 comment|/// the specified basic block.
 name|virtual
 name|bool
 name|dominates
 argument_list|(
-name|BasicBlock
-operator|*
-name|BB
+argument|BasicBlock *BB
 argument_list|,
-name|DominatorTree
-operator|*
-name|DT
+argument|DominatorTree *DT
 argument_list|)
-decl|const
-init|=
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+block|;
 comment|/// print - Print out the internal representation of this scalar to the
 comment|/// specified stream.  This should really only be used for debugging
 comment|/// purposes.
@@ -345,35 +328,25 @@ name|virtual
 name|void
 name|print
 argument_list|(
-name|raw_ostream
-operator|&
-name|OS
+argument|raw_ostream&OS
 argument_list|)
-decl|const
-init|=
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+block|;
 name|void
 name|print
 argument_list|(
-name|std
-operator|::
-name|ostream
-operator|&
-name|OS
+argument|std::ostream&OS
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|void
 name|print
 argument_list|(
-name|std
-operator|::
-name|ostream
-operator|*
-name|OS
+argument|std::ostream *OS
 argument_list|)
-decl|const
+specifier|const
 block|{
 if|if
 condition|(
@@ -392,9 +365,8 @@ name|void
 name|dump
 argument_list|()
 specifier|const
-expr_stmt|;
-block|}
-empty_stmt|;
+block|;   }
+decl_stmt|;
 specifier|inline
 name|raw_ostream
 operator|&
@@ -468,6 +440,14 @@ name|SCEVCouldNotCompute
 argument_list|()
 block|;
 comment|// None of these methods are valid for this object.
+name|virtual
+name|void
+name|Profile
+argument_list|(
+argument|FoldingSetNodeID&ID
+argument_list|)
+specifier|const
+block|;
 name|virtual
 name|bool
 name|isLoopInvariant
@@ -632,9 +612,7 @@ name|TD
 block|;
 comment|/// CouldNotCompute - This SCEV is used to represent unknown trip
 comment|/// counts and things.
-specifier|const
-name|SCEV
-operator|*
+name|SCEVCouldNotCompute
 name|CouldNotCompute
 block|;
 comment|/// Scalars - This is a cache of the scalars we have analyzed so far.
@@ -2108,170 +2086,14 @@ expr_stmt|;
 block|}
 name|private
 operator|:
-comment|// Uniquing tables.
-name|std
-operator|::
-name|map
+name|FoldingSet
 operator|<
-name|ConstantInt
-operator|*
-block|,
-name|SCEVConstant
-operator|*
-operator|>
-name|SCEVConstants
-block|;
-name|std
-operator|::
-name|map
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-specifier|const
 name|SCEV
-operator|*
-block|,
-specifier|const
-name|Type
-operator|*
 operator|>
-block|,
-name|SCEVTruncateExpr
-operator|*
-operator|>
-name|SCEVTruncates
+name|UniqueSCEVs
 block|;
-name|std
-operator|::
-name|map
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-specifier|const
-name|SCEV
-operator|*
-block|,
-specifier|const
-name|Type
-operator|*
-operator|>
-block|,
-name|SCEVZeroExtendExpr
-operator|*
-operator|>
-name|SCEVZeroExtends
-block|;
-name|std
-operator|::
-name|map
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
-block|,
-name|std
-operator|::
-name|vector
-operator|<
-specifier|const
-name|SCEV
-operator|*
-operator|>
-expr|>
-block|,
-name|SCEVCommutativeExpr
-operator|*
-operator|>
-name|SCEVCommExprs
-block|;
-name|std
-operator|::
-name|map
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-specifier|const
-name|SCEV
-operator|*
-block|,
-specifier|const
-name|SCEV
-operator|*
-operator|>
-block|,
-name|SCEVUDivExpr
-operator|*
-operator|>
-name|SCEVUDivs
-block|;
-name|std
-operator|::
-name|map
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-specifier|const
-name|SCEV
-operator|*
-block|,
-specifier|const
-name|Type
-operator|*
-operator|>
-block|,
-name|SCEVSignExtendExpr
-operator|*
-operator|>
-name|SCEVSignExtends
-block|;
-name|std
-operator|::
-name|map
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-specifier|const
-name|Loop
-operator|*
-block|,
-name|std
-operator|::
-name|vector
-operator|<
-specifier|const
-name|SCEV
-operator|*
-operator|>
-expr|>
-block|,
-name|SCEVAddRecExpr
-operator|*
-operator|>
-name|SCEVAddRecExprs
-block|;
-name|std
-operator|::
-name|map
-operator|<
-name|Value
-operator|*
-block|,
-name|SCEVUnknown
-operator|*
-operator|>
-name|SCEVUnknowns
+name|BumpPtrAllocator
+name|SCEVAllocator
 block|;   }
 block|; }
 end_decl_stmt

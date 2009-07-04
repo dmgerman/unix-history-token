@@ -120,6 +120,9 @@ block|{
 name|class
 name|MemoryBuffer
 decl_stmt|;
+name|class
+name|LLVMContext
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//                          BitcodeReaderValueList Class
 comment|//===----------------------------------------------------------------------===//
@@ -382,6 +385,10 @@ range|:
 name|public
 name|ModuleProvider
 block|{
+name|LLVMContext
+operator|&
+name|Context
+block|;
 name|MemoryBuffer
 operator|*
 name|Buffer
@@ -528,8 +535,17 @@ argument_list|(
 name|MemoryBuffer
 operator|*
 name|buffer
+argument_list|,
+name|LLVMContext
+operator|&
+name|C
 argument_list|)
 operator|:
+name|Context
+argument_list|(
+name|C
+argument_list|)
+operator|,
 name|Buffer
 argument_list|(
 name|buffer

@@ -100,24 +100,19 @@ function_decl|;
 name|FunctionPass
 modifier|*
 name|createSPUAsmPrinterPass
-argument_list|(
+parameter_list|(
 name|raw_ostream
-operator|&
+modifier|&
 name|o
-argument_list|,
+parameter_list|,
 name|SPUTargetMachine
-operator|&
+modifier|&
 name|tm
-argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-name|OptLevel
-argument_list|,
+parameter_list|,
 name|bool
 name|verbose
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/*--== Utility functions/predicates/etc used all over the place: --==*/
 comment|//! Predicate test for a signed 10-bit value
 comment|/*!     \param Value The input value to be tested      This predicate tests for a signed 10-bit value, returning the 10-bit value     as a short if true.    */

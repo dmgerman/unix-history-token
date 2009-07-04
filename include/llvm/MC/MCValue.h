@@ -65,6 +65,18 @@ directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCSymbol.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -75,6 +87,10 @@ decl_stmt|;
 comment|/// MCValue - This represents an "assembler immediate".  In its most general
 comment|/// form, this can hold "SymbolA - SymbolB + imm64".  Not all targets supports
 comment|/// relocations of this general form, but we need to represent this anyway.
+comment|///
+comment|/// In the general form, SymbolB can only be defined if SymbolA is, and both
+comment|/// must be in the same (non-external) section. The latter constraint is not
+comment|/// enforced, since a symbol's section may not be known at construction.
 comment|///
 comment|/// Note that this class must remain a simple POD value class, because we need
 comment|/// it to live in unions etc.
@@ -94,7 +110,7 @@ decl_stmt|;
 name|public
 label|:
 name|int64_t
-name|getCst
+name|getConstant
 argument_list|()
 specifier|const
 block|{
@@ -122,6 +138,42 @@ return|return
 name|SymB
 return|;
 block|}
+comment|/// isAbsolute - Is this an absolute (as opposed to relocatable) value.
+name|bool
+name|isAbsolute
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|SymA
+operator|&&
+operator|!
+name|SymB
+return|;
+block|}
+comment|/// getAssociatedSection - For relocatable values, return the section the
+comment|/// value is associated with.
+comment|///
+comment|/// @result - The value's associated section, or null for external or constant
+comment|/// values.
+name|MCSection
+operator|*
+name|getAssociatedSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SymA
+operator|?
+name|SymA
+operator|->
+name|getSection
+argument_list|()
+operator|:
+literal|0
+return|;
+block|}
 specifier|static
 name|MCValue
 name|get
@@ -145,6 +197,18 @@ block|{
 name|MCValue
 name|R
 decl_stmt|;
+name|assert
+argument_list|(
+operator|(
+operator|!
+name|SymB
+operator|||
+name|SymA
+operator|)
+operator|&&
+literal|"Invalid relocatable MCValue!"
+argument_list|)
+expr_stmt|;
 name|R
 operator|.
 name|Cst

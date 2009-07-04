@@ -160,8 +160,6 @@ argument|X86TargetMachine&TM
 argument_list|,
 argument|const TargetAsmInfo *T
 argument_list|,
-argument|CodeGenOpt::Level OL
-argument_list|,
 argument|bool V
 argument_list|)
 operator|:
@@ -172,8 +170,6 @@ argument_list|,
 argument|TM
 argument_list|,
 argument|T
-argument_list|,
-argument|OL
 argument_list|,
 argument|V
 argument_list|)
@@ -757,6 +753,26 @@ argument_list|)
 expr_stmt|;
 block|}
 name|void
+name|printi256mem
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|,
+name|unsigned
+name|OpNo
+parameter_list|)
+block|{
+name|printMemReference
+argument_list|(
+name|MI
+argument_list|,
+name|OpNo
+argument_list|)
+expr_stmt|;
+block|}
+name|void
 name|printf32mem
 parameter_list|(
 specifier|const
@@ -818,6 +834,26 @@ expr_stmt|;
 block|}
 name|void
 name|printf128mem
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|,
+name|unsigned
+name|OpNo
+parameter_list|)
+block|{
+name|printMemReference
+argument_list|(
+name|MI
+argument_list|,
+name|OpNo
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|printf256mem
 parameter_list|(
 specifier|const
 name|MachineInstr

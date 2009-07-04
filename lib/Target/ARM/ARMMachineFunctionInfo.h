@@ -106,6 +106,12 @@ comment|/// Used to initialized Align, so must precede it.
 name|bool
 name|isThumb
 block|;
+comment|/// hasThumb2 - True if the target architecture supports Thumb2. Do not use
+comment|/// to determine if function is compiled under Thumb mode, for that use
+comment|/// 'isThumb'.
+name|bool
+name|hasThumb2
+block|;
 comment|/// Align - required alignment.  ARM functions and Thumb functions with
 comment|/// constant pools require 4-byte alignment; other Thumb functions
 comment|/// require only 2-byte alignment.
@@ -195,6 +201,11 @@ name|ARMFunctionInfo
 argument_list|()
 operator|:
 name|isThumb
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|hasThumb2
 argument_list|(
 name|false
 argument_list|)
@@ -310,6 +321,24 @@ name|isThumb
 argument_list|()
 argument_list|)
 block|,
+name|hasThumb2
+argument_list|(
+name|MF
+operator|.
+name|getTarget
+argument_list|()
+operator|.
+name|getSubtarget
+operator|<
+name|ARMSubtarget
+operator|>
+operator|(
+operator|)
+operator|.
+name|hasThumb2
+argument_list|()
+argument_list|)
+block|,
 name|Align
 argument_list|(
 name|isThumb
@@ -420,6 +449,17 @@ specifier|const
 block|{
 return|return
 name|isThumb
+return|;
+block|}
+name|bool
+name|isThumb2Function
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isThumb
+operator|&&
+name|hasThumb2
 return|;
 block|}
 name|unsigned

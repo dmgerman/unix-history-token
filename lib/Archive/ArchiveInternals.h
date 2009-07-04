@@ -175,6 +175,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|LLVMContext
+decl_stmt|;
 comment|/// The ArchiveMemberHeader structure is used internally for bitcode
 comment|/// archives.
 comment|/// The header precedes each file member in the archive. This structure is
@@ -345,6 +348,10 @@ name|Path
 operator|&
 name|fName
 argument_list|,
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
 name|std
 operator|::
 name|vector
@@ -382,6 +389,10 @@ operator|::
 name|string
 operator|&
 name|ModuleID
+argument_list|,
+name|LLVMContext
+operator|&
+name|Context
 argument_list|,
 name|std
 operator|::

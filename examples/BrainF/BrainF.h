@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/LLVMContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Module.h"
 end_include
 
@@ -138,6 +144,10 @@ name|mem
 argument_list|,
 name|CompileFlags
 name|cf
+argument_list|,
+name|LLVMContext
+operator|&
+name|C
 argument_list|)
 decl_stmt|;
 name|protected
@@ -195,7 +205,11 @@ decl_stmt|;
 comment|/// Put the brainf function preamble and other fixed pieces of code
 name|void
 name|header
-parameter_list|()
+parameter_list|(
+name|LLVMContext
+modifier|&
+name|C
+parameter_list|)
 function_decl|;
 comment|/// The main loop for parsing.  It calls itself recursively
 comment|/// to handle the depth of nesting of "[]".

@@ -89,18 +89,33 @@ directive|include
 file|"llvm/Analysis/LoopPass.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iosfwd>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
+name|AliasAnalysis
+decl_stmt|;
+name|class
 name|AnalysisUsage
 decl_stmt|;
 name|class
-name|LoopPass
+name|ScalarEvolution
 decl_stmt|;
 name|class
-name|ScalarEvolution
+name|Value
 decl_stmt|;
 name|class
 name|LoopDependenceAnalysis
@@ -111,6 +126,10 @@ block|{
 name|Loop
 operator|*
 name|L
+block|;
+name|AliasAnalysis
+operator|*
+name|AA
 block|;
 name|ScalarEvolution
 operator|*
@@ -131,6 +150,26 @@ argument_list|(
 argument|&ID
 argument_list|)
 block|{}
+comment|/// TODO: docs
+name|bool
+name|isDependencePair
+argument_list|(
+argument|const Value*
+argument_list|,
+argument|const Value*
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|depends
+argument_list|(
+name|Value
+operator|*
+argument_list|,
+name|Value
+operator|*
+argument_list|)
+block|;
 name|bool
 name|runOnLoop
 argument_list|(
@@ -146,6 +185,27 @@ name|void
 name|getAnalysisUsage
 argument_list|(
 argument|AnalysisUsage&
+argument_list|)
+specifier|const
+block|;
+name|void
+name|print
+argument_list|(
+argument|raw_ostream&
+argument_list|,
+argument|const Module* =
+literal|0
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|print
+argument_list|(
+argument|std::ostream&
+argument_list|,
+argument|const Module* =
+literal|0
 argument_list|)
 specifier|const
 block|;   }

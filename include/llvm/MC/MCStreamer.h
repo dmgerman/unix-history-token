@@ -31,6 +31,22 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This file declares the MCStreamer class.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -71,7 +87,15 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
-comment|/// MCStreamer - Streaming machine code generation interface.
+comment|/// MCStreamer - Streaming machine code generation interface.  This interface
+comment|/// is intended to provide a programatic interface that is very similar to the
+comment|/// level that an assembler .s file provides.  It has callbacks to emit bytes,
+comment|/// "emit directives", etc.  The implementation of this interface retains
+comment|/// state to know what the current section is etc.
+comment|///
+comment|/// There are multiple implementations of this interface: one for writing out
+comment|/// a .s file, and implementations that write out .o files of various formats.
+comment|///
 name|class
 name|MCStreamer
 block|{
@@ -327,7 +351,7 @@ comment|///
 comment|/// This used to implement the .align assembler directive.
 comment|///
 comment|/// @param ByteAlignment - The alignment to reach. This must be a power of
-comment|/// two.
+comment|/// two on some targets.
 comment|/// @param Value - The value to use when filling bytes.
 comment|/// @param Size - The size of the integer (in bytes) to emit for @param
 comment|/// Value. This must match a native machine width.

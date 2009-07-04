@@ -94,11 +94,18 @@ decl_stmt|;
 name|class
 name|RuntimeInfo
 decl_stmt|;
+name|class
+name|LLVMContext
+decl_stmt|;
 comment|/// CLIDebugger - This class implements the command line interface for the
 comment|/// LLVM debugger.
 name|class
 name|CLIDebugger
 block|{
+name|LLVMContext
+modifier|&
+name|Context
+decl_stmt|;
 comment|/// Dbg - The low-level LLVM debugger object that we use to do our dirty
 comment|/// work.
 name|Debugger
@@ -186,7 +193,11 @@ decl_stmt|;
 name|public
 label|:
 name|CLIDebugger
-argument_list|()
+argument_list|(
+name|LLVMContext
+operator|&
+name|ctxt
+argument_list|)
 expr_stmt|;
 comment|/// getDebugger - Return the current LLVM debugger implementation being
 comment|/// used.

@@ -601,6 +601,20 @@ name|TmpSize
 operator|=
 name|Size
 block|; }
+comment|/// getFunctionAlignment - Return the Log2 alignment of this function.
+name|virtual
+name|unsigned
+name|getFunctionAlignment
+argument_list|(
+argument|const Function *
+argument_list|)
+specifier|const
+block|{
+comment|// FIXME: The function never seems to be aligned.
+return|return
+literal|1
+return|;
+block|}
 name|private
 operator|:
 comment|// If the Node is a BUILD_PAIR representing a direct Address,

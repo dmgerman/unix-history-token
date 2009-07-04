@@ -127,7 +127,7 @@ comment|///      unsigned Value;
 comment|///    public:
 comment|///      MyNode(const char *N, unsigned V) : Name(N), Value(V) {}
 comment|///       ...
-comment|///      void Profile(FoldingSetNodeID&ID) {
+comment|///      void Profile(FoldingSetNodeID&ID) const {
 comment|///        ID.AddString(Name);
 comment|///        ID.AddInteger(Value);
 comment|///       }

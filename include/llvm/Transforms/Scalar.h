@@ -605,6 +605,15 @@ modifier|*
 specifier|const
 name|InstructionNamerID
 decl_stmt|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// SSI - This pass converts to Static Single Information form.
+comment|//
+name|FunctionPass
+modifier|*
+name|createSSIPass
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 

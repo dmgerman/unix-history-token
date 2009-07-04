@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"ARM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
@@ -100,12 +106,67 @@ literal|2
 block|}
 enum|;
 block|}
+comment|/// isARMLowRegister - Returns true if the register is low register r0-r7.
+comment|///
+specifier|static
+specifier|inline
+name|bool
+name|isARMLowRegister
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|)
+block|{
+name|using
+name|namespace
+name|ARM
+decl_stmt|;
+switch|switch
+condition|(
+name|Reg
+condition|)
+block|{
+case|case
+name|R0
+case|:
+case|case
+name|R1
+case|:
+case|case
+name|R2
+case|:
+case|case
+name|R3
+case|:
+case|case
+name|R4
+case|:
+case|case
+name|R5
+case|:
+case|case
+name|R6
+case|:
+case|case
+name|R7
+case|:
+return|return
+name|true
+return|;
+default|default:
+return|return
+name|false
+return|;
+block|}
+block|}
 name|struct
-name|ARMRegisterInfo
+name|ARMBaseRegisterInfo
 range|:
 name|public
 name|ARMGenRegisterInfo
 block|{
+name|protected
+operator|:
 specifier|const
 name|TargetInstrInfo
 operator|&
@@ -116,9 +177,13 @@ name|ARMSubtarget
 operator|&
 name|STI
 block|;
+comment|/// FramePtr - ARM physical register used as frame ptr.
+name|unsigned
+name|FramePtr
+block|;
 name|public
 operator|:
-name|ARMRegisterInfo
+name|ARMBaseRegisterInfo
 argument_list|(
 specifier|const
 name|TargetInstrInfo
@@ -130,31 +195,6 @@ name|ARMSubtarget
 operator|&
 name|STI
 argument_list|)
-block|;
-comment|/// emitLoadConstPool - Emits a load from constpool to materialize the
-comment|/// specified immediate.
-name|void
-name|emitLoadConstPool
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator&MBBI
-argument_list|,
-argument|unsigned DestReg
-argument_list|,
-argument|int Val
-argument_list|,
-argument|unsigned Pred
-argument_list|,
-argument|unsigned PredReg
-argument_list|,
-argument|const TargetInstrInfo *TII
-argument_list|,
-argument|bool isThumb
-argument_list|,
-argument|DebugLoc dl
-argument_list|)
-specifier|const
 block|;
 comment|/// getRegisterNumbering - Given the enum value for some register, e.g.
 comment|/// ARM::LR, return the number that it corresponds to (e.g. 14).
@@ -177,17 +217,6 @@ argument|bool&isSPVFP
 argument_list|)
 block|;
 comment|/// Code Generation virtual methods...
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|getPhysicalRegisterRegClass
-argument_list|(
-argument|unsigned Reg
-argument_list|,
-argument|MVT VT = MVT::Other
-argument_list|)
-specifier|const
-block|;
 specifier|const
 name|unsigned
 operator|*
@@ -280,45 +309,9 @@ argument_list|)
 specifier|const
 block|;
 name|bool
-name|requiresRegisterScavenging
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|bool
 name|hasFP
 argument_list|(
 argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|hasReservedCallFrame
-argument_list|(
-argument|MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|void
-name|eliminateCallFramePseudoInstr
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator I
-argument_list|)
-specifier|const
-block|;
-name|void
-name|eliminateFrameIndex
-argument_list|(
-argument|MachineBasicBlock::iterator II
-argument_list|,
-argument|int SPAdj
-argument_list|,
-argument|RegScavenger *RS = NULL
 argument_list|)
 specifier|const
 block|;
@@ -328,22 +321,6 @@ argument_list|(
 argument|MachineFunction&MF
 argument_list|,
 argument|RegScavenger *RS = NULL
-argument_list|)
-specifier|const
-block|;
-name|void
-name|emitPrologue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|void
-name|emitEpilogue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
 block|;
@@ -389,10 +366,6 @@ specifier|const
 block|;
 name|private
 operator|:
-comment|/// FramePtr - ARM physical register used as frame ptr.
-name|unsigned
-name|FramePtr
-block|;
 name|unsigned
 name|getRegisterPairEven
 argument_list|(
@@ -410,7 +383,115 @@ argument_list|,
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
-block|;  }
+block|; }
+decl_stmt|;
+name|struct
+name|ARMRegisterInfo
+range|:
+name|public
+name|ARMBaseRegisterInfo
+block|{
+name|public
+operator|:
+name|ARMRegisterInfo
+argument_list|(
+specifier|const
+name|TargetInstrInfo
+operator|&
+name|tii
+argument_list|,
+specifier|const
+name|ARMSubtarget
+operator|&
+name|STI
+argument_list|)
+block|;
+comment|/// emitLoadConstPool - Emits a load from constpool to materialize the
+comment|/// specified immediate.
+name|void
+name|emitLoadConstPool
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator&MBBI
+argument_list|,
+argument|const TargetInstrInfo *TII
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|unsigned DestReg
+argument_list|,
+argument|int Val
+argument_list|,
+argument|ARMCC::CondCodes Pred = ARMCC::AL
+argument_list|,
+argument|unsigned PredReg =
+literal|0
+argument_list|)
+specifier|const
+block|;
+comment|/// Code Generation virtual methods...
+name|bool
+name|isReservedReg
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|unsigned Reg
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|requiresRegisterScavenging
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|hasReservedCallFrame
+argument_list|(
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|void
+name|eliminateCallFramePseudoInstr
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|)
+specifier|const
+block|;
+name|void
+name|eliminateFrameIndex
+argument_list|(
+argument|MachineBasicBlock::iterator II
+argument_list|,
+argument|int SPAdj
+argument_list|,
+argument|RegScavenger *RS = NULL
+argument_list|)
+specifier|const
+block|;
+name|void
+name|emitPrologue
+argument_list|(
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|void
+name|emitEpilogue
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|)
+specifier|const
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

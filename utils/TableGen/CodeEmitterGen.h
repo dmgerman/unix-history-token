@@ -121,9 +121,7 @@ comment|// run - Output the code emitter
 name|void
 name|run
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|o
 argument_list|)
@@ -133,9 +131,7 @@ operator|:
 name|void
 name|emitMachineOpEmitter
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|o
 argument_list|,
@@ -150,9 +146,7 @@ block|;
 name|void
 name|emitGetValueBit
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|o
 argument_list|,

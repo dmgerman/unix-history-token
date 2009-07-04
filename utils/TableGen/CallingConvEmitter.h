@@ -120,9 +120,7 @@ comment|// run - Output the asmwriter, returning true on failure.
 name|void
 name|run
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|o
 argument_list|)
@@ -136,9 +134,7 @@ name|Record
 operator|*
 name|CC
 argument_list|,
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|O
 argument_list|)
@@ -150,7 +146,7 @@ argument|Record *Action
 argument_list|,
 argument|unsigned Indent
 argument_list|,
-argument|std::ostream&O
+argument|raw_ostream&O
 argument_list|)
 block|;
 name|unsigned

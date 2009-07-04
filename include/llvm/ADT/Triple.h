@@ -116,6 +116,8 @@ block|,
 name|FreeBSD
 block|,
 name|Linux
+block|,
+name|OpenBSD
 block|}
 enum|;
 name|private

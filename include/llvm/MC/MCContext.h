@@ -114,6 +114,8 @@ operator|>
 name|Symbols
 expr_stmt|;
 comment|/// SymbolValues - Bindings of symbols to values.
+comment|//
+comment|// FIXME: Is there a good reason to not just put this in the MCSymbol?
 name|DenseMap
 operator|<
 name|MCSymbol

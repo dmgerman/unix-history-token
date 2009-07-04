@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/LLVMContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
@@ -284,6 +290,12 @@ operator|<
 name|uint8_t
 operator|>
 name|StringSet
+expr_stmt|;
+name|llvm
+operator|::
+name|LLVMContext
+operator|&
+name|_context
 expr_stmt|;
 name|llvm
 operator|::

@@ -105,9 +105,7 @@ comment|// run - Output the register file description, returning true on failure
 name|void
 name|run
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|o
 argument_list|)
@@ -116,9 +114,7 @@ comment|// runHeader - Emit a header fragment for the register info emitter.
 name|void
 name|runHeader
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|o
 argument_list|)
@@ -127,9 +123,7 @@ comment|// runEnums - Print out enum values for all of the registers.
 name|void
 name|runEnums
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|o
 argument_list|)

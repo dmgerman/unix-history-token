@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"ELFWriter.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/MachineCodeEmitter.h"
 end_include
 
@@ -65,6 +59,12 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|ELFWriter
+decl_stmt|;
+name|class
+name|ELFSection
+decl_stmt|;
 comment|/// ELFCodeEmitter - This class is used by the ELFWriter to
 comment|/// emit the code for functions to the ELF file.
 name|class
@@ -117,6 +117,16 @@ name|unsigned
 operator|>
 name|CPSections
 block|;
+comment|/// JTLocations - This is a map of jump table indices to offsets from the
+comment|/// start of the section for that jump table index.
+name|std
+operator|::
+name|vector
+operator|<
+name|uintptr_t
+operator|>
+name|JTLocations
+block|;
 comment|/// MBBLocations - This vector is a mapping from MBB ID's to their address.
 comment|/// It is filled in by the StartMachineBasicBlock callback and queried by
 comment|/// the getMachineBasicBlockAddress callback.
@@ -133,6 +143,10 @@ comment|/// in the buffer
 name|uint8_t
 operator|*
 name|FnStartPtr
+block|;
+comment|/// JumpTableSectionIdx - Holds the index of the Jump Table Section
+name|unsigned
+name|JumpTableSectionIdx
 block|;
 name|public
 operator|:
@@ -151,7 +165,14 @@ argument_list|)
 block|,
 name|TM
 argument_list|(
-argument|EW.TM
+name|EW
+operator|.
+name|TM
+argument_list|)
+block|,
+name|JumpTableSectionIdx
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 name|void
@@ -234,10 +255,68 @@ argument_list|()
 block|;     }
 name|virtual
 name|uintptr_t
+name|getConstantPoolEntryAddress
+argument_list|(
+argument|unsigned Index
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|CPLocations
+operator|.
+name|size
+argument_list|()
+operator|>
+name|Index
+operator|&&
+literal|"CP not emitted!"
+argument_list|)
+block|;
+return|return
+name|CPLocations
+index|[
+name|Index
+index|]
+return|;
+block|}
+name|virtual
+name|uintptr_t
+name|getJumpTableEntryAddress
+argument_list|(
+name|unsigned
+name|Index
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|JTLocations
+operator|.
+name|size
+argument_list|()
+operator|>
+name|Index
+operator|&&
+literal|"JT not emitted!"
+argument_list|)
+expr_stmt|;
+return|return
+name|JTLocations
+index|[
+name|Index
+index|]
+return|;
+block|}
+name|virtual
+name|uintptr_t
 name|getMachineBasicBlockAddress
 argument_list|(
-argument|MachineBasicBlock *MBB
+name|MachineBasicBlock
+operator|*
+name|MBB
 argument_list|)
+decl|const
 block|{
 name|assert
 argument_list|(
@@ -264,7 +343,7 @@ index|]
 operator|&&
 literal|"MBB not emitted!"
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|MBBLocations
 index|[
@@ -273,75 +352,6 @@ operator|->
 name|getNumber
 argument_list|()
 index|]
-return|;
-block|}
-name|virtual
-name|uintptr_t
-name|getConstantPoolEntryAddress
-argument_list|(
-name|unsigned
-name|Index
-argument_list|)
-decl|const
-block|{
-name|assert
-argument_list|(
-name|CPLocations
-operator|.
-name|size
-argument_list|()
-operator|>
-name|Index
-operator|&&
-literal|"CP not emitted!"
-argument_list|)
-expr_stmt|;
-return|return
-name|CPLocations
-index|[
-name|Index
-index|]
-return|;
-block|}
-name|virtual
-name|uintptr_t
-name|getJumpTableEntryAddress
-argument_list|(
-name|unsigned
-name|Index
-argument_list|)
-decl|const
-block|{
-name|assert
-argument_list|(
-literal|0
-operator|&&
-literal|"JT not implementated yet!"
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-name|virtual
-name|uintptr_t
-name|getMachineBasicBlockAddress
-argument_list|(
-name|MachineBasicBlock
-operator|*
-name|MBB
-argument_list|)
-decl|const
-block|{
-name|assert
-argument_list|(
-literal|0
-operator|&&
-literal|"JT not implementated yet!"
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
 return|;
 block|}
 name|virtual
@@ -396,6 +406,16 @@ modifier|*
 name|MCP
 parameter_list|)
 function_decl|;
+comment|/// emitJumpTables - Emit all the jump tables for a given jump table info
+comment|/// record to the appropriate section.
+name|void
+name|emitJumpTables
+parameter_list|(
+name|MachineJumpTableInfo
+modifier|*
+name|MJTI
+parameter_list|)
+function_decl|;
 name|virtual
 name|void
 name|setModuleInfo
@@ -406,7 +426,7 @@ name|MachineModuleInfo
 operator|*
 name|MMI
 argument_list|)
-block|{ }
+block|{}
 comment|/// JIT SPECIFIC FUNCTIONS - DO NOT IMPLEMENT THESE HERE!
 name|void
 name|startGVStub
