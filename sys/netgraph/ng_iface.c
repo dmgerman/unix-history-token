@@ -1338,6 +1338,10 @@ operator|)
 return|;
 block|}
 comment|/* Protect from deadly infinite recursion. */
+name|mtag
+operator|=
+name|NULL
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1351,7 +1355,7 @@ name|MTAG_NGIF
 argument_list|,
 name|MTAG_NGIF_CALLED
 argument_list|,
-name|NULL
+name|mtag
 argument_list|)
 operator|)
 condition|)
