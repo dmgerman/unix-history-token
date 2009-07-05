@@ -199,6 +199,22 @@ name|COP0_SYNC
 value|nop; nop; nop; nop; nop;
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|CPU_SB1
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|COP0_SYNC
+value|ssnop; ssnop; ssnop; ssnop; ssnop; ssnop; ssnop; ssnop; ssnop
+end_define
+
 begin_else
 else|#
 directive|else
