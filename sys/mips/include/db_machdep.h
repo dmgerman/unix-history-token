@@ -75,7 +75,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|int
+name|intptr_t
 name|db_expr_t
 typedef|;
 end_typedef
