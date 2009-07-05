@@ -226,28 +226,28 @@ end_define
 begin_define
 define|#
 directive|define
-name|T4
+name|TA0
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|T5
+name|TA1
 value|13
 end_define
 
 begin_define
 define|#
 directive|define
-name|T6
+name|TA2
 value|14
 end_define
 
 begin_define
 define|#
 directive|define
-name|T7
+name|TA3
 value|15
 end_define
 
