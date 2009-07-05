@@ -441,6 +441,23 @@ modifier|*
 name|ic
 parameter_list|)
 block|{
+comment|/* XXX really want maxlen enforced per-sta */
+name|ieee80211_ageq_init
+argument_list|(
+operator|&
+name|ic
+operator|->
+name|ic_stageq
+argument_list|,
+name|ic
+operator|->
+name|ic_max_keyix
+operator|*
+literal|8
+argument_list|,
+literal|"802.11 staging q"
+argument_list|)
+expr_stmt|;
 name|ieee80211_node_table_init
 argument_list|(
 name|ic
@@ -569,6 +586,14 @@ operator|&
 name|ic
 operator|->
 name|ic_sta
+argument_list|)
+expr_stmt|;
+name|ieee80211_ageq_cleanup
+argument_list|(
+operator|&
+name|ic
+operator|->
+name|ic_stageq
 argument_list|)
 expr_stmt|;
 block|}
@@ -4288,6 +4313,15 @@ name|ni
 operator|->
 name|ni_vap
 decl_stmt|;
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|ni
+operator|->
+name|ni_ic
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -4370,6 +4404,17 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Clear any staging queue entries. 	 */
+name|ieee80211_ageq_drain_node
+argument_list|(
+operator|&
+name|ic
+operator|->
+name|ic_stageq
+argument_list|,
+name|ni
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Clear AREF flag that marks the authorization refcnt bump 	 * has happened.  This is probably not needed as the node 	 * should always be removed from the table so not found but 	 * do it just in case. 	 * Likewise clear the ASSOCID flag as these flags are intended 	 * to be managed in tandem. 	 */
 name|ni
 operator|->
@@ -4544,11 +4589,6 @@ operator|->
 name|ni_psq
 argument_list|)
 expr_stmt|;
-name|IEEE80211_NODE_WDSQ_DESTROY
-argument_list|(
-name|ni
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|ni
@@ -4620,21 +4660,6 @@ argument_list|(
 name|ni
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Age frames on the wds pending queue. 	 */
-if|if
-condition|(
-name|IEEE80211_NODE_WDSQ_QLEN
-argument_list|(
-name|ni
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|ieee80211_node_wdsq_age
-argument_list|(
-name|ni
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Age out HT resources (e.g. frames on the 	 * A-MPDU reorder queues). 	 */
@@ -4979,13 +5004,6 @@ argument_list|,
 literal|"unknown"
 argument_list|)
 expr_stmt|;
-name|IEEE80211_NODE_WDSQ_INIT
-argument_list|(
-name|ni
-argument_list|,
-literal|"unknown"
-argument_list|)
-expr_stmt|;
 name|IEEE80211_NODE_LOCK
 argument_list|(
 name|nt
@@ -5229,13 +5247,6 @@ operator|&
 name|ni
 operator|->
 name|ni_psq
-argument_list|,
-literal|"unknown"
-argument_list|)
-expr_stmt|;
-name|IEEE80211_NODE_WDSQ_INIT
-argument_list|(
-name|ni
 argument_list|,
 literal|"unknown"
 argument_list|)
@@ -9017,6 +9028,16 @@ expr_stmt|;
 name|ieee80211_timeout_stations
 argument_list|(
 name|ic
+argument_list|)
+expr_stmt|;
+name|ieee80211_ageq_age
+argument_list|(
+operator|&
+name|ic
+operator|->
+name|ic_stageq
+argument_list|,
+name|IEEE80211_INACT_WAIT
 argument_list|)
 expr_stmt|;
 name|IEEE80211_LOCK

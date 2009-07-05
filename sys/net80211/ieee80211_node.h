@@ -652,12 +652,6 @@ modifier|*
 name|ni_wdsvap
 decl_stmt|;
 comment|/* associated WDS vap */
-comment|/* XXX move to vap? */
-name|struct
-name|ifqueue
-name|ni_wdsq
-decl_stmt|;
-comment|/* wds pending queue */
 name|uint64_t
 name|ni_spare
 index|[

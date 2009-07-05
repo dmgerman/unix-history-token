@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net80211/ieee80211_ageq.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net80211/ieee80211_crypto.h>
 end_include
 
@@ -709,6 +715,15 @@ name|ieee80211_node_table
 name|ic_sta
 decl_stmt|;
 comment|/* stations/neighbors */
+name|struct
+name|ieee80211_ageq
+name|ic_stageq
+decl_stmt|;
+comment|/* frame staging queue */
+name|uint32_t
+name|ic_hash_key
+decl_stmt|;
+comment|/* random key for mac hash */
 comment|/* XXX multi-bss: split out common/vap parts */
 name|struct
 name|ieee80211_wme_state
@@ -3627,6 +3642,25 @@ specifier|const
 name|struct
 name|ieee80211_channel
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|ieee80211_mac_hash
+parameter_list|(
+specifier|const
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
+specifier|const
+name|uint8_t
+name|addr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
 parameter_list|)
 function_decl|;
 end_function_decl
