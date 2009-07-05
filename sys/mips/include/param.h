@@ -487,7 +487,7 @@ name|mips_round_page
 parameter_list|(
 name|x
 parameter_list|)
-value|((((unsigned)(x)) + NBPG - 1)& ~(NBPG-1))
+value|((((uintptr_t)(x)) + NBPG - 1)& ~(NBPG-1))
 end_define
 
 begin_define
@@ -497,7 +497,7 @@ name|mips_trunc_page
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x)& ~(NBPG-1))
+value|((uintptr_t)(x)& ~(NBPG-1))
 end_define
 
 begin_define
@@ -507,7 +507,7 @@ name|mips_btop
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x)>> PGSHIFT)
+value|((uintptr_t)(x)>> PGSHIFT)
 end_define
 
 begin_define
@@ -517,7 +517,7 @@ name|mips_ptob
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x)<< PGSHIFT)
+value|((uintptr_t)(x)<< PGSHIFT)
 end_define
 
 begin_define
@@ -533,6 +533,10 @@ directive|define
 name|trunc_page
 value|mips_trunc_page
 end_define
+
+begin_comment
+comment|/* XXXimp: Is unsigned long the right cast type here? PA can be> 32bits */
+end_comment
 
 begin_define
 define|#
