@@ -27,7 +27,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|long
 name|Maxmem
 decl_stmt|;
 end_decl_stmt
@@ -128,6 +128,16 @@ end_function_decl
 begin_function_decl
 name|int
 name|is_cacheable_mem
+parameter_list|(
+name|vm_offset_t
+name|pa
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|is_coherent_mem
 parameter_list|(
 name|vm_offset_t
 name|pa
