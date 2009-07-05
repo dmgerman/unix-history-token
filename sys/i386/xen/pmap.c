@@ -2387,19 +2387,6 @@ name|XEN
 argument_list|)
 end_if
 
-begin_expr_stmt
-specifier|static
-name|MALLOC_DEFINE
-argument_list|(
-name|M_PMAPPDPT
-argument_list|,
-literal|"pmap"
-argument_list|,
-literal|"pmap pdpt"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 specifier|static
 name|void
@@ -2420,20 +2407,25 @@ name|int
 name|wait
 parameter_list|)
 block|{
+comment|/* Inform UMA that this allocator uses kernel_map/object. */
 operator|*
 name|flags
 operator|=
-name|UMA_SLAB_PRIV
+name|UMA_SLAB_KERNEL
 expr_stmt|;
 return|return
 operator|(
-name|contigmalloc
+operator|(
+name|void
+operator|*
+operator|)
+name|kmem_alloc_contig
 argument_list|(
-name|PAGE_SIZE
+name|kernel_map
 argument_list|,
-name|M_PMAPPDPT
+name|bytes
 argument_list|,
-literal|0
+name|wait
 argument_list|,
 literal|0x0ULL
 argument_list|,
@@ -2442,6 +2434,8 @@ argument_list|,
 literal|1
 argument_list|,
 literal|0
+argument_list|,
+name|VM_CACHE_DEFAULT
 argument_list|)
 operator|)
 return|;
