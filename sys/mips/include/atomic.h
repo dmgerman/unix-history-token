@@ -704,7 +704,7 @@ asm|__asm __volatile (
 literal|"1:\n\t"
 literal|"lld	%0, %3\n\t"
 comment|/* load old value */
-literal|"addu	%0, %2, %0\n\t"
+literal|"daddu	%0, %2, %0\n\t"
 comment|/* calculate new value */
 literal|"scd	%0, %1\n\t"
 comment|/* attempt to store */
@@ -760,7 +760,7 @@ asm|__asm __volatile (
 literal|"1:\n\t"
 literal|"lld	%0, %3\n\t"
 comment|/* load old value */
-literal|"subu	%0, %2\n\t"
+literal|"dsubu	%0, %2\n\t"
 comment|/* calculate new value */
 literal|"scd	%0, %1\n\t"
 comment|/* attempt to store */
