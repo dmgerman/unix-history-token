@@ -1003,11 +1003,16 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|mwl_recv_action
 parameter_list|(
 name|struct
 name|ieee80211_node
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_frame
 modifier|*
 parameter_list|,
 specifier|const
@@ -17274,13 +17279,19 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|mwl_recv_action
 parameter_list|(
 name|struct
 name|ieee80211_node
 modifier|*
 name|ni
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_frame
+modifier|*
+name|wh
 parameter_list|,
 specifier|const
 name|uint8_t
@@ -17377,19 +17388,25 @@ name|IEEE80211_A_HT_MIMOPWRSAVE_MODE
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 else|else
+return|return
 name|sc
 operator|->
 name|sc_recv_action
 argument_list|(
 name|ni
 argument_list|,
+name|wh
+argument_list|,
 name|frm
 argument_list|,
 name|efrm
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 

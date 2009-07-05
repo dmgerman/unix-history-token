@@ -437,6 +437,12 @@ name|ieee80211_superg
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|ieee80211_frame
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|ieee80211com
@@ -1166,7 +1172,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/* 	 * 802.11n ADDBA support.  A simple/generic implementation 	 * of A-MPDU tx aggregation is provided; the driver may 	 * override these methods to provide their own support. 	 * A-MPDU rx re-ordering happens automatically if the 	 * driver passes out-of-order frames to ieee80211_input 	 * from an assocated HT station. 	 */
-name|void
+name|int
 function_decl|(
 modifier|*
 name|ic_recv_action
@@ -1174,6 +1180,11 @@ function_decl|)
 parameter_list|(
 name|struct
 name|ieee80211_node
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_frame
 modifier|*
 parameter_list|,
 specifier|const
@@ -1203,11 +1214,8 @@ parameter_list|,
 name|int
 name|action
 parameter_list|,
-name|uint16_t
-name|args
-index|[
-literal|4
-index|]
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 comment|/* check if A-MPDU should be enabled this station+ac */
