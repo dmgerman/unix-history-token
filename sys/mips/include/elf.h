@@ -29,6 +29,31 @@ directive|ifndef
 name|__ELF_WORD_SIZE
 end_ifndef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__ELF_WORD_SIZE
+value|64
+end_define
+
+begin_comment
+comment|/* Used by<sys/elf_generic.h> */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -39,6 +64,11 @@ end_define
 begin_comment
 comment|/* Used by<sys/elf_generic.h> */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
