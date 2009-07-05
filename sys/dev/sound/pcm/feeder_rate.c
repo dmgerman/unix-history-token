@@ -1938,7 +1938,7 @@ parameter_list|,
 name|adv
 parameter_list|)
 define|\
-value|c += z>> Z_SHIFT;						\ 	z&= Z_MASK;							\ 	coeff = Z_COEFF_INTERPOLATE(z, z_coeff[c], z_dcoeff[c]);	\ 	x = _PCM_READ_##SIGN##BIT##_##ENDIAN(p);			\ 	v += (intpcm64_t)x * coeff;					\ 	z += info->z_dy;						\ 	p adv##= info->channels * PCM_##BIT##_BPS
+value|c += z>> Z_SHIFT;						\ 	z&= Z_MASK;							\ 	coeff = Z_COEFF_INTERPOLATE(z, z_coeff[c], z_dcoeff[c]);	\ 	x = _PCM_READ_##SIGN##BIT##_##ENDIAN(p);			\ 	v += Z_NORM_##BIT((intpcm64_t)x * coeff);			\ 	z += info->z_dy;						\ 	p adv##= info->channels * PCM_##BIT##_BPS
 end_define
 
 begin_comment
@@ -2014,7 +2014,7 @@ parameter_list|,
 name|ENDIAN
 parameter_list|)
 define|\
-value|static void									\ z_feed_sinc_##SIGN##BIT##ENDIAN(struct z_info *info, uint8_t *dst)		\ {										\ 	intpcm64_t v;								\ 	intpcm_t x;								\ 	uint8_t *p;								\ 	int32_t coeff, z, *z_coeff, *z_dcoeff;					\ 	uint32_t c, center, ch, i;						\ 										\ 	z_coeff = info->z_coeff;						\ 	z_dcoeff = info->z_dcoeff;						\ 	center = z_prev(info, info->z_start, info->z_size);			\ 	ch = info->channels * PCM_##BIT##_BPS;					\ 	dst += ch;								\ 										\ 	do {									\ 		dst -= PCM_##BIT##_BPS;						\ 		ch -= PCM_##BIT##_BPS;						\ 		v = 0;								\ 		z = info->z_alpha * info->z_dx;					\ 		c = 0;								\ 		p = info->z_delay + (z_next(info, center, 1) *			\ 		    info->channels * PCM_##BIT##_BPS) + ch;			\ 		for (i = info->z_size; i != 0; i -= Z_SINC_ACCUMULATE_DECR) 	\ 			Z_SINC_ACCUMULATE(SIGN, BIT, ENDIAN, +);		\ 		z = info->z_dy - (info->z_alpha * info->z_dx);			\ 		c = 0;								\ 		p = info->z_delay + (center * info->channels *			\ 		    PCM_##BIT##_BPS) + ch;					\ 		for (i = info->z_size; i != 0; i -= Z_SINC_ACCUMULATE_DECR) 	\ 			Z_SINC_ACCUMULATE(SIGN, BIT, ENDIAN, -);		\ 		if (info->z_scale != Z_ONE)					\ 			v = Z_SCALE_##BIT(v, info->z_scale);			\ 		else								\ 			v>>= Z_COEFF_SHIFT;					\ 		Z_CLIP_CHECK(v, BIT);						\ 		_PCM_WRITE_##SIGN##BIT##_##ENDIAN(dst, Z_CLAMP(v, BIT));	\ 	} while (ch != 0);							\ }
+value|static void									\ z_feed_sinc_##SIGN##BIT##ENDIAN(struct z_info *info, uint8_t *dst)		\ {										\ 	intpcm64_t v;								\ 	intpcm_t x;								\ 	uint8_t *p;								\ 	int32_t coeff, z, *z_coeff, *z_dcoeff;					\ 	uint32_t c, center, ch, i;						\ 										\ 	z_coeff = info->z_coeff;						\ 	z_dcoeff = info->z_dcoeff;						\ 	center = z_prev(info, info->z_start, info->z_size);			\ 	ch = info->channels * PCM_##BIT##_BPS;					\ 	dst += ch;								\ 										\ 	do {									\ 		dst -= PCM_##BIT##_BPS;						\ 		ch -= PCM_##BIT##_BPS;						\ 		v = 0;								\ 		z = info->z_alpha * info->z_dx;					\ 		c = 0;								\ 		p = info->z_delay + (z_next(info, center, 1) *			\ 		    info->channels * PCM_##BIT##_BPS) + ch;			\ 		for (i = info->z_size; i != 0; i -= Z_SINC_ACCUMULATE_DECR) 	\ 			Z_SINC_ACCUMULATE(SIGN, BIT, ENDIAN, +);		\ 		z = info->z_dy - (info->z_alpha * info->z_dx);			\ 		c = 0;								\ 		p = info->z_delay + (center * info->channels *			\ 		    PCM_##BIT##_BPS) + ch;					\ 		for (i = info->z_size; i != 0; i -= Z_SINC_ACCUMULATE_DECR) 	\ 			Z_SINC_ACCUMULATE(SIGN, BIT, ENDIAN, -);		\ 		if (info->z_scale != Z_ONE)					\ 			v = Z_SCALE_##BIT(v, info->z_scale);			\ 		else								\ 			v>>= Z_COEFF_SHIFT - Z_GUARD_BIT_##BIT;		\ 		Z_CLIP_CHECK(v, BIT);						\ 		_PCM_WRITE_##SIGN##BIT##_##ENDIAN(dst, Z_CLAMP(v, BIT));	\ 	} while (ch != 0);							\ }
 end_define
 
 begin_define
@@ -2029,7 +2029,7 @@ parameter_list|,
 name|ENDIAN
 parameter_list|)
 define|\
-value|static void									\ z_feed_sinc_polyphase_##SIGN##BIT##ENDIAN(struct z_info *info, uint8_t *dst)	\ {										\ 	intpcm64_t v;								\ 	intpcm_t x;								\ 	uint8_t *p;								\ 	int32_t ch, i, start, *z_pcoeff;					\ 										\ 	ch = info->channels * PCM_##BIT##_BPS;					\ 	dst += ch;								\ 	start = z_prev(info, info->z_start, (info->z_size<< 1) - 1) * ch;	\ 										\ 	do {									\ 		dst -= PCM_##BIT##_BPS;						\ 		ch -= PCM_##BIT##_BPS;						\ 		v = 0;								\ 		p = info->z_delay + start + ch;					\ 		z_pcoeff = info->z_pcoeff +					\ 		    ((info->z_alpha * info->z_size)<< 1);			\ 		for (i = info->z_size; i != 0; i--) {				\ 			x = _PCM_READ_##SIGN##BIT##_##ENDIAN(p);		\ 			v += (intpcm64_t)x * *z_pcoeff;				\ 			z_pcoeff++;						\ 			p += info->channels * PCM_##BIT##_BPS;			\ 			x = _PCM_READ_##SIGN##BIT##_##ENDIAN(p);		\ 			v += (intpcm64_t)x * *z_pcoeff;				\ 			z_pcoeff++;						\ 			p += info->channels * PCM_##BIT##_BPS;			\ 		}								\ 		if (info->z_scale != Z_ONE)					\ 			v = Z_SCALE_##BIT(v, info->z_scale);			\ 		else								\ 			v>>= Z_COEFF_SHIFT;					\ 		Z_CLIP_CHECK(v, BIT);						\ 		_PCM_WRITE_##SIGN##BIT##_##ENDIAN(dst, Z_CLAMP(v, BIT));	\ 	} while (ch != 0);							\ }
+value|static void									\ z_feed_sinc_polyphase_##SIGN##BIT##ENDIAN(struct z_info *info, uint8_t *dst)	\ {										\ 	intpcm64_t v;								\ 	intpcm_t x;								\ 	uint8_t *p;								\ 	int32_t ch, i, start, *z_pcoeff;					\ 										\ 	ch = info->channels * PCM_##BIT##_BPS;					\ 	dst += ch;								\ 	start = z_prev(info, info->z_start, (info->z_size<< 1) - 1) * ch;	\ 										\ 	do {									\ 		dst -= PCM_##BIT##_BPS;						\ 		ch -= PCM_##BIT##_BPS;						\ 		v = 0;								\ 		p = info->z_delay + start + ch;					\ 		z_pcoeff = info->z_pcoeff +					\ 		    ((info->z_alpha * info->z_size)<< 1);			\ 		for (i = info->z_size; i != 0; i--) {				\ 			x = _PCM_READ_##SIGN##BIT##_##ENDIAN(p);		\ 			v += Z_NORM_##BIT((intpcm64_t)x * *z_pcoeff);		\ 			z_pcoeff++;						\ 			p += info->channels * PCM_##BIT##_BPS;			\ 			x = _PCM_READ_##SIGN##BIT##_##ENDIAN(p);		\ 			v += Z_NORM_##BIT((intpcm64_t)x * *z_pcoeff);		\ 			z_pcoeff++;						\ 			p += info->channels * PCM_##BIT##_BPS;			\ 		}								\ 		if (info->z_scale != Z_ONE)					\ 			v = Z_SCALE_##BIT(v, info->z_scale);			\ 		else								\ 			v>>= Z_COEFF_SHIFT - Z_GUARD_BIT_##BIT;		\ 		Z_CLIP_CHECK(v, BIT);						\ 		_PCM_WRITE_##SIGN##BIT##_##ENDIAN(dst, Z_CLAMP(v, BIT));	\ 	} while (ch != 0);							\ }
 end_define
 
 begin_define
@@ -3653,11 +3653,9 @@ name|zoc0
 operator|=
 operator|(
 operator|(
-operator|(
 literal|0x1ac2260dLL
 operator|*
 name|zoe1
-operator|)
 operator|)
 operator|>>
 literal|30
@@ -4037,11 +4035,9 @@ name|zoc0
 operator|=
 operator|(
 operator|(
-operator|(
 literal|0x1ac2260dLL
 operator|*
 name|zoe1
-operator|)
 operator|)
 operator|>>
 literal|30
@@ -4421,11 +4417,9 @@ name|zoc0
 operator|=
 operator|(
 operator|(
-operator|(
 literal|0x1aa9b47dLL
 operator|*
 name|zoe1
-operator|)
 operator|)
 operator|>>
 literal|30
@@ -4805,11 +4799,9 @@ name|zoc0
 operator|=
 operator|(
 operator|(
-operator|(
 literal|0x1a8eda43LL
 operator|*
 name|zoe1
-operator|)
 operator|)
 operator|>>
 literal|30
@@ -5189,11 +5181,9 @@ name|zoc0
 operator|=
 operator|(
 operator|(
-operator|(
 literal|0x19edb6fdLL
 operator|*
 name|zoe1
-operator|)
 operator|)
 operator|>>
 literal|30
