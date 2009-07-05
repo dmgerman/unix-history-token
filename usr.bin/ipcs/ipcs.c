@@ -2262,13 +2262,11 @@ name|BIGGEST
 condition|)
 name|printf
 argument_list|(
-literal|" %12d"
+literal|" %12zu"
 argument_list|,
 name|kshmptr
 operator|->
-name|u
-operator|.
-name|shm_segsz
+name|shm_bsegsz
 argument_list|)
 expr_stmt|;
 if|if
