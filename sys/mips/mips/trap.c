@@ -1381,7 +1381,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"badaddr = %p, pc = %p, ra = %p, sp = %p, sr = 0x%x, pid = %d, ASID = 0x%x\n"
+literal|"badaddr = 0x%0x, pc = 0x%0x, ra = 0x%0x, sp = 0x%0x, sr = 0x%x, pid = %d, ASID = 0x%x\n"
 argument_list|,
 name|trapframe
 operator|->
@@ -1501,7 +1501,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"too many faults at %p\n"
+literal|"too many faults at %x\n"
 argument_list|,
 name|last_badvaddr
 argument_list|)
@@ -2347,7 +2347,7 @@ directive|ifdef
 name|VMFAULT_TRACE
 name|printf
 argument_list|(
-literal|"vm_fault(%x (pmap %x), %x (%x), %x, %d) -> %x at pc %x\n"
+literal|"vm_fault(%p (pmap %p), %x (%x), %x, %d) -> %x at pc %x\n"
 argument_list|,
 name|map
 argument_list|,
@@ -6785,18 +6785,34 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"\tzero: %08x\tat: %08x\tv0: %08x\tv1: %08x\n"
+literal|"\tzero: %p\tat: %p\tv0: %p\tv1: %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 literal|0
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|ast
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|v0
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|v1
@@ -6806,20 +6822,36 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"\ta0: %08x\ta1: %08x\ta2: %08x\ta3: %08x\n"
+literal|"\ta0: %p\ta1: %p\ta2: %p\ta3: %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|a0
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|a1
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|a2
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|a3
@@ -6829,20 +6861,36 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"\tt0: %08x\tt1: %08x\tt2: %08x\tt3: %08x\n"
+literal|"\tt0: %p\tt1: %p\tt2: %p\tt3: %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|t0
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|t1
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|t2
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|t3
@@ -6852,20 +6900,36 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"\tt4: %08x\tt5: %08x\tt6: %08x\tt7: %08x\n"
+literal|"\tt4: %p\tt5: %p\tt6: %p\tt7: %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|t4
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|t5
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|t6
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|t7
@@ -6875,20 +6939,36 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"\tt8: %08x\tt9: %08x\ts0: %08x\ts1: %08x\n"
+literal|"\tt8: %p\tt9: %p\ts0: %p\ts1: %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|t8
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|t9
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|s0
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|s1
@@ -6898,20 +6978,36 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"\ts2: %08x\ts3: %08x\ts4: %08x\ts5: %08x\n"
+literal|"\ts2: %p\ts3: %p\ts4: %p\ts5: %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|s2
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|s3
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|s4
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|s5
@@ -6921,20 +7017,36 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"\ts6: %08x\ts7: %08x\tk0: %08x\tk1: %08x\n"
+literal|"\ts6: %p\ts7: %p\tk0: %p\tk1: %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|s6
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|s7
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|k0
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|k1
@@ -6944,20 +7056,36 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"\tgp: %08x\tsp: %08x\ts8: %08x\tra: %08x\n"
+literal|"\tgp: %p\tsp: %p\ts8: %p\tra: %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|gp
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|sp
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|s8
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|ra
@@ -6967,20 +7095,36 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"\tsr: %08x\tmullo: %08x\tmulhi: %08x\tbadvaddr: %08x\n"
+literal|"\tsr: %p\tmullo: %p\tmulhi: %p\tbadvaddr: %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|sr
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|mullo
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|mulhi
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|badvaddr
@@ -6993,16 +7137,28 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"\tcause: %08x\tpc: %08x\tic: %08x\n"
+literal|"\tcause: %p\tpc: %p\tic: %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|cause
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|pc
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|ic
@@ -7014,12 +7170,20 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"\tcause: %08x\tpc: %08x\n"
+literal|"\tcause: %p\tpc: %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|cause
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|pc
@@ -7054,18 +7218,34 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tzero: %08x\tat: %08x\tv0: %08x\tv1: %08x\n"
+literal|"\tzero: %p\tat: %p\tv0: %p\tv1: %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 literal|0
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|ast
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|v0
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|v1
@@ -7073,20 +7253,36 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\ta0: %08x\ta1: %08x\ta2: %08x\ta3: %08x\n"
+literal|"\ta0: %p\ta1: %p\ta2: %p\ta3: %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|a0
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|a1
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|a2
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|a3
@@ -7094,20 +7290,36 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tt0: %08x\tt1: %08x\tt2: %08x\tt3: %08x\n"
+literal|"\tt0: %p\tt1: %p\tt2: %p\tt3: %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|t0
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|t1
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|t2
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|t3
@@ -7115,20 +7327,36 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tt4: %08x\tt5: %08x\tt6: %08x\tt7: %08x\n"
+literal|"\tt4: %p\tt5: %p\tt6: %p\tt7: %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|t4
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|t5
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|t6
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|t7
@@ -7136,20 +7364,36 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tt8: %08x\tt9: %08x\ts0: %08x\ts1: %08x\n"
+literal|"\tt8: %p\tt9: %p\ts0: %p\ts1: %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|t8
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|t9
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|s0
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|s1
@@ -7157,20 +7401,36 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\ts2: %08x\ts3: %08x\ts4: %08x\ts5: %08x\n"
+literal|"\ts2: %p\ts3: %p\ts4: %p\ts5: %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|s2
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|s3
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|s4
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|s5
@@ -7178,20 +7438,36 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\ts6: %08x\ts7: %08x\tk0: %08x\tk1: %08x\n"
+literal|"\ts6: %p\ts7: %p\tk0: %p\tk1: %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|s6
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|s7
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|k0
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|k1
@@ -7199,20 +7475,36 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tgp: %08x\tsp: %08x\ts8: %08x\tra: %08x\n"
+literal|"\tgp: %p\tsp: %p\ts8: %p\tra: %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|gp
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|sp
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|s8
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|ra
@@ -7220,20 +7512,36 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tsr: %08x\tmullo: %08x\tmulhi: %08x\tbadvaddr: %08x\n"
+literal|"\tsr: %p\tmullo: %p\tmulhi: %p\tbadvaddr: %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|sr
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|mullo
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|mulhi
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|badvaddr
@@ -7244,16 +7552,28 @@ directive|ifdef
 name|IC_REG
 name|printf
 argument_list|(
-literal|"\tcause: %08x\tpc: %08x\tic: %08x\n"
+literal|"\tcause: %p\tpc: %p\tic: %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|cause
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|pc
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|ic
@@ -7263,12 +7583,20 @@ else|#
 directive|else
 name|printf
 argument_list|(
-literal|"\tcause: %08x\tpc: %08x\n"
+literal|"\tcause: %p\tpc: %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|cause
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|pc
@@ -7503,7 +7831,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: pid %d (%s), uid %d: pc 0x%x got a %s fault at 0x%x\n"
+literal|"%s: pid %d (%s), uid %d: pc %p got a %s fault at %p\n"
 argument_list|,
 name|msg
 argument_list|,
@@ -7528,10 +7856,18 @@ else|:
 operator|-
 literal|1
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|pc
 argument_list|,
 name|read_or_write
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|badvaddr
@@ -7604,8 +7940,12 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Page table info for pc address 0x%x: pde = %p, pte = 0x%lx\n"
+literal|"Page table info for pc address %p: pde = %p, pte = 0x%lx\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|pc
 argument_list|,
 operator|*
@@ -7671,8 +8011,12 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"pc address 0x%x is inaccessible, pde = 0x%p, pte = 0x%lx\n"
+literal|"pc address %p is inaccessible, pde = 0x%p, pte = 0x%lx\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|pc
 argument_list|,
 operator|*
@@ -8115,7 +8459,7 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"Unaligned %s: pc=0x%x, badvaddr=0x%x\n"
+literal|"Unaligned %s: pc=%p, badvaddr=%p\n"
 argument_list|,
 name|access_name
 index|[
@@ -8124,8 +8468,16 @@ operator|-
 literal|1
 index|]
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|pc
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frame
 operator|->
 name|badvaddr
