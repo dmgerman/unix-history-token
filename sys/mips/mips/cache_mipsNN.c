@@ -156,10 +156,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_asm
-asm|__asm(".set mips32");
-end_asm
-
 begin_decl_stmt
 specifier|static
 name|int
