@@ -1619,7 +1619,7 @@ asm|__asm __volatile (
 literal|"1:\n\t"
 literal|"lld	%0, %1\n\t"
 comment|/* load old value */
-literal|"addu	%2, %3, %0\n\t"
+literal|"daddu	%2, %3, %0\n\t"
 comment|/* calculate new value */
 literal|"scd	%2, %1\n\t"
 comment|/* attempt to store */
