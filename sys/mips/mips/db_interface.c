@@ -1091,6 +1091,7 @@ operator|*
 operator|)
 name|addr
 argument_list|,
+operator|*
 operator|(
 name|u_int64_t
 operator|*
