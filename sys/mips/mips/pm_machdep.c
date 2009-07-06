@@ -1060,16 +1060,28 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  old sp %x ra %x pc %x\n"
+literal|"  old sp %p ra %p pc %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|regs
 operator|->
 name|sp
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|regs
 operator|->
 name|ra
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|regs
 operator|->
 name|pc
@@ -1077,8 +1089,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  new sp %x ra %x pc %x z %x\n"
+literal|"  new sp %p ra %p pc %p z %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|ucp
 operator|->
 name|uc_mcontext
@@ -1088,6 +1104,10 @@ index|[
 name|SP
 index|]
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|ucp
 operator|->
 name|uc_mcontext
@@ -1097,6 +1117,10 @@ index|[
 name|RA
 index|]
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|ucp
 operator|->
 name|uc_mcontext
@@ -1106,6 +1130,10 @@ index|[
 name|PC
 index|]
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|ucp
 operator|->
 name|uc_mcontext
@@ -1623,7 +1651,7 @@ operator|->
 name|fsr
 argument_list|,
 operator|(
-name|u_int
+name|uintptr_t
 operator|)
 operator|&
 name|curinstr
