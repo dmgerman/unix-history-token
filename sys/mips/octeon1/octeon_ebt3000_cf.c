@@ -2339,7 +2339,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|OCTEON_PHYS2PTR
+name|MIPS_PHYS_TO_KSEG0
 argument_list|(
 name|OCTEON_CF_COMMON_BASE_ADDR
 argument_list|)
