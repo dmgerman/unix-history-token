@@ -102,6 +102,11 @@ literal|" FPA  Ctrl-Status-reg 0x%llX := 0x%llX  EN %X  M1_E %X  M0_E %X\n"
 argument_list|,
 name|OCTEON_FPA_CTL_STATUS
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|status
 operator|.
 name|word64
@@ -235,6 +240,11 @@ literal|" FPA  Ctrl-Status-reg 0x%llX := 0x%llX  EN %X  M1_E %X  M0_E %X\n"
 argument_list|,
 name|OCTEON_FPA_CTL_STATUS
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|status
 operator|.
 name|word64
@@ -655,7 +665,7 @@ directive|ifdef
 name|FPA_DEBUG_TERSE
 name|printf
 argument_list|(
-literal|"FPA fill: %u  Count: %u  SizeBytes: %u  SizeBytesAligned: %u  1st: 0x%X = 0x%X\n"
+literal|"FPA fill: %u  Count: %u  SizeBytes: %u  SizeBytesAligned: %u  1st: 0x%X = %p\n"
 argument_list|,
 name|pool
 argument_list|,
@@ -667,6 +677,10 @@ name|block_size
 argument_list|,
 name|memory
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|OCTEON_PTR2PHYS
 argument_list|(
 name|memory
