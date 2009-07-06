@@ -3223,7 +3223,7 @@ name|usbd_clear_endpoint_stall_async
 argument_list|(
 name|sc
 operator|->
-name|sc_bulkin_pipe
+name|sc_bulkout_pipe
 argument_list|)
 expr_stmt|;
 comment|/* XXX we should restart after some delay. */
