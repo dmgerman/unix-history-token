@@ -10068,7 +10068,7 @@ literal|" is missing"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Invalidate the 2MB page mapping and return "failure" if the 		 * mapping was never accessed or the allocation of the new 		 * page table page fails. 		 */
+comment|/* 		 * Invalidate the 2MB page mapping and return "failure" if the 		 * mapping was never accessed or the allocation of the new 		 * page table page fails.  If the 2MB page mapping belongs to 		 * the direct map region of the kernel's address space, then 		 * the page allocation request specifies the highest possible 		 * priority (VM_ALLOC_INTERRUPT).  Otherwise, the priority is 		 * normal.  Page table pages are preallocated for every other 		 * part of the kernel address space, so the direct map region 		 * is the only part of the kernel address space that must be 		 * handled here. 		 */
 if|if
 condition|(
 operator|(
@@ -10091,9 +10091,21 @@ argument_list|(
 name|va
 argument_list|)
 argument_list|,
-name|VM_ALLOC_NOOBJ
-operator||
+operator|(
+name|va
+operator|>=
+name|DMAP_MIN_ADDRESS
+operator|&&
+name|va
+operator|<
+name|DMAP_MAX_ADDRESS
+condition|?
+name|VM_ALLOC_INTERRUPT
+else|:
 name|VM_ALLOC_NORMAL
+operator|)
+operator||
+name|VM_ALLOC_NOOBJ
 operator||
 name|VM_ALLOC_WIRED
 argument_list|)
