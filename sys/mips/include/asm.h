@@ -738,7 +738,7 @@ define|#
 directive|define
 name|DO_AST
 define|\
-value|44:				                     \ 	PTR_LA	s0, _C_LABEL(disableintr)           ;\ 	jalr	s0                                  ;\ 	nop                                         ;\ 	move	a0, v0                              ;\ 	GET_CPU_PCPU(s1)                            ;\ 	lw	s3, PC_CURPCB(s1)                   ;\ 	lw	s1, PC_CURTHREAD(s1)                ;\ 	lw	s2, TD_FLAGS(s1)                    ;\ 	li	s0, TDF_ASTPENDING | TDF_NEEDRESCHED;\ 	and	s2, s0                              ;\ 	PTR_LA	s0, _C_LABEL(restoreintr)           ;\ 	jalr	s0                                  ;\ 	nop                                         ;\ 	beq	s2, zero, 4f                        ;\ 	nop                                         ;\ 	PTR_LA	s0, _C_LABEL(ast)                   ;\ 	jalr	s0                                  ;\ 	addu	a0, s3, U_PCB_REGS                  ;\ 	j 44b			                    ;\         nop                                         ;\ 4:
+value|44:				                     \ 	PTR_LA	s0, _C_LABEL(disableintr)           ;\ 	jalr	s0                                  ;\ 	nop                                         ;\ 	move	a0, v0                              ;\ 	GET_CPU_PCPU(s1)                            ;\ 	lw	s3, PC_CURPCB(s1)                   ;\ 	lw	s1, PC_CURTHREAD(s1)                ;\ 	lw	s2, TD_FLAGS(s1)                    ;\ 	li	s0, TDF_ASTPENDING | TDF_NEEDRESCHED;\ 	and	s2, s0                              ;\ 	PTR_LA	s0, _C_LABEL(restoreintr)           ;\ 	jalr	s0                                  ;\ 	nop                                         ;\ 	beq	s2, zero, 4f                        ;\ 	nop                                         ;\ 	PTR_LA	s0, _C_LABEL(ast)                   ;\ 	jalr	s0                                  ;\ 	PTR_ADDU a0, s3, U_PCB_REGS                 ;\ 	j 44b			                    ;\         nop                                         ;\ 4:
 end_define
 
 begin_comment
@@ -896,6 +896,13 @@ name|PTR_LA
 value|la
 end_define
 
+begin_define
+define|#
+directive|define
+name|PTR_ADDU
+value|addu
+end_define
+
 begin_else
 else|#
 directive|else
@@ -948,6 +955,13 @@ define|#
 directive|define
 name|PTR_LA
 value|dla
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTR_ADDU
+value|daddu
 end_define
 
 begin_endif
