@@ -31,7 +31,7 @@ begin_define
 define|#
 directive|define
 name|B
-value|(1<< HALF_BITS)
+value|(1UL<< HALF_BITS)
 end_define
 
 begin_comment

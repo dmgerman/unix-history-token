@@ -141,7 +141,7 @@ name|LHALF
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& ((1<< HALF_BITS) - 1))
+value|((x)& ((1UL<< HALF_BITS) - 1))
 end_define
 
 begin_define
