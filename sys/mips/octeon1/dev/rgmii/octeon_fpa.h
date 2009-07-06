@@ -489,13 +489,14 @@ condition|)
 block|{
 comment|/*  * 32 bit FPA pointers only  */
 comment|/*          * We only use 32 bit pointers at this time          */
+comment|/*XXX mips64 issue */
 return|return
 operator|(
 operator|(
 name|void
 operator|*
 operator|)
-name|OCTEON_PHYS2PTR
+name|MIPS_PHYS_TO_KSEG0
 argument_list|(
 name|address
 operator|&
@@ -540,22 +541,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  * octeon_fpa_alloc  *  * Allocate a new block from the FPA  *  * Buffer passes away from FPA management to SW control  */
-end_comment
-
-begin_endif
-unit|static inline void *octeon_fpa_alloc (u_int pool) {     uint64_t address;      address = oct_read64(OCTEON_ADDR_DID(OCTEON_ADDR_FULL_DID(OCTEON_DID_FPA,                                                               pool)));     if (address) {         return ((void *) (oct_ptr_size) OCTEON_PHYS2PTR(address));     }     return (NULL); }
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

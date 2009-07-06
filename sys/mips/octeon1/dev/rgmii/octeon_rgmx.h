@@ -1357,7 +1357,7 @@ operator|(
 name|octeon_wqe_t
 operator|*
 operator|)
-name|OCTEON_PHYS2PTR
+name|MIPS_PHYS_TO_KSEG0
 argument_list|(
 name|result
 operator|.
@@ -1439,6 +1439,11 @@ name|printf
 argument_list|(
 literal|"WQE Result: 0x%llX  No-work %X   Addr %llX  Ptr: %p\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|result
 operator|.
 name|word64
@@ -1450,7 +1455,9 @@ operator|.
 name|no_work
 argument_list|,
 operator|(
-name|uint64_t
+name|unsigned
+name|long
+name|long
 operator|)
 name|result
 operator|.
@@ -1458,7 +1465,11 @@ name|s_work
 operator|.
 name|addr
 argument_list|,
-name|OCTEON_PHYS2PTR
+operator|(
+name|void
+operator|*
+operator|)
+name|MIPS_PHYS_TO_KSEG0
 argument_list|(
 name|result
 operator|.
@@ -1493,7 +1504,7 @@ operator|(
 name|octeon_wqe_t
 operator|*
 operator|)
-name|OCTEON_PHYS2PTR
+name|MIPS_PHYS_TO_KSEG0
 argument_list|(
 name|result
 operator|.
@@ -1602,7 +1613,7 @@ operator|(
 name|octeon_wqe_t
 operator|*
 operator|)
-name|OCTEON_PHYS2PTR
+name|MIPS_PHYS_TO_KSEG0
 argument_list|(
 name|result
 operator|.
@@ -1631,7 +1642,11 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|OCTEON_PHYS2PTR
+operator|(
+name|void
+operator|*
+operator|)
+name|MIPS_PHYS_TO_KSEG0
 argument_list|(
 operator|(
 operator|(

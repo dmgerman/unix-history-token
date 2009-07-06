@@ -4318,7 +4318,7 @@ operator|(
 name|uint64_t
 operator|*
 operator|)
-name|OCTEON_PHYS2PTR
+name|MIPS_PHYS_TO_KSEG0
 argument_list|(
 name|temp
 argument_list|)
