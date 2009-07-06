@@ -1812,72 +1812,6 @@ begin_comment
 comment|/*  * We limit the allocated device physical blocks to low mem. So use Kseg0  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|AVOID_CODE_NOT_64_BIT
-end_ifndef
-
-begin_comment
-comment|/*  #ifdef PTR_SIZE == sizeof(u_int32) */
-end_comment
-
-begin_comment
-comment|//#define OCTEON_PHYS2PTR(addr)  ((void *) (((uint32_t) addr)    | 0x80000000))
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OCTEON_PHYS2PTR
-parameter_list|(
-name|addr
-parameter_list|)
-value|((void *) (((vm_offset_t) addr) | MIPS_KSEG0_START))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IN_FUTURE_64_BIT
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PTR_SIZE
-name|==
-name|sizeof
-name|(
-name|u_int64
-name|)
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|OCTEON_PHYS2PTR
-parameter_list|(
-name|addr
-parameter_list|)
-value|((void *) (((uint64_t) addr) | (1ul<< 63))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Need to go back to kernel to find v->p mappings& vice-versa  * We are getting non 1-1 mappings.  * #define OCTEON_PTR2PHYS(addr)  ((unsigned long) addr& 0x7fffffff)  */
 end_comment
@@ -1895,6 +1829,12 @@ end_define
 begin_comment
 comment|/*  PTR_SIZE == sizeof(uint32_t)  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_define
 define|#
@@ -1929,22 +1869,10 @@ begin_comment
 comment|// 0x1fffffff
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CODE_FOR_64_BIT_NEEDED
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PTR_SIZE
-name|==
-name|sizeof
-name|(
-name|uint64_t
-name|)
-end_ifdef
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -1964,13 +1892,8 @@ begin_define
 define|#
 directive|define
 name|MIPSX_ADDR_SIZE_KSEGX_MASK_REMOVED
-value|0x1fffffff ffff ffff
+value|0x1fffffffffffffff
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -4097,60 +4020,6 @@ define|#
 directive|define
 name|OCTEON_DRAM_THIRD_BANK_SIZE
 value|(OCTEON_DRAM_ABOVE_512_END - OCTEON_DRAM_ABOVE_512_START + 1ull)
-end_define
-
-begin_comment
-comment|/*  * Mips  Address Range conversions  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PHY_TO_KSEG1
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)+0xA0000000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHY_TO_KSEG0
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)+0x80000000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHY_ADDR
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)&0x1FFFFFFF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ROM_OFFSET
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)&0x000FFFFF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KSEG1_TO_KSEG0
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)-0x20000000)
 end_define
 
 begin_endif
