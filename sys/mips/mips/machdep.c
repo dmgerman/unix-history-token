@@ -1160,6 +1160,21 @@ name|td_pcb
 operator|->
 name|pcb_regs
 expr_stmt|;
+comment|/* Steal memory for the dynamic per-cpu area. */
+name|dpcpu_init
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|pmap_steal_memory
+argument_list|(
+name|DPCPU_SIZE
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * There is no need to initialize md_upte array for thread0 as it's 	 * located in .bss section and should be explicitly zeroed during  	 * kernel initialization. 	 */
 name|PCPU_SET
 argument_list|(
