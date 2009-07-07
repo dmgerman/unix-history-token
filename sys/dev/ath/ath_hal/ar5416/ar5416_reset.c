@@ -4454,6 +4454,8 @@ parameter_list|)
 block|{
 name|uint32_t
 name|tmpReg
+decl_stmt|,
+name|mask
 decl_stmt|;
 comment|/*      * Force wake      */
 name|OS_REG_WRITE
@@ -4613,10 +4615,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Set register and descriptor swapping on      * Bigendian platforms on cold reset      */
-ifdef|#
-directive|ifdef
-name|__BIG_ENDIAN__
 if|if
 condition|(
 name|type
@@ -4624,20 +4622,13 @@ operator|==
 name|HAL_RESET_COLD
 condition|)
 block|{
-name|uint32_t
-name|mask
-decl_stmt|;
-name|HALDEBUG
-argument_list|(
-name|ah
-argument_list|,
-name|HAL_DEBUG_RESET
-argument_list|,
-literal|"%s Applying descriptor swap\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+name|isBigEndian
+argument_list|()
+condition|)
+block|{
+comment|/* 			 * Set CFG, little-endian for register 			 * and descriptor accesses. 			 */
 name|mask
 operator|=
 name|INIT_CONFIG_STATUS
@@ -4655,6 +4646,17 @@ name|AR_CFG_SWTD
 expr_stmt|;
 endif|#
 directive|endif
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_RESET
+argument_list|,
+literal|"%s Applying descriptor swap\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|OS_REG_WRITE
 argument_list|(
 name|ah
@@ -4669,8 +4671,17 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
+else|else
+name|OS_REG_WRITE
+argument_list|(
+name|ah
+argument_list|,
+name|AR_CFG
+argument_list|,
+name|INIT_CONFIG_STATUS
+argument_list|)
+expr_stmt|;
+block|}
 name|ar5416InitPLL
 argument_list|(
 name|ah
