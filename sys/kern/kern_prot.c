@@ -2598,13 +2598,6 @@ goto|goto
 name|fail
 goto|;
 comment|/* 	 * Everything's okay, do it. 	 */
-name|crcopy
-argument_list|(
-name|newcred
-argument_list|,
-name|oldcred
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|oldcred
