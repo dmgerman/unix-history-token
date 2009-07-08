@@ -328,6 +328,12 @@ name|installFixitCDROM
 block|}
 block|,
 block|{
+literal|"installFixitUSB"
+block|,
+name|installFixitUSB
+block|}
+block|,
+block|{
 literal|"installFixitFloppy"
 block|,
 name|installFixitFloppy
