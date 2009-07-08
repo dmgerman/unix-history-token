@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/namei.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/priv.h>
 end_include
 
@@ -3805,6 +3811,8 @@ argument_list|,
 name|uap
 operator|->
 name|name
+argument_list|,
+name|FOLLOW
 argument_list|)
 expr_stmt|;
 name|free

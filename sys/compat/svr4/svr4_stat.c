@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/namei.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/unistd.h>
 end_include
 
@@ -3047,6 +3053,8 @@ argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
 name|name
+argument_list|,
+name|FOLLOW
 argument_list|)
 expr_stmt|;
 name|free
