@@ -1285,10 +1285,6 @@ name|dev
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|DIOCGPROVIDERALIAS
-case|:
-break|break;
 default|default:
 name|acd_read_toc
 argument_list|(
