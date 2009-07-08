@@ -83,6 +83,17 @@ value|3
 end_define
 
 begin_comment
+comment|/*  * PCI devices slots are starting from this number  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR71XX_PCI_BASE_SLOT
+value|17
+end_define
+
+begin_comment
 comment|/* PCI config registers */
 end_comment
 
