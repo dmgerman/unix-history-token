@@ -1130,12 +1130,14 @@ modifier|*
 name|p
 parameter_list|,
 name|uint64_t
+modifier|*
 name|v
 parameter_list|)
 block|{
 operator|*
 name|p
 operator|=
+operator|*
 name|v
 expr_stmt|;
 block|}
