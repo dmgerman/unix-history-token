@@ -5413,9 +5413,13 @@ name|dma
 operator|.
 name|max_iosize
 operator|=
-literal|8192
+operator|(
+name|ATA_AHCI_DMA_ENTRIES
+operator|-
+literal|1
+operator|)
 operator|*
-name|DEV_BSIZE
+name|PAGE_SIZE
 expr_stmt|;
 if|if
 condition|(
