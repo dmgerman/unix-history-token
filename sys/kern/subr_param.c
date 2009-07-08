@@ -127,7 +127,7 @@ begin_define
 define|#
 directive|define
 name|HZ_VM
-value|10
+value|100
 end_define
 
 begin_endif
