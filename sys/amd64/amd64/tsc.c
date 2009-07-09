@@ -919,41 +919,5 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KDTRACE_HOOKS
-end_ifdef
-
-begin_comment
-comment|/*  * DTrace needs a high resolution time function which can  * be called from a probe context and guaranteed not to have  * instrumented with probes itself.  *  * Returns nanoseconds since boot.  */
-end_comment
-
-begin_function
-name|uint64_t
-name|dtrace_gethrtime
-parameter_list|()
-block|{
-return|return
-operator|(
-name|rdtsc
-argument_list|()
-operator|*
-operator|(
-name|uint64_t
-operator|)
-literal|1000000000
-operator|/
-name|tsc_freq
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 end_unit
 
