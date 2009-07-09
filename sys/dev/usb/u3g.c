@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/usb.h>
 end_include
 
@@ -128,15 +134,53 @@ directive|include
 file|"usbdevs.h"
 end_include
 
-begin_comment
-comment|//#define U3G_DEBUG
-end_comment
+begin_decl_stmt
+specifier|static
+name|int
+name|u3gdebug
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|U3G_DEBUG
-end_ifdef
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw_usb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|u3g
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"USB u3g"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_usb_u3g
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|debug
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|u3gdebug
+argument_list|,
+literal|0
+argument_list|,
+literal|"u3g debug level"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -146,52 +190,14 @@ parameter_list|(
 name|x
 modifier|...
 parameter_list|)
-value|device_printf(sc->sc_dev, ##x)
+value|if (u3gdebug) device_printf(sc->sc_dev, ##x)
 end_define
-
-begin_define
-define|#
-directive|define
-name|bootverbose
-value|(1)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|DPRINTF
-parameter_list|(
-name|x
-modifier|...
-parameter_list|)
-end_define
-
-begin_comment
-comment|/* nop */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
 directive|define
 name|U3G_MAXPORTS
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|U3G_CONFIG_INDEX
-value|0
+value|6
 end_define
 
 begin_struct
@@ -1505,6 +1511,30 @@ name|i
 operator|++
 control|)
 block|{
+name|DPRINTF
+argument_list|(
+literal|"Interface %d of %d, %sin use\n"
+argument_list|,
+name|i
+argument_list|,
+name|uaa
+operator|->
+name|nifaces
+argument_list|,
+operator|(
+name|uaa
+operator|->
+name|ifaces
+index|[
+name|i
+index|]
+condition|?
+literal|"not "
+else|:
+literal|""
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|uaa
@@ -1544,7 +1574,11 @@ comment|/* We attach to the interface instead of the device as 			 * some device
 if|if
 condition|(
 operator|!
+operator|(
 name|bootverbose
+operator|||
+name|u3gdebug
+operator|)
 condition|)
 if|if
 condition|(
@@ -1621,6 +1655,25 @@ name|i
 index|]
 argument_list|,
 name|n
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+literal|" Endpoint %d of %d%s\n"
+argument_list|,
+name|n
+argument_list|,
+name|id
+operator|->
+name|bNumEndpoints
+argument_list|,
+operator|(
+name|ed
+condition|?
+literal|""
+else|:
+literal|"no descriptor"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2990,7 +3043,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|bootverbose
+name|u3gdebug
 condition|)
 name|device_printf
 argument_list|(
@@ -3087,14 +3140,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bootverbose
-condition|)
-block|{
-if|if
-condition|(
 name|err
+operator|&&
+name|u3gdebug
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|sc
@@ -3109,8 +3158,6 @@ name|err
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 return|return
 literal|1
 return|;
@@ -3189,14 +3236,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bootverbose
-condition|)
-block|{
-if|if
-condition|(
 name|err
+operator|&&
+name|u3gdebug
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|sc
@@ -3211,8 +3254,6 @@ name|err
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 return|return
 literal|1
 return|;
@@ -3272,6 +3313,8 @@ case|:
 if|if
 condition|(
 name|bootverbose
+operator|||
+name|u3gdebug
 condition|)
 name|device_printf
 argument_list|(
@@ -3294,6 +3337,8 @@ case|:
 if|if
 condition|(
 name|bootverbose
+operator|||
+name|u3gdebug
 condition|)
 name|device_printf
 argument_list|(
@@ -3316,6 +3361,8 @@ case|:
 if|if
 condition|(
 name|bootverbose
+operator|||
+name|u3gdebug
 condition|)
 name|device_printf
 argument_list|(
@@ -3356,6 +3403,8 @@ case|:
 if|if
 condition|(
 name|bootverbose
+operator|||
+name|u3gdebug
 condition|)
 name|device_printf
 argument_list|(
@@ -3380,6 +3429,8 @@ case|:
 if|if
 condition|(
 name|bootverbose
+operator|||
+name|u3gdebug
 condition|)
 name|device_printf
 argument_list|(
@@ -3405,6 +3456,8 @@ default|default:
 if|if
 condition|(
 name|bootverbose
+operator|||
+name|u3gdebug
 condition|)
 name|device_printf
 argument_list|(
@@ -3519,8 +3572,9 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
-name|bootverbose
+name|u3gdebug
+operator|==
+literal|0
 condition|)
 name|device_quiet
 argument_list|(
@@ -3582,8 +3636,9 @@ name|err
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|bootverbose
+name|u3gdebug
+operator|==
+literal|0
 condition|)
 name|device_quiet
 argument_list|(
