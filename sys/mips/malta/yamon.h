@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|YAMON_FUNCTION_BASE
-value|0x1fc00500
+value|0x1fc00500ul
 end_define
 
 begin_define
@@ -113,7 +113,7 @@ name|YAMON_FUNC
 parameter_list|(
 name|ofs
 parameter_list|)
-value|(*(uint32_t *)(MIPS_PHYS_TO_KSEG0(ofs)))
+value|((long)(*(int32_t *)(MIPS_PHYS_TO_KSEG0(ofs))))
 end_define
 
 begin_typedef
