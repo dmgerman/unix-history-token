@@ -11001,7 +11001,10 @@ directive|ifndef
 name|XL905B_TXCSUM_BROKEN
 if|if
 condition|(
+operator|(
+operator|*
 name|m_head
+operator|)
 operator|->
 name|m_pkthdr
 operator|.
@@ -11010,7 +11013,10 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+operator|*
 name|m_head
+operator|)
 operator|->
 name|m_pkthdr
 operator|.
@@ -11024,7 +11030,10 @@ name|XL_TXSTAT_IPCKSUM
 expr_stmt|;
 if|if
 condition|(
+operator|(
+operator|*
 name|m_head
+operator|)
 operator|->
 name|m_pkthdr
 operator|.
@@ -11038,7 +11047,10 @@ name|XL_TXSTAT_TCPCKSUM
 expr_stmt|;
 if|if
 condition|(
+operator|(
+operator|*
 name|m_head
+operator|)
 operator|->
 name|m_pkthdr
 operator|.
