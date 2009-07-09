@@ -7010,10 +7010,8 @@ name|xfer
 operator|->
 name|pipe
 expr_stmt|;
-name|DPRINTFN
+name|DPRINTF
 argument_list|(
-literal|15
-argument_list|,
 operator|(
 literal|"ohci_process_done: error cc=%d (%s)\n"
 operator|,
