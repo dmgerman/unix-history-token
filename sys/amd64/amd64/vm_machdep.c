@@ -673,6 +673,13 @@ name|pcb_tssp
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* New segment registers. */
+name|pcb2
+operator|->
+name|pcb_full_iret
+operator|=
+literal|1
+expr_stmt|;
 comment|/* Copy the LDT, if necessary. */
 name|mdp1
 operator|=
@@ -1197,6 +1204,12 @@ operator|&=
 operator|~
 name|PCB_FPUINITDONE
 expr_stmt|;
+name|pcb2
+operator|->
+name|pcb_full_iret
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * Create a new fresh stack for the new thread. 	 */
 name|bcopy
 argument_list|(
@@ -1615,6 +1628,14 @@ operator|(
 name|register_t
 operator|)
 name|tls_base
+expr_stmt|;
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_full_iret
+operator|=
+literal|1
 expr_stmt|;
 return|return
 operator|(
