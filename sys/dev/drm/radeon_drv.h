@@ -164,6 +164,8 @@ name|CHIP_RS780
 block|,
 name|CHIP_RV770
 block|,
+name|CHIP_RV740
+block|,
 name|CHIP_RV730
 block|,
 name|CHIP_RV710
