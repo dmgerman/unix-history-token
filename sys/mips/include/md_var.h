@@ -88,18 +88,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int
+name|uintptr_t
 name|MipsEmulateBranch
 parameter_list|(
 name|struct
 name|trapframe
 modifier|*
 parameter_list|,
-name|int
+name|uintptr_t
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int
+name|uintptr_t
 parameter_list|)
 function_decl|;
 end_function_decl
