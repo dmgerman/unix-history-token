@@ -180,7 +180,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Round p (pointer or byte index) up to a correctly-aligned value for all  * data types (int, long, ...).	  The result is u_int and must be cast to  * any desired pointer type.  */
+comment|/*  * Round p (pointer or byte index) up to a correctly-aligned value for all  * data types (int, long, ...).	  The result is u_int and must be cast to  * any desired pointer type. XXX u_int isn't big enough to hod a pointer.  */
 end_comment
 
 begin_define
@@ -197,7 +197,7 @@ name|_ALIGN
 parameter_list|(
 name|p
 parameter_list|)
-value|(((u_int)(p) + _ALIGNBYTES)&~ _ALIGNBYTES)
+value|(((uintptr_t)(p) + _ALIGNBYTES)&~ _ALIGNBYTES)
 end_define
 
 begin_define
@@ -209,7 +209,7 @@ name|p
 parameter_list|,
 name|t
 parameter_list|)
-value|((((u_int32_t)(p))& (sizeof (t) - 1)) == 0)
+value|((((uintptr_t)(p))& (sizeof (t) - 1)) == 0)
 end_define
 
 begin_define
