@@ -5393,7 +5393,7 @@ expr_stmt|;
 name|ACCEPT_UNLOCK
 argument_list|()
 expr_stmt|;
-comment|/* XXX KNOTE(&head->so_rcv.sb_sel.si_note, 0); */
+comment|/* XXX KNOTE_UNLOCKED(&head->so_rcv.sb_sel.si_note, 0); */
 name|soaccept
 argument_list|(
 name|so

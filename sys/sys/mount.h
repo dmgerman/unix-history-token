@@ -2894,7 +2894,7 @@ name|vp
 parameter_list|,
 name|hint
 parameter_list|)
-value|do					\ {									\ 	if (((vp)->v_vflag& VV_NOKNOTE) == 0)				\ 		VN_KNOTE((vp), (hint), 1);				\ } while (0)
+value|do					\ {									\ 	if (((vp)->v_vflag& VV_NOKNOTE) == 0)				\ 		VN_KNOTE((vp), (hint), KNF_LISTLOCKED);			\ } while (0)
 end_define
 
 begin_define
