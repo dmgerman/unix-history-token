@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /p/tcsh/cvsroot/tcsh/config_f.h,v 3.40 2006/08/28 14:53:04 mitr Exp $ */
+comment|/* $Header: /p/tcsh/cvsroot/tcsh/config_f.h,v 3.42 2009/06/25 12:10:56 christos Exp $ */
 end_comment
 
 begin_comment
@@ -283,11 +283,6 @@ name|defined
 argument_list|(
 name|__MVS__
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__linux__
-argument_list|)
 end_if
 
 begin_define
@@ -416,7 +411,7 @@ name|RCSID
 parameter_list|(
 name|id
 parameter_list|)
-value|static char *rcsid(const char *a) { return rcsid(a = id); }
+value|static const char rcsid[] __attribute__((__used__)) = (id);
 end_define
 
 begin_endif
