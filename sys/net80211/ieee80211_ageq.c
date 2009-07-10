@@ -766,13 +766,6 @@ name|aq_len
 operator|--
 expr_stmt|;
 comment|/* 		 * Remove from forward list; tail pointer is harder. 		 */
-operator|*
-name|prev
-operator|=
-name|m
-operator|->
-name|m_nextpkt
-expr_stmt|;
 if|if
 condition|(
 name|aq
@@ -858,6 +851,13 @@ operator|)
 expr_stmt|;
 block|}
 block|}
+operator|*
+name|prev
+operator|=
+name|m
+operator|->
+name|m_nextpkt
+expr_stmt|;
 comment|/* add to private list for return */
 operator|*
 name|phead
