@@ -869,6 +869,15 @@ operator|==
 name|NULL
 condition|)
 break|break;
+if|if
+condition|(
+name|cgd
+operator|->
+name|protocol
+operator|!=
+name|PROTO_SCSI
+condition|)
+break|break;
 comment|/* 		 * Allocate a peripheral instance for this device and 		 * start the probe process. 		 */
 name|status
 operator|=

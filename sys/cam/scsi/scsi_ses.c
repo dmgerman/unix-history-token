@@ -1181,6 +1181,15 @@ condition|)
 block|{
 break|break;
 block|}
+if|if
+condition|(
+name|cgd
+operator|->
+name|protocol
+operator|!=
+name|PROTO_SCSI
+condition|)
+break|break;
 name|inq_len
 operator|=
 name|cgd

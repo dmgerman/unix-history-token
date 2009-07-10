@@ -72,6 +72,13 @@ name|ADV_MAX_LUN
 value|7
 end_define
 
+begin_define
+define|#
+directive|define
+name|ADV_MAXPHYS
+value|(128 * 1024)
+end_define
+
 begin_comment
 comment|/* Enumeration of board types */
 end_comment

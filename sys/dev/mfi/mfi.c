@@ -1741,7 +1741,7 @@ name|max_fw_sge
 argument_list|,
 operator|(
 operator|(
-name|MAXPHYS
+name|MFI_MAXPHYS
 operator|/
 name|PAGE_SIZE
 operator|)

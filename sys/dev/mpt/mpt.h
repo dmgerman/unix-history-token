@@ -3972,6 +3972,17 @@ value|256
 end_define
 
 begin_comment
+comment|/* Max i/o size, based on legacy MAXPHYS.  Can be increased. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPT_MAXPHYS
+value|(128 * 1024)
+end_define
+
+begin_comment
 comment|/*  * Must be less than 16384 in order for target mode to work  */
 end_comment
 

@@ -2929,8 +2929,15 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ISP_MAXPHYS
+value|(128 * 1024)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISP_NSEGS
-value|((MAXPHYS / PAGE_SIZE) + 1)
+value|((ISP_MAXPHYS / PAGE_SIZE) + 1)
 end_define
 
 begin_comment

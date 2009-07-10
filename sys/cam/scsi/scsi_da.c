@@ -3596,6 +3596,15 @@ condition|)
 break|break;
 if|if
 condition|(
+name|cgd
+operator|->
+name|protocol
+operator|!=
+name|PROTO_SCSI
+condition|)
+break|break;
+if|if
+condition|(
 name|SID_TYPE
 argument_list|(
 operator|&
@@ -4337,6 +4346,17 @@ operator|=
 name|DA_Q_NONE
 expr_stmt|;
 comment|/* Check if the SIM does not want 6 byte commands */
+name|bzero
+argument_list|(
+operator|&
+name|cpi
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cpi
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|xpt_setup_ccb
 argument_list|(
 operator|&
@@ -4613,6 +4633,14 @@ name|d_drv1
 operator|=
 name|periph
 expr_stmt|;
+if|if
+condition|(
+name|cpi
+operator|.
+name|maxio
+operator|==
+literal|0
+condition|)
 name|softc
 operator|->
 name|disk
@@ -4621,7 +4649,36 @@ name|d_maxsize
 operator|=
 name|DFLTPHYS
 expr_stmt|;
-comment|/* XXX: probably not arbitrary */
+comment|/* traditional default */
+elseif|else
+if|if
+condition|(
+name|cpi
+operator|.
+name|maxio
+operator|>
+name|MAXPHYS
+condition|)
+name|softc
+operator|->
+name|disk
+operator|->
+name|d_maxsize
+operator|=
+name|MAXPHYS
+expr_stmt|;
+comment|/* for safety */
+else|else
+name|softc
+operator|->
+name|disk
+operator|->
+name|d_maxsize
+operator|=
+name|cpi
+operator|.
+name|maxio
+expr_stmt|;
 name|softc
 operator|->
 name|disk

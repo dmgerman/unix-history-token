@@ -8801,7 +8801,7 @@ name|mu
 operator|->
 name|mu_datasize
 operator|>
-name|MAXPHYS
+name|MLX_MAXPHYS
 condition|)
 block|{
 name|error
