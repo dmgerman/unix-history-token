@@ -102,7 +102,7 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|DPRINTF
 argument_list|(
 name|ctx
 argument_list|,
@@ -255,7 +255,7 @@ name|pdesc
 operator|->
 name|bNumConfigurations
 expr_stmt|;
-name|dprintf
+name|DPRINTF
 argument_list|(
 name|ctx
 argument_list|,
@@ -308,7 +308,7 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|DPRINTF
 argument_list|(
 name|ctx
 argument_list|,
@@ -330,7 +330,7 @@ argument_list|(
 name|pdev
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|DPRINTF
 argument_list|(
 name|ctx
 argument_list|,
@@ -435,7 +435,7 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|DPRINTF
 argument_list|(
 name|ctx
 argument_list|,
@@ -1426,7 +1426,7 @@ argument_list|(
 name|pconf
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|DPRINTF
 argument_list|(
 name|ctx
 argument_list|,
@@ -1492,7 +1492,7 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|DPRINTF
 argument_list|(
 name|ctx
 argument_list|,
@@ -1587,7 +1587,7 @@ name|pconf
 argument_list|)
 expr_stmt|;
 block|}
-name|dprintf
+name|DPRINTF
 argument_list|(
 name|ctx
 argument_list|,
@@ -1627,7 +1627,7 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|DPRINTF
 argument_list|(
 name|ctx
 argument_list|,
@@ -1641,7 +1641,7 @@ argument_list|(
 name|config
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|DPRINTF
 argument_list|(
 name|ctx
 argument_list|,
@@ -1682,9 +1682,6 @@ name|libusb_context
 modifier|*
 name|ctx
 decl_stmt|;
-name|int
-name|ret
-decl_stmt|;
 name|ctx
 operator|=
 name|NULL
@@ -1694,7 +1691,7 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|DPRINTF
 argument_list|(
 name|ctx
 argument_list|,
@@ -1724,7 +1721,7 @@ name|dev
 operator|->
 name|os_priv
 expr_stmt|;
-name|dprintf
+name|DPRINTF
 argument_list|(
 name|ctx
 argument_list|,
