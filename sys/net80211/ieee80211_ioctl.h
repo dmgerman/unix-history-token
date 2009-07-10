@@ -973,6 +973,7 @@ name|IEEE80211_ADDR_LEN
 index|]
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
