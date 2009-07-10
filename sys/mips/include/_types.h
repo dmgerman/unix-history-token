@@ -405,7 +405,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|ISA_MIPS64
+name|__mips_n32
 argument_list|)
 end_if
 
@@ -647,7 +647,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|ISA_MIPS64
+name|__mips_n32
 argument_list|)
 end_if
 
@@ -657,6 +657,32 @@ name|__uint64_t
 name|__u_register_t
 typedef|;
 end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|__uint32_t
+name|__u_register_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+end_if
 
 begin_typedef
 typedef|typedef
@@ -683,13 +709,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_typedef
-typedef|typedef
-name|__uint32_t
-name|__u_register_t
-typedef|;
-end_typedef
 
 begin_typedef
 typedef|typedef
