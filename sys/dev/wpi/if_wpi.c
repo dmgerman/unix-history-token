@@ -14741,6 +14741,23 @@ name|WPI_FILTER_PROMISC
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"unknown opmode %d\n"
+argument_list|,
+name|ic
+operator|->
+name|ic_opmode
+argument_list|)
+expr_stmt|;
+return|return
+name|EINVAL
+return|;
 block|}
 name|sc
 operator|->
