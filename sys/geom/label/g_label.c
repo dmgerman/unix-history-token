@@ -365,7 +365,7 @@ parameter_list|)
 block|{
 name|G_LABEL_DEBUG
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 literal|"Label %s removed."
 argument_list|,
@@ -403,7 +403,7 @@ parameter_list|)
 block|{
 name|G_LABEL_DEBUG
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 literal|"Label %s removed."
 argument_list|,
@@ -823,7 +823,7 @@ argument_list|)
 expr_stmt|;
 name|G_LABEL_DEBUG
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 literal|"Label for provider %s is %s."
 argument_list|,
@@ -955,7 +955,7 @@ else|else
 block|{
 name|G_LABEL_DEBUG
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 literal|"Label %s removed."
 argument_list|,
