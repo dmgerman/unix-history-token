@@ -224,11 +224,7 @@ name|char
 name|driver_ver
 index|[]
 init|=
-literal|"v1.2 ("
-name|__DATE__
-literal|" "
-name|__TIME__
-literal|")"
+literal|"v1.2"
 decl_stmt|;
 end_decl_stmt
 
