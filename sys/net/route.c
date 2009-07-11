@@ -4117,9 +4117,40 @@ name|error
 operator|=
 name|ESRCH
 expr_stmt|;
+else|else
+block|{
+comment|/* 				 * remove from tree before returning it 				 * to the caller 				 */
+name|rn
+operator|=
+name|rnh
+operator|->
+name|rnh_deladdr
+argument_list|(
+name|dst
+argument_list|,
+name|netmask
+argument_list|,
+name|rnh
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|rt
+operator|==
+name|RNTORT
+argument_list|(
+name|rn
+argument_list|)
+argument_list|,
+operator|(
+literal|"radix node disappeared"
+operator|)
+argument_list|)
+expr_stmt|;
 goto|goto
-name|done
+name|gwdelete
 goto|;
+block|}
 block|}
 comment|/* 		 * use the normal delete code to remove 		 * the first entry 		 */
 if|if
@@ -4161,6 +4192,8 @@ argument_list|(
 literal|"rtrequest1: rt_mpath_deldup"
 argument_list|)
 expr_stmt|;
+name|gwdelete
+label|:
 name|RT_LOCK
 argument_list|(
 name|rt
