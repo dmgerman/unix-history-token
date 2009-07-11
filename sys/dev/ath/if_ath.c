@@ -4896,6 +4896,7 @@ name|ic
 operator|->
 name|ic_opmode
 expr_stmt|;
+break|break;
 default|default:
 name|device_printf
 argument_list|(
