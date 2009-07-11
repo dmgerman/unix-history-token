@@ -920,6 +920,22 @@ name|M_80211_RX
 value|(M_AMPDU|M_WEP|M_AMPDU_MPDU)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_MBUF_TX_FLAG_BITS
+define|\
+value|"\20\1M_EXT\2M_PKTHDR\3M_EOR\4M_RDONLY\5M_ENCAP\6M_WEP\7M_EAPOL" \ 	"\10M_PWR_SAV\11M_MORE_DATA\12M_BCAST\13M_MCAST\14M_FRAG\15M_FIRSTFRAG" \ 	"\16M_LASTFRAG\17M_SKIP_FIREWALL\20M_FREELIST\21M_VLANTAG\22M_PROMISC" \ 	"\23M_NOFREE\24M_FF\25M_TXCB\26M_AMPDU_MPDU\27M_FLOWID"
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MBUF_RX_FLAG_BITS
+define|\
+value|"\20\1M_EXT\2M_PKTHDR\3M_EOR\4M_RDONLY\5M_AMPDU\6M_WEP\7M_PROTO3" \ 	"\10M_PROTO4\11M_PROTO5\12M_BCAST\13M_MCAST\14M_FRAG\15M_FIRSTFRAG" \ 	"\16M_LASTFRAG\17M_SKIP_FIREWALL\20M_FREELIST\21M_VLANTAG\22M_PROMISC" \ 	"\23M_NOFREE\24M_PROTO6\25M_PROTO7\26M_AMPDU_MPDU\27M_FLOWID"
+end_define
+
 begin_comment
 comment|/*  * Store WME access control bits in the vlan tag.  * This is safe since it's done after the packet is classified  * (where we use any previous tag) and because it's passed  * directly in to the driver and there's no chance someone  * else will clobber them on us.  */
 end_comment

@@ -747,6 +747,14 @@ name|csa
 decl_stmt|;
 name|uint8_t
 modifier|*
+name|meshid
+decl_stmt|;
+name|uint8_t
+modifier|*
+name|meshconf
+decl_stmt|;
+name|uint8_t
+modifier|*
 name|spare
 index|[
 literal|3
@@ -865,6 +873,14 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* captured country code */
+name|uint8_t
+name|se_meshid
+index|[
+literal|2
+operator|+
+name|IEEE80211_MESHID_LEN
+index|]
+decl_stmt|;
 name|struct
 name|ieee80211_ies
 name|se_ies

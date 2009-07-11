@@ -993,6 +993,9 @@ comment|/* IEEE80211_M_HOSTAP */
 literal|"wlan_scan_monitor"
 block|,
 comment|/* IEEE80211_M_MONITOR */
+literal|"wlan_scan_sta"
+block|,
+comment|/* IEEE80211_M_MBSS */
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -855,6 +855,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IEEE80211_MESHID_LEN
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_QOS_TXOP
 value|0x00ff
 end_define
@@ -3537,6 +3544,81 @@ init|=
 literal|221
 block|,
 comment|/* vendor private */
+comment|/* 	 * 802.11s IEs based on D3.0 spec and were not assigned by 	 * ANA. Beware changing them because some of them are being 	 * kept compatible with Linux. 	 */
+name|IEEE80211_ELEMID_MESHCONF
+init|=
+literal|51
+block|,
+name|IEEE80211_ELEMID_MESHID
+init|=
+literal|52
+block|,
+name|IEEE80211_ELEMID_MESHLINK
+init|=
+literal|35
+block|,
+name|IEEE80211_ELEMID_MESHCNGST
+init|=
+literal|36
+block|,
+name|IEEE80211_ELEMID_MESHPEER
+init|=
+literal|55
+block|,
+name|IEEE80211_ELEMID_MESHCSA
+init|=
+literal|38
+block|,
+name|IEEE80211_ELEMID_MESHTIM
+init|=
+literal|39
+block|,
+name|IEEE80211_ELEMID_MESHAWAKEW
+init|=
+literal|40
+block|,
+name|IEEE80211_ELEMID_MESHBEACONT
+init|=
+literal|41
+block|,
+name|IEEE80211_ELEMID_MESHPANN
+init|=
+literal|48
+block|,
+name|IEEE80211_ELEMID_MESHRANN
+init|=
+literal|49
+block|,
+name|IEEE80211_ELEMID_MESHPREQ
+init|=
+literal|68
+block|,
+name|IEEE80211_ELEMID_MESHPREP
+init|=
+literal|69
+block|,
+name|IEEE80211_ELEMID_MESHPERR
+init|=
+literal|70
+block|,
+name|IEEE80211_ELEMID_MESHPU
+init|=
+literal|53
+block|,
+name|IEEE80211_ELEMID_MESHPUC
+init|=
+literal|54
+block|,
+name|IEEE80211_ELEMID_MESHAH
+init|=
+literal|60
+block|,
+comment|/* Abbreviated Handshake */
+name|IEEE80211_ELEMID_MESHPEERVER
+init|=
+literal|80
+block|,
+comment|/* Peering Protocol Version */
 block|}
 enum|;
 end_enum
@@ -4302,6 +4384,52 @@ init|=
 literal|39
 block|,
 comment|/* 11e */
+comment|/* values not yet allocated by ANA */
+name|IEEE80211_REASON_PEER_LINK_CANCELED
+init|=
+literal|2
+block|,
+comment|/* 11s */
+name|IEEE80211_REASON_MESH_MAX_PEERS
+init|=
+literal|3
+block|,
+comment|/* 11s */
+name|IEEE80211_REASON_MESH_CPVIOLATION
+init|=
+literal|4
+block|,
+comment|/* 11s */
+name|IEEE80211_REASON_MESH_CLOSE_RCVD
+init|=
+literal|5
+block|,
+comment|/* 11s */
+name|IEEE80211_REASON_MESH_MAX_RETRIES
+init|=
+literal|6
+block|,
+comment|/* 11s */
+name|IEEE80211_REASON_MESH_CONFIRM_TIMEOUT
+init|=
+literal|7
+block|,
+comment|/* 11s */
+name|IEEE80211_REASON_MESH_INVALID_GTK
+init|=
+literal|8
+block|,
+comment|/* 11s */
+name|IEEE80211_REASON_MESH_INCONS_PARAMS
+init|=
+literal|9
+block|,
+comment|/* 11s */
+name|IEEE80211_REASON_MESH_INVALID_SECURITY
+init|=
+literal|10
+block|,
+comment|/* 11s */
 name|IEEE80211_STATUS_SUCCESS
 init|=
 literal|0

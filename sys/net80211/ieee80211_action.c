@@ -98,6 +98,12 @@ directive|include
 file|<net80211/ieee80211_action.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net80211/ieee80211_mesh.h>
+end_include
+
 begin_function
 specifier|static
 name|int
@@ -183,16 +189,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* NB: temporary until 802.11s support is added */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IEEE80211_ACTION_CAT_MESHPEERING
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|ieee80211_send_action_func
@@ -271,11 +267,6 @@ name|send_inval
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -379,9 +370,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-ifdef|#
-directive|ifdef
-name|IEEE80211_ACTION_CAT_MESHPEERING
 case|case
 name|IEEE80211_ACTION_CAT_MESHPEERING
 case|:
@@ -451,8 +439,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-endif|#
-directive|endif
 case|case
 name|IEEE80211_ACTION_CAT_VENDOR
 case|:
@@ -587,9 +573,6 @@ name|act
 index|]
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|IEEE80211_ACTION_CAT_MESHPEERING
 case|case
 name|IEEE80211_ACTION_CAT_MESHPEERING
 case|:
@@ -650,8 +633,6 @@ name|act
 index|]
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|IEEE80211_ACTION_CAT_VENDOR
 case|:
@@ -782,12 +763,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IEEE80211_ACTION_CAT_MESHPEERING
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|ieee80211_recv_action_func
@@ -866,11 +841,6 @@ name|recv_inval
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -974,9 +944,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-ifdef|#
-directive|ifdef
-name|IEEE80211_ACTION_CAT_MESHPEERING
 case|case
 name|IEEE80211_ACTION_CAT_MESHPEERING
 case|:
@@ -1046,8 +1013,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-endif|#
-directive|endif
 case|case
 name|IEEE80211_ACTION_CAT_VENDOR
 case|:
@@ -1212,9 +1177,6 @@ name|ia_action
 index|]
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|IEEE80211_ACTION_CAT_MESHPEERING
 case|case
 name|IEEE80211_ACTION_CAT_MESHPEERING
 case|:
@@ -1287,8 +1249,6 @@ name|ia_action
 index|]
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|IEEE80211_ACTION_CAT_VENDOR
 case|:

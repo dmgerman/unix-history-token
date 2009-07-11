@@ -970,6 +970,11 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* bssid mask support */
+name|sc_hasbmatch
+range|:
+literal|1
+decl_stmt|,
+comment|/* bssid match disable support*/
 name|sc_hastsfadd
 range|:
 literal|1

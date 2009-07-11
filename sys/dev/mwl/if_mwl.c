@@ -2720,6 +2720,9 @@ comment|/* adhoc demo mode */
 endif|#
 directive|endif
 operator||
+name|IEEE80211_C_MBSS
+comment|/* mesh point link mode */
+operator||
 name|IEEE80211_C_WDS
 comment|/* WDS supported */
 operator||
@@ -3488,6 +3491,9 @@ block|{
 case|case
 name|IEEE80211_M_HOSTAP
 case|:
+case|case
+name|IEEE80211_M_MBSS
+case|:
 if|if
 condition|(
 operator|(
@@ -3869,6 +3875,10 @@ condition|(
 name|opmode
 operator|==
 name|IEEE80211_M_HOSTAP
+operator|||
+name|opmode
+operator|==
+name|IEEE80211_M_MBSS
 condition|)
 block|{
 name|vap
@@ -3947,6 +3957,9 @@ case|case
 name|IEEE80211_M_HOSTAP
 case|:
 case|case
+name|IEEE80211_M_MBSS
+case|:
+case|case
 name|IEEE80211_M_STA
 case|:
 comment|/* 		 * Setup sta db entry for local address. 		 */
@@ -3962,6 +3975,12 @@ operator|->
 name|iv_opmode
 operator|==
 name|IEEE80211_M_HOSTAP
+operator|||
+name|vap
+operator|->
+name|iv_opmode
+operator|==
+name|IEEE80211_M_MBSS
 condition|)
 name|sc
 operator|->
@@ -4127,6 +4146,9 @@ case|case
 name|IEEE80211_M_HOSTAP
 case|:
 case|case
+name|IEEE80211_M_MBSS
+case|:
+case|case
 name|IEEE80211_M_STA
 case|:
 name|KASSERT
@@ -4162,6 +4184,10 @@ condition|(
 name|opmode
 operator|==
 name|IEEE80211_M_HOSTAP
+operator|||
+name|opmode
+operator|==
+name|IEEE80211_M_MBSS
 condition|)
 name|sc
 operator|->
@@ -6478,6 +6504,12 @@ operator|->
 name|iv_opmode
 operator|==
 name|IEEE80211_M_HOSTAP
+operator|||
+name|vap
+operator|->
+name|iv_opmode
+operator|==
+name|IEEE80211_M_MBSS
 operator|||
 name|vap
 operator|->
@@ -19926,6 +19958,9 @@ break|break;
 case|case
 name|IEEE80211_M_HOSTAP
 case|:
+case|case
+name|IEEE80211_M_MBSS
+case|:
 name|error
 operator|=
 name|mwl_hal_newstation
@@ -20241,6 +20276,12 @@ operator|->
 name|iv_opmode
 operator|==
 name|IEEE80211_M_HOSTAP
+operator|||
+name|vap
+operator|->
+name|iv_opmode
+operator|==
+name|IEEE80211_M_MBSS
 condition|)
 name|mwl_startcsa
 argument_list|(
@@ -20360,6 +20401,9 @@ condition|)
 block|{
 case|case
 name|IEEE80211_M_HOSTAP
+case|:
+case|case
+name|IEEE80211_M_MBSS
 case|:
 if|if
 condition|(
