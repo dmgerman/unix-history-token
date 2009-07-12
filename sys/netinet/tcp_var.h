@@ -175,6 +175,17 @@ decl_stmt|;
 name|int
 name|sack_bytes_rexmit
 decl_stmt|;
+name|int
+name|ispare
+decl_stmt|;
+comment|/* explicit pad for 64bit alignment */
+name|uint64_t
+name|_pad
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* 1 sacked_bytes, 1 TBD */
 block|}
 struct|;
 end_struct
@@ -262,6 +273,14 @@ name|tsegqe_head
 name|t_segq
 decl_stmt|;
 comment|/* segment reassembly queue */
+name|void
+modifier|*
+name|t_pspare
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* new reassembly queue */
 name|int
 name|t_segqlen
 decl_stmt|;
@@ -544,14 +563,6 @@ name|int
 name|rfbuf_cnt
 decl_stmt|;
 comment|/* recv buffer autoscaling byte count */
-name|void
-modifier|*
-name|t_pspare
-index|[
-literal|3
-index|]
-decl_stmt|;
-comment|/* toe usrreqs / toepcb * / congestion algo / 1 general use */
 name|struct
 name|toe_usrreqs
 modifier|*
@@ -567,6 +578,25 @@ name|int
 name|t_bytes_acked
 decl_stmt|;
 comment|/* # bytes acked during current RTT */
+name|int
+name|t_ispare
+decl_stmt|;
+comment|/* explicit pad for 64bit alignment */
+name|void
+modifier|*
+name|t_pspare2
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* 2 CC / 4 TBD */
+name|uint64_t
+name|_pad
+index|[
+literal|12
+index|]
+decl_stmt|;
+comment|/* 7 UTO, 5 TBD (1-2 CC/RTT?) */
 block|}
 struct|;
 end_struct
@@ -1673,6 +1703,13 @@ name|u_long
 name|tcps_ecn_rcwnd
 decl_stmt|;
 comment|/* # times ECN reduced the cwnd */
+name|u_long
+name|_pad
+index|[
+literal|12
+index|]
+decl_stmt|;
+comment|/* 6 UTO, 6 TBD */
 block|}
 struct|;
 end_struct
