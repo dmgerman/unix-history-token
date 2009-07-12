@@ -131,6 +131,24 @@ name|struct
 name|__siov
 name|iov
 decl_stmt|;
+comment|/* 	 * ANSI and SUSv2 require a return value of 0 if size or count are 0. 	 */
+name|n
+operator|=
+name|count
+operator|*
+name|size
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|iov
 operator|.
 name|iov_base
@@ -150,10 +168,6 @@ operator|.
 name|iov_len
 operator|=
 name|n
-operator|=
-name|count
-operator|*
-name|size
 expr_stmt|;
 name|uio
 operator|.

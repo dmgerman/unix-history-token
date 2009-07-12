@@ -180,7 +180,7 @@ decl_stmt|;
 name|size_t
 name|total
 decl_stmt|;
-comment|/* 	 * The ANSI standard requires a return value of 0 for a count 	 * or a size of 0.  Peculiarily, it imposes no such requirements 	 * on fwrite; it only requires fread to be broken. 	 */
+comment|/* 	 * ANSI and SUSv2 require a return value of 0 if size or count are 0. 	 */
 if|if
 condition|(
 operator|(
