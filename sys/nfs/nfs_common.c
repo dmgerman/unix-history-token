@@ -528,7 +528,6 @@ name|uio_segflg
 operator|==
 name|UIO_SYSSPACE
 condition|)
-block|{
 name|bcopy
 argument_list|(
 name|mbufcp
@@ -538,14 +537,6 @@ argument_list|,
 name|xfer
 argument_list|)
 expr_stmt|;
-name|cpu_flush_dcache
-argument_list|(
-name|uiocp
-argument_list|,
-name|xfer
-argument_list|)
-expr_stmt|;
-block|}
 else|else
 name|copyout
 argument_list|(
