@@ -5955,7 +5955,7 @@ name|usbd_xfer_get_frame
 argument_list|(
 name|xfer
 argument_list|,
-name|n
+literal|0
 argument_list|)
 expr_stmt|;
 name|len
