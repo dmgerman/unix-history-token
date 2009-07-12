@@ -91,8 +91,8 @@ name|unsigned
 name|long
 name|boundary
 parameter_list|,
-name|vm_cache_mode_t
-name|mode
+name|vm_memattr_t
+name|memattr
 parameter_list|)
 function_decl|;
 end_function_decl

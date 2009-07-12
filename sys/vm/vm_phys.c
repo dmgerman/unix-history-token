@@ -3036,9 +3036,6 @@ parameter_list|,
 name|unsigned
 name|long
 name|boundary
-parameter_list|,
-name|vm_cache_mode_t
-name|mode
 parameter_list|)
 block|{
 name|struct
@@ -3679,6 +3676,27 @@ operator|(
 literal|"vm_phys_alloc_contig: page %p is dirty"
 operator|,
 name|m
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|pmap_page_get_memattr
+argument_list|(
+name|m
+argument_list|)
+operator|==
+name|VM_MEMATTR_DEFAULT
+argument_list|,
+operator|(
+literal|"vm_phys_alloc_contig: page %p has unexpected memattr %d"
+operator|,
+name|m
+operator|,
+name|pmap_page_get_memattr
+argument_list|(
+name|m
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;

@@ -2369,6 +2369,14 @@ operator|.
 name|pv_list
 argument_list|)
 expr_stmt|;
+name|m
+operator|->
+name|md
+operator|.
+name|pat_mode
+operator|=
+name|PAT_WRITE_BACK
+expr_stmt|;
 block|}
 end_function
 
@@ -2435,7 +2443,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-name|VM_CACHE_DEFAULT
+name|VM_MEMATTR_DEFAULT
 argument_list|)
 operator|)
 return|;

@@ -16,13 +16,13 @@ name|_MACHINE_VM_H_
 end_define
 
 begin_comment
-comment|/* Cache control is not (yet) implemented. */
+comment|/* Memory attribute configuration is not (yet) implemented. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VM_CACHE_DEFAULT
+name|VM_MEMATTR_DEFAULT
 value|0
 end_define
 

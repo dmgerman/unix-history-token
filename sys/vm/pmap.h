@@ -48,6 +48,10 @@ name|pmap_statistics_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  * Each machine dependent implementation is expected to provide:  *  * vm_memattr_t	pmap_page_get_memattr(vm_page_t);  * boolean_t	pmap_page_is_mapped(vm_page_t);  * void		pmap_page_set_memattr(vm_page_t, vm_memattr_t);  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -59,12 +63,6 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_struct_decl
-struct_decl|struct
-name|proc
-struct_decl|;
-end_struct_decl
 
 begin_struct_decl
 struct_decl|struct

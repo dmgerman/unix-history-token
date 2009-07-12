@@ -28,49 +28,49 @@ file|<machine/pte.h>
 end_include
 
 begin_comment
-comment|/* Cache control options. */
+comment|/* Memory attributes. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VM_CACHE_WRITE_BACK
-value|((vm_cache_mode_t)PTE_MA_WB)
+name|VM_MEMATTR_WRITE_BACK
+value|((vm_memattr_t)PTE_MA_WB)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VM_CACHE_UNCACHEABLE
-value|((vm_cache_mode_t)PTE_MA_UC)
+name|VM_MEMATTR_UNCACHEABLE
+value|((vm_memattr_t)PTE_MA_UC)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VM_CACHE_UNCACHEABLE_EXPORTED
-value|((vm_cache_mode_t)PTE_MA_UCE)
+name|VM_MEMATTR_UNCACHEABLE_EXPORTED
+value|((vm_memattr_t)PTE_MA_UCE)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VM_CACHE_WRITE_COMBINING
-value|((vm_cache_mode_t)PTE_MA_WC)
+name|VM_MEMATTR_WRITE_COMBINING
+value|((vm_memattr_t)PTE_MA_WC)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VM_CACHE_NATPAGE
-value|((vm_cache_mode_t)PTE_MA_NATPAGE)
+name|VM_MEMATTR_NATPAGE
+value|((vm_memattr_t)PTE_MA_NATPAGE)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VM_CACHE_DEFAULT
-value|VM_CACHE_WRITE_BACK
+name|VM_MEMATTR_DEFAULT
+value|VM_MEMATTR_WRITE_BACK
 end_define
 
 begin_endif

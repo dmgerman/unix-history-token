@@ -99,6 +99,10 @@ name|int
 name|shadow_count
 decl_stmt|;
 comment|/* how many objects that this is a shadow for */
+name|vm_memattr_t
+name|memattr
+decl_stmt|;
+comment|/* default memory attribute for pages */
 name|objtype_t
 name|type
 decl_stmt|;
@@ -752,6 +756,19 @@ name|void
 name|vm_object_reference_locked
 parameter_list|(
 name|vm_object_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vm_object_set_memattr
+parameter_list|(
+name|vm_object_t
+name|object
+parameter_list|,
+name|vm_memattr_t
+name|memattr
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -22,27 +22,41 @@ file|<machine/pte.h>
 end_include
 
 begin_comment
-comment|/* Cache control options. */
+comment|/* Memory attributes. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VM_CACHE_INHIBIT
-value|((vm_cache_mode_t)PTE_I)
+name|VM_MEMATTR_CACHING_INHIBIT
+value|((vm_memattr_t)PTE_I)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VM_CACHE_WRITE_THROUGH
-value|((vm_cache_mode_t)PTE_W)
+name|VM_MEMATTR_GUARD
+value|((vm_memattr_t)PTE_G)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VM_CACHE_DEFAULT
+name|VM_MEMATTR_MEMORY_COHERENCE
+value|((vm_memattr_t)PTE_M)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MEMATTR_WRITE_THROUGH
+value|((vm_memattr_t)PTE_W)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MEMATTR_DEFAULT
 value|0
 end_define
 

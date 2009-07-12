@@ -648,6 +648,9 @@ parameter_list|,
 name|vm_page_t
 name|m
 parameter_list|,
+name|vm_memattr_t
+name|memattr
+parameter_list|,
 name|int
 name|flags
 parameter_list|)
@@ -751,6 +754,19 @@ operator|+=
 name|PAGE_SIZE
 control|)
 block|{
+if|if
+condition|(
+name|memattr
+operator|!=
+name|VM_MEMATTR_DEFAULT
+condition|)
+name|pmap_page_set_memattr
+argument_list|(
+name|m
+argument_list|,
+name|memattr
+argument_list|)
+expr_stmt|;
 name|vm_page_insert
 argument_list|(
 name|m
@@ -885,7 +901,7 @@ name|alignment
 argument_list|,
 name|boundary
 argument_list|,
-name|VM_CACHE_DEFAULT
+name|VM_MEMATTR_DEFAULT
 argument_list|)
 expr_stmt|;
 if|if
@@ -939,8 +955,8 @@ name|unsigned
 name|long
 name|boundary
 parameter_list|,
-name|vm_cache_mode_t
-name|mode
+name|vm_memattr_t
+name|memattr
 parameter_list|)
 block|{
 name|vm_offset_t
@@ -996,8 +1012,6 @@ argument_list|,
 name|alignment
 argument_list|,
 name|boundary
-argument_list|,
-name|mode
 argument_list|)
 expr_stmt|;
 if|if
@@ -1127,6 +1141,8 @@ argument_list|,
 name|size
 argument_list|,
 name|pages
+argument_list|,
+name|memattr
 argument_list|,
 name|flags
 argument_list|)

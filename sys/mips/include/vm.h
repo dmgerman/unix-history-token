@@ -22,28 +22,28 @@ file|<machine/pte.h>
 end_include
 
 begin_comment
-comment|/* Cache control options. */
+comment|/* Memory attributes. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VM_CACHE_UNCACHED
-value|((vm_cache_mode_t)PTE_UNCACHED)
+name|VM_MEMATTR_UNCACHED
+value|((vm_memattr_t)PTE_UNCACHED)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VM_CACHE_CACHEABLE_NONCOHERENT
-value|((vm_cache_mode_t)PTE_CACHE)
+name|VM_MEMATTR_CACHEABLE_NONCOHERENT
+value|((vm_memattr_t)PTE_CACHE)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VM_CACHE_DEFAULT
-value|VM_CACHE_CACHEABLE_NONCOHERENT
+name|VM_MEMATTR_DEFAULT
+value|VM_MEMATTR_CACHEABLE_NONCOHERENT
 end_define
 
 begin_endif
