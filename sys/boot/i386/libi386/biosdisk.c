@@ -4551,6 +4551,13 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
+name|part
+operator|!=
+literal|1
+operator|)
+operator|&&
+operator|(
 name|dp
 index|[
 name|i
@@ -4559,6 +4566,7 @@ operator|.
 name|dp_typ
 operator|!=
 literal|0x00
+operator|)
 condition|)
 return|return
 operator|(
