@@ -5663,7 +5663,7 @@ name|sata
 operator|.
 name|pm_present
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 name|cts
 operator|.
