@@ -1010,7 +1010,7 @@ begin_struct
 struct|struct
 name|tcpopt
 block|{
-name|u_long
+name|u_int64_t
 name|to_flags
 decl_stmt|;
 comment|/* which options are present */
@@ -1056,6 +1056,16 @@ name|u_int32_t
 name|to_tsecr
 decl_stmt|;
 comment|/* reflected timestamp */
+name|u_char
+modifier|*
+name|to_sacks
+decl_stmt|;
+comment|/* pointer to the first SACK blocks */
+name|u_char
+modifier|*
+name|to_signature
+decl_stmt|;
+comment|/* pointer to the TCP-MD5 signature */
 name|u_int16_t
 name|to_mss
 decl_stmt|;
@@ -1068,16 +1078,6 @@ name|u_int8_t
 name|to_nsacks
 decl_stmt|;
 comment|/* number of SACK blocks */
-name|u_char
-modifier|*
-name|to_sacks
-decl_stmt|;
-comment|/* pointer to the first SACK blocks */
-name|u_char
-modifier|*
-name|to_signature
-decl_stmt|;
-comment|/* pointer to the TCP-MD5 signature */
 block|}
 struct|;
 end_struct

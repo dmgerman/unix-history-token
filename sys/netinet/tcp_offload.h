@@ -118,6 +118,45 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Proxy for struct tcpopt between TOE drivers and TCP functions.  */
+end_comment
+
+begin_struct
+struct|struct
+name|toeopt
+block|{
+name|u_int64_t
+name|to_flags
+decl_stmt|;
+comment|/* see tcpopt in tcp_var.h */
+name|u_int16_t
+name|to_mss
+decl_stmt|;
+comment|/* maximum segment size */
+name|u_int8_t
+name|to_wscale
+decl_stmt|;
+comment|/* window scaling */
+name|u_int8_t
+name|_pad1
+decl_stmt|;
+comment|/* explicit pad for 64bit alignment */
+name|u_int32_t
+name|_pad2
+decl_stmt|;
+comment|/* explicit pad for 64bit alignment */
+name|u_int64_t
+name|_pad3
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* TBD */
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
