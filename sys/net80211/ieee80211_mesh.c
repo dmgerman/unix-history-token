@@ -221,7 +221,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
 name|void
 name|mesh_linkchange
 parameter_list|(
@@ -9655,7 +9654,6 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
 name|int
 name|mesh_verify_meshpeerver
 parameter_list|(
@@ -9728,7 +9726,6 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
 name|int
 name|mesh_verify_meshid
 parameter_list|(
