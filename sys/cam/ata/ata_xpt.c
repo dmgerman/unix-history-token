@@ -297,7 +297,7 @@ init|=
 block|{
 name|probe_periph_init
 block|,
-literal|"probe"
+literal|"aprobe"
 block|,
 name|TAILQ_HEAD_INITIALIZER
 argument_list|(
@@ -310,7 +310,7 @@ end_decl_stmt
 begin_expr_stmt
 name|PERIPHDRIVER_DECLARE
 argument_list|(
-name|probe
+name|aprobe
 argument_list|,
 name|probe_driver
 argument_list|)
@@ -6267,7 +6267,7 @@ name|cam_periph_find
 argument_list|(
 name|path
 argument_list|,
-literal|"probe"
+literal|"aprobe"
 argument_list|)
 operator|)
 operator|!=
@@ -6320,7 +6320,7 @@ name|probecleanup
 argument_list|,
 name|probestart
 argument_list|,
-literal|"probe"
+literal|"aprobe"
 argument_list|,
 name|CAM_PERIPH_BIO
 argument_list|,
