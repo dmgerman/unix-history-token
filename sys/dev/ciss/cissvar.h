@@ -287,7 +287,7 @@ begin_define
 define|#
 directive|define
 name|CISS_MAX_SG_ELEMENTS
-value|33
+value|17
 end_define
 
 begin_comment
