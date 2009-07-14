@@ -274,65 +274,185 @@ init|=
 block|{
 literal|"Succesful"
 block|,
-comment|/*  0  */
+comment|/*  0 */
 literal|"Unspecified failure"
 block|,
-comment|/*  1  */
+comment|/*  1 */
 literal|"Reserved"
 block|,
-comment|/*  2  */
+comment|/*  2 */
 literal|"Reserved"
 block|,
-comment|/*  3  */
+comment|/*  3 */
 literal|"Reserved"
 block|,
-comment|/*  4  */
+comment|/*  4 */
 literal|"Reserved"
 block|,
-comment|/*  5  */
+comment|/*  5 */
 literal|"Reserved"
 block|,
-comment|/*  6  */
+comment|/*  6 */
 literal|"Reserved"
 block|,
-comment|/*  7  */
+comment|/*  7 */
 literal|"Reserved"
 block|,
-comment|/*  8  */
+comment|/*  8 */
 literal|"Reserved"
 block|,
-comment|/*  9  */
-literal|"Cannot Support all requested capabilities in the Capability Information field"
+comment|/*  9 */
+literal|"Cannot Support all requested capabilities in the Capability "
+literal|"Information field"
 block|,
-comment|/*  10  */
-literal|"Reassociation denied due to inability to confirm that association exists"
+comment|/* 10 */
+literal|"Reassociation denied due to inability to confirm that association "
+literal|"exists"
 block|,
-comment|/*  11  */
-literal|"Association denied due to reason outside the scope of the standard"
+comment|/* 11 */
+literal|"Association denied due to reason outside the scope of the "
+literal|"standard"
 block|,
-comment|/*  12  */
-literal|"Responding station does not support the specified authentication algorithm "
+comment|/* 12 */
+literal|"Responding station does not support the specified authentication "
+literal|"algorithm "
 block|,
-comment|/*  13  */
+comment|/* 13 */
 literal|"Received an Authentication frame with authentication transaction "
-expr|\
 literal|"sequence number out of expected sequence"
 block|,
-comment|/*  14  */
+comment|/* 14 */
 literal|"Authentication rejected because of challenge failure"
 block|,
-comment|/*  15 */
-literal|"Authentication rejected due to timeout waiting for next frame in sequence"
+comment|/* 15 */
+literal|"Authentication rejected due to timeout waiting for next frame in "
+literal|"sequence"
 block|,
-comment|/*  16 */
-literal|"Association denied because AP is unable to handle additional associated stations"
+comment|/* 16 */
+literal|"Association denied because AP is unable to handle additional"
+literal|"associated stations"
 block|,
-comment|/*  17 */
-literal|"Association denied due to requesting station not supporting all of the "
-expr|\
-literal|"data rates in BSSBasicRateSet parameter"
+comment|/* 17 */
+literal|"Association denied due to requesting station not supporting all of "
+literal|"the data rates in BSSBasicRateSet parameter"
 block|,
-comment|/*  18 */
+comment|/* 18 */
+literal|"Association denied due to requesting station not supporting "
+literal|"short preamble operation"
+block|,
+comment|/* 19 */
+literal|"Association denied due to requesting station not supporting "
+literal|"PBCC encoding"
+block|,
+comment|/* 20 */
+literal|"Association denied due to requesting station not supporting "
+literal|"channel agility"
+block|,
+comment|/* 21 */
+literal|"Association request rejected because Spectrum Management "
+literal|"capability is required"
+block|,
+comment|/* 22 */
+literal|"Association request rejected because the information in the "
+literal|"Power Capability element is unacceptable"
+block|,
+comment|/* 23 */
+literal|"Association request rejected because the information in the "
+literal|"Supported Channels element is unacceptable"
+block|,
+comment|/* 24 */
+literal|"Association denied due to requesting station not supporting "
+literal|"short slot operation"
+block|,
+comment|/* 25 */
+literal|"Association denied due to requesting station not supporting "
+literal|"DSSS-OFDM operation"
+block|,
+comment|/* 26 */
+literal|"Association denied because the requested STA does not support HT "
+literal|"features"
+block|,
+comment|/* 27 */
+literal|"Reserved"
+block|,
+comment|/* 28 */
+literal|"Association denied because the requested STA does not support "
+literal|"the PCO transition time required by the AP"
+block|,
+comment|/* 29 */
+literal|"Reserved"
+block|,
+comment|/* 30 */
+literal|"Reserved"
+block|,
+comment|/* 31 */
+literal|"Unspecified, QoS-related failure"
+block|,
+comment|/* 32 */
+literal|"Association denied due to QAP having insufficient bandwidth "
+literal|"to handle another QSTA"
+block|,
+comment|/* 33 */
+literal|"Association denied due to excessive frame loss rates and/or "
+literal|"poor conditions on current operating channel"
+block|,
+comment|/* 34 */
+literal|"Association (with QBSS) denied due to requesting station not "
+literal|"supporting the QoS facility"
+block|,
+comment|/* 35 */
+literal|"Association denied due to requesting station not supporting "
+literal|"Block Ack"
+block|,
+comment|/* 36 */
+literal|"The request has been declined"
+block|,
+comment|/* 37 */
+literal|"The request has not been successful as one or more parameters "
+literal|"have invalid values"
+block|,
+comment|/* 38 */
+literal|"The TS has not been created because the request cannot be honored. "
+literal|"However, a suggested TSPEC is provided so that the initiating QSTA"
+literal|"may attempt to set another TS with the suggested changes to the "
+literal|"TSPEC"
+block|,
+comment|/* 39 */
+literal|"Invalid Information Element"
+block|,
+comment|/* 40 */
+literal|"Group Cipher is not valid"
+block|,
+comment|/* 41 */
+literal|"Pairwise Cipher is not valid"
+block|,
+comment|/* 42 */
+literal|"AKMP is not valid"
+block|,
+comment|/* 43 */
+literal|"Unsupported RSN IE version"
+block|,
+comment|/* 44 */
+literal|"Invalid RSN IE Capabilities"
+block|,
+comment|/* 45 */
+literal|"Cipher suite is rejected per security policy"
+block|,
+comment|/* 46 */
+literal|"The TS has not been created. However, the HC may be capable of "
+literal|"creating a TS, in response to a request, after the time indicated "
+literal|"in the TS Delay element"
+block|,
+comment|/* 47 */
+literal|"Direct Link is not allowed in the BSS by policy"
+block|,
+comment|/* 48 */
+literal|"Destination STA is not present within this QBSS."
+block|,
+comment|/* 49 */
+literal|"The Destination STA is not a QSTA."
+block|,
+comment|/* 50 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -362,13 +482,15 @@ comment|/* 1 */
 literal|"Previous authentication no longer valid"
 block|,
 comment|/* 2 */
-literal|"Deauthenticated because sending station is leaving (or has left) IBSS or ESS"
+literal|"Deauthenticated because sending station is leaving (or has left) "
+literal|"IBSS or ESS"
 block|,
 comment|/* 3 */
 literal|"Disassociated due to inactivity"
 block|,
 comment|/* 4 */
-literal|"Disassociated because AP is unable to handle all currently associated stations"
+literal|"Disassociated because AP is unable to handle all currently "
+literal|" associated stations"
 block|,
 comment|/* 5 */
 literal|"Class 2 frame received from nonauthenticated station"
@@ -377,12 +499,136 @@ comment|/* 6 */
 literal|"Class 3 frame received from nonassociated station"
 block|,
 comment|/* 7 */
-literal|"Disassociated because sending station is leaving (or has left) BSS"
+literal|"Disassociated because sending station is leaving "
+literal|"(or has left) BSS"
 block|,
 comment|/* 8 */
-literal|"Station requesting (re)association is not authenticated with responding station"
+literal|"Station requesting (re)association is not authenticated with "
+literal|"responding station"
 block|,
 comment|/* 9 */
+literal|"Disassociated because the information in the Power Capability "
+literal|"element is unacceptable"
+block|,
+comment|/* 10 */
+literal|"Disassociated because the information in the SupportedChannels "
+literal|"element is unacceptable"
+block|,
+comment|/* 11 */
+literal|"Invalid Information Element"
+block|,
+comment|/* 12 */
+literal|"Reserved"
+block|,
+comment|/* 13 */
+literal|"Michael MIC failure"
+block|,
+comment|/* 14 */
+literal|"4-Way Handshake timeout"
+block|,
+comment|/* 15 */
+literal|"Group key update timeout"
+block|,
+comment|/* 16 */
+literal|"Information element in 4-Way Handshake different from (Re)Association"
+literal|"Request/Probe Response/Beacon"
+block|,
+comment|/* 17 */
+literal|"Group Cipher is not valid"
+block|,
+comment|/* 18 */
+literal|"AKMP is not valid"
+block|,
+comment|/* 20 */
+literal|"Unsupported RSN IE version"
+block|,
+comment|/* 21 */
+literal|"Invalid RSN IE Capabilities"
+block|,
+comment|/* 22 */
+literal|"IEEE 802.1X Authentication failed"
+block|,
+comment|/* 23 */
+literal|"Cipher suite is rejected per security policy"
+block|,
+comment|/* 24 */
+literal|"Reserved"
+block|,
+comment|/* 25 */
+literal|"Reserved"
+block|,
+comment|/* 26 */
+literal|"Reserved"
+block|,
+comment|/* 27 */
+literal|"Reserved"
+block|,
+comment|/* 28 */
+literal|"Reserved"
+block|,
+comment|/* 29 */
+literal|"Reserved"
+block|,
+comment|/* 30 */
+literal|"TS deleted because QoS AP lacks sufficient bandwidth for this "
+literal|"QoS STA due to a change in BSS service characteristics or "
+literal|"operational mode (e.g. an HT BSS change from 40 MHz channel "
+literal|"to 20 MHz channel)"
+block|,
+comment|/* 31 */
+literal|"Disassociated for unspecified, QoS-related reason"
+block|,
+comment|/* 32 */
+literal|"Disassociated because QoS AP lacks sufficient bandwidth for this "
+literal|"QoS STA"
+block|,
+comment|/* 33 */
+literal|"Disassociated because of excessive number of frames that need to be "
+literal|"acknowledged, but are not acknowledged for AP transmissions "
+literal|"and/or poor channel conditions"
+block|,
+comment|/* 34 */
+literal|"Disassociated because STA is transmitting outside the limits "
+literal|"of its TXOPs"
+block|,
+comment|/* 35 */
+literal|"Requested from peer STA as the STA is leaving the BSS "
+literal|"(or resetting)"
+block|,
+comment|/* 36 */
+literal|"Requested from peer STA as it does not want to use the "
+literal|"mechanism"
+block|,
+comment|/* 37 */
+literal|"Requested from peer STA as the STA received frames using the "
+literal|"mechanism for which a set up is required"
+block|,
+comment|/* 38 */
+literal|"Requested from peer STA due to time out"
+block|,
+comment|/* 39 */
+literal|"Reserved"
+block|,
+comment|/* 40 */
+literal|"Reserved"
+block|,
+comment|/* 41 */
+literal|"Reserved"
+block|,
+comment|/* 42 */
+literal|"Reserved"
+block|,
+comment|/* 43 */
+literal|"Reserved"
+block|,
+comment|/* 44 */
+literal|"Peer STA does not support the requested cipher suite"
+block|,
+comment|/* 45 */
+literal|"Association denied due to requesting STA not supporting HT "
+literal|"features"
+block|,
+comment|/* 46 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2543,6 +2789,328 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|PRINT_HT_ACTION
+parameter_list|(
+name|v
+parameter_list|)
+value|(\ 	(v) == 0 ? printf("TxChWidth") : \ 	(v) == 1 ? printf("MIMOPwrSave") : \ 		   printf("Act#%d", (v)) \ )
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRINT_BA_ACTION
+parameter_list|(
+name|v
+parameter_list|)
+value|(\ 	(v) == 0 ? printf("ADDBA Request") : \ 	(v) == 1 ? printf("ADDBA Response") : \ 	(v) == 2 ? printf("DELBA") : \ 		   printf("Act#%d", (v)) \ )
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRINT_MESHLINK_ACTION
+parameter_list|(
+name|v
+parameter_list|)
+value|(\ 	(v) == 0 ? printf("Request") : \ 	(v) == 1 ? printf("Report") : \ 		   printf("Act#%d", (v)) \ )
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRINT_MESHPEERING_ACTION
+parameter_list|(
+name|v
+parameter_list|)
+value|(\ 	(v) == 0 ? printf("Open") : \ 	(v) == 1 ? printf("Confirm") : \ 	(v) == 2 ? printf("Close") : \ 		   printf("Act#%d", (v)) \ )
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRINT_MESHPATH_ACTION
+parameter_list|(
+name|v
+parameter_list|)
+value|(\ 	(v) == 0 ? printf("Request") : \ 	(v) == 1 ? printf("Report") : \ 	(v) == 2 ? printf("Error") : \ 	(v) == 3 ? printf("RootAnnouncement") : \ 		   printf("Act#%d", (v)) \ )
+end_define
+
+begin_function
+specifier|static
+name|int
+name|handle_action
+parameter_list|(
+specifier|const
+name|struct
+name|mgmt_header_t
+modifier|*
+name|pmh
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
+name|p
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|TTEST2
+argument_list|(
+operator|*
+name|p
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|eflag
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|": "
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|" (%s): "
+argument_list|,
+name|etheraddr_string
+argument_list|(
+name|pmh
+operator|->
+name|sa
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+switch|switch
+condition|(
+name|p
+index|[
+literal|0
+index|]
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|printf
+argument_list|(
+literal|"Spectrum Management Act#%d"
+argument_list|,
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|printf
+argument_list|(
+literal|"QoS Act#%d"
+argument_list|,
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|printf
+argument_list|(
+literal|"DLS Act#%d"
+argument_list|,
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|printf
+argument_list|(
+literal|"BA "
+argument_list|)
+expr_stmt|;
+name|PRINT_BA_ACTION
+argument_list|(
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|7
+case|:
+name|printf
+argument_list|(
+literal|"HT "
+argument_list|)
+expr_stmt|;
+name|PRINT_HT_ACTION
+argument_list|(
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|13
+case|:
+name|printf
+argument_list|(
+literal|"MeshLMetric "
+argument_list|)
+expr_stmt|;
+name|PRINT_MESHLINK_ACTION
+argument_list|(
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|15
+case|:
+name|printf
+argument_list|(
+literal|"Interwork Act#%d"
+argument_list|,
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|16
+case|:
+name|printf
+argument_list|(
+literal|"Resource Act#%d"
+argument_list|,
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|17
+case|:
+name|printf
+argument_list|(
+literal|"Proxy Act#%d"
+argument_list|,
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|30
+case|:
+name|printf
+argument_list|(
+literal|"MeshPeering "
+argument_list|)
+expr_stmt|;
+name|PRINT_MESHPEERING_ACTION
+argument_list|(
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|32
+case|:
+name|printf
+argument_list|(
+literal|"MeshPath "
+argument_list|)
+expr_stmt|;
+name|PRINT_MESHPATH_ACTION
+argument_list|(
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|127
+case|:
+name|printf
+argument_list|(
+literal|"Vendor Act#%d"
+argument_list|,
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"Reserved(%d) Act#%d"
+argument_list|,
+name|p
+index|[
+literal|0
+index|]
+argument_list|,
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+return|return
+literal|1
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*********************************************************************************  * Print Body funcs  *********************************************************************************/
 end_comment
@@ -2786,6 +3354,23 @@ name|p
 argument_list|)
 return|;
 break|break;
+case|case
+name|ST_ACTION
+case|:
+name|printf
+argument_list|(
+literal|"Action"
+argument_list|)
+expr_stmt|;
+return|return
+name|handle_action
+argument_list|(
+name|pmh
+argument_list|,
+name|p
+argument_list|)
+return|;
+break|break;
 default|default:
 name|printf
 argument_list|(
@@ -2925,6 +3510,54 @@ operator|)
 operator|->
 name|seq
 operator|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CTRL_BA
+case|:
+name|printf
+argument_list|(
+literal|"BA"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|TTEST2
+argument_list|(
+operator|*
+name|p
+argument_list|,
+name|CTRL_BA_HDRLEN
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+operator|!
+name|eflag
+condition|)
+name|printf
+argument_list|(
+literal|" RA:%s "
+argument_list|,
+name|etheraddr_string
+argument_list|(
+operator|(
+operator|(
+specifier|const
+expr|struct
+name|ctrl_ba_t
+operator|*
+operator|)
+name|p
+operator|)
+operator|->
+name|ra
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3886,6 +4519,30 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|CTRL_BA
+case|:
+name|printf
+argument_list|(
+literal|"RA:%s "
+argument_list|,
+name|etheraddr_string
+argument_list|(
+operator|(
+operator|(
+specifier|const
+expr|struct
+name|ctrl_ba_t
+operator|*
+operator|)
+name|p
+operator|)
+operator|->
+name|ra
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|CTRL_PS_POLL
 case|:
 name|printf
@@ -4240,13 +4897,54 @@ block|}
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|extract_mesh_header_length
+parameter_list|(
+specifier|const
+name|u_char
+modifier|*
+name|p
+parameter_list|)
+block|{
+return|return
+operator|(
+name|p
+index|[
+literal|0
+index|]
+operator|&
+operator|~
+literal|3
+operator|)
+condition|?
+literal|0
+else|:
+literal|6
+operator|*
+operator|(
+literal|1
+operator|+
+operator|(
+name|p
+index|[
+literal|0
+index|]
+operator|&
+literal|3
+operator|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Print the 802.11 MAC header if eflag is set, and set "*srcp" and "*dstp"  * to point to the source and destination MAC addresses in any case if  * "srcp" and "dstp" aren't null.  */
 end_comment
 
 begin_function
 specifier|static
-specifier|inline
 name|void
 name|ieee_802_11_hdr_print
 parameter_list|(
@@ -4257,6 +4955,12 @@ specifier|const
 name|u_char
 modifier|*
 name|p
+parameter_list|,
+name|u_int
+name|hdrlen
+parameter_list|,
+name|u_int
+name|meshdrlen
 parameter_list|,
 specifier|const
 name|u_int8_t
@@ -4383,6 +5087,120 @@ operator|)
 operator|->
 name|duration
 argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|meshdrlen
+operator|!=
+literal|0
+condition|)
+block|{
+specifier|const
+name|struct
+name|meshcntl_t
+modifier|*
+name|mc
+init|=
+operator|(
+specifier|const
+expr|struct
+name|meshcntl_t
+operator|*
+operator|)
+operator|&
+name|p
+index|[
+name|hdrlen
+operator|-
+name|meshdrlen
+index|]
+decl_stmt|;
+name|int
+name|ae
+init|=
+name|mc
+operator|->
+name|flags
+operator|&
+literal|3
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"MeshData (AE %d TTL %u seq %u"
+argument_list|,
+name|ae
+argument_list|,
+name|mc
+operator|->
+name|ttl
+argument_list|,
+name|EXTRACT_LE_32BITS
+argument_list|(
+name|mc
+operator|->
+name|seq
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ae
+operator|>
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|" A4:%s"
+argument_list|,
+name|etheraddr_string
+argument_list|(
+name|mc
+operator|->
+name|addr4
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ae
+operator|>
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|" A5:%s"
+argument_list|,
+name|etheraddr_string
+argument_list|(
+name|mc
+operator|->
+name|addr5
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ae
+operator|>
+literal|2
+condition|)
+name|printf
+argument_list|(
+literal|" A6:%s"
+argument_list|,
+name|etheraddr_string
+argument_list|(
+name|mc
+operator|->
+name|addr6
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|") "
 argument_list|)
 expr_stmt|;
 block|}
@@ -4515,6 +5333,8 @@ name|fc
 decl_stmt|;
 name|u_int
 name|hdrlen
+decl_stmt|,
+name|meshdrlen
 decl_stmt|;
 specifier|const
 name|u_int8_t
@@ -4572,6 +5392,43 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|FC_TYPE
+argument_list|(
+name|fc
+argument_list|)
+operator|==
+name|T_DATA
+operator|&&
+name|DATA_FRAME_IS_QOS
+argument_list|(
+name|FC_SUBTYPE
+argument_list|(
+name|fc
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|meshdrlen
+operator|=
+name|extract_mesh_header_length
+argument_list|(
+name|p
+operator|+
+name|hdrlen
+argument_list|)
+expr_stmt|;
+name|hdrlen
+operator|+=
+name|meshdrlen
+expr_stmt|;
+block|}
+else|else
+name|meshdrlen
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
 name|caplen
 operator|<
 name|hdrlen
@@ -4591,6 +5448,10 @@ argument_list|(
 name|fc
 argument_list|,
 name|p
+argument_list|,
+name|hdrlen
+argument_list|,
+name|meshdrlen
 argument_list|,
 operator|&
 name|src
@@ -4762,6 +5623,10 @@ argument_list|,
 name|p
 operator|-
 name|hdrlen
+argument_list|,
+name|hdrlen
+argument_list|,
+name|meshdrlen
 argument_list|,
 name|NULL
 argument_list|,
