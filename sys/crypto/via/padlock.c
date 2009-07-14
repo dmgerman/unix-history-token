@@ -70,6 +70,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
 name|__i386__
 argument_list|)
 operator|&&
@@ -78,6 +84,7 @@ name|defined
 argument_list|(
 name|PC98
 argument_list|)
+operator|)
 end_if
 
 begin_include
@@ -300,6 +307,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
 name|__i386__
 argument_list|)
 operator|&&
@@ -308,6 +321,7 @@ name|defined
 argument_list|(
 name|PC98
 argument_list|)
+operator|)
 comment|/* If there is no AES support, we has nothing to do here. */
 if|if
 condition|(
