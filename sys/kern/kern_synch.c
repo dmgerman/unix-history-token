@@ -1351,9 +1351,23 @@ if|if
 condition|(
 name|wakeup_swapper
 condition|)
+block|{
+name|KASSERT
+argument_list|(
+name|ident
+operator|!=
+operator|&
+name|proc0
+argument_list|,
+operator|(
+literal|"wakeup and wakeup_swapper and proc0"
+operator|)
+argument_list|)
+expr_stmt|;
 name|kick_proc0
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 end_function
 
