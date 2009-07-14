@@ -5841,7 +5841,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * To start a scan, request_ccb is an XPT_SCAN_BUS ccb.  * As the scan progresses, xpt_scan_bus is used as the  * callback on completion function.  */
+comment|/*  * To start a scan, request_ccb is an XPT_SCAN_BUS ccb.  * As the scan progresses, scsi_scan_bus is used as the  * callback on completion function.  */
 end_comment
 
 begin_function
@@ -5871,7 +5871,7 @@ argument_list|,
 name|CAM_DEBUG_TRACE
 argument_list|,
 operator|(
-literal|"xpt_scan_bus\n"
+literal|"scsi_scan_bus\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6228,7 +6228,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"xpt_scan_bus: xpt_create_path failed"
+literal|"scsi_scan_bus: xpt_create_path failed"
 literal|" with status %#x, bus scan halted\n"
 argument_list|,
 name|status
@@ -6861,7 +6861,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"xpt_scan_bus: xpt_create_path failed"
+literal|"scsi_scan_bus: xpt_create_path failed"
 literal|" with status %#x, bus scan halted\n"
 argument_list|,
 name|status
@@ -6996,7 +6996,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"xpt_scan_bus: xpt_create_path failed "
+literal|"scsi_scan_bus: xpt_create_path failed "
 literal|"with status %#x, halting LUN scan\n"
 argument_list|,
 name|status
@@ -7128,7 +7128,7 @@ argument_list|,
 name|CAM_DEBUG_TRACE
 argument_list|,
 operator|(
-literal|"xpt_scan_lun\n"
+literal|"scsi_scan_lun\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7272,7 +7272,7 @@ name|xpt_print
 argument_list|(
 name|path
 argument_list|,
-literal|"xpt_scan_lun: can't allocate CCB, "
+literal|"scsi_scan_lun: can't allocate CCB, "
 literal|"can't continue\n"
 argument_list|)
 expr_stmt|;
@@ -7304,7 +7304,7 @@ name|xpt_print
 argument_list|(
 name|path
 argument_list|,
-literal|"xpt_scan_lun: can't allocate path, "
+literal|"scsi_scan_lun: can't allocate path, "
 literal|"can't continue\n"
 argument_list|)
 expr_stmt|;
@@ -7355,7 +7355,7 @@ name|xpt_print
 argument_list|(
 name|path
 argument_list|,
-literal|"xpt_scan_lun: can't compile path, "
+literal|"scsi_scan_lun: can't compile path, "
 literal|"can't continue\n"
 argument_list|)
 expr_stmt|;
@@ -7503,7 +7503,7 @@ name|xpt_print
 argument_list|(
 name|path
 argument_list|,
-literal|"xpt_scan_lun: cam_alloc_periph "
+literal|"scsi_scan_lun: cam_alloc_periph "
 literal|"returned an error, can't continue probe\n"
 argument_list|)
 expr_stmt|;
