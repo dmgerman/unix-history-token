@@ -790,13 +790,10 @@ expr_stmt|;
 comment|/* make sure mapping fits into numeric range etc */
 if|if
 condition|(
-operator|(
-name|ssize_t
-operator|)
 name|uap
 operator|->
 name|len
-operator|<
+operator|==
 literal|0
 operator|||
 operator|(
