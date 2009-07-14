@@ -1000,13 +1000,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|closefrom
-value|ssh_closefrom
-end_define
-
-begin_define
-define|#
-directive|define
 name|colon
 value|ssh_colon
 end_define

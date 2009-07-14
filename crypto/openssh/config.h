@@ -614,9 +614,12 @@ begin_comment
 comment|/* Define to 1 if you have the `closefrom' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_CLOSEFROM */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_CLOSEFROM
+value|1
+end_define
 
 begin_comment
 comment|/* Define if gai_strerror() returns const char * */
