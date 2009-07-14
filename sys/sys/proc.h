@@ -1119,12 +1119,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_UNUSED2000
+name|TDF_SBDRY
 value|0x00002000
 end_define
 
 begin_comment
-comment|/* --available-- */
+comment|/* Stop only on usermode boundary. */
 end_comment
 
 begin_define
