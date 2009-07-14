@@ -177,15 +177,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|__stack_chk_fail_local
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*LINTED used*/
 end_comment
@@ -509,18 +500,18 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|void
+begin_expr_stmt
+name|__sym_compat
+argument_list|(
 name|__stack_chk_fail_local
-parameter_list|(
-name|void
-parameter_list|)
-block|{
+argument_list|,
 name|__stack_chk_fail
-argument_list|()
+argument_list|,
+name|FBSD_1
+literal|.0
+argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 end_unit
 
