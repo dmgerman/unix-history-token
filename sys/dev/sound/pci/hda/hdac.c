@@ -2279,7 +2279,7 @@ name|HDA_NVIDIA_MCP55
 block|,
 literal|"NVidia MCP55"
 block|,
-literal|0
+name|HDAC_NO_MSI
 block|}
 block|,
 block|{
