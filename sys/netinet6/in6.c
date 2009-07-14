@@ -237,12 +237,6 @@ directive|include
 file|<netinet6/in6_pcb.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet6/vinet6.h>
-end_include
-
 begin_comment
 comment|/*  * Definitions of some costant IP6 addresses.  */
 end_comment
@@ -720,11 +714,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|in6_ifreq
 modifier|*
@@ -2643,13 +2632,6 @@ name|int
 name|flags
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
 name|int
 name|error
 init|=
@@ -6126,13 +6108,6 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
 name|int
 name|s
 init|=
@@ -8934,11 +8909,6 @@ modifier|*
 name|in6
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|in6_ifaddr
 modifier|*
@@ -9022,11 +8992,6 @@ modifier|*
 name|sa6
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|in6_ifaddr
 modifier|*
@@ -9489,11 +9454,6 @@ modifier|*
 name|dst
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|dst_scope
 init|=
@@ -10132,16 +10092,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|unsigned
 name|long
 name|maxmtu

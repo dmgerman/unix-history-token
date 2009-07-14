@@ -449,23 +449,6 @@ directive|include
 file|<netinet/if_ether.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/vinet.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -564,12 +547,6 @@ begin_include
 include|#
 directive|include
 file|<netinet6/in6_pcb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/vinet6.h>
 end_include
 
 begin_endif
@@ -8006,7 +7983,7 @@ directive|else
 argument|pf_send_tcp(const struct pf_rule *r, sa_family_t af,
 endif|#
 directive|endif
-argument|const struct pf_addr *saddr, const struct pf_addr *daddr,     u_int16_t sport, u_int16_t dport, u_int32_t seq, u_int32_t ack,     u_int8_t flags, u_int16_t win, u_int16_t mss, u_int8_t ttl, int tag,     u_int16_t rtag, struct ether_header *eh, struct ifnet *ifp) { 	INIT_VNET_INET(curvnet); 	struct mbuf	*m; 	int		 len, tlen;
+argument|const struct pf_addr *saddr, const struct pf_addr *daddr,     u_int16_t sport, u_int16_t dport, u_int32_t seq, u_int32_t ack,     u_int8_t flags, u_int16_t win, u_int16_t mss, u_int8_t ttl, int tag,     u_int16_t rtag, struct ether_header *eh, struct ifnet *ifp) { 	struct mbuf	*m; 	int		 len, tlen;
 ifdef|#
 directive|ifdef
 name|INET
@@ -8951,7 +8928,7 @@ directive|else
 argument|pf_socket_lookup(int direction, struct pf_pdesc *pd)
 endif|#
 directive|endif
-argument|{ 	INIT_VNET_INET(curvnet); 	struct pf_addr		*saddr, *daddr; 	u_int16_t		 sport, dport;
+argument|{ 	struct pf_addr		*saddr, *daddr; 	u_int16_t		 sport, dport;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -9094,7 +9071,7 @@ argument|]; 			if (optlen<
 literal|2
 argument|) 				optlen =
 literal|2
-argument|; 			hlen -= optlen; 			opt += optlen; 			break; 		} 	} 	return (wscale); }  u_int16_t pf_get_mss(struct mbuf *m, int off, u_int16_t th_off, sa_family_t af) { 	INIT_VNET_INET(curvnet); 	int		 hlen; 	u_int8_t	 hdr[
+argument|; 			hlen -= optlen; 			opt += optlen; 			break; 		} 	} 	return (wscale); }  u_int16_t pf_get_mss(struct mbuf *m, int off, u_int16_t th_off, sa_family_t af) { 	int		 hlen; 	u_int8_t	 hdr[
 literal|60
 argument|]; 	u_int8_t	*opt, optlen; 	u_int16_t	 mss = V_tcp_mssdflt;  	hlen = th_off<<
 literal|2
@@ -9120,7 +9097,7 @@ argument|; 			hlen -= optlen; 			opt += optlen; 			break; 		} 	} 	return (mss); 
 ifdef|#
 directive|ifdef
 name|INET
-argument|INIT_VNET_INET(curvnet); 	struct sockaddr_in	*dst; 	struct route		 ro;
+argument|struct sockaddr_in	*dst; 	struct route		 ro;
 endif|#
 directive|endif
 comment|/* INET */
@@ -9225,7 +9202,7 @@ directive|else
 argument|struct pf_pdesc *pd, struct pf_rule **am, struct pf_ruleset **rsm,     struct ifqueue *ifq)
 endif|#
 directive|endif
-argument|{ 	INIT_VNET_INET(curvnet); 	struct pf_rule		*nr = NULL; 	struct pf_addr		*saddr = pd->src
+argument|{ 	struct pf_rule		*nr = NULL; 	struct pf_addr		*saddr = pd->src
 argument_list|,
 argument|*daddr = pd->dst; 	struct tcphdr		*th = pd->hdr.tcp; 	u_int16_t		 bport
 argument_list|,
@@ -17847,7 +17824,7 @@ argument|RTFREE(ro.ro_rt); 	}  	return (ret); }
 ifdef|#
 directive|ifdef
 name|INET
-argument|void pf_route(struct mbuf **m, struct pf_rule *r, int dir, struct ifnet *oifp,     struct pf_state *s, struct pf_pdesc *pd) { 	INIT_VNET_INET(curvnet); 	struct mbuf		*m0, *m1; 	struct route		 iproute; 	struct route		*ro = NULL; 	struct sockaddr_in	*dst; 	struct ip		*ip; 	struct ifnet		*ifp = NULL; 	struct pf_addr		 naddr; 	struct pf_src_node	*sn = NULL; 	int			 error =
+argument|void pf_route(struct mbuf **m, struct pf_rule *r, int dir, struct ifnet *oifp,     struct pf_state *s, struct pf_pdesc *pd) { 	struct mbuf		*m0, *m1; 	struct route		 iproute; 	struct route		*ro = NULL; 	struct sockaddr_in	*dst; 	struct ip		*ip; 	struct ifnet		*ifp = NULL; 	struct pf_addr		 naddr; 	struct pf_src_node	*sn = NULL; 	int			 error =
 literal|0
 argument|;
 ifdef|#
@@ -18142,11 +18119,11 @@ directive|endif
 comment|/* INET6 */
 argument|default: 			return (
 literal|1
-argument|); 		} 	} 	if (sum) { 		switch (p) { 		case IPPROTO_TCP: 		    { 			INIT_VNET_INET(curvnet); 			TCPSTAT_INC(tcps_rcvbadsum); 			break; 		    } 		case IPPROTO_UDP: 		    { 			INIT_VNET_INET(curvnet); 			UDPSTAT_INC(udps_badsum); 			break; 		    } 		case IPPROTO_ICMP: 		    { 			INIT_VNET_INET(curvnet); 			ICMPSTAT_INC(icps_checksum); 			break; 		    }
+argument|); 		} 	} 	if (sum) { 		switch (p) { 		case IPPROTO_TCP: 		    { 			TCPSTAT_INC(tcps_rcvbadsum); 			break; 		    } 		case IPPROTO_UDP: 		    { 			UDPSTAT_INC(udps_badsum); 			break; 		    } 		case IPPROTO_ICMP: 		    { 			ICMPSTAT_INC(icps_checksum); 			break; 		    }
 ifdef|#
 directive|ifdef
 name|INET6
-argument|case IPPROTO_ICMPV6: 		    { 			INIT_VNET_INET6(curvnet); 			ICMP6STAT_INC(icp6s_checksum); 			break; 		    }
+argument|case IPPROTO_ICMPV6: 		    { 			ICMP6STAT_INC(icp6s_checksum); 			break; 		    }
 endif|#
 directive|endif
 comment|/* INET6 */

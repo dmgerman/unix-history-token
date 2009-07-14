@@ -3167,38 +3167,47 @@ comment|/*CONSTCOND*/
 value|0)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|icmp6_rediraccept
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* accept/process redirects */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|icmp6_redirtimeout
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* cache time for redirect routes */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_icmp6_rediraccept
+value|VNET_GET(icmp6_rediraccept)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_icmp6_redirtimeout
+value|VNET_GET(icmp6_redirtimeout)
+end_define
 
 begin_define
 define|#

@@ -206,12 +206,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/vinet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/pfvar.h>
 end_include
 

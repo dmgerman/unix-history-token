@@ -119,20 +119,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|key_cb
-block|{
-name|int
-name|key_count
-decl_stmt|;
-name|int
-name|any_count
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
@@ -181,13 +167,23 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|extern
-name|struct
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+expr|struct
 name|pfkeystat
+argument_list|,
 name|pfkeystat
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_pfkeystat
+value|VNET_GET(pfkeystat)
+end_define
 
 begin_function_decl
 specifier|extern

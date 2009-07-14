@@ -2244,11 +2244,6 @@ argument_list|(
 name|vnet_iter
 argument_list|)
 expr_stmt|;
-name|INIT_VNET_NET
-argument_list|(
-name|vnet_iter
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 for|for

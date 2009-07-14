@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netipsec/ipsec.h>
 end_include
 
@@ -186,11 +192,6 @@ modifier|*
 name|xsp
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|keylen
 decl_stmt|;

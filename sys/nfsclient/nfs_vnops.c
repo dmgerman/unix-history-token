@@ -252,12 +252,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/vinet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/stdarg.h>
 end_include
 
@@ -8331,11 +8325,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|IN_IFADDR_RLOCK
 argument_list|()
 expr_stmt|;

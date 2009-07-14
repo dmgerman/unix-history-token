@@ -143,12 +143,6 @@ directive|include
 file|<netinet/toedev.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/vinet.h>
-end_include
-
 begin_decl_stmt
 name|uint32_t
 name|toedev_registration_count
@@ -344,11 +338,6 @@ modifier|*
 name|tp
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
@@ -388,11 +377,6 @@ modifier|*
 name|tp
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
@@ -453,11 +437,6 @@ name|int
 name|error
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&

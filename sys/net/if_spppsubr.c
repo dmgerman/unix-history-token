@@ -175,12 +175,6 @@ directive|include
 file|<netinet/tcp.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/vinet.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -24610,11 +24604,6 @@ name|u_long
 name|src
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|STDDCL
 expr_stmt|;
 name|struct

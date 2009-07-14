@@ -175,12 +175,22 @@ define|\
 value|do { if ((V_key_debug_level& (lev)) == (lev)) { arg; } } while (0)
 end_define
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|u_int32_t
+argument_list|,
 name|key_debug_level
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_key_debug_level
+value|VNET_GET(key_debug_level)
+end_define
 
 begin_endif
 endif|#

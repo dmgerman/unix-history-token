@@ -1995,11 +1995,6 @@ name|vnet_iter
 argument_list|)
 expr_stmt|;
 comment|/* XXX revisit quiet */
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp

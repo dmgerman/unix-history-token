@@ -544,6 +544,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|curvidata
+value|PCPU_GET(vidata)
+end_define
+
 begin_comment
 comment|/*  * Machine dependent callouts.  cpu_pcpu_init() is responsible for  * initializing machine dependent fields of struct pcpu, and  * db_show_mdpcpu() is responsible for handling machine dependent  * fields for the DDB 'show pcpu' command.  */
 end_comment

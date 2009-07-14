@@ -189,12 +189,6 @@ directive|include
 file|<netinet/ip_encap.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/vinet.h>
-end_include
-
 begin_else
 else|#
 directive|else
@@ -1039,18 +1033,6 @@ modifier|*
 name|ro
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|INET6
-name|INIT_VNET_INET
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|int
 name|error
 init|=

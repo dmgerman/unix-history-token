@@ -369,12 +369,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/vinet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netgraph/ng_ipfw.h>
 end_include
 
@@ -434,78 +428,82 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VIMAGE
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VIMAGE_GLOBALS
-end_ifndef
-
-begin_decl_stmt
-name|struct
-name|vnet_ipfw
-name|vnet_ipfw_0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * set_disable contains one bit per set value (0..31).  * If the bit is set, all rules with the corresponding set  * are disabled. Set RESVD_SET(31) is reserved for the default rule  * and rules that are not deleted by the flush command,  * and CANNOT be disabled.  * Rules in set RESVD_SET can only be deleted explicitly.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|u_int32_t
+argument_list|,
 name|set_disable
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|fw_verbose
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
-name|struct
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|callout
+argument_list|,
 name|ipfw_timeout
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|verbose_limit
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_set_disable
+value|VNET_GET(set_disable)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_fw_verbose
+value|VNET_GET(fw_verbose)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ipfw_timeout
+value|VNET_GET(ipfw_timeout)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_verbose_limit
+value|VNET_GET(verbose_limit)
+end_define
 
 begin_ifdef
 ifdef|#
@@ -558,23 +556,16 @@ begin_comment
 comment|/*  * list of rules for layer 3  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
-name|struct
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|ip_fw_chain
+argument_list|,
 name|layer3_chain
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|MALLOC_DEFINE
@@ -668,23 +659,23 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|autoinc_step
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_autoinc_step
+value|VNET_GET(autoinc_step)
+end_define
 
 begin_function_decl
 specifier|extern
@@ -721,12 +712,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipfw
-argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -739,7 +726,11 @@ name|CTLFLAG_RW
 operator||
 name|CTLFLAG_SECURE3
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|fw_enable
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -753,12 +744,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipfw
-argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -767,7 +754,11 @@ name|autoinc_step
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|autoinc_step
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -777,12 +768,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -793,7 +780,11 @@ name|CTLFLAG_RW
 operator||
 name|CTLFLAG_SECURE3
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|fw_one_pass
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -803,12 +794,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipfw
-argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -819,7 +806,11 @@ name|CTLFLAG_RW
 operator||
 name|CTLFLAG_SECURE3
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|fw_verbose
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -829,12 +820,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipfw
-argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -843,7 +830,11 @@ name|verbose_limit
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|verbose_limit
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -937,39 +928,61 @@ begin_comment
 comment|/*  * Description of dynamic rules.  *  * Dynamic rules are stored in lists accessed through a hash table  * (ipfw_dyn_v) whose size is curr_dyn_buckets. This value can  * be modified through the sysctl variable dyn_buckets which is  * updated when the table becomes empty.  *  * XXX currently there is only one list, ipfw_dyn.  *  * When a packet is received, its address fields are first masked  * with the mask defined for the rule, then hashed, then matched  * against the entries in the corresponding list.  * Dynamic rules can be used for different purposes:  *  + stateful rules;  *  + enforcing limits on the number of sessions;  *  + in-kernel NAT (not implemented yet)  *  * The lifetime of dynamic rules is regulated by dyn_*_lifetime,  * measured in seconds and depending on the flags.  *  * The total number of dynamic rules is stored in dyn_count.  * The max number of dynamic rules is dyn_max. When we reach  * the maximum number of rules we do not create anymore. This is  * done to avoid consuming too much memory, but also too much  * time when searching on each packet (ideally, we should try instead  * to put a limit on the length of the list on each bucket...).  *  * Each dynamic rule holds a pointer to the parent ipfw rule so  * we know what action to perform. Dynamic rules are removed when  * the parent rule is deleted. XXX we should make them survive.  *  * There are some limitations with dynamic rules -- we do not  * obey the 'randomized match', and we do not do multiple  * passes through the firewall. XXX check the latter!!!  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|ipfw_dyn_rule
-modifier|*
-modifier|*
+operator|*
+operator|*
+argument_list|,
 name|ipfw_dyn_v
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|u_int32_t
+argument_list|,
 name|dyn_buckets
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|u_int32_t
+argument_list|,
 name|curr_dyn_buckets
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_ipfw_dyn_v
+value|VNET_GET(ipfw_dyn_v)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_dyn_buckets
+value|VNET_GET(dyn_buckets)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_curr_dyn_buckets
+value|VNET_GET(curr_dyn_buckets)
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -1028,131 +1041,259 @@ begin_comment
 comment|/*  * Timeouts for various events in handing dynamic rules.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|u_int32_t
+argument_list|,
 name|dyn_ack_lifetime
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|u_int32_t
+argument_list|,
 name|dyn_syn_lifetime
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|u_int32_t
+argument_list|,
 name|dyn_fin_lifetime
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|u_int32_t
+argument_list|,
 name|dyn_rst_lifetime
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|u_int32_t
+argument_list|,
 name|dyn_udp_lifetime
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|u_int32_t
+argument_list|,
 name|dyn_short_lifetime
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_dyn_ack_lifetime
+value|VNET_GET(dyn_ack_lifetime)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_dyn_syn_lifetime
+value|VNET_GET(dyn_syn_lifetime)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_dyn_fin_lifetime
+value|VNET_GET(dyn_fin_lifetime)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_dyn_rst_lifetime
+value|VNET_GET(dyn_rst_lifetime)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_dyn_udp_lifetime
+value|VNET_GET(dyn_udp_lifetime)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_dyn_short_lifetime
+value|VNET_GET(dyn_short_lifetime)
+end_define
 
 begin_comment
 comment|/*  * Keepalives are sent if dyn_keepalive is set. They are sent every  * dyn_keepalive_period seconds, in the last dyn_keepalive_interval  * seconds of lifetime of a rule.  * dyn_rst_lifetime and dyn_fin_lifetime should be strictly lower  * than dyn_keepalive_period.  */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|u_int32_t
+argument_list|,
 name|dyn_keepalive_interval
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|u_int32_t
+argument_list|,
 name|dyn_keepalive_period
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|u_int32_t
+argument_list|,
 name|dyn_keepalive
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_define
+define|#
+directive|define
+name|V_dyn_keepalive_interval
+value|VNET_GET(dyn_keepalive_interval)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_dyn_keepalive_period
+value|VNET_GET(dyn_keepalive_period)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_dyn_keepalive
+value|VNET_GET(dyn_keepalive)
+end_define
+
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|u_int32_t
+argument_list|,
 name|static_count
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* # of static rules */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|u_int32_t
+argument_list|,
 name|static_len
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/* size in bytes of static rules */
+comment|/* bytes of static rules */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|u_int32_t
+argument_list|,
 name|dyn_count
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* # of dynamic rules */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|u_int32_t
+argument_list|,
 name|dyn_max
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* max # of dynamic rules */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_static_count
+value|VNET_GET(static_count)
+end_define
 
-begin_comment
-comment|/* VIMAGE_GLOBALS */
-end_comment
+begin_define
+define|#
+directive|define
+name|V_static_len
+value|VNET_GET(static_len)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_dyn_count
+value|VNET_GET(dyn_count)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_dyn_max
+value|VNET_GET(dyn_max)
+end_define
 
 begin_ifdef
 ifdef|#
@@ -1161,12 +1302,8 @@ name|SYSCTL_NODE
 end_ifdef
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipfw
-argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -1175,7 +1312,11 @@ name|dyn_buckets
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|dyn_buckets
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -1185,12 +1326,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipfw
-argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -1199,7 +1336,11 @@ name|curr_dyn_buckets
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|curr_dyn_buckets
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -1209,12 +1350,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipfw
-argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -1223,7 +1360,11 @@ name|dyn_count
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|dyn_count
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -1233,12 +1374,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipfw
-argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -1247,7 +1384,11 @@ name|dyn_max
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|dyn_max
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -1257,12 +1398,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipfw
-argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -1271,7 +1408,11 @@ name|static_count
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|static_count
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -1281,12 +1422,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipfw
-argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -1295,7 +1432,11 @@ name|dyn_ack_lifetime
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|dyn_ack_lifetime
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -1305,12 +1446,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipfw
-argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -1319,7 +1456,11 @@ name|dyn_syn_lifetime
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|dyn_syn_lifetime
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -1329,12 +1470,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipfw
-argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -1343,7 +1480,11 @@ name|dyn_fin_lifetime
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|dyn_fin_lifetime
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -1353,12 +1494,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipfw
-argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -1367,7 +1504,11 @@ name|dyn_rst_lifetime
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|dyn_rst_lifetime
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -1377,12 +1518,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipfw
-argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -1391,7 +1528,11 @@ name|dyn_udp_lifetime
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|dyn_udp_lifetime
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -1401,12 +1542,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipfw
-argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -1415,7 +1552,11 @@ name|dyn_short_lifetime
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|dyn_short_lifetime
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -1425,12 +1566,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipfw
-argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -1439,7 +1576,11 @@ name|dyn_keepalive
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|dyn_keepalive
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -1516,23 +1657,23 @@ begin_comment
 comment|/* INET6 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|fw_deny_unknown_exthdrs
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_fw_deny_unknown_exthdrs
+value|VNET_GET(fw_deny_unknown_exthdrs)
+end_define
 
 begin_comment
 comment|/*  * L3HDR maps an ipv4 pointer into a layer3 header pointer of type T  * Other macros just cast void * into the appropriate type  */
@@ -2633,11 +2774,6 @@ modifier|*
 name|ip6_addr
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -3488,27 +3624,27 @@ begin_comment
 comment|/* INET6 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|u_int64_t
-name|norule_counter
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* counter for ipfw_log(NULL...) */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+name|u_int64_t
+argument_list|,
+name|norule_counter
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_norule_counter
+value|VNET_GET(norule_counter)
+end_define
 
 begin_define
 define|#
@@ -3576,11 +3712,6 @@ modifier|*
 name|ip
 parameter_list|)
 block|{
-name|INIT_VNET_IPFW
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ether_header
 modifier|*
@@ -5122,11 +5253,6 @@ modifier|*
 name|id
 parameter_list|)
 block|{
-name|INIT_VNET_IPFW
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|u_int32_t
 name|i
 decl_stmt|;
@@ -5242,11 +5368,6 @@ modifier|*
 name|keep_me
 parameter_list|)
 block|{
-name|INIT_VNET_IPFW
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 specifier|static
 name|u_int32_t
 name|last_remove
@@ -5512,11 +5633,6 @@ modifier|*
 name|tcp
 parameter_list|)
 block|{
-name|INIT_VNET_IPFW
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 comment|/* 	 * stateful ipfw extensions. 	 * Lookup into dynamic session queue 	 */
 define|#
 directive|define
@@ -6311,11 +6427,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|INIT_VNET_IPFW
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|IPFW_DYN_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -6438,11 +6549,6 @@ modifier|*
 name|rule
 parameter_list|)
 block|{
-name|INIT_VNET_IPFW
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|ipfw_dyn_rule
 modifier|*
 name|r
@@ -6668,11 +6774,6 @@ modifier|*
 name|rule
 parameter_list|)
 block|{
-name|INIT_VNET_IPFW
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|ipfw_dyn_rule
 modifier|*
 name|q
@@ -6895,11 +6996,6 @@ name|uint32_t
 name|tablearg
 parameter_list|)
 block|{
-name|INIT_VNET_IPFW
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 specifier|static
 name|int
 name|last_log
@@ -7622,11 +7718,6 @@ name|int
 name|flags
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -9619,11 +9710,6 @@ modifier|*
 name|inp
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|inpcbinfo
 modifier|*
@@ -9975,16 +10061,6 @@ modifier|*
 name|args
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-name|INIT_VNET_IPFW
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Local variables holding state during the processing of a packet: 	 * 	 * IMPORTANT NOTE: to speed up the processing of rules, there 	 * are some assumption on the values of the variables, which 	 * are documented here. Should you change them, please check 	 * the implementation of the various instructions to make sure 	 * that they still work. 	 * 	 * args->eh	The MAC header. It is non-null for a layer2 	 *	packet, it is NULL for a layer-3 packet. 	 * **notyet** 	 * args->L3offset Offset in the packet to the L3 (IP or equiv.) header. 	 * 	 * m | args->m	Pointer to the mbuf, as received from the caller. 	 *	It may change if ipfw_chk() does an m_pullup, or if it 	 *	consumes the packet because it calls send_reject(). 	 *	XXX This has to change, so that ipfw_chk() never modifies 	 *	or consumes the buffer. 	 * ip	is the beginning of the ip(4 or 6) header. 	 *	Calculated by adding the L3offset to the start of data. 	 *	(Until we start using L3offset, the packet is 	 *	supposed to start with the ip header). 	 */
 name|struct
 name|mbuf
@@ -15676,11 +15752,6 @@ modifier|*
 name|input_rule
 parameter_list|)
 block|{
-name|INIT_VNET_IPFW
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ip_fw
 modifier|*
@@ -16054,11 +16125,6 @@ modifier|*
 name|prev
 parameter_list|)
 block|{
-name|INIT_VNET_IPFW
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ip_fw
 modifier|*
@@ -16874,11 +16940,6 @@ name|int
 name|log_only
 parameter_list|)
 block|{
-name|INIT_VNET_IPFW
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ip_fw
 modifier|*
@@ -18290,11 +18351,6 @@ name|size_t
 name|space
 parameter_list|)
 block|{
-name|INIT_VNET_IPFW
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|char
 modifier|*
 name|bp
@@ -18696,11 +18752,6 @@ define|#
 directive|define
 name|RULE_MAXSIZE
 value|(256*sizeof(u_int32_t))
-name|INIT_VNET_IPFW
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -19739,11 +19790,6 @@ name|__unused
 name|unused
 parameter_list|)
 block|{
-name|INIT_VNET_IPFW
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -20053,11 +20099,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|INIT_VNET_IPFW
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ip_fw
 name|default_rule
@@ -20568,11 +20609,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|INIT_VNET_IPFW
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ip_fw
 modifier|*

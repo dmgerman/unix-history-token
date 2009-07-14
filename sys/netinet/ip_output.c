@@ -226,12 +226,6 @@ directive|include
 file|<netinet/ip_options.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/vinet.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -308,22 +302,15 @@ parameter_list|)
 value|printf("%s %d.%d.%d.%d%s",\ 				x, (ntohl(a.s_addr)>>24)&0xFF,\ 				  (ntohl(a.s_addr)>>16)&0xFF,\ 				  (ntohl(a.s_addr)>>8)&0xFF,\ 				  (ntohl(a.s_addr))&0xFF, y);
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|u_short
+argument_list|,
 name|ip_id
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_ifdef
 ifdef|#
@@ -440,16 +427,6 @@ modifier|*
 name|inp
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ip
 modifier|*
@@ -2941,11 +2918,6 @@ name|int
 name|sw_csum
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|error
 init|=

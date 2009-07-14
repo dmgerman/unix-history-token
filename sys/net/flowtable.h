@@ -49,25 +49,24 @@ name|flowtable
 struct_decl|;
 end_struct_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+expr|struct
 name|flowtable
-modifier|*
+operator|*
+argument_list|,
 name|ip_ft
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_ip_ft
+value|VNET_GET(ip_ft)
+end_define
 
 begin_function_decl
 name|struct

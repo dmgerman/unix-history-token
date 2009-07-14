@@ -423,6 +423,12 @@ directive|include
 file|<sys/vimage.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_var.h>
+end_include
+
 begin_else
 else|#
 directive|else
@@ -591,32 +597,6 @@ include|#
 directive|include
 file|<netinet/ip_icmp.h>
 end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD_version
-argument_list|)
-operator|&&
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|800056
-operator|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<netinet/vinet.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -1411,11 +1391,6 @@ name|int
 name|ipfattach
 parameter_list|()
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USE_SPL
@@ -1619,11 +1594,6 @@ name|int
 name|ipfdetach
 parameter_list|()
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USE_SPL
@@ -3432,11 +3402,6 @@ end_function
 
 begin_block
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|fr_info_t
 name|fnew
 decl_stmt|;

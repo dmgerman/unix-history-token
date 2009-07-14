@@ -202,12 +202,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/vinet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/ip_encap.h>
 end_include
 
@@ -257,12 +251,6 @@ begin_include
 include|#
 directive|include
 file|<netinet6/pim6_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/vinet6.h>
 end_include
 
 begin_expr_stmt
@@ -500,23 +488,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_mrouter_ver
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_ip6_mrouter_ver
+value|VNET_GET(ip6_mrouter_ver)
+end_define
 
 begin_expr_stmt
 name|SYSCTL_DECL
@@ -834,27 +822,27 @@ directive|ifdef
 name|MRT6DEBUG
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|u_int
+argument_list|,
 name|mrt6debug
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* debug level */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_mrt6debug
+value|VNET_GET(mrt6debug)
+end_define
 
 begin_define
 define|#
@@ -1015,23 +1003,23 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|pim6
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_pim6
+value|VNET_GET(pim6)
+end_define
 
 begin_comment
 comment|/*  * Hash function for a source, group entry  */
@@ -1332,15 +1320,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-name|V_ip6_mrouter_ver
-operator|=
-literal|0
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MRT6DEBUG
@@ -1373,11 +1352,6 @@ modifier|*
 name|sopt
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|error
 init|=
@@ -1699,11 +1673,6 @@ modifier|*
 name|sopt
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|error
 init|=
@@ -2036,11 +2005,6 @@ modifier|*
 name|i
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2096,11 +2060,6 @@ name|int
 name|cmd
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|V_ip6_mrouter_ver
 operator|=
 literal|0
@@ -2283,11 +2242,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|mifi_t
 name|mifi
 decl_stmt|;
@@ -2620,11 +2574,6 @@ modifier|*
 name|mifcp
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|mif6
 modifier|*
@@ -4391,11 +4340,6 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|mf6c
 modifier|*
@@ -5768,11 +5712,6 @@ modifier|*
 name|rt
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ip6_hdr
 modifier|*
@@ -6548,11 +6487,6 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -7000,11 +6934,6 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -7401,11 +7330,6 @@ name|int
 name|proto
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|pim
 modifier|*
@@ -8246,11 +8170,6 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|type

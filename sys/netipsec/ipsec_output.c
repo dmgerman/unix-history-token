@@ -106,6 +106,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -195,12 +201,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/icmp6.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/vinet6.h>
 end_include
 
 begin_endif
@@ -328,11 +328,6 @@ modifier|*
 name|isr
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|tdb_ident
 modifier|*
@@ -1113,11 +1108,6 @@ parameter_list|,
 name|z
 parameter_list|)
 value|(isr->saidx.proto == IPPROTO_ESP ? (x)++ : \ 			    isr->saidx.proto == IPPROTO_AH ? (y)++ : (z)++)
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|secasvar
 modifier|*
@@ -1788,11 +1778,6 @@ name|int
 name|tunalready
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|secasindex
 name|saidx
@@ -2839,11 +2824,6 @@ modifier|*
 name|tun
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ipsecrequest
 modifier|*
@@ -3137,11 +3117,6 @@ modifier|*
 name|sav
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ip6_hdr
 modifier|*
@@ -3559,16 +3534,6 @@ name|int
 name|flags
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ip6_hdr
 modifier|*

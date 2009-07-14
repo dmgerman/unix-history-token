@@ -267,12 +267,6 @@ directive|include
 file|<netinet/udp_var.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/vinet.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -312,22 +306,15 @@ begin_comment
 comment|/*  * UDP protocol implementation.  * Per RFC 768, August, 1980.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|udp_blackhole
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * BSD 4.2 defaulted the udp checksum to be off.  Turning off udp checksums  * removes the only data integrity mechanism for packets and malformed  * packets that would otherwise be discarded due to bad checksums, and may  * cause problems (especially for NFS data blocks).  */
@@ -393,12 +380,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_udp
 argument_list|,
 name|OID_AUTO
@@ -407,7 +390,11 @@ name|blackhole
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|udp_blackhole
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -504,52 +491,64 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
-name|struct
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|inpcbhead
+argument_list|,
 name|udb
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* from udp_var.h */
 end_comment
 
-begin_decl_stmt
-name|struct
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|inpcbinfo
+argument_list|,
 name|udbinfo
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|uma_zone_t
+argument_list|,
 name|udpcb_zone
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-name|struct
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|udpstat
+argument_list|,
 name|udpstat
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* from udp_var.h */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_udpcb_zone
+value|VNET_GET(udpcb_zone)
+end_define
 
 begin_ifndef
 ifndef|#
@@ -570,12 +569,8 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|SYSCTL_V_STRUCT
+name|SYSCTL_VNET_STRUCT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_udp
 argument_list|,
 name|UDPCTL_STATS
@@ -584,7 +579,11 @@ name|stats
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|udpstat
+argument_list|)
 argument_list|,
 name|udpstat
 argument_list|,
@@ -712,11 +711,6 @@ modifier|*
 name|tag
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|uma_zone_set_max
 argument_list|(
 name|V_udbinfo
@@ -785,11 +779,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|V_udp_blackhole
 operator|=
 literal|0
@@ -950,11 +939,6 @@ modifier|*
 name|inp
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|udpcb
 modifier|*
@@ -1006,11 +990,6 @@ modifier|*
 name|up
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|uma_zfree
 argument_list|(
 name|V_udpcb_zone
@@ -1034,11 +1013,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|hashdestroy
 argument_list|(
 name|V_udbinfo
@@ -1177,11 +1151,6 @@ name|inp
 argument_list|)
 condition|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|m_freem
 argument_list|(
 name|n
@@ -1455,13 +1424,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|SOCKBUF_UNLOCK
 argument_list|(
 operator|&
@@ -1512,11 +1474,6 @@ name|int
 name|off
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|iphlen
 init|=
@@ -2955,11 +2912,6 @@ modifier|*
 name|vip
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ip
 modifier|*
@@ -3180,11 +3132,6 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -3718,11 +3665,6 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|xucred
 name|xuc
@@ -4408,13 +4350,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|inp
-operator|->
-name|inp_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|udpiphdr
 modifier|*
@@ -5785,11 +5720,6 @@ name|int
 name|off
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|size_t
 name|minlen
 decl_stmt|,
@@ -6342,13 +6272,6 @@ modifier|*
 name|so
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|inpcb
 modifier|*
@@ -6446,13 +6369,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|inpcb
 modifier|*
@@ -6770,13 +6686,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|inpcb
 modifier|*
@@ -6857,13 +6766,6 @@ modifier|*
 name|so
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|inpcb
 modifier|*
@@ -6963,13 +6865,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|inpcb
 modifier|*
@@ -7141,13 +7036,6 @@ modifier|*
 name|so
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|inpcb
 modifier|*
@@ -7263,13 +7151,6 @@ modifier|*
 name|so
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|inpcb
 modifier|*

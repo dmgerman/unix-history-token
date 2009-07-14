@@ -137,12 +137,6 @@ directive|include
 file|<netinet/icmp6.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet6/vinet6.h>
-end_include
-
 begin_comment
 comment|/*  * Destination options header processing.  */
 end_comment
@@ -165,11 +159,6 @@ name|int
 name|proto
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|mbuf
 modifier|*

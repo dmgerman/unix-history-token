@@ -264,12 +264,6 @@ directive|include
 file|<netinet/ip_fw.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/vinet.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -323,32 +317,43 @@ begin_comment
 comment|/* Internal variables. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
-name|struct
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|inpcbhead
+argument_list|,
 name|divcb
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
-name|struct
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|inpcbinfo
+argument_list|,
 name|divcbinfo
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_divcb
+value|VNET_GET(divcb)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_divcbinfo
+value|VNET_GET(divcbinfo)
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -390,11 +395,6 @@ modifier|*
 name|tag
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|uma_zone_set_max
 argument_list|(
 name|V_divcbinfo
@@ -482,11 +482,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|INP_INFO_LOCK_INIT
 argument_list|(
 operator|&
@@ -619,11 +614,6 @@ name|int
 name|off
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|IPSTAT_INC
 argument_list|(
 name|ips_noproto
@@ -655,11 +645,6 @@ name|int
 name|incoming
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ip
 modifier|*
@@ -1196,11 +1181,6 @@ modifier|*
 name|control
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|m_tag
 modifier|*
@@ -1855,13 +1835,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|inpcb
 modifier|*
@@ -2020,13 +1993,6 @@ modifier|*
 name|so
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|inpcb
 modifier|*
@@ -2101,13 +2067,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|inpcb
 modifier|*
@@ -2291,13 +2250,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 comment|/* Packet must have a header (but that's about it) */
 if|if
 condition|(
@@ -2432,11 +2384,6 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -3093,12 +3040,6 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-comment|/* XXX move to iattach - revisit!!! */
 name|int
 name|err
 init|=

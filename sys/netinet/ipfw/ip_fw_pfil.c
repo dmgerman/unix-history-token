@@ -222,12 +222,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/vinet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netgraph/ng_ipfw.h>
 end_include
 
@@ -237,19 +231,17 @@ directive|include
 file|<machine/in_cksum.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|fw_enable
-init|=
+argument_list|)
+operator|=
 literal|1
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_ifdef
 ifdef|#
@@ -257,18 +249,17 @@ directive|ifdef
 name|INET6
 end_ifdef
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|fw6_enable
-init|=
+argument_list|)
+operator|=
 literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -373,11 +364,6 @@ modifier|*
 name|inp
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ip_fw_args
 name|args
@@ -1030,11 +1016,6 @@ modifier|*
 name|inp
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ip_fw_args
 name|args
@@ -2275,11 +2256,6 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-name|INIT_VNET_IPFW
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|enable
 init|=

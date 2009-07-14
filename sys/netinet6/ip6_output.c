@@ -201,12 +201,6 @@ directive|include
 file|<netinet6/nd6.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/vinet.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -256,12 +250,6 @@ begin_include
 include|#
 directive|include
 file|<netinet6/scope6_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/vinet6.h>
 end_include
 
 begin_decl_stmt
@@ -620,16 +608,6 @@ modifier|*
 name|inp
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ip6_hdr
 modifier|*
@@ -9571,16 +9549,6 @@ name|int
 name|uproto
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|minmtupolicy
 decl_stmt|,

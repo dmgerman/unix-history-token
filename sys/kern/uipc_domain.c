@@ -366,11 +366,11 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VIMAGE_GLOBALS
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
 
 begin_decl_stmt
 name|vnet_modinfo_t
@@ -392,17 +392,11 @@ name|vmi_iattach
 operator|=
 name|net_init_domain
 block|,
-ifdef|#
-directive|ifdef
-name|VIMAGE
 operator|.
 name|vmi_idetach
 operator|=
 name|net_detach_domain
-block|,
-endif|#
-directive|endif
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -956,9 +950,9 @@ operator|&
 name|dom_mtx
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|VIMAGE_GLOBALS
+ifdef|#
+directive|ifdef
+name|VIMAGE
 name|vnet_mod_register_multi
 argument_list|(
 operator|&

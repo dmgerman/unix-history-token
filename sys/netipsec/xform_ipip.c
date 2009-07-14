@@ -173,12 +173,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<netinet/vinet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netipsec/ipsec.h>
 end_include
 
@@ -257,29 +251,28 @@ begin_comment
 comment|/*  * We can control the acceptance of IP4 packets by altering the sysctl  * net.inet.ipip.allow value.  Zero means drop them, all else is acceptance.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ipip_allow
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-name|struct
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|ipipstat
+argument_list|,
 name|ipipstat
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_DECL
@@ -290,12 +283,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipsec
-argument_list|,
 name|_net_inet_ipip
 argument_list|,
 name|OID_AUTO
@@ -304,7 +293,11 @@ name|ipip_allow
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ipip_allow
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -314,12 +307,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_STRUCT
+name|SYSCTL_VNET_STRUCT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipsec
-argument_list|,
 name|_net_inet_ipip
 argument_list|,
 name|IPSECCTL_STATS
@@ -328,7 +317,11 @@ name|stats
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ipipstat
+argument_list|)
 argument_list|,
 name|ipipstat
 argument_list|,
@@ -369,23 +362,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|int
-name|ipe4_iattach
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VIMAGE_GLOBALS
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -408,12 +389,7 @@ operator|.
 name|vmi_dependson
 operator|=
 name|VNET_MOD_IPSEC
-block|,
-operator|.
-name|vmi_iattach
-operator|=
-name|ipe4_iattach
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -421,10 +397,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* !VIMAGE_GLOBALS */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -561,16 +533,6 @@ modifier|*
 name|gifp
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET
@@ -1560,22 +1522,6 @@ name|int
 name|protoff
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* INET */
 name|struct
 name|secasvar
 modifier|*
@@ -2978,35 +2924,6 @@ end_function
 
 begin_function
 specifier|static
-name|int
-name|ipe4_iattach
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-name|unused
-name|__unused
-parameter_list|)
-block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-name|V_ipip_allow
-operator|=
-literal|0
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
 name|void
 name|ipe4_attach
 parameter_list|(
@@ -3067,20 +2984,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
-name|VIMAGE_GLOBALS
+ifdef|#
+directive|ifdef
+name|VIMAGE
 name|vnet_mod_register
 argument_list|(
 operator|&
 name|vnet_ipip_modinfo
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|ipe4_iattach
-argument_list|(
-name|NULL
 argument_list|)
 expr_stmt|;
 endif|#

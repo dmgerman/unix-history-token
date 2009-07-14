@@ -269,12 +269,6 @@ directive|include
 file|<machine/in_cksum.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/vinet.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -314,12 +308,6 @@ begin_include
 include|#
 directive|include
 file|<netinet6/nd6.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/vinet6.h>
 end_include
 
 begin_endif
@@ -4987,11 +4975,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -8007,11 +7990,6 @@ modifier|*
 name|sin
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -8954,11 +8932,6 @@ modifier|*
 name|sin6
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ifnet
 modifier|*

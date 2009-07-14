@@ -786,11 +786,6 @@ argument_list|(
 argument|vnet_iter
 argument_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|vnet_iter
-argument_list|)
-expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp

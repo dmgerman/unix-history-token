@@ -189,12 +189,6 @@ directive|include
 file|<netinet6/in6_var.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet6/vinet6.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -2408,21 +2402,6 @@ modifier|*
 name|args
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|INET6
-ifndef|#
-directive|ifndef
-name|KLD_MODULE
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|#
-directive|endif
 name|struct
 name|socket_args
 comment|/* { 		int domain; 		int type; 		int protocol; 	} */

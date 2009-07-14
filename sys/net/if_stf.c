@@ -186,12 +186,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/vinet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/ip6.h>
 end_include
 
@@ -1596,13 +1590,6 @@ modifier|*
 name|ifp
 decl_stmt|;
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ifaddr
 modifier|*
@@ -2725,11 +2712,6 @@ name|inifp
 decl_stmt|;
 comment|/* incoming interface */
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|in_ifaddr
 modifier|*

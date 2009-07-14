@@ -784,246 +784,309 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+expr|struct
 name|ip6stat
+argument_list|,
 name|ip6stat
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* statistics */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_defhlim
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* default hop limit */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_defmcasthlim
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* default multicast hop limit */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_forwarding
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* act as router? */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_gif_hlim
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Hop limit for gif encap packet */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_use_deprecated
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* allow deprecated addr as source */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_rr_prune
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* router renumbering prefix 					 * walk list every 5 sec.    */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_mcast_pmtu
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* enable pMTU discovery for multicast? */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_v6only
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+expr|struct
 name|socket
-modifier|*
+operator|*
+argument_list|,
 name|ip6_mrouter
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* multicast routing daemon */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_sendredirects
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* send IP redirects when forwarding? */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_maxfragpackets
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/* Maximum packets in reassembly queue */
+comment|/* Maximum packets in reassembly 					 * queue */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_maxfrags
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/* Maximum fragments in reassembly queue */
+comment|/* Maximum fragments in reassembly 					 * queue */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_accept_rtadv
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Acts as a host not a router */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_keepfaith
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Firewall Aided Internet Translator */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_log_interval
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|time_t
+argument_list|,
 name|ip6_log_time
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_hdrnestlimit
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/* upper limit of # of extension headers */
+comment|/* upper limit of # of extension 					 * headers */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_dad_count
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* DupAddrDetectionTransmits */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_auto_flowlabel
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_auto_linklocal
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_use_tempaddr
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/* whether to use temporary addresses. */
+comment|/* Whether to use temporary addresses */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_prefer_tempaddr
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/* whether to prefer temporary addresses 					in the source address selection */
+comment|/* Whether to prefer temporary 					 * addresses in the source address 					 * selection */
 end_comment
 
 begin_ifdef
@@ -1032,37 +1095,220 @@ directive|ifdef
 name|IPSTEALTH
 end_ifdef
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ip6stealth
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_use_defzone
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/* whether to use the default scope zone 				    when unspecified */
+comment|/* Whether to use the default scope 					 * zone when unspecified */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|V_ip6stat
+value|VNET_GET(ip6stat)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_defhlim
+value|VNET_GET(ip6_defhlim)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_defmcasthlim
+value|VNET_GET(ip6_defmcasthlim)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_forwarding
+value|VNET_GET(ip6_forwarding)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_gif_hlim
+value|VNET_GET(ip6_gif_hlim)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_use_deprecated
+value|VNET_GET(ip6_use_deprecated)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_rr_prune
+value|VNET_GET(ip6_rr_prune)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_mcast_pmtu
+value|VNET_GET(ip6_mcast_pmtu)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_v6only
+value|VNET_GET(ip6_v6only)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_mrouter
+value|VNET_GET(ip6_mrouter)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_sendredirects
+value|VNET_GET(ip6_sendredirects)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_maxfragpackets
+value|VNET_GET(ip6_maxfragpackets)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_maxfrags
+value|VNET_GET(ip6_maxfrags)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_accept_rtadv
+value|VNET_GET(ip6_accept_rtadv)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_keepfaith
+value|VNET_GET(ip6_keepfaith)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_log_interval
+value|VNET_GET(ip6_log_interval)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_log_time
+value|VNET_GET(ip6_log_time)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_hdrnestlimit
+value|VNET_GET(ip6_hdrnestlimit)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_dad_count
+value|VNET_GET(ip6_dad_count)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_auto_flowlabel
+value|VNET_GET(ip6_auto_flowlabel)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_auto_linklocal
+value|VNET_GET(ip6_auto_linklocal)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_use_tempaddr
+value|VNET_GET(ip6_use_tempaddr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_prefer_tempaddr
+value|VNET_GET(ip6_prefer_tempaddr)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPSTEALTH
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|V_ip6stealth
+value|VNET_GET(ip6stealth)
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* VIMAGE_GLOBALS */
-end_comment
+begin_define
+define|#
+directive|define
+name|V_ip6_use_defzone
+value|VNET_GET(ip6_use_defzone)
+end_define
 
 begin_decl_stmt
 specifier|extern

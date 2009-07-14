@@ -343,6 +343,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -532,55 +538,54 @@ name|sockopt
 struct_decl|;
 end_struct_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+expr|struct
 name|ipstat
+argument_list|,
 name|ipstat
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|u_short
+argument_list|,
 name|ip_id
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* ip packet ctr, for ids */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
-name|ip_do_randomid
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
+argument_list|,
 name|ip_defttl
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* default IP ttl */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ipforwarding
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* ip forwarding */
@@ -592,12 +597,15 @@ directive|ifdef
 name|IPSTEALTH
 end_ifdef
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ipstealth
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* stealth forwarding */
@@ -608,47 +616,114 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|rsvp_on
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+expr|struct
 name|socket
-modifier|*
+operator|*
+argument_list|,
 name|ip_rsvpd
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/* reservation protocol daemon */
+comment|/* reservation protocol daemon*/
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|struct
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+expr|struct
 name|socket
-modifier|*
+operator|*
+argument_list|,
 name|ip_mrouter
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* multicast routing daemon */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|V_ipstat
+value|VNET_GET(ipstat)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip_id
+value|VNET_GET(ip_id)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip_defttl
+value|VNET_GET(ip_defttl)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ipforwarding
+value|VNET_GET(ipforwarding)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPSTEALTH
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|V_ipstealth
+value|VNET_GET(ipstealth)
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* VIMAGE_GLOBALS */
-end_comment
+begin_define
+define|#
+directive|define
+name|V_rsvp_on
+value|VNET_GET(rsvp_on)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip_rsvpd
+value|VNET_GET(ip_rsvpd)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip_mrouter
+value|VNET_GET(ip_mrouter)
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -1275,6 +1350,31 @@ end_function_decl
 begin_comment
 comment|/* in ip_fw2.c */
 end_comment
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+name|int
+argument_list|,
+name|ip_do_randomid
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_ip_do_randomid
+value|VNET_GET(ip_do_randomid)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ip_newid
+parameter_list|()
+value|((V_ip_do_randomid != 0) ? ip_randomid() : \ 			    htons(V_ip_id++))
+end_define
 
 begin_endif
 endif|#

@@ -88,12 +88,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_net
-argument_list|,
 name|_net_link_generic_system
 argument_list|,
 name|IFMIB_IFCOUNT
@@ -102,7 +98,11 @@ name|ifcount
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|if_index
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,

@@ -202,12 +202,6 @@ directive|include
 file|<netinet/udp_var.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/vinet.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -224,12 +218,6 @@ begin_include
 include|#
 directive|include
 file|<netinet6/ip6_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/vinet6.h>
 end_include
 
 begin_endif
@@ -274,112 +262,233 @@ directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
 begin_comment
 comment|/*  * These configure the range of local port addresses assigned to  * "unspecified" outgoing connections/packets/whatever.  */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_lowfirstauto
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+operator|=
+name|IPPORT_RESERVED
+operator|-
+literal|1
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_comment
+comment|/* 1023 */
+end_comment
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_lowlastauto
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+operator|=
+name|IPPORT_RESERVEDSTART
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_comment
+comment|/* 600 */
+end_comment
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_firstauto
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+operator|=
+name|IPPORT_EPHEMERALFIRST
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_comment
+comment|/* 10000 */
+end_comment
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_lastauto
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+operator|=
+name|IPPORT_EPHEMERALLAST
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_comment
+comment|/* 65535 */
+end_comment
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_hifirstauto
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+operator|=
+name|IPPORT_HIFIRSTAUTO
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_comment
+comment|/* 49152 */
+end_comment
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_hilastauto
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+operator|=
+name|IPPORT_HILASTAUTO
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* 65535 */
+end_comment
 
 begin_comment
 comment|/*  * Reserved ports accessible only to root. There are significant  * security considerations that must be accounted for when changing these,  * but the security benefits can be great. Please be careful.  */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_reservedhigh
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+operator|=
+name|IPPORT_RESERVED
+operator|-
+literal|1
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_comment
+comment|/* 1023 */
+end_comment
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_reservedlow
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Variables dealing with random ephemeral port allocation. */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_randomized
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_comment
+comment|/* user controlled via sysctl */
+end_comment
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_randomcps
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+operator|=
+literal|10
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_comment
+comment|/* user controlled via sysctl */
+end_comment
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_randomtime
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+operator|=
+literal|45
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_comment
+comment|/* user controlled via sysctl */
+end_comment
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_stoprandom
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_comment
+comment|/* toggled by ipport_tick */
+end_comment
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_tcpallocs
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_tcplastcount
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_ipport_tcplastcount
+value|VNET_GET(ipport_tcplastcount)
+end_define
 
 begin_define
 define|#
@@ -417,17 +526,27 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|SYSCTL_RESOLVE_V_ARG1
-argument_list|()
+ifdef|#
+directive|ifdef
+name|VIMAGE
+name|error
+operator|=
+name|vnet_sysctl_handle_int
+argument_list|(
+name|oidp
+argument_list|,
+name|arg1
+argument_list|,
+name|arg2
+argument_list|,
+name|req
+argument_list|)
 expr_stmt|;
+else|#
+directive|else
 name|error
 operator|=
 name|sysctl_handle_int
@@ -441,6 +560,8 @@ argument_list|,
 name|req
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|error
@@ -540,12 +661,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_ip_portrange
 argument_list|,
 name|OID_AUTO
@@ -556,7 +673,11 @@ name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ipport_lowfirstauto
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -571,12 +692,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_ip_portrange
 argument_list|,
 name|OID_AUTO
@@ -587,7 +704,11 @@ name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ipport_lowlastauto
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -602,12 +723,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_ip_portrange
 argument_list|,
 name|OID_AUTO
@@ -618,7 +735,11 @@ name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ipport_firstauto
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -633,12 +754,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_ip_portrange
 argument_list|,
 name|OID_AUTO
@@ -649,7 +766,11 @@ name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ipport_lastauto
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -664,12 +785,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_ip_portrange
 argument_list|,
 name|OID_AUTO
@@ -680,7 +797,11 @@ name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ipport_hifirstauto
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -695,12 +816,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_ip_portrange
 argument_list|,
 name|OID_AUTO
@@ -711,7 +828,11 @@ name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ipport_hilastauto
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -726,12 +847,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_ip_portrange
 argument_list|,
 name|OID_AUTO
@@ -742,7 +859,11 @@ name|CTLFLAG_RW
 operator||
 name|CTLFLAG_SECURE
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ipport_reservedhigh
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -752,12 +873,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_ip_portrange
 argument_list|,
 name|OID_AUTO
@@ -768,7 +885,11 @@ name|CTLFLAG_RW
 operator||
 name|CTLFLAG_SECURE
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ipport_reservedlow
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -778,12 +899,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_ip_portrange
 argument_list|,
 name|OID_AUTO
@@ -792,7 +909,11 @@ name|randomized
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ipport_randomized
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -802,12 +923,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_ip_portrange
 argument_list|,
 name|OID_AUTO
@@ -816,7 +933,11 @@ name|randomcps
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ipport_randomcps
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -827,12 +948,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_ip_portrange
 argument_list|,
 name|OID_AUTO
@@ -841,7 +958,11 @@ name|randomtime
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ipport_randomtime
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -874,16 +995,6 @@ modifier|*
 name|pcbinfo
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|INET6
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|struct
 name|inpcb
 modifier|*
@@ -1369,13 +1480,6 @@ modifier|*
 name|cred
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|inp
-operator|->
-name|inp_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|socket
 modifier|*
@@ -3583,13 +3687,6 @@ modifier|*
 name|cred
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|inp
-operator|->
-name|inp_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|sockaddr_in
 modifier|*
@@ -6810,11 +6907,6 @@ name|vnet_iter
 argument_list|)
 expr_stmt|;
 comment|/* XXX appease INVARIANTS here */
-name|INIT_VNET_INET
-argument_list|(
-name|vnet_iter
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|V_ipport_tcpallocs
@@ -7007,11 +7099,6 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|inpcb
 modifier|*

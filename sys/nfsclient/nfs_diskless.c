@@ -603,11 +603,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|nfs_diskless
 modifier|*

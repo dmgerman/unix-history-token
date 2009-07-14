@@ -217,12 +217,6 @@ directive|include
 file|<netinet6/ip6_var.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet6/vinet6.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -1256,11 +1250,6 @@ modifier|*
 name|in6
 decl_stmt|;
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|rtentry
 modifier|*

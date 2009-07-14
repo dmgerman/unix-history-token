@@ -242,49 +242,69 @@ begin_comment
 comment|/* TCPDEBUG */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<netinet/vinet.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|tcp_reass_maxseg
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|tcp_reass_qsize
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|tcp_reass_maxqlen
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|tcp_reass_overflows
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_tcp_reass_maxseg
+value|VNET_GET(tcp_reass_maxseg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_tcp_reass_maxqlen
+value|VNET_GET(tcp_reass_maxqlen)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_tcp_reass_overflows
+value|VNET_GET(tcp_reass_overflows)
+end_define
 
 begin_expr_stmt
 name|SYSCTL_NODE
@@ -305,12 +325,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_tcp_reass
 argument_list|,
 name|OID_AUTO
@@ -319,7 +335,11 @@ name|maxsegments
 argument_list|,
 name|CTLFLAG_RDTUN
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|tcp_reass_maxseg
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -329,12 +349,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_tcp_reass
 argument_list|,
 name|OID_AUTO
@@ -343,7 +359,11 @@ name|cursegments
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|tcp_reass_qsize
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -353,12 +373,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_tcp_reass
 argument_list|,
 name|OID_AUTO
@@ -367,7 +383,11 @@ name|maxqlen
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|tcp_reass_maxqlen
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -377,12 +397,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_tcp_reass
 argument_list|,
 name|OID_AUTO
@@ -391,7 +407,11 @@ name|overflows
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|tcp_reass_overflows
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -414,11 +434,6 @@ modifier|*
 name|tag
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|V_tcp_reass_maxseg
 operator|=
 name|nmbclusters
@@ -435,22 +450,15 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|uma_zone_t
+argument_list|,
 name|tcp_reass_zone
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|void
@@ -459,11 +467,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|V_tcp_reass_maxseg
 operator|=
 literal|0
@@ -564,11 +567,6 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|tseg_qent
 modifier|*
