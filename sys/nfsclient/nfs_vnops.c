@@ -15852,7 +15852,7 @@ name|NFSMNT_INT
 condition|)
 name|slpflag
 operator|=
-name|PCATCH
+name|NFS_PCATCH
 expr_stmt|;
 if|if
 condition|(
@@ -16608,7 +16608,7 @@ block|}
 if|if
 condition|(
 name|slpflag
-operator|==
+operator|&
 name|PCATCH
 condition|)
 block|{
@@ -16798,7 +16798,7 @@ goto|;
 if|if
 condition|(
 name|slpflag
-operator|==
+operator|&
 name|PCATCH
 condition|)
 block|{

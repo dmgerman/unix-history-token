@@ -301,6 +301,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|NFS_PCATCH
+value|(PCATCH | PBDRY)
+end_define
+
 begin_endif
 endif|#
 directive|endif
