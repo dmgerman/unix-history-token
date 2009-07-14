@@ -16982,7 +16982,7 @@ name|inc
 decl_stmt|;
 name|struct
 name|toeopt
-name|to
+name|toeo
 decl_stmt|;
 name|struct
 name|tcphdr
