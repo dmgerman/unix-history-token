@@ -4437,13 +4437,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-else|else
-name|panic
-argument_list|(
-literal|"link_elf_load_file: unexpected "
-literal|"progbits type"
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 name|bzero
