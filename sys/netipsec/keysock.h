@@ -182,7 +182,7 @@ begin_define
 define|#
 directive|define
 name|V_pfkeystat
-value|VNET_GET(pfkeystat)
+value|VNET(pfkeystat)
 end_define
 
 begin_function_decl

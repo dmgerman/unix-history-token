@@ -1286,84 +1286,84 @@ begin_define
 define|#
 directive|define
 name|V_nd6_prune
-value|VNET_GET(nd6_prune)
+value|VNET(nd6_prune)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_nd6_delay
-value|VNET_GET(nd6_delay)
+value|VNET(nd6_delay)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_nd6_umaxtries
-value|VNET_GET(nd6_umaxtries)
+value|VNET(nd6_umaxtries)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_nd6_mmaxtries
-value|VNET_GET(nd6_mmaxtries)
+value|VNET(nd6_mmaxtries)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_nd6_useloopback
-value|VNET_GET(nd6_useloopback)
+value|VNET(nd6_useloopback)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_nd6_maxnudhint
-value|VNET_GET(nd6_maxnudhint)
+value|VNET(nd6_maxnudhint)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_nd6_gctimer
-value|VNET_GET(nd6_gctimer)
+value|VNET(nd6_gctimer)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_nd_defrouter
-value|VNET_GET(nd_defrouter)
+value|VNET(nd_defrouter)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_nd_prefix
-value|VNET_GET(nd_prefix)
+value|VNET(nd_prefix)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_nd6_debug
-value|VNET_GET(nd6_debug)
+value|VNET(nd6_debug)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_nd6_onlink_ns_rfc4861
-value|VNET_GET(nd6_onlink_ns_rfc4861)
+value|VNET(nd6_onlink_ns_rfc4861)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_nd6_timer_ch
-value|VNET_GET(nd6_timer_ch)
+value|VNET(nd6_timer_ch)
 end_define
 
 begin_comment
@@ -1440,35 +1440,35 @@ begin_define
 define|#
 directive|define
 name|V_nd6_defifindex
-value|VNET_GET(nd6_defifindex)
+value|VNET(nd6_defifindex)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6_desync_factor
-value|VNET_GET(ip6_desync_factor)
+value|VNET(ip6_desync_factor)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6_temp_preferred_lifetime
-value|VNET_GET(ip6_temp_preferred_lifetime)
+value|VNET(ip6_temp_preferred_lifetime)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6_temp_valid_lifetime
-value|VNET_GET(ip6_temp_valid_lifetime)
+value|VNET(ip6_temp_valid_lifetime)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6_temp_regen_advance
-value|VNET_GET(ip6_temp_regen_advance)
+value|VNET(ip6_temp_regen_advance)
 end_define
 
 begin_define

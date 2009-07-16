@@ -271,14 +271,14 @@ begin_define
 define|#
 directive|define
 name|V_tcp_hostcache
-value|VNET_GET(tcp_hostcache)
+value|VNET(tcp_hostcache)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_hc_callout
-value|VNET_GET(tcp_hc_callout)
+value|VNET(tcp_hc_callout)
 end_define
 
 begin_function_decl

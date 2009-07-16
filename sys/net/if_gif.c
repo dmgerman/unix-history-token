@@ -388,21 +388,21 @@ begin_define
 define|#
 directive|define
 name|V_gif_softc_list
-value|VNET_GET(gif_softc_list)
+value|VNET(gif_softc_list)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_max_gif_nesting
-value|VNET_GET(max_gif_nesting)
+value|VNET(max_gif_nesting)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_parallel_tunnels
-value|VNET_GET(parallel_tunnels)
+value|VNET(parallel_tunnels)
 end_define
 
 begin_ifdef
@@ -425,7 +425,7 @@ begin_define
 define|#
 directive|define
 name|V_ip_gif_ttl
-value|VNET_GET(ip_gif_ttl)
+value|VNET(ip_gif_ttl)
 end_define
 
 begin_endif
@@ -453,7 +453,7 @@ begin_define
 define|#
 directive|define
 name|V_ip6_gif_hlim
-value|VNET_GET(ip6_gif_hlim)
+value|VNET(ip6_gif_hlim)
 end_define
 
 begin_endif

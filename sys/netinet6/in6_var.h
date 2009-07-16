@@ -1601,21 +1601,21 @@ begin_define
 define|#
 directive|define
 name|V_in6_ifaddrhead
-value|VNET_GET(in6_ifaddrhead)
+value|VNET(in6_ifaddrhead)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_icmp6stat
-value|VNET_GET(icmp6stat)
+value|VNET(icmp6stat)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_in6_maxmtu
-value|VNET_GET(in6_maxmtu)
+value|VNET(in6_maxmtu)
 end_define
 
 begin_decl_stmt

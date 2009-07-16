@@ -411,21 +411,21 @@ begin_define
 define|#
 directive|define
 name|V_tcp_syncache
-value|VNET_GET(tcp_syncache)
+value|VNET(tcp_syncache)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_syncookies
-value|VNET_GET(tcp_syncookies)
+value|VNET(tcp_syncookies)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_syncookiesonly
-value|VNET_GET(tcp_syncookiesonly)
+value|VNET(tcp_syncookiesonly)
 end_define
 
 begin_expr_stmt

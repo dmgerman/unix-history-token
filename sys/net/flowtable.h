@@ -65,7 +65,7 @@ begin_define
 define|#
 directive|define
 name|V_ip_ft
-value|VNET_GET(ip_ft)
+value|VNET(ip_ft)
 end_define
 
 begin_function_decl

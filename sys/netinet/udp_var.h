@@ -433,28 +433,28 @@ begin_define
 define|#
 directive|define
 name|V_udb
-value|VNET_GET(udb)
+value|VNET(udb)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_udbinfo
-value|VNET_GET(udbinfo)
+value|VNET(udbinfo)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_udpstat
-value|VNET_GET(udpstat)
+value|VNET(udpstat)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_udp_blackhole
-value|VNET_GET(udp_blackhole)
+value|VNET(udp_blackhole)
 end_define
 
 begin_decl_stmt

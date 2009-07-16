@@ -387,14 +387,14 @@ begin_define
 define|#
 directive|define
 name|V_nd6_maxndopt
-value|VNET_GET(nd6_maxndopt)
+value|VNET(nd6_maxndopt)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_nd6_maxqueuelen
-value|VNET_GET(nd6_maxqueuelen)
+value|VNET(nd6_maxqueuelen)
 end_define
 
 begin_expr_stmt
@@ -459,7 +459,7 @@ begin_define
 define|#
 directive|define
 name|V_nd6_recalc_reachtm_interval
-value|VNET_GET(nd6_recalc_reachtm_interval)
+value|VNET(nd6_recalc_reachtm_interval)
 end_define
 
 begin_decl_stmt
@@ -583,7 +583,7 @@ begin_define
 define|#
 directive|define
 name|V_nd6_slowtimo_ch
-value|VNET_GET(nd6_slowtimo_ch)
+value|VNET(nd6_slowtimo_ch)
 end_define
 
 begin_expr_stmt
@@ -621,14 +621,14 @@ begin_define
 define|#
 directive|define
 name|V_dad_ignore_ns
-value|VNET_GET(dad_ignore_ns)
+value|VNET(dad_ignore_ns)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_dad_maxtry
-value|VNET_GET(dad_maxtry)
+value|VNET(dad_maxtry)
 end_define
 
 begin_function

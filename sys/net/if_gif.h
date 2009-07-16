@@ -567,7 +567,7 @@ begin_define
 define|#
 directive|define
 name|V_ip_gif_ttl
-value|VNET_GET(ip_gif_ttl)
+value|VNET(ip_gif_ttl)
 end_define
 
 begin_endif

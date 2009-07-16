@@ -206,14 +206,14 @@ begin_define
 define|#
 directive|define
 name|V_if_cloners_count
-value|VNET_GET(if_cloners_count)
+value|VNET(if_cloners_count)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_if_cloners
-value|VNET_GET(if_cloners)
+value|VNET(if_cloners)
 end_define
 
 begin_define

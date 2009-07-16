@@ -801,35 +801,35 @@ begin_define
 define|#
 directive|define
 name|V_mld_gsrdelay
-value|VNET_GET(mld_gsrdelay)
+value|VNET(mld_gsrdelay)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_mli_head
-value|VNET_GET(mli_head)
+value|VNET(mli_head)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_interface_timers_running6
-value|VNET_GET(interface_timers_running6)
+value|VNET(interface_timers_running6)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_state_change_timers_running6
-value|VNET_GET(state_change_timers_running6)
+value|VNET(state_change_timers_running6)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_current_state_timers_running6
-value|VNET_GET(current_state_timers_running6)
+value|VNET(current_state_timers_running6)
 end_define
 
 begin_expr_stmt

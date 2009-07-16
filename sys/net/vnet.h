@@ -111,27 +111,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|_VNET_GET
+name|_VNET
 parameter_list|(
 name|b
 parameter_list|,
 name|n
 parameter_list|)
 value|(*_VNET_PTR(b, n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|_VNET_SET
-parameter_list|(
-name|b
-parameter_list|,
-name|n
-parameter_list|,
-name|v
-parameter_list|)
-value|(*_VNET_PTR(b, n) = v)
 end_define
 
 begin_comment
@@ -153,27 +139,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|VNET_VNET_GET
+name|VNET_VNET
 parameter_list|(
 name|vnet
 parameter_list|,
 name|n
 parameter_list|)
 value|(*VNET_VNET_PTR((vnet), n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|VNET_VNET_SET
-parameter_list|(
-name|vnet
-parameter_list|,
-name|n
-parameter_list|,
-name|v
-parameter_list|)
-value|((*VNET_VNET_PTR((vnet), n)) = v)
 end_define
 
 begin_define
@@ -189,23 +161,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|VNET_GET
+name|VNET
 parameter_list|(
 name|n
 parameter_list|)
-value|VNET_VNET_GET(curvnet, n)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VNET_SET
-parameter_list|(
-name|n
-parameter_list|,
-name|v
-parameter_list|)
-value|VNET_VNET_SET(curvnet, n, v)
+value|VNET_VNET(curvnet, n)
 end_define
 
 begin_comment
@@ -671,27 +631,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|VNET_VNET_GET
+name|VNET_VNET
 parameter_list|(
 name|vnet
 parameter_list|,
 name|n
 parameter_list|)
 value|(n)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VNET_VNET_SET
-parameter_list|(
-name|vnet
-parameter_list|,
-name|n
-parameter_list|,
-name|v
-parameter_list|)
-value|((n) = (v))
 end_define
 
 begin_define
@@ -707,23 +653,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|VNET_GET
+name|VNET
 parameter_list|(
 name|n
 parameter_list|)
 value|(n)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VNET_SET
-parameter_list|(
-name|n
-parameter_list|,
-name|v
-parameter_list|)
-value|((n) = (v))
 end_define
 
 begin_endif

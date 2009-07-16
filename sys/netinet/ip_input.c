@@ -386,28 +386,28 @@ begin_define
 define|#
 directive|define
 name|V_ipsendredirects
-value|VNET_GET(ipsendredirects)
+value|VNET(ipsendredirects)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip_checkinterface
-value|VNET_GET(ip_checkinterface)
+value|VNET(ip_checkinterface)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip_keepfaith
-value|VNET_GET(ip_keepfaith)
+value|VNET(ip_keepfaith)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip_sendsourcequench
-value|VNET_GET(ip_sendsourcequench)
+value|VNET(ip_sendsourcequench)
 end_define
 
 begin_expr_stmt
@@ -535,7 +535,7 @@ begin_define
 define|#
 directive|define
 name|V_ip_rsvp_on
-value|VNET_GET(ip_rsvp_on)
+value|VNET(ip_rsvp_on)
 end_define
 
 begin_expr_stmt
@@ -602,28 +602,28 @@ begin_define
 define|#
 directive|define
 name|V_ipq
-value|VNET_GET(ipq)
+value|VNET(ipq)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_maxnipq
-value|VNET_GET(maxnipq)
+value|VNET(maxnipq)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_maxfragsperpacket
-value|VNET_GET(maxfragsperpacket)
+value|VNET(maxfragsperpacket)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_nipq
-value|VNET_GET(nipq)
+value|VNET(nipq)
 end_define
 
 begin_expr_stmt
@@ -934,7 +934,7 @@ begin_define
 define|#
 directive|define
 name|V_ipq_zone
-value|VNET_GET(ipq_zone)
+value|VNET(ipq_zone)
 end_define
 
 begin_decl_stmt
@@ -1155,7 +1155,7 @@ begin_define
 define|#
 directive|define
 name|V_ip_output_flowtable_size
-value|VNET_GET(ip_output_flowtable_size)
+value|VNET(ip_output_flowtable_size)
 end_define
 
 begin_expr_stmt

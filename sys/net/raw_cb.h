@@ -103,7 +103,7 @@ begin_define
 define|#
 directive|define
 name|V_rawcb_list
-value|VNET_GET(rawcb_list)
+value|VNET(rawcb_list)
 end_define
 
 begin_decl_stmt

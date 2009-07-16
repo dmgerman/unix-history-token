@@ -206,7 +206,7 @@ begin_define
 define|#
 directive|define
 name|V_icmpstat
-value|VNET_GET(icmpstat)
+value|VNET(icmpstat)
 end_define
 
 begin_function_decl

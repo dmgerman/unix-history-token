@@ -3199,14 +3199,14 @@ begin_define
 define|#
 directive|define
 name|V_icmp6_rediraccept
-value|VNET_GET(icmp6_rediraccept)
+value|VNET(icmp6_rediraccept)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_icmp6_redirtimeout
-value|VNET_GET(icmp6_redirtimeout)
+value|VNET(icmp6_redirtimeout)
 end_define
 
 begin_define

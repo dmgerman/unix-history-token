@@ -345,14 +345,14 @@ begin_define
 define|#
 directive|define
 name|V_divcb
-value|VNET_GET(divcb)
+value|VNET(divcb)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_divcbinfo
-value|VNET_GET(divcbinfo)
+value|VNET(divcbinfo)
 end_define
 
 begin_decl_stmt

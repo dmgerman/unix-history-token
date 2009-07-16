@@ -332,21 +332,21 @@ begin_define
 define|#
 directive|define
 name|V_subnetsarelocal
-value|VNET_GET(subnetsarelocal)
+value|VNET(subnetsarelocal)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_sameprefixcarponly
-value|VNET_GET(sameprefixcarponly)
+value|VNET(sameprefixcarponly)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ripcbinfo
-value|VNET_GET(ripcbinfo)
+value|VNET(ripcbinfo)
 end_define
 
 begin_expr_stmt

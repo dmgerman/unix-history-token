@@ -177,7 +177,7 @@ begin_define
 define|#
 directive|define
 name|V_sid_default
-value|VNET_GET(sid_default)
+value|VNET(sid_default)
 end_define
 
 begin_define

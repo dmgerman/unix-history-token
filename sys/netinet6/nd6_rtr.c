@@ -419,7 +419,7 @@ begin_define
 define|#
 directive|define
 name|V_nd6_recalc_reachtm_interval
-value|VNET_GET(nd6_recalc_reachtm_interval)
+value|VNET(nd6_recalc_reachtm_interval)
 end_define
 
 begin_expr_stmt
@@ -439,7 +439,7 @@ begin_define
 define|#
 directive|define
 name|V_nd6_defifp
-value|VNET_GET(nd6_defifp)
+value|VNET(nd6_defifp)
 end_define
 
 begin_expr_stmt

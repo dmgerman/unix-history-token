@@ -1128,161 +1128,161 @@ begin_define
 define|#
 directive|define
 name|V_ip6stat
-value|VNET_GET(ip6stat)
+value|VNET(ip6stat)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6_defhlim
-value|VNET_GET(ip6_defhlim)
+value|VNET(ip6_defhlim)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6_defmcasthlim
-value|VNET_GET(ip6_defmcasthlim)
+value|VNET(ip6_defmcasthlim)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6_forwarding
-value|VNET_GET(ip6_forwarding)
+value|VNET(ip6_forwarding)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6_gif_hlim
-value|VNET_GET(ip6_gif_hlim)
+value|VNET(ip6_gif_hlim)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6_use_deprecated
-value|VNET_GET(ip6_use_deprecated)
+value|VNET(ip6_use_deprecated)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6_rr_prune
-value|VNET_GET(ip6_rr_prune)
+value|VNET(ip6_rr_prune)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6_mcast_pmtu
-value|VNET_GET(ip6_mcast_pmtu)
+value|VNET(ip6_mcast_pmtu)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6_v6only
-value|VNET_GET(ip6_v6only)
+value|VNET(ip6_v6only)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6_mrouter
-value|VNET_GET(ip6_mrouter)
+value|VNET(ip6_mrouter)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6_sendredirects
-value|VNET_GET(ip6_sendredirects)
+value|VNET(ip6_sendredirects)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6_maxfragpackets
-value|VNET_GET(ip6_maxfragpackets)
+value|VNET(ip6_maxfragpackets)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6_maxfrags
-value|VNET_GET(ip6_maxfrags)
+value|VNET(ip6_maxfrags)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6_accept_rtadv
-value|VNET_GET(ip6_accept_rtadv)
+value|VNET(ip6_accept_rtadv)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6_keepfaith
-value|VNET_GET(ip6_keepfaith)
+value|VNET(ip6_keepfaith)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6_log_interval
-value|VNET_GET(ip6_log_interval)
+value|VNET(ip6_log_interval)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6_log_time
-value|VNET_GET(ip6_log_time)
+value|VNET(ip6_log_time)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6_hdrnestlimit
-value|VNET_GET(ip6_hdrnestlimit)
+value|VNET(ip6_hdrnestlimit)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6_dad_count
-value|VNET_GET(ip6_dad_count)
+value|VNET(ip6_dad_count)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6_auto_flowlabel
-value|VNET_GET(ip6_auto_flowlabel)
+value|VNET(ip6_auto_flowlabel)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6_auto_linklocal
-value|VNET_GET(ip6_auto_linklocal)
+value|VNET(ip6_auto_linklocal)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6_use_tempaddr
-value|VNET_GET(ip6_use_tempaddr)
+value|VNET(ip6_use_tempaddr)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6_prefer_tempaddr
-value|VNET_GET(ip6_prefer_tempaddr)
+value|VNET(ip6_prefer_tempaddr)
 end_define
 
 begin_ifdef
@@ -1295,7 +1295,7 @@ begin_define
 define|#
 directive|define
 name|V_ip6stealth
-value|VNET_GET(ip6stealth)
+value|VNET(ip6stealth)
 end_define
 
 begin_endif
@@ -1307,7 +1307,7 @@ begin_define
 define|#
 directive|define
 name|V_ip6_use_defzone
-value|VNET_GET(ip6_use_defzone)
+value|VNET(ip6_use_defzone)
 end_define
 
 begin_decl_stmt

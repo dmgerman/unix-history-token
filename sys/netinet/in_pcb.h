@@ -1963,91 +1963,91 @@ begin_define
 define|#
 directive|define
 name|V_ipport_reservedhigh
-value|VNET_GET(ipport_reservedhigh)
+value|VNET(ipport_reservedhigh)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ipport_reservedlow
-value|VNET_GET(ipport_reservedlow)
+value|VNET(ipport_reservedlow)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ipport_lowfirstauto
-value|VNET_GET(ipport_lowfirstauto)
+value|VNET(ipport_lowfirstauto)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ipport_lowlastauto
-value|VNET_GET(ipport_lowlastauto)
+value|VNET(ipport_lowlastauto)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ipport_firstauto
-value|VNET_GET(ipport_firstauto)
+value|VNET(ipport_firstauto)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ipport_lastauto
-value|VNET_GET(ipport_lastauto)
+value|VNET(ipport_lastauto)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ipport_hifirstauto
-value|VNET_GET(ipport_hifirstauto)
+value|VNET(ipport_hifirstauto)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ipport_hilastauto
-value|VNET_GET(ipport_hilastauto)
+value|VNET(ipport_hilastauto)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ipport_randomized
-value|VNET_GET(ipport_randomized)
+value|VNET(ipport_randomized)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ipport_randomcps
-value|VNET_GET(ipport_randomcps)
+value|VNET(ipport_randomcps)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ipport_randomtime
-value|VNET_GET(ipport_randomtime)
+value|VNET(ipport_randomtime)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ipport_stoprandom
-value|VNET_GET(ipport_stoprandom)
+value|VNET(ipport_stoprandom)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ipport_tcpallocs
-value|VNET_GET(ipport_tcpallocs)
+value|VNET(ipport_tcpallocs)
 end_define
 
 begin_decl_stmt

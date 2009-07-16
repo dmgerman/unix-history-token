@@ -76,7 +76,7 @@ begin_define
 define|#
 directive|define
 name|V_rip6stat
-value|VNET_GET(rip6stat)
+value|VNET(rip6stat)
 end_define
 
 begin_endif

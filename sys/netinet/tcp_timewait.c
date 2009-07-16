@@ -380,14 +380,14 @@ begin_define
 define|#
 directive|define
 name|V_tcptw_zone
-value|VNET_GET(tcptw_zone)
+value|VNET(tcptw_zone)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_twq_2msl
-value|VNET_GET(twq_2msl)
+value|VNET(twq_2msl)
 end_define
 
 begin_function_decl

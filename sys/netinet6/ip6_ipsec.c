@@ -318,7 +318,7 @@ begin_define
 define|#
 directive|define
 name|V_ip6_ipsec6_filtertunnel
-value|VNET_GET(ip6_ipsec6_filtertunnel)
+value|VNET(ip6_ipsec6_filtertunnel)
 end_define
 
 begin_expr_stmt

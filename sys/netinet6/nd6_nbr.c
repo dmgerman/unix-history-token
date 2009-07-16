@@ -403,14 +403,14 @@ begin_define
 define|#
 directive|define
 name|V_dad_ignore_ns
-value|VNET_GET(dad_ignore_ns)
+value|VNET(dad_ignore_ns)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_dad_maxtry
-value|VNET_GET(dad_maxtry)
+value|VNET(dad_maxtry)
 end_define
 
 begin_comment
@@ -4922,7 +4922,7 @@ begin_define
 define|#
 directive|define
 name|V_dadq
-value|VNET_GET(dadq)
+value|VNET(dadq)
 end_define
 
 begin_expr_stmt
@@ -4939,7 +4939,7 @@ begin_define
 define|#
 directive|define
 name|V_dad_init
-value|VNET_GET(dad_init)
+value|VNET(dad_init)
 end_define
 
 begin_function

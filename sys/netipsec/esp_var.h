@@ -148,7 +148,7 @@ begin_define
 define|#
 directive|define
 name|V_esp_enable
-value|VNET_GET(esp_enable)
+value|VNET(esp_enable)
 end_define
 
 begin_expr_stmt
@@ -166,7 +166,7 @@ begin_define
 define|#
 directive|define
 name|V_espstat
-value|VNET_GET(espstat)
+value|VNET(espstat)
 end_define
 
 begin_endif

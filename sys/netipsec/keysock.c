@@ -219,7 +219,7 @@ begin_define
 define|#
 directive|define
 name|V_key_cb
-value|VNET_GET(key_cb)
+value|VNET(key_cb)
 end_define
 
 begin_decl_stmt

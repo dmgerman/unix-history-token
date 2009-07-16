@@ -319,21 +319,21 @@ begin_define
 define|#
 directive|define
 name|V_in_ifaddrhashtbl
-value|VNET_GET(in_ifaddrhashtbl)
+value|VNET(in_ifaddrhashtbl)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_in_ifaddrhead
-value|VNET_GET(in_ifaddrhead)
+value|VNET(in_ifaddrhead)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_in_ifaddrhmask
-value|VNET_GET(in_ifaddrhmask)
+value|VNET(in_ifaddrhmask)
 end_define
 
 begin_define

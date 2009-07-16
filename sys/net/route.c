@@ -306,28 +306,28 @@ begin_define
 define|#
 directive|define
 name|V_rt_tables
-value|VNET_GET(rt_tables)
+value|VNET(rt_tables)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_rtzone
-value|VNET_GET(rtzone)
+value|VNET(rtzone)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_rttrash
-value|VNET_GET(rttrash)
+value|VNET(rttrash)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_rtstat
-value|VNET_GET(rtstat)
+value|VNET(rtstat)
 end_define
 
 begin_function_decl

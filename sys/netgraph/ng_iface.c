@@ -823,7 +823,7 @@ begin_define
 define|#
 directive|define
 name|V_ng_iface_unit
-value|VNET_GET(ng_iface_unit)
+value|VNET(ng_iface_unit)
 end_define
 
 begin_ifdef

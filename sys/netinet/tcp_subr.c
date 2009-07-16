@@ -571,49 +571,49 @@ begin_define
 define|#
 directive|define
 name|V_icmp_may_rst
-value|VNET_GET(icmp_may_rst)
+value|VNET(icmp_may_rst)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_isn_reseed_interval
-value|VNET_GET(tcp_isn_reseed_interval)
+value|VNET(tcp_isn_reseed_interval)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_inflight_enable
-value|VNET_GET(tcp_inflight_enable)
+value|VNET(tcp_inflight_enable)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_inflight_rttthresh
-value|VNET_GET(tcp_inflight_rttthresh)
+value|VNET(tcp_inflight_rttthresh)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_inflight_min
-value|VNET_GET(tcp_inflight_min)
+value|VNET(tcp_inflight_min)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_inflight_max
-value|VNET_GET(tcp_inflight_max)
+value|VNET(tcp_inflight_max)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_inflight_stab
-value|VNET_GET(tcp_inflight_stab)
+value|VNET(tcp_inflight_stab)
 end_define
 
 begin_function
@@ -1229,7 +1229,7 @@ begin_define
 define|#
 directive|define
 name|V_sack_hole_zone
-value|VNET_GET(sack_hole_zone)
+value|VNET(sack_hole_zone)
 end_define
 
 begin_function_decl
@@ -1316,7 +1316,7 @@ begin_define
 define|#
 directive|define
 name|V_tcpcb_zone
-value|VNET_GET(tcpcb_zone)
+value|VNET(tcpcb_zone)
 end_define
 
 begin_expr_stmt
@@ -7242,28 +7242,28 @@ begin_define
 define|#
 directive|define
 name|V_isn_secret
-value|VNET_GET(isn_secret)
+value|VNET(isn_secret)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_isn_last_reseed
-value|VNET_GET(isn_last_reseed)
+value|VNET(isn_last_reseed)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_isn_offset
-value|VNET_GET(isn_offset)
+value|VNET(isn_offset)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_isn_offset_old
-value|VNET_GET(isn_offset_old)
+value|VNET(isn_offset_old)
 end_define
 
 begin_function

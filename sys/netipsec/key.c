@@ -391,7 +391,7 @@ begin_define
 define|#
 directive|define
 name|V_key_spi_trycnt
-value|VNET_GET(key_spi_trycnt)
+value|VNET(key_spi_trycnt)
 end_define
 
 begin_expr_stmt
@@ -411,7 +411,7 @@ begin_define
 define|#
 directive|define
 name|V_key_spi_minval
-value|VNET_GET(key_spi_minval)
+value|VNET(key_spi_minval)
 end_define
 
 begin_expr_stmt
@@ -435,7 +435,7 @@ begin_define
 define|#
 directive|define
 name|V_key_spi_maxval
-value|VNET_GET(key_spi_maxval)
+value|VNET(key_spi_maxval)
 end_define
 
 begin_expr_stmt
@@ -455,7 +455,7 @@ begin_define
 define|#
 directive|define
 name|V_policy_id
-value|VNET_GET(policy_id)
+value|VNET(policy_id)
 end_define
 
 begin_comment
@@ -479,7 +479,7 @@ begin_define
 define|#
 directive|define
 name|V_key_int_random
-value|VNET_GET(key_int_random)
+value|VNET(key_int_random)
 end_define
 
 begin_comment
@@ -503,7 +503,7 @@ begin_define
 define|#
 directive|define
 name|V_key_larval_lifetime
-value|VNET_GET(key_larval_lifetime)
+value|VNET(key_larval_lifetime)
 end_define
 
 begin_comment
@@ -527,7 +527,7 @@ begin_define
 define|#
 directive|define
 name|V_key_blockacq_count
-value|VNET_GET(key_blockacq_count)
+value|VNET(key_blockacq_count)
 end_define
 
 begin_comment
@@ -551,7 +551,7 @@ begin_define
 define|#
 directive|define
 name|V_key_blockacq_lifetime
-value|VNET_GET(key_blockacq_lifetime)
+value|VNET(key_blockacq_lifetime)
 end_define
 
 begin_comment
@@ -575,7 +575,7 @@ begin_define
 define|#
 directive|define
 name|V_key_preferred_oldsa
-value|VNET_GET(key_preferred_oldsa)
+value|VNET(key_preferred_oldsa)
 end_define
 
 begin_expr_stmt
@@ -595,7 +595,7 @@ begin_define
 define|#
 directive|define
 name|V_acq_seq
-value|VNET_GET(acq_seq)
+value|VNET(acq_seq)
 end_define
 
 begin_comment
@@ -625,7 +625,7 @@ begin_define
 define|#
 directive|define
 name|V_sptree
-value|VNET_GET(sptree)
+value|VNET(sptree)
 end_define
 
 begin_decl_stmt
@@ -701,7 +701,7 @@ begin_define
 define|#
 directive|define
 name|V_sahtree
-value|VNET_GET(sahtree)
+value|VNET(sahtree)
 end_define
 
 begin_decl_stmt
@@ -782,7 +782,7 @@ begin_define
 define|#
 directive|define
 name|V_regtree
-value|VNET_GET(regtree)
+value|VNET(regtree)
 end_define
 
 begin_decl_stmt
@@ -858,7 +858,7 @@ begin_define
 define|#
 directive|define
 name|V_acqtree
-value|VNET_GET(acqtree)
+value|VNET(acqtree)
 end_define
 
 begin_decl_stmt
@@ -934,7 +934,7 @@ begin_define
 define|#
 directive|define
 name|V_spacqtree
-value|VNET_GET(spacqtree)
+value|VNET(spacqtree)
 end_define
 
 begin_decl_stmt
@@ -1398,7 +1398,7 @@ begin_define
 define|#
 directive|define
 name|V_ipsec_esp_keymin
-value|VNET_GET(ipsec_esp_keymin)
+value|VNET(ipsec_esp_keymin)
 end_define
 
 begin_expr_stmt
@@ -1418,7 +1418,7 @@ begin_define
 define|#
 directive|define
 name|V_ipsec_esp_auth
-value|VNET_GET(ipsec_esp_auth)
+value|VNET(ipsec_esp_auth)
 end_define
 
 begin_expr_stmt
@@ -1438,7 +1438,7 @@ begin_define
 define|#
 directive|define
 name|V_ipsec_ah_keymin
-value|VNET_GET(ipsec_ah_keymin)
+value|VNET(ipsec_ah_keymin)
 end_define
 
 begin_ifdef

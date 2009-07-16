@@ -278,7 +278,7 @@ begin_define
 define|#
 directive|define
 name|V_ip4_ipsec_filtertunnel
-value|VNET_GET(ip4_ipsec_filtertunnel)
+value|VNET(ip4_ipsec_filtertunnel)
 end_define
 
 begin_expr_stmt

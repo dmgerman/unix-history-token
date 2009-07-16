@@ -1769,14 +1769,14 @@ begin_define
 define|#
 directive|define
 name|V_fw_one_pass
-value|VNET_GET(fw_one_pass)
+value|VNET(fw_one_pass)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_fw_enable
-value|VNET_GET(fw_enable)
+value|VNET(fw_enable)
 end_define
 
 begin_ifdef
@@ -1799,7 +1799,7 @@ begin_define
 define|#
 directive|define
 name|V_fw6_enable
-value|VNET_GET(fw6_enable)
+value|VNET(fw6_enable)
 end_define
 
 begin_endif
@@ -1994,7 +1994,7 @@ begin_define
 define|#
 directive|define
 name|V_layer3_chain
-value|VNET_GET(layer3_chain)
+value|VNET(layer3_chain)
 end_define
 
 begin_endif

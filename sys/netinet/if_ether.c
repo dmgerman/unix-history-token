@@ -316,28 +316,28 @@ begin_define
 define|#
 directive|define
 name|V_arpt_keep
-value|VNET_GET(arpt_keep)
+value|VNET(arpt_keep)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_arp_maxtries
-value|VNET_GET(arp_maxtries)
+value|VNET(arp_maxtries)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_useloopback
-value|VNET_GET(useloopback)
+value|VNET(useloopback)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_arp_proxyall
-value|VNET_GET(arp_proxyall)
+value|VNET(arp_proxyall)
 end_define
 
 begin_expr_stmt

@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|V_ipsec6stat
-value|VNET_GET(ipsec6stat)
+value|VNET(ipsec6stat)
 end_define
 
 begin_expr_stmt
@@ -77,7 +77,7 @@ begin_define
 define|#
 directive|define
 name|V_ip6_esp_trans_deflev
-value|VNET_GET(ip6_esp_trans_deflev)
+value|VNET(ip6_esp_trans_deflev)
 end_define
 
 begin_expr_stmt
@@ -94,7 +94,7 @@ begin_define
 define|#
 directive|define
 name|V_ip6_esp_net_deflev
-value|VNET_GET(ip6_esp_net_deflev)
+value|VNET(ip6_esp_net_deflev)
 end_define
 
 begin_expr_stmt
@@ -111,7 +111,7 @@ begin_define
 define|#
 directive|define
 name|V_ip6_ah_trans_deflev
-value|VNET_GET(ip6_ah_trans_deflev)
+value|VNET(ip6_ah_trans_deflev)
 end_define
 
 begin_expr_stmt
@@ -128,7 +128,7 @@ begin_define
 define|#
 directive|define
 name|V_ip6_ah_net_deflev
-value|VNET_GET(ip6_ah_net_deflev)
+value|VNET(ip6_ah_net_deflev)
 end_define
 
 begin_expr_stmt
@@ -145,7 +145,7 @@ begin_define
 define|#
 directive|define
 name|V_ip6_ipsec_ecn
-value|VNET_GET(ip6_ipsec_ecn)
+value|VNET(ip6_ipsec_ecn)
 end_define
 
 begin_struct_decl

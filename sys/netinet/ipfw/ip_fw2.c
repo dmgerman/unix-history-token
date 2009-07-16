@@ -481,28 +481,28 @@ begin_define
 define|#
 directive|define
 name|V_set_disable
-value|VNET_GET(set_disable)
+value|VNET(set_disable)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_fw_verbose
-value|VNET_GET(fw_verbose)
+value|VNET(fw_verbose)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ipfw_timeout
-value|VNET_GET(ipfw_timeout)
+value|VNET(ipfw_timeout)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_verbose_limit
-value|VNET_GET(verbose_limit)
+value|VNET(verbose_limit)
 end_define
 
 begin_ifdef
@@ -674,7 +674,7 @@ begin_define
 define|#
 directive|define
 name|V_autoinc_step
-value|VNET_GET(autoinc_step)
+value|VNET(autoinc_step)
 end_define
 
 begin_function_decl
@@ -967,21 +967,21 @@ begin_define
 define|#
 directive|define
 name|V_ipfw_dyn_v
-value|VNET_GET(ipfw_dyn_v)
+value|VNET(ipfw_dyn_v)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_dyn_buckets
-value|VNET_GET(dyn_buckets)
+value|VNET(dyn_buckets)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_curr_dyn_buckets
-value|VNET_GET(curr_dyn_buckets)
+value|VNET(curr_dyn_buckets)
 end_define
 
 begin_decl_stmt
@@ -1111,42 +1111,42 @@ begin_define
 define|#
 directive|define
 name|V_dyn_ack_lifetime
-value|VNET_GET(dyn_ack_lifetime)
+value|VNET(dyn_ack_lifetime)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_dyn_syn_lifetime
-value|VNET_GET(dyn_syn_lifetime)
+value|VNET(dyn_syn_lifetime)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_dyn_fin_lifetime
-value|VNET_GET(dyn_fin_lifetime)
+value|VNET(dyn_fin_lifetime)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_dyn_rst_lifetime
-value|VNET_GET(dyn_rst_lifetime)
+value|VNET(dyn_rst_lifetime)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_dyn_udp_lifetime
-value|VNET_GET(dyn_udp_lifetime)
+value|VNET(dyn_udp_lifetime)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_dyn_short_lifetime
-value|VNET_GET(dyn_short_lifetime)
+value|VNET(dyn_short_lifetime)
 end_define
 
 begin_comment
@@ -1190,21 +1190,21 @@ begin_define
 define|#
 directive|define
 name|V_dyn_keepalive_interval
-value|VNET_GET(dyn_keepalive_interval)
+value|VNET(dyn_keepalive_interval)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_dyn_keepalive_period
-value|VNET_GET(dyn_keepalive_period)
+value|VNET(dyn_keepalive_period)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_dyn_keepalive
-value|VNET_GET(dyn_keepalive)
+value|VNET(dyn_keepalive)
 end_define
 
 begin_expr_stmt
@@ -1271,28 +1271,28 @@ begin_define
 define|#
 directive|define
 name|V_static_count
-value|VNET_GET(static_count)
+value|VNET(static_count)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_static_len
-value|VNET_GET(static_len)
+value|VNET(static_len)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_dyn_count
-value|VNET_GET(dyn_count)
+value|VNET(dyn_count)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_dyn_max
-value|VNET_GET(dyn_max)
+value|VNET(dyn_max)
 end_define
 
 begin_ifdef
@@ -1672,7 +1672,7 @@ begin_define
 define|#
 directive|define
 name|V_fw_deny_unknown_exthdrs
-value|VNET_GET(fw_deny_unknown_exthdrs)
+value|VNET(fw_deny_unknown_exthdrs)
 end_define
 
 begin_comment
@@ -3643,7 +3643,7 @@ begin_define
 define|#
 directive|define
 name|V_norule_counter
-value|VNET_GET(norule_counter)
+value|VNET(norule_counter)
 end_define
 
 begin_define

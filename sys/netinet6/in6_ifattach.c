@@ -241,7 +241,7 @@ begin_define
 define|#
 directive|define
 name|V_in6_tmpaddrtimer_ch
-value|VNET_GET(in6_tmpaddrtimer_ch)
+value|VNET(in6_tmpaddrtimer_ch)
 end_define
 
 begin_expr_stmt
@@ -259,7 +259,7 @@ begin_define
 define|#
 directive|define
 name|V_ripcbinfo
-value|VNET_GET(ripcbinfo)
+value|VNET(ripcbinfo)
 end_define
 
 begin_function_decl

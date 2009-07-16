@@ -73,21 +73,21 @@ begin_define
 define|#
 directive|define
 name|V_tcp_do_rfc1323
-value|VNET_GET(tcp_do_rfc1323)
+value|VNET(tcp_do_rfc1323)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_reass_qsize
-value|VNET_GET(tcp_reass_qsize)
+value|VNET(tcp_reass_qsize)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_reass_zone
-value|VNET_GET(tcp_reass_zone)
+value|VNET(tcp_reass_zone)
 end_define
 
 begin_endif
@@ -2165,70 +2165,70 @@ begin_define
 define|#
 directive|define
 name|V_tcb
-value|VNET_GET(tcb)
+value|VNET(tcb)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcbinfo
-value|VNET_GET(tcbinfo)
+value|VNET(tcbinfo)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcpstat
-value|VNET_GET(tcpstat)
+value|VNET(tcpstat)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_mssdflt
-value|VNET_GET(tcp_mssdflt)
+value|VNET(tcp_mssdflt)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_minmss
-value|VNET_GET(tcp_minmss)
+value|VNET(tcp_minmss)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_delack_enabled
-value|VNET_GET(tcp_delack_enabled)
+value|VNET(tcp_delack_enabled)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_do_newreno
-value|VNET_GET(tcp_do_newreno)
+value|VNET(tcp_do_newreno)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_path_mtu_discovery
-value|VNET_GET(path_mtu_discovery)
+value|VNET(path_mtu_discovery)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ss_fltsz
-value|VNET_GET(ss_fltsz)
+value|VNET(ss_fltsz)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ss_fltsz_local
-value|VNET_GET(ss_fltsz_local)
+value|VNET(ss_fltsz_local)
 end_define
 
 begin_expr_stmt
@@ -2335,70 +2335,70 @@ begin_define
 define|#
 directive|define
 name|V_blackhole
-value|VNET_GET(blackhole)
+value|VNET(blackhole)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_drop_synfin
-value|VNET_GET(drop_synfin)
+value|VNET(drop_synfin)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_do_rfc3042
-value|VNET_GET(tcp_do_rfc3042)
+value|VNET(tcp_do_rfc3042)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_do_rfc3390
-value|VNET_GET(tcp_do_rfc3390)
+value|VNET(tcp_do_rfc3390)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_insecure_rst
-value|VNET_GET(tcp_insecure_rst)
+value|VNET(tcp_insecure_rst)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_do_autorcvbuf
-value|VNET_GET(tcp_do_autorcvbuf)
+value|VNET(tcp_do_autorcvbuf)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_autorcvbuf_inc
-value|VNET_GET(tcp_autorcvbuf_inc)
+value|VNET(tcp_autorcvbuf_inc)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_autorcvbuf_max
-value|VNET_GET(tcp_autorcvbuf_max)
+value|VNET(tcp_autorcvbuf_max)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_do_rfc3465
-value|VNET_GET(tcp_do_rfc3465)
+value|VNET(tcp_do_rfc3465)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_abc_l_var
-value|VNET_GET(tcp_abc_l_var)
+value|VNET(tcp_abc_l_var)
 end_define
 
 begin_expr_stmt
@@ -2445,28 +2445,28 @@ begin_define
 define|#
 directive|define
 name|V_tcp_do_tso
-value|VNET_GET(tcp_do_tso)
+value|VNET(tcp_do_tso)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_do_autosndbuf
-value|VNET_GET(tcp_do_autosndbuf)
+value|VNET(tcp_do_autosndbuf)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_autosndbuf_inc
-value|VNET_GET(tcp_autosndbuf_inc)
+value|VNET(tcp_autosndbuf_inc)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_autosndbuf_max
-value|VNET_GET(tcp_autosndbuf_max)
+value|VNET(tcp_autosndbuf_max)
 end_define
 
 begin_expr_stmt
@@ -2483,7 +2483,7 @@ begin_define
 define|#
 directive|define
 name|V_nolocaltimewait
-value|VNET_GET(nolocaltimewait)
+value|VNET(nolocaltimewait)
 end_define
 
 begin_expr_stmt
@@ -2572,49 +2572,49 @@ begin_define
 define|#
 directive|define
 name|V_tcp_do_sack
-value|VNET_GET(tcp_do_sack)
+value|VNET(tcp_do_sack)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_sack_maxholes
-value|VNET_GET(tcp_sack_maxholes)
+value|VNET(tcp_sack_maxholes)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_sack_globalmaxholes
-value|VNET_GET(tcp_sack_globalmaxholes)
+value|VNET(tcp_sack_globalmaxholes)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_sack_globalholes
-value|VNET_GET(tcp_sack_globalholes)
+value|VNET(tcp_sack_globalholes)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_sc_rst_sock_fail
-value|VNET_GET(tcp_sc_rst_sock_fail)
+value|VNET(tcp_sc_rst_sock_fail)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_do_ecn
-value|VNET_GET(tcp_do_ecn)
+value|VNET(tcp_do_ecn)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_ecn_maxretries
-value|VNET_GET(tcp_ecn_maxretries)
+value|VNET(tcp_ecn_maxretries)
 end_define
 
 begin_function_decl

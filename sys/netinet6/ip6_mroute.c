@@ -503,7 +503,7 @@ begin_define
 define|#
 directive|define
 name|V_ip6_mrouter_ver
-value|VNET_GET(ip6_mrouter_ver)
+value|VNET(ip6_mrouter_ver)
 end_define
 
 begin_expr_stmt
@@ -841,7 +841,7 @@ begin_define
 define|#
 directive|define
 name|V_mrt6debug
-value|VNET_GET(mrt6debug)
+value|VNET(mrt6debug)
 end_define
 
 begin_define
@@ -1018,7 +1018,7 @@ begin_define
 define|#
 directive|define
 name|V_pim6
-value|VNET_GET(pim6)
+value|VNET(pim6)
 end_define
 
 begin_comment

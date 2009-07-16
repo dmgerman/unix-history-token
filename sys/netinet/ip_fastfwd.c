@@ -190,7 +190,7 @@ begin_define
 define|#
 directive|define
 name|V_ipfastforward_active
-value|VNET_GET(ipfastforward_active)
+value|VNET(ipfastforward_active)
 end_define
 
 begin_expr_stmt

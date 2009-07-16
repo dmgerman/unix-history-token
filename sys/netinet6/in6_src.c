@@ -381,7 +381,7 @@ begin_define
 define|#
 directive|define
 name|V_defaultaddrpolicy
-value|VNET_GET(defaultaddrpolicy)
+value|VNET(defaultaddrpolicy)
 end_define
 
 begin_decl_stmt
@@ -4101,7 +4101,7 @@ begin_define
 define|#
 directive|define
 name|V_addrsel_policytab
-value|VNET_GET(addrsel_policytab)
+value|VNET(addrsel_policytab)
 end_define
 
 begin_function

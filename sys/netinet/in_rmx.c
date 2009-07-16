@@ -472,21 +472,21 @@ begin_define
 define|#
 directive|define
 name|V_rtq_reallyold
-value|VNET_GET(rtq_reallyold)
+value|VNET(rtq_reallyold)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_rtq_minreallyold
-value|VNET_GET(rtq_minreallyold)
+value|VNET(rtq_minreallyold)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_rtq_toomany
-value|VNET_GET(rtq_toomany)
+value|VNET(rtq_toomany)
 end_define
 
 begin_expr_stmt
@@ -943,14 +943,14 @@ begin_define
 define|#
 directive|define
 name|V_rtq_timeout
-value|VNET_GET(rtq_timeout)
+value|VNET(rtq_timeout)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_rtq_timer
-value|VNET_GET(rtq_timer)
+value|VNET(rtq_timer)
 end_define
 
 begin_function_decl

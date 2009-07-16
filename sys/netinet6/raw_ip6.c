@@ -308,14 +308,14 @@ begin_define
 define|#
 directive|define
 name|V_ripcb
-value|VNET_GET(ripcb)
+value|VNET(ripcb)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ripcbinfo
-value|VNET_GET(ripcbinfo)
+value|VNET(ripcbinfo)
 end_define
 
 begin_expr_stmt

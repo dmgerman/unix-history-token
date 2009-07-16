@@ -662,28 +662,28 @@ begin_define
 define|#
 directive|define
 name|V_ipstat
-value|VNET_GET(ipstat)
+value|VNET(ipstat)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip_id
-value|VNET_GET(ip_id)
+value|VNET(ip_id)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip_defttl
-value|VNET_GET(ip_defttl)
+value|VNET(ip_defttl)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ipforwarding
-value|VNET_GET(ipforwarding)
+value|VNET(ipforwarding)
 end_define
 
 begin_ifdef
@@ -696,7 +696,7 @@ begin_define
 define|#
 directive|define
 name|V_ipstealth
-value|VNET_GET(ipstealth)
+value|VNET(ipstealth)
 end_define
 
 begin_endif
@@ -708,21 +708,21 @@ begin_define
 define|#
 directive|define
 name|V_rsvp_on
-value|VNET_GET(rsvp_on)
+value|VNET(rsvp_on)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip_rsvpd
-value|VNET_GET(ip_rsvpd)
+value|VNET(ip_rsvpd)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip_mrouter
-value|VNET_GET(ip_mrouter)
+value|VNET(ip_mrouter)
 end_define
 
 begin_decl_stmt
@@ -1365,7 +1365,7 @@ begin_define
 define|#
 directive|define
 name|V_ip_do_randomid
-value|VNET_GET(ip_do_randomid)
+value|VNET(ip_do_randomid)
 end_define
 
 begin_define

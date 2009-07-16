@@ -326,28 +326,28 @@ begin_define
 define|#
 directive|define
 name|V_ripcbinfo
-value|VNET_GET(ripcbinfo)
+value|VNET(ripcbinfo)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ripcb
-value|VNET_GET(ripcb)
+value|VNET(ripcb)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_icmp6errppslim
-value|VNET_GET(icmp6errppslim)
+value|VNET(icmp6errppslim)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_icmp6_nodeinfo
-value|VNET_GET(icmp6_nodeinfo)
+value|VNET(icmp6_nodeinfo)
 end_define
 
 begin_expr_stmt
@@ -388,14 +388,14 @@ begin_define
 define|#
 directive|define
 name|V_icmp6errpps_count
-value|VNET_GET(icmp6errpps_count)
+value|VNET(icmp6errpps_count)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_icmp6errppslim_last
-value|VNET_GET(icmp6errppslim_last)
+value|VNET(icmp6errppslim_last)
 end_define
 
 begin_function_decl

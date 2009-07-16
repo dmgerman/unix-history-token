@@ -340,35 +340,35 @@ begin_define
 define|#
 directive|define
 name|V_sack_hole_zone
-value|VNET_GET(sack_hole_zone)
+value|VNET(sack_hole_zone)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_do_sack
-value|VNET_GET(tcp_do_sack)
+value|VNET(tcp_do_sack)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_sack_maxholes
-value|VNET_GET(tcp_sack_maxholes)
+value|VNET(tcp_sack_maxholes)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_sack_globalmaxholes
-value|VNET_GET(tcp_sack_globalmaxholes)
+value|VNET(tcp_sack_globalmaxholes)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_sack_globalholes
-value|VNET_GET(tcp_sack_globalholes)
+value|VNET(tcp_sack_globalholes)
 end_define
 
 begin_expr_stmt

@@ -340,70 +340,70 @@ begin_define
 define|#
 directive|define
 name|V_icmpmaskrepl
-value|VNET_GET(icmpmaskrepl)
+value|VNET(icmpmaskrepl)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_icmpmaskfake
-value|VNET_GET(icmpmaskfake)
+value|VNET(icmpmaskfake)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_drop_redirect
-value|VNET_GET(drop_redirect)
+value|VNET(drop_redirect)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_log_redirect
-value|VNET_GET(log_redirect)
+value|VNET(log_redirect)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_icmplim
-value|VNET_GET(icmplim)
+value|VNET(icmplim)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_icmplim_output
-value|VNET_GET(icmplim_output)
+value|VNET(icmplim_output)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_reply_src
-value|VNET_GET(reply_src)
+value|VNET(reply_src)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_icmp_rfi
-value|VNET_GET(icmp_rfi)
+value|VNET(icmp_rfi)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_icmp_quotelen
-value|VNET_GET(icmp_quotelen)
+value|VNET(icmp_quotelen)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_icmpbmcastecho
-value|VNET_GET(icmpbmcastecho)
+value|VNET(icmpbmcastecho)
 end_define
 
 begin_expr_stmt

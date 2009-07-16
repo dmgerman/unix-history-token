@@ -650,28 +650,28 @@ begin_define
 define|#
 directive|define
 name|V_flow_list_head
-value|VNET_GET(flow_list_head)
+value|VNET(flow_list_head)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_flow_hashjitter
-value|VNET_GET(flow_hashjitter)
+value|VNET(flow_hashjitter)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_flow_ipv4_zone
-value|VNET_GET(flow_ipv4_zone)
+value|VNET(flow_ipv4_zone)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_flow_ipv6_zone
-value|VNET_GET(flow_ipv6_zone)
+value|VNET(flow_ipv6_zone)
 end_define
 
 begin_function_decl
@@ -906,91 +906,91 @@ begin_define
 define|#
 directive|define
 name|V_flowtable_enable
-value|VNET_GET(flowtable_enable)
+value|VNET(flowtable_enable)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_flowtable_hits
-value|VNET_GET(flowtable_hits)
+value|VNET(flowtable_hits)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_flowtable_lookups
-value|VNET_GET(flowtable_lookups)
+value|VNET(flowtable_lookups)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_flowtable_misses
-value|VNET_GET(flowtable_misses)
+value|VNET(flowtable_misses)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_flowtable_frees
-value|VNET_GET(flowtable_frees)
+value|VNET(flowtable_frees)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_flowtable_free_checks
-value|VNET_GET(flowtable_free_checks)
+value|VNET(flowtable_free_checks)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_flowtable_max_depth
-value|VNET_GET(flowtable_max_depth)
+value|VNET(flowtable_max_depth)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_flowtable_collisions
-value|VNET_GET(flowtable_collisions)
+value|VNET(flowtable_collisions)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_flowtable_syn_expire
-value|VNET_GET(flowtable_syn_expire)
+value|VNET(flowtable_syn_expire)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_flowtable_udp_expire
-value|VNET_GET(flowtable_udp_expire)
+value|VNET(flowtable_udp_expire)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_flowtable_fin_wait_expire
-value|VNET_GET(flowtable_fin_wait_expire)
+value|VNET(flowtable_fin_wait_expire)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_flowtable_tcp_expire
-value|VNET_GET(flowtable_tcp_expire)
+value|VNET(flowtable_tcp_expire)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_flowtable_nmbflows
-value|VNET_GET(flowtable_nmbflows)
+value|VNET(flowtable_nmbflows)
 end_define
 
 begin_expr_stmt

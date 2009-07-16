@@ -289,21 +289,21 @@ begin_define
 define|#
 directive|define
 name|V_tcp_reass_maxseg
-value|VNET_GET(tcp_reass_maxseg)
+value|VNET(tcp_reass_maxseg)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_reass_maxqlen
-value|VNET_GET(tcp_reass_maxqlen)
+value|VNET(tcp_reass_maxqlen)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_tcp_reass_overflows
-value|VNET_GET(tcp_reass_overflows)
+value|VNET(tcp_reass_overflows)
 end_define
 
 begin_expr_stmt

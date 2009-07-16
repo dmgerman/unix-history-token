@@ -2982,28 +2982,28 @@ begin_define
 define|#
 directive|define
 name|V_ifnet
-value|VNET_GET(ifnet)
+value|VNET(ifnet)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ifg_head
-value|VNET_GET(ifg_head)
+value|VNET(ifg_head)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_if_index
-value|VNET_GET(if_index)
+value|VNET(if_index)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_loif
-value|VNET_GET(loif)
+value|VNET(loif)
 end_define
 
 begin_decl_stmt

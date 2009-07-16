@@ -461,7 +461,7 @@ begin_define
 define|#
 directive|define
 name|V_ng_eiface_unit
-value|VNET_GET(ng_eiface_unit)
+value|VNET(ng_eiface_unit)
 end_define
 
 begin_ifdef

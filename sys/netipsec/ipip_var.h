@@ -92,7 +92,7 @@ begin_define
 define|#
 directive|define
 name|V_ipip_allow
-value|VNET_GET(ipip_allow)
+value|VNET(ipip_allow)
 end_define
 
 begin_expr_stmt
@@ -110,7 +110,7 @@ begin_define
 define|#
 directive|define
 name|V_ipipstat
-value|VNET_GET(ipipstat)
+value|VNET(ipipstat)
 end_define
 
 begin_endif

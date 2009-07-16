@@ -57,7 +57,7 @@ begin_define
 define|#
 directive|define
 name|V_tcp_v6mssdflt
-value|VNET_GET(tcp_v6mssdflt)
+value|VNET(tcp_v6mssdflt)
 end_define
 
 begin_endif

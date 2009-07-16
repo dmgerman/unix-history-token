@@ -314,7 +314,7 @@ begin_define
 define|#
 directive|define
 name|V_esp_max_ivlen
-value|VNET_GET(esp_max_ivlen)
+value|VNET(esp_max_ivlen)
 end_define
 
 begin_function_decl

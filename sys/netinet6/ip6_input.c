@@ -471,70 +471,70 @@ begin_define
 define|#
 directive|define
 name|V_in6_tmpaddrtimer_ch
-value|VNET_GET(in6_tmpaddrtimer_ch)
+value|VNET(in6_tmpaddrtimer_ch)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_dad_init
-value|VNET_GET(dad_init)
+value|VNET(dad_init)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_pmtu_expire
-value|VNET_GET(pmtu_expire)
+value|VNET(pmtu_expire)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_pmtu_probe
-value|VNET_GET(pmtu_probe)
+value|VNET(pmtu_probe)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_rip6_sendspace
-value|VNET_GET(rip6_sendspace)
+value|VNET(rip6_sendspace)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_rip6_recvspace
-value|VNET_GET(rip6_recvspace)
+value|VNET(rip6_recvspace)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_icmp6errppslim
-value|VNET_GET(icmp6errppslim)
+value|VNET(icmp6errppslim)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_icmp6_nodeinfo
-value|VNET_GET(icmp6_nodeinfo)
+value|VNET(icmp6_nodeinfo)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_udp6_sendspace
-value|VNET_GET(udp6_sendspace)
+value|VNET(udp6_sendspace)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_udp6_recvspace
-value|VNET_GET(udp6_recvspace)
+value|VNET(udp6_recvspace)
 end_define
 
 begin_decl_stmt

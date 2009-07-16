@@ -189,7 +189,7 @@ begin_define
 define|#
 directive|define
 name|V_key_debug_level
-value|VNET_GET(key_debug_level)
+value|VNET(key_debug_level)
 end_define
 
 begin_endif

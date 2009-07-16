@@ -1088,7 +1088,7 @@ begin_define
 define|#
 directive|define
 name|V_ipsec_debug
-value|VNET_GET(ipsec_debug)
+value|VNET(ipsec_debug)
 end_define
 
 begin_expr_stmt
@@ -1106,7 +1106,7 @@ begin_define
 define|#
 directive|define
 name|V_ipsec4stat
-value|VNET_GET(ipsec4stat)
+value|VNET(ipsec4stat)
 end_define
 
 begin_expr_stmt
@@ -1123,7 +1123,7 @@ begin_define
 define|#
 directive|define
 name|V_ip4_ah_offsetmask
-value|VNET_GET(ip4_ah_offsetmask)
+value|VNET(ip4_ah_offsetmask)
 end_define
 
 begin_expr_stmt
@@ -1140,7 +1140,7 @@ begin_define
 define|#
 directive|define
 name|V_ip4_ipsec_dfbit
-value|VNET_GET(ip4_ipsec_dfbit)
+value|VNET(ip4_ipsec_dfbit)
 end_define
 
 begin_expr_stmt
@@ -1157,7 +1157,7 @@ begin_define
 define|#
 directive|define
 name|V_ip4_esp_trans_deflev
-value|VNET_GET(ip4_esp_trans_deflev)
+value|VNET(ip4_esp_trans_deflev)
 end_define
 
 begin_expr_stmt
@@ -1174,7 +1174,7 @@ begin_define
 define|#
 directive|define
 name|V_ip4_esp_net_deflev
-value|VNET_GET(ip4_esp_net_deflev)
+value|VNET(ip4_esp_net_deflev)
 end_define
 
 begin_expr_stmt
@@ -1191,7 +1191,7 @@ begin_define
 define|#
 directive|define
 name|V_ip4_ah_trans_deflev
-value|VNET_GET(ip4_ah_trans_deflev)
+value|VNET(ip4_ah_trans_deflev)
 end_define
 
 begin_expr_stmt
@@ -1208,7 +1208,7 @@ begin_define
 define|#
 directive|define
 name|V_ip4_ah_net_deflev
-value|VNET_GET(ip4_ah_net_deflev)
+value|VNET(ip4_ah_net_deflev)
 end_define
 
 begin_expr_stmt
@@ -1226,7 +1226,7 @@ begin_define
 define|#
 directive|define
 name|V_ip4_def_policy
-value|VNET_GET(ip4_def_policy)
+value|VNET(ip4_def_policy)
 end_define
 
 begin_expr_stmt
@@ -1243,7 +1243,7 @@ begin_define
 define|#
 directive|define
 name|V_ip4_ipsec_ecn
-value|VNET_GET(ip4_ipsec_ecn)
+value|VNET(ip4_ipsec_ecn)
 end_define
 
 begin_expr_stmt
@@ -1260,7 +1260,7 @@ begin_define
 define|#
 directive|define
 name|V_ip4_esp_randpad
-value|VNET_GET(ip4_esp_randpad)
+value|VNET(ip4_esp_randpad)
 end_define
 
 begin_expr_stmt
@@ -1277,7 +1277,7 @@ begin_define
 define|#
 directive|define
 name|V_crypto_support
-value|VNET_GET(crypto_support)
+value|VNET(crypto_support)
 end_define
 
 begin_decl_stmt
@@ -1307,7 +1307,7 @@ begin_define
 define|#
 directive|define
 name|V_ipsec_replay
-value|VNET_GET(ipsec_replay)
+value|VNET(ipsec_replay)
 end_define
 
 begin_expr_stmt
@@ -1324,7 +1324,7 @@ begin_define
 define|#
 directive|define
 name|V_ipsec_integrity
-value|VNET_GET(ipsec_integrity)
+value|VNET(ipsec_integrity)
 end_define
 
 begin_endif

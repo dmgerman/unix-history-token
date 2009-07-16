@@ -124,7 +124,7 @@ begin_define
 define|#
 directive|define
 name|V_ipcomp_enable
-value|VNET_GET(ipcomp_enable)
+value|VNET(ipcomp_enable)
 end_define
 
 begin_expr_stmt
@@ -142,7 +142,7 @@ begin_define
 define|#
 directive|define
 name|V_ipcompstat
-value|VNET_GET(ipcompstat)
+value|VNET(ipcompstat)
 end_define
 
 begin_endif

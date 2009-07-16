@@ -295,21 +295,21 @@ begin_define
 define|#
 directive|define
 name|V_frag6_nfragpackets
-value|VNET_GET(frag6_nfragpackets)
+value|VNET(frag6_nfragpackets)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_frag6_nfrags
-value|VNET_GET(frag6_nfrags)
+value|VNET(frag6_nfrags)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ip6q
-value|VNET_GET(ip6q)
+value|VNET(ip6q)
 end_define
 
 begin_define

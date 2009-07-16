@@ -547,7 +547,7 @@ begin_define
 define|#
 directive|define
 name|V_udpcb_zone
-value|VNET_GET(udpcb_zone)
+value|VNET(udpcb_zone)
 end_define
 
 begin_ifndef

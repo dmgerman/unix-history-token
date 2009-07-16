@@ -967,14 +967,14 @@ begin_define
 define|#
 directive|define
 name|V_if_indexlim
-value|VNET_GET(if_indexlim)
+value|VNET(if_indexlim)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_ifindex_table
-value|VNET_GET(ifindex_table)
+value|VNET(ifindex_table)
 end_define
 
 begin_decl_stmt

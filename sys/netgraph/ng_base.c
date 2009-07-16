@@ -596,7 +596,7 @@ begin_define
 define|#
 directive|define
 name|V_ng_ID_hash
-value|VNET_GET(ng_ID_hash)
+value|VNET(ng_ID_hash)
 end_define
 
 begin_decl_stmt
@@ -655,7 +655,7 @@ begin_define
 define|#
 directive|define
 name|V_ng_name_hash
-value|VNET_GET(ng_name_hash)
+value|VNET(ng_name_hash)
 end_define
 
 begin_decl_stmt
@@ -1648,7 +1648,7 @@ begin_define
 define|#
 directive|define
 name|V_nextID
-value|VNET_GET(nextID)
+value|VNET(nextID)
 end_define
 
 begin_ifdef

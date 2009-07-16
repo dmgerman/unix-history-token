@@ -851,7 +851,7 @@ begin_define
 define|#
 directive|define
 name|V_ether_ipfw
-value|VNET_GET(ether_ipfw)
+value|VNET(ether_ipfw)
 end_define
 
 begin_endif

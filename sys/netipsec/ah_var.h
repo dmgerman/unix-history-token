@@ -138,7 +138,7 @@ begin_define
 define|#
 directive|define
 name|V_ah_enable
-value|VNET_GET(ah_enable)
+value|VNET(ah_enable)
 end_define
 
 begin_expr_stmt
@@ -155,7 +155,7 @@ begin_define
 define|#
 directive|define
 name|V_ah_cleartos
-value|VNET_GET(ah_cleartos)
+value|VNET(ah_cleartos)
 end_define
 
 begin_expr_stmt
@@ -173,7 +173,7 @@ begin_define
 define|#
 directive|define
 name|V_ahstat
-value|VNET_GET(ahstat)
+value|VNET(ahstat)
 end_define
 
 begin_endif

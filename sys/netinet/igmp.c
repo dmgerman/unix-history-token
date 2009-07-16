@@ -876,21 +876,21 @@ begin_define
 define|#
 directive|define
 name|V_interface_timers_running
-value|VNET_GET(interface_timers_running)
+value|VNET(interface_timers_running)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_state_change_timers_running
-value|VNET_GET(state_change_timers_running)
+value|VNET(state_change_timers_running)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_current_state_timers_running
-value|VNET_GET(current_state_timers_running)
+value|VNET(current_state_timers_running)
 end_define
 
 begin_expr_stmt
@@ -941,21 +941,21 @@ begin_define
 define|#
 directive|define
 name|V_igi_head
-value|VNET_GET(igi_head)
+value|VNET(igi_head)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_igmpstat
-value|VNET_GET(igmpstat)
+value|VNET(igmpstat)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_igmp_gsrdelay
-value|VNET_GET(igmp_gsrdelay)
+value|VNET(igmp_gsrdelay)
 end_define
 
 begin_expr_stmt
@@ -1051,49 +1051,49 @@ begin_define
 define|#
 directive|define
 name|V_igmp_recvifkludge
-value|VNET_GET(igmp_recvifkludge)
+value|VNET(igmp_recvifkludge)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_igmp_sendra
-value|VNET_GET(igmp_sendra)
+value|VNET(igmp_sendra)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_igmp_sendlocal
-value|VNET_GET(igmp_sendlocal)
+value|VNET(igmp_sendlocal)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_igmp_v1enable
-value|VNET_GET(igmp_v1enable)
+value|VNET(igmp_v1enable)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_igmp_v2enable
-value|VNET_GET(igmp_v2enable)
+value|VNET(igmp_v2enable)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_igmp_legacysupp
-value|VNET_GET(igmp_legacysupp)
+value|VNET(igmp_legacysupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_igmp_default_version
-value|VNET_GET(igmp_default_version)
+value|VNET(igmp_default_version)
 end_define
 
 begin_comment

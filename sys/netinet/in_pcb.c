@@ -487,7 +487,7 @@ begin_define
 define|#
 directive|define
 name|V_ipport_tcplastcount
-value|VNET_GET(ipport_tcplastcount)
+value|VNET(ipport_tcplastcount)
 end_define
 
 begin_define

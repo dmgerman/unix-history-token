@@ -258,7 +258,7 @@ begin_define
 define|#
 directive|define
 name|V_ifaddr_event_tag
-value|VNET_GET(ifaddr_event_tag)
+value|VNET(ifaddr_event_tag)
 end_define
 
 begin_decl_stmt

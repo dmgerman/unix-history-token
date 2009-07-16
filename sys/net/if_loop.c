@@ -489,14 +489,14 @@ begin_define
 define|#
 directive|define
 name|V_lo_cloner_data
-value|VNET_GET(lo_cloner_data)
+value|VNET(lo_cloner_data)
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_lo_cloner
-value|VNET_GET(lo_cloner)
+value|VNET(lo_cloner)
 end_define
 
 begin_expr_stmt
