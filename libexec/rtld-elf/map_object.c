@@ -749,6 +749,24 @@ return|return
 name|NULL
 return|;
 block|}
+comment|/* Do BSS setup */
+if|if
+condition|(
+name|segs
+index|[
+name|i
+index|]
+operator|->
+name|p_filesz
+operator|!=
+name|segs
+index|[
+name|i
+index|]
+operator|->
+name|p_memsz
+condition|)
+block|{
 comment|/* Clear any BSS in the last page of the segment. */
 name|clear_vaddr
 operator|=
@@ -948,6 +966,7 @@ expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
 block|}
 block|}
 if|if
