@@ -98,6 +98,17 @@ begin_comment
 comment|/* Do not remove members. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RTLD_NOLOAD
+value|0x02000
+end_define
+
+begin_comment
+comment|/* Do not load if not already loaded. */
+end_comment
+
 begin_comment
 comment|/*  * Request arguments for dlinfo().  */
 end_comment
