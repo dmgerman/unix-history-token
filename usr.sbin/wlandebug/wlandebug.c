@@ -230,12 +230,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_MSG_DOT1X
+name|IEEE80211_MSG_HWMP
 value|0x00020000
 end_define
 
 begin_comment
-comment|/* 802.1x authenticator */
+comment|/* hybrid mesh protocol */
 end_comment
 
 begin_define
@@ -274,12 +274,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_MSG_RADKEYS
+name|IEEE80211_MSG_MESH
 value|0x00002000
 end_define
 
 begin_comment
-comment|/* dump 802.1x keys */
+comment|/* mesh networking */
 end_comment
 
 begin_define
@@ -516,9 +516,9 @@ name|IEEE80211_MSG_POWER
 block|}
 block|,
 block|{
-literal|"dot1x"
+literal|"hwmp"
 block|,
-name|IEEE80211_MSG_DOT1X
+name|IEEE80211_MSG_HWMP
 block|}
 block|,
 block|{
@@ -540,9 +540,9 @@ name|IEEE80211_MSG_RADDUMP
 block|}
 block|,
 block|{
-literal|"radkeys"
+literal|"mesh"
 block|,
-name|IEEE80211_MSG_RADKEYS
+name|IEEE80211_MSG_MESH
 block|}
 block|,
 block|{
