@@ -194,12 +194,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<security/audit/audit.h>
 end_include
 
@@ -1517,19 +1511,6 @@ comment|/* 	 * Increment the nprocs resource before blocking can occur.  There 	
 name|nprocs
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VIMAGE
-name|P_TO_VPROCG
-argument_list|(
-name|p1
-argument_list|)
-operator|->
-name|nprocs
-operator|++
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Find an unused process ID.  We remember a range of unused IDs 	 * ready to use (from lastpid+1 through pidchecked-1). 	 * 	 * If RFHIGHPID is set (used during system boot), do not allocate 	 * low-numbered pids. 	 */
 name|trypid
 operator|=
