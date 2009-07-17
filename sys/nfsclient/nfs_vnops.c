@@ -5423,6 +5423,12 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|newvp
+operator|!=
+name|dvp
+condition|)
 name|vn_lock
 argument_list|(
 name|dvp
