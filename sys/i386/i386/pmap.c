@@ -19323,6 +19323,16 @@ argument_list|,
 name|tmpva
 argument_list|)
 expr_stmt|;
+comment|/* If "Self Snoop" is supported, do nothing. */
+if|if
+condition|(
+operator|!
+operator|(
+name|cpu_feature
+operator|&
+name|CPUID_SS
+operator|)
+condition|)
 name|pmap_invalidate_cache
 argument_list|()
 expr_stmt|;
@@ -19521,6 +19531,16 @@ operator|=
 name|ma
 expr_stmt|;
 comment|/* 	 * Flush CPU caches to make sure any data isn't cached that shouldn't 	 * be, etc. 	 */
+comment|/* If "Self Snoop" is supported, do nothing. */
+if|if
+condition|(
+operator|!
+operator|(
+name|cpu_feature
+operator|&
+name|CPUID_SS
+operator|)
+condition|)
 name|pmap_invalidate_cache
 argument_list|()
 expr_stmt|;
@@ -19765,6 +19785,16 @@ argument_list|,
 name|tmpva
 argument_list|)
 expr_stmt|;
+comment|/* If "Self Snoop" is supported, do nothing. */
+if|if
+condition|(
+operator|!
+operator|(
+name|cpu_feature
+operator|&
+name|CPUID_SS
+operator|)
+condition|)
 name|pmap_invalidate_cache
 argument_list|()
 expr_stmt|;

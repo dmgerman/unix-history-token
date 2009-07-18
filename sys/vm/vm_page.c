@@ -4231,6 +4231,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* Ignore device objects; the pager sets "memattr" for them. */
 if|if
 condition|(
 name|object
@@ -4238,6 +4239,12 @@ operator|->
 name|memattr
 operator|!=
 name|VM_MEMATTR_DEFAULT
+operator|&&
+name|object
+operator|->
+name|type
+operator|!=
+name|OBJT_DEVICE
 condition|)
 name|pmap_page_set_memattr
 argument_list|(
