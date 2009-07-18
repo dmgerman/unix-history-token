@@ -785,9 +785,13 @@ name|is_hwmp_rootrann
 decl_stmt|;
 comment|/* root RANNs sent */
 name|uint32_t
+name|is_rx_badalign
+decl_stmt|;
+comment|/* dropped 'cuz misaligned */
+name|uint32_t
 name|is_spare
 index|[
-literal|16
+literal|15
 index|]
 decl_stmt|;
 block|}
