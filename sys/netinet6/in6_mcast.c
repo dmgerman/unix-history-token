@@ -9713,7 +9713,7 @@ operator|(
 name|EADDRNOTAVAIL
 operator|)
 return|;
-comment|/* 		 * XXX For now, stomp on zone ID for the corner case. 		 * This is not the 'KAME way', but we need to see the ifp 		 * directly until such time as this implementation is 		 * refactored, assuming the scope IDs are the way to go. 		 */
+comment|/* 		 * Some badly behaved applications don't pass an ifindex 		 * or a scope ID, which is an API violation. In this case, 		 * perform a lookup as per a v6 join. 		 * 		 * XXX For now, stomp on zone ID for the corner case. 		 * This is not the 'KAME way', but we need to see the ifp 		 * directly until such time as this implementation is 		 * refactored, assuming the scope IDs are the way to go. 		 */
 name|ifindex
 operator|=
 name|ntohs
@@ -9730,19 +9730,50 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|ifindex
-operator|!=
+operator|==
 literal|0
+condition|)
+block|{
+name|CTR2
+argument_list|(
+name|KTR_MLD
 argument_list|,
-operator|(
-literal|"%s: bad zone ID"
-operator|,
+literal|"%s: warning: no ifindex, looking up "
+literal|"ifp for group %s."
+argument_list|,
 name|__func__
-operator|)
+argument_list|,
+name|ip6_sprintf
+argument_list|(
+name|ip6tbuf
+argument_list|,
+operator|&
+name|gsa
+operator|->
+name|sin6
+operator|.
+name|sin6_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
+name|ifp
+operator|=
+name|in6p_lookup_mcast_ifp
+argument_list|(
+name|inp
+argument_list|,
+operator|&
+name|gsa
+operator|->
+name|sin6
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|ifp
 operator|=
 name|ifnet_byindex
@@ -9750,6 +9781,7 @@ argument_list|(
 name|ifindex
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ifp
