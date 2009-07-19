@@ -19766,9 +19766,19 @@ name|pat_mode
 operator|=
 name|ma
 expr_stmt|;
-comment|/* 	 * Update the direct mapping and flush the cache. 	 */
+comment|/* 	 * If "m" is a normal page, update its direct mapping.  This update 	 * can be relied upon to perform any cache operations that are 	 * required for data coherence. 	 */
 if|if
 condition|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_FICTITIOUS
+operator|)
+operator|==
+literal|0
+operator|&&
 name|pmap_change_attr
 argument_list|(
 name|PHYS_TO_DMAP

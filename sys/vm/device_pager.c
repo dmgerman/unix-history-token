@@ -1283,7 +1283,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create a fictitious page with the specified physical address and memory  * attribute.  */
+comment|/*  * Create a fictitious page with the specified physical address and memory  * attribute.  The memory attribute is the only the machine-dependent aspect  * of a fictitious page that must be initialized.  */
 end_comment
 
 begin_function
@@ -1326,11 +1326,6 @@ operator|=
 name|PG_FICTITIOUS
 expr_stmt|;
 comment|/* Fictitious pages don't use "order" or "pool". */
-name|pmap_page_init
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|m
 operator|->
 name|oflags
@@ -1343,12 +1338,6 @@ name|wire_count
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|memattr
-operator|!=
-name|VM_MEMATTR_DEFAULT
-condition|)
 name|pmap_page_set_memattr
 argument_list|(
 name|m
@@ -1391,23 +1380,6 @@ condition|)
 name|panic
 argument_list|(
 literal|"dev_pager_putfake: bad page"
-argument_list|)
-expr_stmt|;
-comment|/* Restore the default memory attribute to "phys_addr". */
-if|if
-condition|(
-name|pmap_page_get_memattr
-argument_list|(
-name|m
-argument_list|)
-operator|!=
-name|VM_MEMATTR_DEFAULT
-condition|)
-name|pmap_page_set_memattr
-argument_list|(
-name|m
-argument_list|,
-name|VM_MEMATTR_DEFAULT
 argument_list|)
 expr_stmt|;
 name|uma_zfree
@@ -1455,35 +1427,12 @@ argument_list|(
 literal|"dev_pager_updatefake: bad page"
 argument_list|)
 expr_stmt|;
-comment|/* Restore the default memory attribute before changing "phys_addr". */
-if|if
-condition|(
-name|pmap_page_get_memattr
-argument_list|(
-name|m
-argument_list|)
-operator|!=
-name|VM_MEMATTR_DEFAULT
-condition|)
-name|pmap_page_set_memattr
-argument_list|(
-name|m
-argument_list|,
-name|VM_MEMATTR_DEFAULT
-argument_list|)
-expr_stmt|;
 name|m
 operator|->
 name|phys_addr
 operator|=
 name|paddr
 expr_stmt|;
-if|if
-condition|(
-name|memattr
-operator|!=
-name|VM_MEMATTR_DEFAULT
-condition|)
 name|pmap_page_set_memattr
 argument_list|(
 name|m
