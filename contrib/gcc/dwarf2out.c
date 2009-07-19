@@ -40477,9 +40477,10 @@ operator|==
 name|FUNCTION_DECL
 operator|)
 condition|)
-name|gcc_unreachable
-argument_list|()
-expr_stmt|;
+return|return
+operator|*
+name|tp
+return|;
 elseif|else
 if|if
 condition|(
