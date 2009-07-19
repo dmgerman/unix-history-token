@@ -30491,11 +30491,8 @@ argument_list|)
 operator|+=
 sizeof|sizeof
 argument_list|(
-sizeof|sizeof
-argument_list|(
 expr|struct
 name|sctp_paramhdr
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -36318,11 +36315,8 @@ argument_list|)
 operator|+=
 sizeof|sizeof
 argument_list|(
-sizeof|sizeof
-argument_list|(
 expr|struct
 name|sctp_paramhdr
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
