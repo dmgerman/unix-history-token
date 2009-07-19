@@ -2758,7 +2758,7 @@ directive|ifdef
 name|VIMAGE
 name|curvnet
 operator|->
-name|ifcnt
+name|vnet_ifcnt
 operator|++
 expr_stmt|;
 endif|#
@@ -3400,7 +3400,7 @@ name|found
 condition|)
 name|curvnet
 operator|->
-name|ifcnt
+name|vnet_ifcnt
 operator|--
 expr_stmt|;
 endif|#

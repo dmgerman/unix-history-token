@@ -1048,12 +1048,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|VIMAGE
-operator|++
 name|vnet
 operator|->
-name|sockcnt
+name|vnet_sockcnt
+operator|++
 expr_stmt|;
-comment|/* Locked with so_global_mtx. */
 name|so
 operator|->
 name|so_vnet
@@ -1141,12 +1140,12 @@ comment|/* Could be below, but faster here. */
 ifdef|#
 directive|ifdef
 name|VIMAGE
-operator|--
 name|so
 operator|->
 name|so_vnet
 operator|->
-name|sockcnt
+name|vnet_sockcnt
+operator|--
 expr_stmt|;
 endif|#
 directive|endif

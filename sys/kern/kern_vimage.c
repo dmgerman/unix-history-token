@@ -1303,7 +1303,7 @@ name|KASSERT
 argument_list|(
 name|vnet
 operator|->
-name|sockcnt
+name|vnet_sockcnt
 operator|==
 literal|0
 argument_list|,
@@ -1679,7 +1679,7 @@ name|UINT32_MAX
 comment|/* 32-bit arch */
 name|db_printf
 argument_list|(
-literal|"      vnet ifs socks"
+literal|"      vnet ifs socks\n"
 argument_list|)
 expr_stmt|;
 else|#
@@ -1687,7 +1687,7 @@ directive|else
 comment|/* 64-bit arch, most probaly... */
 name|db_printf
 argument_list|(
-literal|"              vnet ifs socks"
+literal|"              vnet ifs socks\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1699,22 +1699,17 @@ argument_list|)
 block|{
 name|db_printf
 argument_list|(
-literal|"%p %3d %5d"
+literal|"%p %3d %5d\n"
 argument_list|,
 name|vnet_iter
 argument_list|,
 name|vnet_iter
 operator|->
-name|ifcnt
+name|vnet_ifcnt
 argument_list|,
 name|vnet_iter
 operator|->
-name|sockcnt
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
-literal|"\n"
+name|vnet_sockcnt
 argument_list|)
 expr_stmt|;
 block|}

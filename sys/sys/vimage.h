@@ -54,10 +54,10 @@ name|u_int
 name|vnet_magic_n
 decl_stmt|;
 name|u_int
-name|ifcnt
+name|vnet_ifcnt
 decl_stmt|;
 name|u_int
-name|sockcnt
+name|vnet_sockcnt
 decl_stmt|;
 name|void
 modifier|*
