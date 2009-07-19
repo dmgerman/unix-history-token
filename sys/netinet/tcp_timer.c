@@ -563,7 +563,7 @@ argument_list|(
 name|vnet_iter
 argument_list|)
 expr_stmt|;
-name|VNET_LIST_RLOCK
+name|VNET_LIST_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|VNET_FOREACH
@@ -606,7 +606,7 @@ name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 block|}
-name|VNET_LIST_RUNLOCK
+name|VNET_LIST_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 block|}

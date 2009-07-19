@@ -1978,10 +1978,10 @@ operator|=
 name|ng_gif_input_orphan
 expr_stmt|;
 comment|/* Create nodes for any already-existing gif interfaces */
-name|IFNET_RLOCK
+name|VNET_LIST_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
-name|VNET_LIST_RLOCK
+name|IFNET_RLOCK
 argument_list|()
 expr_stmt|;
 name|VNET_FOREACH
@@ -2022,10 +2022,10 @@ name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 block|}
-name|VNET_LIST_RUNLOCK
+name|IFNET_RUNLOCK
 argument_list|()
 expr_stmt|;
-name|IFNET_RUNLOCK
+name|VNET_LIST_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 break|break;

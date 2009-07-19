@@ -33,6 +33,18 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -745,6 +757,10 @@ directive|ifdef
 name|VIMAGE
 end_ifdef
 
+begin_comment
+comment|/*  * Global linked list of all virtual network stacks, along with read locks to  * access it.  If a caller may sleep while accessing the list, it must use  * the sleepable lock macros.  */
+end_comment
+
 begin_expr_stmt
 name|LIST_HEAD
 argument_list|(
@@ -766,11 +782,54 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|vnet
-modifier|*
-name|vnet0
+name|rwlock
+name|vnet_rwlock
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|sx
+name|vnet_sxlock
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|VNET_LIST_RLOCK
+parameter_list|()
+value|sx_slock(&vnet_sxlock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VNET_LIST_RLOCK_NOSLEEP
+parameter_list|()
+value|rw_rlock(&vnet_rwlock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VNET_LIST_RUNLOCK
+parameter_list|()
+value|sx_sunlock(&vnet_sxlock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VNET_LIST_RUNLOCK_NOSLEEP
+parameter_list|()
+value|rw_runlock(&vnet_rwlock)
+end_define
+
+begin_comment
+comment|/*  * Iteration macros to walk the global list of virtual network stacks.  */
+end_comment
 
 begin_define
 define|#
@@ -779,7 +838,7 @@ name|VNET_ITERATOR_DECL
 parameter_list|(
 name|arg
 parameter_list|)
-value|struct vnet *arg;
+value|struct vnet *arg
 end_define
 
 begin_define
@@ -789,13 +848,49 @@ name|VNET_FOREACH
 parameter_list|(
 name|arg
 parameter_list|)
-value|LIST_FOREACH(arg,&vnet_head, vnet_le)
+value|LIST_FOREACH((arg),&vnet_head, vnet_le)
 end_define
 
 begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* !VIMAGE */
+end_comment
+
+begin_comment
+comment|/*  * No-op macros for the !VIMAGE case.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VNET_LIST_RLOCK
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|VNET_LIST_RLOCK_NOSLEEP
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|VNET_LIST_RUNLOCK
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|VNET_LIST_RUNLOCK_NOSLEEP
+parameter_list|()
+end_define
 
 begin_define
 define|#
@@ -820,11 +915,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* VIMAGE */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|VIMAGE
 end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vnet
+modifier|*
+name|vnet0
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -939,24 +1047,6 @@ end_endif
 begin_comment
 comment|/* VIMAGE */
 end_comment
-
-begin_comment
-comment|/* Non-VIMAGE null-macros */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VNET_LIST_RLOCK
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|VNET_LIST_RUNLOCK
-parameter_list|()
-end_define
 
 begin_endif
 endif|#

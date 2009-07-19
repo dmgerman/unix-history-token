@@ -4414,7 +4414,7 @@ operator|!
 name|do_tcpdrain
 condition|)
 return|return;
-name|VNET_LIST_RLOCK
+name|VNET_LIST_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|VNET_FOREACH
@@ -4555,7 +4555,7 @@ name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 block|}
-name|VNET_LIST_RUNLOCK
+name|VNET_LIST_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 block|}
@@ -7609,7 +7609,7 @@ expr_stmt|;
 name|u_int32_t
 name|projected_offset
 decl_stmt|;
-name|VNET_LIST_RLOCK
+name|VNET_LIST_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|ISN_LOCK
@@ -7658,7 +7658,7 @@ block|}
 name|ISN_UNLOCK
 argument_list|()
 expr_stmt|;
-name|VNET_LIST_RUNLOCK
+name|VNET_LIST_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|callout_reset
