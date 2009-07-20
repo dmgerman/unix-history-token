@@ -785,13 +785,25 @@ name|is_hwmp_rootrann
 decl_stmt|;
 comment|/* root RANNs sent */
 name|uint32_t
+name|is_mesh_badae
+decl_stmt|;
+comment|/* dropped 'cuz invalid AE */
+name|uint32_t
+name|is_mesh_rtaddfailed
+decl_stmt|;
+comment|/* route add failed */
+name|uint32_t
+name|is_mesh_notproxy
+decl_stmt|;
+comment|/* dropped 'cuz not proxying */
+name|uint32_t
 name|is_rx_badalign
 decl_stmt|;
 comment|/* dropped 'cuz misaligned */
 name|uint32_t
 name|is_spare
 index|[
-literal|15
+literal|12
 index|]
 decl_stmt|;
 block|}
@@ -1051,6 +1063,41 @@ comment|/* delete an entry from the table */
 block|}
 enum|;
 end_enum
+
+begin_struct
+struct|struct
+name|ieee80211req_mesh_route
+block|{
+name|uint8_t
+name|imr_dest
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
+name|uint8_t
+name|imr_nexthop
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
+name|uint16_t
+name|imr_nhops
+decl_stmt|;
+name|uint16_t
+name|imr_pad
+decl_stmt|;
+name|uint32_t
+name|imr_metric
+decl_stmt|;
+name|uint32_t
+name|imr_lifetime
+decl_stmt|;
+name|uint32_t
+name|imr_lastmseq
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * HWMP root modes  */

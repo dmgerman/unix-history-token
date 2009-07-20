@@ -20528,7 +20528,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-17.17s %-17.17s %4s %4s %4s\n"
+literal|"%-17.17s %-17.17s %4s %4s %4s %6s\n"
 argument_list|,
 literal|"DEST"
 argument_list|,
@@ -20539,6 +20539,8 @@ argument_list|,
 literal|"METRIC"
 argument_list|,
 literal|"LIFETIME"
+argument_list|,
+literal|"MSEQ"
 argument_list|)
 expr_stmt|;
 for|for
@@ -20586,7 +20588,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s %4u   %4d   %6d\n"
+literal|"%s %4u   %4u   %6u %6u\n"
 argument_list|,
 name|ether_ntoa
 argument_list|(
@@ -20624,6 +20626,13 @@ name|i
 index|]
 operator|.
 name|imr_lifetime
+argument_list|,
+name|routes
+index|[
+name|i
+index|]
+operator|.
+name|imr_lastmseq
 argument_list|)
 expr_stmt|;
 block|}

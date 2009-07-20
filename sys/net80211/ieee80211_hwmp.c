@@ -651,21 +651,6 @@ specifier|static
 specifier|const
 name|struct
 name|timeval
-name|ieee80211_hwmp_prepminint
-init|=
-block|{
-literal|0
-block|,
-literal|100000
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|struct
-name|timeval
 name|ieee80211_hwmp_perrminint
 init|=
 block|{
@@ -862,31 +847,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|uint8_t
-name|invalidaddr
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
-init|=
-block|{
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_typedef
 typedef|typedef
 name|uint32_t
@@ -958,11 +918,6 @@ name|timeval
 name|hs_lastpreq
 decl_stmt|;
 comment|/* last time we sent a PREQ */
-name|struct
-name|timeval
-name|hs_lastprep
-decl_stmt|;
-comment|/* last time we sent a PREP */
 name|struct
 name|timeval
 name|hs_lastperr
@@ -1134,6 +1089,16 @@ argument_list|(
 expr|struct
 name|ieee80211_hwmp_route
 argument_list|)
+block|,
+comment|/* ieee80211_hwmp_pathtimeout */
+operator|.
+name|mpp_inact
+operator|=
+block|{
+literal|5
+block|,
+literal|0
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1318,16 +1283,6 @@ name|vap
 operator|->
 name|iv_hwmp
 decl_stmt|;
-if|if
-condition|(
-name|callout_active
-argument_list|(
-operator|&
-name|hs
-operator|->
-name|hs_roottimer
-argument_list|)
-condition|)
 name|callout_drain
 argument_list|(
 operator|&
@@ -1428,6 +1383,17 @@ operator|&
 name|hs
 operator|->
 name|hs_roottimer
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nstate
+operator|==
+name|IEEE80211_S_RUN
+condition|)
+name|hwmp_rootmode_setup
+argument_list|(
+name|vap
 argument_list|)
 expr_stmt|;
 return|return
@@ -3649,7 +3615,7 @@ name|iv_bss
 argument_list|,
 literal|"%s"
 argument_list|,
-literal|"sending broadcast PREQ"
+literal|"send broadcast PREQ"
 argument_list|)
 expr_stmt|;
 comment|/* XXX check portal role */
@@ -3872,7 +3838,7 @@ name|iv_bss
 argument_list|,
 literal|"%s"
 argument_list|,
-literal|"sending broadcast RANN"
+literal|"send broadcast RANN"
 argument_list|)
 expr_stmt|;
 comment|/* XXX check portal role */
@@ -4162,7 +4128,7 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|ni
 argument_list|,
-literal|"replying to %s"
+literal|"reply to %s"
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -4294,14 +4260,15 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|IEEE80211_ADDR_EQ
-argument_list|(
+operator|(
 name|rt
 operator|->
-name|rt_nexthop
-argument_list|,
-name|invalidaddr
-argument_list|)
+name|rt_flags
+operator|&
+name|IEEE80211_MESHRT_FLAGS_VALID
+operator|)
+operator|==
+literal|0
 condition|)
 name|hwmp_discover
 argument_list|(
@@ -4357,24 +4324,6 @@ index|[
 name|IEEE80211_ADDR_LEN
 index|]
 decl_stmt|;
-name|IEEE80211_NOTE
-argument_list|(
-name|vap
-argument_list|,
-name|IEEE80211_MSG_HWMP
-argument_list|,
-name|ni
-argument_list|,
-literal|"root mesh station @ %s"
-argument_list|,
-name|ether_sprintf
-argument_list|(
-name|preq
-operator|->
-name|preq_origaddr
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|IEEE80211_ADDR_COPY
 argument_list|(
 name|rootmac
@@ -4399,6 +4348,7 @@ name|rt
 operator|==
 name|NULL
 condition|)
+block|{
 name|rt
 operator|=
 name|ieee80211_mesh_rt_add
@@ -4408,17 +4358,67 @@ argument_list|,
 name|rootmac
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rt
+operator|==
+name|NULL
+condition|)
+block|{
+name|IEEE80211_NOTE
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_HWMP
+argument_list|,
+name|ni
+argument_list|,
+literal|"unable to add root mesh path to %s"
+argument_list|,
+name|ether_sprintf
+argument_list|(
+name|rootmac
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|vap
+operator|->
+name|iv_stats
+operator|.
+name|is_mesh_rtaddfailed
+operator|++
+expr_stmt|;
+return|return;
+block|}
+block|}
+name|IEEE80211_NOTE
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_HWMP
+argument_list|,
+name|ni
+argument_list|,
+literal|"root mesh station @ %s"
+argument_list|,
+name|ether_sprintf
+argument_list|(
+name|rootmac
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Reply with a PREP if we don't have a path to the root 		 * or if the root sent us a proactive PREQ. 		 */
 if|if
 condition|(
-name|IEEE80211_ADDR_EQ
-argument_list|(
+operator|(
 name|rt
 operator|->
-name|rt_nexthop
-argument_list|,
-name|invalidaddr
-argument_list|)
+name|rt_flags
+operator|&
+name|IEEE80211_MESHRT_FLAGS_VALID
+operator|)
+operator|==
+literal|0
 operator|||
 operator|(
 name|preq
@@ -4585,15 +4585,13 @@ name|rt
 operator|!=
 name|NULL
 operator|&&
-operator|!
-name|IEEE80211_ADDR_EQ
-argument_list|(
+operator|(
 name|rt
 operator|->
-name|rt_nexthop
-argument_list|,
-name|invalidaddr
-argument_list|)
+name|rt_flags
+operator|&
+name|IEEE80211_MESHRT_FLAGS_VALID
+operator|)
 condition|)
 block|{
 name|hr
@@ -4647,7 +4645,7 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|ni
 argument_list|,
-literal|"forwarding PREQ from %s"
+literal|"forward PREQ from %s"
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -4890,6 +4888,7 @@ name|rt
 operator|==
 name|NULL
 condition|)
+block|{
 name|rt
 operator|=
 name|ieee80211_mesh_rt_add
@@ -4902,6 +4901,42 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rt
+operator|==
+name|NULL
+condition|)
+block|{
+name|IEEE80211_NOTE
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_HWMP
+argument_list|,
+name|ni
+argument_list|,
+literal|"unable to add PREQ path to %s"
+argument_list|,
+name|ether_sprintf
+argument_list|(
+name|PREQ_TADDR
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|vap
+operator|->
+name|iv_stats
+operator|.
+name|is_mesh_rtaddfailed
+operator|++
+expr_stmt|;
+return|return;
+block|}
+block|}
 name|hr
 operator|=
 name|IEEE80211_MESH_ROUTE_PRIV
@@ -4952,7 +4987,7 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|ni
 argument_list|,
-literal|"forwarding PREQ from %s"
+literal|"forward PREQ from %s"
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -5309,7 +5344,7 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|ni
 argument_list|,
-literal|"propagating PREP from %s"
+literal|"propagate PREP from %s"
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -5422,6 +5457,40 @@ operator|->
 name|prep_origaddr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rt
+operator|==
+name|NULL
+condition|)
+block|{
+name|IEEE80211_NOTE
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_HWMP
+argument_list|,
+name|ni
+argument_list|,
+literal|"unable to add PREP path to %s"
+argument_list|,
+name|ether_sprintf
+argument_list|(
+name|prep
+operator|->
+name|prep_origaddr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|vap
+operator|->
+name|iv_stats
+operator|.
+name|is_mesh_rtaddfailed
+operator|++
+expr_stmt|;
+return|return;
+block|}
 name|IEEE80211_ADDR_COPY
 argument_list|(
 name|rt
@@ -5457,6 +5526,12 @@ name|prep
 operator|->
 name|prep_metric
 expr_stmt|;
+name|rt
+operator|->
+name|rt_flags
+operator||=
+name|IEEE80211_MESHRT_FLAGS_VALID
+expr_stmt|;
 return|return;
 block|}
 return|return;
@@ -5490,14 +5565,15 @@ decl_stmt|;
 comment|/* 		 * Check if we already have a path to this node. 		 * If we do, check if this path reply contains a 		 * better route. 		 */
 if|if
 condition|(
-name|IEEE80211_ADDR_EQ
-argument_list|(
+operator|(
 name|rt
 operator|->
-name|rt_nexthop
-argument_list|,
-name|invalidaddr
-argument_list|)
+name|rt_flags
+operator|&
+name|IEEE80211_MESHRT_FLAGS_VALID
+operator|)
+operator|==
+literal|0
 condition|)
 name|useprep
 operator|=
@@ -5565,6 +5641,12 @@ operator|=
 name|prep
 operator|->
 name|prep_metric
+expr_stmt|;
+name|rt
+operator|->
+name|rt_flags
+operator||=
+name|IEEE80211_MESHRT_FLAGS_VALID
 expr_stmt|;
 block|}
 block|}
@@ -5658,6 +5740,25 @@ name|m_nextpkt
 operator|=
 name|NULL
 expr_stmt|;
+name|IEEE80211_NOTE
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_HWMP
+argument_list|,
+name|ni
+argument_list|,
+literal|"flush queued frame %p len %d"
+argument_list|,
+name|m
+argument_list|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_transmit
@@ -5701,44 +5802,7 @@ modifier|*
 name|prep
 parameter_list|)
 block|{
-name|struct
-name|ieee80211_hwmp_state
-modifier|*
-name|hs
-init|=
-name|ni
-operator|->
-name|ni_vap
-operator|->
-name|iv_hwmp
-decl_stmt|;
-comment|/* 	 * Enforce PREP interval. 	 */
-if|if
-condition|(
-name|ratecheck
-argument_list|(
-operator|&
-name|hs
-operator|->
-name|hs_lastprep
-argument_list|,
-operator|&
-name|ieee80211_hwmp_prepminint
-argument_list|)
-operator|==
-literal|0
-condition|)
-return|return
-name|EALREADY
-return|;
-name|getmicrouptime
-argument_list|(
-operator|&
-name|hs
-operator|->
-name|hs_lastprep
-argument_list|)
-expr_stmt|;
+comment|/* NB: there's no PREP minimum interval. */
 comment|/* 	 * mesh prep action frame format 	 *     [6] da 	 *     [6] sa  	 *     [6] addr3 = sa 	 *     [1] action 	 *     [1] category 	 *     [tlv] mesh path reply 	 */
 name|prep
 operator|->
@@ -5863,7 +5927,7 @@ name|ni
 argument_list|,
 literal|"%s"
 argument_list|,
-literal|"deleting route entry"
+literal|"delete route entry"
 argument_list|)
 expr_stmt|;
 name|perr
@@ -6135,7 +6199,7 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|ni
 argument_list|,
-literal|"propagating PERR from %s"
+literal|"propagate PERR from %s"
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -6743,7 +6807,29 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* XXX stat+msg */
+name|IEEE80211_NOTE
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_HWMP
+argument_list|,
+name|ni
+argument_list|,
+literal|"unable to add discovery path to %s"
+argument_list|,
+name|ether_sprintf
+argument_list|(
+name|dest
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|vap
+operator|->
+name|iv_stats
+operator|.
+name|is_mesh_rtaddfailed
+operator|++
+expr_stmt|;
 goto|goto
 name|done
 goto|;
@@ -6761,14 +6847,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|IEEE80211_ADDR_EQ
-argument_list|(
+operator|(
 name|rt
 operator|->
-name|rt_nexthop
-argument_list|,
-name|invalidaddr
-argument_list|)
+name|rt_flags
+operator|&
+name|IEEE80211_MESHRT_FLAGS_VALID
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -6827,9 +6914,27 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|dest
 argument_list|,
-literal|"%s"
+literal|"start path discovery (src %s)"
 argument_list|,
-literal|"initiating path discovery"
+name|m
+operator|==
+name|NULL
+condition|?
+literal|"<none>"
+else|:
+name|ether_sprintf
+argument_list|(
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ether_header
+operator|*
+argument_list|)
+operator|->
+name|ether_shost
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Try to discover the path for this node. 			 */
@@ -6975,15 +7080,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
-name|IEEE80211_ADDR_EQ
-argument_list|(
 name|rt
 operator|->
-name|rt_nexthop
-argument_list|,
-name|invalidaddr
-argument_list|)
+name|rt_flags
+operator|&
+name|IEEE80211_MESHRT_FLAGS_VALID
 condition|)
 name|ni
 operator|=
@@ -7008,6 +7109,18 @@ argument_list|,
 name|dest
 argument_list|)
 expr_stmt|;
+comment|/* NB: if null then we leak mbuf */
+name|KASSERT
+argument_list|(
+name|ni
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"leak mcast frame"
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 name|ni
 return|;
@@ -7025,21 +7138,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|IEEE80211_DISCARD_MAC
-argument_list|(
-name|vap
-argument_list|,
-name|IEEE80211_MSG_HWMP
-argument_list|,
-name|dest
-argument_list|,
-name|NULL
-argument_list|,
-literal|"%s"
-argument_list|,
-literal|"no valid path to this node"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sendpreq
@@ -7055,6 +7153,19 @@ operator|->
 name|iv_ic
 decl_stmt|;
 comment|/* 			 * Queue packet for transmit when path discovery 			 * completes.  If discovery never completes the 			 * frame will be flushed by way of the aging timer. 			 */
+name|IEEE80211_NOTE_MAC
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_HWMP
+argument_list|,
+name|dest
+argument_list|,
+literal|"%s"
+argument_list|,
+literal|"queue frame until path found"
+argument_list|)
+expr_stmt|;
 name|m
 operator|->
 name|m_pkthdr
@@ -7090,11 +7201,28 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+name|IEEE80211_DISCARD_MAC
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_HWMP
+argument_list|,
+name|dest
+argument_list|,
+name|NULL
+argument_list|,
+literal|"%s"
+argument_list|,
+literal|"no valid path to this node"
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 name|ni

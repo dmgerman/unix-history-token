@@ -1294,13 +1294,13 @@ index|]
 decl_stmt|;
 comment|/* Sequence No. */
 name|uint8_t
-name|mc_addr5
+name|mc_addr4
 index|[
 name|IEEE80211_ADDR_LEN
 index|]
 decl_stmt|;
 name|uint8_t
-name|mc_addr6
+name|mc_addr5
 index|[
 name|IEEE80211_ADDR_LEN
 index|]
@@ -1352,35 +1352,6 @@ name|__packed
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|ieee80211req_mesh_route
-block|{
-name|uint8_t
-name|imr_dest
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
-decl_stmt|;
-name|uint8_t
-name|imr_nexthop
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
-decl_stmt|;
-name|uint32_t
-name|imr_metric
-decl_stmt|;
-name|uint16_t
-name|imr_nhops
-decl_stmt|;
-name|uint32_t
-name|imr_lifetime
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1405,6 +1376,11 @@ argument|ieee80211_mesh_route
 argument_list|)
 name|rt_next
 expr_stmt|;
+name|struct
+name|timeval
+name|rt_crtime
+decl_stmt|;
+comment|/* creation time */
 name|uint8_t
 name|rt_dest
 index|[
@@ -1425,6 +1401,19 @@ name|uint16_t
 name|rt_nhops
 decl_stmt|;
 comment|/* number of hops */
+name|uint16_t
+name|rt_flags
+decl_stmt|;
+define|#
+directive|define
+name|IEEE80211_MESHRT_FLAGS_VALID
+value|0x01
+comment|/* patch discovery complete */
+define|#
+directive|define
+name|IEEE80211_MESHRT_FLAGS_PROXY
+value|0x02
+comment|/* proxy entry */
 name|uint32_t
 name|rt_lifetime
 decl_stmt|;
@@ -1562,10 +1551,17 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+specifier|const
 name|size_t
 name|mpp_privlen
 decl_stmt|;
 comment|/* size required in the routing table 					   for private data */
+specifier|const
+name|struct
+name|timeval
+name|mpp_inact
+decl_stmt|;
+comment|/* inact. timeout for invalid routes */
 block|}
 struct|;
 end_struct
@@ -1725,6 +1721,10 @@ name|struct
 name|mtx
 name|ms_rt_lock
 decl_stmt|;
+name|struct
+name|callout
+name|ms_cleantimer
+decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -1830,6 +1830,23 @@ parameter_list|(
 name|struct
 name|ieee80211vap
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_mesh_proxy_check
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+specifier|const
+name|uint8_t
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2002,6 +2019,53 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * Return non-zero if proxy operation is enabled.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|ieee80211_mesh_isproxyena
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+name|vap
+parameter_list|)
+block|{
+name|struct
+name|ieee80211_mesh_state
+modifier|*
+name|ms
+init|=
+name|vap
+operator|->
+name|iv_mesh
+decl_stmt|;
+return|return
+operator|(
+name|ms
+operator|->
+name|ms_flags
+operator|&
+operator|(
+name|IEEE80211_MESHFLAGS_AP
+operator||
+name|IEEE80211_MESHFLAGS_PORTAL
+operator|)
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Process an outbound frame: if a path is known to the  * destination then return a reference to the next hop  * for immediate transmission.  Otherwise initiate path  * discovery and, if possible queue the packet to be  * sent when path discovery completes.  */
+end_comment
 
 begin_expr_stmt
 specifier|static

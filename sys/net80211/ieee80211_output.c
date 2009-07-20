@@ -852,6 +852,79 @@ name|IEEE80211_SUPPORT_MESH
 block|}
 else|else
 block|{
+if|if
+condition|(
+operator|!
+name|IEEE80211_ADDR_EQ
+argument_list|(
+name|eh
+operator|->
+name|ether_shost
+argument_list|,
+name|vap
+operator|->
+name|iv_myaddr
+argument_list|)
+condition|)
+block|{
+comment|/* 				 * Proxy station only if configured. 				 */
+if|if
+condition|(
+operator|!
+name|ieee80211_mesh_isproxyena
+argument_list|(
+name|vap
+argument_list|)
+condition|)
+block|{
+name|IEEE80211_DISCARD_MAC
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_OUTPUT
+operator||
+name|IEEE80211_MSG_MESH
+argument_list|,
+name|eh
+operator|->
+name|ether_dhost
+argument_list|,
+name|NULL
+argument_list|,
+literal|"%s"
+argument_list|,
+literal|"proxy not enabled"
+argument_list|)
+expr_stmt|;
+name|vap
+operator|->
+name|iv_stats
+operator|.
+name|is_mesh_notproxy
+operator|++
+expr_stmt|;
+name|ifp
+operator|->
+name|if_oerrors
+operator|++
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+name|ieee80211_mesh_proxy_check
+argument_list|(
+name|vap
+argument_list|,
+name|eh
+operator|->
+name|ether_shost
+argument_list|)
+expr_stmt|;
+block|}
 name|ni
 operator|=
 name|ieee80211_mesh_discover
@@ -872,7 +945,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 				 * NB: ieee80211_mesh_discover function 				 *   holds/disposes frame 				 *   (e.g. queueing on path discovery). 				 */
+comment|/* 				 * NB: ieee80211_mesh_discover holds/disposes 				 * frame (e.g. queueing on path discovery). 				 */
 name|ifp
 operator|->
 name|if_oerrors
@@ -4003,7 +4076,7 @@ operator|->
 name|iv_mesh
 decl_stmt|;
 name|struct
-name|ieee80211_meshcntl_ae11
+name|ieee80211_meshcntl_ae10
 modifier|*
 name|mc
 decl_stmt|;
@@ -4261,6 +4334,21 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* NB: don't use, disable */
+if|if
+condition|(
+operator|!
+name|IEEE80211_IS_MULTICAST
+argument_list|(
+name|eh
+operator|.
+name|ether_dhost
+argument_list|)
+condition|)
+name|hdrsize
+operator|+=
+name|IEEE80211_ADDR_LEN
+expr_stmt|;
+comment|/* unicast are 4-addr */
 name|meshhdrsize
 operator|=
 sizeof|sizeof
@@ -4270,7 +4358,6 @@ name|ieee80211_meshcntl
 argument_list|)
 expr_stmt|;
 comment|/* XXX defines for AE modes */
-comment|/* XXX not right, need to check if from non-mesh-sta */
 if|if
 condition|(
 name|IEEE80211_ADDR_EQ
@@ -4295,16 +4382,10 @@ operator|.
 name|ether_dhost
 argument_list|)
 condition|)
-block|{
-name|hdrsize
-operator|+=
-name|IEEE80211_ADDR_LEN
-expr_stmt|;
 name|meshae
 operator|=
 literal|0
 expr_stmt|;
-block|}
 else|else
 name|meshae
 operator|=
@@ -4329,7 +4410,7 @@ literal|1
 expr_stmt|;
 name|meshhdrsize
 operator|+=
-literal|2
+literal|1
 operator|*
 name|IEEE80211_ADDR_LEN
 expr_stmt|;
@@ -4342,7 +4423,7 @@ literal|2
 expr_stmt|;
 name|meshhdrsize
 operator|+=
-literal|3
+literal|2
 operator|*
 name|IEEE80211_ADDR_LEN
 expr_stmt|;
@@ -4896,7 +4977,7 @@ name|mc
 operator|=
 operator|(
 expr|struct
-name|ieee80211_meshcntl_ae11
+name|ieee80211_meshcntl_ae10
 operator|*
 operator|)
 operator|(
@@ -5098,16 +5179,15 @@ operator|->
 name|iv_myaddr
 argument_list|)
 expr_stmt|;
-comment|/* XXX not right, need MeshSA */
 name|IEEE80211_ADDR_COPY
 argument_list|(
 name|wh
 operator|->
 name|i_addr3
 argument_list|,
-name|eh
-operator|.
-name|ether_shost
+name|vap
+operator|->
+name|iv_myaddr
 argument_list|)
 expr_stmt|;
 name|mc
@@ -5176,7 +5256,7 @@ operator|->
 name|iv_myaddr
 argument_list|)
 expr_stmt|;
-comment|/* XXX not right, need MeshDA+MeshSA */
+comment|/* XXX not right, need MeshDA */
 name|IEEE80211_ADDR_COPY
 argument_list|(
 name|wh
@@ -5188,6 +5268,7 @@ operator|.
 name|ether_dhost
 argument_list|)
 expr_stmt|;
+comment|/* XXX assume are MeshSA */
 name|IEEE80211_ADDR_COPY
 argument_list|(
 name|WH4
@@ -5197,9 +5278,9 @@ argument_list|)
 operator|->
 name|i_addr4
 argument_list|,
-name|eh
-operator|.
-name|ether_shost
+name|vap
+operator|->
+name|iv_myaddr
 argument_list|)
 expr_stmt|;
 name|mc
@@ -5212,18 +5293,18 @@ name|IEEE80211_ADDR_COPY
 argument_list|(
 name|mc
 operator|->
-name|mc_addr5
+name|mc_addr4
 argument_list|,
 name|eh
 operator|.
-name|ether_shost
+name|ether_dhost
 argument_list|)
 expr_stmt|;
 name|IEEE80211_ADDR_COPY
 argument_list|(
 name|mc
 operator|->
-name|mc_addr6
+name|mc_addr5
 argument_list|,
 name|eh
 operator|.
