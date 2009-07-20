@@ -19,6 +19,39 @@ directive|define
 name|_NET_VNET_H_
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WANT_VNET
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|VNET_SETNAME
+value|"set_vnet"
+end_define
+
+begin_define
+define|#
+directive|define
+name|VNET_SYMPREFIX
+value|"vnet_entry_"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -41,7 +74,7 @@ argument_list|)
 end_if
 
 begin_asm
-asm|__asm__(".section set_vnet, \"aw\", %progbits");
+asm|__asm__(".section " VNET_SETNAME ", \"aw\", %progbits");
 end_asm
 
 begin_else
@@ -50,7 +83,7 @@ directive|else
 end_else
 
 begin_asm
-asm|__asm__(".section set_vnet, \"aw\", @progbits");
+asm|__asm__(".section " VNET_SETNAME ", \"aw\", @progbits");
 end_asm
 
 begin_endif
@@ -93,7 +126,7 @@ name|t
 parameter_list|,
 name|n
 parameter_list|)
-value|t VNET_NAME(n) __section("set_vnet") __used
+value|t VNET_NAME(n) __section(VNET_SETNAME) __used
 end_define
 
 begin_define

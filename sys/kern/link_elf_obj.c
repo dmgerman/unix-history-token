@@ -1944,7 +1944,7 @@ index|]
 operator|.
 name|name
 argument_list|,
-literal|"set_vnet"
+name|VNET_SETNAME
 argument_list|)
 condition|)
 block|{
@@ -4153,7 +4153,7 @@ index|]
 operator|.
 name|name
 argument_list|,
-literal|"set_vnet"
+name|VNET_SETNAME
 argument_list|)
 condition|)
 name|ef
@@ -4413,7 +4413,7 @@ index|]
 operator|.
 name|name
 argument_list|,
-literal|"set_vnet"
+name|VNET_SETNAME
 argument_list|)
 condition|)
 name|vnet_data_copy
@@ -5154,7 +5154,7 @@ index|]
 operator|.
 name|name
 argument_list|,
-literal|"set_vnet"
+name|VNET_SETNAME
 argument_list|)
 condition|)
 name|vnet_data_free
