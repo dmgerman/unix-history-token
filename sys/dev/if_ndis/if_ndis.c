@@ -10337,6 +10337,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|vap
+operator|==
+name|NULL
+condition|)
+return|return;
+if|if
+condition|(
 operator|!
 name|NDIS_INITIALIZED
 argument_list|(
