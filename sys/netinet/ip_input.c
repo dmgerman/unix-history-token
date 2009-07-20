@@ -1443,6 +1443,12 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|V_ip_id
+operator|=
+name|time_second
+operator|&
+literal|0xffff
+expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -1740,12 +1746,6 @@ name|EVENTHANDLER_PRI_ANY
 argument_list|)
 expr_stmt|;
 comment|/* Initialize various other remaining things. */
-name|V_ip_id
-operator|=
-name|time_second
-operator|&
-literal|0xffff
-expr_stmt|;
 name|IPQ_LOCK_INIT
 argument_list|()
 expr_stmt|;
