@@ -1494,12 +1494,6 @@ operator|=
 literal|"ipsec"
 block|,
 operator|.
-name|vmi_dependson
-operator|=
-name|VNET_MOD_INET
-block|,
-comment|/* XXX revisit - INET6 ? */
-operator|.
 name|vmi_iattach
 operator|=
 name|ipsec_iattach

@@ -722,11 +722,6 @@ operator|=
 literal|"flowtable"
 block|,
 operator|.
-name|vmi_dependson
-operator|=
-name|VNET_MOD_INET
-block|,
-operator|.
 name|vmi_iattach
 operator|=
 name|flowtable_iattach

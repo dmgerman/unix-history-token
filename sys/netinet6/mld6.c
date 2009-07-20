@@ -12328,11 +12328,6 @@ operator|=
 literal|"mld"
 block|,
 operator|.
-name|vmi_dependson
-operator|=
-name|VNET_MOD_INET6
-block|,
-operator|.
 name|vmi_iattach
 operator|=
 name|vnet_mld_iattach

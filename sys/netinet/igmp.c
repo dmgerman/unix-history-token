@@ -916,6 +916,22 @@ name|igmpstat
 argument_list|,
 name|igmpstat
 argument_list|)
+operator|=
+block|{
+operator|.
+name|igps_version
+operator|=
+name|IGPS_VERSION_3
+block|,
+operator|.
+name|igps_len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|igmpstat
+argument_list|)
+block|, }
 expr_stmt|;
 end_expr_stmt
 
@@ -13695,23 +13711,6 @@ operator|&
 name|V_igi_head
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize sysctls to default values. 	 */
-name|V_igmpstat
-operator|.
-name|igps_version
-operator|=
-name|IGPS_VERSION_3
-expr_stmt|;
-name|V_igmpstat
-operator|.
-name|igps_len
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|igmpstat
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -13785,11 +13784,6 @@ operator|.
 name|vmi_name
 operator|=
 literal|"igmp"
-block|,
-operator|.
-name|vmi_dependson
-operator|=
-name|VNET_MOD_INET
 block|,
 operator|.
 name|vmi_iattach
