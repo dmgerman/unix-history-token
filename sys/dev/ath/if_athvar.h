@@ -801,6 +801,10 @@ name|int
 name|sc_nstavaps
 decl_stmt|;
 comment|/* # station vaps */
+name|int
+name|sc_nmeshvaps
+decl_stmt|;
+comment|/* # mbss vaps */
 name|u_int8_t
 name|sc_hwbssidmask
 index|[
