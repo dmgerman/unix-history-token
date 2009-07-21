@@ -366,6 +366,18 @@ define|\
 value|SYSCTL_OID(parent, nbr, name, CTLTYPE_UINT|CTLFLAG_MPSAFE|(access), \ 	    ptr, val, vnet_sysctl_handle_uint, "IU", descr)
 end_define
 
+begin_define
+define|#
+directive|define
+name|VNET_SYSCTL_ARG
+parameter_list|(
+name|req
+parameter_list|,
+name|arg1
+parameter_list|)
+value|do {					\ 	if (arg1 != NULL)						\ 		arg1 = (void *)(TD_TO_VNET((req)->td)->vnet_data_base +	\ 		    (uintptr_t)(arg1));					\ } while (0)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -634,6 +646,17 @@ name|descr
 parameter_list|)
 define|\
 value|SYSCTL_UINT(parent, nbr, name, access, ptr, val, descr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VNET_SYSCTL_ARG
+parameter_list|(
+name|req
+parameter_list|,
+name|arg1
+parameter_list|)
 end_define
 
 begin_endif

@@ -821,6 +821,38 @@ endif|#
 directive|endif
 end_endif
 
+begin_function
+specifier|static
+name|int
+name|vnet_sysctl_msec_to_ticks
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+name|VNET_SYSCTL_ARG
+argument_list|(
+name|req
+argument_list|,
+name|arg1
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|sysctl_msec_to_ticks
+argument_list|(
+name|oidp
+argument_list|,
+name|arg1
+argument_list|,
+name|arg2
+argument_list|,
+name|req
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Minimum MSS we accept and use. This prevents DoS attacks where  * we are forced to a ridiculous low MSS like 20 and send hundreds  * of packets instead of one. The effect scales with the available  * bandwidth and quickly saturates the CPU and network interface  * with packet generation and sending. Set to zero to disable MINMSS  * checking. This setting prevents us from sending too small packets.  */
 end_comment
@@ -1134,7 +1166,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-name|sysctl_msec_to_ticks
+name|vnet_sysctl_msec_to_ticks
 argument_list|,
 literal|"I"
 argument_list|,
