@@ -9550,7 +9550,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"KLD %s: depends on %s - not available\n"
+literal|"KLD %s: depends on %s - not available or"
+literal|" version mismatch\n"
 argument_list|,
 name|lf
 operator|->
