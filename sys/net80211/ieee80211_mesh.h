@@ -1376,8 +1376,7 @@ argument|ieee80211_mesh_route
 argument_list|)
 name|rt_next
 expr_stmt|;
-name|struct
-name|timeval
+name|int
 name|rt_crtime
 decl_stmt|;
 comment|/* creation time */
@@ -1556,12 +1555,10 @@ name|size_t
 name|mpp_privlen
 decl_stmt|;
 comment|/* size required in the routing table 					   for private data */
-specifier|const
-name|struct
-name|timeval
+name|int
 name|mpp_inact
 decl_stmt|;
-comment|/* inact. timeout for invalid routes */
+comment|/* inact. timeout for invalid routes 					   (ticks) */
 block|}
 struct|;
 end_struct
