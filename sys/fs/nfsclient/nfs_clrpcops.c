@@ -4485,6 +4485,8 @@ name|int
 name|error
 decl_stmt|,
 name|isinet6
+init|=
+literal|0
 decl_stmt|,
 name|callblen
 decl_stmt|;
