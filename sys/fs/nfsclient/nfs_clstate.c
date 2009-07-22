@@ -11868,12 +11868,6 @@ condition|(
 name|op
 operator|!=
 name|NULL
-operator|&&
-name|op
-operator|->
-name|nfso_opencnt
-operator|>
-literal|0
 condition|)
 block|{
 name|clearok
