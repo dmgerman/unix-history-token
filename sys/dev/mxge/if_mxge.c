@@ -19951,6 +19951,14 @@ argument_list|)
 expr_stmt|;
 name|TUNABLE_INT_FETCH
 argument_list|(
+literal|"hw.mxge.rss_hashtype"
+argument_list|,
+operator|&
+name|mxge_rss_hash_type
+argument_list|)
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
 literal|"hw.mxge.initial_mtu"
 argument_list|,
 operator|&
