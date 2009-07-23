@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -2148,10 +2154,13 @@ directive|ifdef
 name|ELF_VERBOSE
 name|printf
 argument_list|(
-literal|"\n%s: 0x%lx@0x%lx -> 0x%lx-0x%lx"
+literal|"\n%s: 0x%jx@0x%jx -> 0x%jx-0x%jx"
 argument_list|,
 name|secname
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|shdr
 index|[
 name|i
@@ -2159,6 +2168,9 @@ index|]
 operator|.
 name|sh_size
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|shdr
 index|[
 name|i
@@ -2166,8 +2178,15 @@ index|]
 operator|.
 name|sh_offset
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|lastaddr
 argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|lastaddr
 operator|+
 name|shdr
@@ -2176,6 +2195,7 @@ name|i
 index|]
 operator|.
 name|sh_size
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|#
