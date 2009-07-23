@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/domain.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/jail.h>
 end_include
 
@@ -49,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/domain.h>
 end_include
 
 begin_include
@@ -7901,7 +7901,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|DOMAIN_SET
+name|VNET_DOMAIN_SET
 argument_list|(
 name|route
 argument_list|)

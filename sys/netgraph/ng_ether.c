@@ -147,53 +147,6 @@ parameter_list|)
 value|(IFP2AC((ifp))->ac_netgraph)
 end_define
 
-begin_decl_stmt
-specifier|static
-name|vnet_attach_fn
-name|ng_ether_iattach
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|vnet_modinfo_t
-name|vnet_ng_ether_modinfo
-init|=
-block|{
-operator|.
-name|vmi_id
-operator|=
-name|VNET_MOD_NG_ETHER
-block|,
-operator|.
-name|vmi_name
-operator|=
-literal|"ng_ether"
-block|,
-operator|.
-name|vmi_dependson
-operator|=
-name|VNET_MOD_NETGRAPH
-block|,
-operator|.
-name|vmi_iattach
-operator|=
-name|ng_ether_iattach
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Per-node private data */
 end_comment
@@ -3162,42 +3115,11 @@ name|ng_ether_link_state_p
 operator|=
 name|ng_ether_link_state
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VIMAGE
-name|vnet_mod_register
-argument_list|(
-operator|&
-name|vnet_ng_ether_modinfo
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|error
-operator|=
-name|ng_ether_iattach
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|MOD_UNLOAD
 case|:
 comment|/* 		 * Note that the base code won't try to unload us until 		 * all nodes have been removed, and that can't happen 		 * until all Ethernet interfaces are removed. In any 		 * case, we know there are no nodes left if the action 		 * is MOD_UNLOAD, so there's no need to detach any nodes. 		 */
-ifdef|#
-directive|ifdef
-name|VIMAGE
-name|vnet_mod_deregister
-argument_list|(
-operator|&
-name|vnet_ng_ether_modinfo
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* Unregister function hooks */
 name|ng_ether_attach_p
 operator|=
@@ -3246,8 +3168,8 @@ end_function
 
 begin_function
 specifier|static
-name|int
-name|ng_ether_iattach
+name|void
+name|vnet_ng_ether_init
 parameter_list|(
 specifier|const
 name|void
@@ -3260,6 +3182,14 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+comment|/* If module load was rejected, don't attach to vnets. */
+if|if
+condition|(
+name|ng_ether_attach_p
+operator|!=
+name|ng_ether_attach
+condition|)
+return|return;
 comment|/* Create nodes for any already-existing Ethernet interfaces. */
 name|IFNET_RLOCK
 argument_list|()
@@ -3296,13 +3226,24 @@ block|}
 name|IFNET_RUNLOCK
 argument_list|()
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|VNET_SYSINIT
+argument_list|(
+name|vnet_ng_ether_init
+argument_list|,
+name|SI_SUB_PSEUDO
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|,
+name|vnet_ng_ether_init
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

@@ -5683,7 +5683,7 @@ parameter_list|,
 name|tp
 parameter_list|)
 define|\
-value|NETGRAPH_INIT_ORDERED(tn, tp, SI_SUB_PSEUDO, SI_ORDER_ANY)
+value|NETGRAPH_INIT_ORDERED(tn, tp, SI_SUB_PSEUDO, SI_ORDER_MIDDLE)
 end_define
 
 begin_comment

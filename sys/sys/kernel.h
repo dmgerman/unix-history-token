@@ -420,6 +420,11 @@ init|=
 literal|0x8400000
 block|,
 comment|/* interfaces*/
+name|SI_SUB_PROTO_DOMAININIT
+init|=
+literal|0x8600000
+block|,
+comment|/* domain registration system */
 name|SI_SUB_PROTO_DOMAIN
 init|=
 literal|0x8800000
@@ -551,6 +556,11 @@ init|=
 literal|0x0000002
 block|,
 comment|/* third*/
+name|SI_ORDER_FOURTH
+init|=
+literal|0x0000003
+block|,
+comment|/* fourth*/
 name|SI_ORDER_MIDDLE
 init|=
 literal|0x1000000

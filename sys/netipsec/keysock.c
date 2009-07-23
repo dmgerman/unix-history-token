@@ -2400,7 +2400,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|DOMAIN_SET
+name|VNET_DOMAIN_SET
 argument_list|(
 name|key
 argument_list|)
