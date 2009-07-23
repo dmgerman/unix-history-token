@@ -19595,6 +19595,9 @@ name|pd_entry_t
 modifier|*
 name|pde
 decl_stmt|;
+name|boolean_t
+name|changed
+decl_stmt|;
 name|base
 operator|=
 name|trunc_page
@@ -19704,6 +19707,10 @@ name|EINVAL
 operator|)
 return|;
 block|}
+name|changed
+operator|=
+name|FALSE
+expr_stmt|;
 comment|/* 	 * Ok, all the pages exist and are 4k, so run through them updating 	 * their cache mode. 	 */
 for|for
 control|(
@@ -19780,6 +19787,16 @@ name|npte
 argument_list|)
 condition|)
 do|;
+if|if
+condition|(
+name|npte
+operator|!=
+name|opte
+condition|)
+name|changed
+operator|=
+name|TRUE
+expr_stmt|;
 name|tmpva
 operator|+=
 name|PAGE_SIZE
@@ -19790,6 +19807,11 @@ name|PAGE_SIZE
 expr_stmt|;
 block|}
 comment|/* 	 * Flush CPU caches to make sure any data isn't cached that shouldn't 	 * be, etc. 	 */
+if|if
+condition|(
+name|changed
+condition|)
+block|{
 name|pmap_invalidate_range
 argument_list|(
 name|kernel_pmap
@@ -19812,6 +19834,7 @@ condition|)
 name|pmap_invalidate_cache
 argument_list|()
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
