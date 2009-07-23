@@ -86,6 +86,26 @@ name|int
 name|rawdump
 decl_stmt|;
 comment|/* raw dump format */
+name|int
+name|vnet_initialized
+decl_stmt|;
+comment|/* vnet fields set up */
+name|uintptr_t
+name|vnet_start
+decl_stmt|;
+comment|/* start of kernel's vnet region */
+name|uintptr_t
+name|vnet_stop
+decl_stmt|;
+comment|/* stop of kernel's vnet region */
+name|uintptr_t
+name|vnet_current
+decl_stmt|;
+comment|/* vnet we're working with */
+name|uintptr_t
+name|vnet_base
+decl_stmt|;
+comment|/* vnet base of current vnet */
 block|}
 struct|;
 end_struct
@@ -187,6 +207,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|_kvm_nlist
+parameter_list|(
+name|kvm_t
+modifier|*
+parameter_list|,
+name|struct
+name|nlist
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 modifier|*
 name|_kvm_realloc
@@ -251,6 +287,42 @@ name|u_long
 parameter_list|,
 name|u_long
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_kvm_vnet_selectpid
+parameter_list|(
+name|kvm_t
+modifier|*
+parameter_list|,
+name|pid_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_kvm_vnet_initialized
+parameter_list|(
+name|kvm_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uintptr_t
+name|_kvm_vnet_validaddr
+parameter_list|(
+name|kvm_t
+modifier|*
+parameter_list|,
+name|uintptr_t
 parameter_list|)
 function_decl|;
 end_function_decl
