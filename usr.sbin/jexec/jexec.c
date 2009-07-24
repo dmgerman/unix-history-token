@@ -906,7 +906,7 @@ begin_define
 define|#
 directive|define
 name|GET_USER_INFO
-value|do {						\ 	pwd = getpwnam(username);					\ 	if (pwd == NULL) {						\ 		if (errno)						\ 			err(1, "getpwnam: %s", username);		\ 		else							\ 			errx(1, "%s: no such user", username);		\ 	}								\ 	lcap = login_getpwclass(pwd);					\ 	if (lcap == NULL)						\ 		err(1, "getpwclass: %s", username);			\ 	ngroups = NGROUPS;						\ 	if (getgrouplist(username, pwd->pw_gid, groups,&ngroups) != 0)	\ 		err(1, "getgrouplist: %s", username);			\ } while (0)
+value|do {						\ 	pwd = getpwnam(username);					\ 	if (pwd == NULL) {						\ 		if (errno)						\ 			err(1, "getpwnam: %s", username);		\ 		else							\ 			errx(1, "%s: no such user", username);		\ 	}								\ 	lcap = login_getpwclass(pwd);					\ 	if (lcap == NULL)						\ 		err(1, "getpwclass: %s", username);			\ 	ngroups = ngroups_max;						\ 	if (getgrouplist(username, pwd->pw_gid, groups,&ngroups) != 0)	\ 		err(1, "getgrouplist: %s", username);			\ } while (0)
 end_define
 
 begin_function
@@ -939,10 +939,10 @@ init|=
 name|NULL
 decl_stmt|;
 name|gid_t
+modifier|*
 name|groups
-index|[
-name|NGROUPS
-index|]
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|ch
@@ -952,6 +952,9 @@ decl_stmt|,
 name|uflag
 decl_stmt|,
 name|Uflag
+decl_stmt|;
+name|long
+name|ngroups_max
 decl_stmt|;
 name|char
 modifier|*
@@ -978,6 +981,40 @@ name|jid
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|ngroups_max
+operator|=
+name|sysconf
+argument_list|(
+name|_SC_NGROUPS_MAX
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|groups
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|gid_t
+argument_list|)
+operator|*
+name|ngroups_max
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc"
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
