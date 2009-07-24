@@ -1347,6 +1347,10 @@ name|struct
 name|ieee80211vap
 modifier|*
 name|vap
+init|=
+name|ifp
+operator|->
+name|if_softc
 decl_stmt|;
 name|struct
 name|ieee80211_frame
@@ -1356,28 +1360,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_drv_flags
-operator|&
-name|IFF_DRV_OACTIVE
-condition|)
-block|{
-comment|/* 		 * Short-circuit requests if the vap is marked OACTIVE 		 * as this is used when tearing down state to indicate 		 * the vap may be gone.  This can also happen because a 		 * packet came down through ieee80211_start before the 		 * vap entered RUN state in which case it's also ok to 		 * just drop the frame.  This should not be necessary 		 * but callers of if_output don't check OACTIVE. 		 */
-name|senderr
-argument_list|(
-name|ENETDOWN
-argument_list|)
-expr_stmt|;
-block|}
-name|vap
-operator|=
-name|ifp
-operator|->
-name|if_softc
-expr_stmt|;
 comment|/* 	 * Hand to the 802.3 code if not tagged as 	 * a raw 802.11 frame. 	 */
 if|if
 condition|(
@@ -1672,6 +1654,11 @@ name|EIO
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
+name|ifp
+operator|->
+name|if_opackets
+operator|++
+expr_stmt|;
 name|IEEE80211_NODE_STAT
 argument_list|(
 name|ni
@@ -1779,6 +1766,11 @@ name|ieee80211_free_node
 argument_list|(
 name|ni
 argument_list|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_oerrors
+operator|++
 expr_stmt|;
 return|return
 name|error
