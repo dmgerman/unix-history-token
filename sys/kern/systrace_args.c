@@ -10619,18 +10619,6 @@ literal|6
 expr_stmt|;
 break|break;
 block|}
-comment|/* lkmressys */
-case|case
-literal|370
-case|:
-block|{
-operator|*
-name|n_args
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-block|}
 comment|/* extattr_set_fd */
 case|case
 literal|371
@@ -10859,48 +10847,6 @@ operator|*
 name|n_args
 operator|=
 literal|1
-expr_stmt|;
-break|break;
-block|}
-comment|/* nfsclnt */
-case|case
-literal|375
-case|:
-block|{
-name|struct
-name|nfsclnt_args
-modifier|*
-name|p
-init|=
-name|params
-decl_stmt|;
-name|iarg
-index|[
-literal|0
-index|]
-operator|=
-name|p
-operator|->
-name|flag
-expr_stmt|;
-comment|/* int */
-name|uarg
-index|[
-literal|1
-index|]
-operator|=
-operator|(
-name|intptr_t
-operator|)
-name|p
-operator|->
-name|argp
-expr_stmt|;
-comment|/* caddr_t */
-operator|*
-name|n_args
-operator|=
-literal|2
 expr_stmt|;
 break|break;
 block|}
@@ -23387,11 +23333,6 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* lkmressys */
-case|case
-literal|370
-case|:
-break|break;
 comment|/* extattr_set_fd */
 case|case
 literal|371
@@ -23553,36 +23494,6 @@ case|:
 name|p
 operator|=
 literal|"int"
-expr_stmt|;
-break|break;
-default|default:
-break|break;
-block|}
-empty_stmt|;
-break|break;
-comment|/* nfsclnt */
-case|case
-literal|375
-case|:
-switch|switch
-condition|(
-name|ndx
-condition|)
-block|{
-case|case
-literal|0
-case|:
-name|p
-operator|=
-literal|"int"
-expr_stmt|;
-break|break;
-case|case
-literal|1
-case|:
-name|p
-operator|=
-literal|"caddr_t"
 expr_stmt|;
 break|break;
 default|default:
