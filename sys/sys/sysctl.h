@@ -2372,6 +2372,17 @@ begin_comment
 comment|/* File descriptors for process */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|KERN_PROC_GROUPS
+value|34
+end_define
+
+begin_comment
+comment|/* process groups */
+end_comment
+
 begin_comment
 comment|/*  * KERN_IPC identifiers  */
 end_comment
