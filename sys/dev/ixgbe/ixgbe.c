@@ -13708,6 +13708,14 @@ directive|if
 name|__FreeBSD_version
 operator|>=
 literal|800000
+if|if
+condition|(
+name|txr
+operator|->
+name|br
+operator|!=
+name|NULL
+condition|)
 name|buf_ring_free
 argument_list|(
 name|txr
@@ -19060,6 +19068,16 @@ name|bit
 decl_stmt|;
 if|if
 condition|(
+name|ifp
+operator|->
+name|if_init
+operator|!=
+name|ixgbe_init
+condition|)
+comment|/* Not our event */
+return|return;
+if|if
+condition|(
 operator|(
 name|vtag
 operator|==
@@ -19151,6 +19169,15 @@ name|index
 decl_stmt|,
 name|bit
 decl_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_init
+operator|!=
+name|ixgbe_init
+condition|)
+return|return;
 if|if
 condition|(
 operator|(
