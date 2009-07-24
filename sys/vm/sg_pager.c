@@ -768,13 +768,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Construct a new fake page. */
-name|printf
-argument_list|(
-literal|"SG: getting fake page for paddr %lx\n"
-argument_list|,
-name|paddr
-argument_list|)
-expr_stmt|;
 name|page
 operator|=
 name|sg_pager_getfake
@@ -822,17 +815,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
-name|printf
-argument_list|(
-literal|"SG: freeing VM page %p\n"
-argument_list|,
-name|m
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
 name|vm_page_free
 argument_list|(
 name|m
@@ -841,14 +823,8 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|vm_page_unlock_queues
 argument_list|()
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"SG: Inserting new fake page\n"
-argument_list|)
 expr_stmt|;
 name|vm_page_insert
 argument_list|(
