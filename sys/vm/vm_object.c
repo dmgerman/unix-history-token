@@ -1114,6 +1114,9 @@ case|case
 name|OBJT_PHYS
 case|:
 case|case
+name|OBJT_SG
+case|:
+case|case
 name|OBJT_SWAP
 case|:
 case|case

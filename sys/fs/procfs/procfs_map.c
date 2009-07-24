@@ -635,6 +635,9 @@ name|NULL
 expr_stmt|;
 break|break;
 case|case
+name|OBJT_SG
+case|:
+case|case
 name|OBJT_DEVICE
 case|:
 name|type

@@ -1855,6 +1855,12 @@ name|first_object
 operator|->
 name|type
 operator|==
+name|OBJT_SG
+operator|||
+name|first_object
+operator|->
+name|type
+operator|==
 name|OBJT_PHYS
 condition|)
 return|return;
