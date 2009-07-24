@@ -4732,7 +4732,7 @@ name|vlan_config
 argument_list|,
 name|em_register_vlan
 argument_list|,
-literal|0
+name|adapter
 argument_list|,
 name|EVENTHANDLER_PRI_FIRST
 argument_list|)
@@ -4747,7 +4747,7 @@ name|vlan_unconfig
 argument_list|,
 name|em_unregister_vlan
 argument_list|,
-literal|0
+name|adapter
 argument_list|,
 name|EVENTHANDLER_PRI_FIRST
 argument_list|)
@@ -14360,7 +14360,7 @@ name|__FreeBSD_version
 operator|>=
 literal|700029
 comment|/*  * This routine is run via an vlan  * config EVENT  */
-argument|static void em_register_vlan(void *unused, struct ifnet *ifp, u16 vtag) { 	struct adapter	*adapter = ifp->if_softc; 	u32		index, bit;  	if (ifp->if_init !=  em_init)
+argument|static void em_register_vlan(void *arg, struct ifnet *ifp, u16 vtag) { 	struct adapter	*adapter = ifp->if_softc; 	u32		index, bit;  	if (ifp->if_softc !=  arg)
 comment|/* Not our event */
 argument|return;  	if ((vtag ==
 literal|0
@@ -14380,7 +14380,7 @@ argument|<< bit); 	++adapter->num_vlans;
 comment|/* Re-init to load the changes */
 argument|em_init(adapter); }
 comment|/*  * This routine is run via an vlan  * unconfig EVENT  */
-argument|static void em_unregister_vlan(void *unused, struct ifnet *ifp, u16 vtag) { 	struct adapter	*adapter = ifp->if_softc; 	u32		index, bit;  	if (ifp->if_init !=  em_init) 		return;  	if ((vtag ==
+argument|static void em_unregister_vlan(void *arg, struct ifnet *ifp, u16 vtag) { 	struct adapter	*adapter = ifp->if_softc; 	u32		index, bit;  	if (ifp->if_softc !=  arg) 		return;  	if ((vtag ==
 literal|0
 argument|) || (vtag>
 literal|4095

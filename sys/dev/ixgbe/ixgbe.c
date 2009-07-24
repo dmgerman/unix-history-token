@@ -2775,7 +2775,7 @@ name|vlan_config
 argument_list|,
 name|ixgbe_register_vlan
 argument_list|,
-literal|0
+name|adapter
 argument_list|,
 name|EVENTHANDLER_PRI_FIRST
 argument_list|)
@@ -2790,7 +2790,7 @@ name|vlan_unconfig
 argument_list|,
 name|ixgbe_unregister_vlan
 argument_list|,
-literal|0
+name|adapter
 argument_list|,
 name|EVENTHANDLER_PRI_FIRST
 argument_list|)
@@ -19041,7 +19041,7 @@ name|ixgbe_register_vlan
 parameter_list|(
 name|void
 modifier|*
-name|unused
+name|arg
 parameter_list|,
 name|struct
 name|ifnet
@@ -19070,9 +19070,9 @@ if|if
 condition|(
 name|ifp
 operator|->
-name|if_init
+name|if_softc
 operator|!=
-name|ixgbe_init
+name|arg
 condition|)
 comment|/* Not our event */
 return|return;
@@ -19144,7 +19144,7 @@ name|ixgbe_unregister_vlan
 parameter_list|(
 name|void
 modifier|*
-name|unused
+name|arg
 parameter_list|,
 name|struct
 name|ifnet
@@ -19173,9 +19173,9 @@ if|if
 condition|(
 name|ifp
 operator|->
-name|if_init
+name|if_softc
 operator|!=
-name|ixgbe_init
+name|arg
 condition|)
 return|return;
 if|if
