@@ -2869,6 +2869,11 @@ operator|.
 name|s
 argument_list|)
 expr_stmt|;
+name|archive_entry_unset_size
+argument_list|(
+name|entry
+argument_list|)
+expr_stmt|;
 name|iso9660
 operator|->
 name|entry_bytes_remaining
