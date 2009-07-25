@@ -966,7 +966,7 @@ literal|17
 argument_list|,
 literal|0
 argument_list|,
-literal|"D = Delete Slice      Z = Toggle Size Units    S = Set Bootable   | = Wizard m."
+literal|"D = Delete Slice      Z = Toggle Size Units    S = Set Bootable   | = Expert m."
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -2955,7 +2955,7 @@ condition|(
 operator|!
 name|msgNoYes
 argument_list|(
-literal|"Are you SURE you want to go into Wizard mode?\n"
+literal|"Are you SURE you want to go into Expert mode?\n"
 literal|"No seat belts whatsoever are provided!"
 argument_list|)
 condition|)
