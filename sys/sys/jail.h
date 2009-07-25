@@ -279,6 +279,27 @@ name|JAIL_GET_MASK
 value|0x08
 end_define
 
+begin_define
+define|#
+directive|define
+name|JAIL_SYS_DISABLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|JAIL_SYS_NEW
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|JAIL_SYS_INHERIT
+value|2
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -683,7 +704,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/* Virtualize IPv4 addresses */
+comment|/* Restrict IPv4 addresses */
 end_comment
 
 begin_define
@@ -694,7 +715,7 @@ value|0x00000008
 end_define
 
 begin_comment
-comment|/* Virtualize IPv6 addresses */
+comment|/* Restrict IPv6 addresses */
 end_comment
 
 begin_define
@@ -706,6 +727,28 @@ end_define
 
 begin_comment
 comment|/* Virtual network stack */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PR_IP4_DISABLE
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* Disable IPv4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PR_IP6_DISABLE
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* Disable IPv6 */
 end_comment
 
 begin_comment
@@ -731,11 +774,11 @@ value|0x02000000
 end_define
 
 begin_comment
-comment|/* IPv4 virtualized by this jail or */
+comment|/* IPv4 restricted or disabled */
 end_comment
 
 begin_comment
-comment|/*  an ancestor			    */
+comment|/* by this jail or an ancestor */
 end_comment
 
 begin_define
@@ -746,11 +789,11 @@ value|0x04000000
 end_define
 
 begin_comment
-comment|/* IPv6 virtualized by this jail or */
+comment|/* IPv6 restricted or disabled */
 end_comment
 
 begin_comment
-comment|/*  an ancestor			    */
+comment|/* by this jail or an ancestor */
 end_comment
 
 begin_comment
@@ -1104,7 +1147,22 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_NODE(_security_jail_param, OID_AUTO, module, CTLFLAG_RW, 0, descr)
+value|SYSCTL_NODE(_security_jail_param, OID_AUTO, module, 0, 0, descr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_JAIL_PARAM_SYS_NODE
+parameter_list|(
+name|module
+parameter_list|,
+name|access
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_JAIL_PARAM_NODE(module, descr);				\     SYSCTL_JAIL_PARAM(_##module, , CTLTYPE_INT | (access), "E,jailsys",	\ 	descr)
 end_define
 
 begin_comment

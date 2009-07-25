@@ -39,6 +39,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|JP_JAILSYS
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
 name|JAIL_ERRMSGLEN
 value|1024
 end_define

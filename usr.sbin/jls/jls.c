@@ -170,7 +170,7 @@ begin_decl_stmt
 specifier|static
 name|int
 modifier|*
-name|param_noparent
+name|param_parent
 decl_stmt|;
 end_decl_stmt
 
@@ -303,9 +303,6 @@ name|ep
 decl_stmt|,
 modifier|*
 name|jname
-decl_stmt|,
-modifier|*
-name|nname
 decl_stmt|;
 name|int
 name|c
@@ -770,7 +767,7 @@ operator|&
 name|PRINT_SKIP
 condition|)
 block|{
-comment|/* Check for parameters with boolean parents. */
+comment|/* Check for parameters with jailsys parents. */
 for|for
 control|(
 name|i
@@ -820,9 +817,12 @@ name|dot
 operator|=
 literal|0
 expr_stmt|;
-name|nname
+name|param_parent
+index|[
+name|i
+index|]
 operator|=
-name|noname
+name|add_param
 argument_list|(
 name|params
 index|[
@@ -830,21 +830,6 @@ name|i
 index|]
 operator|.
 name|jp_name
-argument_list|)
-expr_stmt|;
-operator|*
-name|dot
-operator|=
-literal|'.'
-expr_stmt|;
-name|param_noparent
-index|[
-name|i
-index|]
-operator|=
-name|add_param
-argument_list|(
-name|nname
 argument_list|,
 name|NULL
 argument_list|,
@@ -858,10 +843,10 @@ argument_list|,
 name|JP_OPT
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|nname
-argument_list|)
+operator|*
+name|dot
+operator|=
+literal|'.'
 expr_stmt|;
 block|}
 block|}
@@ -1361,7 +1346,7 @@ name|params
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|param_noparent
+name|param_parent
 operator|=
 name|malloc
 argument_list|(
@@ -1370,7 +1355,7 @@ operator|*
 sizeof|sizeof
 argument_list|(
 operator|*
-name|param_noparent
+name|param_parent
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1380,7 +1365,7 @@ name|params
 operator|==
 name|NULL
 operator|||
-name|param_noparent
+name|param_parent
 operator|==
 name|NULL
 condition|)
@@ -1419,18 +1404,18 @@ name|params
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|param_noparent
+name|param_parent
 operator|=
 name|realloc
 argument_list|(
-name|param_noparent
+name|param_parent
 argument_list|,
 name|paramlistsize
 operator|*
 sizeof|sizeof
 argument_list|(
 operator|*
-name|param_noparent
+name|param_parent
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1440,7 +1425,7 @@ name|params
 operator|==
 name|NULL
 operator|||
-name|param_noparent
+name|param_parent
 operator|==
 name|NULL
 condition|)
@@ -1453,7 +1438,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Look up the parameter. */
-name|param_noparent
+name|param_parent
 index|[
 name|nparams
 index|]
@@ -2432,7 +2417,7 @@ operator|)
 operator|)
 operator|||
 operator|(
-name|param_noparent
+name|param_parent
 index|[
 name|i
 index|]
@@ -2446,13 +2431,15 @@ operator|*
 operator|)
 name|params
 index|[
-name|param_noparent
+name|param_parent
 index|[
 name|i
 index|]
 index|]
 operator|.
 name|jp_value
+operator|!=
+name|JAIL_SYS_NEW
 operator|)
 operator|)
 condition|)
