@@ -142,26 +142,6 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
-name|int
-name|vi_if_move
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-parameter_list|,
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|vnet
 modifier|*
