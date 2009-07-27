@@ -1387,12 +1387,6 @@ operator|->
 name|swi_queue
 argument_list|)
 expr_stmt|;
-name|dev
-operator|->
-name|max_vblank_count
-operator|=
-literal|0x001fffff
-expr_stmt|;
 name|radeon_irq_set_state
 argument_list|(
 name|dev

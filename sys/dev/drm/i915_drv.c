@@ -107,10 +107,21 @@ operator|-
 name|ENODEV
 return|;
 block|}
+name|DRM_LOCK
+argument_list|()
+expr_stmt|;
+name|DRM_DEBUG
+argument_list|(
+literal|"starting suspend\n"
+argument_list|)
+expr_stmt|;
 name|i915_save_state
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|DRM_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -142,10 +153,21 @@ argument_list|(
 name|kdev
 argument_list|)
 decl_stmt|;
+name|DRM_LOCK
+argument_list|()
+expr_stmt|;
 name|i915_restore_state
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|DRM_DEBUG
+argument_list|(
+literal|"finished resume\n"
+argument_list|)
+expr_stmt|;
+name|DRM_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(

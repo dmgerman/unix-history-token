@@ -358,9 +358,6 @@ decl_stmt|;
 name|wait_queue_head_t
 name|irq_queue
 decl_stmt|;
-name|atomic_t
-name|irq_received
-decl_stmt|;
 comment|/** Protects user_irq_refcount and irq_mask_reg */
 name|DRM_SPINTYPE
 name|user_irq_lock
