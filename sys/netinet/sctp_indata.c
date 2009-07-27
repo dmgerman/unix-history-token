@@ -26436,8 +26436,10 @@ argument_list|,
 name|sctp_next
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Do not toss it if on a different stream or marked 			 * for unordered delivery in which case the stream 			 * sequence number has no meaning. 			 */
 if|if
 condition|(
+operator|(
 name|chk
 operator|->
 name|rec
@@ -26447,6 +26449,23 @@ operator|.
 name|stream_number
 operator|!=
 name|stream
+operator|)
+operator|||
+operator|(
+operator|(
+name|chk
+operator|->
+name|rec
+operator|.
+name|data
+operator|.
+name|rcv_flags
+operator|&
+name|SCTP_DATA_UNORDERED
+operator|)
+operator|==
+name|SCTP_DATA_UNORDERED
+operator|)
 condition|)
 block|{
 name|chk
