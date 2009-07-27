@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_dl.h>
 end_include
 
@@ -4482,17 +4488,15 @@ return|;
 comment|/* 	 * add a loopback route to self 	 */
 if|if
 condition|(
+name|V_useloopback
+operator|&&
 operator|!
 operator|(
 name|ifp
 operator|->
 name|if_flags
 operator|&
-operator|(
 name|IFF_LOOPBACK
-operator||
-name|IFF_POINTOPOINT
-operator|)
 operator|)
 condition|)
 block|{
@@ -5017,6 +5021,7 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 	 * Remove the loopback route to the interface address. 	 * The "useloopback" setting is not consulted because if the 	 * user configures an interface address, turns off this 	 * setting, and then tries to delete that interface address, 	 * checking the current setting of "useloopback" would leave 	 * that interface address loopback route untouched, which 	 * would be wrong. Therefore the interface address loopback route 	 * deletion is unconditional. 	 */
 if|if
 condition|(
 operator|(
@@ -5039,11 +5044,7 @@ name|ia_ifp
 operator|->
 name|if_flags
 operator|&
-operator|(
 name|IFF_LOOPBACK
-operator||
-name|IFF_POINTOPOINT
-operator|)
 operator|)
 condition|)
 block|{

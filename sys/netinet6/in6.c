@@ -4915,6 +4915,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Remove the loopback route to the interface address. 	 * The check for the current setting of "nd6_useloopback" is not needed. 	 */
 if|if
 condition|(
 operator|!
@@ -4925,11 +4926,7 @@ name|ia_ifp
 operator|->
 name|if_flags
 operator|&
-operator|(
 name|IFF_LOOPBACK
-operator||
-name|IFF_POINTOPOINT
-operator|)
 operator|)
 condition|)
 block|{
@@ -7898,17 +7895,15 @@ block|}
 comment|/* 	 * add a loopback route to self 	 */
 if|if
 condition|(
+name|V_nd6_useloopback
+operator|&&
 operator|!
 operator|(
 name|ifp
 operator|->
 name|if_flags
 operator|&
-operator|(
 name|IFF_LOOPBACK
-operator||
-name|IFF_POINTOPOINT
-operator|)
 operator|)
 condition|)
 block|{

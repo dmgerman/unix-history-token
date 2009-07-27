@@ -246,6 +246,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|useloopback
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* use loopback interface for 					 * local traffic */
+end_comment
+
 begin_comment
 comment|/* timer values */
 end_comment
@@ -290,23 +306,6 @@ name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
-name|useloopback
-argument_list|)
-operator|=
-literal|1
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* use loopback interface for 						 * local traffic */
-end_comment
-
-begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
 name|arp_proxyall
 argument_list|)
 expr_stmt|;
@@ -324,13 +323,6 @@ define|#
 directive|define
 name|V_arp_maxtries
 value|VNET(arp_maxtries)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_useloopback
-value|VNET(useloopback)
 end_define
 
 begin_define
