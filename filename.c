@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2008  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2009  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -3284,6 +3284,9 @@ name|returnfd
 operator|=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
+block|}
 if|if
 condition|(
 operator|*
@@ -3292,7 +3295,7 @@ operator|==
 literal|'-'
 condition|)
 block|{
-comment|/* 			 * Lessopen preprocessor will accept "-" as a filename. 			 */
+comment|/* 		 * Lessopen preprocessor will accept "-" as a filename. 		 */
 name|lessopen
 operator|++
 expr_stmt|;
@@ -3315,9 +3318,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-block|}
-endif|#
-directive|endif
 block|}
 name|len
 operator|=

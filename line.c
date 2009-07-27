@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2008  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2009  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -3846,18 +3846,15 @@ name|pdone
 parameter_list|(
 name|endline
 parameter_list|,
-name|nextc
+name|forw
 parameter_list|)
 name|int
 name|endline
 decl_stmt|;
 name|int
-name|nextc
+name|forw
 decl_stmt|;
 block|{
-name|int
-name|nl
-decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -4000,15 +3997,17 @@ operator|&&
 name|column
 operator|>=
 name|sc_width
+operator|&&
+name|forw
 condition|)
 block|{
-comment|/* 		 * Terminals with "ignaw" don't wrap until they *really* need 		 * to, i.e. when the character *after* the last one to fit on a 		 * line is output. But they are too hard to deal with when they 		 * get in the state where a full screen width of characters 		 * have been output but the cursor is sitting on the right edge 		 * instead of at the start of the next line. 		 * So we nudge them into wrapping by outputting the next 		 * character plus a backspace. (This wouldn't be right for 		 * "!auto_wrap" terminals, but they always end up in the  		 * branch above.) 		 */
+comment|/* 		 * Terminals with "ignaw" don't wrap until they *really* need 		 * to, i.e. when the character *after* the last one to fit on a 		 * line is output. But they are too hard to deal with when they 		 * get in the state where a full screen width of characters 		 * have been output but the cursor is sitting on the right edge 		 * instead of at the start of the next line. 		 * So we nudge them into wrapping by outputting a space  		 * character plus a backspace.  But do this only if moving  		 * forward; if we're moving backward and drawing this line at 		 * the top of the screen, the space would overwrite the first 		 * char on the next line.  We don't need to do this "nudge"  		 * at the top of the screen anyway. 		 */
 name|linebuf
 index|[
 name|curr
 index|]
 operator|=
-name|nextc
+literal|' '
 expr_stmt|;
 name|attr
 index|[
