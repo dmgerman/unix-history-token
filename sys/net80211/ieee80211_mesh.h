@@ -1833,6 +1833,23 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ieee80211_mesh_rt_flush_peer
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+specifier|const
+name|uint8_t
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ieee80211_mesh_proxy_check
 parameter_list|(
 name|struct

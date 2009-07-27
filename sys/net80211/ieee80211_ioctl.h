@@ -801,9 +801,13 @@ name|is_rx_badalign
 decl_stmt|;
 comment|/* dropped 'cuz misaligned */
 name|uint32_t
+name|is_hwmp_proxy
+decl_stmt|;
+comment|/* PREP for proxy route */
+name|uint32_t
 name|is_spare
 index|[
-literal|12
+literal|11
 index|]
 decl_stmt|;
 block|}
@@ -1069,6 +1073,17 @@ struct|struct
 name|ieee80211req_mesh_route
 block|{
 name|uint8_t
+name|imr_flags
+decl_stmt|;
+define|#
+directive|define
+name|IEEE80211_MESHRT_FLAGS_VALID
+value|0x01
+define|#
+directive|define
+name|IEEE80211_MESHRT_FLAGS_PROXY
+value|0x02
+name|uint8_t
 name|imr_dest
 index|[
 name|IEEE80211_ADDR_LEN
@@ -1083,7 +1098,7 @@ decl_stmt|;
 name|uint16_t
 name|imr_nhops
 decl_stmt|;
-name|uint16_t
+name|uint8_t
 name|imr_pad
 decl_stmt|;
 name|uint32_t
