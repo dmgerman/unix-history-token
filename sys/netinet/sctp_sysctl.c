@@ -527,7 +527,7 @@ argument_list|(
 name|sctp_inits_include_nat_friendly
 argument_list|)
 operator|=
-name|SCTPCTL_NAT_FRIENDLY_DEFAULT
+name|SCTPCTL_NAT_FRIENDLY_INITS_DEFAULT
 expr_stmt|;
 if|#
 directive|if
@@ -3812,9 +3812,9 @@ argument_list|(
 name|sctp_inits_include_nat_friendly
 argument_list|)
 argument_list|,
-name|SCTPCTL_NAT_FRIENDLY_MIN
+name|SCTPCTL_NAT_FRIENDLY_INITS_MIN
 argument_list|,
-name|SCTPCTL_NAT_FRIENDLY_MAX
+name|SCTPCTL_NAT_FRIENDLY_INITS_MAX
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -5848,7 +5848,7 @@ name|sysctl_sctp_check
 argument_list|,
 literal|"IU"
 argument_list|,
-name|SCTPCTL_NAT_FRIENDLY_DESC
+name|SCTPCTL_NAT_FRIENDLY_INITS_DESC
 argument_list|)
 expr_stmt|;
 end_expr_stmt

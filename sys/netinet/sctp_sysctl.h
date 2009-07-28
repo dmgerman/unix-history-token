@@ -2215,7 +2215,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_NAT_FRIENDLY_INITS
+name|SCTPCTL_NAT_FRIENDLY_INITS_DESC
 value|"Enable sending of the nat-friendly SCTP option on INITs."
 end_define
 
