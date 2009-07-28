@@ -3573,6 +3573,14 @@ name|th
 operator|->
 name|th_dport
 expr_stmt|;
+name|inc
+operator|.
+name|inc_fibnum
+operator|=
+name|so
+operator|->
+name|so_fibnum
+expr_stmt|;
 comment|/* 		 * Check for an existing connection attempt in syncache if 		 * the flag is only ACK.  A successful lookup creates a new 		 * socket appended to the listen queue in SYN_RECEIVED state. 		 */
 if|if
 condition|(

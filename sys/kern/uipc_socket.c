@@ -1869,6 +1869,14 @@ name|SS_NOFDREF
 expr_stmt|;
 name|so
 operator|->
+name|so_fibnum
+operator|=
+name|head
+operator|->
+name|so_fibnum
+expr_stmt|;
+name|so
+operator|->
 name|so_proto
 operator|=
 name|head
