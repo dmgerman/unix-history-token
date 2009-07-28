@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: update.c,v 1.109.18.27 2008/02/07 03:16:08 marka Exp $ */
+comment|/* $Id: update.c,v 1.109.18.27.4.1 2009/07/28 13:57:27 marka Exp $ */
 end_comment
 
 begin_include
@@ -3039,6 +3039,34 @@ operator|->
 name|rdata
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|type
+operator|==
+name|dns_rdatatype_any
+condition|)
+block|{
+name|dns_db_detachnode
+argument_list|(
+name|db
+argument_list|,
+operator|&
+name|node
+argument_list|)
+expr_stmt|;
+name|dns_diff_clear
+argument_list|(
+operator|&
+name|trash
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|DNS_R_NXRRSET
+operator|)
+return|;
+block|}
 else|else
 name|covers
 operator|=
