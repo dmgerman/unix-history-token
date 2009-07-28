@@ -1926,11 +1926,9 @@ operator||
 name|LK_RETRY
 argument_list|)
 expr_stmt|;
-name|AUDIT_ARG_VNODE
+name|AUDIT_ARG_VNODE1
 argument_list|(
 name|binvp
-argument_list|,
-name|ARG_VNODE1
 argument_list|)
 expr_stmt|;
 name|imgp

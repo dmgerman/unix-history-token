@@ -694,6 +694,18 @@ parameter_list|)
 value|do {					\ 	(kar)->k_ar.ar_valid_arg |= (arg);				\ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ARG_CLEAR_VALID
+parameter_list|(
+name|kar
+parameter_list|,
+name|arg
+parameter_list|)
+value|do {					\ 	(kar)->k_ar.ar_valid_arg&= ~(arg);				\ } while (0)
+end_define
+
 begin_comment
 comment|/*  * In-kernel version of audit record; the basic record plus queue meta-data.  * This record can also have a pointer set to some opaque data that will be  * passed through to the audit writing mechanism.  */
 end_comment

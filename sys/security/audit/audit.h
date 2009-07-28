@@ -879,15 +879,24 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|audit_arg_vnode
+name|audit_arg_vnode1
 parameter_list|(
 name|struct
 name|vnode
 modifier|*
 name|vp
-parameter_list|,
-name|u_int64_t
-name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|audit_arg_vnode2
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1499,13 +1508,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|AUDIT_ARG_VNODE
+name|AUDIT_ARG_VNODE1
 parameter_list|(
 name|vp
-parameter_list|,
-name|flags
 parameter_list|)
-value|do {					\ 	if (AUDITING_TD(curthread))					\ 		audit_arg_vnode((vp), (flags));				\ } while (0)
+value|do {					\ 	if (AUDITING_TD(curthread))					\ 		audit_arg_vnode1((vp));					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIT_ARG_VNODE2
+parameter_list|(
+name|vp
+parameter_list|)
+value|do {					\ 	if (AUDITING_TD(curthread))					\ 		audit_arg_vnode2((vp));					\ } while (0)
 end_define
 
 begin_define
@@ -1858,11 +1875,18 @@ end_define
 begin_define
 define|#
 directive|define
-name|AUDIT_ARG_VNODE
+name|AUDIT_ARG_VNODE1
 parameter_list|(
 name|vp
-parameter_list|,
-name|flags
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIT_ARG_VNODE2
+parameter_list|(
+name|vp
 parameter_list|)
 end_define
 
