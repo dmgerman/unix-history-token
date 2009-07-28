@@ -1506,6 +1506,7 @@ name|sorf
 operator|=
 name|AU_PRS_SUCCESS
 expr_stmt|;
+comment|/* 	 * syscalls.master sometimes contains a prototype event number, which 	 * we will transform into a more specific event number now that we 	 * have more complete information gathered during the system call. 	 */
 switch|switch
 condition|(
 name|ar
@@ -1518,7 +1519,6 @@ block|{
 case|case
 name|AUE_OPEN_RWTC
 case|:
-comment|/* 		 * The open syscall always writes a AUE_OPEN_RWTC event; 		 * change it to the proper type of event based on the flags 		 * and the error value. 		 */
 name|ar
 operator|->
 name|k_ar
@@ -1526,6 +1526,27 @@ operator|.
 name|ar_event
 operator|=
 name|audit_flags_and_error_to_openevent
+argument_list|(
+name|ar
+operator|->
+name|k_ar
+operator|.
+name|ar_arg_fflags
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|AUE_OPENAT_RWTC
+case|:
+name|ar
+operator|->
+name|k_ar
+operator|.
+name|ar_event
+operator|=
+name|audit_flags_and_error_to_openatevent
 argument_list|(
 name|ar
 operator|->
