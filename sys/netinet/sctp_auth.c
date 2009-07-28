@@ -8903,6 +8903,8 @@ name|so_rcv
 argument_list|,
 literal|1
 argument_list|,
+name|SCTP_READ_LOCK_NOT_HELD
+argument_list|,
 name|so_locked
 argument_list|)
 expr_stmt|;

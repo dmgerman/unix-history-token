@@ -1623,6 +1623,8 @@ name|so_rcv
 argument_list|,
 name|end
 argument_list|,
+name|SCTP_READ_LOCK_NOT_HELD
+argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
@@ -2261,6 +2263,8 @@ name|so_rcv
 argument_list|,
 literal|1
 argument_list|,
+name|SCTP_READ_LOCK_NOT_HELD
+argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
@@ -2870,6 +2874,8 @@ name|so_rcv
 argument_list|,
 literal|1
 argument_list|,
+name|SCTP_READ_LOCK_NOT_HELD
+argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
@@ -3101,6 +3107,8 @@ operator|->
 name|so_rcv
 argument_list|,
 literal|1
+argument_list|,
+name|SCTP_READ_LOCK_NOT_HELD
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
@@ -9204,6 +9212,8 @@ name|so_rcv
 argument_list|,
 literal|1
 argument_list|,
+name|SCTP_READ_LOCK_NOT_HELD
+argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
@@ -10708,6 +10718,8 @@ operator|->
 name|so_rcv
 argument_list|,
 literal|1
+argument_list|,
+name|SCTP_READ_LOCK_NOT_HELD
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
@@ -25979,6 +25991,8 @@ name|so_rcv
 argument_list|,
 literal|1
 argument_list|,
+name|SCTP_READ_LOCK_HELD
+argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
@@ -26224,6 +26238,8 @@ operator|->
 name|so_rcv
 argument_list|,
 literal|1
+argument_list|,
+name|SCTP_READ_LOCK_HELD
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
