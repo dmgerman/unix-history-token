@@ -20768,9 +20768,11 @@ name|VNET_SYSINIT
 argument_list|(
 name|vnet_ipfw_init
 argument_list|,
-name|SI_SUB_KTHREAD_INIT
+name|SI_SUB_PROTO_IFATTACHDOMAIN
 argument_list|,
 name|SI_ORDER_ANY
+operator|-
+literal|255
 argument_list|,
 name|vnet_ipfw_init
 argument_list|,
@@ -20784,9 +20786,11 @@ name|VNET_SYSUNINIT
 argument_list|(
 name|vnet_ipfw_uninit
 argument_list|,
-name|SI_SUB_KTHREAD_INIT
+name|SI_SUB_PROTO_IFATTACHDOMAIN
 argument_list|,
 name|SI_ORDER_ANY
+operator|-
+literal|255
 argument_list|,
 name|vnet_ipfw_uninit
 argument_list|,
