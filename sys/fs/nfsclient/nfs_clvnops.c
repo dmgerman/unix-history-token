@@ -3243,7 +3243,10 @@ name|NFS_ISV4
 argument_list|(
 name|vp
 argument_list|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|nfscl_mustflush
 argument_list|(
 name|vp
@@ -3276,8 +3279,8 @@ argument_list|,
 name|cm
 argument_list|)
 expr_stmt|;
-comment|/* as above w.r.t. races when clearing NMODIFIED */
-comment|/* np->n_flag&= ~NMODIFIED; */
+comment|/* 				 * as above w.r.t races when clearing 				 * NMODIFIED. 				 * np->n_flag&= ~NMODIFIED; 				 */
+block|}
 block|}
 else|else
 name|error
