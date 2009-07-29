@@ -646,15 +646,13 @@ name|cn_flags
 operator|&
 name|AUDITVNODE1
 condition|)
-name|AUDIT_ARG_UPATH
+name|AUDIT_ARG_UPATH1
 argument_list|(
 name|td
 argument_list|,
 name|cnp
 operator|->
 name|cn_pnbuf
-argument_list|,
-name|ARG_UPATH1
 argument_list|)
 expr_stmt|;
 if|if
@@ -665,15 +663,13 @@ name|cn_flags
 operator|&
 name|AUDITVNODE2
 condition|)
-name|AUDIT_ARG_UPATH
+name|AUDIT_ARG_UPATH2
 argument_list|(
 name|td
 argument_list|,
 name|cnp
 operator|->
 name|cn_pnbuf
-argument_list|,
-name|ARG_UPATH2
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Don't allow empty pathnames. 	 */

@@ -5732,13 +5732,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|AUDIT_ARG_UPATH
+name|AUDIT_ARG_UPATH1
 argument_list|(
 name|td
 argument_list|,
 name|pathbuf
-argument_list|,
-name|ARG_UPATH1
 argument_list|)
 expr_stmt|;
 name|mtx_lock
