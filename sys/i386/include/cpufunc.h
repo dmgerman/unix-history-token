@@ -277,6 +277,20 @@ begin_function
 specifier|static
 name|__inline
 name|void
+name|clflush
+parameter_list|(
+name|u_long
+name|addr
+parameter_list|)
+block|{
+asm|__asm __volatile("clflush %0" : : "m" (*(char *)addr));
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
 name|disable_intr
 parameter_list|(
 name|void
@@ -491,6 +505,19 @@ name|hints
 parameter_list|)
 block|{
 asm|__asm __volatile("mwait;" : :"a" (hints), "c" (extensions));
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|mfence
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm __volatile("mfence" : : : "memory");
 block|}
 end_function
 
