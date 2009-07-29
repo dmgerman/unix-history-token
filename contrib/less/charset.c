@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2008  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2009  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -1683,6 +1683,9 @@ argument_list|)
 argument_list|,
 literal|"%c"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|c
 argument_list|)
 expr_stmt|;
@@ -1766,9 +1769,14 @@ argument_list|)
 argument_list|,
 literal|"^%c"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|c
 operator|^
 literal|0100
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#

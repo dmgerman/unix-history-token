@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2008  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2009  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -569,7 +569,7 @@ name|pdone
 argument_list|(
 name|endline
 argument_list|,
-name|c
+literal|1
 argument_list|)
 expr_stmt|;
 if|#
@@ -1146,8 +1146,7 @@ name|pdone
 argument_list|(
 name|endline
 argument_list|,
-name|ch_forw_get
-argument_list|()
+literal|0
 argument_list|)
 expr_stmt|;
 if|#
