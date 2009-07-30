@@ -3761,13 +3761,11 @@ operator|==
 name|NULL
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 name|USB_ERR_INVAL
 operator|)
 return|;
-block|}
 name|req
 operator|.
 name|bmRequestType
@@ -3895,13 +3893,11 @@ operator|==
 name|NULL
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 name|USB_ERR_INVAL
 operator|)
 return|;
-block|}
 name|req
 operator|.
 name|bmRequestType

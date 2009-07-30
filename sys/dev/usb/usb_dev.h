@@ -386,6 +386,14 @@ name|flag_stall
 decl_stmt|;
 comment|/* set if clear stall should be run */
 name|uint8_t
+name|flag_write_defrag
+decl_stmt|;
+comment|/* set to defrag written data */
+name|uint8_t
+name|flag_have_fragment
+decl_stmt|;
+comment|/* set if defragging */
+name|uint8_t
 name|iface_index
 decl_stmt|;
 comment|/* set to the interface we belong to */
@@ -456,18 +464,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|usb_fifo_free
-parameter_list|(
-name|struct
-name|usb_fifo
-modifier|*
-name|f
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|usb_symlink
 modifier|*
@@ -506,19 +502,6 @@ name|startentry
 parameter_list|,
 name|uint32_t
 name|user_len
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|usb_fifo_set_close_zlp
-parameter_list|(
-name|struct
-name|usb_fifo
-modifier|*
-parameter_list|,
-name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl

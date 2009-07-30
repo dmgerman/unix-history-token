@@ -3901,6 +3901,7 @@ argument_list|,
 literal|"vendor=0x%04x product=0x%04x "
 literal|"devclass=0x%02x devsubclass=0x%02x "
 literal|"sernum=\"%s\" "
+literal|"release=0x%04x "
 literal|"intclass=0x%02x intsubclass=0x%02x"
 argument_list|,
 name|UGETW
@@ -3946,6 +3947,17 @@ operator|.
 name|udev
 operator|->
 name|serial
+argument_list|,
+name|UGETW
+argument_list|(
+name|res
+operator|.
+name|udev
+operator|->
+name|ddesc
+operator|.
+name|bcdDevice
+argument_list|)
 argument_list|,
 name|iface
 operator|->
