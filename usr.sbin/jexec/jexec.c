@@ -1108,6 +1108,10 @@ operator|>
 literal|0
 condition|)
 block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|jid
 operator|=
 operator|(
