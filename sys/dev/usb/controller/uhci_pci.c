@@ -581,6 +581,38 @@ literal|"Intel 82801FB/FR/FW/FRW (ICH6) USB controller USB-D"
 operator|)
 return|;
 case|case
+literal|0x27c88086
+case|:
+return|return
+operator|(
+literal|"Intel 82801G (ICH7) USB controller USB-A"
+operator|)
+return|;
+case|case
+literal|0x27c98086
+case|:
+return|return
+operator|(
+literal|"Intel 82801G (ICH7) USB controller USB-B"
+operator|)
+return|;
+case|case
+literal|0x27ca8086
+case|:
+return|return
+operator|(
+literal|"Intel 82801G (ICH7) USB controller USB-C"
+operator|)
+return|;
+case|case
+literal|0x27cb8086
+case|:
+return|return
+operator|(
+literal|"Intel 82801G (ICH7) USB controller USB-D"
+operator|)
+return|;
+case|case
 literal|0x28308086
 case|:
 return|return
