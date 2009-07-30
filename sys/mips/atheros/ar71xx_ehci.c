@@ -54,19 +54,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/condvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_mfunc.h>
+file|<dev/usb/usb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb.h>
+file|<dev/usb/usbdi.h>
 end_include
 
 begin_include
@@ -411,7 +429,7 @@ expr_stmt|;
 comment|/* get all DMA memory */
 if|if
 condition|(
-name|usb2_bus_mem_alloc_all
+name|usb_bus_mem_alloc_all
 argument_list|(
 operator|&
 name|sc
@@ -957,7 +975,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|usb2_bus_mem_free_all
+name|usb_bus_mem_free_all
 argument_list|(
 operator|&
 name|sc
