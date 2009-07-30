@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2009 Jeffrey Roberson<jeff@freebsd.org>  * Copyrigh
 end_comment
 
 begin_comment
-comment|/*  * This header file defines two sets of interfaces supporting virtualized  * network stacks: a virtual network stack memory allocator, which provides  * support for virtualized global variables via a special linker set,  * set_vnet, and virtualized sysinits/sysuninits, which allow constructors  * and destructors to be run for each network stack subsystem as virtual  * instances are created and destroyed.  If VIMAGE isn't compiled into the  * kernel, virtualized global variables compile to normal global variables,  * and virtualized sysinits to regular sysinits.  */
+comment|/*-  * This header file defines several sets of interfaces supporting virtualized  * network stacks:  *  * - A virtual network stack memory allocator, which provides support for  *   virtualized global variables via a special linker set, set_vnet.  *  * - Virtualized sysinits/sysuninits, which allow constructors and  *   destructors to be run for each network stack subsystem as virtual  *   instances are created and destroyed.  *  * If VIMAGE isn't compiled into the kernel, virtualized global variables  * compile to normal global variables, and virtualized sysinits to regular  * sysinits.  */
 end_comment
 
 begin_ifndef
@@ -18,6 +18,10 @@ define|#
 directive|define
 name|_NET_VNET_H_
 end_define
+
+begin_comment
+comment|/*  * Virtual network stack memory allocator, which allows global variables to  * be automatically instantiated for each network stack instance.  */
+end_comment
 
 begin_if
 if|#
@@ -63,84 +67,6 @@ ifdef|#
 directive|ifdef
 name|VIMAGE
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_comment
-comment|/*  * SYSINIT/SYSUNINIT variants that provide per-vnet constructors and  * destructors.  */
-end_comment
-
-begin_struct
-struct|struct
-name|vnet_sysinit
-block|{
-name|enum
-name|sysinit_sub_id
-name|subsystem
-decl_stmt|;
-name|enum
-name|sysinit_elem_order
-name|order
-decl_stmt|;
-name|sysinit_cfunc_t
-name|func
-decl_stmt|;
-specifier|const
-name|void
-modifier|*
-name|arg
-decl_stmt|;
-name|TAILQ_ENTRY
-argument_list|(
-argument|vnet_sysinit
-argument_list|)
-name|link
-expr_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|VNET_SYSINIT
-parameter_list|(
-name|ident
-parameter_list|,
-name|subsystem
-parameter_list|,
-name|order
-parameter_list|,
-name|func
-parameter_list|,
-name|arg
-parameter_list|)
-define|\
-value|static struct vnet_sysinit ident ## _vnet_init = {		\ 		subsystem,						\ 		order,							\ 		(sysinit_cfunc_t)(sysinit_nfunc_t)func,			\ 		(arg)							\ 	};								\ 	SYSINIT(vnet_init_ ## ident, subsystem, order,			\ 	    vnet_register_sysinit,&ident ## _vnet_init);		\ 	SYSUNINIT(vnet_init_ ## ident, subsystem, order,		\ 	    vnet_deregister_sysinit,&ident ## _vnet_init)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VNET_SYSUNINIT
-parameter_list|(
-name|ident
-parameter_list|,
-name|subsystem
-parameter_list|,
-name|order
-parameter_list|,
-name|func
-parameter_list|,
-name|arg
-parameter_list|)
-define|\
-value|static struct vnet_sysinit ident ## _vnet_uninit = {		\ 		subsystem,						\ 		order,							\ 		(sysinit_cfunc_t)(sysinit_nfunc_t)func,			\ 		(arg)							\ 	};								\ 	SYSINIT(vnet_uninit_ ## ident, subsystem, order,		\ 	    vnet_register_sysuninit,&ident ## _vnet_uninit);		\ 	SYSUNINIT(vnet_uninit_ ## ident, subsystem, order,		\ 	    vnet_deregister_sysuninit,&ident ## _vnet_uninit)
-end_define
 
 begin_if
 if|#
@@ -278,6 +204,83 @@ name|n
 parameter_list|)
 value|VNET_VNET(curvnet, n)
 end_define
+
+begin_comment
+comment|/*  * Virtual network stack allocator interfaces from the kernel linker.  */
+end_comment
+
+begin_function_decl
+name|void
+modifier|*
+name|vnet_data_alloc
+parameter_list|(
+name|int
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vnet_data_copy
+parameter_list|(
+name|void
+modifier|*
+name|start
+parameter_list|,
+name|int
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vnet_data_free
+parameter_list|(
+name|void
+modifier|*
+name|start_arg
+parameter_list|,
+name|int
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Virtual network stack allocator interfaces for vnet setup/teardown.  */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|vnet
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|void
+name|vnet_data_init
+parameter_list|(
+name|struct
+name|vnet
+modifier|*
+name|vnet
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vnet_data_destroy
+parameter_list|(
+name|struct
+name|vnet
+modifier|*
+name|vnet
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Sysctl variants for vnet-virtualized global variables.  Include  *<sys/sysctl.h> to expose these definitions.  *  * Note: SYSCTL_PROC() handler functions will need to resolve pointer  * arguments themselves, if required.  */
@@ -466,81 +469,90 @@ comment|/* SYSCTL_OID */
 end_comment
 
 begin_comment
-comment|/*  * Interfaces from the kernel linker.  */
+comment|/*  * Virtual sysinit mechanism, allowing network stack components to declare  * startup and shutdown methods to be run when virtual network stack  * instances are created and destroyed.  */
 end_comment
 
-begin_function_decl
-name|void
-modifier|*
-name|vnet_data_alloc
-parameter_list|(
-name|int
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vnet_data_copy
-parameter_list|(
-name|void
-modifier|*
-name|start
-parameter_list|,
-name|int
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vnet_data_free
-parameter_list|(
-name|void
-modifier|*
-name|start_arg
-parameter_list|,
-name|int
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
 
 begin_comment
-comment|/*  * Interfaces for vnet setup/teardown.  */
+comment|/*  * SYSINIT/SYSUNINIT variants that provide per-vnet constructors and  * destructors.  */
 end_comment
 
-begin_struct_decl
-struct_decl|struct
-name|vnet
-struct_decl|;
-end_struct_decl
-
-begin_function_decl
+begin_struct
+struct|struct
+name|vnet_sysinit
+block|{
+name|enum
+name|sysinit_sub_id
+name|subsystem
+decl_stmt|;
+name|enum
+name|sysinit_elem_order
+name|order
+decl_stmt|;
+name|sysinit_cfunc_t
+name|func
+decl_stmt|;
+specifier|const
 name|void
-name|vnet_data_init
-parameter_list|(
-name|struct
-name|vnet
 modifier|*
-name|vnet
-parameter_list|)
-function_decl|;
-end_function_decl
+name|arg
+decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|vnet_sysinit
+argument_list|)
+name|link
+expr_stmt|;
+block|}
+struct|;
+end_struct
 
-begin_function_decl
-name|void
-name|vnet_data_destroy
+begin_define
+define|#
+directive|define
+name|VNET_SYSINIT
 parameter_list|(
-name|struct
-name|vnet
-modifier|*
-name|vnet
+name|ident
+parameter_list|,
+name|subsystem
+parameter_list|,
+name|order
+parameter_list|,
+name|func
+parameter_list|,
+name|arg
 parameter_list|)
-function_decl|;
-end_function_decl
+define|\
+value|static struct vnet_sysinit ident ## _vnet_init = {		\ 		subsystem,						\ 		order,							\ 		(sysinit_cfunc_t)(sysinit_nfunc_t)func,			\ 		(arg)							\ 	};								\ 	SYSINIT(vnet_init_ ## ident, subsystem, order,			\ 	    vnet_register_sysinit,&ident ## _vnet_init);		\ 	SYSUNINIT(vnet_init_ ## ident, subsystem, order,		\ 	    vnet_deregister_sysinit,&ident ## _vnet_init)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VNET_SYSUNINIT
+parameter_list|(
+name|ident
+parameter_list|,
+name|subsystem
+parameter_list|,
+name|order
+parameter_list|,
+name|func
+parameter_list|,
+name|arg
+parameter_list|)
+define|\
+value|static struct vnet_sysinit ident ## _vnet_uninit = {		\ 		subsystem,						\ 		order,							\ 		(sysinit_cfunc_t)(sysinit_nfunc_t)func,			\ 		(arg)							\ 	};								\ 	SYSINIT(vnet_uninit_ ## ident, subsystem, order,		\ 	    vnet_register_sysuninit,&ident ## _vnet_uninit);		\ 	SYSUNINIT(vnet_uninit_ ## ident, subsystem, order,		\ 	    vnet_deregister_sysuninit,&ident ## _vnet_uninit)
+end_define
+
+begin_comment
+comment|/*  * Run per-vnet sysinits or sysuninits during vnet creation/destruction.  */
+end_comment
 
 begin_function_decl
 name|void
@@ -667,43 +679,57 @@ parameter_list|)
 value|&VNET_NAME(n)
 end_define
 
+begin_comment
+comment|/*  * Virtualized global variable accessor macros.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|VNET_SYSINIT
+name|VNET_VNET_PTR
 parameter_list|(
-name|ident
+name|vnet
 parameter_list|,
-name|subsystem
-parameter_list|,
-name|order
-parameter_list|,
-name|func
-parameter_list|,
-name|arg
+name|n
 parameter_list|)
-define|\
-value|SYSINIT(ident, subsystem, order, func, arg)
+value|(&(n))
 end_define
 
 begin_define
 define|#
 directive|define
-name|VNET_SYSUNINIT
+name|VNET_VNET
 parameter_list|(
-name|ident
+name|vnet
 parameter_list|,
-name|subsystem
-parameter_list|,
-name|order
-parameter_list|,
-name|func
-parameter_list|,
-name|arg
+name|n
 parameter_list|)
-define|\
-value|SYSUNINIT(ident, subsystem, order, func, arg)
+value|(n)
 end_define
+
+begin_define
+define|#
+directive|define
+name|VNET_PTR
+parameter_list|(
+name|n
+parameter_list|)
+value|(&(n))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VNET
+parameter_list|(
+name|n
+parameter_list|)
+value|(n)
+end_define
+
+begin_comment
+comment|/*  * When VIMAGE isn't compiled into the kernel, virtaulized SYSCTLs simply  * become normal SYSCTLs.  */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -851,51 +877,45 @@ comment|/* SYSCTL_OID */
 end_comment
 
 begin_comment
-comment|/*  * Virtualized global variable accessor macros.  */
+comment|/*  * When VIMAGE isn't compiled into the kernel, VNET_SYSINIT/VNET_SYSUNINIT  * map into normal sysinits, which have the same ordering properties.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VNET_VNET_PTR
+name|VNET_SYSINIT
 parameter_list|(
-name|vnet
+name|ident
 parameter_list|,
-name|n
-parameter_list|)
-value|(&(n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|VNET_VNET
-parameter_list|(
-name|vnet
+name|subsystem
 parameter_list|,
-name|n
+name|order
+parameter_list|,
+name|func
+parameter_list|,
+name|arg
 parameter_list|)
-value|(n)
+define|\
+value|SYSINIT(ident, subsystem, order, func, arg)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VNET_PTR
+name|VNET_SYSUNINIT
 parameter_list|(
-name|n
+name|ident
+parameter_list|,
+name|subsystem
+parameter_list|,
+name|order
+parameter_list|,
+name|func
+parameter_list|,
+name|arg
 parameter_list|)
-value|(&(n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|VNET
-parameter_list|(
-name|n
-parameter_list|)
-value|(n)
+define|\
+value|SYSUNINIT(ident, subsystem, order, func, arg)
 end_define
 
 begin_endif
