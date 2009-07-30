@@ -5214,16 +5214,33 @@ name|DEBUG
 argument_list|)
 end_if
 
+begin_comment
+comment|/*  * A function using a stack frame has the following instruction as the first  * one: addiu sp,sp,-<frame_size>  *  * We make use of this to detect starting address of a function. This works  * better than using 'j ra' instruction to signify end of the previous  * function (for e.g. functions like boot() or panic() do not actually  * emit a 'j ra' instruction).  *  * XXX the abi does not require that the addiu instruction be the first one.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|MIPS_JR_RA
-value|0x03e00008
+name|MIPS_START_OF_FUNCTION
+parameter_list|(
+name|ins
+parameter_list|)
+value|(((ins)& 0xffff8000) == 0x27bd8000)
 end_define
 
 begin_comment
-comment|/* instruction code for jr ra */
+comment|/*  * MIPS ABI 3.0 requires that all functions return using the 'j ra' instruction  *  * XXX gcc doesn't do this true for functions with __noreturn__ attribute.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_END_OF_FUNCTION
+parameter_list|(
+name|ins
+parameter_list|)
+value|((ins) == 0x03e00008)
+end_define
 
 begin_comment
 comment|/* forward */
@@ -5687,7 +5704,9 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-operator|(
+literal|1
+condition|)
+block|{
 name|instr
 operator|=
 name|kdbpeek
@@ -5698,17 +5717,24 @@ operator|*
 operator|)
 name|va
 argument_list|)
-operator|)
-operator|!=
-name|MIPS_JR_RA
-condition|)
-name|va
-operator|-=
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|MIPS_START_OF_FUNCTION
+argument_list|(
+name|instr
+argument_list|)
+condition|)
+break|break;
+if|if
+condition|(
+name|MIPS_END_OF_FUNCTION
+argument_list|(
+name|instr
+argument_list|)
+condition|)
+block|{
+comment|/* skip over branch-delay slot instruction */
 name|va
 operator|+=
 literal|2
@@ -5718,7 +5744,16 @@ argument_list|(
 name|int
 argument_list|)
 expr_stmt|;
-comment|/* skip back over branch& delay slot */
+break|break;
+block|}
+name|va
+operator|-=
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* skip over nulls which might separate .o files */
 while|while
 condition|(
