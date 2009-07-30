@@ -3249,7 +3249,7 @@ expr_stmt|;
 name|CARP_LOG
 argument_list|(
 literal|"carp_input: received len %zd< "
-literal|"sizeof(struct carp_header)\n"
+literal|"sizeof(struct carp_header) on %s\n"
 argument_list|,
 name|m
 operator|->
@@ -3260,6 +3260,14 @@ argument_list|(
 expr|struct
 name|ip
 argument_list|)
+argument_list|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|->
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|m_freem
