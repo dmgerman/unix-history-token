@@ -7869,6 +7869,12 @@ name|roothub_exec
 operator|=
 operator|&
 name|atmegadci_roothub_exec
+block|,
+operator|.
+name|xfer_poll
+operator|=
+operator|&
+name|atmegadci_do_poll
 block|, }
 decl_stmt|;
 end_decl_stmt

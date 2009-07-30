@@ -13014,6 +13014,11 @@ operator|.
 name|roothub_exec
 operator|=
 name|uhci_roothub_exec
+block|,
+operator|.
+name|xfer_poll
+operator|=
+name|uhci_do_poll
 block|, }
 decl_stmt|;
 end_decl_stmt

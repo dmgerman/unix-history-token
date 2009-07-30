@@ -17208,6 +17208,11 @@ operator|.
 name|roothub_exec
 operator|=
 name|ehci_roothub_exec
+block|,
+operator|.
+name|xfer_poll
+operator|=
+name|ehci_do_poll
 block|, }
 decl_stmt|;
 end_decl_stmt

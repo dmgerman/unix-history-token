@@ -8979,6 +8979,12 @@ name|roothub_exec
 operator|=
 operator|&
 name|uss820dci_roothub_exec
+block|,
+operator|.
+name|xfer_poll
+operator|=
+operator|&
+name|uss820dci_do_poll
 block|, }
 decl_stmt|;
 end_decl_stmt
