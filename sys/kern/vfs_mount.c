@@ -5367,16 +5367,11 @@ argument_list|(
 literal|"mount: lost mount"
 argument_list|)
 expr_stmt|;
-name|mountcheckdirs
+name|VOP_UNLOCK
 argument_list|(
-name|vp
+name|newdp
 argument_list|,
-name|newdp
-argument_list|)
-expr_stmt|;
-name|vput
-argument_list|(
-name|newdp
+literal|0
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -5384,6 +5379,18 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|mountcheckdirs
+argument_list|(
+name|vp
+argument_list|,
+name|newdp
+argument_list|)
+expr_stmt|;
+name|vrele
+argument_list|(
+name|newdp
 argument_list|)
 expr_stmt|;
 if|if
@@ -7194,6 +7201,13 @@ argument_list|(
 literal|"Cannot find root vnode"
 argument_list|)
 expr_stmt|;
+name|VOP_UNLOCK
+argument_list|(
+name|rootvnode
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|curthread
@@ -7276,13 +7290,6 @@ argument_list|(
 name|p
 operator|->
 name|p_fd
-argument_list|)
-expr_stmt|;
-name|VOP_UNLOCK
-argument_list|(
-name|rootvnode
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|EVENTHANDLER_INVOKE
