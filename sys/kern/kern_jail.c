@@ -790,6 +790,13 @@ name|JAIL_DEFAULT_ALLOW
 value|PR_ALLOW_SET_HOSTNAME
 end_define
 
+begin_define
+define|#
+directive|define
+name|JAIL_DEFAULT_ENFORCE_STATFS
+value|2
+end_define
+
 begin_decl_stmt
 specifier|static
 name|unsigned
@@ -804,7 +811,7 @@ specifier|static
 name|int
 name|jail_default_enforce_statfs
 init|=
-literal|2
+name|JAIL_DEFAULT_ENFORCE_STATFS
 decl_stmt|;
 end_decl_stmt
 
@@ -6173,9 +6180,7 @@ name|pr
 operator|->
 name|pr_enforce_statfs
 operator|=
-name|ppr
-operator|->
-name|pr_enforce_statfs
+name|JAIL_DEFAULT_ENFORCE_STATFS
 expr_stmt|;
 name|LIST_INIT
 argument_list|(
