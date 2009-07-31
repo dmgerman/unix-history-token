@@ -135,6 +135,31 @@ name|thr_param
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/*  * ABI shims for the old SYSV IPC ABI.  The kern_*() version of these  * symbols are used by older kernel modules using the old ABI.  To make  * this transparent use the macros below to rename the functions to  * kern_new_*().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|kern_msgctl
+value|kern_new_msgctl
+end_define
+
+begin_define
+define|#
+directive|define
+name|kern_semctl
+value|kern_new_semctl
+end_define
+
+begin_define
+define|#
+directive|define
+name|kern_shmctl
+value|kern_new_shmctl
+end_define
+
 begin_function_decl
 name|int
 name|kern___getcwd

@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/msg.h>
 end_include
 
@@ -2109,6 +2115,21 @@ name|bp
 operator|->
 name|shm_cpid
 expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|shm_nattch
+operator|>
+name|SHRT_MAX
+condition|)
+name|ibp
+operator|->
+name|shm_nattch
+operator|=
+name|SHRT_MAX
+expr_stmt|;
+else|else
 name|ibp
 operator|->
 name|shm_nattch
@@ -2241,17 +2262,6 @@ name|ibp
 operator|->
 name|shm_ctime
 expr_stmt|;
-name|bp
-operator|->
-name|shm_internal
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-literal|0
-expr_stmt|;
-comment|/* ignored anyway */
 return|return;
 block|}
 end_function

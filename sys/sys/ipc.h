@@ -127,13 +127,18 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * XXX almost all members have wrong types.  */
-end_comment
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
 
 begin_struct
 struct|struct
-name|ipc_perm
+name|ipc_perm_old
 block|{
 name|unsigned
 name|short
@@ -157,6 +162,48 @@ decl_stmt|;
 comment|/* group id */
 name|unsigned
 name|short
+name|mode
+decl_stmt|;
+comment|/* r/w permission */
+name|unsigned
+name|short
+name|seq
+decl_stmt|;
+comment|/* sequence # (to generate unique ipcid) */
+name|key_t
+name|key
+decl_stmt|;
+comment|/* user specified msg/sem/shm key */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_struct
+struct|struct
+name|ipc_perm
+block|{
+name|uid_t
+name|cuid
+decl_stmt|;
+comment|/* creator user id */
+name|gid_t
+name|cgid
+decl_stmt|;
+comment|/* creator group id */
+name|uid_t
+name|uid
+decl_stmt|;
+comment|/* user id */
+name|gid_t
+name|gid
+decl_stmt|;
+comment|/* group id */
+name|mode_t
 name|mode
 decl_stmt|;
 comment|/* r/w permission */
@@ -397,6 +444,36 @@ name|ipc_perm
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ipcperm_old2new
+parameter_list|(
+name|struct
+name|ipc_perm_old
+modifier|*
+parameter_list|,
+name|struct
+name|ipc_perm
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ipcperm_new2old
+parameter_list|(
+name|struct
+name|ipc_perm
+modifier|*
+parameter_list|,
+name|struct
+name|ipc_perm_old
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

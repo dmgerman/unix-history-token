@@ -204,12 +204,21 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
+
 begin_struct
 struct|struct
-name|shmid_ds
+name|shmid_ds_old
 block|{
 name|struct
-name|ipc_perm
+name|ipc_perm_old
 name|shm_perm
 decl_stmt|;
 comment|/* operation permission structure */
@@ -250,11 +259,63 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_struct
+struct|struct
+name|shmid_ds
+block|{
+name|struct
+name|ipc_perm
+name|shm_perm
+decl_stmt|;
+comment|/* operation permission structure */
+name|size_t
+name|shm_segsz
+decl_stmt|;
+comment|/* size of segment in bytes */
+name|pid_t
+name|shm_lpid
+decl_stmt|;
+comment|/* process ID of last shared memory op */
+name|pid_t
+name|shm_cpid
+decl_stmt|;
+comment|/* process ID of creator */
+name|int
+name|shm_nattch
+decl_stmt|;
+comment|/* number of current attaches */
+name|time_t
+name|shm_atime
+decl_stmt|;
+comment|/* time of last shmat() */
+name|time_t
+name|shm_dtime
+decl_stmt|;
+comment|/* time of last shmdt() */
+name|time_t
+name|shm_ctime
+decl_stmt|;
+comment|/* time of last change by shmctl() */
+block|}
+struct|;
+end_struct
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
 
 begin_comment
 comment|/*  * System 5 style catch-all structure for shared memory constants that  * might be of interest to user programs.  Do we really want/need this?  */
@@ -300,15 +361,15 @@ name|struct
 name|shmid_ds
 name|u
 decl_stmt|;
+name|vm_object_t
+name|object
+decl_stmt|;
 name|struct
 name|label
 modifier|*
 name|label
 decl_stmt|;
 comment|/* MAC label */
-name|size_t
-name|shm_bsegsz
-decl_stmt|;
 block|}
 struct|;
 end_struct

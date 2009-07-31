@@ -950,18 +950,6 @@ name|lsp
 operator|->
 name|shm_ctime
 expr_stmt|;
-comment|/* this goes (yet) SOS */
-name|bsp
-operator|->
-name|shm_internal
-operator|=
-name|PTRIN
-argument_list|(
-name|lsp
-operator|->
-name|private3
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -994,6 +982,21 @@ operator|->
 name|shm_perm
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bsp
+operator|->
+name|shm_segsz
+operator|>
+name|INT_MAX
+condition|)
+name|lsp
+operator|->
+name|shm_segsz
+operator|=
+name|INT_MAX
+expr_stmt|;
+else|else
 name|lsp
 operator|->
 name|shm_segsz
@@ -1018,6 +1021,21 @@ name|bsp
 operator|->
 name|shm_cpid
 expr_stmt|;
+if|if
+condition|(
+name|bsp
+operator|->
+name|shm_nattch
+operator|>
+name|SHRT_MAX
+condition|)
+name|lsp
+operator|->
+name|shm_nattch
+operator|=
+name|SHRT_MAX
+expr_stmt|;
+else|else
 name|lsp
 operator|->
 name|shm_nattch
@@ -1050,17 +1068,11 @@ name|bsp
 operator|->
 name|shm_ctime
 expr_stmt|;
-comment|/* this goes (yet) SOS */
 name|lsp
 operator|->
 name|private3
 operator|=
-name|PTROUT
-argument_list|(
-name|bsp
-operator|->
-name|shm_internal
-argument_list|)
+literal|0
 expr_stmt|;
 block|}
 end_function
@@ -2076,6 +2088,7 @@ name|struct
 name|l_shmid64_ds
 name|linux_shmid64
 decl_stmt|;
+comment|/* 	 * XXX: This is backwards and loses information in shm_nattch 	 * and shm_segsz.  We should probably either expose the BSD 	 * shmid structure directly and convert it to either the 	 * non-64 or 64 variant directly or the code should always 	 * convert to the 64 variant and then truncate values into the 	 * non-64 variant if needed since the 64 variant has more 	 * precision. 	 */
 if|if
 condition|(
 name|ver
