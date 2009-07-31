@@ -4963,11 +4963,11 @@ name|fail
 operator||=
 name|MATCH_MESHID
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
