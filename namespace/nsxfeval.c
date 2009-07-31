@@ -1146,7 +1146,7 @@ name|BOOLEAN
 name|Found
 decl_stmt|;
 name|int
-name|Match
+name|NoMatch
 decl_stmt|;
 name|Status
 operator|=
@@ -1306,7 +1306,7 @@ name|AE_CTRL_DEPTH
 operator|)
 return|;
 block|}
-name|Match
+name|NoMatch
 operator|=
 name|ACPI_STRCMP
 argument_list|(
@@ -1326,8 +1326,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|Match
+name|NoMatch
 condition|)
 block|{
 comment|/*              * HID does not match, attempt match within the              * list of Compatible IDs (CIDs)              */

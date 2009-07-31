@@ -645,6 +645,26 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
+if|if
+condition|(
+name|Info
+operator|->
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|Flags
+operator|&
+name|AOPOBJ_MODULE_LEVEL
+condition|)
+block|{
+name|WalkState
+operator|->
+name|ParseFlags
+operator||=
+name|ACPI_PARSE_MODULE_LEVEL
+expr_stmt|;
+block|}
 comment|/* Invoke an internal method if necessary */
 if|if
 condition|(

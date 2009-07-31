@@ -1555,7 +1555,7 @@ name|StartOfThisLine
 operator|--
 expr_stmt|;
 block|}
-comment|/*                  * Move the brace up to the previous line, UNLESS:                  *                  * 1) There is a conditional compile on the line (starts with '#')                  * 2) Previous line ends with an '=' (Start of initializer block)                  * 3) Previous line ends with a comma (part of an init list)                  */
+comment|/*                  * Move the brace up to the previous line, UNLESS:                  *                  * 1) There is a conditional compile on the line (starts with '#')                  * 2) Previous line ends with an '=' (Start of initializer block)                  * 3) Previous line ends with a comma (part of an init list)                  * 4) Previous line ends with a backslash (part of a macro)                  */
 if|if
 condition|(
 operator|(
@@ -1565,6 +1565,13 @@ literal|1
 index|]
 operator|!=
 literal|'#'
+operator|)
+operator|&&
+operator|(
+operator|*
+name|Beginning
+operator|!=
+literal|'\\'
 operator|)
 operator|&&
 operator|(

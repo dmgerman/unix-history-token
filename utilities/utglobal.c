@@ -2095,6 +2095,10 @@ operator|=
 name|TRUE
 expr_stmt|;
 comment|/* Namespace */
+name|AcpiGbl_ModuleCodeList
+operator|=
+name|NULL
+expr_stmt|;
 name|AcpiGbl_RootNode
 operator|=
 name|NULL

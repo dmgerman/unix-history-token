@@ -93,6 +93,39 @@ name|AE_NOT_EXIST
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ResetReg
+operator|->
+name|SpaceId
+operator|==
+name|ACPI_ADR_SPACE_SYSTEM_IO
+condition|)
+block|{
+comment|/*          * For I/O space, write directly to the OSL. This bypasses the port          * validation mechanism, which may block a valid write to the reset          * register.          */
+name|Status
+operator|=
+name|AcpiOsWritePort
+argument_list|(
+operator|(
+name|ACPI_IO_ADDRESS
+operator|)
+name|ResetReg
+operator|->
+name|Address
+argument_list|,
+name|AcpiGbl_FADT
+operator|.
+name|ResetValue
+argument_list|,
+name|ResetReg
+operator|->
+name|BitWidth
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* Write the reset value to the reset register */
 name|Status
 operator|=
@@ -105,6 +138,7 @@ argument_list|,
 name|ResetReg
 argument_list|)
 expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status

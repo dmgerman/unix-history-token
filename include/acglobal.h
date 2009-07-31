@@ -832,6 +832,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|ACPI_EXTERN
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|AcpiGbl_ModuleCodeList
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 specifier|const
 name|UINT8

@@ -20,7 +20,11 @@ name|__ACTBL_H__
 end_define
 
 begin_comment
-comment|/*  * Values for description table header signatures. Useful because they make  * it more difficult to inadvertently type in the wrong signature.  */
+comment|/*******************************************************************************  *  * Fundamental ACPI tables  *  * This file contains definitions for the ACPI tables that are directly consumed  * by ACPICA. All other tables are consumed by the OS-dependent ACPI-related  * device drivers and other OS support code.  *  * The RSDP and FACS do not use the common ACPI table header. All other ACPI  * tables use the header.  *  ******************************************************************************/
+end_comment
+
+begin_comment
+comment|/*  * Values for description table header signatures for tables defined in this  * file. Useful because they make it more difficult to inadvertently type in  * the wrong signature.  */
 end_comment
 
 begin_define
@@ -136,11 +140,11 @@ name|)
 end_pragma
 
 begin_comment
-comment|/*  * These are the ACPI tables that are directly consumed by the subsystem.  *  * The RSDP and FACS do not use the common ACPI table header. All other ACPI  * tables use the header.  *  * Note about bitfields: The UINT8 type is used for bitfields in ACPI tables.  * This is the only type that is even remotely portable. Anything else is not  * portable, so do not use any other bitfield types.  */
+comment|/*  * Note about bitfields: The UINT8 type is used for bitfields in ACPI tables.  * This is the only type that is even remotely portable. Anything else is not  * portable, so do not use any other bitfield types.  */
 end_comment
 
 begin_comment
-comment|/*******************************************************************************  *  * ACPI Table Header. This common header is used by all tables except the  * RSDP and FACS. The define is used for direct inclusion of header into  * other ACPI tables  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Master ACPI Table Header. This common header is used by all ACPI tables  * except the RSDP and FACS.  *  ******************************************************************************/
 end_comment
 
 begin_typedef
@@ -202,7 +206,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * GAS - Generic Address Structure (ACPI 2.0+)  *  * Note: Since this structure is used in the ACPI tables, it is byte aligned.  * If misalignment is not supported, access to the Address field must be  * performed with care.  */
+comment|/*******************************************************************************  *  * GAS - Generic Address Structure (ACPI 2.0+)  *  * Note: Since this structure is used in the ACPI tables, it is byte aligned.  * If misaliged access is not supported by the hardware, accesses to the  * 64-bit Address field must be performed with care.  *  ******************************************************************************/
 end_comment
 
 begin_typedef
@@ -236,7 +240,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*******************************************************************************  *  * RSDP - Root System Description Pointer (Signature is "RSD PTR ")  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * RSDP - Root System Description Pointer (Signature is "RSD PTR ")  *        Version 2  *  ******************************************************************************/
 end_comment
 
 begin_typedef
@@ -306,7 +310,7 @@ comment|/* Size of original ACPI 1.0 RSDP */
 end_comment
 
 begin_comment
-comment|/*******************************************************************************  *  * RSDT/XSDT - Root System Description Tables  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * RSDT/XSDT - Root System Description Tables  *             Version 1 (both)  *  ******************************************************************************/
 end_comment
 
 begin_typedef
@@ -418,7 +422,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* GlobalLock flags */
+comment|/* Masks for GlobalLock flag field above */
 end_comment
 
 begin_define
@@ -444,7 +448,7 @@ comment|/* 01: Global lock is owned */
 end_comment
 
 begin_comment
-comment|/* Flags  */
+comment|/* Masks for Flags field above  */
 end_comment
 
 begin_define
@@ -470,7 +474,7 @@ comment|/* 01: 64-bit wake vector supported (ACPI 4.0) */
 end_comment
 
 begin_comment
-comment|/* OspmFlags */
+comment|/* Masks for OspmFlags field above */
 end_comment
 
 begin_define
@@ -485,7 +489,7 @@ comment|/* 00: 64-bit wake environment is required (ACPI 4.0) */
 end_comment
 
 begin_comment
-comment|/*******************************************************************************  *  * FADT - Fixed ACPI Description Table (Signature "FACP")  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FADT - Fixed ACPI Description Table (Signature "FACP")  *        Version 4  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -714,7 +718,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* FADT Boot Architecture Flags (BootFlags) */
+comment|/* Masks for FADT Boot Architecture Flags (BootFlags) */
 end_comment
 
 begin_define
@@ -773,7 +777,7 @@ comment|/* 04: [V4] PCIe ASPM control must not be enabled */
 end_comment
 
 begin_comment
-comment|/* FADT flags */
+comment|/* Masks for FADT flags */
 end_comment
 
 begin_define
@@ -997,7 +1001,7 @@ comment|/* 19: [V4] All local xAPICs must use physical dest mode (ACPI 3.0) */
 end_comment
 
 begin_comment
-comment|/* FADT Prefered Power Management Profiles */
+comment|/* Values for PreferredProfile (Prefered Power Management Profiles) */
 end_comment
 
 begin_enum
@@ -1047,6 +1051,10 @@ name|(
 name|)
 end_pragma
 
+begin_comment
+comment|/*  * Internal table-related structures  */
+end_comment
+
 begin_typedef
 typedef|typedef
 union|union
@@ -1067,7 +1075,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Internal ACPI Table Descriptor. One per ACPI table  */
+comment|/* Internal ACPI Table Descriptor. One per ACPI table. */
 end_comment
 
 begin_typedef
@@ -1101,7 +1109,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Flags for above */
+comment|/* Masks for Flags field above */
 end_comment
 
 begin_define
@@ -1154,6 +1162,12 @@ begin_include
 include|#
 directive|include
 file|"actbl1.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"actbl2.h"
 end_include
 
 begin_comment

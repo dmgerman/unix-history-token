@@ -235,12 +235,21 @@ name|ACPI_NS_DONT_OPEN_SCOPE
 operator||
 name|ACPI_NS_ERROR_IF_FOUND
 expr_stmt|;
-comment|/* Mark node temporary if we are executing a method */
+comment|/*          * Mark node temporary if we are executing a normal control          * method. (Don't mark if this is a module-level code method)          */
 if|if
 condition|(
 name|WalkState
 operator|->
 name|MethodNode
+operator|&&
+operator|!
+operator|(
+name|WalkState
+operator|->
+name|ParseFlags
+operator|&
+name|ACPI_PARSE_MODULE_LEVEL
+operator|)
 condition|)
 block|{
 name|Flags
@@ -1176,12 +1185,21 @@ name|ACPI_NS_DONT_OPEN_SCOPE
 operator||
 name|ACPI_NS_ERROR_IF_FOUND
 expr_stmt|;
-comment|/* Mark node(s) temporary if we are executing a method */
+comment|/*      * Mark node(s) temporary if we are executing a normal control      * method. (Don't mark if this is a module-level code method)      */
 if|if
 condition|(
 name|WalkState
 operator|->
 name|MethodNode
+operator|&&
+operator|!
+operator|(
+name|WalkState
+operator|->
+name|ParseFlags
+operator|&
+name|ACPI_PARSE_MODULE_LEVEL
+operator|)
 condition|)
 block|{
 name|Flags
