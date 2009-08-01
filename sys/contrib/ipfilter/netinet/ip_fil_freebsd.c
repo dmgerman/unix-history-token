@@ -420,12 +420,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/tcp_var.h>
 end_include
 

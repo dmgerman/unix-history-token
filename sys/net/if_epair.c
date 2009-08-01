@@ -8,7 +8,7 @@ comment|/*  * A pair of virtual back-to-back connected ethernet like interfaces 
 end_comment
 
 begin_comment
-comment|/*  * Things to re-think once we have more experience:  * - ifp->if_reassign function once we can test with vimage. Depending on  *   how if_vomve() is going to be improved.  * - Real random etheraddrs that are checked to be uniquish; we would need  *   to re-do them in case we move the interface between network stacks  *   in a private if_reassign function.  *   In case we bridge to a real interface/network or between indepedent  *   epairs on multiple stacks/machines, we may need this.  *   For now let the user handle that case.  */
+comment|/*  * Things to re-think once we have more experience:  * - ifp->if_reassign function once we can test with vimage. Depending on  *   how if_vmove() is going to be improved.  * - Real random etheraddrs that are checked to be uniquish; we would need  *   to re-do them in case we move the interface between network stacks  *   in a private if_reassign function.  *   In case we bridge to a real interface/network or between indepedent  *   epairs on multiple stacks/machines, we may need this.  *   For now let the user handle that case.  */
 end_comment
 
 begin_include
@@ -94,12 +94,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/bpf.h>
 end_include
 
@@ -137,6 +131,12 @@ begin_include
 include|#
 directive|include
 file|<net/netisr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
 end_include
 
 begin_define

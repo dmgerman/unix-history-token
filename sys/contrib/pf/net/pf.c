@@ -296,12 +296,6 @@ directive|include
 file|<sys/sx.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/vimage.h>
-end_include
-
 begin_else
 else|#
 directive|else

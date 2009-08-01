@@ -128,12 +128,6 @@ directive|include
 file|<sys/jail.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/vimage.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -161,6 +155,12 @@ begin_include
 include|#
 directive|include
 file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
 end_include
 
 begin_include

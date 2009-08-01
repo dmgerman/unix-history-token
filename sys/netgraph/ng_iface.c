@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/random.h>
 end_include
 
@@ -105,12 +111,6 @@ begin_include
 include|#
 directive|include
 file|<sys/libkern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vimage.h>
 end_include
 
 begin_include
