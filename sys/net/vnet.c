@@ -131,7 +131,7 @@ file|<net/vnet.h>
 end_include
 
 begin_comment
-comment|/*-  * This file implements core functions for virtual network stacks:  *  * - Core virtual network stack management functions.  *  * - Virtual network stack memory allocator, which virtualized global  *   variables in the network stack  *  * - Virtualized SYSINIT's/SYSUNINIT's, which allow network stack subsystems  *   to register startup/shutdown events to be run for each virtual network  *   stack instance.  */
+comment|/*-  * This file implements core functions for virtual network stacks:  *  * - Virtual network stack management functions.  *  * - Virtual network stack memory allocator, which virtualizes global  *   variables in the network stack  *  * - Virtualized SYSINIT's/SYSUNINIT's, which allow network stack subsystems  *   to register startup/shutdown events to be run for each virtual network  *   stack instance.  */
 end_comment
 
 begin_expr_stmt
@@ -147,7 +147,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * The virtual network stack list has two read-write locks, one sleepable and  * the other not, so that the list can be stablized and walked in a variety  * of network stack contexts.  Both must be acquired exclusively to modify  * the list.  */
+comment|/*  * The virtual network stack list has two read-write locks, one sleepable and  * the other not, so that the list can be stablized and walked in a variety  * of network stack contexts.  Both must be acquired exclusively to modify  * the list, but a read lock of either lock is sufficient to walk the list.  */
 end_comment
 
 begin_decl_stmt
@@ -300,7 +300,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Global lists of subsystem constructor and destructors for vnets.  * They are registered via VNET_SYSINIT() and VNET_SYSUNINIT().  The  * lists are protected by the vnet_sxlock global lock.  */
+comment|/*  * Global lists of subsystem constructor and destructors for vnets.  They are  * registered via VNET_SYSINIT() and VNET_SYSUNINIT().  The lists are  * protected by the vnet_sxlock global lock.  */
 end_comment
 
 begin_expr_stmt
@@ -1110,7 +1110,7 @@ operator|>
 name|end
 condition|)
 break|break;
-comment|/* 		 * If we expand at the end of an entry we may have to 		 * merge it with the one following it as well. 		 */
+comment|/* 		 * If we expand at the end of an entry we may have to merge 		 * it with the one following it as well. 		 */
 if|if
 condition|(
 name|df
@@ -1905,7 +1905,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Invoke all registered vnet constructors on the current vnet.  Used  * during vnet construction.  The caller is responsible for ensuring  * the new vnet is the current vnet and that the vnet_sxlock lock is  * locked.  */
+comment|/*  * Invoke all registered vnet constructors on the current vnet.  Used during  * vnet construction.  The caller is responsible for ensuring the new vnet is  * the current vnet and that the vnet_sxlock lock is locked.  */
 end_comment
 
 begin_function
@@ -1951,7 +1951,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Invoke all registered vnet destructors on the current vnet.  Used  * during vnet destruction.  The caller is responsible for ensuring  * the dying vnet is the current vnet and that the vnet_sxlock lock is  * locked.  */
+comment|/*  * Invoke all registered vnet destructors on the current vnet.  Used during  * vnet destruction.  The caller is responsible for ensuring the dying vnet  * is the current vnet and that the vnet_sxlock lock is locked.  */
 end_comment
 
 begin_function
