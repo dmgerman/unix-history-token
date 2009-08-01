@@ -656,40 +656,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Virtual network stack allocator interfaces for vnet setup/teardown.  */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|vnet
-struct_decl|;
-end_struct_decl
-
-begin_function_decl
-name|void
-name|vnet_data_init
-parameter_list|(
-name|struct
-name|vnet
-modifier|*
-name|vnet
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vnet_data_destroy
-parameter_list|(
-name|struct
-name|vnet
-modifier|*
-name|vnet
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Sysctl variants for vnet-virtualized global variables.  Include  *<sys/sysctl.h> to expose these definitions.  *  * Note: SYSCTL_PROC() handler functions will need to resolve pointer  * arguments themselves, if required.  */
 end_comment
 
