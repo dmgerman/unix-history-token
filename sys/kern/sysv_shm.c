@@ -4795,7 +4795,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_sysvshm_check_shmctl
+name|mac_check_sysv_shmctl
 argument_list|(
 name|td
 operator|->
