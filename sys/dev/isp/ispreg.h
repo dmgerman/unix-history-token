@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*-  *  Copyright (c) 1997-2007 by Matthew Jacob  *  All rights reserved.  *   *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions  *  are met:  *   *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  *   *  THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *  ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  *  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *  OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *  SUCH DAMAGE.  */
+comment|/*-  *  Copyright (c) 1997-2009 by Matthew Jacob  *  All rights reserved.  *   *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions  *  are met:  *   *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  *   *  THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *  ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  *  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *  OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *  SUCH DAMAGE.  *   */
 end_comment
 
 begin_comment
@@ -2069,7 +2069,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BIU2400_PRI_RQINP
+name|BIU2400_PRI_REQINP
 value|(BIU_BLOCK+0x2C)
 end_define
 
@@ -2080,7 +2080,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BIU2400_PRI_RSPINP
+name|BIU2400_PRI_REQOUTP
 value|(BIU_BLOCK+0x30)
 end_define
 
@@ -2102,7 +2102,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BIU2400_ATIO_REQINP
+name|BIU2400_ATIO_RSPOUTP
 value|(BIU_BLOCK+0x40)
 end_define
 
@@ -2681,20 +2681,46 @@ name|uint16_t
 name|obits
 decl_stmt|;
 name|uint32_t
-label|:
-literal|28
-operator|,
+name|lineno
+range|:
+literal|16
+decl_stmt|,
+range|:
+literal|12
+decl_stmt|,
 name|logval
-operator|:
+range|:
 literal|4
-expr_stmt|;
+decl_stmt|;
 name|uint32_t
 name|timeout
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|func
 decl_stmt|;
 block|}
 name|mbreg_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|MBSINIT
+parameter_list|(
+name|mbxp
+parameter_list|,
+name|code
+parameter_list|,
+name|loglev
+parameter_list|,
+name|timo
+parameter_list|)
+define|\
+value|ISP_MEMZERO((mbxp), sizeof (mbreg_t));	\ 	(mbxp)->param[0] = code;		\ 	(mbxp)->lineno = __LINE__;		\ 	(mbxp)->func = __func__;		\ 	(mbxp)->logval = loglev;		\ 	(mbxp)->timeout = timo
+end_define
 
 begin_comment
 comment|/*  * Fibre Protocol Module and Frame Buffer Register Offsets/Definitions (2X00).  * NB: The RISC processor must be paused and the appropriate register  * bank selected via BIU2100_CSR bits.  */
