@@ -6297,13 +6297,13 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-comment|/* __semctl */
+comment|/* freebsd7___semctl */
 case|case
 literal|220
 case|:
 block|{
 name|struct
-name|__semctl_args
+name|freebsd7___semctl_args
 modifier|*
 name|p
 init|=
@@ -6351,7 +6351,7 @@ name|p
 operator|->
 name|arg
 expr_stmt|;
-comment|/* union semun * */
+comment|/* union semun_old * */
 operator|*
 name|n_args
 operator|=
@@ -6460,13 +6460,13 @@ literal|3
 expr_stmt|;
 break|break;
 block|}
-comment|/* msgctl */
+comment|/* freebsd7_msgctl */
 case|case
 literal|224
 case|:
 block|{
 name|struct
-name|msgctl_args
+name|freebsd7_msgctl_args
 modifier|*
 name|p
 init|=
@@ -6504,7 +6504,7 @@ name|p
 operator|->
 name|buf
 expr_stmt|;
-comment|/* struct msqid_ds * */
+comment|/* struct msqid_ds_old * */
 operator|*
 name|n_args
 operator|=
@@ -6737,13 +6737,13 @@ literal|3
 expr_stmt|;
 break|break;
 block|}
-comment|/* shmctl */
+comment|/* freebsd7_shmctl */
 case|case
 literal|229
 case|:
 block|{
 name|struct
-name|shmctl_args
+name|freebsd7_shmctl_args
 modifier|*
 name|p
 init|=
@@ -6781,7 +6781,7 @@ name|p
 operator|->
 name|buf
 expr_stmt|;
-comment|/* struct shmid_ds * */
+comment|/* struct shmid_ds_old * */
 operator|*
 name|n_args
 operator|=
@@ -15780,6 +15780,172 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
+comment|/* __semctl */
+case|case
+literal|510
+case|:
+block|{
+name|struct
+name|__semctl_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|semid
+expr_stmt|;
+comment|/* int */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|semnum
+expr_stmt|;
+comment|/* int */
+name|iarg
+index|[
+literal|2
+index|]
+operator|=
+name|p
+operator|->
+name|cmd
+expr_stmt|;
+comment|/* int */
+name|uarg
+index|[
+literal|3
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|arg
+expr_stmt|;
+comment|/* union semun * */
+operator|*
+name|n_args
+operator|=
+literal|4
+expr_stmt|;
+break|break;
+block|}
+comment|/* msgctl */
+case|case
+literal|511
+case|:
+block|{
+name|struct
+name|msgctl_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|msqid
+expr_stmt|;
+comment|/* int */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|cmd
+expr_stmt|;
+comment|/* int */
+name|uarg
+index|[
+literal|2
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|buf
+expr_stmt|;
+comment|/* struct msqid_ds * */
+operator|*
+name|n_args
+operator|=
+literal|3
+expr_stmt|;
+break|break;
+block|}
+comment|/* shmctl */
+case|case
+literal|512
+case|:
+block|{
+name|struct
+name|shmctl_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|shmid
+expr_stmt|;
+comment|/* int */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|cmd
+expr_stmt|;
+comment|/* int */
+name|uarg
+index|[
+literal|2
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|buf
+expr_stmt|;
+comment|/* struct shmid_ds * */
+operator|*
+name|n_args
+operator|=
+literal|3
+expr_stmt|;
+break|break;
+block|}
 default|default:
 operator|*
 name|n_args
@@ -20262,7 +20428,7 @@ case|case
 literal|219
 case|:
 break|break;
-comment|/* __semctl */
+comment|/* freebsd7___semctl */
 case|case
 literal|220
 case|:
@@ -20300,7 +20466,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"union semun *"
+literal|"union semun_old *"
 expr_stmt|;
 break|break;
 default|default:
@@ -20384,7 +20550,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* msgctl */
+comment|/* freebsd7_msgctl */
 case|case
 literal|224
 case|:
@@ -20414,7 +20580,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"struct msqid_ds *"
+literal|"struct msqid_ds_old *"
 expr_stmt|;
 break|break;
 default|default:
@@ -20590,7 +20756,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* shmctl */
+comment|/* freebsd7_shmctl */
 case|case
 literal|229
 case|:
@@ -20620,7 +20786,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"struct shmid_ds *"
+literal|"struct shmid_ds_old *"
 expr_stmt|;
 break|break;
 default|default:
@@ -26999,6 +27165,128 @@ case|:
 name|p
 operator|=
 literal|"int"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* __semctl */
+case|case
+literal|510
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|p
+operator|=
+literal|"union semun *"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* msgctl */
+case|case
+literal|511
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|p
+operator|=
+literal|"struct msqid_ds *"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* shmctl */
+case|case
+literal|512
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|p
+operator|=
+literal|"struct shmid_ds *"
 expr_stmt|;
 break|break;
 default|default:
