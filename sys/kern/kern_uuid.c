@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/uuid.h>
 end_include
 
@@ -243,6 +249,14 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|TD_TO_VNET
+argument_list|(
+name|curthread
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|IFNET_RLOCK
 argument_list|()
 expr_stmt|;
@@ -321,6 +335,9 @@ expr_stmt|;
 name|IFNET_RUNLOCK
 argument_list|()
 expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
 block|}
@@ -371,6 +388,9 @@ name|node
 operator|)
 operator||=
 literal|0x01
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function
