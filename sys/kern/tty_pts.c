@@ -722,9 +722,15 @@ name|error
 operator|!=
 literal|0
 condition|)
+block|{
+name|iblen
+operator|=
+literal|0
+expr_stmt|;
 goto|goto
 name|done
 goto|;
+block|}
 comment|/* 		 * When possible, avoid the slow path. rint_bypass() 		 * copies all input to the input queue at once. 		 */
 name|MPASS
 argument_list|(
@@ -904,6 +910,13 @@ name|tty_unlock
 argument_list|(
 name|tp
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Don't account for the part of the buffer that we couldn't 	 * pass to the TTY. 	 */
+name|uio
+operator|->
+name|uio_resid
+operator|+=
+name|iblen
 expr_stmt|;
 return|return
 operator|(
