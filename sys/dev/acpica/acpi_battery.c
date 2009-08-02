@@ -1311,6 +1311,9 @@ name|found_unit
 operator|=
 literal|0
 expr_stmt|;
+name|newbus_slock
+argument_list|()
+expr_stmt|;
 name|batt_dc
 operator|=
 name|devclass_find
@@ -1370,6 +1373,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|newbus_sunlock
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|dev
@@ -1476,6 +1482,9 @@ block|{
 case|case
 name|ACPIIO_BATT_GET_UNITS
 case|:
+name|newbus_slock
+argument_list|()
+expr_stmt|;
 operator|*
 operator|(
 name|int
@@ -1484,6 +1493,9 @@ operator|)
 name|addr
 operator|=
 name|acpi_battery_get_units
+argument_list|()
+expr_stmt|;
+name|newbus_sunlock
 argument_list|()
 expr_stmt|;
 name|error
@@ -1520,6 +1532,9 @@ name|battinfo
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|newbus_slock
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|acpi_battery_get_battinfo
@@ -1531,6 +1546,9 @@ name|ioctl_arg
 operator|->
 name|battinfo
 argument_list|)
+expr_stmt|;
+name|newbus_sunlock
+argument_list|()
 expr_stmt|;
 block|}
 break|break;
@@ -1712,6 +1730,7 @@ name|val
 decl_stmt|,
 name|error
 decl_stmt|;
+comment|/*      * Tolerate a race here because newbus lock can't be acquired before      * acpi_battery_get_battinfo() as it can create a LOR with the sysctl      * lock.      */
 name|acpi_battery_get_battinfo
 argument_list|(
 name|NULL
@@ -1766,6 +1785,7 @@ name|count
 decl_stmt|,
 name|error
 decl_stmt|;
+comment|/*      * Tolerate a race here in order to avoid a LOR between sysctl lock      * and newbus lock.      */
 name|count
 operator|=
 name|acpi_battery_get_units

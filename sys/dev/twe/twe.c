@@ -1387,6 +1387,9 @@ name|int
 name|i
 decl_stmt|;
 comment|/*      * Scan for drives      */
+name|newbus_xlock
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1406,6 +1409,9 @@ name|sc
 argument_list|,
 name|i
 argument_list|)
+expr_stmt|;
+name|newbus_xunlock
+argument_list|()
 expr_stmt|;
 comment|/*      * Initialise connection with controller.      */
 name|twe_init_connection
@@ -2780,6 +2786,9 @@ break|break;
 case|case
 name|TWEIO_ADD_UNIT
 case|:
+name|newbus_xlock
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|twe_add_unit
@@ -2791,10 +2800,16 @@ operator|->
 name|td_unit
 argument_list|)
 expr_stmt|;
+name|newbus_xunlock
+argument_list|()
+expr_stmt|;
 break|break;
 case|case
 name|TWEIO_DEL_UNIT
 case|:
+name|newbus_xlock
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|twe_del_unit
@@ -2805,6 +2820,9 @@ name|td
 operator|->
 name|td_unit
 argument_list|)
+expr_stmt|;
+name|newbus_xunlock
+argument_list|()
 expr_stmt|;
 break|break;
 comment|/* XXX implement ATA PASSTHROUGH */

@@ -173,12 +173,6 @@ operator|=
 name|D_VERSION
 block|,
 operator|.
-name|d_flags
-operator|=
-name|D_NEEDGIANT
-block|,
-comment|/* we need this as newbus isn't mpsafe */
-operator|.
 name|d_ioctl
 operator|=
 name|ata_ioctl
@@ -1077,10 +1071,16 @@ name|device_t
 operator|)
 name|context
 decl_stmt|;
+name|newbus_xlock
+argument_list|()
+expr_stmt|;
 name|ata_reinit
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|newbus_xunlock
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1257,13 +1257,6 @@ name|nchildren
 argument_list|)
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* newbus suckage it needs Giant */
 for|for
 control|(
 name|i
@@ -1374,13 +1367,6 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* newbus suckage dealt with, release Giant */
 block|}
 comment|/* if we still have a good request put it on the queue again */
 if|if
@@ -1906,6 +1892,9 @@ name|error
 init|=
 name|ENOTTY
 decl_stmt|;
+name|newbus_xlock
+argument_list|()
+expr_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -1960,9 +1949,14 @@ argument_list|(
 name|device
 argument_list|)
 condition|)
+block|{
+name|newbus_xunlock
+argument_list|()
+expr_stmt|;
 return|return
 name|ENXIO
 return|;
+block|}
 name|error
 operator|=
 name|ata_reinit
@@ -2003,9 +1997,14 @@ argument_list|(
 name|device
 argument_list|)
 condition|)
+block|{
+name|newbus_xunlock
+argument_list|()
+expr_stmt|;
 return|return
 name|ENXIO
 return|;
+block|}
 name|error
 operator|=
 name|DEVICE_ATTACH
@@ -2046,9 +2045,14 @@ argument_list|(
 name|device
 argument_list|)
 condition|)
+block|{
+name|newbus_xunlock
+argument_list|()
+expr_stmt|;
 return|return
 name|ENXIO
 return|;
+block|}
 name|error
 operator|=
 name|DEVICE_DETACH
@@ -2091,9 +2095,14 @@ argument_list|(
 name|device
 argument_list|)
 condition|)
+block|{
+name|newbus_xunlock
+argument_list|()
+expr_stmt|;
 return|return
 name|ENXIO
 return|;
+block|}
 name|bzero
 argument_list|(
 name|devices
@@ -2351,6 +2360,9 @@ name|data
 argument_list|)
 expr_stmt|;
 block|}
+name|newbus_xunlock
+argument_list|()
+expr_stmt|;
 return|return
 name|error
 return|;
@@ -3026,13 +3038,9 @@ decl_stmt|;
 name|int
 name|ctlr
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
+name|newbus_xlock
+argument_list|()
 expr_stmt|;
-comment|/* newbus suckage it needs Giant */
 comment|/* kick of probe and attach on all channels */
 for|for
 control|(
@@ -3097,13 +3105,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
+name|newbus_xunlock
+argument_list|()
 expr_stmt|;
-comment|/* newbus suckage dealt with, release Giant */
 block|}
 end_function
 
@@ -3953,12 +3957,6 @@ operator|->
 name|devices
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 comment|/* Skip existing devices. */
 if|if
 condition|(
@@ -4052,19 +4050,11 @@ name|n
 operator|==
 literal|0
 condition|)
-block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 for|for
 control|(
 name|i
@@ -4306,12 +4296,6 @@ expr_stmt|;
 name|bus_generic_attach
 argument_list|(
 name|dev
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 return|return

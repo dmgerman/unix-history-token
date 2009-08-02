@@ -39265,6 +39265,9 @@ literal|"HDA Config: on=0x%08x off=0x%08x\n"
 argument|, 		    quirks_on, quirks_off);
 argument_list|)
 empty_stmt|;
+name|newbus_xlock
+argument_list|()
+expr_stmt|;
 name|hdac_lock
 argument_list|(
 name|sc
@@ -40084,6 +40087,9 @@ literal|"I"
 argument_list|,
 literal|"Dump pin states/data"
 argument_list|)
+expr_stmt|;
+name|newbus_xunlock
+argument_list|()
 expr_stmt|;
 block|}
 end_function

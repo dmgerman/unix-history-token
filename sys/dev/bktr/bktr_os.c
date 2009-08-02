@@ -2754,6 +2754,9 @@ name|ENXIO
 operator|)
 return|;
 comment|/* Record that the device is now busy */
+name|newbus_xlock
+argument_list|()
+expr_stmt|;
 name|device_busy
 argument_list|(
 name|devclass_get_device
@@ -2763,6 +2766,9 @@ argument_list|,
 name|unit
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|newbus_xunlock
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -3107,6 +3113,10 @@ name|result
 operator|!=
 literal|0
 condition|)
+block|{
+name|newbus_xlock
+argument_list|()
+expr_stmt|;
 name|device_unbusy
 argument_list|(
 name|devclass_get_device
@@ -3117,6 +3127,10 @@ name|unit
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|newbus_xunlock
+argument_list|()
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|result
@@ -3249,8 +3263,10 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-break|break;
 block|}
+name|newbus_xlock
+argument_list|()
+expr_stmt|;
 name|device_unbusy
 argument_list|(
 name|devclass_get_device
@@ -3260,6 +3276,9 @@ argument_list|,
 name|unit
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|newbus_xunlock
+argument_list|()
 expr_stmt|;
 return|return
 operator|(

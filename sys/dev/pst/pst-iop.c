@@ -670,6 +670,9 @@ break|break;
 case|case
 name|I2O_CLASS_RANDOM_BLOCK_STORAGE
 case|:
+name|newbus_xlock
+argument_list|()
+expr_stmt|;
 name|pst_add_raid
 argument_list|(
 name|sc
@@ -682,6 +685,9 @@ index|[
 name|i
 index|]
 argument_list|)
+expr_stmt|;
+name|newbus_xunlock
+argument_list|()
 expr_stmt|;
 break|break;
 block|}

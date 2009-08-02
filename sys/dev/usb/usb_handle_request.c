@@ -522,13 +522,9 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
+name|newbus_xlock
+argument_list|()
 expr_stmt|;
-comment|/* XXX */
 name|sx_xlock
 argument_list|(
 name|udev
@@ -607,13 +603,6 @@ goto|;
 block|}
 name|done
 label|:
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 name|sx_unlock
 argument_list|(
 name|udev
@@ -622,6 +611,9 @@ name|default_sx
 operator|+
 literal|1
 argument_list|)
+expr_stmt|;
+name|newbus_xunlock
+argument_list|()
 expr_stmt|;
 name|USB_XFER_LOCK
 argument_list|(
@@ -842,13 +834,9 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
+name|newbus_xlock
+argument_list|()
 expr_stmt|;
-comment|/* XXX */
 name|sx_xlock
 argument_list|(
 name|udev
@@ -1314,12 +1302,6 @@ goto|;
 block|}
 name|tr_valid
 label|:
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|sx_unlock
 argument_list|(
 name|udev
@@ -1328,6 +1310,9 @@ name|default_sx
 operator|+
 literal|1
 argument_list|)
+expr_stmt|;
+name|newbus_xunlock
+argument_list|()
 expr_stmt|;
 name|USB_XFER_LOCK
 argument_list|(
@@ -1341,12 +1326,6 @@ operator|)
 return|;
 name|tr_short
 label|:
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|sx_unlock
 argument_list|(
 name|udev
@@ -1355,6 +1334,9 @@ name|default_sx
 operator|+
 literal|1
 argument_list|)
+expr_stmt|;
+name|newbus_xunlock
+argument_list|()
 expr_stmt|;
 name|USB_XFER_LOCK
 argument_list|(
@@ -1368,12 +1350,6 @@ operator|)
 return|;
 name|tr_stalled
 label|:
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|sx_unlock
 argument_list|(
 name|udev
@@ -1382,6 +1358,9 @@ name|default_sx
 operator|+
 literal|1
 argument_list|)
+expr_stmt|;
+name|newbus_xunlock
+argument_list|()
 expr_stmt|;
 name|USB_XFER_LOCK
 argument_list|(

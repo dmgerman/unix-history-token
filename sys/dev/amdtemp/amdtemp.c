@@ -1053,6 +1053,9 @@ name|dev
 argument_list|)
 expr_stmt|;
 comment|/* 	 * dev.cpu.N.temperature. 	 */
+name|newbus_xlock
+argument_list|()
+expr_stmt|;
 name|nexus
 operator|=
 name|device_find_child
@@ -1159,6 +1162,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|newbus_xunlock
+argument_list|()
+expr_stmt|;
 name|config_intrhook_disestablish
 argument_list|(
 operator|&
