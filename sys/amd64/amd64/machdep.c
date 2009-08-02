@@ -920,6 +920,17 @@ name|strncmp
 argument_list|(
 name|sysenv
 argument_list|,
+literal|"MacBook3,1"
+argument_list|,
+literal|10
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strncmp
+argument_list|(
+name|sysenv
+argument_list|,
 literal|"MacBookPro1,1"
 argument_list|,
 literal|13
