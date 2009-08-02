@@ -18026,7 +18026,7 @@ name|tp
 operator|->
 name|t_state
 expr_stmt|;
-name|TCPSTAT_INC
+name|KMOD_TCPSTAT_INC
 argument_list|(
 name|tcps_connects
 argument_list|)

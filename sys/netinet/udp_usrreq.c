@@ -923,6 +923,36 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Kernel module interface for updating udpstat.  The argument is an index  * into udpstat treated as an array of u_long.  While this encodes the  * general layout of udpstat into the caller, it doesn't encode its location,  * so that future changes to add, for example, per-CPU stats support won't  * cause binary compatibility problems for kernel modules.  */
+end_comment
+
+begin_function
+name|void
+name|kmod_udpstat_inc
+parameter_list|(
+name|int
+name|statnum
+parameter_list|)
+block|{
+operator|(
+operator|*
+operator|(
+operator|(
+name|u_long
+operator|*
+operator|)
+operator|&
+name|V_udpstat
+operator|+
+name|statnum
+operator|)
+operator|)
+operator|++
+expr_stmt|;
+block|}
+end_function
+
 begin_function
 name|int
 name|udp_newudpcb

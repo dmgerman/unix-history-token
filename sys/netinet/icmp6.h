@@ -2703,6 +2703,10 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_comment
+comment|/*  * In-kernel consumers can use these accessor macros directly to update  * stats.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2723,6 +2727,31 @@ parameter_list|(
 name|name
 parameter_list|)
 value|ICMP6STAT_ADD(name, 1)
+end_define
+
+begin_comment
+comment|/*  * Kernel module consumers must use this accessor macro.  */
+end_comment
+
+begin_function_decl
+name|void
+name|kmod_icmp6stat_inc
+parameter_list|(
+name|int
+name|statnum
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|KMOD_ICMP6STAT_INC
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|kmod_icmp6stat_inc(offsetof(struct icmp6stat, name) / sizeof(u_quad_t))
 end_define
 
 begin_endif

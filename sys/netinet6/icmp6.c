@@ -613,6 +613,36 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Kernel module interface for updating icmp6stat.  The argument is an index  * into icmp6stat treated as an array of u_quad_t.  While this encodes the  * general layout of icmp6stat into the caller, it doesn't encode its  * location, so that future changes to add, for example, per-CPU stats  * support won't cause binary compatibility problems for kernel modules.  */
+end_comment
+
+begin_function
+name|void
+name|kmod_icmp6stat_inc
+parameter_list|(
+name|int
+name|statnum
+parameter_list|)
+block|{
+operator|(
+operator|*
+operator|(
+operator|(
+name|u_quad_t
+operator|*
+operator|)
+operator|&
+name|V_icmp6stat
+operator|+
+name|statnum
+operator|)
+operator|)
+operator|++
+expr_stmt|;
+block|}
+end_function
+
 begin_function
 specifier|static
 name|void

@@ -349,6 +349,10 @@ directive|include
 file|<net/vnet.h>
 end_include
 
+begin_comment
+comment|/*  * In-kernel consumers can use these accessor macros directly to update  * stats.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -391,6 +395,52 @@ parameter_list|(
 name|name
 parameter_list|)
 value|IPSTAT_SUB(name, 1)
+end_define
+
+begin_comment
+comment|/*  * Kernel module consumers must use this accessor macro.  */
+end_comment
+
+begin_function_decl
+name|void
+name|kmod_ipstat_inc
+parameter_list|(
+name|int
+name|statnum
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|KMOD_IPSTAT_INC
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|kmod_ipstat_inc(offsetof(struct ipstat, name) / sizeof(u_long))
+end_define
+
+begin_function_decl
+name|void
+name|kmod_ipstat_dec
+parameter_list|(
+name|int
+name|statnum
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|KMOD_IPSTAT_DEC
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|kmod_ipstat_dec(offsetof(struct ipstat, name) / sizeof(u_long))
 end_define
 
 begin_comment

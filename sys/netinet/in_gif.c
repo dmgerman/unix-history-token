@@ -1335,7 +1335,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|IPSTAT_INC
+name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_nogif
 argument_list|)
@@ -1371,7 +1371,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|IPSTAT_INC
+name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_nogif
 argument_list|)
@@ -1658,7 +1658,7 @@ name|AF_LINK
 expr_stmt|;
 break|break;
 default|default:
-name|IPSTAT_INC
+name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_nogif
 argument_list|)

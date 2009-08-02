@@ -99,6 +99,10 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_comment
+comment|/*  * In-kernel consumers can use these accessor macros directly to update  * stats.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -119,6 +123,31 @@ parameter_list|(
 name|name
 parameter_list|)
 value|ICMPSTAT_ADD(name, 1)
+end_define
+
+begin_comment
+comment|/*  * Kernel module consumers must use this accessor macro.  */
+end_comment
+
+begin_function_decl
+name|void
+name|kmod_icmpstat_inc
+parameter_list|(
+name|int
+name|statnum
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|KMOD_ICMPSTAT_INC
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|kmod_icmpstat_inc(offsetof(struct icmpstat, name) / sizeof(u_long))
 end_define
 
 begin_endif

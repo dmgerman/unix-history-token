@@ -614,7 +614,7 @@ name|int
 name|off
 parameter_list|)
 block|{
-name|IPSTAT_INC
+name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_noproto
 argument_list|)
@@ -1137,12 +1137,12 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|IPSTAT_INC
+name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_noproto
 argument_list|)
 expr_stmt|;
-name|IPSTAT_DEC
+name|KMOD_IPSTAT_DEC
 argument_list|(
 name|ips_delivered
 argument_list|)
@@ -1543,7 +1543,7 @@ name|ip_off
 argument_list|)
 expr_stmt|;
 comment|/* Send packet to output processing */
-name|IPSTAT_INC
+name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_rawout
 argument_list|)
@@ -2281,7 +2281,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|IPSTAT_INC
+name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_toosmall
 argument_list|)

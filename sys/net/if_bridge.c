@@ -14298,7 +14298,7 @@ name|NULL
 condition|)
 block|{
 comment|/* XXXJRT new stat, please */
-name|IPSTAT_INC
+name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_toosmall
 argument_list|)
@@ -14345,7 +14345,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|IPSTAT_INC
+name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_toosmall
 argument_list|)
@@ -14384,7 +14384,7 @@ operator|!=
 name|IPVERSION
 condition|)
 block|{
-name|IPSTAT_INC
+name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_badvers
 argument_list|)
@@ -14413,7 +14413,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* minimum header length */
-name|IPSTAT_INC
+name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_badhlen
 argument_list|)
@@ -14447,7 +14447,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|IPSTAT_INC
+name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_badhlen
 argument_list|)
@@ -14541,7 +14541,7 @@ condition|(
 name|sum
 condition|)
 block|{
-name|IPSTAT_INC
+name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_badsum
 argument_list|)
@@ -14568,7 +14568,7 @@ operator|<
 name|hlen
 condition|)
 block|{
-name|IPSTAT_INC
+name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_badlen
 argument_list|)
@@ -14589,7 +14589,7 @@ operator|<
 name|len
 condition|)
 block|{
-name|IPSTAT_INC
+name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_tooshort
 argument_list|)
@@ -15121,7 +15121,7 @@ name|error
 operator|==
 literal|0
 condition|)
-name|IPSTAT_INC
+name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_fragmented
 argument_list|)
