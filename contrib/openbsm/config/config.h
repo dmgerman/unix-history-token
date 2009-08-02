@@ -583,7 +583,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"OpenBSM 1.1p1"
+value|"OpenBSM 1.1p2"
 end_define
 
 begin_comment
@@ -605,7 +605,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.1p1"
+value|"1.1p2"
 end_define
 
 begin_comment
@@ -679,7 +679,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"1.1p1"
+value|"1.1p2"
 end_define
 
 begin_comment
