@@ -402,10 +402,17 @@ name|void
 modifier|*
 name|inp_pspare
 index|[
-literal|2
+literal|4
 index|]
 decl_stmt|;
 comment|/* (x) rtentry / general use */
+name|u_int
+name|inp_ispare
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* general use */
 comment|/* Local and foreign ports, local and foreign addr. */
 name|struct
 name|in_conninfo
