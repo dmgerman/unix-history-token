@@ -152,6 +152,8 @@ operator|=
 name|cursig
 argument_list|(
 name|td
+argument_list|,
+name|SIG_STOP_ALLOWED
 argument_list|)
 expr_stmt|;
 name|mtx_unlock

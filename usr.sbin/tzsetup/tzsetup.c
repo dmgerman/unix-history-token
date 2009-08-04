@@ -3579,7 +3579,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: tzsetup [-n]\n"
+literal|"usage: tzsetup [-ns]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3651,7 +3651,13 @@ name|int
 name|c
 decl_stmt|,
 name|fd
+decl_stmt|,
+name|skiputc
 decl_stmt|;
+name|skiputc
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -3663,7 +3669,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"n"
+literal|"ns"
 argument_list|)
 operator|)
 operator|!=
@@ -3682,6 +3688,14 @@ case|:
 name|reallydoit
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+name|skiputc
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 default|default:
@@ -3724,6 +3738,16 @@ expr_stmt|;
 name|make_menus
 argument_list|()
 expr_stmt|;
+name|init_dialog
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|skiputc
+operator|==
+literal|0
+condition|)
+block|{
 name|snprintf
 argument_list|(
 name|title
@@ -3749,9 +3773,6 @@ literal|"Is this machine's CMOS clock set to UTC?  "
 literal|"If it is set to local time,\n"
 literal|"or you don't know, please choose NO here!"
 argument_list|)
-expr_stmt|;
-name|init_dialog
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -3829,6 +3850,7 @@ block|}
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|optind

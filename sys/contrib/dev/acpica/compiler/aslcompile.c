@@ -225,19 +225,17 @@ name|CompilerId
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Version, build date, copyright, compliance */
+comment|/* Version, copyright, compliance */
 name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|" version %X [%s]\n%s%s\n%s%s\n%s\n"
+literal|" version %X\n%s%s\n%s%s\n%s\n"
 argument_list|,
 operator|(
 name|UINT32
 operator|)
 name|ACPI_CA_VERSION
-argument_list|,
-name|__DATE__
 argument_list|,
 name|Prefix
 argument_list|,

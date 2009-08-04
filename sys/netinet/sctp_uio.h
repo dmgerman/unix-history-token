@@ -208,9 +208,6 @@ decl_stmt|;
 name|uint16_t
 name|sinfo_flags
 decl_stmt|;
-name|uint16_t
-name|sinfo_pr_policy
-decl_stmt|;
 name|uint32_t
 name|sinfo_ppid
 decl_stmt|;

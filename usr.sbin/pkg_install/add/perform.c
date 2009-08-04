@@ -1224,6 +1224,9 @@ literal|"-f specified; proceeding anyway"
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|ENSURE_THAT_ALL_REQUIREMENTS_ARE_MET
 comment|/*      * Before attempting to do the slave mode bit, ensure that we've      * downloaded& processed everything we need.      * It's possible that we haven't already installed all of our      * dependencies if the dependency list was misgenerated due to      * other dynamic dependencies or if a dependency was added to a      * package without all REQUIRED_BY packages being regenerated.      */
 for|for
 control|(
@@ -1433,6 +1436,8 @@ block|}
 block|}
 block|}
 block|}
+endif|#
+directive|endif
 comment|/* Now check the packing list for dependencies */
 for|for
 control|(

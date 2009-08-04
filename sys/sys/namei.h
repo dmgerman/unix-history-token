@@ -36,7 +36,7 @@ name|u_long
 name|cn_nameiop
 decl_stmt|;
 comment|/* namei operation */
-name|u_long
+name|u_int64_t
 name|cn_flags
 decl_stmt|;
 comment|/* flags to namei */
@@ -145,7 +145,7 @@ modifier|*
 name|ni_next
 decl_stmt|;
 comment|/* next location in pathname */
-name|u_long
+name|u_int
 name|ni_loopcnt
 decl_stmt|;
 comment|/* count of symlinks encountered */

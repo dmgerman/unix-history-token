@@ -296,12 +296,6 @@ directive|include
 file|<sys/sx.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/vimage.h>
-end_include
-
 begin_else
 else|#
 directive|else
@@ -449,23 +443,6 @@ directive|include
 file|<netinet/if_ether.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/vinet.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -564,12 +541,6 @@ begin_include
 include|#
 directive|include
 file|<netinet6/in6_pcb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/vinet6.h>
 end_include
 
 begin_endif
@@ -8006,7 +7977,7 @@ directive|else
 argument|pf_send_tcp(const struct pf_rule *r, sa_family_t af,
 endif|#
 directive|endif
-argument|const struct pf_addr *saddr, const struct pf_addr *daddr,     u_int16_t sport, u_int16_t dport, u_int32_t seq, u_int32_t ack,     u_int8_t flags, u_int16_t win, u_int16_t mss, u_int8_t ttl, int tag,     u_int16_t rtag, struct ether_header *eh, struct ifnet *ifp) { 	INIT_VNET_INET(curvnet); 	struct mbuf	*m; 	int		 len, tlen;
+argument|const struct pf_addr *saddr, const struct pf_addr *daddr,     u_int16_t sport, u_int16_t dport, u_int32_t seq, u_int32_t ack,     u_int8_t flags, u_int16_t win, u_int16_t mss, u_int8_t ttl, int tag,     u_int16_t rtag, struct ether_header *eh, struct ifnet *ifp) { 	struct mbuf	*m; 	int		 len, tlen;
 ifdef|#
 directive|ifdef
 name|INET
@@ -8951,7 +8922,7 @@ directive|else
 argument|pf_socket_lookup(int direction, struct pf_pdesc *pd)
 endif|#
 directive|endif
-argument|{ 	INIT_VNET_INET(curvnet); 	struct pf_addr		*saddr, *daddr; 	u_int16_t		 sport, dport;
+argument|{ 	struct pf_addr		*saddr, *daddr; 	u_int16_t		 sport, dport;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -9094,7 +9065,7 @@ argument|]; 			if (optlen<
 literal|2
 argument|) 				optlen =
 literal|2
-argument|; 			hlen -= optlen; 			opt += optlen; 			break; 		} 	} 	return (wscale); }  u_int16_t pf_get_mss(struct mbuf *m, int off, u_int16_t th_off, sa_family_t af) { 	INIT_VNET_INET(curvnet); 	int		 hlen; 	u_int8_t	 hdr[
+argument|; 			hlen -= optlen; 			opt += optlen; 			break; 		} 	} 	return (wscale); }  u_int16_t pf_get_mss(struct mbuf *m, int off, u_int16_t th_off, sa_family_t af) { 	int		 hlen; 	u_int8_t	 hdr[
 literal|60
 argument|]; 	u_int8_t	*opt, optlen; 	u_int16_t	 mss = V_tcp_mssdflt;  	hlen = th_off<<
 literal|2
@@ -9120,7 +9091,7 @@ argument|; 			hlen -= optlen; 			opt += optlen; 			break; 		} 	} 	return (mss); 
 ifdef|#
 directive|ifdef
 name|INET
-argument|INIT_VNET_INET(curvnet); 	struct sockaddr_in	*dst; 	struct route		 ro;
+argument|struct sockaddr_in	*dst; 	struct route		 ro;
 endif|#
 directive|endif
 comment|/* INET */
@@ -9225,7 +9196,7 @@ directive|else
 argument|struct pf_pdesc *pd, struct pf_rule **am, struct pf_ruleset **rsm,     struct ifqueue *ifq)
 endif|#
 directive|endif
-argument|{ 	INIT_VNET_INET(curvnet); 	struct pf_rule		*nr = NULL; 	struct pf_addr		*saddr = pd->src
+argument|{ 	struct pf_rule		*nr = NULL; 	struct pf_addr		*saddr = pd->src
 argument_list|,
 argument|*daddr = pd->dst; 	struct tcphdr		*th = pd->hdr.tcp; 	u_int16_t		 bport
 argument_list|,
@@ -17847,7 +17818,7 @@ argument|RTFREE(ro.ro_rt); 	}  	return (ret); }
 ifdef|#
 directive|ifdef
 name|INET
-argument|void pf_route(struct mbuf **m, struct pf_rule *r, int dir, struct ifnet *oifp,     struct pf_state *s, struct pf_pdesc *pd) { 	INIT_VNET_INET(curvnet); 	struct mbuf		*m0, *m1; 	struct route		 iproute; 	struct route		*ro = NULL; 	struct sockaddr_in	*dst; 	struct ip		*ip; 	struct ifnet		*ifp = NULL; 	struct pf_addr		 naddr; 	struct pf_src_node	*sn = NULL; 	int			 error =
+argument|void pf_route(struct mbuf **m, struct pf_rule *r, int dir, struct ifnet *oifp,     struct pf_state *s, struct pf_pdesc *pd) { 	struct mbuf		*m0, *m1; 	struct route		 iproute; 	struct route		*ro = NULL; 	struct sockaddr_in	*dst; 	struct ip		*ip; 	struct ifnet		*ifp = NULL; 	struct pf_addr		 naddr; 	struct pf_src_node	*sn = NULL; 	int			 error =
 literal|0
 argument|;
 ifdef|#
@@ -17885,7 +17856,7 @@ argument|)); 		goto bad; 	}  	ip = mtod(m0, struct ip *);  	ro =&iproute; 	bzero
 literal|0
 argument|); 		if (ro->ro_rt ==
 literal|0
-argument|) { 			IPSTAT_INC(ips_noroute); 			goto bad; 		}  		ifp = ro->ro_rt->rt_ifp; 		ro->ro_rt->rt_use++;  		if (ro->ro_rt->rt_flags& RTF_GATEWAY) 			dst = satosin(ro->ro_rt->rt_gateway); 	} else { 		if (TAILQ_EMPTY(&r->rpool.list)) { 			DPFPRINTF(PF_DEBUG_URGENT, 			    (
+argument|) { 			KMOD_IPSTAT_INC(ips_noroute); 			goto bad; 		}  		ifp = ro->ro_rt->rt_ifp; 		ro->ro_rt->rt_use++;  		if (ro->ro_rt->rt_flags& RTF_GATEWAY) 			dst = satosin(ro->ro_rt->rt_gateway); 	} else { 		if (TAILQ_EMPTY(&r->rpool.list)) { 			DPFPRINTF(PF_DEBUG_URGENT, 			    (
 literal|"pf_route: TAILQ_EMPTY(&r->rpool.list)\n"
 argument|)); 			goto bad; 		} 		if (s == NULL) { 			pf_map_addr(AF_INET, r, (struct pf_addr *)&ip->ip_src,&naddr, NULL,&sn); 			if (!PF_AZERO(&naddr, AF_INET)) 				dst->sin_addr.s_addr = naddr.v4.s_addr; 			ifp = r->rpool.cur->kif ? 			    r->rpool.cur->kif->pfik_ifp : NULL; 		} else { 			if (!PF_AZERO(&s->rt_addr, AF_INET)) 				dst->sin_addr.s_addr = 				    s->rt_addr.v4.s_addr; 			ifp = s->rt_kif ? s->rt_kif->pfik_ifp : NULL; 		} 	} 	if (ifp == NULL) 		goto bad;  	if (oifp != ifp) {
 ifdef|#
@@ -17943,17 +17914,17 @@ argument|if (m0->m_pkthdr.csum_flags& M_TCPV4_CSUM_OUT) { 		if (!(ifp->if_capabi
 comment|/* Clear */
 argument|} 	} else if (m0->m_pkthdr.csum_flags& M_UDPV4_CSUM_OUT) { 		if (!(ifp->if_capabilities& IFCAP_CSUM_UDPv4) || 		    ifp->if_bridge != NULL) { 			in_delayed_cksum(m0); 			m0->m_pkthdr.csum_flags&= ~M_UDPV4_CSUM_OUT;
 comment|/* Clear */
-argument|} 	}  	if (ntohs(ip->ip_len)<= ifp->if_mtu) { 		if ((ifp->if_capabilities& IFCAP_CSUM_IPv4)&& 		    ifp->if_bridge == NULL) { 			m0->m_pkthdr.csum_flags |= M_IPV4_CSUM_OUT; 			IPSTAT_INC(ips_outhwcsum); 		} else { 			ip->ip_sum =
+argument|} 	}  	if (ntohs(ip->ip_len)<= ifp->if_mtu) { 		if ((ifp->if_capabilities& IFCAP_CSUM_IPv4)&& 		    ifp->if_bridge == NULL) { 			m0->m_pkthdr.csum_flags |= M_IPV4_CSUM_OUT; 			KMOD_IPSTAT_INC(ips_outhwcsum); 		} else { 			ip->ip_sum =
 literal|0
 argument|; 			ip->ip_sum = in_cksum(m0, ip->ip_hl<<
 literal|2
 argument|); 		}
 comment|/* Update relevant hardware checksum stats for TCP/UDP */
-argument|if (m0->m_pkthdr.csum_flags& M_TCPV4_CSUM_OUT) 			TCPSTAT_INC(tcpstat.tcps_outhwcsum); 		else if (m0->m_pkthdr.csum_flags& M_UDPV4_CSUM_OUT) 			UDPSTAT_INC(udps_outhwcsum); 		error = (*ifp->if_output)(ifp, m0, sintosa(dst), NULL); 		goto done; 	}
+argument|if (m0->m_pkthdr.csum_flags& M_TCPV4_CSUM_OUT) 			KMOD_TCPSTAT_INC(tcps_outhwcsum); 		else if (m0->m_pkthdr.csum_flags& M_UDPV4_CSUM_OUT) 			KMOD_UDPSTAT_INC(udps_outhwcsum); 		error = (*ifp->if_output)(ifp, m0, sintosa(dst), NULL); 		goto done; 	}
 endif|#
 directive|endif
 comment|/* 	 * Too large for interface; fragment if possible. 	 * Must be able to put at least 8 bytes per fragment. 	 */
-argument|if (ip->ip_off& htons(IP_DF)) { 		IPSTAT_INC(ips_cantfrag); 		if (r->rt != PF_DUPTO) {
+argument|if (ip->ip_off& htons(IP_DF)) { 		KMOD_IPSTAT_INC(ips_cantfrag); 		if (r->rt != PF_DUPTO) {
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -18005,7 +17976,7 @@ endif|#
 directive|endif
 argument|m_freem(m0); 	}  	if (error ==
 literal|0
-argument|) 		IPSTAT_INC(ips_fragmented);  done: 	if (r->rt != PF_DUPTO) 		*m = NULL; 	if (ro ==&iproute&& ro->ro_rt) 		RTFREE(ro->ro_rt); 	return;  bad: 	m_freem(m0); 	goto done; }
+argument|) 		KMOD_IPSTAT_INC(ips_fragmented);  done: 	if (r->rt != PF_DUPTO) 		*m = NULL; 	if (ro ==&iproute&& ro->ro_rt) 		RTFREE(ro->ro_rt); 	return;  bad: 	m_freem(m0); 	goto done; }
 endif|#
 directive|endif
 comment|/* INET */
@@ -18142,11 +18113,11 @@ directive|endif
 comment|/* INET6 */
 argument|default: 			return (
 literal|1
-argument|); 		} 	} 	if (sum) { 		switch (p) { 		case IPPROTO_TCP: 		    { 			INIT_VNET_INET(curvnet); 			TCPSTAT_INC(tcps_rcvbadsum); 			break; 		    } 		case IPPROTO_UDP: 		    { 			INIT_VNET_INET(curvnet); 			UDPSTAT_INC(udps_badsum); 			break; 		    } 		case IPPROTO_ICMP: 		    { 			INIT_VNET_INET(curvnet); 			ICMPSTAT_INC(icps_checksum); 			break; 		    }
+argument|); 		} 	} 	if (sum) { 		switch (p) { 		case IPPROTO_TCP: 		    { 			KMOD_TCPSTAT_INC(tcps_rcvbadsum); 			break; 		    } 		case IPPROTO_UDP: 		    { 			KMOD_UDPSTAT_INC(udps_badsum); 			break; 		    } 		case IPPROTO_ICMP: 		    { 			KMOD_ICMPSTAT_INC(icps_checksum); 			break; 		    }
 ifdef|#
 directive|ifdef
 name|INET6
-argument|case IPPROTO_ICMPV6: 		    { 			INIT_VNET_INET6(curvnet); 			ICMP6STAT_INC(icp6s_checksum); 			break; 		    }
+argument|case IPPROTO_ICMPV6: 		    { 			KMOD_ICMP6STAT_INC(icp6s_checksum); 			break; 		    }
 endif|#
 directive|endif
 comment|/* INET6 */
@@ -18204,11 +18175,11 @@ directive|endif
 comment|/* INET6 */
 argument|default: 		return (
 literal|1
-argument|); 	} 	if (sum) { 		m->m_pkthdr.csum_flags |= flag_bad; 		switch (p) { 		case IPPROTO_TCP: 			TCPSTAT_INC(tcps_rcvbadsum); 			break; 		case IPPROTO_UDP: 			UDPSTAT_INC(udps_badsum); 			break; 		case IPPROTO_ICMP: 			ICMPSTAT_INC(icps_checksum); 			break;
+argument|); 	} 	if (sum) { 		m->m_pkthdr.csum_flags |= flag_bad; 		switch (p) { 		case IPPROTO_TCP: 			KMOD_TCPSTAT_INC(tcps_rcvbadsum); 			break; 		case IPPROTO_UDP: 			KMOD_UDPSTAT_INC(udps_badsum); 			break; 		case IPPROTO_ICMP: 			KMOD_ICMPSTAT_INC(icps_checksum); 			break;
 ifdef|#
 directive|ifdef
 name|INET6
-argument|case IPPROTO_ICMPV6: 			ICMP6STAT_INC(icp6s_checksum); 			break;
+argument|case IPPROTO_ICMPV6: 			KMOD_ICMP6STAT_INC(icp6s_checksum); 			break;
 endif|#
 directive|endif
 comment|/* INET6 */

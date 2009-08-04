@@ -656,6 +656,16 @@ name|flags
 operator||=
 name|SLEEPQ_INTERRUPTIBLE
 expr_stmt|;
+if|if
+condition|(
+name|priority
+operator|&
+name|PBDRY
+condition|)
+name|flags
+operator||=
+name|SLEEPQ_STOP_ON_BDRY
+expr_stmt|;
 name|sleepq_lock
 argument_list|(
 name|ident
@@ -1351,9 +1361,23 @@ if|if
 condition|(
 name|wakeup_swapper
 condition|)
+block|{
+name|KASSERT
+argument_list|(
+name|ident
+operator|!=
+operator|&
+name|proc0
+argument_list|,
+operator|(
+literal|"wakeup and wakeup_swapper and proc0"
+operator|)
+argument_list|)
+expr_stmt|;
 name|kick_proc0
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 end_function
 

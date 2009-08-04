@@ -134,6 +134,17 @@ name|NETISR_NATM
 value|11
 end_define
 
+begin_define
+define|#
+directive|define
+name|NETISR_EPAIR
+value|12
+end_define
+
+begin_comment
+comment|/* if_epair(4) */
+end_comment
+
 begin_comment
 comment|/*-  * Protocols express ordering constraints and affinity preferences by  * implementing one or neither of nh_m2flow and nh_m2cpuid, which are used by  * netisr to determine which per-CPU workstream to assign mbufs to.  *  * The following policies may be used by protocols:  *  * NETISR_POLICY_SOURCE - netisr should maintain source ordering without  *                        advice from the protocol.  netisr will ignore any  *                        flow IDs present on the mbuf for the purposes of  *                        work placement.  *  * NETISR_POLICY_FLOW - netisr should maintain flow ordering as defined by  *                      the mbuf header flow ID field.  If the protocol  *                      implements nh_m2flow, then netisr will query the  *                      protocol in the event that the mbuf doesn't have a  *                      flow ID, falling back on source ordering.  *  * NETISR_POLICY_CPU - netisr will delegate all work placement decisions to  *                     the protocol, querying nh_m2cpuid for each packet.  *  * Protocols might make decisions about work placement based on an existing  * calculated flow ID on the mbuf, such as one provided in hardware, the  * receive interface pointed to by the mbuf (if any), the optional source  * identifier passed at some dispatch points, or even parse packet headers to  * calculate a flow.  Both protocol handlers may return a new mbuf pointer  * for the chain, or NULL if the packet proves invalid or m_pullup() fails.  *  * XXXRW: If we eventually support dynamic reconfiguration, there should be  * protocol handlers to notify them of CPU configuration changes so that they  * can rebalance work.  */
 end_comment

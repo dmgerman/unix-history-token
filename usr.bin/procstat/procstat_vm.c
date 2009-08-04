@@ -395,6 +395,14 @@ literal|"dd"
 expr_stmt|;
 break|break;
 case|case
+name|KVME_TYPE_SG
+case|:
+name|str
+operator|=
+literal|"sg"
+expr_stmt|;
+break|break;
+case|case
 name|KVME_TYPE_UNKNOWN
 case|:
 default|default:

@@ -116,7 +116,7 @@ file|"pw_scan.h"
 end_include
 
 begin_comment
-comment|/*  * Some software assumes that IDs are short.  We should emit warnings  * for id's which cannot be stored in a short, but we are more liberal  * by default, warning for IDs greater than USHRT_MAX.  *  * If pw_big_ids_warning is -1 on entry to pw_scan(), it will be set based  * on the existence of PW_SCAN_BIG_IDS in the environment.  */
+comment|/*  * Some software assumes that IDs are short.  We should emit warnings  * for id's which cannot be stored in a short, but we are more liberal  * by default, warning for IDs greater than USHRT_MAX.  *  * If pw_big_ids_warning is -1 on entry to pw_scan(), it will be set based  * on the existence of PW_SCAN_BIG_IDS in the environment.  *  * It is believed all baseline system software that can not handle the  * normal ID sizes is now gone so pw_big_ids_warning is disabled for now.  * But the code has been left in place in case end-users want to re-enable  * it and/or for the next time the ID sizes get bigger but pieces of the  * system lag behind.  */
 end_comment
 
 begin_decl_stmt
@@ -124,8 +124,7 @@ specifier|static
 name|int
 name|pw_big_ids_warning
 init|=
-operator|-
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -161,6 +160,10 @@ name|p
 decl_stmt|,
 modifier|*
 name|sh
+decl_stmt|;
+name|unsigned
+name|long
+name|temp
 decl_stmt|;
 if|if
 condition|(
@@ -369,7 +372,11 @@ operator|)
 return|;
 block|}
 block|}
-name|id
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|temp
 operator|=
 name|strtoul
 argument_list|(
@@ -383,9 +390,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|temp
+operator|==
+name|ULONG_MAX
+operator|&&
 name|errno
 operator|==
 name|ERANGE
+operator|)
+operator|||
+name|temp
+operator|>
+name|UID_MAX
 condition|)
 block|{
 if|if
@@ -396,11 +413,11 @@ name|_PWSCAN_WARN
 condition|)
 name|warnx
 argument_list|(
-literal|"%s> max uid value (%lu)"
+literal|"%s> max uid value (%u)"
 argument_list|,
 name|p
 argument_list|,
-name|ULONG_MAX
+name|UID_MAX
 argument_list|)
 expr_stmt|;
 return|return
@@ -409,6 +426,10 @@ literal|0
 operator|)
 return|;
 block|}
+name|id
+operator|=
+name|temp
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -568,7 +589,11 @@ operator|)
 return|;
 block|}
 block|}
-name|id
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|temp
 operator|=
 name|strtoul
 argument_list|(
@@ -582,9 +607,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|temp
+operator|==
+name|ULONG_MAX
+operator|&&
 name|errno
 operator|==
 name|ERANGE
+operator|)
+operator|||
+name|temp
+operator|>
+name|GID_MAX
 condition|)
 block|{
 if|if
@@ -595,11 +630,11 @@ name|_PWSCAN_WARN
 condition|)
 name|warnx
 argument_list|(
-literal|"%s> max gid value (%lu)"
+literal|"%s> max gid value (%u)"
 argument_list|,
 name|p
 argument_list|,
-name|ULONG_MAX
+name|GID_MAX
 argument_list|)
 expr_stmt|;
 return|return
@@ -608,6 +643,10 @@ literal|0
 operator|)
 return|;
 block|}
+name|id
+operator|=
+name|temp
+expr_stmt|;
 if|if
 condition|(
 operator|*

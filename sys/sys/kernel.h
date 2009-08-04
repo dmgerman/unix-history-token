@@ -215,6 +215,11 @@ init|=
 literal|0x1C00000
 block|,
 comment|/* eventhandler init */
+name|SI_SUB_VNET_PRELINK
+init|=
+literal|0x1E00000
+block|,
+comment|/* vnet init before modules */
 name|SI_SUB_KLD
 init|=
 literal|0x2000000
@@ -245,11 +250,11 @@ init|=
 literal|0x21D0000
 block|,
 comment|/* TrustedBSD MAC subsystem */
-name|SI_SUB_VIMAGE
+name|SI_SUB_VNET
 init|=
 literal|0x21E0000
 block|,
-comment|/* vimage infrastructure */
+comment|/* vnet 0 */
 name|SI_SUB_INTRINSIC
 init|=
 literal|0x2200000
@@ -415,6 +420,11 @@ init|=
 literal|0x8400000
 block|,
 comment|/* interfaces*/
+name|SI_SUB_PROTO_DOMAININIT
+init|=
+literal|0x8600000
+block|,
+comment|/* domain registration system */
 name|SI_SUB_PROTO_DOMAIN
 init|=
 literal|0x8800000
@@ -475,7 +485,7 @@ init|=
 literal|0xd800000
 block|,
 comment|/* register system calls */
-name|SI_SUB_VIMAGE_DONE
+name|SI_SUB_VNET_DONE
 init|=
 literal|0xdc00000
 block|,
@@ -546,6 +556,11 @@ init|=
 literal|0x0000002
 block|,
 comment|/* third*/
+name|SI_ORDER_FOURTH
+init|=
+literal|0x0000003
+block|,
+comment|/* fourth*/
 name|SI_ORDER_MIDDLE
 init|=
 literal|0x1000000

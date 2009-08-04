@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/domain.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/jail.h>
 end_include
 
@@ -49,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/domain.h>
 end_include
 
 begin_include
@@ -121,12 +121,6 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vimage.h>
 end_include
 
 begin_include
@@ -6211,11 +6205,6 @@ modifier|*
 name|sa
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|m_tag
 modifier|*
@@ -6700,11 +6689,6 @@ modifier|*
 name|w
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -7126,11 +7110,6 @@ modifier|*
 name|w
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -7916,7 +7895,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|DOMAIN_SET
+name|VNET_DOMAIN_SET
 argument_list|(
 name|route
 argument_list|)

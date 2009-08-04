@@ -866,7 +866,7 @@ name|DocDists
 argument_list|,
 name|DOC_MN
 argument_list|,
-literal|"mn-freebsd-doc-mn"
+literal|"mn-freebsd-doc"
 argument_list|)
 block|,
 name|DTE_PACKAGE

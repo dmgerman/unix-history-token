@@ -670,6 +670,13 @@ argument_list|)
 block|,
 name|UATH_DEV
 argument_list|(
+name|DLINK2
+argument_list|,
+name|DWA120
+argument_list|)
+block|,
+name|UATH_DEV
+argument_list|(
 name|GIGASET
 argument_list|,
 name|AR5523

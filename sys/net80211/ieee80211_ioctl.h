@@ -745,9 +745,69 @@ name|is_ampdu_rexmt_fail
 decl_stmt|;
 comment|/* A-MPDU frames rexmt fail */
 name|uint32_t
+name|is_mesh_wrongmesh
+decl_stmt|;
+comment|/* dropped 'cuz not mesh sta*/
+name|uint32_t
+name|is_mesh_nolink
+decl_stmt|;
+comment|/* dropped 'cuz link not estab*/
+name|uint32_t
+name|is_mesh_fwd_ttl
+decl_stmt|;
+comment|/* mesh not fwd'd 'cuz ttl 0 */
+name|uint32_t
+name|is_mesh_fwd_nobuf
+decl_stmt|;
+comment|/* mesh not fwd'd 'cuz no mbuf*/
+name|uint32_t
+name|is_mesh_fwd_tooshort
+decl_stmt|;
+comment|/* mesh not fwd'd 'cuz no hdr */
+name|uint32_t
+name|is_mesh_fwd_disabled
+decl_stmt|;
+comment|/* mesh not fwd'd 'cuz disabled */
+name|uint32_t
+name|is_mesh_fwd_nopath
+decl_stmt|;
+comment|/* mesh not fwd'd 'cuz path unknown */
+name|uint32_t
+name|is_hwmp_wrongseq
+decl_stmt|;
+comment|/* wrong hwmp seq no. */
+name|uint32_t
+name|is_hwmp_rootreqs
+decl_stmt|;
+comment|/* root PREQs sent */
+name|uint32_t
+name|is_hwmp_rootrann
+decl_stmt|;
+comment|/* root RANNs sent */
+name|uint32_t
+name|is_mesh_badae
+decl_stmt|;
+comment|/* dropped 'cuz invalid AE */
+name|uint32_t
+name|is_mesh_rtaddfailed
+decl_stmt|;
+comment|/* route add failed */
+name|uint32_t
+name|is_mesh_notproxy
+decl_stmt|;
+comment|/* dropped 'cuz not proxying */
+name|uint32_t
+name|is_rx_badalign
+decl_stmt|;
+comment|/* dropped 'cuz misaligned */
+name|uint32_t
+name|is_hwmp_proxy
+decl_stmt|;
+comment|/* PREP for proxy route */
+name|uint32_t
 name|is_spare
 index|[
-literal|16
+literal|11
 index|]
 decl_stmt|;
 block|}
@@ -973,8 +1033,117 @@ name|IEEE80211_ADDR_LEN
 index|]
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Mesh Routing Table Operations.  */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|IEEE80211_MESH_RTCMD_LIST
+init|=
+literal|0
+block|,
+comment|/* list HWMP routing table */
+name|IEEE80211_MESH_RTCMD_FLUSH
+init|=
+literal|1
+block|,
+comment|/* flush HWMP routing table */
+name|IEEE80211_MESH_RTCMD_ADD
+init|=
+literal|2
+block|,
+comment|/* add entry to the table */
+name|IEEE80211_MESH_RTCMD_DELETE
+init|=
+literal|3
+block|,
+comment|/* delete an entry from the table */
+block|}
+enum|;
+end_enum
+
+begin_struct
+struct|struct
+name|ieee80211req_mesh_route
+block|{
+name|uint8_t
+name|imr_flags
+decl_stmt|;
+define|#
+directive|define
+name|IEEE80211_MESHRT_FLAGS_VALID
+value|0x01
+define|#
+directive|define
+name|IEEE80211_MESHRT_FLAGS_PROXY
+value|0x02
+name|uint8_t
+name|imr_dest
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
+name|uint8_t
+name|imr_nexthop
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
+name|uint16_t
+name|imr_nhops
+decl_stmt|;
+name|uint8_t
+name|imr_pad
+decl_stmt|;
+name|uint32_t
+name|imr_metric
+decl_stmt|;
+name|uint32_t
+name|imr_lifetime
+decl_stmt|;
+name|uint32_t
+name|imr_lastmseq
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * HWMP root modes  */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|IEEE80211_HWMP_ROOTMODE_DISABLED
+init|=
+literal|0
+block|,
+comment|/* disabled */
+name|IEEE80211_HWMP_ROOTMODE_NORMAL
+init|=
+literal|1
+block|,
+comment|/* normal PREPs */
+name|IEEE80211_HWMP_ROOTMODE_PROACTIVE
+init|=
+literal|2
+block|,
+comment|/* proactive PREPS */
+name|IEEE80211_HWMP_ROOTMODE_RANN
+init|=
+literal|3
+block|,
+comment|/* use RANN elemid */
+block|}
+enum|;
+end_enum
 
 begin_comment
 comment|/*  * Set the active channel list by IEEE channel #: each channel  * to be marked active is set in a bit vector.  Note this list is  * intersected with the available channel list in calculating  * the set of channels actually used in scanning.  */
@@ -1241,6 +1410,16 @@ name|ieee80211_mimo_info
 name|isi_mimo
 decl_stmt|;
 comment|/* MIMO info for 11n sta's */
+comment|/* 11s info */
+name|uint16_t
+name|isi_peerid
+decl_stmt|;
+name|uint16_t
+name|isi_localid
+decl_stmt|;
+name|uint8_t
+name|isi_peerstate
+decl_stmt|;
 comment|/* XXX frag state? */
 comment|/* variable length IE data */
 block|}
@@ -2621,6 +2800,160 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_IOC_MESH_ID
+value|170
+end_define
+
+begin_comment
+comment|/* mesh identifier */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_MESH_AP
+value|171
+end_define
+
+begin_comment
+comment|/* accepting peerings */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_MESH_FWRD
+value|172
+end_define
+
+begin_comment
+comment|/* forward frames */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_MESH_PROTO
+value|173
+end_define
+
+begin_comment
+comment|/* mesh protocols */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_MESH_TTL
+value|174
+end_define
+
+begin_comment
+comment|/* mesh TTL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_MESH_RTCMD
+value|175
+end_define
+
+begin_comment
+comment|/* mesh routing table commands*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_MESH_PR_METRIC
+value|176
+end_define
+
+begin_comment
+comment|/* mesh metric protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_MESH_PR_PATH
+value|177
+end_define
+
+begin_comment
+comment|/* mesh path protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_MESH_PR_SIG
+value|178
+end_define
+
+begin_comment
+comment|/* mesh sig protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_MESH_PR_CC
+value|179
+end_define
+
+begin_comment
+comment|/* mesh congestion protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_MESH_PR_AUTH
+value|180
+end_define
+
+begin_comment
+comment|/* mesh auth protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_HWMP_ROOTMODE
+value|190
+end_define
+
+begin_comment
+comment|/* HWMP root mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_HWMP_MAXHOPS
+value|191
+end_define
+
+begin_comment
+comment|/* number of hops before drop */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_HWMP_TTL
+value|192
+end_define
+
+begin_comment
+comment|/* HWMP TTL */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_IOC_TDMA_SLOT
 value|201
 end_define
@@ -2837,7 +3170,11 @@ name|uint8_t
 name|isr_ssid_len
 decl_stmt|;
 comment|/* SSID length */
-comment|/* variable length SSID followed by IE data */
+name|uint8_t
+name|isr_meshid_len
+decl_stmt|;
+comment|/* MESH ID length */
+comment|/* variable length SSID, followed by variable length MESH ID, 	  followed by IE data */
 block|}
 struct|;
 end_struct

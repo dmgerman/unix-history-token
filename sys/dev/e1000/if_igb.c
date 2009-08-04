@@ -19,6 +19,12 @@ directive|include
 file|"opt_device_polling.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_inet.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -3068,7 +3074,7 @@ name|vlan_config
 argument_list|,
 name|igb_register_vlan
 argument_list|,
-literal|0
+name|adapter
 argument_list|,
 name|EVENTHANDLER_PRI_FIRST
 argument_list|)
@@ -3083,7 +3089,7 @@ name|vlan_unconfig
 argument_list|,
 name|igb_unregister_vlan
 argument_list|,
-literal|0
+name|adapter
 argument_list|,
 name|EVENTHANDLER_PRI_FIRST
 argument_list|)
@@ -13938,6 +13944,14 @@ directive|if
 name|__FreeBSD_version
 operator|>=
 literal|800000
+if|if
+condition|(
+name|txr
+operator|->
+name|br
+operator|!=
+name|NULL
+condition|)
 name|buf_ring_free
 argument_list|(
 name|txr
@@ -19622,7 +19636,7 @@ name|igb_register_vlan
 parameter_list|(
 name|void
 modifier|*
-name|unused
+name|arg
 parameter_list|,
 name|struct
 name|ifnet
@@ -19647,6 +19661,16 @@ name|index
 decl_stmt|,
 name|bit
 decl_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_softc
+operator|!=
+name|arg
+condition|)
+comment|/* Not our event */
+return|return;
 if|if
 condition|(
 operator|(
@@ -19715,7 +19739,7 @@ name|igb_unregister_vlan
 parameter_list|(
 name|void
 modifier|*
-name|unused
+name|arg
 parameter_list|,
 name|struct
 name|ifnet
@@ -19740,6 +19764,15 @@ name|index
 decl_stmt|,
 name|bit
 decl_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_softc
+operator|!=
+name|arg
+condition|)
+return|return;
 if|if
 condition|(
 operator|(

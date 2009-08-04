@@ -6386,8 +6386,6 @@ literal|1UL
 operator|<<
 literal|34
 operator|)
-argument_list|,
-name|VM_CACHE_DEFAULT
 argument_list|)
 expr_stmt|;
 if|if

@@ -256,12 +256,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fs/fifofs/fifo.h>
 end_include
 
@@ -353,12 +347,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/tcp_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/vinet.h>
 end_include
 
 begin_include
@@ -3923,6 +3911,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Define this as the flags argument for msleep() when catching signals  * while holding a resource that other threads would block for, such as  * a vnode lock.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFS_PCATCH
+value|(PCATCH | PBDRY)
+end_define
 
 begin_endif
 endif|#

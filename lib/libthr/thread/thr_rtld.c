@@ -397,6 +397,11 @@ operator|!=
 literal|0
 condition|)
 empty_stmt|;
+name|curthread
+operator|->
+name|rdlock_count
+operator|++
+expr_stmt|;
 name|RESTORE_ERRNO
 argument_list|()
 expr_stmt|;
@@ -533,6 +538,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|curthread
+operator|->
+name|rdlock_count
+operator|--
+expr_stmt|;
 if|if
 condition|(
 operator|(

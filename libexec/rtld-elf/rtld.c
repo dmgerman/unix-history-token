@@ -582,6 +582,8 @@ parameter_list|,
 specifier|const
 name|Obj_Entry
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7255,6 +7257,8 @@ operator|->
 name|name
 argument_list|,
 name|obj
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 if|if
@@ -7402,6 +7406,8 @@ argument_list|(
 name|p
 argument_list|,
 name|NULL
+argument_list|,
+name|false
 argument_list|)
 operator|==
 name|NULL
@@ -7472,6 +7478,9 @@ specifier|const
 name|Obj_Entry
 modifier|*
 name|refobj
+parameter_list|,
+name|int
+name|noload
 parameter_list|)
 block|{
 name|Obj_Entry
@@ -7683,6 +7692,15 @@ return|return
 name|obj
 return|;
 block|}
+if|if
+condition|(
+name|noload
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 comment|/* First use of this object, so we must map it in */
 name|obj
 operator|=
@@ -9703,6 +9721,8 @@ decl_stmt|,
 name|lockstate
 decl_stmt|,
 name|nodelete
+decl_stmt|,
+name|noload
 decl_stmt|;
 name|LD_UTRACE
 argument_list|(
@@ -9758,6 +9778,12 @@ name|mode
 operator|&
 name|RTLD_NODELETE
 expr_stmt|;
+name|noload
+operator|=
+name|mode
+operator|&
+name|RTLD_NOLOAD
+expr_stmt|;
 name|objlist_init
 argument_list|(
 operator|&
@@ -9812,6 +9838,8 @@ argument_list|(
 name|name
 argument_list|,
 name|obj_main
+argument_list|,
+name|noload
 argument_list|)
 expr_stmt|;
 block|}

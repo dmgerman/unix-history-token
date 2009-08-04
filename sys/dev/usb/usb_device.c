@@ -3157,29 +3157,6 @@ goto|;
 block|}
 if|if
 condition|(
-name|udev
-operator|->
-name|flags
-operator|.
-name|usb_mode
-operator|==
-name|USB_MODE_DEVICE
-condition|)
-block|{
-name|usb_detach_device
-argument_list|(
-name|udev
-argument_list|,
-name|iface_index
-argument_list|,
-name|USB_UNCFG_FLAG_FREE_SUBDEV
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
 name|iface
 operator|->
 name|alt_index
@@ -3187,7 +3164,7 @@ operator|==
 name|alt_index
 condition|)
 block|{
-comment|/*  			 * Optimise away duplicate setting of 			 * alternate setting in USB Host Mode! 			 */
+comment|/*  		 * Optimise away duplicate setting of 		 * alternate setting in USB Host Mode! 		 */
 name|err
 operator|=
 literal|0
@@ -3195,7 +3172,6 @@ expr_stmt|;
 goto|goto
 name|done
 goto|;
-block|}
 block|}
 if|#
 directive|if
@@ -3228,6 +3204,24 @@ condition|(
 name|err
 condition|)
 block|{
+goto|goto
+name|done
+goto|;
+block|}
+if|if
+condition|(
+name|iface
+operator|->
+name|alt_index
+operator|!=
+name|alt_index
+condition|)
+block|{
+comment|/* the alternate setting does not exist */
+name|err
+operator|=
+name|USB_ERR_INVAL
+expr_stmt|;
 goto|goto
 name|done
 goto|;
@@ -3562,9 +3556,6 @@ name|usb_endpoint
 modifier|*
 name|ep_end
 decl_stmt|;
-name|usb_error_t
-name|err
-decl_stmt|;
 name|ep
 operator|=
 name|udev
@@ -3614,8 +3605,6 @@ block|{
 continue|continue;
 block|}
 comment|/* simulate a clear stall from the peer */
-name|err
-operator|=
 name|usbd_set_endpoint_stall
 argument_list|(
 name|udev
@@ -3625,13 +3614,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-block|{
-comment|/* just ignore */
-block|}
 block|}
 return|return
 operator|(
@@ -4676,6 +4658,13 @@ name|use_generic
 operator|=
 literal|0
 expr_stmt|;
+name|uaa
+operator|.
+name|driver_info
+operator|=
+literal|0
+expr_stmt|;
+comment|/* reset driver_info */
 name|DPRINTFN
 argument_list|(
 literal|2
@@ -4734,6 +4723,13 @@ name|use_generic
 operator|=
 literal|1
 expr_stmt|;
+name|uaa
+operator|.
+name|driver_info
+operator|=
+literal|0
+expr_stmt|;
+comment|/* reset driver_info */
 if|if
 condition|(
 name|usb_probe_and_attach_sub
@@ -8966,6 +8962,7 @@ literal|"product=0x%04x "
 literal|"devclass=0x%02x "
 literal|"devsubclass=0x%02x "
 literal|"sernum=\"%s\" "
+literal|"release=0x%04x "
 literal|"at "
 literal|"port=%u "
 literal|"on "
@@ -9010,6 +9007,15 @@ argument_list|,
 name|udev
 operator|->
 name|serial
+argument_list|,
+name|UGETW
+argument_list|(
+name|udev
+operator|->
+name|ddesc
+operator|.
+name|bcdDevice
+argument_list|)
 argument_list|,
 name|udev
 operator|->

@@ -1295,6 +1295,8 @@ operator|->
 name|rc_intr
 condition|?
 name|PCATCH
+operator||
+name|PBDRY
 else|:
 literal|0
 argument_list|,

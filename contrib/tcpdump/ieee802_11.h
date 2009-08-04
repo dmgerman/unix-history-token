@@ -296,9 +296,12 @@ name|ST_DEAUTH
 value|0xC
 end_define
 
-begin_comment
-comment|/* RESERVED 			0xD  */
-end_comment
+begin_define
+define|#
+directive|define
+name|ST_ACTION
+value|0xD
+end_define
 
 begin_comment
 comment|/* RESERVED 			0xE  */
@@ -313,6 +316,13 @@ define|#
 directive|define
 name|CTRL_BAR
 value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
+name|CTRL_BA
+value|0x9
 end_define
 
 begin_define
@@ -1319,6 +1329,39 @@ end_define
 
 begin_struct
 struct|struct
+name|ctrl_ba_t
+block|{
+name|u_int16_t
+name|fc
+decl_stmt|;
+name|u_int16_t
+name|duration
+decl_stmt|;
+name|u_int8_t
+name|ra
+index|[
+literal|6
+index|]
+decl_stmt|;
+name|u_int8_t
+name|fcs
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|CTRL_BA_HDRLEN
+value|(IEEE802_11_FC_LEN+IEEE802_11_DUR_LEN+IEEE802_11_RA_LEN)
+end_define
+
+begin_struct
+struct|struct
 name|ctrl_bar_t
 block|{
 name|u_int16_t
@@ -1361,6 +1404,44 @@ directive|define
 name|CTRL_BAR_HDRLEN
 value|(IEEE802_11_FC_LEN+IEEE802_11_DUR_LEN+\ 				 IEEE802_11_RA_LEN+IEEE802_11_TA_LEN+\ 				 IEEE802_11_CTL_LEN+IEEE802_11_SEQ_LEN)
 end_define
+
+begin_struct
+struct|struct
+name|meshcntl_t
+block|{
+name|u_int8_t
+name|flags
+decl_stmt|;
+name|u_int8_t
+name|ttl
+decl_stmt|;
+name|u_int8_t
+name|seq
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|u_int8_t
+name|addr4
+index|[
+literal|6
+index|]
+decl_stmt|;
+name|u_int8_t
+name|addr5
+index|[
+literal|6
+index|]
+decl_stmt|;
+name|u_int8_t
+name|addr6
+index|[
+literal|6
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#

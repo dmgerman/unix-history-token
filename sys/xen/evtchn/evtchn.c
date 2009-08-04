@@ -2724,7 +2724,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|xenpic_assign_cpu
 parameter_list|(
 name|struct
@@ -3233,7 +3233,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|xenpic_assign_cpu
 parameter_list|(
 name|struct
@@ -3247,6 +3247,11 @@ parameter_list|)
 block|{
 name|TODO
 expr_stmt|;
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 block|}
 end_function
 

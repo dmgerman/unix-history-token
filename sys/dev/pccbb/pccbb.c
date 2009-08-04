@@ -1971,12 +1971,8 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We take out Giant here because we need it deep, 		 * down in the bowels of the vm system for mapping the 		 * memory we need to read the CIS.  In addition, since 		 * we are adding/deleting devices from the dev tree, 		 * and that code isn't MP safe, we have to hold Giant. 		 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
+name|newbus_xlock
+argument_list|()
 expr_stmt|;
 name|status
 operator|=
@@ -2080,11 +2076,8 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
+name|newbus_xunlock
+argument_list|()
 expr_stmt|;
 comment|/* 		 * First time through we need to tell mountroot that we're 		 * done. 		 */
 if|if

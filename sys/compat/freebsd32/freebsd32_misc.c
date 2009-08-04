@@ -8334,13 +8334,13 @@ literal|0
 case|:
 return|return
 operator|(
-name|freebsd32_semctl
+name|freebsd7_freebsd32_semctl
 argument_list|(
 name|td
 argument_list|,
 operator|(
 expr|struct
-name|freebsd32_semctl_args
+name|freebsd7_freebsd32_semctl_args
 operator|*
 operator|)
 operator|&
@@ -9229,13 +9229,13 @@ literal|0
 case|:
 return|return
 operator|(
-name|freebsd32_msgctl
+name|freebsd7_freebsd32_msgctl
 argument_list|(
 name|td
 argument_list|,
 operator|(
 expr|struct
-name|freebsd32_msgctl_args
+name|freebsd7_freebsd32_msgctl_args
 operator|*
 operator|)
 operator|&
@@ -10430,7 +10430,7 @@ case|:
 block|{
 comment|/* shmctl */
 name|struct
-name|freebsd32_shmctl_args
+name|freebsd7_freebsd32_shmctl_args
 name|ap
 decl_stmt|;
 name|ap
@@ -10462,7 +10462,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|freebsd32_shmctl
+name|freebsd7_freebsd32_shmctl
 argument_list|(
 name|td
 argument_list|,

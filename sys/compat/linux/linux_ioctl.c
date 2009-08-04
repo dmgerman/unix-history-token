@@ -194,12 +194,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -11126,13 +11120,6 @@ name|size_t
 name|buflen
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -11254,14 +11241,6 @@ modifier|*
 name|bsdname
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|TD_TO_VNET
-argument_list|(
-name|td
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -11480,14 +11459,6 @@ modifier|*
 name|uifc
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|TD_TO_VNET
-argument_list|(
-name|td
-argument_list|)
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|COMPAT_LINUX32

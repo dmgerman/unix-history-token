@@ -998,13 +998,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
+name|newbus_xlock
+argument_list|()
 expr_stmt|;
-comment|/* device_xxx() depends on this */
 name|error
 operator|=
 name|mii_phy_probe
@@ -1027,11 +1023,8 @@ operator|->
 name|ue_mii_sts
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
+name|newbus_xunlock
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1276,13 +1269,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* device_xxx() depends on this */
+comment|/* 			 * It is up to the callers to provide the correct 			 * newbus locking. 			 */
 name|device_delete_child
 argument_list|(
 name|ue
@@ -1292,12 +1279,6 @@ argument_list|,
 name|ue
 operator|->
 name|ue_miibus
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 block|}

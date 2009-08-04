@@ -207,7 +207,7 @@ begin_define
 define|#
 directive|define
 name|KI_NSPARE_PTR
-value|6
+value|7
 end_define
 
 begin_ifdef
@@ -437,6 +437,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KI_NGROUPS
+value|16
+end_define
+
+begin_comment
+comment|/* number of groups in ki_groups */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LOGNAMELEN
 value|17
 end_define
@@ -444,6 +455,17 @@ end_define
 begin_comment
 comment|/* size of returned ki_login */
 end_comment
+
+begin_comment
+comment|/*  * Steal a bit from ki_cr_flags (cr_flags is never used) to indicate  * that the cred had more than KI_NGROUPS groups.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KI_CRF_GRP_OVERFLOW
+value|0x80000000
+end_define
 
 begin_struct
 struct|struct
@@ -584,13 +606,13 @@ name|short
 name|ki_spare_short2
 decl_stmt|;
 comment|/* unused (just here for alignment) */
-name|uint32_t
-name|__was_ki_groups
+name|gid_t
+name|ki_groups
 index|[
-literal|16
+name|KI_NGROUPS
 index|]
 decl_stmt|;
-comment|/* unused; left for bin compat */
+comment|/* groups */
 name|vm_size_t
 name|ki_size
 decl_stmt|;
@@ -811,11 +833,6 @@ modifier|*
 name|ki_udata
 decl_stmt|;
 comment|/* User convenience pointer */
-name|gid_t
-modifier|*
-name|ki_groups
-decl_stmt|;
-comment|/* groups */
 comment|/* 	 * When adding new variables, take space for pointers from the 	 * front of ki_spareptrs, and longs from the end of ki_sparelongs. 	 * That way the spare room from both arrays will remain contiguous. 	 */
 name|void
 modifier|*
@@ -1464,6 +1481,13 @@ define|#
 directive|define
 name|KVME_TYPE_DEAD
 value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|KVME_TYPE_SG
+value|7
 end_define
 
 begin_define

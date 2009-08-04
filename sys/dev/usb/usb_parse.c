@@ -683,7 +683,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usbd_get_no_alts  *  * Return value:  *   Number of alternate settings for the given interface descriptor pointer.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_get_no_alts  *  * Return value:  *   Number of alternate settings for the given interface descriptor  *   pointer. If the USB descriptor is corrupt, the returned value can  *   be greater than the actual number of alternate settings.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -708,26 +708,26 @@ name|desc
 decl_stmt|;
 name|uint8_t
 name|n
-init|=
-literal|0
 decl_stmt|;
 name|uint8_t
 name|ifaceno
 decl_stmt|;
+comment|/* Reset interface count */
+name|n
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Get the interface number */
 name|ifaceno
 operator|=
 name|id
 operator|->
 name|bInterfaceNumber
 expr_stmt|;
+comment|/* Iterate all the USB descriptors */
 name|desc
 operator|=
-operator|(
-expr|struct
-name|usb_descriptor
-operator|*
-operator|)
-name|id
+name|NULL
 expr_stmt|;
 while|while
 condition|(
@@ -796,9 +796,6 @@ condition|)
 break|break;
 comment|/* crazy */
 block|}
-else|else
-break|break;
-comment|/* end */
 block|}
 block|}
 return|return

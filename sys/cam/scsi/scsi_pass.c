@@ -1992,6 +1992,14 @@ operator|.
 name|func_code
 operator|==
 name|XPT_SCSI_IO
+operator|||
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|func_code
+operator|==
+name|XPT_ATA_IO
 operator|)
 operator|&&
 operator|(

@@ -136,6 +136,9 @@ name|amd64tss
 modifier|*
 name|pcb_tssp
 decl_stmt|;
+name|char
+name|pcb_full_iret
+decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -99,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
 end_include
 
 begin_include
@@ -141,12 +141,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/toedev.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/vinet.h>
 end_include
 
 begin_decl_stmt
@@ -344,11 +338,6 @@ modifier|*
 name|tp
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
@@ -388,11 +377,6 @@ modifier|*
 name|tp
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
@@ -453,11 +437,6 @@ name|int
 name|error
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&

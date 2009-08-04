@@ -115,6 +115,23 @@ directive|include
 file|<net80211/ieee80211_wds.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_MESH
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net80211/ieee80211_mesh.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -265,7 +282,10 @@ literal|"HOSTAP"
 block|,
 comment|/* IEEE80211_M_HOSTAP */
 literal|"MONITOR"
+block|,
 comment|/* IEEE80211_M_MONITOR */
+literal|"MBSS"
+comment|/* IEEE80211_M_MBSS */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -681,6 +701,16 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_MESH
+name|ieee80211_mesh_attach
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ieee80211_monitor_attach
 argument_list|(
 name|ic
@@ -704,6 +734,16 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_MESH
+name|ieee80211_mesh_detach
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ieee80211_hostap_detach
 argument_list|(
 name|ic
@@ -7674,6 +7714,12 @@ operator|->
 name|iv_opmode
 operator|==
 name|IEEE80211_M_IBSS
+operator|||
+name|vap
+operator|->
+name|iv_opmode
+operator|==
+name|IEEE80211_M_MBSS
 condition|)
 name|ieee80211_beacon_notify
 argument_list|(

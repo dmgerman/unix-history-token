@@ -225,8 +225,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|TRM_MAXPHYS
+value|(128 * 1024)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TRM_NSEG
-value|(btoc(MAXPHYS) + 1)
+value|(btoc(TRM_MAXPHYS) + 1)
 end_define
 
 begin_define

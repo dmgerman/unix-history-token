@@ -4457,6 +4457,9 @@ init|;
 condition|;
 control|)
 block|{
+name|newbus_slock
+argument_list|()
+expr_stmt|;
 comment|/* If the number of devices has changed, re-evaluate. */
 if|if
 condition|(
@@ -4548,6 +4551,9 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+name|newbus_sunlock
+argument_list|()
+expr_stmt|;
 comment|/* Check for temperature events and act on them. */
 for|for
 control|(

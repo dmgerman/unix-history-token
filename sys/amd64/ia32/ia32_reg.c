@@ -591,6 +591,14 @@ name|regs
 operator|->
 name|r_ds
 expr_stmt|;
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_full_iret
+operator|=
+literal|1
+expr_stmt|;
 name|tp
 operator|->
 name|tf_flags

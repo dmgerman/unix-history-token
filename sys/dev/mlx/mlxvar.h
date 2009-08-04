@@ -78,6 +78,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MLX_MAXPHYS
+value|(128 * 124)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MLX_NSEG
 value|64
 end_define

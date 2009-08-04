@@ -472,7 +472,11 @@ block|,
 comment|/* OBJT_PHYS */
 operator|&
 name|deadpagerops
+block|,
 comment|/* OBJT_DEAD */
+operator|&
+name|sgpagerops
+comment|/* OBJT_SG */
 block|}
 decl_stmt|;
 end_decl_stmt

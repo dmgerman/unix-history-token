@@ -1016,6 +1016,10 @@ comment|/* (in) not used on FreeBSD */
 name|uint8_t
 name|bsd_isread
 decl_stmt|;
+name|uint8_t
+name|kill_count
+decl_stmt|;
+comment|/* FreeBSD specific */
 name|struct
 name|usb_iso_packet_descriptor
 name|iso_frame_desc

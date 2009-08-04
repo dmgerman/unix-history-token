@@ -901,7 +901,7 @@ name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"%s version %X [%s]\n"
+literal|"%s version %X\n"
 argument_list|,
 name|CompilerId
 argument_list|,
@@ -909,8 +909,6 @@ operator|(
 name|UINT32
 operator|)
 name|ACPI_CA_VERSION
-argument_list|,
-name|__DATE__
 argument_list|)
 expr_stmt|;
 block|}

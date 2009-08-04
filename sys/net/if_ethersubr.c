@@ -120,12 +120,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -254,7 +248,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/vinet.h>
+file|<netinet/ip_var.h>
 end_include
 
 begin_endif
@@ -836,23 +830,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ether_ipfw
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_ether_ipfw
+value|VNET(ether_ipfw)
+end_define
 
 begin_endif
 endif|#
@@ -951,6 +945,21 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+operator|(
+name|M_BCAST
+operator||
+name|M_MCAST
+operator|)
+operator|)
+condition|)
 name|lle
 operator|=
 name|ro
@@ -2320,13 +2329,6 @@ name|defined
 argument_list|(
 name|INET6
 argument_list|)
-name|INIT_VNET_NET
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ip_fw_chk_ptr
@@ -2430,13 +2432,6 @@ name|int
 name|shared
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|dst
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ether_header
 modifier|*
@@ -3654,13 +3649,6 @@ name|defined
 argument_list|(
 name|INET6
 argument_list|)
-name|INIT_VNET_NET
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Allow dummynet and/or ipfw to claim the frame. 	 * Do not do this for PROMISC frames in case we are re-entered. 	 */
 if|if
 condition|(
@@ -4591,12 +4579,8 @@ argument_list|)
 end_if
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_net
-argument_list|,
 name|_net_link_ether
 argument_list|,
 name|OID_AUTO
@@ -4605,7 +4589,11 @@ name|ipfw
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ether_ipfw
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,

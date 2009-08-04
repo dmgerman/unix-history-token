@@ -14457,6 +14457,8 @@ name|so_rcv
 argument_list|,
 literal|1
 argument_list|,
+name|SCTP_READ_LOCK_NOT_HELD
+argument_list|,
 name|so_locked
 argument_list|)
 expr_stmt|;
@@ -14959,6 +14961,8 @@ name|so_rcv
 argument_list|,
 literal|1
 argument_list|,
+name|SCTP_READ_LOCK_NOT_HELD
+argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
@@ -15418,6 +15422,8 @@ name|so_rcv
 argument_list|,
 literal|1
 argument_list|,
+name|SCTP_READ_LOCK_NOT_HELD
+argument_list|,
 name|so_locked
 argument_list|)
 expr_stmt|;
@@ -15813,6 +15819,8 @@ name|so_rcv
 argument_list|,
 literal|1
 argument_list|,
+name|SCTP_READ_LOCK_NOT_HELD
+argument_list|,
 name|so_locked
 argument_list|)
 expr_stmt|;
@@ -16050,6 +16058,8 @@ operator|->
 name|so_rcv
 argument_list|,
 literal|1
+argument_list|,
+name|SCTP_READ_LOCK_NOT_HELD
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
@@ -16863,6 +16873,8 @@ name|so_rcv
 argument_list|,
 literal|1
 argument_list|,
+name|SCTP_READ_LOCK_NOT_HELD
+argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
@@ -17108,6 +17120,8 @@ operator|->
 name|so_rcv
 argument_list|,
 literal|1
+argument_list|,
+name|SCTP_READ_LOCK_NOT_HELD
 argument_list|,
 name|so_locked
 argument_list|)
@@ -17407,6 +17421,8 @@ operator|->
 name|so_rcv
 argument_list|,
 literal|1
+argument_list|,
+name|SCTP_READ_LOCK_NOT_HELD
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
@@ -17759,6 +17775,8 @@ operator|->
 name|so_rcv
 argument_list|,
 literal|1
+argument_list|,
+name|SCTP_READ_LOCK_NOT_HELD
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
@@ -22173,6 +22191,9 @@ name|int
 name|end
 parameter_list|,
 name|int
+name|inp_read_lock_held
+parameter_list|,
+name|int
 name|so_locked
 if|#
 directive|if
@@ -22223,6 +22244,12 @@ endif|#
 directive|endif
 return|return;
 block|}
+if|if
+condition|(
+name|inp_read_lock_held
+operator|==
+literal|0
+condition|)
 name|SCTP_INP_READ_LOCK
 argument_list|(
 name|inp
@@ -22475,6 +22502,17 @@ block|}
 else|else
 block|{
 comment|/* Everything got collapsed out?? */
+if|if
+condition|(
+name|inp_read_lock_held
+operator|==
+literal|0
+condition|)
+name|SCTP_INP_READ_UNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -22501,6 +22539,12 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|inp_read_lock_held
+operator|==
+literal|0
+condition|)
 name|SCTP_INP_READ_UNLOCK
 argument_list|(
 name|inp

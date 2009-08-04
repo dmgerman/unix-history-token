@@ -167,7 +167,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|struct
 name|domain
 name|ng_btsocket_domain
@@ -808,6 +808,7 @@ comment|/*  * BLUETOOTH domain  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|domain
 name|ng_btsocket_domain
@@ -1020,12 +1021,6 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-name|net_add_domain
-argument_list|(
-operator|&
-name|ng_btsocket_domain
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|MOD_UNLOAD
@@ -1054,6 +1049,14 @@ end_function
 begin_comment
 comment|/* ng_btsocket_modevent */
 end_comment
+
+begin_expr_stmt
+name|DOMAIN_SET
+argument_list|(
+name|ng_btsocket_
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

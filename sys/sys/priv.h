@@ -2615,6 +2615,32 @@ comment|/* Unrestricted CAPI message tracing. */
 end_comment
 
 begin_comment
+comment|/*  * OpenAFS privileges.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_AFS_ADMIN
+value|660
+end_define
+
+begin_comment
+comment|/* Can change AFS client settings. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_AFS_DAEMON
+value|661
+end_define
+
+begin_comment
+comment|/* Can become the AFS daemon. */
+end_comment
+
+begin_comment
 comment|/*  * Track end of privilege list.  */
 end_comment
 
@@ -2622,7 +2648,7 @@ begin_define
 define|#
 directive|define
 name|_PRIV_HIGHEST
-value|652
+value|662
 end_define
 
 begin_comment

@@ -4383,6 +4383,9 @@ argument_list|,
 name|POLL_INTERVAL
 argument_list|)
 expr_stmt|;
+name|newbus_xlock
+argument_list|()
+expr_stmt|;
 name|device_busy
 argument_list|(
 name|rp
@@ -4391,6 +4394,9 @@ name|rp_ctlp
 operator|->
 name|dev
 argument_list|)
+expr_stmt|;
+name|newbus_xunlock
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -4428,6 +4434,9 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+name|newbus_xlock
+argument_list|()
+expr_stmt|;
 name|device_unbusy
 argument_list|(
 name|rp
@@ -4436,6 +4445,9 @@ name|rp_ctlp
 operator|->
 name|dev
 argument_list|)
+expr_stmt|;
+name|newbus_xunlock
+argument_list|()
 expr_stmt|;
 block|}
 end_function

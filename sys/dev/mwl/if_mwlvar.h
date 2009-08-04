@@ -1112,7 +1112,7 @@ name|ieee80211_node
 modifier|*
 parameter_list|)
 function_decl|;
-name|void
+name|int
 function_decl|(
 modifier|*
 name|sc_recv_action
@@ -1120,6 +1120,11 @@ function_decl|)
 parameter_list|(
 name|struct
 name|ieee80211_node
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_frame
 modifier|*
 parameter_list|,
 specifier|const

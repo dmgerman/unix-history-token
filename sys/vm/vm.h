@@ -22,18 +22,18 @@ file|<machine/vm.h>
 end_include
 
 begin_comment
-comment|/*  * The exact set of cache control codes is machine dependent.  However, every  * machine is required to define VM_CACHE_DEFAULT.  */
+comment|/*  * The exact set of memory attributes is machine dependent.  However, every  * machine is required to define VM_MEMATTR_DEFAULT.  */
 end_comment
 
 begin_typedef
 typedef|typedef
 name|char
-name|vm_cache_mode_t
+name|vm_memattr_t
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* cache control codes */
+comment|/* memory attribute codes */
 end_comment
 
 begin_typedef
@@ -161,6 +161,8 @@ block|,
 name|OBJT_PHYS
 block|,
 name|OBJT_DEAD
+block|,
+name|OBJT_SG
 block|}
 enum|;
 end_enum

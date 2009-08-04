@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -98,13 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet6/scope6_var.h>
+file|<netinet6/ip6_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet6/vinet6.h>
+file|<netinet6/scope6_var.h>
 end_include
 
 begin_comment
@@ -151,30 +145,34 @@ parameter_list|()
 value|mtx_assert(&scope6_lock, MA_OWNED)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
-name|struct
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|scope6_id
+argument_list|,
 name|sid_default
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_use_defzone
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_sid_default
+value|VNET(sid_default)
+end_define
 
 begin_define
 define|#
@@ -194,11 +192,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ENABLE_DEFAULT_SCOPE
@@ -376,13 +369,6 @@ modifier|*
 name|idlist
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -841,13 +827,6 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Currently, this function just sets the default "interfaces" 	 * and "links" according to the given interface. 	 * We might eventually have to separate the notion of "link" from 	 * "interface" and provide a user interface to set the default. 	 */
 name|SCOPE6_LOCK
 argument_list|()
@@ -917,11 +896,6 @@ modifier|*
 name|idlist
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|SCOPE6_LOCK
 argument_list|()
 expr_stmt|;
@@ -951,11 +925,6 @@ modifier|*
 name|addr
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|u_int32_t
 name|id
 decl_stmt|;
@@ -1016,11 +985,6 @@ name|int
 name|defaultok
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -1153,11 +1117,6 @@ modifier|*
 name|sin6
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|char
 name|ip6buf
 index|[

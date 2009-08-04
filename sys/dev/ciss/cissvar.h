@@ -280,6 +280,17 @@ value|((CISS_COMMAND_ALLOC_SIZE - sizeof(struct ciss_command)) \ 				 / sizeof(s
 end_define
 
 begin_comment
+comment|/* XXX Prep for increasing max i/o */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CISS_MAX_SG_ELEMENTS
+value|17
+end_define
+
+begin_comment
 comment|/*  * Per-logical-drive data.  */
 end_comment
 

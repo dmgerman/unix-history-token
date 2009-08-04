@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -99,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
 end_include
 
 begin_include
@@ -150,12 +150,6 @@ end_include
 begin_comment
 comment|/* for ECN definitions */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<netinet6/vinet6.h>
-end_include
 
 begin_include
 include|#
@@ -253,42 +247,64 @@ begin_comment
 comment|/*  * These fields all protected by ip6qlock.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|u_int
+argument_list|,
 name|frag6_nfragpackets
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|u_int
+argument_list|,
 name|frag6_nfrags
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
-name|struct
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|ip6q
+argument_list|,
 name|ip6q
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* ip6 reassemble queue */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_frag6_nfragpackets
+value|VNET(frag6_nfragpackets)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_frag6_nfrags
+value|VNET(frag6_nfrags)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6q
+value|VNET(ip6q)
+end_define
 
 begin_define
 define|#
@@ -357,11 +373,6 @@ modifier|*
 name|tag
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|V_ip6_maxfragpackets
 operator|=
 name|nmbclusters
@@ -384,11 +395,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|V_ip6q
 operator|.
 name|ip6q_next
@@ -464,11 +470,6 @@ name|int
 name|proto
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -2365,11 +2366,6 @@ modifier|*
 name|q6
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ip6asfrag
 modifier|*
@@ -2727,10 +2723,10 @@ name|ip6q
 modifier|*
 name|q6
 decl_stmt|;
-name|IP6Q_LOCK
+name|VNET_LIST_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
-name|VNET_LIST_RLOCK
+name|IP6Q_LOCK
 argument_list|()
 expr_stmt|;
 name|VNET_FOREACH
@@ -2739,11 +2735,6 @@ argument|vnet_iter
 argument_list|)
 block|{
 name|CURVNET_SET
-argument_list|(
-name|vnet_iter
-argument_list|)
-expr_stmt|;
-name|INIT_VNET_INET6
 argument_list|(
 name|vnet_iter
 argument_list|)
@@ -2836,10 +2827,10 @@ name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 block|}
-name|VNET_LIST_RUNLOCK
+name|IP6Q_UNLOCK
 argument_list|()
 expr_stmt|;
-name|IP6Q_UNLOCK
+name|VNET_LIST_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 block|}
@@ -2861,6 +2852,9 @@ argument_list|(
 name|vnet_iter
 argument_list|)
 expr_stmt|;
+name|VNET_LIST_RLOCK_NOSLEEP
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|IP6Q_TRYLOCK
@@ -2868,21 +2862,18 @@ argument_list|()
 operator|==
 literal|0
 condition|)
-return|return;
-name|VNET_LIST_RLOCK
+block|{
+name|VNET_LIST_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
+return|return;
+block|}
 name|VNET_FOREACH
 argument_list|(
 argument|vnet_iter
 argument_list|)
 block|{
 name|CURVNET_SET
-argument_list|(
-name|vnet_iter
-argument_list|)
-expr_stmt|;
-name|INIT_VNET_INET6
 argument_list|(
 name|vnet_iter
 argument_list|)
@@ -2915,10 +2906,10 @@ name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 block|}
-name|VNET_LIST_RUNLOCK
+name|IP6Q_UNLOCK
 argument_list|()
 expr_stmt|;
-name|IP6Q_UNLOCK
+name|VNET_LIST_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 block|}

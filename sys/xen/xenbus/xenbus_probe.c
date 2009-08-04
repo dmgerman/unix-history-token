@@ -1494,6 +1494,9 @@ name|p
 operator|=
 literal|0
 expr_stmt|;
+name|newbus_xlock
+argument_list|()
+expr_stmt|;
 name|xenbus_add_device
 argument_list|(
 name|dev
@@ -1504,6 +1507,9 @@ name|type
 argument_list|,
 name|id
 argument_list|)
+expr_stmt|;
+name|newbus_xunlock
+argument_list|()
 expr_stmt|;
 name|taskqueue_enqueue
 argument_list|(
@@ -1558,6 +1564,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|newbus_xlock
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|xenbus_enumerate_bus
@@ -1566,6 +1575,9 @@ name|dev
 argument_list|,
 literal|"device"
 argument_list|)
+expr_stmt|;
+name|newbus_xunlock
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

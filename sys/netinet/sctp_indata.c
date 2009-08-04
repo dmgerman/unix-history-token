@@ -1623,6 +1623,8 @@ name|so_rcv
 argument_list|,
 name|end
 argument_list|,
+name|SCTP_READ_LOCK_NOT_HELD
+argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
@@ -2261,6 +2263,8 @@ name|so_rcv
 argument_list|,
 literal|1
 argument_list|,
+name|SCTP_READ_LOCK_NOT_HELD
+argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
@@ -2870,6 +2874,8 @@ name|so_rcv
 argument_list|,
 literal|1
 argument_list|,
+name|SCTP_READ_LOCK_NOT_HELD
+argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
@@ -3101,6 +3107,8 @@ operator|->
 name|so_rcv
 argument_list|,
 literal|1
+argument_list|,
+name|SCTP_READ_LOCK_NOT_HELD
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
@@ -9204,6 +9212,8 @@ name|so_rcv
 argument_list|,
 literal|1
 argument_list|,
+name|SCTP_READ_LOCK_NOT_HELD
+argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
@@ -10708,6 +10718,8 @@ operator|->
 name|so_rcv
 argument_list|,
 literal|1
+argument_list|,
+name|SCTP_READ_LOCK_NOT_HELD
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
@@ -25979,6 +25991,8 @@ name|so_rcv
 argument_list|,
 literal|1
 argument_list|,
+name|SCTP_READ_LOCK_HELD
+argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
@@ -26225,6 +26239,8 @@ name|so_rcv
 argument_list|,
 literal|1
 argument_list|,
+name|SCTP_READ_LOCK_HELD
+argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
@@ -26436,8 +26452,10 @@ argument_list|,
 name|sctp_next
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Do not toss it if on a different stream or marked 			 * for unordered delivery in which case the stream 			 * sequence number has no meaning. 			 */
 if|if
 condition|(
+operator|(
 name|chk
 operator|->
 name|rec
@@ -26447,6 +26465,23 @@ operator|.
 name|stream_number
 operator|!=
 name|stream
+operator|)
+operator|||
+operator|(
+operator|(
+name|chk
+operator|->
+name|rec
+operator|.
+name|data
+operator|.
+name|rcv_flags
+operator|&
+name|SCTP_DATA_UNORDERED
+operator|)
+operator|==
+name|SCTP_DATA_UNORDERED
+operator|)
 condition|)
 block|{
 name|chk

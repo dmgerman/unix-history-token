@@ -1875,6 +1875,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* reset USB paralell port */
 name|ulpt_reset
 argument_list|(
 name|sc
@@ -2962,6 +2963,15 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+comment|/*  	 * Only read status while the device is not opened, due to 	 * possible hardware or firmware bug in some printers. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_fflags
+operator|==
+literal|0
+condition|)
 name|usbd_transfer_start
 argument_list|(
 name|sc

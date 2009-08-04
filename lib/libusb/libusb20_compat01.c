@@ -3515,7 +3515,7 @@ name|udev
 operator|=
 name|pdev
 operator|->
-name|priv01Data
+name|privLuData
 expr_stmt|;
 name|libusb20_be_dequeue_device
 argument_list|(
@@ -3841,7 +3841,7 @@ name|pdev
 expr_stmt|;
 name|pdev
 operator|->
-name|priv01Data
+name|privLuData
 operator|=
 name|udev
 expr_stmt|;
@@ -3924,7 +3924,7 @@ return|return
 operator|(
 name|pdev
 operator|->
-name|priv01Data
+name|privLuData
 operator|)
 return|;
 block|}

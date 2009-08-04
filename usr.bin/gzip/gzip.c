@@ -530,6 +530,13 @@ name|NUM_SUFFIXES
 value|(sizeof suffixes / sizeof suffixes[0])
 end_define
 
+begin_define
+define|#
+directive|define
+name|SUFFIX_MAXLEN
+value|30
+end_define
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -1997,6 +2004,21 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|len
+operator|>
+name|SUFFIX_MAXLEN
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"incorrect suffix: '%s': too long"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
 name|suffixes
 index|[
 literal|0
@@ -5882,6 +5904,8 @@ condition|)
 name|memcpy
 argument_list|(
 name|outfile
+operator|+
+name|outsize
 operator|-
 name|suffixes
 index|[

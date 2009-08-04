@@ -264,6 +264,10 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_comment
+comment|/*  * In-kernel consumers can use these accessor macros directly to update  * stats.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -284,6 +288,31 @@ parameter_list|(
 name|name
 parameter_list|)
 value|UDPSTAT_ADD(name, 1)
+end_define
+
+begin_comment
+comment|/*  * Kernel module consumers must use this accessor macro.  */
+end_comment
+
+begin_function_decl
+name|void
+name|kmod_udpstat_inc
+parameter_list|(
+name|int
+name|statnum
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|KMOD_UDPSTAT_INC
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|kmod_udpstat_inc(offsetof(struct udpstat, name) / sizeof(u_long))
 end_define
 
 begin_endif
@@ -386,47 +415,76 @@ name|udp_usrreqs
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+expr|struct
 name|inpcbhead
+argument_list|,
 name|udb
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+expr|struct
 name|inpcbinfo
+argument_list|,
 name|udbinfo
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+expr|struct
 name|udpstat
+argument_list|,
 name|udpstat
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|udp_blackhole
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_udb
+value|VNET(udb)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_udbinfo
+value|VNET(udbinfo)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_udpstat
+value|VNET(udpstat)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_udp_blackhole
+value|VNET(udp_blackhole)
+end_define
 
 begin_decl_stmt
 specifier|extern

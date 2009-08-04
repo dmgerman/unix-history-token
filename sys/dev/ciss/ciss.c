@@ -12144,7 +12144,7 @@ if|if
 condition|(
 name|nseg
 operator|==
-literal|1
+literal|0
 condition|)
 name|cr
 operator|->
@@ -13555,6 +13555,18 @@ operator|->
 name|protocol_version
 operator|=
 name|SCSI_REV_2
+expr_stmt|;
+name|cpi
+operator|->
+name|maxio
+operator|=
+operator|(
+name|CISS_MAX_SG_ELEMENTS
+operator|-
+literal|1
+operator|)
+operator|*
+name|PAGE_SIZE
 expr_stmt|;
 name|ccb
 operator|->

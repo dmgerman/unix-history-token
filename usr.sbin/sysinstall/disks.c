@@ -957,7 +957,7 @@ literal|16
 argument_list|,
 literal|0
 argument_list|,
-literal|"A = Use Entire Disk   G = set Drive Geometry   C = Create Slice   F = `DD' mode"
+literal|"A = Use Entire Disk   G = set Drive Geometry   C = Create Slice"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -966,7 +966,7 @@ literal|17
 argument_list|,
 literal|0
 argument_list|,
-literal|"D = Delete Slice      Z = Toggle Size Units    S = Set Bootable   | = Wizard m."
+literal|"D = Delete Slice      Z = Toggle Size Units    S = Set Bootable   | = Expert m."
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -1910,10 +1910,6 @@ break|break;
 case|case
 literal|'A'
 case|:
-case|case
-literal|'F'
-case|:
-comment|/* Undocumented magic Dangerously Dedicated mode */
 if|#
 directive|if
 operator|!
@@ -1934,68 +1930,10 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* The rest is only relevant on x86 */
-name|cp
-operator|=
-name|variable_get
-argument_list|(
-name|VAR_DEDICATE_DISK
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cp
-operator|&&
-operator|!
-name|strcasecmp
-argument_list|(
-name|cp
-argument_list|,
-literal|"always"
-argument_list|)
-condition|)
-name|rv
-operator|=
-literal|1
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|toupper
-argument_list|(
-name|key
-argument_list|)
-operator|==
-literal|'A'
-condition|)
 name|rv
 operator|=
 literal|0
 expr_stmt|;
-else|else
-block|{
-name|rv
-operator|=
-name|msgYesNo
-argument_list|(
-literal|"Do you want to do this with a true partition entry\n"
-literal|"so as to remain cooperative with any future possible\n"
-literal|"operating systems on the drive(s)?\n"
-literal|"(See also the section about ``dangerously dedicated''\n"
-literal|"disks in the FreeBSD FAQ.)"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rv
-operator|==
-operator|-
-literal|1
-condition|)
-name|rv
-operator|=
-literal|0
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 name|All_FreeBSD
@@ -3017,7 +2955,7 @@ condition|(
 operator|!
 name|msgNoYes
 argument_list|(
-literal|"Are you SURE you want to go into Wizard mode?\n"
+literal|"Are you SURE you want to go into Expert mode?\n"
 literal|"No seat belts whatsoever are provided!"
 argument_list|)
 condition|)

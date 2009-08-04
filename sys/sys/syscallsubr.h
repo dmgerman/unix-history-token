@@ -1515,6 +1515,9 @@ name|pathseg
 parameter_list|,
 name|int
 name|name
+parameter_list|,
+name|u_long
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl

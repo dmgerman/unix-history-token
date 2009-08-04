@@ -22,56 +22,56 @@ file|<machine/specialreg.h>
 end_include
 
 begin_comment
-comment|/* Cache control options. */
+comment|/* Memory attributes. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VM_CACHE_UNCACHEABLE
-value|((vm_cache_mode_t)PAT_UNCACHEABLE)
+name|VM_MEMATTR_UNCACHEABLE
+value|((vm_memattr_t)PAT_UNCACHEABLE)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VM_CACHE_WRITE_COMBINING
-value|((vm_cache_mode_t)PAT_WRITE_COMBINING)
+name|VM_MEMATTR_WRITE_COMBINING
+value|((vm_memattr_t)PAT_WRITE_COMBINING)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VM_CACHE_WRITE_THROUGH
-value|((vm_cache_mode_t)PAT_WRITE_THROUGH)
+name|VM_MEMATTR_WRITE_THROUGH
+value|((vm_memattr_t)PAT_WRITE_THROUGH)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VM_CACHE_WRITE_PROTECTED
-value|((vm_cache_mode_t)PAT_WRITE_PROTECTED)
+name|VM_MEMATTR_WRITE_PROTECTED
+value|((vm_memattr_t)PAT_WRITE_PROTECTED)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VM_CACHE_WRITE_BACK
-value|((vm_cache_mode_t)PAT_WRITE_BACK)
+name|VM_MEMATTR_WRITE_BACK
+value|((vm_memattr_t)PAT_WRITE_BACK)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VM_CACHE_UNCACHED
-value|((vm_cache_mode_t)PAT_UNCACHED)
+name|VM_MEMATTR_UNCACHED
+value|((vm_memattr_t)PAT_UNCACHED)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VM_CACHE_DEFAULT
-value|VM_CACHE_WRITE_BACK
+name|VM_MEMATTR_DEFAULT
+value|VM_MEMATTR_WRITE_BACK
 end_define
 
 begin_endif

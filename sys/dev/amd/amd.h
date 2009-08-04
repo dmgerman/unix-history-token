@@ -188,8 +188,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|AMD_MAXPHYS
+value|(128 * 1024)
+end_define
+
+begin_comment
+comment|/* legacy MAXPHYS */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AMD_NSEG
-value|(btoc(MAXPHYS) + 1)
+value|(btoc(AMD_MAXPHYS) + 1)
 end_define
 
 begin_define

@@ -889,10 +889,10 @@ name|void
 modifier|*
 name|privBeData
 decl_stmt|;
-comment|/* libUSB v0.1 compat data */
+comment|/* libUSB v0.1 and v1.0 compat data */
 name|void
 modifier|*
-name|priv01Data
+name|privLuData
 decl_stmt|;
 comment|/* claimed interface */
 name|uint8_t

@@ -609,7 +609,7 @@ name|DW_OP_piece
 case|:
 name|uval
 operator|=
-name|dwarf_decode_sleb128
+name|dwarf_decode_uleb128
 argument_list|(
 operator|&
 name|p
@@ -1215,7 +1215,7 @@ name|DW_OP_piece
 case|:
 name|operand1
 operator|=
-name|dwarf_decode_sleb128
+name|dwarf_decode_uleb128
 argument_list|(
 operator|&
 name|p

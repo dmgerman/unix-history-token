@@ -96,12 +96,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -121,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|<net/netisr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
 end_include
 
 begin_include
@@ -192,12 +192,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/icmp6.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/vinet6.h>
 end_include
 
 begin_endif
@@ -378,11 +372,6 @@ name|int
 name|sproto
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|union
 name|sockaddr_union
 name|dst_address
@@ -1332,11 +1321,6 @@ modifier|*
 name|mt
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|prot
 decl_stmt|,
@@ -2488,11 +2472,6 @@ name|int
 name|proto
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|l
 init|=
@@ -2773,16 +2752,6 @@ modifier|*
 name|mt
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|prot
 decl_stmt|,

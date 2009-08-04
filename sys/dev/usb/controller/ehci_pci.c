@@ -648,6 +648,12 @@ return|return
 literal|"NVIDIA nForce4 USB 2.0 controller"
 return|;
 case|case
+literal|0x03f210de
+case|:
+return|return
+literal|"NVIDIA nForce MCP61 USB 2.0 controller"
+return|;
+case|case
 literal|0x15621131
 case|:
 return|return

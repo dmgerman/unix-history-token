@@ -4447,6 +4447,17 @@ operator|->
 name|t_inq
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|<
+name|len
+condition|)
+name|tty_hiwat_in_block
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ret

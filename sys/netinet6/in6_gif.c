@@ -92,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -199,12 +193,6 @@ begin_include
 include|#
 directive|include
 file|<netinet6/ip6_ecn.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/vinet6.h>
 end_include
 
 begin_endif
@@ -320,13 +308,6 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-name|INIT_VNET_GIF
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|gif_softc
 modifier|*
@@ -1308,11 +1289,6 @@ name|int
 name|proto
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|mbuf
 modifier|*

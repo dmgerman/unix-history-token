@@ -7963,6 +7963,12 @@ name|roothub_exec
 operator|=
 operator|&
 name|avr32dci_roothub_exec
+block|,
+operator|.
+name|xfer_poll
+operator|=
+operator|&
+name|avr32dci_do_poll
 block|, }
 decl_stmt|;
 end_decl_stmt

@@ -8632,6 +8632,12 @@ name|roothub_exec
 operator|=
 operator|&
 name|at91dci_roothub_exec
+block|,
+operator|.
+name|xfer_poll
+operator|=
+operator|&
+name|at91dci_do_poll
 block|, }
 decl_stmt|;
 end_decl_stmt

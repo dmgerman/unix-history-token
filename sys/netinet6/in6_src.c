@@ -138,12 +138,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -227,12 +221,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/vinet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet6/in6_var.h>
 end_include
 
@@ -264,12 +252,6 @@ begin_include
 include|#
 directive|include
 file|<netinet6/nd6.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/vinet6.h>
 end_include
 
 begin_decl_stmt
@@ -367,29 +349,34 @@ name|ADDR_LABEL_NOTAPP
 value|(-1)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
-name|struct
+begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|in6_addrpolicy
+argument_list|,
 name|defaultaddrpolicy
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_prefer_tempaddr
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_defaultaddrpolicy
+value|VNET(defaultaddrpolicy)
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -656,11 +643,6 @@ modifier|*
 name|srcp
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|in6_addr
 name|dst
@@ -2063,11 +2045,6 @@ name|int
 name|norouteok
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|error
 init|=
@@ -3101,11 +3078,6 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|in6p
@@ -3290,11 +3262,6 @@ modifier|*
 name|cred
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|socket
 modifier|*
@@ -3712,11 +3679,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|V_ip6_prefer_tempaddr
 operator|=
 literal|0
@@ -3773,11 +3735,6 @@ modifier|*
 name|key
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|in6_addrpolicy
 modifier|*
@@ -4122,23 +4079,24 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
-name|struct
+begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|addrsel_policyhead
+argument_list|,
 name|addrsel_policytab
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_addrsel_policytab
+value|VNET(addrsel_policytab)
+end_define
 
 begin_function
 specifier|static
@@ -4148,11 +4106,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -4173,11 +4126,6 @@ modifier|*
 name|newpolicy
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|addrsel_policyent
 modifier|*
@@ -4333,11 +4281,6 @@ modifier|*
 name|key
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|addrsel_policyent
 modifier|*
@@ -4470,11 +4413,6 @@ modifier|*
 name|w
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|addrsel_policyent
 modifier|*
@@ -4605,11 +4543,6 @@ modifier|*
 name|key
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|addrsel_policyent
 modifier|*

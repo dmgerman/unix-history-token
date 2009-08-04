@@ -863,6 +863,9 @@ operator|->
 name|ips_ich
 argument_list|)
 expr_stmt|;
+name|newbus_xlock
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|ips_adapter_init
@@ -881,6 +884,9 @@ operator|->
 name|configured
 operator|=
 literal|1
+expr_stmt|;
+name|newbus_xunlock
+argument_list|()
 expr_stmt|;
 block|}
 end_function

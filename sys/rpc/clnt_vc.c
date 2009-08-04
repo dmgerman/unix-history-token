@@ -825,6 +825,8 @@ argument_list|,
 name|PSOCK
 operator||
 name|PCATCH
+operator||
+name|PBDRY
 argument_list|,
 literal|"connec"
 argument_list|,
@@ -2307,6 +2309,9 @@ block|{
 case|case
 name|EINTR
 case|:
+case|case
+name|ERESTART
+case|:
 name|stat
 operator|=
 name|RPC_INTR
@@ -3292,6 +3297,8 @@ operator|->
 name|ct_waitflag
 operator|=
 name|PCATCH
+operator||
+name|PBDRY
 expr_stmt|;
 else|else
 name|ct

@@ -177,6 +177,9 @@ name|ZFS_BONUS_SCANSTAMP
 value|0x80
 comment|/* Scanstamp in bonus area */
 comment|/*  * Is ID ephemeral?  */
+ifdef|#
+directive|ifdef
+name|TODO
 define|#
 directive|define
 name|IS_EPHEMERAL
@@ -184,6 +187,17 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(x> MAXUID)
+else|#
+directive|else
+define|#
+directive|define
+name|IS_EPHEMERAL
+parameter_list|(
+name|x
+parameter_list|)
+value|(0)
+endif|#
+directive|endif
 comment|/*  * Should we use FUIDs?  */
 define|#
 directive|define

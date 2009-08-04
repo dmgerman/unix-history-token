@@ -120,12 +120,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -189,31 +183,38 @@ directive|include
 file|<machine/stdarg.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
+begin_struct
+struct|struct
+name|key_cb
+block|{
+name|int
+name|key_count
+decl_stmt|;
+name|int
+name|any_count
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
-name|struct
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|key_cb
+argument_list|,
 name|key_cb
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-name|struct
-name|pfkeystat
-name|pfkeystat
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_key_cb
+value|VNET(key_cb)
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -225,7 +226,7 @@ block|{
 literal|2
 block|,
 name|PF_KEY
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -250,6 +251,17 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+expr|struct
+name|pfkeystat
+argument_list|,
+name|pfkeystat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * key_output()  */
 end_comment
@@ -269,11 +281,6 @@ modifier|*
 name|so
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|sadb_msg
 modifier|*
@@ -513,11 +520,6 @@ name|int
 name|promisc
 decl_stmt|;
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -755,11 +757,6 @@ name|target
 decl_stmt|;
 comment|/*target of the resulting message*/
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -1117,16 +1114,6 @@ name|int
 name|target
 decl_stmt|;
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -1635,11 +1622,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|keycb
 modifier|*
@@ -1917,11 +1899,6 @@ modifier|*
 name|so
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|keycb
 modifier|*
@@ -2337,11 +2314,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
@@ -2355,9 +2327,6 @@ argument_list|(
 name|V_key_cb
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|ipsec_init
-argument_list|()
 expr_stmt|;
 name|key_init
 argument_list|()
@@ -2425,7 +2394,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|DOMAIN_SET
+name|VNET_DOMAIN_SET
 argument_list|(
 name|key
 argument_list|)

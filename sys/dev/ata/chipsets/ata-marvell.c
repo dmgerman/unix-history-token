@@ -1093,12 +1093,6 @@ argument_list|)
 decl_stmt|;
 name|u_int64_t
 name|work
-init|=
-name|ch
-operator|->
-name|dma
-operator|.
-name|work_bus
 decl_stmt|;
 name|int
 name|i
@@ -1107,6 +1101,14 @@ name|ata_marvell_edma_dmainit
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|work
+operator|=
+name|ch
+operator|->
+name|dma
+operator|.
+name|work_bus
 expr_stmt|;
 comment|/* clear work area */
 name|bzero

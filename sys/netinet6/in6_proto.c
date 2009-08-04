@@ -132,12 +132,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -377,12 +371,6 @@ begin_include
 include|#
 directive|include
 file|<netinet6/ip6protosw.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/vinet6.h>
 end_include
 
 begin_comment
@@ -1504,7 +1492,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|DOMAIN_SET
+name|VNET_DOMAIN_SET
 argument_list|(
 name|inet6
 argument_list|)
@@ -1515,125 +1503,195 @@ begin_comment
 comment|/*  * Internet configuration info  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_forwarding
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_sendredirects
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_defhlim
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_defmcasthlim
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_accept_rtadv
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_maxfragpackets
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_maxfrags
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_log_interval
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_hdrnestlimit
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_dad_count
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_auto_flowlabel
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_use_deprecated
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_rr_prune
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_mcast_pmtu
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_v6only
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ip6_keepfaith
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|time_t
+argument_list|,
 name|ip6_log_time
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ip6stealth
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|nd6_onlink_ns_rfc4861
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* icmp6 */
@@ -1643,17 +1701,25 @@ begin_comment
 comment|/*  * BSDI4 defines these variables in in_proto.c...  * XXX: what if we don't define INET? Should we define pmtu6_expire  * or so? (jinmei@kame.net 19990310)  */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|pmtu_expire
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|pmtu_probe
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* raw IP6 parameters */
@@ -1663,74 +1729,97 @@ begin_comment
 comment|/*  * Nominal space allocated to a raw ip socket.  */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|u_long
+argument_list|,
 name|rip6_sendspace
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|u_long
+argument_list|,
 name|rip6_recvspace
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* ICMPV6 parameters */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|icmp6_rediraccept
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|icmp6_redirtimeout
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|icmp6errppslim
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* control how to respond to NI queries */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|icmp6_nodeinfo
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* UDP on IP6 parameters */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|udp6_sendspace
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|udp6_recvspace
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* VIMAGE_GLOBALS */
-end_comment
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * sysctl related items.  */
@@ -1904,11 +1993,6 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|error
 init|=
@@ -1917,8 +2001,12 @@ decl_stmt|;
 name|int
 name|old
 decl_stmt|;
-name|SYSCTL_RESOLVE_V_ARG1
-argument_list|()
+name|VNET_SYSCTL_ARG
+argument_list|(
+name|req
+argument_list|,
+name|arg1
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -2001,11 +2089,6 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|error
 init|=
@@ -2014,8 +2097,12 @@ decl_stmt|;
 name|int
 name|old
 decl_stmt|;
-name|SYSCTL_RESOLVE_V_ARG1
-argument_list|()
+name|VNET_SYSCTL_ARG
+argument_list|(
+name|req
+argument_list|,
+name|arg1
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -2089,12 +2176,8 @@ block|}
 end_function
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_FORWARDING
@@ -2103,7 +2186,11 @@ name|forwarding
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ip6_forwarding
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2113,12 +2200,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_SENDREDIRECTS
@@ -2127,7 +2210,11 @@ name|redirect
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ip6_sendredirects
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2137,12 +2224,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_DEFHLIM
@@ -2151,7 +2234,11 @@ name|hlim
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ip6_defhlim
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2161,12 +2248,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_STRUCT
+name|SYSCTL_VNET_STRUCT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_STATS
@@ -2175,7 +2258,11 @@ name|stats
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ip6stat
+argument_list|)
 argument_list|,
 name|ip6stat
 argument_list|,
@@ -2185,12 +2272,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_MAXFRAGPACKETS
@@ -2199,7 +2282,11 @@ name|maxfragpackets
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ip6_maxfragpackets
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2209,12 +2296,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_ACCEPT_RTADV
@@ -2223,7 +2306,11 @@ name|accept_rtadv
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ip6_accept_rtadv
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2233,12 +2320,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_KEEPFAITH
@@ -2247,7 +2330,11 @@ name|keepfaith
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ip6_keepfaith
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2257,12 +2344,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_LOG_INTERVAL
@@ -2271,7 +2354,11 @@ name|log_interval
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ip6_log_interval
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2281,12 +2368,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_HDRNESTLIMIT
@@ -2295,7 +2378,11 @@ name|hdrnestlimit
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ip6_hdrnestlimit
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2305,12 +2392,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_DAD_COUNT
@@ -2319,7 +2402,11 @@ name|dad_count
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ip6_dad_count
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2329,12 +2416,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_AUTO_FLOWLABEL
@@ -2343,7 +2426,11 @@ name|auto_flowlabel
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ip6_auto_flowlabel
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2353,12 +2440,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_DEFMCASTHLIM
@@ -2367,7 +2450,11 @@ name|defmcasthlim
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ip6_defmcasthlim
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2397,12 +2484,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_USE_DEPRECATED
@@ -2411,7 +2494,11 @@ name|use_deprecated
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ip6_use_deprecated
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2421,12 +2508,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_RR_PRUNE
@@ -2435,7 +2518,11 @@ name|rr_prune
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ip6_rr_prune
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2445,12 +2532,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_USETEMPADDR
@@ -2459,7 +2542,11 @@ name|use_tempaddr
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ip6_use_tempaddr
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2469,12 +2556,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_OID
+name|SYSCTL_VNET_PROC
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_TEMPPLTIME
@@ -2485,7 +2568,11 @@ name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ip6_temp_preferred_lifetime
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2499,12 +2586,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_OID
+name|SYSCTL_VNET_PROC
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_TEMPVLTIME
@@ -2515,7 +2598,11 @@ name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ip6_temp_valid_lifetime
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2529,12 +2616,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_V6ONLY
@@ -2543,7 +2626,11 @@ name|v6only
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ip6_v6only
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2553,12 +2640,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_AUTO_LINKLOCAL
@@ -2567,7 +2650,11 @@ name|auto_linklocal
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ip6_auto_linklocal
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2577,12 +2664,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_STRUCT
+name|SYSCTL_VNET_STRUCT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_RIP6STATS
@@ -2591,7 +2674,11 @@ name|rip6stats
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|rip6stat
+argument_list|)
 argument_list|,
 name|rip6stat
 argument_list|,
@@ -2601,12 +2688,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_PREFER_TEMPADDR
@@ -2615,7 +2698,11 @@ name|prefer_tempaddr
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ip6_prefer_tempaddr
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2625,12 +2712,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_USE_DEFAULTZONE
@@ -2639,7 +2722,11 @@ name|use_defaultzone
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ip6_use_defzone
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2649,12 +2736,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_MAXFRAGS
@@ -2663,7 +2746,11 @@ name|maxfrags
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ip6_maxfrags
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2673,12 +2760,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_MCAST_PMTU
@@ -2687,7 +2770,11 @@ name|mcast_pmtu
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ip6_mcast_pmtu
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2703,12 +2790,8 @@ name|IPSTEALTH
 end_ifdef
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_STEALTH
@@ -2717,7 +2800,11 @@ name|stealth
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ip6stealth
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2736,12 +2823,8 @@ comment|/* net.inet6.icmp6 */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_icmp6
 argument_list|,
 name|ICMPV6CTL_REDIRACCEPT
@@ -2750,7 +2833,11 @@ name|rediraccept
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|icmp6_rediraccept
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2760,12 +2847,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_icmp6
 argument_list|,
 name|ICMPV6CTL_REDIRTIMEOUT
@@ -2774,7 +2857,11 @@ name|redirtimeout
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|icmp6_redirtimeout
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2784,12 +2871,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_STRUCT
+name|SYSCTL_VNET_STRUCT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_icmp6
 argument_list|,
 name|ICMPV6CTL_STATS
@@ -2798,7 +2881,11 @@ name|stats
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|icmp6stat
+argument_list|)
 argument_list|,
 name|icmp6stat
 argument_list|,
@@ -2808,12 +2895,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_icmp6
 argument_list|,
 name|ICMPV6CTL_ND6_PRUNE
@@ -2822,7 +2905,11 @@ name|nd6_prune
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|nd6_prune
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2832,12 +2919,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_icmp6
 argument_list|,
 name|ICMPV6CTL_ND6_DELAY
@@ -2846,7 +2929,11 @@ name|nd6_delay
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|nd6_delay
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2856,12 +2943,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_icmp6
 argument_list|,
 name|ICMPV6CTL_ND6_UMAXTRIES
@@ -2870,7 +2953,11 @@ name|nd6_umaxtries
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|nd6_umaxtries
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2880,12 +2967,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_icmp6
 argument_list|,
 name|ICMPV6CTL_ND6_MMAXTRIES
@@ -2894,7 +2977,11 @@ name|nd6_mmaxtries
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|nd6_mmaxtries
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2904,12 +2991,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_icmp6
 argument_list|,
 name|ICMPV6CTL_ND6_USELOOPBACK
@@ -2918,7 +3001,11 @@ name|nd6_useloopback
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|nd6_useloopback
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2928,12 +3015,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_icmp6
 argument_list|,
 name|ICMPV6CTL_NODEINFO
@@ -2942,7 +3025,11 @@ name|nodeinfo
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|icmp6_nodeinfo
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2952,12 +3039,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_icmp6
 argument_list|,
 name|ICMPV6CTL_ERRPPSLIMIT
@@ -2966,7 +3049,11 @@ name|errppslimit
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|icmp6errppslim
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2976,12 +3063,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_icmp6
 argument_list|,
 name|ICMPV6CTL_ND6_MAXNUDHINT
@@ -2990,7 +3073,11 @@ name|nd6_maxnudhint
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|nd6_maxnudhint
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -3000,12 +3087,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_icmp6
 argument_list|,
 name|ICMPV6CTL_ND6_DEBUG
@@ -3014,7 +3097,11 @@ name|nd6_debug
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|nd6_debug
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -3024,12 +3111,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet6
-argument_list|,
 name|_net_inet6_icmp6
 argument_list|,
 name|ICMPV6CTL_ND6_ONLINKNSRFC4861
@@ -3038,7 +3121,11 @@ name|nd6_onlink_ns_rfc4861
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|nd6_onlink_ns_rfc4861
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,

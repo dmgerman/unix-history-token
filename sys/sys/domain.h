@@ -200,15 +200,55 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|extern
 name|void
-name|net_add_domain
+name|domain_add
 parameter_list|(
 name|void
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|domain_init
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_function_decl
+name|void
+name|vnet_domain_init
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vnet_domain_uninit
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -218,7 +258,43 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|SYSINIT(domain_ ## name, SI_SUB_PROTO_DOMAIN, SI_ORDER_SECOND, net_add_domain,& name ## domain)
+value|SYSINIT(domain_add_ ## name, SI_SUB_PROTO_DOMAIN,		\ 	    SI_ORDER_FIRST, domain_add,& name ## domain);		\ 	SYSINIT(domain_init_ ## name, SI_SUB_PROTO_DOMAIN,		\ 	    SI_ORDER_SECOND, domain_init,& name ## domain);
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|VNET_DOMAIN_SET
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|SYSINIT(domain_add_ ## name, SI_SUB_PROTO_DOMAIN,		\ 	    SI_ORDER_FIRST, domain_add,& name ## domain);		\ 	VNET_SYSINIT(vnet_domain_init_ ## name, SI_SUB_PROTO_DOMAIN,	\ 	    SI_ORDER_SECOND, vnet_domain_init,& name ## domain);	\ 	VNET_SYSUNINIT(vnet_domain_uninit_ ## name,			\ 	    SI_SUB_PROTO_DOMAIN, SI_ORDER_SECOND, vnet_domain_uninit,	\& name ## domain)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !VIMAGE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VNET_DOMAIN_SET
+parameter_list|(
+name|name
+parameter_list|)
+value|DOMAIN_SET(name)
 end_define
 
 begin_endif
@@ -226,10 +302,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* VIMAGE */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_SYS_DOMAIN_H_ */
+end_comment
 
 end_unit
 

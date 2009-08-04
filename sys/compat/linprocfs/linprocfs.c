@@ -200,12 +200,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
 end_include
 
@@ -4979,14 +4973,6 @@ parameter_list|(
 name|PFS_FILL_ARGS
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|TD_TO_VNET
-argument_list|(
-name|td
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|char
 name|ifname
 index|[

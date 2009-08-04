@@ -648,6 +648,9 @@ operator|=
 name|acline
 expr_stmt|;
 comment|/* on/off */
+name|newbus_slock
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|acpi_battery_get_battinfo
@@ -740,6 +743,9 @@ name|acpi_battery_get_units
 argument_list|()
 expr_stmt|;
 block|}
+name|newbus_sunlock
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -798,6 +804,9 @@ operator|(
 literal|1
 operator|)
 return|;
+name|newbus_slock
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|app
@@ -860,6 +869,9 @@ operator|=
 name|ENXIO
 expr_stmt|;
 block|}
+name|newbus_sunlock
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -1311,6 +1323,9 @@ name|apm_clone_data
 modifier|*
 name|clone
 decl_stmt|;
+name|newbus_slock
+argument_list|()
+expr_stmt|;
 name|acpi_sc
 operator|=
 name|devclass_get_softc
@@ -1322,6 +1337,9 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|newbus_sunlock
+argument_list|()
 expr_stmt|;
 name|clone
 operator|=

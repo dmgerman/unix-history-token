@@ -11147,6 +11147,13 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
+name|va
+operator|=
+name|va
+operator|&
+operator|~
+name|PAGE_MASK
+expr_stmt|;
 name|cpu_dcache_wbinv_range
 argument_list|(
 name|va
@@ -11557,6 +11564,12 @@ operator|->
 name|type
 operator|==
 name|OBJT_DEVICE
+operator|||
+name|object
+operator|->
+name|type
+operator|==
+name|OBJT_SG
 argument_list|,
 operator|(
 literal|"pmap_object_init_pt: non-device object"

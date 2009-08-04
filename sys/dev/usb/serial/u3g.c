@@ -921,6 +921,15 @@ name|U3G_DEV
 argument_list|(
 name|HUAWEI
 argument_list|,
+name|E180V
+argument_list|,
+name|U3GFL_HUAWEI_INIT
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
+name|HUAWEI
+argument_list|,
 name|E220
 argument_list|,
 name|U3GFL_HUAWEI_INIT

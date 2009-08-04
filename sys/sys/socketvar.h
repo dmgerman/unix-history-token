@@ -564,12 +564,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|soreadabledata
+parameter_list|(
+name|so
+parameter_list|)
+define|\
+value|((so)->so_rcv.sb_cc>= (so)->so_rcv.sb_lowat || \ 	!TAILQ_EMPTY(&(so)->so_comp) || (so)->so_error)
+end_define
+
+begin_define
+define|#
+directive|define
 name|soreadable
 parameter_list|(
 name|so
 parameter_list|)
 define|\
-value|((so)->so_rcv.sb_cc>= (so)->so_rcv.sb_lowat || \ 	((so)->so_rcv.sb_state& SBS_CANTRCVMORE) || \ 	!TAILQ_EMPTY(&(so)->so_comp) || (so)->so_error)
+value|(soreadabledata(so) || ((so)->so_rcv.sb_state& SBS_CANTRCVMORE))
 end_define
 
 begin_comment

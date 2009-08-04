@@ -96,12 +96,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -6004,11 +5998,6 @@ argument_list|(
 name|vnet_iter
 argument_list|)
 expr_stmt|;
-name|INIT_VNET_NET
-argument_list|(
-name|vnet_iter
-argument_list|)
-expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -6082,11 +6071,6 @@ argument|vnet_iter
 argument_list|)
 block|{
 name|CURVNET_SET_QUIET
-argument_list|(
-name|vnet_iter
-argument_list|)
-expr_stmt|;
-name|INIT_VNET_NET
 argument_list|(
 name|vnet_iter
 argument_list|)

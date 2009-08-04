@@ -12221,7 +12221,7 @@ block|,
 block|{
 literal|"2 CDROM/DVD"
 block|,
-literal|"Use the \"live\" filesystem CDROM/DVD"
+literal|"Use the live filesystem CDROM/DVD"
 block|,
 name|NULL
 block|,
@@ -12229,7 +12229,17 @@ name|installFixitCDROM
 block|}
 block|,
 block|{
-literal|"3 Floppy"
+literal|"3 USB"
+block|,
+literal|"Use the live filesystem from a USB drive"
+block|,
+name|NULL
+block|,
+name|installFixitUSB
+block|}
+block|,
+block|{
+literal|"4 Floppy"
 block|,
 literal|"Use a floppy generated from the fixit image"
 block|,
@@ -12239,7 +12249,7 @@ name|installFixitFloppy
 block|}
 block|,
 block|{
-literal|"4 Shell"
+literal|"5 Shell"
 block|,
 literal|"Start an Emergency Holographic Shell"
 block|,

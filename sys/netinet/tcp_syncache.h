@@ -21,6 +21,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_struct_decl
+struct_decl|struct
+name|toeopt
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|syncache_init
@@ -103,9 +109,9 @@ modifier|*
 name|inc
 parameter_list|,
 name|struct
-name|tcpopt
+name|toeopt
 modifier|*
-name|to
+name|toeo
 parameter_list|,
 name|struct
 name|tcphdr
@@ -167,7 +173,7 @@ name|in_conninfo
 modifier|*
 parameter_list|,
 name|struct
-name|tcpopt
+name|toeopt
 modifier|*
 parameter_list|,
 name|struct

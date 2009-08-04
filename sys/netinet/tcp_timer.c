@@ -92,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -105,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
 end_include
 
 begin_include
@@ -194,12 +194,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<netinet/vinet.h>
-end_include
 
 begin_decl_stmt
 name|int
@@ -569,7 +563,7 @@ argument_list|(
 name|vnet_iter
 argument_list|)
 expr_stmt|;
-name|VNET_LIST_RLOCK
+name|VNET_LIST_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|VNET_FOREACH
@@ -578,11 +572,6 @@ argument|vnet_iter
 argument_list|)
 block|{
 name|CURVNET_SET
-argument_list|(
-name|vnet_iter
-argument_list|)
-expr_stmt|;
-name|INIT_VNET_INET
 argument_list|(
 name|vnet_iter
 argument_list|)
@@ -617,7 +606,7 @@ name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 block|}
-name|VNET_LIST_RUNLOCK
+name|VNET_LIST_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 block|}
@@ -774,13 +763,6 @@ operator|->
 name|t_vnet
 argument_list|)
 expr_stmt|;
-name|INIT_VNET_INET
-argument_list|(
-name|tp
-operator|->
-name|t_vnet
-argument_list|)
-expr_stmt|;
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
@@ -930,13 +912,6 @@ modifier|*
 name|inp
 decl_stmt|;
 name|CURVNET_SET
-argument_list|(
-name|tp
-operator|->
-name|t_vnet
-argument_list|)
-expr_stmt|;
-name|INIT_VNET_INET
 argument_list|(
 name|tp
 operator|->
@@ -1251,13 +1226,6 @@ modifier|*
 name|inp
 decl_stmt|;
 name|CURVNET_SET
-argument_list|(
-name|tp
-operator|->
-name|t_vnet
-argument_list|)
-expr_stmt|;
-name|INIT_VNET_INET
 argument_list|(
 name|tp
 operator|->
@@ -1691,13 +1659,6 @@ operator|->
 name|t_vnet
 argument_list|)
 expr_stmt|;
-name|INIT_VNET_INET
-argument_list|(
-name|tp
-operator|->
-name|t_vnet
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TCPDEBUG
@@ -1970,13 +1931,6 @@ init|=
 name|xtp
 decl_stmt|;
 name|CURVNET_SET
-argument_list|(
-name|tp
-operator|->
-name|t_vnet
-argument_list|)
-expr_stmt|;
-name|INIT_VNET_INET
 argument_list|(
 name|tp
 operator|->

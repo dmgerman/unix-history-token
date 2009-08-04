@@ -47,6 +47,20 @@ name|__Userspace__
 argument_list|)
 end_if
 
+begin_define
+define|#
+directive|define
+name|SCTP_READ_LOCK_HELD
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_READ_LOCK_NOT_HELD
+value|0
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -411,6 +425,9 @@ name|sb
 parameter_list|,
 name|int
 name|end
+parameter_list|,
+name|int
+name|inpread_locked
 parameter_list|,
 name|int
 name|so_locked

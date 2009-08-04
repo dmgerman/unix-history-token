@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
+file|<net/vnet.h>
 end_include
 
 begin_include
@@ -115,9 +115,9 @@ name|SYSINIT
 argument_list|(
 name|domain
 argument_list|,
-name|SI_SUB_PROTO_DOMAIN
+name|SI_SUB_PROTO_DOMAININIT
 argument_list|,
-name|SI_ORDER_FIRST
+name|SI_ORDER_ANY
 argument_list|,
 name|domaininit
 argument_list|,
@@ -152,31 +152,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|vnet_attach_fn
-name|net_init_domain
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|vnet_detach_fn
-name|net_detach_domain
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -365,51 +340,6 @@ name|pru_sopoll_notsupp
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VIMAGE_GLOBALS
-end_ifndef
-
-begin_decl_stmt
-name|vnet_modinfo_t
-name|vnet_domain_modinfo
-init|=
-block|{
-operator|.
-name|vmi_id
-operator|=
-name|VNET_MOD_DOMAIN
-block|,
-operator|.
-name|vmi_name
-operator|=
-literal|"domain"
-block|,
-operator|.
-name|vmi_iattach
-operator|=
-name|net_init_domain
-block|,
-ifdef|#
-directive|ifdef
-name|VIMAGE
-operator|.
-name|vmi_idetach
-operator|=
-name|net_detach_domain
-block|,
-endif|#
-directive|endif
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -648,17 +578,14 @@ comment|/*  * Add a new protocol domain to the list of supported domains  * Note
 end_comment
 
 begin_function
-specifier|static
-name|int
-name|net_init_domain
+name|void
+name|domain_init
 parameter_list|(
-specifier|const
 name|void
 modifier|*
 name|arg
 parameter_list|)
 block|{
-specifier|const
 name|struct
 name|domain
 modifier|*
@@ -733,11 +660,6 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -747,22 +669,33 @@ directive|ifdef
 name|VIMAGE
 end_ifdef
 
-begin_comment
-comment|/*  * Detach / free a domain instance.  */
-end_comment
-
 begin_function
-specifier|static
-name|int
-name|net_detach_domain
+name|void
+name|vnet_domain_init
 parameter_list|(
-specifier|const
 name|void
 modifier|*
 name|arg
 parameter_list|)
 block|{
-specifier|const
+comment|/* Virtualized case is no different -- call init functions. */
+name|domain_init
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|vnet_domain_uninit
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
 name|struct
 name|domain
 modifier|*
@@ -820,11 +753,6 @@ name|dom_destroy
 call|)
 argument_list|()
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -839,7 +767,7 @@ end_comment
 
 begin_function
 name|void
-name|net_add_domain
+name|domain_add
 parameter_list|(
 name|void
 modifier|*
@@ -902,7 +830,7 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"WARNING: attempt to net_add_domain(%s) before "
+literal|"WARNING: attempt to domain_add(%s) before "
 literal|"domaininit()\n"
 argument_list|,
 name|dp
@@ -922,7 +850,7 @@ operator|<
 literal|2
 argument_list|,
 operator|(
-literal|"attempt to net_add_domain(%s) after domainfinalize()"
+literal|"attempt to domain_add(%s) after domainfinalize()"
 operator|,
 name|dp
 operator|->
@@ -940,7 +868,7 @@ literal|2
 condition|)
 name|printf
 argument_list|(
-literal|"WARNING: attempt to net_add_domain(%s) after "
+literal|"WARNING: attempt to domain_add(%s) after "
 literal|"domainfinalize()\n"
 argument_list|,
 name|dp
@@ -956,30 +884,6 @@ operator|&
 name|dom_mtx
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|VIMAGE_GLOBALS
-name|vnet_mod_register_multi
-argument_list|(
-operator|&
-name|vnet_domain_modinfo
-argument_list|,
-name|dp
-argument_list|,
-name|dp
-operator|->
-name|dom_name
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|net_init_domain
-argument_list|(
-name|dp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

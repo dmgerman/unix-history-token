@@ -126,12 +126,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/uma.h>
 end_include
 
@@ -192,12 +186,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/vinet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet6/ip6_var.h>
 end_include
 
@@ -223,12 +211,6 @@ begin_include
 include|#
 directive|include
 file|<netinet6/scope6_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/vinet6.h>
 end_include
 
 begin_include
@@ -265,20 +247,6 @@ modifier|*
 name|cred
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|inp
-operator|->
-name|inp_vnet
-argument_list|)
-expr_stmt|;
-name|INIT_VNET_INET
-argument_list|(
-name|inp
-operator|->
-name|inp_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|socket
 modifier|*
@@ -1281,13 +1249,6 @@ modifier|*
 name|plocal_addr6
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|inp
-operator|->
-name|inp_vnet
-argument_list|)
-expr_stmt|;
 specifier|register
 name|struct
 name|sockaddr_in6

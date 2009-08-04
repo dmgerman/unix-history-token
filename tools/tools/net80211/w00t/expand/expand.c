@@ -1977,7 +1977,7 @@ name|char
 modifier|*
 name|iface
 init|=
-literal|"ath0"
+literal|"wlan0"
 decl_stmt|;
 name|char
 modifier|*

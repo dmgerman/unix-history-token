@@ -1562,44 +1562,61 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+expr|struct
 name|in6_ifaddrhead
+argument_list|,
 name|in6_ifaddrhead
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+expr|struct
 name|icmp6stat
+argument_list|,
 name|icmp6stat
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|long
-name|in6_maxmtu
-decl_stmt|;
-end_decl_stmt
+begin_macro
+name|VNET_DECLARE
+argument_list|(
+argument|unsigned long
+argument_list|,
+argument|in6_maxmtu
+argument_list|)
+end_macro
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
-begin_comment
-comment|/* VIMAGE_GLOBALS */
-end_comment
+begin_define
+define|#
+directive|define
+name|V_in6_ifaddrhead
+value|VNET(in6_ifaddrhead)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_icmp6stat
+value|VNET(icmp6stat)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_in6_maxmtu
+value|VNET(in6_maxmtu)
+end_define
 
 begin_decl_stmt
 specifier|extern

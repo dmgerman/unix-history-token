@@ -334,6 +334,18 @@ modifier|*
 name|ep
 parameter_list|)
 function_decl|;
+comment|/* Optional transfer polling support */
+name|void
+function_decl|(
+modifier|*
+name|xfer_poll
+function_decl|)
+parameter_list|(
+name|struct
+name|usb_bus
+modifier|*
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct

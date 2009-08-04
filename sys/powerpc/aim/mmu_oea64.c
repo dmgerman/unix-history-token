@@ -3543,10 +3543,6 @@ name|moea64_pteg_count
 operator|<<=
 literal|1
 expr_stmt|;
-name|moea64_pteg_count
-operator|>>=
-literal|1
-expr_stmt|;
 endif|#
 directive|endif
 comment|/* PTEGCOUNT */

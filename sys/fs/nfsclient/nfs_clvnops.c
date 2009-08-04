@@ -210,12 +210,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/vinet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in.h>
 end_include
 
@@ -3249,7 +3243,10 @@ name|NFS_ISV4
 argument_list|(
 name|vp
 argument_list|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|nfscl_mustflush
 argument_list|(
 name|vp
@@ -3282,8 +3279,8 @@ argument_list|,
 name|cm
 argument_list|)
 expr_stmt|;
-comment|/* as above w.r.t. races when clearing NMODIFIED */
-comment|/* np->n_flag&= ~NMODIFIED; */
+comment|/* 				 * as above w.r.t races when clearing 				 * NMODIFIED. 				 * np->n_flag&= ~NMODIFIED; 				 */
+block|}
 block|}
 else|else
 name|error
@@ -5689,6 +5686,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|vfs_ref
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|dvp
@@ -5712,6 +5714,11 @@ argument_list|,
 name|ltype
 operator||
 name|LK_RETRY
+argument_list|)
+expr_stmt|;
+name|vfs_rel
+argument_list|(
+name|mp
 argument_list|)
 expr_stmt|;
 if|if
@@ -5796,6 +5803,12 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|newvp
+operator|!=
+name|dvp
+condition|)
 name|vn_lock
 argument_list|(
 name|dvp
@@ -7485,11 +7498,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|IN_IFADDR_RLOCK
 argument_list|()
 expr_stmt|;
@@ -13473,7 +13481,7 @@ name|NFSMNT_INT
 condition|)
 name|slpflag
 operator|=
-name|PCATCH
+name|NFS_PCATCH
 expr_stmt|;
 if|if
 condition|(
@@ -14229,7 +14237,7 @@ block|}
 if|if
 condition|(
 name|slpflag
-operator|==
+operator|&
 name|PCATCH
 condition|)
 block|{
@@ -14419,7 +14427,7 @@ goto|;
 if|if
 condition|(
 name|slpflag
-operator|==
+operator|&
 name|PCATCH
 condition|)
 block|{

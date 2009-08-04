@@ -1076,6 +1076,13 @@ name|MFI_CMD_TIMEOUT
 value|30
 end_define
 
+begin_define
+define|#
+directive|define
+name|MFI_MAXPHYS
+value|(128 * 1024)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef

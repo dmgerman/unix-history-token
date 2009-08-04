@@ -2317,15 +2317,6 @@ block|}
 break|break;
 default|default:
 comment|/* UNIONFS_TRADITIONAL */
-name|FILEDESC_SLOCK
-argument_list|(
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_fd
-argument_list|)
-expr_stmt|;
 name|uva
 operator|->
 name|va_mode
@@ -2340,15 +2331,6 @@ operator|->
 name|p_fd
 operator|->
 name|fd_cmask
-expr_stmt|;
-name|FILEDESC_SUNLOCK
-argument_list|(
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_fd
-argument_list|)
 expr_stmt|;
 name|uva
 operator|->

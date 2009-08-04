@@ -121,6 +121,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netgraph/ng_message.h>
 end_include
 
@@ -4726,13 +4732,6 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-comment|/* Register protocol domain. */
-name|net_add_domain
-argument_list|(
-operator|&
-name|ngdomain
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|MOD_UNLOAD
@@ -4741,22 +4740,6 @@ ifdef|#
 directive|ifdef
 name|NOTYET
 comment|/* Unregister protocol domain XXX can't do this yet.. */
-if|if
-condition|(
-operator|(
-name|error
-operator|=
-name|net_rm_domain
-argument_list|(
-operator|&
-name|ngdomain
-argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-break|break;
-else|else
 endif|#
 directive|endif
 name|error
@@ -4778,6 +4761,14 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|VNET_DOMAIN_SET
+argument_list|(
+name|ng
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT

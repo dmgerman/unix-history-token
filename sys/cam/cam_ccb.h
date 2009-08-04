@@ -69,6 +69,12 @@ directive|include
 file|<cam/scsi/scsi_all.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cam/ata/ata_all.h>
+end_include
+
 begin_comment
 comment|/* General allocation length definitions for CCB structures */
 end_comment
@@ -519,6 +525,23 @@ init|=
 literal|0x17
 block|,
 comment|/* 				 * Calculate the geometry parameters for 				 * a device give the sector size and 				 * volume size. 				 */
+name|XPT_ATA_IO
+init|=
+literal|0x18
+operator||
+name|XPT_FC_DEV_QUEUED
+block|,
+comment|/* Execute the requested ATA I/O operation */
+name|XPT_GET_SIM_KNOB
+init|=
+literal|0x18
+block|,
+comment|/* 				 * Get SIM specific knob values. 				 */
+name|XPT_SET_SIM_KNOB
+init|=
+literal|0x19
+block|,
+comment|/* 				 * Set SIM specific knob values. 				 */
 comment|/* HBA engine commands 0x20->0x2F */
 name|XPT_ENG_INQ
 init|=
@@ -571,10 +594,28 @@ name|XPT_FC_QUEUED
 operator||
 name|XPT_FC_USER_CCB
 block|,
-comment|/* Notify Host Target driver of event */
+comment|/* Notify Host Target driver of event (obsolete) */
 name|XPT_NOTIFY_ACK
 init|=
 literal|0x35
+block|,
+comment|/* Acknowledgement of event (obsolete) */
+name|XPT_IMMEDIATE_NOTIFY
+init|=
+literal|0x36
+operator||
+name|XPT_FC_QUEUED
+operator||
+name|XPT_FC_USER_CCB
+block|,
+comment|/* Notify Host Target driver of event */
+name|XPT_NOTIFY_ACKNOWLEDGE
+init|=
+literal|0x37
+operator||
+name|XPT_FC_QUEUED
+operator||
+name|XPT_FC_USER_CCB
 block|,
 comment|/* Acknowledgement of event */
 comment|/* Vendor Unique codes: 0x80->0x8F */
@@ -677,6 +718,9 @@ comment|/* AT Attachment */
 name|PROTO_ATAPI
 block|,
 comment|/* AT Attachment Packetized Interface */
+name|PROTO_SATAPM
+block|,
+comment|/* SATA Port Multiplier */
 block|}
 name|cam_proto
 typedef|;
@@ -711,6 +755,9 @@ comment|/* AT Attachment */
 name|XPORT_SAS
 block|,
 comment|/* Serial Attached SCSI */
+name|XPORT_SATA
+block|,
+comment|/* Serial AT Attachment */
 block|}
 name|cam_xport
 typedef|;
@@ -954,9 +1001,16 @@ name|struct
 name|ccb_hdr
 name|ccb_h
 decl_stmt|;
+name|cam_proto
+name|protocol
+decl_stmt|;
 name|struct
 name|scsi_inquiry_data
 name|inq_data
+decl_stmt|;
+name|struct
+name|ata_params
+name|ident_data
 decl_stmt|;
 name|u_int8_t
 name|serial_num
@@ -1352,9 +1406,16 @@ decl_stmt|;
 name|lun_id_t
 name|target_lun
 decl_stmt|;
+name|cam_proto
+name|protocol
+decl_stmt|;
 name|struct
 name|scsi_inquiry_data
 name|inq_data
+decl_stmt|;
+name|struct
+name|ata_params
+name|ident_data
 decl_stmt|;
 name|dev_result_flags
 name|flags
@@ -1633,6 +1694,11 @@ init|=
 literal|0x08
 block|,
 comment|/* Supports linked CDBs */
+name|PI_SATAPM
+init|=
+literal|0x04
+block|,
+comment|/* Supports SATA PM */
 name|PI_TAG_ABLE
 init|=
 literal|0x02
@@ -1904,6 +1970,10 @@ decl_stmt|;
 block|}
 name|xport_specific
 union|;
+name|u_int
+name|maxio
+decl_stmt|;
+comment|/* Max supported I/O size, in bytes. */
 block|}
 struct|;
 end_struct
@@ -2064,6 +2134,68 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * ATA I/O Request CCB used for the XPT_ATA_IO function code.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ccb_ataio
+block|{
+name|struct
+name|ccb_hdr
+name|ccb_h
+decl_stmt|;
+name|union
+name|ccb
+modifier|*
+name|next_ccb
+decl_stmt|;
+comment|/* Ptr for next CCB for action */
+name|struct
+name|ata_cmd
+name|cmd
+decl_stmt|;
+comment|/* ATA command register set */
+name|struct
+name|ata_res
+name|res
+decl_stmt|;
+comment|/* ATA result register set */
+name|u_int8_t
+modifier|*
+name|data_ptr
+decl_stmt|;
+comment|/* Ptr to the data buf/SG list */
+name|u_int32_t
+name|dxfer_len
+decl_stmt|;
+comment|/* Data transfer length */
+name|u_int32_t
+name|resid
+decl_stmt|;
+comment|/* Transfer residual length: 2's comp */
+name|u_int8_t
+name|tag_action
+decl_stmt|;
+comment|/* What to do for tag queueing */
+comment|/* 	 * The tag action should be either the define below (to send a 	 * non-tagged transaction) or one of the defined scsi tag messages 	 * from scsi_message.h. 	 */
+define|#
+directive|define
+name|CAM_TAG_ACTION_NONE
+value|0x00
+name|u_int
+name|tag_id
+decl_stmt|;
+comment|/* tag id from initator (target mode) */
+name|u_int
+name|init_id
+decl_stmt|;
+comment|/* initiator id of who selected */
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|ccb_accept_tio
@@ -2156,6 +2288,11 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
+name|AC_CONTRACT
+init|=
+literal|0x1000
+block|,
+comment|/* A contractual callback */
 name|AC_GETDEV_CHANGED
 init|=
 literal|0x800
@@ -2238,6 +2375,61 @@ name|args
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_comment
+comment|/*  * Generic Asynchronous callbacks.  *  * Generic arguments passed bac which are then interpreted between a per-system  * contract number.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AC_CONTRACT_DATA_MAX
+value|(128 - sizeof (u_int64_t))
+end_define
+
+begin_struct
+struct|struct
+name|ac_contract
+block|{
+name|u_int64_t
+name|contract_number
+decl_stmt|;
+name|u_int8_t
+name|contract_data
+index|[
+name|AC_CONTRACT_DATA_MAX
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|AC_CONTRACT_DEV_CHG
+value|1
+end_define
+
+begin_struct
+struct|struct
+name|ac_device_changed
+block|{
+name|u_int64_t
+name|wwpn
+decl_stmt|;
+name|u_int32_t
+name|port
+decl_stmt|;
+name|target_id_t
+name|target
+decl_stmt|;
+name|u_int8_t
+name|arrived
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* Set Asynchronous Callback CCB */
@@ -2517,6 +2709,34 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ccb_trans_settings_sata
+block|{
+name|u_int
+name|valid
+decl_stmt|;
+comment|/* Which fields to honor */
+define|#
+directive|define
+name|CTS_SATA_VALID_SPEED
+value|0x01
+define|#
+directive|define
+name|CTS_SATA_VALID_PM
+value|0x02
+name|u_int32_t
+name|bitrate
+decl_stmt|;
+comment|/* Mbps */
+name|u_int
+name|pm_present
+decl_stmt|;
+comment|/* PM is present (XPT->SIM) */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* Get/Set transfer rate/width/disconnection/tag queueing settings */
 end_comment
@@ -2576,6 +2796,10 @@ name|struct
 name|ccb_trans_settings_sas
 name|sas
 decl_stmt|;
+name|struct
+name|ccb_trans_settings_sata
+name|sata
+decl_stmt|;
 block|}
 name|xport_specific
 union|;
@@ -2610,6 +2834,155 @@ decl_stmt|;
 name|u_int8_t
 name|secs_per_track
 decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Set or get SIM (and transport) specific knobs  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KNOB_VALID_ADDRESS
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|KNOB_VALID_ROLE
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|KNOB_ROLE_NONE
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|KNOB_ROLE_INITIATOR
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|KNOB_ROLE_TARGET
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|KNOB_ROLE_BOTH
+value|0x3
+end_define
+
+begin_struct
+struct|struct
+name|ccb_sim_knob_settings_spi
+block|{
+name|u_int
+name|valid
+decl_stmt|;
+name|u_int
+name|initiator_id
+decl_stmt|;
+name|u_int
+name|role
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ccb_sim_knob_settings_fc
+block|{
+name|u_int
+name|valid
+decl_stmt|;
+name|u_int64_t
+name|wwnn
+decl_stmt|;
+comment|/* world wide node name */
+name|u_int64_t
+name|wwpn
+decl_stmt|;
+comment|/* world wide port name */
+name|u_int
+name|role
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ccb_sim_knob_settings_sas
+block|{
+name|u_int
+name|valid
+decl_stmt|;
+name|u_int64_t
+name|wwnn
+decl_stmt|;
+comment|/* world wide node name */
+name|u_int
+name|role
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|KNOB_SETTINGS_SIZE
+value|128
+end_define
+
+begin_struct
+struct|struct
+name|ccb_sim_knob
+block|{
+name|struct
+name|ccb_hdr
+name|ccb_h
+decl_stmt|;
+union|union
+block|{
+name|u_int
+name|valid
+decl_stmt|;
+comment|/* Which fields to honor */
+name|struct
+name|ccb_sim_knob_settings_spi
+name|spi
+decl_stmt|;
+name|struct
+name|ccb_sim_knob_settings_fc
+name|fc
+decl_stmt|;
+name|struct
+name|ccb_sim_knob_settings_sas
+name|sas
+decl_stmt|;
+name|char
+name|pad
+index|[
+name|KNOB_SETTINGS_SIZE
+index|]
+decl_stmt|;
+block|}
+name|xport_specific
+union|;
 block|}
 struct|;
 end_struct
@@ -2679,6 +3052,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* old, barely used immediate notify, binary compatibility */
+end_comment
+
 begin_struct
 struct|struct
 name|ccb_immed_notify
@@ -2726,6 +3103,62 @@ name|u_int8_t
 name|event
 decl_stmt|;
 comment|/* Event flags */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ccb_immediate_notify
+block|{
+name|struct
+name|ccb_hdr
+name|ccb_h
+decl_stmt|;
+name|u_int
+name|tag_id
+decl_stmt|;
+comment|/* Tag for immediate notify */
+name|u_int
+name|seq_id
+decl_stmt|;
+comment|/* Tag for target of notify */
+name|u_int
+name|initiator_id
+decl_stmt|;
+comment|/* Initiator Identifier */
+name|u_int
+name|arg
+decl_stmt|;
+comment|/* Function specific */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ccb_notify_acknowledge
+block|{
+name|struct
+name|ccb_hdr
+name|ccb_h
+decl_stmt|;
+name|u_int
+name|tag_id
+decl_stmt|;
+comment|/* Tag for immediate notify */
+name|u_int
+name|seq_id
+decl_stmt|;
+comment|/* Tar for target of notify */
+name|u_int
+name|initiator_id
+decl_stmt|;
+comment|/* Initiator Identifier */
+name|u_int
+name|arg
+decl_stmt|;
+comment|/* Function specific */
 block|}
 struct|;
 end_struct
@@ -3002,6 +3435,10 @@ name|ccb_calc_geometry
 name|ccg
 decl_stmt|;
 name|struct
+name|ccb_sim_knob
+name|knob
+decl_stmt|;
+name|struct
 name|ccb_abort
 name|cab
 decl_stmt|;
@@ -3038,6 +3475,14 @@ name|ccb_notify_ack
 name|cna
 decl_stmt|;
 name|struct
+name|ccb_immediate_notify
+name|cin1
+decl_stmt|;
+name|struct
+name|ccb_notify_acknowledge
+name|cna2
+decl_stmt|;
+name|struct
 name|ccb_eng_inq
 name|cei
 decl_stmt|;
@@ -3052,6 +3497,10 @@ decl_stmt|;
 name|struct
 name|ccb_debug
 name|cdbg
+decl_stmt|;
+name|struct
+name|ccb_ataio
+name|ataio
 decl_stmt|;
 block|}
 union|;
@@ -3155,6 +3604,54 @@ name|init_id
 parameter_list|,
 name|u_int
 name|scsi_status
+parameter_list|,
+name|u_int8_t
+modifier|*
+name|data_ptr
+parameter_list|,
+name|u_int32_t
+name|dxfer_len
+parameter_list|,
+name|u_int32_t
+name|timeout
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|__inline
+name|void
+name|cam_fill_ataio
+parameter_list|(
+name|struct
+name|ccb_ataio
+modifier|*
+name|ataio
+parameter_list|,
+name|u_int32_t
+name|retries
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|cbfcnp
+function_decl|)
+parameter_list|(
+name|struct
+name|cam_periph
+modifier|*
+parameter_list|,
+name|union
+name|ccb
+modifier|*
+parameter_list|)
+parameter_list|,
+name|u_int32_t
+name|flags
+parameter_list|,
+name|u_int
+name|tag_action
 parameter_list|,
 name|u_int8_t
 modifier|*
@@ -3424,6 +3921,113 @@ operator|->
 name|init_id
 operator|=
 name|init_id
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|cam_fill_ataio
+parameter_list|(
+name|struct
+name|ccb_ataio
+modifier|*
+name|ataio
+parameter_list|,
+name|u_int32_t
+name|retries
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|cbfcnp
+function_decl|)
+parameter_list|(
+name|struct
+name|cam_periph
+modifier|*
+parameter_list|,
+name|union
+name|ccb
+modifier|*
+parameter_list|)
+parameter_list|,
+name|u_int32_t
+name|flags
+parameter_list|,
+name|u_int
+name|tag_action
+parameter_list|,
+name|u_int8_t
+modifier|*
+name|data_ptr
+parameter_list|,
+name|u_int32_t
+name|dxfer_len
+parameter_list|,
+name|u_int32_t
+name|timeout
+parameter_list|)
+block|{
+name|ataio
+operator|->
+name|ccb_h
+operator|.
+name|func_code
+operator|=
+name|XPT_ATA_IO
+expr_stmt|;
+name|ataio
+operator|->
+name|ccb_h
+operator|.
+name|flags
+operator|=
+name|flags
+expr_stmt|;
+name|ataio
+operator|->
+name|ccb_h
+operator|.
+name|retry_count
+operator|=
+name|retries
+expr_stmt|;
+name|ataio
+operator|->
+name|ccb_h
+operator|.
+name|cbfcnp
+operator|=
+name|cbfcnp
+expr_stmt|;
+name|ataio
+operator|->
+name|ccb_h
+operator|.
+name|timeout
+operator|=
+name|timeout
+expr_stmt|;
+name|ataio
+operator|->
+name|data_ptr
+operator|=
+name|data_ptr
+expr_stmt|;
+name|ataio
+operator|->
+name|dxfer_len
+operator|=
+name|dxfer_len
+expr_stmt|;
+name|ataio
+operator|->
+name|tag_action
+operator|=
+name|tag_action
 expr_stmt|;
 block|}
 end_function

@@ -178,12 +178,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/bpf.h>
 end_include
 
@@ -257,12 +251,6 @@ directive|include
 file|<netinet/ip_var.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/vinet.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -279,12 +267,6 @@ begin_include
 include|#
 directive|include
 file|<netinet6/ip6_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/vinet6.h>
 end_include
 
 begin_endif
@@ -13362,11 +13344,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|dn_pkt_tag
 modifier|*
@@ -14242,11 +14219,6 @@ modifier|*
 name|mp
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -14326,7 +14298,7 @@ name|NULL
 condition|)
 block|{
 comment|/* XXXJRT new stat, please */
-name|IPSTAT_INC
+name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_toosmall
 argument_list|)
@@ -14373,7 +14345,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|IPSTAT_INC
+name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_toosmall
 argument_list|)
@@ -14412,7 +14384,7 @@ operator|!=
 name|IPVERSION
 condition|)
 block|{
-name|IPSTAT_INC
+name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_badvers
 argument_list|)
@@ -14441,7 +14413,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* minimum header length */
-name|IPSTAT_INC
+name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_badhlen
 argument_list|)
@@ -14475,7 +14447,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|IPSTAT_INC
+name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_badhlen
 argument_list|)
@@ -14569,7 +14541,7 @@ condition|(
 name|sum
 condition|)
 block|{
-name|IPSTAT_INC
+name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_badsum
 argument_list|)
@@ -14596,7 +14568,7 @@ operator|<
 name|hlen
 condition|)
 block|{
-name|IPSTAT_INC
+name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_badlen
 argument_list|)
@@ -14617,7 +14589,7 @@ operator|<
 name|len
 condition|)
 block|{
-name|IPSTAT_INC
+name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_tooshort
 argument_list|)
@@ -14675,11 +14647,6 @@ modifier|*
 name|mp
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -14945,11 +14912,6 @@ modifier|*
 name|llc
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -15159,7 +15121,7 @@ name|error
 operator|==
 literal|0
 condition|)
-name|IPSTAT_INC
+name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_fragmented
 argument_list|)

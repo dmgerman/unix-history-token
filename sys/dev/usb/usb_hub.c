@@ -953,6 +953,9 @@ name|driver_added_refcount
 operator|=
 name|refcount
 expr_stmt|;
+name|newbus_xlock
+argument_list|()
+expr_stmt|;
 name|err
 operator|=
 name|usb_probe_and_attach
@@ -961,6 +964,9 @@ name|child
 argument_list|,
 name|USB_IFACE_INDEX_ANY
 argument_list|)
+expr_stmt|;
+name|newbus_xunlock
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1239,6 +1245,9 @@ condition|(
 name|child
 condition|)
 block|{
+name|newbus_xlock
+argument_list|()
+expr_stmt|;
 name|usb_free_device
 argument_list|(
 name|child
@@ -1247,6 +1256,9 @@ name|USB_UNCFG_FLAG_FREE_SUBDEV
 operator||
 name|USB_UNCFG_FLAG_FREE_EP0
 argument_list|)
+expr_stmt|;
+name|newbus_xunlock
+argument_list|()
 expr_stmt|;
 name|child
 operator|=
@@ -1610,6 +1622,9 @@ operator|=
 name|USB_MODE_HOST
 expr_stmt|;
 comment|/* need to create a new child */
+name|newbus_xlock
+argument_list|()
+expr_stmt|;
 name|child
 operator|=
 name|usb_alloc_device
@@ -1640,6 +1655,9 @@ name|speed
 argument_list|,
 name|mode
 argument_list|)
+expr_stmt|;
+name|newbus_xunlock
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1672,6 +1690,9 @@ condition|(
 name|child
 condition|)
 block|{
+name|newbus_xlock
+argument_list|()
+expr_stmt|;
 name|usb_free_device
 argument_list|(
 name|child
@@ -1680,6 +1701,9 @@ name|USB_UNCFG_FLAG_FREE_SUBDEV
 operator||
 name|USB_UNCFG_FLAG_FREE_EP0
 argument_list|)
+expr_stmt|;
+name|newbus_xunlock
+argument_list|()
 expr_stmt|;
 name|child
 operator|=
@@ -3696,12 +3720,6 @@ name|struct
 name|hub_result
 name|res
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|uhub_find_iface_index
 argument_list|(
 name|hub
@@ -3761,12 +3779,6 @@ argument_list|)
 expr_stmt|;
 name|done
 label|:
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3824,12 +3836,6 @@ name|struct
 name|hub_result
 name|res
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|uhub_find_iface_index
 argument_list|(
 name|hub
@@ -3901,6 +3907,7 @@ argument_list|,
 literal|"vendor=0x%04x product=0x%04x "
 literal|"devclass=0x%02x devsubclass=0x%02x "
 literal|"sernum=\"%s\" "
+literal|"release=0x%04x "
 literal|"intclass=0x%02x intsubclass=0x%02x"
 argument_list|,
 name|UGETW
@@ -3947,6 +3954,17 @@ name|udev
 operator|->
 name|serial
 argument_list|,
+name|UGETW
+argument_list|(
+name|res
+operator|.
+name|udev
+operator|->
+name|ddesc
+operator|.
+name|bcdDevice
+argument_list|)
+argument_list|,
 name|iface
 operator|->
 name|idesc
@@ -3982,12 +4000,6 @@ goto|;
 block|}
 name|done
 label|:
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -6515,6 +6527,9 @@ name|bus
 argument_list|)
 expr_stmt|;
 block|}
+name|newbus_xlock
+argument_list|()
+expr_stmt|;
 name|sx_xlock
 argument_list|(
 name|udev
@@ -6542,6 +6557,9 @@ name|default_sx
 operator|+
 literal|1
 argument_list|)
+expr_stmt|;
+name|newbus_xunlock
+argument_list|()
 expr_stmt|;
 comment|/* check if peer has wakeup capability */
 if|if
@@ -6734,6 +6752,9 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+name|newbus_xlock
+argument_list|()
+expr_stmt|;
 name|sx_xlock
 argument_list|(
 name|udev
@@ -6761,6 +6782,9 @@ name|default_sx
 operator|+
 literal|1
 argument_list|)
+expr_stmt|;
+name|newbus_xunlock
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

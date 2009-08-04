@@ -39,27 +39,26 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|tcp_v6mssdflt
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* XXX */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|V_tcp_v6mssdflt
+value|VNET(tcp_v6mssdflt)
+end_define
 
 begin_endif
 endif|#

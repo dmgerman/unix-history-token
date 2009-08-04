@@ -88,12 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/pfil.h>
 end_include
 
@@ -125,6 +119,12 @@ begin_include
 include|#
 directive|include
 file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
 end_include
 
 begin_include
@@ -172,40 +172,30 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/vinet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/in_cksum.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ipfastforward_active
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_ipfastforward_active
+value|VNET(ipfastforward_active)
+end_define
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_ip
 argument_list|,
 name|OID_AUTO
@@ -214,7 +204,11 @@ name|fastforwarding
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ipfastforward_active
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -245,11 +239,6 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|sockaddr_in
 modifier|*
@@ -442,11 +431,6 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ip
 modifier|*

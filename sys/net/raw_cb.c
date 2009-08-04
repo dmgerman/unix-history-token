@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -104,23 +98,16 @@ name|rawcb_mtx
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
-name|struct
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|rawcb_list_head
+argument_list|,
 name|rawcb_list
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_NODE
@@ -217,13 +204,6 @@ name|int
 name|proto
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|rawcb
 modifier|*

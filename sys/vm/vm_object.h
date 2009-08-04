@@ -99,6 +99,10 @@ name|int
 name|shadow_count
 decl_stmt|;
 comment|/* how many objects that this is a shadow for */
+name|vm_memattr_t
+name|memattr
+decl_stmt|;
+comment|/* default memory attribute for pages */
 name|objtype_t
 name|type
 decl_stmt|;
@@ -175,6 +179,19 @@ name|devp_pglist
 expr_stmt|;
 block|}
 name|devp
+struct|;
+comment|/* 		 * SG pager 		 * 		 *	sgp_pglist - list of allocated pages 		 */
+struct|struct
+block|{
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|vm_page
+argument_list|)
+name|sgp_pglist
+expr_stmt|;
+block|}
+name|sgp
 struct|;
 comment|/* 		 * Swap pager 		 * 		 *	swp_bcount - number of swap 'swblock' metablocks, each 		 *		     contains up to 16 swapblk assignments. 		 *		     see vm/swap_pager.h 		 */
 struct|struct
@@ -752,6 +769,19 @@ name|void
 name|vm_object_reference_locked
 parameter_list|(
 name|vm_object_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vm_object_set_memattr
+parameter_list|(
+name|vm_object_t
+name|object
+parameter_list|,
+name|vm_memattr_t
+name|memattr
 parameter_list|)
 function_decl|;
 end_function_decl

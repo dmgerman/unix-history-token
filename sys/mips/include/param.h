@@ -180,7 +180,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Round p (pointer or byte index) up to a correctly-aligned value for all  * data types (int, long, ...).	  The result is u_int and must be cast to  * any desired pointer type. XXX u_int isn't big enough to hod a pointer.  */
+comment|/*  * Round p (pointer or byte index) up to a correctly-aligned value for all  * data types (int, long, ...).	  The result is u_int and must be cast to  * any desired pointer type.  */
 end_comment
 
 begin_define
@@ -197,19 +197,7 @@ name|_ALIGN
 parameter_list|(
 name|p
 parameter_list|)
-value|(((uintptr_t)(p) + _ALIGNBYTES)&~ _ALIGNBYTES)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ALIGNED_POINTER
-parameter_list|(
-name|p
-parameter_list|,
-name|t
-parameter_list|)
-value|((((uintptr_t)(p))& (sizeof (t) - 1)) == 0)
+value|(((u_int)(p) + _ALIGNBYTES)&~ _ALIGNBYTES)
 end_define
 
 begin_define
@@ -227,6 +215,22 @@ parameter_list|(
 name|p
 parameter_list|)
 value|_ALIGN(p)
+end_define
+
+begin_comment
+comment|/*  * ALIGNED_POINTER is a boolean macro that checks whether an address  * is valid to fetch data elements of type t from on this architecture.  * This does not reflect the optimal alignment, just the possibility  * (within reasonable limits).   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALIGNED_POINTER
+parameter_list|(
+name|p
+parameter_list|,
+name|t
+parameter_list|)
+value|((((unsigned)(p))& (sizeof (t) - 1)) == 0)
 end_define
 
 begin_comment
@@ -487,7 +491,7 @@ name|mips_round_page
 parameter_list|(
 name|x
 parameter_list|)
-value|((((uintptr_t)(x)) + NBPG - 1)& ~(NBPG-1))
+value|((((unsigned)(x)) + NBPG - 1)& ~(NBPG-1))
 end_define
 
 begin_define
@@ -497,7 +501,7 @@ name|mips_trunc_page
 parameter_list|(
 name|x
 parameter_list|)
-value|((uintptr_t)(x)& ~(NBPG-1))
+value|((unsigned)(x)& ~(NBPG-1))
 end_define
 
 begin_define
@@ -507,7 +511,7 @@ name|mips_btop
 parameter_list|(
 name|x
 parameter_list|)
-value|((uintptr_t)(x)>> PGSHIFT)
+value|((unsigned)(x)>> PGSHIFT)
 end_define
 
 begin_define
@@ -517,7 +521,7 @@ name|mips_ptob
 parameter_list|(
 name|x
 parameter_list|)
-value|((uintptr_t)(x)<< PGSHIFT)
+value|((unsigned)(x)<< PGSHIFT)
 end_define
 
 begin_define
@@ -533,10 +537,6 @@ directive|define
 name|trunc_page
 value|mips_trunc_page
 end_define
-
-begin_comment
-comment|/* XXXimp: Is unsigned long the right cast type here? PA can be> 32bits */
-end_comment
 
 begin_define
 define|#

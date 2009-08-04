@@ -158,12 +158,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/stdarg.h>
 end_include
 
@@ -221,6 +215,12 @@ directive|include
 file|<net/route.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -269,12 +269,6 @@ directive|include
 file|<machine/in_cksum.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/vinet.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -314,12 +308,6 @@ begin_include
 include|#
 directive|include
 file|<netinet6/nd6.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/vinet6.h>
 end_include
 
 begin_endif
@@ -3261,7 +3249,7 @@ expr_stmt|;
 name|CARP_LOG
 argument_list|(
 literal|"carp_input: received len %zd< "
-literal|"sizeof(struct carp_header)\n"
+literal|"sizeof(struct carp_header) on %s\n"
 argument_list|,
 name|m
 operator|->
@@ -3272,6 +3260,14 @@ argument_list|(
 expr|struct
 name|ip
 argument_list|)
+argument_list|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|->
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -4987,11 +4983,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -8007,11 +7998,6 @@ modifier|*
 name|sin
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -8954,11 +8940,6 @@ modifier|*
 name|sin6
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ifnet
 modifier|*

@@ -278,6 +278,14 @@ begin_comment
 comment|/* Valid bits in mxcsr */
 end_comment
 
+begin_decl_stmt
+name|u_int
+name|cpu_clflush_line_size
+init|=
+literal|32
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
@@ -715,6 +723,31 @@ literal|0xf
 condition|)
 name|init_via
 argument_list|()
+expr_stmt|;
+comment|/* 	 * CPUID with %eax = 1, %ebx returns 	 * Bits 15-8: CLFLUSH line size 	 * 	(Value * 8 = cache line size in bytes) 	 */
+if|if
+condition|(
+operator|(
+name|cpu_feature
+operator|&
+name|CPUID_CLFSH
+operator|)
+operator|!=
+literal|0
+condition|)
+name|cpu_clflush_line_size
+operator|=
+operator|(
+operator|(
+name|cpu_procinfo
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xff
+operator|)
+operator|*
+literal|8
 expr_stmt|;
 block|}
 end_function

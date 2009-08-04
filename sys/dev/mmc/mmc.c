@@ -9196,10 +9196,16 @@ name|sc
 init|=
 name|xsc
 decl_stmt|;
+name|newbus_xlock
+argument_list|()
+expr_stmt|;
 name|mmc_scan
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+name|newbus_xunlock
+argument_list|()
 expr_stmt|;
 name|config_intrhook_disestablish
 argument_list|(

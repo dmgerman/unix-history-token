@@ -1003,11 +1003,16 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|mwl_recv_action
 parameter_list|(
 name|struct
 name|ieee80211_node
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_frame
 modifier|*
 parameter_list|,
 specifier|const
@@ -2715,6 +2720,9 @@ comment|/* adhoc demo mode */
 endif|#
 directive|endif
 operator||
+name|IEEE80211_C_MBSS
+comment|/* mesh point link mode */
+operator||
 name|IEEE80211_C_WDS
 comment|/* WDS supported */
 operator||
@@ -3483,6 +3491,9 @@ block|{
 case|case
 name|IEEE80211_M_HOSTAP
 case|:
+case|case
+name|IEEE80211_M_MBSS
+case|:
 if|if
 condition|(
 operator|(
@@ -3864,6 +3875,10 @@ condition|(
 name|opmode
 operator|==
 name|IEEE80211_M_HOSTAP
+operator|||
+name|opmode
+operator|==
+name|IEEE80211_M_MBSS
 condition|)
 block|{
 name|vap
@@ -3942,6 +3957,9 @@ case|case
 name|IEEE80211_M_HOSTAP
 case|:
 case|case
+name|IEEE80211_M_MBSS
+case|:
+case|case
 name|IEEE80211_M_STA
 case|:
 comment|/* 		 * Setup sta db entry for local address. 		 */
@@ -3957,6 +3975,12 @@ operator|->
 name|iv_opmode
 operator|==
 name|IEEE80211_M_HOSTAP
+operator|||
+name|vap
+operator|->
+name|iv_opmode
+operator|==
+name|IEEE80211_M_MBSS
 condition|)
 name|sc
 operator|->
@@ -4122,6 +4146,9 @@ case|case
 name|IEEE80211_M_HOSTAP
 case|:
 case|case
+name|IEEE80211_M_MBSS
+case|:
+case|case
 name|IEEE80211_M_STA
 case|:
 name|KASSERT
@@ -4157,6 +4184,10 @@ condition|(
 name|opmode
 operator|==
 name|IEEE80211_M_HOSTAP
+operator|||
+name|opmode
+operator|==
+name|IEEE80211_M_MBSS
 condition|)
 name|sc
 operator|->
@@ -6473,6 +6504,12 @@ operator|->
 name|iv_opmode
 operator|==
 name|IEEE80211_M_HOSTAP
+operator|||
+name|vap
+operator|->
+name|iv_opmode
+operator|==
+name|IEEE80211_M_MBSS
 operator|||
 name|vap
 operator|->
@@ -17274,13 +17311,19 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|mwl_recv_action
 parameter_list|(
 name|struct
 name|ieee80211_node
 modifier|*
 name|ni
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_frame
+modifier|*
+name|wh
 parameter_list|,
 specifier|const
 name|uint8_t
@@ -17377,19 +17420,25 @@ name|IEEE80211_A_HT_MIMOPWRSAVE_MODE
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 else|else
+return|return
 name|sc
 operator|->
 name|sc_recv_action
 argument_list|(
 name|ni
 argument_list|,
+name|wh
+argument_list|,
 name|frm
 argument_list|,
 name|efrm
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 
@@ -19909,6 +19958,9 @@ break|break;
 case|case
 name|IEEE80211_M_HOSTAP
 case|:
+case|case
+name|IEEE80211_M_MBSS
+case|:
 name|error
 operator|=
 name|mwl_hal_newstation
@@ -20224,6 +20276,12 @@ operator|->
 name|iv_opmode
 operator|==
 name|IEEE80211_M_HOSTAP
+operator|||
+name|vap
+operator|->
+name|iv_opmode
+operator|==
+name|IEEE80211_M_MBSS
 condition|)
 name|mwl_startcsa
 argument_list|(
@@ -20343,6 +20401,9 @@ condition|)
 block|{
 case|case
 name|IEEE80211_M_HOSTAP
+case|:
+case|case
+name|IEEE80211_M_MBSS
 case|:
 if|if
 condition|(

@@ -1764,6 +1764,9 @@ operator||
 name|IEEE80211_C_WDS
 comment|/* 4-address traffic works */
 operator||
+name|IEEE80211_C_MBSS
+comment|/* mesh point link mode */
+operator||
 name|IEEE80211_C_SHPREAMBLE
 comment|/* short preamble supported */
 operator||
@@ -2279,6 +2282,10 @@ case|:
 case|case
 name|IEEE80211_M_HOSTAP
 case|:
+case|case
+name|IEEE80211_M_MBSS
+case|:
+comment|/* XXXRP: TBD */
 if|if
 condition|(
 operator|!
@@ -4591,6 +4598,12 @@ operator|->
 name|iv_opmode
 operator|==
 name|IEEE80211_M_IBSS
+operator|||
+name|vap
+operator|->
+name|iv_opmode
+operator|==
+name|IEEE80211_M_MBSS
 condition|)
 block|{
 name|error
@@ -13096,6 +13109,12 @@ operator|->
 name|ic_opmode
 operator|!=
 name|IEEE80211_M_HOSTAP
+operator|&&
+name|ic
+operator|->
+name|ic_opmode
+operator|!=
+name|IEEE80211_M_MBSS
 condition|)
 name|tmp
 operator||=

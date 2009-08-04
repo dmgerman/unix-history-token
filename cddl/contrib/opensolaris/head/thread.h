@@ -184,16 +184,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|mutex_owned
-parameter_list|(
-name|l
-parameter_list|)
-value|pthread_mutex_isowned_np(l)
-end_define
-
-begin_define
-define|#
-directive|define
 name|rwlock_init
 parameter_list|(
 name|l

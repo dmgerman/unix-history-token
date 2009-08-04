@@ -801,6 +801,10 @@ name|int
 name|sc_nstavaps
 decl_stmt|;
 comment|/* # station vaps */
+name|int
+name|sc_nmeshvaps
+decl_stmt|;
+comment|/* # mbss vaps */
 name|u_int8_t
 name|sc_hwbssidmask
 index|[
@@ -970,6 +974,11 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* bssid mask support */
+name|sc_hasbmatch
+range|:
+literal|1
+decl_stmt|,
+comment|/* bssid match disable support*/
 name|sc_hastsfadd
 range|:
 literal|1

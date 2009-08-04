@@ -180,6 +180,11 @@ init|=
 literal|5
 block|,
 comment|/* Monitor mode */
+name|IEEE80211_M_MBSS
+init|=
+literal|6
+block|,
+comment|/* MBSS (Mesh Point) link */
 block|}
 enum|;
 end_enum
@@ -188,7 +193,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_OPMODE_MAX
-value|(IEEE80211_M_MONITOR+1)
+value|(IEEE80211_M_MBSS+1)
 end_define
 
 begin_comment

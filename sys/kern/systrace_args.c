@@ -16641,6 +16641,48 @@ literal|3
 expr_stmt|;
 break|break;
 block|}
+comment|/* lpathconf */
+case|case
+literal|513
+case|:
+block|{
+name|struct
+name|lpathconf_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|uarg
+index|[
+literal|0
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|path
+expr_stmt|;
+comment|/* char * */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|name
+expr_stmt|;
+comment|/* int */
+operator|*
+name|n_args
+operator|=
+literal|2
+expr_stmt|;
+break|break;
+block|}
 default|default:
 operator|*
 name|n_args
@@ -28491,6 +28533,36 @@ case|:
 name|p
 operator|=
 literal|"struct shmid_ds *"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* lpathconf */
+case|case
+literal|513
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"char *"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"int"
 expr_stmt|;
 break|break;
 default|default:

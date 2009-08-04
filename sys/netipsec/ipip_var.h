@@ -78,31 +78,40 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ipip_allow
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
+begin_define
+define|#
+directive|define
+name|V_ipip_allow
+value|VNET(ipip_allow)
+end_define
 
-begin_decl_stmt
-specifier|extern
-name|struct
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+expr|struct
 name|ipipstat
+argument_list|,
 name|ipipstat
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_ipipstat
+value|VNET(ipipstat)
+end_define
 
 begin_endif
 endif|#

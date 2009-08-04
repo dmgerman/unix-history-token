@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -123,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|<net/netisr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
 end_include
 
 begin_include
@@ -177,12 +177,6 @@ begin_include
 include|#
 directive|include
 file|<machine/in_cksum.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/vinet.h>
 end_include
 
 begin_include
@@ -326,11 +320,6 @@ name|int
 name|pass
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ip
 modifier|*

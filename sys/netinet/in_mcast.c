@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/ktr.h>
 end_include
 
@@ -157,12 +151,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/igmp_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/vinet.h>
 end_include
 
 begin_ifndef
@@ -287,28 +275,6 @@ literal|"IPv4 multicast IGMP-layer source filter"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|in_multihead
-name|in_multihead
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX now unused; retain for ABI */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Locking:  * - Lock order is: Giant, INP_WLOCK, IN_MULTI_LOCK, IGMP_LOCK, IF_ADDR_LOCK.  * - The IF_ADDR_LOCK is implicitly taken by inm_lookup() earlier, however  *   it can be taken by code in net/if.c also.  * - ip_moptions and in_mfilter are covered by the INP_WLOCK.  *  * struct in_multi is covered by IN_MULTI_LOCK. There isn't strictly  * any need for in_multi itself to be virtualized -- it is bound to an ifp  * anyway no matter what happens.  */
@@ -5770,16 +5736,6 @@ modifier|*
 name|sopt
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|group_source_req
 name|gsr
@@ -6994,11 +6950,6 @@ modifier|*
 name|sopt
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|__msfilterreq
 name|msfr
@@ -7541,11 +7492,6 @@ modifier|*
 name|sopt
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ip_mreqn
 name|mreqn
@@ -8074,11 +8020,6 @@ name|in_addr
 name|ina
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -8319,11 +8260,6 @@ modifier|*
 name|sopt
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|group_source_req
 name|gsr
@@ -9431,16 +9367,6 @@ modifier|*
 name|sopt
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|group_source_req
 name|gsr
@@ -10378,16 +10304,6 @@ modifier|*
 name|sopt
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|in_addr
 name|addr
@@ -10672,11 +10588,6 @@ modifier|*
 name|sopt
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|__msfilterreq
 name|msfr
@@ -11831,11 +11742,6 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|in_addr
 name|src

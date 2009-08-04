@@ -1385,7 +1385,15 @@ comment|/* alignment */
 name|align
 argument_list|,
 comment|/* boundary  */
+operator|(
+name|align
+operator|==
+literal|1
+operator|)
+condition|?
 name|USB_PAGE_SIZE
+else|:
+literal|0
 argument_list|,
 comment|/* lowaddr   */
 operator|(

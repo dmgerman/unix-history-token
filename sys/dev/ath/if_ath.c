@@ -3426,6 +3426,9 @@ operator||
 name|IEEE80211_C_WDS
 comment|/* 4-address traffic works */
 operator||
+name|IEEE80211_C_MBSS
+comment|/* mesh point link mode */
+operator||
 name|IEEE80211_C_SHPREAMBLE
 comment|/* short preamble supported */
 operator||
@@ -3720,6 +3723,15 @@ operator|->
 name|sc_hasbmask
 operator|=
 name|ath_hal_hasbssidmask
+argument_list|(
+name|ah
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_hasbmatch
+operator|=
+name|ath_hal_hasbssidmatch
 argument_list|(
 name|ah
 argument_list|)
@@ -4820,6 +4832,9 @@ break|break;
 case|case
 name|IEEE80211_M_HOSTAP
 case|:
+case|case
+name|IEEE80211_M_MBSS
+case|:
 name|needbeacon
 operator|=
 literal|1
@@ -4931,6 +4946,10 @@ condition|(
 name|opmode
 operator|==
 name|IEEE80211_M_HOSTAP
+operator|||
+name|opmode
+operator|==
+name|IEEE80211_M_MBSS
 condition|)
 block|{
 name|assign_address
@@ -5264,6 +5283,17 @@ operator|->
 name|sc_nstavaps
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|opmode
+operator|==
+name|IEEE80211_M_MBSS
+condition|)
+name|sc
+operator|->
+name|sc_nmeshvaps
+operator|++
+expr_stmt|;
 block|}
 switch|switch
 condition|(
@@ -5325,6 +5355,9 @@ endif|#
 directive|endif
 case|case
 name|IEEE80211_M_HOSTAP
+case|:
+case|case
+name|IEEE80211_M_MBSS
 case|:
 name|sc
 operator|->
@@ -5683,6 +5716,12 @@ operator|->
 name|iv_opmode
 operator|==
 name|IEEE80211_M_HOSTAP
+operator|||
+name|vap
+operator|->
+name|iv_opmode
+operator|==
+name|IEEE80211_M_MBSS
 condition|)
 block|{
 name|reclaim_address
@@ -5702,6 +5741,19 @@ name|sc
 operator|->
 name|sc_hwbssidmask
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_opmode
+operator|==
+name|IEEE80211_M_MBSS
+condition|)
+name|sc
+operator|->
+name|sc_nmeshvaps
+operator|--
 expr_stmt|;
 block|}
 if|if
@@ -11012,7 +11064,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Calculate the receive filter according to the  * operating mode and state:  *  * o always accept unicast, broadcast, and multicast traffic  * o accept PHY error frames when hardware doesn't have MIB support  *   to count and we need them for ANI (sta mode only until recently)  *   and we are not scanning (ANI is disabled)  *   NB: older hal's add rx filter bits out of sight and we need to  *	 blindly preserve them  * o probe request frames are accepted only when operating in  *   hostap, adhoc, or monitor modes  * o enable promiscuous mode  *   - when in monitor mode  *   - if interface marked PROMISC (assumes bridge setting is filtered)  * o accept beacons:  *   - when operating in station mode for collecting rssi data when  *     the station is otherwise quiet, or  *   - when operating in adhoc mode so the 802.11 layer creates  *     node table entries for peers,  *   - when scanning  *   - when doing s/w beacon miss (e.g. for ap+sta)  *   - when operating in ap mode in 11g to detect overlapping bss that  *     require protection  * o accept control frames:  *   - when in monitor mode  * XXX BAR frames for 11n  * XXX HT protection for 11n  */
+comment|/*  * Calculate the receive filter according to the  * operating mode and state:  *  * o always accept unicast, broadcast, and multicast traffic  * o accept PHY error frames when hardware doesn't have MIB support  *   to count and we need them for ANI (sta mode only until recently)  *   and we are not scanning (ANI is disabled)  *   NB: older hal's add rx filter bits out of sight and we need to  *	 blindly preserve them  * o probe request frames are accepted only when operating in  *   hostap, adhoc, mesh, or monitor modes  * o enable promiscuous mode  *   - when in monitor mode  *   - if interface marked PROMISC (assumes bridge setting is filtered)  * o accept beacons:  *   - when operating in station mode for collecting rssi data when  *     the station is otherwise quiet, or  *   - when operating in adhoc mode so the 802.11 layer creates  *     node table entries for peers,  *   - when scanning  *   - when doing s/w beacon miss (e.g. for ap+sta)  *   - when operating in ap mode in 11g to detect overlapping bss that  *     require protection  *   - when operating in mesh mode to detect neighbors  * o accept control frames:  *   - when in monitor mode  * XXX BAR frames for 11n  * XXX HT protection for 11n  */
 end_comment
 
 begin_function
@@ -11150,6 +11202,33 @@ name|rfilt
 operator||=
 name|HAL_RX_FILTER_BEACON
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_nmeshvaps
+condition|)
+block|{
+name|rfilt
+operator||=
+name|HAL_RX_FILTER_BEACON
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_hasbmatch
+condition|)
+name|rfilt
+operator||=
+name|HAL_RX_FILTER_BSSID
+expr_stmt|;
+else|else
+name|rfilt
+operator||=
+name|HAL_RX_FILTER_PROM
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ic
@@ -11756,6 +11835,12 @@ operator|->
 name|ic_opmode
 operator|==
 name|IEEE80211_M_HOSTAP
+operator|||
+name|ic
+operator|->
+name|ic_opmode
+operator|==
+name|IEEE80211_M_MBSS
 condition|)
 name|sc
 operator|->
@@ -11906,6 +11991,12 @@ operator|->
 name|ic_opmode
 operator|==
 name|IEEE80211_M_HOSTAP
+operator|||
+name|ic
+operator|->
+name|ic_opmode
+operator|==
+name|IEEE80211_M_MBSS
 condition|)
 block|{
 comment|/* 		 * Always burst out beacon and CAB traffic. 		 */
@@ -14381,9 +14472,15 @@ operator|->
 name|ic_opmode
 operator|==
 name|IEEE80211_M_HOSTAP
+operator|||
+name|ic
+operator|->
+name|ic_opmode
+operator|==
+name|IEEE80211_M_MBSS
 condition|)
 block|{
-comment|/* 		 * For multi-bss ap support beacons are either staggered 		 * evenly over N slots or burst together.  For the former 		 * arrange for the SWBA to be delivered for each slot. 		 * Slots that are not occupied will generate nothing. 		 */
+comment|/* 		 * For multi-bss ap/mesh support beacons are either staggered 		 * evenly over N slots or burst together.  For the former 		 * arrange for the SWBA to be delivered for each slot. 		 * Slots that are not occupied will generate nothing. 		 */
 comment|/* NB: the beacon interval is kept internally in TU's */
 name|intval
 operator|=
@@ -14951,9 +15048,15 @@ operator|->
 name|ic_opmode
 operator|==
 name|IEEE80211_M_HOSTAP
+operator|||
+name|ic
+operator|->
+name|ic_opmode
+operator|==
+name|IEEE80211_M_MBSS
 condition|)
 block|{
-comment|/* 			 * In AP mode we enable the beacon timers and 			 * SWBA interrupts to prepare beacon frames. 			 */
+comment|/* 			 * In AP/mesh mode we enable the beacon timers 			 * and SWBA interrupts to prepare beacon frames. 			 */
 name|intval
 operator||=
 name|HAL_BEACON_ENA
@@ -26114,6 +26217,9 @@ name|IEEE80211_M_HOSTAP
 case|:
 case|case
 name|IEEE80211_M_IBSS
+case|:
+case|case
+name|IEEE80211_M_MBSS
 case|:
 comment|/* 			 * Allocate and setup the beacon frame. 			 * 			 * Stop any previous beacon DMA.  This may be 			 * necessary, for example, when an ibss merge 			 * causes reconfiguration; there will be a state 			 * transition from RUN->RUN that means we may 			 * be called with beacon transmission active. 			 */
 name|ath_hal_stoptxdma
