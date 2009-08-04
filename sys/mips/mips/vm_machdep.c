@@ -1260,7 +1260,7 @@ name|trapframe
 modifier|*
 name|tf
 decl_stmt|;
-name|u_int32_t
+name|register_t
 name|sp
 decl_stmt|;
 comment|/* 	* At the point where a function is called, sp must be 8 	* byte aligned[for compatibility with 64-bit CPUs] 	* in ``See MIPS Run'' by D. Sweetman, p. 269 	* align stack */
@@ -1268,7 +1268,7 @@ name|sp
 operator|=
 operator|(
 call|(
-name|uint32_t
+name|register_t
 call|)
 argument_list|(
 name|stack
