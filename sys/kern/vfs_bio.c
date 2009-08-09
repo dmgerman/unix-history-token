@@ -5323,6 +5323,12 @@ operator|->
 name|b_ioflags
 operator|&
 name|BIO_ERROR
+operator|&&
+name|bp
+operator|->
+name|b_iocmd
+operator|==
+name|BIO_READ
 operator|)
 condition|)
 block|{
