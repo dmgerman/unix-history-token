@@ -88,35 +88,21 @@ name|__stop_set_pcpu
 decl_stmt|;
 end_decl_stmt
 
-begin_if
+begin_asm
+asm|__asm__(
 if|#
 directive|if
 name|defined
 argument_list|(
 name|__arm__
 argument_list|)
-end_if
-
-begin_asm
-asm|__asm__(".section set_pcpu, \"aw\", %progbits");
-end_asm
-
-begin_else
+asm|".section set_pcpu, \"aw\", %progbits\n"
 else|#
 directive|else
-end_else
-
-begin_asm
-asm|__asm__(".section set_pcpu, \"aw\", @progbits");
-end_asm
-
-begin_endif
+asm|".section set_pcpu, \"aw\", @progbits\n"
 endif|#
 directive|endif
-end_endif
-
-begin_asm
-asm|__asm__(".previous");
+asm|"\t.p2align " __XSTRING(CACHE_LINE_SHIFT) "\n" 	"\t.previous");
 end_asm
 
 begin_comment
