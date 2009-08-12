@@ -2201,7 +2201,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%6s  %-15.15s\n"
+literal|"%6s  %s\n"
 argument_list|,
 literal|""
 argument_list|,
