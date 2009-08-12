@@ -1330,6 +1330,16 @@ name|p
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|m
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
 name|xdrs
 operator|->
 name|x_op
