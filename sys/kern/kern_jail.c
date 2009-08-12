@@ -2517,9 +2517,6 @@ name|ppr
 decl_stmt|,
 modifier|*
 name|tpr
-decl_stmt|,
-modifier|*
-name|tppr
 decl_stmt|;
 name|struct
 name|vnode
@@ -2559,6 +2556,11 @@ name|defined
 argument_list|(
 name|INET6
 argument_list|)
+name|struct
+name|prison
+modifier|*
+name|tppr
+decl_stmt|;
 name|void
 modifier|*
 name|op
