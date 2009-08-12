@@ -2027,27 +2027,6 @@ argument_list|(
 name|vnet_iter
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|SIZE_MAX
-operator|==
-name|UINT32_MAX
-comment|/* 32-bit arch */
-name|db_printf
-argument_list|(
-literal|"      vnet ifs socks\n"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* 64-bit arch, most probaly... */
-name|db_printf
-argument_list|(
-literal|"              vnet ifs socks\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|VNET_FOREACH
 argument_list|(
 argument|vnet_iter
@@ -2055,19 +2034,83 @@ argument_list|)
 block|{
 name|db_printf
 argument_list|(
-literal|"%p %3d %5d\n"
+literal|"vnet            = %p\n"
 argument_list|,
 name|vnet_iter
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|" vnet_magic_n   = 0x%x (%s, orig 0x%x)\n"
+argument_list|,
+name|vnet_iter
+operator|->
+name|vnet_magic_n
+argument_list|,
+operator|(
+name|vnet_iter
+operator|->
+name|vnet_magic_n
+operator|==
+name|VNET_MAGIC_N
+operator|)
+condition|?
+literal|"ok"
+else|:
+literal|"mismatch"
+argument_list|,
+name|VNET_MAGIC_N
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|" vnet_ifcnt     = %u\n"
 argument_list|,
 name|vnet_iter
 operator|->
 name|vnet_ifcnt
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|" vnet_sockcnt   = %u\n"
 argument_list|,
 name|vnet_iter
 operator|->
 name|vnet_sockcnt
 argument_list|)
 expr_stmt|;
+name|db_printf
+argument_list|(
+literal|" vnet_data_mem  = %p\n"
+argument_list|,
+name|vnet_iter
+operator|->
+name|vnet_data_mem
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|" vnet_data_base = 0x%jx\n"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|vnet_iter
+operator|->
+name|vnet_data_base
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+break|break;
 block|}
 block|}
 end_block
