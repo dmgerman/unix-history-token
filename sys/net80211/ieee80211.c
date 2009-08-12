@@ -2726,7 +2726,7 @@ argument_list|(
 name|vap
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Flush any deferred vap tasks. 	 * NB: must be before ether_ifdetach() and removal from ic_vaps list 	 */
+comment|/* 	 * Flush any deferred vap tasks. 	 */
 name|ieee80211_draintask
 argument_list|(
 name|ic
@@ -2745,6 +2745,17 @@ operator|&
 name|vap
 operator|->
 name|iv_swbmiss_task
+argument_list|)
+expr_stmt|;
+comment|/* XXX band-aid until ifnet handles this for us */
+name|taskqueue_drain
+argument_list|(
+name|taskqueue_swi
+argument_list|,
+operator|&
+name|ifp
+operator|->
+name|if_linktask
 argument_list|)
 expr_stmt|;
 name|IEEE80211_LOCK
