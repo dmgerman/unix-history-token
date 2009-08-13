@@ -1300,6 +1300,17 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|prison_owns_vnet
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|prison_canseemount
 parameter_list|(
 name|struct
