@@ -229,6 +229,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|ipi_nmi_handler
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ipi_selected
 parameter_list|(
@@ -359,26 +368,6 @@ name|mask
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|STOP_NMI
-end_ifdef
-
-begin_function_decl
-name|int
-name|ipi_nmi_handler
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
