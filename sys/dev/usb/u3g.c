@@ -139,7 +139,7 @@ specifier|static
 name|int
 name|u3gdebug
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
