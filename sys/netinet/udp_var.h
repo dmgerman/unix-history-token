@@ -100,6 +100,46 @@ name|ui_sum
 value|ui_u.uh_sum
 end_define
 
+begin_comment
+comment|/*  * UDP control block; one per udp.  */
+end_comment
+
+begin_struct
+struct|struct
+name|udpcb
+block|{
+name|void
+modifier|*
+name|u_pspare
+decl_stmt|;
+name|u_int
+name|u_flags
+decl_stmt|;
+comment|/* Generic UDP flags. */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|intoudpcb
+parameter_list|(
+name|ip
+parameter_list|)
+value|((struct udpcb *)(ip)->inp_ppcb)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sotoudpcb
+parameter_list|(
+name|so
+parameter_list|)
+value|(intoudpcb(sotoinpcb(so)))
+end_define
+
 begin_struct
 struct|struct
 name|udpstat
@@ -312,6 +352,28 @@ name|int
 name|udp_log_in_vain
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|int
+name|udp_newudpcb
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|udp_discardcb
+parameter_list|(
+name|struct
+name|udpcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
