@@ -1186,6 +1186,25 @@ name|st_size
 expr_stmt|;
 if|if
 condition|(
+name|len
+operator|<
+operator|(
+literal|2
+operator|*
+name|NBG
+operator|)
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"database too small: %s"
+argument_list|,
+name|db
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|p
 operator|=
