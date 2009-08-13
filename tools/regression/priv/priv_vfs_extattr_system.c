@@ -201,7 +201,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"priv_vfs_extattr_system: set returned %d"
+literal|"priv_vfs_extattr_system: set returned %zd"
 argument_list|,
 name|ret
 argument_list|)
