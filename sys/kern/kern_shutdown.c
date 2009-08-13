@@ -1588,10 +1588,6 @@ argument_list|,
 name|howto
 argument_list|)
 expr_stmt|;
-comment|/* XXX This doesn't disable interrupts any more.  Reconsider? */
-name|splhigh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1832,6 +1828,10 @@ name|int
 name|howto
 parameter_list|)
 block|{
+comment|/* 	 * Disable interrupts on CPU0 in order to avoid fast handlers 	 * to preempt the stopping process and to deadlock against other 	 * CPUs. 	 */
+name|spinlock_enter
+argument_list|()
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Rebooting...\n"

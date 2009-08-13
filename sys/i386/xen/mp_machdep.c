@@ -361,13 +361,6 @@ directive|include
 file|<xen/interface/vcpu.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|stop_cpus_with_nmi
-value|0
-end_define
-
 begin_decl_stmt
 name|int
 name|mp_naps

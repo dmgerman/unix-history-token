@@ -680,7 +680,7 @@ name|ifa
 expr_stmt|;
 name|next
 label|:
-comment|/* 	 * Handle ExtINT interrupts by generating an INTA cycle to 	 * read the vector. 	 */
+comment|/* 	 * Handle ExtINT interrupts by generating an INTA cycle to 	 * read the vector. 	 * IPI_STOP_HARD is mapped to IPI_STOP so it is not necessary 	 * to add it to this switch-like construct. 	 */
 if|if
 condition|(
 name|vector
