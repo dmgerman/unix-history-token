@@ -3766,6 +3766,27 @@ operator|)
 operator|&
 literal|0xff
 expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"OHCI version %x.%x (ROM=%d)\n"
+argument_list|,
+name|mver
+argument_list|,
+name|reg
+operator|&
+literal|0xff
+argument_list|,
+operator|(
+name|reg
+operator|>>
+literal|24
+operator|)
+operator|&
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mver
@@ -3781,11 +3802,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"invalid OHCI version %d (reg=0x%08x)\n"
-argument_list|,
-name|mver
-argument_list|,
-name|reg
+literal|"invalid OHCI version\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3875,24 +3892,6 @@ operator|==
 literal|0
 condition|)
 break|break;
-if|if
-condition|(
-name|i
-operator|==
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"0 isoc. channels"
-argument_list|)
-expr_stmt|;
-return|return
-name|ENXIO
-return|;
-block|}
 name|sc
 operator|->
 name|fc
@@ -3905,29 +3904,22 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"OHCI version %x.%x (ROM=%d), %d isoc. channels\n"
+literal|"No. of Isochronous channels is %d.\n"
 argument_list|,
-name|mver
-argument_list|,
-name|reg
-operator|&
-literal|0xff
-argument_list|,
-operator|(
-name|reg
-operator|>>
-literal|24
-operator|)
-operator|&
-literal|1
-argument_list|,
-name|sc
-operator|->
-name|fc
-operator|.
-name|nisodma
+name|i
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|sc
 operator|->
 name|fc
@@ -11489,10 +11481,6 @@ argument_list|,
 name|OHCI_INT_PHY_BUS_R
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
 name|device_printf
 argument_list|(
 name|fc
@@ -14623,7 +14611,7 @@ argument|]), 				FWOHCI_DMA_READ(db[i+
 literal|1
 argument|].db.immed[
 literal|3
-argument|])); 		} 		if(key == OHCI_KEY_DEVICE){ 			return; 		} 		if((cmd& OHCI_BRANCH_MASK)  				== OHCI_BRANCH_ALWAYS){ 			return; 		} 		if((cmd& OHCI_CMD_MASK)  				== OHCI_OUTPUT_LAST){ 			return; 		} 		if((cmd& OHCI_CMD_MASK)  				== OHCI_INPUT_LAST){ 			return; 		} 		if(key == OHCI_KEY_ST2 ){ 			i++; 		} 	} 	return; }  void fwohci_ibr(struct firewire_comm *fc) { 	struct fwohci_softc *sc; 	uint32_t fun;  	if (bootverbose) 		device_printf(fc->dev,
+argument|])); 		} 		if(key == OHCI_KEY_DEVICE){ 			return; 		} 		if((cmd& OHCI_BRANCH_MASK)  				== OHCI_BRANCH_ALWAYS){ 			return; 		} 		if((cmd& OHCI_CMD_MASK)  				== OHCI_OUTPUT_LAST){ 			return; 		} 		if((cmd& OHCI_CMD_MASK)  				== OHCI_INPUT_LAST){ 			return; 		} 		if(key == OHCI_KEY_ST2 ){ 			i++; 		} 	} 	return; }  void fwohci_ibr(struct firewire_comm *fc) { 	struct fwohci_softc *sc; 	uint32_t fun;  	device_printf(fc->dev,
 literal|"Initiate bus reset\n"
 argument|); 	sc = (struct fwohci_softc *)fc;
 comment|/* 	 * Make sure our cached values from the config rom are 	 * initialised. 	 */
