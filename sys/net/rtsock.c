@@ -7652,6 +7652,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 name|rnh
 operator|=
 name|rt_tables_get_rnh
@@ -7710,6 +7711,7 @@ name|error
 operator|=
 name|EAFNOSUPPORT
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|NET_RT_IFLIST
