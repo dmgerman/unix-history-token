@@ -1109,7 +1109,7 @@ modifier|*
 name|oaa
 decl_stmt|;
 comment|/* 			 * If the request is specifying phase 1, then 			 * only look at a phase one address 			 */
-name|AT_IFADDR_RUNLOCK
+name|AT_IFADDR_RLOCK
 argument_list|()
 expr_stmt|;
 for|for
@@ -1186,7 +1186,7 @@ operator|->
 name|aa_ifa
 argument_list|)
 expr_stmt|;
-name|AT_IFADDR_RLOCK
+name|AT_IFADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
 block|}
