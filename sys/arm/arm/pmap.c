@@ -3653,7 +3653,7 @@ operator|*
 name|ptep
 argument_list|)
 condition|)
-name|cpu_l2cache_wb_range
+name|cpu_l2cache_wbinv_range
 argument_list|(
 name|va
 argument_list|,
