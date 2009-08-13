@@ -304,6 +304,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CTLFLAG_VNET
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Prisons with vnet can fiddle */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CTLFLAG_RDTUN
 value|(CTLFLAG_RD|CTLFLAG_TUN)
 end_define
