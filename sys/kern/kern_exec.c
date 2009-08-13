@@ -2585,11 +2585,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|setugidsafety
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|imgp
@@ -2598,6 +2593,11 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+name|setugidsafety
+argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
