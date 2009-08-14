@@ -2019,25 +2019,18 @@ return|;
 block|}
 if|if
 condition|(
-name|bootverbose
-condition|)
-block|{
-name|device_print_prettyname
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|sc
 operator|->
 name|stolen
 operator|>
 literal|0
 condition|)
-name|printf
+block|{
+name|device_printf
 argument_list|(
-literal|"detected %dk stolen memory, "
+name|dev
+argument_list|,
+literal|"detected %dk stolen memory\n"
 argument_list|,
 name|sc
 operator|->
@@ -2046,8 +2039,11 @@ operator|*
 literal|4
 argument_list|)
 expr_stmt|;
-name|printf
+block|}
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"aperture size is %dM\n"
 argument_list|,
 name|sc
@@ -2059,7 +2055,6 @@ operator|/
 literal|1024
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* GATT address is already in there, make sure it's enabled */
 name|pgtblctl
 operator|=
@@ -2828,25 +2823,17 @@ literal|4096
 expr_stmt|;
 if|if
 condition|(
-name|bootverbose
-condition|)
-block|{
-name|device_print_prettyname
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|sc
 operator|->
 name|stolen
 operator|>
 literal|0
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"detected %dk stolen memory, "
+name|dev
+argument_list|,
+literal|"detected %dk stolen memory\n"
 argument_list|,
 name|sc
 operator|->
@@ -2855,8 +2842,10 @@ operator|*
 literal|4
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"aperture size is %dM\n"
 argument_list|,
 name|sc
@@ -2868,7 +2857,6 @@ operator|/
 literal|1024
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* GATT address is already in there, make sure it's enabled */
 name|pgtblctl
 operator|=
