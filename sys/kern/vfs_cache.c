@@ -2297,9 +2297,14 @@ name|v_cache_dd
 operator|=
 name|NULL
 expr_stmt|;
-goto|goto
-name|unlock
-goto|;
+name|CACHE_WUNLOCK
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 if|if
 condition|(
