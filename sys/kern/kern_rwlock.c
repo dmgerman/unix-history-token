@@ -736,6 +736,26 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+name|ASSERT_ATOMIC_LOAD
+argument_list|(
+name|rw
+operator|->
+name|rw_lock
+argument_list|,
+operator|(
+literal|"%s: rw_lock not aligned for %s: %p"
+operator|,
+name|__func__
+operator|,
+name|name
+operator|,
+operator|&
+name|rw
+operator|->
+name|rw_lock
+operator|)
+argument_list|)
+expr_stmt|;
 name|flags
 operator|=
 name|LO_UPGRADABLE
