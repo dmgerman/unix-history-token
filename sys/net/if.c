@@ -3964,7 +3964,7 @@ return|;
 block|}
 comment|/* Make sure the named iface does not exists in the dst. prison/vnet. */
 comment|/* XXX Lock interfaces to avoid races. */
-name|CURVNET_SET
+name|CURVNET_SET_QUIET
 argument_list|(
 name|pr
 operator|->
