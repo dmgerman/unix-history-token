@@ -626,7 +626,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {	\ 	if (LOCK_LOG_TEST((lo), (flags)))				\ 		CTR5(KTR_LOCK, opname " (%s) %s r = %d at %s:%d",	\ 		    LOCK_CLASS(lo)->lc_name, (lo)->lo_name,		\ 		    (u_int)(recurse), (file), (line));			\ } while (0)
+value|do {	\ 	if (LOCK_LOG_TEST((lo), (flags)))				\ 		CTR6(KTR_LOCK, opname " (%s) %s %p r = %d at %s:%d",	\ 		    LOCK_CLASS(lo)->lc_name, (lo)->lo_name,		\ 		    (lo), (u_int)(recurse), (file), (line));		\ } while (0)
 end_define
 
 begin_define
@@ -646,7 +646,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {	\ 	if (LOCK_LOG_TEST((lo), (flags)))				\ 		CTR5(KTR_LOCK, "TRY_" opname " (%s) %s result=%d at %s:%d",\ 		    LOCK_CLASS(lo)->lc_name, (lo)->lo_name,		\ 		    (u_int)(result), (file), (line));			\ } while (0)
+value|do {	\ 	if (LOCK_LOG_TEST((lo), (flags)))				\ 		CTR6(KTR_LOCK, "TRY_" opname " (%s) %s %p result=%d at %s:%d",\ 		    LOCK_CLASS(lo)->lc_name, (lo)->lo_name,		\ 		    (lo), (u_int)(result), (file), (line));		\ } while (0)
 end_define
 
 begin_define
