@@ -197,7 +197,7 @@ name|_ALIGN
 parameter_list|(
 name|p
 parameter_list|)
-value|(((u_int)(p) + _ALIGNBYTES)&~ _ALIGNBYTES)
+value|(((unsigned long)(p) + _ALIGNBYTES)&~ _ALIGNBYTES)
 end_define
 
 begin_define
@@ -230,7 +230,7 @@ name|p
 parameter_list|,
 name|t
 parameter_list|)
-value|((((unsigned)(p))& (sizeof (t) - 1)) == 0)
+value|((((unsigned long)(p))& (sizeof (t) - 1)) == 0)
 end_define
 
 begin_comment
