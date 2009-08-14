@@ -134,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_llatbl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/netisr.h>
 end_include
 
@@ -775,6 +781,7 @@ condition|(
 operator|!
 name|nortfree
 condition|)
+block|{
 name|RTFREE
 argument_list|(
 name|ro
@@ -782,6 +789,14 @@ operator|->
 name|ro_rt
 argument_list|)
 expr_stmt|;
+name|LLE_FREE
+argument_list|(
+name|ro
+operator|->
+name|ro_lle
+argument_list|)
+expr_stmt|;
+block|}
 name|ro
 operator|->
 name|ro_rt
@@ -789,6 +804,17 @@ operator|=
 operator|(
 expr|struct
 name|rtentry
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
+name|ro
+operator|->
+name|ro_lle
+operator|=
+operator|(
+expr|struct
+name|llentry
 operator|*
 operator|)
 name|NULL
