@@ -327,6 +327,19 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|ASSERT_ATOMIC_LOAD
+parameter_list|(
+name|var
+parameter_list|,
+name|msg
+parameter_list|)
+define|\
+value|KASSERT(sizeof(var)<= sizeof(uintptr_t)&&			\ 	    ALIGN(&(var)) == (uintptr_t)&(var), msg)
+end_define
+
 begin_comment
 comment|/*  * XXX the hints declarations are even more misplaced than most declarations  * in this file, since they are needed in one file (per arch) and only used  * in two files.  * XXX most of these variables should be const.  */
 end_comment
