@@ -276,6 +276,23 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_error
+error|#
+directive|error
+literal|"SCTP is not yet compatible with VIMAGE."
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|IPSEC
 end_ifdef
 
