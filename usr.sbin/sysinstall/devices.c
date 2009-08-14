@@ -295,6 +295,15 @@ argument_list|)
 block|,
 name|DISK
 argument_list|(
+literal|"ada%d"
+argument_list|,
+literal|"SATA disk device"
+argument_list|,
+literal|16
+argument_list|)
+block|,
+name|DISK
+argument_list|(
 literal|"ar%d"
 argument_list|,
 literal|"ATA/IDE RAID device"
