@@ -189,23 +189,6 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|INVARIANTS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|VNET_DEBUG
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|VNET_DEBUG
 end_ifdef
 
