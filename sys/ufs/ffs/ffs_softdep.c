@@ -3135,6 +3135,17 @@ name|FLUSH_REMOVE_WAIT
 value|3
 end_define
 
+begin_decl_stmt
+specifier|static
+name|long
+name|num_freeblkdep
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of freeblks workitems allocated */
+end_comment
+
 begin_comment
 comment|/*  * runtime statistics  */
 end_comment
@@ -10178,6 +10189,21 @@ name|ip
 operator|->
 name|i_devvp
 expr_stmt|;
+name|ACQUIRE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
+name|num_freeblkdep
+operator|++
+expr_stmt|;
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|extblocks
 operator|=
 literal|0
@@ -13100,6 +13126,9 @@ name|freeblks
 argument_list|,
 name|D_FREEBLKS
 argument_list|)
+expr_stmt|;
+name|num_freeblkdep
+operator|--
 expr_stmt|;
 name|FREE_LOCK
 argument_list|(
@@ -25975,6 +26004,10 @@ operator|->
 name|um_numindirdeps
 operator|<
 name|maxindirdeps
+operator|&&
+name|num_freeblkdep
+operator|<
+name|max_softdeps_hard
 condition|)
 block|{
 name|FREE_LOCK
