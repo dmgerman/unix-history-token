@@ -981,11 +981,11 @@ name|struct
 name|trapframe
 modifier|*
 parameter_list|,
-name|int
+name|uintptr_t
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int
+name|uintptr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1023,14 +1023,6 @@ name|addr
 parameter_list|)
 value|kdbpeek(((int *)(addr)) + 1)
 end_define
-
-begin_decl_stmt
-name|int
-name|rrs_debug
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * MIPS load/store access type  */
@@ -1146,13 +1138,11 @@ begin_function
 name|u_int
 name|trap
 parameter_list|(
-name|trapframe
-parameter_list|)
 name|struct
 name|trapframe
 modifier|*
 name|trapframe
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|type
@@ -3558,8 +3548,7 @@ operator|+
 name|T_USER
 case|:
 block|{
-name|unsigned
-name|int
+name|uintptr_t
 name|va
 decl_stmt|,
 name|instr
@@ -3656,8 +3645,7 @@ operator|+
 name|T_USER
 case|:
 block|{
-name|unsigned
-name|int
+name|uintptr_t
 name|va
 decl_stmt|;
 comment|/* compute address of trapped instruction */
@@ -3685,8 +3673,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"watch exception @ 0x%x\n"
+literal|"watch exception @ %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|va
 argument_list|)
 expr_stmt|;
@@ -3706,8 +3698,7 @@ operator|+
 name|T_USER
 case|:
 block|{
-name|unsigned
-name|int
+name|uintptr_t
 name|va
 decl_stmt|,
 name|instr
@@ -4601,13 +4592,13 @@ name|trapframe
 modifier|*
 name|framePtr
 parameter_list|,
-name|int
+name|uintptr_t
 name|instPC
 parameter_list|,
 name|int
 name|fpcCSR
 parameter_list|,
-name|u_int
+name|uintptr_t
 name|instptr
 parameter_list|)
 block|{
@@ -4624,7 +4615,7 @@ operator|*
 operator|)
 name|framePtr
 decl_stmt|;
-name|unsigned
+name|uintptr_t
 name|retAddr
 init|=
 literal|0
@@ -4641,7 +4632,7 @@ parameter_list|,
 name|inst
 parameter_list|)
 define|\
-value|((unsigned)InstPtr + 4 + ((short)inst.IType.imm<< 2))
+value|(InstPtr + 4 + ((short)inst.IType.imm<< 2))
 if|if
 condition|(
 name|instptr
@@ -4657,7 +4648,7 @@ name|inst
 operator|.
 name|word
 operator|=
-name|fuword
+name|fuword32
 argument_list|(
 operator|(
 name|void
@@ -4692,7 +4683,7 @@ name|inst
 operator|.
 name|word
 operator|=
-name|fuword
+name|fuword32
 argument_list|(
 operator|(
 name|void
@@ -5247,11 +5238,12 @@ comment|/* forward */
 end_comment
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|fn_name
 parameter_list|(
-name|unsigned
+name|uintptr_t
 name|addr
 parameter_list|)
 function_decl|;
@@ -5307,7 +5299,7 @@ block|{
 name|InstFmt
 name|i
 decl_stmt|;
-name|unsigned
+name|uintptr_t
 name|a0
 decl_stmt|,
 name|a1
@@ -5429,6 +5421,7 @@ goto|;
 comment|/* XXX */
 block|}
 comment|/* check for bad SP: could foul up next frame */
+comment|/*XXX MIPS64 bad: this hard-coded SP is lame */
 if|if
 condition|(
 name|sp
@@ -5483,7 +5476,7 @@ parameter_list|,
 name|b
 parameter_list|)
 define|\
-value|Between((unsigned)a, pc, (unsigned)b)
+value|Between((uintptr_t)a, pc, (uintptr_t)b)
 comment|/* 	 * Check for current PC in  exception handler code that don't have a 	 * preceding "j ra" at the tail of the preceding function. Depends 	 * on relative ordering of functions in exception.S, swtch.S. 	 */
 if|if
 condition|(
@@ -5497,7 +5490,7 @@ condition|)
 name|subr
 operator|=
 operator|(
-name|unsigned
+name|uintptr_t
 operator|)
 name|MipsKernGenException
 expr_stmt|;
@@ -5514,7 +5507,7 @@ condition|)
 name|subr
 operator|=
 operator|(
-name|unsigned
+name|uintptr_t
 operator|)
 name|MipsUserGenException
 expr_stmt|;
@@ -5531,7 +5524,7 @@ condition|)
 name|subr
 operator|=
 operator|(
-name|unsigned
+name|uintptr_t
 operator|)
 name|MipsKernIntr
 expr_stmt|;
@@ -5548,7 +5541,7 @@ condition|)
 name|subr
 operator|=
 operator|(
-name|unsigned
+name|uintptr_t
 operator|)
 name|MipsUserIntr
 expr_stmt|;
@@ -5565,7 +5558,7 @@ condition|)
 name|subr
 operator|=
 operator|(
-name|unsigned
+name|uintptr_t
 operator|)
 name|MipsTLBInvalidException
 expr_stmt|;
@@ -5582,7 +5575,7 @@ condition|)
 name|subr
 operator|=
 operator|(
-name|unsigned
+name|uintptr_t
 operator|)
 name|MipsKernTLBInvalidException
 expr_stmt|;
@@ -5599,7 +5592,7 @@ condition|)
 name|subr
 operator|=
 operator|(
-name|unsigned
+name|uintptr_t
 operator|)
 name|MipsUserTLBInvalidException
 expr_stmt|;
@@ -5616,7 +5609,7 @@ condition|)
 name|subr
 operator|=
 operator|(
-name|unsigned
+name|uintptr_t
 operator|)
 name|cpu_switch
 expr_stmt|;
@@ -5634,7 +5627,7 @@ block|{
 name|subr
 operator|=
 operator|(
-name|unsigned
+name|uintptr_t
 operator|)
 name|_locore
 expr_stmt|;
@@ -5647,6 +5640,7 @@ name|done
 goto|;
 block|}
 comment|/* check for bad PC */
+comment|/*XXX MIPS64 bad: These hard coded constants are lame */
 if|if
 condition|(
 name|pc
@@ -5656,14 +5650,14 @@ operator|||
 name|pc
 operator|<
 operator|(
-name|unsigned
+name|uintptr_t
 operator|)
 literal|0x80000000
 operator|||
 name|pc
 operator|>=
 operator|(
-name|unsigned
+name|uintptr_t
 operator|)
 name|edata
 condition|)
@@ -6640,11 +6634,12 @@ comment|/*  * Map a function address to a string name, if known; or a hex string
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|fn_name
 parameter_list|(
-name|unsigned
+name|uintptr_t
 name|addr
 parameter_list|)
 block|{
@@ -6776,8 +6771,11 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%x"
+literal|"%jx"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|addr
 argument_list|)
 expr_stmt|;
