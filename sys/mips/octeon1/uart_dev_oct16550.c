@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mips/octeon1/octeon_pcmap_regs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"uart_if.h"
 end_include
 
