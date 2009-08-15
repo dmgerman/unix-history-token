@@ -2085,7 +2085,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%4.0Lf%5.0Lf"
+literal|"%4.0Lf %5.0Lf"
 argument_list|,
 name|cur
 operator|.
@@ -2343,7 +2343,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"      tty"
+literal|"       tty"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2506,7 +2506,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" tin tout"
+literal|" tin  tout"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2739,7 +2739,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"     tty "
+literal|"      tty "
 argument_list|)
 expr_stmt|;
 if|if
@@ -2783,7 +2783,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"tin tout "
+literal|"tin  tout "
 argument_list|)
 expr_stmt|;
 if|if
@@ -3440,7 +3440,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%4.0Lf%5.0Lf"
+literal|"%4.0Lf %5.0Lf"
 argument_list|,
 name|cur
 operator|.
