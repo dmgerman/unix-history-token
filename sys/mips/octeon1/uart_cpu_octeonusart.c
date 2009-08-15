@@ -80,6 +80,18 @@ file|<mips/octeon1/octeonreg.h>
 end_include
 
 begin_decl_stmt
+name|bus_space_tag_t
+name|uart_bus_space_io
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bus_space_tag_t
+name|uart_bus_space_mem
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|struct
 name|uart_class
@@ -256,6 +268,14 @@ name|di
 argument_list|,
 name|class
 argument_list|)
+expr_stmt|;
+name|uart_bus_space_io
+operator|=
+name|NULL
+expr_stmt|;
+name|uart_bus_space_mem
+operator|=
+name|mips_bus_space_generic
 expr_stmt|;
 return|return
 operator|(
