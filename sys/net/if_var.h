@@ -865,14 +865,6 @@ name|if_lastchange
 value|if_data.ifi_lastchange
 end_define
 
-begin_define
-define|#
-directive|define
-name|if_rawoutput
-parameter_list|(
-define|if, m, sa) if_output(if, m, sa, (struct rtentry *)NULL)
-end_define
-
 begin_comment
 comment|/* for compatibility with other BSDs */
 end_comment
