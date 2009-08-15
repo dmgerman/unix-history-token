@@ -138,7 +138,6 @@ return|return
 literal|0
 return|;
 block|}
-else|else
 return|return
 operator|(
 name|ENXIO

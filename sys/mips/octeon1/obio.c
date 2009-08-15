@@ -104,7 +104,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * We need only one obio.  * Any other device hanging off of it, shouldn't cause multiple of  * these to be found.  */
+comment|/*  * We need only one obio.  Any other device hanging off of it,  * shouldn't cause multiple of these to be found.  */
 end_comment
 
 begin_decl_stmt
@@ -138,7 +138,6 @@ return|return
 literal|0
 return|;
 block|}
-else|else
 return|return
 operator|(
 name|ENXIO
@@ -169,7 +168,7 @@ name|sc
 operator|->
 name|oba_st
 operator|=
-name|MIPS_BUS_SPACE_IO
+name|mips_bus_space_generic
 expr_stmt|;
 name|sc
 operator|->
