@@ -227,6 +227,15 @@ literal|800000
 operator|)
 end_if
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|proc
+modifier|*
+name|usbproc
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -241,7 +250,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|kproc_create((f), (s), (p), RFHIGHPID, 0, __VA_ARGS__)
+value|kproc_kthread_add((f), (s),&usbproc, (p), RFHIGHPID, \ 		    0, "usb", __VA_ARGS__)
 end_define
 
 begin_define
@@ -251,7 +260,7 @@ name|USB_THREAD_SUSPEND
 parameter_list|(
 name|p
 parameter_list|)
-value|kproc_suspend(p,0)
+value|kthread_suspend(p,0)
 end_define
 
 begin_define
@@ -261,7 +270,7 @@ name|USB_THREAD_EXIT
 parameter_list|(
 name|err
 parameter_list|)
-value|kproc_exit(err)
+value|kthread_exit()
 end_define
 
 begin_else
@@ -653,7 +662,7 @@ name|up
 operator|->
 name|up_cv
 argument_list|,
-literal|"wmsg"
+literal|"-"
 argument_list|)
 expr_stmt|;
 name|cv_init
@@ -663,7 +672,7 @@ name|up
 operator|->
 name|up_drain
 argument_list|,
-literal|"dmsg"
+literal|"usbdrain"
 argument_list|)
 expr_stmt|;
 if|if
