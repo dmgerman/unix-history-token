@@ -1775,11 +1775,12 @@ name|size_t
 name|size
 parameter_list|)
 block|{
+comment|/* 	 * Set pc_acpi_id to "uninitialized". 	 * See sys/dev/acpica/acpi_cpu.c 	 */
 name|pcpu
 operator|->
 name|pc_acpi_id
 operator|=
-name|cpuid
+literal|0xffffffff
 expr_stmt|;
 block|}
 end_function
