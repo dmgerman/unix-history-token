@@ -910,6 +910,14 @@ name|private
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|variable_get
+argument_list|(
+name|VAR_NONINTERACTIVE
+argument_list|)
+condition|)
 name|msgConfirm
 argument_list|(
 literal|"Using USB device: %s"
