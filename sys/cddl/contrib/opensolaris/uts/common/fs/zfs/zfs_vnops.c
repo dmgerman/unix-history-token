@@ -19076,6 +19076,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|ZFS_EXIT
+argument_list|(
+name|zfsvfs
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -19085,11 +19090,6 @@ condition|)
 name|error
 operator|=
 name|ENOATTR
-expr_stmt|;
-name|ZFS_EXIT
-argument_list|(
-name|zfsvfs
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -19432,6 +19432,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|ZFS_EXIT
+argument_list|(
+name|zfsvfs
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -19441,11 +19446,6 @@ condition|)
 name|error
 operator|=
 name|ENOATTR
-expr_stmt|;
-name|ZFS_EXIT
-argument_list|(
-name|zfsvfs
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -19987,6 +19987,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -20078,6 +20080,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|ZFS_EXIT
+argument_list|(
+name|zfsvfs
+argument_list|)
+expr_stmt|;
 comment|/* 		 * ENOATTR means that the EA directory does not yet exist, 		 * i.e. there are no extended attributes there. 		 */
 if|if
 condition|(
@@ -20088,11 +20095,6 @@ condition|)
 name|error
 operator|=
 literal|0
-expr_stmt|;
-name|ZFS_EXIT
-argument_list|(
-name|zfsvfs
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
