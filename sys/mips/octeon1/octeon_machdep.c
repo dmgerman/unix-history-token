@@ -312,34 +312,27 @@ end_comment
 
 begin_function
 name|void
-name|octeon_reset
+name|platform_reset
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|void
-function_decl|(
-modifier|*
-name|reset_func
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-init|=
+operator|(
 operator|(
 name|void
 argument_list|(
 operator|*
 argument_list|)
-operator|(
+argument_list|(
 name|void
-operator|)
+argument_list|)
 operator|)
 literal|0x1fc00000
-function_decl|;
-name|reset_func
-argument_list|()
+operator|)
+operator|(
+operator|)
 expr_stmt|;
+comment|/* Jump to this hex address */
 block|}
 end_function
 
