@@ -3605,7 +3605,7 @@ condition|(
 name|RunningAsInit
 condition|)
 block|{
-comment|/* 	 * Install something as /boot/kernel.  Prefer SMP 	 * over generic--this should handle the case where 	 * both SMP and GENERIC are installed (otherwise we 	 * select the one kernel that was installed). 	 * 	 * NB: we assume any existing kernel has been saved 	 *     already and the /boot/kernel we remove is empty. 	 */
+comment|/* 	 * Install something as /boot/kernel.  Prefer SMP 	 * over GENERIC--this should handle the case where 	 * both SMP and GENERIC are installed (otherwise we 	 * select the one kernel that was installed). 	 * 	 * NB: we assume any existing kernel has been saved 	 *     already and the /boot/kernel we remove is empty. 	 */
 name|vsystem
 argument_list|(
 literal|"rm -rf /boot/kernel"
