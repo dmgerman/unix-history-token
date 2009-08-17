@@ -4238,7 +4238,7 @@ name|zp
 argument_list|)
 operator|->
 name|v_count
-operator|>
+operator|>=
 literal|0
 argument_list|)
 expr_stmt|;
