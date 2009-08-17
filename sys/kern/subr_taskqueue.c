@@ -1850,6 +1850,20 @@ argument_list|(
 name|tq
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Because taskqueue_run() can drop tq_mutex, we need to 		 * check if the TQ_FLAGS_ACTIVE flag wasn't removed in the 		 * meantime, which means we missed a wakeup. 		 */
+if|if
+condition|(
+operator|(
+name|tq
+operator|->
+name|tq_flags
+operator|&
+name|TQ_FLAGS_ACTIVE
+operator|)
+operator|==
+literal|0
+condition|)
+break|break;
 name|TQ_SLEEP
 argument_list|(
 name|tq
