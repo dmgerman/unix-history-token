@@ -1510,6 +1510,26 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+name|ASSERT_ATOMIC_LOAD_PTR
+argument_list|(
+name|lk
+operator|->
+name|lk_lock
+argument_list|,
+operator|(
+literal|"%s: lockmgr not aligned for %s: %p"
+operator|,
+name|__func__
+operator|,
+name|wmesg
+operator|,
+operator|&
+name|lk
+operator|->
+name|lk_lock
+operator|)
+argument_list|)
+expr_stmt|;
 name|iflags
 operator|=
 name|LO_SLEEPABLE

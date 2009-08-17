@@ -3568,7 +3568,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|ASSERT_ATOMIC_LOAD
+name|ASSERT_ATOMIC_LOAD_PTR
 argument_list|(
 name|m
 operator|->
