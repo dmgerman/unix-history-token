@@ -2389,7 +2389,7 @@ expr_stmt|;
 break|break;
 ifdef|#
 directive|ifdef
-name|IEEE80211_SUPPORT_TDMA
+name|IEEE80211_SUPPORT_MESH
 case|case
 name|IEEE80211_ELEMID_MESHID
 case|:
