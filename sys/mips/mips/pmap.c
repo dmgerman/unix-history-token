@@ -1393,6 +1393,18 @@ name|again
 goto|;
 block|}
 block|}
+name|Maxmem
+operator|=
+name|atop
+argument_list|(
+name|phys_avail
+index|[
+name|i
+operator|-
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bootverbose
@@ -1478,6 +1490,16 @@ name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"Maxmem is 0x%0lx\n"
+argument_list|,
+name|ptoa
+argument_list|(
+name|Maxmem
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * Steal the message buffer from the beginning of memory. 	 */
 name|msgbufp
@@ -1707,29 +1729,7 @@ name|pte
 operator|=
 name|PTE_G
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Va=0x%x Ve=%x\n"
-argument_list|,
-name|virtual_avail
-argument_list|,
-name|virtual_end
-argument_list|)
-expr_stmt|;
 comment|/* 	 * The segment table contains the KVA of the pages in the second 	 * level page table. 	 */
-name|printf
-argument_list|(
-literal|"init kernel_segmap va>> = %d nkpt:%d\n"
-argument_list|,
-operator|(
-name|virtual_avail
-operator|>>
-name|SEGSHIFT
-operator|)
-argument_list|,
-name|nkpt
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -1790,23 +1790,6 @@ operator|+=
 literal|2
 control|)
 continue|continue;
-name|printf
-argument_list|(
-literal|"avail_start:0x%x avail_end:0x%x\n"
-argument_list|,
-name|phys_avail
-index|[
-literal|0
-index|]
-argument_list|,
-name|phys_avail
-index|[
-name|i
-operator|+
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
 comment|/* 	 * The kernel's pmap is statically allocated so we don't have to use 	 * pmap_create, which is unlikely to work correctly at this part of 	 * the boot sequence (XXX and which no longer exists). 	 */
 name|PMAP_LOCK_INIT
 argument_list|(
@@ -7045,7 +7028,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"pmap_enter: invalid page directory, pdir=%p, va=0x%x\n"
+literal|"pmap_enter: invalid page directory, pdir=%p, va=%p\n"
 argument_list|,
 operator|(
 name|void
@@ -7055,6 +7038,10 @@ name|pmap
 operator|->
 name|pm_segtab
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|va
 argument_list|)
 expr_stmt|;
@@ -7259,8 +7246,12 @@ literal|0
 argument_list|,
 operator|(
 literal|"pmap_enter: missing reference to page table page,"
-literal|" va: 0x%x"
+literal|" va: %p"
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|va
 operator|)
 argument_list|)
@@ -7516,8 +7507,12 @@ operator|)
 argument_list|,
 operator|(
 literal|"pmap_enter: modified page not writable:"
-literal|" va: 0x%x, pte: 0x%lx"
+literal|" va: %p, pte: 0x%lx"
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|va
 operator|,
 name|origpte
@@ -8742,7 +8737,7 @@ condition|)
 block|{
 name|va
 operator|=
-name|MIPS_PHYS_TO_UNCACHED
+name|MIPS_PHYS_TO_CACHED
 argument_list|(
 name|phys
 argument_list|)
@@ -9013,7 +9008,7 @@ condition|)
 block|{
 name|va
 operator|=
-name|MIPS_PHYS_TO_UNCACHED
+name|MIPS_PHYS_TO_CACHED
 argument_list|(
 name|phys
 argument_list|)
@@ -9247,7 +9242,7 @@ condition|)
 block|{
 name|va
 operator|=
-name|MIPS_PHYS_TO_UNCACHED
+name|MIPS_PHYS_TO_CACHED
 argument_list|(
 name|phys
 argument_list|)
@@ -11316,6 +11311,8 @@ operator|=
 name|roundup
 argument_list|(
 name|size
+operator|+
+name|offset
 argument_list|,
 name|PAGE_SIZE
 argument_list|)
@@ -11337,6 +11334,13 @@ condition|)
 name|panic
 argument_list|(
 literal|"pmap_mapdev: Couldn't alloc kernel virtual memory"
+argument_list|)
+expr_stmt|;
+name|pa
+operator|=
+name|trunc_page
+argument_list|(
+name|pa
 argument_list|)
 expr_stmt|;
 for|for
@@ -11398,7 +11402,81 @@ parameter_list|,
 name|vm_size_t
 name|size
 parameter_list|)
-block|{ }
+block|{
+name|vm_offset_t
+name|base
+decl_stmt|,
+name|offset
+decl_stmt|,
+name|tmpva
+decl_stmt|;
+comment|/* If the address is within KSEG1 then there is nothing to do */
+if|if
+condition|(
+name|va
+operator|>=
+name|MIPS_KSEG1_START
+operator|&&
+name|va
+operator|<=
+name|MIPS_KSEG1_END
+condition|)
+return|return;
+name|base
+operator|=
+name|trunc_page
+argument_list|(
+name|va
+argument_list|)
+expr_stmt|;
+name|offset
+operator|=
+name|va
+operator|&
+name|PAGE_MASK
+expr_stmt|;
+name|size
+operator|=
+name|roundup
+argument_list|(
+name|size
+operator|+
+name|offset
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|tmpva
+operator|=
+name|base
+init|;
+name|tmpva
+operator|<
+name|base
+operator|+
+name|size
+condition|;
+name|tmpva
+operator|+=
+name|PAGE_SIZE
+control|)
+name|pmap_kremove
+argument_list|(
+name|tmpva
+argument_list|)
+expr_stmt|;
+name|kmem_free
+argument_list|(
+name|kernel_map
+argument_list|,
+name|base
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_comment
@@ -12019,7 +12097,7 @@ name|j
 operator|++
 control|)
 block|{
-name|unsigned
+name|vm_offset_t
 name|va
 init|=
 name|base
@@ -12072,10 +12150,18 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"va: 0x%x, pt: 0x%x, h: %d, w: %d, f: 0x%x"
+literal|"va: %p, pt: %p, h: %d, w: %d, f: 0x%x"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|va
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|pa
 argument_list|,
 name|m
