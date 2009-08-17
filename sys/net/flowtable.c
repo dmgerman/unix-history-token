@@ -832,6 +832,19 @@ literal|4096
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|flowtable_ready
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -921,6 +934,13 @@ define|#
 directive|define
 name|V_flowtable_nmbflows
 value|VNET(flowtable_nmbflows)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_flowtable_ready
+value|VNET(flowtable_ready)
 end_define
 
 begin_expr_stmt
@@ -1650,9 +1670,17 @@ name|sh
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|V_flowtable_enable
 operator|==
 literal|0
+operator|)
+operator|||
+operator|(
+name|V_flowtable_ready
+operator|==
+literal|0
+operator|)
 condition|)
 return|return
 operator|(
@@ -3988,6 +4016,10 @@ name|V_flow_ipv6_zone
 argument_list|,
 name|V_flowtable_nmbflows
 argument_list|)
+expr_stmt|;
+name|V_flowtable_ready
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_function
