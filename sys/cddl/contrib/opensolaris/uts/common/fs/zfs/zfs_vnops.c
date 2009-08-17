@@ -15669,14 +15669,6 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * The fs has been unmounted, or we did a 		 * suspend/resume and this file no longer exists. 		 */
-name|mutex_enter
-argument_list|(
-operator|&
-name|zp
-operator|->
-name|z_lock
-argument_list|)
-expr_stmt|;
 name|VI_LOCK
 argument_list|(
 name|vp
@@ -15689,12 +15681,16 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* count arrives as 1 */
-name|mutex_exit
+name|VI_UNLOCK
 argument_list|(
-operator|&
-name|zp
-operator|->
-name|z_lock
+name|vp
+argument_list|)
+expr_stmt|;
+name|vrecycle
+argument_list|(
+name|vp
+argument_list|,
+name|curthread
 argument_list|)
 expr_stmt|;
 name|rw_exit
@@ -15703,11 +15699,6 @@ operator|&
 name|zfsvfs
 operator|->
 name|z_teardown_inactive_lock
-argument_list|)
-expr_stmt|;
-name|zfs_znode_free
-argument_list|(
-name|zp
 argument_list|)
 expr_stmt|;
 return|return;
