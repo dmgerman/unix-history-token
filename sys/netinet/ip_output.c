@@ -614,6 +614,11 @@ argument_list|,
 name|m
 argument_list|,
 name|ro
+argument_list|,
+name|M_GETFIB
+argument_list|(
+name|m
+argument_list|)
 argument_list|)
 operator|==
 literal|0
