@@ -983,16 +983,6 @@ operator|==
 name|MII_MODEL_MARVELL_E1149
 condition|)
 block|{
-name|page
-operator|=
-name|PHY_READ
-argument_list|(
-name|sc
-argument_list|,
-name|E1000_EADR
-argument_list|)
-expr_stmt|;
-comment|/* Select page 2, MAC specific control register. */
 name|PHY_WRITE
 argument_list|(
 name|sc
@@ -1030,7 +1020,7 @@ name|sc
 argument_list|,
 name|E1000_EADR
 argument_list|,
-name|page
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
