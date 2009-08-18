@@ -105,6 +105,9 @@ name|struct
 name|route
 modifier|*
 name|ro
+parameter_list|,
+name|uint32_t
+name|fibnum
 parameter_list|)
 function_decl|;
 end_function_decl
