@@ -16840,6 +16840,12 @@ case|:
 case|case
 name|XPORT_USB
 case|:
+case|case
+name|XPORT_ISCSI
+case|:
+case|case
+name|XPORT_PPB
+case|:
 name|new_bus
 operator|->
 name|xport
