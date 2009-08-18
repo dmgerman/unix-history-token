@@ -75,12 +75,6 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_struct_decl
-struct_decl|struct
-name|proc
-struct_decl|;
-end_struct_decl
-
 begin_function_decl
 name|struct
 name|taskqueue
@@ -170,20 +164,6 @@ name|struct
 name|task
 modifier|*
 name|task
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|taskqueue
-modifier|*
-name|taskqueue_find
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
 parameter_list|)
 function_decl|;
 end_function_decl
