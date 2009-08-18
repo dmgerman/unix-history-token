@@ -758,6 +758,9 @@ comment|/* Serial Attached SCSI */
 name|XPORT_SATA
 block|,
 comment|/* Serial AT Attachment */
+name|XPORT_ISCSI
+block|,
+comment|/* iSCSI */
 block|}
 name|cam_xport
 typedef|;
