@@ -61569,9 +61569,14 @@ goto|goto
 name|out_unlocked
 goto|;
 block|}
+name|SCTP_TCB_LOCK
+argument_list|(
+name|stcb
+argument_list|)
+expr_stmt|;
 name|hold_tcblock
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|SCTP_INP_RUNLOCK
 argument_list|(
