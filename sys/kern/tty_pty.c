@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -81,7 +87,7 @@ name|unsigned
 name|int
 name|pty_warningcnt
 init|=
-literal|10
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -101,7 +107,7 @@ name|pty_warningcnt
 argument_list|,
 literal|0
 argument_list|,
-literal|"Warnings that will be triggered upon PTY allocation"
+literal|"Warnings that will be triggered upon legacy PTY allocation"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -232,8 +238,10 @@ block|{
 name|pty_warningcnt
 operator|--
 expr_stmt|;
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"pid %d (%s) is using legacy pty devices%s\n"
 argument_list|,
 name|td
