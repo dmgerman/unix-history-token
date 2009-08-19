@@ -740,6 +740,17 @@ name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
+name|flowtable_debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
 name|flowtable_hits
 argument_list|)
 expr_stmt|;
@@ -899,6 +910,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|V_flowtable_debug
+value|VNET(flowtable_debug)
+end_define
+
+begin_define
+define|#
+directive|define
 name|V_flowtable_hits
 value|VNET(flowtable_hits)
 end_define
@@ -1001,6 +1019,30 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|"flowtable"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_VNET_INT
+argument_list|(
+name|_net_inet_flowtable
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|debug
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
+name|flowtable_debug
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|"print debug info."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4454,7 +4496,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|bootverbose
+name|V_flowtable_debug
 operator|&&
 name|count
 condition|)
@@ -4640,7 +4682,7 @@ expr_stmt|;
 name|flowclean_cycles
 operator|++
 expr_stmt|;
-comment|/* 		 * The 20 second interval between cleaning checks 		 * is arbitrary 		 */
+comment|/* 		 * The 10 second interval between cleaning checks 		 * is arbitrary 		 */
 name|mtx_lock
 argument_list|(
 operator|&
