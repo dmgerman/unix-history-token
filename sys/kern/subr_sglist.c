@@ -1268,7 +1268,7 @@ name|uio
 modifier|*
 name|uio
 parameter_list|,
-name|int
+name|size_t
 name|resid
 parameter_list|)
 block|{
