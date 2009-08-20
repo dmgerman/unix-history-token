@@ -3562,6 +3562,8 @@ name|numdevs
 decl_stmt|,
 name|pstate
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 comment|/* First give child devices a chance to suspend. */
 name|error
 operator|=
@@ -3719,6 +3721,8 @@ decl_stmt|,
 modifier|*
 name|devlist
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 comment|/*      * Put all devices in D0 before resuming them.  Call _S0D on each one      * since some systems expect this.      */
 name|error
 operator|=
@@ -3829,6 +3833,8 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
 comment|/* Allow children to shutdown first. */
 name|bus_generic_shutdown
 argument_list|(
@@ -11293,8 +11299,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|newbus_xlock
-argument_list|()
+comment|/*      * Be sure to hold Giant across DEVICE_SUSPEND/RESUME since non-MPSAFE      * drivers need this.      */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 name|slp_state
 operator|=
@@ -11535,8 +11545,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|newbus_xunlock
-argument_list|()
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef

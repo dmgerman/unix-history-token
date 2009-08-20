@@ -3537,16 +3537,10 @@ comment|/* 	 * Scan the controller to see whether new drives have appeared. 	 */
 case|case
 name|MLX_RESCAN_DRIVES
 case|:
-name|newbus_xlock
-argument_list|()
-expr_stmt|;
 name|mlx_startup
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
-name|newbus_xunlock
-argument_list|()
 expr_stmt|;
 return|return
 operator|(

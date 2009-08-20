@@ -169,10 +169,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * In order to get rid of Giant, amr_state should be protected by  * a proper softc lock for the cdev operations.  */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|d_open_t
@@ -1355,9 +1351,6 @@ name|ich_func
 operator|=
 name|NULL
 expr_stmt|;
-name|newbus_xlock
-argument_list|()
-expr_stmt|;
 comment|/* get up-to-date drive information */
 if|if
 condition|(
@@ -1375,9 +1368,6 @@ name|amr_dev
 argument_list|,
 literal|"can't scan controller for drives\n"
 argument_list|)
-expr_stmt|;
-name|newbus_xunlock
-argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -1570,9 +1560,6 @@ operator|->
 name|amr_state
 operator||=
 name|AMR_STATE_INTEN
-expr_stmt|;
-name|newbus_xunlock
-argument_list|()
 expr_stmt|;
 comment|/*      * Start the timeout routine.      */
 comment|/*    sc->amr_timeout = timeout(amr_periodic, sc, hz);*/
@@ -1979,12 +1966,7 @@ name|struct
 name|amr_softc
 modifier|*
 name|sc
-decl_stmt|;
-name|newbus_slock
-argument_list|()
-expr_stmt|;
-name|sc
-operator|=
+init|=
 name|devclass_get_softc
 argument_list|(
 name|devclass_find
@@ -1994,10 +1976,7 @@ argument_list|)
 argument_list|,
 name|unit
 argument_list|)
-expr_stmt|;
-name|newbus_sunlock
-argument_list|()
-expr_stmt|;
+decl_stmt|;
 name|debug_called
 argument_list|(
 literal|1
@@ -2240,12 +2219,7 @@ name|struct
 name|amr_softc
 modifier|*
 name|sc
-decl_stmt|;
-name|newbus_slock
-argument_list|()
-expr_stmt|;
-name|sc
-operator|=
+init|=
 name|devclass_get_softc
 argument_list|(
 name|devclass_find
@@ -2255,10 +2229,7 @@ argument_list|)
 argument_list|,
 name|unit
 argument_list|)
-expr_stmt|;
-name|newbus_sunlock
-argument_list|()
-expr_stmt|;
+decl_stmt|;
 name|debug_called
 argument_list|(
 literal|1
@@ -2315,9 +2286,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|newbus_xlock
-argument_list|()
-expr_stmt|;
 name|sc
 operator|->
 name|amr_state
@@ -2446,9 +2414,6 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-name|newbus_xunlock
-argument_list|()
-expr_stmt|;
 name|shutdown_out
 label|:
 name|amr_startup
@@ -3905,18 +3870,12 @@ name|adapter
 decl_stmt|,
 name|error
 decl_stmt|;
-name|newbus_slock
-argument_list|()
-expr_stmt|;
 name|devclass
 operator|=
 name|devclass_find
 argument_list|(
 literal|"amr"
 argument_list|)
-expr_stmt|;
-name|newbus_sunlock
-argument_list|()
 expr_stmt|;
 if|if
 condition|(

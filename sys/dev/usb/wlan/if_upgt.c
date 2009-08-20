@@ -2601,8 +2601,11 @@ block|{
 case|case
 name|SIOCSIFFLAGS
 case|:
-name|newbus_xlock
-argument_list|()
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2692,8 +2695,11 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
-name|newbus_xunlock
-argument_list|()
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 break|break;
 case|case

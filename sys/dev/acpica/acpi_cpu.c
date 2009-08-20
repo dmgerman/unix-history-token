@@ -3474,9 +3474,6 @@ name|int
 name|i
 decl_stmt|;
 comment|/* Get set of CPU devices */
-name|newbus_slock
-argument_list|()
-expr_stmt|;
 name|devclass_get_devices
 argument_list|(
 name|acpi_cpu_devclass
@@ -3487,9 +3484,6 @@ argument_list|,
 operator|&
 name|cpu_ndevices
 argument_list|)
-expr_stmt|;
-name|newbus_sunlock
-argument_list|()
 expr_stmt|;
 comment|/*      * Setup any quirks that might necessary now that we have probed      * all the CPUs      */
 name|acpi_cpu_quirks

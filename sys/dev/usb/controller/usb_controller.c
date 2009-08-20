@@ -636,11 +636,23 @@ condition|(
 name|usb_post_init_called
 condition|)
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|usb_attach_sub
 argument_list|(
 name|dev
 argument_list|,
 name|bus
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 name|usb_needs_explore
@@ -939,13 +951,19 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* 		 * First update the USB power state! 		 */
 name|usb_bus_powerd
 argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
-comment|/* Explore the Root USB HUB. */
+comment|/* 		 * Explore the Root USB HUB. This call can sleep, 		 * exiting Giant, which is actually Giant. 		 */
 call|(
 name|udev
 operator|->
@@ -955,6 +973,12 @@ name|explore
 call|)
 argument_list|(
 name|udev
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 name|USB_BUS_LOCK
@@ -1058,8 +1082,11 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
-name|newbus_xlock
-argument_list|()
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 comment|/* detach children first */
 name|bus_generic_detach
@@ -1075,8 +1102,11 @@ argument_list|,
 name|USB_UNCFG_FLAG_FREE_EP0
 argument_list|)
 expr_stmt|;
-name|newbus_xunlock
-argument_list|()
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 name|USB_BUS_LOCK
 argument_list|(
@@ -1302,9 +1332,13 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
-name|newbus_xlock
-argument_list|()
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
+comment|/* XXX not required by USB */
 comment|/* default power_mask value */
 name|bus
 operator|->
@@ -1429,8 +1463,11 @@ operator|=
 name|USB_ERR_NOMEM
 expr_stmt|;
 block|}
-name|newbus_xunlock
-argument_list|()
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 name|USB_BUS_LOCK
 argument_list|(
@@ -1842,8 +1879,11 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
-name|newbus_xlock
-argument_list|()
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 name|usb_devclass_ptr
 operator|=
@@ -1914,6 +1954,13 @@ if|if
 condition|(
 name|bus
 condition|)
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|usb_attach_sub
 argument_list|(
 name|dev
@@ -1921,6 +1968,13 @@ argument_list|,
 name|bus
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -1942,8 +1996,11 @@ comment|/* explore all USB busses in parallell */
 name|usb_needs_explore_all
 argument_list|()
 expr_stmt|;
-name|newbus_xunlock
-argument_list|()
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 block|}
 end_function
