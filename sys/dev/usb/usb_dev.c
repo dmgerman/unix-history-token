@@ -4550,10 +4550,7 @@ operator|(
 name|err
 operator|)
 return|;
-comment|/*  	 * Performance optimisation: We try to check for IOCTL's that 	 * don't need the USB reference first. Then we grab the USB 	 * reference if we need it! 	 * Note that some ioctl_post handlers would need to run with the 	 * newbus lock held.  It cannot be acquired later because it can 	 * introduce a LOR, so acquire it here. 	 */
-name|newbus_xlock
-argument_list|()
-expr_stmt|;
+comment|/*  	 * Performance optimisation: We try to check for IOCTL's that 	 * don't need the USB reference first. Then we grab the USB 	 * reference if we need it! 	 */
 name|err
 operator|=
 name|usb_ref_device
@@ -4572,9 +4569,6 @@ condition|(
 name|err
 condition|)
 block|{
-name|newbus_xunlock
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -4778,9 +4772,6 @@ argument_list|,
 operator|&
 name|refs
 argument_list|)
-expr_stmt|;
-name|newbus_xunlock
-argument_list|()
 expr_stmt|;
 return|return
 operator|(

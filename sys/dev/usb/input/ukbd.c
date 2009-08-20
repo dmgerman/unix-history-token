@@ -3867,10 +3867,12 @@ decl_stmt|;
 name|uint16_t
 name|hid_len
 decl_stmt|;
-name|mtx_lock
+name|mtx_assert
 argument_list|(
 operator|&
 name|Giant
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|kbd_init_struct
@@ -4375,6 +4377,13 @@ name|bootverbose
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* lock keyboard mutex */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* start the keyboard */
 name|usbd_transfer_start
 argument_list|(
@@ -4442,10 +4451,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|mtx_lock
+name|mtx_assert
 argument_list|(
 operator|&
 name|Giant
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|DPRINTF
@@ -4592,12 +4603,6 @@ operator|->
 name|sc_callout
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|DPRINTF
 argument_list|(
 literal|"%s: disconnected\n"
@@ -4635,10 +4640,12 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|mtx_lock
+name|mtx_assert
 argument_list|(
 operator|&
 name|Giant
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|ukbd_clear_state
@@ -4647,12 +4654,6 @@ operator|&
 name|sc
 operator|->
 name|sc_kbd
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 return|return

@@ -6329,9 +6329,6 @@ operator|(
 name|EBUSY
 operator|)
 return|;
-name|newbus_xlock
-argument_list|()
-expr_stmt|;
 name|device_busy
 argument_list|(
 name|devclass_get_device
@@ -6341,9 +6338,6 @@ argument_list|,
 name|unit
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|newbus_xunlock
-argument_list|()
 expr_stmt|;
 comment|/* Initialize state */
 name|sc
@@ -6975,9 +6969,6 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|newbus_xlock
-argument_list|()
-expr_stmt|;
 name|device_unbusy
 argument_list|(
 name|devclass_get_device
@@ -6987,9 +6978,6 @@ argument_list|,
 name|unit
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|newbus_xunlock
-argument_list|()
 expr_stmt|;
 return|return
 operator|(

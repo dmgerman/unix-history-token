@@ -3189,9 +3189,6 @@ name|_DRM_STAT_OPENS
 index|]
 argument_list|)
 expr_stmt|;
-name|newbus_xlock
-argument_list|()
-expr_stmt|;
 name|DRM_LOCK
 argument_list|()
 expr_stmt|;
@@ -3218,9 +3215,6 @@ name|dev
 argument_list|)
 expr_stmt|;
 name|DRM_UNLOCK
-argument_list|()
-expr_stmt|;
-name|newbus_xunlock
 argument_list|()
 expr_stmt|;
 block|}
@@ -3268,10 +3262,6 @@ name|dev
 operator|->
 name|open_count
 argument_list|)
-expr_stmt|;
-comment|/* 	 * We require to lock newbus here for handling device_unbusy() and 	 * avoid a LOR with DRM_LOCK. 	 */
-name|newbus_xlock
-argument_list|()
 expr_stmt|;
 name|DRM_LOCK
 argument_list|()
@@ -3664,9 +3654,6 @@ argument_list|)
 expr_stmt|;
 block|}
 name|DRM_UNLOCK
-argument_list|()
-expr_stmt|;
-name|newbus_xunlock
 argument_list|()
 expr_stmt|;
 block|}
