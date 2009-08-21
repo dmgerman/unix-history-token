@@ -1709,7 +1709,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ipfw_init
+name|ipfw_hook
 parameter_list|(
 name|void
 parameter_list|)
@@ -1717,8 +1717,26 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|ipfw6_hook
+parameter_list|(
 name|void
-name|ipfw_destroy
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ipfw_unhook
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ipfw6_unhook
 parameter_list|(
 name|void
 parameter_list|)
