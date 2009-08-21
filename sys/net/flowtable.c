@@ -4884,6 +4884,10 @@ argument_list|,
 name|V_flowtable_nmbflows
 argument_list|)
 expr_stmt|;
+name|V_flowtable_ready
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 
@@ -4946,10 +4950,6 @@ argument_list|,
 name|EVENTHANDLER_PRI_ANY
 argument_list|)
 expr_stmt|;
-name|V_flowtable_ready
-operator|=
-literal|1
-expr_stmt|;
 block|}
 end_function
 
@@ -4987,6 +4987,10 @@ name|unused
 name|__unused
 parameter_list|)
 block|{
+name|V_flowtable_ready
+operator|=
+literal|0
+expr_stmt|;
 name|uma_zdestroy
 argument_list|(
 name|V_flow_ipv4_zone
