@@ -1232,9 +1232,6 @@ name|VI_CREATE
 case|:
 if|if
 condition|(
-operator|(
-name|jid
-operator|=
 name|jail_setv
 argument_list|(
 name|JAIL_CREATE
@@ -1272,14 +1269,6 @@ literal|"true"
 argument_list|,
 name|NULL
 argument_list|)
-operator|)
-operator|>=
-literal|0
-condition|)
-break|break;
-if|if
-condition|(
-name|jid
 operator|<
 literal|0
 condition|)
