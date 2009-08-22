@@ -2501,6 +2501,16 @@ parameter_list|)
 value|((int64_t)(v) * pagesize / blocksize)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CONVERT_BLOCKS
+parameter_list|(
+name|v
+parameter_list|)
+value|((int64_t)(v) * pagesize)
+end_define
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -2660,10 +2670,8 @@ argument_list|(
 name|usedbuf
 argument_list|)
 argument_list|,
-name|CONVERT
+name|CONVERT_BLOCKS
 argument_list|(
-name|blocksize
-operator|*
 name|bused
 argument_list|)
 argument_list|,
@@ -2687,10 +2695,8 @@ argument_list|(
 name|availbuf
 argument_list|)
 argument_list|,
-name|CONVERT
+name|CONVERT_BLOCKS
 argument_list|(
-name|blocksize
-operator|*
 name|bavail
 argument_list|)
 argument_list|,
