@@ -1925,9 +1925,6 @@ decl_stmt|;
 name|int
 name|master
 decl_stmt|;
-name|int
-name|minor
-decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;
