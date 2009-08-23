@@ -17,12 +17,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_include
-include|#
-directive|include
-file|"opt_tty.h"
-end_include
-
 begin_comment
 comment|/* Add compatibility bits for FreeBSD. */
 end_comment
@@ -33,12 +27,6 @@ directive|define
 name|PTS_COMPAT
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_PTY
-end_ifdef
-
 begin_comment
 comment|/* Add /dev/ptyXX compat bits. */
 end_comment
@@ -48,15 +36,6 @@ define|#
 directive|define
 name|PTS_EXTERNAL
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DEV_PTY */
-end_comment
 
 begin_comment
 comment|/* Add bits to make Linux binaries work. */
