@@ -14245,6 +14245,16 @@ operator|->
 name|num_gb_pipes
 expr_stmt|;
 break|break;
+case|case
+name|RADEON_PARAM_NUM_Z_PIPES
+case|:
+name|value
+operator|=
+name|dev_priv
+operator|->
+name|num_z_pipes
+expr_stmt|;
+break|break;
 default|default:
 name|DRM_DEBUG
 argument_list|(

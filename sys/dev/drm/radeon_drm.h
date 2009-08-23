@@ -3349,6 +3349,24 @@ begin_comment
 comment|/* num GB pipes */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RADEON_PARAM_DEVICE_ID
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_PARAM_NUM_Z_PIPES
+value|17
+end_define
+
+begin_comment
+comment|/* num Z pipes */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
