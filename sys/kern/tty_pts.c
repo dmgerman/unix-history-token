@@ -741,18 +741,9 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
-if|if
-condition|(
-name|ttydisc_can_bypass
-argument_list|(
-name|tp
-argument_list|)
-condition|)
-block|{
-comment|/* Store data at once. */
 name|rintlen
 operator|=
-name|ttydisc_rint_bypass
+name|ttydisc_rint_simple
 argument_list|(
 name|tp
 argument_list|,
@@ -778,38 +769,6 @@ condition|)
 block|{
 comment|/* All data written. */
 break|break;
-block|}
-block|}
-else|else
-block|{
-name|error
-operator|=
-name|ttydisc_rint
-argument_list|(
-name|tp
-argument_list|,
-operator|*
-name|ibstart
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* Character stored successfully. */
-name|ibstart
-operator|++
-expr_stmt|;
-name|iblen
-operator|--
-expr_stmt|;
-continue|continue;
-block|}
 block|}
 comment|/* Maybe the device isn't used anyway. */
 if|if
