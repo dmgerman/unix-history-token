@@ -1750,6 +1750,16 @@ operator|.
 name|seq
 condition|)
 block|{
+name|unsigned
+name|long
+name|frag_len
+init|=
+name|frag
+operator|->
+name|msg_header
+operator|.
+name|frag_len
+decl_stmt|;
 name|pqueue_pop
 argument_list|(
 name|s
@@ -1846,10 +1856,6 @@ operator|=
 literal|1
 expr_stmt|;
 return|return
-name|frag
-operator|->
-name|msg_header
-operator|.
 name|frag_len
 return|;
 block|}
