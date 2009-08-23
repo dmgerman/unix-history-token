@@ -2080,6 +2080,11 @@ name|i
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|frag_len
+condition|)
+block|{
 name|frag
 operator|=
 name|dtls1_hm_fragment_new
@@ -2114,12 +2119,7 @@ name|msg_hdr
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|frag_len
-condition|)
-block|{
-comment|/* read the body of the fragment (header has already been read */
+comment|/* read the body of the fragment (header has already been read) */
 name|i
 operator|=
 name|s
@@ -2158,7 +2158,6 @@ condition|)
 goto|goto
 name|err
 goto|;
-block|}
 name|pq_64bit_init
 argument_list|(
 operator|&
@@ -2210,6 +2209,7 @@ argument_list|,
 name|item
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|DTLS1_HM_FRAGMENT_RETRY
 return|;
