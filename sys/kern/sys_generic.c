@@ -6110,6 +6110,26 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+comment|/* 				 * POSIX requires POLLOUT to be never 				 * set simultaneously with POLLHUP. 				 */
+if|if
+condition|(
+operator|(
+name|fds
+operator|->
+name|revents
+operator|&
+name|POLLHUP
+operator|)
+operator|!=
+literal|0
+condition|)
+name|fds
+operator|->
+name|revents
+operator|&=
+operator|~
+name|POLLOUT
+expr_stmt|;
 if|if
 condition|(
 name|fds

@@ -13626,7 +13626,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 if|if
 condition|(
 name|so
@@ -13637,16 +13636,9 @@ name|sb_state
 operator|&
 name|SBS_CANTRCVMORE
 condition|)
-block|{
 name|revents
 operator||=
-name|events
-operator|&
-operator|(
-name|POLLIN
-operator||
-name|POLLRDNORM
-operator|)
+name|POLLHUP
 expr_stmt|;
 if|if
 condition|(
@@ -13662,8 +13654,6 @@ name|revents
 operator||=
 name|POLLHUP
 expr_stmt|;
-block|}
-block|}
 if|if
 condition|(
 name|revents
