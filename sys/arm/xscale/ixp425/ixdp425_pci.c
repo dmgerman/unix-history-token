@@ -165,13 +165,6 @@ argument_list|,
 name|IXP425_GPIO_GPOUTR
 argument_list|,
 name|reg
-operator|&
-operator|~
-operator|(
-literal|1U
-operator|<<
-name|GPIO_PCI_RESET
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* PCI Clock Disable */
@@ -196,9 +189,6 @@ argument_list|,
 name|IXP425_GPIO_GPCLKR
 argument_list|,
 name|reg
-operator|&
-operator|~
-name|GPCLKR_MUX14
 argument_list|)
 expr_stmt|;
 comment|/* 	 * set GPIO Direction 	 *	Output: PCI_CLK, PCI_RESET 	 *	Input:  PCI_INTA, PCI_INTB, PCI_INTC, PCI_INTD 	 */
