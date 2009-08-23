@@ -2234,8 +2234,12 @@ argument_list|(
 name|vnet_iter
 argument_list|)
 expr_stmt|;
-name|IFNET_RLOCK
-argument_list|()
+comment|/* 		 * XXXRW: The following loop walks the ifnet list while 		 * modifying it, something not well-supported by ifnet 		 * locking.  To avoid lock upgrade/recursion issues, manually 		 * acquire a write lock of ifnet_sxlock here, rather than a 		 * read lock, so that when if_alloc() recurses the lock, we 		 * don't panic.  This structure, in which if_ef automatically 		 * attaches to all ethernet interfaces, should be replaced 		 * with a model like that found in if_vlan, in which 		 * interfaces are explicitly configured, which would avoid 		 * this (and other) problems. 		 */
+name|sx_xlock
+argument_list|(
+operator|&
+name|ifnet_sxlock
+argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -2395,8 +2399,11 @@ name|el_next
 argument_list|)
 expr_stmt|;
 block|}
-name|IFNET_RUNLOCK
-argument_list|()
+name|sx_xunlock
+argument_list|(
+operator|&
+name|ifnet_sxlock
+argument_list|)
 expr_stmt|;
 name|CURVNET_RESTORE
 argument_list|()
