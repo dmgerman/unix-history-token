@@ -6805,8 +6805,7 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|;
-comment|/* XXXXX 	 * current IFNET_RLOCK() is mapped to IFNET_WLOCK() 	 * so it is okay to use this ASSERT, change it when 	 * IFNET lock is finalized 	 */
-name|IFNET_WLOCK_ASSERT
+name|IFNET_RLOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|error
