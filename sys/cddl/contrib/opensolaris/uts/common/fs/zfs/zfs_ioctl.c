@@ -13395,6 +13395,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|zfsproc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|uint_t
 name|zfs_fsyncer_key
 decl_stmt|;

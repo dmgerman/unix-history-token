@@ -1712,10 +1712,8 @@ operator|->
 name|zv_queue_mtx
 argument_list|)
 expr_stmt|;
-name|kproc_exit
-argument_list|(
-literal|0
-argument_list|)
+name|kthread_exit
+argument_list|()
 expr_stmt|;
 block|}
 name|msleep
@@ -3846,11 +3844,14 @@ name|zv_state
 operator|=
 literal|0
 expr_stmt|;
-name|kproc_create
+name|kproc_kthread_add
 argument_list|(
 name|zvol_worker
 argument_list|,
 name|zv
+argument_list|,
+operator|&
+name|zfsproc
 argument_list|,
 name|NULL
 argument_list|,
@@ -3858,11 +3859,20 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"zvol:worker %s"
+literal|"zfskern"
+argument_list|,
+literal|"zvol %s"
 argument_list|,
 name|pp
 operator|->
 name|name
+operator|+
+name|strlen
+argument_list|(
+name|ZVOL_DEV_DIR
+argument_list|)
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|zvol_minors
