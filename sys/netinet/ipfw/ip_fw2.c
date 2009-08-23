@@ -20342,7 +20342,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Other things that are only done the first time. 	 * (now that we a re guaranteed of success). 	 */
+comment|/* 	 * Other things that are only done the first time. 	 * (now that we are guaranteed of success). 	 */
 name|ip_fw_ctl_ptr
 operator|=
 name|ipfw_ctl
