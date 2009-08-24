@@ -12732,9 +12732,11 @@ if|if
 condition|(
 name|pr
 operator|->
-name|pr_flags
-operator|&
-name|PR_VNET
+name|pr_vnet
+operator|!=
+name|ppr
+operator|->
+name|pr_vnet
 condition|)
 name|vnet_destroy
 argument_list|(
