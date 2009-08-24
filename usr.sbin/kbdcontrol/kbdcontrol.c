@@ -153,6 +153,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|SPECIAL
+value|0x80000000
+end_define
+
 begin_decl_stmt
 name|char
 name|ctrl_names
@@ -1212,7 +1219,7 @@ case|:
 return|return
 name|NOP
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TLSH
@@ -1220,7 +1227,7 @@ case|:
 return|return
 name|LSH
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TRSH
@@ -1228,7 +1235,7 @@ case|:
 return|return
 name|RSH
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TCLK
@@ -1236,7 +1243,7 @@ case|:
 return|return
 name|CLK
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TNLK
@@ -1244,7 +1251,7 @@ case|:
 return|return
 name|NLK
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TSLK
@@ -1252,7 +1259,7 @@ case|:
 return|return
 name|SLK
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TBTAB
@@ -1260,7 +1267,7 @@ case|:
 return|return
 name|BTAB
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TLALT
@@ -1268,7 +1275,7 @@ case|:
 return|return
 name|LALT
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TLCTR
@@ -1276,7 +1283,7 @@ case|:
 return|return
 name|LCTR
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TNEXT
@@ -1284,7 +1291,7 @@ case|:
 return|return
 name|NEXT
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TPREV
@@ -1292,7 +1299,7 @@ case|:
 return|return
 name|PREV
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TRCTR
@@ -1300,7 +1307,7 @@ case|:
 return|return
 name|RCTR
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TRALT
@@ -1308,7 +1315,7 @@ case|:
 return|return
 name|RALT
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TALK
@@ -1316,7 +1323,7 @@ case|:
 return|return
 name|ALK
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TASH
@@ -1324,7 +1331,7 @@ case|:
 return|return
 name|ASH
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TMETA
@@ -1332,7 +1339,7 @@ case|:
 return|return
 name|META
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TRBT
@@ -1340,7 +1347,7 @@ case|:
 return|return
 name|RBT
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TDBG
@@ -1348,7 +1355,7 @@ case|:
 return|return
 name|DBG
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TSUSP
@@ -1356,7 +1363,7 @@ case|:
 return|return
 name|SUSP
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TSPSC
@@ -1364,7 +1371,7 @@ case|:
 return|return
 name|SPSC
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TPANIC
@@ -1372,7 +1379,7 @@ case|:
 return|return
 name|PNC
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TLSHA
@@ -1380,7 +1387,7 @@ case|:
 return|return
 name|LSHA
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TRSHA
@@ -1388,7 +1395,7 @@ case|:
 return|return
 name|RSHA
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TLCTRA
@@ -1396,7 +1403,7 @@ case|:
 return|return
 name|LCTRA
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TRCTRA
@@ -1404,7 +1411,7 @@ case|:
 return|return
 name|RCTRA
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TLALTA
@@ -1412,7 +1419,7 @@ case|:
 return|return
 name|LALTA
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TRALTA
@@ -1420,7 +1427,7 @@ case|:
 return|return
 name|RALTA
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|THALT
@@ -1428,7 +1435,7 @@ case|:
 return|return
 name|HALT
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TPDWN
@@ -1436,7 +1443,7 @@ case|:
 return|return
 name|PDWN
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TPASTE
@@ -1444,7 +1451,7 @@ case|:
 return|return
 name|PASTE
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TACC
@@ -1468,7 +1475,7 @@ argument_list|(
 name|number
 argument_list|)
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TFUNC
@@ -1492,7 +1499,7 @@ argument_list|(
 name|number
 argument_list|)
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TSCRN
@@ -1516,7 +1523,7 @@ argument_list|(
 name|number
 argument_list|)
 operator||
-literal|0x100
+name|SPECIAL
 return|;
 case|case
 name|TLET
@@ -1778,7 +1785,7 @@ if|if
 condition|(
 name|def
 operator|&
-literal|0x100
+name|SPECIAL
 condition|)
 name|map
 operator|->
@@ -1809,7 +1816,8 @@ index|]
 operator|=
 name|def
 operator|&
-literal|0xFF
+operator|~
+name|SPECIAL
 expr_stmt|;
 block|}
 comment|/* get lock state key def */
@@ -2143,7 +2151,8 @@ name|val
 init|=
 name|value
 operator|&
-literal|0xFF
+operator|~
+name|SPECIAL
 decl_stmt|;
 switch|switch
 condition|(
@@ -2153,7 +2162,7 @@ block|{
 case|case
 name|NOP
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2166,7 +2175,7 @@ break|break;
 case|case
 name|LSH
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2179,7 +2188,7 @@ break|break;
 case|case
 name|RSH
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2192,7 +2201,7 @@ break|break;
 case|case
 name|CLK
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2205,7 +2214,7 @@ break|break;
 case|case
 name|NLK
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2218,7 +2227,7 @@ break|break;
 case|case
 name|SLK
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2231,7 +2240,7 @@ break|break;
 case|case
 name|BTAB
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2244,7 +2253,7 @@ break|break;
 case|case
 name|LALT
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2257,7 +2266,7 @@ break|break;
 case|case
 name|LCTR
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2270,7 +2279,7 @@ break|break;
 case|case
 name|NEXT
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2283,7 +2292,7 @@ break|break;
 case|case
 name|PREV
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2296,7 +2305,7 @@ break|break;
 case|case
 name|RCTR
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2309,7 +2318,7 @@ break|break;
 case|case
 name|RALT
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2322,7 +2331,7 @@ break|break;
 case|case
 name|ALK
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2335,7 +2344,7 @@ break|break;
 case|case
 name|ASH
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2348,7 +2357,7 @@ break|break;
 case|case
 name|META
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2361,7 +2370,7 @@ break|break;
 case|case
 name|RBT
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2374,7 +2383,7 @@ break|break;
 case|case
 name|DBG
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2387,7 +2396,7 @@ break|break;
 case|case
 name|SUSP
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2400,7 +2409,7 @@ break|break;
 case|case
 name|SPSC
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2413,7 +2422,7 @@ break|break;
 case|case
 name|PNC
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2426,7 +2435,7 @@ break|break;
 case|case
 name|LSHA
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2439,7 +2448,7 @@ break|break;
 case|case
 name|RSHA
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2452,7 +2461,7 @@ break|break;
 case|case
 name|LCTRA
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2465,7 +2474,7 @@ break|break;
 case|case
 name|RCTRA
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2478,7 +2487,7 @@ break|break;
 case|case
 name|LALTA
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2491,7 +2500,7 @@ break|break;
 case|case
 name|RALTA
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2504,7 +2513,7 @@ break|break;
 case|case
 name|HALT
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2517,7 +2526,7 @@ break|break;
 case|case
 name|PDWN
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2530,7 +2539,7 @@ break|break;
 case|case
 name|PASTE
 operator||
-literal|0x100
+name|SPECIAL
 case|:
 name|fprintf
 argument_list|(
@@ -2545,7 +2554,7 @@ if|if
 condition|(
 name|value
 operator|&
-literal|0x100
+name|SPECIAL
 condition|)
 block|{
 if|if
@@ -2812,7 +2821,7 @@ index|[
 name|i
 index|]
 operator||
-literal|0x100
+name|SPECIAL
 argument_list|)
 expr_stmt|;
 else|else
@@ -3168,12 +3177,13 @@ if|if
 condition|(
 name|value
 operator|&
-literal|0x100
+name|SPECIAL
 condition|)
 block|{
 name|value
 operator|&=
-literal|0x00ff
+operator|~
+name|SPECIAL
 expr_stmt|;
 switch|switch
 condition|(
@@ -3700,7 +3710,7 @@ index|[
 name|j
 index|]
 operator||
-literal|0x100
+name|SPECIAL
 argument_list|)
 expr_stmt|;
 else|else
