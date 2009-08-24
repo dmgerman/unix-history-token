@@ -162,6 +162,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/tcp.h>
 end_include
 
@@ -916,6 +922,13 @@ name|err
 goto|;
 block|}
 block|}
+name|CURVNET_SET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -927,9 +940,14 @@ operator|&
 name|si
 argument_list|)
 condition|)
+block|{
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 goto|goto
 name|err
 goto|;
+block|}
 if|if
 condition|(
 name|so
@@ -1060,6 +1078,9 @@ name|sopt
 argument_list|)
 expr_stmt|;
 block|}
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 name|ct
 operator|->
 name|ct_closeit

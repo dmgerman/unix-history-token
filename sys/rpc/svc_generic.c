@@ -144,6 +144,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpc/rpc.h>
 end_include
 
@@ -858,6 +864,13 @@ block|}
 else|else
 block|{
 comment|/* 		 * It is an open socket. Get the transport info. 		 */
+name|CURVNET_SET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -875,12 +888,18 @@ argument_list|(
 literal|"svc_tli_create: could not get transport information\n"
 argument_list|)
 expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
 block|}
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 block|}
 comment|/* 	 * If the socket is unbound, try to bind it. 	 */
 if|if
@@ -1006,6 +1025,13 @@ goto|goto
 name|freedata
 goto|;
 block|}
+name|CURVNET_SET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|solisten
 argument_list|(
 name|so
@@ -1019,6 +1045,9 @@ name|qlen
 argument_list|,
 name|curthread
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 block|}
