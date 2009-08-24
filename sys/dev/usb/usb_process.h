@@ -256,6 +256,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|usb_proc_rewakeup
+parameter_list|(
+name|struct
+name|usb_process
+modifier|*
+name|up
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
