@@ -651,7 +651,7 @@ operator|==
 name|RTM_DELETE
 condition|)
 block|{
-name|rtfree
+name|RTFREE_LOCKED
 argument_list|(
 name|nrt
 argument_list|)
@@ -745,7 +745,7 @@ if|if
 condition|(
 name|rt
 condition|)
-name|rtfree
+name|RTFREE_LOCKED
 argument_list|(
 name|rt
 argument_list|)
@@ -893,7 +893,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|rtfree
+name|RTFREE_LOCKED
 argument_list|(
 name|rt
 argument_list|)

@@ -1933,7 +1933,7 @@ if|if
 condition|(
 name|rt
 condition|)
-name|rtfree
+name|RTFREE_LOCKED
 argument_list|(
 name|rt
 argument_list|)
@@ -1942,7 +1942,7 @@ return|return
 literal|0
 return|;
 block|}
-name|rtfree
+name|RTFREE_LOCKED
 argument_list|(
 name|rt
 argument_list|)
