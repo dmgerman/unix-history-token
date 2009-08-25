@@ -212,6 +212,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|struct
+name|rwlock
+name|lltable_rwlock
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|RW_SYSINIT
+argument_list|(
+name|lltable_rwlock
+argument_list|,
+operator|&
+name|lltable_rwlock
+argument_list|,
+literal|"lltable_rwlock"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Dump arp state for a specific address family.  */
 end_comment
@@ -239,7 +259,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|IFNET_RLOCK
+name|LLTABLE_RLOCK
 argument_list|()
 expr_stmt|;
 name|SLIST_FOREACH
@@ -284,7 +304,7 @@ block|}
 block|}
 name|done
 label|:
-name|IFNET_RUNLOCK
+name|LLTABLE_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -534,7 +554,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free all entries from given table and free itself.  * Since lltables collects from all of the intefaces,  * the caller of this function must acquire IFNET_WLOCK().  */
+comment|/*  * Free all entries from given table and free itself.  */
 end_comment
 
 begin_function
@@ -571,7 +591,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|IFNET_WLOCK
+name|LLTABLE_WLOCK
 argument_list|()
 expr_stmt|;
 name|SLIST_REMOVE
@@ -586,7 +606,7 @@ argument_list|,
 name|llt_link
 argument_list|)
 expr_stmt|;
-name|IFNET_WUNLOCK
+name|LLTABLE_WUNLOCK
 argument_list|()
 expr_stmt|;
 for|for
@@ -666,7 +686,7 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|IFNET_RLOCK
+name|LLTABLE_RLOCK
 argument_list|()
 expr_stmt|;
 name|SLIST_FOREACH
@@ -734,7 +754,7 @@ block|}
 block|}
 block|}
 block|}
-name|IFNET_RUNLOCK
+name|LLTABLE_RUNLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -763,7 +783,7 @@ name|lltable
 modifier|*
 name|llt
 decl_stmt|;
-name|IFNET_RLOCK_NOSLEEP
+name|LLTABLE_RLOCK
 argument_list|()
 expr_stmt|;
 name|SLIST_FOREACH
@@ -796,7 +816,7 @@ name|mask
 argument_list|)
 expr_stmt|;
 block|}
-name|IFNET_RUNLOCK_NOSLEEP
+name|LLTABLE_RUNLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -892,7 +912,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|IFNET_WLOCK
+name|LLTABLE_WLOCK
 argument_list|()
 expr_stmt|;
 name|SLIST_INSERT_HEAD
@@ -905,7 +925,7 @@ argument_list|,
 name|llt_link
 argument_list|)
 expr_stmt|;
-name|IFNET_WUNLOCK
+name|LLTABLE_WUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -1195,7 +1215,7 @@ return|;
 comment|/* XXX not implemented yet */
 block|}
 comment|/* XXX linked list may be too expensive */
-name|IFNET_RLOCK_NOSLEEP
+name|LLTABLE_RLOCK
 argument_list|()
 expr_stmt|;
 name|SLIST_FOREACH
@@ -1225,7 +1245,7 @@ name|ifp
 condition|)
 break|break;
 block|}
-name|IFNET_RUNLOCK_NOSLEEP
+name|LLTABLE_RUNLOCK
 argument_list|()
 expr_stmt|;
 name|KASSERT

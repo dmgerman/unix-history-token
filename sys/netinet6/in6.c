@@ -11264,7 +11264,7 @@ name|i
 decl_stmt|,
 name|error
 decl_stmt|;
-name|IFNET_RLOCK_ASSERT
+name|LLTABLE_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|error
