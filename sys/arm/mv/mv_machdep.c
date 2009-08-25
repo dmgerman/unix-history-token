@@ -291,6 +291,12 @@ begin_comment
 comment|/* XXX eventually this should be eliminated */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<arm/mv/mvwin.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -523,6 +529,21 @@ end_decl_stmt
 begin_decl_stmt
 name|vm_offset_t
 name|physical_pages
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vm_offset_t
+name|pmap_bootstrap_lastaddr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|struct
+name|pmap_devmap
+modifier|*
+name|pmap_devmap_bootstrap_table
 decl_stmt|;
 end_decl_stmt
 
@@ -1875,18 +1896,20 @@ literal|1
 condition|)
 empty_stmt|;
 comment|/* Platform-specific initialisation */
-if|if
-condition|(
-name|platform_pmap_init
-argument_list|()
-operator|!=
+name|pmap_bootstrap_lastaddr
+operator|=
+name|MV_BASE
+operator|-
+name|ARM_NOCACHE_KVA_SIZE
+expr_stmt|;
+name|pmap_devmap_bootstrap_table
+operator|=
+operator|&
+name|pmap_devmap
+index|[
 literal|0
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+index|]
+expr_stmt|;
 name|pcpu_init
 argument_list|(
 name|pcpup
