@@ -519,6 +519,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|soc_power_ctrl_set
+parameter_list|(
+name|uint32_t
+name|mask
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|decode_win_cpu_set
 parameter_list|(
