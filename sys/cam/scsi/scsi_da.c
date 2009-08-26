@@ -1435,6 +1435,26 @@ block|,
 comment|/*quirks*/
 name|DA_Q_NO_SYNC_CACHE
 block|}
+block|,
+block|{
+comment|/* 		 * Sony Cyber-Shot DSC cameras 		 * PR: usb/137035 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"Sony"
+block|,
+literal|"Sony DSC"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+operator||
+name|DA_Q_NO_PREVENT
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
