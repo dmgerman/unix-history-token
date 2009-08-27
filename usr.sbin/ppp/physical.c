@@ -6799,6 +6799,11 @@ operator|(
 name|p
 operator|)
 expr_stmt|;
+name|close
+argument_list|(
+name|STDOUT_FILENO
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
