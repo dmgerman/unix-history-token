@@ -1562,6 +1562,11 @@ block|{
 comment|/* 					 * Autodetect. 					 * This check also covers the images 					 * without the ABI-tag ELF note. 					 */
 if|if
 condition|(
+name|SV_CURPROC_ABI
+argument_list|()
+operator|==
+name|SV_ABI_FREEBSD
+operator|&&
 name|p
 operator|->
 name|p_osrel
