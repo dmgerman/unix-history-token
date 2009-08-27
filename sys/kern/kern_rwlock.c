@@ -836,6 +836,16 @@ operator|->
 name|rw_recurse
 operator|++
 expr_stmt|;
+name|atomic_set_ptr
+argument_list|(
+operator|&
+name|rw
+operator|->
+name|rw_lock
+argument_list|,
+name|RW_LOCK_RECURSED
+argument_list|)
+expr_stmt|;
 name|rval
 operator|=
 literal|1
