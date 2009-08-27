@@ -1318,17 +1318,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|==
-name|NULL
-condition|)
-block|{
-goto|goto
-name|fail
-goto|;
-block|}
 name|gp
 operator|->
 name|softc
