@@ -104,10 +104,31 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
+name|boolean_t
+function_decl|(
+modifier|*
+name|trans_osrel
+function_decl|)
+parameter_list|(
+specifier|const
+name|Elf_Note
+modifier|*
+parameter_list|,
+name|int32_t
+modifier|*
+parameter_list|)
+function_decl|;
 define|#
 directive|define
 name|BN_CAN_FETCH_OSREL
 value|0x0001
+comment|/* Deprecated. */
+define|#
+directive|define
+name|BN_TRANSLATE_OSREL
+value|0x0002
+comment|/* Use trans_osrel fetch osrel after */
+comment|/* checking ABI contraint if needed. */
 block|}
 name|Elf_Brandnote
 typedef|;
@@ -314,6 +335,16 @@ name|Elf_Brandnote
 name|__elfN
 parameter_list|(
 name|freebsd_brandnote
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|Elf_Brandnote
+name|__elfN
+parameter_list|(
+name|kfreebsd_brandnote
 parameter_list|)
 function_decl|;
 end_function_decl

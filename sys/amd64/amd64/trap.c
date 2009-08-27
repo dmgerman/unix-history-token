@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_cpu.h"
 end_include
 
@@ -335,6 +341,41 @@ end_comment
 begin_decl_stmt
 name|systrace_probe_func_t
 name|systrace_probe_func
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Defined in amd64/amd64/elf_machdep.c. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|sysentvec
+name|elf64_freebsd_sysvec
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_IA32
+end_ifdef
+
+begin_comment
+comment|/* Defined in compat/ia32/ia32_sysvec.c. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|sysentvec
+name|ia32_freebsd_sysvec
 decl_stmt|;
 end_decl_stmt
 
@@ -1191,6 +1232,27 @@ block|{
 comment|/* 					 * Autodetect. 					 * This check also covers the images 					 * without the ABI-tag ELF note. 					 */
 if|if
 condition|(
+operator|(
+name|curproc
+operator|->
+name|p_sysent
+operator|==
+operator|&
+name|elf64_freebsd_sysvec
+ifdef|#
+directive|ifdef
+name|COMPAT_IA32
+operator|||
+name|curproc
+operator|->
+name|p_sysent
+operator|==
+operator|&
+name|ia32_freebsd_sysvec
+endif|#
+directive|endif
+operator|)
+operator|&&
 name|p
 operator|->
 name|p_osrel

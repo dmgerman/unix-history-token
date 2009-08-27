@@ -384,6 +384,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Defined in i386/i386/elf_machdep.c. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|sysentvec
+name|elf32_freebsd_sysvec
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|extern
 name|void
@@ -1434,6 +1446,13 @@ block|{
 comment|/* 					 * Autodetect. 					 * This check also covers the images 					 * without the ABI-tag ELF note. 					 */
 if|if
 condition|(
+name|curproc
+operator|->
+name|p_sysent
+operator|==
+operator|&
+name|elf32_freebsd_sysvec
+operator|&&
 name|p
 operator|->
 name|p_osrel
