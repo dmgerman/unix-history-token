@@ -2392,15 +2392,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* -direct - STDIN_FILENO gets used by physical_Open */
+comment|/*        * -direct - STDIN_FILENO gets used by physical_Open.  STDOUT_FILENO        * *may* get used in exec/pipe mode.        */
 name|prompt_TtyInit
 argument_list|(
 name|NULL
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|STDOUT_FILENO
 argument_list|)
 expr_stmt|;
 name|close

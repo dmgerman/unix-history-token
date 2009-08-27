@@ -60,12 +60,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
+begin_function_decl
+specifier|extern
+name|unsigned
 name|exec_DeviceSize
-value|physical_DeviceSize
-end_define
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 
