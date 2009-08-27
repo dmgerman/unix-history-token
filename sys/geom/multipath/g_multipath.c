@@ -898,6 +898,9 @@ operator|->
 name|sc_name
 argument_list|)
 expr_stmt|;
+name|g_topology_unlock
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
 else|else
