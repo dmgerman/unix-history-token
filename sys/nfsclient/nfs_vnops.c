@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -8325,6 +8331,16 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET
+name|CURVNET_SET
+argument_list|(
+name|CRED_TO_VNET
+argument_list|(
+name|cnp
+operator|->
+name|cn_cred
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|IN_IFADDR_RLOCK
 argument_list|()
 expr_stmt|;
@@ -8367,6 +8383,9 @@ ifdef|#
 directive|ifdef
 name|INET
 name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
+name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 endif|#
