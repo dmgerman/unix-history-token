@@ -3884,6 +3884,10 @@ condition|(
 name|flag
 operator|==
 name|R_NEXT
+operator|||
+name|flag
+operator|==
+literal|0
 condition|)
 block|{
 name|hashp
