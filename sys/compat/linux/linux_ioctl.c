@@ -11358,6 +11358,14 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|TD_TO_VNET
+argument_list|(
+name|td
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|IFNET_RLOCK
 argument_list|()
 expr_stmt|;
@@ -11404,6 +11412,9 @@ condition|)
 break|break;
 block|}
 name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
+name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 if|if
@@ -11530,6 +11541,14 @@ name|MAXPHYS
 operator|-
 literal|1
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|TD_TO_VNET
+argument_list|(
+name|td
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* handle the 'request buffer size' case */
 if|if
 condition|(
@@ -11610,6 +11629,9 @@ name|ifc
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -11624,11 +11646,16 @@ name|ifc_len
 operator|<=
 literal|0
 condition|)
+block|{
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 name|again
 label|:
 comment|/* Keep track of eth interfaces */
@@ -11974,6 +12001,9 @@ name|sbuf_delete
 argument_list|(
 name|sb
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 return|return
 operator|(

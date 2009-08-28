@@ -5004,6 +5004,14 @@ argument_list|,
 literal|"bytes    packets errs drop fifo frame compressed"
 argument_list|)
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|TD_TO_VNET
+argument_list|(
+name|curthread
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|IFNET_RLOCK
 argument_list|()
 expr_stmt|;
@@ -5083,6 +5091,9 @@ argument_list|)
 expr_stmt|;
 block|}
 name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
+name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 return|return
