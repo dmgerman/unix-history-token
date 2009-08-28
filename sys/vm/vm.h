@@ -21,21 +21,6 @@ directive|include
 file|<machine/vm.h>
 end_include
 
-begin_comment
-comment|/*  * The exact set of memory attributes is machine dependent.  However, every  * machine is required to define VM_MEMATTR_DEFAULT.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|char
-name|vm_memattr_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* memory attribute codes */
-end_comment
-
 begin_typedef
 typedef|typedef
 name|char
@@ -249,6 +234,21 @@ name|int
 name|boolean_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*  * The exact set of memory attributes is machine dependent.  However, every  * machine is required to define VM_MEMATTR_DEFAULT.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|char
+name|vm_memattr_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* memory attribute codes */
+end_comment
 
 begin_comment
 comment|/*  * This is defined in<sys/types.h> for the kernel so that vnode_if.h  * doesn't have to include<vm/vm.h>.  */
