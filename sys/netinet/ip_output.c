@@ -786,7 +786,6 @@ condition|(
 operator|!
 name|nortfree
 condition|)
-block|{
 name|RTFREE
 argument_list|(
 name|ro
@@ -794,14 +793,6 @@ operator|->
 name|ro_rt
 argument_list|)
 expr_stmt|;
-name|LLE_FREE
-argument_list|(
-name|ro
-operator|->
-name|ro_lle
-argument_list|)
-expr_stmt|;
-block|}
 name|ro
 operator|->
 name|ro_rt
