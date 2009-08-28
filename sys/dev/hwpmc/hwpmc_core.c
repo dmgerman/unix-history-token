@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/pmc.h>
 end_include
 
@@ -43,6 +49,18 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/intr_machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/apicvar.h>
 end_include
 
 begin_include
@@ -12429,7 +12447,7 @@ if|if
 condition|(
 name|found_interrupt
 condition|)
-name|pmc_x86_lapic_enable_pmc_interrupt
+name|lapic_reenable_pmc
 argument_list|()
 expr_stmt|;
 name|atomic_add_int
@@ -12988,7 +13006,7 @@ if|if
 condition|(
 name|found_interrupt
 condition|)
-name|pmc_x86_lapic_enable_pmc_interrupt
+name|lapic_reenable_pmc
 argument_list|()
 expr_stmt|;
 name|atomic_add_int
