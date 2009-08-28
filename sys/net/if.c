@@ -583,6 +583,16 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|if_grow
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|if_check
 parameter_list|(
 name|void
@@ -1448,6 +1458,7 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|void
 name|if_grow
 parameter_list|(
