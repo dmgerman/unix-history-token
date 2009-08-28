@@ -906,7 +906,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Table of ifnet by index.  Locked with ifnet_lock. */
+comment|/* Table of ifnet by index. */
 end_comment
 
 begin_expr_stmt
@@ -944,10 +944,21 @@ name|IFQ_MAXLEN
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * The global network interface list (V_ifnet) and related state (such as  * if_index, if_indexlim, and ifindex_table) are protected by an sxlock and  * an rwlock.  Either may be acquired shared to stablize the list, but both  * must be acquired writable to modify the list.  This model allows us to  * both stablize the interface list during interrupt thread processing, but  * also to stablize it over long-running ioctls, without introducing priority  * inversions and deadlocks.  */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|rwlock
-name|ifnet_lock
+name|ifnet_rwlock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|sx
+name|ifnet_sxlock
 decl_stmt|;
 end_decl_stmt
 
@@ -1078,7 +1089,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|IFNET_RLOCK
+name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|ifp
@@ -1088,7 +1099,7 @@ argument_list|(
 name|idx
 argument_list|)
 expr_stmt|;
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 return|return
@@ -1114,7 +1125,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|IFNET_RLOCK
+name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|ifp
@@ -1139,7 +1150,7 @@ name|IFF_DYING
 operator|)
 condition|)
 block|{
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 return|return
@@ -1153,7 +1164,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 return|return
@@ -1167,7 +1178,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|ifnet_setbyindex
+name|ifnet_setbyindex_locked
 parameter_list|(
 name|u_short
 name|idx
@@ -1194,6 +1205,36 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|ifnet_setbyindex
+parameter_list|(
+name|u_short
+name|idx
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+block|{
+name|IFNET_WLOCK
+argument_list|()
+expr_stmt|;
+name|ifnet_setbyindex_locked
+argument_list|(
+name|idx
+argument_list|,
+name|ifp
+argument_list|)
+expr_stmt|;
+name|IFNET_WUNLOCK
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|struct
 name|ifaddr
 modifier|*
@@ -1208,7 +1249,7 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
-name|IFNET_RLOCK
+name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|ifa
@@ -1231,7 +1272,7 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 return|return
@@ -1782,9 +1823,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Index reference. */
-name|IFNET_WLOCK
-argument_list|()
-expr_stmt|;
 name|ifnet_setbyindex
 argument_list|(
 name|ifp
@@ -1793,9 +1831,6 @@ name|if_index
 argument_list|,
 name|ifp
 argument_list|)
-expr_stmt|;
-name|IFNET_WUNLOCK
-argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1858,7 +1893,7 @@ name|if_xname
 operator|)
 argument_list|)
 expr_stmt|;
-name|ifnet_setbyindex
+name|ifnet_setbyindex_locked
 argument_list|(
 name|ifp
 operator|->
@@ -3778,11 +3813,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Unlink the ifnet from ifindex_table[] in current vnet, 	 * and shrink the if_index for that vnet if possible. 	 */
+comment|/* 	 * Unlink the ifnet from ifindex_table[] in current vnet, and shrink 	 * the if_index for that vnet if possible. 	 * 	 * NOTE: IFNET_WLOCK/IFNET_WUNLOCK() are assumed to be unvirtualized, 	 * or we'd lock on one vnet and unlock on another. 	 */
 name|IFNET_WLOCK
 argument_list|()
 expr_stmt|;
-name|ifnet_setbyindex
+name|ifnet_setbyindex_locked
 argument_list|(
 name|ifp
 operator|->
@@ -3890,7 +3925,7 @@ condition|)
 name|if_grow
 argument_list|()
 expr_stmt|;
-name|ifnet_setbyindex
+name|ifnet_setbyindex_locked
 argument_list|(
 name|ifp
 operator|->
@@ -5923,7 +5958,7 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
-name|IFNET_RLOCK
+name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -6056,7 +6091,7 @@ name|NULL
 expr_stmt|;
 name|done
 label|:
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 return|return
@@ -6147,7 +6182,7 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
-name|IFNET_RLOCK
+name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -6245,7 +6280,7 @@ name|NULL
 expr_stmt|;
 name|done
 label|:
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 return|return
@@ -6286,7 +6321,7 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
-name|IFNET_RLOCK
+name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -6383,7 +6418,7 @@ name|NULL
 expr_stmt|;
 name|done
 label|:
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 return|return
@@ -6489,7 +6524,7 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Scan though each interface, looking for ones that have addresses 	 * in this address family.  Maintain a reference on ifa_maybe once 	 * we find one, as we release the IF_ADDR_LOCK() that kept it stable 	 * when we move onto the next interface. 	 */
-name|IFNET_RLOCK
+name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -6762,7 +6797,7 @@ name|NULL
 expr_stmt|;
 name|done
 label|:
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 if|if
@@ -8043,7 +8078,7 @@ decl_stmt|;
 name|VNET_LIST_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
-name|IFNET_RLOCK
+name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|VNET_FOREACH
@@ -8100,7 +8135,7 @@ name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 block|}
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|VNET_LIST_RUNLOCK_NOSLEEP
@@ -8150,7 +8185,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|IFNET_RLOCK
+name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -8199,7 +8234,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 return|return
@@ -8227,7 +8262,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|IFNET_RLOCK
+name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -8256,7 +8291,7 @@ literal|0
 condition|)
 break|break;
 block|}
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 return|return
@@ -11081,7 +11116,6 @@ expr_stmt|;
 name|IFNET_RLOCK
 argument_list|()
 expr_stmt|;
-comment|/* could sleep XXX */
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -12328,7 +12362,7 @@ name|ifnet
 modifier|*
 name|oifp
 decl_stmt|;
-name|IFNET_RLOCK
+name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -12356,7 +12390,7 @@ name|ifp
 operator|=
 name|NULL
 expr_stmt|;
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|KASSERT
@@ -12526,7 +12560,7 @@ name|ifnet
 modifier|*
 name|oifp
 decl_stmt|;
-name|IFNET_RLOCK
+name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -12565,7 +12599,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 block|}

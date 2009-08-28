@@ -763,7 +763,7 @@ name|lltable
 modifier|*
 name|llt
 decl_stmt|;
-name|IFNET_RLOCK
+name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|SLIST_FOREACH
@@ -796,7 +796,7 @@ name|mask
 argument_list|)
 expr_stmt|;
 block|}
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 block|}
@@ -1195,7 +1195,7 @@ return|;
 comment|/* XXX not implemented yet */
 block|}
 comment|/* XXX linked list may be too expensive */
-name|IFNET_RLOCK
+name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|SLIST_FOREACH
@@ -1225,7 +1225,7 @@ name|ifp
 condition|)
 break|break;
 block|}
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|KASSERT

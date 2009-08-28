@@ -1121,7 +1121,7 @@ operator|!=
 literal|2
 condition|)
 block|{
-name|IFNET_RLOCK
+name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -1197,7 +1197,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 return|return;
@@ -1262,7 +1262,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 return|return;
@@ -1273,7 +1273,7 @@ directive|endif
 comment|/* INET6 */
 block|}
 block|}
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 block|}

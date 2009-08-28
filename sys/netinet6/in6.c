@@ -10062,7 +10062,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|IFNET_RLOCK
+name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 for|for
@@ -10126,7 +10126,7 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 if|if
@@ -11264,8 +11264,7 @@ name|i
 decl_stmt|,
 name|error
 decl_stmt|;
-comment|/* XXXXX 	 * current IFNET_RLOCK() is mapped to IFNET_WLOCK() 	 * so it is okay to use this ASSERT, change it when 	 * IFNET lock is finalized 	 */
-name|IFNET_WLOCK_ASSERT
+name|IFNET_RLOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|error

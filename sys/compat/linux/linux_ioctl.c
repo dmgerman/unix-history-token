@@ -11128,6 +11128,9 @@ decl_stmt|;
 name|int
 name|ethno
 decl_stmt|;
+name|IFNET_RLOCK_ASSERT
+argument_list|()
+expr_stmt|;
 comment|/* Short-circuit non ethernet interfaces */
 if|if
 condition|(
@@ -11156,9 +11159,6 @@ name|ethno
 operator|=
 literal|0
 expr_stmt|;
-name|IFNET_RLOCK
-argument_list|()
-expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifscan
@@ -11174,10 +11174,6 @@ name|ifscan
 operator|==
 name|ifp
 condition|)
-block|{
-name|IFNET_RUNLOCK
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|snprintf
@@ -11192,7 +11188,6 @@ name|ethno
 argument_list|)
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|IFP_IS_ETH
@@ -11204,9 +11199,6 @@ name|ethno
 operator|++
 expr_stmt|;
 block|}
-name|IFNET_RUNLOCK
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -11691,7 +11683,6 @@ comment|/* Return all AF_INET addresses of all interfaces */
 name|IFNET_RLOCK
 argument_list|()
 expr_stmt|;
-comment|/* could sleep XXX */
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp

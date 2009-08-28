@@ -1664,7 +1664,7 @@ name|success
 goto|;
 block|}
 comment|/* next, try to get it from some other hardware interface */
-name|IFNET_RLOCK
+name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 for|for
@@ -1733,7 +1733,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -1741,7 +1741,7 @@ name|success
 goto|;
 block|}
 block|}
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 comment|/* last resort: get from random number source */

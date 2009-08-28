@@ -1818,7 +1818,6 @@ expr_stmt|;
 name|IFNET_RLOCK
 argument_list|()
 expr_stmt|;
-comment|/* could sleep, but okay for debugging XXX */
 for|for
 control|(
 name|ifp

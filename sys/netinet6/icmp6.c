@@ -7206,7 +7206,7 @@ operator|)
 return|;
 block|}
 block|}
-name|IFNET_RLOCK
+name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 for|for
@@ -7424,7 +7424,7 @@ name|ifpp
 operator|=
 name|ifp
 expr_stmt|;
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 return|return
@@ -7438,7 +7438,7 @@ operator|+=
 name|addrsofif
 expr_stmt|;
 block|}
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 return|return
@@ -7557,7 +7557,7 @@ literal|0
 operator|)
 return|;
 comment|/* needless to copy */
-name|IFNET_RLOCK
+name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|again
@@ -7797,7 +7797,7 @@ name|ni_flags
 operator||=
 name|NI_NODEADDR_FLAG_TRUNCATE
 expr_stmt|;
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 return|return
@@ -7976,7 +7976,7 @@ goto|goto
 name|again
 goto|;
 block|}
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 return|return
