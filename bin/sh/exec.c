@@ -1265,14 +1265,14 @@ name|name
 operator|=
 name|commandtext
 argument_list|(
-operator|&
+name|getfuncnode
+argument_list|(
 name|cmdp
 operator|->
 name|param
 operator|.
 name|func
-operator|->
-name|n
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|out1c

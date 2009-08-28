@@ -1402,28 +1402,7 @@ argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-literal|"struct funcdef {\n"
-argument_list|,
-name|hfile
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|"\tunsigned int refcount;\n"
-argument_list|,
-name|hfile
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|"\tunion node n;\n"
-argument_list|,
-name|hfile
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|"};\n\n\n"
+literal|"struct funcdef;\n"
 argument_list|,
 name|hfile
 argument_list|)
@@ -1431,6 +1410,13 @@ expr_stmt|;
 name|fputs
 argument_list|(
 literal|"struct funcdef *copyfunc(union node *);\n"
+argument_list|,
+name|hfile
+argument_list|)
+expr_stmt|;
+name|fputs
+argument_list|(
+literal|"union node *getfuncnode(struct funcdef *);\n"
 argument_list|,
 name|hfile
 argument_list|)
