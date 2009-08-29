@@ -1289,7 +1289,7 @@ literal|0
 condition|)
 name|vm_thread_dispose
 argument_list|(
-name|td
+name|td2
 argument_list|)
 expr_stmt|;
 if|if
