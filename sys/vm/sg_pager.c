@@ -842,6 +842,12 @@ index|]
 operator|=
 name|page
 expr_stmt|;
+name|page
+operator|->
+name|valid
+operator|=
+name|VM_PAGE_BITS_ALL
+expr_stmt|;
 return|return
 operator|(
 name|VM_PAGER_OK
