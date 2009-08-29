@@ -794,9 +794,7 @@ comment|/* Initialize our td */
 name|newtd
 operator|=
 name|thread_alloc
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
