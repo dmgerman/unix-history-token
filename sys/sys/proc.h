@@ -799,20 +799,6 @@ name|int
 name|td_kstack_pages
 decl_stmt|;
 comment|/* (a) Size of the kstack. */
-name|struct
-name|vm_object
-modifier|*
-name|td_altkstack_obj
-decl_stmt|;
-comment|/* (a) Alternate kstack object. */
-name|vm_offset_t
-name|td_altkstack
-decl_stmt|;
-comment|/* (a) Kernel VA of alternate kstack. */
-name|int
-name|td_altkstack_pages
-decl_stmt|;
-comment|/* (a) Size of alternate kstack. */
 specifier|volatile
 name|u_int
 name|td_critnest
@@ -4757,7 +4743,22 @@ name|thread
 modifier|*
 name|thread_alloc
 parameter_list|(
-name|void
+name|int
+name|pages
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|thread_alloc_stack
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|int
+name|pages
 parameter_list|)
 function_decl|;
 end_function_decl
