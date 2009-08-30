@@ -6829,7 +6829,9 @@ name|ch
 operator|->
 name|lastslot
 argument_list|,
+operator|(
 literal|"ahci: ALL SLOTS BUSY!"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
