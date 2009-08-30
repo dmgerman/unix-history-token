@@ -352,7 +352,7 @@ end_function
 
 begin_function
 name|void
-name|ata_36bit_cmd
+name|ata_28bit_cmd
 parameter_list|(
 name|struct
 name|ccb_ataio
