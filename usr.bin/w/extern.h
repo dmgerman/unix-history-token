@@ -17,7 +17,7 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
-name|void
+name|int
 name|pr_attime
 parameter_list|(
 name|time_t
