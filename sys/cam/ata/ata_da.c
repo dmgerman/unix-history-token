@@ -1242,7 +1242,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 else|else
-name|ata_48bit_cmd
+name|ata_36bit_cmd
 argument_list|(
 operator|&
 name|ccb
@@ -1895,7 +1895,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 else|else
-name|ata_48bit_cmd
+name|ata_36bit_cmd
 argument_list|(
 operator|&
 name|ccb
@@ -3852,7 +3852,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 else|else
-name|ata_48bit_cmd
+name|ata_36bit_cmd
 argument_list|(
 name|ataio
 argument_list|,
@@ -4983,7 +4983,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 else|else
-name|ata_48bit_cmd
+name|ata_36bit_cmd
 argument_list|(
 operator|&
 name|ccb
