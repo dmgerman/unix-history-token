@@ -12719,7 +12719,7 @@ operator|->
 name|pr_childcount
 operator|--
 expr_stmt|;
-name|sx_downgrade
+name|sx_xunlock
 argument_list|(
 operator|&
 name|allprison_lock
@@ -12859,8 +12859,6 @@ expr_stmt|;
 name|flags
 operator|=
 name|PD_DEREF
-operator||
-name|PD_LIST_SLOCKED
 expr_stmt|;
 block|}
 block|}
