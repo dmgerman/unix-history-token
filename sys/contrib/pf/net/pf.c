@@ -6466,6 +6466,14 @@ literal|0
 decl_stmt|,
 name|s
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|int
+name|locked
+decl_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 init|;
@@ -6497,16 +6505,40 @@ expr_stmt|;
 name|PF_LOCK
 argument_list|()
 expr_stmt|;
+name|locked
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|pf_end_threads
 condition|)
 block|{
+name|PF_UNLOCK
+argument_list|()
+expr_stmt|;
+name|sx_sunlock
+argument_list|(
+operator|&
+name|pf_consistency_lock
+argument_list|)
+expr_stmt|;
+name|sx_xlock
+argument_list|(
+operator|&
+name|pf_consistency_lock
+argument_list|)
+expr_stmt|;
+name|PF_LOCK
+argument_list|()
+expr_stmt|;
 name|pf_purge_expired_states
 argument_list|(
 name|pf_status
 operator|.
 name|states
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|pf_purge_expired_fragments
@@ -6514,13 +6546,13 @@ argument_list|()
 expr_stmt|;
 name|pf_purge_expired_src_nodes
 argument_list|(
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 name|pf_end_threads
 operator|++
 expr_stmt|;
-name|sx_sunlock
+name|sx_xunlock
 argument_list|(
 operator|&
 name|pf_consistency_lock
@@ -6548,6 +6580,78 @@ name|splsoftnet
 argument_list|()
 expr_stmt|;
 comment|/* process a fraction of the state table every second */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+if|if
+condition|(
+operator|!
+name|pf_purge_expired_states
+argument_list|(
+literal|1
+operator|+
+operator|(
+name|pf_status
+operator|.
+name|states
+operator|/
+name|pf_default_rule
+operator|.
+name|timeout
+index|[
+name|PFTM_INTERVAL
+index|]
+operator|)
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+block|{
+name|PF_UNLOCK
+argument_list|()
+expr_stmt|;
+name|sx_sunlock
+argument_list|(
+operator|&
+name|pf_consistency_lock
+argument_list|)
+expr_stmt|;
+name|sx_xlock
+argument_list|(
+operator|&
+name|pf_consistency_lock
+argument_list|)
+expr_stmt|;
+name|PF_LOCK
+argument_list|()
+expr_stmt|;
+name|locked
+operator|=
+literal|1
+expr_stmt|;
+name|pf_purge_expired_states
+argument_list|(
+literal|1
+operator|+
+operator|(
+name|pf_status
+operator|.
+name|states
+operator|/
+name|pf_default_rule
+operator|.
+name|timeout
+index|[
+name|PFTM_INTERVAL
+index|]
+operator|)
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
 name|pf_purge_expired_states
 argument_list|(
 literal|1
@@ -6566,6 +6670,8 @@ index|]
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* purge other expired types every PFTM_INTERVAL seconds */
 if|if
 condition|(
@@ -6583,11 +6689,43 @@ block|{
 name|pf_purge_expired_fragments
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|pf_purge_expired_src_nodes
 argument_list|(
-literal|0
+name|locked
+argument_list|)
+condition|)
+block|{
+name|PF_UNLOCK
+argument_list|()
+expr_stmt|;
+name|sx_sunlock
+argument_list|(
+operator|&
+name|pf_consistency_lock
 argument_list|)
 expr_stmt|;
+name|sx_xlock
+argument_list|(
+operator|&
+name|pf_consistency_lock
+argument_list|)
+expr_stmt|;
+name|PF_LOCK
+argument_list|()
+expr_stmt|;
+name|locked
+operator|=
+literal|1
+expr_stmt|;
+name|pf_purge_expired_src_nodes
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|nloops
 operator|=
 literal|0
@@ -6604,6 +6742,17 @@ name|__FreeBSD__
 name|PF_UNLOCK
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|locked
+condition|)
+name|sx_xunlock
+argument_list|(
+operator|&
+name|pf_consistency_lock
+argument_list|)
+expr_stmt|;
+else|else
 name|sx_sunlock
 argument_list|(
 operator|&
@@ -6878,13 +7027,29 @@ return|;
 block|}
 end_function
 
-begin_function
-name|void
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_decl_stmt
+name|int
 name|pf_purge_expired_src_nodes
-parameter_list|(
+argument_list|(
 name|int
 name|waslocked
-parameter_list|)
+argument_list|)
+else|#
+directive|else
+name|void
+name|pf_purge_expired_src_nodes
+argument_list|(
+name|int
+name|waslocked
+argument_list|)
+endif|#
+directive|endif
 block|{
 name|struct
 name|pf_src_node
@@ -6963,26 +7128,11 @@ operator|&
 name|pf_consistency_lock
 argument_list|)
 condition|)
-block|{
-name|PF_UNLOCK
-argument_list|()
-expr_stmt|;
-name|sx_sunlock
-argument_list|(
-operator|&
-name|pf_consistency_lock
-argument_list|)
-expr_stmt|;
-name|sx_xlock
-argument_list|(
-operator|&
-name|pf_consistency_lock
-argument_list|)
-expr_stmt|;
-name|PF_LOCK
-argument_list|()
-expr_stmt|;
-block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 else|#
 directive|else
 name|rw_enter_write
@@ -7123,8 +7273,18 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
-end_function
+end_decl_stmt
 
 begin_function
 name|void
@@ -7413,9 +7573,29 @@ argument|&& 			cur->nat_rule.ptr->src_nodes<=
 literal|0
 argument|) 			pf_rm_rule(NULL, cur->nat_rule.ptr); 	if (cur->anchor.ptr != NULL) 		if (--cur->anchor.ptr->states<=
 literal|0
-argument|) 			pf_rm_rule(NULL, cur->anchor.ptr); 	pf_normalize_tcp_cleanup(cur); 	pfi_kif_unref(cur->u.s.kif, PFI_KIF_REF_STATE); 	TAILQ_REMOVE(&state_list, cur, u.s.entry_list); 	if (cur->tag) 		pf_tag_unref(cur->tag); 	pool_put(&pf_state_pl, cur); 	pf_status.fcounters[FCNT_STATE_REMOVALS]++; 	pf_status.states--; }  void pf_purge_expired_states(u_int32_t maxcheck) { 	static struct pf_state	*cur = NULL; 	struct pf_state		*next; 	int 			 locked =
+argument|) 			pf_rm_rule(NULL, cur->anchor.ptr); 	pf_normalize_tcp_cleanup(cur); 	pfi_kif_unref(cur->u.s.kif, PFI_KIF_REF_STATE); 	TAILQ_REMOVE(&state_list, cur, u.s.entry_list); 	if (cur->tag) 		pf_tag_unref(cur->tag); 	pool_put(&pf_state_pl, cur); 	pf_status.fcounters[FCNT_STATE_REMOVALS]++; 	pf_status.states--; }
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|int pf_purge_expired_states(u_int32_t maxcheck, int waslocked)
+else|#
+directive|else
+argument|void pf_purge_expired_states(u_int32_t maxcheck)
+endif|#
+directive|endif
+argument|{ 	static struct pf_state	*cur = NULL; 	struct pf_state		*next;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|int 			 locked = waslocked;
+else|#
+directive|else
+argument|int 			 locked =
 literal|0
-argument|;  	while (maxcheck--) {
+argument|;
+endif|#
+directive|endif
+argument|while (maxcheck--) {
 comment|/* wrap to start of list when we hit the end */
 argument|if (cur == NULL) { 			cur = TAILQ_FIRST(&state_list); 			if (cur == NULL) 				break;
 comment|/* list empty */
@@ -7427,7 +7607,9 @@ argument|if (! locked) {
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|if (!sx_try_upgrade(&pf_consistency_lock)) { 					 PF_UNLOCK(); 					 sx_sunlock(&pf_consistency_lock); 					 sx_xlock(&pf_consistency_lock); 					 PF_LOCK(); 				 }
+argument|if (!sx_try_upgrade(&pf_consistency_lock)) 				 	return (
+literal|0
+argument|);
 else|#
 directive|else
 argument|rw_enter_write(&pf_consistency_lock);
@@ -7441,7 +7623,9 @@ argument|pf_unlink_state(cur); 			if (! locked) {
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|if (!sx_try_upgrade(&pf_consistency_lock)) { 					 PF_UNLOCK(); 					 sx_sunlock(&pf_consistency_lock); 					 sx_xlock(&pf_consistency_lock); 					 PF_LOCK(); 				 }
+argument|if (!sx_try_upgrade(&pf_consistency_lock)) 				 	return (
+literal|0
+argument|);
 else|#
 directive|else
 argument|rw_enter_write(&pf_consistency_lock);
@@ -7449,14 +7633,16 @@ endif|#
 directive|endif
 argument|locked =
 literal|1
-argument|; 			} 			pf_free_state(cur); 		} 		cur = next; 	}  	if (locked)
+argument|; 			} 			pf_free_state(cur); 		} 		cur = next; 	}
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|sx_downgrade(&pf_consistency_lock);
+argument|if (!waslocked&& locked) 		sx_downgrade(&pf_consistency_lock);  	return (
+literal|1
+argument|);
 else|#
 directive|else
-argument|rw_exit_write(&pf_consistency_lock);
+argument|if (locked) 		rw_exit_write(&pf_consistency_lock);
 endif|#
 directive|endif
 argument|}  int pf_tbladdr_setup(struct pf_ruleset *rs, struct pf_addr_wrap *aw) { 	if (aw->type != PF_ADDR_TABLE) 		return (
