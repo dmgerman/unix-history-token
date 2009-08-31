@@ -2599,12 +2599,16 @@ index|[
 name|RTAX_GATEWAY
 index|]
 expr_stmt|;
-name|rtalloc_ign
+name|rtalloc_ign_fib
 argument_list|(
 operator|&
 name|gw_ro
 argument_list|,
 literal|0
+argument_list|,
+name|so
+operator|->
+name|so_fibnum
 argument_list|)
 expr_stmt|;
 comment|/*  		 * A host route through the loopback interface is  		 * installed for each interface adddress. In pre 8.0 		 * releases the interface address of a PPP link type 		 * is not reachable locally. This behavior is fixed as  		 * part of the new L2/L3 redesign and rewrite work. The 		 * signature of this interface address route is the 		 * AF_LINK sa_family type of the rt_gateway, and the 		 * rt_ifp has the IFF_LOOPBACK flag set. 		 */
