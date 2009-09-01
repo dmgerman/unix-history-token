@@ -4563,6 +4563,14 @@ condition|(
 name|error
 operator|!=
 literal|0
+operator|||
+operator|(
+name|flags
+operator|&
+name|V_XSLEEP
+operator|)
+operator|!=
+literal|0
 condition|)
 name|MNT_REL
 argument_list|(
