@@ -1390,6 +1390,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|__inline
+name|void
+name|pagezero
+parameter_list|(
+name|void
+modifier|*
+name|page
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_if
 if|#
 directive|if
