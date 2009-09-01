@@ -7063,7 +7063,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|u_int
+name|cpumask_t
 modifier|*
 name|lazymask
 decl_stmt|;
@@ -7100,7 +7100,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_int
+name|cpumask_t
 name|mymask
 init|=
 name|PCPU_GET
@@ -7165,7 +7165,7 @@ specifier|static
 name|void
 name|pmap_lazyfix_self
 parameter_list|(
-name|u_int
+name|cpumask_t
 name|mymask
 parameter_list|)
 block|{
@@ -7205,10 +7205,9 @@ name|pmap_t
 name|pmap
 parameter_list|)
 block|{
-name|u_int
+name|cpumask_t
 name|mymask
-decl_stmt|;
-name|u_int
+decl_stmt|,
 name|mask
 decl_stmt|;
 name|u_int
