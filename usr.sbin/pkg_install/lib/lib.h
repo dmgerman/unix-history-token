@@ -446,14 +446,14 @@ value|"PKG_PREFIX"
 end_define
 
 begin_comment
-comment|/*  * Version of the package tools - increase only when some  * functionality used by bsd.port.mk is changed, added or removed  */
+comment|/*  * Version of the package tools - increase whenever you make a change  * in the code that is not cosmetic only.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PKG_INSTALL_VERSION
-value|20090519
+value|20090902
 end_define
 
 begin_define
