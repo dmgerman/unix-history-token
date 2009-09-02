@@ -3003,7 +3003,7 @@ condition|(
 name|pat_works
 condition|)
 block|{
-comment|/* 		 * Leave the indices 0-3 at the default of WB, WT, UC, and UC-. 		 * Program 4 and 5 as WP and WC. 		 * Leave 6 and 7 as UC and UC-. 		 */
+comment|/* 		 * Leave the indices 0-3 at the default of WB, WT, UC-, and UC. 		 * Program 4 and 5 as WP and WC. 		 * Leave 6 and 7 as UC- and UC. 		 */
 name|pat_msr
 operator|&=
 operator|~
