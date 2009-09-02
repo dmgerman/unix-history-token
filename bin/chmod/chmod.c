@@ -63,12 +63,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -186,6 +180,8 @@ name|Rflag
 decl_stmt|,
 name|ch
 decl_stmt|,
+name|error
+decl_stmt|,
 name|fflag
 decl_stmt|,
 name|fts_options
@@ -193,8 +189,6 @@ decl_stmt|,
 name|hflag
 decl_stmt|,
 name|rval
-decl_stmt|,
-name|error
 decl_stmt|;
 name|int
 name|vflag
@@ -629,7 +623,6 @@ operator|!
 name|hflag
 condition|)
 continue|continue;
-comment|/* else */
 comment|/* FALLTHROUGH */
 default|default:
 break|break;
@@ -706,7 +699,10 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|fflag
 condition|)
@@ -724,6 +720,7 @@ name|rval
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -841,11 +838,6 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"fts_read"
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|set
 argument_list|)
 expr_stmt|;
 name|exit
