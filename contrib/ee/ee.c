@@ -142,6 +142,12 @@ directive|include
 file|<pwd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -215,12 +221,6 @@ ifndef|#
 directive|ifndef
 name|NO_CATGETS
 end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<locale.h>
-end_include
 
 begin_include
 include|#
