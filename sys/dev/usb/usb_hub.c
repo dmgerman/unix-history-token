@@ -372,6 +372,11 @@ name|sc_dev
 decl_stmt|;
 comment|/* base device */
 name|struct
+name|mtx
+name|sc_mtx
+decl_stmt|;
+comment|/* our mutex */
+name|struct
 name|usb_device
 modifier|*
 name|sc_udev
@@ -2562,6 +2567,20 @@ name|sc_dev
 operator|=
 name|dev
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mtx
+argument_list|,
+literal|"USB HUB mutex"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|sc
@@ -2950,7 +2969,9 @@ argument_list|,
 name|sc
 argument_list|,
 operator|&
-name|Giant
+name|sc
+operator|->
+name|sc_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -3173,14 +3194,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|USB_XFER_LOCK
+name|mtx_lock
 argument_list|(
+operator|&
 name|sc
 operator|->
-name|sc_xfer
-index|[
-literal|0
-index|]
+name|sc_mtx
 argument_list|)
 expr_stmt|;
 name|usbd_transfer_start
@@ -3193,14 +3212,12 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|USB_XFER_UNLOCK
+name|mtx_unlock
 argument_list|(
+operator|&
 name|sc
 operator|->
-name|sc_xfer
-index|[
-literal|0
-index|]
+name|sc_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -3251,6 +3268,14 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|mtx_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mtx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -3395,6 +3420,14 @@ operator|->
 name|hub
 operator|=
 name|NULL
+expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mtx
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -6527,13 +6560,9 @@ name|bus
 argument_list|)
 expr_stmt|;
 block|}
-name|sx_xlock
+name|usbd_enum_lock
 argument_list|(
 name|udev
-operator|->
-name|default_sx
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* notify all sub-devices about resume */
@@ -6546,13 +6575,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|sx_unlock
+name|usbd_enum_unlock
 argument_list|(
 name|udev
-operator|->
-name|default_sx
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* check if peer has wakeup capability */
@@ -6746,13 +6771,9 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-name|sx_xlock
+name|usbd_enum_lock
 argument_list|(
 name|udev
-operator|->
-name|default_sx
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* notify all sub-devices about suspend */
@@ -6765,13 +6786,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|sx_unlock
+name|usbd_enum_unlock
 argument_list|(
 name|udev
-operator|->
-name|default_sx
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 if|if

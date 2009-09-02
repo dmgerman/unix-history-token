@@ -1509,5 +1509,68 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*------------------------------------------------------------------------*  *	usb_proc_rewakeup  *  * This function is called to re-wakeup the the given USB  * process. This usually happens after that the USB system has been in  * polling mode, like during a panic. This function must be called  * having "up->up_mtx" locked.  *------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+name|void
+name|usb_proc_rewakeup
+parameter_list|(
+name|struct
+name|usb_process
+modifier|*
+name|up
+parameter_list|)
+block|{
+comment|/* check if not initialised */
+if|if
+condition|(
+name|up
+operator|->
+name|up_mtx
+operator|==
+name|NULL
+condition|)
+return|return;
+comment|/* check if gone */
+if|if
+condition|(
+name|up
+operator|->
+name|up_gone
+condition|)
+return|return;
+name|mtx_assert
+argument_list|(
+name|up
+operator|->
+name|up_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|up
+operator|->
+name|up_msleep
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* re-wakeup */
+name|cv_signal
+argument_list|(
+operator|&
+name|up
+operator|->
+name|up_cv
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
 end_unit
 
