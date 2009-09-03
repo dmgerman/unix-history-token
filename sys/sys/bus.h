@@ -70,11 +70,17 @@ comment|/**< @brief not probed or probe failed */
 name|DS_ALIVE
 block|,
 comment|/**< @brief probe succeeded */
+name|DS_ATTACHING
+block|,
+comment|/**< @brief attaching is in progress */
 name|DS_ATTACHED
 block|,
 comment|/**< @brief attach method called */
 name|DS_BUSY
+block|,
 comment|/**< @brief device is open */
+name|DS_DETACHING
+comment|/**< @brief detaching is in progress */
 block|}
 name|device_state_t
 typedef|;
