@@ -124,6 +124,13 @@ name|TF_BLINK
 value|0x04
 end_define
 
+begin_define
+define|#
+directive|define
+name|TF_REVERSE
+value|0x08
+end_define
+
 begin_typedef
 typedef|typedef
 name|unsigned
