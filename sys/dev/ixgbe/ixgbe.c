@@ -20995,7 +20995,7 @@ name|adapter
 operator|->
 name|stats
 operator|.
-name|gorc
+name|gotc
 operator|+=
 name|IXGBE_READ_REG
 argument_list|(
