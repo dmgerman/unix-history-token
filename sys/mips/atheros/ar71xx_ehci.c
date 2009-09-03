@@ -698,16 +698,8 @@ comment|/* 	 * Arrange to force Host mode, select big-endian byte alignment, 	 *
 name|sc
 operator|->
 name|sc_flags
-operator||=
-name|EHCI_SCFLG_TT
-operator||
+operator|=
 name|EHCI_SCFLG_SETMODE
-operator||
-name|EHCI_SCFLG_BIGEDESC
-operator||
-name|EHCI_SCFLG_BIGEMMIO
-operator||
-name|EHCI_SCFLG_NORESTERM
 expr_stmt|;
 operator|(
 name|void
