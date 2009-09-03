@@ -330,6 +330,108 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_struct
+struct|struct
+name|arpstat
+block|{
+comment|/* Normal things that happen: */
+name|u_long
+name|txrequests
+decl_stmt|;
+comment|/* # of ARP requests sent by this host. */
+name|u_long
+name|txreplies
+decl_stmt|;
+comment|/* # of ARP replies sent by this host. */
+name|u_long
+name|rxrequests
+decl_stmt|;
+comment|/* # of ARP requests received by this host. */
+name|u_long
+name|rxreplies
+decl_stmt|;
+comment|/* # of ARP replies received by this host. */
+name|u_long
+name|received
+decl_stmt|;
+comment|/* # of ARP packets received by this host. */
+name|u_long
+name|arp_spares
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* For either the upper or lower half. */
+comment|/* Abnormal event and error  counting: */
+name|u_long
+name|dropped
+decl_stmt|;
+comment|/* # of packets dropped waiting for a reply. */
+name|u_long
+name|timeouts
+decl_stmt|;
+comment|/* # of times with entries removed */
+comment|/* due to timeout. */
+name|u_long
+name|dupips
+decl_stmt|;
+comment|/* # of duplicate IPs detected. */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * In-kernel consumers can use these accessor macros directly to update  * stats.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARPSTAT_ADD
+parameter_list|(
+name|name
+parameter_list|,
+name|val
+parameter_list|)
+value|V_arpstat.name += (val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARPSTAT_SUB
+parameter_list|(
+name|name
+parameter_list|,
+name|val
+parameter_list|)
+value|V_arpstat.name -= (val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARPSTAT_INC
+parameter_list|(
+name|name
+parameter_list|)
+value|ARPSTAT_ADD(name, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARPSTAT_DEC
+parameter_list|(
+name|name
+parameter_list|)
+value|ARPSTAT_SUB(name, 1)
+end_define
+
 begin_endif
 endif|#
 directive|endif

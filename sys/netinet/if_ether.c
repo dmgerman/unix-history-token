@@ -247,6 +247,24 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_net_link_ether
+argument_list|,
+name|PF_ARP
+argument_list|,
+name|arp
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
 name|int
@@ -311,6 +329,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+expr|struct
+name|arpstat
+argument_list|,
+name|arpstat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* ARP statistics, see if_arp.h */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -330,6 +364,13 @@ define|#
 directive|define
 name|V_arp_proxyall
 value|VNET(arp_proxyall)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_arpstat
+value|VNET(arpstat)
 end_define
 
 begin_expr_stmt
@@ -424,6 +465,30 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Enable proxy ARP for all suitable requests"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_VNET_STRUCT
+argument_list|(
+name|_net_link_ether_arp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|stats
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
+name|arpstat
+argument_list|)
+argument_list|,
+name|arpstat
+argument_list|,
+literal|"ARP statistics (struct arpstat, net/if_arp.h)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -722,6 +787,13 @@ name|lle_tbl
 operator|->
 name|llt_ifp
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|IF_AFDATA_LOCK
 argument_list|(
 name|ifp
@@ -771,6 +843,7 @@ name|la_timer
 argument_list|)
 operator|)
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -779,6 +852,12 @@ argument_list|(
 name|lle
 argument_list|)
 expr_stmt|;
+name|ARPSTAT_INC
+argument_list|(
+name|timeouts
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 comment|/* 		 * Still valid, just drop our reference 		 */
@@ -792,6 +871,9 @@ name|IF_AFDATA_UNLOCK
 argument_list|(
 name|ifp
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1163,6 +1245,11 @@ operator|&
 name|sa
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|ARPSTAT_INC
+argument_list|(
+name|txrequests
 argument_list|)
 expr_stmt|;
 block|}
@@ -1647,6 +1734,7 @@ name|la_hold
 operator|!=
 name|NULL
 condition|)
+block|{
 name|m_freem
 argument_list|(
 name|la
@@ -1654,6 +1742,12 @@ operator|->
 name|la_hold
 argument_list|)
 expr_stmt|;
+name|ARPSTAT_INC
+argument_list|(
+name|dropped
+argument_list|)
+expr_stmt|;
+block|}
 name|la
 operator|->
 name|la_hold
@@ -2001,6 +2095,11 @@ operator|*
 argument_list|)
 expr_stmt|;
 block|}
+name|ARPSTAT_INC
+argument_list|(
+name|received
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|ntohs
@@ -2385,6 +2484,17 @@ sizeof|sizeof
 argument_list|(
 name|itaddr
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|op
+operator|==
+name|ARPOP_REPLY
+condition|)
+name|ARPSTAT_INC
+argument_list|(
+name|rxreplies
 argument_list|)
 expr_stmt|;
 comment|/* 	 * For a bridge, we want to check the address irrespective 	 * of the receive interface. (This will change slightly 	 * when we have clusters of interfaces). 	 * If the interface does not match, but the recieving interface 	 * is part of carp, we call carp_iamatch to see if this is a 	 * request for the virtual host ip. 	 * XXX: This is really ugly! 	 */
@@ -2876,6 +2986,11 @@ expr_stmt|;
 name|itaddr
 operator|=
 name|myaddr
+expr_stmt|;
+name|ARPSTAT_INC
+argument_list|(
+name|dupips
+argument_list|)
 expr_stmt|;
 goto|goto
 name|reply
@@ -3399,6 +3514,11 @@ condition|)
 goto|goto
 name|drop
 goto|;
+name|ARPSTAT_INC
+argument_list|(
+name|rxrequests
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|itaddr
@@ -3905,6 +4025,11 @@ operator|&
 name|sa
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|ARPSTAT_INC
+argument_list|(
+name|txreplies
 argument_list|)
 expr_stmt|;
 return|return;
