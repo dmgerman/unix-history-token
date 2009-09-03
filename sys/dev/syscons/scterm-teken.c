@@ -98,7 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/syscons/teken/teken.h>
+file|<teken/teken.h>
 end_include
 
 begin_function_decl
