@@ -2301,8 +2301,6 @@ decl_stmt|;
 name|uint32_t
 name|addr
 init|=
-literal|0x1000
-operator||
 operator|(
 name|phy
 operator|<<
@@ -2481,8 +2479,6 @@ decl_stmt|;
 name|uint32_t
 name|addr
 init|=
-literal|0x1000
-operator||
 operator|(
 name|phy
 operator|<<
