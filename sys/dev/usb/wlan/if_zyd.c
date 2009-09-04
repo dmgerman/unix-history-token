@@ -14874,12 +14874,15 @@ name|desc
 operator|->
 name|plcp_length
 operator|=
+name|htole16
+argument_list|(
 name|bits
 operator|/
 name|ratediv
 index|[
 name|phy
 index|]
+argument_list|)
 expr_stmt|;
 name|desc
 operator|->
