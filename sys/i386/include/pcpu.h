@@ -312,7 +312,7 @@ name|__PCPU_GET
 parameter_list|(
 name|name
 parameter_list|)
-value|__extension__ ({				\ 	__pcpu_type(name) __res;					\ 	struct __s {							\ 		u_char	__b[MIN(sizeof(__pcpu_type(name)), 4)];		\ 	} __s;								\ 									\ 	if (sizeof(__res) == 1 || sizeof(__res) == 2 ||			\ 	    sizeof(__res) == 4) {					\ 		__asm __volatile("mov %%fs:%1,%0"			\ 		    : "=r" (__s)					\ 		    : "m" (*(struct __s *)(__pcpu_offset(name))));	\ 		*(struct __s *)(void *)&__res = __s;			\ 	} else {							\ 		__res = *__PCPU_PTR(name);				\ 	}								\ 	__res;								\ })
+value|__extension__ ({				\ 	__pcpu_type(name) __res;					\ 	struct __s {							\ 		u_char	__b[MIN(sizeof(__res), 4)];		\ 	} __s;								\ 									\ 	if (sizeof(__res) == 1 || sizeof(__res) == 2 ||			\ 	    sizeof(__res) == 4) {					\ 		__asm __volatile("mov %%fs:%1,%0"			\ 		    : "=r" (__s)					\ 		    : "m" (*(struct __s *)(__pcpu_offset(name))));	\ 		*(struct __s *)(void *)&__res = __s;			\ 	} else {							\ 		__res = *__PCPU_PTR(name);				\ 	}								\ 	__res;								\ })
 end_define
 
 begin_comment
@@ -328,7 +328,7 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|do {					\ 	__pcpu_type(name) __val;					\ 	struct __s {							\ 		u_char	__b[MIN(sizeof(__pcpu_type(name)), 4)];		\ 	} __s;								\ 									\ 	__val = (val);							\ 	if (sizeof(__val) == 1 || sizeof(__val) == 2 ||			\ 	    sizeof(__val) == 4) {					\ 		__s = *(struct __s *)(void *)&__val;			\ 		__asm __volatile("add %1,%%fs:%0"			\ 		    : "=m" (*(struct __s *)(__pcpu_offset(name)))	\ 		    : "r" (__s));					\ 	} else								\ 		*__PCPU_PTR(name) += __val;				\ } while (0)
+value|do {					\ 	__pcpu_type(name) __val;					\ 	struct __s {							\ 		u_char	__b[MIN(sizeof(__val), 4)];		\ 	} __s;								\ 									\ 	__val = (val);							\ 	if (sizeof(__val) == 1 || sizeof(__val) == 2 ||			\ 	    sizeof(__val) == 4) {					\ 		__s = *(struct __s *)(void *)&__val;			\ 		__asm __volatile("add %1,%%fs:%0"			\ 		    : "=m" (*(struct __s *)(__pcpu_offset(name)))	\ 		    : "r" (__s));					\ 	} else								\ 		*__PCPU_PTR(name) += __val;				\ } while (0)
 end_define
 
 begin_comment
@@ -358,7 +358,7 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|{						\ 	__pcpu_type(name) __val;					\ 	struct __s {							\ 		u_char	__b[MIN(sizeof(__pcpu_type(name)), 4)];		\ 	} __s;								\ 									\ 	__val = (val);							\ 	if (sizeof(__val) == 1 || sizeof(__val) == 2 ||			\ 	    sizeof(__val) == 4) {					\ 		__s = *(struct __s *)(void *)&__val;			\ 		__asm __volatile("mov %1,%%fs:%0"			\ 		    : "=m" (*(struct __s *)(__pcpu_offset(name)))	\ 		    : "r" (__s));					\ 	} else {							\ 		*__PCPU_PTR(name) = __val;				\ 	}								\ }
+value|do {					\ 	__pcpu_type(name) __val;					\ 	struct __s {							\ 		u_char	__b[MIN(sizeof(__val), 4)];			\ 	} __s;								\ 									\ 	__val = (val);							\ 	if (sizeof(__val) == 1 || sizeof(__val) == 2 ||			\ 	    sizeof(__val) == 4) {					\ 		__s = *(struct __s *)(void *)&__val;			\ 		__asm __volatile("mov %1,%%fs:%0"			\ 		    : "=m" (*(struct __s *)(__pcpu_offset(name)))	\ 		    : "r" (__s));					\ 	} else {							\ 		*__PCPU_PTR(name) = __val;				\ 	}								\ } while (0)
 end_define
 
 begin_define
