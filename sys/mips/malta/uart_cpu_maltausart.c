@@ -7,10 +7,6 @@ begin_comment
 comment|/*  * Skeleton of this file was based on respective code for ARM  * code written by Olivier Houchard.  */
 end_comment
 
-begin_comment
-comment|/*  * XXXMIPS: This file is hacked from arm/... . XXXMIPS here means this file is  * experimental and was written for MIPS32 port.  */
-end_comment
-
 begin_include
 include|#
 directive|include
