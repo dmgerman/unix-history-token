@@ -3670,6 +3670,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
+operator|(
 name|ifp
 operator|->
 name|if_drv_flags
@@ -3678,6 +3679,14 @@ name|IFF_DRV_RUNNING
 operator|)
 operator|==
 literal|0
+operator|)
+operator|||
+operator|(
+operator|!
+name|adapter
+operator|->
+name|link_active
+operator|)
 condition|)
 block|{
 name|err
