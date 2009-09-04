@@ -2360,6 +2360,14 @@ operator|.
 name|pv_list
 argument_list|)
 expr_stmt|;
+name|m
+operator|->
+name|md
+operator|.
+name|pat_mode
+operator|=
+name|PAT_WRITE_BACK
+expr_stmt|;
 block|}
 end_function
 
@@ -2368,19 +2376,6 @@ ifdef|#
 directive|ifdef
 name|PAE
 end_ifdef
-
-begin_expr_stmt
-specifier|static
-name|MALLOC_DEFINE
-argument_list|(
-name|M_PMAPPDPT
-argument_list|,
-literal|"pmap"
-argument_list|,
-literal|"pmap pdpt"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function
 specifier|static
@@ -2410,13 +2405,17 @@ name|UMA_SLAB_KERNEL
 expr_stmt|;
 return|return
 operator|(
-name|contigmalloc
+operator|(
+name|void
+operator|*
+operator|)
+name|kmem_alloc_contig
 argument_list|(
-name|PAGE_SIZE
+name|kernel_map
 argument_list|,
-name|M_PMAPPDPT
+name|bytes
 argument_list|,
-literal|0
+name|wait
 argument_list|,
 literal|0x0ULL
 argument_list|,
@@ -2425,6 +2424,8 @@ argument_list|,
 literal|1
 argument_list|,
 literal|0
+argument_list|,
+name|VM_MEMATTR_DEFAULT
 argument_list|)
 operator|)
 return|;
@@ -4918,6 +4919,20 @@ name|ma
 argument_list|)
 operator||
 name|pgeflag
+operator||
+name|pmap_cache_bits
+argument_list|(
+operator|(
+operator|*
+name|ma
+operator|)
+operator|->
+name|md
+operator|.
+name|pat_mode
+argument_list|,
+literal|0
+argument_list|)
 operator||
 name|PG_RW
 operator||
@@ -13659,6 +13674,17 @@ call|)
 argument_list|(
 name|pa
 operator||
+name|pmap_cache_bits
+argument_list|(
+name|m
+operator|->
+name|md
+operator|.
+name|pat_mode
+argument_list|,
+literal|0
+argument_list|)
+operator||
 name|PG_V
 argument_list|)
 expr_stmt|;
@@ -14048,6 +14074,17 @@ operator|=
 name|VM_PAGE_TO_PHYS
 argument_list|(
 name|m
+argument_list|)
+operator||
+name|pmap_cache_bits
+argument_list|(
+name|m
+operator|->
+name|md
+operator|.
+name|pat_mode
+argument_list|,
+literal|1
 argument_list|)
 operator||
 name|PG_PS
@@ -14747,6 +14784,17 @@ name|VM_PAGE_TO_PHYS
 argument_list|(
 name|m
 argument_list|)
+operator||
+name|pmap_cache_bits
+argument_list|(
+name|m
+operator|->
+name|md
+operator|.
+name|pat_mode
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -14903,6 +14951,9 @@ decl_stmt|;
 name|vm_page_t
 name|p
 decl_stmt|;
+name|int
+name|pat_mode
+decl_stmt|;
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
@@ -14994,6 +15045,14 @@ name|p
 operator|)
 argument_list|)
 expr_stmt|;
+name|pat_mode
+operator|=
+name|p
+operator|->
+name|md
+operator|.
+name|pat_mode
+expr_stmt|;
 comment|/* 		 * Abort the mapping if the first page is not physically 		 * aligned to a 2/4MB page boundary. 		 */
 name|ptepa
 operator|=
@@ -15013,7 +15072,7 @@ literal|1
 operator|)
 condition|)
 return|return;
-comment|/* 		 * Skip the first page.  Abort the mapping if the rest of 		 * the pages are not physically contiguous. 		 */
+comment|/* 		 * Skip the first page.  Abort the mapping if the rest of 		 * the pages are not physically contiguous or have differing 		 * memory attributes. 		 */
 name|p
 operator|=
 name|TAILQ_NEXT
@@ -15065,6 +15124,14 @@ name|VM_PAGE_TO_PHYS
 argument_list|(
 name|p
 argument_list|)
+operator|||
+name|pat_mode
+operator|!=
+name|p
+operator|->
+name|md
+operator|.
+name|pat_mode
 condition|)
 return|return;
 name|p
@@ -15077,7 +15144,7 @@ name|listq
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Map using 2/4MB pages. */
+comment|/* 		 * Map using 2/4MB pages.  Since "ptepa" is 2/4M aligned and 		 * "size" is a multiple of 2/4M, adding the PAT setting to 		 * "pa" will not affect the termination of this loop. 		 */
 name|PMAP_LOCK
 argument_list|(
 name|pmap
@@ -15088,6 +15155,13 @@ control|(
 name|pa
 operator|=
 name|ptepa
+operator||
+name|pmap_cache_bits
+argument_list|(
+name|pat_mode
+argument_list|,
+literal|1
+argument_list|)
 init|;
 name|pa
 operator|<
@@ -15960,6 +16034,17 @@ operator||
 name|PG_A
 operator||
 name|PG_M
+operator||
+name|pmap_cache_bits
+argument_list|(
+name|m
+operator|->
+name|md
+operator|.
+name|pat_mode
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|invlcaddr
 argument_list|(
@@ -16047,7 +16132,7 @@ name|CMAP2
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_zero_page: CMAP2 busy"
+literal|"pmap_zero_page_area: CMAP2 busy"
 argument_list|)
 expr_stmt|;
 name|sched_pin
@@ -16070,6 +16155,17 @@ operator||
 name|PG_A
 operator||
 name|PG_M
+operator||
+name|pmap_cache_bits
+argument_list|(
+name|m
+operator|->
+name|md
+operator|.
+name|pat_mode
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|invlcaddr
 argument_list|(
@@ -16151,7 +16247,7 @@ name|CMAP3
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_zero_page: CMAP3 busy"
+literal|"pmap_zero_page_idle: CMAP3 busy"
 argument_list|)
 expr_stmt|;
 name|sched_pin
@@ -16172,6 +16268,17 @@ operator||
 name|PG_A
 operator||
 name|PG_M
+operator||
+name|pmap_cache_bits
+argument_list|(
+name|m
+operator|->
+name|md
+operator|.
+name|pat_mode
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|invlcaddr
 argument_list|(
@@ -16293,6 +16400,17 @@ name|src
 argument_list|)
 operator||
 name|PG_A
+operator||
+name|pmap_cache_bits
+argument_list|(
+name|src
+operator|->
+name|md
+operator|.
+name|pat_mode
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 operator|*
 name|sysmaps
@@ -16311,6 +16429,17 @@ operator||
 name|PG_A
 operator||
 name|PG_M
+operator||
+name|pmap_cache_bits
+argument_list|(
+name|dst
+operator|->
+name|md
+operator|.
+name|pat_mode
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
@@ -19233,6 +19362,16 @@ argument_list|,
 name|tmpva
 argument_list|)
 expr_stmt|;
+comment|/* If "Self Snoop" is supported, do nothing. */
+if|if
+condition|(
+operator|!
+operator|(
+name|cpu_feature
+operator|&
+name|CPUID_SS
+operator|)
+condition|)
 name|pmap_invalidate_cache
 argument_list|()
 expr_stmt|;
@@ -19404,6 +19543,60 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Sets the memory attribute for the specified page.  */
+end_comment
+
+begin_function
+name|void
+name|pmap_page_set_memattr
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|,
+name|vm_memattr_t
+name|ma
+parameter_list|)
+block|{
+name|m
+operator|->
+name|md
+operator|.
+name|pat_mode
+operator|=
+name|ma
+expr_stmt|;
+comment|/* 	 * If "m" is a normal page, flush it from the cache. 	 */
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_FICTITIOUS
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* If "Self Snoop" is supported, do nothing. */
+if|if
+condition|(
+operator|!
+operator|(
+name|cpu_feature
+operator|&
+name|CPUID_SS
+operator|)
+condition|)
+name|pmap_invalidate_cache
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 end_function
 

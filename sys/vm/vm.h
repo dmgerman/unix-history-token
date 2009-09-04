@@ -15,6 +15,27 @@ directive|define
 name|VM_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/vm.h>
+end_include
+
+begin_comment
+comment|/*  * The exact set of memory attributes is machine dependent.  However, every  * machine is required to define VM_MEMATTR_DEFAULT.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|char
+name|vm_memattr_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* memory attribute codes */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|char
