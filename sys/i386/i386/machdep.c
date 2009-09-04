@@ -12350,10 +12350,11 @@ name|default_proc_ldt
 expr_stmt|;
 name|PCPU_SET
 argument_list|(
-argument|currentldt
+name|currentldt
 argument_list|,
-argument|_default_ldt
+name|_default_ldt
 argument_list|)
+expr_stmt|;
 name|PT_SET_MA
 argument_list|(
 name|ldt
