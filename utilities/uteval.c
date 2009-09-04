@@ -107,6 +107,27 @@ name|ACPI_OSI_WIN_VISTA
 block|}
 block|,
 comment|/* Windows Vista - Added 03/2006 */
+block|{
+literal|"Windows 2006.1"
+block|,
+name|ACPI_OSI_WINSRV_2008
+block|}
+block|,
+comment|/* Windows Server 2008 - Added 09/2009 */
+block|{
+literal|"Windows 2006 SP1"
+block|,
+name|ACPI_OSI_WIN_VISTA_SP1
+block|}
+block|,
+comment|/* Windows Vista SP1 - Added 09/2009 */
+block|{
+literal|"Windows 2009"
+block|,
+name|ACPI_OSI_WIN_7
+block|}
+block|,
+comment|/* Windows 7 and Server 2008 R2 - Added 09/2009 */
 comment|/* Feature Group Strings */
 block|{
 literal|"Extended Address Space Descriptor"

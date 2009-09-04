@@ -76,6 +76,20 @@ argument_list|,
 name|SourceDesc
 argument_list|)
 expr_stmt|;
+comment|/* If Source and Target are the same, just return */
+if|if
+condition|(
+name|SourceDesc
+operator|==
+name|TargetDesc
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* We know that SourceDesc is a buffer by now */
 name|Buffer
 operator|=
@@ -325,6 +339,20 @@ argument_list|,
 name|SourceDesc
 argument_list|)
 expr_stmt|;
+comment|/* If Source and Target are the same, just return */
+if|if
+condition|(
+name|SourceDesc
+operator|==
+name|TargetDesc
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* We know that SourceDesc is a string by now */
 name|Buffer
 operator|=

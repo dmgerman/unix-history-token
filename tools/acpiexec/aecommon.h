@@ -142,6 +142,25 @@ name|AcpiGbl_IgnoreErrors
 decl_stmt|;
 end_decl_stmt
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|ae_table_desc
+block|{
+name|ACPI_TABLE_HEADER
+modifier|*
+name|Table
+decl_stmt|;
+name|struct
+name|ae_table_desc
+modifier|*
+name|Next
+decl_stmt|;
+block|}
+name|AE_TABLE_DESC
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * Debug Regions  */
 end_comment
@@ -227,9 +246,12 @@ begin_function_decl
 name|ACPI_STATUS
 name|AeBuildLocalTables
 parameter_list|(
-name|ACPI_TABLE_HEADER
+name|UINT32
+name|TableCount
+parameter_list|,
+name|AE_TABLE_DESC
 modifier|*
-name|UserTable
+name|TableList
 parameter_list|)
 function_decl|;
 end_function_decl

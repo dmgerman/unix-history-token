@@ -387,15 +387,27 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*      * We have a return value, but if one wasn't expected, just exit, this is      * not a problem. For example, if the "Implicit Return" feature is      * enabled, methods will always return a value.      */
+comment|/*      * 1) We have a return value, but if one wasn't expected, just exit, this is      * not a problem. For example, if the "Implicit Return" feature is      * enabled, methods will always return a value.      *      * 2) If the return value can be of any type, then we cannot perform any      * validation, exit.      */
 if|if
 condition|(
+operator|(
 operator|!
 name|Predefined
 operator|->
 name|Info
 operator|.
 name|ExpectedBtypes
+operator|)
+operator|||
+operator|(
+name|Predefined
+operator|->
+name|Info
+operator|.
+name|ExpectedBtypes
+operator|==
+name|ACPI_RTYPE_ALL
+operator|)
 condition|)
 block|{
 goto|goto
