@@ -4909,20 +4909,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Remove the loopback route to the interface address. 	 * The check for the current setting of "nd6_useloopback" is not needed. 	 */
-if|if
-condition|(
-operator|!
-operator|(
-name|ia
-operator|->
-name|ia_ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_LOOPBACK
-operator|)
-condition|)
+comment|/* 	 * Remove the loopback route to the interface address. 	 * The check for the current setting of "nd6_useloopback"  	 * is not needed. 	 */
 block|{
 name|struct
 name|rt_addrinfo
@@ -7863,15 +7850,25 @@ block|}
 comment|/* 	 * add a loopback route to self 	 */
 if|if
 condition|(
-name|V_nd6_useloopback
-operator|&&
 operator|!
+operator|(
+name|ia
+operator|->
+name|ia_flags
+operator|&
+name|IFA_ROUTE
+operator|)
+operator|&&
+operator|(
+name|V_nd6_useloopback
+operator|||
 operator|(
 name|ifp
 operator|->
 name|if_flags
 operator|&
 name|IFF_LOOPBACK
+operator|)
 operator|)
 condition|)
 block|{
@@ -8048,7 +8045,9 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"in6_ifinit: insertion failed\n"
+literal|"in6_ifinit: error = %d, insertion failed\n"
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 block|}
