@@ -1483,11 +1483,6 @@ argument_list|(
 name|proc
 argument_list|)
 expr_stmt|;
-name|pfs_unlock
-argument_list|(
-name|pn
-argument_list|)
-expr_stmt|;
 name|PFS_RETURN
 argument_list|(
 name|error
