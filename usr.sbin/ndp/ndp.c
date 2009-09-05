@@ -234,7 +234,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|if (rtm->rtm_addrs& (w)) { \ 		bcopy((char *)&s, cp, sizeof(s)); cp += sizeof(s);}
+value|if (rtm->rtm_addrs& (w)) { \ 		bcopy((char *)&s, cp, sizeof(s)); cp += SA_SIZE(&s);}
 end_define
 
 begin_decl_stmt
