@@ -2150,24 +2150,7 @@ name|rt_use
 operator|++
 expr_stmt|;
 block|}
-comment|/* 	 * The outgoing interface must be in the zone of source and 	 * destination addresses.  We should use ia_ifp to support the 	 * case of sending packets to an address of our own. 	 */
-if|if
-condition|(
-name|ia
-operator|!=
-name|NULL
-operator|&&
-name|ia
-operator|->
-name|ia_ifp
-condition|)
-name|origifp
-operator|=
-name|ia
-operator|->
-name|ia_ifp
-expr_stmt|;
-else|else
+comment|/* 	 * The outgoing interface must be in the zone of source and 	 * destination addresses.   	 */
 name|origifp
 operator|=
 name|ifp
@@ -2321,6 +2304,23 @@ goto|goto
 name|badscope
 goto|;
 block|}
+comment|/* We should use ia_ifp to support the case of  	 * sending packets to an address of our own. 	 */
+if|if
+condition|(
+name|ia
+operator|!=
+name|NULL
+operator|&&
+name|ia
+operator|->
+name|ia_ifp
+condition|)
+name|ifp
+operator|=
+name|ia
+operator|->
+name|ia_ifp
+expr_stmt|;
 comment|/* scope check is done. */
 goto|goto
 name|routefound
