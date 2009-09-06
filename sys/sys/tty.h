@@ -975,6 +975,26 @@ end_comment
 
 begin_function_decl
 name|int
+name|pts_alloc
+parameter_list|(
+name|int
+name|fflags
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|file
+modifier|*
+name|fp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|pts_alloc_external
 parameter_list|(
 name|int
