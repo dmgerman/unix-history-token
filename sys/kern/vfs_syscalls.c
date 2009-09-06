@@ -22238,6 +22238,11 @@ operator|&
 name|O_TRUNC
 condition|)
 block|{
+name|vfs_ref
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|vp
@@ -22272,6 +22277,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+name|vfs_rel
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -22286,6 +22296,11 @@ name|LK_RETRY
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
+name|vfs_rel
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
@@ -22610,11 +22625,6 @@ argument_list|(
 name|fp
 argument_list|,
 name|td
-argument_list|)
-expr_stmt|;
-name|vfs_rel
-argument_list|(
-name|mp
 argument_list|)
 expr_stmt|;
 name|VFS_UNLOCK_GIANT
