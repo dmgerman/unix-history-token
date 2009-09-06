@@ -20541,7 +20541,7 @@ block|{
 name|printf
 argument_list|(
 literal|"xptconfigfunc: xpt_create_path failed with "
-literal|"status %#x for bus %d\n"
+literal|"status %#x for scbus%d\n"
 argument_list|,
 name|status
 argument_list|,
@@ -20615,7 +20615,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"xptconfigfunc: CPI failed on bus %d "
+literal|"xptconfigfunc: CPI failed on scbus%d "
 literal|"with status %d\n"
 argument_list|,
 name|bus
