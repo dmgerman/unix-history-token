@@ -4683,12 +4683,12 @@ name|state_valid
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* silent gcc */
+comment|/* silence gcc */
 name|arraysize
 operator|=
 literal|0
 expr_stmt|;
-comment|/* silent gcc */
+comment|/* silence gcc */
 name|SAHTREE_LOCK
 argument_list|()
 expr_stmt|;
