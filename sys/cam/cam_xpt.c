@@ -4418,7 +4418,7 @@ expr_stmt|;
 comment|/* 	 * To ensure that this is printed in one piece, 	 * mask out CAM interrupts. 	 */
 name|printf
 argument_list|(
-literal|"%s%d at %s%d bus %d target %d lun %d\n"
+literal|"%s%d at %s%d bus %d scbus%d target %d lun %d\n"
 argument_list|,
 name|periph
 operator|->
@@ -4451,6 +4451,12 @@ operator|->
 name|sim
 operator|->
 name|bus_id
+argument_list|,
+name|path
+operator|->
+name|bus
+operator|->
+name|path_id
 argument_list|,
 name|path
 operator|->
