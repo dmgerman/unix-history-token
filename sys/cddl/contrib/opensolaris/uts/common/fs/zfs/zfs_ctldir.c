@@ -4986,6 +4986,23 @@ condition|(
 name|error
 condition|)
 block|{
+comment|/* 				 * Before reinserting snapshot to the tree, 				 * check if it was actually removed. For example 				 * when snapshot mount point is busy, we will 				 * have an error here, but there will be no need 				 * to reinsert snapshot. 				 */
+if|if
+condition|(
+name|avl_find
+argument_list|(
+operator|&
+name|sdp
+operator|->
+name|sd_snaps
+argument_list|,
+name|sep
+argument_list|,
+name|NULL
+argument_list|)
+operator|==
+name|NULL
+condition|)
 name|avl_add
 argument_list|(
 operator|&
