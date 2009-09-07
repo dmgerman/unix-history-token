@@ -7043,7 +7043,6 @@ name|mask
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|&
 name|mask
 argument_list|)
 argument_list|,
