@@ -7320,6 +7320,17 @@ name|struct
 name|refsarg
 name|arg
 decl_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|arg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|arg
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|mutex_init
 argument_list|(
 operator|&
