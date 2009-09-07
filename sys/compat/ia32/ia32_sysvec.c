@@ -946,7 +946,7 @@ name|flags
 operator|=
 name|BI_CAN_EXEC_DYN
 operator||
-name|BI_BRAND_NOTE
+name|BI_BRAND_NOTE_MANDATORY
 block|}
 decl_stmt|;
 end_decl_stmt

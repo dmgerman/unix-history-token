@@ -185,6 +185,12 @@ define|#
 directive|define
 name|BI_BRAND_NOTE
 value|0x0002
+comment|/* May have note.ABI-tag section. */
+define|#
+directive|define
+name|BI_BRAND_NOTE_MANDATORY
+value|0x0004
+comment|/* Must have note.ABI-tag section. */
 block|}
 name|__ElfN
 typedef|(
