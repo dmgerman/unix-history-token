@@ -16400,7 +16400,7 @@ block|{
 name|printf
 argument_list|(
 literal|"ZFS NOTICE: Prefetch is disabled by default if less "
-literal|"than 4 GB of RAM is present;\n"
+literal|"than 4GB of RAM is present;\n"
 literal|"            to enable, add \"vfs.zfs.prefetch_disable=0\" "
 literal|"to /boot/loader.conf.\n"
 argument_list|)
