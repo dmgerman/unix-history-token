@@ -3553,8 +3553,22 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|==
+operator|!=
 literal|0
+condition|)
+goto|goto
+name|out
+goto|;
+if|if
+condition|(
+operator|!
+operator|(
+name|vfsp
+operator|->
+name|vfs_flag
+operator|&
+name|MS_REMOUNT
+operator|)
 condition|)
 block|{
 name|vattr_t
@@ -3672,6 +3686,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 name|secpolicy_fs_mount_clearopts
 argument_list|(
 name|cr
@@ -3679,13 +3694,6 @@ argument_list|,
 name|vfsp
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-goto|goto
-name|out
-goto|;
-block|}
 block|}
 comment|/* 	 * Refuse to mount a filesystem if we are in a local zone and the 	 * dataset is not visible. 	 */
 if|if
