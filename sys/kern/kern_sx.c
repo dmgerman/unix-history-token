@@ -527,6 +527,26 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+name|ASSERT_ATOMIC_LOAD_PTR
+argument_list|(
+name|sx
+operator|->
+name|sx_lock
+argument_list|,
+operator|(
+literal|"%s: sx_lock not aligned for %s:%p"
+operator|,
+name|__func__
+operator|,
+name|description
+operator|,
+operator|&
+name|sx
+operator|->
+name|sx_lock
+operator|)
+argument_list|)
+expr_stmt|;
 name|flags
 operator|=
 name|LO_RECURSABLE
