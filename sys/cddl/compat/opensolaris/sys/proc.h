@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/debug.h>
 end_include
 
@@ -265,7 +271,7 @@ argument_list|,
 operator|&
 name|td
 argument_list|,
-literal|0
+name|RFSTOPPED
 argument_list|,
 name|stksize
 operator|/
@@ -295,6 +301,13 @@ argument_list|(
 name|td
 argument_list|,
 name|pri
+argument_list|)
+expr_stmt|;
+name|sched_add
+argument_list|(
+name|td
+argument_list|,
+name|SRQ_BORING
 argument_list|)
 expr_stmt|;
 name|thread_unlock
