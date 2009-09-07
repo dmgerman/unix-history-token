@@ -578,6 +578,12 @@ operator|==
 literal|0
 condition|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 comment|/* 			 * the protocol field is the third field 			 * skip over second field 			 */
 name|ptr
 operator|=
@@ -672,6 +678,21 @@ operator|)
 return|;
 block|}
 block|}
+else|#
+directive|else
+if|if
+condition|(
+name|proto
+operator|==
+name|PROTO_NFS
+condition|)
+return|return
+operator|(
+name|SHARED_NFS
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 block|}
 return|return
