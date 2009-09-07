@@ -525,14 +525,13 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-return|return
 name|free
 argument_list|(
 name|p
 argument_list|,
 name|M_ATH_HAL
 argument_list|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
