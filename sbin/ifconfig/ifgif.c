@@ -221,6 +221,13 @@ operator|-
 literal|1
 condition|)
 return|return;
+if|if
+condition|(
+name|opts
+operator|==
+literal|0
+condition|)
+return|return;
 name|printf
 argument_list|(
 literal|"\toptions=%d<"
