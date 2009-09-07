@@ -16275,7 +16275,32 @@ name|valp
 operator|=
 literal|0
 expr_stmt|;
-comment|/* TODO */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
+name|_PC_ACL_NFS4
+case|:
+operator|*
+name|valp
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
+name|_PC_ACL_PATH_MAX
+case|:
+operator|*
+name|valp
+operator|=
+name|ACL_MAX_ENTRIES
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -18693,6 +18718,62 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|zfs_freebsd_fifo_pathconf
+parameter_list|(
+name|ap
+parameter_list|)
+name|struct
+name|vop_pathconf_args
+comment|/* { 		struct vnode *a_vp; 		int a_name; 		register_t *a_retval; 	} */
+modifier|*
+name|ap
+decl_stmt|;
+block|{
+switch|switch
+condition|(
+name|ap
+operator|->
+name|a_name
+condition|)
+block|{
+case|case
+name|_PC_ACL_EXTENDED
+case|:
+case|case
+name|_PC_ACL_NFS4
+case|:
+case|case
+name|_PC_ACL_PATH_MAX
+case|:
+case|case
+name|_PC_MAC_PRESENT
+case|:
+return|return
+operator|(
+name|zfs_freebsd_pathconf
+argument_list|(
+name|ap
+argument_list|)
+operator|)
+return|;
+default|default:
+return|return
+operator|(
+name|fifo_specops
+operator|.
+name|vop_pathconf
+argument_list|(
+name|ap
+argument_list|)
+operator|)
+return|;
+block|}
+block|}
+end_function
+
 begin_comment
 comment|/*  * FreeBSD's extended attributes namespace defines file name prefix for ZFS'  * extended attribute name:  *  *	NAMESPACE	PREFIX	  *	system		freebsd:system:  *	user		(none, can be used to access ZFS fsattr(5) attributes  *			created on Solaris)  */
 end_comment
@@ -20674,7 +20755,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* 	 * With NFS4 ACLs, chmod(2) may need to add additional entries, 	 * splitting every entry into two and appending "canonical six" 	 * entries at the end.  Don't allow for setting an ACL that would 	 * cause chmod(2) to run out of ACL entries. 	 */
+comment|/* 	 * With NFSv4 ACLs, chmod(2) may need to add additional entries, 	 * splitting every entry into two and appending "canonical six" 	 * entries at the end.  Don't allow for setting an ACL that would 	 * cause chmod(2) to run out of ACL entries. 	 */
 if|if
 condition|(
 name|ap
@@ -20996,9 +21077,6 @@ name|vop_listextattr
 operator|=
 name|zfs_listextattr
 block|,
-ifdef|#
-directive|ifdef
-name|notyet
 operator|.
 name|vop_getacl
 operator|=
@@ -21013,10 +21091,7 @@ operator|.
 name|vop_aclcheck
 operator|=
 name|zfs_freebsd_aclcheck
-block|,
-endif|#
-directive|endif
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -21073,13 +21148,15 @@ operator|=
 name|VOP_PANIC
 block|,
 operator|.
+name|vop_pathconf
+operator|=
+name|zfs_freebsd_fifo_pathconf
+block|,
+operator|.
 name|vop_fid
 operator|=
 name|zfs_freebsd_fid
 block|,
-ifdef|#
-directive|ifdef
-name|notyet
 operator|.
 name|vop_getacl
 operator|=
@@ -21094,10 +21171,7 @@ operator|.
 name|vop_aclcheck
 operator|=
 name|zfs_freebsd_aclcheck
-block|,
-endif|#
-directive|endif
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
