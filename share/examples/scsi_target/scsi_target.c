@@ -933,9 +933,9 @@ name|file_fd
 operator|<
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|1
+name|EX_NOINPUT
 argument_list|,
 literal|"open backing store file"
 argument_list|)
@@ -1283,11 +1283,19 @@ name|targ_fd
 operator|<
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
 literal|"Tried to open %d devices, none available"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+else|else
+name|warnx
+argument_list|(
+literal|"opened /dev/targ%d"
 argument_list|,
 name|unit
 argument_list|)
