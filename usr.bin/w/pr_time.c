@@ -108,6 +108,7 @@ decl_stmt|;
 name|time_t
 name|diff
 decl_stmt|;
+specifier|const
 name|wchar_t
 modifier|*
 name|fmt
