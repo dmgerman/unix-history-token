@@ -5407,12 +5407,6 @@ name|vpp
 argument_list|)
 expr_stmt|;
 block|}
-name|ZFS_EXIT
-argument_list|(
-name|zfsvfs
-argument_list|)
-expr_stmt|;
-comment|/* XXX: LK_RETRY? */
 name|vn_lock
 argument_list|(
 operator|*
@@ -5421,6 +5415,11 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
+argument_list|)
+expr_stmt|;
+name|ZFS_EXIT
+argument_list|(
+name|zfsvfs
 argument_list|)
 expr_stmt|;
 return|return
@@ -5546,7 +5545,6 @@ argument_list|(
 name|zp
 argument_list|)
 expr_stmt|;
-comment|/* XXX: LK_RETRY? */
 name|vn_lock
 argument_list|(
 operator|*
