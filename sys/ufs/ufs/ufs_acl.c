@@ -859,10 +859,6 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-name|error
-operator|=
-literal|0
-expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
 literal|0
