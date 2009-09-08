@@ -132,6 +132,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_arp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_dl.h>
 end_include
 
@@ -162,6 +168,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in_systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/ip.h>
 end_include
 
@@ -169,6 +181,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/tcp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/udp.h>
 end_include
 
 begin_include
@@ -198,7 +216,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/mii/mii.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/mii/miivar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/mii/brgphyreg.h>
 end_include
 
 begin_include

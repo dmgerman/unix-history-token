@@ -118,6 +118,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/bpf.h>
 end_include
 
@@ -125,6 +137,12 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_arp.h>
 end_include
 
 begin_include
@@ -8848,14 +8866,12 @@ operator||
 name|RT2573_RF_20BIT
 operator||
 operator|(
-operator|(
 name|val
 operator|&
 literal|0xfffff
 operator|)
 operator|<<
 literal|2
-operator|)
 operator||
 operator|(
 name|reg

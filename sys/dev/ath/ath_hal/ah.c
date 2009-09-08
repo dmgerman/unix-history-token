@@ -2365,7 +2365,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* XXX: FlexeLint: ">" test with ++ */
 for|for
 control|(
 name|i

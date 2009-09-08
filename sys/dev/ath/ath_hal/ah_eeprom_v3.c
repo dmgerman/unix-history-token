@@ -10815,10 +10815,6 @@ begin_comment
 comment|/*  * Reclaim any EEPROM-related storage.  */
 end_comment
 
-begin_comment
-comment|/* XXX: FlexeLint: return in void function */
-end_comment
-
 begin_function
 specifier|static
 name|void

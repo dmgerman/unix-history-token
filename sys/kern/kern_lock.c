@@ -1416,10 +1416,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* XXX: flexelint retval */
-end_comment
-
 begin_function
 specifier|static
 name|int

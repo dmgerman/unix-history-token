@@ -2544,7 +2544,6 @@ name|thislong
 operator|++
 expr_stmt|;
 block|}
-comment|/* XXX: FlexeLint: Not kosher, dn is an array, not a pointer */
 name|dn
 operator|+=
 name|i

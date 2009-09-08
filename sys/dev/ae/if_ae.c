@@ -8381,7 +8381,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Wait for IDLE state. 	 */
-comment|/* XXX: Flexelint  "<" test with -- */
 for|for
 control|(
 name|i
@@ -8523,7 +8522,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Wait for IDLE state. 	 */
-comment|/* XXX: Flexelint  "<" test with -- */
 for|for
 control|(
 name|i

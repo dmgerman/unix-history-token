@@ -7906,7 +7906,6 @@ operator|&
 name|CSUM_TSO
 condition|)
 block|{
-comment|/* XXX: FlexeLint: negative subscript */
 name|cbp
 operator|->
 name|tbd

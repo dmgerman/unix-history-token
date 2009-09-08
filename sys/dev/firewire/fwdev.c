@@ -4887,7 +4887,6 @@ operator|==
 name|NULL
 condition|)
 comment|/* myself */
-comment|/* XXX: Flexelint no sure about modified pointer */
 name|free
 argument_list|(
 name|ptr

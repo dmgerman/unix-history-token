@@ -8459,7 +8459,6 @@ name|pr
 operator|->
 name|pr_ip6s
 expr_stmt|;
-comment|/* XXX: FlexeLint claims mem leak */
 name|ip6
 operator|=
 name|malloc

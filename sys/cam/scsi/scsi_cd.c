@@ -10916,8 +10916,6 @@ name|free
 argument_list|(
 operator|&
 name|params
-operator|.
-name|mode_buf
 argument_list|,
 name|M_SCSICD
 argument_list|)
