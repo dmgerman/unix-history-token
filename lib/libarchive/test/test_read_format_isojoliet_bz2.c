@@ -385,7 +385,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* A hardlink to the regular file. */
+comment|/* A regular file with two names ("hardlink" gets returned 	 * first, so it's not marked as a hardlink). */
 name|assertEqualInt
 argument_list|(
 literal|0
@@ -422,22 +422,16 @@ name|st_mode
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|withrr
-condition|)
-block|{
-name|assertEqualString
+name|assert
 argument_list|(
-literal|"long-joliet-file-name.textfile"
-argument_list|,
 name|archive_entry_hardlink
 argument_list|(
 name|ae
 argument_list|)
+operator|==
+name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 name|assertEqualInt
 argument_list|(
 literal|6
@@ -523,16 +517,15 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* TODO: Actually, libarchive should be able to 		 * compute nlinks correctly even without RR 		 * extensions. See comments in libarchive source. */
 name|assertEqualInt
 argument_list|(
 literal|2
 argument_list|,
-name|archive_entry_stat
+name|archive_entry_nlink
 argument_list|(
 name|ae
 argument_list|)
-operator|->
-name|st_nlink
 argument_list|)
 expr_stmt|;
 name|assertEqualInt
@@ -556,7 +549,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* A regular file. */
+comment|/* Second name for the same regular file (this happens to be 	 * returned second, so does get marked as a hardlink). */
 name|assertEqualInt
 argument_list|(
 literal|0
@@ -593,11 +586,20 @@ name|st_mode
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assertEqualInt
+name|assertEqualString
 argument_list|(
-literal|6
+literal|"hardlink"
 argument_list|,
-name|archive_entry_size
+name|archive_entry_hardlink
+argument_list|(
+name|ae
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|!
+name|archive_entry_size_is_set
 argument_list|(
 name|ae
 argument_list|)
@@ -628,16 +630,15 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* TODO: See above. */
 name|assertEqualInt
 argument_list|(
 literal|2
 argument_list|,
-name|archive_entry_stat
+name|archive_entry_nlink
 argument_list|(
 name|ae
 argument_list|)
-operator|->
-name|st_nlink
 argument_list|)
 expr_stmt|;
 name|assertEqualInt
@@ -753,12 +754,10 @@ name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
-name|archive_entry_stat
+name|archive_entry_nlink
 argument_list|(
 name|ae
 argument_list|)
-operator|->
-name|st_nlink
 argument_list|)
 expr_stmt|;
 name|assertEqualInt
