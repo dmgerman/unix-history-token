@@ -341,12 +341,6 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_NO_NAMESPACE_POLLUTION
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|DEV_BSHIFT
 end_ifndef
 
@@ -660,15 +654,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _NO_NAMESPACE_POLLUTION */
-end_comment
 
 begin_define
 define|#

@@ -10,14 +10,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_PARAM_H_
+name|_MIPS_INCLUDE_PARAM_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_PARAM_H_
+name|_MIPS_INCLUDE_PARAM_H_
 end_define
+
+begin_include
+include|#
+directive|include
+file|<machine/_align.h>
+end_include
 
 begin_include
 include|#
@@ -182,23 +188,6 @@ end_endif
 begin_comment
 comment|/*  * Round p (pointer or byte index) up to a correctly-aligned value for all  * data types (int, long, ...).	  The result is u_int and must be cast to  * any desired pointer type.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|_ALIGNBYTES
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|_ALIGN
-parameter_list|(
-name|p
-parameter_list|)
-value|(((u_int)(p) + _ALIGNBYTES)&~ _ALIGNBYTES)
-end_define
 
 begin_define
 define|#
@@ -599,7 +588,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_MACHINE_PARAM_H_ */
+comment|/* !_MIPS_INCLUDE_PARAM_H_ */
 end_comment
 
 end_unit

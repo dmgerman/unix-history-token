@@ -33,23 +33,11 @@ directive|include
 file|<sys/_iovec.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|_NO_NAMESPACE_POLLUTION
-end_define
-
 begin_include
 include|#
 directive|include
-file|<machine/param.h>
+file|<machine/_align.h>
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|_NO_NAMESPACE_POLLUTION
-end_undef
 
 begin_comment
 comment|/*  * Definitions related to sockets: types, address families, options.  */
