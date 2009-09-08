@@ -472,11 +472,6 @@ name|g_geom
 modifier|*
 name|gp
 decl_stmt|;
-name|struct
-name|bufobj
-modifier|*
-name|bo
-decl_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
@@ -485,12 +480,6 @@ operator|=
 name|cp
 operator|->
 name|geom
-expr_stmt|;
-name|bo
-operator|=
-name|gp
-operator|->
-name|softc
 expr_stmt|;
 name|g_trace
 argument_list|(
