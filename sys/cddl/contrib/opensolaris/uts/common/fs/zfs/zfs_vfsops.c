@@ -1696,6 +1696,19 @@ name|zfsvfs
 operator|->
 name|z_os
 expr_stmt|;
+comment|/* 	 * This function can be called for a snapshot when we update snapshot's 	 * mount point, which isn't really supported. 	 */
+if|if
+condition|(
+name|dmu_objset_is_snapshot
+argument_list|(
+name|os
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 comment|/* 	 * The act of registering our callbacks will destroy any mount 	 * options we may have.  In order to enable temporary overrides 	 * of mount options, we stash away the current values and 	 * restore them after we register the callbacks. 	 */
 if|if
 condition|(
