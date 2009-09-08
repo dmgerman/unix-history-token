@@ -6827,6 +6827,13 @@ name|la_flags
 operator|=
 name|LLE_DELETED
 expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|arp_update_event
+argument_list|,
+name|lle
+argument_list|)
+expr_stmt|;
 name|LLE_WUNLOCK
 argument_list|(
 name|lle

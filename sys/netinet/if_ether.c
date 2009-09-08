@@ -3389,6 +3389,13 @@ name|la_flags
 operator||=
 name|LLE_VALID
 expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|arp_update_event
+argument_list|,
+name|la
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
