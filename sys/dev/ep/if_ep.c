@@ -3061,22 +3061,19 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-else|else
-block|{
 if|if
 condition|(
 name|status
 operator|&
-name|TXS_JABBER
+name|TXS_MAX_COLLISION
 condition|)
-empty_stmt|;
-else|else
+block|{
+comment|/* 						 * TXS_MAX_COLLISION we 						 * shouldn't get here 						 */
 operator|++
 name|ifp
 operator|->
 name|if_collisions
 expr_stmt|;
-comment|/* TXS_MAX_COLLISION 							 * we shouldn't get 							 * here 							 */
 block|}
 operator|++
 name|ifp
