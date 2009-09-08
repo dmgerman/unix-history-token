@@ -5076,6 +5076,10 @@ argument_list|(
 name|zfsvfs
 argument_list|)
 expr_stmt|;
+comment|/* 	 * On FreeBSD we are already called with snapshot's mount point 	 * and not the mount point of its parent. 	 */
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 if|if
 condition|(
 name|fidp
@@ -5213,6 +5217,8 @@ name|zfsvfs
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|fidp
