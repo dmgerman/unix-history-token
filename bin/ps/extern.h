@@ -67,6 +67,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|showthreads
+decl_stmt|,
 name|sumrusage
 decl_stmt|,
 name|termwidth
@@ -440,6 +442,16 @@ name|KINFO
 modifier|*
 parameter_list|,
 name|VARENT
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|s_comm
+parameter_list|(
+name|KINFO
 modifier|*
 parameter_list|)
 function_decl|;

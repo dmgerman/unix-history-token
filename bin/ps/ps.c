@@ -360,6 +360,16 @@ comment|/* Calculated-width of requested variables. */
 end_comment
 
 begin_decl_stmt
+name|int
+name|showthreads
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* will threads be shown? */
+end_comment
+
+begin_decl_stmt
 name|struct
 name|velisthead
 name|varlist
@@ -969,8 +979,6 @@ name|nselectors
 decl_stmt|;
 name|int
 name|prtheader
-decl_stmt|,
-name|showthreads
 decl_stmt|,
 name|wflag
 decl_stmt|,
