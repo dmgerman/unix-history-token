@@ -3435,7 +3435,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"n"
+literal|"ns"
 argument_list|)
 operator|)
 operator|!=
@@ -3454,6 +3454,14 @@ case|:
 name|reallydoit
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+name|dialog_utc
+operator|=
+name|NULL
 expr_stmt|;
 break|break;
 default|default:
@@ -3499,6 +3507,13 @@ expr_stmt|;
 name|init_dialog
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|dialog_utc
+operator|!=
+name|NULL
+condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -3576,6 +3591,7 @@ block|}
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|optind
