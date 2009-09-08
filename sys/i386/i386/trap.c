@@ -796,9 +796,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
-ifdef|#
-directive|ifdef
-name|STOP_NMI
 comment|/* Handler for NMI IPIs used for stopping CPUs. */
 if|if
 condition|(
@@ -818,9 +815,6 @@ goto|goto
 name|out
 goto|;
 block|}
-endif|#
-directive|endif
-comment|/* STOP_NMI */
 endif|#
 directive|endif
 comment|/* SMP */
@@ -1446,6 +1440,11 @@ block|{
 comment|/* 					 * Autodetect. 					 * This check also covers the images 					 * without the ABI-tag ELF note. 					 */
 if|if
 condition|(
+name|SV_CURPROC_ABI
+argument_list|()
+operator|==
+name|SV_ABI_FREEBSD
+operator|&&
 name|p
 operator|->
 name|p_osrel

@@ -477,11 +477,12 @@ break|break;
 case|case
 name|IPI_STOP
 case|:
+comment|/* 			 * IPI_STOP_HARD is mapped to IPI_STOP so it is not 			 * necessary to add it in the switch. 			 */
 name|CTR0
 argument_list|(
 name|KTR_SMP
 argument_list|,
-literal|"IPI_STOP"
+literal|"IPI_STOP or IPI_STOP_HARD"
 argument_list|)
 expr_stmt|;
 name|atomic_set_int

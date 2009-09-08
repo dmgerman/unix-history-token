@@ -5554,8 +5554,11 @@ name|err
 init|=
 literal|0
 decl_stmt|;
-name|newbus_xlock
-argument_list|()
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 comment|/* We will add a vbd device as a child of nexus0 (for now) */
 if|if
@@ -5660,8 +5663,11 @@ argument_list|)
 expr_stmt|;
 name|done
 label|:
-name|newbus_xunlock
-argument_list|()
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 return|return
 name|err

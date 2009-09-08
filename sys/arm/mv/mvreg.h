@@ -1626,6 +1626,13 @@ name|CPU_PM_CTRL_NONE
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|CPU_PM_CTRL_ALL
+value|~0x0
+end_define
+
 begin_if
 if|#
 directive|if
@@ -1737,14 +1744,38 @@ begin_define
 define|#
 directive|define
 name|CPU_PM_CTRL_GE1
-value|(1<< 18)
+value|(1<< 19)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CPU_PM_CTRL_TDM
-value|(1<< 19)
+value|(1<< 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_PM_CTRL_XOR
+value|(CPU_PM_CTRL_XOR0 | CPU_PM_CTRL_XOR1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_PM_CTRL_USB
+parameter_list|(
+name|u
+parameter_list|)
+value|(CPU_PM_CTRL_USB0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_PM_CTRL_SATA
+value|(CPU_PM_CTRL_SATA0 | CPU_PM_CTRL_SATA1)
 end_define
 
 begin_elif
@@ -1901,6 +1932,66 @@ define|#
 directive|define
 name|CPU_PM_CTRL_DEVICE
 value|(1<< 23)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_PM_CTRL_USB
+parameter_list|(
+name|u
+parameter_list|)
+value|(1<< (17 + (u)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_PM_CTRL_SATA
+value|(CPU_PM_CTRL_SATA0 | CPU_PM_CTRL_SATA1)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CPU_PM_CTRL_CRYPTO
+value|(CPU_PM_CTRL_NONE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_PM_CTRL_IDMA
+value|(CPU_PM_CTRL_NONE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_PM_CTRL_XOR
+value|(CPU_PM_CTRL_NONE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_PM_CTRL_SATA
+value|(CPU_PM_CTRL_NONE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_PM_CTRL_USB
+parameter_list|(
+name|u
+parameter_list|)
+value|(CPU_PM_CTRL_NONE)
 end_define
 
 begin_endif

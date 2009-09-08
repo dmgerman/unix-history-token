@@ -85,6 +85,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IPI_STOP_HARD
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
 name|IPI_PREEMPT
 value|7
 end_define

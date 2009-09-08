@@ -877,16 +877,9 @@ name|kd
 operator|->
 name|vnet_base
 operator|=
-operator|(
-name|uintptr_t
-operator|)
 name|vnet
 operator|.
-name|vnet_data_mem
-operator|-
-name|kd
-operator|->
-name|vnet_start
+name|vnet_data_base
 expr_stmt|;
 return|return
 operator|(

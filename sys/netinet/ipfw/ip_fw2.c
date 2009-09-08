@@ -422,6 +422,26 @@ endif|#
 directive|endif
 end_endif
 
+begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|ipfw_vnet_ready
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_ipfw_vnet_ready
+value|VNET(ipfw_vnet_ready)
+end_define
+
 begin_comment
 comment|/*  * set_disable contains one bit per set value (0..31).  * If the bit is set, all rules with the corresponding set  * are disabled. Set RESVD_SET(31) is reserved for the default rule  * and rules that are not deleted by the flush command,  * and CANNOT be disabled.  * Rules in set RESVD_SET can only be deleted explicitly.  */
 end_comment
@@ -9935,7 +9955,7 @@ name|uc
 operator|=
 name|crhold
 argument_list|(
-name|inp
+name|pcb
 operator|->
 name|inp_cred
 argument_list|)
@@ -10259,6 +10279,11 @@ operator|->
 name|m_flags
 operator|&
 name|M_SKIP_FIREWALL
+operator|||
+operator|(
+operator|!
+name|V_ipfw_vnet_ready
+operator|)
 condition|)
 return|return
 operator|(
@@ -20142,6 +20167,7 @@ comment|/****************  * Stuff that must be initialised only on boot or modu
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ipfw_init
 parameter_list|(
@@ -20232,7 +20258,7 @@ else|:
 literal|"deny"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note: V_xxx variables can be accessed here but the iattach()      	 * may not have been called yet for the VIMGE case. 	 * Tuneables will have been processed. 	 */
+comment|/* 	 * Note: V_xxx variables can be accessed here but the vnet specific 	 * initializer may not have been called yet for the VIMAGE case. 	 * Tuneables will have been processed. We will print out values for 	 * the default vnet.  	 * XXX This should all be rationalized AFTER 8.0 	 */
 if|if
 condition|(
 name|V_fw_verbose
@@ -20264,7 +20290,59 @@ argument_list|,
 name|V_verbose_limit
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Other things that are only done the first time. 	 * (now that we a re cuaranteed of success). 	 */
+comment|/* 	 * Hook us up to pfil. 	 * Eventually pfil will be per vnet. 	 */
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|ipfw_hook
+argument_list|()
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ipfw_hook() error\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+ifdef|#
+directive|ifdef
+name|INET6
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|ipfw6_hook
+argument_list|()
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ipfw6_hook() error\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* 	 * Other things that are only done the first time. 	 * (now that we are guaranteed of success). 	 */
 name|ip_fw_ctl_ptr
 operator|=
 name|ipfw_ctl
@@ -20282,7 +20360,7 @@ block|}
 end_function
 
 begin_comment
-comment|/****************  * Stuff that must be initialised for every instance  * (including the forst of course).  */
+comment|/****************  * Stuff that must be initialized for every instance  * (including the first of course).  */
 end_comment
 
 begin_function
@@ -20607,6 +20685,11 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* First set up some values that are compile time options */
+name|V_ipfw_vnet_ready
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Open for business */
 return|return
 operator|(
 literal|0
@@ -20620,20 +20703,13 @@ comment|/**********************  * Called for the removal of the last instance o
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ipfw_destroy
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|ip_fw_chk_ptr
-operator|=
-name|NULL
-expr_stmt|;
-name|ip_fw_ctl_ptr
-operator|=
-name|NULL
-expr_stmt|;
 name|uma_zdestroy
 argument_list|(
 name|ipfw_dyn_rule_zone
@@ -20670,12 +20746,18 @@ name|ip_fw
 modifier|*
 name|reap
 decl_stmt|;
+name|V_ipfw_vnet_ready
+operator|=
+literal|0
+expr_stmt|;
+comment|/* tell new callers to go away */
 name|callout_drain
 argument_list|(
 operator|&
 name|V_ipfw_timeout
 argument_list|)
 expr_stmt|;
+comment|/* We wait on the wlock here until the last user leaves */
 name|IPFW_WLOCK
 argument_list|(
 operator|&
@@ -20757,18 +20839,226 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Module event handler.  * In general we have the choice of handling most of these events by the  * event handler or by the (VNET_)SYS(UN)INIT handlers. I have chosen to  * use the SYSINIT handlers as they are more capable of expressing the  * flow of control during module and vnet operations, so this is just  * a skeleton. Note there is no SYSINIT equivalent of the module  * SHUTDOWN handler, but we don't have anything to do in that case anyhow.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|ipfw_modevent
+parameter_list|(
+name|module_t
+name|mod
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|void
+modifier|*
+name|unused
+parameter_list|)
+block|{
+name|int
+name|err
+init|=
+literal|0
+decl_stmt|;
+switch|switch
+condition|(
+name|type
+condition|)
+block|{
+case|case
+name|MOD_LOAD
+case|:
+comment|/* Called once at module load or 	 	 * system boot if compiled in. */
+break|break;
+case|case
+name|MOD_UNLOAD
+case|:
+break|break;
+case|case
+name|MOD_QUIESCE
+case|:
+comment|/* Yes, the unhooks can return errors, we can safely ignore 		 * them. Eventually these will be done per jail as they 		 * shut down. We will wait on each vnet's l3 lock as existing 		 * callers go away. 		 */
+name|ipfw_unhook
+argument_list|()
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
+name|ipfw6_unhook
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* layer2 and other entrypoints still come in this way. */
+name|ip_fw_chk_ptr
+operator|=
+name|NULL
+expr_stmt|;
+name|ip_fw_ctl_ptr
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* Called during unload. */
+break|break;
+case|case
+name|MOD_SHUTDOWN
+case|:
+comment|/* Called during system shutdown. */
+break|break;
+default|default:
+name|err
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
+break|break;
+block|}
+return|return
+name|err
+return|;
+block|}
+end_function
+
+begin_decl_stmt
+specifier|static
+name|moduledata_t
+name|ipfwmod
+init|=
+block|{
+literal|"ipfw"
+block|,
+name|ipfw_modevent
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Define startup order. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_SI_SUB_FIREWALL
+value|SI_SUB_PROTO_IFATTACHDOMAIN
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_MODEVENT_ORDER
+value|(SI_ORDER_ANY - 255)
+end_define
+
+begin_comment
+comment|/* On boot slot in here. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_MODULE_ORDER
+value|(IPFW_MODEVENT_ORDER + 1)
+end_define
+
+begin_comment
+comment|/* A little later. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_VNET_ORDER
+value|(IPFW_MODEVENT_ORDER + 2)
+end_define
+
+begin_comment
+comment|/* Later still. */
+end_comment
+
+begin_expr_stmt
+name|DECLARE_MODULE
+argument_list|(
+name|ipfw
+argument_list|,
+name|ipfwmod
+argument_list|,
+name|IPFW_SI_SUB_FIREWALL
+argument_list|,
+name|IPFW_MODEVENT_ORDER
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|ipfw
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* should declare some dependencies here */
+end_comment
+
+begin_comment
+comment|/*  * Starting up. Done in order after ipfwmod() has been called.  * VNET_SYSINIT is also called for each existing vnet and each new vnet.  */
+end_comment
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|ipfw_init
+argument_list|,
+name|IPFW_SI_SUB_FIREWALL
+argument_list|,
+name|IPFW_MODULE_ORDER
+argument_list|,
+name|ipfw_init
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_expr_stmt
 name|VNET_SYSINIT
 argument_list|(
 name|vnet_ipfw_init
 argument_list|,
-name|SI_SUB_PROTO_IFATTACHDOMAIN
+name|IPFW_SI_SUB_FIREWALL
 argument_list|,
-name|SI_ORDER_ANY
-operator|-
-literal|255
+name|IPFW_VNET_ORDER
 argument_list|,
 name|vnet_ipfw_init
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * Closing up shop. These are done in REVERSE ORDER, but still  * after ipfwmod() has been called. Not called on reboot.  * VNET_SYSUNINIT is also called for each exiting vnet as it exits.  * or when the module is unloaded.  */
+end_comment
+
+begin_expr_stmt
+name|SYSUNINIT
+argument_list|(
+name|ipfw_destroy
+argument_list|,
+name|IPFW_SI_SUB_FIREWALL
+argument_list|,
+name|IPFW_MODULE_ORDER
+argument_list|,
+name|ipfw_destroy
 argument_list|,
 name|NULL
 argument_list|)
@@ -20780,11 +21070,9 @@ name|VNET_SYSUNINIT
 argument_list|(
 name|vnet_ipfw_uninit
 argument_list|,
-name|SI_SUB_PROTO_IFATTACHDOMAIN
+name|IPFW_SI_SUB_FIREWALL
 argument_list|,
-name|SI_ORDER_ANY
-operator|-
-literal|255
+name|IPFW_VNET_ORDER
 argument_list|,
 name|vnet_ipfw_uninit
 argument_list|,

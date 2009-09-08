@@ -328,6 +328,23 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * Assert that a pointer can be loaded from memory atomically.  *  * This assertion enforces stronger alignment than necessary.  For example,  * on some architectures, atomicity for unaligned loads will depend on  * whether or not the load spans multiple cache lines.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASSERT_ATOMIC_LOAD_PTR
+parameter_list|(
+name|var
+parameter_list|,
+name|msg
+parameter_list|)
+define|\
+value|KASSERT(sizeof(var) == sizeof(void *)&&			\ 	    ((uintptr_t)&(var)& (sizeof(void *) - 1)) == 0, msg)
+end_define
+
+begin_comment
 comment|/*  * XXX the hints declarations are even more misplaced than most declarations  * in this file, since they are needed in one file (per arch) and only used  * in two files.  * XXX most of these variables should be const.  */
 end_comment
 

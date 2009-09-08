@@ -2533,6 +2533,7 @@ block|{
 comment|/* nothing has been loaded into this page cache! */
 return|return;
 block|}
+comment|/* 	 * TODO: We currently do XXX_POSTREAD and XXX_PREREAD at the 	 * same time, but in the future we should try to isolate the 	 * different cases to optimise the code. --HPS 	 */
 name|bus_dmamap_sync
 argument_list|(
 name|pc
@@ -2543,9 +2544,20 @@ name|pc
 operator|->
 name|map
 argument_list|,
-name|BUS_DMASYNC_POSTWRITE
-operator||
 name|BUS_DMASYNC_POSTREAD
+argument_list|)
+expr_stmt|;
+name|bus_dmamap_sync
+argument_list|(
+name|pc
+operator|->
+name|tag
+argument_list|,
+name|pc
+operator|->
+name|map
+argument_list|,
+name|BUS_DMASYNC_PREREAD
 argument_list|)
 expr_stmt|;
 block|}
@@ -2590,8 +2602,6 @@ operator|->
 name|map
 argument_list|,
 name|BUS_DMASYNC_PREWRITE
-operator||
-name|BUS_DMASYNC_PREREAD
 argument_list|)
 expr_stmt|;
 block|}

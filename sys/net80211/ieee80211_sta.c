@@ -1543,7 +1543,7 @@ name|ieee80211_sta_pwrsave
 argument_list|(
 name|vap
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 break|break;

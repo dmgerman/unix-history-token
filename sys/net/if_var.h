@@ -176,6 +176,16 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<sys/event.h>
 end_include
 
@@ -863,14 +873,6 @@ define|#
 directive|define
 name|if_lastchange
 value|if_data.ifi_lastchange
-end_define
-
-begin_define
-define|#
-directive|define
-name|if_rawoutput
-parameter_list|(
-define|if, m, sa) if_output(if, m, sa, (struct rtentry *)NULL)
 end_define
 
 begin_comment
@@ -2821,7 +2823,15 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|rwlock
-name|ifnet_lock
+name|ifnet_rwlock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|sx
+name|ifnet_sxlock
 decl_stmt|;
 end_decl_stmt
 
@@ -2830,8 +2840,7 @@ define|#
 directive|define
 name|IFNET_LOCK_INIT
 parameter_list|()
-define|\
-value|rw_init_flags(&ifnet_lock, "ifnet",  RW_RECURSE)
+value|do {						\ 	rw_init_flags(&ifnet_rwlock, "ifnet_rw",  RW_RECURSE);		\ 	sx_init_flags(&ifnet_sxlock, "ifnet_sx",  SX_RECURSE);		\ } while(0)
 end_define
 
 begin_define
@@ -2839,7 +2848,7 @@ define|#
 directive|define
 name|IFNET_WLOCK
 parameter_list|()
-value|rw_wlock(&ifnet_lock)
+value|do {						\ 	sx_xlock(&ifnet_sxlock);					\ 	rw_wlock(&ifnet_rwlock);					\ } while (0)
 end_define
 
 begin_define
@@ -2847,7 +2856,27 @@ define|#
 directive|define
 name|IFNET_WUNLOCK
 parameter_list|()
-value|rw_wunlock(&ifnet_lock)
+value|do {						\ 	rw_wunlock(&ifnet_rwlock);					\ 	sx_xunlock(&ifnet_sxlock);					\ } while (0)
+end_define
+
+begin_comment
+comment|/*  * To assert the ifnet lock, you must know not only whether it's for read or  * write, but also whether it was acquired with sleep support or not.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFNET_RLOCK_ASSERT
+parameter_list|()
+value|sx_assert(&ifnet_sxlock, SA_SLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFNET_RLOCK_NOSLEEP_ASSERT
+parameter_list|()
+value|rw_assert(&ifnet_rwlock, RA_RLOCKED)
 end_define
 
 begin_define
@@ -2855,7 +2884,7 @@ define|#
 directive|define
 name|IFNET_WLOCK_ASSERT
 parameter_list|()
-value|rw_assert(&ifnet_lock, RA_LOCKED)
+value|do {					\ 	sx_assert(&ifnet_sxlock, SA_XLOCKED);				\ 	rw_assert(&ifnet_rwlock, RA_WLOCKED);				\ } while (0)
 end_define
 
 begin_define
@@ -2863,7 +2892,15 @@ define|#
 directive|define
 name|IFNET_RLOCK
 parameter_list|()
-value|rw_rlock(&ifnet_lock)
+value|sx_slock(&ifnet_sxlock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFNET_RLOCK_NOSLEEP
+parameter_list|()
+value|rw_rlock(&ifnet_rwlock)
 end_define
 
 begin_define
@@ -2871,7 +2908,15 @@ define|#
 directive|define
 name|IFNET_RUNLOCK
 parameter_list|()
-value|rw_runlock(&ifnet_lock)
+value|sx_sunlock(&ifnet_sxlock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFNET_RUNLOCK_NOSLEEP
+parameter_list|()
+value|rw_runlock(&ifnet_rwlock)
 end_define
 
 begin_comment
@@ -3122,15 +3167,6 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|if_grow
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl

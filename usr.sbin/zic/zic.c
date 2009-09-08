@@ -10,7 +10,7 @@ name|char
 name|elsieid
 index|[]
 init|=
-literal|"@(#)zic.c	8.19"
+literal|"@(#)zic.c	8.20"
 decl_stmt|;
 end_decl_stmt
 
@@ -11139,11 +11139,19 @@ name|stdrp
 operator|==
 name|NULL
 operator|&&
+operator|(
 name|zp
 operator|->
 name|z_nrules
 operator|!=
 literal|0
+operator|||
+name|zp
+operator|->
+name|z_stdoff
+operator|!=
+literal|0
+operator|)
 condition|)
 return|return;
 name|abbrvar

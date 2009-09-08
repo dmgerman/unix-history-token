@@ -70,11 +70,17 @@ comment|/**< @brief not probed or probe failed */
 name|DS_ALIVE
 block|,
 comment|/**< @brief probe succeeded */
+name|DS_ATTACHING
+block|,
+comment|/**< @brief attaching is in progress */
 name|DS_ATTACHED
 block|,
 comment|/**< @brief attach method called */
 name|DS_BUSY
+block|,
 comment|/**< @brief device is open */
+name|DS_DETACHING
+comment|/**< @brief detaching is in progress */
 block|}
 name|device_state_t
 typedef|;
@@ -2708,46 +2714,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|bus_data_generation_update
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Exported locking facilities.  */
-end_comment
-
-begin_function_decl
-name|void
-name|newbus_xlock
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|newbus_slock
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|newbus_xunlock
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|newbus_sunlock
 parameter_list|(
 name|void
 parameter_list|)

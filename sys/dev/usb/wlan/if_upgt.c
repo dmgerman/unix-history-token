@@ -2601,9 +2601,6 @@ block|{
 case|case
 name|SIOCSIFFLAGS
 case|:
-name|newbus_xlock
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -2691,9 +2688,6 @@ name|ieee80211_start_all
 argument_list|(
 name|ic
 argument_list|)
-expr_stmt|;
-name|newbus_xunlock
-argument_list|()
 expr_stmt|;
 break|break;
 case|case

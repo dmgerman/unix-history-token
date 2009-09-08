@@ -78,7 +78,7 @@ name|a
 argument_list|,
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_support_format_all
+name|archive_read_support_format_zip
 argument_list|(
 name|a
 argument_list|)

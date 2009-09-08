@@ -781,6 +781,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|free
+argument_list|(
+name|pvd
+argument_list|,
+name|M_PFSVNCACHE
+argument_list|)
+expr_stmt|;
 operator|*
 name|vpp
 operator|=
@@ -1035,6 +1042,7 @@ name|pvd
 operator|->
 name|pvd_prev
 condition|)
+block|{
 name|pvd
 operator|->
 name|pvd_prev
@@ -1045,6 +1053,10 @@ name|pvd
 operator|->
 name|pvd_next
 expr_stmt|;
+operator|--
+name|pfs_vncache_entries
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1052,6 +1064,7 @@ name|pfs_vncache
 operator|==
 name|pvd
 condition|)
+block|{
 name|pfs_vncache
 operator|=
 name|pvd
@@ -1061,6 +1074,7 @@ expr_stmt|;
 operator|--
 name|pfs_vncache_entries
 expr_stmt|;
+block|}
 name|mtx_unlock
 argument_list|(
 operator|&

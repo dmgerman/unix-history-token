@@ -550,11 +550,10 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assertEqualInt
+name|assert
 argument_list|(
-literal|12345684
-argument_list|,
-name|archive_entry_size
+operator|!
+name|archive_entry_size_is_set
 argument_list|(
 name|ae
 argument_list|)

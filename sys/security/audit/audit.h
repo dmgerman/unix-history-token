@@ -1035,7 +1035,7 @@ name|AUDIT_ARG_RGID
 parameter_list|(
 name|rgid
 parameter_list|)
-value|do {					\ 	if (AUDITING_TD(curthread))					\ 		audit_arg_gid((rgid));					\ } while (0)
+value|do {					\ 	if (AUDITING_TD(curthread))					\ 		audit_arg_rgid((rgid));					\ } while (0)
 end_define
 
 begin_define

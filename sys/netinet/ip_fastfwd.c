@@ -416,7 +416,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Try to forward a packet based on the destination address.  * This is a fast path optimized for the plain forwarding case.  * If the packet is handled (and consumed) here then we return 1;  * otherwise 0 is returned and the packet should be delivered  * to ip_input for full processing.  */
+comment|/*  * Try to forward a packet based on the destination address.  * This is a fast path optimized for the plain forwarding case.  * If the packet is handled (and consumed) here then we return NULL;  * otherwise mbuf is returned and the packet should be delivered  * to ip_input for full processing.  */
 end_comment
 
 begin_function

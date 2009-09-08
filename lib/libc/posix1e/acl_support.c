@@ -558,7 +558,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * _posix1e_acl_check -- given an ACL, check its validity.  This is mirrored  * from code in sys/kern/kern_acl.c, and if changes are made in one, they  * should be made in the other also.  This copy of acl_check is made  * available * in userland for the benefit of processes wanting to check ACLs  * for validity before submitting them to the kernel, or for performing   * in userland file system checking.  Needless to say, the kernel makes  * the real checks on calls to get/setacl.  *  * See the comments in kernel for explanation -- just briefly, it assumes  * an already sorted ACL, and checks based on that assumption.  The  * POSIX.1e interface, acl_valid(), will perform the sort before calling  * this.  Returns 0 on success, EINVAL on failure.  */
+comment|/*  * _posix1e_acl_check -- given an ACL, check its validity.  This is mirrored  * from code in sys/kern/kern_acl.c, and if changes are made in one, they  * should be made in the other also.  This copy of acl_check is made  * available * in userland for the benefit of processes wanting to check ACLs  * for validity before submitting them to the kernel, or for performing  * in userland file system checking.  Needless to say, the kernel makes  * the real checks on calls to get/setacl.  *  * See the comments in kernel for explanation -- just briefly, it assumes  * an already sorted ACL, and checks based on that assumption.  The  * POSIX.1e interface, acl_valid(), will perform the sort before calling  * this.  Returns 0 on success, EINVAL on failure.  */
 end_comment
 
 begin_function

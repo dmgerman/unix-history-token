@@ -20212,12 +20212,18 @@ name|htonl
 argument_list|(
 name|max
 argument_list|(
+name|inp
+operator|->
+name|sctp_socket
+condition|?
 name|SCTP_SB_LIMIT_RCV
 argument_list|(
 name|inp
 operator|->
 name|sctp_socket
 argument_list|)
+else|:
+literal|0
 argument_list|,
 name|SCTP_MINIMAL_RWND
 argument_list|)
@@ -21725,17 +21731,6 @@ expr_stmt|;
 name|SCTP_STAT_INCR_COUNTER64
 argument_list|(
 name|sctps_outcontrolchunks
-argument_list|)
-expr_stmt|;
-name|sctp_timer_start
-argument_list|(
-name|SCTP_TIMER_TYPE_INIT
-argument_list|,
-name|inp
-argument_list|,
-name|stcb
-argument_list|,
-name|net
 argument_list|)
 expr_stmt|;
 operator|(
@@ -28611,11 +28606,6 @@ name|void
 name|sctp_set_prsctp_policy
 parameter_list|(
 name|struct
-name|sctp_tcb
-modifier|*
-name|stcb
-parameter_list|,
-name|struct
 name|sctp_stream_queue_pending
 modifier|*
 name|sp
@@ -28627,16 +28617,7 @@ name|pr_sctp_on
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|peer_supports_prsctp
-condition|)
-block|{
-comment|/* 		 * We assume that the user wants PR_SCTP_TTL if the user 		 * provides a positive lifetime but does not specify any 		 * PR_SCTP policy. This is a BAD assumption and causes 		 * problems at least with the U-Vancovers MPI folks. I will 		 * change this to be no policy means NO PR-SCTP. 		 */
+comment|/* 	 * We assume that the user wants PR_SCTP_TTL if the user provides a 	 * positive lifetime but does not specify any PR_SCTP policy. This 	 * is a BAD assumption and causes problems at least with the 	 * U-Vancovers MPI folks. I will change this to be no policy means 	 * NO PR-SCTP. 	 */
 if|if
 condition|(
 name|PR_SCTP_ENABLED
@@ -28682,7 +28663,7 @@ block|{
 case|case
 name|CHUNK_FLAGS_PR_SCTP_BUF
 case|:
-comment|/* 			 * Time to live is a priority stored in tv_sec when 			 * doing the buffer drop thing. 			 */
+comment|/* 		 * Time to live is a priority stored in tv_sec when doing 		 * the buffer drop thing. 		 */
 name|sp
 operator|->
 name|ts
@@ -28745,7 +28726,7 @@ operator|)
 operator|%
 literal|1000000
 expr_stmt|;
-comment|/* 				 * TODO sctp_constants.h needs alternative 				 * time macros when _KERNEL is undefined. 				 */
+comment|/* 			 * TODO sctp_constants.h needs alternative time 			 * macros when _KERNEL is undefined. 			 */
 name|timevaladd
 argument_list|(
 operator|&
@@ -28762,7 +28743,7 @@ break|break;
 case|case
 name|CHUNK_FLAGS_PR_SCTP_RTX
 case|:
-comment|/* 			 * Time to live is a the number or retransmissions 			 * stored in tv_sec. 			 */
+comment|/* 		 * Time to live is a the number or retransmissions stored in 		 * tv_sec. 		 */
 name|sp
 operator|->
 name|ts
@@ -28798,7 +28779,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
 block|}
 block|}
 end_function
@@ -29217,8 +29197,6 @@ name|m
 expr_stmt|;
 name|sctp_set_prsctp_policy
 argument_list|(
-name|stcb
-argument_list|,
 name|sp
 argument_list|)
 expr_stmt|;
@@ -35219,8 +35197,6 @@ condition|)
 block|{
 name|sctp_set_prsctp_policy
 argument_list|(
-name|stcb
-argument_list|,
 name|sp
 argument_list|)
 expr_stmt|;
@@ -60688,8 +60664,6 @@ argument_list|)
 expr_stmt|;
 name|sctp_set_prsctp_policy
 argument_list|(
-name|stcb
-argument_list|,
 name|sp
 argument_list|)
 expr_stmt|;
@@ -61595,9 +61569,14 @@ goto|goto
 name|out_unlocked
 goto|;
 block|}
+name|SCTP_TCB_LOCK
+argument_list|(
+name|stcb
+argument_list|)
+expr_stmt|;
 name|hold_tcblock
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|SCTP_INP_RUNLOCK
 argument_list|(

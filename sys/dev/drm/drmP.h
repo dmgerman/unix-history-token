@@ -713,6 +713,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_hw_drm
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -1924,9 +1932,6 @@ name|authenticated
 decl_stmt|;
 name|int
 name|master
-decl_stmt|;
-name|int
-name|minor
 decl_stmt|;
 name|pid_t
 name|pid

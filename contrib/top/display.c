@@ -1697,6 +1697,15 @@ name|lastline
 operator|++
 expr_stmt|;
 comment|/* now walk thru the names and print the line */
+name|Move_to
+argument_list|(
+name|cpustates_column
+argument_list|,
+name|y_cpustates
+operator|+
+name|cpu
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -2050,6 +2059,15 @@ argument_list|)
 expr_stmt|;
 name|lastline
 operator|++
+expr_stmt|;
+name|Move_to
+argument_list|(
+name|cpustates_column
+argument_list|,
+name|y_cpustates
+operator|+
+name|cpu
+argument_list|)
 expr_stmt|;
 while|while
 condition|(

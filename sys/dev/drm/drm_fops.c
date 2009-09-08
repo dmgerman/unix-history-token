@@ -62,14 +62,6 @@ modifier|*
 name|priv
 decl_stmt|;
 name|int
-name|m
-init|=
-name|dev2unit
-argument_list|(
-name|kdev
-argument_list|)
-decl_stmt|;
-name|int
 name|retcode
 decl_stmt|;
 if|if
@@ -90,11 +82,14 @@ name|flags
 expr_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"pid = %d, minor = %d\n"
+literal|"pid = %d, device = %s\n"
 argument_list|,
 name|DRM_CURRENTPID
 argument_list|,
-name|m
+name|devtoname
+argument_list|(
+name|kdev
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|priv
@@ -180,12 +175,6 @@ operator|->
 name|td_proc
 operator|->
 name|p_pid
-expr_stmt|;
-name|priv
-operator|->
-name|minor
-operator|=
-name|m
 expr_stmt|;
 name|priv
 operator|->

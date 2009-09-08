@@ -432,7 +432,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Flag indicating whether or not to IPI the other CPUs to stop them on  * entering the debugger.  Sometimes, this will result in a deadlock as  * stop_cpus() waits for the other cpus to stop, so we allow it to be  * disabled.  */
+comment|/*  * Flag indicating whether or not to IPI the other CPUs to stop them on  * entering the debugger.  Sometimes, this will result in a deadlock as  * stop_cpus() waits for the other cpus to stop, so we allow it to be  * disabled.  In order to maximize the chances of success, use a hard  * stop for that.  */
 end_comment
 
 begin_ifdef
@@ -1172,7 +1172,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|SMP
-name|stop_cpus
+name|stop_cpus_hard
 argument_list|(
 name|PCPU_GET
 argument_list|(
@@ -2279,7 +2279,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|stop_cpus
+name|stop_cpus_hard
 argument_list|(
 name|PCPU_GET
 argument_list|(

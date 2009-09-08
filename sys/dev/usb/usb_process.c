@@ -227,6 +227,22 @@ literal|800000
 operator|)
 end_if
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|proc
+modifier|*
+name|usbproc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|usb_pcount
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -241,7 +257,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|kproc_create((f), (s), (p), RFHIGHPID, 0, __VA_ARGS__)
+value|kproc_kthread_add((f), (s),&usbproc, (p), RFHIGHPID, \ 		    0, "usb", __VA_ARGS__)
 end_define
 
 begin_define
@@ -251,7 +267,7 @@ name|USB_THREAD_SUSPEND
 parameter_list|(
 name|p
 parameter_list|)
-value|kproc_suspend(p,0)
+value|kthread_suspend(p,0)
 end_define
 
 begin_define
@@ -261,7 +277,7 @@ name|USB_THREAD_EXIT
 parameter_list|(
 name|err
 parameter_list|)
-value|kproc_exit(err)
+value|kthread_exit()
 end_define
 
 begin_else
@@ -591,6 +607,27 @@ operator|->
 name|up_mtx
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|800000
+operator|)
+comment|/* Clear the proc pointer if this is the last thread. */
+if|if
+condition|(
+operator|--
+name|usb_pcount
+operator|==
+literal|0
+condition|)
+name|usbproc
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
 name|USB_THREAD_EXIT
 argument_list|(
 literal|0
@@ -653,7 +690,7 @@ name|up
 operator|->
 name|up_cv
 argument_list|,
-literal|"wmsg"
+literal|"-"
 argument_list|)
 expr_stmt|;
 name|cv_init
@@ -663,7 +700,7 @@ name|up
 operator|->
 name|up_drain
 argument_list|,
-literal|"dmsg"
+literal|"usbdrain"
 argument_list|)
 expr_stmt|;
 if|if
@@ -701,6 +738,18 @@ goto|goto
 name|error
 goto|;
 block|}
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|800000
+operator|)
+name|usb_pcount
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -1457,6 +1506,69 @@ operator|->
 name|up_mtx
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*------------------------------------------------------------------------*  *	usb_proc_rewakeup  *  * This function is called to re-wakeup the the given USB  * process. This usually happens after that the USB system has been in  * polling mode, like during a panic. This function must be called  * having "up->up_mtx" locked.  *------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+name|void
+name|usb_proc_rewakeup
+parameter_list|(
+name|struct
+name|usb_process
+modifier|*
+name|up
+parameter_list|)
+block|{
+comment|/* check if not initialised */
+if|if
+condition|(
+name|up
+operator|->
+name|up_mtx
+operator|==
+name|NULL
+condition|)
+return|return;
+comment|/* check if gone */
+if|if
+condition|(
+name|up
+operator|->
+name|up_gone
+condition|)
+return|return;
+name|mtx_assert
+argument_list|(
+name|up
+operator|->
+name|up_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|up
+operator|->
+name|up_msleep
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* re-wakeup */
+name|cv_signal
+argument_list|(
+operator|&
+name|up
+operator|->
+name|up_cv
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

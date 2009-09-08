@@ -382,6 +382,21 @@ name|pitem
 modifier|*
 name|item
 decl_stmt|;
+comment|/* Limit the size of the queue to prevent DOS attacks */
+if|if
+condition|(
+name|pqueue_size
+argument_list|(
+name|queue
+operator|->
+name|q
+argument_list|)
+operator|>=
+literal|100
+condition|)
+return|return
+literal|0
+return|;
 name|rdata
 operator|=
 name|OPENSSL_malloc

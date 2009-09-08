@@ -6307,6 +6307,17 @@ name|adapter
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_NOARP
+operator|)
+condition|)
 name|arp_ifinit
 argument_list|(
 name|ifp

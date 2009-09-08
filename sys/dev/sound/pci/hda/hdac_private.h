@@ -1210,6 +1210,9 @@ name|int
 name|num_bss
 decl_stmt|;
 name|int
+name|num_sdo
+decl_stmt|;
+name|int
 name|support_64bit
 decl_stmt|;
 name|int

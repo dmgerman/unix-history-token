@@ -3991,7 +3991,7 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* 		 * If we can satisfy from the copy buffer, we're done. 		 */
+comment|/* 		 * If we can satisfy from the copy buffer (and the 		 * copy buffer isn't empty), we're done.  In particular, 		 * note that min == 0 is a perfectly well-defined 		 * request. 		 */
 if|if
 condition|(
 name|filter
@@ -3999,6 +3999,12 @@ operator|->
 name|avail
 operator|>=
 name|min
+operator|&&
+name|filter
+operator|->
+name|avail
+operator|>
+literal|0
 condition|)
 block|{
 if|if

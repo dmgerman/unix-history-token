@@ -202,12 +202,23 @@ directive|include
 file|<dev/mii/miivar.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MII_ADDR_BASE
+end_ifndef
+
 begin_define
 define|#
 directive|define
-name|MV_PHY_ADDR_BASE
+name|MII_ADDR_BASE
 value|8
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -6360,11 +6371,11 @@ block|{
 name|uint32_t
 name|retries
 decl_stmt|;
-comment|/* 	 * We assume static PHY address<=> device unit mapping: 	 * PHY Address = MV_PHY_ADDR_BASE + devce unit. 	 * This is true for most Marvell boards. 	 *  	 * Code below grants proper PHY detection on each device 	 * unit. 	 */
+comment|/* 	 * We assume static PHY address<=> device unit mapping: 	 * PHY Address = MII_ADDR_BASE + devce unit. 	 * This is true for most Marvell boards. 	 *  	 * Code below grants proper PHY detection on each device 	 * unit. 	 */
 if|if
 condition|(
 operator|(
-name|MV_PHY_ADDR_BASE
+name|MII_ADDR_BASE
 operator|+
 name|device_get_unit
 argument_list|(
@@ -6482,7 +6493,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|MV_PHY_ADDR_BASE
+name|MII_ADDR_BASE
 operator|+
 name|device_get_unit
 argument_list|(

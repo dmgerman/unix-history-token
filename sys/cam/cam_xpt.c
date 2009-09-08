@@ -4418,7 +4418,7 @@ expr_stmt|;
 comment|/* 	 * To ensure that this is printed in one piece, 	 * mask out CAM interrupts. 	 */
 name|printf
 argument_list|(
-literal|"%s%d at %s%d bus %d target %d lun %d\n"
+literal|"%s%d at %s%d bus %d scbus%d target %d lun %d\n"
 argument_list|,
 name|periph
 operator|->
@@ -4451,6 +4451,12 @@ operator|->
 name|sim
 operator|->
 name|bus_id
+argument_list|,
+name|path
+operator|->
+name|bus
+operator|->
+name|path_id
 argument_list|,
 name|path
 operator|->
@@ -10964,6 +10970,10 @@ name|path
 operator|->
 name|device
 operator|->
+name|ccbq
+operator|.
+name|queue
+operator|.
 name|qfrozen_cnt
 operator|==
 literal|0
@@ -12906,6 +12916,10 @@ name|qfrozen_cnt
 operator|=
 name|dev
 operator|->
+name|ccbq
+operator|.
+name|queue
+operator|.
 name|qfrozen_cnt
 expr_stmt|;
 name|start_ccb
@@ -14147,6 +14161,10 @@ if|if
 condition|(
 name|device
 operator|->
+name|ccbq
+operator|.
+name|queue
+operator|.
 name|qfrozen_cnt
 operator|>
 literal|0
@@ -14226,6 +14244,10 @@ block|{
 comment|/* 				 * We got a high power command, but we 				 * don't have any available slots.  Freeze 				 * the device queue until we have a slot 				 * available. 				 */
 name|device
 operator|->
+name|ccbq
+operator|.
+name|queue
+operator|.
 name|qfrozen_cnt
 operator|++
 expr_stmt|;
@@ -14349,6 +14371,10 @@ block|{
 comment|/* 			 * The client wants to freeze the queue 			 * after this CCB is sent. 			 */
 name|device
 operator|->
+name|ccbq
+operator|.
+name|queue
+operator|.
 name|qfrozen_cnt
 operator|++
 expr_stmt|;
@@ -16840,6 +16866,12 @@ case|:
 case|case
 name|XPORT_USB
 case|:
+case|case
+name|XPORT_ISCSI
+case|:
+case|case
+name|XPORT_PPB
+case|:
 name|new_bus
 operator|->
 name|xport
@@ -17760,6 +17792,10 @@ name|path
 operator|->
 name|device
 operator|->
+name|ccbq
+operator|.
+name|queue
+operator|.
 name|qfrozen_cnt
 operator|+=
 name|count
@@ -17803,6 +17839,10 @@ name|path
 operator|->
 name|device
 operator|->
+name|ccbq
+operator|.
+name|queue
+operator|.
 name|qfrozen_cnt
 operator|)
 return|;
@@ -18015,6 +18055,10 @@ if|if
 condition|(
 name|dev
 operator|->
+name|ccbq
+operator|.
+name|queue
+operator|.
 name|qfrozen_cnt
 operator|>
 literal|0
@@ -18027,17 +18071,29 @@ name|count
 operator|>
 name|dev
 operator|->
+name|ccbq
+operator|.
+name|queue
+operator|.
 name|qfrozen_cnt
 operator|)
 condition|?
 name|dev
 operator|->
+name|ccbq
+operator|.
+name|queue
+operator|.
 name|qfrozen_cnt
 else|:
 name|count
 expr_stmt|;
 name|dev
 operator|->
+name|ccbq
+operator|.
+name|queue
+operator|.
 name|qfrozen_cnt
 operator|-=
 name|count
@@ -18046,6 +18102,10 @@ if|if
 condition|(
 name|dev
 operator|->
+name|ccbq
+operator|.
+name|queue
+operator|.
 name|qfrozen_cnt
 operator|==
 literal|0
@@ -18445,19 +18505,18 @@ argument_list|,
 name|links
 argument_list|)
 expr_stmt|;
-name|sim
-operator|->
-name|flags
-operator||=
-name|CAM_SIM_ON_DONEQ
-expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
 name|cam_simq_lock
 argument_list|)
 expr_stmt|;
-block|}
+name|sim
+operator|->
+name|flags
+operator||=
+name|CAM_SIM_ON_DONEQ
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -18483,6 +18542,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 default|default:
 name|panic
@@ -19490,12 +19550,6 @@ name|NULL
 expr_stmt|;
 name|device
 operator|->
-name|qfrozen_cnt
-operator|=
-literal|0
-expr_stmt|;
-name|device
-operator|->
 name|flags
 operator|=
 name|CAM_DEV_UNCONFIGURED
@@ -19518,16 +19572,6 @@ name|refcount
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|bus
-operator|->
-name|sim
-operator|->
-name|flags
-operator|&
-name|CAM_SIM_MPSAFE
-condition|)
 name|callout_init_mtx
 argument_list|(
 operator|&
@@ -19540,20 +19584,6 @@ operator|->
 name|sim
 operator|->
 name|mtx
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-else|else
-name|callout_init_mtx
-argument_list|(
-operator|&
-name|device
-operator|->
-name|callout
-argument_list|,
-operator|&
-name|Giant
 argument_list|,
 literal|0
 argument_list|)
@@ -20529,7 +20559,7 @@ block|{
 name|printf
 argument_list|(
 literal|"xptconfigfunc: xpt_create_path failed with "
-literal|"status %#x for bus %d\n"
+literal|"status %#x for scbus%d\n"
 argument_list|,
 name|status
 argument_list|,
@@ -20603,7 +20633,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"xptconfigfunc: CPI failed on bus %d "
+literal|"xptconfigfunc: CPI failed on scbus%d "
 literal|"with status %d\n"
 argument_list|,
 name|bus
@@ -21789,6 +21819,16 @@ operator|&
 name|queue
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+operator|!
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|cam_simq
+argument_list|)
+condition|)
+block|{
 name|TAILQ_CONCAT
 argument_list|(
 operator|&
@@ -21857,6 +21897,19 @@ name|sim
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_lock
+argument_list|(
+operator|&
+name|cam_simq_lock
+argument_list|)
+expr_stmt|;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|cam_simq_lock
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -22210,6 +22263,10 @@ operator|&&
 operator|(
 name|dev
 operator|->
+name|ccbq
+operator|.
+name|queue
+operator|.
 name|qfrozen_cnt
 operator|==
 literal|0

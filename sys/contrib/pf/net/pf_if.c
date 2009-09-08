@@ -3308,11 +3308,11 @@ return|return;
 block|}
 name|memcpy
 argument_list|(
-name|pfi_buffer
-argument_list|,
 name|p
 argument_list|,
-name|pfi_buffer_cnt
+name|pfi_buffer
+argument_list|,
+name|pfi_buffer_max
 operator|*
 sizeof|sizeof
 argument_list|(

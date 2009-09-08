@@ -691,6 +691,9 @@ case|case
 name|IFT_GIF
 case|:
 case|case
+name|IFT_L2VLAN
+case|:
+case|case
 name|IFT_IP
 case|:
 case|case

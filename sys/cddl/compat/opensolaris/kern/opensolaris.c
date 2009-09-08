@@ -104,21 +104,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"This module (opensolaris) contains code covered by the\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Common Development and Distribution License (CDDL)\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"see http://opensolaris.org/os/licensing/opensolaris_license/\n"
-argument_list|)
-expr_stmt|;
 comment|/* 	 * "Enable" all CPUs even though they may not exist just so 	 * that the asserts work. On FreeBSD, if a CPU exists, it is 	 * enabled. 	 */
 for|for
 control|(

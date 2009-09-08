@@ -1810,6 +1810,9 @@ literal|"Consumer with zero access count in g_dev_strategy"
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 if|if
 condition|(
 operator|(
@@ -1860,6 +1863,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+endif|#
+directive|endif
 for|for
 control|(
 init|;

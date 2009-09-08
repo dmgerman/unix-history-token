@@ -11128,6 +11128,9 @@ decl_stmt|;
 name|int
 name|ethno
 decl_stmt|;
+name|IFNET_RLOCK_ASSERT
+argument_list|()
+expr_stmt|;
 comment|/* Short-circuit non ethernet interfaces */
 if|if
 condition|(
@@ -11156,9 +11159,6 @@ name|ethno
 operator|=
 literal|0
 expr_stmt|;
-name|IFNET_RLOCK
-argument_list|()
-expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifscan
@@ -11174,10 +11174,6 @@ name|ifscan
 operator|==
 name|ifp
 condition|)
-block|{
-name|IFNET_RUNLOCK
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|snprintf
@@ -11192,7 +11188,6 @@ name|ethno
 argument_list|)
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|IFP_IS_ETH
@@ -11204,9 +11199,6 @@ name|ethno
 operator|++
 expr_stmt|;
 block|}
-name|IFNET_RUNLOCK
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -11366,6 +11358,14 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|TD_TO_VNET
+argument_list|(
+name|td
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|IFNET_RLOCK
 argument_list|()
 expr_stmt|;
@@ -11412,6 +11412,9 @@ condition|)
 break|break;
 block|}
 name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
+name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 if|if
@@ -11538,6 +11541,14 @@ name|MAXPHYS
 operator|-
 literal|1
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|TD_TO_VNET
+argument_list|(
+name|td
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* handle the 'request buffer size' case */
 if|if
 condition|(
@@ -11618,6 +11629,9 @@ name|ifc
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -11632,11 +11646,16 @@ name|ifc_len
 operator|<=
 literal|0
 condition|)
+block|{
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 name|again
 label|:
 comment|/* Keep track of eth interfaces */
@@ -11691,7 +11710,6 @@ comment|/* Return all AF_INET addresses of all interfaces */
 name|IFNET_RLOCK
 argument_list|()
 expr_stmt|;
-comment|/* could sleep XXX */
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -11983,6 +12001,9 @@ name|sbuf_delete
 argument_list|(
 name|sb
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 return|return
 operator|(

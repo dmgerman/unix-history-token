@@ -2811,7 +2811,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* Check for<etherif>.<vlan> style interface names. */
-name|IFNET_RLOCK
+name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -2926,7 +2926,7 @@ name|t
 expr_stmt|;
 break|break;
 block|}
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 return|return

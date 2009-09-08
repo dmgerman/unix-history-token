@@ -165,40 +165,40 @@ begin_define
 define|#
 directive|define
 name|TIOCGETP
-value|_IOR('t', 8,struct sgttyb)
+value|_IOR('t', 8, struct sgttyb)
 end_define
 
 begin_comment
-comment|/* get parameters -- gtty */
+comment|/* get parameters */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TIOCSETP
-value|_IOW('t', 9,struct sgttyb)
+value|_IOW('t', 9, struct sgttyb)
 end_define
 
 begin_comment
-comment|/* set parameters -- stty */
+comment|/* set parameters */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TIOCSETN
-value|_IOW('t',10,struct sgttyb)
+value|_IOW('t',10, struct sgttyb)
 end_define
 
 begin_comment
-comment|/* as above, but no flushtty*/
+comment|/* as above, but no flush */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TIOCSETC
-value|_IOW('t',17,struct tchars)
+value|_IOW('t',17, struct tchars)
 end_define
 
 begin_comment
@@ -209,7 +209,7 @@ begin_define
 define|#
 directive|define
 name|TIOCGETC
-value|_IOR('t',18,struct tchars)
+value|_IOR('t',18, struct tchars)
 end_define
 
 begin_comment
@@ -692,34 +692,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TIOCLBIS
-value|_IOW('t', 127, int)
+name|OTIOCCONS
+value|_IO('t', 98)
 end_define
 
 begin_comment
-comment|/* bis local mode bits */
+comment|/* for hp300 -- sans int arg */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCLBIC
-value|_IOW('t', 126, int)
+name|TIOCGLTC
+value|_IOR('t', 116,struct ltchars)
 end_define
 
 begin_comment
-comment|/* bic local mode bits */
+comment|/* get special chars */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCLSET
-value|_IOW('t', 125, int)
+name|TIOCSLTC
+value|_IOW('t', 117,struct ltchars)
 end_define
 
 begin_comment
-comment|/* set entire local mode word */
+comment|/* set special chars */
 end_comment
 
 begin_define
@@ -841,34 +841,34 @@ end_define
 begin_define
 define|#
 directive|define
-name|TIOCSLTC
-value|_IOW('t',117,struct ltchars)
+name|TIOCLSET
+value|_IOW('t', 125, int)
 end_define
 
 begin_comment
-comment|/* set local special chars*/
+comment|/* set entire local mode word */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCGLTC
-value|_IOR('t',116,struct ltchars)
+name|TIOCLBIC
+value|_IOW('t', 126, int)
 end_define
 
 begin_comment
-comment|/* get local special chars*/
+comment|/* bic local mode bits */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|OTIOCCONS
-value|_IO('t', 98)
+name|TIOCLBIS
+value|_IOW('t', 127, int)
 end_define
 
 begin_comment
-comment|/* for hp300 -- sans int arg */
+comment|/* bis local mode bits */
 end_comment
 
 begin_endif

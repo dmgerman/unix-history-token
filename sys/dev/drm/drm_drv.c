@@ -122,17 +122,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|DRIVER_SOFTC
-parameter_list|(
-name|unit
-parameter_list|)
-define|\
-value|((struct drm_device *)devclass_get_softc(drm_devclass, unit))
-end_define
-
 begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
@@ -815,6 +804,45 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|drm
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+name|NULL
+argument_list|,
+literal|"DRM device"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_drm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|msi
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|drm_msi
+argument_list|,
+literal|1
+argument_list|,
+literal|"Enable MSI interrupts for drm devices"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1183,7 +1211,7 @@ argument_list|(
 operator|&
 name|drm_cdevsw
 argument_list|,
-name|unit
+literal|0
 argument_list|,
 name|DRM_DEV_UID
 argument_list|,
@@ -1195,6 +1223,14 @@ literal|"dri/card%d"
 argument_list|,
 name|unit
 argument_list|)
+expr_stmt|;
+name|dev
+operator|->
+name|devnode
+operator|->
+name|si_drv1
+operator|=
+name|dev
 expr_stmt|;
 if|#
 directive|if
@@ -3140,13 +3176,9 @@ literal|0
 decl_stmt|;
 name|dev
 operator|=
-name|DRIVER_SOFTC
-argument_list|(
-name|dev2unit
-argument_list|(
 name|kdev
-argument_list|)
-argument_list|)
+operator|->
+name|si_drv1
 expr_stmt|;
 name|DRM_DEBUG
 argument_list|(
@@ -3189,9 +3221,6 @@ name|_DRM_STAT_OPENS
 index|]
 argument_list|)
 expr_stmt|;
-name|newbus_xlock
-argument_list|()
-expr_stmt|;
 name|DRM_LOCK
 argument_list|()
 expr_stmt|;
@@ -3218,9 +3247,6 @@ name|dev
 argument_list|)
 expr_stmt|;
 name|DRM_UNLOCK
-argument_list|()
-expr_stmt|;
-name|newbus_xunlock
 argument_list|()
 expr_stmt|;
 block|}
@@ -3268,10 +3294,6 @@ name|dev
 operator|->
 name|open_count
 argument_list|)
-expr_stmt|;
-comment|/* 	 * We require to lock newbus here for handling device_unbusy() and 	 * avoid a LOR with DRM_LOCK. 	 */
-name|newbus_xlock
-argument_list|()
 expr_stmt|;
 name|DRM_LOCK
 argument_list|()
@@ -3664,9 +3686,6 @@ argument_list|)
 expr_stmt|;
 block|}
 name|DRM_UNLOCK
-argument_list|()
-expr_stmt|;
-name|newbus_xunlock
 argument_list|()
 expr_stmt|;
 block|}

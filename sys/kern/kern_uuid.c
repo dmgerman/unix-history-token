@@ -257,7 +257,7 @@ name|curthread
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|IFNET_RLOCK
+name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -332,7 +332,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|CURVNET_RESTORE
@@ -347,7 +347,7 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 for|for

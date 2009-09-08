@@ -332,15 +332,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|void
-name|pmc_x86_lapic_enable_pmc_interrupt
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|pmc_mdep
 modifier|*

@@ -336,8 +336,28 @@ argument_list|)
 operator|&&
 name|__FreeBSD_version
 operator|>=
-literal|800000
+literal|900000
 end_if
+
+begin_define
+define|#
+directive|define
+name|INDEX_FNAME
+value|"INDEX-9"
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|800000
+end_elif
 
 begin_define
 define|#
@@ -386,26 +406,6 @@ name|INDEX_FNAME
 value|"INDEX-6"
 end_define
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__FreeBSD_version
-argument_list|)
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|500036
-end_elif
-
-begin_define
-define|#
-directive|define
-name|INDEX_FNAME
-value|"INDEX-5"
-end_define
-
 begin_else
 else|#
 directive|else
@@ -446,14 +446,14 @@ value|"PKG_PREFIX"
 end_define
 
 begin_comment
-comment|/*  * Version of the package tools - increase only when some  * functionality used by bsd.port.mk is changed, added or removed  */
+comment|/*  * Version of the package tools - increase whenever you make a change  * in the code that is not cosmetic only.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PKG_INSTALL_VERSION
-value|20090519
+value|20090902
 end_define
 
 begin_define

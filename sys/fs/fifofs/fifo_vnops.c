@@ -877,6 +877,22 @@ argument_list|,
 name|rso
 argument_list|)
 expr_stmt|;
+comment|/* Close the direction we do not use, so we can get POLLHUP. */
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+name|error
+operator|=
+name|soshutdown
+argument_list|(
+name|rso
+argument_list|,
+name|SHUT_WR
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error

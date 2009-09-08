@@ -4679,6 +4679,16 @@ name|u_int
 modifier|*
 name|state_valid
 decl_stmt|;
+name|state_valid
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* silence gcc */
+name|arraysize
+operator|=
+literal|0
+expr_stmt|;
+comment|/* silence gcc */
 name|SAHTREE_LOCK
 argument_list|()
 expr_stmt|;
@@ -4746,22 +4756,21 @@ name|saorder_state_valid_prefer_new
 argument_list|)
 expr_stmt|;
 block|}
-name|SAHTREE_UNLOCK
-argument_list|()
-expr_stmt|;
-goto|goto
-name|found
-goto|;
+break|break;
 block|}
 block|}
 name|SAHTREE_UNLOCK
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|sah
+operator|==
+name|NULL
+condition|)
 return|return
 name|NULL
 return|;
-name|found
-label|:
 comment|/* search valid state */
 for|for
 control|(

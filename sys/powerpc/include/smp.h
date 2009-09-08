@@ -49,6 +49,13 @@ name|IPI_STOP
 value|3
 end_define
 
+begin_define
+define|#
+directive|define
+name|IPI_STOP_HARD
+value|3
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef

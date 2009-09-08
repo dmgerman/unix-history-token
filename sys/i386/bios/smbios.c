@@ -894,9 +894,6 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
-name|newbus_xlock
-argument_list|()
-expr_stmt|;
 name|devclass_get_devices
 argument_list|(
 name|smbios_devclass
@@ -939,9 +936,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|newbus_xunlock
-argument_list|()
-expr_stmt|;
 break|break;
 default|default:
 break|break;

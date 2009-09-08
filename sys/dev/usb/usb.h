@@ -2543,6 +2543,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|UICLASS_IAD
+value|0xEF
+end_define
+
+begin_comment
+comment|/* Interface Association Descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|UICLASS_APPL_SPEC
 value|0xfe
 end_define

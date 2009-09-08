@@ -898,6 +898,9 @@ operator|->
 name|sc_name
 argument_list|)
 expr_stmt|;
+name|g_topology_unlock
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
 else|else
@@ -1315,17 +1318,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|==
-name|NULL
-condition|)
-block|{
-goto|goto
-name|fail
-goto|;
-block|}
 name|gp
 operator|->
 name|softc

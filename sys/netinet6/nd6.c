@@ -6171,7 +6171,7 @@ argument_list|,
 name|curvnet
 argument_list|)
 expr_stmt|;
-name|IFNET_RLOCK
+name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 for|for
@@ -6241,7 +6241,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|CURVNET_RESTORE

@@ -425,9 +425,6 @@ decl_stmt|;
 name|uint16_t
 name|r3
 decl_stmt|;
-name|newbus_xlock
-argument_list|()
-expr_stmt|;
 name|sc
 operator|->
 name|sc_dev
@@ -868,9 +865,6 @@ name|bus_generic_attach
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
-name|newbus_xunlock
-argument_list|()
 expr_stmt|;
 name|config_intrhook_disestablish
 argument_list|(

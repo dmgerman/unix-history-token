@@ -62,7 +62,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/apicreg.h>
+file|<machine/intr_machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/apicvar.h>
 end_include
 
 begin_include
@@ -94,45 +100,6 @@ include|#
 directive|include
 file|<vm/pmap.h>
 end_include
-
-begin_decl_stmt
-specifier|extern
-specifier|volatile
-name|lapic_t
-modifier|*
-name|lapic
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-name|void
-name|pmc_x86_lapic_enable_pmc_interrupt
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|uint32_t
-name|value
-decl_stmt|;
-name|value
-operator|=
-name|lapic
-operator|->
-name|lvt_pcint
-expr_stmt|;
-name|value
-operator|&=
-operator|~
-name|APIC_LVT_M
-expr_stmt|;
-name|lapic
-operator|->
-name|lvt_pcint
-operator|=
-name|value
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * Attempt to walk a user call stack using a too-simple algorithm.  * In the general case we need unwind information associated with  * the executable to be able to walk the user stack.  *  * We are handed a trap frame laid down at the time the PMC interrupt  * was taken.  If the application is using frame pointers, the saved  * PC value could be:  * a. at the beginning of a function before the stack frame is laid  *    down,  * b. just before a 'ret', after the stack frame has been taken off,  * c. somewhere else in the function with a valid stack frame being  *    present,  *  * If the application is not using frame pointers, this algorithm will  * fail to yield an interesting call chain.  *  * TODO: figure out a way to use unwind information.  */
@@ -898,10 +865,6 @@ modifier|*
 name|md
 decl_stmt|;
 comment|/* determine the CPU kind */
-name|md
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|cpu_vendor_id
@@ -926,27 +889,17 @@ name|pmc_intel_initialize
 argument_list|()
 expr_stmt|;
 else|else
-name|KASSERT
-argument_list|(
-literal|0
-argument_list|,
+return|return
 operator|(
-literal|"[x86,%d] Unknown vendor"
-operator|,
-name|__LINE__
+name|NULL
 operator|)
-argument_list|)
-expr_stmt|;
+return|;
 comment|/* disallow sampling if we do not have an LAPIC */
 if|if
 condition|(
-name|md
-operator|!=
-name|NULL
-operator|&&
-name|lapic
-operator|==
-name|NULL
+operator|!
+name|lapic_enable_pmc
+argument_list|()
 condition|)
 for|for
 control|(
@@ -993,6 +946,9 @@ modifier|*
 name|md
 parameter_list|)
 block|{
+name|lapic_disable_pmc
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|cpu_vendor_id

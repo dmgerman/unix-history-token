@@ -300,7 +300,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Global lists of subsystem constructor and destructors for vnets.  They are  * registered via VNET_SYSINIT() and VNET_SYSUNINIT().  The lists are  * protected by the vnet_sxlock global lock.  */
+comment|/*  * Global lists of subsystem constructor and destructors for vnets.  They are  * registered via VNET_SYSINIT() and VNET_SYSUNINIT().  Both lists are  * protected by the vnet_sysinit_sxlock global lock.  */
 end_comment
 
 begin_expr_stmt
@@ -336,6 +336,45 @@ name|vnet_destructors
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|struct
+name|sx
+name|vnet_sysinit_sxlock
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|VNET_SYSINIT_WLOCK
+parameter_list|()
+value|sx_xlock(&vnet_sysinit_sxlock);
+end_define
+
+begin_define
+define|#
+directive|define
+name|VNET_SYSINIT_WUNLOCK
+parameter_list|()
+value|sx_xunlock(&vnet_sysinit_sxlock);
+end_define
+
+begin_define
+define|#
+directive|define
+name|VNET_SYSINIT_RLOCK
+parameter_list|()
+value|sx_slock(&vnet_sysinit_sxlock);
+end_define
+
+begin_define
+define|#
+directive|define
+name|VNET_SYSINIT_RUNLOCK
+parameter_list|()
+value|sx_sunlock(&vnet_sysinit_sxlock);
+end_define
 
 begin_struct
 struct|struct
@@ -483,23 +522,14 @@ argument_list|(
 name|vnet
 argument_list|)
 expr_stmt|;
-name|sx_xlock
-argument_list|(
-operator|&
-name|vnet_sxlock
-argument_list|)
-expr_stmt|;
 name|vnet_sysinit
 argument_list|()
 expr_stmt|;
 name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
-name|rw_wlock
-argument_list|(
-operator|&
-name|vnet_rwlock
-argument_list|)
+name|VNET_LIST_WLOCK
+argument_list|()
 expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
@@ -569,11 +599,8 @@ argument_list|,
 name|vnet_le
 argument_list|)
 expr_stmt|;
-name|rw_wunlock
-argument_list|(
-operator|&
-name|vnet_rwlock
-argument_list|)
+name|VNET_LIST_WUNLOCK
+argument_list|()
 expr_stmt|;
 name|CURVNET_SET_QUIET
 argument_list|(
@@ -614,12 +641,6 @@ expr_stmt|;
 block|}
 name|vnet_sysuninit
 argument_list|()
-expr_stmt|;
-name|sx_xunlock
-argument_list|(
-operator|&
-name|vnet_sxlock
-argument_list|)
 expr_stmt|;
 name|CURVNET_RESTORE
 argument_list|()
@@ -690,6 +711,14 @@ operator|&
 name|vnet_sxlock
 argument_list|,
 literal|"vnet_sxlock"
+argument_list|)
+expr_stmt|;
+name|sx_init
+argument_list|(
+operator|&
+name|vnet_sysinit_sxlock
+argument_list|,
+literal|"vnet_sysinit_sxlock"
 argument_list|)
 expr_stmt|;
 name|LIST_INIT
@@ -1586,11 +1615,8 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Add the constructor to the global list of vnet constructors. */
-name|sx_xlock
-argument_list|(
-operator|&
-name|vnet_sxlock
-argument_list|)
+name|VNET_SYSINIT_WLOCK
+argument_list|()
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -1682,11 +1708,8 @@ name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 block|}
-name|sx_xunlock
-argument_list|(
-operator|&
-name|vnet_sxlock
-argument_list|)
+name|VNET_SYSINIT_WUNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1710,11 +1733,8 @@ operator|=
 name|arg
 expr_stmt|;
 comment|/* Remove the constructor from the global list of vnet constructors. */
-name|sx_xlock
-argument_list|(
-operator|&
-name|vnet_sxlock
-argument_list|)
+name|VNET_SYSINIT_WLOCK
+argument_list|()
 expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
@@ -1726,11 +1746,8 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-name|sx_xunlock
-argument_list|(
-operator|&
-name|vnet_sxlock
-argument_list|)
+name|VNET_SYSINIT_WUNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1757,11 +1774,8 @@ operator|=
 name|arg
 expr_stmt|;
 comment|/* Add the destructor to the global list of vnet destructors. */
-name|sx_xlock
-argument_list|(
-operator|&
-name|vnet_sxlock
-argument_list|)
+name|VNET_SYSINIT_WLOCK
+argument_list|()
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -1829,11 +1843,8 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-name|sx_xunlock
-argument_list|(
-operator|&
-name|vnet_sxlock
-argument_list|)
+name|VNET_SYSINIT_WUNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1862,11 +1873,8 @@ operator|=
 name|arg
 expr_stmt|;
 comment|/* 	 * Invoke the destructor on all the existing vnets when it is 	 * deregistered. 	 */
-name|sx_xlock
-argument_list|(
-operator|&
-name|vnet_sxlock
-argument_list|)
+name|VNET_SYSINIT_WLOCK
+argument_list|()
 expr_stmt|;
 name|VNET_FOREACH
 argument_list|(
@@ -1902,17 +1910,14 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-name|sx_xunlock
-argument_list|(
-operator|&
-name|vnet_sxlock
-argument_list|)
+name|VNET_SYSINIT_WUNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Invoke all registered vnet constructors on the current vnet.  Used during  * vnet construction.  The caller is responsible for ensuring the new vnet is  * the current vnet and that the vnet_sxlock lock is locked.  */
+comment|/*  * Invoke all registered vnet constructors on the current vnet.  Used during  * vnet construction.  The caller is responsible for ensuring the new vnet is  * the current vnet and that the vnet_sysinit_sxlock lock is locked.  */
 end_comment
 
 begin_function
@@ -1927,13 +1932,8 @@ name|vnet_sysinit
 modifier|*
 name|vs
 decl_stmt|;
-name|sx_assert
-argument_list|(
-operator|&
-name|vnet_sxlock
-argument_list|,
-name|SA_LOCKED
-argument_list|)
+name|VNET_SYSINIT_RLOCK
+argument_list|()
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -1954,11 +1954,14 @@ name|arg
 argument_list|)
 expr_stmt|;
 block|}
+name|VNET_SYSINIT_RUNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Invoke all registered vnet destructors on the current vnet.  Used during  * vnet destruction.  The caller is responsible for ensuring the dying vnet  * is the current vnet and that the vnet_sxlock lock is locked.  */
+comment|/*  * Invoke all registered vnet destructors on the current vnet.  Used during  * vnet destruction.  The caller is responsible for ensuring the dying vnet  * the current vnet and that the vnet_sysinit_sxlock lock is locked.  */
 end_comment
 
 begin_function
@@ -1973,13 +1976,8 @@ name|vnet_sysinit
 modifier|*
 name|vs
 decl_stmt|;
-name|sx_assert
-argument_list|(
-operator|&
-name|vnet_sxlock
-argument_list|,
-name|SA_LOCKED
-argument_list|)
+name|VNET_SYSINIT_RLOCK
+argument_list|()
 expr_stmt|;
 name|TAILQ_FOREACH_REVERSE
 argument_list|(
@@ -2002,6 +2000,9 @@ name|arg
 argument_list|)
 expr_stmt|;
 block|}
+name|VNET_SYSINIT_RUNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -2027,27 +2028,6 @@ argument_list|(
 name|vnet_iter
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|SIZE_MAX
-operator|==
-name|UINT32_MAX
-comment|/* 32-bit arch */
-name|db_printf
-argument_list|(
-literal|"      vnet ifs socks\n"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* 64-bit arch, most probaly... */
-name|db_printf
-argument_list|(
-literal|"              vnet ifs socks\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|VNET_FOREACH
 argument_list|(
 argument|vnet_iter
@@ -2055,19 +2035,83 @@ argument_list|)
 block|{
 name|db_printf
 argument_list|(
-literal|"%p %3d %5d\n"
+literal|"vnet            = %p\n"
 argument_list|,
 name|vnet_iter
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|" vnet_magic_n   = 0x%x (%s, orig 0x%x)\n"
+argument_list|,
+name|vnet_iter
+operator|->
+name|vnet_magic_n
+argument_list|,
+operator|(
+name|vnet_iter
+operator|->
+name|vnet_magic_n
+operator|==
+name|VNET_MAGIC_N
+operator|)
+condition|?
+literal|"ok"
+else|:
+literal|"mismatch"
+argument_list|,
+name|VNET_MAGIC_N
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|" vnet_ifcnt     = %u\n"
 argument_list|,
 name|vnet_iter
 operator|->
 name|vnet_ifcnt
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|" vnet_sockcnt   = %u\n"
 argument_list|,
 name|vnet_iter
 operator|->
 name|vnet_sockcnt
 argument_list|)
 expr_stmt|;
+name|db_printf
+argument_list|(
+literal|" vnet_data_mem  = %p\n"
+argument_list|,
+name|vnet_iter
+operator|->
+name|vnet_data_mem
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|" vnet_data_base = 0x%jx\n"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|vnet_iter
+operator|->
+name|vnet_data_base
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+break|break;
 block|}
 block|}
 end_block

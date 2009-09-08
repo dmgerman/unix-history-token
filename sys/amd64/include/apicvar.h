@@ -73,7 +73,7 @@ value|(APIC_IO_INTS + APIC_NUM_IOINTS)
 end_define
 
 begin_comment
-comment|/*    ********************* !!! WARNING !!! ******************************  * Each local apic has an interrupt receive fifo that is two entries deep  * for each interrupt priority class (higher 4 bits of interrupt vector).  * Once the fifo is full the APIC can no longer receive interrupts for this  * class and sending IPIs from other CPUs will be blocked.  * To avoid deadlocks there should be no more than two IPI interrupts  * pending at the same time.  * Currently this is guaranteed by dividing the IPIs in two groups that have   * each at most one IPI interrupt pending. The first group is protected by the  * smp_ipi_mtx and waits for the completion of the IPI (Only one IPI user   * at a time) The second group uses a single interrupt and a bitmap to avoid  * redundant IPI interrupts.  *  * Right now IPI_STOP used by kdb shares the interrupt priority class with  * the two IPI groups mentioned above. As such IPI_STOP may cause a deadlock.  * Eventually IPI_STOP should use NMI IPIs - this would eliminate this and  * other deadlocks caused by IPI_STOP.  */
+comment|/*    ********************* !!! WARNING !!! ******************************  * Each local apic has an interrupt receive fifo that is two entries deep  * for each interrupt priority class (higher 4 bits of interrupt vector).  * Once the fifo is full the APIC can no longer receive interrupts for this  * class and sending IPIs from other CPUs will be blocked.  * To avoid deadlocks there should be no more than two IPI interrupts  * pending at the same time.  * Currently this is guaranteed by dividing the IPIs in two groups that have   * each at most one IPI interrupt pending. The first group is protected by the  * smp_ipi_mtx and waits for the completion of the IPI (Only one IPI user   * at a time) The second group uses a single interrupt and a bitmap to avoid  * redundant IPI interrupts.  */
 end_comment
 
 begin_comment
@@ -242,6 +242,17 @@ end_define
 
 begin_comment
 comment|/* Suspend CPU until restarted. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPI_STOP_HARD
+value|(APIC_IPI_INTS + 9)
+end_define
+
+begin_comment
+comment|/* Stop CPU with a NMI. */
 end_comment
 
 begin_comment
@@ -791,12 +802,30 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|lapic_disable_pmc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|lapic_dump
 parameter_list|(
 specifier|const
 name|char
 modifier|*
 name|str
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|lapic_enable_pmc
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -907,6 +936,15 @@ name|struct
 name|trapframe
 modifier|*
 name|frame
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|lapic_reenable_pmc
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

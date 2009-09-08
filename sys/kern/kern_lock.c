@@ -1510,6 +1510,26 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+name|ASSERT_ATOMIC_LOAD_PTR
+argument_list|(
+name|lk
+operator|->
+name|lk_lock
+argument_list|,
+operator|(
+literal|"%s: lockmgr not aligned for %s: %p"
+operator|,
+name|__func__
+operator|,
+name|wmesg
+operator|,
+operator|&
+name|lk
+operator|->
+name|lk_lock
+operator|)
+argument_list|)
+expr_stmt|;
 name|iflags
 operator|=
 name|LO_SLEEPABLE
@@ -2150,7 +2170,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|ADAPTIVE_LOCKMGRS
-comment|/* 			 * If the owner is running on another CPU, spin until 			 * the owner stops running or the state of the lock 			 * changes. 			 */
+comment|/* 			 * If the owner is running on another CPU, spin until 			 * the owner stops running or the state of the lock 			 * changes.  We need a double-state handle here 			 * because for a failed acquisition the lock can be 			 * either held in exclusive mode or shared mode 			 * (for the writer starvation avoidance technique). 			 */
 if|if
 condition|(
 name|LK_CAN_ADAPT
@@ -2259,6 +2279,10 @@ condition|)
 name|cpu_spinwait
 argument_list|()
 expr_stmt|;
+name|GIANT_RESTORE
+argument_list|()
+expr_stmt|;
+continue|continue;
 block|}
 elseif|else
 if|if
@@ -2383,6 +2407,9 @@ name|cpu_spinwait
 argument_list|()
 expr_stmt|;
 block|}
+name|GIANT_RESTORE
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|i
@@ -3134,6 +3161,10 @@ condition|)
 name|cpu_spinwait
 argument_list|()
 expr_stmt|;
+name|GIANT_RESTORE
+argument_list|()
+expr_stmt|;
+continue|continue;
 block|}
 elseif|else
 if|if
@@ -3273,6 +3304,9 @@ name|cpu_spinwait
 argument_list|()
 expr_stmt|;
 block|}
+name|GIANT_RESTORE
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|i

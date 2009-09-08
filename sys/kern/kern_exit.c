@@ -486,11 +486,16 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
+comment|/* 	 * XXX in case we're rebooting we just let init die in order to 	 * work around an unsolved stack overflow seen very late during 	 * shutdown on sparc64 when the gmirror worker process exists. 	 */
 if|if
 condition|(
 name|p
 operator|==
 name|initproc
+operator|&&
+name|rebooting
+operator|==
+literal|0
 condition|)
 block|{
 name|printf

@@ -3568,6 +3568,26 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+name|ASSERT_ATOMIC_LOAD_PTR
+argument_list|(
+name|m
+operator|->
+name|mtx_lock
+argument_list|,
+operator|(
+literal|"%s: mtx_lock not aligned for %s: %p"
+operator|,
+name|__func__
+operator|,
+name|name
+operator|,
+operator|&
+name|m
+operator|->
+name|mtx_lock
+operator|)
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MUTEX_DEBUG

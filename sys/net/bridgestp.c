@@ -9528,7 +9528,7 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	 * Search through the Ethernet adapters and find the one with the 	 * lowest value. The adapter which we take the MAC address from does 	 * not need to be part of the bridge, it just needs to be a unique 	 * value. 	 */
-name|IFNET_RLOCK
+name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -9602,7 +9602,7 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 if|if

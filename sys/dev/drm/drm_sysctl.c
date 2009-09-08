@@ -1330,7 +1330,7 @@ argument_list|()
 expr_stmt|;
 name|DRM_SYSCTL_PRINT
 argument_list|(
-literal|"\na dev	pid    uid	magic	  ioctls\n"
+literal|"\na dev            pid   uid      magic     ioctls\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1357,7 +1357,7 @@ index|]
 expr_stmt|;
 name|DRM_SYSCTL_PRINT
 argument_list|(
-literal|"%c %3d %5d %5d %10u %10lu\n"
+literal|"%c %-12s %5d %5d %10u %10lu\n"
 argument_list|,
 name|priv
 operator|->
@@ -1367,9 +1367,14 @@ literal|'y'
 else|:
 literal|'n'
 argument_list|,
+name|devtoname
+argument_list|(
 name|priv
 operator|->
-name|minor
+name|dev
+operator|->
+name|devnode
+argument_list|)
 argument_list|,
 name|priv
 operator|->

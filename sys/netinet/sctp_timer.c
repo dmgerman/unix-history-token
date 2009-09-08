@@ -2579,6 +2579,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|asoc
+operator|->
+name|peer_supports_prsctp
+operator|&&
 name|PR_SCTP_BUF_ENABLED
 argument_list|(
 name|chk
@@ -3369,6 +3373,12 @@ block|}
 block|}
 if|if
 condition|(
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|peer_supports_prsctp
+operator|&&
 name|PR_SCTP_TTL_ENABLED
 argument_list|(
 name|chk
@@ -3463,6 +3473,12 @@ block|}
 block|}
 if|if
 condition|(
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|peer_supports_prsctp
+operator|&&
 name|PR_SCTP_RTX_ENABLED
 argument_list|(
 name|chk

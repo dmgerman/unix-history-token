@@ -11349,7 +11349,7 @@ name|nvs
 operator|->
 name|nvs_private
 decl_stmt|;
-name|nvlist_t
+name|char
 modifier|*
 name|packed
 init|=
@@ -11375,14 +11375,24 @@ decl_stmt|;
 comment|/* 		 * Null out the pointer that is meaningless in the packed 		 * structure. The address may not be aligned, so we have 		 * to use bzero. 		 */
 name|bzero
 argument_list|(
-operator|&
 name|packed
-operator|->
+operator|+
+name|offsetof
+argument_list|(
+name|nvlist_t
+argument_list|,
 name|nvl_priv
+argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|packed
+operator|(
+operator|(
+name|nvlist_t
+operator|*
+operator|)
+name|NULL
+operator|)
 operator|->
 name|nvl_priv
 argument_list|)

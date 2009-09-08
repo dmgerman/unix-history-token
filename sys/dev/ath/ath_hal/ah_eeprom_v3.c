@@ -10851,14 +10851,13 @@ name|ee_eepMap
 operator|==
 literal|1
 condition|)
-return|return
 name|freeEepromRawPowerCalInfo5112
 argument_list|(
 name|ah
 argument_list|,
 name|ee
 argument_list|)
-return|;
+expr_stmt|;
 name|ath_hal_free
 argument_list|(
 name|ee

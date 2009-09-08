@@ -1028,15 +1028,11 @@ name|usb_ref_lock
 argument_list|)
 expr_stmt|;
 comment|/* 		 * We need to grab the sx-lock before grabbing the 		 * FIFO refs to avoid deadlock at detach! 		 */
-name|sx_xlock
+name|usbd_enum_lock
 argument_list|(
 name|cpd
 operator|->
 name|udev
-operator|->
-name|default_sx
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -1291,21 +1287,6 @@ operator|&
 name|usb_ref_lock
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|crd
-operator|->
-name|is_uref
-condition|)
-block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
-block|}
 return|return
 operator|(
 literal|0
@@ -1320,15 +1301,11 @@ operator|->
 name|is_uref
 condition|)
 block|{
-name|sx_unlock
+name|usbd_enum_unlock
 argument_list|(
 name|cpd
 operator|->
 name|udev
-operator|->
-name|default_sx
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1474,26 +1451,13 @@ name|crd
 operator|->
 name|is_uref
 condition|)
-block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
-name|sx_unlock
+name|usbd_enum_unlock
 argument_list|(
 name|cpd
 operator|->
 name|udev
-operator|->
-name|default_sx
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
-block|}
 name|mtx_lock
 argument_list|(
 operator|&
@@ -4550,10 +4514,7 @@ operator|(
 name|err
 operator|)
 return|;
-comment|/*  	 * Performance optimisation: We try to check for IOCTL's that 	 * don't need the USB reference first. Then we grab the USB 	 * reference if we need it! 	 * Note that some ioctl_post handlers would need to run with the 	 * newbus lock held.  It cannot be acquired later because it can 	 * introduce a LOR, so acquire it here. 	 */
-name|newbus_xlock
-argument_list|()
-expr_stmt|;
+comment|/*  	 * Performance optimisation: We try to check for IOCTL's that 	 * don't need the USB reference first. Then we grab the USB 	 * reference if we need it! 	 */
 name|err
 operator|=
 name|usb_ref_device
@@ -4571,16 +4532,11 @@ if|if
 condition|(
 name|err
 condition|)
-block|{
-name|newbus_xunlock
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 name|fflags
 operator|=
 name|cpd
@@ -4778,9 +4734,6 @@ argument_list|,
 operator|&
 name|refs
 argument_list|)
-expr_stmt|;
-name|newbus_xunlock
-argument_list|()
 expr_stmt|;
 return|return
 operator|(

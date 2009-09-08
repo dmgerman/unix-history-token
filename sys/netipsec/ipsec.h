@@ -117,7 +117,7 @@ block|{
 name|u_int8_t
 name|dir
 decl_stmt|;
-comment|/* direction of packet flow, see blow */
+comment|/* direction of packet flow, see below */
 name|union
 name|sockaddr_union
 name|src

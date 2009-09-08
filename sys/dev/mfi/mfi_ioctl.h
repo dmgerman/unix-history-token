@@ -17,6 +17,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_include
+include|#
+directive|include
+file|<dev/mfi/mfireg.h>
+end_include
+
 begin_if
 if|#
 directive|if

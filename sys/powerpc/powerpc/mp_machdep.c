@@ -1119,11 +1119,12 @@ break|break;
 case|case
 name|IPI_STOP
 case|:
+comment|/* 			 * IPI_STOP_HARD is mapped to IPI_STOP so it is not 			 * necessary to add such case in the switch. 			 */
 name|CTR1
 argument_list|(
 name|KTR_SMP
 argument_list|,
-literal|"%s: IPI_STOP (stop)"
+literal|"%s: IPI_STOP or IPI_STOP_HARD (stop)"
 argument_list|,
 name|__func__
 argument_list|)

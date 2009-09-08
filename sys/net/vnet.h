@@ -189,23 +189,6 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|INVARIANTS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|VNET_DEBUG
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|VNET_DEBUG
 end_ifdef
 
@@ -475,35 +458,21 @@ begin_comment
 comment|/*  * Virtual network stack memory allocator, which allows global variables to  * be automatically instantiated for each network stack instance.  */
 end_comment
 
-begin_if
+begin_asm
+asm|__asm__(
 if|#
 directive|if
 name|defined
 argument_list|(
 name|__arm__
 argument_list|)
-end_if
-
-begin_asm
-asm|__asm__(".section " VNET_SETNAME ", \"aw\", %progbits");
-end_asm
-
-begin_else
+asm|".section " VNET_SETNAME ", \"aw\", %progbits\n"
 else|#
 directive|else
-end_else
-
-begin_asm
-asm|__asm__(".section " VNET_SETNAME ", \"aw\", @progbits");
-end_asm
-
-begin_endif
+asm|".section " VNET_SETNAME ", \"aw\", @progbits\n"
 endif|#
 directive|endif
-end_endif
-
-begin_asm
-asm|__asm__(".previous");
+asm|"\t.p2align " __XSTRING(CACHE_LINE_SHIFT) "\n" 	"\t.previous");
 end_asm
 
 begin_define
@@ -721,7 +690,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|CTLFLAG_MPSAFE|(access), \ 	    ptr, val, vnet_sysctl_handle_int, "I", descr)
+value|SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_INT|CTLFLAG_MPSAFE|CTLFLAG_VNET|(access),		\ 	    ptr, val, vnet_sysctl_handle_int, "I", descr)
 end_define
 
 begin_define
@@ -748,7 +717,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, access, ptr, arg, handler, fmt,	\ 	    descr)
+value|SYSCTL_OID(parent, nbr, name, CTLFLAG_VNET|(access), ptr, arg, 	\ 	    handler, fmt, descr)
 end_define
 
 begin_define
@@ -771,7 +740,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_STRING|(access), arg,	\ 	    len, vnet_sysctl_handle_string, "A", descr)
+value|SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_STRING|CTLFLAG_VNET|(access),			\ 	    arg, len, vnet_sysctl_handle_string, "A", descr)
 end_define
 
 begin_define
@@ -794,7 +763,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_OPAQUE|(access), ptr,	\ 	    sizeof(struct type), vnet_sysctl_handle_opaque, "S," #type,	\ 	    descr)
+value|SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_OPAQUE|CTLFLAG_VNET|(access), ptr,			\ 	    sizeof(struct type), vnet_sysctl_handle_opaque, "S," #type,	\ 	    descr)
 end_define
 
 begin_define
@@ -817,7 +786,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_UINT|CTLFLAG_MPSAFE|(access), \ 	    ptr, val, vnet_sysctl_handle_uint, "IU", descr)
+value|SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_UINT|CTLFLAG_MPSAFE|CTLFLAG_VNET|(access),		\ 	    ptr, val, vnet_sysctl_handle_uint, "IU", descr)
 end_define
 
 begin_define

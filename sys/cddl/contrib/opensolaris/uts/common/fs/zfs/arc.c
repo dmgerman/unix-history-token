@@ -16356,8 +16356,14 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ZFS NOTICE: prefetch is disabled by default on i386"
-literal|" - add enable to tunable to change.\n"
+literal|"ZFS NOTICE: Prefetch is disabled by default on i386 "
+literal|"-- to enable,\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"            add \"vfs.zfs.prefetch_disable=0\" "
+literal|"to /boot/loader.conf.\n"
 argument_list|)
 expr_stmt|;
 name|zfs_prefetch_disable
@@ -16393,8 +16399,10 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ZFS NOTICE: system has less than 4GB and prefetch enable is not set"
-literal|"... disabling.\n"
+literal|"ZFS NOTICE: Prefetch is disabled by default if less "
+literal|"than 4GB of RAM is present;\n"
+literal|"            to enable, add \"vfs.zfs.prefetch_disable=0\" "
+literal|"to /boot/loader.conf.\n"
 argument_list|)
 expr_stmt|;
 name|zfs_prefetch_disable

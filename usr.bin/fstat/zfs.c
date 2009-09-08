@@ -440,6 +440,9 @@ operator|=
 operator|(
 name|long
 operator|)
+operator|(
+name|uint32_t
+operator|)
 name|mount
 operator|.
 name|mnt_stat

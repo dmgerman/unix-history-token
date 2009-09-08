@@ -602,6 +602,8 @@ name|wcmd
 decl_stmt|,
 name|longidle
 decl_stmt|,
+name|longattime
+decl_stmt|,
 name|dropgid
 decl_stmt|;
 specifier|const
@@ -2198,6 +2200,8 @@ operator|.
 name|ut_time
 argument_list|)
 expr_stmt|;
+name|longattime
+operator|=
 name|pr_attime
 argument_list|(
 operator|&
@@ -2226,6 +2230,8 @@ argument_list|,
 name|argwidth
 operator|-
 name|longidle
+operator|-
+name|longattime
 argument_list|,
 name|ep
 operator|->

@@ -2510,6 +2510,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DRM_RADEON_CS
+value|0x26
+end_define
+
+begin_define
+define|#
+directive|define
 name|DRM_IOCTL_RADEON_CP_INIT
 value|DRM_IOW( DRM_COMMAND_BASE + DRM_RADEON_CP_INIT, drm_radeon_init_t)
 end_define
@@ -2694,6 +2701,13 @@ define|#
 directive|define
 name|DRM_IOCTL_RADEON_SURF_FREE
 value|DRM_IOW( DRM_COMMAND_BASE + DRM_RADEON_SURF_FREE, drm_radeon_surface_free_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_RADEON_CS
+value|DRM_IOWR(DRM_COMMAND_BASE + DRM_RADEON_CS, struct drm_radeon_cs)
 end_define
 
 begin_typedef
@@ -3335,6 +3349,24 @@ begin_comment
 comment|/* num GB pipes */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RADEON_PARAM_DEVICE_ID
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_PARAM_NUM_Z_PIPES
+value|17
+end_define
+
+begin_comment
+comment|/* num Z pipes */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -3603,6 +3635,66 @@ directive|define
 name|DRM_RADEON_VBLANK_CRTC2
 value|2
 end_define
+
+begin_comment
+comment|/* New interface which obsolete all previous interface.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADEON_CHUNK_ID_RELOCS
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_CHUNK_ID_IB
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_CHUNK_ID_OLD
+value|0xff
+end_define
+
+begin_struct
+struct|struct
+name|drm_radeon_cs_chunk
+block|{
+name|uint32_t
+name|chunk_id
+decl_stmt|;
+name|uint32_t
+name|length_dw
+decl_stmt|;
+name|uint64_t
+name|chunk_data
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|drm_radeon_cs
+block|{
+name|uint32_t
+name|num_chunks
+decl_stmt|;
+name|uint32_t
+name|cs_id
+decl_stmt|;
+name|uint64_t
+name|chunks
+decl_stmt|;
+comment|/* this points to uint64_t * which point to 				   cs chunks */
+block|}
+struct|;
+end_struct
 
 begin_endif
 endif|#

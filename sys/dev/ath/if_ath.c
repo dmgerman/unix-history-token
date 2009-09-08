@@ -6154,10 +6154,19 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|ieee80211_beacon_miss
+comment|/* 			 * Program the beacon registers using the last rx'd 			 * beacon frame and enable sync on the next beacon 			 * we see.  This should handle the case where we 			 * wakeup and find the same AP and also the case where 			 * we wakeup and need to roam.  For the latter we 			 * should get bmiss events that trigger a roam. 			 */
+name|ath_beacon_config
 argument_list|(
-name|ic
+name|sc
+argument_list|,
+name|NULL
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_syncbeacon
+operator|=
+literal|1
 expr_stmt|;
 block|}
 else|else
@@ -7034,7 +7043,6 @@ name|mask
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|&
 name|mask
 argument_list|)
 argument_list|,

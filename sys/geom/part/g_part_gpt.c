@@ -2512,7 +2512,7 @@ operator|+
 literal|1
 index|]
 operator|=
-literal|0xff
+literal|0x01
 expr_stmt|;
 comment|/* shd */
 name|table
@@ -2524,7 +2524,7 @@ operator|+
 literal|2
 index|]
 operator|=
-literal|0xff
+literal|0x01
 expr_stmt|;
 comment|/* ssect */
 name|table
@@ -2536,7 +2536,7 @@ operator|+
 literal|3
 index|]
 operator|=
-literal|0xff
+literal|0x00
 expr_stmt|;
 comment|/* scyl */
 name|table

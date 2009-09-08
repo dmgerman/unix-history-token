@@ -134,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_llatbl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/netisr.h>
 end_include
 
@@ -608,6 +614,11 @@ argument_list|,
 name|m
 argument_list|,
 name|ro
+argument_list|,
+name|M_GETFIB
+argument_list|(
+name|m
+argument_list|)
 argument_list|)
 operator|==
 literal|0
@@ -789,6 +800,17 @@ operator|=
 operator|(
 expr|struct
 name|rtentry
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
+name|ro
+operator|->
+name|ro_lle
+operator|=
+operator|(
+expr|struct
+name|llentry
 operator|*
 operator|)
 name|NULL
