@@ -13109,6 +13109,7 @@ operator|)
 return|;
 block|}
 comment|/*********************************************************************  *  *  Setup the Legacy or MSI Interrupt handler  *  **********************************************************************/
+specifier|static
 name|int
 name|em_allocate_legacy
 parameter_list|(

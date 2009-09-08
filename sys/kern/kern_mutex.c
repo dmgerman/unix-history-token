@@ -526,6 +526,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|assert_mtx
 parameter_list|(
@@ -554,6 +555,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|lock_mtx
 parameter_list|(
@@ -580,6 +582,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|lock_spin
 parameter_list|(
@@ -601,6 +604,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|unlock_mtx
 parameter_list|(
@@ -646,7 +650,12 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* XXX: FlexeLint retval */
+end_comment
+
 begin_function
+specifier|static
 name|int
 name|unlock_spin
 parameter_list|(

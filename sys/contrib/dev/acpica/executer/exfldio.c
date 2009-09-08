@@ -2230,6 +2230,7 @@ name|AccessBitWidth
 argument_list|)
 expr_stmt|;
 comment|/* Get initial Datum from the input buffer */
+comment|/* XXX: Flexelint sees arg 9 for bufferlen 8 */
 name|ACPI_MEMCPY
 argument_list|(
 operator|&

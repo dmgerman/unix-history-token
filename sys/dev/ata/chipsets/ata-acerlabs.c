@@ -662,6 +662,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+comment|/* XXX: Flexelint: Reuse of for loop variable 'i' at 'line 124' could cause chaos */
 for|for
 control|(
 name|i

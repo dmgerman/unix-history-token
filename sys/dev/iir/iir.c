@@ -6984,6 +6984,7 @@ operator|)
 operator|->
 name|page
 expr_stmt|;
+comment|/* XXX: FlexeLint: why ?? */
 switch|switch
 condition|(
 name|page

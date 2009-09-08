@@ -1880,7 +1880,6 @@ comment|/* AppIE length in bytes */
 name|uint16_t
 name|bo_csa_trailer_len
 decl_stmt|;
-empty_stmt|;
 name|uint8_t
 modifier|*
 name|bo_csa

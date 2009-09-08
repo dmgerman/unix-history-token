@@ -734,7 +734,7 @@ begin_define
 define|#
 directive|define
 name|RT2573_RF_BUSY
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment

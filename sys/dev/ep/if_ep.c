@@ -3063,6 +3063,7 @@ directive|endif
 block|}
 else|else
 block|{
+comment|/* XXX: FlexeLint doesn't like ; */
 if|if
 condition|(
 name|status

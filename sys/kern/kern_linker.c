@@ -8610,6 +8610,7 @@ argument_list|)
 operator|)
 return|;
 comment|/* traverse the linker path */
+comment|/* XXX: FlexeLint: this is not safe, ep will count past NUL */
 name|len
 operator|=
 name|strlen

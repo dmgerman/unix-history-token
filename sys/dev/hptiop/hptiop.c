@@ -2395,6 +2395,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* XXX: Flexelint arg2 is 16 bytes, arg3 is 32 */
 name|memcpy
 argument_list|(
 operator|&
@@ -3100,6 +3101,7 @@ break|break;
 case|case
 name|IOP_RESULT_CHECK_CONDITION
 case|:
+comment|/* XXX: FlexeLint: arg2=16b arg3=32 */
 name|memcpy
 argument_list|(
 operator|&

@@ -2015,7 +2015,7 @@ operator|<
 literal|500000
 name|printf
 argument_list|(
-literal|"text(%d) trancated to %d.\n"
+literal|"text(%d) truncated to %d.\n"
 argument_list|,
 name|len
 argument_list|,
@@ -2026,7 +2026,7 @@ else|#
 directive|else
 name|printf
 argument_list|(
-literal|"text(%d) trancated to %td.\n"
+literal|"text(%d) truncated to %td.\n"
 argument_list|,
 name|len
 argument_list|,

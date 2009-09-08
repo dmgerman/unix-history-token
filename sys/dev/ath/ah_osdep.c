@@ -516,6 +516,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* XXX: FlexeLint return in void function ? */
+end_comment
+
 begin_function
 name|void
 name|ath_hal_free

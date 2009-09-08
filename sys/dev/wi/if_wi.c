@@ -9090,6 +9090,7 @@ name|ident
 argument_list|)
 expr_stmt|;
 comment|/* value should be the format like "V2.00-11" */
+comment|/* XXX: Flexelint: ident is local, p is arg */
 if|if
 condition|(
 name|wi_read_rid

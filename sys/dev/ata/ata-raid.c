@@ -2847,7 +2847,6 @@ name|rdp
 operator|->
 name|interleave
 expr_stmt|;
-empty_stmt|;
 if|if
 condition|(
 name|bp
@@ -6846,6 +6845,7 @@ name|bit
 init|=
 literal|0
 decl_stmt|;
+comment|/* XXX: Flexelint not happy */
 while|while
 condition|(
 name|config

@@ -2315,6 +2315,7 @@ argument_list|(
 name|req
 argument_list|)
 expr_stmt|;
+comment|/* XXX: FlexeLint: ActionData is only 4 bytes */
 name|memcpy
 argument_list|(
 operator|&

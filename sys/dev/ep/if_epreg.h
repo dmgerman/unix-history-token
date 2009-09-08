@@ -1358,7 +1358,8 @@ name|EP_BUSY_WAIT
 parameter_list|(
 name|sc
 parameter_list|)
-value|while (CSR_READ_2(sc, EP_STATUS)& S_COMMAND_IN_PROGRESS)
+define|\
+value|do {									\ 		while (CSR_READ_2(sc, EP_STATUS)& S_COMMAND_IN_PROGRESS)	\ 			continue;						\ 	} while (0)
 end_define
 
 begin_comment
