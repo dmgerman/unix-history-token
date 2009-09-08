@@ -4133,6 +4133,12 @@ name|td
 operator|=
 name|curthread
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|rebooting
+condition|)
+block|{
 name|thread_lock
 argument_list|(
 name|td
@@ -4165,6 +4171,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+block|}
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -4192,6 +4199,12 @@ operator|&
 name|icu_lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|rebooting
+condition|)
+block|{
 name|thread_lock
 argument_list|(
 name|td
@@ -4207,6 +4220,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
