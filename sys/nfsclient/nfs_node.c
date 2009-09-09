@@ -575,6 +575,8 @@ operator|->
 name|v_vnlock
 argument_list|,
 name|LK_EXCLUSIVE
+operator||
+name|LK_NOWITNESS
 argument_list|,
 name|NULL
 argument_list|)
