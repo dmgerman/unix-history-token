@@ -167,7 +167,7 @@ begin_define
 define|#
 directive|define
 name|AAC_CMD_TIMEOUT
-value|30
+value|120
 end_define
 
 begin_comment
