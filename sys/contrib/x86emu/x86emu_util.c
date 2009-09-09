@@ -8,6 +8,10 @@ comment|/*	$NetBSD: x86emu_util.c,v 1.2 2007/12/04 17:32:22 joerg Exp $	*/
 end_comment
 
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/*  *  *  Realmode X86 Emulator Library  *  *  Copyright (C) 1996-1999 SciTech Software, Inc.  *  Copyright (C) David Mosberger-Tang  *  Copyright (C) 1999 Egbert Eich  *  Copyright (C) 2007 Joerg Sonnenberger  *  *  ========================================================================  *  *  Permission to use, copy, modify, distribute, and sell this software and  *  its documentation for any purpose is hereby granted without fee,  *  provided that the above copyright notice appear in all copies and that  *  both that copyright notice and this permission notice appear in  *  supporting documentation, and that the name of the authors not be used  *  in advertising or publicity pertaining to distribution of the software  *  without specific, written prior permission.  The authors makes no  *  representations about the suitability of this software for any purpose.  *  It is provided "as is" without express or implied warranty.  *  *  THE AUTHORS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,  *  INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO  *  EVENT SHALL THE AUTHORS BE LIABLE FOR ANY SPECIAL, INDIRECT OR  *  CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF  *  USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR  *  OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  *  PERFORMANCE OF THIS SOFTWARE.  *  */
 end_comment
 
@@ -26,13 +30,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/x86emu/x86emu.h>
+file|<contrib/x86emu/x86emu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/x86emu/x86emu_regs.h>
+file|<contrib/x86emu/x86emu_regs.h>
 end_include
 
 begin_comment
@@ -173,7 +177,7 @@ return|;
 block|}
 else|else
 return|return
-name|letoh32
+name|le32toh
 argument_list|(
 operator|*
 operator|(
@@ -192,7 +196,7 @@ return|;
 else|#
 directive|else
 return|return
-name|letoh16
+name|le16toh
 argument_list|(
 operator|*
 operator|(
@@ -337,7 +341,7 @@ return|;
 block|}
 else|else
 return|return
-name|letoh32
+name|le32toh
 argument_list|(
 operator|*
 operator|(
@@ -356,7 +360,7 @@ return|;
 else|#
 directive|else
 return|return
-name|letoh32
+name|le32toh
 argument_list|(
 operator|*
 operator|(

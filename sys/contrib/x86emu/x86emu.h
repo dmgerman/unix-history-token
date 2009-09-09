@@ -8,6 +8,10 @@ comment|/*	$OpenBSD: x86emu.h,v 1.3 2009/06/06 03:45:05 matthieu Exp $ */
 end_comment
 
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/**************************************************************************** * *  Realmode X86 Emulator Library * *  Copyright (C) 1996-1999 SciTech Software, Inc. *  Copyright (C) David Mosberger-Tang *  Copyright (C) 1999 Egbert Eich *  Copyright (C) 2007 Joerg Sonnenberger * *  ======================================================================== * *  Permission to use, copy, modify, distribute, and sell this software and *  its documentation for any purpose is hereby granted without fee, *  provided that the above copyright notice appear in all copies and that *  both that copyright notice and this permission notice appear in *  supporting documentation, and that the name of the authors not be used *  in advertising or publicity pertaining to distribution of the software *  without specific, written prior permission.  The authors makes no *  representations about the suitability of this software for any purpose. *  It is provided "as is" without express or implied warranty. * *  THE AUTHORS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, *  INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO *  EVENT SHALL THE AUTHORS BE LIABLE FOR ANY SPECIAL, INDIRECT OR *  CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF *  USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR *  OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR *  PERFORMANCE OF THIS SOFTWARE. * ****************************************************************************/
 end_comment
 
@@ -45,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/setjmp.h>
 end_include
 
 begin_else
@@ -291,19 +301,9 @@ name|struct
 name|x86emu_regs
 name|x86
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|_KERNEL
-name|label_t
-name|exec_state
-decl_stmt|;
-else|#
-directive|else
 name|jmp_buf
 name|exec_state
 decl_stmt|;
-endif|#
-directive|endif
 name|uint64_t
 name|cur_cycles
 decl_stmt|;
@@ -597,7 +597,7 @@ expr|struct
 name|x86emu
 operator|*
 argument_list|)
-name|__dead
+name|__dead2
 decl_stmt|;
 end_decl_stmt
 
