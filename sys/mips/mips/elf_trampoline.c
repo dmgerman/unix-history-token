@@ -107,7 +107,7 @@ name|void
 modifier|*
 name|src
 parameter_list|,
-name|int
+name|size_t
 name|len
 parameter_list|)
 block|{
@@ -218,7 +218,7 @@ name|void
 modifier|*
 name|addr
 parameter_list|,
-name|int
+name|size_t
 name|count
 parameter_list|)
 block|{
