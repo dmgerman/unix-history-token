@@ -8696,7 +8696,7 @@ argument_list|)
 expr_stmt|;
 name|vput
 argument_list|(
-name|drip
+name|dirp
 argument_list|)
 expr_stmt|;
 block|}
