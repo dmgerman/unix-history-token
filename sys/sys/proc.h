@@ -801,13 +801,13 @@ decl_stmt|;
 comment|/* (a) Size of the kstack. */
 name|void
 modifier|*
-name|td_space1
+name|td_unused1
 decl_stmt|;
 name|vm_offset_t
-name|td_space2
+name|td_unused2
 decl_stmt|;
 name|int
-name|td_space3
+name|td_unused3
 decl_stmt|;
 specifier|volatile
 name|u_int
