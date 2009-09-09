@@ -144,7 +144,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/pc/vesa.h>
+file|<dev/fb/vesa.h>
 end_include
 
 begin_include
