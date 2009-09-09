@@ -29,11 +29,33 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n64
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/elf64.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<sys/elf32.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -306,6 +328,22 @@ modifier|*
 name|kstart
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|__mips_n64
+name|Elf64_Ehdr
+modifier|*
+name|eh
+decl_stmt|;
+name|Elf64_Phdr
+name|phdr
+index|[
+literal|64
+index|]
+comment|/* XXX */
+decl_stmt|;
+else|#
+directive|else
 name|Elf32_Ehdr
 modifier|*
 name|eh
@@ -317,6 +355,8 @@ literal|64
 index|]
 comment|/* XXX */
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|i
 decl_stmt|;
@@ -324,6 +364,19 @@ name|void
 modifier|*
 name|entry_point
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__mips_n64
+name|eh
+operator|=
+operator|(
+name|Elf64_Ehdr
+operator|*
+operator|)
+name|kstart
+expr_stmt|;
+else|#
+directive|else
 name|eh
 operator|=
 operator|(
@@ -332,6 +385,8 @@ operator|*
 operator|)
 name|kstart
 expr_stmt|;
+endif|#
+directive|endif
 name|entry_point
 operator|=
 operator|(
