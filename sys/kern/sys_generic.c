@@ -3854,6 +3854,8 @@ operator|->
 name|ex
 argument_list|,
 name|tvp
+argument_list|,
+name|NFDBITS
 argument_list|)
 operator|)
 return|;
@@ -3888,6 +3890,9 @@ name|struct
 name|timeval
 modifier|*
 name|tvp
+parameter_list|,
+name|int
+name|abi_nfdbits
 parameter_list|)
 block|{
 name|struct
@@ -3944,6 +3949,8 @@ name|nbufbytes
 decl_stmt|,
 name|ncpbytes
 decl_stmt|,
+name|ncpubytes
+decl_stmt|,
 name|nfdbits
 decl_stmt|;
 if|if
@@ -3996,6 +4003,17 @@ expr_stmt|;
 name|ncpbytes
 operator|=
 name|nfdbits
+operator|/
+name|NBBY
+expr_stmt|;
+name|ncpubytes
+operator|=
+name|roundup
+argument_list|(
+name|nd
+argument_list|,
+name|abi_nfdbits
+argument_list|)
 operator|/
 name|NBBY
 expr_stmt|;
@@ -4080,7 +4098,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|do {								\ 		if (name == NULL)					\ 			ibits[x] = NULL;				\ 		else {							\ 			ibits[x] = sbp + nbufbytes / 2 / sizeof *sbp;	\ 			obits[x] = sbp;					\ 			sbp += ncpbytes / sizeof *sbp;			\ 			error = copyin(name, ibits[x], ncpbytes);	\ 			if (error != 0)					\ 				goto done;				\ 		}							\ 	} while (0)
+value|do {								\ 		if (name == NULL)					\ 			ibits[x] = NULL;				\ 		else {							\ 			ibits[x] = sbp + nbufbytes / 2 / sizeof *sbp;	\ 			obits[x] = sbp;					\ 			sbp += ncpbytes / sizeof *sbp;			\ 			error = copyin(name, ibits[x], ncpubytes);	\ 			if (error != 0)					\ 				goto done;				\ 			bzero((char *)ibits[x] + ncpubytes,		\ 			    ncpbytes - ncpubytes);			\ 		}							\ 	} while (0)
 name|getbits
 argument_list|(
 name|fd_in
@@ -4371,7 +4389,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|if (name&& (error2 = copyout(obits[x], name, ncpbytes))) \ 		error = error2;
+value|if (name&& (error2 = copyout(obits[x], name, ncpubytes))) \ 		error = error2;
 if|if
 condition|(
 name|error
