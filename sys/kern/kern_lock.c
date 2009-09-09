@@ -2170,7 +2170,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|ADAPTIVE_LOCKMGRS
-comment|/* 			 * If the owner is running on another CPU, spin until 			 * the owner stops running or the state of the lock 			 * changes. 			 */
+comment|/* 			 * If the owner is running on another CPU, spin until 			 * the owner stops running or the state of the lock 			 * changes.  We need a double-state handle here 			 * because for a failed acquisition the lock can be 			 * either held in exclusive mode or shared mode 			 * (for the writer starvation avoidance technique). 			 */
 if|if
 condition|(
 name|LK_CAN_ADAPT
@@ -2279,6 +2279,10 @@ condition|)
 name|cpu_spinwait
 argument_list|()
 expr_stmt|;
+name|GIANT_RESTORE
+argument_list|()
+expr_stmt|;
+continue|continue;
 block|}
 elseif|else
 if|if
@@ -2403,6 +2407,9 @@ name|cpu_spinwait
 argument_list|()
 expr_stmt|;
 block|}
+name|GIANT_RESTORE
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|i
@@ -3154,6 +3161,10 @@ condition|)
 name|cpu_spinwait
 argument_list|()
 expr_stmt|;
+name|GIANT_RESTORE
+argument_list|()
+expr_stmt|;
+continue|continue;
 block|}
 elseif|else
 if|if
@@ -3293,6 +3304,9 @@ name|cpu_spinwait
 argument_list|()
 expr_stmt|;
 block|}
+name|GIANT_RESTORE
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|i

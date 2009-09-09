@@ -2568,6 +2568,9 @@ operator|<
 name|asx_retries
 condition|)
 block|{
+name|GIANT_SAVE
+argument_list|()
+expr_stmt|;
 name|spintries
 operator|++
 expr_stmt|;
@@ -2611,9 +2614,6 @@ name|spintries
 argument_list|,
 name|i
 argument_list|)
-expr_stmt|;
-name|GIANT_SAVE
-argument_list|()
 expr_stmt|;
 name|x
 operator|=
