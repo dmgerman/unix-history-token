@@ -4025,6 +4025,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|err
 operator|=
 name|igb_xmit
@@ -4034,6 +4035,9 @@ argument_list|,
 operator|&
 name|m
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
@@ -4178,6 +4182,7 @@ condition|)
 break|break;
 if|if
 condition|(
+operator|(
 name|err
 operator|=
 name|igb_xmit
@@ -4187,6 +4192,9 @@ argument_list|,
 operator|&
 name|next
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
