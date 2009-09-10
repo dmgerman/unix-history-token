@@ -28,61 +28,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCI_DOMAINMAX
-value|65535
-end_define
-
-begin_comment
-comment|/* highest supported domain number */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCI_BUSMAX
-value|255
-end_define
-
-begin_comment
-comment|/* highest supported bus number */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCI_SLOTMAX
-value|31
-end_define
-
-begin_comment
-comment|/* highest supported slot number */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCI_FUNCMAX
-value|7
-end_define
-
-begin_comment
-comment|/* highest supported function number */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCI_REGMAX
-value|255
-end_define
-
-begin_comment
-comment|/* highest supported config register addr. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PCI_MAXMAPS_0
 value|6
 end_define
