@@ -7405,6 +7405,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|uma_zfree
+argument_list|(
+name|uma_inode
+argument_list|,
+name|ip
+argument_list|)
+expr_stmt|;
 operator|*
 name|vpp
 operator|=

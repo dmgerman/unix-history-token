@@ -792,6 +792,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|free
+argument_list|(
+name|pvd
+argument_list|,
+name|M_PFSVNCACHE
+argument_list|)
+expr_stmt|;
 operator|*
 name|vpp
 operator|=
