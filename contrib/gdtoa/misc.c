@@ -126,8 +126,14 @@ argument_list|(
 literal|0
 argument_list|)
 block|;
+comment|/* The k> Kmax case does not need ACQUIRE_DTOA_LOCK(0), */
+comment|/* but this case seems very unlikely. */
 if|if
 condition|(
+name|k
+operator|<=
+name|Kmax
+operator|&&
 operator|(
 name|rv
 operator|=
@@ -225,6 +231,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|k
+operator|<=
+name|Kmax
+operator|&&
 name|pmem_next
 operator|-
 name|private_mem
@@ -345,6 +355,25 @@ condition|(
 name|v
 condition|)
 block|{
+if|if
+condition|(
+name|v
+operator|->
+name|k
+operator|>
+name|Kmax
+condition|)
+name|free
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|v
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|ACQUIRE_DTOA_LOCK
 argument_list|(
 literal|0
@@ -378,18 +407,16 @@ expr_stmt|;
 block|}
 end_expr_stmt
 
-begin_macro
-unit|}   int
+begin_decl_stmt
+unit|} 	}
+name|int
 name|lo0bits
 ifdef|#
 directive|ifdef
 name|KR_headers
 argument_list|(
-argument|y
+name|y
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|ULong
 modifier|*
 name|y

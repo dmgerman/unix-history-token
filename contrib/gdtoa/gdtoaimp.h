@@ -1269,7 +1269,7 @@ value|do {				\ 	if (__isthreaded)					\ 		_pthread_mutex_unlock(&__gdtoa_locks[
 define|#
 directive|define
 name|Kmax
-value|15
+value|9
 struct|struct
 name|Bigint
 block|{
