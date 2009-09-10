@@ -31945,11 +31945,19 @@ begin_comment
 comment|/* COMPAT_FREEBSD4 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_FREEBSD6
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD5
+argument_list|)
+end_if
 
 begin_endif
 endif|#
@@ -31957,14 +31965,62 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* COMPAT_FREEBSD6 */
+comment|/* COMPAT_FREEBSD[45] */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD5
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD6
+argument_list|)
+end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* COMPAT_FREEBSD[456] */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD5
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD6
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|COMPAT_FREEBSD7
-end_ifdef
+argument_list|)
+end_if
 
 begin_struct
 struct|struct
@@ -32269,7 +32325,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* COMPAT_FREEBSD7 */
+comment|/* COMPAT_FREEBSD[4567] */
 end_comment
 
 begin_define
