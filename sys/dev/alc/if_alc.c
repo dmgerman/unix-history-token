@@ -4733,6 +4733,17 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|alc_res
+index|[
+literal|0
+index|]
+operator|!=
+name|NULL
+condition|)
 name|alc_phy_down
 argument_list|(
 name|sc
