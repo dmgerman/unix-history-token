@@ -137,6 +137,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|gdtset
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -162,13 +169,6 @@ end_include
 begin_comment
 comment|/* XXX for PCPU_GET */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|gdtset
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 specifier|static
