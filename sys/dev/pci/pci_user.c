@@ -2622,7 +2622,7 @@ case|:
 case|case
 literal|1
 case|:
-comment|/* Make sure register is in bounds and aligned. */
+comment|/* Make sure register is not negative and aligned. */
 if|if
 condition|(
 name|io
@@ -2630,18 +2630,6 @@ operator|->
 name|pi_reg
 operator|<
 literal|0
-operator|||
-name|io
-operator|->
-name|pi_reg
-operator|+
-name|io
-operator|->
-name|pi_width
-operator|>
-name|PCI_REGMAX
-operator|+
-literal|1
 operator|||
 name|io
 operator|->
