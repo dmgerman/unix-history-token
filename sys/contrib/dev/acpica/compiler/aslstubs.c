@@ -40,7 +40,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acnamesp.h"
+file|<contrib/dev/acpica/include/acnamesp.h>
 end_include
 
 begin_define
