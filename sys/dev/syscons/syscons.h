@@ -740,7 +740,7 @@ decl_stmt|;
 comment|/* configuration flags */
 define|#
 directive|define
-name|SC_VESA800X600
+name|SC_VESAMODE
 value|(1<< 7)
 define|#
 directive|define
