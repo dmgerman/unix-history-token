@@ -1784,7 +1784,7 @@ name|sel
 operator||=
 name|AMDTEMP_TTSR_SELSENSOR
 expr_stmt|;
-comment|/* FALLTROUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|SENSOR0_CORE0
 case|:
@@ -1809,7 +1809,7 @@ name|sel
 operator||=
 name|AMDTEMP_TTSR_SELSENSOR
 expr_stmt|;
-comment|/* FALLTROUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|SENSOR0_CORE1
 case|:
