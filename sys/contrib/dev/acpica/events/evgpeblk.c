@@ -2246,7 +2246,7 @@ block|}
 comment|/* Disable all GPEs within this register */
 name|Status
 operator|=
-name|AcpiWrite
+name|AcpiHwWrite
 argument_list|(
 literal|0x00
 argument_list|,
@@ -2271,7 +2271,7 @@ block|}
 comment|/* Clear any pending GPE events within this register */
 name|Status
 operator|=
-name|AcpiWrite
+name|AcpiHwWrite
 argument_list|(
 literal|0xFF
 argument_list|,

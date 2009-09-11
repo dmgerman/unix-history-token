@@ -327,7 +327,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_NUM_PREDEFINED_REGIONS
-value|8
+value|9
 end_define
 
 begin_define
@@ -378,7 +378,7 @@ value|36
 end_define
 
 begin_comment
-comment|/* SMBus bidirectional buffer size */
+comment|/* SMBus and IPMI bidirectional buffer size */
 end_comment
 
 begin_define
@@ -386,6 +386,31 @@ define|#
 directive|define
 name|ACPI_SMBUS_BUFFER_SIZE
 value|34
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IPMI_BUFFER_SIZE
+value|66
+end_define
+
+begin_comment
+comment|/* _SxD and _SxW control methods */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NUM_SxD_METHODS
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NUM_SxW_METHODS
+value|5
 end_define
 
 begin_comment

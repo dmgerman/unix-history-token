@@ -108,7 +108,7 @@ block|}
 comment|/* Get current value of the enable register that contains this GPE */
 name|Status
 operator|=
-name|AcpiRead
+name|AcpiHwRead
 argument_list|(
 operator|&
 name|EnableMask
@@ -159,7 +159,7 @@ expr_stmt|;
 comment|/* Write the updated enable mask */
 name|Status
 operator|=
-name|AcpiWrite
+name|AcpiHwWrite
 argument_list|(
 name|EnableMask
 argument_list|,
@@ -222,7 +222,7 @@ block|}
 comment|/* Write the entire GPE (runtime) enable register */
 name|Status
 operator|=
-name|AcpiWrite
+name|AcpiHwWrite
 argument_list|(
 name|GpeRegisterInfo
 operator|->
@@ -288,7 +288,7 @@ expr_stmt|;
 comment|/*      * Write a one to the appropriate bit in the status register to      * clear this GPE.      */
 name|Status
 operator|=
-name|AcpiWrite
+name|AcpiHwWrite
 argument_list|(
 name|RegisterBit
 argument_list|,
@@ -420,7 +420,7 @@ block|}
 comment|/* GPE currently active (status bit == 1)? */
 name|Status
 operator|=
-name|AcpiRead
+name|AcpiHwRead
 argument_list|(
 operator|&
 name|InByte
@@ -520,7 +520,7 @@ block|{
 comment|/* Disable all GPEs in this register */
 name|Status
 operator|=
-name|AcpiWrite
+name|AcpiHwWrite
 argument_list|(
 literal|0x00
 argument_list|,
@@ -605,7 +605,7 @@ block|{
 comment|/* Clear status on all GPEs in this register */
 name|Status
 operator|=
-name|AcpiWrite
+name|AcpiHwWrite
 argument_list|(
 literal|0xFF
 argument_list|,
@@ -706,7 +706,7 @@ block|}
 comment|/* Enable all "runtime" GPEs in this register */
 name|Status
 operator|=
-name|AcpiWrite
+name|AcpiHwWrite
 argument_list|(
 name|GpeBlock
 operator|->
@@ -814,7 +814,7 @@ block|}
 comment|/* Enable all "wake" GPEs in this register */
 name|Status
 operator|=
-name|AcpiWrite
+name|AcpiHwWrite
 argument_list|(
 name|GpeBlock
 operator|->

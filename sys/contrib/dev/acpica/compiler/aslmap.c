@@ -248,7 +248,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * DATA STRUCTURE:  ReservedMethods  *  * DESCRIPTION:     Contains all reserved methods and names as defined in the  *                  ACPI specification.  Used during the analysis phase to  *                  ensure that reserved methods have the required number of  *                  arguments and the proper return type.  *  * Each entry in the table contains the following items:  *  * Name         - The ACPI reserved name  * Args         - Number of arguments to the method  * Flags        - Whether this method must return a value or not  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * DATA STRUCTURE:  ReservedMethods  *  * DESCRIPTION:     Contains all reserved methods and names as defined in the  *                  ACPI specification.  Used during the analysis phase to  *                  ensure that reserved methods have the required number of  *                  arguments and the proper return type.  *  * Each entry in the table contains the following items:  *  * Name         - The ACPI reserved name  * Args         - Number of arguments to the method  * Flags        - Whether this method must return a value or not. Or if the  *                name is a resource descriptor label.  *  ******************************************************************************/
 end_comment
 
 begin_decl_stmt
@@ -480,6 +480,15 @@ block|}
 block|,
 comment|/* Acpi 3.0 */
 block|{
+literal|"_ART"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
 literal|"_ASI"
 block|,
 literal|0
@@ -528,6 +537,15 @@ literal|0
 block|}
 block|,
 block|{
+literal|"_BCT"
+block|,
+literal|1
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
 literal|"_BDN"
 block|,
 literal|0
@@ -552,6 +570,15 @@ name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
 block|{
+literal|"_BIX"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
 literal|"_BLT"
 block|,
 literal|3
@@ -568,6 +595,15 @@ block|,
 name|ASL_RSVD_RESOURCE_NAME
 block|}
 block|,
+block|{
+literal|"_BMA"
+block|,
+literal|1
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
 block|{
 literal|"_BMC"
 block|,
@@ -586,6 +622,15 @@ name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
 comment|/* Acpi 3.0 */
+block|{
+literal|"_BMS"
+block|,
+literal|1
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
 block|{
 literal|"_BQC"
 block|,
@@ -629,6 +674,15 @@ name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
 comment|/* Acpi 3.0 */
+block|{
+literal|"_CDM"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
 block|{
 literal|"_CID"
 block|,
@@ -777,6 +831,15 @@ block|}
 block|,
 comment|/* Acpi 3.0 */
 block|{
+literal|"_DTI"
+block|,
+literal|1
+block|,
+literal|0
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
 literal|"_EC_"
 block|,
 literal|0
@@ -873,6 +936,15 @@ literal|0
 block|}
 block|,
 block|{
+literal|"_FIF"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
 literal|"_FIX"
 block|,
 literal|0
@@ -880,6 +952,51 @@ block|,
 name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
+block|{
+literal|"_FPS"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
+literal|"_FSL"
+block|,
+literal|1
+block|,
+literal|0
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
+literal|"_FST"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
+literal|"_GAI"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
+literal|"_GHL"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
 block|{
 literal|"_GL_"
 block|,
@@ -1084,6 +1201,15 @@ name|ASL_RSVD_RESOURCE_NAME
 block|}
 block|,
 block|{
+literal|"_MBM"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
 literal|"_MEM"
 block|,
 literal|0
@@ -1125,6 +1251,15 @@ literal|0
 block|}
 block|,
 block|{
+literal|"_MSM"
+block|,
+literal|4
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
 literal|"_MTP"
 block|,
 literal|0
@@ -1132,6 +1267,15 @@ block|,
 name|ASL_RSVD_RESOURCE_NAME
 block|}
 block|,
+block|{
+literal|"_NTT"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
 block|{
 literal|"_OFF"
 block|,
@@ -1183,6 +1327,15 @@ block|}
 block|,
 comment|/* Acpi 3.0 */
 block|{
+literal|"_PAI"
+block|,
+literal|1
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
 literal|"_PCL"
 block|,
 literal|0
@@ -1207,6 +1360,15 @@ literal|0
 block|}
 block|,
 block|{
+literal|"_PDL"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
 literal|"_PIC"
 block|,
 literal|1
@@ -1214,6 +1376,15 @@ block|,
 literal|0
 block|}
 block|,
+block|{
+literal|"_PIF"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
 block|{
 literal|"_PLD"
 block|,
@@ -1223,6 +1394,33 @@ name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
 comment|/* Acpi 3.0 */
+block|{
+literal|"_PMC"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
+literal|"_PMD"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
+literal|"_PMM"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
 block|{
 literal|"_PPC"
 block|,
@@ -1264,6 +1462,24 @@ block|,
 name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
+block|{
+literal|"_PR3"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
+literal|"_PRL"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
 block|{
 literal|"_PRS"
 block|,
@@ -1386,6 +1602,15 @@ name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
 block|{
+literal|"_PTP"
+block|,
+literal|2
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
 literal|"_PTS"
 block|,
 literal|1
@@ -1393,6 +1618,15 @@ block|,
 literal|0
 block|}
 block|,
+block|{
+literal|"_PUR"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
 block|{
 literal|"_PXM"
 block|,
@@ -1651,6 +1885,15 @@ name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
 block|{
+literal|"_SHL"
+block|,
+literal|1
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
 literal|"_SHR"
 block|,
 literal|0
@@ -1733,6 +1976,15 @@ literal|0
 block|}
 block|,
 block|{
+literal|"_STP"
+block|,
+literal|2
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
 literal|"_STR"
 block|,
 literal|0
@@ -1740,6 +1992,15 @@ block|,
 name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
+block|{
+literal|"_STV"
+block|,
+literal|2
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
 block|{
 literal|"_SUN"
 block|,
@@ -1782,6 +2043,24 @@ name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
 comment|/* Acpi 3.0b */
+block|{
+literal|"_TIP"
+block|,
+literal|1
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
+literal|"_TIV"
+block|,
+literal|1
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
 block|{
 literal|"_TMP"
 block|,
@@ -4417,6 +4696,18 @@ argument_list|(
 name|AML_RAW_DATA_BYTE
 argument_list|,
 name|REGION_IO
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* REGIONSPACE_IPMI */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_RAW_DATA_BYTE
+argument_list|,
+name|REGION_IPMI
 argument_list|,
 literal|0
 argument_list|,

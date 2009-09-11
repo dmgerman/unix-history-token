@@ -680,9 +680,21 @@ specifier|extern
 specifier|const
 name|char
 modifier|*
+name|AcpiGbl_LowestDstateNames
+index|[
+name|ACPI_NUM_SxW_METHODS
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
 name|AcpiGbl_HighestDstateNames
 index|[
-literal|4
+name|ACPI_NUM_SxD_METHODS
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -816,6 +828,14 @@ name|ACPI_EXTERN
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|AcpiGbl_FadtGpeDevice
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|AcpiGbl_ModuleCodeList
 decl_stmt|;
 end_decl_stmt
 

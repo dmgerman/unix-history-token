@@ -563,7 +563,7 @@ block|}
 block|}
 block|}
 comment|/* Now delete the starting object, and we are done */
-name|AcpiNsDeleteNode
+name|AcpiNsRemoveNode
 argument_list|(
 name|ChildHandle
 argument_list|)

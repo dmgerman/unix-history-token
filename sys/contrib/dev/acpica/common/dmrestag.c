@@ -1403,7 +1403,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|UINT8
+name|char
 name|AcpiGbl_Prefix
 index|[
 name|ACPI_NUM_RES_PREFIX

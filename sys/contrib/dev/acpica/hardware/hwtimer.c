@@ -140,7 +140,7 @@ expr_stmt|;
 block|}
 name|Status
 operator|=
-name|AcpiRead
+name|AcpiHwRead
 argument_list|(
 name|Ticks
 argument_list|,

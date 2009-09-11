@@ -157,12 +157,129 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDeleteNode  *  * PARAMETERS:  Node            - Node to be deleted  *  * RETURN:      None  *  * DESCRIPTION: Delete a namespace node  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDeleteNode  *  * PARAMETERS:  Node            - Node to be deleted  *  * RETURN:      None  *  * DESCRIPTION: Delete a namespace node. All node deletions must come through  *              here. Detaches any attached objects, including any attached  *              data. If a handler is associated with attached data, it is  *              invoked before the node is deleted.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiNsDeleteNode
+parameter_list|(
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+parameter_list|)
+block|{
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
+decl_stmt|;
+name|ACPI_FUNCTION_NAME
+argument_list|(
+name|NsDeleteNode
+argument_list|)
+expr_stmt|;
+comment|/* Detach an object if there is one */
+name|AcpiNsDetachObject
+argument_list|(
+name|Node
+argument_list|)
+expr_stmt|;
+comment|/*      * Delete an attached data object if present (an object that was created      * and attached via AcpiAttachData). Note: After any normal object is      * detached above, the only possible remaining object is a data object.      */
+name|ObjDesc
+operator|=
+name|Node
+operator|->
+name|Object
+expr_stmt|;
+if|if
+condition|(
+name|ObjDesc
+operator|&&
+operator|(
+name|ObjDesc
+operator|->
+name|Common
+operator|.
+name|Type
+operator|==
+name|ACPI_TYPE_LOCAL_DATA
+operator|)
+condition|)
+block|{
+comment|/* Invoke the attached data deletion handler if present */
+if|if
+condition|(
+name|ObjDesc
+operator|->
+name|Data
+operator|.
+name|Handler
+condition|)
+block|{
+name|ObjDesc
+operator|->
+name|Data
+operator|.
+name|Handler
+argument_list|(
+name|Node
+argument_list|,
+name|ObjDesc
+operator|->
+name|Data
+operator|.
+name|Pointer
+argument_list|)
+expr_stmt|;
+block|}
+name|AcpiUtRemoveReference
+argument_list|(
+name|ObjDesc
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Now we can delete the node */
+operator|(
+name|void
+operator|)
+name|AcpiOsReleaseObject
+argument_list|(
+name|AcpiGbl_NamespaceCache
+argument_list|,
+name|Node
+argument_list|)
+expr_stmt|;
+name|ACPI_MEM_TRACKING
+argument_list|(
+name|AcpiGbl_NsNodeList
+operator|->
+name|TotalFreed
+operator|++
+argument_list|)
+expr_stmt|;
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ALLOCATIONS
+operator|,
+literal|"Node %p, Remaining %X\n"
+operator|,
+name|Node
+operator|,
+name|AcpiGbl_CurrentNodeCount
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsRemoveNode  *  * PARAMETERS:  Node            - Node to be removed/deleted  *  * RETURN:      None  *  * DESCRIPTION: Remove (unlink) and delete a namespace node  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiNsRemoveNode
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*
@@ -183,7 +300,7 @@ name|NextNode
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
-name|NsDeleteNode
+name|NsRemoveNode
 argument_list|,
 name|Node
 argument_list|)
@@ -288,27 +405,9 @@ name|Peer
 expr_stmt|;
 block|}
 block|}
-name|ACPI_MEM_TRACKING
+comment|/* Delete the node and any attached objects */
+name|AcpiNsDeleteNode
 argument_list|(
-name|AcpiGbl_NsNodeList
-operator|->
-name|TotalFreed
-operator|++
-argument_list|)
-expr_stmt|;
-comment|/* Detach an object if there is one, then delete the node */
-name|AcpiNsDetachObject
-argument_list|(
-name|Node
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|AcpiOsReleaseObject
-argument_list|(
-name|AcpiGbl_NamespaceCache
-argument_list|,
 name|Node
 argument_list|)
 expr_stmt|;
@@ -604,46 +703,12 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Now we can free this child object */
-name|ACPI_MEM_TRACKING
-argument_list|(
-name|AcpiGbl_NsNodeList
-operator|->
-name|TotalFreed
-operator|++
-argument_list|)
-expr_stmt|;
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_ALLOCATIONS
-operator|,
-literal|"Object %p, Remaining %X\n"
-operator|,
-name|ChildNode
-operator|,
-name|AcpiGbl_CurrentNodeCount
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Detach an object if there is one, then free the child node */
-name|AcpiNsDetachObject
+comment|/*          * Delete this child node and move on to the next child in the list.          * No need to unlink the node since we are deleting the entire branch.          */
+name|AcpiNsDeleteNode
 argument_list|(
 name|ChildNode
 argument_list|)
 expr_stmt|;
-comment|/* Now we can delete the node */
-operator|(
-name|void
-operator|)
-name|AcpiOsReleaseObject
-argument_list|(
-name|AcpiGbl_NamespaceCache
-argument_list|,
-name|ChildNode
-argument_list|)
-expr_stmt|;
-comment|/* And move on to the next child in the list */
 name|ChildNode
 operator|=
 name|NextNode
@@ -902,7 +967,7 @@ argument_list|(
 name|DeletionNode
 argument_list|)
 expr_stmt|;
-name|AcpiNsDeleteNode
+name|AcpiNsRemoveNode
 argument_list|(
 name|DeletionNode
 argument_list|)
