@@ -374,8 +374,8 @@ name|RT_DEVICEID_8168
 block|,
 literal|0
 block|,
-literal|"RealTek 8168/8168B/8168C/8168CP/8168D/8111B/8111C/8111CP PCIe "
-literal|"Gigabit Ethernet"
+literal|"RealTek 8168/8168B/8168C/8168CP/8168D/8168DP/"
+literal|"8111B/8111C/8111CP/8111DP PCIe Gigabit Ethernet"
 block|}
 block|,
 block|{
@@ -660,7 +660,15 @@ name|RL_HWREV_8168D
 block|,
 name|RL_8169
 block|,
-literal|"8168D"
+literal|"8168D/8111D"
+block|}
+block|,
+block|{
+name|RL_HWREV_8168DP
+block|,
+name|RL_8169
+block|,
+literal|"8168DP/8111DP"
 block|}
 block|,
 block|{
@@ -5805,6 +5813,9 @@ name|RL_HWREV_8168CP
 case|:
 case|case
 name|RL_HWREV_8168D
+case|:
+case|case
+name|RL_HWREV_8168DP
 case|:
 name|sc
 operator|->
