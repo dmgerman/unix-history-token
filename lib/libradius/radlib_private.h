@@ -65,6 +65,17 @@ begin_comment
 comment|/* RADIUS accounting */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RADIUS_SERVER
+value|2
+end_define
+
+begin_comment
+comment|/* RADIUS server */
+end_comment
+
 begin_comment
 comment|/* Defaults */
 end_comment
@@ -300,18 +311,18 @@ decl_stmt|;
 comment|/* Most recent error message */
 name|unsigned
 name|char
-name|request
+name|out
 index|[
 name|MSGSIZE
 index|]
 decl_stmt|;
 comment|/* Request to send */
 name|char
-name|request_created
+name|out_created
 decl_stmt|;
 comment|/* rad_create_request() called? */
 name|int
-name|req_len
+name|out_len
 decl_stmt|;
 comment|/* Length of request */
 name|char
@@ -343,18 +354,18 @@ decl_stmt|;
 comment|/* Are we an EAP Proxy? */
 name|unsigned
 name|char
-name|response
+name|in
 index|[
 name|MSGSIZE
 index|]
 decl_stmt|;
 comment|/* Response received */
 name|int
-name|resp_len
+name|in_len
 decl_stmt|;
 comment|/* Length of response */
 name|int
-name|resp_pos
+name|in_pos
 decl_stmt|;
 comment|/* Current position scanning attrs */
 name|int
