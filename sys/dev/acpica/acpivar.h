@@ -835,9 +835,6 @@ parameter_list|(
 name|ACPI_HANDLE
 name|h
 parameter_list|,
-name|UINT32
-name|fn
-parameter_list|,
 name|void
 modifier|*
 name|data

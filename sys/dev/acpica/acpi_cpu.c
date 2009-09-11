@@ -4284,7 +4284,7 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/*      * Read from P_LVLx to enter C2(+), checking time spent asleep.      * Use the ACPI timer for measuring sleep time.  Since we need to      * get the time very close to the CPU start/stop clock logic, this      * is the only reliable time source.      */
-name|AcpiRead
+name|AcpiHwRead
 argument_list|(
 operator|&
 name|start_time
@@ -4305,7 +4305,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/*      * Read the end time twice.  Since it may take an arbitrary time      * to enter the idle state, the first read may be executed before      * the processor has stopped.  Doing it again provides enough      * margin that we are certain to have a correct value.      */
-name|AcpiRead
+name|AcpiHwRead
 argument_list|(
 operator|&
 name|end_time
@@ -4316,7 +4316,7 @@ operator|.
 name|XPmTimerBlock
 argument_list|)
 expr_stmt|;
-name|AcpiRead
+name|AcpiHwRead
 argument_list|(
 operator|&
 name|end_time
