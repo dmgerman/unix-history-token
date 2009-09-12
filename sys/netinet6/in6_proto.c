@@ -2314,7 +2314,8 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Default value of per-interface flag for accepting ICMPv6 Router"
+literal|"Advertisement messages"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2658,7 +2659,8 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Default value of per-interface flag for automatically adding an IPv6"
+literal|" link-local address to interfaces when attached"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

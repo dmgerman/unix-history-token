@@ -626,13 +626,8 @@ decl_stmt|;
 comment|/* If I'm not a router, ignore it. */
 if|if
 condition|(
-name|V_ip6_accept_rtadv
-operator|!=
-literal|0
-operator|||
+operator|!
 name|V_ip6_forwarding
-operator|!=
-literal|1
 condition|)
 goto|goto
 name|freeit
@@ -1023,18 +1018,11 @@ index|[
 name|INET6_ADDRSTRLEN
 index|]
 decl_stmt|;
-comment|/* 	 * We only accept RAs only when 	 * the system-wide variable allows the acceptance, and 	 * per-interface variable allows RAs on the receiving interface. 	 */
+comment|/* 	 * We only accept RAs only when 	 * the node is not a router and 	 * per-interface variable allows RAs on the receiving interface. 	 */
 if|if
 condition|(
-name|V_ip6_accept_rtadv
-operator|==
-literal|0
-condition|)
-goto|goto
-name|freeit
-goto|;
-if|if
-condition|(
+name|V_ip6_forwarding
+operator|||
 operator|!
 operator|(
 name|ndi
@@ -2696,10 +2684,7 @@ if|if
 condition|(
 operator|!
 name|V_ip6_forwarding
-operator|&&
-name|V_ip6_accept_rtadv
 condition|)
-comment|/* XXX: better condition? */
 name|rt6_flush
 argument_list|(
 operator|&
@@ -2847,9 +2832,6 @@ comment|/* 	 * This function should be called only when acting as an autoconfigu
 if|if
 condition|(
 name|V_ip6_forwarding
-operator|||
-operator|!
-name|V_ip6_accept_rtadv
 condition|)
 block|{
 name|nd6log
@@ -2857,12 +2839,9 @@ argument_list|(
 operator|(
 name|LOG_WARNING
 operator|,
-literal|"defrouter_select: called unexpectedly (forwarding=%d, "
-literal|"accept_rtadv=%d)\n"
+literal|"defrouter_select: called unexpectedly (forwarding=%d)\n"
 operator|,
 name|V_ip6_forwarding
-operator|,
-name|V_ip6_accept_rtadv
 operator|)
 argument_list|)
 expr_stmt|;

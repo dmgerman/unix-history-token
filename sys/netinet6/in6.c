@@ -3681,6 +3681,24 @@ name|ia6_flags
 operator||=
 name|IN6_IFF_TENTATIVE
 expr_stmt|;
+comment|/* DAD should be performed after ND6_IFF_IFDISABLED is cleared. */
+if|if
+condition|(
+name|ND_IFINFO
+argument_list|(
+name|ifp
+argument_list|)
+operator|->
+name|flags
+operator|&
+name|ND6_IFF_IFDISABLED
+condition|)
+name|ia
+operator|->
+name|ia6_flags
+operator||=
+name|IN6_IFF_TENTATIVE
+expr_stmt|;
 comment|/* 	 * We are done if we have simply modified an existing address. 	 */
 if|if
 condition|(
@@ -3836,7 +3854,7 @@ name|IN6_IFAUPDATE_DADDELAY
 operator|)
 condition|)
 block|{
-comment|/* 			 * We need a random delay for DAD on the address 			 * being configured.  It also means delaying 			 * transmission of the corresponding MLD report to 			 * avoid report collision. 			 * [draft-ietf-ipv6-rfc2462bis-02.txt] 			 */
+comment|/* 			 * We need a random delay for DAD on the address 			 * being configured.  It also means delaying 			 * transmission of the corresponding MLD report to 			 * avoid report collision. 			 * [RFC 4861, Section 6.3.7] 			 */
 name|delay
 operator|=
 name|arc4random
@@ -9972,6 +9990,22 @@ name|IFF_LOOPBACK
 operator|)
 operator|!=
 literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+name|ND_IFINFO
+argument_list|(
+name|ifp
+argument_list|)
+operator|->
+name|flags
+operator|&
+name|ND6_IFF_IFDISABLED
 condition|)
 return|return
 operator|(

@@ -237,6 +237,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ND6_IFF_AUTO_LINKLOCAL
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
 name|ND6_CREATE
 value|LLE_CREATE
 end_define

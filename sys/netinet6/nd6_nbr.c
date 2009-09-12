@@ -5226,6 +5226,20 @@ return|return;
 block|}
 if|if
 condition|(
+name|ND_IFINFO
+argument_list|(
+name|ifa
+operator|->
+name|ifa_ifp
+argument_list|)
+operator|->
+name|flags
+operator|&
+name|ND6_IFF_IFDISABLED
+condition|)
+return|return;
+if|if
+condition|(
 name|nd6_dad_find
 argument_list|(
 name|ifa
@@ -6104,7 +6118,7 @@ name|ifp
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the address is a link-local address formed from an interface 	 * identifier based on the hardware address which is supposed to be 	 * uniquely assigned (e.g., EUI-64 for an Ethernet interface), IP 	 * operation on the interface SHOULD be disabled. 	 * [rfc2462bis-03 Section 5.4.5] 	 */
+comment|/* 	 * If the address is a link-local address formed from an interface 	 * identifier based on the hardware address which is supposed to be 	 * uniquely assigned (e.g., EUI-64 for an Ethernet interface), IP 	 * operation on the interface SHOULD be disabled. 	 * [RFC 4862, Section 5.4.5] 	 */
 if|if
 condition|(
 name|IN6_IS_ADDR_LINKLOCAL

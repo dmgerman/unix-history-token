@@ -674,7 +674,7 @@ name|V_ip6_auto_linklocal
 operator|=
 literal|1
 expr_stmt|;
-comment|/* enable by default */
+comment|/* enabled by default */
 endif|#
 directive|endif
 name|TUNABLE_INT_FETCH
@@ -739,7 +739,6 @@ name|V_ip6_accept_rtadv
 operator|=
 literal|0
 expr_stmt|;
-comment|/* "IPV6FORWARDING ? 0 : 1" is dangerous */
 name|V_ip6_log_interval
 operator|=
 literal|5
