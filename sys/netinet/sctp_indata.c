@@ -3813,8 +3813,6 @@ name|stcb
 operator|->
 name|sctp_socket
 argument_list|)
-operator|>>
-name|SCTP_PARTIAL_DELIVERY_SHIFT
 argument_list|,
 name|stcb
 operator|->
@@ -13672,7 +13670,7 @@ operator|)
 condition|)
 block|{
 comment|/* 		 * Yep the first one is here. We setup to start reception, 		 * by backing down the TSN just in case we can't deliver. 		 */
-comment|/* 		 * Before we start though either all of the message should 		 * be here or 1/4 the socket buffer max or nothing on the 		 * delivery queue and something can be delivered. 		 */
+comment|/* 		 * Before we start though either all of the message should 		 * be here or the socket buffer max or nothing on the 		 * delivery queue and something can be delivered. 		 */
 if|if
 condition|(
 name|stcb
@@ -13690,8 +13688,6 @@ name|stcb
 operator|->
 name|sctp_socket
 argument_list|)
-operator|>>
-name|SCTP_PARTIAL_DELIVERY_SHIFT
 argument_list|,
 name|stcb
 operator|->
