@@ -3868,6 +3868,36 @@ block|{
 name|int
 name|width
 decl_stmt|;
+if|if
+condition|(
+name|t
+operator|->
+name|t_utf8_left
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|TEKEN_XTERM
+if|if
+condition|(
+name|c
+operator|<=
+literal|0x1B
+condition|)
+return|return;
+endif|#
+directive|endif
+comment|/* TEKEN_XTERM */
+name|width
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
 name|c
 operator|=
 name|teken_scs_process
@@ -3877,7 +3907,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-comment|/* XXX: Don't process zero-width characters yet. */
 name|width
 operator|=
 name|teken_wcwidth
@@ -3885,6 +3914,7 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+comment|/* XXX: Don't process zero-width characters yet. */
 if|if
 condition|(
 name|width
@@ -3892,6 +3922,7 @@ operator|<=
 literal|0
 condition|)
 return|return;
+block|}
 ifdef|#
 directive|ifdef
 name|TEKEN_XTERM

@@ -150,93 +150,17 @@ directive|include
 file|"teken.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TEKEN_UTF8
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|"teken_wcwidth.h"
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !TEKEN_UTF8 */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|TEKEN_XTERM
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|teken_wcwidth
-parameter_list|(
-name|c
-parameter_list|)
-value|((c<= 0x1B) ? -1 : 1)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !TEKEN_XTERM */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|teken_wcwidth
-parameter_list|(
-name|c
-parameter_list|)
-value|(1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TEKEN_XTERM */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TEKEN_UTF8 */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TEKEN_XTERM
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|TEKEN_UTF8
-argument_list|)
-end_if
 
 begin_include
 include|#
@@ -250,7 +174,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !(TEKEN_XTERM&& TEKEN_UTF8) */
+comment|/* !TEKEN_XTERM */
 end_comment
 
 begin_define
@@ -313,7 +237,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* TEKEN_XTERM&& TEKEN_UTF8 */
+comment|/* TEKEN_XTERM */
 end_comment
 
 begin_comment
@@ -1057,18 +981,12 @@ argument_list|(
 name|t
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TEKEN_UTF8
 name|t
 operator|->
 name|t_utf8_left
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* TEKEN_UTF8 */
 name|teken_set_winsize
 argument_list|(
 name|t
@@ -1141,17 +1059,9 @@ name|t
 argument_list|)
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|TEKEN_XTERM
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|TEKEN_UTF8
-argument_list|)
 case|case
 literal|'\x0E'
 case|:
@@ -1176,7 +1086,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-comment|/* TEKEN_XTERM&& TEKEN_UTF8 */
+comment|/* TEKEN_XTERM */
 case|case
 literal|'\r'
 case|:
@@ -1397,10 +1307,27 @@ name|char
 name|c
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|TEKEN_UTF8
 comment|/* 	 * UTF-8 handling. 	 */
+if|if
+condition|(
+name|t
+operator|->
+name|t_utf8_left
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* UTF-8 disabled. */
+name|teken_input_char
+argument_list|(
+name|t
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 operator|(
@@ -1584,19 +1511,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|#
-directive|else
-comment|/* !TEKEN_UTF8 */
-name|teken_input_char
-argument_list|(
-name|t
-argument_list|,
-name|c
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* TEKEN_UTF8 */
 block|}
 end_function
 
@@ -1819,6 +1733,25 @@ name|teken_subr_do_reset
 argument_list|(
 name|t
 argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|teken_set_8bit
+parameter_list|(
+name|teken_t
+modifier|*
+name|t
+parameter_list|)
+block|{
+name|t
+operator|->
+name|t_utf8_left
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 block|}
 end_function

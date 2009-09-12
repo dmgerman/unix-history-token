@@ -463,6 +463,20 @@ argument_list|,
 name|scp
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|TEKEN_UTF8
+name|teken_set_8bit
+argument_list|(
+operator|&
+name|ts
+operator|->
+name|ts_teken
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* !TEKEN_UTF8 */
 name|tp
 operator|.
 name|tp_row

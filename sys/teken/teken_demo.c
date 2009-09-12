@@ -359,9 +359,6 @@ name|tp_row
 index|]
 expr_stmt|;
 comment|/* Convert Unicode to UTF-8. */
-ifdef|#
-directive|ifdef
-name|TEKEN_UTF8
 if|if
 condition|(
 name|px
@@ -553,21 +550,6 @@ literal|0x3f
 operator|)
 expr_stmt|;
 block|}
-else|#
-directive|else
-comment|/* !TEKEN_UTF8 */
-name|str
-index|[
-literal|0
-index|]
-operator|=
-name|px
-operator|->
-name|c
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* TEKEN_UTF8 */
 if|if
 condition|(
 name|px
@@ -1638,9 +1620,6 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TEKEN_UTF8
 name|setlocale
 argument_list|(
 name|LC_CTYPE
@@ -1648,9 +1627,6 @@ argument_list|,
 literal|"UTF-8"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* TEKEN_UTF8 */
 name|tp
 operator|.
 name|tp_row
@@ -1731,9 +1707,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* TEKEN_XTERM */
-ifdef|#
-directive|ifdef
-name|TEKEN_UTF8
 name|setenv
 argument_list|(
 literal|"LC_CTYPE"
@@ -1743,9 +1716,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* TEKEN_UTF8 */
 name|execlp
 argument_list|(
 literal|"zsh"

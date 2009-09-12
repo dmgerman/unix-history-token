@@ -16,7 +16,7 @@ name|_TEKEN_H_
 end_define
 
 begin_comment
-comment|/*  * libteken: terminal emulation library.  *  * This library converts an UTF-8 stream of bytes to terminal drawing  * commands.  *  * Configuration switches:  * - TEKEN_UTF8: Enable/disable UTF-8 handling.  * - TEKEN_XTERM: Enable xterm-style emulation, instead of cons25.  */
+comment|/*  * libteken: terminal emulation library.  *  * This library converts an UTF-8 stream of bytes to terminal drawing  * commands.  *  * Configuration switches:  * - TEKEN_XTERM: Enable xterm-style emulation, instead of cons25.  */
 end_comment
 
 begin_if
@@ -48,44 +48,12 @@ begin_comment
 comment|/* __FreeBSD__&& _KERNEL */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TEKEN_UTF8
-end_ifdef
-
 begin_typedef
 typedef|typedef
 name|uint32_t
 name|teken_char_t
 typedef|;
 end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !TEKEN_UTF8 */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|char
-name|teken_char_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TEKEN_UTF8 */
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -516,19 +484,11 @@ name|teken_funcs_t
 typedef|;
 end_typedef
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|TEKEN_XTERM
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|TEKEN_UTF8
-argument_list|)
-end_if
+end_ifdef
 
 begin_typedef
 typedef|typedef
@@ -546,7 +506,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* TEKEN_XTERM&& TEKEN_UTF8 */
+comment|/* TEKEN_XTERM */
 end_comment
 
 begin_comment
@@ -637,14 +597,7 @@ block|)
 struct|];
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TEKEN_UTF8
-end_ifdef
-
 begin_decl_stmt
-name|unsigned
 name|int
 name|t_utf8_left
 decl_stmt|;
@@ -656,28 +609,11 @@ name|t_utf8_partial
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TEKEN_UTF8 */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|TEKEN_XTERM
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|TEKEN_UTF8
-argument_list|)
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|unsigned
@@ -709,7 +645,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* TEKEN_XTERM&& TEKEN_UTF8 */
+comment|/* TEKEN_XTERM */
 end_comment
 
 begin_comment
@@ -833,6 +769,20 @@ modifier|*
 parameter_list|,
 specifier|const
 name|teken_pos_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Legacy features. */
+end_comment
+
+begin_function_decl
+name|void
+name|teken_set_8bit
+parameter_list|(
+name|teken_t
 modifier|*
 parameter_list|)
 function_decl|;
