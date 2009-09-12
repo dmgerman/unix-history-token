@@ -360,14 +360,21 @@ name|filterops
 name|solisten_filtops
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|1
 block|,
-name|NULL
-block|,
+operator|.
+name|f_detach
+operator|=
 name|filt_sordetach
 block|,
+operator|.
+name|f_event
+operator|=
 name|filt_solisten
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -378,14 +385,21 @@ name|filterops
 name|soread_filtops
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|1
 block|,
-name|NULL
-block|,
+operator|.
+name|f_detach
+operator|=
 name|filt_sordetach
 block|,
+operator|.
+name|f_event
+operator|=
 name|filt_soread
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -396,14 +410,21 @@ name|filterops
 name|sowrite_filtops
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|1
 block|,
-name|NULL
-block|,
+operator|.
+name|f_detach
+operator|=
 name|filt_sowdetach
 block|,
+operator|.
+name|f_event
+operator|=
 name|filt_sowrite
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

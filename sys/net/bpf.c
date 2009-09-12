@@ -775,14 +775,21 @@ name|filterops
 name|bpfread_filtops
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|1
 block|,
-name|NULL
-block|,
+operator|.
+name|f_detach
+operator|=
 name|filt_bpfdetach
 block|,
+operator|.
+name|f_event
+operator|=
 name|filt_bpfread
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

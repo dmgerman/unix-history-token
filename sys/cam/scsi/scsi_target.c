@@ -334,14 +334,21 @@ name|filterops
 name|targread_filtops
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|1
 block|,
-name|NULL
-block|,
+operator|.
+name|f_detach
+operator|=
 name|targreadfiltdetach
 block|,
+operator|.
+name|f_event
+operator|=
 name|targreadfilt
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

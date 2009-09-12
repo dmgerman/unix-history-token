@@ -648,14 +648,26 @@ name|filterops
 name|sig_filtops
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|0
 block|,
+operator|.
+name|f_attach
+operator|=
 name|filt_sigattach
 block|,
+operator|.
+name|f_detach
+operator|=
 name|filt_sigdetach
 block|,
+operator|.
+name|f_event
+operator|=
 name|filt_signal
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

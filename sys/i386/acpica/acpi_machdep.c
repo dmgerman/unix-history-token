@@ -319,14 +319,21 @@ name|filterops
 name|apm_readfiltops
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|1
 block|,
-name|NULL
-block|,
+operator|.
+name|f_detach
+operator|=
 name|apmreadfiltdetach
 block|,
+operator|.
+name|f_event
+operator|=
 name|apmreadfilt
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

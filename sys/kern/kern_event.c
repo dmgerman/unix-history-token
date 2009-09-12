@@ -855,14 +855,16 @@ name|filterops
 name|file_filtops
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|1
 block|,
+operator|.
+name|f_attach
+operator|=
 name|filt_fileattach
-block|,
-name|NULL
-block|,
-name|NULL
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -873,14 +875,21 @@ name|filterops
 name|kqread_filtops
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|1
 block|,
-name|NULL
-block|,
+operator|.
+name|f_detach
+operator|=
 name|filt_kqdetach
 block|,
+operator|.
+name|f_event
+operator|=
 name|filt_kqueue
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -895,14 +904,26 @@ name|filterops
 name|proc_filtops
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|0
 block|,
+operator|.
+name|f_attach
+operator|=
 name|filt_procattach
 block|,
+operator|.
+name|f_detach
+operator|=
 name|filt_procdetach
 block|,
+operator|.
+name|f_event
+operator|=
 name|filt_proc
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -913,14 +934,26 @@ name|filterops
 name|timer_filtops
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|0
 block|,
+operator|.
+name|f_attach
+operator|=
 name|filt_timerattach
 block|,
+operator|.
+name|f_detach
+operator|=
 name|filt_timerdetach
 block|,
+operator|.
+name|f_event
+operator|=
 name|filt_timer
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1198,14 +1231,16 @@ name|filterops
 name|null_filtops
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|0
 block|,
+operator|.
+name|f_attach
+operator|=
 name|filt_nullattach
-block|,
-name|NULL
-block|,
-name|NULL
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
