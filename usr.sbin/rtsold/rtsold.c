@@ -178,7 +178,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|Fflag
 init|=
@@ -765,13 +764,6 @@ condition|)
 block|{
 name|setinet6sysctl
 argument_list|(
-name|IPV6CTL_ACCEPT_RTADV
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|setinet6sysctl
-argument_list|(
 name|IPV6CTL_FORWARDING
 argument_list|,
 literal|0
@@ -780,20 +772,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* warn if accept_rtadv is down */
-if|if
-condition|(
-operator|!
-name|getinet6sysctl
-argument_list|(
-name|IPV6CTL_ACCEPT_RTADV
-argument_list|)
-condition|)
-name|warnx
-argument_list|(
-literal|"kernel is configured not to accept RAs"
-argument_list|)
-expr_stmt|;
 comment|/* warn if forwarding is up */
 if|if
 condition|(

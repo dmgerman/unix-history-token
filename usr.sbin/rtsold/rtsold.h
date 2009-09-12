@@ -157,6 +157,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|Fflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|otherconf_script
