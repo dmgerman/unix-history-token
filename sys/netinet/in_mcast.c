@@ -10265,7 +10265,7 @@ condition|(
 name|is_final
 condition|)
 block|{
-comment|/* Remove the gap in the membership array. */
+comment|/* Remove the gap in the membership and filter array. */
 for|for
 control|(
 operator|++
@@ -10280,6 +10280,7 @@ condition|;
 operator|++
 name|idx
 control|)
+block|{
 name|imo
 operator|->
 name|imo_membership
@@ -10296,6 +10297,23 @@ index|[
 name|idx
 index|]
 expr_stmt|;
+name|imo
+operator|->
+name|imo_mfilters
+index|[
+name|idx
+operator|-
+literal|1
+index|]
+operator|=
+name|imo
+operator|->
+name|imo_mfilters
+index|[
+name|idx
+index|]
+expr_stmt|;
+block|}
 name|imo
 operator|->
 name|imo_num_memberships
