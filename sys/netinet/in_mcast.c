@@ -9931,6 +9931,17 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+if|if
+condition|(
+name|ifp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|EADDRNOTAVAIL
+operator|)
+return|;
 comment|/* 	 * Find the membership in the membership array. 	 */
 name|imo
 operator|=
