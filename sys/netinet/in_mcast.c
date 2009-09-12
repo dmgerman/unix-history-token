@@ -8312,6 +8312,10 @@ name|imf
 operator|=
 name|NULL
 expr_stmt|;
+name|lims
+operator|=
+name|NULL
+expr_stmt|;
 name|error
 operator|=
 literal|0
@@ -8950,7 +8954,7 @@ goto|goto
 name|out_inp_locked
 goto|;
 block|}
-comment|/* Throw out duplicates. */
+comment|/* 			 * Throw out duplicates. 			 * 			 * XXX FIXME: This makes a naive assumption that 			 * even if entries exist for *ssa in this imf, 			 * they will be rejected as dupes, even if they 			 * are not valid in the current mode (in-mode). 			 * 			 * in_msource is transactioned just as for anything 			 * else in SSM -- but note naive use of inm_graft() 			 * below for allocating new filter entries. 			 * 			 * This is only an issue if someone mixes the 			 * full-state SSM API with the delta-based API, 			 * which is discouraged in the relevant RFCs. 			 */
 name|lims
 operator|=
 name|imo_match_source
@@ -8970,6 +8974,7 @@ condition|(
 name|lims
 operator|!=
 name|NULL
+comment|/*&& 			    lims->imsl_st[1] == MCAST_INCLUDE*/
 condition|)
 block|{
 name|error
@@ -9094,7 +9099,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Graft new source into filter list for this inpcb's 	 * membership of the group. The in_multi may not have 	 * been allocated yet if this is a new membership, however, 	 * the in_mfilter slot will be allocated and must be initialized. 	 * 	 * Note: Grafting of exclusive mode filters doesn't happen 	 * in this path. 	 */
+comment|/* 	 * Graft new source into filter list for this inpcb's 	 * membership of the group. The in_multi may not have 	 * been allocated yet if this is a new membership, however, 	 * the in_mfilter slot will be allocated and must be initialized. 	 * 	 * Note: Grafting of exclusive mode filters doesn't happen 	 * in this path. 	 * XXX: Should check for non-NULL lims (node exists but may 	 * not be in-mode) for interop with full-state API. 	 */
 if|if
 condition|(
 name|ssa
