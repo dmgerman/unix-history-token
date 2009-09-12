@@ -16,36 +16,7 @@ name|_TEKEN_H_
 end_define
 
 begin_comment
-comment|/*  * libteken: terminal emulation library.  *  * This library converts an UTF-8 stream of bytes to terminal drawing  * commands.  *  * Configuration switches:  * - TEKEN_XTERM: Enable xterm-style emulation, instead of cons25.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|"opt_teken.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__&& _KERNEL */
+comment|/*  * libteken: terminal emulation library.  *  * This library converts an UTF-8 stream of bytes to terminal drawing  * commands.  */
 end_comment
 
 begin_typedef
@@ -484,12 +455,6 @@ name|teken_funcs_t
 typedef|;
 end_typedef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TEKEN_XTERM
-end_ifdef
-
 begin_typedef
 typedef|typedef
 name|teken_char_t
@@ -499,15 +464,6 @@ name|teken_char_t
 parameter_list|)
 function_decl|;
 end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TEKEN_XTERM */
-end_comment
 
 begin_comment
 comment|/*  * Terminal state.  */
@@ -598,6 +554,7 @@ struct|];
 end_struct
 
 begin_decl_stmt
+name|unsigned
 name|int
 name|t_utf8_left
 decl_stmt|;
@@ -608,12 +565,6 @@ name|teken_char_t
 name|t_utf8_partial
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TEKEN_XTERM
-end_ifdef
 
 begin_decl_stmt
 name|unsigned
@@ -638,15 +589,6 @@ literal|2
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TEKEN_XTERM */
-end_comment
 
 begin_comment
 unit|};
@@ -696,6 +638,18 @@ end_comment
 
 begin_function_decl
 specifier|const
+name|teken_pos_t
+modifier|*
+name|teken_get_cursor
+parameter_list|(
+name|teken_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
 name|teken_attr_t
 modifier|*
 name|teken_get_curattr
@@ -711,6 +665,34 @@ specifier|const
 name|teken_attr_t
 modifier|*
 name|teken_get_defattr
+parameter_list|(
+name|teken_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|teken_get_defattr_cons25
+parameter_list|(
+name|teken_t
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|teken_pos_t
+modifier|*
+name|teken_get_winsize
 parameter_list|(
 name|teken_t
 modifier|*
@@ -781,6 +763,16 @@ end_comment
 begin_function_decl
 name|void
 name|teken_set_8bit
+parameter_list|(
+name|teken_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|teken_set_cons25
 parameter_list|(
 name|teken_t
 modifier|*

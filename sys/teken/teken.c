@@ -156,89 +156,11 @@ directive|include
 file|"teken_wcwidth.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TEKEN_XTERM
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|"teken_scs.h"
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !TEKEN_XTERM */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|teken_scs_process
-parameter_list|(
-name|t
-parameter_list|,
-name|c
-parameter_list|)
-value|(c)
-end_define
-
-begin_define
-define|#
-directive|define
-name|teken_scs_restore
-parameter_list|(
-name|t
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|teken_scs_save
-parameter_list|(
-name|t
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|teken_scs_set
-parameter_list|(
-name|t
-parameter_list|,
-name|g
-parameter_list|,
-name|ts
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|teken_scs_switch
-parameter_list|(
-name|t
-parameter_list|,
-name|g
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TEKEN_XTERM */
-end_comment
 
 begin_comment
 comment|/* Private flags for t_stateflags. */
@@ -288,12 +210,6 @@ begin_comment
 comment|/* Origin mode. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TEKEN_XTERM
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -305,33 +221,26 @@ begin_comment
 comment|/* Next character should be printed on col 0. */
 end_comment
 
-begin_else
-else|#
-directive|else
-end_else
+begin_define
+define|#
+directive|define
+name|TS_8BIT
+value|0x20
+end_define
 
 begin_comment
-comment|/* !TEKEN_XTERM */
+comment|/* UTF-8 disabled. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TS_WRAPPED
-value|0x00
+name|TS_CONS25
+value|0x40
 end_define
 
 begin_comment
-comment|/* Simple line wrapping. */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TEKEN_XTERM */
+comment|/* cons25 emulation. */
 end_comment
 
 begin_comment
@@ -954,6 +863,18 @@ name|teken_state_init
 expr_stmt|;
 name|t
 operator|->
+name|t_stateflags
+operator|=
+literal|0
+expr_stmt|;
+name|t
+operator|->
+name|t_utf8_left
+operator|=
+literal|0
+expr_stmt|;
+name|t
+operator|->
 name|t_defattr
 operator|.
 name|ta_format
@@ -980,12 +901,6 @@ name|teken_subr_do_reset
 argument_list|(
 name|t
 argument_list|)
-expr_stmt|;
-name|t
-operator|->
-name|t_utf8_left
-operator|=
-literal|0
 expr_stmt|;
 name|teken_set_winsize
 argument_list|(
@@ -1059,12 +974,27 @@ name|t
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|TEKEN_XTERM
 case|case
 literal|'\x0E'
 case|:
+if|if
+condition|(
+name|t
+operator|->
+name|t_stateflags
+operator|&
+name|TS_CONS25
+condition|)
+name|t
+operator|->
+name|t_nextstate
+argument_list|(
+name|t
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+else|else
 name|teken_scs_switch
 argument_list|(
 name|t
@@ -1076,6 +1006,24 @@ break|break;
 case|case
 literal|'\x0F'
 case|:
+if|if
+condition|(
+name|t
+operator|->
+name|t_stateflags
+operator|&
+name|TS_CONS25
+condition|)
+name|t
+operator|->
+name|t_nextstate
+argument_list|(
+name|t
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+else|else
 name|teken_scs_switch
 argument_list|(
 name|t
@@ -1084,9 +1032,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* TEKEN_XTERM */
 case|case
 literal|'\r'
 case|:
@@ -1310,26 +1255,6 @@ block|{
 comment|/* 	 * UTF-8 handling. 	 */
 if|if
 condition|(
-name|t
-operator|->
-name|t_utf8_left
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-comment|/* UTF-8 disabled. */
-name|teken_input_char
-argument_list|(
-name|t
-argument_list|,
-name|c
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
 operator|(
 name|c
 operator|&
@@ -1337,6 +1262,12 @@ literal|0x80
 operator|)
 operator|==
 literal|0x00
+operator|||
+name|t
+operator|->
+name|t_stateflags
+operator|&
+name|TS_8BIT
 condition|)
 block|{
 comment|/* One-byte sequence. */
@@ -1558,6 +1489,28 @@ block|}
 end_function
 
 begin_function
+specifier|const
+name|teken_pos_t
+modifier|*
+name|teken_get_cursor
+parameter_list|(
+name|teken_t
+modifier|*
+name|t
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|&
+name|t
+operator|->
+name|t_cursor
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|void
 name|teken_set_cursor
 parameter_list|(
@@ -1709,6 +1662,28 @@ block|}
 end_function
 
 begin_function
+specifier|const
+name|teken_pos_t
+modifier|*
+name|teken_get_winsize
+parameter_list|(
+name|teken_t
+modifier|*
+name|t
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|&
+name|t
+operator|->
+name|t_winsize
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|void
 name|teken_set_winsize
 parameter_list|(
@@ -1748,10 +1723,27 @@ parameter_list|)
 block|{
 name|t
 operator|->
-name|t_utf8_left
-operator|=
-operator|-
-literal|1
+name|t_stateflags
+operator||=
+name|TS_8BIT
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|teken_set_cons25
+parameter_list|(
+name|teken_t
+modifier|*
+name|t
+parameter_list|)
+block|{
+name|t
+operator|->
+name|t_stateflags
+operator||=
+name|TS_CONS25
 expr_stmt|;
 block|}
 end_function

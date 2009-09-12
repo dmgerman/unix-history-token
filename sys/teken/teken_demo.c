@@ -223,43 +223,12 @@ name|NCOLS
 value|80
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TEKEN_XTERM
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|NROWS
 value|24
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !TEKEN_XTERM */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NROWS
-value|25
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TEKEN_XTERM */
-end_comment
 
 begin_decl_stmt
 name|struct
@@ -1680,9 +1649,6 @@ expr_stmt|;
 case|case
 literal|0
 case|:
-ifdef|#
-directive|ifdef
-name|TEKEN_XTERM
 name|setenv
 argument_list|(
 literal|"TERM"
@@ -1692,21 +1658,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* !TEKEN_XTERM */
-name|setenv
-argument_list|(
-literal|"TERM"
-argument_list|,
-literal|"cons25"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* TEKEN_XTERM */
 name|setenv
 argument_list|(
 literal|"LC_CTYPE"
