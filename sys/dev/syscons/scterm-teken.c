@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_teken.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -477,6 +483,20 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* !TEKEN_UTF8 */
+ifndef|#
+directive|ifndef
+name|TEKEN_XTERM
+name|teken_set_cons25
+argument_list|(
+operator|&
+name|ts
+operator|->
+name|ts_teken
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* !TEKEN_XTERM */
 name|tp
 operator|.
 name|tp_row
