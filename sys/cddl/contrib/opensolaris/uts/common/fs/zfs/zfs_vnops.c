@@ -18487,10 +18487,9 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|ZTOV
-argument_list|(
 name|zp
-argument_list|)
+operator|->
+name|z_vnode
 operator|=
 name|NULL
 expr_stmt|;

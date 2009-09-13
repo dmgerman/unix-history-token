@@ -436,10 +436,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ZTOV
-argument_list|(
 name|zp
-argument_list|)
+operator|->
+name|z_vnode
 operator|=
 name|NULL
 expr_stmt|;
@@ -7114,10 +7113,9 @@ name|v_holdcnt
 operator|=
 literal|0
 expr_stmt|;
-name|ZTOV
-argument_list|(
 name|rootzp
-argument_list|)
+operator|->
+name|z_vnode
 operator|=
 name|NULL
 expr_stmt|;
