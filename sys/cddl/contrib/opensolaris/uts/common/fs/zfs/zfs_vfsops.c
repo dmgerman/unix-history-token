@@ -5023,6 +5023,22 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+comment|/* 	 * XXXPJD: zfs_zget() can't operate on virtual entires like .zfs/ or 	 * .zfs/snapshot/ directories, so for now just return EOPNOTSUPP. 	 * This will make NFS to fall back to using READDIR instead of 	 * READDIRPLUS. 	 * Also snapshots are stored in AVL tree, but based on their names, 	 * not inode numbers, so it will be very inefficient to iterate 	 * over all snapshots to find the right one. 	 * Note that OpenSolaris READDIRPLUS implementation does LOOKUP on 	 * d_name, and not VGET on d_fileno as we do. 	 */
+if|if
+condition|(
+name|ino
+operator|==
+name|ZFSCTL_INO_ROOT
+operator|||
+name|ino
+operator|==
+name|ZFSCTL_INO_SNAPDIR
+condition|)
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 name|ZFS_ENTER
 argument_list|(
 name|zfsvfs
