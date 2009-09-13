@@ -4592,11 +4592,6 @@ name|svp
 expr_stmt|;
 block|}
 block|}
-name|ZFS_EXIT
-argument_list|(
-name|zfsvfs
-argument_list|)
-expr_stmt|;
 comment|/* Translate errors and add SAVENAME when needed. */
 if|if
 condition|(
@@ -4755,6 +4750,11 @@ name|vpp
 operator|=
 name|NULL
 expr_stmt|;
+name|ZFS_EXIT
+argument_list|(
+name|zfsvfs
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -4846,6 +4846,11 @@ block|}
 block|}
 endif|#
 directive|endif
+name|ZFS_EXIT
+argument_list|(
+name|zfsvfs
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
