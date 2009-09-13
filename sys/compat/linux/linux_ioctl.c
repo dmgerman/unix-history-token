@@ -11568,6 +11568,9 @@ name|ifc_len
 operator|=
 literal|0
 expr_stmt|;
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -11614,6 +11617,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|copyout
