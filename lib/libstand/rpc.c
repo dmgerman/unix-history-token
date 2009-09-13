@@ -263,48 +263,34 @@ begin_function
 name|ssize_t
 name|rpc_call
 parameter_list|(
-name|d
-parameter_list|,
-name|prog
-parameter_list|,
-name|vers
-parameter_list|,
-name|proc
-parameter_list|,
-name|sdata
-parameter_list|,
-name|slen
-parameter_list|,
-name|rdata
-parameter_list|,
-name|rlen
-parameter_list|)
 name|struct
 name|iodesc
 modifier|*
 name|d
-decl_stmt|;
+parameter_list|,
 name|n_long
 name|prog
-decl_stmt|,
+parameter_list|,
+name|n_long
 name|vers
-decl_stmt|,
+parameter_list|,
+name|n_long
 name|proc
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|sdata
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|slen
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|rdata
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|rlen
-decl_stmt|;
+parameter_list|)
 block|{
 name|ssize_t
 name|cc
@@ -859,29 +845,21 @@ specifier|static
 name|ssize_t
 name|recvrpc
 parameter_list|(
-name|d
-parameter_list|,
-name|pkt
-parameter_list|,
-name|len
-parameter_list|,
-name|tleft
-parameter_list|)
 name|struct
 name|iodesc
 modifier|*
 name|d
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|pkt
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|len
-decl_stmt|;
+parameter_list|,
 name|time_t
 name|tleft
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|rpc_reply
@@ -1087,25 +1065,19 @@ begin_function
 name|void
 name|rpc_fromaddr
 parameter_list|(
-name|pkt
-parameter_list|,
-name|addr
-parameter_list|,
-name|port
-parameter_list|)
 name|void
 modifier|*
 name|pkt
-decl_stmt|;
+parameter_list|,
 name|struct
 name|in_addr
 modifier|*
 name|addr
-decl_stmt|;
+parameter_list|,
 name|u_short
 modifier|*
 name|port
-decl_stmt|;
+parameter_list|)
 block|{
 struct|struct
 name|hackhdr
@@ -1225,32 +1197,23 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* return port number in host order, or -1 */
+comment|/*  * return port number in host order, or -1.  * arguments are:  *  addr .. server, net order.  *  prog .. host order.  *  vers .. host order.  */
 end_comment
 
 begin_function
 name|int
 name|rpc_pmap_getcache
 parameter_list|(
-name|addr
-parameter_list|,
-name|prog
-parameter_list|,
-name|vers
-parameter_list|)
 name|struct
 name|in_addr
 name|addr
-decl_stmt|;
-comment|/* server, net order */
+parameter_list|,
 name|u_int
 name|prog
-decl_stmt|;
-comment|/* host order */
+parameter_list|,
 name|u_int
 name|vers
-decl_stmt|;
-comment|/* host order */
+parameter_list|)
 block|{
 name|struct
 name|pmap_list
@@ -1318,35 +1281,27 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * arguments are:  *  addr .. server, net order.  *  prog .. host order.  *  vers .. host order.  *  port .. host order.  */
+end_comment
+
 begin_function
 name|void
 name|rpc_pmap_putcache
 parameter_list|(
-name|addr
-parameter_list|,
-name|prog
-parameter_list|,
-name|vers
-parameter_list|,
-name|port
-parameter_list|)
 name|struct
 name|in_addr
 name|addr
-decl_stmt|;
-comment|/* server, net order */
+parameter_list|,
 name|u_int
 name|prog
-decl_stmt|;
-comment|/* host order */
+parameter_list|,
 name|u_int
 name|vers
-decl_stmt|;
-comment|/* host order */
+parameter_list|,
 name|int
 name|port
-decl_stmt|;
-comment|/* host order */
+parameter_list|)
 block|{
 name|struct
 name|pmap_list
@@ -1419,32 +1374,24 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Request a port number from the port mapper.  * Returns the port in host order.  */
+comment|/*  * Request a port number from the port mapper.  * Returns the port in host order.  * prog and vers are host order.  */
 end_comment
 
 begin_function
 name|int
 name|rpc_getport
 parameter_list|(
-name|d
-parameter_list|,
-name|prog
-parameter_list|,
-name|vers
-parameter_list|)
 name|struct
 name|iodesc
 modifier|*
 name|d
-decl_stmt|;
+parameter_list|,
 name|n_long
 name|prog
-decl_stmt|;
-comment|/* host order */
+parameter_list|,
 name|n_long
 name|vers
-decl_stmt|;
-comment|/* host order */
+parameter_list|)
 block|{
 struct|struct
 name|args
