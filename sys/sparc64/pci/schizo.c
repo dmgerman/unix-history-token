@@ -956,13 +956,6 @@ define|\
 value|SCHIZO_SPC_WRITE_8(STX_ICON, (sc), (offs), (v))
 end_define
 
-begin_define
-define|#
-directive|define
-name|OFW_PCI_TYPE
-value|"pci"
-end_define
-
 begin_struct
 struct|struct
 name|schizo_desc
@@ -1134,7 +1127,7 @@ name|strcmp
 argument_list|(
 name|dtype
 argument_list|,
-name|OFW_PCI_TYPE
+name|OFW_TYPE_PCI
 argument_list|)
 operator|==
 literal|0

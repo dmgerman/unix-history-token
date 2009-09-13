@@ -884,13 +884,6 @@ begin_comment
 comment|/*  * "Sabre" is the UltraSPARC IIi onboard UPA to PCI bridge.  It manages a  * single PCI bus and does not have a streaming buffer.  It often has an APB  * (advanced PCI bridge) connected to it, which was designed specifically for  * the IIi.  The APB let's the IIi handle two independednt PCI buses, and  * appears as two "Simba"'s underneath the Sabre.  *  * "Hummingbird" is the UltraSPARC IIe onboard UPA to PCI bridge. It's  * basically the same as Sabre but without an APB underneath it.  *  * "Psycho" and "Psycho+" are dual UPA to PCI bridges.  They sit on the UPA bus  * and manage two PCI buses.  "Psycho" has two 64-bit 33MHz buses, while  * "Psycho+" controls both a 64-bit 33Mhz and a 64-bit 66Mhz PCI bus.  You  * will usually find a "Psycho+" since I don't think the original "Psycho"  * ever shipped, and if it did it would be in the U30.  *  * Each "Psycho" PCI bus appears as a separate OFW node, but since they are  * both part of the same IC, they only have a single register space.  As such,  * they need to be configured together, even though the autoconfiguration will  * attach them separately.  *  * On UltraIIi machines, "Sabre" itself usually takes pci0, with "Simba" often  * as pci1 and pci2, although they have been implemented with other PCI bus  * numbers on some machines.  *  * On UltraII machines, there can be any number of "Psycho+" ICs, each  * providing two PCI buses.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|OFW_PCI_TYPE
-value|"pci"
-end_define
-
 begin_struct
 struct|struct
 name|psycho_desc
@@ -1159,7 +1152,7 @@ name|strcmp
 argument_list|(
 name|dtype
 argument_list|,
-name|OFW_PCI_TYPE
+name|OFW_TYPE_PCI
 argument_list|)
 operator|==
 literal|0

@@ -77,6 +77,23 @@ directive|include
 file|<machine/resource.h>
 end_include
 
+begin_if
+if|#
+directive|if
+literal|1
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sparc64/pci/ofw_pci.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -575,7 +592,7 @@ name|j
 index|]
 argument_list|)
 argument_list|,
-literal|"pci"
+name|OFW_TYPE_PCI
 argument_list|)
 operator|==
 literal|0
