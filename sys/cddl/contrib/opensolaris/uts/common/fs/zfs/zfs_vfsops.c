@@ -5289,12 +5289,15 @@ argument_list|(
 name|zfsvfs
 argument_list|)
 expr_stmt|;
-comment|/* 	 * On FreeBSD we are already called with snapshot's mount point 	 * and not the mount point of its parent. 	 */
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
+comment|/* 	 * On FreeBSD we can get snapshot's mount point or its parent file 	 * system mount point depending if snapshot is already mounted or not. 	 */
 if|if
 condition|(
+name|zfsvfs
+operator|->
+name|z_parent
+operator|==
+name|zfsvfs
+operator|&&
 name|fidp
 operator|->
 name|fid_len
@@ -5430,8 +5433,6 @@ name|zfsvfs
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|fidp
