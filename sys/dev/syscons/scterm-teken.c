@@ -524,6 +524,22 @@ operator|&
 name|tp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|scp
+operator|->
+name|cursor_pos
+operator|<
+name|scp
+operator|->
+name|ysize
+operator|*
+name|scp
+operator|->
+name|xsize
+condition|)
+block|{
+comment|/* Valid old cursor position. */
 name|tp
 operator|.
 name|tp_row
@@ -559,6 +575,7 @@ operator|&
 name|tp
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 block|}
 return|return
