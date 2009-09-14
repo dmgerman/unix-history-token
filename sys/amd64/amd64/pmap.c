@@ -14800,6 +14800,12 @@ operator|->
 name|type
 operator|==
 name|OBJT_DEVICE
+operator|||
+name|object
+operator|->
+name|type
+operator|==
+name|OBJT_SG
 argument_list|,
 operator|(
 literal|"pmap_object_init_pt: non-device object"
@@ -20353,6 +20359,12 @@ operator|->
 name|type
 operator|!=
 name|OBJT_DEVICE
+operator|&&
+name|obj
+operator|->
+name|type
+operator|!=
+name|OBJT_SG
 operator|)
 condition|)
 block|{

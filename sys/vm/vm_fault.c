@@ -1704,6 +1704,14 @@ operator|->
 name|type
 operator|!=
 name|OBJT_PHYS
+operator|&&
+name|fs
+operator|.
+name|first_object
+operator|->
+name|type
+operator|!=
+name|OBJT_SG
 condition|)
 block|{
 name|vm_pindex_t

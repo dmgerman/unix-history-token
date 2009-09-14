@@ -180,6 +180,19 @@ expr_stmt|;
 block|}
 name|devp
 struct|;
+comment|/* 		 * SG pager 		 * 		 *	sgp_pglist - list of allocated pages 		 */
+struct|struct
+block|{
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|vm_page
+argument_list|)
+name|sgp_pglist
+expr_stmt|;
+block|}
+name|sgp
+struct|;
 comment|/* 		 * Swap pager 		 * 		 *	swp_bcount - number of swap 'swblock' metablocks, each 		 *		     contains up to 16 swapblk assignments. 		 *		     see vm/swap_pager.h 		 */
 struct|struct
 block|{

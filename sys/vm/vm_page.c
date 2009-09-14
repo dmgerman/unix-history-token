@@ -4177,6 +4177,12 @@ operator|->
 name|type
 operator|!=
 name|OBJT_DEVICE
+operator|&&
+name|object
+operator|->
+name|type
+operator|!=
+name|OBJT_SG
 condition|)
 name|pmap_page_set_memattr
 argument_list|(

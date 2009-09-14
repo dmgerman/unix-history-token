@@ -161,6 +161,8 @@ block|,
 name|OBJT_PHYS
 block|,
 name|OBJT_DEAD
+block|,
+name|OBJT_SG
 block|}
 enum|;
 end_enum

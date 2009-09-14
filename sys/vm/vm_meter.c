@@ -878,6 +878,12 @@ operator|->
 name|type
 operator|==
 name|OBJT_DEVICE
+operator|||
+name|object
+operator|->
+name|type
+operator|==
+name|OBJT_SG
 condition|)
 block|{
 comment|/* 			 * Devices, like /dev/mem, will badly skew our totals. 			 */
