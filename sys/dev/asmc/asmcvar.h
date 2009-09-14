@@ -95,6 +95,9 @@ name|struct
 name|task
 name|sc_sms_task
 decl_stmt|;
+name|uint8_t
+name|sc_sms_intr_works
+decl_stmt|;
 block|}
 struct|;
 end_struct
