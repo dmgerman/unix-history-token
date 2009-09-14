@@ -3875,7 +3875,7 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"WARNING: cropping maxlen "
-literal|"from %u to %u\n"
+literal|"from %u to %lu\n"
 argument_list|,
 name|maxlen
 argument_list|,
