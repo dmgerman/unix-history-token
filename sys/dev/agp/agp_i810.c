@@ -2826,11 +2826,6 @@ operator|~
 literal|1
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|bootverbose
-condition|)
-block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -2871,7 +2866,6 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 literal|0
