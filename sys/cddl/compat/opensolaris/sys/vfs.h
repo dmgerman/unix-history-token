@@ -424,7 +424,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|domount
+name|mount_snapshot
 parameter_list|(
 name|kthread_t
 modifier|*
@@ -432,7 +432,8 @@ name|td
 parameter_list|,
 name|vnode_t
 modifier|*
-name|vp
+modifier|*
+name|vpp
 parameter_list|,
 specifier|const
 name|char
