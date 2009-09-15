@@ -2499,6 +2499,36 @@ comment|/* 	 * We might not have been told the right interface, so we pass 	 * o
 block|for (i = strlen(nd->myif.ifra_name) - 1; 		nd->myif.ifra_name[i]>= '0'&& 		nd->myif.ifra_name[i]<= '9'; 		nd->myif.ifra_name[i] ++) { 		error = ifioctl(so, SIOCAIFADDR, (caddr_t)&nd->myif, td); 		if(!error) 			break; 	}
 endif|#
 directive|endif
+name|error
+operator|=
+name|ifioctl
+argument_list|(
+name|so
+argument_list|,
+name|SIOCAIFADDR
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|nd
+operator|->
+name|myif
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|panic
+argument_list|(
+literal|"nfs_mountroot: SIOCAIFADDR: %d"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
