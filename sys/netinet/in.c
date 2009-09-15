@@ -2579,6 +2579,14 @@ operator|.
 name|sin_len
 condition|)
 block|{
+comment|/*  			 * QL: XXX 			 * Need to scrub the prefix here in case 			 * the issued command is SIOCAIFADDR with 			 * the same address, but with a different 			 * prefix length. And if the prefix length 			 * is the same as before, then the call is  			 * un-necessarily executed here. 			 */
+name|in_ifscrub
+argument_list|(
+name|ifp
+argument_list|,
+name|ia
+argument_list|)
+expr_stmt|;
 name|ia
 operator|->
 name|ia_sockmask
@@ -2636,6 +2644,13 @@ name|AF_INET
 operator|)
 condition|)
 block|{
+name|in_ifscrub
+argument_list|(
+name|ifp
+argument_list|,
+name|ia
+argument_list|)
+expr_stmt|;
 name|ia
 operator|->
 name|ia_dstaddr
