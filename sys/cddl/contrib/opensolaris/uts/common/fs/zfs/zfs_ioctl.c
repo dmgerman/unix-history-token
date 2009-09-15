@@ -13460,12 +13460,6 @@ argument_list|(
 literal|"ZFS"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"WARNING: ZFS is considered to be an experimental "
-literal|"feature in FreeBSD.\n"
-argument_list|)
-expr_stmt|;
 name|mutex_init
 argument_list|(
 operator|&
