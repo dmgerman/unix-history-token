@@ -1865,7 +1865,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_endif
-unit|static int zfsctl_snapdir_remove(vnode_t *dvp, char *name, vnode_t *cwd, cred_t *cr,     caller_context_t *ct, int flags) { 	zfsctl_snapdir_t *sdp = dvp->v_data; 	zfs_snapentry_t *sep; 	zfs_snapentry_t search; 	zfsvfs_t *zfsvfs; 	char snapname[MAXNAMELEN]; 	char real[MAXNAMELEN]; 	int err;  	zfsvfs = dvp->v_vfsp->vfs_data; 	ZFS_ENTER(zfsvfs);  	if ((flags& FIGNORECASE) || zfsvfs->z_case == ZFS_CASE_INSENSITIVE) {  		err = dmu_snapshot_realname(zfsvfs->z_os, name, real, 		    MAXNAMELEN, NULL); 		if (err == 0) { 			name = real; 		} else if (err != ENOTSUP) { 			ZFS_EXIT(zfsvfs); 			return (err); 		} 	}  	ZFS_EXIT(zfsvfs);  	err = zfsctl_snapshot_zname(dvp, name, MAXNAMELEN, snapname); 	if (!err) 		err = zfs_secpolicy_destroy_perms(snapname, cr); 	if (err) 		return (err);  	mutex_enter(&sdp->sd_lock);  	search.se_name = name; 	sep = avl_find(&sdp->sd_snaps,&search, NULL); 	if (sep) { 		avl_remove(&sdp->sd_snaps, sep); 		err = zfsctl_unmount_snap(sep, MS_FORCE, cr); 		if (err) 			avl_add(&sdp->sd_snaps, sep); 		else 			err = dmu_objset_destroy(snapname); 	} else { 		err = ENOENT; 	}  	mutex_exit(&sdp->sd_lock);  	return (err); }
+unit|static int zfsctl_snapdir_remove(vnode_t *dvp, char *name, vnode_t *cwd, cred_t *cr,     caller_context_t *ct, int flags) { 	zfsctl_snapdir_t *sdp = dvp->v_data; 	zfs_snapentry_t *sep; 	zfs_snapentry_t search; 	zfsvfs_t *zfsvfs; 	char snapname[MAXNAMELEN]; 	char real[MAXNAMELEN]; 	int err;  	zfsvfs = dvp->v_vfsp->vfs_data; 	ZFS_ENTER(zfsvfs);  	if ((flags& FIGNORECASE) || zfsvfs->z_case == ZFS_CASE_INSENSITIVE) {  		err = dmu_snapshot_realname(zfsvfs->z_os, name, real, 		    MAXNAMELEN, NULL); 		if (err == 0) { 			name = real; 		} else if (err != ENOTSUP) { 			ZFS_EXIT(zfsvfs); 			return (err); 		} 	}  	ZFS_EXIT(zfsvfs);  	err = zfsctl_snapshot_zname(dvp, name, MAXNAMELEN, snapname); 	if (!err) 		err = zfs_secpolicy_destroy_perms(snapname, cr); 	if (err) 		return (err);  	mutex_enter(&sdp->sd_lock);  	search.se_name = name; 	sep = avl_find(&sdp->sd_snaps,&search, NULL); 	if (sep) { 		avl_remove(&sdp->sd_snaps, sep); 		err = zfsctl_unmount_snap(sep, MS_FORCE, cr); 		if (err) { 			avl_index_t where;  			if (avl_find(&sdp->sd_snaps, sep,&where) == NULL) 				avl_insert(&sdp->sd_snaps, sep, where); 		} else 			err = dmu_objset_destroy(snapname); 	} else { 		err = ENOENT; 	}  	mutex_exit(&sdp->sd_lock);  	return (err); }
 endif|#
 directive|endif
 end_endif
@@ -2778,11 +2778,10 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|domount
+name|mount_snapshot
 argument_list|(
 name|curthread
 argument_list|,
-operator|*
 name|vpp
 argument_list|,
 literal|"zfs"
@@ -2801,23 +2800,40 @@ argument_list|,
 name|mountpoint_len
 argument_list|)
 expr_stmt|;
-comment|/* FreeBSD: This line was moved from below to avoid a lock recursion. */
 if|if
 condition|(
 name|err
 operator|==
 literal|0
 condition|)
-name|vn_lock
+block|{
+comment|/* 		 * Fix up the root vnode mounted on .zfs/snapshot/<snapname>. 		 * 		 * This is where we lie about our v_vfsp in order to 		 * make .zfs/snapshot/<snapname> accessible over NFS 		 * without requiring manual mounts of<snapname>. 		 */
+name|ASSERT
+argument_list|(
+name|VTOZ
 argument_list|(
 operator|*
 name|vpp
-argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_RETRY
+argument_list|)
+operator|->
+name|z_zfsvfs
+operator|!=
+name|zfsvfs
 argument_list|)
 expr_stmt|;
+name|VTOZ
+argument_list|(
+operator|*
+name|vpp
+argument_list|)
+operator|->
+name|z_zfsvfs
+operator|->
+name|z_parent
+operator|=
+name|zfsvfs
+expr_stmt|;
+block|}
 name|mutex_exit
 argument_list|(
 operator|&
@@ -2826,24 +2842,6 @@ operator|->
 name|sd_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we had an error, drop our hold on the vnode and 	 * zfsctl_snapshot_inactive() will clean up. 	 */
-if|if
-condition|(
-name|err
-condition|)
-block|{
-name|VN_RELE
-argument_list|(
-operator|*
-name|vpp
-argument_list|)
-expr_stmt|;
-operator|*
-name|vpp
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 name|ZFS_EXIT
 argument_list|(
 name|zfsvfs
@@ -4986,7 +4984,13 @@ condition|(
 name|error
 condition|)
 block|{
-name|avl_add
+name|avl_index_t
+name|where
+decl_stmt|;
+comment|/* 				 * Before reinserting snapshot to the tree, 				 * check if it was actually removed. For example 				 * when snapshot mount point is busy, we will 				 * have an error here, but there will be no need 				 * to reinsert snapshot. 				 */
+if|if
+condition|(
+name|avl_find
 argument_list|(
 operator|&
 name|sdp
@@ -4994,6 +4998,23 @@ operator|->
 name|sd_snaps
 argument_list|,
 name|sep
+argument_list|,
+operator|&
+name|where
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|avl_insert
+argument_list|(
+operator|&
+name|sdp
+operator|->
+name|sd_snaps
+argument_list|,
+name|sep
+argument_list|,
+name|where
 argument_list|)
 expr_stmt|;
 break|break;

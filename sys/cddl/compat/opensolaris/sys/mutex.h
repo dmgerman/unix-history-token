@@ -30,18 +30,18 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/lock.h>
 end_include
 
 begin_empty
 empty|#include_next<sys/mutex.h>
 end_empty
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
 
 begin_include
 include|#
