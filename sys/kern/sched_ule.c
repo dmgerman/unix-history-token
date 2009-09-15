@@ -7601,9 +7601,12 @@ name|td
 argument_list|)
 expr_stmt|;
 comment|/* This releases the lock on tdq. */
-name|TDQ_LOCK
+comment|/* 	 * Acquire both run-queue locks before placing the thread on the new 	 * run-queue to avoid deadlocks created by placing a thread with a 	 * blocked lock on the run-queue of a remote processor.  The deadlock 	 * occurs when a third processor attempts to lock the two queues in 	 * question while the target processor is spinning with its own 	 * run-queue lock held while waiting for the blocked lock to clear. 	 */
+name|tdq_lock_pair
 argument_list|(
 name|tdn
+argument_list|,
+name|tdq
 argument_list|)
 expr_stmt|;
 name|tdq_add
@@ -7622,31 +7625,11 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 	 * After we unlock tdn the new cpu still can't switch into this 	 * thread until we've unblocked it in cpu_switch().  The lock 	 * pointers may match in the case of HTT cores.  Don't unlock here 	 * or we can deadlock when the other CPU runs the IPI handler. 	 */
-if|if
-condition|(
-name|TDQ_LOCKPTR
-argument_list|(
-name|tdn
-argument_list|)
-operator|!=
-name|TDQ_LOCKPTR
-argument_list|(
-name|tdq
-argument_list|)
-condition|)
-block|{
 name|TDQ_UNLOCK
 argument_list|(
 name|tdn
 argument_list|)
 expr_stmt|;
-name|TDQ_LOCK
-argument_list|(
-name|tdq
-argument_list|)
-expr_stmt|;
-block|}
 name|spinlock_exit
 argument_list|()
 expr_stmt|;
