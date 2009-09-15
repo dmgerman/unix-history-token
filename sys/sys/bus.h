@@ -65,15 +65,23 @@ enum|enum
 name|device_state
 block|{
 name|DS_NOTPRESENT
+init|=
+literal|10
 block|,
 comment|/**< @brief not probed or probe failed */
 name|DS_ALIVE
+init|=
+literal|20
 block|,
 comment|/**< @brief probe succeeded */
 name|DS_ATTACHED
+init|=
+literal|30
 block|,
 comment|/**< @brief attach method called */
 name|DS_BUSY
+init|=
+literal|40
 comment|/**< @brief device is open */
 block|}
 name|device_state_t
