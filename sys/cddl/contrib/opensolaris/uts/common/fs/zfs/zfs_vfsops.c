@@ -4540,22 +4540,6 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-if|if
-condition|(
-name|fflag
-operator|&
-name|MS_FORCE
-condition|)
-block|{
-comment|/* TODO: Force unmount is not well implemented yet, so deny it. */
-name|ZFS_LOG
-argument_list|(
-literal|0
-argument_list|,
-literal|"Force unmount is experimental - report any problems."
-argument_list|)
-expr_stmt|;
-block|}
 name|ret
 operator|=
 name|secpolicy_fs_unmount
