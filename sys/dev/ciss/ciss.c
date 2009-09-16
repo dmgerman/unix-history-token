@@ -11477,6 +11477,14 @@ name|cr
 argument_list|)
 expr_stmt|;
 comment|/*      * Allocate an in-kernel databuffer if required, copy in user data.      */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ciss_mtx
+argument_list|)
+expr_stmt|;
 name|cr
 operator|->
 name|cr_length
@@ -11521,7 +11529,7 @@ operator|=
 name|ENOMEM
 expr_stmt|;
 goto|goto
-name|out
+name|out_unlocked
 goto|;
 block|}
 if|if
@@ -11562,7 +11570,7 @@ name|buf_size
 argument_list|)
 expr_stmt|;
 goto|goto
-name|out
+name|out_unlocked
 goto|;
 block|}
 block|}
@@ -11612,6 +11620,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* XXX anything else to populate here? */
+name|mtx_lock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ciss_mtx
+argument_list|)
+expr_stmt|;
 comment|/*      * Run the command.      */
 if|if
 condition|(
@@ -11702,6 +11718,14 @@ name|ce
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ciss_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -11748,13 +11772,23 @@ name|buf_size
 argument_list|)
 expr_stmt|;
 goto|goto
-name|out
+name|out_unlocked
 goto|;
 block|}
 comment|/* done OK */
 name|error
 operator|=
 literal|0
+expr_stmt|;
+name|out_unlocked
+label|:
+name|mtx_lock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ciss_mtx
+argument_list|)
 expr_stmt|;
 name|out
 label|:
