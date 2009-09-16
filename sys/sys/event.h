@@ -126,8 +126,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EVFILT_USER
+value|(-11)
+end_define
+
+begin_comment
+comment|/* User events */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EVFILT_SYSCOUNT
-value|10
+value|11
 end_define
 
 begin_define
@@ -302,6 +313,83 @@ end_define
 
 begin_comment
 comment|/* error, data contains errno */
+end_comment
+
+begin_comment
+comment|/*   * data/hint flags/masks for EVFILT_USER, shared with userspace   *   * On input, the top two bits of fflags specifies how the lower twenty four   * bits should be applied to the stored value of fflags.   *   * On output, the top two bits will always be set to NOTE_FFNOP and the   * remaining twenty four bits will contain the stored fflags value.   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOTE_FFNOP
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* ignore input fflags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOTE_FFAND
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* AND fflags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOTE_FFOR
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* OR fflags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOTE_FFCOPY
+value|0xc0000000
+end_define
+
+begin_comment
+comment|/* copy fflags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOTE_FFCTRLMASK
+value|0xc0000000
+end_define
+
+begin_comment
+comment|/* masks for operations */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOTE_FFLAGSMASK
+value|0x00ffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|NOTE_TRIGGER
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* Cause the event to be 						   triggered for output. */
 end_comment
 
 begin_comment
