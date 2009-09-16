@@ -6643,6 +6643,8 @@ argument_list|,
 name|aft
 argument_list|,
 name|look
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
