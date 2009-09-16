@@ -2343,6 +2343,13 @@ operator|->
 name|exceptfds
 argument_list|,
 name|tvp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|l_int
+argument_list|)
+operator|*
+literal|8
 argument_list|)
 expr_stmt|;
 ifdef|#
