@@ -267,8 +267,15 @@ begin_comment
 comment|/* clear event state after reporting */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EV_RECEIPT
+value|0x0040
+end_define
+
 begin_comment
-comment|/* 0x0040 reserved for EV_RECEIPT */
+comment|/* force EV_ERROR on success, data=0 */
 end_comment
 
 begin_define

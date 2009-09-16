@@ -3992,6 +3992,14 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|||
+operator|(
+name|kevp
+operator|->
+name|flags
+operator|&
+name|EV_RECEIPT
+operator|)
 condition|)
 block|{
 if|if
