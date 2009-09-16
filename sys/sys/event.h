@@ -267,6 +267,21 @@ begin_comment
 comment|/* clear event state after reporting */
 end_comment
 
+begin_comment
+comment|/* 0x0040 reserved for EV_RECEIPT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EV_DISPATCH
+value|0x0080
+end_define
+
+begin_comment
+comment|/* disable event after reporting */
+end_comment
+
 begin_define
 define|#
 directive|define

@@ -6954,7 +6954,11 @@ name|kn
 operator|->
 name|kn_flags
 operator|&
+operator|(
 name|EV_CLEAR
+operator||
+name|EV_DISPATCH
+operator|)
 condition|)
 block|{
 comment|/*  				 * Manually clear knotes who weren't  				 * 'touch'ed. 				 */
@@ -6963,6 +6967,12 @@ condition|(
 name|touch
 operator|==
 literal|0
+operator|&&
+name|kn
+operator|->
+name|kn_flags
+operator|&
+name|EV_CLEAR
 condition|)
 block|{
 name|kn
@@ -6978,6 +6988,20 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|kn
+operator|->
+name|kn_flags
+operator|&
+name|EV_DISPATCH
+condition|)
+name|kn
+operator|->
+name|kn_status
+operator||=
+name|KN_DISABLED
+expr_stmt|;
 name|kn
 operator|->
 name|kn_status
