@@ -370,7 +370,7 @@ begin_decl_stmt
 name|int
 name|nfsproto
 init|=
-name|IPPROTO_UDP
+name|IPPROTO_TCP
 decl_stmt|;
 end_decl_stmt
 
